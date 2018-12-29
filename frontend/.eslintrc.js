@@ -4,6 +4,7 @@ module.exports = {
     node: true
   },
   'extends': [
+    'codex',
     'plugin:vue/essential',
     'eslint:recommended'
   ],
@@ -14,4 +15,4 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   }
-}
+};
