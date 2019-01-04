@@ -7,33 +7,31 @@
     </p>
     <ul class="yard-home__links">
       <li v-if="authed">
-        <a class="primary" href="/garage">
+        <router-link class="primary" to="/garage">
           <!--{{ user.email|escape }}-->
           <!--{{ svg('/public/svg/arrow-right.svg') }}-->
-          nikmel2803@gmail.com
-        </a>
+        </router-link>
       </li>
       <template v-else>
         <li>
-          <a class="primary" href="/garage">Try for free</a>
+          <router-link class="primary" to="/garage">Try for free</router-link>
         </li>
         <li>
-          <a href="/join">Sign up</a>
+          <router-link to="/join">Sign up</router-link>
         </li>
         <li>
-          <a href="/login">Login</a>
+          <router-link to="/login">Login</router-link>
         </li>
       </template>
 
       <li>
-        <a href="/docs">Documentation</a>
+        <router-link to="/docs">Documentation</router-link>
       </li>
     </ul>
     <figure class="yard-home__figure">
-      <!--{# <figcaption></figcaption> #}-->
-      <!--<a href="/garage">-->
-      <!--<img src="/static/images/index_page/list.png" alt="Backend and Frontend errors monitoring">-->
-      <!--</a>-->
+      <router-link to="/garage">
+        <img src="../assets/views/home/list.png" alt="Backend and Frontend errors monitoring">
+      </router-link>
     </figure>
 
     <div class="yard-home__footer">
@@ -88,6 +86,7 @@ export default {
   &__links {
     margin-top: 1em;
     font-weight: bold;
+    padding: 0;
 
     li {
       display: inline-block;

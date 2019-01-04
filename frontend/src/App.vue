@@ -4,20 +4,25 @@
   </div>
 </template>
 
-<style>
-@import-normalize;
+<style lang="postcss">
+@import url("normalize.css");
 
 html {
-    height: 100%;
+  height: 100%;
 }
 
 body {
-    font-family: system-ui;
-    display: flex;
-    align-items: stretch;
-    min-height: 100%;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 15px;
+  font-family: system-ui;
+  display: flex;
+  align-items: stretch;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+}
+#app {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
 }
 </style>

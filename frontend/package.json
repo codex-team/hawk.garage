@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "NODE_ENV=development vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "normalize.css": "^8.0.1",
     "postcss-apply": "^0.11.0",
     "postcss-custom-media": "^7.0.7",
     "postcss-custom-properties": "^8.0.9",
@@ -18,7 +19,6 @@
     "postcss-nested": "^4.1.1",
     "postcss-nested-ancestors": "^2.0.0",
     "postcss-nesting": "^7.0.0",
-    "postcss-normalize": "^7.0.1",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
