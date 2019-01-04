@@ -17,7 +17,7 @@
           <router-link class="primary" to="/garage">Try for free</router-link>
         </li>
         <li>
-          <router-link to="/join">Sign up</router-link>
+          <router-link to="/sign-up">Sign up</router-link>
         </li>
         <li>
           <router-link to="/login">Login</router-link>
@@ -96,7 +96,6 @@ export default {
 
     a {
       color: #fff;
-      text-decoration: none;
       &.primary {
         color: var(--linkOnDark);
       }

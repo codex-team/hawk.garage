@@ -6,7 +6,7 @@
 
 <style lang="postcss">
 @import url("normalize.css");
-
+@import url("./stylesheets/base.css");
 html {
   height: 100%;
 }

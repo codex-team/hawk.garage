@@ -1,0 +1,283 @@
+
+/**
+* CodeX Team stylesheets
+*/
+@import url("variables.css");
+
+/**
+*
+* Base elements rules
+* ================================================
+*
+*/
+
+.hide { display: none !important; }
+.block { display: block; }
+.p_rel { position: relative; }
+.pointer { cursor: pointer; }
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/**
+* Clearfix hack
+*/
+.clearfix::before,
+.clearfix::after {
+    content: " ";
+    display: table;
+}
+
+.clearfix::after {
+    clear: both;
+}
+
+/**
+* Floating shorthands
+*/
+.fl_l {
+    float: left;
+}
+
+.fl_r {
+    float: right;
+}
+
+.constrain {
+    overflow: hidden;
+}
+
+/**
+* Links
+*/
+
+.inline-link {
+    color: var(--linkColor);
+}
+
+/**
+* Forms elements
+* =========================================
+*/
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 18px;
+    font-size: 17px;
+    font-family: inherit;
+    outline: none;
+    background: #fff;
+    border: 1px solid var(--grayLine);
+    box-shadow: inset 0 1px 2px 0 color(var(--grayLine) alpha(50%));
+    border-radius: 2px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+    border-color: #93d2f3;
+    box-shadow: inset 0 1px 2px 0 rgba(129, 218, 255, 0.41);
+}
+
+.button,
+.button--submit {
+    user-select: none;
+    border-radius: 2px;
+    border: 0;
+    display: inline-block;
+    padding: 12px 24px;
+    color: color(var(--buttonBg) lightness(-60%));
+    vertical-align: top;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    background-color: var(--buttonBg);
+    line-height: 1em;
+}
+
+.button:hover,
+.button--submit:hover {
+    background-color: color(var(--buttonBg) lightness(-10%));
+    color: color(var(--buttonBg) lightness(-70%));
+}
+
+.button--submit {
+    background-color: var(--submitButtonBg);
+    color: #fff;
+
+    &:hover {
+        background-color: color(var(--submitButtonBg) lightness(-15%));
+        color: #fff;
+    }
+}
+
+::placeholder {
+    color: color(var(--grayText) alpha(40%));
+}
+
+.button {
+    svg {
+        width: 1.2em;
+        height: 1.2em;
+        vertical-align: text-bottom;
+        margin-right: 0.3em;
+    }
+
+    &--bordered {
+        @apply --beautiful-green-button;
+    }
+
+    &--green {
+        color: #fff;
+        background: var(--greenBg);
+        padding: 12px 38px;
+
+        &:hover {
+            background-color: color(var(--greenBg) lightness(-5%));
+        }
+
+    }
+
+}
+
+.form {
+    &__header {
+        margin-bottom: 25px;
+        font-size: 27px;
+        font-weight: 800;
+
+        &:first-of-type {
+            margin-top: 0;
+        }
+
+    }
+
+    &__label {
+        display: block;
+        margin-bottom: 0.7em;
+        font-size: 19px;
+        color: var(--grayText);
+        font-weight: bold;
+
+        &--thin {
+            color: var(--noticeColor);
+            font-size: 15px;
+            font-weight: normal;
+        }
+
+    }
+
+    &__checkbox {
+        margin-right: 25px;
+        font-size: 16px;
+        cursor: pointer;
+
+        &::before {
+            content: '';
+            display: inline-block;
+            position: relative;
+            top: 5px;
+            margin-right: 5px;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--grayLine);
+            box-shadow: inset 0 1px 2px 0 color(var(--grayLine) alpha(50%));
+            border-radius: 2px;
+        }
+
+        &:hover::before {
+            border-color: var(--greenText);
+            box-shadow: inset 0 1px 2px 0 color(var(--greenText) alpha(30%));
+        }
+
+        &--checked::before {
+            background: url('/static/svg/check.svg') center center no-repeat;
+            border-color: var(--greenText);
+            box-shadow: inset 0 1px 2px 0 color(var(--greenText) alpha(30%));
+        }
+    }
+
+    &__width-fixed {
+        max-width: 400px;
+    }
+
+    &__section {
+        border: 0;
+        padding: 0;
+        margin: 0 0 30px;
+    }
+
+    &__submit {
+        font-size: 18px;
+    }
+
+    &__logo-upload {
+        width: 120px;
+        height: 120px;
+        border: 1px solid var(--grayBlueLine);
+        border-radius: 2px;
+    }
+
+}
+
+.default-checkbox {
+    display: none;
+}
+
+/**
+* Cancel default list styles
+*/
+ul,
+ol {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+/**
+* SVG icons styles
+*/
+svg {
+    fill: currentColor;
+    vertical-align: middle;
+    max-height: 100%;
+}
+
+/**
+* Base site styles
+* =================================
+*/
+html {
+    height: 100%;
+}
+
+body {
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    display: flex;
+    align-items: stretch;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+}
+
+module-settings {
+  display: none;
+}
