@@ -5,6 +5,8 @@
 </template>
 
 <style>
+@import-normalize;
+
 html {
     height: 100%;
 }

@@ -1,6 +1,7 @@
 module.exports = {
   plugins: {
     'postcss-import': {},
+    'postcss-normalize': {},
     'postcss-apply': {},
     'postcss-custom-properties': {},
     'postcss-custom-media': {},
