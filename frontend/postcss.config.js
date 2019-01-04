@@ -9,6 +9,8 @@ module.exports = {
     'postcss-nested-ancestors': {},
     'postcss-nesting': {},
     'postcss-nested': {},
+    'postcss-color-function': {},
+    'postcss-color-hex-alpha': {},
     'postcss-font-family-system-ui': {},
     'autoprefixer': {}
   }

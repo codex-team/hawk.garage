@@ -12,7 +12,7 @@ html {
 }
 
 body {
-  font-family: system-ui;
+  font-family: "Lato", system-ui;
   display: flex;
   align-items: stretch;
   min-height: 100%;

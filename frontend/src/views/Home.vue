@@ -34,14 +34,14 @@
       </router-link>
     </figure>
 
-    <div class="yard-home__footer">
+    <footer class="yard-home__footer">
       Made with inspiration by
       <a href="//ifmo.su">CodeX</a>.
       <div class="fl_r">
         Feel free to leave a Feedback to the
         <a href="mailto:team@ifmo.su?subject=Hawk">team@ifmo.su</a>.
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
@@ -87,7 +87,7 @@ export default {
     margin-top: 1em;
     font-weight: bold;
     padding: 0;
-
+    margin-bottom: 0;
     li {
       display: inline-block;
       margin-right: 1em;
@@ -96,7 +96,7 @@ export default {
 
     a {
       color: #fff;
-
+      text-decoration: none;
       &.primary {
         color: var(--linkOnDark);
       }
