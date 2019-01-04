@@ -2,7 +2,7 @@ module.exports = {
   plugins: {
     'postcss-import': {},
     'postcss-apply': {},
-    'postcss-custom-properties': {},
+    'postcss-css-variables': {},
     'postcss-custom-media': {},
     'postcss-media-minmax': {},
     'postcss-custom-selectors': {},

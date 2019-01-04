@@ -104,6 +104,8 @@
 </template>
 
 <style lang="postcss">
+@import url("../stylesheets/variables.css");
+
 /**
  * Static article page
  * Uses in Platfor'm working on windows and even with the added watch options to my config, it doesn't work, unfortunately. – Gilian Dec 10 '18 at 8:40entation
