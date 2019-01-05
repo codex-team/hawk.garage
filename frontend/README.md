@@ -1,4 +1,4 @@
-# frontend
+# Hawk.so frontend
 
 ## Project setup
 ```
