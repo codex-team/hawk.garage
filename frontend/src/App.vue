@@ -5,6 +5,7 @@
 </template>
 
 <style lang="postcss">
+
 @import url("normalize.css");
 
 html {
