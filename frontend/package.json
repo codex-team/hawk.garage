@@ -14,12 +14,9 @@
     "postcss-color-hex-alpha": "^5.0.2",
     "postcss-css-variables": "^0.11.0",
     "postcss-custom-media": "^7.0.7",
-    "postcss-custom-selectors": "^5.1.2",
     "postcss-font-family-system-ui": "^4.1.0",
     "postcss-import": "^12.0.1",
-    "postcss-media-minmax": "^4.0.0",
     "postcss-nested": "^4.1.1",
-    "postcss-nested-ancestors": "^2.0.0",
     "postcss-nesting": "^7.0.0",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.17",
@@ -35,9 +32,7 @@
     "eslint": "^5.8.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
     "eslint-plugin-vue": "^5.0.0-0",
-    "node-sass": "^4.9.0",
     "prerender-spa-plugin": "^3.2.1",
-    "sass-loader": "^7.0.1",
     "vue-cli-plugin-prerender-spa": "^1.1.0",
     "vue-template-compiler": "^2.5.17"
   }
