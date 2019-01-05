@@ -4,9 +4,13 @@
       :title="title"
       :fields="fields"
       :submitText="submitText"
-      :disclaimer="disclaimer"
       :message="message"
-    ></yard-form>
+    >
+      <div slot="disclaimer">Already have an account?
+        <router-link to="/login">Login</router-link>, you, beauty
+        <span style="display: inline-block; vertical-align: middle;">😏</span>
+      </div>
+    </yard-form>
   </div>
 </template>
 
@@ -28,8 +32,6 @@ export default {
         }
       ],
       submitText: "Register",
-      disclaimer:
-        'Already have an account? <router-link to="/login">Login</router-link>, you, beauty <span style="display: inline-block; vertical-align: middle;"> 😏 </span>',
       message: null
     };
   },

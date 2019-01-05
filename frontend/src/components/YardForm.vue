@@ -12,7 +12,7 @@
         <label class="yard-form__label" :for="field.name">{{ field.label}}</label>
         <input
           class="yard-form__input"
-          :type="type || 'text'"
+          :type="field.type || 'text'"
           :name="field.name"
           :value="field.value"
           :id="field.name"
@@ -32,7 +32,9 @@
         :to="altLink"
       >{{ altText }}</router-link>
     </form>
-    <div class="yard-form__disclaimer" v-html="disclaimer"></div>
+    <div class="yard-form__disclaimer">
+      <slot name="disclaimer"></slot>
+    </div>
   </div>
 </template>
 
@@ -52,12 +54,17 @@ export default {
       type: String,
       required: true
     },
-    disclaimer: {
-      type: String,
-      required: true
-    },
     message: {
-      type: String
+      type: String,
+      required: false
+    },
+    altText: {
+      type: String,
+      required: false
+    },
+    altLink: {
+      type: String,
+      required: false
     }
   }
 };
