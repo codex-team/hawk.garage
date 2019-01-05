@@ -7,18 +7,10 @@ const app = express();
 const publicDir = path.join(__dirname, '../frontend/dist/');
 
 app.use(function (req, res, next) {
-  if (req.path.indexOf('.') === -1) {
-    const file = publicDir + req.path + '.html';
-
-    fs.access(file, function (err) {
-      if (!err) {
-        req.url += '.html';
-      }
-      next();
-    });
-  } else {
-    next();
+  if (req.path !== '/' && req.path.indexOf('.') === -1) {
+    req.url += '.html';
   }
+  next();
 });
 
 app.use('/', express.static(publicDir));
