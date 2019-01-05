@@ -1,7 +1,7 @@
 <template>
   <article class="yard-doc">
     <header class="yard-doc__header">
-      <a class="yard-doc__header-title" href="/">Hawk.so</a>
+      <router-link class="yard-doc__header-title" to="/">Hawk.so</router-link>
       <div class="yard-doc__header-caption">Fast and lightweight errors tracking service</div>
     </header>
 
