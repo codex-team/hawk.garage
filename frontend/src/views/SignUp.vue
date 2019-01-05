@@ -15,23 +15,23 @@
 </template>
 
 <script>
-import YardForm from "@/components/YardForm";
+import YardForm from '@/components/YardForm';
 
 export default {
-  name: "sign-up",
+  name: 'sign-up',
   data() {
     return {
-      title: "Create an account",
+      title: 'Create an account',
       fields: [
         {
-          label: "Enter your email",
-          name: "email",
-          value: "",
-          placeholder: "name@best-team.com",
-          type: "email"
+          label: 'Enter your email',
+          name: 'email',
+          value: '',
+          placeholder: 'name@best-team.com',
+          type: 'email'
         }
       ],
-      submitText: "Register",
+      submitText: 'Register',
       message: null
     };
   },

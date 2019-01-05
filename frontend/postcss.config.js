@@ -14,4 +14,4 @@ module.exports = {
     'postcss-font-family-system-ui': {},
     'autoprefixer': {}
   }
-}
+};

@@ -1,14 +1,14 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import './registerServiceWorker'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import './registerServiceWorker';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
   render: h => h(App),
-  mounted: () => document.dispatchEvent(new Event("x-app-rendered")),
-}).$mount('#app')
+  mounted: () => document.dispatchEvent(new Event('x-app-rendered'))
+}).$mount('#app');

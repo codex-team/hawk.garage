@@ -15,32 +15,32 @@
 </template>
 
 <script>
-import YardForm from "@/components/YardForm";
+import YardForm from '@/components/YardForm';
 
 export default {
-  name: "login",
+  name: 'login',
   data() {
     return {
-      title: "Log in",
+      title: 'Log in',
       fields: [
         {
-          label: "Your email",
-          name: "email",
-          value: "",
-          placeholder: "name@best-team.com",
-          type: "email"
+          label: 'Your email',
+          name: 'email',
+          value: '',
+          placeholder: 'name@best-team.com',
+          type: 'email'
         },
         {
-          label: "Password",
-          name: "password",
-          value: "",
-          placeholder: "********",
-          type: "password"
+          label: 'Password',
+          name: 'password',
+          value: '',
+          placeholder: '********',
+          type: 'password'
         }
       ],
-      submitText: "Log in",
-      altLink: "/reset",
-      altText: "Reset password"
+      submitText: 'Log in',
+      altLink: '/reset',
+      altText: 'Reset password'
     };
   },
   components: {

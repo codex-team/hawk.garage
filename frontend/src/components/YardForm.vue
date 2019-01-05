@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  name: "yard-form",
+  name: 'yard-form',
   props: {
     title: {
       type: String,

@@ -49,7 +49,7 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: "home",
+  name: 'home',
   data() {
     return {
       authed: false

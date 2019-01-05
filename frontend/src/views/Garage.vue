@@ -7,6 +7,6 @@
 <script>
 
 export default {
-  name: "garage"
+  name: 'garage'
 };
 </script>
