@@ -1,5 +1,5 @@
 <template>
-  <div class="yard-home">
+  <div class="yard-page yard-home">
     <h1 class="yard-home__title">Hawk.so</h1>
     <p class="yard-home__caption">
       Fast and lightweight errors tracking service. Backend and Frontend events
@@ -62,17 +62,6 @@ export default {
 @import url("../stylesheets/variables.css");
 
 .yard-home {
-  width: 100%;
-  background: var(--yardBg);
-  color: var(--yardGrayText);
-  padding: 60px;
-  padding-bottom: 20px;
-  font-size: 20px;
-
-  @media (--mobile) {
-    padding: 15px;
-  }
-
   &__title {
     font-size: 2.6em;
     color: #fff;

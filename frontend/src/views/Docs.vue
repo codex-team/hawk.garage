@@ -1,5 +1,5 @@
 <template>
-  <article class="yard-doc">
+  <article class="yard-page yard-doc">
     <header class="yard-doc__header">
       <router-link class="yard-doc__header-title" to="/">Hawk.so</router-link>
       <div class="yard-doc__header-caption">Fast and lightweight errors tracking service</div>
@@ -151,9 +151,10 @@
  */
 .yard-doc {
   position: relative;
-  max-width: 600;
+  max-width: 600px;
   margin: 80px;
   padding: 15px;
+  background: #fff;
   font-size: 16.8px;
   line-height: 1.5em;
 

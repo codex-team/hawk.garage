@@ -1,5 +1,5 @@
 <template>
-  <div class="yard-sign-up">
+  <div class="yard-page yard-sign-up">
     <yard-form
       :title="title"
       :fields="fields"
@@ -38,20 +38,3 @@ export default {
   }
 };
 </script>
-
-<style lang="postcss">
-@import url("../stylesheets/variables.css");
-
-.yard-sign-up {
-  width: 100%;
-  background: var(--yardBg);
-  color: var(--yardGrayText);
-  padding: 60px;
-  padding-bottom: 20px;
-  font-size: 20px;
-
-  @media (--mobile) {
-    padding: 15px;
-  }
-}
-</style>
