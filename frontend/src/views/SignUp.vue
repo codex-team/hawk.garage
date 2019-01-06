@@ -1,5 +1,5 @@
 <template>
-  <div class="yard-page yard-sign-up">
+  <div>
   </div>
 </template>
 

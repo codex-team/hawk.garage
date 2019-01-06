@@ -1,5 +1,5 @@
 <template>
-  <div class="garage">
+  <div>
       Not implemented yet. <router-link to="/">Hawk.so</router-link>
   </div>
 </template>

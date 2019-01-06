@@ -1,5 +1,5 @@
 <template>
-  <article class="yard-page yard-doc">
+  <article>
 
   </article>
 </template>
