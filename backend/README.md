@@ -5,7 +5,7 @@
 yarn install
 ```
 
-### Compiles and hot-reloads for development
+### Run server
 ```
-node index.js
+yarn start
 ```

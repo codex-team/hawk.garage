@@ -1,20 +1,33 @@
 const path = require('path');
-const env = require('dotenv').config({ path: path.resolve(__dirname, '.env') }).parsed;
-const fs = require('fs');
+const twig = require('twig');
 const express = require('express');
 const app = express();
 
-const publicDir = path.join(__dirname, '../frontend/dist/');
+require('dotenv').config();
+const publicDir = path.join(__dirname, process.env.STATIC_PATH);
+const templatesPath = path.join(__dirname, process.env.TEMPLATES_PATH);
 
-app.use(function (req, res, next) {
-  if (req.path !== '/' && req.path.indexOf('.') === -1) {
-    req.url += '.html';
-  }
-  next();
-});
+/**
+ * View engine setup
+ */
+app.set('views', templatesPath);
+app.set('view engine', 'twig');
 
-app.use('/', express.static(publicDir));
+/**
+ * Garage
+ */
+app.use('/garage', express.static(publicDir));
 
-app.listen(env.PORT, env.HOST, () => {
-  console.log(`Server running at ${env.HOST}:${env.PORT}/`);
+/**
+ * Yard
+ */
+const index = require('./routes/yard');
+
+app.use('/', index);
+
+/**
+ * Start server
+ */
+app.listen(process.env.PORT, process.env.HOST, () => {
+  console.log(`Server running at ${process.env.HOST}:${process.env.PORT}/`);
 });
