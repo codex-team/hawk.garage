@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ meta.title|default('Hawk.so') }}</title>
+  <meta property="og:title" content="{{ meta.title|default('Hawk.so') }}"/>
+  <meta property="og:site_name" content="Hawk">
+  <meta name="description" property="og:description"
+        content="{{ meta.description|default('Fast and lightweight errors tracking service.') }}"/>
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>
