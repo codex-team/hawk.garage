@@ -1,1 +1,1 @@
-import './stylesheets/yard/index.css';
+import './yard/styles/index.css';
