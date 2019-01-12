@@ -1,0 +1,12 @@
+@import url("../base.css");
+@import url("./variables.css");
+
+@import url("home.css");
+/**
+ * Yard page with dark background
+ */
+.yard-page {
+  width: 100%;
+  background: var(--color-yard-background);
+  color: var(--color-yard-gray-text);
+}
