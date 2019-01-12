@@ -20,6 +20,11 @@ const index = require('./routes/yard');
 app.use('/', index);
 
 /**
+ * Garage
+ */
+app.use('/garage', express.static(path.join(__dirname, '../frontend/garage/views')));
+
+/**
  * Serve static files
  */
 app.use(express.static(publicDir));
