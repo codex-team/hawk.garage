@@ -1,5 +1,5 @@
 @import url("../base.css");
-@import url("../common-variables.css");
+@import url("../variables-common.css");
 @import url("./variables.css");
 
 .yard-home {
@@ -54,6 +54,7 @@
     border-top: 1px solid color(var(--color-yard-background) lightness(+5%));
     font-size: 15px;
     padding: 20px 0 0;
+    letter-spacing: 0.18px;
 
     a {
       color: var(--color-green-text);
