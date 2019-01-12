@@ -3,8 +3,8 @@ const express = require('express');
 const app = express();
 
 require('dotenv').config();
-const publicDir = path.join(__dirname, process.env.STATIC_PATH);
-const templatesPath = path.join(__dirname, process.env.TEMPLATES_PATH);
+const publicDir = path.join(__dirname, '../frontend');
+const templatesPath = path.join(__dirname, '../frontend/yard/views');
 
 /**
  * View engine setup
