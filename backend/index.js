@@ -1,5 +1,4 @@
 const path = require('path');
-const twig = require('twig');
 const express = require('express');
 const app = express();
 
@@ -14,16 +13,16 @@ app.set('views', templatesPath);
 app.set('view engine', 'twig');
 
 /**
- * Garage
- */
-app.use('/garage', express.static(publicDir));
-
-/**
  * Yard
  */
 const index = require('./routes/yard');
 
 app.use('/', index);
+
+/**
+ * Serve static files
+ */
+app.use(express.static(publicDir));
 
 /**
  * Start server

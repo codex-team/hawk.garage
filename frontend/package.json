@@ -1,0 +1,30 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "webpack --mode=production"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-codex": "github:codex-team/eslint-config",
+    "mini-css-extract-plugin": "^0.5.0",
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
+  },
+  "dependencies": {
+    "autoprefixer": "^9.4.4",
+    "css-loader": "^2.1.0",
+    "cssnano": "^4.1.8",
+    "normalize.css": "^8.0.1",
+    "postcss-color-function": "^4.0.1",
+    "postcss-color-hex-alpha": "^5.0.2",
+    "postcss-css-variables": "^0.11.0",
+    "postcss-custom-media": "^7.0.7",
+    "postcss-font-family-system-ui": "^4.1.0",
+    "postcss-import": "^12.0.1",
+    "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.1.1"
+  }
+}
