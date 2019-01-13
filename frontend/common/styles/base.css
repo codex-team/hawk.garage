@@ -1,0 +1,54 @@
+@import url("normalize.css");
+
+/**
+* Base site styles
+* =================================
+*/
+html {
+  height: 100%;
+}
+
+body {
+  font-family: "Lato", system-ui, sans-serif;
+  display: flex;
+  align-items: stretch;
+  min-height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+}
+
+/**
+*
+* Base elements rules
+* ================================================
+*
+*/
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/**
+* Cancel default list styles
+*/
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+/**
+* Floating shorthands
+*/
+.fl_l {
+  float: left;
+}
+
+.fl_r {
+  float: right;
+}

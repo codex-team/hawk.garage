@@ -1,0 +1,12 @@
+@import url("../../common/styles/base.css");
+@import url("variables.css");
+@import url("home.css");
+
+body {
+  background: var(--color-yard-background);
+}
+
+.yard-page {
+  width: 100%;
+  color: var(--color-yard-gray-text);
+}

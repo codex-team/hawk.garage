@@ -1,0 +1,9 @@
+:root {
+  /** Texts */
+  --color-yard-gray-text: #8a97ab;
+  --color-yard-link-on-dark: #31ffac;
+  --color-green-text: #00b693;
+
+  /** Backgrounds */
+  --color-yard-background: #1d1d27;
+}
