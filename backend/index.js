@@ -3,8 +3,8 @@ const express = require('express');
 const app = express();
 
 require('dotenv').config();
-const publicDir = path.join(__dirname, '../frontend');
-const templatesPath = path.join(__dirname, '../frontend/yard/views');
+const publicDir = path.resolve(__dirname, '../frontend');
+const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
 
 /**
  * View engine setup
@@ -22,7 +22,7 @@ app.use('/', index);
 /**
  * Garage
  */
-app.use('/garage', express.static(path.join(__dirname, '../frontend/garage/views')));
+app.use('/garage', express.static(path.resolve(__dirname, '../frontend/garage/views')));
 
 /**
  * Serve static files
