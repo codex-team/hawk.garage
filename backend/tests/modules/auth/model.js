@@ -27,9 +27,9 @@ const UserModel = require('../../../modules/auth/model')();
 const chai = require('chai');
 const assert = chai.assert;
 
-describe('MODULE.AUTH', () => {
-  describe('Testing auth model', () => {
-    it('Try to add new user with email test@example.com', () => {
+describe('MODULE.AUTH', function () {
+  describe('Testing auth model', function () {
+    it('Try to add new user with email test@example.com', function () {
       return UserModel.add('test@example.com').then((user) => {
         assert.isObject(user, 'result must be object');
         assert(user._id && user.email === 'test@example.com' && user.password);
