@@ -29,11 +29,11 @@ const assert = chai.assert;
 
 describe('MODULE.AUTH', () => {
   describe('Testing auth model', () => {
-    it('Try to add new user with email test@example.com', (done) => {
-      UserModel.add('test@example.com').then((user) => {
+    it('Try to add new user with email test@example.com', () => {
+      return UserModel.add('test@example.com').then((user) => {
         assert.isObject(user, 'result must be object');
         assert(user._id && user.email === 'test@example.com' && user.password);
-      }).then(done, done);
+      });
     });
   });
 });
