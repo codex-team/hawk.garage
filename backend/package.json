@@ -9,14 +9,15 @@
     "test": "mocha \"tests/**/index.js\" --exit"
   },
   "dependencies": {
+    "bcrypt": "^3.0.3",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "mongoose": "^5.4.4",
     "twig": "^1.12.0"
   },
   "devDependencies": {
-    "eslint": "^5.12.0",
     "chai": "^4.2.0",
+    "eslint": "^5.12.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
     "mocha": "^5.2.0"
   }
