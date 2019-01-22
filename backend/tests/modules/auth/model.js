@@ -41,18 +41,16 @@ module.exports = function () {
     });
   });
 
-  it('Should return user by email with right password', function () {
-    return new Promise(resolve => {
-      UserModel.getByEmail('test@example.com').then(user => {
-        assert.isObject(user, 'result must be object');
-        assert(user._id && user.email === 'test@example.com' && user.password, 'user object is invalid');
+  it('Should return user by email with right password', function (done) {
+    UserModel.getByEmail('test@example.com').then(user => {
+      assert.isObject(user, 'result must be object');
+      assert(user._id && user.email === 'test@example.com' && user.password, 'user object is invalid');
 
-        const hashedPassword = user.password;
+      const hashedPassword = user.password;
 
-        bcrypt.compare(userPassword, hashedPassword).then(res => {
-          assert.isTrue(res);
-          resolve();
-        });
+      bcrypt.compare(userPassword, hashedPassword).then(res => {
+        assert.isTrue(res);
+        done();
       });
     });
   });
