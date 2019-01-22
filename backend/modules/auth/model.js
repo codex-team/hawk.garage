@@ -2,9 +2,18 @@ const utils = require('./utils');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+mongoose.set('useCreateIndex', true);
+
 const userSchema = new Schema({
-  email: String,
-  password: String
+  email: {
+    type: String,
+    required: true,
+    index: {unique: true}
+  },
+  password: {
+    type: String,
+    required: true
+  }
 });
 
 const mongooseUserModel = mongoose.model('user', userSchema);
