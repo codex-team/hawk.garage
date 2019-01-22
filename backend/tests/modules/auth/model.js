@@ -1,3 +1,9 @@
+const utils = require('../../../modules/auth/utils');
+const mongoose = require('mongoose');
+const UserModel = require('../../../modules/auth/model');
+const chai = require('chai');
+
+const assert = chai.assert;
 const mongodbOptions = {
   protocol: 'mongodb://',
   user: 'root',
@@ -7,17 +13,9 @@ const mongodbOptions = {
   authSource: 'admin',
   dbName: 'hawk_test'
 };
-const utils = require('../../../modules/auth/utils');
-const mongoose = require('mongoose');
-
-mongoose.Promise = global.Promise;
 
 mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
-
-const UserModel = require('../../../modules/auth/model');
-
-const chai = require('chai');
-const assert = chai.assert;
+mongoose.Promise = global.Promise;
 
 module.exports = function () {
   it('Should add new user', function () {
