@@ -42,7 +42,18 @@ class UserModel {
       password: passwordHashed
     };
 
-    return mongooseUserModel.create(user);
+    const mongooseUser = await mongooseUserModel.create(user);
+
+    return {_id: mongooseUser._id, email, password};
+  }
+
+  /**
+   * Returns User object by email field
+   * @param {string} email - user email to search
+   * @returns {Promise<User>} - founded user
+   */
+  static async getByEmail(email) {
+    return mongooseUserModel.findOne({email});
   }
 }
 
