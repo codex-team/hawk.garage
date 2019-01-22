@@ -3,8 +3,8 @@ const assert = chai.assert;
 const utils = require('../../../modules/auth/utils');
 
 module.exports = function () {
-  describe('Testing generatePassword()', function () {
-    it('Generated passwords must not be equal', function () {
+  describe('generatePassword function', function () {
+    it('Should generate non-equal passwords', function () {
       const password1 = utils.generatePassword();
       const password2 = utils.generatePassword();
       const password3 = utils.generatePassword();
@@ -13,18 +13,18 @@ module.exports = function () {
     });
   });
 
-  describe('Test generateHash()', function () {
-    it('Method should return right answer ', function () {
+  describe('generateHash function', function () {
+    it('Should return hash without error', function () {
       const valueToHash = 'Hello, Hawk';
-      const salt = 'blablabla';
-      const result = utils.generateHash(valueToHash, salt);
 
-      assert.strictEqual(result, '71545e3c5c4d1a81cf7bf5817769ad2b25bc1e5553dd0566bdbfbdebee0670ad');
+      return utils.generateHash(valueToHash, 10).then(hash => {
+        assert.isOk(hash);
+      });
     });
   });
 
-  describe('Testing getMongoUrl()', function () {
-    it('Method should return right answer', function () {
+  describe('getMongoUrl function', function () {
+    it('Should return right answer', function () {
       const options = {
         protocol: 'mongodb://',
         user: 'root',

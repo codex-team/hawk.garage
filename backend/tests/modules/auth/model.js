@@ -14,13 +14,13 @@ mongoose.Promise = global.Promise;
 
 mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
 
-const UserModel = require('../../../modules/auth/model')();
+const UserModel = require('../../../modules/auth/model');
 
 const chai = require('chai');
 const assert = chai.assert;
 
 module.exports = function () {
-  it('Try to add new user with email test@example.com', function () {
+  it('Should add new user', function () {
     return UserModel.add('test@example.com').then((user) => {
       assert.isObject(user, 'result must be object');
       assert(user._id && user.email === 'test@example.com' && user.password, 'user object is invalid');
