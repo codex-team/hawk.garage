@@ -1,4 +1,4 @@
-const Crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 /**
  * Generate random password
@@ -11,13 +11,11 @@ function generatePassword() {
 /**
  * Generate hash from input string and salt
  * @param {string} inputString - value to hash
- * @param {string} salt - salt for hashing
+ * @param {number} [saltRounds=10] - cost factor: the higher the number, the more difficult is brute-forcing.
  * @returns {string} - hashed value
  */
-function generateHash(inputString, salt) {
-  const string = inputString + salt;
-
-  return Crypto.createHash('sha256').update(string, 'utf8').digest('hex');
+function generateHash(inputString, saltRounds) {
+  return bcrypt.hash(inputString, saltRounds || 10);
 }
 
 /**
