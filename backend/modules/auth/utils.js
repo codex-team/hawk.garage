@@ -1,11 +1,12 @@
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 /**
  * Generate random password
  * @returns {string} - generated password
  */
 function generatePassword() {
-  return Math.random().toString(36).slice(-8);
+  return crypto.randomBytes(128).toString('hex');
 }
 
 /**
