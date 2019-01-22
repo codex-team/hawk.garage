@@ -19,6 +19,9 @@ mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
 mongoose.Promise = global.Promise;
 
 module.exports = function () {
+  /**
+   * @type {string} - saved non-hashed user password from add() function. Using for authenticate user later
+   */
   let userPassword;
 
   before(function () {
