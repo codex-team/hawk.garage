@@ -5,7 +5,7 @@ const mongodbOptions = {
   host: 'localhost',
   port: '27017',
   authSource: 'admin',
-  dbName: 'hawk'
+  dbName: 'hawk_test'
 };
 const utils = require('../../../modules/auth/utils');
 const mongoose = require('mongoose');
