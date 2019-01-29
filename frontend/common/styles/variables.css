@@ -1,3 +1,15 @@
+:root{
+
+
+  /** Borders */
+  --color-gray-line: #d4d6d8;
+
+  /** Backgrounds */
+  --color-button-bg: #c5dff5;
+  --color-submit-button-bg: #4592da;
+
+}
+
 /**
 * Custom media queries
 */

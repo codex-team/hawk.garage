@@ -16,7 +16,7 @@
   }
 
   &__caption {
-    color: var(--color-yard-gray-text);
+    color: var(--color-gray-text);
     line-height: 1.4em;
   }
 
@@ -34,7 +34,7 @@
       color: #fff;
 
       &.primary {
-        color: var(--color-yard-link-on-dark);
+        color: var(--color-link-on-dark);
       }
 
     }
@@ -42,7 +42,7 @@
 
   &__figure {
     margin: 0 0 30px;
-    color: var(--color-yard-gray-text);
+    color: var(--color-gray-text);
 
     img {
       margin-top: 1em;
