@@ -101,8 +101,7 @@ textarea:focus {
   line-height: 1em;
 }
 
-.button:hover,
-.button--submit:hover {
+.button:hover {
   background-color: color(var(--color-button-bg) lightness(-10%));
   color: color(var(--color-button-bg) lightness(-70%));
 }
