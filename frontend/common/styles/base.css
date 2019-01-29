@@ -118,5 +118,5 @@ textarea:focus {
 }
 
 ::placeholder {
-  color: color(var(--color-gray-text) alpha(40%));
+  color: color(var(--color-form-gray-text) alpha(40%));
 }

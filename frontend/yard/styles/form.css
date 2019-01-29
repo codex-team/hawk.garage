@@ -71,7 +71,7 @@
     display: block;
     margin-bottom: 0.7em;
     font-size: 19px;
-    color: var(--color-gray-text);
+    color: var(--color-form-gray-text);
     font-weight: bold;
   }
 
@@ -104,7 +104,7 @@
   &__alt-button {
     display: inline-block;
     padding: 10px 24px;
-    color: var(--color-gray-text);
+    color: var(--color-form-gray-text);
     font-size: 16px;
   }
 }

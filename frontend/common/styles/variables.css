@@ -1,5 +1,6 @@
-:root{
-
+:root {
+  /** Texts */
+  --color-form-gray-text: #555968;
 
   /** Borders */
   --color-gray-line: #d4d6d8;
