@@ -1,6 +1,6 @@
-@import url("../../common/styles/base.css");
-@import url("variables.css");
-@import url("home.css");
+@import "../../common/styles/base.css";
+@import "variables.css";
+@import "home.css";
 @import "form.css";
 
 body {

@@ -1,6 +1,6 @@
-@import url("../../common/styles/base.css");
-@import url("../../common/styles/variables.css");
-@import url("variables.css");
+@import "../../common/styles/base.css";
+@import "../../common/styles/variables.css";
+@import "variables.css";
 
 .yard-home {
   padding: 60px 60px 20px;
