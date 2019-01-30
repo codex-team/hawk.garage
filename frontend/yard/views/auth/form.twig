@@ -23,7 +23,7 @@
       </fieldset>
     {% endfor %}
     {% if submitText is not empty %}
-      <input class="yard-form__submit button--submit" type="submit" value="{{ submitText|escape }}">
+      <input class="yard-form__submit button button--submit" type="submit" value="{{ submitText|escape }}">
     {% endif %}
     {% if altText and altLink not empty %}
       <a class="yard-form__alt-button" href="{{ altLink }}">{{ altText }}</a>

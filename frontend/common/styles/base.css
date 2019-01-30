@@ -70,52 +70,42 @@ textarea {
   font-family: inherit;
   outline: none;
   background: #fff;
-  border: 1px solid var(--color-gray-line);
-  box-shadow: inset 0 1px 2px 0 color(var(--color-gray-line) alpha(50%));
+  border: 1px solid var(--color-line-gray);
+  box-shadow: inset 0 1px 2px 0 color(var(--color-line-gray) alpha(50%));
   border-radius: 2px;
+
+  &:focus {
+    border-color: #93d2f3;
+    box-shadow: inset 0 1px 2px 0 rgba(129, 218, 255, 0.41);
+  }
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="search"]:focus,
-input[type="url"]:focus,
-textarea:focus {
-  border-color: #93d2f3;
-  box-shadow: inset 0 1px 2px 0 rgba(129, 218, 255, 0.41);
-}
-
-.button,
-.button--submit {
+.button {
   user-select: none;
   border-radius: 2px;
   border: 0;
-  display: inline-block;
   padding: 12px 24px;
-  color: color(var(--color-button-bg) lightness(-60%));
-  vertical-align: top;
+  color: color(var(--color-bg-button) lightness(-60%));
   cursor: pointer;
-  text-decoration: none;
-  font-family: inherit;
-  background-color: var(--color-button-bg);
+  background-color: var(--color-bg-button);
   line-height: 1em;
-}
-
-.button:hover {
-  background-color: color(var(--color-button-bg) lightness(-10%));
-  color: color(var(--color-button-bg) lightness(-70%));
-}
-
-.button--submit {
-  background-color: var(--color-submit-button-bg);
-  color: #fff;
 
   &:hover {
-    background-color: color(var(--color-submit-button-bg) lightness(-15%));
+    background-color: color(var(--color-bg-button) lightness(-10%));
+    color: color(var(--color-bg-button) lightness(-70%));
+  }
+
+  &--submit {
+    background-color: var(--color-bg-submit-button);
     color: #fff;
+
+    &:hover {
+      background-color: color(var(--color-bg-submit-button) lightness(-15%));
+      color: #fff;
+    }
   }
 }
 
 ::placeholder {
-  color: color(var(--color-form-gray-text) alpha(40%));
+  color: color(var(--color-text-form-gray) alpha(40%));
 }

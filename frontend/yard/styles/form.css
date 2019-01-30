@@ -55,11 +55,11 @@
     line-height: 1.4em;
 
     &--error {
-      color: var(--color-error-message);
+      color: var(--color-message-error);
     }
 
     &--notify {
-      color: var(--color-green-text);
+      color: var(--color-text-green);
     }
 
     & a {
@@ -71,7 +71,7 @@
     display: block;
     margin-bottom: 0.7em;
     font-size: 19px;
-    color: var(--color-form-gray-text);
+    color: var(--color-text-form-gray);
     font-weight: bold;
   }
 
@@ -104,7 +104,7 @@
   &__alt-button {
     display: inline-block;
     padding: 10px 24px;
-    color: var(--color-form-gray-text);
+    color: var(--color-text-form-gray);
     font-size: 16px;
   }
 }
