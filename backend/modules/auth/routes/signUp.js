@@ -4,7 +4,7 @@ const router = express.Router();
 module.exports = function (params) {
   router.get('/sign-up', (req, res, next) => {
     if (res.locals.user) {
-      res.redirect(params.redirectIfAuthed);
+      res.redirect(params.authedRedirect);
       return;
     }
 
