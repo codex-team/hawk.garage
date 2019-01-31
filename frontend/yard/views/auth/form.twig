@@ -5,9 +5,9 @@
   <div class="yard-form__caption">
     Fast and lightweight errors tracking service
   </div>
-  <form class="yard-form__container" method="POST" action="{{ action|escape }}">
+  <form class="yard-form__container" method="POST" action="{{ action }}">
     <div class="yard-form__header">
-      {{ title|escape }}
+      {{ title }}
     </div>
     {% if message %}
       <div class="yard-form__message yard-form__message--{{ message.type }}">
@@ -16,24 +16,24 @@
     {% endif %}
     {% for field in fields %}
       <fieldset class="yard-form__section">
-        <label class="yard-form__label" for="{{ field.name|escape }}">
-          {{ field.label|escape }}
+        <label class="yard-form__label" for="{{ field.name }}">
+          {{ field.label }}
         </label>
         {% set type = 'text' %}
         {% if field.type is defined and field.type not empty  %}
           {% set type = field.type %}
         {% endif %}
         <input class="yard-form__input"
-          type="{{ type|escape }}"
-          name="{{ field.name|escape }}"
-          value="{{ field.value|escape }}"
-          id="{{ field.name|escape }}"
-          placeholder="{{ field.placeholder|escape }}"
+          type="{{ type }}"
+          name="{{ field.name }}"
+          value="{{ field.value }}"
+          id="{{ field.name }}"
+          placeholder="{{ field.placeholder }}"
           required />
       </fieldset>
     {% endfor %}
     {% if submitText is not empty %}
-      <input class="yard-form__submit button button--submit" type="submit" value="{{ submitText|escape }}">
+      <input class="yard-form__submit button button--submit" type="submit" value="{{ submitText }}">
     {% endif %}
     {% if altText and altLink not empty %}
       <a class="yard-form__alt-button" href="{{ altLink }}">
