@@ -1,0 +1,22 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+  <div class="yard-page yard-sign-up">
+    {% include './form.twig' with {
+      action: '/sign-up',
+      title: 'Create an account',
+      fields: [
+        {
+          label: 'Enter your email',
+          name: 'email',
+          value: '',
+          placeholder: 'name@best-team.com',
+          type: 'email'
+        }
+      ],
+      submitText: 'Register',
+      disclaimer: 'Already have an account? <a href="/login">Login</a>, you, beauty <span style="display: inline-block; vertical-align: middle;"> 😏 </span>',
+      message: message.type and message.text ? {type: message.type, text: message.text} : null,
+    } %}
+  </div>
+{% endblock %}

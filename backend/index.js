@@ -13,6 +13,14 @@ app.set('views', templatesPath);
 app.set('view engine', 'twig');
 
 /**
+ * Auth module setup
+ */
+const authModule = require('./modules/auth');
+const authModuleConfig = require('./config/auth');
+
+app.use(authModule(authModuleConfig));
+
+/**
  * Yard
  */
 const index = require('./routes/yard');

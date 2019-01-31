@@ -1,3 +1,16 @@
+:root {
+  /** Texts */
+  --color-text-form-gray: #555968;
+
+  /** Borders */
+  --color-line-gray: #d4d6d8;
+
+  /** Backgrounds */
+  --color-bg-button: #c5dff5;
+  --color-bg-submit-button: #4592da;
+
+}
+
 /**
 * Custom media queries
 */
