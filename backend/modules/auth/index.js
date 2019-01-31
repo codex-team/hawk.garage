@@ -7,6 +7,6 @@ module.exports = function (params) {
    */
   const signUp = require('./routes/signUp');
 
-  router.use(params.routePrefix, signUp(params.signUp));
+  router.use('/', signUp(params.signUp));
   return router;
 };

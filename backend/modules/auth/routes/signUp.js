@@ -8,7 +8,7 @@ module.exports = function (params) {
       return;
     }
 
-    res.render(params.redirect);
+    res.render(params.viewPath);
   });
   return router;
 };
