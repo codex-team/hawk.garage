@@ -17,20 +17,18 @@ const transporter = nodemailer.createTransport(config);
 
 /**
  * Send email to specified receiver with subject and text
- *
- * from    - {name:'Hawk.so Team', email:'team@hawk.so'}
- * to      - 'receiver@mail.com'
- * subject
- * text
- * html
+ * @param {string} to - email's receivers
+ * @param {string} subject - email's subject
+ * @param {string} text - plain text content of the email
+ * @param {string} html - html content of the email
  */
 function send(to, subject, text, html) {
   const mailOptions = {
     from: `"${process.env.MAIL_HAWK_NAME}" <${process.env.MAIL_HAWK_ADDRESS}>`, // sender address
-    to: to, // list of receivers
-    subject: subject, // Subject line
-    text: text, // plain text body
-    html: html // html body
+    to: to,
+    subject: subject,
+    text: text,
+    html: html
   };
 
   return transporter.sendMail(mailOptions);
