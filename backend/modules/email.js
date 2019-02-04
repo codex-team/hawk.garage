@@ -22,7 +22,11 @@ const transporter = nodemailer.createTransport(config);
  * @param {string} text - plain text content of the email
  * @param {string} html - html content of the email
  */
-function send(to, subject, text, html) {
+async function send(to, subject, text, html) {
+  if (!subject) throw new Error('Email\'s subject must be specified');
+  if (!text) throw new Error('Email\'s text content must be specified');
+  if (!html) throw new Error('Email\'s html content must be specified');
+
   const mailOptions = {
     from: `"${process.env.MAIL_HAWK_NAME}" <${process.env.MAIL_HAWK_ADDRESS}>`, // sender address
     to: to,
