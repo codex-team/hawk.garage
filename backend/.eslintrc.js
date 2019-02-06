@@ -2,7 +2,7 @@ module.exports = {
   extends:[
     'codex'
   ],
-  "env": {
-    "node": true
+  'env': {
+    'node': true
   }
 };
