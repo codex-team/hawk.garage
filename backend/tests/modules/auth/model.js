@@ -1,22 +1,9 @@
-const utils = require('../../../modules/auth/utils');
 const mongoose = require('mongoose');
 const UserModel = require('../../../modules/auth/model');
 const chai = require('chai');
 const bcrypt = require('bcrypt');
 
 const assert = chai.assert;
-const mongodbOptions = {
-  protocol: 'mongodb://',
-  user: 'root',
-  password: 'root',
-  host: 'localhost',
-  port: '27017',
-  authSource: 'admin',
-  dbName: 'hawk_test'
-};
-
-mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
-mongoose.Promise = global.Promise;
 
 module.exports = function () {
   /**

@@ -22,21 +22,4 @@ module.exports = function () {
       });
     });
   });
-
-  describe('getMongoUrl function', function () {
-    it('Should return right answer', function () {
-      const options = {
-        protocol: 'mongodb://',
-        user: 'root',
-        password: 'root',
-        host: 'localhost',
-        port: '27017',
-        authSource: 'admin',
-        dbName: 'hawk'
-      };
-      const url = utils.getMongoUrl(options);
-
-      assert.strictEqual(url, 'mongodb://root:root@localhost:27017/hawk?authSource=admin');
-    });
-  });
 };
