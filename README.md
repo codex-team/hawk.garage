@@ -3,7 +3,7 @@ Hawk 2.0 web client
 
 # Before deploying
 1. Run `yarn install`.
-2. Rename `.env.sample` in `.env` and write all necessary setting.
+2. Copy `.env.sample` to `.env` and fill environmental variables with your data.
 3. Run `docker-compose up` to setup mongoDB.
 4. Run tests:
 ```bash
