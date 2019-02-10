@@ -6,7 +6,7 @@ const crypto = require('crypto');
  * @returns {string} - generated password
  */
 function generatePassword() {
-  return crypto.randomBytes(128).toString('hex');
+  return crypto.randomBytes(8).toString('hex');
 }
 
 /**
