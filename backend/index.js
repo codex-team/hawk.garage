@@ -3,11 +3,17 @@ const express = require('express');
 const app = express();
 const publicDir = path.resolve(__dirname, '../frontend');
 const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
+const bodyParser = require('body-parser');
 
 /**
  * Read environment settings
  */
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
+
+/**
+ * Setup necessary middlewares
+ */
+app.use(bodyParser.urlencoded({extended: false}));
 
 /**
  * View engine setup
