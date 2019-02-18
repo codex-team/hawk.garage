@@ -36,7 +36,6 @@ async function send(to, subject, html, text) {
           return '\n====' + h.toUpperCase() + '====\n';
         }
       }});
-    console.log(text);
   }
 
   const mailOptions = {
