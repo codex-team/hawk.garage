@@ -1,9 +1,12 @@
 const path = require('path');
 const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const utils = require('./modules/utils');
+
 const app = express();
 const publicDir = path.resolve(__dirname, '../frontend');
 const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
-const bodyParser = require('body-parser');
 
 /**
  * Read environment settings
@@ -11,8 +14,24 @@ const bodyParser = require('body-parser');
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
 /**
+ * Setup mongoose
+ */
+const mongodbOptions = {
+  protocol: 'mongodb://',
+  user: process.env.MONGO_ROOT_USERNAME,
+  password: process.env.MONGO_ROOT_PASSWORD,
+  host: 'localhost',
+  port: process.env.MONGODB_LOCAL_PORT,
+  authSource: 'admin',
+  dbName: 'hawk'
+};
+
+mongoose.Promise = global.Promise;
+mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
+/**
  * Setup necessary middlewares
  */
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 /**
