@@ -4,7 +4,7 @@ const UserModel = require('../model');
 const email = require('../../email');
 
 module.exports = function (params) {
-  router.get('/sign-up', (req, res, next) => {
+  router.get('/sign-up', (req, res) => {
     if (res.locals.user) {
       res.redirect(params.redirect);
       return;
@@ -13,7 +13,7 @@ module.exports = function (params) {
     res.render(params.viewPath);
   });
 
-  router.post('/sign-up', async (req, res, next) => {
+  router.post('/sign-up', async (req, res) => {
     if (res.locals.user) {
       res.redirect(params.redirect);
       return;
@@ -23,12 +23,7 @@ module.exports = function (params) {
     const regExp = /.+@.+\..+/i;
 
     if (!regExp.test(newUserEmail)) {
-      res.render('auth/sign-up', {
-        message: {
-          type: 'error',
-          text: 'You typed invalid email. Please, try again.'
-        }
-      });
+      res.render(params.wrongEmailError.viewPath, params.wrongEmailError.options);
       return;
     }
 
@@ -49,7 +44,7 @@ module.exports = function (params) {
       });
     } catch (e) {
       console.log(e);
-      res.end(500);
+      res.render(params.userExistsError.viewPath, params.userExistsError.options);
     }
   });
   return router;
