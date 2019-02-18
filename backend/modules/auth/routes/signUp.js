@@ -34,13 +34,17 @@ module.exports = function (params) {
         ...params.renderParams
       };
 
-      res.render(params.email.templatePath, renderParams, function (err, html) {
+      res.render(params.email.templatePath, renderParams, async function (err, html) {
         if (err) {
           res.send(500);
           return;
         }
-        email.send(newUserEmail, params.email.subject, 'Your password...', html);
-        res.redirect(params.redirect);
+        try {
+          await email.send(newUserEmail, params.email.subject, html);
+          res.redirect(params.redirect);
+        } catch (e) {
+          res.send(500);
+        }
       });
     } catch (e) {
       console.log(e);

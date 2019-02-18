@@ -19,9 +19,7 @@ mongoose.Promise = global.Promise;
 describe('MODULE.AUTH', function () {
   before(function (done) {
     mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true}, function (error) {
-      if (!error) {
-        done();
-      }
+      done(error);
     });
   });
   describe('Auth utils', require('./utils').bind(this));
