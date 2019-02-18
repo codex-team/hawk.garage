@@ -26,7 +26,6 @@ const mongodbOptions = {
   dbName: 'hawk'
 };
 
-mongoose.Promise = global.Promise;
 mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
 /**
  * Setup necessary middlewares

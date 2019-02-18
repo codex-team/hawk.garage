@@ -14,8 +14,6 @@ const mongodbOptions = {
   dbName: 'hawk_test'
 };
 
-mongoose.Promise = global.Promise;
-
 describe('MODULE.AUTH', function () {
   before(function (done) {
     mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true}, function (error) {
