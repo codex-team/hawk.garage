@@ -34,7 +34,6 @@ router.post('/sign-up', async (req, res) => {
   try {
     const newUser = await UserModel.add(newUserEmail);
 
-    console.log(newUser);
     const renderParams = {
       password: newUser.password,
       settingsLink: process.env.SERVER_URL + '/garage/settings'
