@@ -33,7 +33,7 @@ async function send(to, subject, html, text) {
         heading: function (elem, fn, options) {
           const h = fn(elem.children, options);
 
-          return '\n\n' + h.toUpperCase() + '\n\n';
+          return '\n\n' + h + '\n\n';
         }
       }});
   }
