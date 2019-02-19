@@ -27,6 +27,7 @@ const mongodbOptions = {
 };
 
 mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
+
 /**
  * Setup necessary middlewares
  */
@@ -43,9 +44,8 @@ app.set('view engine', 'twig');
  * Auth module setup
  */
 const authModule = require('./modules/auth');
-const authModuleConfig = require('./config/auth');
 
-app.use(authModule(authModuleConfig));
+app.use(authModule);
 
 /**
  * Yard
