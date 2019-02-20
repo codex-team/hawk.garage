@@ -42,5 +42,13 @@ describe('MODULE.EMAIL', function () {
         done();
       });
     });
+
+    it('Shouldn\'t send email without text content', function (done) {
+      email.send(MAIL_TEST_RECIPIENT, 'Test', '<b>Test email</b>', '').then(() => {
+        done(new Error('Expected method to reject.'));
+      }).catch(() => {
+        done();
+      });
+    });
   });
 });
