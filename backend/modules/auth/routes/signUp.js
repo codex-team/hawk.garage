@@ -22,13 +22,12 @@ router.post('/sign-up', async (req, res) => {
   const regExp = /.+@.+\..+/i;
 
   if (!regExp.test(newUserEmail)) { // if typed email address is invalid sh
-    res.render('auth/sign-up', {
+    return res.render('auth/sign-up', {
       message: {
         type: 'error',
         text: 'You typed invalid email. Please, try again.'
       }
     });
-    return;
   }
 
   try {
@@ -41,15 +40,15 @@ router.post('/sign-up', async (req, res) => {
 
     try {
       email.sendFromTemplate(newUserEmail, 'Welcome to Hawk.so', 'notifies/email/join', renderParams);
-      res.redirect('/garage');
+      return res.redirect('/garage');
     } catch (e) {
       console.log(e);
       res.sendStatus(500);
-      res.end();
+      return res.end();
     }
   } catch (e) {
     console.log(e);
-    res.render('auth/sign-up', {
+    return res.render('auth/sign-up', {
       message: {
         type: 'error',
         text: 'This email is already registered. Please, <a href="/login">login</a>.'
