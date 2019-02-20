@@ -45,7 +45,7 @@ async function send(to, subject, html, text) {
  * @param {string} to - email's receivers
  * @param {string} subject - email's subject
  * @param {string} template - template folder
- * @param {string} [locals] - data for rendering
+ * @param {object} [locals] - data for rendering
  */
 async function sendFromTemplate(to, subject, template, locals) {
   if (!subject) throw new Error('Email\'s subject must be specified');

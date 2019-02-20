@@ -14,7 +14,6 @@ const mongodbOptions = {
   dbName: process.env.MONGODB_DATABASE_TEST
 };
 
-
 describe('MODULE.AUTH', function () {
   before(function (done) {
     mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true}, function (error) {
