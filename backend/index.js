@@ -18,12 +18,12 @@ require('dotenv').config({path: path.resolve(__dirname, '../.env')});
  */
 const mongodbOptions = {
   protocol: 'mongodb://',
-  user: process.env.MONGO_ROOT_USERNAME,
-  password: process.env.MONGO_ROOT_PASSWORD,
-  host: 'localhost',
+  user: process.env.MONGODB_ROOT_USERNAME,
+  password: process.env.MONGODB_ROOT_PASSWORD,
+  host: process.env.MONGODB_HOST,
   port: process.env.MONGODB_LOCAL_PORT,
-  authSource: 'admin',
-  dbName: 'hawk'
+  authSource: process.env.MONGODB_AUTH_SOURCE,
+  dbName: process.env.MONGODB_DATABASE
 };
 
 mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
