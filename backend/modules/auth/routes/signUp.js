@@ -39,18 +39,14 @@ router.post('/sign-up', async (req, res) => {
       settingsLink: process.env.SERVER_URL + '/garage/settings'
     };
 
-    res.render('notifies/email/join', renderParams, async function (err, html) {
-      if (err) {
-        res.send(500);
-        return;
-      }
-      try {
-        await email.send(newUserEmail, 'Welcome to Hawk.so', html);
-        res.redirect('/garage');
-      } catch (e) {
-        res.send(500);
-      }
-    });
+    try {
+      email.sendFromTemplate(newUserEmail, 'Welcome to Hawk.so', 'notifies/email/join', renderParams);
+      res.redirect('/garage');
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(500);
+      res.end();
+    }
   } catch (e) {
     console.log(e);
     res.render('auth/sign-up', {
