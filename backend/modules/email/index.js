@@ -50,7 +50,7 @@ async function send(to, subject, html, text) {
 async function sendFromTemplate(to, subject, template, locals) {
   if (!subject) throw new Error('Email\'s subject must be specified');
 
-  const templatesPath = path.resolve(__dirname, '../../frontend/yard/views');
+  const templatesPath = path.resolve(__dirname, '../../../frontend/yard/views');
   const htmlTemplate = path.join(templatesPath, template, 'html.twig');
   const textTemplate = path.join(templatesPath, template, 'text.twig');
 
