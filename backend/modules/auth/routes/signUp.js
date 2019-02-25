@@ -41,12 +41,12 @@ router.post('/sign-up', async (req, res) => {
       email.sendFromTemplate(newUserEmail, 'Welcome to Hawk.so', 'notifies/email/join', renderParams);
       return res.redirect('/garage');
     } catch (e) {
-      console.log(e);
+      console.log('Error while sending email with password', e);
       res.sendStatus(500);
       return res.end();
     }
   } catch (e) {
-    console.log(e);
+    console.log('Error while adding user in DB', e);
     return res.render('auth/sign-up', {
       message: {
         type: 'error',
