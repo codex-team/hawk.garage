@@ -1,8 +1,10 @@
 :root {
   /** Texts */
-  --color-yard-gray-text: #8a97ab;
-  --color-yard-link-on-dark: #31ffac;
-  --color-green-text: #00b693;
+  --color-text-gray: #8a97ab;
+  --color-link-on-dark: #31ffac;
+  --color-text-green: #00b693;
+  --color-gray-on-dark: #a1a6b3;
+  --color-message-error: #cd4949;
 
   /** Backgrounds */
   --color-yard-background: #1d1d27;

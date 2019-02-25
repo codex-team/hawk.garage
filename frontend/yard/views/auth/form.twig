@@ -1,0 +1,47 @@
+<div class="yard-form">
+  <a class="yard-form__title" href="/">
+    Hawk.so
+  </a>
+  <div class="yard-form__caption">
+    Fast and lightweight errors tracking service
+  </div>
+  <form class="yard-form__container" method="POST" action="{{ action }}">
+    <div class="yard-form__header">
+      {{ title }}
+    </div>
+    {% if message %}
+      <div class="yard-form__message yard-form__message--{{ message.type }}">
+        {{ message.text }}
+      </div>
+    {% endif %}
+    {% for field in fields %}
+      <fieldset class="yard-form__section">
+        <label class="yard-form__label" for="{{ field.name }}">
+          {{ field.label }}
+        </label>
+        {% set type = 'text' %}
+        {% if field.type is defined and field.type not empty  %}
+          {% set type = field.type %}
+        {% endif %}
+        <input class="yard-form__input"
+          type="{{ type }}"
+          name="{{ field.name }}"
+          value="{{ field.value }}"
+          id="{{ field.name }}"
+          placeholder="{{ field.placeholder }}"
+          required />
+      </fieldset>
+    {% endfor %}
+    {% if submitText is not empty %}
+      <input class="yard-form__submit button button--submit" type="submit" value="{{ submitText }}">
+    {% endif %}
+    {% if altText and altLink not empty %}
+      <a class="yard-form__alt-button" href="{{ altLink }}">
+        {{ altText }}
+      </a>
+    {% endif %}
+  </form>
+  <div class="yard-form__disclaimer">
+    {{ disclaimer }}
+  </div>
+</div>
