@@ -5,8 +5,7 @@ const email = require('../../email');
 
 router.get('/sign-up', (req, res) => {
   if (res.locals.user) {
-    res.redirect('/garage');
-    return;
+    return res.redirect('/garage');
   }
 
   res.render('auth/sign-up');
