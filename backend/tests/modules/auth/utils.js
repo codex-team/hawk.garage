@@ -13,12 +13,35 @@ module.exports = function () {
     });
   });
 
+  /**
+   * @type {string} - using for generateHash and checkPasswords tests
+   */
+  const valueToHash = 'Hello, Hawk';
+
+  /**
+   * @type {string} - saved hashed string from generateHashed function. Using for checkPasswords function later
+   */
+  let hashedString;
+
   describe('generateHash function', function () {
     it('Should return hash without error', function () {
-      const valueToHash = 'Hello, Hawk';
-
       return utils.generateHash(valueToHash, 10).then(hash => {
+        hashedString = hash;
         assert.isOk(hash);
+      });
+    });
+  });
+
+  describe('checkPasswords function', function () {
+    it('Should return true if passwords are equal', function () {
+      return utils.checkPasswords(valueToHash, hashedString).then(res => {
+        assert.isTrue(res);
+      });
+    });
+
+    it('Should return false if passwords are non-equal', function () {
+      return utils.checkPasswords('bla-bla-bla', hashedString).then(res => {
+        assert.isFalse(res);
       });
     });
   });
