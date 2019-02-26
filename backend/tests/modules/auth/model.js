@@ -44,4 +44,11 @@ module.exports = function () {
       });
     });
   });
+
+  it('Should\'t return non-exists user', function (done) {
+    UserModel.getByEmail('test-bla-bla@example.com').then(user => {
+      assert.isNotOk(user);
+      done();
+    });
+  });
 };
