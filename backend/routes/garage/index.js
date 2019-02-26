@@ -7,7 +7,7 @@ const router = express.Router();
  * Garage page
  */
 router.get('/', function (req, res, next) {
-	fs.readFile(path.resolve(__dirname, '../../../frontend/build_garage/index.html'), 'utf-8', (err, str) => {
+	fs.readFile(path.resolve(__dirname, '../../../frontend/build/garage.html'), 'utf-8', (err, str) => {
 		if (err) { return next(err); }
 
     res.send(str);

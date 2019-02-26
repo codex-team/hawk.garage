@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 /frontend/build
-/frontend/build_garage
 .env
 
 # local env files

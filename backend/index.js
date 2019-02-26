@@ -5,9 +5,8 @@ const mongoose = require('mongoose');
 const utils = require('./modules/utils');
 
 const app = express();
-const publicDir = path.resolve(__dirname, '../frontend');
+const publicDir = path.resolve(__dirname, '../frontend/build');
 const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
-const garageStaticPath = path.join(__dirname, '../frontend/build_garage');
 
 /**
  * Read environment settings
@@ -60,7 +59,7 @@ app.use('/', index);
  */
 const garage = require('./routes/garage');
 
-app.use(/\/garage\/.*/, garage);
+app.use(/\/garage.*/, garage);
 
 /**
  * Simple API example
@@ -75,7 +74,6 @@ app.use(/\/garage\/.*/, garage);
  * Serve static files
  */
 app.use(express.static(publicDir));
-app.use(express.static(garageStaticPath));
 
 /**
  * Start server
