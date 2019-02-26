@@ -7,6 +7,7 @@ const utils = require('./modules/utils');
 const app = express();
 const publicDir = path.resolve(__dirname, '../frontend');
 const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
+const garageStaticPath = path.join(__dirname, '../frontend/build_garage');
 
 /**
  * Read environment settings
@@ -57,12 +58,24 @@ app.use('/', index);
 /**
  * Garage
  */
-app.use('/garage', express.static(path.resolve(__dirname, '../frontend/garage/views')));
+const garage = require('./routes/garage');
+
+app.use(/\/garage\/.*/, garage);
+
+/**
+ * Simple API example
+ */
+ app.get('/api/test', (req, res) => {
+ 	res.send({
+ 		ok: true
+ 	});
+ });
 
 /**
  * Serve static files
  */
 app.use(express.static(publicDir));
+app.use(express.static(garageStaticPath));
 
 /**
  * Start server
