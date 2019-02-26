@@ -19,7 +19,18 @@ function generateHash(inputString, saltRounds) {
   return bcrypt.hash(inputString, saltRounds || 10);
 }
 
+/**
+ * Compare to passwords and return true if they are equal and false if not
+ * @param {string} plainPassword - password to check
+ * @param {string} hashedPassword - password to be compared to
+ * @returns {Promise<true|false>}
+ */
+function checkPasswords(plainPassword, hashedPassword) {
+  return bcrypt.compare(plainPassword, hashedPassword);
+}
+
 module.exports = {
   generatePassword,
-  generateHash
+  generateHash,
+  checkPasswords
 };

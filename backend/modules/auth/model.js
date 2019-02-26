@@ -55,6 +55,19 @@ class UserModel {
   static async getByEmail(email) {
     return mongooseUserModel.findOne({email});
   }
+
+  /**
+   * Find and return user if email and password are valid
+   * @param {string} email - user email
+   * @param {string} password - user password
+   * @returns {Promise<User|null>}
+   */
+  static async checkUser(email, password) {
+    const user = await this.getByEmail(email);
+
+    if (!user) return null;
+    return await utils.checkPasswords(password, user.password) ? user : null;
+  }
 }
 
 module.exports = UserModel;
