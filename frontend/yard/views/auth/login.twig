@@ -1,0 +1,30 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+  <div class="yard-page">
+    {% include './form.twig' with {
+      action: '/login',
+      title: 'Log in',
+      fields: [
+        {
+          label: 'Your email',
+          name: 'email',
+          value: email,
+          placeholder: 'name@best-team.com',
+          type: 'email'
+        },
+        {
+          label: 'Password',
+          name: 'password',
+          value: '',
+          placeholder: '********',
+          type: 'password'
+        }
+      ],
+      submitText: 'Log in',
+      disclaimer: 'Don\'t have an account? Please, <a href="/sign-up">sign up</a> one.',
+      altLink: '/reset',
+      altText: 'Reset password'
+    } %}
+  </div>
+{% endblock %}
