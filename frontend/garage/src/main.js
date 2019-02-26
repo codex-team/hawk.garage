@@ -8,8 +8,8 @@ import store from './store';
 Vue.use(VueAxios, axios);
 axios.defaults.baseURL = process.env.SERVER_URL || 'http://localhost:3000';
 
-Vue.config.devtools = true;
-Vue.config.debug = true;
+Vue.config.devtools = process.env.NODE_ENV !== 'production';
+Vue.config.debug = process.env.NODE_ENV !== 'production';
 
 new Vue({
   router,
