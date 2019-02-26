@@ -4,11 +4,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack --mode=production",
+    "build:yard": "webpack --mode=production",
     "serve:garage": "vue-cli-service serve",
     "build:garage": "vue-cli-service build",
-    "lint:garage": "vue-cli-service lint",
-    "lint-fix:garage": "vue-cli-service lint --fix"
+    "build": "yarn build:yard && yarn build:garage"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
