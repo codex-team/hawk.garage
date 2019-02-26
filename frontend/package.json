@@ -4,17 +4,28 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "webpack --mode=production"
+    "build": "webpack --mode=production",
+    "serve:garage": "vue-cli-service serve",
+    "build:garage": "vue-cli-service build",
+    "lint:garage": "vue-cli-service lint",
+    "lint-fix:garage": "vue-cli-service lint --fix"
   },
   "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.4.0",
+    "@vue/cli-plugin-eslint": "^3.4.0",
+    "@vue/cli-service": "^3.4.0",
+    "babel-eslint": "^10.0.1",
     "eslint": "^5.12.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
+    "eslint-plugin-vue": "^5.0.0",
     "mini-css-extract-plugin": "^0.5.0",
+    "vue-template-compiler": "^2.5.21",
     "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1"
+    "webpack-cli": "^3.2.3"
   },
   "dependencies": {
     "autoprefixer": "^9.4.4",
+    "axios": "^0.18.0",
     "css-loader": "^2.1.0",
     "cssnano": "^4.1.8",
     "normalize.css": "^8.0.1",
@@ -25,6 +36,10 @@
     "postcss-font-family-system-ui": "^4.1.0",
     "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
-    "postcss-nested": "^4.1.1"
+    "postcss-nested": "^4.1.1",
+    "vue": "^2.6.6",
+    "vue-axios": "^2.1.4",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   }
 }
