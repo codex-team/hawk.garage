@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const utils = require('./modules/utils');
 
@@ -33,6 +34,7 @@ mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
  */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
 
 /**
  * View engine setup
