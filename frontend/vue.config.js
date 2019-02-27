@@ -1,8 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  outputDir: path.join(__dirname, '/build'),
-  indexPath: 'garage.html',
+  outputDir: path.join(__dirname, '/build/garage'),
+  publicPath: '/garage/',
   configureWebpack: {
     devServer: {
       proxy: process.env.SERVER_URL || 'http://localhost:3000'

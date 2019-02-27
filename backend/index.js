@@ -55,20 +55,13 @@ const index = require('./routes/yard');
 app.use('/', index);
 
 /**
- * Garage
- */
-const garage = require('./routes/garage');
-
-app.use(/\/garage.*/, garage);
-
-/**
  * Simple API example
  */
- app.get('/api/test', (req, res) => {
- 	res.send({
- 		ok: true
- 	});
- });
+app.get('/api/test', (req, res) => {
+  res.send({
+    ok: true
+  });
+});
 
 /**
  * Serve static files
