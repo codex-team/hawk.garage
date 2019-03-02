@@ -5,7 +5,13 @@ module.exports = {
   publicPath: '/garage/',
   configureWebpack: {
     devServer: {
-      proxy: process.env.SERVER_URL || 'http://localhost:3000'
+      proxy: process.env.SERVER_URL || 'http://localhost:3000',
+      headers: {
+        'Access-Control-Allow-Origin': process.env.SERVER_URL || 'http://localhost:3000',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-id, Content-Length, X-Requested-With',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+      }
     },
     entry: {
       app: './garage/src/main.js'
