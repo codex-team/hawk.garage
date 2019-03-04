@@ -11,17 +11,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      meta: {
-        title: 'Garage - Hawk.so'
-      },
       name: 'home',
       component: Home
     },
     {
       path: '/settings',
-      meta: {
-        title: 'Settings - Hawk.so'
-      },
       name: 'settings',
       component: Settings
     }

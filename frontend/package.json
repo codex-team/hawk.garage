@@ -7,7 +7,7 @@
     "build:yard": "webpack --mode=production",
     "serve:garage": "vue-cli-service serve",
     "build:garage": "vue-cli-service build",
-    "build": "yarn build:yard && yarn build:garage"
+    "build": "cross-env NODE_ENV=production yarn build:yard && yarn build:garage"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
@@ -15,6 +15,7 @@
     "@vue/cli-service": "^3.4.0",
     "babel-eslint": "^10.0.1",
     "copy-webpack-plugin": "^5.0.0",
+    "cross-env": "^5.2.0",
     "eslint": "^5.12.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
     "eslint-plugin-vue": "^5.0.0",
