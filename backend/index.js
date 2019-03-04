@@ -58,6 +58,7 @@ app.use('/', index);
  * Simple API example
  */
 app.get('/api/test', (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   res.send({
     ok: true
   });
