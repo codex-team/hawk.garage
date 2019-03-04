@@ -25,7 +25,7 @@ yarn build:yard
 
 # Build garage frontend
 
-## Run in production mode
+## Build for production mode
 ```bash
 yarn build:garage
 ```
