@@ -13,18 +13,18 @@ export default {
     HelloWorld
   },
   methods: {
-  	doSmt: function() {
-  		this.axios.get('/api/test')
-  			.then(data => {
-  				console.log('DATA: ', data);
-  			})
-  			.catch(err => {
-  				console.log('ERROR: ', err);
-  			})
-	  }
-	},
-	beforeMount() {
-    this.doSmt();
+    doSmt: () => {
+      this.axios.get('/api/test')
+        .then(data => {
+          console.log('DATA: ', data);
+        })
+        .catch(err => {
+          console.log('ERROR: ', err);
+        });
+    }
   },
+  beforeMount() {
+    this.doSmt();
+  }
 };
 </script>

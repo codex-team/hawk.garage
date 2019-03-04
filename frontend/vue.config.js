@@ -5,7 +5,7 @@ module.exports = {
   publicPath: '/garage/',
   configureWebpack: {
     devServer: {
-      proxy: process.env.SERVER_URL || 'http://localhost:3000',
+      proxy: process.env.SERVER_URL || 'http://localhost:3000'
     },
     entry: {
       app: './garage/src/main.js'
