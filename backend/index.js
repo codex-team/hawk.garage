@@ -70,6 +70,13 @@ app.get('/api/test', (req, res) => {
 app.use(express.static(publicDir));
 
 /**
+ * Garage
+ */
+app.all('/garage*', (req, res) => {
+  res.sendFile(path.join(publicDir, 'garage/index.html'));
+});
+
+/**
  * Start server
  */
 app.listen(process.env.PORT, process.env.HOST, () => {
