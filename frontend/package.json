@@ -8,8 +8,8 @@
     "serve:garage": "vue-cli-service serve",
     "build:garage": "vue-cli-service build",
     "build": "cross-env NODE_ENV=production yarn build:yard && yarn build:garage",
-    "lint:garage": "./node_modules/.bin/eslint garage/src/**/*.{js,vue}",
-    "lint-fix:garage": "./node_modules/.bin/eslint garage/src/**/*.{js,vue} --fix"
+    "lint:garage": "eslint garage/src/**/*.{js,vue}",
+    "lint-fix:garage": "eslint garage/src/**/*.{js,vue} --fix"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
