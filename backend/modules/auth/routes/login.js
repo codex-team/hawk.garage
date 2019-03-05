@@ -31,13 +31,13 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    const oneMinute = Math.floor(Date.now() / 1000) + (60 * 60);
+    const oneHour = Math.floor(Date.now() / 1000) + (60 * 60);
     const token = jwt.sign({
-      exp: oneMinute,
+      exp: oneHour,
       userId: user._id
     }, process.env.JWT_SECRET_STRING);
-    console.log(token);
-    res.cookie('accessToken', token, {expires: oneMinute, httpOnly: true});
+
+    res.cookie('accessToken', token, {expires: new Date(oneHour), httpOnly: true});
     return res.redirect('/garage');
   } catch (e) {
     console.log('Error while getting user from DB', e);
