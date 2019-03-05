@@ -12,11 +12,11 @@ function generatePassword() {
 /**
  * Generate hash from input string and salt
  * @param {string} inputString - value to hash
- * @param {number} [saltRounds=10] - cost factor: the higher the number, the more difficult is brute-forcing.
+ * @param {number} [saltRounds=12] - cost factor: the higher the number, the more difficult is brute-forcing.
  * @returns {string} - hashed value
  */
 function generateHash(inputString, saltRounds) {
-  return bcrypt.hash(inputString, saltRounds || 10);
+  return bcrypt.hash(inputString, saltRounds || 12);
 }
 
 /**
