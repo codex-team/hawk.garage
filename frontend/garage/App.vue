@@ -9,8 +9,8 @@
 </template>
 
 <style>
-@import "../../common/styles/base.css";
-@import "../../common/styles/variables.css";
+@import "../common/styles/base.css";
+@import "../common/styles/variables.css";
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -33,9 +33,6 @@
 </style>
 <script>
 export default {
-  name: 'app',
-  beforeMount() {
-    document.title = 'Hawk.so';
-  }
+  name: 'app'
 };
 </script>
