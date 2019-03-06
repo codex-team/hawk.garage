@@ -13,7 +13,7 @@ export default {
     HelloWorld
   },
   methods: {
-    doSmt: function() {
+    doSmt: function () {
       this.axios.get('/api/test')
         .then(data => {
           console.log('DATA: ', data);

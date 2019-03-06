@@ -1,7 +1,8 @@
 const path = require('path');
+const outputDir = path.join(__dirname, '/build/garage');
 
 module.exports = {
-  outputDir: path.join(__dirname, '/build/garage'),
+  outputDir: outputDir,
   publicPath: '/garage/',
   configureWebpack: {
     devServer: {
@@ -21,8 +22,14 @@ module.exports = {
       .plugin('html')
       .tap(args => {
         args[0].template = 'garage/index.html';
-        args[0].favicon = 'garage/assets/favicon.ico';
         return args;
       });
+
+    config
+      .plugin('copy')
+      .use(require('copy-webpack-plugin'), [ [ {
+        from: './garage/public',
+        to: outputDir
+      } ] ]);
   }
 };
