@@ -44,7 +44,7 @@ router.use('/garage*', function (req, res, next) {
 const signUp = require('./routes/signUp');
 const login = require('./routes/login');
 
-router.use('/', login);
-router.use('/', signUp);
+router.use(login);
+router.use(signUp);
 
 module.exports = router;
