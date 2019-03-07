@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const UserModel = require('./model');
 const jwt = require('jsonwebtoken');
 
-router.use(/^\/(garage|login|sign-up)?$/, async function (req, res, next) {
+router.use(/^\/(garage|login|sign-up)$/, async function (req, res, next) {
   const token = req.cookies.accessToken;
-
-  console.log('token is ', token);
 
   if (!token) {
     return next();
@@ -14,7 +11,9 @@ router.use(/^\/(garage|login|sign-up)?$/, async function (req, res, next) {
 
   try {
     res.locals.user = jwt.verify(token, process.env.JWT_SECRET_STRING);
-    next();
+    if (res.locals.user) {
+      return res.redirect('/garage');
+    }
   } catch (err) {
     console.log(err);
     next();

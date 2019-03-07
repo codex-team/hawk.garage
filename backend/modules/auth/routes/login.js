@@ -4,18 +4,10 @@ const UserModel = require('../model');
 const jwt = require('jsonwebtoken');
 
 router.get('/login', (req, res) => {
-  if (res.locals.user) {
-    return res.redirect('/garage');
-  }
-
   res.render('auth/login');
 });
 
 router.post('/login', async (req, res) => {
-  if (res.locals.user) {
-    return res.redirect('/garage');
-  }
-
   const userEmail = req.body.email;
   const userPassword = req.body.password;
 

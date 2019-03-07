@@ -4,18 +4,10 @@ const UserModel = require('../model');
 const email = require('../../email');
 
 router.get('/sign-up', (req, res) => {
-  if (res.locals.user) {
-    return res.redirect('/garage');
-  }
-
   res.render('auth/sign-up');
 });
 
 router.post('/sign-up', async (req, res) => {
-  if (res.locals.user) {
-    return res.redirect('/garage');
-  }
-
   const newUserEmail = req.body.email;
   const regExp = /.+@.+\..+/i;
 
