@@ -39,10 +39,10 @@ function signTokenAndRedirect(res) {
   const token = jwt.sign({
     userId: res.locals.user._id
   }, process.env.JWT_SECRET_STRING, {
-    expiresIn: 60 * 15
+    expiresIn: 60 * 15 // 15 minutes
   });
 
-  res.cookie('accessToken', token, {maxAge: 1000 * 60 * 15});
+  res.cookie('accessToken', token, {maxAge: 1000 * 60 * 15}); // 15 minutes
   return res.redirect('/garage');
 }
 
