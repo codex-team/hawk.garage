@@ -24,7 +24,7 @@ module.exports = function () {
       });
     });
 
-    it('Shouldn\'t add new user with email test@example.com', function () {
+    it('Shouldn\'t add new user with email test@example.com repeatedly', function () {
       return UserModel.add('test@example.com').then(user => {
         assert.isNotOk(user, 'user must not be added');
       }).catch(err => {
