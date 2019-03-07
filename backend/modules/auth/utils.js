@@ -32,13 +32,12 @@ function checkPasswords(plainPassword, hashedPassword) {
 
 /**
  * Create and sign jwt, set cookie and redirect to /garage
- * @param {string} userId - user id from mongoDB
  * @param {object} res - express response object
  * @returns {Response}
  */
-function signTokenAndRedirect(userId, res) {
+function signTokenAndRedirect(res) {
   const token = jwt.sign({
-    userId: userId
+    userId: res.locals.user._id
   }, process.env.JWT_SECRET_STRING, {
     expiresIn: 60 * 15
   });

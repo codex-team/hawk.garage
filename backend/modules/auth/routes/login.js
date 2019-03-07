@@ -22,8 +22,8 @@ router.post('/login', async (req, res) => {
         }
       });
     }
-
-    return utils.signTokenAndRedirect(user._id, res);
+    res.locals.user = user;
+    return utils.signTokenAndRedirect(res);
   } catch (e) {
     console.log('Error while getting user from DB', e);
     res.sendStatus(500);

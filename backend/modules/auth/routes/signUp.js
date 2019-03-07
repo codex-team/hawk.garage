@@ -20,10 +20,9 @@ router.post('/sign-up', async (req, res) => {
       }
     });
   }
-  let newUser;
 
   try {
-    newUser = await UserModel.add(newUserEmail);
+    res.locals.user = await UserModel.add(newUserEmail);
   } catch (e) {
     console.log('Error while adding user in DB', e);
     return res.render('auth/sign-up', {
@@ -35,14 +34,14 @@ router.post('/sign-up', async (req, res) => {
   }
 
   const renderParams = {
-    password: newUser.password,
+    password: res.locals.user.password,
     settingsLink: process.env.SERVER_URL + '/garage/settings'
   };
 
   email.sendFromTemplate(newUserEmail, 'Welcome to Hawk.so', 'notifies/email/join', renderParams);
 
   try {
-    return utils.signTokenAndRedirect(newUser._id, res);
+    return utils.signTokenAndRedirect(res);
   } catch (e) {
     console.log('Error while creating JWT', e);
   }
