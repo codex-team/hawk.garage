@@ -29,16 +29,6 @@ router.use(/^\/(login|sign-up)$/, function (req, res, next) {
 });
 
 /**
- * If user is unauthorized redirect to login page
- */
-router.use('/garage*', function (req, res, next) {
-  if (!res.locals.user) {
-    return res.redirect('/login');
-  }
-  next();
-});
-
-/**
  * Router setup
  */
 const signUp = require('./routes/signUp');
@@ -47,4 +37,20 @@ const login = require('./routes/login');
 router.use(login);
 router.use(signUp);
 
-module.exports = router;
+/**
+ * If user is unauthorized redirect to login page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
+function authRequired(req, res, next) {
+  if (!res.locals.user) {
+    return res.redirect('/login');
+  }
+  next();
+}
+
+module.exports = {
+  router,
+  authRequired
+};

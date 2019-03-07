@@ -47,7 +47,7 @@ app.set('view engine', 'twig');
  */
 const authModule = require('./modules/auth');
 
-app.use(authModule);
+app.use(authModule.router);
 
 /**
  * Yard
@@ -59,7 +59,7 @@ app.use('/', index);
 /**
  * Garage
  */
-app.use('/garage', express.static(path.resolve(__dirname, '../frontend/garage/views')));
+app.use('/garage', authModule.authRequired, express.static(path.resolve(__dirname, '../frontend/garage/views')));
 
 /**
  * Serve static files
