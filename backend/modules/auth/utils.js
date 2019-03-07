@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 /**
  * Generate random password
@@ -29,8 +30,26 @@ function checkPasswords(plainPassword, hashedPassword) {
   return bcrypt.compare(plainPassword, hashedPassword);
 }
 
+/**
+ * Create and sign jwt, set cookie and redirect to /garage
+ * @param {string} userId - user id from mongoDB
+ * @param {object} res - express response object
+ * @returns {Response}
+ */
+function signTokenAndRedirect(userId, res) {
+  const token = jwt.sign({
+    userId: userId
+  }, process.env.JWT_SECRET_STRING, {
+    expiresIn: 60 * 15
+  });
+
+  res.cookie('accessToken', token, {maxAge: 1000 * 60 * 15});
+  return res.redirect('/garage');
+}
+
 module.exports = {
   generatePassword,
   generateHash,
-  checkPasswords
+  checkPasswords,
+  signTokenAndRedirect
 };

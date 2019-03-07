@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserModel = require('../model');
-const jwt = require('jsonwebtoken');
+const utils = require('../utils');
 
 router.get('/login', (req, res) => {
   res.render('auth/login');
@@ -23,14 +23,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    const token = jwt.sign({
-      userId: user._id
-    }, process.env.JWT_SECRET_STRING, {
-      expiresIn: 60 * 15
-    });
-
-    res.cookie('accessToken', token, {maxAge: 1000 * 60 * 15});
-    return res.redirect('/garage');
+    return utils.signTokenAndRedirect(user._id, res);
   } catch (e) {
     console.log('Error while getting user from DB', e);
     res.sendStatus(500);

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const utils = require('../utils');
 const UserModel = require('../model');
 const email = require('../../email');
 
@@ -11,7 +12,7 @@ router.post('/sign-up', async (req, res) => {
   const newUserEmail = req.body.email;
   const regExp = /.+@.+\..+/i;
 
-  if (!regExp.test(newUserEmail)) { // if typed email address is invalid sh
+  if (!regExp.test(newUserEmail)) { // if typed email address is invalid
     return res.render('auth/sign-up', {
       message: {
         type: 'error',
@@ -19,23 +20,10 @@ router.post('/sign-up', async (req, res) => {
       }
     });
   }
+  let newUser;
 
   try {
-    const newUser = await UserModel.add(newUserEmail);
-
-    const renderParams = {
-      password: newUser.password,
-      settingsLink: process.env.SERVER_URL + '/garage/settings'
-    };
-
-    try {
-      email.sendFromTemplate(newUserEmail, 'Welcome to Hawk.so', 'notifies/email/join', renderParams);
-      return res.redirect('/garage');
-    } catch (e) {
-      console.log('Error while sending email with password', e);
-      res.sendStatus(500);
-      return res.end();
-    }
+    newUser = await UserModel.add(newUserEmail);
   } catch (e) {
     console.log('Error while adding user in DB', e);
     return res.render('auth/sign-up', {
@@ -44,6 +32,19 @@ router.post('/sign-up', async (req, res) => {
         text: 'This email is already registered. Please, <a href="/login">login</a>.'
       }
     });
+  }
+
+  const renderParams = {
+    password: newUser.password,
+    settingsLink: process.env.SERVER_URL + '/garage/settings'
+  };
+
+  email.sendFromTemplate(newUserEmail, 'Welcome to Hawk.so', 'notifies/email/join', renderParams);
+
+  try {
+    return utils.signTokenAndRedirect(newUser._id, res);
+  } catch (e) {
+    console.log('Error while creating JWT', e);
   }
 });
 
