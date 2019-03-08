@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
+/**
+ * Check if user is authenticated
+ */
 router.use(/^\/(garage|login|sign-up)/, async function (req, res, next) {
   const token = req.cookies.accessToken;
 
@@ -13,7 +16,7 @@ router.use(/^\/(garage|login|sign-up)/, async function (req, res, next) {
     res.locals.user = jwt.verify(token, process.env.JWT_SECRET_STRING);
     next();
   } catch (err) {
-    console.log(err);
+    console.log('Error while verifying JWT token', err);
     next();
   }
 });
