@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const expressPino = require('express-pino-logger');
 const utils = require('./modules/utils');
 
 const app = express();
@@ -11,7 +12,11 @@ const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
 /**
  * Read environment settings
  */
-require('dotenv').config({path: path.resolve(__dirname, '../.env')});
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+/**
+ * Import logger after reading .env
+ */
+const { logger } = require('./logger');
 
 /**
  * Setup mongoose
@@ -26,13 +31,18 @@ const mongodbOptions = {
   dbName: process.env.MONGODB_DATABASE
 };
 
-mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
+mongoose.connect(utils.getMongoUrl(mongodbOptions), { useNewUrlParser: true });
+
+/**
+ * Setup logging
+ */
+app.use(expressPino({ logger }));
 
 /**
  * Setup necessary middlewares
  */
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 /**
  * View engine setup
@@ -57,7 +67,10 @@ app.use('/', index);
 /**
  * Garage
  */
-app.use('/garage', express.static(path.resolve(__dirname, '../frontend/garage/views')));
+app.use(
+  '/garage',
+  express.static(path.resolve(__dirname, '../frontend/garage/views'))
+);
 
 /**
  * Serve static files
