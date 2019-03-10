@@ -12,10 +12,27 @@ yarn test
 ```
 If not all tests passed, your config contains errors.
 
-# Build frontend
+# Build all frontend
 ```bash
 cd frontend
 yarn build
+```
+
+# Build yard frontend
+```bash
+yarn build:yard
+```
+
+# Build garage frontend
+
+## Build for production mode
+```bash
+yarn build:garage
+```
+
+## Run with webpack-dev-server
+```bash
+yarn serve:garage
 ```
 
 # Run server
