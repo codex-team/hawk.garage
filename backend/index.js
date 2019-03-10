@@ -1,22 +1,20 @@
 const path = require('path');
+/**
+ * Read environment settings
+ */
+
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressPino = require('express-pino-logger');
 const utils = require('./modules/utils');
+const { logger } = require('./modules/logger');
 
 const app = express();
 const publicDir = path.resolve(__dirname, '../frontend');
 const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
-
-/**
- * Read environment settings
- */
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-/**
- * Import logger after reading .env
- */
-const { logger } = require('./logger');
 
 /**
  * Setup mongoose
