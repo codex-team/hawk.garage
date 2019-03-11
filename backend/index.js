@@ -1,17 +1,20 @@
 const path = require('path');
+/**
+ * Read environment settings
+ */
+
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const expressPino = require('express-pino-logger');
 const utils = require('./modules/utils');
+const { logger } = require('./modules/logger');
 
 const app = express();
 const publicDir = path.resolve(__dirname, '../frontend/build');
 const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
-
-/**
- * Read environment settings
- */
-require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
 /**
  * Setup mongoose
@@ -26,13 +29,18 @@ const mongodbOptions = {
   dbName: process.env.MONGODB_DATABASE
 };
 
-mongoose.connect(utils.getMongoUrl(mongodbOptions), {useNewUrlParser: true});
+mongoose.connect(utils.getMongoUrl(mongodbOptions), { useNewUrlParser: true });
+
+/**
+ * Setup logging
+ */
+app.use(expressPino({ logger }));
 
 /**
  * Setup necessary middlewares
  */
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 /**
  * View engine setup
