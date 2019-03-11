@@ -13,7 +13,7 @@ const utils = require('./modules/utils');
 const { logger } = require('./modules/logger');
 
 const app = express();
-const publicDir = path.resolve(__dirname, '../frontend');
+const publicDir = path.resolve(__dirname, '../frontend/build');
 const templatesPath = path.resolve(__dirname, '../frontend/yard/views');
 
 /**
@@ -63,17 +63,26 @@ const index = require('./routes/yard');
 app.use('/', index);
 
 /**
- * Garage
+ * Simple API example
  */
-app.use(
-  '/garage',
-  express.static(path.resolve(__dirname, '../frontend/garage/views'))
-);
+app.get('/api/test', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.send({
+    ok: true
+  });
+});
 
 /**
  * Serve static files
  */
 app.use(express.static(publicDir));
+
+/**
+ * Garage
+ */
+app.all('/garage*', (req, res) => {
+  res.sendFile(path.join(publicDir, 'garage/index.html'));
+});
 
 /**
  * Start server

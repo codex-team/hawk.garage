@@ -1,5 +1,6 @@
 module.exports = {
-  extends:[
-    'codex'
+  extends: [
+    'codex',
+    'plugin:vue/essential'
   ]
 };
