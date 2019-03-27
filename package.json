@@ -1,8 +1,37 @@
 {
+  "name": "hawk.so",
+  "version": "0.1.0",
   "private": true,
-  "license": "MIT",
-  "workspaces": [
-    "backend",
-    "frontend"
-  ]
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "autoprefixer": "^9.5.0",
+    "axios": "^0.18.0",
+    "cssnano": "^4.1.10",
+    "normalize.css": "^8.0.1",
+    "postcss-color-function": "^4.0.1",
+    "postcss-color-hex-alpha": "^5.0.2",
+    "postcss-css-variables": "^0.12.0",
+    "postcss-custom-media": "^7.0.7",
+    "postcss-font-family-system-ui": "^4.1.0",
+    "postcss-import": "^12.0.1",
+    "postcss-nested": "^4.1.2",
+    "vue": "^2.6.6",
+    "vue-axios": "^2.1.4",
+    "vue-router": "^3.0.2",
+    "vuex": "^3.1.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-codex": "github:codex-team/eslint-config",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.5.21"
+  }
 }
