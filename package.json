@@ -2,6 +2,7 @@
   "name": "hawk.so",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
