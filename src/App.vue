@@ -7,7 +7,7 @@
       |
       <router-link to="/sign-up">SignUp</router-link>
     </div>
-    <router-view class="rout"/>
+    <router-view/>
   </div>
 </template>
 
