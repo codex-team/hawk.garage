@@ -1,11 +1,17 @@
 :root {
   /** Texts */
+  --color-text-gray: #8a97ab;
   --color-text-form-gray: #555968;
+  --color-text-gray-on-dark: #a1a6b3;
+  --color-text-error-message: #cd4949;
+  --color-text-green: #00b693;
+  --color-text-link-on-dark: #31ffac;
 
   /** Borders */
   --color-line-gray: #d4d6d8;
 
   /** Backgrounds */
+  --color-bg-page: #1d1d27;
   --color-bg-button: #c5dff5;
   --color-bg-submit-button: #4592da;
 
@@ -15,5 +21,5 @@
 * Custom media queries
 */
 @custom-media --media-desktop all and (min-width: 1050px);
+
 @custom-media --media-mobile all and (max-width: 980px);
-@custom-media --media-retina all and (-webkit-min-device-pixel-ratio: 1.5);
