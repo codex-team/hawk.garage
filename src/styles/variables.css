@@ -21,5 +21,4 @@
 * Custom media queries
 */
 @custom-media --media-desktop all and (min-width: 1050px);
-
 @custom-media --media-mobile all and (max-width: 980px);
