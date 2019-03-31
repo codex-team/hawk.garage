@@ -42,7 +42,7 @@
 
 <script>
 export default {
-  name: 'form',
+  name: 'Form',
   props: {
     title: {
       type: String,
