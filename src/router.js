@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Settings from './pages/Settings.vue';
 import SignUp from './pages/SignUp.vue';
+import Login from './pages/Login.vue';
 
 Vue.use(Router);
 
@@ -11,7 +12,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      redirect: '/sign-up'
+      redirect: '/login'
     },
     {
       path: '/settings',
@@ -22,6 +23,11 @@ export default new Router({
       path: '/sign-up',
       name: 'sign-up',
       component: SignUp
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     }
   ]
 });

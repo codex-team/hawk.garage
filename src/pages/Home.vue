@@ -6,7 +6,7 @@
 <script>
 
 export default {
-  name: 'home',
+  name: 'Home',
   methods: {
     doSmt: function () {
       this.axios.get('/api/test')
