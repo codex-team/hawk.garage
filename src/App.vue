@@ -80,7 +80,7 @@ export default {
     outline: none;
     background: #fff;
     border: 1px solid var(--color-line-gray);
-    box-shadow: inset 0 1px 2px 0 color(var(--color-line-gray) alpha(50%));
+    box-shadow: inset 0 1px 2px 0 color-mod(var(--color-line-gray) alpha(50%));
     border-radius: 2px;
 
     &:focus {
@@ -94,14 +94,14 @@ export default {
     border-radius: 2px;
     border: 0;
     padding: 12px 24px;
-    color: color(var(--color-bg-button) lightness(-60%));
+    color: color-mod(var(--color-bg-button) lightness(-60%));
     cursor: pointer;
     background-color: var(--color-bg-button);
     line-height: 1em;
 
     &:hover {
-      background-color: color(var(--color-bg-button) lightness(-10%));
-      color: color(var(--color-bg-button) lightness(-70%));
+      background-color: color-mod(var(--color-bg-button) lightness(-10%));
+      color: color-mod(var(--color-bg-button) lightness(-70%));
     }
 
     &--submit {
@@ -109,13 +109,13 @@ export default {
       color: #fff;
 
       &:hover {
-        background-color: color(var(--color-bg-submit-button) lightness(-15%));
+        background-color: color-mod(var(--color-bg-submit-button) lightness(-15%));
         color: #fff;
       }
     }
   }
 
   ::placeholder {
-    color: color(var(--color-text-form-gray) alpha(40%));
+    color: color-mod(var(--color-text-form-gray) alpha(40%));
   }
 </style>

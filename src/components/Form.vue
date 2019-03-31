@@ -152,13 +152,13 @@ export default {
 
       a {
         color: var(--color-text-link-on-dark);
-        border-bottom: 1px solid color(var(--color-text-link-on-dark) alpha(50%));
+        border-bottom: 1px solid color-mod(var(--color-text-link-on-dark) alpha(50%));
         padding-bottom: 1px;
 
         &:hover {
-          color: color(var(--color-text-link-on-dark) lightness(+20%));
-          border-bottom-color: color(
-            color(var(--color-text-link-on-dark) lightness(+20%)) alpha(50%)
+          color: color-mod(var(--color-text-link-on-dark) lightness(+20%));
+          border-bottom-color: color-mod(
+            color-mod(var(--color-text-link-on-dark) lightness(+20%)) alpha(50%)
           );
         }
       }
