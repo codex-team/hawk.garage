@@ -12,12 +12,6 @@ plugins:
     # List of features with levels: https://cssdb.org/
     stage: 0
 
-    # Define polyfills based on browsers you are supporting
-    # https://github.com/csstools/postcss-preset-env#browsers
-    browsers:
-      - 'last 2 versions'
-      - '> 1%'
-
     # Instruct all plugins to omit pre-polyfilled CSS
     # https://github.com/csstools/postcss-preset-env#preserve
     preserve: false
