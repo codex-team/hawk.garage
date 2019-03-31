@@ -6,10 +6,10 @@
       :submitText="submitText"
       :message="message"
     >
-      <div slot="disclaimer">Already have an account?
+      <template #disclaimer>Already have an account?
         <router-link to="/login">Login</router-link>, you, beauty
         <span style="display: inline-block; vertical-align: middle;">😏</span>
-      </div>
+      </template>
     </Form>
   </div>
 </template>
@@ -18,7 +18,7 @@
 import Form from '../components/Form';
 
 export default {
-  name: 'sign-up',
+  name: 'SignUp',
   data() {
     return {
       title: 'Create an account',
