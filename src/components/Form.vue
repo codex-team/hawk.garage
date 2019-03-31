@@ -77,7 +77,7 @@ export default {
 
   .form {
     max-width: 500px;
-    margin: 100px auto;
+    margin: 0 auto;
 
     @media (--media-desktop) {
       min-width: 500px;
