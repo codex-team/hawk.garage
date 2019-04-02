@@ -6,7 +6,12 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  created() {
+    if (navigator && !navigator.onLine) {
+      this.$router.push('no-connection');
+    }
+  }
 };
 </script>
 
