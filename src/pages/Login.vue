@@ -5,10 +5,11 @@
       :fields="fields"
       :submitText="submitText"
       :message="message"
+      :altLink="altLink"
+      :altText="altText"
     >
-      <template #disclaimer>Already have an account?
-        <router-link to="/login">Login</router-link>, you, beauty
-        <span style="display: inline-block; vertical-align: middle;">😏</span>
+      <template #disclaimer>
+        Don't have an account? Please, <router-link to="/sign-up">sign up</router-link> one.
       </template>
     </Form>
   </div>
@@ -18,20 +19,29 @@
 import Form from '../components/Form';
 
 export default {
-  name: 'SignUp',
+  name: 'Login',
   data() {
     return {
-      title: 'Create an account',
+      title: 'Log in',
       fields: [
         {
-          label: 'Enter your email',
+          label: 'Your email',
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
           type: 'email'
+        },
+        {
+          label: 'Password',
+          name: 'password',
+          value: '',
+          placeholder: '********',
+          type: 'password'
         }
       ],
-      submitText: 'Register',
+      altLink: '/reset',
+      altText: 'Reset password',
+      submitText: 'Login',
       message: null
     };
   },
