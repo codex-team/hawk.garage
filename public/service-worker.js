@@ -1,15 +1,16 @@
 /**
  * This file will be post-processed by WORKBOX plugin
  */
+ workbox.core.setCacheNameDetails({prefix: 'hawk.garage'});
 
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.1.1/workbox-sw.js');
-
-workbox.precaching.precacheAndRoute([])
+self.__precacheManifest = [].concat(self.__precacheManifest || []);
+workbox.precaching.suppressWarnings();
+workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 workbox.routing.registerRoute(
   /\.(?:png|jpg|jpeg|svg|gif)$/,
   new workbox.strategies.CacheFirst({
-    cacheName: 'image-cache',
+    cacheName: 'hawk.garage-image-cache',
     plugins: [
       new workbox.expiration.Plugin({
         // Cache only 20 images.
