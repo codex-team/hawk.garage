@@ -1,7 +1,8 @@
 /**
  * This file will be post-processed by WORKBOX plugin
  */
- workbox.core.setCacheNameDetails({prefix: 'hawk.garage'});
+ 
+workbox.core.setCacheNameDetails({prefix: 'hawk.garage'});
 
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
