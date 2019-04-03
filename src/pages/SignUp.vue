@@ -37,6 +37,11 @@ export default {
   },
   components: {
     Form
+  },
+  beforeMount() {
+    if (!navigator.onLine) {
+      this.message = { text: 'Sorry... Your internet connection lost ⛔' };
+    }
   }
 };
 </script>

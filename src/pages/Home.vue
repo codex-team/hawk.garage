@@ -27,7 +27,7 @@ export default {
     loadProjects: function () {
       let tmpProjects;
 
-      if (!navigator.onLine) {
+      if (navigator.onLine) {
         this.$api.testStub().then(data => {
           this.projects = this.projects.concat(data.projects);
           localStorage.setItem(consts.PROJECTS_KEY, JSON.stringify(data.projects));

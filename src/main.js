@@ -12,7 +12,7 @@ Vue.use(VueAxios, axios);
 Vue.$api = api;
 
 Object.defineProperty(Vue.prototype, '$api', {
-  get () {
+  get() {
     return api;
   }
 });
