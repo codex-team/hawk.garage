@@ -1,7 +1,7 @@
 /**
  * This file will be post-processed by WORKBOX plugin
  */
- 
+
 workbox.core.setCacheNameDetails({prefix: 'hawk.garage'});
 
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
@@ -18,6 +18,7 @@ workbox.routing.registerRoute(
         maxEntries: 20,
         // Cache for a maximum of a week.
         maxAgeSeconds: 7 * 24 * 60 * 60,
+        purgeOnQuotaError: true
       })
     ],
   })

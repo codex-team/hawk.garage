@@ -8,7 +8,7 @@
 export default {
   name: 'app',
   created() {
-    if (navigator && !navigator.onLine) {
+    if (!navigator.onLine) {
       this.$router.push('no-connection');
     }
   }
