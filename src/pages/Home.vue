@@ -26,12 +26,14 @@ export default {
 
     loadProjects: function () {
       let tmpProjects;
+      // @todo wait for api
+      let data = {
+        projects: ['PROECT1', 'PROJECT2', 'ETC']
+      };
 
       if (navigator.onLine) {
-        this.$api.testStub().then(data => {
-          this.projects = this.projects.concat(data.projects);
-          localStorage.setItem(consts.PROJECTS_KEY, JSON.stringify(data.projects));
-        });
+        this.projects = this.projects.concat(data.projects);
+        localStorage.setItem(consts.PROJECTS_KEY, JSON.stringify(data.projects));
       } else {
         try {
           tmpProjects = JSON.parse(localStorage.getItem(consts.PROJECTS_KEY));
@@ -44,7 +46,6 @@ export default {
     }
   },
   beforeMount() {
-    // this.doSmt();
     this.loadProjects();
   }
 };

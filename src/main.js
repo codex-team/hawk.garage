@@ -5,17 +5,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import './registerServiceWorker';
-import api from '@/services/Api.js';
 
 Vue.use(VueAxios, axios);
-
-Vue.$api = api;
-
-Object.defineProperty(Vue.prototype, '$api', {
-  get() {
-    return api;
-  }
-});
 
 if (process.env.NODE_ENV === 'production') {
   axios.defaults.baseURL = process.env.SERVER_URL || 'http://localhost:3000';
