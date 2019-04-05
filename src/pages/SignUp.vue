@@ -5,9 +5,11 @@
       :fields="fields"
       :submitText="submitText"
       :message="message"
+      @submit="signUp"
     >
       <template #disclaimer>Already have an account?
-        <router-link to="/login">Login</router-link>, you, beauty
+        <router-link to="/login">Login</router-link>
+        , you, beauty
         <span style="display: inline-block; vertical-align: middle;">😏</span>
       </template>
     </Form>
@@ -34,6 +36,12 @@ export default {
       submitText: 'Register',
       message: null
     };
+  },
+  methods: {
+    signUp() {
+      console.log('sdwf')
+      // this.$store.dispatch()
+    }
   },
   components: {
     Form

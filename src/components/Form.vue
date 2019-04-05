@@ -26,6 +26,7 @@
         class="button form__submit button--submit"
         type="submit"
         :value="submitText"
+        @click="$emit('submit')"
       >
       <router-link
         v-if="altText && altLink"
