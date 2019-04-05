@@ -7,9 +7,12 @@
       :message="message"
       :altLink="altLink"
       :altText="altText"
+      @submit="login"
     >
       <template #disclaimer>
-        Don't have an account? Please, <router-link to="/sign-up">sign up</router-link> one.
+        Don't have an account? Please,
+        <router-link to="/sign-up">sign up</router-link>
+        one.
       </template>
     </Form>
   </div>
@@ -17,6 +20,7 @@
 
 <script>
 import Form from '../components/Form';
+import { AUTH_REQUEST } from '../store/actions/auth';
 
 export default {
   name: 'Login',
@@ -44,6 +48,19 @@ export default {
       submitText: 'Login',
       message: null
     };
+  },
+  methods: {
+    async login() {
+      const email = this.fields[0].value;
+      const password = this.fields[1].value;
+
+      try {
+        await this.$store.dispatch(AUTH_REQUEST, { email, password });
+        this.$router.push('/');
+      } catch (e) {
+        this.message = 'Some error';
+      }
+    }
   },
   components: {
     Form

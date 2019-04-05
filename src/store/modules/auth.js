@@ -1,10 +1,14 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
 import axios from 'axios';
+import router from '../../router';
 
 const apiMockup = {
   login(email, password) {
-    return { response: { accessToken: `${email}${password}` } };
+    return { accessToken: `${email}${password}` };
+  },
+  signUp(email) {
+    return { accessToken: `${email}password` };
   }
 };
 
@@ -21,7 +25,7 @@ const getters = {
 const actions = {
   async [SIGN_UP_REQUEST]({ commit, dispatch }, user) {
     try {
-      const response = await apiMockup.login(user.email, user.password);
+      const response = await apiMockup.signUp(user.email);
 
       commit(AUTH_SUCCESS, response);
     } catch (e) {
@@ -54,13 +58,16 @@ const mutations = {
     axios.defaults.headers.common['Authorization'] = accessToken;
     state.status = 'success';
     state.token = accessToken;
+    console.log('token ' + accessToken);
   },
   [AUTH_ERROR]: (state) => {
+    router.push('/login');
     localStorage.removeItem('user-token');
     state.token = '';
     state.status = 'error';
   },
   [AUTH_LOGOUT]: (state) => {
+    router.push('/login');
     localStorage.removeItem('user-token');
     state.token = '';
   }

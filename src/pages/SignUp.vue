@@ -18,6 +18,7 @@
 
 <script>
 import Form from '../components/Form';
+import { SIGN_UP_REQUEST } from '../store/actions/auth';
 
 export default {
   name: 'SignUp',
@@ -38,9 +39,15 @@ export default {
     };
   },
   methods: {
-    signUp() {
-      console.log('sdwf')
-      // this.$store.dispatch()
+    async signUp() {
+      const email = this.fields[0].value;
+
+      try {
+        await this.$store.dispatch(SIGN_UP_REQUEST, { email });
+        this.$router.push('/');
+      } catch (e) {
+        this.message = 'Some error';
+      }
     }
   },
   components: {
