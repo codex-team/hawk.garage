@@ -58,17 +58,16 @@ const mutations = {
     axios.defaults.headers.common['Authorization'] = accessToken;
     state.status = 'success';
     state.token = accessToken;
-    console.log('token ' + accessToken);
   },
   [AUTH_ERROR]: (state) => {
     router.push('/login');
-    localStorage.removeItem('user-token');
+    localStorage.removeItem('access-token');
     state.token = '';
     state.status = 'error';
   },
   [AUTH_LOGOUT]: (state) => {
     router.push('/login');
-    localStorage.removeItem('user-token');
+    localStorage.removeItem('access-token');
     state.token = '';
   }
 };

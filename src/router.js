@@ -9,21 +9,13 @@ import Login from './pages/Login.vue';
 
 Vue.use(Router);
 
-const isAuthenticated = (to, from, next) => {
-  if (store.getters.isAuthenticated) {
-    return next();
-  }
-  next('/login');
-};
-
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
       name: 'home',
-      component: Home,
-      beforeEnter: isAuthenticated
+      component: Home
     },
     {
       path: '/settings',
@@ -42,3 +34,20 @@ export default new Router({
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  const loginRoutes = /^\/(login|sign-up)/;
+
+  if (store.getters.isAuthenticated) {
+    if (loginRoutes.test(to.fullPath)) {
+      next('/');
+    }
+  } else {
+    if (!loginRoutes.test(to.fullPath)) {
+      next('/login');
+    }
+  }
+  next();
+});
+
+export default router;
