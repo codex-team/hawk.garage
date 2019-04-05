@@ -1,12 +1,16 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from '../actions/auth';
-import { USER_REQUEST } from '../actions/user';
 import axios from 'axios';
+
+const apiMockup = {
+  login(email, password) {
+    return { response: { accessToken: `${email}${password}` } };
+  }
+};
 
 const state = {
   token: localStorage.getItem('user-token') || '',
-  status: '',
-  hasLoadedOnce: false
+  status: ''
 };
 
 const getters = {
@@ -15,32 +19,17 @@ const getters = {
 };
 
 const actions = {
-  [AUTH_REQUEST]({ commit, dispatch }, user) {
-    return new Promise((resolve, reject) => {
-      commit(AUTH_REQUEST);
-      axios.get('/login?email=' + user.email + '&password=' + user.password)
-        .then(resp => {
-          const token = resp.data.jwt;
+  async [AUTH_REQUEST]({ commit, dispatch }, user) {
+    commit(AUTH_REQUEST);
 
-          localStorage.setItem('user-token', token);
-          axios.defaults.headers.common['Authorization'] = token;
-          commit(AUTH_SUCCESS, resp);
-          dispatch(USER_REQUEST);
-          resolve(resp);
-        })
-        .catch(err => {
-          commit(AUTH_ERROR, err);
-          localStorage.removeItem('user-token');
-          reject(err);
-        });
-    });
-  },
-  [AUTH_LOGOUT]({ commit }){
-    return new Promise((resolve) => {
-      commit(AUTH_LOGOUT);
-      localStorage.removeItem('user-token');
-      resolve();
-    });
+    try {
+      const response = await apiMockup.login(user.email, user.password);
+
+      commit(AUTH_SUCCESS, response);
+    } catch (e) {
+      commit(AUTH_ERROR);
+      throw e;
+    }
   }
 };
 
@@ -48,16 +37,20 @@ const mutations = {
   [AUTH_REQUEST]: (state) => {
     state.status = 'loading';
   },
-  [AUTH_SUCCESS]: (state, resp) => {
+  [AUTH_SUCCESS]: (state, response) => {
+    const accessToken = response.accessToken;
+
+    localStorage.setItem('access-token', accessToken);
+    axios.defaults.headers.common['Authorization'] = accessToken;
     state.status = 'success';
-    state.token = resp.data.jwt;
-    state.hasLoadedOnce = true;
+    state.token = accessToken;
   },
   [AUTH_ERROR]: (state) => {
+    localStorage.removeItem('user-token');
     state.status = 'error';
-    state.hasLoadedOnce = true;
   },
   [AUTH_LOGOUT]: (state) => {
+    localStorage.removeItem('user-token');
     state.token = '';
   }
 };
