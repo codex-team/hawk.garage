@@ -13,7 +13,7 @@ const apiMockup = {
 };
 
 const state = {
-  token: localStorage.getItem('user-token') || '',
+  token: localStorage.getItem('access-token') || '',
   status: ''
 };
 
