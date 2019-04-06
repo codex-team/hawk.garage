@@ -8,6 +8,11 @@ const API_ENDPOINT =
   process.env.VUE_API_ENDPOINT || 'http://localhost:3000/graphql';
 
 /**
+ * Mock api? true/false
+ */
+const MOCK = process.env.VUE_API_MOCK;
+
+/**
  * Base error for auth module
  *
  * @class AuthError
@@ -27,13 +32,24 @@ const login = async (email, password) => {
   let resp;
 
   try {
-    resp = await axios.post(API_ENDPOINT, {
-      query: MUTATION_LOGIN,
-      variables: {
-        login: email,
-        password
-      }
-    });
+    if (!MOCK) {
+      resp = await axios.post(API_ENDPOINT, {
+        query: MUTATION_LOGIN,
+        variables: {
+          login: email,
+          password
+        }
+      });
+    } else {
+      resp = {
+        status: 200,
+        data: {
+          // payload: { user: "test@test.com"}, secret: "test"
+          token:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
+        }
+      };
+    }
   } catch (e) {
     throw new AuthError('Error while authenticating');
   }
@@ -56,12 +72,21 @@ const signUp = async email => {
   let resp;
 
   try {
-    resp = await axios.post(API_ENDPOINT, {
-      query: MUTATION_SIGNUP,
-      variables: {
-        email
-      }
-    });
+    if (!MOCK) {
+      resp = await axios.post(API_ENDPOINT, {
+        query: MUTATION_SIGNUP,
+        variables: {
+          email
+        }
+      });
+    } else {
+      resp = {
+        status: 200,
+        data: {
+          ok: true
+        }
+      };
+    }
   } catch (e) {
     throw new AuthError('Error while signing up');
   }
