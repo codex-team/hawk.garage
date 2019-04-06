@@ -1,3 +1,4 @@
+/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import auth from '../modules/auth';
 
 const state = {
