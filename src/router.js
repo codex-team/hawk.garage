@@ -36,14 +36,14 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const loginRoutes = /^\/(login|sign-up)/;
+  const authRoutes = /^\/(login|sign-up)/;
 
   if (store.getters.isAuthenticated) {
-    if (loginRoutes.test(to.fullPath)) {
+    if (authRoutes.test(to.fullPath)) {
       next('/');
     }
   } else {
-    if (!loginRoutes.test(to.fullPath)) {
+    if (!authRoutes.test(to.fullPath)) {
       next('/login');
     }
   }
