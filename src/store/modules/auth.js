@@ -48,10 +48,10 @@ const actions = {
 };
 
 const mutations = {
-  [AUTH_REQUEST]: (state) => {
+  [AUTH_REQUEST](state) {
     state.status = 'loading';
   },
-  [AUTH_SUCCESS]: (state, response) => {
+  [AUTH_SUCCESS](state, response) {
     const accessToken = response.accessToken;
 
     localStorage.setItem('access-token', accessToken);
@@ -59,13 +59,13 @@ const mutations = {
     state.status = 'success';
     state.token = accessToken;
   },
-  [AUTH_ERROR]: (state) => {
+  [AUTH_ERROR](state) {
     router.push('/login');
     localStorage.removeItem('access-token');
     state.token = '';
     state.status = 'error';
   },
-  [AUTH_LOGOUT]: (state) => {
+  [AUTH_LOGOUT](state) {
     router.push('/login');
     localStorage.removeItem('access-token');
     state.token = '';
