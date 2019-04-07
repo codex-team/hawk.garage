@@ -1,5 +1,5 @@
 <template>
-  <div class="page sign-up-page">
+  <div class="page">
     <Form
       :title="title"
       :fields="fields"
@@ -50,6 +50,9 @@ export default {
     };
   },
   methods: {
+    /**
+     * Form submit event handler
+     */
     async login() {
       const email = this.fields[0].value;
       const password = this.fields[1].value;
@@ -58,7 +61,10 @@ export default {
         await this.$store.dispatch(AUTH_REQUEST, { email, password });
         this.$router.push('/');
       } catch (e) {
-        this.message = 'Some error';
+        this.message = {
+          text: 'Error while sending request to the server',
+          type: 'error'
+        };
       }
     }
   },
