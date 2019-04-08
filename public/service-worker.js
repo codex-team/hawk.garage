@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 /**
  * This file will be post-processed by WORKBOX plugin
  */

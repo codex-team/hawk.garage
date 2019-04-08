@@ -14,7 +14,7 @@ export default {
     };
   },
   methods: {
-    loadProjects: function () {
+    loadProjects() {
       let tmpProjects;
       // @todo wait for api
       let data = {
