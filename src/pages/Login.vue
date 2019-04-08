@@ -17,9 +17,11 @@
 
 <script>
 import Form from '../components/Form';
+import { offlineErrorMessage } from '../mixins/offline-error-message';
 
 export default {
   name: 'Login',
+  mixins: [ offlineErrorMessage ],
   data() {
     return {
       title: 'Log in',
@@ -47,14 +49,6 @@ export default {
   },
   components: {
     Form
-  },
-  beforeMount() {
-    if (!navigator.onLine) {
-      this.message = {
-        text: 'Sorry... Your internet connection lost ⛔',
-        type: 'error'
-      };
-    }
   }
 };
 </script>

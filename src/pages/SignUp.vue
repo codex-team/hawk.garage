@@ -16,9 +16,11 @@
 
 <script>
 import Form from '../components/Form';
+import { offlineErrorMessage } from '../mixins/offline-error-message';
 
 export default {
   name: 'SignUp',
+  mixins: [ offlineErrorMessage ],
   data() {
     return {
       title: 'Create an account',
@@ -37,14 +39,6 @@ export default {
   },
   components: {
     Form
-  },
-  beforeMount() {
-    if (!navigator.onLine) {
-      this.message = {
-        text: 'Sorry... Your internet connection lost ⛔',
-        type: 'error'
-      };
-    }
   }
 };
 </script>
