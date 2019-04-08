@@ -26,6 +26,10 @@ workbox.routing.registerRoute(
   })
 );
 
+self.addEventListener('fetch', function(e) {
+  // no operation now
+});
+
 if (workbox) {
   console.log(`Yay! Workbox is loaded`);
 } else {
