@@ -9,6 +9,7 @@ export const AUTH_REQUEST = 'AUTH_REQUEST';
 
 /**
  * Mutation caused by successful authentication
+ * Called when authentication process ended successfully
  */
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 
