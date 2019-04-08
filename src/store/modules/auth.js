@@ -96,6 +96,7 @@ const mutations = {
   [AUTH_ERROR](state) {
     router.push('/login');
     localStorage.removeItem('access-token');
+    delete axios.defaults.headers.common['Authorization'];
     state.token = '';
     state.status = 'error';
   },
@@ -106,6 +107,7 @@ const mutations = {
    */
   [AUTH_LOGOUT](state) {
     router.push('/login');
+    delete axios.defaults.headers.common['Authorization'];
     localStorage.removeItem('access-token');
     state.token = '';
   }
