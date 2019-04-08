@@ -9,6 +9,8 @@ workbox.skipWaiting();
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
+workbox.routing.registerNavigationRoute('/index.html');
+
 workbox.routing.registerRoute(
   /\.(?:png|jpg|jpeg|svg|gif)$/,
   new workbox.strategies.CacheFirst({
