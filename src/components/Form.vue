@@ -58,7 +58,10 @@ export default {
     },
     message: {
       type: Object,
-      required: false
+      required: false,
+      validator: function (val) {
+        return val['text'] && val['type'] && ['error', 'notify'].indexOf(val['type']) !== -1;
+      }
     },
     altText: {
       type: String,
