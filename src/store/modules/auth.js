@@ -5,8 +5,8 @@ import router from '../../router';
 
 /**
  * @typedef User - represents user
- * @property email - user's email
- * @property password - user's password
+ * @property {string} email - user's email
+ * @property {string} password - user's password
  */
 
 /**
@@ -27,7 +27,12 @@ const state = {
 };
 
 const getters = {
-  isAuthenticated: state => !!state.token // if the user is authenticated
+  /**
+   * Returns true if the user is authenticated else false
+   * @param {object} state - vuex state
+   * @return {boolean}
+   */
+  isAuthenticated: state => !!state.token
 };
 
 const actions = {
