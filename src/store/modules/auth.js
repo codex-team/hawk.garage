@@ -21,15 +21,33 @@ const apiMockup = {
   }
 };
 
+/**
+ * Enum of auth states
+ * @type {{success: string, loading: string, error: string}}
+ */
+const AUTH_STATES = {
+  loading: 'loading',
+  success: 'success',
+  error: 'error',
+  noLoggedIn: 'noLoggedIn'
+};
+
+/**
+ * Module state
+ * @typedef AuthModuleState
+ * @type {object}
+ * @property {string} token - user's access token
+ * @property {status} status- current auth status
+ */
 const state = {
-  token: localStorage.getItem('access-token') || '', // user's access token
-  status: '' // current auth status
+  token: localStorage.getItem('access-token') || '',
+  status: AUTH_STATES.noLoggedIn
 };
 
 const getters = {
   /**
    * Returns true if the user is authenticated else false
-   * @param {object} state - vuex state
+   * @param {AuthModuleState} state - vuex state
    * @return {boolean}
    */
   isAuthenticated: state => !!state.token
@@ -79,7 +97,7 @@ const mutations = {
    * @param {object} state - Vuex state
    */
   [AUTH_REQUEST](state) {
-    state.status = 'loading';
+    state.status = AUTH_STATES.loading;
   },
 
   /**
@@ -90,7 +108,7 @@ const mutations = {
   [AUTH_SUCCESS](state, accessToken) {
     localStorage.setItem('access-token', accessToken);
     axios.defaults.headers.common['Authorization'] = accessToken;
-    state.status = 'success';
+    state.status = AUTH_STATES.success;
     state.token = accessToken;
   },
 
@@ -99,11 +117,8 @@ const mutations = {
    * @param {object} state - Vuex state
    */
   [AUTH_ERROR](state) {
-    router.push('/login');
-    localStorage.removeItem('access-token');
-    delete axios.defaults.headers.common['Authorization'];
-    state.token = '';
-    state.status = 'error';
+    this.commit(AUTH_LOGOUT);
+    state.status = AUTH_STATES.error;
   },
 
   /**
