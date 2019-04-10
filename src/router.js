@@ -1,18 +1,21 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from './store';
+
+import Home from './pages/Home';
 import Settings from './pages/Settings.vue';
 import SignUp from './pages/SignUp.vue';
 import Login from './pages/Login.vue';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
       name: 'home',
-      redirect: '/login'
+      component: Home
     },
     {
       path: '/settings',
@@ -31,3 +34,20 @@ export default new Router({
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  const authRoutes = /^\/(login|sign-up)/;
+
+  if (store.getters.isAuthenticated) {
+    if (authRoutes.test(to.fullPath)) {
+      next('/');
+    }
+  } else {
+    if (!authRoutes.test(to.fullPath)) {
+      next('/login');
+    }
+  }
+  next();
+});
+
+export default router;

@@ -1,25 +1,19 @@
 <template>
   <div class="home">
+    <button @click="logout">Logout</button>
   </div>
 </template>
 
 <script>
 
+import { AUTH_LOGOUT } from '../store/actions/auth';
+
 export default {
   name: 'Home',
   methods: {
-    doSmt: function () {
-      this.axios.get('/api/test')
-        .then(data => {
-          console.log('DATA: ', data);
-        })
-        .catch(err => {
-          console.log('ERROR: ', err);
-        });
+    logout() {
+      this.$store.commit(AUTH_LOGOUT);
     }
-  },
-  beforeMount() {
-    this.doSmt();
   }
 };
 
