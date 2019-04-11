@@ -5,12 +5,14 @@
       :fields="fields"
       :submitText="submitText"
       :message="message"
-      @submit="signUp"
+      :altLink="altLink"
+      :altText="altText"
+      @submit="login"
     >
-      <template #disclaimer>Already have an account?
-        <router-link to="/login">Login</router-link>
-        , you, beauty
-        <span style="display: inline-block; vertical-align: middle;">😏</span>
+      <template #disclaimer>
+        Don't have an account? Please,
+        <router-link to="/sign-up">sign up</router-link>
+        one.
       </template>
     </Form>
   </div>
@@ -18,23 +20,32 @@
 
 <script>
 import Form from '../components/Form';
-import { SIGN_UP_REQUEST } from '../store/actions/auth';
+import { AUTH_REQUEST } from '../store/actions/auth';
 
 export default {
-  name: 'SignUp',
+  name: 'Login',
   data() {
     return {
-      title: 'Create an account',
+      title: 'Log in',
       fields: [
         {
-          label: 'Enter your email',
+          label: 'Your email',
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
           type: 'email'
+        },
+        {
+          label: 'Password',
+          name: 'password',
+          value: '',
+          placeholder: '********',
+          type: 'password'
         }
       ],
-      submitText: 'Register',
+      altLink: '/reset',
+      altText: 'Reset password',
+      submitText: 'Login',
       message: null
     };
   },
@@ -42,11 +53,12 @@ export default {
     /**
      * Form submit event handler
      */
-    async signUp() {
+    async login() {
       const email = this.fields[0].value;
+      const password = this.fields[1].value;
 
       try {
-        await this.$store.dispatch(SIGN_UP_REQUEST, { email });
+        await this.$store.dispatch(AUTH_REQUEST, { email, password });
         this.$router.push('/');
       } catch (e) {
         this.message = {
