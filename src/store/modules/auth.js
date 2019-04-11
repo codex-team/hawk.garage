@@ -1,22 +1,4 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-<<<<<<< HEAD
-import auth from '../modules/auth';
-
-const state = {
-  user: ''
-};
-
-const getters = {};
-
-const actions = {
-  login({ commit, state }, { email, password }) {},
-  logout({ commit }) {},
-  signUp({ commit, state }, { email }) {}
-};
-
-const mutations = {
-  setUser(state, username) {}
-=======
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
 import axios from 'axios';
 import router from '../../router';
@@ -149,7 +131,6 @@ const mutations = {
     localStorage.removeItem('access-token');
     state.token = '';
   }
->>>>>>> a5ce2ad1cdf7851b78d3e7e6380a39d9ab96a4eb
 };
 
 export default {
