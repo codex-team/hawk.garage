@@ -5,6 +5,13 @@
         <button @click="logout">Logout</button>
       </div>
       <div class="home__workspaces">
+        <div
+          class="home__workspace-item"
+          v-for="workspace in workspaces"
+          :key="workspace.id"
+        >
+          {{workspace.name}}
+        </div>
       </div>
     </aside>
     <div class="home__content">
@@ -23,6 +30,11 @@ export default {
   methods: {
     logout() {
       this.$store.commit(AUTH_LOGOUT);
+    }
+  },
+  computed: {
+    workspaces() {
+      return this.$store.state.workspaces.workspaces;
     }
   },
   components: {
@@ -46,6 +58,10 @@ export default {
 
     &__content {
       width: 100%;
+    }
+
+    &__workspace-item {
+      color: #fff;
     }
   }
 </style>

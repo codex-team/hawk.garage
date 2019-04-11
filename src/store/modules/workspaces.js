@@ -1,5 +1,6 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import { CREATE_WORKSPACE, ADD_WORKSPACE } from '../actions/workspaces';
+import uuid from 'uuid/v4';
 
 /**
  * @typedef Workspace - represents workspace
@@ -12,7 +13,7 @@ import { CREATE_WORKSPACE, ADD_WORKSPACE } from '../actions/workspaces';
  */
 const apiMockup = {
   createWorkspace(workspace) {
-    return { id: 'awedwer23re3we23ed23de', name: workspace.name };
+    return { id: uuid(), name: workspace.name };
   }
 };
 
@@ -31,7 +32,6 @@ const getters = {
    * @param {AuthModuleState} state - vuex state
    * @return {boolean}
    */
-  isAuthenticated: state => !!state.token
 };
 
 const actions = {
@@ -58,6 +58,7 @@ const mutations = {
    * @param {object} state - Vuex state
    */
   [ADD_WORKSPACE](state, workspace) {
+    console.log('commit');
     state.workspaces.push(workspace);
   }
 };
