@@ -22,6 +22,7 @@ export default {
     async createWorkspace() {
       try {
         await this.$store.dispatch(CREATE_WORKSPACE, { name: this.name });
+        this.message = '';
       } catch (e) {
         this.message = e;
       }

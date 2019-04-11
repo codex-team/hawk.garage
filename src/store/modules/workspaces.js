@@ -1,6 +1,7 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import { CREATE_WORKSPACE, ADD_WORKSPACE } from '../actions/workspaces';
 import uuid from 'uuid/v4';
+import { WORKSPACES } from '../../constants/localStorageKeys';
 
 /**
  * @typedef Workspace - represents workspace
@@ -24,9 +25,27 @@ const apiMockup = {
  * @type {object}
  * @property {array<Workspace>} workspaces - registered workspaces
  */
-const state = {
-  workspaces: []
-};
+const state = initModule();
+
+/**
+ * Function for initialization Workspaces module
+ * Loading data from localStorage
+ * @return {WorkspacesModuleState}
+ */
+function initModule() {
+  let workspaces;
+
+  try {
+    workspaces = JSON.parse(localStorage.getItem(WORKSPACES)) || [];
+  } catch (e) {
+    workspaces = [];
+    localStorage.removeItem(WORKSPACES);
+  }
+
+  return {
+    workspaces
+  };
+}
 
 const actions = {
   /**
@@ -53,6 +72,11 @@ const mutations = {
    */
   [ADD_WORKSPACE](state, workspace) {
     state.workspaces.push(workspace);
+    try {
+      localStorage.setItem(WORKSPACES, JSON.stringify(state.workspaces));
+    } catch (e) {
+      console.log('Exception while saving workspaces to localStorage ', e);
+    }
   }
 };
 
