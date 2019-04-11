@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { MUTATION_LOGIN, MUTATION_SIGNUP } from './queries';
+import getMutation from './mutations';
+import { MUTATION_LOGIN, MUTATION_SIGNUP, HTTP_OK } from './constants';
 
 /**
  * Hawk API endpoint URL
@@ -18,7 +19,7 @@ const MOCK = process.env.VUE_API_MOCK;
  * @class AuthError
  * @extends {Error}
  */
-class AuthError extends Error {}
+export class AuthError extends Error {}
 
 /**
  * Login user and get token.
@@ -28,13 +29,13 @@ class AuthError extends Error {}
  * @returns {Promise<string>} Auth token.
  * @throws {AuthError} Authentication error occured.
  */
-const login = async (email, password) => {
+export const login = async (email, password) => {
   let resp;
 
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_LOGIN,
+        query: getMutation(MUTATION_LOGIN),
         variables: {
           login: email,
           password
@@ -42,7 +43,7 @@ const login = async (email, password) => {
       });
     } else {
       resp = {
-        status: 200,
+        status: HTTP_OK,
         data: {
           // payload: { user: "test@test.com"}, secret: "test"
           token:
@@ -54,7 +55,7 @@ const login = async (email, password) => {
     throw new AuthError('Error while authenticating');
   }
 
-  if (resp.status === 200) {
+  if (resp.status === HTTP_OK) {
     return resp.data.token;
   } else {
     throw new AuthError('Unknown response');
@@ -68,20 +69,20 @@ const login = async (email, password) => {
  * @returns {Promise<boolean>} Response status.
  * @throws {AuthError} Authentication error occured.
  */
-const signUp = async email => {
+export const signUp = async email => {
   let resp;
 
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_SIGNUP,
+        query: getMutation(MUTATION_SIGNUP),
         variables: {
           email
         }
       });
     } else {
       resp = {
-        status: 200,
+        status: HTTP_OK,
         data: {
           ok: true
         }
@@ -91,14 +92,9 @@ const signUp = async email => {
     throw new AuthError('Error while signing up');
   }
 
-  if (resp.status === 200) {
+  if (resp.status === HTTP_OK) {
     return resp.data.ok;
   } else {
     throw new AuthError('Unknown response');
   }
-};
-
-export default {
-  login,
-  signUp
 };
