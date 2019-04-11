@@ -4,6 +4,7 @@ import uuid from 'uuid/v4';
 
 /**
  * @typedef Workspace - represents workspace
+ * @type {object}
  * @property {string} id - workspace id
  * @property {string} name - workspace name
  */
@@ -21,27 +22,19 @@ const apiMockup = {
  * Module state
  * @typedef WorkspacesModuleState
  * @type {object}
+ * @property {array<Workspace>} workspaces - registered workspaces
  */
 const state = {
   workspaces: []
 };
 
-const getters = {
-  /**
-   * Returns true if the user is authenticated else false
-   * @param {AuthModuleState} state - vuex state
-   * @return {boolean}
-   */
-};
-
 const actions = {
   /**
-   * Send sign up request to the server and performs user login
+   * Send request to create new workspace
    * @param {function} commit - standard Vuex commit function
-   * @param {function} dispatch - standard Vuex dispatch function
-   * @param {Workspace} user - workspace params for creation
+   * @param {Workspace} workspace - workspace params for creation
    */
-  async [CREATE_WORKSPACE]({ commit, dispatch }, workspace) {
+  async [CREATE_WORKSPACE]({ commit }, workspace) {
     try {
       const response = await apiMockup.createWorkspace(workspace);
 
@@ -54,18 +47,17 @@ const actions = {
 
 const mutations = {
   /**
-   * Mutation caused by authentication request
-   * @param {object} state - Vuex state
+   * Mutation for adding new workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Workspace} workspace - workspace params for creation
    */
   [ADD_WORKSPACE](state, workspace) {
-    console.log('commit');
     state.workspaces.push(workspace);
   }
 };
 
 export default {
   state,
-  getters,
   actions,
   mutations
 };

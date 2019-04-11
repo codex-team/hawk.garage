@@ -3,8 +3,11 @@
  */
 
 /**
- * Send login request to the server and performs user login
+ * Send request to create new workspace
  */
 export const CREATE_WORKSPACE = 'CREATE_WORKSPACE';
 
+/**
+ * Mutation for adding new workspace
+ */
 export const ADD_WORKSPACE = 'ADD_WORKSPACE';

@@ -33,6 +33,9 @@ export default {
     }
   },
   computed: {
+    /**
+     * @return {Array<Workspace>} - registered workspaces
+     */
     workspaces() {
       return this.$store.state.workspaces.workspaces;
     }
