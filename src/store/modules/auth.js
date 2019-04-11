@@ -5,6 +5,7 @@ import router from '../../router';
 
 /**
  * @typedef User - represents user
+ * @type {object}
  * @property {string} email - user's email
  * @property {string} password - user's password
  */
@@ -57,10 +58,9 @@ const actions = {
   /**
    * Send sign up request to the server and performs user login
    * @param {function} commit - standard Vuex commit function
-   * @param {function} dispatch - standard Vuex dispatch function
    * @param {User} user - user's params for auth
    */
-  async [SIGN_UP_REQUEST]({ commit, dispatch }, user) {
+  async [SIGN_UP_REQUEST]({ commit }, user) {
     try {
       const response = await apiMockup.signUp(user.email);
 
@@ -74,10 +74,9 @@ const actions = {
   /**
    * Send login request to the server and performs user login
    * @param {function} commit - standard Vuex commit function
-   * @param {function} dispatch - standard Vuex dispatch function
    * @param {User} user - user's params for auth
    */
-  async [AUTH_REQUEST]({ commit, dispatch }, user) {
+  async [AUTH_REQUEST]({ commit }, user) {
     commit(AUTH_REQUEST);
 
     try {
@@ -94,7 +93,7 @@ const actions = {
 const mutations = {
   /**
    * Mutation caused by authentication request
-   * @param {object} state - Vuex state
+   * @param {AuthModuleState} state - Vuex state
    */
   [AUTH_REQUEST](state) {
     state.status = AUTH_STATES.loading;
@@ -102,7 +101,7 @@ const mutations = {
 
   /**
    * Mutation caused by successful authentication
-   * @param {object} state - Vuex state
+   * @param {AuthModuleState} state - Vuex state
    * @param {string} accessToken - user's access token
    */
   [AUTH_SUCCESS](state, accessToken) {
@@ -114,7 +113,7 @@ const mutations = {
 
   /**
    * Mutation caused by unsuccessful authentication
-   * @param {object} state - Vuex state
+   * @param {AuthModuleState} state - Vuex state
    */
   [AUTH_ERROR](state) {
     this.commit(AUTH_LOGOUT);
@@ -123,7 +122,7 @@ const mutations = {
 
   /**
    * Mutation caused when user logout
-   * @param {object} state - Vuex state
+   * @param {AuthModuleState} state - Vuex state
    */
   [AUTH_LOGOUT](state) {
     router.push('/login');
