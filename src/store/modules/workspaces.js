@@ -25,14 +25,14 @@ const apiMockup = {
  * @type {object}
  * @property {array<Workspace>} workspaces - registered workspaces
  */
-const state = initModule();
+const state = initState();
 
 /**
- * Function for initialization Workspaces module
+ * Function for initialization Workspaces module state
  * Loading data from localStorage
  * @return {WorkspacesModuleState}
  */
-function initModule() {
+function initState() {
   let workspaces;
 
   try {
