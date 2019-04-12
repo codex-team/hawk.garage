@@ -1,0 +1,63 @@
+/* eslint no-shadow: ["error", { "allow": ["state"] }] */
+import { CREATE_WORKSPACE, ADD_WORKSPACE } from '../actions/workspaces';
+import uuid from 'uuid/v4';
+
+/**
+ * @typedef Workspace - represents workspace
+ * @type {object}
+ * @property {string} id - workspace id
+ * @property {string} name - workspace name
+ */
+
+/**
+ * Temporary mockup api
+ */
+const apiMockup = {
+  createWorkspace(workspace) {
+    return { id: uuid(), name: workspace.name };
+  }
+};
+
+/**
+ * Module state
+ * @typedef WorkspacesModuleState
+ * @type {object}
+ * @property {array<Workspace>} list - registered workspaces
+ */
+const state = {
+  list: []
+};
+
+const actions = {
+  /**
+   * Send request to create new workspace
+   * @param {function} commit - standard Vuex commit function
+   * @param {Workspace} workspace - workspace params for creation
+   */
+  async [CREATE_WORKSPACE]({ commit }, workspace) {
+    try {
+      const response = await apiMockup.createWorkspace(workspace);
+
+      commit(ADD_WORKSPACE, response);
+    } catch (e) {
+      throw e;
+    }
+  }
+};
+
+const mutations = {
+  /**
+   * Mutation for adding new workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Workspace} workspace - workspace params for creation
+   */
+  [ADD_WORKSPACE](state, workspace) {
+    state.list.push(workspace);
+  }
+};
+
+export default {
+  state,
+  actions,
+  mutations
+};
