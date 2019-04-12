@@ -30,7 +30,7 @@ const AUTH_STATES = {
   loading: 'loading',
   success: 'success',
   error: 'error',
-  noLoggedIn: 'noLoggedIn'
+  notLoggedIn: 'notLoggedIn'
 };
 
 /**
@@ -38,11 +38,11 @@ const AUTH_STATES = {
  * @typedef AuthModuleState
  * @type {object}
  * @property {string} token - user's access token
- * @property {status} status- current auth status
+ * @property {status} status - current auth status
  */
 const state = {
   token: '',
-  status: AUTH_STATES.noLoggedIn
+  status: AUTH_STATES.notLoggedIn
 };
 
 const getters = {
