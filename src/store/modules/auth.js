@@ -2,7 +2,6 @@
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
 import axios from 'axios';
 import router from '../../router';
-import { ACCESS_TOKEN } from '../../constants/localStorageKeys';
 
 /**
  * @typedef User - represents user
@@ -42,7 +41,7 @@ const AUTH_STATES = {
  * @property {status} status- current auth status
  */
 const state = {
-  token: localStorage.getItem(ACCESS_TOKEN) || '',
+  token: '',
   status: AUTH_STATES.noLoggedIn
 };
 
@@ -106,7 +105,6 @@ const mutations = {
    * @param {string} accessToken - user's access token
    */
   [AUTH_SUCCESS](state, accessToken) {
-    localStorage.setItem(ACCESS_TOKEN, accessToken);
     axios.defaults.headers.common['Authorization'] = accessToken;
     state.status = AUTH_STATES.success;
     state.token = accessToken;
@@ -128,7 +126,6 @@ const mutations = {
   [AUTH_LOGOUT](state) {
     router.push('/login');
     delete axios.defaults.headers.common['Authorization'];
-    localStorage.removeItem(ACCESS_TOKEN);
     state.token = '';
   }
 };
