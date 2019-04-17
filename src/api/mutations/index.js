@@ -6,6 +6,12 @@ const readFile = promisify(fs.readFile);
 
 let mutations = {};
 
+/**
+ * Singleton for loading .gql files
+ *
+ * @param {string} name Name of the file
+ * @returns {string} Loaded query/mutation
+ */
 export default name => {
   if (mutations[name]) {
     return mutations[name];

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import getMutation from './mutations';
-import { MUTATION_LOGIN, MUTATION_SIGNUP, HTTP_OK } from './constants';
+import { MUTATION_LOGIN, MUTATION_SIGNUP } from './mutations/constants';
+import { HTTP_OK } from './httpCodes';
 
 /**
  * Hawk API endpoint URL
