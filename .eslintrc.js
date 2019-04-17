@@ -6,5 +6,8 @@ module.exports = {
   extends: [
     'codex',
     'plugin:vue/essential'
-  ]
+  ],
+  parserOptions: {
+    parser: 'babel-eslint'
+  }
 };
