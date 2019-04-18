@@ -3,9 +3,9 @@ import Router from 'vue-router';
 import store from './store';
 
 import Home from './pages/Home';
-import Settings from './pages/Settings.vue';
-import SignUp from './pages/SignUp.vue';
-import Login from './pages/Login.vue';
+import Settings from './pages/Settings';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 
 Vue.use(Router);
 
@@ -31,6 +31,11 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/:workspaceId/settings',
+      name: 'workspace-settings',
+      component: () => import(/* webpackChunkName: "catalog" */ './pages/workspaces/Settings')
     }
   ]
 });
