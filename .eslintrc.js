@@ -4,6 +4,6 @@ module.exports = {
     browser: true
   },
   extends: ['codex', 'plugin:vue/essential'],
-  plugins: ['import'],
+  plugins: [ 'import' ],
   parser: 'vue-eslint-parser'
 };

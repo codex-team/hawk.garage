@@ -32,11 +32,10 @@ export class AuthError extends Error {}
 export const login = async (email, password) => {
   let resp;
 
-  console.log();
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: await MUTATION_LOGIN(),
+        query: MUTATION_LOGIN,
         variables: {
           email,
           password
@@ -75,7 +74,7 @@ export const signUp = async email => {
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: await MUTATION_SIGN_UP(),
+        query: MUTATION_SIGN_UP,
         variables: {
           email
         }
