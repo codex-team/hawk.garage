@@ -1,6 +1,5 @@
 import axios from 'axios';
-// import getMutation from './mutations';
-import { MUTATION_LOGIN, MUTATION_SIGNUP } from './mutations';
+import { MUTATION_LOGIN, MUTATION_SIGN_UP } from './mutations';
 import { HTTP_OK } from './httpCodes';
 
 /**
@@ -32,13 +31,14 @@ export class AuthError extends Error {}
  */
 export const login = async (email, password) => {
   let resp;
+
   console.log(MUTATION_LOGIN);
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
         query: MUTATION_LOGIN,
         variables: {
-          login: email,
+          email,
           password
         }
       });
@@ -72,10 +72,12 @@ export const login = async (email, password) => {
 export const signUp = async email => {
   let resp;
 
+  console.log(MUTATION_SIGN_UP);
+
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_SIGNUP,
+        query: MUTATION_SIGN_UP,
         variables: {
           email
         }

@@ -71,7 +71,6 @@ const actions = {
     try {
       const token = await authApi.login(user.email, user.password);
 
-      console.log(token);
       commit(AUTH_SUCCESS, token);
     } catch (e) {
       commit(AUTH_ERROR);
