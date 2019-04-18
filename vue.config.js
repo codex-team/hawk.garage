@@ -4,7 +4,7 @@ module.exports = {
     config.module
       .rule('graphql')
       .test(/\.graphql$/)
-      .use('graphql-tag/loader')
+      .use('webpack-graphql-loader')
       .loader('webpack-graphql-loader')
       .end();
   }
