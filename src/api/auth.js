@@ -1,13 +1,13 @@
 import axios from 'axios';
 // import getMutation from './mutations';
-// import { MUTATION_LOGIN, MUTATION_SIGNUP } from './mutations/constants';
+import { MUTATION_LOGIN, MUTATION_SIGNUP } from './mutations';
 import { HTTP_OK } from './httpCodes';
 
 /**
  * Hawk API endpoint URL
  */
 const API_ENDPOINT =
-  process.env.VUE_API_ENDPOINT || 'http://localhost:3000/graphql';
+  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:3000/graphql';
 
 /**
  * Mock api? true/false
@@ -32,11 +32,11 @@ export class AuthError extends Error {}
  */
 export const login = async (email, password) => {
   let resp;
-
+  console.log(MUTATION_LOGIN);
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: getMutation(MUTATION_LOGIN),
+        query: MUTATION_LOGIN,
         variables: {
           login: email,
           password
@@ -56,7 +56,6 @@ export const login = async (email, password) => {
   }
 
   if (resp.status === HTTP_OK) {
-    console.log(resp.data.token)
     return resp.data.token;
   } else {
     throw new AuthError('Unknown response');
@@ -76,7 +75,7 @@ export const signUp = async email => {
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: getMutation(MUTATION_SIGNUP),
+        query: MUTATION_SIGNUP,
         variables: {
           email
         }
