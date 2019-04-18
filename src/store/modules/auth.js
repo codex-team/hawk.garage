@@ -2,6 +2,7 @@
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
 import axios from 'axios';
 import router from '../../router';
+import * as authApi from '../../api/auth';
 
 /**
  * @typedef User - represents user
@@ -9,18 +10,6 @@ import router from '../../router';
  * @property {string} email - user's email
  * @property {string} password - user's password
  */
-
-/**
- * Temporary mockup api
- */
-const apiMockup = {
-  login(email, password) {
-    return { accessToken: `${email}${password}` };
-  },
-  signUp(email) {
-    return { accessToken: `${email}password` };
-  }
-};
 
 /**
  * Enum of auth states
@@ -62,9 +51,9 @@ const actions = {
    */
   async [SIGN_UP_REQUEST]({ commit }, user) {
     try {
-      const response = await apiMockup.signUp(user.email);
+      const token = await authApi.signUp(user.email);
 
-      commit(AUTH_SUCCESS, response);
+      commit(AUTH_SUCCESS, token);
     } catch (e) {
       commit(AUTH_ERROR);
       throw e;
@@ -80,9 +69,10 @@ const actions = {
     commit(AUTH_REQUEST);
 
     try {
-      const response = await apiMockup.login(user.email, user.password);
+      const token = await authApi.login(user.email, user.password);
 
-      commit(AUTH_SUCCESS, response.accessToken);
+      console.log(token);
+      commit(AUTH_SUCCESS, token);
     } catch (e) {
       commit(AUTH_ERROR);
       throw e;

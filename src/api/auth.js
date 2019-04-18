@@ -1,6 +1,6 @@
 import axios from 'axios';
-import getMutation from './mutations';
-import { MUTATION_LOGIN, MUTATION_SIGNUP } from './mutations/constants';
+// import getMutation from './mutations';
+// import { MUTATION_LOGIN, MUTATION_SIGNUP } from './mutations/constants';
 import { HTTP_OK } from './httpCodes';
 
 /**
@@ -12,7 +12,7 @@ const API_ENDPOINT =
 /**
  * Mock api? true/false
  */
-const MOCK = process.env.VUE_API_MOCK;
+const MOCK = process.env.VUE_APP_API_MOCK;
 
 /**
  * Base error for auth module
@@ -46,7 +46,6 @@ export const login = async (email, password) => {
       resp = {
         status: HTTP_OK,
         data: {
-          // payload: { user: "test@test.com"}, secret: "test"
           token:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
         }
@@ -57,6 +56,7 @@ export const login = async (email, password) => {
   }
 
   if (resp.status === HTTP_OK) {
+    console.log(resp.data.token)
     return resp.data.token;
   } else {
     throw new AuthError('Unknown response');
@@ -85,7 +85,8 @@ export const signUp = async email => {
       resp = {
         status: HTTP_OK,
         data: {
-          ok: true
+          token:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
         }
       };
     }
