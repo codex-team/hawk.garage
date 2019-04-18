@@ -27,16 +27,16 @@ export class AuthError extends Error {}
  * @param {string} email Email.
  * @param {string} password Password.
  * @returns {Promise<string>} Auth token.
- * @throws {AuthError} Authentication error occured.
+ * @throws {AuthError} Authentication error occurred.
  */
 export const login = async (email, password) => {
   let resp;
 
-  console.log(MUTATION_LOGIN);
+  console.log();
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_LOGIN,
+        query: await MUTATION_LOGIN(),
         variables: {
           email,
           password
@@ -72,12 +72,10 @@ export const login = async (email, password) => {
 export const signUp = async email => {
   let resp;
 
-  console.log(MUTATION_SIGN_UP);
-
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_SIGN_UP,
+        query: await MUTATION_SIGN_UP(),
         variables: {
           email
         }

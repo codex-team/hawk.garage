@@ -1,11 +1,9 @@
 /**
- * Login mutation name
+ * Login mutation
  */
-import login from './login.graphql';
-export const MUTATION_LOGIN = login;
+export const MUTATION_LOGIN = async () => (await import(/* webpackChunkName: 'loginMutation' */'./login.graphql')).default;
 
 /**
- * SignUp muatation name
+ * SignUp mutation
  */
-import signUp from './signUp.graphql';
-export const MUTATION_SIGN_UP = signUp;
+export const MUTATION_SIGN_UP = async () => (await import(/* webpackChunkName: 'signUpMutation' */'./signUp.graphql')).default;
