@@ -1,5 +1,5 @@
 mutation SignUp($email: String!) {
   singUp(email: $email) {
-    ok
+    token
   }
 }
