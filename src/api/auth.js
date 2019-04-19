@@ -1,18 +1,17 @@
 import axios from 'axios';
-import getMutation from './mutations';
-import { MUTATION_LOGIN, MUTATION_SIGNUP } from './mutations/constants';
+import { MUTATION_LOGIN, MUTATION_SIGN_UP } from './mutations';
 import { HTTP_OK } from './httpCodes';
 
 /**
  * Hawk API endpoint URL
  */
 const API_ENDPOINT =
-  process.env.VUE_API_ENDPOINT || 'http://localhost:3000/graphql';
+  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:3000/graphql';
 
 /**
  * Mock api? true/false
  */
-const MOCK = process.env.VUE_API_MOCK;
+const MOCK = process.env.VUE_APP_API_MOCK;
 
 /**
  * Base error for auth module
@@ -28,7 +27,7 @@ export class AuthError extends Error {}
  * @param {string} email Email.
  * @param {string} password Password.
  * @returns {Promise<string>} Auth token.
- * @throws {AuthError} Authentication error occured.
+ * @throws {AuthError} Authentication error occurred.
  */
 export const login = async (email, password) => {
   let resp;
@@ -36,9 +35,9 @@ export const login = async (email, password) => {
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: getMutation(MUTATION_LOGIN),
+        query: MUTATION_LOGIN,
         variables: {
-          login: email,
+          email,
           password
         }
       });
@@ -46,7 +45,6 @@ export const login = async (email, password) => {
       resp = {
         status: HTTP_OK,
         data: {
-          // payload: { user: "test@test.com"}, secret: "test"
           token:
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
         }
@@ -76,7 +74,7 @@ export const signUp = async email => {
   try {
     if (!MOCK) {
       resp = await axios.post(API_ENDPOINT, {
-        query: getMutation(MUTATION_SIGNUP),
+        query: MUTATION_SIGN_UP,
         variables: {
           email
         }
@@ -85,7 +83,8 @@ export const signUp = async email => {
       resp = {
         status: HTTP_OK,
         data: {
-          ok: true
+          token:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
         }
       };
     }

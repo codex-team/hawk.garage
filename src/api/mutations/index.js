@@ -1,28 +1,14 @@
-import fs from 'fs';
-import { resolve } from 'path';
-import { promisify } from 'utils';
-
-const readFile = promisify(fs.readFile);
-
-let mutations = {};
+/**
+ * Login mutation
+ */
+import MUTATION_LOGIN from './login.graphql';
 
 /**
- * Singleton for loading .gql files
- *
- * @param {string} name Name of the file
- * @returns {string} Loaded query/mutation
+ * SignUp mutation
  */
-export default name => {
-  if (mutations[name]) {
-    return mutations[name];
-  } else {
-    readFile(resolve(__dirname, name))
-      .then(data => {
-        mutations[name] = data.toString();
-        return mutations[name];
-      })
-      .catch(err => {
-        throw err;
-      });
-  }
+import MUTATION_SIGN_UP from './signUp.graphql';
+
+export {
+  MUTATION_LOGIN,
+  MUTATION_SIGN_UP
 };
