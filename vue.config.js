@@ -7,5 +7,6 @@ module.exports = {
       .use('webpack-graphql-loader')
       .loader('webpack-graphql-loader')
       .end();
-  }
+  },
+  publicPath: ''
 };
