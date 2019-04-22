@@ -14,12 +14,47 @@ const API_ENDPOINT =
 const MOCK = process.env.VUE_APP_API_MOCK;
 
 /**
+ * Enum for AuthError type argument
+ * @typedef {string} AuthErrorType
+ */
+export const AuthErrorType = {
+  LOGIN: 'LOGIN_ERROR',
+  SIGNUP: 'SIGNUP_ERROR',
+  UNKNOWN: 'UNKNOWN_ERROR'
+};
+
+/**
  * Base error for auth module
  *
  * @class AuthError
  * @extends {Error}
+ * @property {AuthError} type Error type, see AuthErrorType.
+ * @property {any} [data] Additional data.
  */
-export class AuthError extends Error {}
+export class AuthError extends Error {
+  /**
+   *Creates an instance of AuthError.
+   * @param {string} message Error message.
+   * @param {AuthErrorType} type Error type.
+   * @param {any} data Additional data to pass. e.g. error from http library or response itself
+   * @memberof AuthError
+   */
+  constructor(message, type, data = null) {
+    super(message);
+
+    // Ensure the name of this error is the same as the class name
+    this.name = this.constructor.name;
+
+    this.type = type;
+
+    if (data) {
+      this.data = data;
+    }
+
+    // Clip constructor invokation from stack trace
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
 
 /**
  * Login user and get token.
@@ -51,13 +86,13 @@ export const login = async (email, password) => {
       };
     }
   } catch (e) {
-    throw new AuthError('Error while authenticating');
+    throw new AuthError('Error while authenticating', AuthErrorType.LOGIN, e);
   }
 
   if (resp.status === HTTP_OK) {
     return resp.data.token;
   } else {
-    throw new AuthError('Unknown response');
+    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, { resp });
   }
 };
 
@@ -89,12 +124,12 @@ export const signUp = async email => {
       };
     }
   } catch (e) {
-    throw new AuthError('Error while signing up');
+    throw new AuthError('Error while signing up', AuthErrorType.SIGNUP, e);
   }
 
   if (resp.status === HTTP_OK) {
     return resp.data.ok;
   } else {
-    throw new AuthError('Unknown response');
+    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, { resp });
   }
 };
