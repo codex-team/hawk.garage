@@ -20,6 +20,11 @@ const state = {
 };
 
 const getters = {
+  /**
+   * Returns number of user's workspaces
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @return {number}
+   */
   count: state => state.list.length
 };
 
@@ -35,6 +40,11 @@ const actions = {
     commit(ADD_WORKSPACE, response);
   },
 
+  /**
+   * Send request to delete workspace
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} workspaceId - id of workspace for deleting
+   */
   async [DELETE_WORKSPACE]({ commit }, workspaceId) {
     await workspaceApi.deleteWorkspace(workspaceId);
 
@@ -51,12 +61,16 @@ const mutations = {
   [ADD_WORKSPACE](state, workspace) {
     state.list.push(workspace);
   },
+
+  /**
+   * Mutation for deleting workspaces
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {string} workspaceId - id of workspace for deleting
+   */
   [DELETE_WORKSPACE](state, workspaceId) {
     state.list.find(element => {
       if (element.id === workspaceId) {
         state.list.splice(element, 1);
-        console.log('remove');
-        console.log(state.list);
       }
     });
   }
