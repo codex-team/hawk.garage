@@ -19,6 +19,9 @@ export default {
     };
   },
   methods: {
+    /**
+     * Creates new workspace
+     */
     async createWorkspace() {
       try {
         const createdWorkspace = await this.$store.dispatch(CREATE_WORKSPACE, { name: this.name });

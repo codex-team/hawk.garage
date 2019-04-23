@@ -11,7 +11,7 @@
 import { DELETE_WORKSPACE } from '../../store/actions/workspaces';
 
 export default {
-  name: 'Setting',
+  name: 'WorkspaceSettings',
   data() {
     const workspaceId = this.$route.params.workspaceId;
 
@@ -23,6 +23,9 @@ export default {
     };
   },
   methods: {
+    /**
+     * Deletes workspace
+     */
     async deleteWorkspace() {
       await this.$store.dispatch(DELETE_WORKSPACE, this.workspaceId);
       this.$router.push('/');
