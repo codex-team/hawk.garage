@@ -6,7 +6,7 @@
       </div>
       <div class="home__workspaces">
         <button
-          @click="$router.push('/create-workspace')"
+          @click="$router.push('/workspace-create')"
         >
           Create workspace
         </button>
