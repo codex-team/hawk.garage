@@ -70,12 +70,12 @@ const mutations = {
    * @param {string} workspaceId - id of workspace for deleting
    */
   [DELETE_WORKSPACE](state, workspaceId) {
-    let index;
+    let index = null;
 
     state.list.find((element, i) => {
       if (element.id === workspaceId) index = i;
     });
-    if (index) state.list.splice(index, 1);
+    if (index !== null) state.list.splice(index, 1);
   }
 };
 
