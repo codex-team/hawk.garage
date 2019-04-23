@@ -1,6 +1,6 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { CREATE_WORKSPACE, ADD_WORKSPACE } from '../actions/workspaces';
-import uuid from 'uuid/v4';
+import { CREATE_WORKSPACE, ADD_WORKSPACE, DELETE_WORKSPACE } from '../actions/workspaces';
+import * as workspaceApi from '../../api/workspaces';
 
 /**
  * @typedef Workspace - represents workspace
@@ -8,15 +8,6 @@ import uuid from 'uuid/v4';
  * @property {string} id - workspace id
  * @property {string} name - workspace name
  */
-
-/**
- * Temporary mockup api
- */
-const apiMockup = {
-  createWorkspace(workspace) {
-    return { id: uuid(), name: workspace.name };
-  }
-};
 
 /**
  * Module state
@@ -28,6 +19,10 @@ const state = {
   list: []
 };
 
+const getters = {
+  count: state => state.list.length
+};
+
 const actions = {
   /**
    * Send request to create new workspace
@@ -35,13 +30,15 @@ const actions = {
    * @param {Workspace} workspace - workspace params for creation
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
-    try {
-      const response = await apiMockup.createWorkspace(workspace);
+    const response = await workspaceApi.createWorkspace(workspace);
 
-      commit(ADD_WORKSPACE, response);
-    } catch (e) {
-      throw e;
-    }
+    commit(ADD_WORKSPACE, response);
+  },
+
+  async [DELETE_WORKSPACE]({ commit }, workspaceId) {
+    await workspaceApi.deleteWorkspace(workspaceId);
+
+    commit(DELETE_WORKSPACE, workspaceId);
   }
 };
 
@@ -53,11 +50,21 @@ const mutations = {
    */
   [ADD_WORKSPACE](state, workspace) {
     state.list.push(workspace);
+  },
+  [DELETE_WORKSPACE](state, workspaceId) {
+    state.list.find(element => {
+      if (element.id === workspaceId) {
+        state.list.splice(element, 1);
+        console.log('remove');
+        console.log(state.list);
+      }
+    });
   }
 };
 
 export default {
   state,
+  getters,
   actions,
   mutations
 };
