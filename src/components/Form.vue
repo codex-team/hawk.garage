@@ -57,7 +57,7 @@ export default {
       required: true
     },
     message: {
-      type: String,
+      type: Object,
       required: false
     },
     altText: {
