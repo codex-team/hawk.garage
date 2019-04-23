@@ -15,7 +15,12 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      children: [ {
+        path: '/:workspaceId/settings',
+        name: 'workspace-settings',
+        component: () => import(/* webpackChunkName: "catalog" */ './pages/workspaces/Settings')
+      } ]
     },
     {
       path: '/settings',
@@ -31,11 +36,6 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
-    },
-    {
-      path: '/:workspaceId/settings',
-      name: 'workspace-settings',
-      component: () => import(/* webpackChunkName: "catalog" */ './pages/workspaces/Settings')
     }
   ]
 });

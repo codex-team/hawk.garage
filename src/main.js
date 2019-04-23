@@ -7,10 +7,6 @@ import store from './store';
 
 Vue.use(VueAxios, axios);
 
-if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = process.env.SERVER_URL || 'http://localhost:3000';
-}
-
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
 Vue.config.debug = process.env.NODE_ENV !== 'production';
 

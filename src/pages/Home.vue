@@ -5,17 +5,18 @@
         <button @click="logout">Logout</button>
       </div>
       <div class="home__workspaces">
-        <div
+        <router-link
+          :to="`${workspace.id}/settings`"
           class="home__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
         >
           {{workspace.name}}
-        </div>
+        </router-link>
       </div>
     </aside>
     <div class="home__content">
-      <create-workspace></create-workspace>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -64,6 +65,7 @@ export default {
     }
 
     &__workspace-item {
+      display: block;
       color: #fff;
     }
   }
