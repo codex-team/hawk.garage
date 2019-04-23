@@ -33,11 +33,13 @@ const actions = {
    * Send request to create new workspace
    * @param {function} commit - standard Vuex commit function
    * @param {Workspace} workspace - workspace params for creation
+   * @returns {Workspace} - created workspace
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
     const response = await workspaceApi.createWorkspace(workspace);
 
     commit(ADD_WORKSPACE, response);
+    return response;
   },
 
   /**
@@ -68,11 +70,12 @@ const mutations = {
    * @param {string} workspaceId - id of workspace for deleting
    */
   [DELETE_WORKSPACE](state, workspaceId) {
-    state.list.find(element => {
-      if (element.id === workspaceId) {
-        state.list.splice(element, 1);
-      }
+    let index;
+
+    state.list.find((element, i) => {
+      if (element.id === workspaceId) index = i;
     });
+    if (index) state.list.splice(index, 1);
   }
 };
 

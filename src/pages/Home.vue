@@ -5,6 +5,11 @@
         <button @click="logout">Logout</button>
       </div>
       <div class="home__workspaces">
+        <button
+          @click="$router.push('/create-workspace')"
+        >
+          Create workspace
+        </button>
         <router-link
           :to="{ name: 'workspace-settings', params: { workspaceId:workspace.id } }"
           class="home__workspace-item"
@@ -39,9 +44,6 @@ export default {
     workspaces() {
       return this.$store.state.workspaces.list;
     }
-  },
-  mounted() {
-    if (!this.$store.getters.count) this.$router.push({ name: 'create-workspace' });
   }
 };
 
