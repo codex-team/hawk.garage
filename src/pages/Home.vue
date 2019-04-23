@@ -6,7 +6,7 @@
       </div>
       <div class="home__workspaces">
         <router-link
-          :to="`${workspace.id}/settings`"
+          :to="{ name: 'workspace-settings', params: { workspaceId:workspace.id } }"
           class="home__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
@@ -24,7 +24,6 @@
 <script>
 
 import { AUTH_LOGOUT } from '../store/actions/auth';
-import CreateWorkspace from '../components/CreateWorkspace';
 
 export default {
   name: 'Home',
@@ -41,8 +40,8 @@ export default {
       return this.$store.state.workspaces.list;
     }
   },
-  components: {
-    CreateWorkspace
+  mounted() {
+    if (!this.$store.getters.count) this.$router.push({ name: 'create-workspace' });
   }
 };
 
