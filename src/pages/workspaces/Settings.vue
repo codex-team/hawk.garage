@@ -1,12 +1,9 @@
 <template>
-  <div>
-    <form>
-      <label for="name">Workspace name</label>
-      <input type="text" id="name" v-model="name">
-      <button class="button" @click="deleteWorkspace">Delete workspace</button>
-      <button class="button" type="submit">Save</button>
-    </form>
-  </div>
+  <form class="form">
+    <label for="name">Workspace name</label>
+    <input type="text" id="name" v-model="name">
+    <button class="button" @click="deleteWorkspace">Delete workspace</button>
+  </form>
 </template>
 
 <script>
@@ -35,5 +32,7 @@ export default {
 </script>
 
 <style>
-
+  .form {
+    margin: 10px;
+  }
 </style>
