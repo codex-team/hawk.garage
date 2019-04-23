@@ -16,11 +16,18 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
-      children: [ {
-        path: '/:workspaceId/settings',
-        name: 'workspace-settings',
-        component: () => import(/* webpackChunkName: 'workspace-settings' */ './pages/workspaces/Settings')
-      } ]
+      children: [
+        {
+          path: '/:workspaceId/settings',
+          name: 'workspace-settings',
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './pages/workspaces/Settings')
+        },
+        {
+          path: '/create-workspace',
+          name: 'create-workspace',
+          component: () => import(/* webpackChunkName: 'create-workspace' */ './components/CreateWorkspace')
+        }
+      ]
     },
     {
       path: '/settings',
