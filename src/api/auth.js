@@ -15,7 +15,7 @@ const MOCK = process.env.VUE_APP_API_MOCK;
 
 /**
  * Enum for AuthError type argument
- * @typedef {string} AuthErrorType
+ * @typedef AuthErrorType
  */
 export const AuthErrorType = {
   LOGIN: 'LOGIN_ERROR',
@@ -26,18 +26,14 @@ export const AuthErrorType = {
 /**
  * Base error for auth module
  *
- * @class AuthError
  * @extends {Error}
- * @property {AuthError} type Error type, see AuthErrorType.
- * @property {any} [data] Additional data.
  */
 export class AuthError extends Error {
   /**
-   *Creates an instance of AuthError.
-   * @param {string} message Error message.
-   * @param {AuthErrorType} type Error type.
-   * @param {any} data Additional data to pass. e.g. error from http library or response itself
-   * @memberof AuthError
+   * Creates an instance of AuthError
+   * @param {string} message -  Error message
+   * @param {AuthErrorType} type - Error type
+   * @param {*} data - Additional data to pass. e.g. error from http library or response itself
    */
   constructor(message, type, data = null) {
     super(message);
@@ -57,12 +53,12 @@ export class AuthError extends Error {
 }
 
 /**
- * Login user and get token.
+ * Login user and get token
  *
- * @param {string} email Email.
- * @param {string} password Password.
- * @returns {Promise<string>} Auth token.
- * @throws {AuthError} Authentication error occurred.
+ * @param {string} email - Email
+ * @param {string} password - Password
+ * @returns {Promise<string>} - Auth token
+ * @throws {AuthError} Authentication error occurred
  */
 export const login = async (email, password) => {
   let resp;
@@ -92,16 +88,16 @@ export const login = async (email, password) => {
   if (resp.status === HTTP_OK) {
     return resp.data.token;
   } else {
-    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, { resp });
+    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, resp);
   }
 };
 
 /**
  * Sign up by email and return status(ok)
  *
- * @param {string} email Email.
- * @returns {Promise<boolean>} Response status.
- * @throws {AuthError} Authentication error occured.
+ * @param {string} email - Email
+ * @returns {Promise<boolean>} Response status
+ * @throws {AuthError} Authentication error occured
  */
 export const signUp = async email => {
   let resp;
@@ -130,6 +126,6 @@ export const signUp = async email => {
   if (resp.status === HTTP_OK) {
     return resp.data.ok;
   } else {
-    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, { resp });
+    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, resp);
   }
 };
