@@ -8,5 +8,5 @@ module.exports = {
       .loader('webpack-graphql-loader')
       .end();
   },
-  publicPath: ''
+  publicPath: '/'
 };

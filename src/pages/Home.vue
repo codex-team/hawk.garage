@@ -5,17 +5,23 @@
         <button @click="logout">Logout</button>
       </div>
       <div class="home__workspaces">
-        <div
+        <button
+          @click="$router.push('/workspace-create')"
+        >
+          Create workspace
+        </button>
+        <router-link
+          :to="{ name: 'workspace-settings', params: { workspaceId:workspace.id } }"
           class="home__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
         >
           {{workspace.name}}
-        </div>
+        </router-link>
       </div>
     </aside>
     <div class="home__content">
-      <create-workspace></create-workspace>
+      <router-view :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
@@ -23,7 +29,6 @@
 <script>
 
 import { AUTH_LOGOUT } from '../store/actions/auth';
-import CreateWorkspace from '../components/CreateWorkspace';
 
 export default {
   name: 'Home',
@@ -39,9 +44,6 @@ export default {
     workspaces() {
       return this.$store.state.workspaces.list;
     }
-  },
-  components: {
-    CreateWorkspace
   }
 };
 
@@ -64,6 +66,7 @@ export default {
     }
 
     &__workspace-item {
+      display: block;
       color: #fff;
     }
   }

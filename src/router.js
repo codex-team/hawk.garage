@@ -3,9 +3,9 @@ import Router from 'vue-router';
 import store from './store';
 
 import Home from './pages/Home';
-import Settings from './pages/Settings.vue';
-import SignUp from './pages/SignUp.vue';
-import Login from './pages/Login.vue';
+import Settings from './pages/Settings';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 
 Vue.use(Router);
 
@@ -15,7 +15,19 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      children: [
+        {
+          path: '/:workspaceId/settings',
+          name: 'workspace-settings',
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './pages/workspaces/Settings')
+        },
+        {
+          path: '/workspace-create',
+          name: 'workspace-create',
+          component: () => import(/* webpackChunkName: 'workspace-create' */ './components/CreateWorkspace')
+        }
+      ]
     },
     {
       path: '/settings',

@@ -1,6 +1,6 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { CREATE_WORKSPACE, ADD_WORKSPACE } from '../actions/workspaces';
-import uuid from 'uuid/v4';
+import { CREATE_WORKSPACE, ADD_WORKSPACE, DELETE_WORKSPACE } from '../actions/workspaces';
+import * as workspaceApi from '../../api/workspaces';
 
 /**
  * @typedef Workspace - represents workspace
@@ -8,15 +8,6 @@ import uuid from 'uuid/v4';
  * @property {string} id - workspace id
  * @property {string} name - workspace name
  */
-
-/**
- * Temporary mockup api
- */
-const apiMockup = {
-  createWorkspace(workspace) {
-    return { id: uuid(), name: workspace.name };
-  }
-};
 
 /**
  * Module state
@@ -28,20 +19,38 @@ const state = {
   list: []
 };
 
+const getters = {
+  /**
+   * Returns number of user's workspaces
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @return {number}
+   */
+  count: state => state.list.length
+};
+
 const actions = {
   /**
    * Send request to create new workspace
    * @param {function} commit - standard Vuex commit function
    * @param {Workspace} workspace - workspace params for creation
+   * @returns {Workspace} - created workspace
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
-    try {
-      const response = await apiMockup.createWorkspace(workspace);
+    const response = await workspaceApi.createWorkspace(workspace);
 
-      commit(ADD_WORKSPACE, response);
-    } catch (e) {
-      throw e;
-    }
+    commit(ADD_WORKSPACE, response);
+    return response;
+  },
+
+  /**
+   * Send request to delete workspace
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} workspaceId - id of workspace for deleting
+   */
+  async [DELETE_WORKSPACE]({ commit }, workspaceId) {
+    await workspaceApi.deleteWorkspace(workspaceId);
+
+    commit(DELETE_WORKSPACE, workspaceId);
   }
 };
 
@@ -53,11 +62,26 @@ const mutations = {
    */
   [ADD_WORKSPACE](state, workspace) {
     state.list.push(workspace);
+  },
+
+  /**
+   * Mutation for deleting workspaces
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {string} workspaceId - id of workspace for deleting
+   */
+  [DELETE_WORKSPACE](state, workspaceId) {
+    let index = null;
+
+    state.list.find((element, i) => {
+      if (element.id === workspaceId) index = i;
+    });
+    if (index !== null) state.list.splice(index, 1);
   }
 };
 
 export default {
   state,
+  getters,
   actions,
   mutations
 };

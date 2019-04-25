@@ -19,10 +19,14 @@ export default {
     };
   },
   methods: {
+    /**
+     * Creates new workspace
+     */
     async createWorkspace() {
       try {
-        await this.$store.dispatch(CREATE_WORKSPACE, { name: this.name });
-        this.message = '';
+        const createdWorkspace = await this.$store.dispatch(CREATE_WORKSPACE, { name: this.name });
+
+        this.$router.push({ name: 'workspace-settings', params: { workspaceId: createdWorkspace.id } });
       } catch (e) {
         this.message = e;
       }
