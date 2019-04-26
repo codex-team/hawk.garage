@@ -8,9 +8,10 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 
 Vue.use(Router);
+console.log(process.env.VUE_APP_ELECTRON);
 
 const router = new Router({
-  mode: 'history',
+  mode: process.env.VUE_APP_ELECTRON ? 'hash' : 'history',
   routes: [
     {
       path: '/',
@@ -48,6 +49,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(to.fullPath);
   const authRoutes = /^\/(login|sign-up)/;
 
   if (store.getters.isAuthenticated) {
