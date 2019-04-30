@@ -2,7 +2,7 @@
   <div class="form">
     <router-link class="form__title" to="/">Hawk.so</router-link>
     <div class="form__caption">Fast and lightweight errors tracking service</div>
-    <form class="form__container">
+    <form class="form__container"  @submit.prevent="$emit('submit')">
       <div class="form__header">{{ title }}</div>
       <div
         v-if="message"
@@ -15,7 +15,7 @@
           class="form__input"
           :type="field.type || 'text'"
           :name="field.name"
-          :value="field.value"
+          v-model="field.value"
           :id="field.name"
           :placeholder="field.placeholder"
           required
@@ -58,10 +58,7 @@ export default {
     },
     message: {
       type: Object,
-      required: false,
-      validator: function (val) {
-        return val['text'] && val['type'] && ['error', 'notify'].indexOf(val['type']) !== -1;
-      }
+      required: false
     },
     altText: {
       type: String,

@@ -1,10 +1,12 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    browser: true
   },
-  extends: [
-    'codex',
-    'plugin:vue/essential'
-  ]
+  extends: ['codex', 'plugin:vue/essential'],
+  plugins: [ 'import' ],
+  parserOptions: {
+    parser: 'babel-eslint',
+    sourceType: 'module'
+  }
 };

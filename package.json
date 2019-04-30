@@ -2,6 +2,7 @@
   "name": "hawk.so",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -15,10 +16,11 @@
     "postcss-nested": "^4.1.2",
     "postcss-preset-env": "^6.6.0",
     "register-service-worker": "^1.6.2",
+    "uuid": "^3.3.2",
     "vue": "^2.6.6",
-    "vue-axios": "^2.1.4",
     "vue-router": "^3.0.2",
-    "vuex": "^3.1.0"
+    "vuex": "^3.1.0",
+    "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
@@ -28,8 +30,9 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-config-codex": "github:codex-team/eslint-config",
+    "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.5.21"
-  },
-  "license": "UNLICENSED"
+    "vue-template-compiler": "^2.5.21",
+    "webpack-graphql-loader": "^1.0.1"
+  }
 }
