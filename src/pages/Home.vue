@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import * as consts from '@/constants/LocalStorageKeys';
+import * as consts from '../constants/localStorageKeys';
 
 import { AUTH_LOGOUT } from '../store/actions/auth';
 
