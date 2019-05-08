@@ -6,16 +6,19 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "serve:prod": "http-server ./dist -o --push-state"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "cssnano": "^4.1.10",
+    "http-server": "^0.11.1",
     "normalize.css": "^8.0.1",
     "postcss-import": "^12.0.1",
     "postcss-nested": "^4.1.2",
     "postcss-preset-env": "^6.6.0",
     "register-service-worker": "^1.6.2",
+    "spa-http-server": "^0.9.0",
     "uuid": "^3.3.2",
     "vue": "^2.6.6",
     "vue-router": "^3.0.2",
