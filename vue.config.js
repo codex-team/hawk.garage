@@ -1,4 +1,11 @@
 module.exports = {
+  pwa: {
+    name: 'hawk.so',
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: 'public/service-worker.js'
+    }
+  },
   chainWebpack: config => {
     // GraphQL Loader
     config.module

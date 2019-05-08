@@ -21,9 +21,11 @@
 <script>
 import Form from '../components/Form';
 import { AUTH_REQUEST } from '../store/actions/auth';
+import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
 
 export default {
   name: 'Login',
+  mixins: [ offlineErrorMessage ],
   data() {
     return {
       title: 'Log in',
