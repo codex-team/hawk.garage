@@ -5,10 +5,14 @@
  */
 
 workbox.core.setCacheNameDetails({ prefix: 'hawk.garage' });
+
+// Workbox generates precache manifest and write it in self.__precacheManifest
 workbox.precaching.precacheAndRoute(self.__precacheManifest);
 
+// Return a specific response for all navigation requests.
 workbox.routing.registerNavigationRoute('/index.html');
 
+// Cache all images (such as favicons)
 workbox.routing.registerRoute(
   /\.(png|jpg|jpeg|svg|gif)$/,
   new workbox.strategies.CacheFirst({
