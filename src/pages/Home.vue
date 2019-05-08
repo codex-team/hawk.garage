@@ -32,11 +32,6 @@ import { AUTH_LOGOUT } from '../store/actions/auth';
 
 export default {
   name: 'Home',
-  data() {
-    return {
-      projects: []
-    };
-  },
   methods: {
     logout() {
       this.$store.commit(AUTH_LOGOUT);
