@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import * as consts from '../constants/localStorageKeys';
 
 import { AUTH_LOGOUT } from '../store/actions/auth';
 
@@ -39,27 +38,6 @@ export default {
     };
   },
   methods: {
-    loadProjects() {
-      let tmpProjects;
-      // @todo wait for api
-
-      let data = {
-        projects: ['PROECT1', 'PROJECT2', 'ETC']
-      };
-
-      if (navigator.onLine) {
-        this.projects = this.projects.concat(data.projects);
-        localStorage.setItem(consts.PROJECTS_KEY, JSON.stringify(data.projects));
-      } else {
-        try {
-          tmpProjects = JSON.parse(localStorage.getItem(consts.PROJECTS_KEY));
-        } catch (err) {
-          tmpProjects = [];
-        }
-
-        this.projects = this.projects.concat(tmpProjects);
-      }
-    },
     logout() {
       this.$store.commit(AUTH_LOGOUT);
     }
@@ -70,9 +48,7 @@ export default {
      */
     workspaces() {
       return this.$store.state.workspaces.list;
-    } },
-  beforeMount() {
-    this.loadProjects();
+    }
   }
 };
 
