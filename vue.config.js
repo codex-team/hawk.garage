@@ -1,4 +1,7 @@
 module.exports = {
+  configureWebpack: {
+    devtool: 'eval'
+  },
   chainWebpack: config => {
     // GraphQL Loader
     config.module
