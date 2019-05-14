@@ -14,43 +14,14 @@ const API_ENDPOINT =
 const MOCK = process.env.VUE_APP_API_MOCK;
 
 /**
- * Enum for AuthError type argument
- * @typedef AuthErrorType
+ * Enum of auth module errors
+ * @enum {String}
  */
-export const AuthErrorType = {
-  LOGIN: 'LOGIN_ERROR',
-  SIGNUP: 'SIGNUP_ERROR',
-  UNKNOWN: 'UNKNOWN_ERROR'
+export const AUTH_ERROR = {
+  LOGIN: 'An error occurred during the login attempt',
+  SIGN_UP: 'An error occurred during the sign up attempt',
+  UNKNOWN: 'Unknown error occurred'
 };
-
-/**
- * Base error for auth module
- *
- * @extends {Error}
- */
-export class AuthError extends Error {
-  /**
-   * Creates an instance of AuthError
-   * @param {string} message -  Error message
-   * @param {AuthErrorType} type - Error type
-   * @param {*} data - Additional data to pass. e.g. error from http library or response itself
-   */
-  constructor(message, type, data = null) {
-    super(message);
-
-    // Ensure the name of this error is the same as the class name
-    this.name = this.constructor.name;
-
-    this.type = type;
-
-    if (data) {
-      this.data = data;
-    }
-
-    // Clip constructor invokation from stack trace
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
 
 /**
  * Login user and get token
@@ -58,7 +29,7 @@ export class AuthError extends Error {
  * @param {string} email - Email
  * @param {string} password - Password
  * @returns {Promise<string>} - Auth token
- * @throws {AuthError} Authentication error occurred
+ * @throws {Error} Authentication error occurred
  */
 export const login = async (email, password) => {
   let resp;
@@ -82,13 +53,13 @@ export const login = async (email, password) => {
       };
     }
   } catch (e) {
-    throw new AuthError('Error while authenticating', AuthErrorType.LOGIN, e);
+    throw new Error(AUTH_ERROR.LOGIN);
   }
 
   if (resp.status === HTTP_OK) {
     return resp.data.token;
   } else {
-    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, resp);
+    throw new Error(AUTH_ERROR.UNKNOWN);
   }
 };
 
@@ -97,7 +68,7 @@ export const login = async (email, password) => {
  *
  * @param {string} email - Email
  * @returns {Promise<boolean>} Response status
- * @throws {AuthError} Authentication error occured
+ * @throws {Error} Authentication error occured
  */
 export const signUp = async email => {
   let resp;
@@ -120,12 +91,12 @@ export const signUp = async email => {
       };
     }
   } catch (e) {
-    throw new AuthError('Error while signing up', AuthErrorType.SIGNUP, e);
+    throw new Error(AUTH_ERROR.SIGN_UP);
   }
 
   if (resp.status === HTTP_OK) {
     return resp.data.ok;
   } else {
-    throw new AuthError('Unknown response', AuthErrorType.UNKNOWN, resp);
+    throw new Error(AUTH_ERROR.UNKNOWN);
   }
 };

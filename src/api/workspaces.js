@@ -2,59 +2,25 @@ import { HTTP_OK } from './httpCodes';
 import uuid from 'uuid/v4';
 
 /**
- * Hawk API endpoint URL
- */
-const API_ENDPOINT =
-  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:3000/graphql';
-
-/**
  * Mock api? true/false
  */
 const MOCK = process.env.VUE_APP_API_MOCK;
 
 /**
- * Enum for WorkspacesError type argument
- * @typedef WorkspacesErrorTypes
+ * Enum of workspaces module errors
+ * @enum {String}
  */
-export const WorkspacesErrorTypes = {
-  CREATE: 'CREATE',
-  DELETE: 'DELETE',
-  UNKNOWN: 'UNKNOWN_ERROR'
+export const WORKSPACES_ERROR = {
+  CREATE: 'An error occurred during the creating attempt',
+  DELETE: 'An error occurred during the deletion attempt',
+  UNKNOWN: 'Unknown error occurred'
 };
-
-/**
- * Base error for workspaces module
- * @extends {Error}
- */
-export class WorkspacesError extends Error {
-  /**
-   * Creates an instance of WorkspacesError.
-   * @param {string} message - error message.
-   * @param {WorkspacesErrorTypes} type - error type.
-   * @param {*} [data] - additional data to pass. e.g. error from http library or response itself
-   */
-  constructor(message, type, data = null) {
-    super(message);
-
-    // Ensure the name of this error is the same as the class name
-    this.name = this.constructor.name;
-
-    this.type = type;
-
-    if (data) {
-      this.data = data;
-    }
-
-    // Clip constructor invokation from stack trace
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
 
 /**
  * Create workspace and return it
  * @param {Workspace} workspace - workspace to create
  * @returns {Promise<Workspace>} created workspace
- * @throws {WorkspacesError} Workspaces error occurred.
+ * @throws {Error} Workspaces error occurred.
  */
 export const createWorkspace = async workspace => {
   let resp;
@@ -72,13 +38,13 @@ export const createWorkspace = async workspace => {
       };
     }
   } catch (e) {
-    throw new WorkspacesError('Error while creating new workspace', WorkspacesErrorTypes.CREATE, e);
+    throw new Error(WORKSPACES_ERROR.CREATE);
   }
 
   if (resp.status === HTTP_OK) {
     return resp.data;
   } else {
-    throw new WorkspacesError('Unknown response', WorkspacesErrorTypes.UNKNOWN, resp);
+    throw new Error(WORKSPACES_ERROR.UNKNOWN);
   }
 };
 
@@ -86,7 +52,7 @@ export const createWorkspace = async workspace => {
  * Remove workspace by id return status (ok)
  * @param {string} workspaceId - workspaces id to delete
  * @returns {Promise<boolean>} Response status
- * @throws {WorkspacesError} Workspaces error occured.
+ * @throws {Error} Workspaces error occured.
  */
 export const deleteWorkspace = async workspaceId => {
   let resp;
@@ -100,12 +66,12 @@ export const deleteWorkspace = async workspaceId => {
       };
     }
   } catch (e) {
-    throw new WorkspacesError('Error while deleting', WorkspacesErrorTypes.DELETE, e);
+    throw new Error(WORKSPACES_ERROR.DELETE);
   }
 
   if (resp.status === HTTP_OK) {
     return true;
   } else {
-    throw new WorkspacesError('Unknown response', WorkspacesErrorTypes.UNKNOWN, resp.status);
+    throw new Error(WORKSPACES_ERROR.UNKNOWN);
   }
 };
