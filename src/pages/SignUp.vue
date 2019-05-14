@@ -19,9 +19,11 @@
 <script>
 import Form from '../components/Form';
 import { SIGN_UP_REQUEST } from '../store/actions/auth';
+import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
 
 export default {
   name: 'SignUp',
+  mixins: [ offlineErrorMessage ],
   data() {
     return {
       title: 'Create an account',
