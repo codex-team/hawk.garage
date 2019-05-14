@@ -73,6 +73,7 @@ const actions = {
 
       commit(AUTH_SUCCESS, token);
     } catch (e) {
+      console.log(e);
       commit(AUTH_ERROR);
       throw e;
     }
