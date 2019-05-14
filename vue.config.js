@@ -1,6 +1,6 @@
 module.exports = {
   configureWebpack: {
-    devtool: 'cheap-source-map'
+    devtool: 'source-map'
   },
   chainWebpack: config => {
     // GraphQL Loader

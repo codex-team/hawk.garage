@@ -18,9 +18,9 @@ const MOCK = process.env.VUE_APP_API_MOCK;
  * @enum {String}
  */
 export const AUTH_ERROR = {
-  LOGIN: 'LOGIN_ERROR',
-  SIGN_UP: 'SIGN_UP_ERROR',
-  UNKNOWN: 'UNKNOWN_ERROR'
+  LOGIN: 'An error occurred during the login attempt',
+  SIGN_UP: 'An error occurred during the sign up attempt',
+  UNKNOWN: 'Unknown error occurred'
 };
 
 /**
