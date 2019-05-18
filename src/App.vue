@@ -9,7 +9,7 @@ export default {
   name: 'app',
   computed: {
     themeClass() {
-      return this.$store.state.app.theme;
+      return `app--${this.$store.state.app.theme}`;
     }
   }
 };

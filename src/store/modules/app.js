@@ -5,7 +5,7 @@ import { THEME_CHANGE } from '../actions/app';
  * @enum {string} - Available themes
  */
 export const Themes = {
-  DARK: '',
+  DARK: 'dark',
   LIGHT: 'light'
 };
 

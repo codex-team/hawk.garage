@@ -17,7 +17,7 @@
 
 }
 
-#app.light{
+.app--light{
   --color-bg-page: #ff0000;
 }
 
