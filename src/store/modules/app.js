@@ -2,12 +2,6 @@
 import { THEME_TOGGLE } from '../actions/app';
 
 /**
- * @typedef App - represents app
- * @type {object}
- * @property {boolean} isDark - if true dark theme is enabled
- */
-
-/**
  * Module state
  * @typedef AuthModuleState
  * @type {object}
