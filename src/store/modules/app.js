@@ -1,19 +1,24 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { THEME_TOGGLE } from '../actions/app';
+import { THEME_CHANGE } from '../actions/app';
 
 /**
  * Module state
- * @typedef AuthModuleState
+ * @typedef AppModuleState
  * @type {object}
- * @property {boolean} isDark - if true dark theme is enabled
+ * @property {string} theme - name of the current theme
  */
 const state = {
-  isDark: true
+  theme: 'dark'
 };
 
 const mutations = {
-  [THEME_TOGGLE](state) {
-    state.isDark = !state.isDark;
+  /**
+   * Set theme name
+   * @param {AppModuleState} state - app module state
+   * @param {string} themeName - the name of the theme to be installed
+   */
+  [THEME_CHANGE](state, themeName) {
+    state.theme = themeName;
   }
 };
 

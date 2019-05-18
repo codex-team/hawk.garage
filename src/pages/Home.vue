@@ -26,7 +26,7 @@
 <script>
 
 import { AUTH_LOGOUT } from '../store/actions/auth';
-import { THEME_TOGGLE } from '../store/actions/app';
+import { THEME_CHANGE } from '../store/actions/app';
 
 export default {
   name: 'Home',
@@ -35,7 +35,7 @@ export default {
       this.$store.commit(AUTH_LOGOUT);
     },
     changeTheme() {
-      this.$store.commit(THEME_TOGGLE);
+      this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === 'dark' ? 'light' : 'dark');
     }
   },
   computed: {

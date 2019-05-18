@@ -1,4 +1,4 @@
 /**
  * Mutation for changing theme
  */
-export const THEME_TOGGLE = 'THEME_TOGGLE';
+export const THEME_CHANGE = 'THEME_CHANGE';

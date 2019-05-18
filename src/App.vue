@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="{ dark: isDark }">
+  <div id="app" :class="[themeClass]">
     <router-view/>
   </div>
 </template>
@@ -8,8 +8,8 @@
 export default {
   name: 'app',
   computed: {
-    isDark() {
-      return this.$store.state.app.isDark;
+    themeClass() {
+      return this.$store.state.app.theme;
     }
   }
 };
