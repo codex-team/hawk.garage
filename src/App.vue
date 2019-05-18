@@ -8,6 +8,10 @@
 export default {
   name: 'app',
   computed: {
+    /**
+     * Returns classname according to the theme name
+     * @return {string}
+     */
     themeClass() {
       return `app--${this.$store.state.app.theme}`;
     }

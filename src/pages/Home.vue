@@ -32,9 +32,15 @@ import { Themes } from '../store/modules/app';
 export default {
   name: 'Home',
   methods: {
+    /**
+     * Logouts user
+     */
     logout() {
       this.$store.commit(AUTH_LOGOUT);
     },
+    /**
+     * Toggles theme (dark/light)
+     */
     changeTheme() {
       this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
     }
