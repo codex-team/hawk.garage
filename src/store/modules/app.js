@@ -13,7 +13,7 @@ export const Themes = {
  * Module state
  * @typedef AppModuleState
  * @type {object}
- * @property {string} theme - name of the current theme
+ * @property {Themes} theme - name of the current theme
  */
 const state = {
   theme: Themes.DARK
