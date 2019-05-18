@@ -15,7 +15,7 @@ module.exports = {
 
       // Instruct all plugins to omit pre-polyfilled CSS
       // https://github.com/csstools/postcss-preset-env#preserve
-      preserve: false,
+      // preserve: false,
 
       // Enable or disable specific polyfills
       // https://github.com/csstools/postcss-preset-env#features

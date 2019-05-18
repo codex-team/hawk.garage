@@ -3,13 +3,10 @@
     <aside class="home__aside">
       <div class="home__aside-header">
         <button @click="logout">Logout</button>
+        <button @click="changeTheme">Change theme</button>
       </div>
       <div class="home__workspaces">
-        <button
-          @click="$router.push('/workspace-create')"
-        >
-          Create workspace
-        </button>
+        <button @click="$router.push('/workspace-create')">Create workspace</button>
         <router-link
           :to="{ name: 'workspace-settings', params: { workspaceId:workspace.id } }"
           class="home__workspace-item"
@@ -29,18 +26,22 @@
 <script>
 
 import { AUTH_LOGOUT } from '../store/actions/auth';
+import { THEME_TOGGLE } from '../store/actions/app';
 
 export default {
   name: 'Home',
   methods: {
     logout() {
       this.$store.commit(AUTH_LOGOUT);
+    },
+    changeTheme() {
+      this.$store.commit(THEME_TOGGLE);
     }
   },
   computed: {
     /**
-     * @return {Array<Workspace>} - registered workspaces
-     */
+       * @return {Array<Workspace>} - registered workspaces
+       */
     workspaces() {
       return this.$store.state.workspaces.list;
     }

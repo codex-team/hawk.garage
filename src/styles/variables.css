@@ -17,6 +17,10 @@
 
 }
 
+#app.dark{
+  --color-bg-page: #ff0000;
+}
+
 /**
 * Custom media queries
 */
