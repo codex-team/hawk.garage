@@ -1,12 +1,21 @@
 <template>
-  <div id="app">
+  <div id="app" :class="[themeClass]">
     <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  computed: {
+    /**
+     * Returns classname according to the theme name
+     * @return {string}
+     */
+    themeClass() {
+      return `app--theme--${this.$store.state.app.theme}`;
+    }
+  }
 };
 </script>
 

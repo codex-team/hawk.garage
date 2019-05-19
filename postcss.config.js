@@ -13,10 +13,6 @@ module.exports = {
       // List of features with levels: https://cssdb.org/
       stage: 0,
 
-      // Instruct all plugins to omit pre-polyfilled CSS
-      // https://github.com/csstools/postcss-preset-env#preserve
-      preserve: false,
-
       // Enable or disable specific polyfills
       // https://github.com/csstools/postcss-preset-env#features
       // List of available plugins

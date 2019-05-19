@@ -17,6 +17,10 @@
 
 }
 
+.app--theme--light{
+  --color-bg-page: #ff0000;
+}
+
 /**
 * Custom media queries
 */
