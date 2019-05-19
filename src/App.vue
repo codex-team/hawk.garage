@@ -13,7 +13,7 @@ export default {
      * @return {string}
      */
     themeClass() {
-      return `app--${this.$store.state.app.theme}`;
+      return `app--theme--${this.$store.state.app.theme}`;
     }
   }
 };
