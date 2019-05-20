@@ -138,12 +138,12 @@
 
         &__delimiter {
             opacity: 0.11;
-            margin: 20px 0;
+            margin: 19.5px 0 24.5px 0;
             border-top: solid 1px var(--color-text-main);
         }
 
         &__fields-container {
-            padding: 30px;
+            padding: 30px 48px 35px 30px;
         }
 
         &__header {
@@ -183,11 +183,12 @@
         &__section {
             border: 0;
             padding: 0;
-            margin: 0 0 25px;
+            margin: 0 0 20px;
         }
 
         &__submit {
             font-size: 17px;
+            margin-top: 10px;
         }
 
         &__alt-button {

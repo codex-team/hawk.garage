@@ -95,6 +95,10 @@ export default {
       border-color: #93d2f3;
       box-shadow: inset 0 1px 2px 0 rgba(129, 218, 255, 0.41);
     }
+
+    &:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 100px white inset;
+    }
   }
 
   .button {
