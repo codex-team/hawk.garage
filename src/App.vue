@@ -32,7 +32,7 @@ export default {
   }
 
   body {
-    font-family: "Lato", system-ui, sans-serif;
+    font-family: Roboto, system-ui, sans-serif;
     align-items: stretch;
     min-height: 100%;
     display: flex;
@@ -83,14 +83,13 @@ export default {
   textarea {
     width: 100%;
     box-sizing: border-box;
-    padding: 13px 18px;
-    font-size: 17px;
-    font-family: inherit;
+    padding: 11px 12px;
+    font-size: 14px;
     outline: none;
-    background: #fff;
-    border: 1px solid var(--color-line-gray);
-    box-shadow: inset 0 1px 2px 0 color-mod(var(--color-line-gray) alpha(50%));
-    border-radius: 2px;
+    color: var(--color-text-second);
+    background: var(--color-bg-main);
+    border: 1px solid #1f2230;
+    border-radius: 3px;
 
     &:focus {
       border-color: #93d2f3;
@@ -114,9 +113,12 @@ export default {
     }
 
     &--submit {
-      background-color: var(--color-bg-submit-button);
       color: #fff;
 
+      width: 128px;
+      height: 40px;
+      border-radius: 16px;
+      background-image: linear-gradient(to bottom, #4bb96f, #2da66a);
       &:hover {
         background-color: color-mod(var(--color-bg-submit-button) lightness(-15%));
         color: #fff;

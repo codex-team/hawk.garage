@@ -65,7 +65,7 @@ export default {
     min-height: 100%;
 
     &__aside {
-      background-color: var(--color-bg-page);
+      background-color: var(--color-bg-main);
       min-width: 250px;
     }
 

@@ -6,7 +6,7 @@
   height: 100%;
   display: flex;
   align-items: center;
-  background: var(--color-bg-page);
+  background: var(--color-bg-main);
   color: var(--color-text-gray);
   font-size: 20px;
 

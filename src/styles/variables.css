@@ -1,5 +1,9 @@
 :root {
   /** Texts */
+  --color-text-main: #dbe6ff;
+  --color-text-second: color-mod(var(--color-text-main) alpha(60%));
+
+  /** Texts */
   --color-text-gray: #8a97ab;
   --color-text-form-gray: #555968;
   --color-text-gray-on-dark: #a1a6b3;
@@ -11,14 +15,19 @@
   --color-line-gray: #d4d6d8;
 
   /** Backgrounds */
-  --color-bg-page: #1d1d27;
+  --color-bg-main: #242732;
+  --color-bg-second: #2f3341;
+
   --color-bg-button: #c5dff5;
   --color-bg-submit-button: #4592da;
+
+
+
 
 }
 
 .app--theme--light{
-  --color-bg-page: #ff0000;
+  --color-bg-main: #ff0000;
 }
 
 /**

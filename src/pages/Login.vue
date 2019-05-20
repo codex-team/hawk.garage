@@ -9,11 +9,6 @@
       :altText="altText"
       @submit="login"
     >
-      <template #disclaimer>
-        Don't have an account? Please,
-        <router-link to="/sign-up">sign up</router-link>
-        one.
-      </template>
     </Form>
   </div>
 </template>
@@ -31,7 +26,7 @@ export default {
       title: 'Log in',
       fields: [
         {
-          label: 'Your email',
+          label: 'Email address',
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
@@ -46,8 +41,8 @@ export default {
         }
       ],
       altLink: '/reset',
-      altText: 'Reset password',
-      submitText: 'Login',
+      altText: 'Recover password',
+      submitText: 'Enter',
       message: null
     };
   },
