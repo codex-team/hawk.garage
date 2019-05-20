@@ -45,35 +45,35 @@
 </template>
 
 <script>
-  export default {
-    name: 'Form',
-    props: {
-      title: {
-        type: String,
-        required: true
-      },
-      fields: {
-        type: Array,
-        required: true
-      },
-      submitText: {
-        type: String,
-        required: true
-      },
-      message: {
-        type: Object,
-        required: false
-      },
-      altText: {
-        type: String,
-        required: false
-      },
-      altLink: {
-        type: String,
-        required: false
-      }
+export default {
+  name: 'Form',
+  props: {
+    title: {
+      type: String,
+      required: true
+    },
+    fields: {
+      type: Array,
+      required: true
+    },
+    submitText: {
+      type: String,
+      required: true
+    },
+    message: {
+      type: Object,
+      required: false
+    },
+    altText: {
+      type: String,
+      required: false
+    },
+    altLink: {
+      type: String,
+      required: false
     }
-  };
+  }
+};
 </script>
 
 <style>
@@ -133,6 +133,10 @@
 
             .router-link-active {
                 color: var(--color-text-main);
+            }
+
+            a:hover {
+                color: var(--color-text-main)
             }
         }
 
@@ -196,6 +200,10 @@
             padding: 10px 24px;
             color: var(--color-text-second);
             font-size: 13px;
+
+            &:hover {
+                color: var(--color-text-main);
+            }
         }
     }
 </style>
