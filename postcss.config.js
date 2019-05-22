@@ -12,6 +12,14 @@ module.exports = {
      */
     'postcss-preset-env': {
       /*
+       * Specifies sources where variables like Custom Media, Custom Properties,
+       * Custom Selectors, and Environment Variables can be imported from
+       *
+       * https://github.com/csstools/postcss-preset-env#importfrom
+       */
+      importFrom: 'src/styles/variables.css',
+
+      /*
        * Polyfill CSS features
        * https://github.com/csstools/postcss-preset-env#stage
        *
