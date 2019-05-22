@@ -94,14 +94,6 @@ export default {
     &:focus {
       box-shadow: 0 0 0 1px var(--color-indicator-medium);
     }
-
-    &:-webkit-autofill {
-      /*
-       * Webkit hack for removing yellow autofill background
-       */
-      transition-delay: 9999s;
-      transition-property: background-color, color;
-    }
   }
 
   .button {
