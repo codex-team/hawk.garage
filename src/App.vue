@@ -21,7 +21,6 @@ export default {
 
 <style>
   @import "normalize.css";
-  @import "styles/variables.css";
 
   /**
   * Base site styles
