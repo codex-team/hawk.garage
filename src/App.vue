@@ -96,6 +96,9 @@ export default {
     }
 
     &:-webkit-autofill {
+      /*
+       * Webkit hack for removing yellow autofill background
+       */
       transition-delay: 9999s;
       transition-property: background-color, color;
     }
