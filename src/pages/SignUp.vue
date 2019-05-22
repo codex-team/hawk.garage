@@ -38,8 +38,8 @@ export default {
   },
   methods: {
     /**
-       * Form submit event handler
-       */
+     * Form submit event handler
+     */
     async signUp() {
       const email = this.fields[0].value;
 

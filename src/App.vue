@@ -9,9 +9,9 @@ export default {
   name: 'app',
   computed: {
     /**
-       * Returns classname according to the theme name
-       * @return {string}
-       */
+     * Returns classname according to the theme name
+     * @return {string}
+     */
     themeClass() {
       return `app--theme--${this.$store.state.app.theme}`;
     }
