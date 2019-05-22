@@ -1,7 +1,7 @@
 <template>
-    <div id="app" :class="[themeClass]">
-        <router-view/>
-    </div>
+  <div id="app" :class="[themeClass]">
+    <router-view/>
+  </div>
 </template>
 
 <script>
@@ -20,117 +20,117 @@ export default {
 </script>
 
 <style>
-    @import "normalize.css";
-    @import "styles/variables.css";
+  @import "normalize.css";
+  @import "styles/variables.css";
 
-    /**
-    * Base site styles
-    * =================================
-    */
-    html {
-        height: 100%;
+  /**
+  * Base site styles
+  * =================================
+  */
+  html {
+    height: 100%;
+  }
+
+  body {
+    font-family: Roboto, system-ui, sans-serif;
+    align-items: stretch;
+    min-height: 100%;
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+  }
+
+  #app {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /**
+  *
+  * Base elements rules
+  * ================================================
+  *
+  */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /**
+  * Cancel default list styles
+  */
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  /**
+  * Forms elements
+  * =========================================
+  */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    font-size: 14px;
+    outline: none;
+    color: var(--color-text-main);
+    background: var(--color-bg-main);
+    border: 1px solid #1f2230;
+    border-radius: 3px;
+
+    &:focus {
+      box-shadow: 0 0 0 1px var(--color-indicator-medium);
     }
 
-    body {
-        font-family: Roboto, system-ui, sans-serif;
-        align-items: stretch;
-        min-height: 100%;
-        display: flex;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        font-size: 15px;
+    &:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 100px white inset;
+    }
+  }
+
+  .button {
+    user-select: none;
+    border-radius: 2px;
+    border: 0;
+    padding: 12px 24px;
+    color: color-mod(var(--color-bg-button) lightness(-60%));
+    cursor: pointer;
+    background-color: var(--color-bg-button);
+    line-height: 1em;
+
+    &:hover {
+      background-color: color-mod(var(--color-bg-button) lightness(-10%));
+      color: color-mod(var(--color-bg-button) lightness(-70%));
     }
 
-    #app {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
+    &--submit {
+      color: var(--color-text-main);
 
-    /**
-    *
-    * Base elements rules
-    * ================================================
-    *
-    */
-    a {
-        color: inherit;
-        text-decoration: none;
-    }
+      width: 128px;
+      height: 40px;
+      border-radius: 16px;
+      background-image: linear-gradient(to bottom, #4bb96f, #2da66a);
 
-    /**
-    * Cancel default list styles
-    */
-    ul,
-    ol {
-        margin: 0;
-        padding: 0;
-    }
-
-    li {
-        list-style: none;
-    }
-
-    /**
-    * Forms elements
-    * =========================================
-    */
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="search"],
-    input[type="url"],
-    textarea {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 11px 12px;
-        font-size: 14px;
-        outline: none;
+      &:hover {
+        opacity: 0.9;
         color: var(--color-text-main);
-        background: var(--color-bg-main);
-        border: 1px solid #1f2230;
-        border-radius: 3px;
-
-        &:focus {
-            box-shadow: 0 0 0 1px var(--color-indicator-medium);
-        }
-
-        &:-webkit-autofill {
-            -webkit-box-shadow: 0 0 0 100px white inset;
-        }
+      }
     }
+  }
 
-    .button {
-        user-select: none;
-        border-radius: 2px;
-        border: 0;
-        padding: 12px 24px;
-        color: color-mod(var(--color-bg-button) lightness(-60%));
-        cursor: pointer;
-        background-color: var(--color-bg-button);
-        line-height: 1em;
-
-        &:hover {
-            background-color: color-mod(var(--color-bg-button) lightness(-10%));
-            color: color-mod(var(--color-bg-button) lightness(-70%));
-        }
-
-        &--submit {
-            color: var(--color-text-main);
-
-            width: 128px;
-            height: 40px;
-            border-radius: 16px;
-            background-image: linear-gradient(to bottom, #4bb96f, #2da66a);
-
-            &:hover {
-                opacity: 0.9;
-                color: var(--color-text-main);
-            }
-        }
-    }
-
-    ::placeholder {
-        color: var(--color-text-second);
-    }
+  ::placeholder {
+    color: var(--color-text-second);
+  }
 </style>

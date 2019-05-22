@@ -5,6 +5,8 @@
       :fields="fields"
       :submitText="submitText"
       :message="message"
+      :altLink="altLink"
+      :altText="altText"
       @submit="signUp"
     >
     </Form>
@@ -24,21 +26,23 @@ export default {
       title: 'Create an account',
       fields: [
         {
-          label: 'Enter your email',
+          label: 'EMAIL ADDRESS',
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
           type: 'email'
         }
       ],
-      submitText: 'Register',
+      altLink: '/reset',
+      altText: 'Recover password',
+      submitText: 'Enter',
       message: null
     };
   },
   methods: {
     /**
-     * Form submit event handler
-     */
+       * Form submit event handler
+       */
     async signUp() {
       const email = this.fields[0].value;
 
