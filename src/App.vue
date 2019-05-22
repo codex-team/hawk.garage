@@ -106,15 +106,8 @@ export default {
     border-radius: 2px;
     border: 0;
     padding: 12px 24px;
-    color: color-mod(var(--color-bg-button) lightness(-60%));
     cursor: pointer;
-    background-color: var(--color-bg-button);
     line-height: 1em;
-
-    &:hover {
-      background-color: color-mod(var(--color-bg-button) lightness(-10%));
-      color: color-mod(var(--color-bg-button) lightness(-70%));
-    }
 
     &--submit {
       color: var(--color-text-main);

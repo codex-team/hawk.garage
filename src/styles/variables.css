@@ -3,23 +3,10 @@
   --color-text-main: #dbe6ff;
   --color-text-second: color-mod(var(--color-text-main) alpha(60%));
 
-  /** Texts */
-  --color-text-gray: #8a97ab;
-  --color-text-form-gray: #555968;
-  --color-text-gray-on-dark: #a1a6b3;
-  --color-text-error-message: #cd4949;
-  --color-text-green: #00b693;
-  --color-text-link-on-dark: #31ffac;
-
-  /** Borders */
-  --color-line-gray: #d4d6d8;
-
   /** Backgrounds */
   --color-bg-main: #242732;
   --color-bg-second: #2f3341;
 
-  --color-bg-button: #c5dff5;
-  --color-bg-submit-button: #4592da;
 
   --color-indicator-critical: #d94848;
   --color-indicator-medium: #4979e4;
