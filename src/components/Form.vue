@@ -6,7 +6,7 @@
       <div class="form__picture"></div>
       <form class="form__fields-container" @submit.prevent="$emit('submit')">
         <div class="form__links">
-          <router-link to="/login">Fast auth</router-link>
+          <router-link to="/login">Login</router-link>
           <router-link to="/sign-up">Sign up</router-link>
         </div>
         <hr class="form__delimiter">
@@ -49,10 +49,6 @@
 export default {
   name: 'Form',
   props: {
-    title: {
-      type: String,
-      required: true
-    },
     fields: {
       type: Array,
       required: true
@@ -81,16 +77,7 @@ export default {
   @import "../styles/variables.css";
 
   .form {
-    /*max-width: 500px;*/
     margin: 0 auto;
-    /*@media (--media-desktop) {*/
-    /*  min-width: 500px;*/
-    /*}*/
-
-    /*@media (--media-mobile) {*/
-    /*  padding: 20px;*/
-    /*  margin: 0 auto;*/
-    /*}*/
 
     &__title {
       margin-bottom: 17px;
@@ -109,6 +96,7 @@ export default {
     }
 
     &__container {
+      height: 345px;
       display: flex;
       border-radius: 7px;
       box-shadow: 0 10px 11px -10px rgba(13, 15, 26, 0.49);
@@ -128,12 +116,18 @@ export default {
 
     &__links {
       display: flex;
+      flex-direction: row-reverse;
       justify-content: space-between;
       font-weight: bold;
       font-size: 18px;
       color: var(--color-text-second);
 
-      .router-link-active, a:hover {
+      .router-link-active {
+        order: 1;
+        color: var(--color-text-main);
+      }
+
+      a:hover {
         color: var(--color-text-main);
       }
     }
@@ -158,7 +152,6 @@ export default {
       margin-top: -5px;
       margin-bottom: 20px;
       font-size: 17px;
-      line-height: 1.4em;
 
       &--error {
         color: var(--color-indicator-critical);
@@ -171,7 +164,7 @@ export default {
 
     &__label {
       display: block;
-      margin-bottom: 0.7em;
+      margin-bottom: 9px;
       text-transform: uppercase;
       font-size: 12px;
       color: var(--color-text-second);

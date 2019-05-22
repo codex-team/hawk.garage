@@ -1,7 +1,6 @@
 <template>
   <div class="auth-page">
     <Form
-      :title="title"
       :fields="fields"
       :submitText="submitText"
       :message="message"
@@ -19,11 +18,9 @@ import { SIGN_UP_REQUEST } from '../store/actions/auth';
 import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
 
 export default {
-  name: 'SignUp',
   mixins: [ offlineErrorMessage ],
   data() {
     return {
-      title: 'Create an account',
       fields: [
         {
           label: 'EMAIL ADDRESS',
@@ -35,7 +32,7 @@ export default {
       ],
       altLink: '/reset',
       altText: 'Recover password',
-      submitText: 'Enter',
+      submitText: 'Register',
       message: null
     };
   },

@@ -1,7 +1,6 @@
 <template>
   <div class="auth-page">
     <Form
-      :title="title"
       :fields="fields"
       :submitText="submitText"
       :message="message"
@@ -23,7 +22,6 @@ export default {
   mixins: [ offlineErrorMessage ],
   data() {
     return {
-      title: 'Log in',
       fields: [
         {
           label: 'Email address',
@@ -42,7 +40,7 @@ export default {
       ],
       altLink: '/reset',
       altText: 'Recover password',
-      submitText: 'Enter',
+      submitText: 'Login',
       message: null
     };
   },
