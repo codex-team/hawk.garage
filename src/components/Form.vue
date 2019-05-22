@@ -74,6 +74,8 @@ export default {
 </script>
 
 <style>
+  @import "../styles/variables.css";
+
   .form {
     margin: 0 auto;
 

@@ -58,6 +58,8 @@ export default {
 </script>
 
 <style>
+  @import "../styles/variables.css";
+
   .home {
     display: flex;
     min-height: 100%;
