@@ -102,6 +102,10 @@ export default {
       box-shadow: 0 10px 11px -10px rgba(13, 15, 26, 0.49);
       border: solid 1px #343949;
       background: var(--color-bg-second);
+
+      @media (--media-mobile) {
+        height: auto;
+      }
     }
 
     &__picture {
@@ -112,6 +116,10 @@ export default {
       border-radius: inherit;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+
+      @media (--media-mobile) {
+        display: none;
+      }
     }
 
     &__links {
@@ -140,6 +148,10 @@ export default {
 
     &__fields-container {
       padding: 30px 48px 35px 30px;
+
+      @media(--media-mobile){
+        padding: 20px;
+      }
     }
 
     &__header {
@@ -187,6 +199,10 @@ export default {
       padding: 10px 24px;
       color: var(--color-text-second);
       font-size: 13px;
+
+      @media (--media-mobile) {
+        padding: 10px 20px;
+      }
 
       &:hover {
         color: var(--color-text-main);
