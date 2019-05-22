@@ -96,7 +96,8 @@ export default {
     }
 
     &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 100px white inset;
+      transition-delay: 9999s;
+      transition-property: background-color, color;
     }
   }
 
