@@ -78,19 +78,22 @@ export default {
     margin: 0 auto;
 
     &__title {
-      margin-bottom: 17px;
+      display: inline-block;
       color: #fff;
       font-size: 19px;
       font-weight: bold;
     }
 
     &__caption {
-      margin-bottom: 17px;
       margin-left: 15px;
-
       display: inline-block;
       color: var(--color-text-second);
       font-size: 14px;
+    }
+
+    &__title,
+    &__caption {
+      margin-bottom: 15px;
     }
 
     &__container {
@@ -140,8 +143,10 @@ export default {
 
     &__delimiter {
       opacity: 0.11;
-      margin: 19.5px 0 24.5px 0;
-      border-top: solid 1px var(--color-text-main);
+      margin: 20px 0 25px 0;
+      background: var(--color-text-main);
+      height: 1px;
+      border: 0;
     }
 
     &__fields-container {
@@ -188,7 +193,6 @@ export default {
     }
 
     &__submit {
-      font-size: 17px;
       margin-top: 10px;
     }
 

@@ -105,15 +105,15 @@ export default {
     line-height: 1em;
 
     &--submit {
-      color: var(--color-text-main);
-
       width: 128px;
       height: 40px;
-      border-radius: 16px;
-      background-image: linear-gradient(to bottom, #4bb96f, #2da66a);
+      border-radius: 13px;
+      background-image: linear-gradient(to bottom, #18a96c, #048058);
+      color: var(--color-text-main);
+      box-shadow: 0 17px 17px -9px #01a95e4d;
 
       &:hover {
-        opacity: 0.9;
+        background-image: linear-gradient(to bottom, #04b168, #00734e);
         color: var(--color-text-main);
       }
     }
@@ -121,5 +121,6 @@ export default {
 
   ::placeholder {
     color: var(--color-text-second);
+    opacity: 0.35;
   }
 </style>
