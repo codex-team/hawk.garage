@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="auth-page">
     <Form
       :title="title"
       :fields="fields"
@@ -72,5 +72,5 @@ export default {
 </script>
 
 <style>
-  @import "../styles/page.css";
+  @import "../styles/auth-page.css";
 </style>

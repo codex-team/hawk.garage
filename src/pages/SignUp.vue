@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="auth-page">
     <Form
       :title="title"
       :fields="fields"
@@ -7,11 +7,6 @@
       :message="message"
       @submit="signUp"
     >
-      <template #disclaimer>Already have an account?
-        <router-link to="/login">Login</router-link>
-        , you, beauty
-        <span style="display: inline-block; vertical-align: middle;">😏</span>
-      </template>
     </Form>
   </div>
 </template>
@@ -65,5 +60,5 @@ export default {
 </script>
 
 <style>
-  @import "../styles/page.css";
+  @import "../styles/auth-page.css";
 </style>
