@@ -69,6 +69,4 @@ export default {
 };
 </script>
 
-<style>
-  @import "../styles/auth-page.css";
-</style>
+<style src="../styles/auth-page.css"></style>
