@@ -28,18 +28,20 @@
             required
           >
         </fieldset>
-        <input
-          v-if="submitText"
-          class="button form__submit button--submit"
-          type="submit"
-          :value="submitText"
-        >
-        <router-link
-          v-if="altText && altLink"
-          class="form__alt-button"
-          :to="altLink"
-        >{{ altText }}
-        </router-link>
+        <div class="form__action-container">
+          <input
+            v-if="submitText"
+            class="button form__submit button--submit"
+            type="submit"
+            :value="submitText"
+          >
+          <router-link
+            v-if="altText && altLink"
+            class="form__alt-button"
+            :to="altLink"
+          >{{ altText }}
+          </router-link>
+        </div>
       </form>
     </div>
   </div>
@@ -199,19 +201,16 @@ export default {
       margin: 0 0 20px;
     }
 
-    &__submit {
+    &__action-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-top: 10px;
     }
 
     &__alt-button {
-      display: inline-block;
-      padding: 10px 24px;
       color: var(--color-text-second);
       font-size: 13px;
-
-      @media (--media-mobile) {
-        padding: 10px 5px;
-      }
 
       &:hover {
         color: var(--color-text-main);
