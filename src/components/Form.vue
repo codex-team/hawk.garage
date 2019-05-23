@@ -76,6 +76,12 @@ export default {
 <style>
   .form {
     margin: 0 auto;
+    width: 100%;
+    max-width: 568px;
+
+    @media (--media-mobile) {
+      max-width: 287px;
+    }
 
     &__title {
       display: inline-block;
@@ -151,8 +157,9 @@ export default {
 
     &__fields-container {
       padding: 30px 48px 35px 30px;
+      flex-grow: 1;
 
-      @media(--media-mobile){
+      @media (--media-mobile) {
         padding: 20px;
       }
     }
