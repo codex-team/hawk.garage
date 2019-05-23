@@ -58,14 +58,12 @@ export default {
 </script>
 
 <style>
-  @import "../styles/variables.css";
-
   .home {
     display: flex;
     min-height: 100%;
 
     &__aside {
-      background-color: var(--color-bg-page);
+      background-color: var(--color-bg-main);
       min-width: 250px;
     }
 

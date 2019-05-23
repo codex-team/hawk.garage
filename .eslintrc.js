@@ -4,6 +4,13 @@ module.exports = {
     browser: true
   },
   extends: ['codex', 'plugin:vue/essential'],
+  rules: {
+    'prefer-const': ['error', {
+      'destructuring': 'all',
+      'ignoreReadBeforeAssign': false
+    } ],
+    'multiline-comment-style': ['error', 'starred-block']
+  },
   plugins: [ 'import' ],
   parserOptions: {
     parser: 'babel-eslint',

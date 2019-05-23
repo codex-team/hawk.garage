@@ -32,7 +32,7 @@ export default {
   }
 
   body {
-    font-family: "Lato", system-ui, sans-serif;
+    font-family: Roboto, system-ui, sans-serif;
     align-items: stretch;
     min-height: 100%;
     display: flex;
@@ -83,18 +83,16 @@ export default {
   textarea {
     width: 100%;
     box-sizing: border-box;
-    padding: 13px 18px;
-    font-size: 17px;
-    font-family: inherit;
+    padding: 11px 12px;
+    font-size: 14px;
     outline: none;
-    background: #fff;
-    border: 1px solid var(--color-line-gray);
-    box-shadow: inset 0 1px 2px 0 color-mod(var(--color-line-gray) alpha(50%));
-    border-radius: 2px;
+    color: var(--color-text-main);
+    background: var(--color-bg-main);
+    border: 1px solid #1f2230;
+    border-radius: 3px;
 
     &:focus {
-      border-color: #93d2f3;
-      box-shadow: inset 0 1px 2px 0 rgba(129, 218, 255, 0.41);
+      box-shadow: 0 0 0 1px var(--color-indicator-medium);
     }
   }
 
@@ -102,29 +100,26 @@ export default {
     user-select: none;
     border-radius: 2px;
     border: 0;
-    padding: 12px 24px;
-    color: color-mod(var(--color-bg-button) lightness(-60%));
+    padding: 12px 35px;
     cursor: pointer;
-    background-color: var(--color-bg-button);
     line-height: 1em;
 
-    &:hover {
-      background-color: color-mod(var(--color-bg-button) lightness(-10%));
-      color: color-mod(var(--color-bg-button) lightness(-70%));
-    }
-
     &--submit {
-      background-color: var(--color-bg-submit-button);
-      color: #fff;
+      height: 40px;
+      border-radius: 13px;
+      background-image: linear-gradient(to bottom, #18a96c, #048058);
+      color: var(--color-text-main);
+      box-shadow: 0 17px 17px -9px #01a95e4d;
 
       &:hover {
-        background-color: color-mod(var(--color-bg-submit-button) lightness(-15%));
-        color: #fff;
+        background-image: linear-gradient(to bottom, #04b168, #00734e);
+        color: var(--color-text-main);
       }
     }
   }
 
   ::placeholder {
-    color: color-mod(var(--color-text-form-gray) alpha(40%));
+    color: var(--color-text-second);
+    opacity: 0.35;
   }
 </style>

@@ -1,17 +1,11 @@
 <template>
-  <div class="page">
+  <div class="auth-page">
     <Form
-      :title="title"
       :fields="fields"
       :submitText="submitText"
       :message="message"
       @submit="signUp"
     >
-      <template #disclaimer>Already have an account?
-        <router-link to="/login">Login</router-link>
-        , you, beauty
-        <span style="display: inline-block; vertical-align: middle;">😏</span>
-      </template>
     </Form>
   </div>
 </template>
@@ -22,14 +16,12 @@ import { SIGN_UP_REQUEST } from '../store/actions/auth';
 import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
 
 export default {
-  name: 'SignUp',
   mixins: [ offlineErrorMessage ],
   data() {
     return {
-      title: 'Create an account',
       fields: [
         {
-          label: 'Enter your email',
+          label: 'EMAIL ADDRESS',
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
@@ -64,6 +56,4 @@ export default {
 };
 </script>
 
-<style>
-  @import "../styles/page.css";
-</style>
+<style src="../styles/auth-page.css"></style>
