@@ -100,12 +100,11 @@ export default {
     user-select: none;
     border-radius: 2px;
     border: 0;
-    padding: 12px 24px;
+    padding: 12px 35px;
     cursor: pointer;
     line-height: 1em;
 
     &--submit {
-      width: 128px;
       height: 40px;
       border-radius: 13px;
       background-image: linear-gradient(to bottom, #18a96c, #048058);

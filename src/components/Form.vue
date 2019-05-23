@@ -139,6 +139,10 @@ export default {
       font-size: 18px;
       color: var(--color-text-second);
 
+      @media (--media-mobile) {
+        font-size: 15px;
+      }
+
       .router-link-active {
         order: 1;
         color: var(--color-text-main);
@@ -151,10 +155,14 @@ export default {
 
     &__delimiter {
       opacity: 0.11;
-      margin: 20px 0 25px 0;
+      margin: 20px 0 25px;
       background: var(--color-text-main);
       height: 1px;
       border: 0;
+
+      @media (--media-mobile) {
+        margin: 15px 0 20px;
+      }
     }
 
     &__fields-container {
@@ -205,7 +213,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 10px;
+      margin-top: 30px;
     }
 
     &__alt-button {
