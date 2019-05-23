@@ -214,6 +214,10 @@ export default {
       align-items: center;
       justify-content: space-between;
       margin-top: 30px;
+
+      @media (--media-mobile) {
+        margin-top: 20px;
+      }
     }
 
     &__alt-button {
