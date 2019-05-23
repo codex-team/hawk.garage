@@ -203,7 +203,7 @@ export default {
       font-size: 13px;
 
       @media (--media-mobile) {
-        padding: 10px 20px;
+        padding: 10px 5px;
       }
 
       &:hover {
