@@ -4,8 +4,6 @@
       :fields="fields"
       :submitText="submitText"
       :message="message"
-      :altLink="altLink"
-      :altText="altText"
       @submit="signUp"
     >
     </Form>
@@ -30,8 +28,6 @@ export default {
           type: 'email'
         }
       ],
-      altLink: '/reset',
-      altText: 'Recover password',
       submitText: 'Register',
       message: null
     };
