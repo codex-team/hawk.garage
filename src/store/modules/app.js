@@ -11,8 +11,7 @@ export const Themes = {
 
 /**
  * Module state
- * @typedef AppModuleState
- * @type {object}
+ * @typedef {object} AppModuleState
  * @property {Themes} theme - name of the current theme
  */
 const state = {

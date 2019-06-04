@@ -1,18 +1,31 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { CREATE_WORKSPACE, ADD_WORKSPACE, DELETE_WORKSPACE } from '../actions/workspaces';
+import {
+  CREATE_WORKSPACE,
+  ADD_WORKSPACE,
+  DELETE_WORKSPACE,
+  FETCH_WORKSPACES,
+  SET_WORKSPACES_LIST
+} from '../actions/workspaces';
 import * as workspaceApi from '../../api/workspaces';
+import Vue from 'vue';
 
 /**
- * @typedef Workspace - represents workspace
- * @type {object}
+ * @typedef {object} Workspace - represents workspace
  * @property {string} id - workspace id
  * @property {string} name - workspace name
+ * @property {String} picture - link to the workspace picture
+ * @property {[Project]} projects - projects associated with workspace
+ */
+
+/**
+ * @typedef {object} Project - represent project in workspace
+ * @property {String} id - project id
+ * @property {String} name - project name
  */
 
 /**
  * Module state
- * @typedef WorkspacesModuleState
- * @type {object}
+ * @typedef {object} WorkspacesModuleState
  * @property {array<Workspace>} list - registered workspaces
  */
 const state = {
@@ -25,7 +38,17 @@ const getters = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @return {number}
    */
-  count: state => state.list.length
+  count: state => state.list.length,
+
+  /**
+   * Returns all projects in all workspaces
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @return {Array<Project>}
+   */
+  allProjects: state => state.list.reduce((accumulator, workspace) => {
+    accumulator.push(...workspace.projects);
+    return accumulator;
+  }, [])
 };
 
 const actions = {
@@ -51,6 +74,17 @@ const actions = {
     await workspaceApi.deleteWorkspace(workspaceId);
 
     commit(DELETE_WORKSPACE, workspaceId);
+  },
+
+  /**
+   * Send query request to get information about all workspaces
+   * @param {function} commit - standard Vuex commit function
+   * @return {Promise<void>}
+   */
+  async [FETCH_WORKSPACES]({ commit }) {
+    const workspaces = await workspaceApi.getAllWorkspacesWithProjects();
+
+    commit(SET_WORKSPACES_LIST, workspaces);
   }
 };
 
@@ -76,6 +110,15 @@ const mutations = {
       if (element.id === workspaceId) index = i;
     });
     if (index !== null) state.list.splice(index, 1);
+  },
+
+  /**
+   * Mutation for replacing workspaces list
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Array<Workspace>} newList - new list of workspaces
+   */
+  [SET_WORKSPACES_LIST](state, newList) {
+    Vue.set(state, 'list', newList);
   }
 };
 

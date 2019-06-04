@@ -6,15 +6,21 @@
         <button @click="changeTheme">Change theme</button>
       </div>
       <div class="home__workspaces">
-        <button @click="$router.push('/workspace-create')">Create workspace</button>
-        <router-link
-          :to="{ name: 'workspace-settings', params: { workspaceId:workspace.id } }"
+        <img
           class="home__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
+          :src="workspace.picture"
         >
-          {{workspace.name}}
-        </router-link>
+      </div>
+      <div class="home__projects">
+        <div
+          class="home__project-item"
+          v-for="project in projects"
+          :key="project.id"
+        >
+          {{project.name}}
+        </div>
       </div>
     </aside>
     <div class="home__content">
@@ -51,6 +57,12 @@ export default {
      */
     workspaces() {
       return this.$store.state.workspaces.list;
+    },
+    /**
+     * @return {Array<Project>} - list of all projects
+     */
+    projects() {
+      return this.$store.getters.allProjects;
     }
   }
 };
@@ -72,8 +84,15 @@ export default {
     }
 
     &__workspace-item {
-      display: block;
-      color: #fff;
+      display: inline;
+      width: 26px;
+      height: 26px;
+      border-radius: 10px;
+      margin-left: 15px;
+    }
+
+    &__project-item {
+      color: var(--color-text-main);
     }
   }
 </style>

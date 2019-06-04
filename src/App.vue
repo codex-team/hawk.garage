@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { FETCH_WORKSPACES } from './store/actions/workspaces';
+
 export default {
   name: 'app',
   computed: {
@@ -15,6 +17,12 @@ export default {
     themeClass() {
       return `app--theme--${this.$store.state.app.theme}`;
     }
+  },
+  /**
+   * Vue hook. Called synchronously after the instance is created
+   */
+  created() {
+    this.$store.dispatch(FETCH_WORKSPACES);
   }
 };
 </script>

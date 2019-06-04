@@ -16,3 +16,13 @@ export const ADD_WORKSPACE = 'ADD_WORKSPACE';
  * Send request to delete workspace
  */
 export const DELETE_WORKSPACE = 'DELETE_WORKSPACE';
+
+/**
+ * Send query request to get information about all workspaces
+ */
+export const FETCH_WORKSPACES = 'FETCH_WORKSPACES';
+
+/**
+ * Set new workspaces list
+ */
+export const SET_WORKSPACES_LIST = 'SET_WORKSPACES_LIST';
