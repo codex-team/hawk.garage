@@ -1,12 +1,20 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { CREATE_WORKSPACE, ADD_WORKSPACE, DELETE_WORKSPACE, FETCH_WORKSPACES } from '../actions/workspaces';
+import {
+  CREATE_WORKSPACE,
+  ADD_WORKSPACE,
+  DELETE_WORKSPACE,
+  FETCH_WORKSPACES,
+  SET_WORKSPACES_LIST
+} from '../actions/workspaces';
 import * as workspaceApi from '../../api/workspaces';
+import Vue from 'vue';
 
 /**
  * @typedef Workspace - represents workspace
  * @type {object}
  * @property {string} id - workspace id
  * @property {string} name - workspace name
+ * @property {String} picture - link to the workspace picture
  * @property {[Project]} project - projects associated with workspace
  */
 
@@ -61,10 +69,10 @@ const actions = {
     commit(DELETE_WORKSPACE, workspaceId);
   },
 
-  async [FETCH_WORKSPACES]({ state }) {
-    const data = await workspaceApi.getAllWorkspacesAndProject();
+  async [FETCH_WORKSPACES]({ commit }) {
+    const workspaces = await workspaceApi.getAllWorkspacesAndProject();
 
-    state.list = data.workspaces;
+    commit(SET_WORKSPACES_LIST, workspaces);
   }
 };
 
@@ -90,6 +98,10 @@ const mutations = {
       if (element.id === workspaceId) index = i;
     });
     if (index !== null) state.list.splice(index, 1);
+  },
+
+  [SET_WORKSPACES_LIST](state, newList) {
+    Vue.set(state, 'list', newList);
   }
 };
 
