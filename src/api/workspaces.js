@@ -22,7 +22,7 @@ export const WORKSPACES_ERROR = {
  * @returns {Promise<Workspace>} created workspace
  * @throws {Error} Workspaces error occurred.
  */
-export const createWorkspace = async workspace => {
+export async function createWorkspace(workspace) {
   let resp;
 
   try {
@@ -46,7 +46,7 @@ export const createWorkspace = async workspace => {
   } else {
     throw new Error(WORKSPACES_ERROR.UNKNOWN);
   }
-};
+}
 
 /**
  * Remove workspace by id return status (ok)
@@ -54,7 +54,7 @@ export const createWorkspace = async workspace => {
  * @returns {Promise<boolean>} Response status
  * @throws {Error} Workspaces error occured.
  */
-export const deleteWorkspace = async workspaceId => {
+export async function deleteWorkspace(workspaceId) {
   let resp;
 
   try {
@@ -74,4 +74,62 @@ export const deleteWorkspace = async workspaceId => {
   } else {
     throw new Error(WORKSPACES_ERROR.UNKNOWN);
   }
-};
+}
+
+/**
+ * Returns all user's workspaces and project.
+ * @return {Promise<[Workspace]>}
+ */
+export async function getAllWorkspacesAndProject() {
+  let resp;
+
+  try {
+    if (!MOCK) {
+      // @todo make real request to API
+    } else {
+      resp = {
+        status: HTTP_OK,
+        data: {
+          workspaces: [
+            {
+              name: 'EditorJS',
+              id: '020302402349234',
+              projects: [
+                {
+                  name: 'codex.so main page',
+                  id: '2342594'
+                },
+                {
+                  name: 'php backend',
+                  id: '2342342367'
+                }
+              ]
+            },
+            {
+              name: 'Hawk.so',
+              id: '342342342343',
+              projects: [
+                {
+                  name: 'Garage',
+                  id: '23425awd94'
+                },
+                {
+                  name: 'GraphQL API',
+                  id: '2342awd342367'
+                }
+              ]
+            }
+          ]
+        }
+      };
+    }
+  } catch (e) {
+    throw new Error(WORKSPACES_ERROR.UNKNOWN);
+  }
+
+  if (resp.status === HTTP_OK) {
+    return resp.data;
+  } else {
+    throw new Error(WORKSPACES_ERROR.UNKNOWN);
+  }
+}
