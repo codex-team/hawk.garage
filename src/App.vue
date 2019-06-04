@@ -80,6 +80,13 @@ export default {
   }
 
   /**
+   * Clearfix for float elements
+   */
+  .clearfix {
+    clear: both;
+  }
+
+  /**
   * Forms elements
   * =========================================
   */

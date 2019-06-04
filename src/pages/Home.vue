@@ -5,6 +5,7 @@
         <div class="aside__user-picture"></div>
         <div class="aside__hawk-title">Hawk</div>
         <div class="aside__user-email">taly@codex.so</div>
+        <div class="clearfix"></div>
       </div>
       <div class="aside__workspaces">
         <img
@@ -85,11 +86,6 @@ export default {
     min-width: 250px;
     padding: 20px;
 
-    &__header {
-      /*display: flex;*/
-      /*flex-direction: column;*/
-    }
-
     &__user-picture {
       float: right;
       width: 40px;
@@ -103,9 +99,11 @@ export default {
       color: var(--color-text-main);
       font-weight: bold;
       letter-spacing: 0.19px;
+      line-height: 1.5;
     }
 
     &__user-email {
+      margin-top: 1px;
       color: var(--color-text-second);
       font-size: 14px;
     }
