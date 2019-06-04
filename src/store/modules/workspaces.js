@@ -1,5 +1,5 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { CREATE_WORKSPACE, ADD_WORKSPACE, DELETE_WORKSPACE } from '../actions/workspaces';
+import { CREATE_WORKSPACE, ADD_WORKSPACE, DELETE_WORKSPACE, FETCH_WORKSPACES } from '../actions/workspaces';
 import * as workspaceApi from '../../api/workspaces';
 
 /**
@@ -7,6 +7,14 @@ import * as workspaceApi from '../../api/workspaces';
  * @type {object}
  * @property {string} id - workspace id
  * @property {string} name - workspace name
+ * @property {[Project]} project - projects associated with workspace
+ */
+
+/**
+ * @typedef Project - represent project in workspace
+ * @type {object}
+ * @property {String} id - project id
+ * @property {String} name - project name
  */
 
 /**
@@ -51,6 +59,12 @@ const actions = {
     await workspaceApi.deleteWorkspace(workspaceId);
 
     commit(DELETE_WORKSPACE, workspaceId);
+  },
+
+  async [FETCH_WORKSPACES]({ state }) {
+    const data = await workspaceApi.getAllWorkspacesAndProject();
+
+    state.list = data.workspaces;
   }
 };
 
