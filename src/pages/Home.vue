@@ -58,6 +58,9 @@ export default {
     workspaces() {
       return this.$store.state.workspaces.list;
     },
+    /**
+     * @return {Array<Project>} - list of all projects
+     */
     projects() {
       return this.$store.getters.allProjects;
     }

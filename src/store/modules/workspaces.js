@@ -15,7 +15,7 @@ import Vue from 'vue';
  * @property {string} id - workspace id
  * @property {string} name - workspace name
  * @property {String} picture - link to the workspace picture
- * @property {[Project]} project - projects associated with workspace
+ * @property {[Project]} projects - projects associated with workspace
  */
 
 /**
@@ -42,6 +42,12 @@ const getters = {
    * @return {number}
    */
   count: state => state.list.length,
+
+  /**
+   * Returns all projects in all workspaces
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @return {Array<Project>}
+   */
   allProjects: state => state.list.reduce((accumulator, workspace) => {
     accumulator.push(...workspace.projects);
     return accumulator;
@@ -73,6 +79,11 @@ const actions = {
     commit(DELETE_WORKSPACE, workspaceId);
   },
 
+  /**
+   * Send query request to get information about all workspaces
+   * @param {function} commit - standard Vuex commit function
+   * @return {Promise<void>}
+   */
   async [FETCH_WORKSPACES]({ commit }) {
     const workspaces = await workspaceApi.getAllWorkspacesAndProject();
 
@@ -104,6 +115,11 @@ const mutations = {
     if (index !== null) state.list.splice(index, 1);
   },
 
+  /**
+   * Mutation for replacing workspaces list
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Array<Workspace>} newList - new list of workspaces
+   */
   [SET_WORKSPACES_LIST](state, newList) {
     Vue.set(state, 'list', newList);
   }

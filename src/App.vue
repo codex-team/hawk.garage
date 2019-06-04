@@ -18,6 +18,9 @@ export default {
       return `app--theme--${this.$store.state.app.theme}`;
     }
   },
+  /**
+   * Vue hook. Called synchronously after the instance is created
+   */
   created() {
     this.$store.dispatch(FETCH_WORKSPACES);
   }
