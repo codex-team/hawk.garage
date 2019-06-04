@@ -41,7 +41,11 @@ const getters = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @return {number}
    */
-  count: state => state.list.length
+  count: state => state.list.length,
+  allProjects: state => state.list.reduce((accumulator, workspace) => {
+    accumulator.push(...workspace.projects);
+    return accumulator;
+  }, [])
 };
 
 const actions = {
