@@ -85,7 +85,7 @@ const actions = {
    * @return {Promise<void>}
    */
   async [FETCH_WORKSPACES]({ commit }) {
-    const workspaces = await workspaceApi.getAllWorkspacesAndProject();
+    const workspaces = await workspaceApi.getAllWorkspacesWithProjects();
 
     commit(SET_WORKSPACES_LIST, workspaces);
   }

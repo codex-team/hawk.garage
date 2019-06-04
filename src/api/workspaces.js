@@ -80,7 +80,7 @@ export async function deleteWorkspace(workspaceId) {
  * Returns all user's workspaces and project.
  * @return {Promise<[Workspace]>}
  */
-export async function getAllWorkspacesAndProject() {
+export async function getAllWorkspacesWithProjects() {
   let resp;
 
   try {
