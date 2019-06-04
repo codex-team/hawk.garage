@@ -5,8 +5,7 @@ import router from '../../router';
 import * as authApi from '../../api/auth';
 
 /**
- * @typedef User - represents user
- * @type {object}
+ * @typedef {object} User - represents user
  * @property {string} email - user's email
  * @property {string} password - user's password
  */
@@ -24,8 +23,7 @@ const AUTH_STATES = {
 
 /**
  * Module state
- * @typedef AuthModuleState
- * @type {object}
+ * @typedef {object} AuthModuleState
  * @property {string} token - user's access token
  * @property {status} status - current auth status
  */

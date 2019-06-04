@@ -10,8 +10,7 @@ import * as workspaceApi from '../../api/workspaces';
 import Vue from 'vue';
 
 /**
- * @typedef Workspace - represents workspace
- * @type {object}
+ * @typedef {object} Workspace - represents workspace
  * @property {string} id - workspace id
  * @property {string} name - workspace name
  * @property {String} picture - link to the workspace picture
@@ -19,16 +18,14 @@ import Vue from 'vue';
  */
 
 /**
- * @typedef Project - represent project in workspace
- * @type {object}
+ * @typedef {object} Project - represent project in workspace
  * @property {String} id - project id
  * @property {String} name - project name
  */
 
 /**
  * Module state
- * @typedef WorkspacesModuleState
- * @type {object}
+ * @typedef {object} WorkspacesModuleState
  * @property {array<Workspace>} list - registered workspaces
  */
 const state = {
