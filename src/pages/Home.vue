@@ -7,22 +7,20 @@
         <div class="aside__user-email">taly@codex.so</div>
         <div class="clearfix"></div>
       </div>
-      <div class="aside__workspaces">
-        <img
+      <div class="aside__workspaces-menu">
+        <div
           class="aside__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
-          :src="workspace.picture"
-        >
+          :style="{ backgroundImage: `url('${workspace.picture}')` }"
+        ></div>
       </div>
-      <div class="aside__projects">
-        <div
-          class="aside__project-item"
+      <div class="aside__projects-list">
+        <ProjectsMenuItem
           v-for="project in projects"
           :key="project.id"
-        >
-          {{project.name}}
-        </div>
+          :project="project"
+        ></ProjectsMenuItem>
       </div>
     </aside>
     <div class="home__content">
@@ -36,9 +34,13 @@
 import { AUTH_LOGOUT } from '../store/actions/auth';
 import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
+import ProjectsMenuItem from '../components/ProjectsMenuItem';
 
 export default {
   name: 'Home',
+  components: {
+    ProjectsMenuItem
+  },
   methods: {
     /**
      * Logouts user
@@ -83,8 +85,11 @@ export default {
 
   .aside {
     background-color: var(--color-bg-main);
-    min-width: 250px;
-    padding: 20px;
+    min-width: 342px;
+
+    &__header {
+      padding: 20px;
+    }
 
     &__user-picture {
       float: right;
@@ -108,16 +113,20 @@ export default {
       font-size: 14px;
     }
 
+    &__workspaces-menu {
+      padding: 0 20px 20px;
+    }
+
     &__workspace-item {
-      display: inline;
+      display: inline-block;
       width: 26px;
       height: 26px;
       border-radius: 10px;
-      margin-left: 15px;
+      margin-right: 15px;
+      background-position: center center;
+      background-size: cover;
     }
 
-    &__project-item {
-      color: var(--color-text-main);
-    }
+
   }
 </style>
