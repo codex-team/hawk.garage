@@ -32,9 +32,8 @@ export default {
   @import "styles/variables.css";
 
   /**
-  * Base site styles
-  * =================================
-  */
+   * Base site styles
+   */
   html {
     height: 100%;
   }
@@ -56,19 +55,17 @@ export default {
   }
 
   /**
-  *
-  * Base elements rules
-  * ================================================
-  *
-  */
+   * Base elements rules
+   *
+   */
   a {
     color: inherit;
     text-decoration: none;
   }
 
   /**
-  * Cancel default list styles
-  */
+   * Cancel default list styles
+   */
   ul,
   ol {
     margin: 0;
@@ -82,14 +79,15 @@ export default {
   /**
    * Clearfix for float elements
    */
-  .clearfix {
+  .clearfix:after {
+    content: "";
+    display: table;
     clear: both;
   }
 
   /**
-  * Forms elements
-  * =========================================
-  */
+   * Forms elements
+   */
   input[type="text"],
   input[type="email"],
   input[type="password"],

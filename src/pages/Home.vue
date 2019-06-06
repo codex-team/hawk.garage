@@ -1,11 +1,10 @@
 <template>
   <div class="home">
     <aside class="aside">
-      <div class="aside__header">
+      <div class="aside__header clearfix">
         <div class="aside__user-picture"></div>
         <div class="aside__hawk-title">Hawk</div>
         <div class="aside__user-email">taly@codex.so</div>
-        <div class="clearfix"></div>
       </div>
       <div class="aside__workspaces-menu">
         <div
