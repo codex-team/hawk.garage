@@ -34,6 +34,8 @@ export default {
 
 <style>
   .project-menu-item {
+    cursor: pointer;
+    user-select: none;
     color: var(--color-text-main);
     max-height: 62px;
     padding: 6px 20px;
@@ -74,12 +76,14 @@ export default {
     &__events-number {
       box-sizing: border-box;
       max-width: 42px;
+      color: var(--color-text-main);
       background-color: var(--color-indicator-medium);
       border-radius: 7px;
       padding: 4px 7px 3px 7px;
       font-size: 11px;
       height: 20px;
       line-height: 13px;
+      font-weight: bold;
       margin: auto 0 auto auto;
     }
 

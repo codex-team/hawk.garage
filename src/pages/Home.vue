@@ -117,6 +117,7 @@ export default {
     }
 
     &__workspace-item {
+      cursor: pointer;
       display: inline-block;
       width: 26px;
       height: 26px;
