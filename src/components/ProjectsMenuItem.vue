@@ -45,6 +45,7 @@ export default {
       font-size: 14px;
       font-weight: 500;
       color: var(--color-text-main);
+      margin-bottom: 5px;
     }
 
     &__last-event {
