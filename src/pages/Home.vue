@@ -113,7 +113,7 @@ export default {
     }
 
     &__workspaces-menu {
-      padding: 0 20px 20px;
+      padding: 0 20px 24px;
     }
 
     &__workspace-item {
@@ -125,7 +125,5 @@ export default {
       background-position: center center;
       background-size: cover;
     }
-
-
   }
 </style>
