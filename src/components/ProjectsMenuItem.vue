@@ -71,11 +71,14 @@ export default {
     }
 
     &__events-number {
+      box-sizing: border-box;
       max-width: 42px;
       background-color: var(--color-indicator-medium);
       border-radius: 7px;
       padding: 4px 7px 3px 7px;
       font-size: 11px;
+      height: 20px;
+      line-height: 13px;
       margin: auto 0 auto auto;
     }
 
