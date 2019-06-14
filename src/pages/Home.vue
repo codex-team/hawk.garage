@@ -1,26 +1,25 @@
 <template>
   <div class="home">
-    <aside class="home__aside">
-      <div class="home__aside-header">
-        <button @click="logout">Logout</button>
-        <button @click="changeTheme">Change theme</button>
+    <aside class="aside">
+      <div class="aside__header clearfix">
+        <div class="aside__user-picture"></div>
+        <div class="aside__hawk-title">Hawk</div>
+        <div class="aside__user-email">taly@codex.so</div>
       </div>
-      <div class="home__workspaces">
-        <img
-          class="home__workspace-item"
+      <div class="aside__workspaces-menu">
+        <div
+          class="aside__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
-          :src="workspace.picture"
-        >
+          :style="{ backgroundImage: `url('${workspace.picture}')` }"
+        ></div>
       </div>
-      <div class="home__projects">
-        <div
-          class="home__project-item"
+      <div class="aside__projects-list">
+        <ProjectsMenuItem
           v-for="project in projects"
           :key="project.id"
-        >
-          {{project.name}}
-        </div>
+          :project="project"
+        ></ProjectsMenuItem>
       </div>
     </aside>
     <div class="home__content">
@@ -34,9 +33,13 @@
 import { AUTH_LOGOUT } from '../store/actions/auth';
 import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
+import ProjectsMenuItem from '../components/ProjectsMenuItem';
 
 export default {
   name: 'Home',
+  components: {
+    ProjectsMenuItem
+  },
   methods: {
     /**
      * Logouts user
@@ -74,25 +77,54 @@ export default {
     display: flex;
     min-height: 100%;
 
-    &__aside {
-      background-color: var(--color-bg-main);
-      min-width: 250px;
-    }
-
     &__content {
       width: 100%;
     }
+  }
+
+  .aside {
+    background-color: var(--color-bg-main);
+    min-width: 342px;
+
+    &__header {
+      padding: 20px;
+    }
+
+    &__user-picture {
+      float: right;
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
+      background-size: cover;
+    }
+
+    &__hawk-title {
+      color: var(--color-text-main);
+      font-weight: bold;
+      letter-spacing: 0.19px;
+      line-height: 1.5;
+    }
+
+    &__user-email {
+      margin-top: 1px;
+      color: var(--color-text-second);
+      font-size: 14px;
+    }
+
+    &__workspaces-menu {
+      padding: 0 20px 24px;
+    }
 
     &__workspace-item {
-      display: inline;
+      cursor: pointer;
+      display: inline-block;
       width: 26px;
       height: 26px;
       border-radius: 10px;
-      margin-left: 15px;
-    }
-
-    &__project-item {
-      color: var(--color-text-main);
+      margin-right: 15px;
+      background-position: center center;
+      background-size: cover;
     }
   }
 </style>

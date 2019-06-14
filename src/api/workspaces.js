@@ -98,11 +98,13 @@ export async function getAllWorkspacesWithProjects() {
               projects: [
                 {
                   name: 'codex.so main page',
-                  id: '2342594'
+                  id: '2342594',
+                  picture: 'https://capella.pics/fd1a93ac-f8e2-4b4b-911e-568359e777ec.jpg'
                 },
                 {
                   name: 'php backend',
-                  id: '2342342367'
+                  id: '2342342367',
+                  picture: 'https://capella.pics/fd1a93ac-f8e2-4b4b-911e-568359e777ec.jpg'
                 }
               ]
             },
@@ -113,11 +115,13 @@ export async function getAllWorkspacesWithProjects() {
               projects: [
                 {
                   name: 'Garage',
-                  id: '23425awd94'
+                  id: '23425awd94',
+                  picture: 'https://capella.pics/9a7e51f7-2629-4040-9aab-e836fc6ee30c.jpg'
                 },
                 {
                   name: 'GraphQL API',
-                  id: '2342awd342367'
+                  id: '2342awd342367',
+                  picture: 'https://capella.pics/9a7e51f7-2629-4040-9aab-e836fc6ee30c.jpg'
                 }
               ]
             }
