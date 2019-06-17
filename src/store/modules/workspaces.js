@@ -1,4 +1,4 @@
-/* eslint no-shadow: ["error", { "allow": ["state"] }] */
+/* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   CREATE_WORKSPACE,
   ADD_WORKSPACE,
@@ -32,6 +32,9 @@ const state = {
   list: []
 };
 
+/**
+ * Module getters
+ */
 const getters = {
   /**
    * Returns number of user's workspaces
@@ -48,7 +51,22 @@ const getters = {
   allProjects: state => state.list.reduce((accumulator, workspace) => {
     accumulator.push(...workspace.projects);
     return accumulator;
-  }, [])
+  }, []),
+
+  /**
+   * Returns project by id
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {object} getters - Vuex getters
+   * @return {function(String): Project}
+   */
+  project: (state, getters) =>
+    /**
+     * @param {String} id project id to find
+     * @return {Project}
+     */
+    id => {
+      return getters.allProjects.find(project => project.id === id);
+    }
 };
 
 const actions = {
