@@ -117,6 +117,7 @@ export default {
       font-size: 14px;
       color: var(--color-text-second);
       margin-bottom: 20px;
+      margin-left: 11px;
     }
 
     &__event {
