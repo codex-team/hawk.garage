@@ -64,9 +64,7 @@ const getters = {
      * @param {String} id project id to find
      * @return {Project}
      */
-    id => {
-      return getters.allProjects.find(project => project.id === id);
-    }
+    id => getters.allProjects.find(project => project.id === id)
 };
 
 const actions = {
