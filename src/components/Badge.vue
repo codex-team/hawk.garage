@@ -1,6 +1,6 @@
 <template>
   <div class="badge">
-    {{content}}
+    {{convertedContent}}
   </div>
 </template>
 
@@ -14,6 +14,16 @@ export default {
     content: {
       type: [String, Number],
       required: true
+    }
+  },
+  computed: {
+    convertedContent() {
+      if (typeof this.content !== 'number') return this.content;
+
+      const count = this.content.toString();
+
+      if (count.length === 4) return `${count.slice(0, 1)} ${count.slice(1)}`;
+      return this.content;
     }
   }
 };
@@ -30,5 +40,6 @@ export default {
     height: 20px;
     line-height: 13px;
     font-weight: bold;
+    white-space: nowrap;
   }
 </style>
