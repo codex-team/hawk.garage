@@ -19,6 +19,7 @@
           v-for="project in projects"
           :key="project.id"
           :project="project"
+          @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
         ></ProjectsMenuItem>
       </div>
     </aside>

@@ -18,7 +18,7 @@ const router = new Router({
       component: Home,
       children: [
         {
-          path: '/:workspaceId/settings',
+          path: '/workspaces/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './pages/workspaces/Settings')
         },
@@ -26,6 +26,11 @@ const router = new Router({
           path: '/workspace-create',
           name: 'workspace-create',
           component: () => import(/* webpackChunkName: 'workspace-create' */ './components/CreateWorkspace')
+        },
+        {
+          path: '/projects/:projectId',
+          name: 'project-overview',
+          component: () => import(/* webpackChunkName: 'project-overview' */ './pages/projects/ProjectOverview.vue')
         }
       ]
     },
