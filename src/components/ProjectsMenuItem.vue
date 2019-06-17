@@ -14,13 +14,16 @@
         Uncaught TypeError: Cannot read property 'activate' of undefined фвцфцвфцвфцв
       </div>
     </div>
-    <div class="project-menu-item__events-number">
-      343
-    </div>
+    <Badge
+      content="343"
+      class="project-menu-item__events-number"
+    ></Badge>
   </div>
 </template>
 
 <script>
+import Badge from './Badge';
+
 export default {
   name: 'ProjectsMenuItem',
   props: {
@@ -28,6 +31,9 @@ export default {
      * @type {Project}
      */
     project: Object
+  },
+  components: {
+    Badge
   }
 };
 </script>
@@ -74,16 +80,6 @@ export default {
     }
 
     &__events-number {
-      box-sizing: border-box;
-      max-width: 42px;
-      color: var(--color-text-main);
-      background-color: var(--color-indicator-medium);
-      border-radius: 7px;
-      padding: 4px 7px 3px 7px;
-      font-size: 11px;
-      height: 20px;
-      line-height: 13px;
-      font-weight: bold;
       margin: auto 0 auto auto;
     }
 

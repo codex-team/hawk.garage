@@ -22,7 +22,6 @@ export default {
 <style>
   .badge {
     box-sizing: border-box;
-    max-width: 42px;
     color: var(--color-text-main);
     background-color: var(--color-indicator-medium);
     border-radius: 7px;
@@ -31,6 +30,5 @@ export default {
     height: 20px;
     line-height: 13px;
     font-weight: bold;
-    margin: auto 0 auto auto;
   }
 </style>
