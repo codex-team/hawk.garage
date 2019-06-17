@@ -33,6 +33,7 @@ export default {
 
     &__time {
       font-size: 12px;
+      min-width: 30px;
       color: var(--color-text-second);
     }
 
