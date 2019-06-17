@@ -42,6 +42,7 @@ export default {
     font-family: Roboto, system-ui, sans-serif;
     align-items: stretch;
     min-height: 100%;
+    color: var(--color-text-main);
     display: flex;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

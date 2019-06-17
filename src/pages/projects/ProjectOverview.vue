@@ -13,15 +13,40 @@
     <div class="project-overview__chart">
 
     </div>
-    <div class="project-overview__errors">
-
+    <div class="project-overview__events">
+      <div class="project-overview__date">Today</div>
+      <EventItem
+        v-for="event in events"
+        :key="event.id"
+        :event="event"
+      ></EventItem>
     </div>
   </div>
 </template>
 
 <script>
+import EventItem from '../../components/EventItem';
+
 export default {
   name: 'ProjectOverview',
+  data() {
+    return {
+      events: [
+        {
+          id: '2342342edwdwed',
+          time: 'now',
+          count: 2342,
+          info: 'Error fetching remote / [ status 0 ] Could not resolve host: detik.com'
+        },
+        {
+          id: '2342342edwdwedqwd',
+          time: '13:51',
+          count: 232,
+          info: 'Uncaught Error: Can not find a Block from this child Node'
+        }
+      ]
+    };
+  },
   computed: {
     /**
      * Current viewed project
@@ -32,14 +57,15 @@ export default {
 
       return this.$store.getters.project(projectId);
     }
+  },
+  components: {
+    EventItem
   }
 };
 </script>
 
 <style>
   .project-overview {
-    display: flex;
-    flex-direction: column;
     background-color: var(--color-bg-second);
     height: 100%;
 
@@ -70,6 +96,18 @@ export default {
       height: 215px;
       background-color: var(--color-bg-main);
       margin: 16px 15px 15px;
+    }
+
+    &__events {
+      display: flex;
+      flex-direction: column;
+      margin: 50px 15px 15px;
+    }
+
+    &__date {
+      font-size: 14px;
+      color: var(--color-text-second);
+      margin-bottom: 20px;
     }
   }
 </style>
