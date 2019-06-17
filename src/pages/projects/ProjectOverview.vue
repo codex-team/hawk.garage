@@ -16,6 +16,10 @@
 export default {
   name: 'ProjectOverview',
   computed: {
+    /**
+     * Current viewed project
+     * @return {Project}
+     */
     project() {
       const projectId = this.$route.params.projectId;
 
