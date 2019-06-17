@@ -79,7 +79,8 @@ export default {
     min-height: 100%;
 
     &__content {
-      width: 100%;
+      flex-grow: 1;
+      overflow: hidden;
     }
   }
 
