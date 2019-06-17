@@ -68,7 +68,6 @@ export default {
 
 <style>
   .project-overview {
-    background-color: var(--color-bg-second);
     height: 100%;
 
     &__header {

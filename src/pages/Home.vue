@@ -79,6 +79,7 @@ export default {
     min-height: 100%;
 
     &__content {
+      background-color: var(--color-bg-second);
       flex-grow: 1;
       overflow: hidden;
     }
