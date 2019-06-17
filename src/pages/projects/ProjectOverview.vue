@@ -16,6 +16,7 @@
     <div class="project-overview__events">
       <div class="project-overview__date">Today</div>
       <EventItem
+        class="project-overview__event"
         v-for="event in events"
         :key="event.id"
         :event="event"
@@ -69,6 +70,7 @@ export default {
 <style>
   .project-overview {
     height: 100%;
+    user-select: none;
 
     &__header {
       display: flex;
@@ -96,6 +98,7 @@ export default {
     &__notifications {
       margin-left: auto;
       margin-right: 19px;
+      cursor: pointer;
     }
 
     &__chart {
@@ -114,6 +117,10 @@ export default {
       font-size: 14px;
       color: var(--color-text-second);
       margin-bottom: 20px;
+    }
+
+    &__event {
+      cursor: pointer;
     }
   }
 </style>
