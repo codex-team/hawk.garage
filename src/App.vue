@@ -136,4 +136,8 @@ export default {
     color: var(--color-text-second);
     opacity: 0.35;
   }
+
+  svg {
+    fill: currentColor;
+  }
 </style>
