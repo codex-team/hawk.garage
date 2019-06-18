@@ -8,13 +8,15 @@
       <div class="project-overview__name">
         {{project.name}}
       </div>
-      <NotificationIcon class="project-overview__notifications"></NotificationIcon>
+      <NotificationIcon class="project-overview__notifications" />
     </div>
     <div class="project-overview__chart">
 
     </div>
     <div class="project-overview__events">
-      <div class="project-overview__date">Today</div>
+      <div class="project-overview__date">
+        Today
+      </div>
       <EventItem
         class="project-overview__event"
         v-for="event in events"
