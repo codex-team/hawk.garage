@@ -1,5 +1,10 @@
 import Vue from 'vue';
 
+/**
+ * Filter that add space after first digit in 4-digits number
+ * @param {Number} value - filter value
+ * @return {String} - filter result
+ */
 Vue.filter('spacedNumber', function (value) {
   if (typeof value !== 'number') return value;
 
