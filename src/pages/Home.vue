@@ -79,13 +79,17 @@ export default {
     min-height: 100%;
 
     &__content {
-      width: 100%;
+      flex-grow: 1;
+      overflow: hidden;
+
+      background-color: var(--color-bg-second);
     }
   }
 
   .aside {
-    background-color: var(--color-bg-main);
     min-width: 342px;
+
+    background-color: var(--color-bg-main);
 
     &__header {
       padding: 20px;
@@ -95,20 +99,22 @@ export default {
       float: right;
       width: 40px;
       height: 40px;
-      border-radius: 11px;
+
       background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
       background-size: cover;
+      border-radius: 11px;
     }
 
     &__hawk-title {
       color: var(--color-text-main);
       font-weight: bold;
-      letter-spacing: 0.19px;
       line-height: 1.5;
+      letter-spacing: 0.19px;
     }
 
     &__user-email {
       margin-top: 1px;
+
       color: var(--color-text-second);
       font-size: 14px;
     }
@@ -118,14 +124,15 @@ export default {
     }
 
     &__workspace-item {
-      cursor: pointer;
       display: inline-block;
       width: 26px;
       height: 26px;
-      border-radius: 10px;
       margin-right: 15px;
+
       background-position: center center;
       background-size: cover;
+      border-radius: 10px;
+      cursor: pointer;
     }
   }
 </style>

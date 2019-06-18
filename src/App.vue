@@ -39,19 +39,21 @@ export default {
   }
 
   body {
-    font-family: Roboto, system-ui, sans-serif;
+    display: flex;
     align-items: stretch;
     min-height: 100%;
-    display: flex;
+
+    color: var(--color-text-main);
+    font-size: 15px;
+    font-family: Roboto, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 15px;
   }
 
   #app {
-    width: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
 
   /**
@@ -80,9 +82,10 @@ export default {
    * Clearfix for float elements
    */
   .clearfix:after {
-    content: "";
     display: table;
     clear: both;
+
+    content: "";
   }
 
   /**
@@ -94,15 +97,17 @@ export default {
   input[type="search"],
   input[type="url"],
   textarea {
-    width: 100%;
     box-sizing: border-box;
+    width: 100%;
     padding: 11px 12px;
-    font-size: 14px;
-    outline: none;
+
     color: var(--color-text-main);
+    font-size: 14px;
+
     background: var(--color-bg-main);
     border: 1px solid #1f2230;
     border-radius: 3px;
+    outline: none;
 
     &:focus {
       box-shadow: 0 0 0 1px var(--color-indicator-medium);
@@ -110,29 +115,40 @@ export default {
   }
 
   .button {
-    user-select: none;
-    border-radius: 2px;
-    border: 0;
     padding: 12px 35px;
-    cursor: pointer;
+
     line-height: 1em;
+
+    border: 0;
+    border-radius: 2px;
+    cursor: pointer;
+
+    user-select: none;
 
     &--submit {
       height: 40px;
-      border-radius: 13px;
-      background-image: linear-gradient(to bottom, #18a96c, #048058);
+
       color: var(--color-text-main);
+
+      background-image: linear-gradient(to bottom, #18a96c, #048058);
+      border-radius: 13px;
       box-shadow: 0 17px 17px -9px #01a95e4d;
 
       &:hover {
-        background-image: linear-gradient(to bottom, #04b168, #00734e);
         color: var(--color-text-main);
+
+        background-image: linear-gradient(to bottom, #04b168, #00734e);
       }
     }
   }
 
   ::placeholder {
     color: var(--color-text-second);
+
     opacity: 0.35;
+  }
+
+  svg {
+    fill: currentColor;
   }
 </style>

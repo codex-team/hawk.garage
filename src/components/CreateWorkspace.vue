@@ -40,8 +40,8 @@ export default {
     margin: 50px;
 
     > * {
-      margin-bottom: 10px;
       display: block;
+      margin-bottom: 10px;
     }
   }
 </style>
