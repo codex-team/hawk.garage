@@ -1,13 +1,17 @@
 <template>
   <div class="event-item">
-    <div class="event-item__time">{{event.time}}</div>
+    <div class="event-item__time">
+      {{event.time}}
+    </div>
     <div class="event-item__badge-container">
       <Badge
         :content="event.count"
         class="event-item__count"
       ></Badge>
     </div>
-    <div class="event-item__info">{{event.info}}</div>
+    <div class="event-item__info">
+      {{event.info}}
+    </div>
     <div class="event-item__assignee"></div>
   </div>
 </template>
