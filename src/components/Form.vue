@@ -77,9 +77,9 @@ export default {
 
 <style>
   .form {
-    margin: 0 auto;
     width: 100%;
     max-width: 568px;
+    margin: 0 auto;
 
     @media (--media-mobile) {
       max-width: 287px;
@@ -87,14 +87,16 @@ export default {
 
     &__title {
       display: inline-block;
+
       color: #fff;
-      font-size: 19px;
       font-weight: bold;
+      font-size: 19px;
     }
 
     &__caption {
-      margin-left: 15px;
       display: inline-block;
+      margin-left: 15px;
+
       color: var(--color-text-second);
       font-size: 14px;
     }
@@ -105,12 +107,13 @@ export default {
     }
 
     &__container {
-      height: 345px;
       display: flex;
+      height: 345px;
+
+      background: var(--color-bg-second);
+      border: solid 1px #343949;
       border-radius: 7px;
       box-shadow: 0 10px 11px -10px rgba(13, 15, 26, 0.49);
-      border: solid 1px #343949;
-      background: var(--color-bg-second);
 
       @media (--media-mobile) {
         height: auto;
@@ -119,6 +122,7 @@ export default {
 
     &__picture {
       width: 205px;
+
       background-image: url("../assets/hawk.png");
       background-position: center center;
       background-size: cover;
@@ -135,9 +139,10 @@ export default {
       display: flex;
       flex-direction: row-reverse;
       justify-content: space-between;
+
+      color: var(--color-text-second);
       font-weight: bold;
       font-size: 18px;
-      color: var(--color-text-second);
 
       @media (--media-mobile) {
         font-size: 15px;
@@ -145,6 +150,7 @@ export default {
 
       .router-link-active {
         order: 1;
+
         color: var(--color-text-main);
       }
 
@@ -154,11 +160,12 @@ export default {
     }
 
     &__delimiter {
-      opacity: 0.11;
-      margin: 20px 0 25px;
-      background: var(--color-text-main);
       height: 1px;
+      margin: 20px 0 25px;
+
+      background: var(--color-text-main);
       border: 0;
+      opacity: 0.11;
 
       @media (--media-mobile) {
         margin: 15px 0 20px;
@@ -166,8 +173,8 @@ export default {
     }
 
     &__fields-container {
-      padding: 30px 48px 35px 30px;
       flex-grow: 1;
+      padding: 30px 48px 35px 30px;
 
       @media (--media-mobile) {
         padding: 20px;
@@ -176,13 +183,15 @@ export default {
 
     &__header {
       margin-bottom: 25px;
-      font-size: 27px;
+
       font-weight: 800;
+      font-size: 27px;
     }
 
     &__message {
       margin-top: -5px;
       margin-bottom: 20px;
+
       font-size: 17px;
 
       &--error {
@@ -197,16 +206,18 @@ export default {
     &__label {
       display: block;
       margin-bottom: 9px;
-      text-transform: uppercase;
-      font-size: 12px;
+
       color: var(--color-text-second);
       font-weight: bold;
+      font-size: 12px;
+      text-transform: uppercase;
     }
 
     &__section {
-      border: 0;
-      padding: 0;
       margin: 0 0 20px;
+      padding: 0;
+
+      border: 0;
     }
 
     &__action-container {

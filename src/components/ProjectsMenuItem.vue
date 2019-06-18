@@ -40,43 +40,49 @@ export default {
 
 <style>
   .project-menu-item {
-    cursor: pointer;
-    user-select: none;
-    color: var(--color-text-main);
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
     max-height: 62px;
     padding: 6px 20px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
+
+    color: var(--color-text-main);
+
+    cursor: pointer;
+
+    user-select: none;
 
     &__name {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-text-main);
       margin-bottom: 5px;
+
+      color: var(--color-text-main);
+      font-weight: 500;
+      font-size: 14px;
     }
 
     &__last-event {
+      display: -webkit-box;
+      width: 206px;
+      height: 30px;
+      overflow: hidden;
+
+      color: var(--color-text-second);
       font-size: 12.6px;
       line-height: 1.27;
-      height: 30px;
       letter-spacing: 0.1px;
-      color: var(--color-text-second);
-      width: 206px;
 
       -webkit-line-clamp: 2;
-      overflow: hidden;
-      display: -webkit-box;
       -webkit-box-orient: vertical;
     }
 
     &__picture {
       width: 26px;
       height: 26px;
-      border-radius: 10px;
-      background-size: cover;
-      background-position: center;
       margin-right: 15px;
+
+      background-position: center;
+      background-size: cover;
+      border-radius: 10px;
     }
 
     &__events-number {

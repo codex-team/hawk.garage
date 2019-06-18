@@ -72,43 +72,49 @@ export default {
 <style>
   .project-overview {
     height: 100%;
+
     user-select: none;
 
     &__header {
       display: flex;
       align-items: center;
       height: 50px;
+
       box-shadow: 0 1px 5px 0 var(--color-bg-main), inset 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     }
 
     &__icon {
       width: 26px;
       height: 26px;
-      background-size: cover;
-      background-position: center center;
-      border-radius: 10px;
       margin-left: 15px;
+
+      background-position: center center;
+      background-size: cover;
+      border-radius: 10px;
     }
 
     &__name {
+      margin-left: 10px;
+
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 15px;
-      margin-left: 10px;
     }
 
     &__notifications {
-      margin-left: auto;
-      margin-right: 19px;
-      cursor: pointer;
       width: 17px;
       height: 20px;
+      margin-right: 19px;
+      margin-left: auto;
+
+      cursor: pointer;
     }
 
     &__chart {
       height: 215px;
-      background-color: var(--color-bg-main);
       margin: 16px 15px 15px;
+
+      background-color: var(--color-bg-main);
     }
 
     &__events {
@@ -118,10 +124,11 @@ export default {
     }
 
     &__date {
-      font-size: 14px;
-      color: var(--color-text-second);
       margin-bottom: 20px;
       margin-left: 11px;
+
+      color: var(--color-text-second);
+      font-size: 14px;
     }
 
     &__event {

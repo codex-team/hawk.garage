@@ -1,10 +1,11 @@
 .auth-page {
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
-  background: var(--color-bg-main);
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+
+  background: var(--color-bg-main);
 
   @media (--media-mobile) {
     padding: 15px;

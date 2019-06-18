@@ -30,17 +30,19 @@ export default {
 
 <style>
   .event-item {
-    box-sizing: border-box;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
     height: 46px;
     padding: 13px 11px 13px 15px;
+
     border-radius: 9px;
 
     &__time {
-      font-size: 12px;
       min-width: 30px;
+
       color: var(--color-text-second);
+      font-size: 12px;
     }
 
     &__count {
@@ -53,20 +55,22 @@ export default {
     }
 
     &__info {
-      margin-left: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       margin-right: auto;
+      margin-left: 10px;
+      overflow: hidden;
+
+      font-weight: bold;
+      font-size: 16px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
     }
 
     &__assignee {
-      margin-left: 10px;
       min-width: 26px;
       min-height: 26px;
+      margin-left: 10px;
+
       background-color: var(--color-bg-main);
     }
 
