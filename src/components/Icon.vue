@@ -14,12 +14,5 @@ export default {
       svgPath
     };
   }
-
 };
 </script>
-
-<style>
-  .icon--color-main {
-    fill: white;
-  }
-</style>
