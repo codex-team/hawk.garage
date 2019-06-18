@@ -8,6 +8,7 @@
     "build": "vue-cli-service build",
     "lint:js": "vue-cli-service lint",
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
+    "lint": "yarn lint:js && yarn lint:css",
     "serve:prod": "http-server ./dist --push-state",
     "svg": "svg-sprite-generate -d src/assets/svg -o src/assets/sprite.svg"
   },
