@@ -8,7 +8,7 @@
       <div class="project-overview__name">
         {{project.name}}
       </div>
-      <NotificationIcon class="project-overview__notifications" />
+      <SpriteIcon width="17" height="20" class="project-overview__notifications" symbol="bell"/>
     </div>
     <div class="project-overview__chart">
 
@@ -29,7 +29,7 @@
 
 <script>
 import EventItem from '../../components/EventItem';
-import NotificationIcon from '../../components/icons/NotificationIcon';
+import SpriteIcon from '../../components/SpriteIcon';
 
 export default {
   name: 'ProjectOverview',
@@ -64,7 +64,7 @@ export default {
   },
   components: {
     EventItem,
-    NotificationIcon
+    SpriteIcon
   }
 };
 </script>
