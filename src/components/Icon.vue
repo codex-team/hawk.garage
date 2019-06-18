@@ -7,7 +7,7 @@
 import svgPath from '../assets/sprite.svg';
 
 export default {
-  name: 'SpriteIcon',
+  name: 'Icon',
   props: [ 'symbol' ],
   data() {
     return {
