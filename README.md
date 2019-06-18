@@ -14,5 +14,6 @@ Hawk 2.0 web client
 4. Run `yarn serve:prod` to run simple production server
 
 # Useful command
-1. `yarn lint` - runs eslint to check files with `.js` and `.vue` extensions
-2. `yarn svg` - runs svg sprite generator
+1. `yarn lint:js` - runs eslint to check files with `.js` and `.vue` extensions
+2. `yarn lint:css` - runs stylelint to check files with `.css` and `.vue` extensions
+3. `yarn svg` - runs svg sprite generator
