@@ -7,7 +7,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "serve:prod": "http-server ./dist --push-state"
+    "serve:prod": "http-server ./dist --push-state",
+    "svg": "svg-sprite-generate -d src/assets/svg -o src/assets/sprite.svg"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -35,6 +36,7 @@
     "eslint-config-codex": "github:codex-team/eslint-config",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "svg-sprite-generator": "^0.0.7",
     "vue-template-compiler": "^2.5.21",
     "webpack-graphql-loader": "^1.0.1"
   }
