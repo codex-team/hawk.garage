@@ -17,3 +17,9 @@ export default {
 
 };
 </script>
+
+<style>
+  .icon--color-main {
+    fill: white;
+  }
+</style>
