@@ -8,7 +8,7 @@
       <div class="project-overview__name">
         {{project.name}}
       </div>
-      <SpriteIcon width="17" height="20" class="project-overview__notifications" symbol="bell"/>
+      <SpriteIcon class="project-overview__notifications" symbol="bell"/>
     </div>
     <div class="project-overview__chart">
 
@@ -101,6 +101,8 @@ export default {
       margin-left: auto;
       margin-right: 19px;
       cursor: pointer;
+      width: 17px;
+      height: 20px;
     }
 
     &__chart {

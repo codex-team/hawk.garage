@@ -1,5 +1,5 @@
 <template>
-  <svg :width="width" :height="height">
+  <svg>
     <use :xlink:href="`${svgPath}#${symbol}`"></use>
   </svg>
 </template>
@@ -8,7 +8,7 @@ import svgPath from '../assets/sprite.svg';
 
 export default {
   name: 'SpriteIcon',
-  props: ['symbol', 'width', 'height'],
+  props: [ 'symbol' ],
   data() {
     return {
       svgPath
