@@ -8,16 +8,6 @@ import * as api from './index';
  */
 
 /**
- * Enum of auth module errors
- * @enum {String}
- */
-export const AUTH_ERROR = {
-  LOGIN: 'An error occurred during the login attempt',
-  SIGN_UP: 'An error occurred during the sign up attempt',
-  UNKNOWN: 'Unknown error occurred'
-};
-
-/**
  * Login user and get token
  *
  * @param {string} email - Email
