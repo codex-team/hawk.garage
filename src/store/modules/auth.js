@@ -1,8 +1,8 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
-import axios from 'axios';
 import router from '../../router';
 import * as authApi from '../../api/auth';
+import * as api from '../../api';
 
 /**
  * @typedef {object} User - represents user
@@ -24,11 +24,13 @@ const AUTH_STATES = {
 /**
  * Module state
  * @typedef {object} AuthModuleState
- * @property {string} token - user's access token
+ * @property {string} accessToken - user's access token
+ * @property {string} refreshToken - user's refresh token for getting new tokens pair
  * @property {status} status - current auth status
  */
 const state = {
-  token: '',
+  accessToken: '',
+  refreshToken: '',
   status: AUTH_STATES.notLoggedIn
 };
 
@@ -38,7 +40,7 @@ const getters = {
    * @param {AuthModuleState} state - vuex state
    * @return {boolean}
    */
-  isAuthenticated: state => !!state.token
+  isAuthenticated: state => !!state.accessToken
 };
 
 const actions = {
@@ -49,9 +51,9 @@ const actions = {
    */
   async [SIGN_UP_REQUEST]({ commit }, user) {
     try {
-      const token = await authApi.signUp(user.email);
+      const tokens = await authApi.signUp(user.email);
 
-      commit(AUTH_SUCCESS, token);
+      commit(AUTH_SUCCESS, tokens);
     } catch (e) {
       commit(AUTH_ERROR);
       throw e;
@@ -67,9 +69,9 @@ const actions = {
     commit(AUTH_REQUEST);
 
     try {
-      const token = await authApi.login(user.email, user.password);
+      const tokens = await authApi.login(user.email, user.password);
 
-      commit(AUTH_SUCCESS, token);
+      commit(AUTH_SUCCESS, tokens);
     } catch (e) {
       commit(AUTH_ERROR);
       throw e;
@@ -90,11 +92,13 @@ const mutations = {
    * Mutation caused by successful authentication
    * @param {AuthModuleState} state - Vuex state
    * @param {string} accessToken - user's access token
+   * @param {string} refreshToken - user's refresh token for getting new tokens pair
    */
-  [AUTH_SUCCESS](state, accessToken) {
-    axios.defaults.headers.common['Authorization'] = accessToken;
+  [AUTH_SUCCESS](state, { accessToken, refreshToken }) {
+    api.setAuthToken(accessToken);
     state.status = AUTH_STATES.success;
-    state.token = accessToken;
+    state.accessToken = accessToken;
+    state.refreshToken = refreshToken;
   },
 
   /**
@@ -112,8 +116,9 @@ const mutations = {
    */
   [AUTH_LOGOUT](state) {
     router.push('/login');
-    delete axios.defaults.headers.common['Authorization'];
-    state.token = '';
+    api.setAuthToken(null);
+    state.accessToken = '';
+    state.refreshToken = '';
   }
 };
 
