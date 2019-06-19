@@ -1,12 +1,5 @@
-import axios from 'axios';
 import { MUTATION_LOGIN, MUTATION_SIGN_UP } from './mutations';
 import * as api from './index';
-
-/**
- * Hawk API endpoint URL
- */
-const API_ENDPOINT =
-  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
 /**
  * Enum of auth module errors

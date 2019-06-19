@@ -74,6 +74,7 @@ const actions = {
       commit(AUTH_SUCCESS, tokens);
     } catch (e) {
       commit(AUTH_ERROR);
+      console.log(e)
       throw e;
     }
   }

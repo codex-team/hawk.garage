@@ -6,16 +6,26 @@ import axios from 'axios';
 const API_ENDPOINT =
   process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
-export async function call(requestName, variables) {
+/**
+ * Makes request to API
+ * @param {String} request - request to send
+ * @param {Object} variables - request variables
+ * @return {Promise<*>} - request data
+ */
+export async function call(request, variables) {
   const response = await axios.post(API_ENDPOINT, {
-    query: requestName,
+    query: request,
     variables
   });
 
-  if (response.data.errors) throw response.data.errors;
+  if (response.data.errors) throw response.data.errors[0];
   return response.data.data;
 }
 
+/**
+ * Set or remove auth token in request header
+ * @param {String|null} accessToken - user's access token. If null, token will be deleted from header
+ */
 export function setAuthToken(accessToken) {
   if (!accessToken) return delete axios.defaults.headers.common['Authorization'];
   axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
