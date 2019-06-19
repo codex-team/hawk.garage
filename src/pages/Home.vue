@@ -2,7 +2,10 @@
   <div class="home">
     <aside class="aside">
       <div class="aside__header clearfix">
-        <div class="aside__user-picture"></div>
+        <div
+          class="aside__user-picture"
+          @click="$store.commit('AUTH_LOGOUT')"
+        ></div>
         <div class="aside__hawk-title">Hawk</div>
         <div class="aside__user-email">taly@codex.so</div>
       </div>
