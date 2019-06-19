@@ -6,12 +6,7 @@ import { HTTP_OK } from './httpCodes';
  * Hawk API endpoint URL
  */
 const API_ENDPOINT =
-  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:3000/graphql';
-
-/**
- * Mock api? true/false
- */
-const MOCK = process.env.VUE_APP_API_MOCK;
+  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
 /**
  * Enum of auth module errors
@@ -31,37 +26,27 @@ export const AUTH_ERROR = {
  * @returns {Promise<string>} - Auth token
  * @throws {Error} Authentication error occurred
  */
-export const login = async (email, password) => {
+export async function login(email, password) {
   let resp;
 
   try {
-    if (!MOCK) {
-      resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_LOGIN,
-        variables: {
-          email,
-          password
-        }
-      });
-    } else {
-      resp = {
-        status: HTTP_OK,
-        data: {
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
-        }
-      };
-    }
+    resp = await axios.post(API_ENDPOINT, {
+      query: MUTATION_LOGIN,
+      variables: {
+        email,
+        password
+      }
+    });
   } catch (e) {
     throw new Error(AUTH_ERROR.LOGIN);
   }
 
   if (resp.status === HTTP_OK) {
-    return resp.data.token;
+    return resp.data.login;
   } else {
     throw new Error(AUTH_ERROR.UNKNOWN);
   }
-};
+}
 
 /**
  * Sign up by email and return status(ok)
@@ -70,33 +55,25 @@ export const login = async (email, password) => {
  * @returns {Promise<boolean>} Response status
  * @throws {Error} Authentication error occured
  */
-export const signUp = async email => {
+export async function signUp(email) {
   let resp;
 
   try {
-    if (!MOCK) {
-      resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_SIGN_UP,
-        variables: {
-          email
-        }
-      });
-    } else {
-      resp = {
-        status: HTTP_OK,
-        data: {
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
-        }
-      };
-    }
+    console.log(MUTATION_SIGN_UP);
+    resp = await axios.post(API_ENDPOINT, {
+      query: MUTATION_SIGN_UP,
+      variables: {
+        email
+      }
+    });
+    console.log(resp)
   } catch (e) {
     throw new Error(AUTH_ERROR.SIGN_UP);
   }
 
   if (resp.status === HTTP_OK) {
-    return resp.data.ok;
+    return resp.data.signUp;
   } else {
     throw new Error(AUTH_ERROR.UNKNOWN);
   }
-};
+}
