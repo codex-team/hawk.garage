@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { MUTATION_LOGIN, MUTATION_SIGN_UP } from './mutations';
-import { HTTP_OK } from './httpCodes';
+import * as api from './index';
 
 /**
  * Hawk API endpoint URL
@@ -27,25 +27,7 @@ export const AUTH_ERROR = {
  * @throws {Error} Authentication error occurred
  */
 export async function login(email, password) {
-  let resp;
-
-  try {
-    resp = await axios.post(API_ENDPOINT, {
-      query: MUTATION_LOGIN,
-      variables: {
-        email,
-        password
-      }
-    });
-  } catch (e) {
-    throw new Error(AUTH_ERROR.LOGIN);
-  }
-
-  if (resp.status === HTTP_OK) {
-    return resp.data.login;
-  } else {
-    throw new Error(AUTH_ERROR.UNKNOWN);
-  }
+  return (await api.call(MUTATION_LOGIN, { email, password })).login;
 }
 
 /**
@@ -56,24 +38,5 @@ export async function login(email, password) {
  * @throws {Error} Authentication error occured
  */
 export async function signUp(email) {
-  let resp;
-
-  try {
-    console.log(MUTATION_SIGN_UP);
-    resp = await axios.post(API_ENDPOINT, {
-      query: MUTATION_SIGN_UP,
-      variables: {
-        email
-      }
-    });
-    console.log(resp)
-  } catch (e) {
-    throw new Error(AUTH_ERROR.SIGN_UP);
-  }
-
-  if (resp.status === HTTP_OK) {
-    return resp.data.signUp;
-  } else {
-    throw new Error(AUTH_ERROR.UNKNOWN);
-  }
+  return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
 }
