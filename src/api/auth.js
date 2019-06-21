@@ -1,102 +1,29 @@
-import axios from 'axios';
 import { MUTATION_LOGIN, MUTATION_SIGN_UP } from './mutations';
-import { HTTP_OK } from './httpCodes';
+import * as api from './index';
 
 /**
- * Hawk API endpoint URL
+ * @typedef {Object} TokensPair
+ * @property {string} accessToken - user's access token
+ * @property {string} refreshToken - user's refresh token for getting new tokens pair
  */
-const API_ENDPOINT =
-  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:3000/graphql';
-
-/**
- * Mock api? true/false
- */
-const MOCK = process.env.VUE_APP_API_MOCK;
-
-/**
- * Enum of auth module errors
- * @enum {String}
- */
-export const AUTH_ERROR = {
-  LOGIN: 'An error occurred during the login attempt',
-  SIGN_UP: 'An error occurred during the sign up attempt',
-  UNKNOWN: 'Unknown error occurred'
-};
 
 /**
  * Login user and get token
  *
  * @param {string} email - Email
  * @param {string} password - Password
- * @returns {Promise<string>} - Auth token
- * @throws {Error} Authentication error occurred
+ * @returns {Promise<TokensPair>} - Auth token
  */
-export const login = async (email, password) => {
-  let resp;
-
-  try {
-    if (!MOCK) {
-      resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_LOGIN,
-        variables: {
-          email,
-          password
-        }
-      });
-    } else {
-      resp = {
-        status: HTTP_OK,
-        data: {
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
-        }
-      };
-    }
-  } catch (e) {
-    throw new Error(AUTH_ERROR.LOGIN);
-  }
-
-  if (resp.status === HTTP_OK) {
-    return resp.data.token;
-  } else {
-    throw new Error(AUTH_ERROR.UNKNOWN);
-  }
-};
+export async function login(email, password) {
+  return (await api.call(MUTATION_LOGIN, { email, password })).login;
+}
 
 /**
  * Sign up by email and return status(ok)
  *
  * @param {string} email - Email
- * @returns {Promise<boolean>} Response status
- * @throws {Error} Authentication error occured
+ * @returns {Promise<TokensPair>} Response status
  */
-export const signUp = async email => {
-  let resp;
-
-  try {
-    if (!MOCK) {
-      resp = await axios.post(API_ENDPOINT, {
-        query: MUTATION_SIGN_UP,
-        variables: {
-          email
-        }
-      });
-    } else {
-      resp = {
-        status: HTTP_OK,
-        data: {
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTU1NDU2NDU4OH0.DLExJXDZc3FSfFr_GbxjxBVyxnFFM5ehryy8vPQ_QO8'
-        }
-      };
-    }
-  } catch (e) {
-    throw new Error(AUTH_ERROR.SIGN_UP);
-  }
-
-  if (resp.status === HTTP_OK) {
-    return resp.data.ok;
-  } else {
-    throw new Error(AUTH_ERROR.UNKNOWN);
-  }
-};
+export async function signUp(email) {
+  return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
+}

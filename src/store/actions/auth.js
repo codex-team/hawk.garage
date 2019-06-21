@@ -14,12 +14,6 @@ export const AUTH_REQUEST = 'AUTH_REQUEST';
 export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 
 /**
- * Mutation caused by unsuccessful authentication
- * Called when some errors occur during the authentication process
- */
-export const AUTH_ERROR = 'AUTH_ERROR';
-
-/**
  * Mutation caused when user logout
  */
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';

@@ -57,7 +57,7 @@ export default {
         this.$router.push('/');
       } catch (e) {
         this.message = {
-          text: 'Error while sending request to the server',
+          text: e.message,
           type: 'error'
         };
       }
