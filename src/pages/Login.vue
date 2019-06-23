@@ -14,7 +14,7 @@
 
 <script>
 import Form from '../components/Form';
-import { AUTH_REQUEST } from '../store/actions/auth';
+import { LOGIN } from '../store/actions/auth';
 import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
 
 export default {
@@ -53,7 +53,7 @@ export default {
       const password = this.fields[1].value;
 
       try {
-        await this.$store.dispatch(AUTH_REQUEST, { email, password });
+        await this.$store.dispatch(LOGIN, { email, password });
         this.$router.push('/');
       } catch (e) {
         this.message = {

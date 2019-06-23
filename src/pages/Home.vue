@@ -4,12 +4,12 @@
       <div class="aside__header clearfix">
         <div
           class="aside__user-picture"
-          @click="$store.commit('AUTH_LOGOUT')"
+          @click="$store.commit('REMOVE_TOKENS')"
         ></div>
         <div class="aside__hawk-title">Hawk</div>
         <div class="aside__user-email">taly@codex.so</div>
       </div>
-      <div class="aside__workspaces-menu">
+      <div class="aside__workspaces-menu" v-if="workspaces.length">
         <div
           class="aside__workspace-item"
           v-for="workspace in workspaces"
@@ -17,7 +17,8 @@
           :style="{ backgroundImage: `url('${workspace.picture}')` }"
         ></div>
       </div>
-      <div class="aside__projects-list">
+      <router-link v-else to="workspace-create">Create workspace</router-link>
+      <div class="aside__projects-list" v-if="projects">
         <ProjectsMenuItem
           v-for="project in projects"
           :key="project.id"
@@ -34,7 +35,7 @@
 
 <script>
 
-import { AUTH_LOGOUT } from '../store/actions/auth';
+import { REMOVE_TOKENS } from '../store/actions/auth';
 import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
 import ProjectsMenuItem from '../components/ProjectsMenuItem';
@@ -49,7 +50,7 @@ export default {
      * Logouts user
      */
     logout() {
-      this.$store.commit(AUTH_LOGOUT);
+      this.$store.commit(REMOVE_TOKENS);
     },
     /**
      * Toggles theme (dark/light)

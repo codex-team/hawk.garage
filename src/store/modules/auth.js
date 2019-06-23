@@ -1,5 +1,5 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { AUTH_REQUEST, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
+import { LOGIN, SET_TOKENS, REMOVE_TOKENS, SIGN_UP } from '../actions/auth';
 import router from '../../router';
 import * as authApi from '../../api/auth';
 
@@ -35,10 +35,10 @@ const actions = {
    * @param {function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
    */
-  async [SIGN_UP_REQUEST]({ commit }, user) {
+  async [SIGN_UP]({ commit }, user) {
     const tokens = await authApi.signUp(user.email);
 
-    commit(AUTH_SUCCESS, tokens);
+    commit(SET_TOKENS, tokens);
   },
 
   /**
@@ -46,10 +46,10 @@ const actions = {
    * @param {function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
    */
-  async [AUTH_REQUEST]({ commit }, user) {
+  async [LOGIN]({ commit }, user) {
     const tokens = await authApi.login(user.email, user.password);
 
-    commit(AUTH_SUCCESS, tokens);
+    commit(SET_TOKENS, tokens);
   }
 };
 
@@ -60,7 +60,7 @@ const mutations = {
    * @param {string} accessToken - user's access token
    * @param {string} refreshToken - user's refresh token for getting new tokens pair
    */
-  [AUTH_SUCCESS](state, { accessToken, refreshToken }) {
+  [SET_TOKENS](state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
   },
@@ -69,7 +69,7 @@ const mutations = {
    * Mutation caused when user logout
    * @param {AuthModuleState} state - Vuex state
    */
-  [AUTH_LOGOUT](state) {
+  [REMOVE_TOKENS](state) {
     router.push('/login');
     state.accessToken = '';
     state.refreshToken = '';

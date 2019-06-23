@@ -12,7 +12,7 @@
 
 <script>
 import Form from '../components/Form';
-import { SIGN_UP_REQUEST } from '../store/actions/auth';
+import { SIGN_UP } from '../store/actions/auth';
 import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
 
 export default {
@@ -40,7 +40,7 @@ export default {
       const email = this.fields[0].value;
 
       try {
-        await this.$store.dispatch(SIGN_UP_REQUEST, { email });
+        await this.$store.dispatch(SIGN_UP, { email });
         this.$router.push('/');
       } catch (e) {
         this.message = {
