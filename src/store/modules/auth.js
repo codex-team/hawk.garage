@@ -21,6 +21,15 @@ const state = {
   refreshToken: ''
 };
 
+const getters = {
+  /**
+   * Returns true if the user is authenticated else false
+   * @param {AuthModuleState} state - vuex state
+   * @return {boolean}
+   */
+  isAuthenticated: state => !!state.accessToken
+};
+
 const actions = {
   /**
    * Send sign up request to the server and performs user login
@@ -72,6 +81,7 @@ const mutations = {
 
 export default {
   state,
+  getters,
   actions,
   mutations
 };
