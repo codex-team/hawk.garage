@@ -7,6 +7,7 @@
 <script>
 import { FETCH_WORKSPACES } from './store/actions/workspaces';
 import * as api from './api';
+import { REFRESH_TOKENS } from './store/actions/auth';
 
 export default {
   name: 'app',
@@ -24,6 +25,8 @@ export default {
    */
   created() {
     api.setAuthToken(this.$store.state.auth.accessToken);
+
+    api.eventsHandlers.onTokenExpired = async () => (await this.$store.dispatch(REFRESH_TOKENS)).accessToken;
 
     this.$store.watch(
       state => state.auth.accessToken,
