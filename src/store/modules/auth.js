@@ -1,5 +1,5 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { LOGIN, SET_TOKENS, REMOVE_TOKENS, SIGN_UP } from '../actions/auth';
+import { LOGIN, SET_TOKENS, REMOVE_TOKENS, SIGN_UP, REFRESH_TOKENS } from '../actions/auth';
 import router from '../../router';
 import * as authApi from '../../api/auth';
 
@@ -50,6 +50,14 @@ const actions = {
     const tokens = await authApi.login(user.email, user.password);
 
     commit(SET_TOKENS, tokens);
+  },
+
+  async [REFRESH_TOKENS]({ commit, state }) {
+    const tokens = await authApi.refreshTokens(state.refreshToken);
+
+    commit(SET_TOKENS, tokens);
+
+    return tokens;
   }
 };
 
