@@ -1,5 +1,12 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { LOGIN, SET_TOKENS, REMOVE_TOKENS, SIGN_UP, REFRESH_TOKENS } from '../actions/auth';
+import {
+  LOGIN,
+  SET_TOKENS,
+  REMOVE_TOKENS,
+  SIGN_UP,
+  REFRESH_TOKENS
+} from '../actions/auth';
+import { RESET_STORE } from '../actions';
 import router from '../../router';
 import * as authApi from '../../api/auth';
 
@@ -15,10 +22,17 @@ import * as authApi from '../../api/auth';
  * @property {string} accessToken - user's access token
  * @property {string} refreshToken - user's refresh token for getting new tokens pair
  */
-const state = {
-  accessToken: '',
-  refreshToken: ''
-};
+
+/**
+ * Creates module state
+ * @return {AuthModuleState}
+ */
+function initialState() {
+  return {
+    accessToken: '',
+    refreshToken: ''
+  };
+}
 
 const getters = {
   /**
@@ -64,6 +78,14 @@ const actions = {
     commit(SET_TOKENS, tokens);
 
     return tokens;
+  },
+
+  /**
+   * Resets module state
+   * @param {function} commit - standard Vuex commit function
+   */
+  [RESET_STORE]({ commit }) {
+    commit(RESET_STORE);
   }
 };
 
@@ -87,11 +109,19 @@ const mutations = {
     router.push('/login');
     state.accessToken = '';
     state.refreshToken = '';
+  },
+
+  /**
+   * Resets module state
+   * @param {AuthModuleState} state - Vuex state
+   */
+  [RESET_STORE](state) {
+    Object.assign(state, initialState());
   }
 };
 
 export default {
-  state,
+  state: initialState(),
   getters,
   actions,
   mutations

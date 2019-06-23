@@ -6,6 +6,7 @@ import {
   FETCH_WORKSPACES,
   SET_WORKSPACES_LIST
 } from '../actions/workspaces';
+import { RESET_STORE } from '../actions';
 import * as workspaceApi from '../../api/workspaces';
 import Vue from 'vue';
 
@@ -28,9 +29,16 @@ import Vue from 'vue';
  * @typedef {object} WorkspacesModuleState
  * @property {array<Workspace>} list - registered workspaces
  */
-const state = {
-  list: []
-};
+
+/**
+ * Creates module state
+ * @return {WorkspacesModuleState}
+ */
+function initialState() {
+  return {
+    list: []
+  };
+}
 
 /**
  * Module getters
@@ -101,6 +109,14 @@ const actions = {
     const workspaces = await workspaceApi.getAllWorkspacesWithProjects();
 
     commit(SET_WORKSPACES_LIST, workspaces);
+  },
+
+  /**
+   * Resets module state
+   * @param {function} commit - standard Vuex commit function
+   */
+  [RESET_STORE]({ commit }) {
+    commit(RESET_STORE);
   }
 };
 
@@ -135,11 +151,19 @@ const mutations = {
    */
   [SET_WORKSPACES_LIST](state, newList) {
     Vue.set(state, 'list', newList);
+  },
+
+  /**
+   * Resets module state
+   * @param {WorkspacesModuleState} state - Vuex state
+   */
+  [RESET_STORE](state) {
+    Object.assign(state, initialState());
   }
 };
 
 export default {
-  state,
+  state: initialState(),
   getters,
   actions,
   mutations
