@@ -53,7 +53,12 @@ export const eventsHandlers = {
    * Сalled when a tokens pair needs to be updated
    * @return {String} access tokens
    */
-  onTokenExpired: () => {}
+  onTokenExpired: () => {},
+
+  /**
+   * Called when auth failed
+   */
+  onAuthError: () => {}
 };
 
 /**
@@ -70,11 +75,14 @@ axios.interceptors.response.use(
 
     const originalRequest = response.config;
 
-    if (typeof eventsHandlers.onTokenExpired === 'function') {
+    try {
       const newAccessToken = await eventsHandlers.onTokenExpired();
 
       originalRequest.headers['Authorization'] = 'Bearer ' + newAccessToken;
       return axios(originalRequest);
-    } else throw new Error('You need to refresh your tokens');
+    } catch {
+      eventsHandlers.onAuthError();
+      return response;
+    }
   }
 );
