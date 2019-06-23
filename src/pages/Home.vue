@@ -4,7 +4,7 @@
       <div class="aside__header clearfix">
         <div
           class="aside__user-picture"
-          @click="$store.commit('REMOVE_TOKENS')"
+          @click="logout"
         ></div>
         <div class="aside__hawk-title">Hawk</div>
         <div class="aside__user-email">taly@codex.so</div>
@@ -35,7 +35,7 @@
 
 <script>
 
-import { REMOVE_TOKENS } from '../store/actions/auth';
+import { RESET_STORE } from '../store/actions';
 import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
 import ProjectsMenuItem from '../components/ProjectsMenuItem';
@@ -50,8 +50,9 @@ export default {
      * Logouts user
      */
     logout() {
-      this.$store.commit(REMOVE_TOKENS);
+      this.$store.dispatch(RESET_STORE);
     },
+
     /**
      * Toggles theme (dark/light)
      */

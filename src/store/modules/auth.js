@@ -2,12 +2,10 @@
 import {
   LOGIN,
   SET_TOKENS,
-  REMOVE_TOKENS,
   SIGN_UP,
   REFRESH_TOKENS
 } from '../actions/auth';
 import { RESET_STORE } from '../actions';
-import router from '../../router';
 import * as authApi from '../../api/auth';
 
 /**
@@ -99,16 +97,6 @@ const mutations = {
   [SET_TOKENS](state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
-  },
-
-  /**
-   * Mutation caused when user logout
-   * @param {AuthModuleState} state - Vuex state
-   */
-  [REMOVE_TOKENS](state) {
-    router.push('/login');
-    state.accessToken = '';
-    state.refreshToken = '';
   },
 
   /**

@@ -30,8 +30,3 @@ export const REFRESH_TOKENS = 'REFRESH_TOKENS';
  * (for example, after authentication or updating tokens)
  */
 export const SET_TOKENS = 'SET_TOKENS';
-
-/**
- * Removes user's auth tokens (for example, when logout)
- */
-export const REMOVE_TOKENS = 'REMOVE_TOKENS';
