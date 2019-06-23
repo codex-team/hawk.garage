@@ -1,6 +1,0 @@
-mutation SignUp($email: String!) {
-  signUp(email: $email) {
-    accessToken
-    refreshToken
-  }
-}

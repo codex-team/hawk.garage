@@ -1,5 +1,5 @@
-import { MUTATION_LOGIN, MUTATION_SIGN_UP } from './mutations';
-import * as api from './index';
+import { MUTATION_LOGIN, MUTATION_SIGN_UP } from './queries';
+import * as api from '../index';
 
 /**
  * @typedef {Object} TokensPair
