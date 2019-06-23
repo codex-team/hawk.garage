@@ -22,6 +22,9 @@ mutation signUp($email: String!) {
 }
 `;
 
+/**
+ * Mutation for refreshing tokens
+ */
 export const MUTATION_REFRESH_TOKENS = `
 mutation refreshTokens($refreshToken: String!) {
   refreshTokens(refreshToken: $refreshToken) {
