@@ -9,7 +9,7 @@ const API_ENDPOINT =
 /**
  * Makes request to API
  * @param {String} request - request to send
- * @param {Object} variables - request variables
+ * @param {Object} [variables] - request variables
  * @return {Promise<*>} - request data
  */
 export async function call(request, variables) {
