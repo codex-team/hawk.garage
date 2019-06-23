@@ -2,7 +2,6 @@
 import { AUTH_REQUEST, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
 import router from '../../router';
 import * as authApi from '../../api/auth';
-import * as api from '../../api';
 
 /**
  * @typedef {object} User - represents user
@@ -62,7 +61,6 @@ const mutations = {
    * @param {string} refreshToken - user's refresh token for getting new tokens pair
    */
   [AUTH_SUCCESS](state, { accessToken, refreshToken }) {
-    api.setAuthToken(accessToken);
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
   },
@@ -73,7 +71,6 @@ const mutations = {
    */
   [AUTH_LOGOUT](state) {
     router.push('/login');
-    api.setAuthToken(null);
     state.accessToken = '';
     state.refreshToken = '';
   }

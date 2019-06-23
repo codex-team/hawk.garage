@@ -6,6 +6,7 @@
 
 <script>
 import { FETCH_WORKSPACES } from './store/actions/workspaces';
+import * as api from './api';
 
 export default {
   name: 'app',
@@ -22,6 +23,13 @@ export default {
    * Vue hook. Called synchronously after the instance is created
    */
   created() {
+    api.setAuthToken(this.$store.state.auth.accessToken);
+
+    this.$store.watch(
+      state => state.auth.accessToken,
+      accessToken => api.setAuthToken(accessToken)
+    );
+
     this.$store.dispatch(FETCH_WORKSPACES);
   }
 };
