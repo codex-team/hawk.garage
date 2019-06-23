@@ -52,6 +52,12 @@ const actions = {
     commit(SET_TOKENS, tokens);
   },
 
+  /**
+   * Send request for refreshing tokens pair
+   * @param {function} commit - standard Vuex commit function
+   * @param {AuthModuleState} state - vuex state
+   * @return {Promise<TokensPair>}
+   */
   async [REFRESH_TOKENS]({ commit, state }) {
     const tokens = await authApi.refreshTokens(state.refreshToken);
 
