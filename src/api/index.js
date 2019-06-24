@@ -65,6 +65,11 @@ export const eventsHandlers = {
  * Interceptors that handles the error of expired tokens
  */
 axios.interceptors.response.use(
+  /**
+   * Interceptor handler
+   * @param {AxiosResponse} response - axios response object
+   * @return {Promise<AxiosResponse>} - processed request
+   */
   async response => {
     const errors = response.data.errors;
     const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
