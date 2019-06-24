@@ -46,11 +46,11 @@ export const errorCodes = {
 };
 
 /**
- * Сallback functions for different situations
+ * Callback functions for different situations
  */
 export const eventsHandlers = {
   /**
-   * Сalled when a tokens pair needs to be updated
+   * Called when a tokens pair needs to be updated
    * @return {String} access tokens
    */
   onTokenExpired: () => {},

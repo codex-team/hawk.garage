@@ -1,5 +1,5 @@
 /**
- * @file Сonstants for naming root mutations and actions
+ * @file Constants for naming root mutations and actions
  */
 
 /**
