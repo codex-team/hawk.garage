@@ -1,8 +1,12 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { AUTH_REQUEST, AUTH_SUCCESS, AUTH_LOGOUT, SIGN_UP_REQUEST } from '../actions/auth';
-import router from '../../router';
+import {
+  LOGIN,
+  SET_TOKENS,
+  SIGN_UP,
+  REFRESH_TOKENS
+} from '../actions/auth';
+import { RESET_STORE } from '../actions';
 import * as authApi from '../../api/auth';
-import * as api from '../../api';
 
 /**
  * @typedef {object} User - represents user
@@ -16,10 +20,17 @@ import * as api from '../../api';
  * @property {string} accessToken - user's access token
  * @property {string} refreshToken - user's refresh token for getting new tokens pair
  */
-const state = {
-  accessToken: '',
-  refreshToken: ''
-};
+
+/**
+ * Creates module state
+ * @return {AuthModuleState}
+ */
+function initialState() {
+  return {
+    accessToken: '',
+    refreshToken: ''
+  };
+}
 
 const getters = {
   /**
@@ -36,10 +47,10 @@ const actions = {
    * @param {function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
    */
-  async [SIGN_UP_REQUEST]({ commit }, user) {
+  async [SIGN_UP]({ commit }, user) {
     const tokens = await authApi.signUp(user.email);
 
-    commit(AUTH_SUCCESS, tokens);
+    commit(SET_TOKENS, tokens);
   },
 
   /**
@@ -47,10 +58,32 @@ const actions = {
    * @param {function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
    */
-  async [AUTH_REQUEST]({ commit }, user) {
+  async [LOGIN]({ commit }, user) {
     const tokens = await authApi.login(user.email, user.password);
 
-    commit(AUTH_SUCCESS, tokens);
+    commit(SET_TOKENS, tokens);
+  },
+
+  /**
+   * Send request for refreshing tokens pair
+   * @param {function} commit - standard Vuex commit function
+   * @param {AuthModuleState} state - vuex state
+   * @return {Promise<TokensPair>}
+   */
+  async [REFRESH_TOKENS]({ commit, state }) {
+    const tokens = await authApi.refreshTokens(state.refreshToken);
+
+    commit(SET_TOKENS, tokens);
+
+    return tokens;
+  },
+
+  /**
+   * Resets module state
+   * @param {function} commit - standard Vuex commit function
+   */
+  [RESET_STORE]({ commit }) {
+    commit(RESET_STORE);
   }
 };
 
@@ -61,26 +94,22 @@ const mutations = {
    * @param {string} accessToken - user's access token
    * @param {string} refreshToken - user's refresh token for getting new tokens pair
    */
-  [AUTH_SUCCESS](state, { accessToken, refreshToken }) {
-    api.setAuthToken(accessToken);
+  [SET_TOKENS](state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
   },
 
   /**
-   * Mutation caused when user logout
+   * Resets module state
    * @param {AuthModuleState} state - Vuex state
    */
-  [AUTH_LOGOUT](state) {
-    router.push('/login');
-    api.setAuthToken(null);
-    state.accessToken = '';
-    state.refreshToken = '';
+  [RESET_STORE](state) {
+    Object.assign(state, initialState());
   }
 };
 
 export default {
-  state,
+  state: initialState(),
   getters,
   actions,
   mutations

@@ -6,6 +6,9 @@
 
 <script>
 import { FETCH_WORKSPACES } from './store/actions/workspaces';
+import * as api from './api';
+import { REFRESH_TOKENS } from './store/actions/auth';
+import { RESET_STORE } from './store/actions';
 
 export default {
   name: 'app',
@@ -22,6 +25,27 @@ export default {
    * Vue hook. Called synchronously after the instance is created
    */
   created() {
+    /**
+     * Configure API
+     */
+    api.setAuthToken(this.$store.state.auth.accessToken);
+    api.eventsHandlers.onTokenExpired = async () => (await this.$store.dispatch(REFRESH_TOKENS)).accessToken;
+    api.eventsHandlers.onAuthError = () => this.$store.dispatch(RESET_STORE);
+
+    /**
+     * Setup watching on auth state
+     */
+    this.$store.watch(
+      state => state.auth.accessToken,
+      accessToken => {
+        if (!accessToken) this.$router.push('/login');
+        api.setAuthToken(accessToken);
+      }
+    );
+
+    /**
+     * Fetch user data
+     */
     this.$store.dispatch(FETCH_WORKSPACES);
   }
 };

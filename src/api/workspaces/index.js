@@ -1,5 +1,7 @@
-import { HTTP_OK } from './httpCodes';
+import { HTTP_OK } from '../httpCodes';
 import uuid from 'uuid/v4';
+import { QUERY_ALL_WORKSPACES_WITH_PROJECTS } from './queries';
+import * as api from '../index';
 
 /**
  * Mock api? true/false
@@ -81,61 +83,5 @@ export async function deleteWorkspace(workspaceId) {
  * @return {Promise<[Workspace]>}
  */
 export async function getAllWorkspacesWithProjects() {
-  let resp;
-
-  try {
-    if (!MOCK) {
-      // @todo make real request to API
-    } else {
-      resp = {
-        status: HTTP_OK,
-        data: {
-          workspaces: [
-            {
-              name: 'EditorJS',
-              id: '020302402349234',
-              picture: 'https://capella.pics/fd1a93ac-f8e2-4b4b-911e-568359e777ec.jpg',
-              projects: [
-                {
-                  name: 'codex.so main page',
-                  id: '2342594',
-                  picture: 'https://capella.pics/fd1a93ac-f8e2-4b4b-911e-568359e777ec.jpg'
-                },
-                {
-                  name: 'php backend',
-                  id: '2342342367',
-                  picture: 'https://capella.pics/fd1a93ac-f8e2-4b4b-911e-568359e777ec.jpg'
-                }
-              ]
-            },
-            {
-              name: 'Hawk.so',
-              id: '342342342343',
-              picture: 'https://capella.pics/9a7e51f7-2629-4040-9aab-e836fc6ee30c.jpg',
-              projects: [
-                {
-                  name: 'Garage',
-                  id: '23425awd94',
-                  picture: 'https://capella.pics/9a7e51f7-2629-4040-9aab-e836fc6ee30c.jpg'
-                },
-                {
-                  name: 'GraphQL API',
-                  id: '2342awd342367',
-                  picture: 'https://capella.pics/9a7e51f7-2629-4040-9aab-e836fc6ee30c.jpg'
-                }
-              ]
-            }
-          ]
-        }
-      };
-    }
-  } catch (e) {
-    throw new Error(WORKSPACES_ERROR.UNKNOWN);
-  }
-
-  if (resp.status === HTTP_OK) {
-    return resp.data.workspaces;
-  } else {
-    throw new Error(WORKSPACES_ERROR.UNKNOWN);
-  }
+  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS)).workspaces;
 }

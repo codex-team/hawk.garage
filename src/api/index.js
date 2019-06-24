@@ -9,7 +9,7 @@ const API_ENDPOINT =
 /**
  * Makes request to API
  * @param {String} request - request to send
- * @param {Object} variables - request variables
+ * @param {Object} [variables] - request variables
  * @return {Promise<*>} - request data
  */
 export async function call(request, variables) {
@@ -44,3 +44,50 @@ export const errorCodes = {
    */
   ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR'
 };
+
+/**
+ * Callback functions for different situations
+ */
+export const eventsHandlers = {
+  /**
+   * Called when a tokens pair needs to be updated
+   * @return {String} access tokens
+   */
+  onTokenExpired: () => {},
+
+  /**
+   * Called when auth failed
+   */
+  onAuthError: () => {}
+};
+
+/**
+ * Interceptors that handles the error of expired tokens
+ */
+axios.interceptors.response.use(
+  /**
+   * Interceptor handler
+   * @param {AxiosResponse} response - axios response object
+   * @return {Promise<AxiosResponse>} - processed request
+   */
+  async response => {
+    const errors = response.data.errors;
+    const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
+
+    if (!errors || !isTokenExpiredError) {
+      return response;
+    }
+
+    const originalRequest = response.config;
+
+    try {
+      const newAccessToken = await eventsHandlers.onTokenExpired();
+
+      originalRequest.headers['Authorization'] = 'Bearer ' + newAccessToken;
+      return axios(originalRequest);
+    } catch {
+      eventsHandlers.onAuthError();
+      return response;
+    }
+  }
+);
