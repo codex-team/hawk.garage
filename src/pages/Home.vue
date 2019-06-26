@@ -17,7 +17,7 @@
           :style="{ backgroundImage: `url('${workspace.picture}')` }"
         ></div>
       </div>
-      <router-link v-else to="workspace-create">Create workspace</router-link>
+      <router-link v-else to="/workspaces/create">Create workspace</router-link>
       <div class="aside__projects-list" v-if="projects">
         <ProjectsMenuItem
           v-for="project in projects"
