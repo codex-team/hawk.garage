@@ -1,6 +1,5 @@
 import { HTTP_OK } from '../httpCodes';
-import uuid from 'uuid/v4';
-import { QUERY_ALL_WORKSPACES_WITH_PROJECTS } from './queries';
+import { MUTATION_CREATE_WORKSPACE, QUERY_ALL_WORKSPACES_WITH_PROJECTS } from './queries';
 import * as api from '../index';
 
 /**
@@ -20,34 +19,11 @@ export const WORKSPACES_ERROR = {
 
 /**
  * Create workspace and return it
- * @param {Workspace} workspace - workspace to create
+ * @param {Workspace} workspaceInfo - workspace to create
  * @returns {Promise<Workspace>} created workspace
- * @throws {Error} Workspaces error occurred.
  */
-export async function createWorkspace(workspace) {
-  let resp;
-
-  try {
-    if (!MOCK) {
-      // @todo make real request to API
-    } else {
-      resp = {
-        status: HTTP_OK,
-        data: {
-          id: uuid(),
-          name: workspace.name
-        }
-      };
-    }
-  } catch (e) {
-    throw new Error(WORKSPACES_ERROR.CREATE);
-  }
-
-  if (resp.status === HTTP_OK) {
-    return resp.data;
-  } else {
-    throw new Error(WORKSPACES_ERROR.UNKNOWN);
-  }
+export async function createWorkspace(workspaceInfo) {
+  return (await api.call(MUTATION_CREATE_WORKSPACE, workspaceInfo)).createWorkspace;
 }
 
 /**
