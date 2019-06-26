@@ -83,10 +83,10 @@ const actions = {
    * @returns {Workspace} - created workspace
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
-    const response = await workspaceApi.createWorkspace(workspace);
+    const createWorkspace = await workspaceApi.createWorkspace(workspace);
 
-    commit(ADD_WORKSPACE, response);
-    return response;
+    commit(ADD_WORKSPACE, createWorkspace);
+    return createWorkspace;
   },
 
   /**
