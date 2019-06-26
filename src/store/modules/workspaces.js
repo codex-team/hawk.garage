@@ -57,7 +57,9 @@ const getters = {
    * @return {Array<Project>}
    */
   allProjects: state => state.list.reduce((accumulator, workspace) => {
-    accumulator.push(...workspace.projects);
+    if (workspace.projects) {
+      accumulator.push(...workspace.projects);
+    }
     return accumulator;
   }, []),
 
