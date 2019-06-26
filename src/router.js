@@ -25,7 +25,7 @@ const router = new Router({
         {
           path: '/workspace-create',
           name: 'workspace-create',
-          component: () => import(/* webpackChunkName: 'workspace-create' */ './components/CreateWorkspace')
+          component: () => import(/* webpackChunkName: 'workspace-create' */ './pages/workspaces/Create')
         },
         {
           path: '/projects/:projectId',

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { CREATE_WORKSPACE } from '../store/actions/workspaces';
+import { CREATE_WORKSPACE } from '../../store/actions/workspaces';
 
 export default {
   name: 'CreateWorkspace',
