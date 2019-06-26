@@ -76,7 +76,6 @@ export default {
      * @return {Array<Workspace>} - registered workspaces
      */
     workspaces() {
-      console.log(this.$store.state.workspaces.list);
       return this.$store.state.workspaces.list;
     },
     /**
