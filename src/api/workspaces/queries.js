@@ -20,8 +20,11 @@ export const MUTATION_CREATE_WORKSPACE = `
     $description: String!,
     $image: String
   ) {
-    createWorkspace(name: $name, description: $description, image: $image){
+    createWorkspace(name: $name, description: $description, image: $image) {
       id
+      name
+      description
+      image
     }
   }
 `;
