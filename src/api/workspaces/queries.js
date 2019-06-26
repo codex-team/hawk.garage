@@ -7,6 +7,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
     id
     name
     description
+    image
     projects {
       id
     }
