@@ -39,6 +39,7 @@ import { RESET_STORE } from '../store/actions';
 import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
 import ProjectsMenuItem from '../components/ProjectsMenuItem';
+import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 
 export default {
   name: 'Home',
@@ -60,11 +61,22 @@ export default {
       this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
     }
   },
+
+  /**
+   * Vue hook. Called synchronously after the instance is created
+   */
+  created() {
+    /**
+     * Fetch user data
+     */
+    this.$store.dispatch(FETCH_WORKSPACES);
+  },
   computed: {
     /**
      * @return {Array<Workspace>} - registered workspaces
      */
     workspaces() {
+      console.log(this.$store.state.workspaces.list);
       return this.$store.state.workspaces.list;
     },
     /**
