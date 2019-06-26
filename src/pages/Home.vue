@@ -14,7 +14,7 @@
           class="aside__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
-          :style="{ backgroundImage: `url('${workspace.picture}')` }"
+          :style="{ backgroundImage: `url('${workspace.image}')` }"
         ></div>
       </div>
       <router-link v-else to="/workspaces/create">Create workspace</router-link>

@@ -14,7 +14,8 @@ import Vue from 'vue';
  * @typedef {object} Workspace - represents workspace
  * @property {string} id - workspace id
  * @property {string} name - workspace name
- * @property {String} picture - link to the workspace picture
+ * @property {String} image - link to the workspace picture
+ * @property {String} description - workspace description
  * @property {[Project]} projects - projects associated with workspace
  */
 
@@ -85,10 +86,10 @@ const actions = {
    * @returns {Workspace} - created workspace
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
-    const createWorkspace = await workspaceApi.createWorkspace(workspace);
+    const createdWorkspace = await workspaceApi.createWorkspace(workspace);
 
-    commit(ADD_WORKSPACE, createWorkspace);
-    return createWorkspace;
+    commit(ADD_WORKSPACE, createdWorkspace);
+    return createdWorkspace;
   },
 
   /**
