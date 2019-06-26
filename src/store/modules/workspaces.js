@@ -2,9 +2,9 @@
 import {
   CREATE_WORKSPACE,
   ADD_WORKSPACE,
-  DELETE_WORKSPACE,
+  REMOVE_WORKSPACE,
   FETCH_WORKSPACES,
-  SET_WORKSPACES_LIST
+  SET_WORKSPACES
 } from '../actions/workspaces';
 import { RESET_STORE } from '../actions';
 import * as workspaceApi from '../../api/workspaces';
@@ -94,10 +94,10 @@ const actions = {
    * @param {function} commit - standard Vuex commit function
    * @param {string} workspaceId - id of workspace for deleting
    */
-  async [DELETE_WORKSPACE]({ commit }, workspaceId) {
+  async [REMOVE_WORKSPACE]({ commit }, workspaceId) {
     await workspaceApi.deleteWorkspace(workspaceId);
 
-    commit(DELETE_WORKSPACE, workspaceId);
+    commit(REMOVE_WORKSPACE, workspaceId);
   },
 
   /**
@@ -108,7 +108,7 @@ const actions = {
   async [FETCH_WORKSPACES]({ commit }) {
     const workspaces = await workspaceApi.getAllWorkspacesWithProjects();
 
-    commit(SET_WORKSPACES_LIST, workspaces);
+    commit(SET_WORKSPACES, workspaces);
   },
 
   /**
@@ -135,7 +135,7 @@ const mutations = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {string} workspaceId - id of workspace for deleting
    */
-  [DELETE_WORKSPACE](state, workspaceId) {
+  [REMOVE_WORKSPACE](state, workspaceId) {
     let index = null;
 
     state.list.find((element, i) => {
@@ -149,7 +149,7 @@ const mutations = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {Array<Workspace>} newList - new list of workspaces
    */
-  [SET_WORKSPACES_LIST](state, newList) {
+  [SET_WORKSPACES](state, newList) {
     Vue.set(state, 'list', newList);
   },
 
