@@ -20,4 +20,4 @@ COPY --from=build-stage /app/dist /
 
 EXPOSE 8080
 
-CMD ["http-server", "./"]
+CMD ["http-server", "--push-state"]
