@@ -8,7 +8,7 @@
 
 <script>
 
-import { DELETE_WORKSPACE } from '../../store/actions/workspaces';
+import { REMOVE_WORKSPACE } from '../../store/actions/workspaces';
 
 export default {
   name: 'WorkspaceSettings',
@@ -27,7 +27,7 @@ export default {
      * Deletes workspace
      */
     async deleteWorkspace() {
-      await this.$store.dispatch(DELETE_WORKSPACE, this.workspaceId);
+      await this.$store.dispatch(REMOVE_WORKSPACE, this.workspaceId);
       this.$router.push('/');
     }
   }

@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { FETCH_WORKSPACES } from './store/actions/workspaces';
 import * as api from './api';
 import { REFRESH_TOKENS } from './store/actions/auth';
 import { RESET_STORE } from './store/actions';
@@ -21,6 +20,7 @@ export default {
       return `app--theme--${this.$store.state.app.theme}`;
     }
   },
+
   /**
    * Vue hook. Called synchronously after the instance is created
    */
@@ -42,11 +42,6 @@ export default {
         api.setAuthToken(accessToken);
       }
     );
-
-    /**
-     * Fetch user data
-     */
-    this.$store.dispatch(FETCH_WORKSPACES);
   }
 };
 </script>

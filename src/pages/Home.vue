@@ -14,10 +14,10 @@
           class="aside__workspace-item"
           v-for="workspace in workspaces"
           :key="workspace.id"
-          :style="{ backgroundImage: `url('${workspace.picture}')` }"
+          :style="{ backgroundImage: `url('${workspace.image}')` }"
         ></div>
       </div>
-      <router-link v-else to="workspace-create">Create workspace</router-link>
+      <router-link v-else to="/workspaces/create">Create workspace</router-link>
       <div class="aside__projects-list" v-if="projects">
         <ProjectsMenuItem
           v-for="project in projects"
@@ -39,6 +39,7 @@ import { RESET_STORE } from '../store/actions';
 import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
 import ProjectsMenuItem from '../components/ProjectsMenuItem';
+import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 
 export default {
   name: 'Home',
@@ -59,6 +60,16 @@ export default {
     changeTheme() {
       this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
     }
+  },
+
+  /**
+   * Vue hook. Called synchronously after the instance is created
+   */
+  created() {
+    /**
+     * Fetch user data
+     */
+    this.$store.dispatch(FETCH_WORKSPACES);
   },
   computed: {
     /**
