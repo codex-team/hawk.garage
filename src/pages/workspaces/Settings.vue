@@ -1,5 +1,5 @@
 <template>
-  <form class="form">
+  <form class="settings-form">
     <label for="name">Workspace name</label>
     <input type="text" id="name" v-model="name">
     <button class="button" @click="deleteWorkspace">Delete workspace</button>
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style>
-  .form {
+  .settings-form {
     margin: 10px;
   }
 </style>
