@@ -77,14 +77,6 @@ export default {
 
 <style>
   .form {
-    width: 100%;
-    max-width: 568px;
-    margin: 0 auto;
-
-    @media (--media-mobile) {
-      max-width: 287px;
-    }
-
     &__title {
       display: inline-block;
 

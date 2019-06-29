@@ -1,6 +1,7 @@
 <template>
   <div class="auth-page">
     <Form
+      class="auth-page__form"
       :fields="fields"
       :submitText="submitText"
       :message="message"
