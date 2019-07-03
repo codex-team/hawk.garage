@@ -1,30 +1,39 @@
 <template>
   <div class="home">
     <aside class="aside">
-      <div class="aside__header clearfix">
+      <div class="aside__left-column">
         <div
           class="aside__user-picture"
           @click="logout"
         ></div>
-        <div class="aside__hawk-title">Hawk</div>
-        <div class="aside__user-email">taly@codex.so</div>
+        <div class="aside__button-create-wrapper">
+          <div
+            class="aside__button-create"
+            @click="$router.push('/workspaces/create')"
+          >
+            <Icon symbol="plus"></Icon>
+          </div>
+        </div>
+        <div class="aside__workspaces-menu" v-if="workspaces.length">
+          <div ref="workspaceHighlight" class="aside__workspace-highlight"></div>
+          <div
+            class="aside__workspace-item"
+            v-for="workspace in workspaces"
+            @click="onWorkspaceItemClick"
+            :key="workspace.id"
+            :style="{ backgroundImage: `url('${workspace.image}')` }"
+          ></div>
+        </div>
       </div>
-      <div class="aside__workspaces-menu" v-if="workspaces.length">
-        <div
-          class="aside__workspace-item"
-          v-for="workspace in workspaces"
-          :key="workspace.id"
-          :style="{ backgroundImage: `url('${workspace.image}')` }"
-        ></div>
-      </div>
-      <router-link v-else to="/workspaces/create">Create workspace</router-link>
-      <div class="aside__projects-list" v-if="projects">
-        <ProjectsMenuItem
-          v-for="project in projects"
-          :key="project.id"
-          :project="project"
-          @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
-        ></ProjectsMenuItem>
+      <div class="aside__right-column">
+        <div class="aside__projects-list" v-if="projects">
+          <ProjectsMenuItem
+            v-for="project in projects"
+            :key="project.id"
+            :project="project"
+            @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
+          ></ProjectsMenuItem>
+        </div>
       </div>
     </aside>
     <div class="home__content">
@@ -40,11 +49,13 @@ import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
 import ProjectsMenuItem from '../components/ProjectsMenuItem';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
+import Icon from '../components/Icon';
 
 export default {
   name: 'Home',
   components: {
-    ProjectsMenuItem
+    ProjectsMenuItem,
+    Icon
   },
   methods: {
     /**
@@ -59,6 +70,16 @@ export default {
      */
     changeTheme() {
       this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
+    },
+
+    /**
+     * Works when workspace item is clicked
+     */
+    onWorkspaceItemClick(event) {
+      const highLightPadding = 9;
+
+      this.$refs.workspaceHighlight.style.top =
+        event.target.offsetTop - highLightPadding + 'px';
     }
   },
 
@@ -103,52 +124,116 @@ export default {
   }
 
   .aside {
-    min-width: 342px;
+    display: flex;
 
     background-color: var(--color-bg-main);
 
-    &__header {
-      padding: 20px;
+    &__left-column {
+      width: 76px;
+
+      background-color: #1a1d26;
     }
 
     &__user-picture {
-      float: right;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
+      margin: 20px 20px 18px;
 
       background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
       background-size: cover;
-      border-radius: 11px;
+      border-radius: 10px;
     }
 
-    &__hawk-title {
-      color: var(--color-text-main);
-      font-weight: bold;
-      line-height: 1.5;
-      letter-spacing: 0.19px;
+    &__button-create-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px;
+      padding: 20px;
+
+      border-top: 1px solid rgba(219, 230, 255, 0.1);
+      border-bottom: 1px solid rgba(219, 230, 255, 0.1);
     }
 
-    &__user-email {
-      margin-top: 1px;
+    &__button-create {
+      width: 36px;
+      height: 36px;
+      margin: auto;
 
-      color: var(--color-text-second);
-      font-size: 14px;
+      background-color: #1a1d26;
+      border: solid 1px var(--color-text-main);
+      border-radius: 9px;
+      cursor: pointer;
+
+      .icon {
+        width: 16px;
+        height: 16px;
+        padding: 10px;
+      }
     }
 
     &__workspaces-menu {
+      position: relative;
+
       padding: 0 20px 24px;
     }
 
     &__workspace-item {
-      display: inline-block;
-      width: 26px;
-      height: 26px;
-      margin-right: 15px;
+      position: relative;
+      z-index: 10;
+
+      width: 36px;
+      height: 36px;
+      margin-bottom: 20px;
 
       background-position: center center;
       background-size: cover;
       border-radius: 10px;
       cursor: pointer;
+    }
+
+    &__workspace-highlight {
+      position: absolute;
+      top: -9px;
+      z-index: 0;
+
+      width: 65px;
+      height: 54px;
+      margin-left: -9px;
+
+      background: var(--color-bg-main);
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+
+      transition: top 0.3s;
+
+      &:before,
+      &:after {
+        position: absolute;
+        right: 0;
+
+        display: block;
+        width: 10px;
+        height: 10px;
+
+        content: '';
+      }
+
+      &:before {
+        top: -10px;
+
+        background-image: radial-gradient(circle at 0 0, transparent 9px, var(--color-bg-main) 10px);
+      }
+
+      &:after {
+        bottom: -10px;
+
+        background-image: radial-gradient(circle at 0 100%, transparent 9px, var(--color-bg-main) 10px);
+      }
+    }
+
+    &__right-column {
+      width: 342px;
     }
   }
 </style>
