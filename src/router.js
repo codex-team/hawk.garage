@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 
-import Home from './pages/Home';
+import AppShell from './pages/AppShell';
 import Settings from './pages/Settings';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
@@ -15,7 +15,7 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
+      component: AppShell,
       children: [
         {
           path: '/workspaces/:workspaceId/settings',

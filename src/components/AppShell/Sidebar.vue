@@ -1,27 +1,27 @@
 <template>
-  <div class="home-panel">
+  <div class="sidebar">
     <div
-      class="home-panel__user-picture"
+      class="sidebar__user-picture"
       @click="logout"
     ></div>
-    <hr class="home-panel__delimiter">
-    <div class="home-panel__button-create-wrapper">
+    <hr class="sidebar__delimiter">
+    <div class="sidebar__button-create-wrapper">
       <div
-        class="home-panel__button-create"
+        class="sidebar__button-create"
         @click="$router.push('/workspaces/create')"
       >
         <Icon symbol="plus"></Icon>
       </div>
     </div>
-    <hr class="home-panel__delimiter">
-    <div class="home-panel__workspaces-menu" v-if="workspaces.length">
-      <div ref="workspaceHighlight" class="home-panel__workspace-highlight"></div>
+    <hr class="sidebar__delimiter">
+    <div class="sidebar__workspaces-menu" v-if="workspaces.length">
+      <div ref="workspaceHighlight" class="sidebar__workspace-highlight"></div>
       <WorkspacesMenuItem
         v-for="workspace in workspaces"
         :key="workspace.id"
         :workspace="workspace"
         :active="activeWorkspaceId === workspace.id"
-        class="home-panel__workspace-item"
+        class="sidebar__workspace-item"
         @click.native="onWorkspaceItemClick($event, workspace.id)"
       />
     </div>
@@ -35,7 +35,7 @@ import Icon from '../Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
 
 export default {
-  name: 'Panel',
+  name: 'Sidebar',
   components: {
     WorkspacesMenuItem,
     Icon
@@ -79,7 +79,7 @@ export default {
 </script>
 
 <style>
-  .home-panel {
+  .sidebar {
     display: flex;
     flex-direction: column;
     align-items: center;

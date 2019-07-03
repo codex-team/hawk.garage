@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
+  <div class="app-shell">
     <aside class="aside">
-      <Panel/>
+      <Sidebar/>
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="projects">
           <ProjectsMenuItem
@@ -13,7 +13,7 @@
         </div>
       </div>
     </aside>
-    <div class="home__content">
+    <div class="app-shell__content">
       <router-view :key="$route.fullPath"></router-view>
     </div>
   </div>
@@ -24,13 +24,13 @@
 import { THEME_CHANGE } from '../store/actions/app';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
-import ProjectsMenuItem from '../components/Home/ProjectsMenuItem';
-import Panel from '../components/Home/Panel';
+import ProjectsMenuItem from '../components/AppShell/ProjectsMenuItem';
+import Sidebar from '../components/AppShell/Sidebar';
 
 export default {
-  name: 'Home',
+  name: 'AppShell',
   components: {
-    Panel,
+    Sidebar,
     ProjectsMenuItem
   },
   methods: {
@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style>
-  .home {
+  .app-shell {
     display: flex;
     min-height: 100%;
 
