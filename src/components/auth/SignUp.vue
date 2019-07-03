@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Form from '../Form';
+import Form from './Form';
 import { SIGN_UP } from '../../store/actions/auth';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 

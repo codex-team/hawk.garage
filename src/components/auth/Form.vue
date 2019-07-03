@@ -1,25 +1,25 @@
 <template>
-  <div class="form">
-    <router-link class="form__title" to="/">Hawk</router-link>
-    <div class="form__caption">Time for quality</div>
-    <div class="form__container">
-      <div class="form__picture"></div>
-      <form class="form__fields-container" @submit.prevent="$emit('submit')">
-        <div class="form__links">
+  <div class="auth-form">
+    <router-link class="auth-form__title" to="/">Hawk</router-link>
+    <div class="auth-form__caption">Time for quality</div>
+    <div class="auth-form__container">
+      <div class="auth-form__picture"></div>
+      <form class="auth-form__fields-container" @submit.prevent="$emit('submit')">
+        <div class="auth-form__links">
           <router-link to="/login">Login</router-link>
           <router-link to="/sign-up">Sign up</router-link>
         </div>
-        <hr class="form__delimiter">
+        <hr class="auth-form__delimiter">
         <div
           v-if="message"
-          :class="`form__message form__message--${message.type}`"
+          :class="`auth-form__message auth-form__message--${message.type}`"
         >
           {{ message.text }}
         </div>
-        <fieldset v-for="(field, index) in fields" :key="index" class="form__section">
-          <label class="form__label" :for="field.name">{{ field.label}}</label>
+        <fieldset v-for="(field, index) in fields" :key="index" class="auth-form__section">
+          <label class="auth-form__label" :for="field.name">{{ field.label}}</label>
           <input
-            class="form__input"
+            class="auth-form__input"
             :type="field.type || 'text'"
             :name="field.name"
             v-model="field.value"
@@ -28,16 +28,16 @@
             required
           >
         </fieldset>
-        <div class="form__action-container">
+        <div class="auth-form__action-container">
           <input
             v-if="submitText"
-            class="button form__submit button--submit"
+            class="button auth-form__submit button--submit"
             type="submit"
             :value="submitText"
           >
           <router-link
             v-if="altText && altLink"
-            class="form__alt-button"
+            class="auth-form__alt-button"
             :to="altLink"
           >{{ altText }}
           </router-link>
@@ -49,7 +49,7 @@
 
 <script>
 export default {
-  name: 'Form',
+  name: 'AuthForm',
   props: {
     fields: {
       type: Array,
@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style>
-  .form {
+  .auth-form {
     &__title {
       display: inline-block;
 
@@ -115,7 +115,7 @@ export default {
     &__picture {
       width: 205px;
 
-      background-image: url("../assets/hawk.png");
+      background-image: url("../../assets/hawk.png");
       background-position: center center;
       background-size: cover;
       border-radius: inherit;

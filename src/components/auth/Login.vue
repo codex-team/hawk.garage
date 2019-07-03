@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Form from '../Form';
+import Form from './Form';
 import { LOGIN } from '../../store/actions/auth';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
