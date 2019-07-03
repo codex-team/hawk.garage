@@ -141,6 +141,9 @@ export default {
     background-color: var(--color-bg-main);
 
     &__left-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       width: 76px;
 
       background-color: #1a1d26;
@@ -149,7 +152,8 @@ export default {
     &__user-picture {
       width: 36px;
       height: 36px;
-      margin: 20px 20px 18px;
+      margin-top: 20px;
+      margin-bottom: 18px;
 
       background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
       background-size: cover;
