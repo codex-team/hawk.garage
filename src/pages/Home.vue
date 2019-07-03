@@ -166,10 +166,15 @@ export default {
     }
 
     &__workspaces-menu {
+      position: relative;
+
       padding: 0 20px 24px;
     }
 
     &__workspace-item {
+      position: relative;
+      z-index: 10;
+
       width: 36px;
       height: 36px;
       margin-bottom: 20px;
@@ -181,7 +186,9 @@ export default {
     }
 
     &__workspace-highlight {
-      position: relative;
+      position: absolute;
+      top: -9px;
+      z-index: 0;
 
       width: 65px;
       height: 54px;
