@@ -15,14 +15,11 @@
           </div>
         </div>
         <div class="aside__workspaces-menu" v-if="workspaces.length">
-
-          <div class="aside__workspace-highlight">
-
-          </div>
-
+          <div ref="workspaceHighlight" class="aside__workspace-highlight"></div>
           <div
             class="aside__workspace-item"
             v-for="workspace in workspaces"
+            @click="onWorkspaceItemClick"
             :key="workspace.id"
             :style="{ backgroundImage: `url('${workspace.image}')` }"
           ></div>
@@ -73,6 +70,16 @@ export default {
      */
     changeTheme() {
       this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
+    },
+
+    /**
+     * Works when workspace item is clicked
+     */
+    onWorkspaceItemClick(event) {
+      const highLightPadding = 9;
+
+      this.$refs.workspaceHighlight.style.top =
+        event.target.offsetTop - highLightPadding + 'px';
     }
   },
 
@@ -197,6 +204,8 @@ export default {
       background: var(--color-bg-main);
       border-top-left-radius: 10px;
       border-bottom-left-radius: 10px;
+
+      transition: top 0.3s;
 
       &:before,
       &:after {
