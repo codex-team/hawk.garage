@@ -113,10 +113,10 @@ export default {
     }
 
     &__button-create {
+      display: flex;
       box-sizing: border-box;
       width: 36px;
       height: 36px;
-      margin: auto;
 
       background-color: #1a1d26;
       border: solid 1px var(--color-text-main);
@@ -126,7 +126,7 @@ export default {
       .icon {
         width: 16px;
         height: 16px;
-        padding: 10px;
+        margin: auto;
       }
     }
 
