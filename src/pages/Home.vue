@@ -166,6 +166,7 @@ export default {
     }
 
     &__button-create {
+      box-sizing: border-box;
       width: 36px;
       height: 36px;
       margin: auto;
