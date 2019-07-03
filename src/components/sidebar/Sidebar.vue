@@ -152,8 +152,8 @@ export default {
       margin-left: -9px;
 
       background: var(--color-bg-main);
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
+      border-top-left-radius: var(--border-radius);
+      border-bottom-left-radius: var(--border-radius);
 
       transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39);
 
