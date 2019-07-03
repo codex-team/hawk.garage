@@ -15,6 +15,11 @@
           </div>
         </div>
         <div class="aside__workspaces-menu" v-if="workspaces.length">
+
+          <div class="aside__workspace-highlight">
+
+          </div>
+
           <div
             class="aside__workspace-item"
             v-for="workspace in workspaces"
@@ -173,6 +178,42 @@ export default {
       background-size: cover;
       border-radius: 10px;
       cursor: pointer;
+    }
+
+    &__workspace-highlight {
+      position: relative;
+
+      width: 65px;
+      height: 54px;
+      margin-left: -9px;
+
+      background: var(--color-bg-main);
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+
+      &:before,
+      &:after {
+        position: absolute;
+        right: 0;
+
+        display: block;
+        width: 10px;
+        height: 10px;
+
+        content: '';
+      }
+
+      &:before {
+        top: -10px;
+
+        background-image: radial-gradient(circle at 0 0, transparent 9px, var(--color-bg-main) 10px);
+      }
+
+      &:after {
+        bottom: -10px;
+
+        background-image: radial-gradient(circle at 0 100%, transparent 9px, var(--color-bg-main) 10px);
+      }
     }
 
     &__right-column {
