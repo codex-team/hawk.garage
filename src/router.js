@@ -2,10 +2,10 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 
-import AppShell from './pages/AppShell';
-import Settings from './pages/Settings';
-import SignUp from './pages/SignUp';
-import Login from './pages/Login';
+import AppShell from './components/AppShell';
+import Settings from './components/Settings';
+import SignUp from './components/auth/SignUp';
+import Login from './components/auth/Login';
 
 Vue.use(Router);
 
@@ -20,17 +20,17 @@ const router = new Router({
         {
           path: '/workspaces/:workspaceId/settings',
           name: 'workspace-settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './pages/workspaces/Settings')
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings')
         },
         {
           path: '/workspaces/create',
           name: 'workspace-create',
-          component: () => import(/* webpackChunkName: 'workspace-create' */ './pages/workspaces/Create')
+          component: () => import(/* webpackChunkName: 'workspace-create' */ './components/workspaces/Create')
         },
         {
           path: '/projects/:projectId',
           name: 'project-overview',
-          component: () => import(/* webpackChunkName: 'project-overview' */ './pages/projects/ProjectOverview.vue')
+          component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/ProjectOverview.vue')
         }
       ]
     },

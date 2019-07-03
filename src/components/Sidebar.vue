@@ -30,8 +30,8 @@
 
 <script>
 
-import { RESET_STORE } from '../../store/actions';
-import Icon from '../Icon';
+import { RESET_STORE } from '../store/actions';
+import Icon from './Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
 
 export default {

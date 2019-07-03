@@ -24,8 +24,8 @@
 import { THEME_CHANGE } from '../store/actions/app';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
-import ProjectsMenuItem from '../components/AppShell/ProjectsMenuItem';
-import Sidebar from '../components/AppShell/Sidebar';
+import ProjectsMenuItem from './ProjectsMenuItem';
+import Sidebar from './Sidebar';
 
 export default {
   name: 'AppShell',

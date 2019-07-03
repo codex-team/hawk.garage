@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Form from '../components/Form';
-import { SIGN_UP } from '../store/actions/auth';
-import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
+import Form from '../Form';
+import { SIGN_UP } from '../../store/actions/auth';
+import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
   mixins: [ offlineErrorMessage ],
@@ -57,4 +57,4 @@ export default {
 };
 </script>
 
-<style src="../styles/auth-page.css"></style>
+<style src="../../styles/auth-page.css"></style>
