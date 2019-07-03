@@ -19,10 +19,10 @@ export async function login(email, password) {
 }
 
 /**
- * Sign up by email and return status(ok)
+ * Sign up by email and return status (true or false)
  *
  * @param {string} email - Email
- * @returns {Promise<TokensPair>} Response status
+ * @returns {Promise<Boolean>} Response status
  */
 export async function signUp(email) {
   return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
