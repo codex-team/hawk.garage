@@ -89,7 +89,7 @@ export default {
       const highLightPadding = 9;
 
       this.$refs.workspaceHighlight.style.top =
-        $event.target.offsetTop - highLightPadding + 'px';
+          $event.target.offsetTop - highLightPadding + 'px';
     }
   },
 
@@ -222,7 +222,7 @@ export default {
       border-top-left-radius: 10px;
       border-bottom-left-radius: 10px;
 
-      transition: top 0.3s;
+      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39);
 
       &:before,
       &:after {
