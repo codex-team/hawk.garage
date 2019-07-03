@@ -8,7 +8,7 @@
       backgroundColor: bgColor
     }"
   >
-    {{workspace.name | abbreviation}}
+    {{!workspace.image ? $options.filters.abbreviation(workspace.name) : ''}}
   </div>
 </template>
 
@@ -44,14 +44,12 @@ export default {
 
 <style>
   .workspaces-menu-item {
-    display: flex;
-    justify-content: center; /* align horizontal */
-    align-items: center; /* align vertical */
-
     width: 36px;
     height: 36px;
 
-    font-size: 20px;
+    font-weight: bold;
+
+    font-size: 12px;
     line-height: 36px;
     text-align: center;
     vertical-align: middle;
