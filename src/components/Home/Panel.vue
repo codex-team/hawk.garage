@@ -85,7 +85,7 @@ export default {
     align-items: center;
     width: 76px;
 
-    background-color: #1a1d26;
+    background-color: var(--color-bg-sidebar);
 
     &__user-picture {
       width: 36px;
@@ -109,7 +109,7 @@ export default {
       width: 36px;
       margin: 0;
 
-      border: 1px solid rgba(219, 230, 255, 0.1);
+      border: 0.5px solid color-mod(var(--color-text-second) alpha(10%));
     }
 
     &__button-create {
@@ -118,7 +118,6 @@ export default {
       width: 36px;
       height: 36px;
 
-      background-color: #1a1d26;
       border: solid 1px var(--color-text-main);
       border-radius: 9px;
       cursor: pointer;
