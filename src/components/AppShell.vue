@@ -24,7 +24,7 @@
 import { THEME_CHANGE } from '../store/actions/app';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
-import ProjectsMenuItem from './ProjectsMenuItem';
+import ProjectsMenuItem from './projects-list/ProjectsMenuItem';
 import Sidebar from './sidebar/Sidebar';
 
 export default {
