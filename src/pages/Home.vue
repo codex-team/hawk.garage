@@ -1,31 +1,36 @@
 <template>
   <div class="home">
     <aside class="aside">
-      <div class="aside__header clearfix">
+      <div class="aside__left-column">
         <div
           class="aside__user-picture"
           @click="logout"
         ></div>
-        <div class="aside__hawk-title">Hawk</div>
-        <div class="aside__user-email">taly@codex.so</div>
+        <div class="aside__button-create-wrapper">
+          <div class="aside__button-create">
+            <Icon symbol="plus"></Icon>
+          </div>
+        </div>
       </div>
-      <div class="aside__workspaces-menu" v-if="workspaces.length">
-        <div
-          class="aside__workspace-item"
-          v-for="workspace in workspaces"
-          :key="workspace.id"
-          :style="{ backgroundImage: `url('${workspace.image}')` }"
-        ></div>
+      <div class="aside__right-column">
+        <div class="aside__projects-list" v-if="projects">
+          <ProjectsMenuItem
+            v-for="project in projects"
+            :key="project.id"
+            :project="project"
+            @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
+          ></ProjectsMenuItem>
+        </div>
       </div>
-      <router-link v-else to="/workspaces/create">Create workspace</router-link>
-      <div class="aside__projects-list" v-if="projects">
-        <ProjectsMenuItem
-          v-for="project in projects"
-          :key="project.id"
-          :project="project"
-          @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
-        ></ProjectsMenuItem>
-      </div>
+      <!--      <div class="aside__workspaces-menu" v-if="workspaces.length">-->
+      <!--        <div-->
+      <!--          class="aside__workspace-item"-->
+      <!--          v-for="workspace in workspaces"-->
+      <!--          :key="workspace.id"-->
+      <!--          :style="{ backgroundImage: `url('${workspace.image}')` }"-->
+      <!--        ></div>-->
+      <!--      </div>-->
+      <!--      <router-link v-else to="/workspaces/create">Create workspace</router-link>-->
     </aside>
     <div class="home__content">
       <router-view :key="$route.fullPath"></router-view>
@@ -40,11 +45,13 @@ import { THEME_CHANGE } from '../store/actions/app';
 import { Themes } from '../store/modules/app';
 import ProjectsMenuItem from '../components/ProjectsMenuItem';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
+import Icon from '../components/Icon';
 
 export default {
   name: 'Home',
   components: {
-    ProjectsMenuItem
+    ProjectsMenuItem,
+    Icon
   },
   methods: {
     /**
@@ -103,22 +110,55 @@ export default {
   }
 
   .aside {
-    min-width: 342px;
+
+    display: flex;
 
     background-color: var(--color-bg-main);
 
-    &__header {
+    &__left-column {
+      width: 76px;
+
+      background-color: #1a1d26;
+    }
+
+    &__right-column {
+      width: 342px;
+    }
+
+    &__button-create-wrapper{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px;
       padding: 20px;
+
+      border-top: 1px solid rgba(219, 230, 255, 0.1);
+      border-bottom: 1px solid rgba(219, 230, 255, 0.1);
+    }
+    &__button-create {
+      width: 36px;
+      height: 36px;
+      margin: auto;
+
+      background-color: #1a1d26;
+      border: solid 1px var(--color-text-main);
+      border-radius: 9px;
+
+      .icon {
+        width: 16px;
+        height: 16px;
+        padding: 10px;
+      }
     }
 
     &__user-picture {
-      float: right;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
+      margin: 20px 20px 18px;
 
       background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
       background-size: cover;
-      border-radius: 11px;
+      border-radius: 10px;
     }
 
     &__hawk-title {
