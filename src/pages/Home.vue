@@ -16,14 +16,14 @@
         </div>
         <div class="aside__workspaces-menu" v-if="workspaces.length">
           <div ref="workspaceHighlight" class="aside__workspace-highlight"></div>
-          <div
-            class="aside__workspace-item"
-            :class="{'aside__workspace-item--active': activeWorkspaceId === workspace.id}"
+          <WorkspacesMenuItem
             v-for="workspace in workspaces"
-            @click="onWorkspaceItemClick($event, workspace.id)"
             :key="workspace.id"
-            :style="{ backgroundImage: `url('${workspace.image}')` }"
-          ></div>
+            :workspace="workspace"
+            :active="activeWorkspaceId === workspace.id"
+            class="aside__workspace-item"
+            @click.native="onWorkspaceItemClick($event, workspace.id)"
+          />
         </div>
       </div>
       <div class="aside__right-column">
@@ -47,14 +47,16 @@
 
 import { RESET_STORE } from '../store/actions';
 import { THEME_CHANGE } from '../store/actions/app';
+import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import ProjectsMenuItem from '../components/ProjectsMenuItem';
-import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import Icon from '../components/Icon';
+import WorkspacesMenuItem from '../components/WorkspacesMenuItem';
 
 export default {
   name: 'Home',
   components: {
+    WorkspacesMenuItem,
     ProjectsMenuItem,
     Icon
   },
@@ -193,21 +195,7 @@ export default {
       position: relative;
       z-index: 10;
 
-      width: 36px;
-      height: 36px;
       margin-bottom: 20px;
-
-      background-position: center center;
-      background-size: cover;
-      border-radius: 10px;
-      cursor: pointer;
-
-      &--active {
-        box-shadow: 0 5px 4px -3px rgba(0, 0, 0, 0.57);
-        transform: scale(1.05);
-
-        transition: transform 150ms ease;
-      }
     }
 
     &__workspace-highlight {
