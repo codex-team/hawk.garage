@@ -8,7 +8,7 @@
       backgroundColor: bgColor
     }"
   >
-    {{workspace.image ? '' : workspace.name[0]}}
+    {{abbreviation}}
   </div>
 </template>
 
@@ -33,8 +33,23 @@ export default {
   },
   data() {
     return {
+      /**
+       * @type {String} item background color
+       */
       bgColor: this.workspace.image ? 'none' : getRandomColor()
     };
+  },
+  computed: {
+    /**
+     * Return workspace name abbreviation (one or two symbols)
+     * @return {string}
+     */
+    abbreviation() {
+      if (this.workspace.image) return '';
+      const words = this.workspace.name.split(' ');
+
+      return words.length === 1 ? words[0][0] : words[0][0] + words[1][0];
+    }
   }
 };
 </script>

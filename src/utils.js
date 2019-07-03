@@ -3,7 +3,7 @@
  * @return {String} color
  */
 export function getRandomColor() {
-  const colors = ['teal', 'green', 'aqua'];
+  const colors = ['teal', 'green', 'purple'];
 
   return colors[Math.floor(Math.random() * colors.length)];
 }
