@@ -14,6 +14,14 @@
             <Icon symbol="plus"></Icon>
           </div>
         </div>
+        <div class="aside__workspaces-menu" v-if="workspaces.length">
+          <div
+            class="aside__workspace-item"
+            v-for="workspace in workspaces"
+            :key="workspace.id"
+            :style="{ backgroundImage: `url('${workspace.image}')` }"
+          ></div>
+        </div>
       </div>
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="projects">
@@ -25,15 +33,6 @@
           ></ProjectsMenuItem>
         </div>
       </div>
-      <!--      <div class="aside__workspaces-menu" v-if="workspaces.length">-->
-      <!--        <div-->
-      <!--          class="aside__workspace-item"-->
-      <!--          v-for="workspace in workspaces"-->
-      <!--          :key="workspace.id"-->
-      <!--          :style="{ backgroundImage: `url('${workspace.image}')` }"-->
-      <!--        ></div>-->
-      <!--      </div>-->
-      <!--      <router-link v-else to="/workspaces/create">Create workspace</router-link>-->
     </aside>
     <div class="home__content">
       <router-view :key="$route.fullPath"></router-view>
@@ -123,8 +122,14 @@ export default {
       background-color: #1a1d26;
     }
 
-    &__right-column {
-      width: 342px;
+    &__user-picture {
+      width: 36px;
+      height: 36px;
+      margin: 20px 20px 18px;
+
+      background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
+      background-size: cover;
+      border-radius: 10px;
     }
 
     &__button-create-wrapper {
@@ -155,44 +160,23 @@ export default {
       }
     }
 
-    &__user-picture {
-      width: 36px;
-      height: 36px;
-      margin: 20px 20px 18px;
-
-      background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
-      background-size: cover;
-      border-radius: 10px;
-    }
-
-    &__hawk-title {
-      color: var(--color-text-main);
-      font-weight: bold;
-      line-height: 1.5;
-      letter-spacing: 0.19px;
-    }
-
-    &__user-email {
-      margin-top: 1px;
-
-      color: var(--color-text-second);
-      font-size: 14px;
-    }
-
     &__workspaces-menu {
       padding: 0 20px 24px;
     }
 
     &__workspace-item {
-      display: inline-block;
-      width: 26px;
-      height: 26px;
-      margin-right: 15px;
+      width: 36px;
+      height: 36px;
+      margin-bottom: 20px;
 
       background-position: center center;
       background-size: cover;
       border-radius: 10px;
       cursor: pointer;
+    }
+
+    &__right-column {
+      width: 342px;
     }
   }
 </style>
