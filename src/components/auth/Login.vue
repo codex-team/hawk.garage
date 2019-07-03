@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import Form from '../components/Form';
-import { LOGIN } from '../store/actions/auth';
-import { offlineErrorMessage } from '../mixins/offlineErrorMessage';
+import Form from '../Form';
+import { LOGIN } from '../../store/actions/auth';
+import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
   name: 'Login',
@@ -70,4 +70,4 @@ export default {
 };
 </script>
 
-<style src="../styles/auth-page.css"></style>
+<style src="../../styles/auth-page.css"></style>

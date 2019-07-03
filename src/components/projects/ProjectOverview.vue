@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import EventItem from '../../components/EventItem';
-import Icon from '../../components/Icon';
+import EventItem from '../EventItem';
+import Icon from '../Icon';
 
 export default {
   name: 'ProjectOverview',
@@ -90,7 +90,7 @@ export default {
 
       background-position: center center;
       background-size: cover;
-      border-radius: 10px;
+      border-radius: var(--border-radius);
     }
 
     &__name {
