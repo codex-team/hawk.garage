@@ -52,7 +52,6 @@ export default {
     font-size: 12px;
     line-height: 36px;
     text-align: center;
-    vertical-align: middle;
 
     background-position: center center;
     background-size: cover;
