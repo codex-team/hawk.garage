@@ -11,7 +11,7 @@
   --color-indicator-critical: #d94848;
   --color-indicator-medium: #4979e4;
 
-
+  --border-radius: 10px;
 }
 
 .app--theme--light{

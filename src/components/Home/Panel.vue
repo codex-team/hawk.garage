@@ -95,7 +95,7 @@ export default {
 
       background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
       background-size: cover;
-      border-radius: 10px;
+      border-radius: var(--border-radius);
     }
 
     &__button-create-wrapper {

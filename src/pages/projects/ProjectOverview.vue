@@ -90,7 +90,7 @@ export default {
 
       background-position: center center;
       background-size: cover;
-      border-radius: 10px;
+      border-radius: var(--border-radius);
     }
 
     &__name {
