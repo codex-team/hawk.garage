@@ -7,7 +7,10 @@
           @click="logout"
         ></div>
         <div class="aside__button-create-wrapper">
-          <div class="aside__button-create">
+          <div
+            class="aside__button-create"
+            @click="$router.push('/workspaces/create')"
+          >
             <Icon symbol="plus"></Icon>
           </div>
         </div>
@@ -110,7 +113,6 @@ export default {
   }
 
   .aside {
-
     display: flex;
 
     background-color: var(--color-bg-main);
@@ -125,7 +127,7 @@ export default {
       width: 342px;
     }
 
-    &__button-create-wrapper{
+    &__button-create-wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -135,6 +137,7 @@ export default {
       border-top: 1px solid rgba(219, 230, 255, 0.1);
       border-bottom: 1px solid rgba(219, 230, 255, 0.1);
     }
+
     &__button-create {
       width: 36px;
       height: 36px;
@@ -143,6 +146,7 @@ export default {
       background-color: #1a1d26;
       border: solid 1px var(--color-text-main);
       border-radius: 9px;
+      cursor: pointer;
 
       .icon {
         width: 16px;
