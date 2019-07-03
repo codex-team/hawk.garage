@@ -18,8 +18,9 @@
           <div ref="workspaceHighlight" class="aside__workspace-highlight"></div>
           <div
             class="aside__workspace-item"
+            :class="{'aside__workspace-item--active': activeWorkspaceId === workspace.id}"
             v-for="workspace in workspaces"
-            @click="onWorkspaceItemClick"
+            @click="onWorkspaceItemClick($event, workspace.id)"
             :key="workspace.id"
             :style="{ backgroundImage: `url('${workspace.image}')` }"
           ></div>
@@ -57,6 +58,14 @@ export default {
     ProjectsMenuItem,
     Icon
   },
+  data() {
+    return {
+      /**
+       * Current workspace id
+       */
+      activeWorkspaceId: null
+    };
+  },
   methods: {
     /**
      * Logouts user
@@ -75,11 +84,12 @@ export default {
     /**
      * Works when workspace item is clicked
      */
-    onWorkspaceItemClick(event) {
+    onWorkspaceItemClick($event, workspaceId) {
+      this.activeWorkspaceId = workspaceId;
       const highLightPadding = 9;
 
       this.$refs.workspaceHighlight.style.top =
-        event.target.offsetTop - highLightPadding + 'px';
+          $event.target.offsetTop - highLightPadding + 'px';
     }
   },
 
@@ -190,6 +200,13 @@ export default {
       background-size: cover;
       border-radius: 10px;
       cursor: pointer;
+
+      &--active {
+        box-shadow: 0 5px 4px -3px rgba(0, 0, 0, 0.57);
+        transform: scale(1.05);
+
+        transition: transform 150ms ease;
+      }
     }
 
     &__workspace-highlight {
@@ -205,7 +222,7 @@ export default {
       border-top-left-radius: 10px;
       border-bottom-left-radius: 10px;
 
-      transition: top 0.3s;
+      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39);
 
       &:before,
       &:after {
