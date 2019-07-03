@@ -8,7 +8,7 @@
       backgroundColor: bgColor
     }"
   >
-    {{abbreviation}}
+    {{workspace.name | abbreviation}}
   </div>
 </template>
 
@@ -38,29 +38,21 @@ export default {
        */
       bgColor: this.workspace.image ? 'none' : getRandomColor()
     };
-  },
-  computed: {
-    /**
-     * Return workspace name abbreviation (one or two symbols)
-     * @return {string}
-     */
-    abbreviation() {
-      if (this.workspace.image) return '';
-      const words = this.workspace.name.split(' ');
-
-      return words.length === 1 ? words[0][0] : words[0][0] + words[1][0];
-    }
   }
 };
 </script>
 
 <style>
   .workspaces-menu-item {
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+
     width: 36px;
     height: 36px;
 
-    font-size: 36px;
-    line-height: 32px;
+    font-size: 20px;
+    line-height: 36px;
     text-align: center;
     vertical-align: middle;
 
