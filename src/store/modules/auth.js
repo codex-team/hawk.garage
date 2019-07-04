@@ -46,11 +46,10 @@ const actions = {
    * Send sign up request to the server and performs user login
    * @param {function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
+   * @return {Promise<boolean>} - sign up status
    */
   async [SIGN_UP]({ commit }, user) {
-    const tokens = await authApi.signUp(user.email);
-
-    commit(SET_TOKENS, tokens);
+    return authApi.signUp(user.email);
   },
 
   /**

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Form from '../Form';
+import Form from './Form';
 import { SIGN_UP } from '../../store/actions/auth';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
@@ -42,7 +42,7 @@ export default {
 
       try {
         await this.$store.dispatch(SIGN_UP, { email });
-        this.$router.push('/');
+        this.$router.push('/login');
       } catch (e) {
         this.message = {
           text: e.message,

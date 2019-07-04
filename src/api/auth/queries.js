@@ -15,10 +15,7 @@ mutation login($email: String!, $password: String!) {
  */
 export const MUTATION_SIGN_UP = `
 mutation signUp($email: String!) {
-  signUp(email: $email) {
-    accessToken
-    refreshToken
-  }
+  signUp(email: $email)
 }
 `;
 
