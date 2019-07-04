@@ -12,6 +12,9 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest);
 // Return a specific response for all navigation requests.
 workbox.routing.registerNavigationRoute('/index.html');
 
+// Don't wait until old service worker stop
+workbox.skipWaiting();
+
 // Cache all images (such as favicons)
 workbox.routing.registerRoute(
   /\.(png|jpg|jpeg|svg|gif)$/,
