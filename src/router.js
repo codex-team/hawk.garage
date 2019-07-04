@@ -18,6 +18,11 @@ const router = new Router({
       component: AppShell,
       children: [
         {
+          path: '/settings/',
+          name: 'settings',
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/SettingsWindow')
+        },
+        {
           path: '/workspaces/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings')

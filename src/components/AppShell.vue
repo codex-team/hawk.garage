@@ -2,7 +2,7 @@
   <div class="app-shell">
     <aside class="aside">
       <Sidebar
-        @userImageClicked="showSettingWindow = true"
+        @userImageClicked="$router.push('/settings')"
       />
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="projects">
@@ -18,10 +18,6 @@
     <div class="app-shell__content">
       <router-view :key="$route.fullPath"></router-view>
     </div>
-    <Settings
-      v-if="showSettingWindow"
-      @exit="showSettingWindow = false"
-    />
   </div>
 </template>
 
@@ -36,13 +32,7 @@ export default {
   name: 'AppShell',
   components: {
     Sidebar,
-    ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem'),
-    Settings: () => import('./SettingsWindow')
-  },
-  data() {
-    return {
-      showSettingWindow: false
-    };
+    ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem')
   },
   methods: {
     /**
