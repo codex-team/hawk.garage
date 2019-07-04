@@ -34,12 +34,20 @@
         Log out
       </div>
     </div>
-    <div class="setting-window__content"></div>
+    <div class="settings-window__content"></div>
+    <div
+      class="settings-window__exit-button exit-button"
+      @click="$router.push('/')"
+    >
+      <Icon class="exit-button__icon" symbol="close"></Icon>
+      <div class="exit-button__key">ESC</div>
+    </div>
   </div>
 </template>
 
 <script>
 import { RESET_STORE } from '../store/actions';
+import Icon from './Icon';
 
 export default {
   name: 'SettingsWindow',
@@ -50,6 +58,9 @@ export default {
     logout() {
       this.$store.dispatch(RESET_STORE);
     }
+  },
+  components: {
+    Icon
   }
 };
 </script>
@@ -111,30 +122,63 @@ export default {
       border: 1px solid var(--color-bg-second);
     }
 
-    .window-header {
-      &__logo {
-        float: left;
-        width: 42px;
-        height: 42px;
-        margin-right: 20px;
+    &__exit-button {
+      position: fixed;
+      top: 38px;
+      right: 137px;
 
-        background-image: url("../assets/hawk-logo.png");
-        background-position: center center;
-        background-size: cover;
-      }
+      cursor: pointer;
+    }
+  }
 
-      &__title {
-        font-weight: bold;
-        font-size: 18px;
-      }
+  .window-header {
+    &__logo {
+      float: left;
+      width: 42px;
+      height: 42px;
+      margin-right: 20px;
 
-      &__caption {
-        margin-top: 3px;
-
-        color: var(--color-text-second);
-        font-size: 14px;
-      }
+      background-image: url("../assets/hawk-logo.png");
+      background-position: center center;
+      background-size: cover;
     }
 
+    &__title {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    &__caption {
+      margin-top: 3px;
+
+      color: var(--color-text-second);
+      font-size: 14px;
+    }
+  }
+
+  .exit-button {
+    text-align: center;
+
+    &__icon {
+      display: flex;
+      box-sizing: border-box;
+      width: 28px;
+      height: 28px;
+      padding: 6px;
+
+      background-image: url("../assets/sprite.svg#close");
+      background-position: center center;
+      background-size: cover;
+      border: 2px solid;
+      border-radius: 50%;
+    }
+
+    &__key {
+      margin-top: 10px;
+
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.7px;
+    }
   }
 </style>

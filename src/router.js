@@ -3,7 +3,6 @@ import Router from 'vue-router';
 import store from './store';
 
 import AppShell from './components/AppShell';
-import Settings from './components/SettingsWindow';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
 
@@ -38,11 +37,6 @@ const router = new Router({
           component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/ProjectOverview.vue')
         }
       ]
-    },
-    {
-      path: '/settings',
-      name: 'settings',
-      component: Settings
     },
     {
       path: '/sign-up',
