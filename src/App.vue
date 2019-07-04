@@ -9,6 +9,7 @@ import * as api from './api';
 import { REFRESH_TOKENS } from './store/actions/auth';
 import { RESET_STORE } from './store/actions';
 import notifier from 'codex-notifier';
+import eventBus from './eventBus';
 
 export default {
   name: 'app',
@@ -43,10 +44,11 @@ export default {
         api.setAuthToken(accessToken);
       }
     );
+
     /**
      * Connect to the event bus
      */
-    this.$eventBus.$on('serviceWorkerUpdated', () => {
+    eventBus.$on('serviceWorkerUpdated', () => {
       notifier.show({
         message: 'New version is available',
         type: 'confirm',
