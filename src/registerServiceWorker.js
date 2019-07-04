@@ -1,4 +1,5 @@
 import { register } from 'register-service-worker';
+import eventBus from './eventBus';
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log('New content is downloading.');
     },
     updated() {
+      eventBus.$emit('serviceWorkerUpdated');
       console.log('New content is available; please refresh.');
     },
     offline() {

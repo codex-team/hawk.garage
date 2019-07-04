@@ -8,6 +8,8 @@
 import * as api from './api';
 import { REFRESH_TOKENS } from './store/actions/auth';
 import { RESET_STORE } from './store/actions';
+import notifier from 'codex-notifier';
+import eventBus from './eventBus';
 
 export default {
   name: 'app',
@@ -42,6 +44,20 @@ export default {
         api.setAuthToken(accessToken);
       }
     );
+
+    /**
+     * Connect to the event bus
+     */
+    eventBus.$on('serviceWorkerUpdated', () => {
+      notifier.show({
+        message: 'New version is available',
+        type: 'confirm',
+        okText: 'Refresh',
+        cancelText: 'Close',
+        okHandler: () => window.location.reload(),
+        time: 10000
+      });
+    });
   }
 };
 </script>
@@ -169,5 +185,21 @@ export default {
 
   svg {
     fill: currentColor;
+  }
+
+  body .cdx-notifies {
+    right: 20px;
+    left: auto;
+  }
+
+  body .cdx-notify {
+    font-size: 13px;
+
+    background-color: var(--color-bg-second);
+    box-shadow: 0 6px 17px -4px #0000009c;
+
+    &__btns-wrapper {
+      margin-top: 8px;
+    }
   }
 </style>
