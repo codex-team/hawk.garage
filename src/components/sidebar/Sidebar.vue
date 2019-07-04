@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div
       class="sidebar__user-picture"
-      @click="logout"
+      @click="$emit('userImageClicked')"
     ></div>
     <hr class="sidebar__delimiter">
     <div class="sidebar__button-create-wrapper">
@@ -30,7 +30,6 @@
 
 <script>
 
-import { RESET_STORE } from '../../store/actions';
 import Icon from '../Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
 
@@ -49,13 +48,6 @@ export default {
     };
   },
   methods: {
-    /**
-     * Logouts user
-     */
-    logout() {
-      this.$store.dispatch(RESET_STORE);
-    },
-
     /**
      * Works when workspace item is clicked
      */

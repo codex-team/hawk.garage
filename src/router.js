@@ -3,7 +3,7 @@ import Router from 'vue-router';
 import store from './store';
 
 import AppShell from './components/AppShell';
-import Settings from './components/Settings';
+import Settings from './components/SettingsWindow';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
 

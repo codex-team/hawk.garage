@@ -1,7 +1,9 @@
 <template>
   <div class="app-shell">
     <aside class="aside">
-      <Sidebar/>
+      <Sidebar
+        @userImageClicked="showSettingWindow = true"
+      />
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="projects">
           <ProjectsMenuItem
@@ -16,6 +18,10 @@
     <div class="app-shell__content">
       <router-view :key="$route.fullPath"></router-view>
     </div>
+    <Settings
+      v-if="showSettingWindow"
+      @exit="showSettingWindow = false"
+    />
   </div>
 </template>
 
@@ -24,14 +30,19 @@
 import { THEME_CHANGE } from '../store/actions/app';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
-import ProjectsMenuItem from './projects-list/ProjectsMenuItem';
 import Sidebar from './sidebar/Sidebar';
 
 export default {
   name: 'AppShell',
   components: {
     Sidebar,
-    ProjectsMenuItem
+    ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem'),
+    Settings: () => import('./SettingsWindow')
+  },
+  data() {
+    return {
+      showSettingWindow: false
+    };
   },
   methods: {
     /**
