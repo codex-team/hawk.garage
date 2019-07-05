@@ -4,7 +4,7 @@
   >
     <div
       class="project-menu-item__picture"
-      :style="{ backgroundImage: `url('${project.picture}')` }"
+      :style="{ backgroundImage: `url('${project.image}')` }"
     ></div>
     <div class="project-menu-item__info">
       <div class="project-menu-item__name">
