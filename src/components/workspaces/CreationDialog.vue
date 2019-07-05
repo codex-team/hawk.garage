@@ -101,5 +101,9 @@ export default {
     &__image-uploader {
       margin-left: 30px;
     }
+
+    &__submit {
+      margin-top: 32px;
+    }
   }
 </style>

@@ -29,7 +29,7 @@
         <div class="auth-form__action-container">
           <input
             v-if="submitText"
-            class="button auth-form__submit"
+            class="button button--submit"
             type="submit"
             :value="submitText"
           >
@@ -211,19 +211,6 @@ export default {
 
       &:hover {
         color: var(--color-text-main);
-      }
-    }
-
-    &__submit {
-      height: 40px;
-      color: var(--color-text-main);
-      background-image: linear-gradient(to bottom, #18a96c, #048058);
-      border-radius: 13px;
-      box-shadow: 0 17px 17px -9px #01a95e4d;
-
-      &:hover {
-        color: var(--color-text-main);
-        background-image: linear-gradient(to bottom, #04b168, #00734e);
       }
     }
   }

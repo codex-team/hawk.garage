@@ -154,7 +154,7 @@ export default {
     user-select: none;
 
     &--submit {
-      margin-top: 32px;
+      min-width: 90px;
       padding: 12px;
       color: var(--color-text-main);
       font-weight: 500;
