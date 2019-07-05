@@ -77,14 +77,12 @@ export default {
     &__content {
       flex-grow: 1;
       overflow: hidden;
-
       background-color: var(--color-bg-second);
     }
   }
 
   .aside {
     display: flex;
-
     background-color: var(--color-bg-main);
 
     &__right-column {

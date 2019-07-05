@@ -79,7 +79,6 @@ export default {
   .auth-form {
     &__title {
       display: inline-block;
-
       color: #fff;
       font-weight: bold;
       font-size: 19px;
@@ -88,7 +87,6 @@ export default {
     &__caption {
       display: inline-block;
       margin-left: 15px;
-
       color: var(--color-text-second);
       font-size: 14px;
     }
@@ -101,7 +99,6 @@ export default {
     &__container {
       display: flex;
       height: 345px;
-
       background: var(--color-bg-second);
       border: solid 1px #343949;
       border-radius: 7px;
@@ -114,7 +111,6 @@ export default {
 
     &__picture {
       width: 205px;
-
       background-image: url("../../assets/hawk.png");
       background-position: center center;
       background-size: cover;
@@ -131,7 +127,6 @@ export default {
       display: flex;
       flex-direction: row-reverse;
       justify-content: space-between;
-
       color: var(--color-text-second);
       font-weight: bold;
       font-size: 18px;
@@ -142,7 +137,6 @@ export default {
 
       .router-link-active {
         order: 1;
-
         color: var(--color-text-main);
       }
 
@@ -154,7 +148,6 @@ export default {
     &__delimiter {
       height: 1px;
       margin: 20px 0 25px;
-
       background: var(--color-text-main);
       border: 0;
       opacity: 0.11;
@@ -175,7 +168,6 @@ export default {
 
     &__header {
       margin-bottom: 25px;
-
       font-weight: 800;
       font-size: 27px;
     }
@@ -183,7 +175,6 @@ export default {
     &__message {
       margin-top: -5px;
       margin-bottom: 20px;
-
       font-size: 17px;
 
       &--error {
@@ -198,7 +189,6 @@ export default {
     &__label {
       display: block;
       margin-bottom: 9px;
-
       color: var(--color-text-second);
       font-weight: bold;
       font-size: 12px;
@@ -208,7 +198,6 @@ export default {
     &__section {
       margin: 0 0 20px;
       padding: 0;
-
       border: 0;
     }
 

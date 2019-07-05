@@ -36,7 +36,6 @@ export default {
     bottom: 0;
     left: 0;
     z-index: 10;
-
     display: flex;
     align-content: stretch;
     align-items: stretch;
@@ -69,7 +68,6 @@ export default {
       position: fixed;
       top: 38px;
       right: 137px;
-
       cursor: pointer;
     }
 
@@ -84,14 +82,12 @@ export default {
       width: 28px;
       height: 28px;
       padding: 6px;
-
       border: 2px solid;
       border-radius: 50%;
     }
 
     &__key {
       margin-top: 10px;
-
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.7px;

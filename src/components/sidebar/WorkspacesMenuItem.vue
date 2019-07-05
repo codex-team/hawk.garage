@@ -46,13 +46,11 @@ export default {
   .workspaces-menu-item {
     width: 36px;
     height: 36px;
-
     font-weight: bold;
 
     font-size: 12px;
     line-height: 36px;
     text-align: center;
-
     background-position: center center;
     background-size: cover;
     border-radius: var(--border-radius);
@@ -61,7 +59,6 @@ export default {
     &--active {
       box-shadow: 0 5px 4px -3px rgba(0, 0, 0, 0.57);
       transform: scale(1.05);
-
       transition: transform 150ms ease;
     }
   }

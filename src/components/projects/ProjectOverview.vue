@@ -72,14 +72,12 @@ export default {
 <style>
   .project-overview {
     height: 100%;
-
     user-select: none;
 
     &__header {
       display: flex;
       align-items: center;
       height: 50px;
-
       box-shadow: 0 1px 5px 0 var(--color-bg-main), inset 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     }
 
@@ -87,7 +85,6 @@ export default {
       width: 26px;
       height: 26px;
       margin-left: 15px;
-
       background-position: center center;
       background-size: cover;
       border-radius: var(--border-radius);
@@ -95,7 +92,6 @@ export default {
 
     &__name {
       margin-left: 10px;
-
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 15px;
@@ -106,14 +102,12 @@ export default {
       height: 20px;
       margin-right: 19px;
       margin-left: auto;
-
       cursor: pointer;
     }
 
     &__chart {
       height: 215px;
       margin: 16px 15px 15px;
-
       background-color: var(--color-bg-main);
     }
 
@@ -126,7 +120,6 @@ export default {
     &__date {
       margin-bottom: 20px;
       margin-left: 11px;
-
       color: var(--color-text-second);
       font-size: 14px;
     }

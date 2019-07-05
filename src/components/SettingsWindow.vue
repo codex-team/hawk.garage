@@ -64,7 +64,6 @@ export default {
   .settings-window {
     display: flex;
     height: 100%;
-
     background-color: var(--color-bg-second);
 
     &__menu {
@@ -74,7 +73,6 @@ export default {
       padding-top: 30px;
       padding-right: 26px;
       padding-left: 192px;
-
       background-color: var(--color-bg-main);
     }
 
@@ -88,13 +86,10 @@ export default {
       height: 34px;
       margin-left: -10px;
       padding-left: 10px;
-
       font-weight: 500;
       line-height: 34px;
-
       border-radius: 3px;
       cursor: pointer;
-
       user-select: none;
 
       &:hover {
@@ -117,7 +112,6 @@ export default {
       width: 42px;
       height: 42px;
       margin-right: 20px;
-
       background-image: url("../assets/hawk-logo.png");
       background-position: center center;
       background-size: cover;
@@ -130,7 +124,6 @@ export default {
 
     &__caption {
       margin-top: 3px;
-
       color: var(--color-text-second);
       font-size: 14px;
     }
