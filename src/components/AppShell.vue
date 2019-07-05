@@ -1,7 +1,9 @@
 <template>
   <div class="app-shell">
     <aside class="aside">
-      <Sidebar/>
+      <Sidebar
+        @createWorkspaceButtonClicked="openWorkspaceCreateDialog"
+      />
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="projects">
           <ProjectsMenuItem
@@ -16,6 +18,7 @@
     <div class="app-shell__content">
       <router-view :key="$route.fullPath"></router-view>
     </div>
+    <component :is="modalDialog"></component>
   </div>
 </template>
 
@@ -25,6 +28,7 @@ import { THEME_CHANGE } from '../store/actions/app';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
+import WorkspaceCreateDialog from './workspaces/CreateDialog';
 
 export default {
   name: 'AppShell',
@@ -32,12 +36,21 @@ export default {
     Sidebar,
     ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem')
   },
+  data(){
+    return {
+      modalDialog: null
+    };
+  },
   methods: {
     /**
      * Toggles theme (dark/light)
      */
     changeTheme() {
       this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
+    },
+
+    openWorkspaceCreateDialog() {
+      this.modalDialog = WorkspaceCreateDialog;
     }
   },
 
