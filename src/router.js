@@ -27,11 +27,6 @@ const router = new Router({
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings')
         },
         {
-          path: '/workspaces/create',
-          name: 'workspace-create',
-          component: () => import(/* webpackChunkName: 'workspace-create' */ './components/workspaces/Create')
-        },
-        {
           path: '/projects/:projectId',
           name: 'project-overview',
           component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/ProjectOverview.vue')
