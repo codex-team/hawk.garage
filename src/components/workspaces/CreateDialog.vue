@@ -1,25 +1,15 @@
 <template>
-  <form class="create-workspace" @submit.prevent="createWorkspace">
-    <div class="create-workspace__message">{{message}}</div>
-
-    <label for="name">Workspace name</label>
-    <input id="name" type="text" v-model="name">
-
-    <label for="description">Workspace description</label>
-    <input id="description" type="text" v-model="description">
-
-    <label for="image">Workspace image</label>
-    <input id="image" type="text" placeholder="Enter image link" v-model="image">
-
-    <button type="submit">Create</button>
-  </form>
+  <PopupDialog>
+    Create Workspace
+  </PopupDialog>
 </template>
 
 <script>
 import { CREATE_WORKSPACE } from '../../store/actions/workspaces';
+import PopupDialog from '../PopupDialog';
 
 export default {
-  name: 'CreateWorkspace',
+  name: 'CreateWorkspaceDialog',
   data() {
     return {
       name: '',
@@ -47,6 +37,9 @@ export default {
         this.message = e;
       }
     }
+  },
+  components: {
+    PopupDialog
   }
 };
 </script>
