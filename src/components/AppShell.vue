@@ -1,9 +1,7 @@
 <template>
   <div class="app-shell">
     <aside class="aside">
-      <Sidebar
-        @userImageClicked="$router.push('/settings')"
-      />
+      <Sidebar/>
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="projects">
           <ProjectsMenuItem

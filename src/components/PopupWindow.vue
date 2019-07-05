@@ -21,7 +21,7 @@
 import Icon from './Icon';
 
 export default {
-  name: 'Popup',
+  name: 'PopupWindow',
   components: {
     Icon
   }

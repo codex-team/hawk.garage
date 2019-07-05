@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div
       class="sidebar__user-picture"
-      @click="$emit('userImageClicked')"
+      @click="$router.push('/settings')"
     ></div>
     <hr class="sidebar__delimiter">
     <div class="sidebar__button-create-wrapper">
