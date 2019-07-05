@@ -154,16 +154,13 @@ export default {
     user-select: none;
 
     &--submit {
-      height: 40px;
+      margin-top: 32px;
+      padding: 12px;
       color: var(--color-text-main);
-      background-image: linear-gradient(to bottom, #18a96c, #048058);
-      border-radius: 13px;
-      box-shadow: 0 17px 17px -9px #01a95e4d;
-
-      &:hover {
-        color: var(--color-text-main);
-        background-image: linear-gradient(to bottom, #04b168, #00734e);
-      }
+      font-weight: 500;
+      font-size: 14.4px;
+      background-color: var(--color-indicator-medium);
+      border-radius: 4px;
     }
   }
 
