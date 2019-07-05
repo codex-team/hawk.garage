@@ -6,24 +6,21 @@
           <slot></slot>
         </div>
       </div>
-      <div
-        class="popup-window__exit-button exit-button"
-        @click="$router.push('/')"
-      >
-        <Icon class="exit-button__icon" symbol="close"></Icon>
-        <div class="exit-button__key">ESC</div>
-      </div>
+      <CloseButton
+        class="popup-window__close-button"
+        @click.native="$emit('close')"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import Icon from './Icon';
+import CloseButton from './CloseButton';
 
 export default {
   name: 'PopupWindow',
   components: {
-    Icon
+    CloseButton
   }
 };
 </script>
@@ -64,33 +61,11 @@ export default {
       height: 100%;
     }
 
-    &__exit-button {
+    &__close-button {
       position: fixed;
       top: 38px;
       right: 137px;
       cursor: pointer;
-    }
-
-  }
-
-  .exit-button {
-    text-align: center;
-
-    &__icon {
-      display: flex;
-      box-sizing: border-box;
-      width: 28px;
-      height: 28px;
-      padding: 6px;
-      border: 2px solid;
-      border-radius: 50%;
-    }
-
-    &__key {
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 12px;
-      letter-spacing: 0.7px;
     }
   }
 </style>

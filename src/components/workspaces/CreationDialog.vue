@@ -1,25 +1,22 @@
 <template>
-  <form class="create-workspace" @submit.prevent="createWorkspace">
-    <div class="create-workspace__message">{{message}}</div>
-
-    <label for="name">Workspace name</label>
-    <input id="name" type="text" v-model="name">
-
-    <label for="description">Workspace description</label>
-    <input id="description" type="text" v-model="description">
-
-    <label for="image">Workspace image</label>
-    <input id="image" type="text" placeholder="Enter image link" v-model="image">
-
-    <button type="submit">Create</button>
-  </form>
+  <PopupDialog @close="$emit('close')">
+    <div class="workspace-creation-dialog">
+      <h1>
+        Organize new workspace
+      </h1>
+      <div class="workspace-creation-dialog__description">
+        Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.
+      </div>
+    </div>
+  </PopupDialog>
 </template>
 
 <script>
 import { CREATE_WORKSPACE } from '../../store/actions/workspaces';
+import PopupDialog from '../PopupDialog';
 
 export default {
-  name: 'CreateWorkspace',
+  name: 'WorkspaceCreationDialog',
   data() {
     return {
       name: '',
@@ -47,17 +44,18 @@ export default {
         this.message = e;
       }
     }
+  },
+  components: {
+    PopupDialog
   }
 };
 </script>
 
 <style>
-  .create-workspace {
-    margin: 50px;
+  .workspace-creation-dialog {
+    max-width: 500px;
+    max-height: 300px;
 
-    > * {
-      display: block;
-      margin-bottom: 10px;
-    }
+    padding: 30px;
   }
 </style>

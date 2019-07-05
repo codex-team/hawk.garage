@@ -1,0 +1,41 @@
+<template>
+  <div class="close-button">
+    <Icon class="close-button__icon" symbol="close"></Icon>
+    <div class="close-button__key">ESC</div>
+  </div>
+</template>
+
+<script>
+import Icon from './Icon';
+
+export default {
+  name: 'CloseButton',
+  components: {
+    Icon
+  }
+};
+</script>
+
+<style>
+  .close-button {
+    text-align: center;
+    user-select: none;
+
+    &__icon {
+      display: flex;
+      box-sizing: border-box;
+      width: 28px;
+      height: 28px;
+      padding: 6px;
+      border: 2px solid;
+      border-radius: 50%;
+    }
+
+    &__key {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.7px;
+    }
+  }
+</style>
