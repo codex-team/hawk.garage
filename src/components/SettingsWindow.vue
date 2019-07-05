@@ -1,5 +1,5 @@
 <template>
-  <PopupWindow>
+  <Popup>
     <div class="settings-window">
       <div class="settings-window__menu">
         <div class="settings-window__header window-header clearfix">
@@ -37,7 +37,7 @@
       </div>
       <div class="settings-window__content"></div>
     </div>
-  </PopupWindow>
+  </Popup>
 </template>
 
 <script>
@@ -55,7 +55,7 @@ export default {
     }
   },
   components: {
-    PopupWindow: Popup
+    Popup
   }
 };
 </script>
