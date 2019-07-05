@@ -1,5 +1,5 @@
 <template>
-  <transition>
+  <transition name="popup" appear>
     <div class="popup">
       <div class="popup__container">
         <div class="popup__content">
@@ -41,6 +41,20 @@ export default {
     align-content: stretch;
     align-items: stretch;
 
+    &-enter-active, &-leave-active {
+      transition: all 300ms ease-in;
+    }
+
+    &-enter, &-leave-to {
+      transform: scale(1.1);
+      opacity: 0;
+    }
+
+    &-enter-to, &-leave {
+      transform: none;
+      opacity: 1;
+    }
+
     &__container {
       display: flex;
       width: 100%;
@@ -58,6 +72,7 @@ export default {
 
       cursor: pointer;
     }
+
   }
 
   .exit-button {
