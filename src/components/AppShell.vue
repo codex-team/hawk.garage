@@ -38,6 +38,9 @@ export default {
   },
   data() {
     return {
+      /**
+       * Current opened modal window
+       */
       modalDialog: null
     };
   },
