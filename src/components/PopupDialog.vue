@@ -1,12 +1,12 @@
 <template>
-  <transition name="popup-window" appear>
+  <transition name="popup-dialog" appear>
     <div class="popup-dialog__mask">
       <div class="popup-dialog__wrapper">
         <div class="popup-dialog__container">
           <slot></slot>
         </div>
+        <CloseButton class="popup-dialog__close-button"/>
       </div>
-      <CloseButton/>
     </div>
   </transition>
 </template>
@@ -41,13 +41,35 @@ export default {
     &__mask {
       position: fixed;
       top: 0;
+      right: 0;
+      bottom: 0;
       left: 0;
       z-index: 9998;
-      display: table;
+      display: flex;align-items: center;
+      justify-content: center;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, .5);
       transition: opacity .3s ease;
+    }
+
+    &__wrapper {
+      position: relative;
+      display: flex;
+      background-color: var(--color-bg-second);
+      border-radius: 3px;
+      box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    &__container {
+      margin: auto;
+    }
+
+    &__close-button {
+      position: absolute;
+      top: 0;
+      right: -53px;
+      cursor: pointer;
     }
   }
 </style>
