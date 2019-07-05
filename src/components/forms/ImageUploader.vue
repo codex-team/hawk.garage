@@ -24,6 +24,7 @@ export default {
     text-align: center;
     border: 1px dashed var(--color-text-second);
     border-radius: 10px;
+    cursor: pointer;
     user-select: none;
   }
 </style>
