@@ -1,5 +1,5 @@
 <template>
-  <Popup>
+  <PopupWindow>
     <div class="settings-window">
       <div class="settings-window__menu">
         <div class="settings-window__header window-header clearfix">
@@ -37,12 +37,12 @@
       </div>
       <div class="settings-window__content"></div>
     </div>
-  </Popup>
+  </PopupWindow>
 </template>
 
 <script>
 import { RESET_STORE } from '../store/actions';
-import Popup from './Popup';
+import PopupWindow from './PopupWindow';
 
 export default {
   name: 'SettingsWindow',
@@ -55,7 +55,7 @@ export default {
     }
   },
   components: {
-    Popup
+    PopupWindow
   }
 };
 </script>

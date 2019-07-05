@@ -1,13 +1,13 @@
 <template>
-  <transition name="popup" appear>
-    <div class="popup">
-      <div class="popup__container">
-        <div class="popup__content">
+  <transition name="popup-window" appear>
+    <div class="popup-window">
+      <div class="popup-window__container">
+        <div class="popup-window__content">
           <slot></slot>
         </div>
       </div>
       <div
-        class="popup__exit-button exit-button"
+        class="popup-window__exit-button exit-button"
         @click="$router.push('/')"
       >
         <Icon class="exit-button__icon" symbol="close"></Icon>
@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style>
-  .popup {
+  .popup-window {
     position: fixed;
     top: 0;
     right: 0;
@@ -42,11 +42,11 @@ export default {
     align-items: stretch;
 
     &-enter-active, &-leave-active {
-      transition: all 300ms ease-in;
+      transition: all 150ms ease-in;
     }
 
     &-enter, &-leave-to {
-      transform: scale(1.1);
+      transform: scale(1.05);
       opacity: 0;
     }
 
