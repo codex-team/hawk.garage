@@ -8,7 +8,7 @@
     <div class="sidebar__button-create-wrapper">
       <div
         class="sidebar__button-create"
-        @click="$router.push('/workspaces/create')"
+        @click="$emit('createWorkspaceButtonClicked')"
       >
         <Icon symbol="plus"></Icon>
       </div>
