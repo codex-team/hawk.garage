@@ -23,7 +23,7 @@ export default {
     line-height: 1.3;
     text-align: center;
     border: 1px dashed var(--color-text-second);
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     cursor: pointer;
     user-select: none;
   }
