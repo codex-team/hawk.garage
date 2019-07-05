@@ -45,16 +45,12 @@ export default {
     justify-content: flex-start;
     max-height: 62px;
     padding: 6px 20px;
-
     color: var(--color-text-main);
-
     cursor: pointer;
-
     user-select: none;
 
     &__name {
       margin-bottom: 5px;
-
       color: var(--color-text-main);
       font-weight: 500;
       font-size: 14px;
@@ -65,7 +61,6 @@ export default {
       width: 206px;
       height: 30px;
       overflow: hidden;
-
       color: var(--color-text-second);
       font-size: 12.6px;
       line-height: 1.27;
@@ -79,7 +74,6 @@ export default {
       width: 26px;
       height: 26px;
       margin-right: 15px;
-
       background-position: center;
       background-size: cover;
       border-radius: var(--border-radius);

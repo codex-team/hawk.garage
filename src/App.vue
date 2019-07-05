@@ -77,7 +77,6 @@ export default {
     display: flex;
     align-items: stretch;
     min-height: 100%;
-
     color: var(--color-text-main);
     font-size: 15px;
     font-family: Roboto, system-ui, sans-serif;
@@ -119,7 +118,6 @@ export default {
   .clearfix:after {
     display: table;
     clear: both;
-
     content: "";
   }
 
@@ -135,10 +133,8 @@ export default {
     box-sizing: border-box;
     width: 100%;
     padding: 11px 12px;
-
     color: var(--color-text-main);
     font-size: 14px;
-
     background: var(--color-bg-main);
     border: 1px solid #1f2230;
     border-radius: 3px;
@@ -151,27 +147,21 @@ export default {
 
   .button {
     padding: 12px 35px;
-
     line-height: 1em;
-
     border: 0;
     border-radius: 2px;
     cursor: pointer;
-
     user-select: none;
 
     &--submit {
       height: 40px;
-
       color: var(--color-text-main);
-
       background-image: linear-gradient(to bottom, #18a96c, #048058);
       border-radius: 13px;
       box-shadow: 0 17px 17px -9px #01a95e4d;
 
       &:hover {
         color: var(--color-text-main);
-
         background-image: linear-gradient(to bottom, #04b168, #00734e);
       }
     }
@@ -179,7 +169,6 @@ export default {
 
   ::placeholder {
     color: var(--color-text-second);
-
     opacity: 0.35;
   }
 
@@ -194,7 +183,6 @@ export default {
 
   body .cdx-notify {
     font-size: 13px;
-
     background-color: var(--color-bg-second);
     box-shadow: 0 6px 17px -4px #0000009c;
 

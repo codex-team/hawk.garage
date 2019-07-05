@@ -4,8 +4,6 @@ module.exports = {
     'stylelint-config-rational-order'
   ],
   rules: {
-    'plugin/rational-order': [true, {
-      'empty-line-between-groups': true
-    } ]
+    'plugin/rational-order': [true]
   }
 };

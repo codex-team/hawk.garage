@@ -35,12 +35,10 @@ export default {
     box-sizing: border-box;
     height: 46px;
     padding: 13px 11px 13px 15px;
-
     border-radius: 9px;
 
     &__time {
       min-width: 30px;
-
       color: var(--color-text-second);
       font-size: 12px;
     }
@@ -58,7 +56,6 @@ export default {
       margin-right: auto;
       margin-left: 10px;
       overflow: hidden;
-
       font-weight: bold;
       font-size: 16px;
       white-space: nowrap;
@@ -70,7 +67,6 @@ export default {
       min-width: 26px;
       min-height: 26px;
       margin-left: 10px;
-
       background-color: var(--color-bg-main);
     }
 

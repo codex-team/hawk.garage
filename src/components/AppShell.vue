@@ -24,14 +24,13 @@
 import { THEME_CHANGE } from '../store/actions/app';
 import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
-import ProjectsMenuItem from './projects-list/ProjectsMenuItem';
 import Sidebar from './sidebar/Sidebar';
 
 export default {
   name: 'AppShell',
   components: {
     Sidebar,
-    ProjectsMenuItem
+    ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem')
   },
   methods: {
     /**
@@ -78,14 +77,12 @@ export default {
     &__content {
       flex-grow: 1;
       overflow: hidden;
-
       background-color: var(--color-bg-second);
     }
   }
 
   .aside {
     display: flex;
-
     background-color: var(--color-bg-main);
 
     &__right-column {
