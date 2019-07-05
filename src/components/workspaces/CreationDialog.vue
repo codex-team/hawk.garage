@@ -85,6 +85,7 @@ export default {
     }
 
     &__description {
+      max-width: 363px;
       margin-top: 20px;
       color: var(--color-text-second);
       font-size: 14px;
