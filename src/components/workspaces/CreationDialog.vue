@@ -7,7 +7,7 @@
       <div class="workspace-creation-dialog__description">
         Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.
       </div>
-      <form class="workspace-creation-dialog__form">
+      <form class="workspace-creation-dialog__form" @submit.prevent="createWorkspace">
         <TextFieldset
           class="workspace-creation-dialog__text-field"
           name="workspaceName"
@@ -38,9 +38,7 @@ export default {
   name: 'WorkspaceCreationDialog',
   data() {
     return {
-      name: '',
-      image: '',
-      message: ''
+      name: ''
     };
   },
   methods: {
@@ -50,16 +48,13 @@ export default {
     async createWorkspace() {
       try {
         const workspaceInfo = {
-          name: this.name,
-          description: this.description,
-          image: this.image
+          name: this.name
         };
 
-        const createdWorkspace = await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
-
-        this.$router.push({ name: 'workspace-settings', params: { workspaceId: createdWorkspace.id } });
+        await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
+        this.$emit('close');
       } catch (e) {
-        this.message = e;
+        console.log(e);
       }
     }
   },
