@@ -1,10 +1,10 @@
 <template>
   <PopupDialog @close="$emit('close')">
-    <div class="create-workspace-dialog">
+    <div class="workspace-creation-dialog">
       <h1>
         Organize new workspace
       </h1>
-      <div class="create-workspace-dialog__description">
+      <div class="workspace-creation-dialog__description">
         Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.
       </div>
     </div>
@@ -16,7 +16,7 @@ import { CREATE_WORKSPACE } from '../../store/actions/workspaces';
 import PopupDialog from '../PopupDialog';
 
 export default {
-  name: 'CreateWorkspaceDialog',
+  name: 'WorkspaceCreationDialog',
   data() {
     return {
       name: '',
@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style>
-  .create-workspace-dialog {
+  .workspace-creation-dialog {
     max-width: 500px;
     max-height: 300px;
 
