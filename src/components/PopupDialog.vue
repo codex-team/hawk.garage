@@ -44,16 +44,16 @@ export default {
     &__mask {
       position: fixed;
       top: 0;
-      left: 0;
       right: 0;
       bottom: 0;
+      left: 0;
       z-index: 9998;
-      display: flex;align-items: center;
+      display: flex;
+      align-items: center;
       justify-content: center;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, .5);
-      transition: opacity .3s ease;
+      background-color: rgba(0, 0, 0, .6);
     }
 
     &__wrapper {
@@ -69,10 +69,10 @@ export default {
     }
 
     &__close-button {
-      cursor: pointer;
       position: absolute;
       top: 0;
       right: -53px;
+      cursor: pointer;
     }
   }
 </style>

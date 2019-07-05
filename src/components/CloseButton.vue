@@ -19,6 +19,7 @@ export default {
 <style>
   .close-button {
     text-align: center;
+    user-select: none;
 
     &__icon {
       display: flex;
