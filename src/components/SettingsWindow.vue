@@ -36,42 +36,34 @@
         </div>
       </div>
       <div class="settings-window__content"></div>
-      <div
-        class="settings-window__exit-button exit-button"
-        @click="$router.push('/')"
-      >
-        <Icon class="exit-button__icon" symbol="close"></Icon>
-        <div class="exit-button__key">ESC</div>
-      </div>
     </div>
   </PopupWindow>
 </template>
 
 <script>
-  import { RESET_STORE } from '../store/actions';
-  import Icon from './Icon';
-  import Popup from './Popup';
+import { RESET_STORE } from '../store/actions';
+import Popup from './Popup';
 
-  export default {
-    name: 'SettingsWindow',
-    methods: {
-      /**
-       * Logouts user
-       */
-      logout() {
-        this.$store.dispatch(RESET_STORE);
-      }
-    },
-    components: {
-      Icon,
-      PopupWindow: Popup
+export default {
+  name: 'SettingsWindow',
+  methods: {
+    /**
+     * Logouts user
+     */
+    logout() {
+      this.$store.dispatch(RESET_STORE);
     }
-  };
+  },
+  components: {
+    PopupWindow: Popup
+  }
+};
 </script>
 
 <style>
   .settings-window {
     display: flex;
+    height: 100%;
 
     background-color: var(--color-bg-second);
 
@@ -117,14 +109,6 @@
     &__menu-delimiter {
       border: 1px solid var(--color-bg-second);
     }
-
-    &__exit-button {
-      position: fixed;
-      top: 38px;
-      right: 137px;
-
-      cursor: pointer;
-    }
   }
 
   .window-header {
@@ -149,32 +133,6 @@
 
       color: var(--color-text-second);
       font-size: 14px;
-    }
-  }
-
-  .exit-button {
-    text-align: center;
-
-    &__icon {
-      display: flex;
-      box-sizing: border-box;
-      width: 28px;
-      height: 28px;
-      padding: 6px;
-
-      background-image: url("../assets/sprite.svg#close");
-      background-position: center center;
-      background-size: cover;
-      border: 2px solid;
-      border-radius: 50%;
-    }
-
-    &__key {
-      margin-top: 10px;
-
-      font-weight: bold;
-      font-size: 12px;
-      letter-spacing: 0.7px;
     }
   }
 </style>
