@@ -5,7 +5,10 @@
         <div class="popup-dialog__container">
           <slot></slot>
         </div>
-        <CloseButton class="popup-dialog__close-button"/>
+        <CloseButton
+          class="popup-dialog__close-button"
+          @click.native="$emit('close')"
+        />
       </div>
     </div>
   </transition>
@@ -41,9 +44,9 @@ export default {
     &__mask {
       position: fixed;
       top: 0;
+      left: 0;
       right: 0;
       bottom: 0;
-      left: 0;
       z-index: 9998;
       display: flex;align-items: center;
       justify-content: center;
@@ -66,10 +69,10 @@ export default {
     }
 
     &__close-button {
+      cursor: pointer;
       position: absolute;
       top: 0;
       right: -53px;
-      cursor: pointer;
     }
   }
 </style>

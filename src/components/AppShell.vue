@@ -18,7 +18,7 @@
     <div class="app-shell__content">
       <router-view :key="$route.fullPath"></router-view>
     </div>
-    <component :is="modalDialog"></component>
+    <component @close="modalDialog = null" :is="modalDialog"></component>
   </div>
 </template>
 

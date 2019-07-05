@@ -1,5 +1,5 @@
 <template>
-  <PopupDialog>
+  <PopupDialog @close="$emit('close')">
     <div class="create-workspace-dialog">
       <h1>
         Organize new workspace

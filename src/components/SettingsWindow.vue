@@ -1,5 +1,5 @@
 <template>
-  <PopupWindow>
+  <PopupWindow @close="$router.push('/')">
     <div class="settings-window">
       <div class="settings-window__menu">
         <div class="settings-window__header window-header clearfix">

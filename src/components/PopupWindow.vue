@@ -8,7 +8,7 @@
       </div>
       <CloseButton
         class="popup-window__close-button"
-        @click.native="$router.push('/')"
+        @click.native="$emit('close')"
       />
     </div>
   </transition>
