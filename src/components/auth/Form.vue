@@ -17,7 +17,9 @@
           {{ message.text }}
         </div>
         <TextFieldset
-          v-for="(field, index) in fields" :key="index" class="auth-form__section"
+          v-for="(field, index) in fields"
+          :key="index"
+          class="auth-form__section"
           :name="field.name"
           :type="field.type"
           :label="field.label"
@@ -45,7 +47,7 @@
 
 <script>
 
-  import TextFieldset from '../forms/TextFieldset'
+import TextFieldset from '../forms/TextFieldset';
 
 export default {
   name: 'AuthForm',
