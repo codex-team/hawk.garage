@@ -10,6 +10,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
     image
     projects {
       id
+      name
+      image
     }
   }
 }
