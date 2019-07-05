@@ -85,9 +85,6 @@ export default {
       height: 28px;
       padding: 6px;
 
-      background-image: url("../assets/sprite.svg#close");
-      background-position: center center;
-      background-size: cover;
       border: 2px solid;
       border-radius: 50%;
     }
