@@ -16,22 +16,20 @@
         >
           {{ message.text }}
         </div>
-        <fieldset v-for="(field, index) in fields" :key="index" class="auth-form__section">
-          <label class="auth-form__label" :for="field.name">{{ field.label}}</label>
-          <input
-            class="auth-form__input"
-            :type="field.type || 'text'"
-            :name="field.name"
-            v-model="field.value"
-            :id="field.name"
-            :placeholder="field.placeholder"
-            required
-          >
-        </fieldset>
+        <TextFieldset
+          v-for="(field, index) in fields"
+          :key="index"
+          class="auth-form__section"
+          :name="field.name"
+          :type="field.type"
+          :label="field.label"
+          :placeholder="field.placeholder"
+          v-model="field.value"
+        />
         <div class="auth-form__action-container">
           <input
             v-if="submitText"
-            class="button auth-form__submit button--submit"
+            class="button button--submit"
             type="submit"
             :value="submitText"
           >
@@ -48,6 +46,9 @@
 </template>
 
 <script>
+
+import TextFieldset from '../forms/TextFieldset';
+
 export default {
   name: 'AuthForm',
   props: {
@@ -71,6 +72,9 @@ export default {
       type: String,
       required: false
     }
+  },
+  components: {
+    TextFieldset
   }
 };
 </script>
@@ -186,19 +190,8 @@ export default {
       }
     }
 
-    &__label {
-      display: block;
-      margin-bottom: 9px;
-      color: var(--color-text-second);
-      font-weight: bold;
-      font-size: 12px;
-      text-transform: uppercase;
-    }
-
     &__section {
       margin: 0 0 20px;
-      padding: 0;
-      border: 0;
     }
 
     &__action-container {

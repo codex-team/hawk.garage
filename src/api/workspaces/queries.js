@@ -20,10 +20,9 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
 export const MUTATION_CREATE_WORKSPACE = `
   mutation createWorkspace(
     $name: String!,
-    $description: String!,
     $image: String
   ) {
-    createWorkspace(name: $name, description: $description, image: $image) {
+    createWorkspace(name: $name, image: $image) {
       id
       name
       description
