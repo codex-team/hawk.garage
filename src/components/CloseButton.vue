@@ -1,5 +1,5 @@
 <template>
-  <div class="close-button">
+  <div class="close-button" @click="$emit('close')">
     <Icon class="close-button__icon" symbol="close"></Icon>
     <div class="close-button__key">ESC</div>
   </div>
@@ -12,6 +12,21 @@ export default {
   name: 'CloseButton',
   components: {
     Icon
+  },
+  created() {
+    window.addEventListener('keyup', this.onEscapeKeyUp);
+  },
+  beforeDestroy() {
+    window.removeEventListener('keyup', this.onEscapeKeyUp);
+  },
+  methods: {
+    onEscapeKeyUp(event) {
+      const ESCAPE_KEY = 27;
+
+      if (event.which === ESCAPE_KEY) {
+        this.$emit('close');
+      }
+    }
   }
 };
 </script>

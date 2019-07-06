@@ -8,7 +8,7 @@
       </div>
       <CloseButton
         class="popup-window__close-button"
-        @click.native="$emit('close')"
+        @close="$emit('close')"
       />
     </div>
   </transition>
