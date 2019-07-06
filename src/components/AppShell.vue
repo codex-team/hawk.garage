@@ -6,7 +6,7 @@
       />
       <div class="aside__right-column">
         <SearchField
-        class="aside__search-field"
+          class="aside__search-field"
         />
         <div class="aside__projects-list" v-if="projects">
           <ProjectsMenuItem

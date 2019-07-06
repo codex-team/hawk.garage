@@ -32,6 +32,7 @@ export default {
       padding: 9px 9px 9px 33px;
       background-color: var(--color-bg-sidebar);
       border-radius: 7px;
+
       &::placeholder {
         color: var(--color-text-second);
         font-size: 15px;
