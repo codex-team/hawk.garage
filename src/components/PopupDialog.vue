@@ -70,8 +70,8 @@ export default {
 
     &__close-button {
       position: absolute;
-      top: 0;
-      right: -53px;
+      top: -5px;
+      right: -68px;
       cursor: pointer;
     }
   }

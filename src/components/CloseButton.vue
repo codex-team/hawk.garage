@@ -33,6 +33,7 @@ export default {
 
 <style>
   .close-button {
+    padding: 15px;
     text-align: center;
     user-select: none;
 
