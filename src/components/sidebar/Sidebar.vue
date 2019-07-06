@@ -22,6 +22,7 @@
         :workspace="workspace"
         :active="activeWorkspaceId === workspace.id"
         class="sidebar__workspace-item"
+        @dblclick.native="$emit('createProjectButtonClicked')"
         @click.native="onWorkspaceItemClick($event, workspace.id)"
       />
     </div>

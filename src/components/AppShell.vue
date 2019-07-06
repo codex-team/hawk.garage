@@ -3,6 +3,7 @@
     <aside class="aside">
       <Sidebar
         @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
+        @createProjectButtonClicked="openProjectCreationDialog"
       />
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="projects">
@@ -29,6 +30,7 @@ import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
+import ProjectCreationDialog from './projects/CreationDialog';
 
 export default {
   name: 'AppShell',
@@ -54,6 +56,10 @@ export default {
 
     openWorkspaceCreationDialog() {
       this.modalDialog = WorkspaceCreationDialog;
+    },
+
+    openProjectCreationDialog() {
+      this.modalDialog = ProjectCreationDialog;
     }
   },
 
