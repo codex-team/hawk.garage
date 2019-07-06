@@ -16,10 +16,3 @@ export default {
   }
 };
 </script>
-
-<style>
-  .icon {
-    display: flex;
-    text-align: center;
-  }
-</style>
