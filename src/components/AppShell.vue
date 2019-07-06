@@ -5,6 +5,9 @@
         @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
       />
       <div class="aside__right-column">
+        <SearchField
+        class="aside__search-field"
+        />
         <div class="aside__projects-list" v-if="projects">
           <ProjectsMenuItem
             v-for="project in projects"
@@ -29,12 +32,14 @@ import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
+import SearchField from './forms/SearchField';
 
 export default {
   name: 'AppShell',
   components: {
     Sidebar,
-    ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem')
+    ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem'),
+    SearchField
   },
   data() {
     return {
@@ -103,6 +108,11 @@ export default {
 
     &__right-column {
       width: 342px;
+    }
+
+    &__search-field {
+      height: 36px;
+      margin: 20px;
     }
   }
 </style>
