@@ -4,7 +4,7 @@ import {
   ADD_WORKSPACE,
   REMOVE_WORKSPACE,
   FETCH_WORKSPACES,
-  SET_WORKSPACES
+  SET_WORKSPACES, CREATE_PROJECT
 } from '../actions/workspaces';
 import { RESET_STORE } from '../actions';
 import * as workspaceApi from '../../api/workspaces';
@@ -112,6 +112,10 @@ const actions = {
     const workspaces = await workspaceApi.getAllWorkspacesWithProjects();
 
     commit(SET_WORKSPACES, workspaces);
+  },
+
+  async [CREATE_PROJECT]() {
+    await workspaceApi.createProject();
   },
 
   /**

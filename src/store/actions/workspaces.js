@@ -12,9 +12,14 @@
 export const CREATE_WORKSPACE = 'CREATE_WORKSPACE';
 
 /**
- * Send query request to get information about all workspaces
+ * Send query to get information about all workspaces
  */
 export const FETCH_WORKSPACES = 'FETCH_WORKSPACES';
+
+/**
+ * Send request to create new project
+ */
+export const CREATE_PROJECT = 'CREATE_PROJECT';
 
 /**
  * Mutations
