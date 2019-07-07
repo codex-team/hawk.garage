@@ -44,8 +44,8 @@ export default {
   name: 'ProjectCreationDialog',
   data() {
     return {
-      name: '',
-      workspaceId: this.$store.state.workspaces.list[0].id
+      name: '', // project name
+      workspaceId: this.$store.state.workspaces.list[0].id // project's workspace id
     };
   },
   methods: {

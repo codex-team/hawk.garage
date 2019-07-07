@@ -114,6 +114,12 @@ const actions = {
     commit(SET_WORKSPACES, workspaces);
   },
 
+  /**
+   * Send request to create new project
+   * @param {function} dispatch - standard Vuex dispatch function
+   * @param {Project} project - project params for creation
+   * @return {Promise<void>}
+   */
   async [CREATE_PROJECT]({ dispatch }, project) {
     await workspaceApi.createProject(project);
   },

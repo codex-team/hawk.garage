@@ -90,7 +90,7 @@ export default {
       margin-right: 15px;
       font-weight: bold;
       font-size: 12px;
-line-height: 26px;
+      line-height: 26px;
       text-align: center;
       background-position: center;
       background-size: cover;
