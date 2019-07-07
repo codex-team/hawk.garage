@@ -11,6 +11,7 @@
         <SelectWorkspace
           class="project-creation-dialog__select-workspaces"
           :workspaces="workspaces"
+          v-model="workspaceId"
         />
         <TextFieldset
           class="project-creation-dialog__text-field"
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-import { CREATE_PROJECT } from '../../store/actions/workspaces';
+import { CREATE_PROJECT, FETCH_WORKSPACES } from '../../store/actions/workspaces';
 import PopupDialog from '../PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
@@ -43,7 +44,8 @@ export default {
   name: 'ProjectCreationDialog',
   data() {
     return {
-      name: ''
+      name: '',
+      workspaceId: this.$store.state.workspaces.list[0].id
     };
   },
   methods: {
@@ -53,10 +55,14 @@ export default {
     async createProject() {
       try {
         const projectInfo = {
-          name: this.name
+          name: this.name,
+          workspaceId: this.workspaceId
         };
 
+        console.log(projectInfo);
         await this.$store.dispatch(CREATE_PROJECT, projectInfo);
+        this.$store.dispatch(FETCH_WORKSPACES);
+
         this.$emit('close');
       } catch (e) {
         console.log(e);

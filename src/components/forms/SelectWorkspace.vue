@@ -8,7 +8,8 @@
         name="workspace"
         id="selectWorkspace"
         class="select-workspace__select"
-      >
+        :value="value"
+        @input="$emit('input', $event.target.value)"      >
         <option
           v-for="workspace in workspaces"
           :key="workspace.id"
@@ -28,7 +29,8 @@ export default {
     workspaces: {
       type: Array,
       required: true
-    }
+    },
+    value: String
   }
 };
 </script>
