@@ -2,12 +2,13 @@
   <PopupDialog @close="$emit('close')">
     <div class="project-creation-dialog">
       <h1 class="project-creation-dialog__header">
-        Create new project
+        Add a project
       </h1>
       <div class="project-creation-dialog__description">
-        Не забыть поменять тут текст
+        To start track events from your application, add it as a Project and get an Integration Token.
       </div>
       <form class="project-creation-dialog__form" @submit.prevent="createProject">
+        <SelectWorkspace/>
         <TextFieldset
           class="project-creation-dialog__text-field"
           name="projectName"
@@ -33,6 +34,7 @@ import { CREATE_PROJECT } from '../../store/actions/workspaces';
 import PopupDialog from '../PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
+import SelectWorkspace from '../forms/SelectWorkspace';
 
 export default {
   name: 'ProjectCreationDialog',
@@ -61,7 +63,8 @@ export default {
   components: {
     PopupDialog,
     TextFieldset,
-    ImageUploader
+    ImageUploader,
+    SelectWorkspace
   }
 };
 </script>
