@@ -4,8 +4,13 @@
   >
     <div
       class="project-menu-item__picture"
-      :style="{ backgroundImage: `url('${project.image}')` }"
-    ></div>
+      :style="{
+        backgroundImage: project.image ? `url('${project.image}')`: 'none',
+        backgroundColor: bgColor
+      }"
+    >
+      {{!project.image ? $options.filters.abbreviation(project.name) : ''}}
+    </div>
     <div class="project-menu-item__info">
       <div class="project-menu-item__name">
         {{project.name}}
@@ -22,6 +27,7 @@
 </template>
 
 <script>
+import { getRandomColor } from '../../utils';
 import Badge from '../Badge';
 
 export default {
@@ -31,6 +37,14 @@ export default {
      * @type {Project}
      */
     project: Object
+  },
+  data() {
+    return {
+      /**
+       * @type {String} item background color
+       */
+      bgColor: this.project.image ? 'none' : getRandomColor()
+    };
   },
   components: {
     Badge
@@ -74,6 +88,10 @@ export default {
       width: 26px;
       height: 26px;
       margin-right: 15px;
+      font-weight: bold;
+      font-size: 12px;
+line-height: 26px;
+      text-align: center;
       background-position: center;
       background-size: cover;
       border-radius: var(--border-radius);
