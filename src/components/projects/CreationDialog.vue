@@ -59,7 +59,6 @@ export default {
           workspaceId: this.workspaceId
         };
 
-        console.log(projectInfo);
         await this.$store.dispatch(CREATE_PROJECT, projectInfo);
         this.$store.dispatch(FETCH_WORKSPACES);
 
