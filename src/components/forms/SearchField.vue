@@ -29,8 +29,10 @@ export default {
     position: relative;
 
     &__input[type="search"] {
+      height: 36px;
       padding: 9px 9px 9px 33px;
       background-color: var(--color-bg-sidebar);
+      border: none;
       border-radius: 7px;
 
       &::placeholder {
@@ -43,12 +45,11 @@ export default {
 
     &__search-icon {
       position: absolute;
-      top: 7px;
-      left: 7px;
+      top: 10.5px;
+      left: 11px;
       box-sizing: border-box;
-      width: 22px;
-      height: 22px;
-      padding: 4px;
+      width: 15px;
+      height: 15px;
       color: var(--color-text-second);
     }
   }
