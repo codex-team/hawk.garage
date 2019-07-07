@@ -9,7 +9,7 @@
       <div class="aside__right-column">
         <div class="aside__projects-list" v-if="currentWorkspace">
           <ProjectsMenuItem
-            v-for="project in currentWorkspace.projects"
+            v-for="project in projects"
             :key="project.id"
             :project="project"
             @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
@@ -100,10 +100,12 @@ export default {
     },
 
     /**
-     * @return {Array<Project>} - list of all projects
+     * @return {Array<Project>} - list of current projects
      */
     projects() {
-      return this.$store.getters.allProjects;
+      return this.$store.state.workspaces.list
+        .find(ws => ws.id === this.currentWorkspace.id)
+        .projects;
     }
   }
 };
