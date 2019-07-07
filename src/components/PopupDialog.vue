@@ -1,13 +1,13 @@
 <template>
   <transition name="popup-dialog" appear>
-    <div class="popup-dialog__mask">
-      <div class="popup-dialog__wrapper">
+    <div class="popup-dialog__mask" @click="$emit('close')">
+      <div class="popup-dialog__wrapper" @click.stop>
         <div class="popup-dialog__container">
           <slot></slot>
         </div>
         <CloseButton
           class="popup-dialog__close-button"
-          @click.native="$emit('close')"
+          @close="$emit('close')"
         />
       </div>
     </div>
@@ -70,8 +70,8 @@ export default {
 
     &__close-button {
       position: absolute;
-      top: 0;
-      right: -53px;
+      top: -5px;
+      right: -68px;
       cursor: pointer;
     }
   }
