@@ -4,11 +4,12 @@
       <Sidebar
         @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
         @createProjectButtonClicked="openProjectCreationDialog"
+        @workspaceSelected="onWorkspaceSelected"
       />
       <div class="aside__right-column">
-        <div class="aside__projects-list" v-if="projects">
+        <div class="aside__projects-list" v-if="currentWorkspace">
           <ProjectsMenuItem
-            v-for="project in projects"
+            v-for="project in currentWorkspace.projects"
             :key="project.id"
             :project="project"
             @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
@@ -43,7 +44,8 @@ export default {
       /**
        * Current opened modal window
        */
-      modalDialog: null
+      modalDialog: null,
+      currentWorkspace: null
     };
   },
   methods: {
@@ -60,6 +62,9 @@ export default {
 
     openProjectCreationDialog() {
       this.modalDialog = ProjectCreationDialog;
+    },
+    onWorkspaceSelected(workspace) {
+      this.currentWorkspace = workspace;
     }
   },
 

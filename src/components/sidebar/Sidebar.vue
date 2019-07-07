@@ -20,10 +20,10 @@
         v-for="workspace in workspaces"
         :key="workspace.id"
         :workspace="workspace"
-        :active="activeWorkspaceId === workspace.id"
+        :active="activeWorkspace ? activeWorkspace.id === workspace.id : false"
         class="sidebar__workspace-item"
         @dblclick.native="$emit('createProjectButtonClicked')"
-        @click.native="onWorkspaceItemClick($event, workspace.id)"
+        @click.native="onWorkspaceItemClick($event, workspace)"
       />
     </div>
   </div>
@@ -45,15 +45,16 @@ export default {
       /**
        * Current workspace id
        */
-      activeWorkspaceId: null
+      activeWorkspace: null
     };
   },
   methods: {
     /**
      * Works when workspace item is clicked
      */
-    onWorkspaceItemClick($event, workspaceId) {
-      this.activeWorkspaceId = workspaceId;
+    onWorkspaceItemClick($event, workspace) {
+      this.$emit('workspaceSelected', workspace);
+      this.activeWorkspace = workspace;
       const highLightPadding = 9;
 
       this.$refs.workspaceHighlight.style.top =
@@ -131,7 +132,7 @@ export default {
 
     &__workspace-highlight {
       position: absolute;
-      top: -9px;
+      top: -300px;
       z-index: 0;
       width: 65px;
       height: 54px;
