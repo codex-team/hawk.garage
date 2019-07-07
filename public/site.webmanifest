@@ -1,0 +1,20 @@
+{
+    "name": "Hawk.so",
+    "short_name": "Hawk.so",
+    "icons": [
+        {
+            "src": "/img/icons/android-chrome-192x192.png?v=3e8p0LlJkJ",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/img/icons/android-chrome-512x512.png?v=3e8p0LlJkJ",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#242732",
+    "background_color": "#242732",
+    "start_url": "/",
+    "display": "standalone"
+}
