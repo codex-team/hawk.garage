@@ -8,7 +8,10 @@
         To start track events from your application, add it as a Project and get an Integration Token.
       </div>
       <form class="project-creation-dialog__form" @submit.prevent="createProject">
-        <SelectWorkspace/>
+        <SelectWorkspace
+          class="project-creation-dialog__select-workspaces"
+          :workspaces="workspaces"
+        />
         <TextFieldset
           class="project-creation-dialog__text-field"
           name="projectName"
@@ -60,6 +63,14 @@ export default {
       }
     }
   },
+  computed: {
+    /**
+     * @return {Array<Workspace>} - registered workspaces
+     */
+    workspaces() {
+      return this.$store.state.workspaces.list;
+    }
+  },
   components: {
     PopupDialog,
     TextFieldset,
@@ -73,7 +84,7 @@ export default {
   .project-creation-dialog {
     box-sizing: border-box;
     max-width: 500px;
-    max-height: 300px;
+    max-height: 385px;
     padding: 30px;
 
     &__header {
@@ -107,6 +118,10 @@ export default {
 
     &__submit {
       margin-top: 32px;
+    }
+
+    &__select-workspaces {
+      flex-basis: 100%;
     }
   }
 </style>
