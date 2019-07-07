@@ -64,8 +64,9 @@ export async function getAllWorkspacesWithProjects() {
 
 /**
  * Create project and returns its id
+ * @param {Project} projectInfo - project to create
  * @return {Promise<Project.id>}
  */
-export async function createProject() {
-  return (await api.call(MUTATION_CREATE_PROJECT)).createProject;
+export async function createProject(projectInfo) {
+  return (await api.call(MUTATION_CREATE_PROJECT, projectInfo)).createProject;
 }

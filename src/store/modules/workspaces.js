@@ -114,8 +114,8 @@ const actions = {
     commit(SET_WORKSPACES, workspaces);
   },
 
-  async [CREATE_PROJECT]() {
-    await workspaceApi.createProject();
+  async [CREATE_PROJECT]({ dispatch }, project) {
+    await workspaceApi.createProject(project);
   },
 
   /**
