@@ -8,9 +8,10 @@
         To start track events from your application, add it as a Project and get an Integration Token.
       </div>
       <form class="project-creation-dialog__form" @submit.prevent="createProject">
-        <SelectWorkspace
+        <CustomSelect
           class="project-creation-dialog__select-workspaces"
-          :workspaces="workspaces"
+          :options="workspaces"
+          label="SELECT WORKSPACE"
           v-model="workspaceId"
         />
         <TextFieldset
@@ -38,7 +39,7 @@ import { CREATE_PROJECT, FETCH_WORKSPACES } from '../../store/actions/workspaces
 import PopupDialog from '../PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
-import SelectWorkspace from '../forms/SelectWorkspace';
+import CustomSelect from '../forms/CustomSelect';
 
 export default {
   name: 'ProjectCreationDialog',
@@ -80,7 +81,7 @@ export default {
     PopupDialog,
     TextFieldset,
     ImageUploader,
-    SelectWorkspace
+    CustomSelect
   }
 };
 </script>

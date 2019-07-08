@@ -1,21 +1,21 @@
 <template>
-  <fieldset class="select-workspace">
-    <label class="select-workspace__label" for="selectWorkspace">SELECT WORKSPACE</label>
+  <fieldset class="custom-select">
+    <label class="custom-select__label" for="selectWorkspace">{{label}}</label>
     <div
-      class="select-workspace__wrapper"
+      class="custom-select__wrapper"
     >
       <select
-        name="workspace"
         id="selectWorkspace"
-        class="select-workspace__select"
+        class="custom-select__select"
         :value="value"
-        @input="$emit('input', $event.target.value)"      >
+        @input="$emit('input', $event.target.value)"
+      >
         <option
-          v-for="workspace in workspaces"
-          :key="workspace.id"
-          :value="workspace.id"
+          v-for="option in options"
+          :key="option.id"
+          :value="option.id"
         >
-          {{workspace.name}}
+          {{option.name}}
         </option>
       </select>
     </div>
@@ -24,19 +24,23 @@
 
 <script>
 export default {
-  name: 'SelectWorkspace',
+  name: 'CustomSelect',
   props: {
-    workspaces: {
+    options: {
       type: Array,
       required: true
     },
-    value: String
+    value: String,
+    label: {
+      type: String,
+      required: true
+    }
   }
 };
 </script>
 
 <style>
-  .select-workspace {
+  .custom-select {
     box-sizing: border-box;
     margin: 0 0 20px;
     padding: 0;
