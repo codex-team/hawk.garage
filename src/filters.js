@@ -25,7 +25,7 @@ Vue.filter('abbreviation', function (value) {
 });
 
 /**
- * Return workspace name abbreviation (one or two symbols)
+ * Returns prettifying time ('now' or time in hh:mm)
  * @return {string}
  */
 Vue.filter('prettyDate', function (value) {
