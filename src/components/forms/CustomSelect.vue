@@ -86,7 +86,7 @@ export default {
       position: relative;
       width: 280px;
 
-      &:after {
+      &::after {
         position: absolute;
         top: 9px;
         right: 17px;
