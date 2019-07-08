@@ -38,7 +38,7 @@ export default {
 <style>
   .select-workspace {
     box-sizing: border-box;
-    margin-bottom: 22px;
+    margin: 0 0 20px;
     padding: 0;
     border: 0;
 
