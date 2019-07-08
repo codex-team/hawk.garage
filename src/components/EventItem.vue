@@ -5,12 +5,12 @@
     </div>
     <div class="event-item__badge-container">
       <Badge
-        :content="event.count"
+        content="365"
         class="event-item__count"
       ></Badge>
     </div>
     <div class="event-item__info">
-      {{event.info}}
+      {{event.payload.title}}
     </div>
     <div class="event-item__assignee"></div>
   </div>

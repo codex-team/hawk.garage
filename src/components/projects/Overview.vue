@@ -3,7 +3,7 @@
     <div class="project-overview__header">
       <div
         class="project-overview__icon"
-        :style="{ backgroundImage: `url('${project.picture}')` }"
+        :style="{ backgroundImage: `url('${project.image}')` }"
       ></div>
       <div class="project-overview__name">
         {{project.name}}
@@ -19,7 +19,7 @@
       </div>
       <EventItem
         class="project-overview__event"
-        v-for="event in events"
+        v-for="event in project.events"
         :key="event.id"
         :event="event"
       ></EventItem>

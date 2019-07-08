@@ -29,7 +29,7 @@ const router = new Router({
         {
           path: '/projects/:projectId',
           name: 'project-overview',
-          component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/ProjectOverview.vue')
+          component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/Overview.vue')
         }
       ]
     },
