@@ -111,7 +111,6 @@ export default {
     }
 
     &__search-field {
-      height: 36px;
       margin: 20px;
     }
   }

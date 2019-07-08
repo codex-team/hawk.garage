@@ -45,7 +45,7 @@ export default {
 
     &__search-icon {
       position: absolute;
-      top: 10.5px;
+      top: 9.5px;
       left: 11px;
       box-sizing: border-box;
       width: 15px;
