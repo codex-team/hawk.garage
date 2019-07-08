@@ -3,6 +3,8 @@
     <aside class="aside">
       <Sidebar
         @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
+        @createProjectButtonClicked="openProjectCreationDialog"
+        @workspaceSelected="onWorkspaceSelected"
       />
       <div class="aside__right-column">
         <SearchField
@@ -32,6 +34,7 @@ import { FETCH_WORKSPACES } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
+import ProjectCreationDialog from './projects/CreationDialog';
 import SearchField from './forms/SearchField';
 
 export default {
@@ -46,7 +49,12 @@ export default {
       /**
        * Current opened modal window
        */
-      modalDialog: null
+      modalDialog: null,
+
+      /**
+       * Current user workspace
+       */
+      currentWorkspace: null
     };
   },
   methods: {
@@ -57,8 +65,25 @@ export default {
       this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
     },
 
+    /**
+     * Opens modal window to create new workspace
+     */
     openWorkspaceCreationDialog() {
       this.modalDialog = WorkspaceCreationDialog;
+    },
+
+    /**
+     * Opens modal window to create new project
+     */
+    openProjectCreationDialog() {
+      this.modalDialog = ProjectCreationDialog;
+    },
+
+    /**
+     * Toggles current user workspace
+     */
+    onWorkspaceSelected(workspace) {
+      this.currentWorkspace = workspace;
     }
   },
 
@@ -80,10 +105,13 @@ export default {
     },
 
     /**
-     * @return {Array<Project>} - list of all projects
+     * @return {Array<Project>} - list of current projects
      */
     projects() {
-      return this.$store.getters.allProjects;
+      if (!this.currentWorkspace) return null;
+      return this.$store.state.workspaces.list
+        .find(ws => ws.id === this.currentWorkspace.id)
+        .projects;
     }
   }
 };

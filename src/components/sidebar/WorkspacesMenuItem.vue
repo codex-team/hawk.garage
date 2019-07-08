@@ -55,6 +55,7 @@ export default {
     background-size: cover;
     border-radius: var(--border-radius);
     cursor: pointer;
+    user-select: none;
 
     &--active {
       box-shadow: 0 5px 4px -3px rgba(0, 0, 0, 0.57);
