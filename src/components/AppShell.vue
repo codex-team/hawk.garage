@@ -108,6 +108,7 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
+      if (!this.currentWorkspace) return null;
       return this.$store.state.workspaces.list
         .find(ws => ws.id === this.currentWorkspace.id)
         .projects;
