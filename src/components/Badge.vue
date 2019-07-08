@@ -1,5 +1,8 @@
 <template>
-  <span class="badge">
+  <span
+    class="badge"
+    :class="{'badge--empty': !content}"
+  >
     {{content | spacedNumber}}
   </span>
 </template>
@@ -31,5 +34,9 @@ export default {
     white-space: nowrap;
     background-color: var(--color-indicator-medium);
     border-radius: 7px;
+
+    &--empty {
+      display: none;
+    }
   }
 </style>

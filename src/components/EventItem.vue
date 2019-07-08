@@ -1,16 +1,16 @@
 <template>
   <div class="event-item">
     <div class="event-item__time">
-      {{event.time}}
+      {{event.payload.timestamp | prettyDate}}
     </div>
     <div class="event-item__badge-container">
       <Badge
-        :content="event.count"
+        content=""
         class="event-item__count"
-      ></Badge>
+      />
     </div>
     <div class="event-item__info">
-      {{event.info}}
+      {{event.payload.title}}
     </div>
     <div class="event-item__assignee"></div>
   </div>
@@ -41,10 +41,6 @@ export default {
       min-width: 30px;
       color: var(--color-text-second);
       font-size: 12px;
-    }
-
-    &__count {
-      display: inline-block;
     }
 
     &__badge-container {

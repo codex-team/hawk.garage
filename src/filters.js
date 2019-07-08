@@ -23,3 +23,21 @@ Vue.filter('abbreviation', function (value) {
 
   return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
 });
+
+/**
+ * Returns prettifying time ('now' or time in hh:mm)
+ * @return {string}
+ */
+Vue.filter('prettyDate', function (value) {
+  const date = new Date(value);
+  const currentDate = new Date();
+
+  const ONE_MINUTE_IN_MS = 1000 * 60;
+
+  if ((currentDate - date) / (ONE_MINUTE_IN_MS) < 1) return 'now';
+
+  const minutes = date.getMinutes();
+  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+  return `${date.getHours()}:${formattedMinutes}`;
+});
