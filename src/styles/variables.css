@@ -12,6 +12,8 @@
   --color-indicator-medium: #4979e4;
 
   --border-radius: 10px;
+
+  --color-border-input: #1f2230;
 }
 
 .app--theme--light{

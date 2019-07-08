@@ -63,7 +63,7 @@ export default {
       color: var(--color-text-main);
       font-size: 14px;
       background: var(--color-bg-main);
-      border: 1px solid #1f2230;
+      border: 1px solid var(--color-border-input);
       border-radius: 3px;
       outline: none;
       appearance: none;
