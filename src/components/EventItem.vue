@@ -5,9 +5,9 @@
     </div>
     <div class="event-item__badge-container">
       <Badge
-        content="365"
+        content=""
         class="event-item__count"
-      ></Badge>
+      />
     </div>
     <div class="event-item__info">
       {{event.payload.title}}
@@ -41,10 +41,6 @@ export default {
       min-width: 30px;
       color: var(--color-text-second);
       font-size: 12px;
-    }
-
-    &__count {
-      display: inline-block;
     }
 
     &__badge-container {
