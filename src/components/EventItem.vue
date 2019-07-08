@@ -1,7 +1,7 @@
 <template>
   <div class="event-item">
     <div class="event-item__time">
-      {{event.time}}
+      {{event.payload.timestamp | prettyDate}}
     </div>
     <div class="event-item__badge-container">
       <Badge
