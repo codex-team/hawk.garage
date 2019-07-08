@@ -12,6 +12,12 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       id
       name
       image
+      events {
+        id
+        payload {
+          title
+        }
+      }
     }
   }
 }
