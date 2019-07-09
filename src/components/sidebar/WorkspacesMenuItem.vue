@@ -1,19 +1,16 @@
 <template>
-  <div
+  <EntityImage
     class="workspaces-menu-item"
     :class="{'workspaces-menu-item--active': active}"
     :title="workspace.name"
-    :style="{
-      backgroundImage: workspace.image ? `url('${workspace.image}')`: 'none',
-      backgroundColor: bgColor
-    }"
-  >
-    {{!workspace.image ? $options.filters.abbreviation(workspace.name) : ''}}
-  </div>
+    :name="workspace.name"
+    :id="workspace.id"
+    :image="workspace.image"
+  />
 </template>
 
 <script>
-import { getRandomColor } from '../../utils';
+import EntityImage from '../EntityImage';
 
 export default {
   name: 'WorkspacesMenuItem',
@@ -31,13 +28,8 @@ export default {
      */
     active: Boolean
   },
-  data() {
-    return {
-      /**
-       * @type {String} item background color
-       */
-      bgColor: this.workspace.image ? 'none' : getRandomColor()
-    };
+  components: {
+    EntityImage
   }
 };
 </script>
@@ -46,14 +38,6 @@ export default {
   .workspaces-menu-item {
     width: 36px;
     height: 36px;
-    font-weight: bold;
-
-    font-size: 12px;
-    line-height: 36px;
-    text-align: center;
-    background-position: center center;
-    background-size: cover;
-    border-radius: var(--border-radius);
     cursor: pointer;
     user-select: none;
 
