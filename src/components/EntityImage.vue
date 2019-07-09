@@ -49,7 +49,7 @@ export default {
     font-weight: bold;
     font-size: 16px;
     line-height: 36px;
-    letter-spacing: -1px;
+    letter-spacing: -0.4px;
     text-align: center;
     background-position: center center;
     background-size: cover;
