@@ -2,15 +2,12 @@
   <div
     class="project-menu-item"
   >
-    <div
+    <EntityImage
       class="project-menu-item__picture"
-      :style="{
-        backgroundImage: project.image ? `url('${project.image}')`: 'none',
-        backgroundColor: bgColor
-      }"
-    >
-      {{!project.image ? $options.filters.abbreviation(project.name) : ''}}
-    </div>
+      :name="project.name"
+      :id="project.id"
+      :image="project.image"
+    />
     <div class="project-menu-item__info">
       <div class="project-menu-item__name">
         {{project.name}}
@@ -29,6 +26,7 @@
 <script>
 import { getRandomColor } from '../../utils';
 import Badge from '../Badge';
+import EntityImage from '../EntityImage';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -47,7 +45,8 @@ export default {
     };
   },
   components: {
-    Badge
+    Badge,
+    EntityImage
   }
 };
 </script>
@@ -88,13 +87,8 @@ export default {
       width: 26px;
       height: 26px;
       margin-right: 15px;
-      font-weight: bold;
       font-size: 12px;
       line-height: 26px;
-      text-align: center;
-      background-position: center;
-      background-size: cover;
-      border-radius: var(--border-radius);
     }
 
     &__events-number {
