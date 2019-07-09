@@ -88,7 +88,6 @@ export default {
 
 <style>
   .project-creation-dialog {
-    box-sizing: border-box;
     max-width: 500px;
     max-height: 385px;
     padding: 30px;

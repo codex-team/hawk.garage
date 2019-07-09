@@ -105,7 +105,6 @@ export default {
 
     &__button-create {
       display: flex;
-      box-sizing: border-box;
       width: 36px;
       height: 36px;
       border: solid 1px var(--color-text-main);

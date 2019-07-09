@@ -20,6 +20,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 /**
  * Base elements rules
  */
@@ -54,7 +58,6 @@ li {
  * Forms elements
  */
 .input {
-  box-sizing: border-box;
   width: 100%;
   padding: 11px 12px;
   color: var(--color-text-main);

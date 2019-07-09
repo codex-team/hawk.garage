@@ -24,7 +24,6 @@ export default {
 
 <style>
   .badge {
-    box-sizing: border-box;
     height: 20px;
     padding: 4px 7px 3px 7px;
     color: var(--color-text-main);

@@ -47,7 +47,6 @@ export default {
       position: absolute;
       top: 9.5px;
       left: 11px;
-      box-sizing: border-box;
       width: 15px;
       height: 15px;
       color: var(--color-text-second);

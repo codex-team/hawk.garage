@@ -68,7 +68,6 @@ export default {
 
 <style>
   .workspace-creation-dialog {
-    box-sizing: border-box;
     max-width: 500px;
     max-height: 300px;
     padding: 30px;

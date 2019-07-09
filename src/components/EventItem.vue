@@ -32,7 +32,6 @@ export default {
   .event-item {
     display: flex;
     align-items: center;
-    box-sizing: border-box;
     height: 46px;
     padding: 13px 11px 13px 15px;
     border-radius: 9px;
