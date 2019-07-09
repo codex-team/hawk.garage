@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import { getRandomColor } from '../../utils';
 
 export default {
   name: 'WorkspacesMenuItem',
@@ -30,14 +29,6 @@ export default {
      * @type {Boolean} is item selected
      */
     active: Boolean
-  },
-  data() {
-    return {
-      /**
-       * @type {String} item background color
-       */
-      bgColor: this.workspace.image ? 'none' : getRandomColor()
-    };
   }
 };
 </script>
