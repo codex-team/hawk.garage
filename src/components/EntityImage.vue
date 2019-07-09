@@ -1,8 +1,8 @@
 <template>
   <div
-    class="image"
+    class="entity-image"
     :style="{
-      backgroundImage: workspace.image ? `url('${workspace.image}')`: 'none',
+      backgroundImage: image ? `url('${image}')`: 'none',
       backgroundColor: bgColor
     }"
   >
@@ -14,29 +14,29 @@
 import { getRandomColor } from '../utils';
 
 export default {
-  name: 'Image',
+  name: 'EntityImage',
   props: {
     /**
-     * Name for making abbreviation
+     * Entity name for making abbreviation
      */
     name: {
       type: String,
       required: true
     },
     /**
-     * Image URL
+     * Entity image URL
      */
     image: String,
 
     /**
-     * Id for picking default background color
+     * Entity id for picking default background color
      */
     id: String
   },
   data() {
     return {
       /**
-       * @type {String} item background color
+       * @type {String} image background color (if image URL is not provided)
        */
       bgColor: this.image ? 'none' : getRandomColor()
     };
@@ -45,5 +45,14 @@ export default {
 </script>
 
 <style>
+.entity-image {
+  font-weight: bold;
 
+  font-size: 12px;
+  line-height: 36px;
+  text-align: center;
+  background-position: center center;
+  background-size: cover;
+  border-radius: var(--border-radius);
+}
 </style>
