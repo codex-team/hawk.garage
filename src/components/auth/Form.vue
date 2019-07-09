@@ -37,7 +37,8 @@
             v-if="altText && altLink"
             class="auth-form__alt-button"
             :to="altLink"
-          >{{ altText }}
+          >
+            {{ altText }}
           </router-link>
         </div>
       </form>

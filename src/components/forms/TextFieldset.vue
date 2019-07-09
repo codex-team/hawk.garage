@@ -1,5 +1,5 @@
 <template>
-  <fieldset class="form-text-fieldset">
+  <fieldset class="fieldset form-text-fieldset">
     <label
       class="label form-text-fieldset__label"
       :for="name"
@@ -34,9 +34,6 @@ export default {
 
 <style>
   .form-text-fieldset {
-    padding: 0;
-    border: 0;
-
     &__label {
       margin-bottom: 9px;
     }
