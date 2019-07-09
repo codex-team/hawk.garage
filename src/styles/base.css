@@ -11,6 +11,7 @@ html {
 body {
   display: flex;
   align-items: stretch;
+  box-sizing: border-box;
   min-height: 100%;
   color: var(--color-text-main);
   font-size: 15px;
@@ -21,7 +22,6 @@ body {
 
 /**
  * Base elements rules
- *
  */
 a {
   color: inherit;
@@ -44,7 +44,7 @@ li {
 /**
  * Clearfix for float elements
  */
-.clearfix:after {
+.clearfix::after {
   display: table;
   clear: both;
   content: "";
@@ -53,12 +53,7 @@ li {
 /**
  * Forms elements
  */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="search"],
-input[type="url"],
-textarea {
+.input {
   box-sizing: border-box;
   width: 100%;
   padding: 11px 12px;
@@ -96,6 +91,14 @@ textarea {
 ::placeholder {
   color: var(--color-text-second);
   opacity: 0.35;
+}
+
+.label {
+  display: block;
+  color: var(--color-text-second);
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
 }
 
 svg {

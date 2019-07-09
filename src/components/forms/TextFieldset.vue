@@ -1,8 +1,13 @@
 <template>
   <fieldset class="form-text-fieldset">
-    <label class="form-text-fieldset__label" :for="name">{{ label}}</label>
+    <label
+      class="label form-text-fieldset__label"
+      :for="name"
+    >
+      {{ label}}
+    </label>
     <input
-      class="form-text-fieldset__input"
+      class="input form-text-fieldset__input"
       :type="type || 'text'"
       :name="name"
       :value="value"
@@ -33,12 +38,7 @@ export default {
     border: 0;
 
     &__label {
-      display: block;
       margin-bottom: 9px;
-      color: var(--color-text-second);
-      font-weight: bold;
-      font-size: 12px;
-      text-transform: uppercase;
     }
   }
 </style>

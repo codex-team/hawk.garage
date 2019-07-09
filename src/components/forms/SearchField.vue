@@ -1,7 +1,7 @@
 <template>
   <div class="form-search-field">
     <input
-      class="form-search-field__input"
+      class="input form-search-field__input"
       type="search"
       placeholder="Search"
     >
@@ -28,7 +28,7 @@ export default {
   .form-search-field {
     position: relative;
 
-    &__input[type="search"] {
+    &__input {
       height: 36px;
       padding: 9px 9px 9px 33px;
       background-color: var(--color-bg-sidebar);
