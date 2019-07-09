@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { getRandomColor } from '../utils';
+import { getEntityColor } from '../utils';
 
 export default {
   name: 'EntityImage',
@@ -29,7 +29,7 @@ export default {
     image: String,
 
     /**
-     * Entity id for picking default background color
+     * Entity id for picking default background color (hex string)
      */
     id: String
   },
@@ -38,20 +38,20 @@ export default {
       /**
        * @type {String} image background color (if image URL is not provided)
        */
-      bgColor: this.image ? 'none' : getRandomColor()
+      bgColor: this.image ? 'none' : getEntityColor(this.id)
     };
   }
 };
 </script>
 
 <style>
-.entity-image {
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 36px;
-  text-align: center;
-  background-position: center center;
-  background-size: cover;
-  border-radius: var(--border-radius);
-}
+  .entity-image {
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 36px;
+    text-align: center;
+    background-position: center center;
+    background-size: cover;
+    border-radius: var(--border-radius);
+  }
 </style>
