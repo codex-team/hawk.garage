@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { getRandomColor } from '../../utils';
 import Badge from '../Badge';
 import EntityImage from '../EntityImage';
 
@@ -35,14 +34,6 @@ export default {
      * @type {Project}
      */
     project: Object
-  },
-  data() {
-    return {
-      /**
-       * @type {String} item background color
-       */
-      bgColor: this.project.image ? 'none' : getRandomColor()
-    };
   },
   components: {
     Badge,
