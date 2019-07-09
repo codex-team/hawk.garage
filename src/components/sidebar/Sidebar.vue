@@ -105,7 +105,6 @@ export default {
 
     &__button-create {
       display: flex;
-      box-sizing: border-box;
       width: 36px;
       height: 36px;
       border: solid 1px var(--color-text-main);
@@ -142,8 +141,8 @@ export default {
       border-bottom-left-radius: var(--border-radius);
       transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39);
 
-      &:before,
-      &:after {
+      &::before,
+      &::after {
         position: absolute;
         right: 0;
         display: block;
@@ -152,12 +151,12 @@ export default {
         content: '';
       }
 
-      &:before {
+      &::before {
         top: -10px;
         background-image: radial-gradient(circle at 0 0, rgba(21, 23, 30, 0) 9px, var(--color-bg-main) 10px);
       }
 
-      &:after {
+      &::after {
         bottom: -10px;
         background-image: radial-gradient(circle at 0 100%, rgba(21, 23, 30, 0) 9px, var(--color-bg-main) 10px);
       }

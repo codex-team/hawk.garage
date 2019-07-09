@@ -41,7 +41,6 @@ export default {
 
 <style>
   .custom-select {
-    box-sizing: border-box;
     margin: 0 0 20px;
     padding: 0;
     border: 0;

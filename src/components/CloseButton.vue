@@ -39,7 +39,6 @@ export default {
 
     &__icon {
       display: flex;
-      box-sizing: border-box;
       width: 28px;
       height: 28px;
       padding: 6px;

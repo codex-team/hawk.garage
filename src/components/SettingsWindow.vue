@@ -67,8 +67,6 @@ export default {
     background-color: var(--color-bg-second);
 
     &__menu {
-      box-sizing: border-box;
-
       width: 418px;
       padding-top: 30px;
       padding-right: 26px;
