@@ -47,8 +47,9 @@ export default {
 <style>
   .entity-image {
     font-weight: bold;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 36px;
+    letter-spacing: -1.07px;
     text-align: center;
     background-position: center center;
     background-size: cover;
