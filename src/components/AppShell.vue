@@ -42,7 +42,7 @@ import WorkspaceCreationDialog from './workspaces/CreationDialog';
 import ProjectCreationDialog from './projects/CreationDialog';
 import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
-import ProjectsMenuItem from './aside/ProjectsMenuItem'
+import ProjectsMenuItem from './aside/ProjectsMenuItem';
 
 export default {
   name: 'AppShell',
@@ -116,7 +116,7 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      if (!this.currentWorkspace) return null;
+      if (!this.currentWorkspace) return this.$store.getters.allProjects;
       return this.$store.state.workspaces.list
         .find(ws => ws.id === this.currentWorkspace.id)
         .projects;
