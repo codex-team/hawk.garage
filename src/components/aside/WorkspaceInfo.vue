@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import Icon from '../Icon';
-import EntityImage from '../EntityImage';
+import Icon from '../utils/Icon';
+import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'WorkspaceInfo',

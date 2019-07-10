@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import EntityImage from '../EntityImage';
+import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'WorkspacesMenuItem',

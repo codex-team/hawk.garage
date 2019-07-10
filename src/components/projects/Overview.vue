@@ -29,7 +29,7 @@
 
 <script>
 import EventItem from '../EventItem';
-import Icon from '../Icon';
+import Icon from '../utils/Icon';
 
 export default {
   name: 'ProjectOverview',

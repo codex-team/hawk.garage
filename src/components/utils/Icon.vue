@@ -4,7 +4,7 @@
   </svg>
 </template>
 <script>
-import svgPath from '../assets/sprite.svg';
+import svgPath from '../../assets/sprite.svg';
 
 export default {
   name: 'Icon',

@@ -42,7 +42,7 @@
 
 <script>
 import { RESET_STORE } from '../store/actions';
-import PopupWindow from './PopupWindow';
+import PopupWindow from './utils/PopupWindow';
 
 export default {
   name: 'SettingsWindow',

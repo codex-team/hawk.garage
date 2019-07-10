@@ -14,7 +14,7 @@
 
 <script>
 
-import Icon from '../Icon';
+import Icon from '../utils/Icon';
 
 export default {
   name: 'FormSearchField',

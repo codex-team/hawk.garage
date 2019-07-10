@@ -30,7 +30,7 @@
 
 <script>
 
-import Icon from '../Icon';
+import Icon from '../utils/Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
 
 export default {

@@ -36,7 +36,7 @@
 
 <script>
 import { CREATE_PROJECT, FETCH_WORKSPACES } from '../../store/actions/workspaces';
-import PopupDialog from '../PopupDialog';
+import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
 import CustomSelect from '../forms/CustomSelect';

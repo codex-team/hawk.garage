@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { getEntityColor } from '../utils';
+import { getEntityColor } from '../../utils';
 
 export default {
   name: 'EntityImage',
