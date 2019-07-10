@@ -30,7 +30,7 @@
 
 <script>
 import { CREATE_WORKSPACE } from '../../store/actions/workspaces';
-import PopupDialog from '../PopupDialog';
+import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
 

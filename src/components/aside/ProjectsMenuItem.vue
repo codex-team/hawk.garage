@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import Badge from '../Badge';
-import EntityImage from '../EntityImage';
+import Badge from '../utils/Badge';
+import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'ProjectsMenuItem',

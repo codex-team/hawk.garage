@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Badge from './Badge';
+import Badge from './utils/Badge';
 
 export default {
   name: 'EventItem',
