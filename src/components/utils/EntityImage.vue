@@ -33,13 +33,13 @@ export default {
      */
     id: String
   },
-  data() {
-    return {
-      /**
-       * @type {String} image background color (if image URL is not provided)
-       */
-      bgColor: this.image ? 'none' : getEntityColor(this.id)
-    };
+  computed: {
+    /**
+     * @returns {String} image background color (if image URL is not provided)
+     */
+    bgColor() {
+      return this.image ? 'none' : getEntityColor(this.id);
+    }
   }
 };
 </script>
