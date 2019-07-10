@@ -15,7 +15,13 @@
     </div>
     <hr class="sidebar__delimiter">
     <div class="sidebar__workspaces-menu" v-if="workspaces.length">
-      <div ref="workspaceHighlight" class="sidebar__workspace-highlight"></div>
+      <transition name="highlight-appearance">
+        <div
+          class="sidebar__workspace-highlight"
+          v-if="activeWorkspace"
+          :style="{'top': highlightPosition}"
+        ></div>
+      </transition>
       <WorkspacesMenuItem
         v-for="workspace in workspaces"
         :key="workspace.id"
@@ -44,7 +50,8 @@ export default {
       /**
        * Current workspace id
        */
-      activeWorkspace: null
+      activeWorkspace: null,
+      highlightPosition: '0px'
     };
   },
   methods: {
@@ -54,7 +61,6 @@ export default {
     onWorkspaceItemClick($event, workspace) {
       if (this.activeWorkspace && this.activeWorkspace.id === workspace.id) {
         this.$emit('workspaceSelected', null);
-        this.$refs.workspaceHighlight.style.top = '-300px';
         this.activeWorkspace = null;
         return;
       }
@@ -62,7 +68,7 @@ export default {
       this.activeWorkspace = workspace;
       const highLightPadding = 9;
 
-      this.$refs.workspaceHighlight.style.top =
+      this.highlightPosition =
           $event.target.offsetTop - highLightPadding + 'px';
     }
   },
@@ -145,7 +151,17 @@ export default {
       background: var(--color-bg-main);
       border-top-left-radius: var(--border-radius);
       border-bottom-left-radius: var(--border-radius);
-      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39);
+      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39), opacity 150ms ease-in;
+
+      &.highlight-appearance-enter,
+      &.highlight-appearance-leave-to {
+        opacity: 0;
+      }
+
+      &.highlight-appearance-enter-to,
+      &.highlight-appearance-leave {
+        opacity: 1;
+      }
 
       &::before,
       &::after {
