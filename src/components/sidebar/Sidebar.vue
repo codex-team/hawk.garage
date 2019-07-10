@@ -22,7 +22,6 @@
         :workspace="workspace"
         :active="activeWorkspace ? activeWorkspace.id === workspace.id : false"
         class="sidebar__workspace-item"
-        @dblclick.native="$emit('createProjectButtonClicked')"
         @click.native="onWorkspaceItemClick($event, workspace)"
       />
     </div>
@@ -53,6 +52,12 @@ export default {
      * Works when workspace item is clicked
      */
     onWorkspaceItemClick($event, workspace) {
+      if (this.activeWorkspace && this.activeWorkspace.id === workspace.id) {
+        this.$emit('workspaceSelected', null);
+        this.$refs.workspaceHighlight.style.top = '-300px';
+        this.activeWorkspace = null;
+        return;
+      }
       this.$emit('workspaceSelected', workspace);
       this.activeWorkspace = workspace;
       const highLightPadding = 9;

@@ -3,7 +3,6 @@
     <aside class="aside">
       <Sidebar
         @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
-        @createProjectButtonClicked="openProjectCreationDialog"
         @workspaceSelected="onWorkspaceSelected"
       />
       <div class="aside__right-column">
@@ -11,6 +10,7 @@
           class="aside__workspace-info"
           v-if="currentWorkspace"
           :workspace="currentWorkspace"
+          @createProjectButtonClicked="openProjectCreationDialog"
         />
         <SearchField
           class="aside__search-field"
