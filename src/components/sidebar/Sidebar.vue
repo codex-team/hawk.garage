@@ -151,15 +151,17 @@ export default {
       background: var(--color-bg-main);
       border-top-left-radius: var(--border-radius);
       border-bottom-left-radius: var(--border-radius);
-      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39), opacity 150ms ease-in;
+      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39), opacity 100ms ease-in;
 
       &.highlight-appearance-enter,
       &.highlight-appearance-leave-to {
+        transform: translateX(5px);
         opacity: 0;
       }
 
       &.highlight-appearance-enter-to,
       &.highlight-appearance-leave {
+        transform: none;
         opacity: 1;
       }
 
