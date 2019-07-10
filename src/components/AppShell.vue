@@ -144,7 +144,7 @@ export default {
 
     &__right-column {
       width: 342px;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
 
     &__search-field {
