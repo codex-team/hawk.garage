@@ -80,9 +80,9 @@ export default {
     }
 
     &__menu-item {
-      width: 200px;
+      width: 220px;
       height: 34px;
-      margin-left: -10px;
+      margin: 0 -10px 0 -10px;
       padding-left: 10px;
       font-weight: 500;
       line-height: 34px;
