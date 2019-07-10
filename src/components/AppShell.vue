@@ -7,6 +7,11 @@
         @workspaceSelected="onWorkspaceSelected"
       />
       <div class="aside__right-column">
+        <WorkspaceInfo
+          class="aside__workspace-info"
+          v-if="currentWorkspace"
+          :workspace="currentWorkspace"
+        />
         <SearchField
           class="aside__search-field"
         />
@@ -16,7 +21,7 @@
             :key="project.id"
             :project="project"
             @click.native="$router.push({ name: 'project-overview', params: { projectId: project.id }})"
-          ></ProjectsMenuItem>
+          />
         </div>
       </div>
     </aside>
@@ -36,13 +41,16 @@ import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
 import ProjectCreationDialog from './projects/CreationDialog';
 import SearchField from './forms/SearchField';
+import WorkspaceInfo from './aside/WorkspaceInfo';
+import ProjectsMenuItem from './aside/ProjectsMenuItem'
 
 export default {
   name: 'AppShell',
   components: {
     Sidebar,
-    ProjectsMenuItem: () => import('./projects-list/ProjectsMenuItem'),
-    SearchField
+    ProjectsMenuItem,
+    SearchField,
+    WorkspaceInfo
   },
   data() {
     return {
@@ -139,6 +147,10 @@ export default {
     }
 
     &__search-field {
+      margin: 20px;
+    }
+
+    &__workspace-info {
       margin: 20px;
     }
   }
