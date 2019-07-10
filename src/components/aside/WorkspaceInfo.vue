@@ -54,6 +54,7 @@ export default {
 
     &__image {
       width: 36px;
+      height: 36px;
       margin-right: 15px;
     }
 
