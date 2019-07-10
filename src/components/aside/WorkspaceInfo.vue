@@ -7,6 +7,7 @@
         :id="workspace.id"
       />
       <Icon
+        @click.native="$emit('createProjectButtonClicked')"
         class="workspace-info__project-creation-button"
         symbol="plus"
       />
@@ -60,6 +61,11 @@ export default {
     &__settings-link {
       margin-top: 2px;
       color: var(--color-text-second);
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &__project-creation-button {
@@ -71,6 +77,7 @@ export default {
       padding: 6px;
       background-color: var(--color-indicator-medium);
       border-radius: var(--border-radius);
+      cursor: pointer;
     }
   }
 </style>
