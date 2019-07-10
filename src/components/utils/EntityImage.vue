@@ -46,6 +46,7 @@ export default {
 
 <style>
   .entity-image {
+    color: #fff;
     font-weight: bold;
     font-size: 16px;
     line-height: 36px;
