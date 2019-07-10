@@ -1,16 +1,12 @@
 <template>
-    <div class="workspace-info clearfix">
-      <EntityImage
-        class="workspace-info__image"
-        :name="workspace.name"
-        :image="workspace.image"
-        :id="workspace.id"
-      />
-      <Icon
-        @click.native="$emit('createProjectButtonClicked')"
-        class="workspace-info__project-creation-button"
-        symbol="plus"
-      />
+  <div class="workspace-info">
+    <EntityImage
+      class="workspace-info__image"
+      :name="workspace.name"
+      :image="workspace.image"
+      :id="workspace.id"
+    />
+    <div class="workspace-info__wrapper">
       <div class="workspace-info__name">
         {{workspace.name}}
       </div>
@@ -18,6 +14,12 @@
         Workspace settings
       </div>
     </div>
+    <Icon
+      @click.native="$emit('createProjectButtonClicked')"
+      class="workspace-info__project-creation-button"
+      symbol="plus"
+    />
+  </div>
 </template>
 
 <script>
@@ -44,12 +46,13 @@ export default {
 
 <style>
   .workspace-info {
+    display: flex;
+    align-items: center;
     height: 36px;
     font-size: 14px;
     line-height: 16px;
 
     &__image {
-      float: left;
       width: 36px;
       margin-right: 15px;
     }
@@ -69,11 +72,9 @@ export default {
     }
 
     &__project-creation-button {
-      position: relative;
-      top: 5px;
-      float: right;
       width: 26px;
       height: 26px;
+      margin-left: auto;
       padding: 6px;
       background-color: var(--color-indicator-medium);
       border-radius: var(--border-radius);
