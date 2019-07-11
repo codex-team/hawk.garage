@@ -34,7 +34,7 @@
 <script>
 
 import { THEME_CHANGE } from '../store/actions/app';
-import { FETCH_WORKSPACES } from '../store/actions/workspaces';
+import { FETCH_WORKSPACES, SET_CURRENT_WORKSPACE } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
@@ -98,6 +98,11 @@ export default {
    * Vue hook. Called synchronously after the instance is created
    */
   created() {
+    /**
+     * Reset current workspace
+     */
+    this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
+
     /**
      * Fetch user data
      */
