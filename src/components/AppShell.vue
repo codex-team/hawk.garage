@@ -3,7 +3,6 @@
     <aside class="aside">
       <Sidebar
         @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
-        @workspaceSelected="onWorkspaceSelected"
       />
       <div class="aside__right-column">
         <WorkspaceInfo
@@ -116,9 +115,9 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      if (!this.currentWorkspace) return this.$store.getters.allProjects;
+      if (!this.$store.state.workspaces.current) return this.$store.getters.allProjects;
       return this.$store.state.workspaces.list
-        .find(ws => ws.id === this.currentWorkspace.id)
+        .find(ws => ws.id === this.$store.state.workspaces.current.id)
         .projects;
     }
   }
