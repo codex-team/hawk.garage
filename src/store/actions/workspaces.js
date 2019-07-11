@@ -3,6 +3,11 @@
  */
 
 /**
+ * Set new current user workspace
+ */
+export const SET_CURRENT_WORKSPACE = 'SET_CURRENT_WORKSPACE';
+
+/**
  * Actions
  */
 
