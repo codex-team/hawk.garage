@@ -18,7 +18,7 @@
       <transition name="highlight-appearance" appear>
         <div
           class="sidebar__workspace-highlight"
-          v-show="activeWorkspace"
+          v-show="currentWorkspace"
           :style="{'top': highlightPosition}"
         ></div>
       </transition>
@@ -26,9 +26,9 @@
         v-for="workspace in workspaces"
         :key="workspace.id"
         :workspace="workspace"
-        :active="activeWorkspace ? activeWorkspace.id === workspace.id : false"
+        :active="currentWorkspace ? currentWorkspace.id === workspace.id : false"
         class="sidebar__workspace-item"
-        @click.native="onWorkspaceItemClick($event, workspace)"
+        @click.native="onWorkspaceItemClick(workspace)"
       />
     </div>
   </div>
@@ -38,6 +38,7 @@
 
 import Icon from '../utils/Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
+import { SET_CURRENT_WORKSPACE } from '../../store/actions/workspaces';
 
 export default {
   name: 'Sidebar',
@@ -48,28 +49,21 @@ export default {
   data() {
     return {
       /**
-       * Current workspace id
+       * Position of the highlight element
        */
-      activeWorkspace: null,
       highlightPosition: '0px'
     };
   },
   methods: {
     /**
      * Works when workspace item is clicked
+     * @param {Workspace} workspace - clicked workspace
      */
-    onWorkspaceItemClick($event, workspace) {
-      if (this.activeWorkspace && this.activeWorkspace.id === workspace.id) {
-        this.$emit('workspaceSelected', null);
-        this.activeWorkspace = null;
-        return;
+    onWorkspaceItemClick(workspace) {
+      if (this.currentWorkspace && this.currentWorkspace.id === workspace.id) {
+        return this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
       }
-      this.$emit('workspaceSelected', workspace);
-      this.activeWorkspace = workspace;
-      const highLightPadding = 9;
-
-      this.highlightPosition =
-          $event.target.offsetTop - highLightPadding + 'px';
+      this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
     }
   },
   computed: {
@@ -78,6 +72,24 @@ export default {
      */
     workspaces() {
       return this.$store.state.workspaces.list;
+    },
+
+    /**
+     * Getter for current user workspace
+     * @return {Workspace}
+     */
+    currentWorkspace() {
+      return this.$store.state.workspaces.current;
+    }
+  },
+  watch: {
+    currentWorkspace(newWorkspace) {
+      if (!newWorkspace) return;
+      const workspaceIndex = this.workspaces.findIndex(ws => ws.id === this.currentWorkspace.id);
+      const highlightPadding = 9;
+      const workspaceItemHeight = 56;
+
+      this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + 'px';
     }
   }
 };

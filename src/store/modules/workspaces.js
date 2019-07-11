@@ -4,7 +4,8 @@ import {
   ADD_WORKSPACE,
   REMOVE_WORKSPACE,
   FETCH_WORKSPACES,
-  SET_WORKSPACES, CREATE_PROJECT
+  SET_WORKSPACES, CREATE_PROJECT,
+  SET_CURRENT_WORKSPACE
 } from '../actions/workspaces';
 import { RESET_STORE } from '../actions';
 import * as workspaceApi from '../../api/workspaces';
@@ -29,6 +30,7 @@ import Vue from 'vue';
  * Module state
  * @typedef {object} WorkspacesModuleState
  * @property {array<Workspace>} list - registered workspaces
+ * @property {Workspace} current - current user workspace
  */
 
 /**
@@ -37,7 +39,8 @@ import Vue from 'vue';
  */
 function initialState() {
   return {
-    list: []
+    list: [],
+    current: null
   };
 }
 
@@ -125,6 +128,15 @@ const actions = {
   },
 
   /**
+   * Sets current user workspace
+   * @param {function} commit - standard Vuex commit function
+   * @param {Workspace} workspace - new current user workspace
+   */
+  [SET_CURRENT_WORKSPACE]({ commit }, workspace) {
+    commit(SET_CURRENT_WORKSPACE, workspace);
+  },
+
+  /**
    * Resets module state
    * @param {function} commit - standard Vuex commit function
    */
@@ -164,6 +176,15 @@ const mutations = {
    */
   [SET_WORKSPACES](state, newList) {
     Vue.set(state, 'list', newList);
+  },
+
+  /**
+   * Sets current user workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Workspace} workspace - new current user workspace
+   */
+  [SET_CURRENT_WORKSPACE](state, workspace) {
+    state.current = workspace;
   },
 
   /**
