@@ -112,6 +112,14 @@ export default {
       return this.$store.state.workspaces.list
         .find(ws => ws.id === this.$store.state.workspaces.current.id)
         .projects;
+    },
+
+    /**
+     * Getter for current user workspace
+     * @return {Workspace}
+     */
+    currentWorkspace() {
+      return this.$store.state.workspaces.current;
     }
   }
 };
