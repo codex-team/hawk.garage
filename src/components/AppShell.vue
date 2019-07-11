@@ -3,7 +3,6 @@
     <aside class="aside">
       <Sidebar
         @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
-        @workspaceSelected="onWorkspaceSelected"
       />
       <div class="aside__right-column">
         <WorkspaceInfo
@@ -35,7 +34,7 @@
 <script>
 
 import { THEME_CHANGE } from '../store/actions/app';
-import { FETCH_WORKSPACES } from '../store/actions/workspaces';
+import { FETCH_WORKSPACES, SET_CURRENT_WORKSPACE } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
@@ -57,12 +56,7 @@ export default {
       /**
        * Current opened modal window
        */
-      modalDialog: null,
-
-      /**
-       * Current user workspace
-       */
-      currentWorkspace: null
+      modalDialog: null
     };
   },
   methods: {
@@ -85,13 +79,6 @@ export default {
      */
     openProjectCreationDialog() {
       this.modalDialog = ProjectCreationDialog;
-    },
-
-    /**
-     * Toggles current user workspace
-     */
-    onWorkspaceSelected(workspace) {
-      this.currentWorkspace = workspace;
     }
   },
 
@@ -99,6 +86,11 @@ export default {
    * Vue hook. Called synchronously after the instance is created
    */
   created() {
+    /**
+     * Reset current workspace
+     */
+    this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
+
     /**
      * Fetch user data
      */
@@ -116,10 +108,18 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      if (!this.currentWorkspace) return this.$store.getters.allProjects;
+      if (!this.$store.state.workspaces.current) return this.$store.getters.allProjects;
       return this.$store.state.workspaces.list
-        .find(ws => ws.id === this.currentWorkspace.id)
+        .find(ws => ws.id === this.$store.state.workspaces.current.id)
         .projects;
+    },
+
+    /**
+     * Getter for current user workspace
+     * @return {Workspace}
+     */
+    currentWorkspace() {
+      return this.$store.state.workspaces.current;
     }
   }
 };
