@@ -126,7 +126,8 @@ export default {
     }
 
     &__select-workspaces {
-      flex-basis: 100%;
+      width: 280px;
+      margin: 0 0 20px;
     }
   }
 </style>
