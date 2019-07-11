@@ -15,7 +15,7 @@
     </div>
     <hr class="sidebar__delimiter">
     <div class="sidebar__workspaces-menu" v-if="workspaces.length">
-      <transition name="highlight-appearance">
+      <transition name="highlight-appearance" appear>
         <div
           class="sidebar__workspace-highlight"
           v-show="activeWorkspace"
@@ -151,7 +151,7 @@ export default {
       background: var(--color-bg-main);
       border-top-left-radius: var(--border-radius);
       border-bottom-left-radius: var(--border-radius);
-      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39), opacity 150ms ease-in;
+      transition: top 150ms cubic-bezier(.37, -0.19, .42, 1.39), opacity 150ms ease, transform 150ms ease;
 
       &.highlight-appearance-enter,
       &.highlight-appearance-leave-to {
