@@ -56,12 +56,7 @@ export default {
       /**
        * Current opened modal window
        */
-      modalDialog: null,
-
-      /**
-       * Current user workspace
-       */
-      currentWorkspace: null
+      modalDialog: null
     };
   },
   methods: {
@@ -84,13 +79,6 @@ export default {
      */
     openProjectCreationDialog() {
       this.modalDialog = ProjectCreationDialog;
-    },
-
-    /**
-     * Toggles current user workspace
-     */
-    onWorkspaceSelected(workspace) {
-      this.currentWorkspace = workspace;
     }
   },
 
