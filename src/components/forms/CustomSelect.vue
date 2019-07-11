@@ -1,28 +1,38 @@
 <template>
   <fieldset class="custom-select">
-    <label class="custom-select__label" for="selectWorkspace">{{label}}</label>
+    <label class="custom-select__label" for="customSelect">
+      {{label}}
+    </label>
     <div
-      class="custom-select__wrapper"
+      id="customSelect"
+      class="input custom-select__select"
+      @click="showDropDown = !showDropDown"
+    ></div>
+    <div
+      class="custom-select__options-wrapper"
+      v-show="showDropDown"
     >
-      <select
-        id="selectWorkspace"
-        class="custom-select__select"
-        :value="value"
-        @input="$emit('input', $event.target.value)"
+      <div
+        class="custom-select__option"
+        v-for="option in options"
+        :key="option.id"
+        :value="option"
       >
-        <option
-          v-for="option in options"
-          :key="option.id"
-          :value="option.id"
-        >
-          {{option.name}}
-        </option>
-      </select>
+        <EntityImage
+          class="custom-select__option-image"
+          :image="option.image"
+          :name="option.name"
+        />
+        {{option.name}}
+      </div>
     </div>
   </fieldset>
 </template>
 
 <script>
+// если он текущий -- отображать. Если отображать весь список, если нажат select
+import EntityImage from '../utils/EntityImage';
+
 export default {
   name: 'CustomSelect',
   props: {
@@ -35,15 +45,24 @@ export default {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      showDropDown: false
+    };
+  },
+  components: {
+    EntityImage
   }
 };
 </script>
 
 <style>
   .custom-select {
-    margin: 0 0 20px;
+    position: relative;
     padding: 0;
     border: 0;
+    user-select: none;
 
     &__label {
       display: block;
@@ -59,31 +78,8 @@ export default {
       width: 100%;
       height: 40px;
       padding-left: 12px;
-      color: var(--color-text-main);
       font-size: 14px;
-      background: var(--color-bg-main);
-      border: 1px solid var(--color-border-input);
       border-radius: 3px;
-      outline: none;
-      appearance: none;
-
-      &::-ms-expand {
-        display: none;
-      }
-
-      &:focus {
-        box-shadow: 0 0 0 1px var(--color-indicator-medium);
-      }
-
-      option {
-        min-height: 40px;
-      }
-    }
-
-    &__wrapper {
-
-      position: relative;
-      width: 280px;
 
       &::after {
         position: absolute;
@@ -99,6 +95,25 @@ export default {
         transform: rotate(-225deg);
         content: '';
       }
+    }
+
+    &__options-wrapper {
+      position: absolute;
+      top: 100%;
+      width: 100%;
+    }
+
+    &__option {
+      width: 100%;
+      height: 40px;
+      background-color: var(--color-bg-main);
+    }
+
+    &__option-image {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
     }
   }
 </style>
