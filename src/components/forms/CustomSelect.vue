@@ -14,24 +14,25 @@
         :id="value.id"
       />
       {{value.name}}
+    </div>
+    <div
+      class="custom-select__options-wrapper"
+      v-show="showDropDown"
+      @click="showDropDown = !showDropDown"
+    >
       <div
-        class="custom-select__options-wrapper"
-        v-show="showDropDown"
+        class="custom-select__option"
+        v-for="option in filteredOption"
+        :key="option.id"
+        @click="$emit('input', option)"
       >
-        <div
-          class="custom-select__option"
-          v-for="option in filteredOption"
-          :key="option.id"
-          @click="$emit('input', option)"
-        >
-          <EntityImage
-            class="custom-select__option-image"
-            :image="option.image"
-            :name="option.name"
-            :id="option.id"
-          />
-          {{option.name}}
-        </div>
+        <EntityImage
+          class="custom-select__option-image"
+          :image="option.image"
+          :name="option.name"
+          :id="option.id"
+        />
+        {{option.name}}
       </div>
     </div>
   </fieldset>
@@ -87,11 +88,9 @@ export default {
 
     &__select {
       position: relative;
-      width: 100%;
-      height: 40px;
-      padding-left: 12px;
-      font-size: 14px;
-      border-radius: 3px;
+      border-bottom: none;
+      border-bottom-right-radius: unset;
+      border-bottom-left-radius: unset;
 
       &::after {
         position: absolute;
@@ -114,11 +113,18 @@ export default {
       top: 100%;
       right: 0;
       left: 0;
+      border: 1px solid var(--color-border-input);
+      border-top: none;
+      border-bottom-right-radius: 3px;
+      border-bottom-left-radius: 3px;
     }
 
-    &__option {
+    &__option, &__select {
       width: 100%;
       height: 40px;
+      padding: 0 0 0 12px;
+      font-size: 14px;
+      line-height: 40px;
       background-color: var(--color-bg-main);
     }
 
