@@ -1,8 +1,9 @@
 <template>
   <fieldset
     class="custom-select"
-    :class="{'custom-select--opened':showDropDown}"
-    @click="onSelectClick"
+    :class="{'custom-select--opened': showDropDown}"
+    @click="showDropDown = !showDropDown"
+    v-click-outside="close"
   >
     <label class="custom-select__label">
       {{label}}
@@ -42,7 +43,7 @@
 </template>
 
 <script>
-  import Icon from '../utils/Icon';
+import Icon from '../utils/Icon';
 import EntityImage from '../utils/EntityImage';
 
 export default {
@@ -64,9 +65,9 @@ export default {
     };
   },
   methods: {
-    onSelectClick() {
-      this.showDropDown = !this.showDropDown;
-    },
+    /**
+     * Close select
+     */
     close() {
       this.showDropDown = false;
     }
