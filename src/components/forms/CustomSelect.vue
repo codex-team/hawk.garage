@@ -1,5 +1,8 @@
 <template>
-  <fieldset class="custom-select">
+  <fieldset
+    class="custom-select"
+    :class="{'custom-select--opened':showDropDown}"
+  >
     <label class="custom-select__label">
       {{label}}
     </label>
@@ -60,7 +63,7 @@ export default {
     };
   },
   computed: {
-    filteredOption(){
+    filteredOption() {
       return this.options.filter(opt => opt !== this.value);
     }
   },
@@ -77,6 +80,19 @@ export default {
     border: 0;
     user-select: none;
 
+    &--opened &__select {
+      border-bottom: none;
+      border-bottom-right-radius: unset;
+      border-bottom-left-radius: unset;
+    }
+
+    &--opened &__option,
+    &--opened &__select {
+      &:hover {
+        background-color: var(--color-bg-sidebar);
+      }
+    }
+
     &__label {
       display: block;
       margin-bottom: 9px;
@@ -88,9 +104,6 @@ export default {
 
     &__select {
       position: relative;
-      border-bottom: none;
-      border-bottom-right-radius: unset;
-      border-bottom-left-radius: unset;
 
       &::after {
         position: absolute;
@@ -132,6 +145,8 @@ export default {
       display: inline-block;
       width: 28px;
       height: 28px;
+      margin-right: 5px;
+      font-size: 13px;
       line-height: 28px;
     }
   }
