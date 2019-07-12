@@ -2,13 +2,13 @@
   <fieldset
     class="custom-select"
     :class="{'custom-select--opened':showDropDown}"
+    @click="onSelectClick"
   >
     <label class="custom-select__label">
       {{label}}
     </label>
     <div
       class="input custom-select__select"
-      @click="showDropDown = !showDropDown"
     >
       <EntityImage
         class="custom-select__option-image"
@@ -21,7 +21,6 @@
     <div
       class="custom-select__options-wrapper"
       v-show="showDropDown"
-      @click="showDropDown = !showDropDown"
     >
       <div
         class="custom-select__option"
@@ -62,6 +61,27 @@ export default {
       showDropDown: false
     };
   },
+  methods: {
+    onSelectClick() {
+      this.showDropDown = !this.showDropDown;
+    },
+    close() {
+      this.showDropDown = false;
+    }
+  },
+  watch: {
+    showDropDown(newValue) {
+      if (newValue) {
+        setTimeout(() => {
+          window.addEventListener('click', this.close);
+          window.addEventListener('touchstart', this.close);
+        }, 0);
+      } else {
+        window.removeEventListener('click', this.close);
+        window.removeEventListener('touchstart', this.close);
+      }
+    }
+  },
   computed: {
     filteredOption() {
       return this.options.filter(opt => opt !== this.value);
@@ -70,7 +90,8 @@ export default {
   components: {
     EntityImage
   }
-};
+}
+;
 </script>
 
 <style>
@@ -79,19 +100,6 @@ export default {
     padding: 0;
     border: 0;
     user-select: none;
-
-    &--opened &__select {
-      border-bottom: none;
-      border-bottom-right-radius: unset;
-      border-bottom-left-radius: unset;
-    }
-
-    &--opened &__option,
-    &--opened &__select {
-      &:hover {
-        background-color: var(--color-bg-sidebar);
-      }
-    }
 
     &__label {
       display: block;
@@ -139,6 +147,19 @@ export default {
       font-size: 14px;
       line-height: 40px;
       background-color: var(--color-bg-main);
+    }
+
+    &--opened &__select {
+      border-bottom: none;
+      border-bottom-right-radius: unset;
+      border-bottom-left-radius: unset;
+    }
+
+    &--opened &__option,
+    &--opened &__select {
+      &:hover {
+        background-color: var(--color-bg-sidebar);
+      }
     }
 
     &__option-image {

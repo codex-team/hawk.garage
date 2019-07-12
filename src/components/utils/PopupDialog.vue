@@ -1,7 +1,7 @@
 <template>
   <transition name="popup-dialog" appear>
-    <div class="popup-dialog__mask" @click="$emit('close')">
-      <div class="popup-dialog__wrapper" @click.stop>
+    <div class="popup-dialog__mask" @click.self="$emit('close')">
+      <div class="popup-dialog__wrapper">
         <div class="popup-dialog__container">
           <slot></slot>
         </div>
