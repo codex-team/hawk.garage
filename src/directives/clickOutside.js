@@ -6,7 +6,7 @@
  * where SOME_METHOD must be a function
  */
 export default {
-  bind: function (el, binding, vNode) {
+  bind(el, binding, vNode) {
     // Provided expression must evaluate to a function.
     if (typeof binding.value !== 'function') {
       const compName = vNode.context.name;
@@ -33,7 +33,7 @@ export default {
     document.addEventListener('click', handler);
   },
 
-  unbind: function (el, binding) {
+  unbind(el) {
     // Remove Event Listeners
     document.removeEventListener('click', el.__vueClickOutside__);
     el.__vueClickOutside__ = null;
