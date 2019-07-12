@@ -122,12 +122,15 @@ export default {
       top: 100%;
       right: 0;
       left: 0;
+      margin-top: -5px;
+      padding-top: 5px;
+      background-color: var(--color-bg-main);
       border: 1px solid var(--color-border-input);
       border-top: none;
       border-bottom-right-radius: 3px;
       border-bottom-left-radius: 3px;
       box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
-      transition: transform 150ms cubic-bezier(.37, -0.19, .42, 1.39);
+      transition: transform 120ms cubic-bezier(0.29, 0.97, 0.82, 1.43);
       will-change: transform;
 
       &.options-appear-leave-active {
@@ -152,7 +155,6 @@ export default {
       height: 40px;
       padding: 0 0 0 12px;
       font-size: 14px;
-      background-color: var(--color-bg-main);
       cursor: pointer;
     }
 
