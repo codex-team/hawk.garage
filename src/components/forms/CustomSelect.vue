@@ -1,36 +1,43 @@
 <template>
   <fieldset class="custom-select">
-    <label class="custom-select__label" for="customSelect">
+    <label class="custom-select__label">
       {{label}}
     </label>
     <div
-      id="customSelect"
       class="input custom-select__select"
       @click="showDropDown = !showDropDown"
-    ></div>
-    <div
-      class="custom-select__options-wrapper"
-      v-show="showDropDown"
     >
+      <EntityImage
+        class="custom-select__option-image"
+        :image="value.image"
+        :name="value.name"
+        :id="value.id"
+      />
+      {{value.name}}
       <div
-        class="custom-select__option"
-        v-for="option in options"
-        :key="option.id"
-        :value="option"
+        class="custom-select__options-wrapper"
+        v-show="showDropDown"
       >
-        <EntityImage
-          class="custom-select__option-image"
-          :image="option.image"
-          :name="option.name"
-        />
-        {{option.name}}
+        <div
+          class="custom-select__option"
+          v-for="option in filteredOption"
+          :key="option.id"
+          @click="$emit('input', option)"
+        >
+          <EntityImage
+            class="custom-select__option-image"
+            :image="option.image"
+            :name="option.name"
+            :id="option.id"
+          />
+          {{option.name}}
+        </div>
       </div>
     </div>
   </fieldset>
 </template>
 
 <script>
-// если он текущий -- отображать. Если отображать весь список, если нажат select
 import EntityImage from '../utils/EntityImage';
 
 export default {
@@ -40,7 +47,7 @@ export default {
       type: Array,
       required: true
     },
-    value: String,
+    value: Object,
     label: {
       type: String,
       required: true
@@ -50,6 +57,11 @@ export default {
     return {
       showDropDown: false
     };
+  },
+  computed: {
+    filteredOption(){
+      return this.options.filter(opt => opt !== this.value);
+    }
   },
   components: {
     EntityImage
@@ -100,7 +112,8 @@ export default {
     &__options-wrapper {
       position: absolute;
       top: 100%;
-      width: 100%;
+      right: 0;
+      left: 0;
     }
 
     &__option {
