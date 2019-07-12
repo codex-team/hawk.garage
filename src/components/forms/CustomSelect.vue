@@ -141,11 +141,12 @@ export default {
     }
 
     &__option, &__select {
+      display: flex;
+      align-items: center;
       width: 100%;
       height: 40px;
       padding: 0 0 0 12px;
       font-size: 14px;
-      line-height: 40px;
       background-color: var(--color-bg-main);
     }
 
