@@ -107,10 +107,11 @@ export default {
 
     &__expand-icon {
       position: absolute;
-      top: 14px;
-      right: 17px;
+      top: 50%;
+      right: 12px;
       width: 18px;
       height: 10px;
+      transform: translateY(-50%);
     }
 
     &__options-wrapper {
