@@ -12,7 +12,7 @@
           class="project-creation-dialog__select-workspaces"
           :options="workspaces"
           label="SELECT WORKSPACE"
-          v-model="workspaceId"
+          v-model="workspace"
         />
         <TextFieldset
           class="project-creation-dialog__text-field"
@@ -46,7 +46,7 @@ export default {
   data() {
     return {
       name: '', // project name
-      workspaceId: this.$store.state.workspaces.list[0].id // project's workspace id
+      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0]// project's workspace id
     };
   },
   methods: {
@@ -57,7 +57,7 @@ export default {
       try {
         const projectInfo = {
           name: this.name,
-          workspaceId: this.workspaceId
+          workspaceId: this.workspace.id
         };
 
         await this.$store.dispatch(CREATE_PROJECT, projectInfo);
@@ -126,7 +126,8 @@ export default {
     }
 
     &__select-workspaces {
-      flex-basis: 100%;
+      width: 280px;
+      margin: 0 0 20px;
     }
   }
 </style>

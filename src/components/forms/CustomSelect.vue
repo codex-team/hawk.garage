@@ -1,28 +1,53 @@
 <template>
-  <fieldset class="custom-select">
-    <label class="custom-select__label" for="selectWorkspace">{{label}}</label>
+  <fieldset
+    class="custom-select"
+    :class="{'custom-select--opened': isOpened}"
+    @click="isOpened = !isOpened"
+    v-click-outside="close"
+  >
+    <label class="custom-select__label">
+      {{label}}
+    </label>
     <div
-      class="custom-select__wrapper"
+      class="input custom-select__select"
     >
-      <select
-        id="selectWorkspace"
-        class="custom-select__select"
-        :value="value"
-        @input="$emit('input', $event.target.value)"
-      >
-        <option
-          v-for="option in options"
-          :key="option.id"
-          :value="option.id"
-        >
-          {{option.name}}
-        </option>
-      </select>
+      <EntityImage
+        class="custom-select__option-image"
+        :image="value.image"
+        :name="value.name"
+        :id="value.id"
+      />
+      {{value.name}}
+      <Icon class="custom-select__expand-icon" symbol="arrow-down"/>
     </div>
+    <transition name="options-appear">
+      <div
+        class="custom-select__options-wrapper"
+        v-show="isOpened"
+      >
+        <div
+          class="custom-select__option"
+          v-for="option in filteredOption"
+          :key="option.id"
+          @click="$emit('input', option)"
+        >
+          <EntityImage
+            class="custom-select__option-image"
+            :image="option.image"
+            :name="option.name"
+            :id="option.id"
+          />
+          {{option.name}}
+        </div>
+      </div>
+    </transition>
   </fieldset>
 </template>
 
 <script>
+import Icon from '../utils/Icon';
+import EntityImage from '../utils/EntityImage';
+
 export default {
   name: 'CustomSelect',
   props: {
@@ -30,20 +55,44 @@ export default {
       type: Array,
       required: true
     },
-    value: String,
+    value: Object,
     label: {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      isOpened: false
+    };
+  },
+  methods: {
+    /**
+     * Close select
+     */
+    close() {
+      this.isOpened = false;
+    }
+  },
+  computed: {
+    filteredOption() {
+      return this.options.filter(opt => opt !== this.value);
+    }
+  },
+  components: {
+    EntityImage,
+    Icon
   }
-};
+}
+;
 </script>
 
 <style>
   .custom-select {
-    margin: 0 0 20px;
+    position: relative;
     padding: 0;
     border: 0;
+    user-select: none;
 
     &__label {
       display: block;
@@ -56,49 +105,83 @@ export default {
 
     &__select {
       position: relative;
-      width: 100%;
-      height: 40px;
-      padding-left: 12px;
-      color: var(--color-text-main);
-      font-size: 14px;
-      background: var(--color-bg-main);
+      z-index: 1;
+    }
+
+    &__expand-icon {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      width: 18px;
+      height: 10px;
+      transform: translateY(-50%);
+    }
+
+    &__options-wrapper {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: 0;
+      margin-top: -5px;
+      padding-top: 5px;
+      background-color: var(--color-bg-main);
       border: 1px solid var(--color-border-input);
-      border-radius: 3px;
-      outline: none;
-      appearance: none;
+      border-top: none;
+      border-bottom-right-radius: 3px;
+      border-bottom-left-radius: 3px;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
+      transition: transform 120ms cubic-bezier(0.29, 0.97, 0.82, 1.43);
+      will-change: transform;
 
-      &::-ms-expand {
-        display: none;
+      &.options-appear-leave-active {
+        transition: none;
       }
 
-      &:focus {
-        box-shadow: 0 0 0 1px var(--color-indicator-medium);
+      &.options-appear-enter,
+      &.options-appear-leave-to {
+        transform: translateY(-10px);
       }
 
-      option {
-        min-height: 40px;
+      &.options-appear-enter-to,
+      &.options-appear-leave {
+        transform: none;
       }
     }
 
-    &__wrapper {
+    &__option, &__select {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 40px;
+      padding: 0 0 0 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
-      position: relative;
-      width: 280px;
+    &--opened &__select {
+      border-bottom: 1px solid transparent;
+      border-bottom-right-radius: unset;
+      border-bottom-left-radius: unset;
+    }
 
-      &::after {
-        position: absolute;
-        top: 9px;
-        right: 17px;
-        display: block;
-        width: 12px;
-        height: 12px;
-        border: 3px solid var(--color-text-main);
-        border-bottom: none;
-        border-left: none;
-        border-radius: 3px;
-        transform: rotate(-225deg);
-        content: '';
+    &--opened &__option,
+    &--opened &__select {
+      &:hover {
+        background-color: var(--color-bg-sidebar);
       }
+    }
+
+    &--opened &__expand-icon {
+      transform: rotate(180deg) translateY(50%);
+    }
+
+    &__option-image {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      margin-right: 6px;
+      font-size: 13px;
+      line-height: 28px;
     }
   }
 </style>
