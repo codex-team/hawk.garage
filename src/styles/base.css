@@ -21,10 +21,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body > svg {
-  display: none;
-}
-
 *, *:before, *:after {
   box-sizing: inherit;
 }
