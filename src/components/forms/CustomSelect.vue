@@ -17,6 +17,7 @@
         :id="value.id"
       />
       {{value.name}}
+      <Icon class="custom-select__expand-icon" symbol="expand"/>
     </div>
     <div
       class="custom-select__options-wrapper"
@@ -41,6 +42,7 @@
 </template>
 
 <script>
+  import Icon from '../utils/Icon';
 import EntityImage from '../utils/EntityImage';
 
 export default {
@@ -88,7 +90,8 @@ export default {
     }
   },
   components: {
-    EntityImage
+    EntityImage,
+    Icon
   }
 }
 ;
@@ -112,21 +115,14 @@ export default {
 
     &__select {
       position: relative;
+    }
 
-      &::after {
-        position: absolute;
-        top: 9px;
-        right: 17px;
-        display: block;
-        width: 12px;
-        height: 12px;
-        border: 3px solid var(--color-text-main);
-        border-bottom: none;
-        border-left: none;
-        border-radius: 3px;
-        transform: rotate(-225deg);
-        content: '';
-      }
+    &__expand-icon {
+      position: absolute;
+      top: 14px;
+      right: 17px;
+      width: 18px;
+      height: 10px;
     }
 
     &__options-wrapper {
