@@ -1,0 +1,11 @@
+:root {
+  --hide-scrollbar: {
+    /* Chrome, Safari, newer versions of Opera */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    overflow: -moz-scrollbars-none; /* Firefox */
+    scrollbar-width: none; /* newer versions of Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  };
+}

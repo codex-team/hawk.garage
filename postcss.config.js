@@ -6,6 +6,12 @@ module.exports = {
      */
     'postcss-import': {},
 
+    /**
+     * Enable custom property sets references (@apply rule and custom property sets)
+     * https://www.npmjs.com/package/postcss-apply
+     */
+    'postcss-apply': {},
+
     /*
      * Convert modern CSS into something most browsers can understand
      * https://github.com/csstools/postcss-preset-env

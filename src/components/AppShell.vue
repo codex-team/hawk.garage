@@ -127,6 +127,8 @@ export default {
 </script>
 
 <style>
+  @import '../styles/custom-properties.css';
+
   .app-shell {
     display: flex;
     min-height: 100%;
@@ -143,6 +145,7 @@ export default {
     background-color: var(--color-bg-main);
 
     &__right-column {
+      @apply --hide-scrollbar;
       width: 342px;
       overflow-y: auto;
     }
