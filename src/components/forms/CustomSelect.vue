@@ -153,7 +153,7 @@ export default {
       display: inline-block;
       width: 28px;
       height: 28px;
-      margin-right: 5px;
+      margin-right: 6px;
       font-size: 13px;
       line-height: 28px;
     }
