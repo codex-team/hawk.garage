@@ -71,19 +71,6 @@ export default {
       this.showDropDown = false;
     }
   },
-  watch: {
-    showDropDown(newValue) {
-      if (newValue) {
-        setTimeout(() => {
-          window.addEventListener('click', this.close);
-          window.addEventListener('touchstart', this.close);
-        }, 0);
-      } else {
-        window.removeEventListener('click', this.close);
-        window.removeEventListener('touchstart', this.close);
-      }
-    }
-  },
   computed: {
     filteredOption() {
       return this.options.filter(opt => opt !== this.value);
