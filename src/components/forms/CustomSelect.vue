@@ -20,25 +20,27 @@
       {{value.name}}
       <Icon class="custom-select__expand-icon" symbol="expand"/>
     </div>
-    <div
-      class="custom-select__options-wrapper"
-      v-show="showDropDown"
-    >
+    <transition name="options-appear">
       <div
-        class="custom-select__option"
-        v-for="option in filteredOption"
-        :key="option.id"
-        @click="$emit('input', option)"
+        class="custom-select__options-wrapper"
+        v-show="showDropDown"
       >
-        <EntityImage
-          class="custom-select__option-image"
-          :image="option.image"
-          :name="option.name"
-          :id="option.id"
-        />
-        {{option.name}}
+        <div
+          class="custom-select__option"
+          v-for="option in filteredOption"
+          :key="option.id"
+          @click="$emit('input', option)"
+        >
+          <EntityImage
+            class="custom-select__option-image"
+            :image="option.image"
+            :name="option.name"
+            :id="option.id"
+          />
+          {{option.name}}
+        </div>
       </div>
-    </div>
+    </transition>
   </fieldset>
 </template>
 
@@ -103,6 +105,7 @@ export default {
 
     &__select {
       position: relative;
+      z-index: 1;
     }
 
     &__expand-icon {
@@ -123,6 +126,23 @@ export default {
       border-top: none;
       border-bottom-right-radius: 3px;
       border-bottom-left-radius: 3px;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
+      transition: transform 150ms cubic-bezier(.37, -0.19, .42, 1.39);
+      will-change: transform;
+
+      &.options-appear-leave-active {
+        transition: none;
+      }
+
+      &.options-appear-enter,
+      &.options-appear-leave-to {
+        transform: translateY(-10px);
+      }
+
+      &.options-appear-enter-to,
+      &.options-appear-leave {
+        transform: none;
+      }
     }
 
     &__option, &__select {
@@ -147,6 +167,10 @@ export default {
       &:hover {
         background-color: var(--color-bg-sidebar);
       }
+    }
+
+    &--opened &__expand-icon {
+      transform: rotate(180deg) translateY(50%);
     }
 
     &__option-image {
