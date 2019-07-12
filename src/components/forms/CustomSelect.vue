@@ -136,7 +136,7 @@ export default {
     }
 
     &--opened &__select {
-      border-bottom: none;
+      border-bottom: 1px solid transparent;
       border-bottom-right-radius: unset;
       border-bottom-left-radius: unset;
     }
