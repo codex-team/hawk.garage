@@ -18,7 +18,7 @@
         :id="value.id"
       />
       {{value.name}}
-      <Icon class="custom-select__expand-icon" symbol="expand"/>
+      <Icon class="custom-select__expand-icon" symbol="arrow-down"/>
     </div>
     <transition name="options-appear">
       <div
