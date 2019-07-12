@@ -1,8 +1,8 @@
 <template>
   <fieldset
     class="custom-select"
-    :class="{'custom-select--opened': showDropDown}"
-    @click="showDropDown = !showDropDown"
+    :class="{'custom-select--opened': isOpened}"
+    @click="isOpened = !isOpened"
     v-click-outside="close"
   >
     <label class="custom-select__label">
@@ -23,7 +23,7 @@
     <transition name="options-appear">
       <div
         class="custom-select__options-wrapper"
-        v-show="showDropDown"
+        v-show="isOpened"
       >
         <div
           class="custom-select__option"
@@ -63,7 +63,7 @@ export default {
   },
   data() {
     return {
-      showDropDown: false
+      isOpened: false
     };
   },
   methods: {
@@ -71,7 +71,7 @@ export default {
      * Close select
      */
     close() {
-      this.showDropDown = false;
+      this.isOpened = false;
     }
   },
   computed: {
