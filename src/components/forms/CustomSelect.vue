@@ -133,6 +133,7 @@ export default {
       padding: 0 0 0 12px;
       font-size: 14px;
       background-color: var(--color-bg-main);
+      cursor: pointer;
     }
 
     &--opened &__select {
