@@ -5,9 +5,6 @@ module.exports = {
   },
   extends: [
     'codex',
-    'plugin:vue/essential',
-    'plugin:vue/base',
-    'plugin:vue/strongly-recommended',
     'plugin:vue/recommended',
   ],
   rules: {
