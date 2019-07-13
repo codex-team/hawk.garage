@@ -56,7 +56,6 @@ export default {
 <style>
   .project-overview {
     height: 100%;
-    user-select: none;
 
     &__header {
       display: flex;
