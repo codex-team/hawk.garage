@@ -34,7 +34,7 @@ const router = new Router({
             {
               path: 'event/:eventId',
               name: 'event-overview',
-              component: () => import('./components/events/Overview.vue')
+              component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
             }
           ]
         }
