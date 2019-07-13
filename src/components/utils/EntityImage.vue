@@ -23,15 +23,22 @@ export default {
       type: String,
       required: true
     },
+
     /**
      * Entity image URL
      */
-    image: String,
+    image: {
+      type: String,
+      default: null
+    },
 
     /**
      * Entity id for picking default background color (hex string)
      */
-    id: String
+    id: {
+      type: String,
+      default: null
+    }
   },
   computed: {
     /**

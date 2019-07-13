@@ -62,7 +62,10 @@ export default {
       type: Array,
       required: true
     },
-    value: Object,
+    value: {
+      type: Object,
+      default: () => {}
+    },
     label: {
       type: String,
       required: true

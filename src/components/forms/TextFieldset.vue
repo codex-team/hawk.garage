@@ -23,11 +23,26 @@
 export default {
   name: 'FormTextFieldset',
   props: {
-    name: String,
-    label: String,
-    placeholder: String,
-    type: String,
-    value: String
+    name: {
+      type: String,
+      default: null
+    },
+    label: {
+      type: String,
+      default: null
+    },
+    placeholder: {
+      type: String,
+      default: null
+    },
+    type: {
+      type: String,
+      default: 'text'
+    },
+    value: {
+      type: String,
+      default: null
+    }
   }
 };
 </script>

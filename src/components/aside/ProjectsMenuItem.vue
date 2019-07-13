@@ -34,10 +34,10 @@ export default {
     EntityImage
   },
   props: {
-    /**
-     * @type {Project}
-     */
-    project: Object
+    project: {
+      type: Object, // @type {Project}
+      required: true
+    }
   }
 };
 </script>

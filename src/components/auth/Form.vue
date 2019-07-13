@@ -80,15 +80,15 @@ export default {
     },
     message: {
       type: Object,
-      required: false
+      default: null
     },
     altText: {
       type: String,
-      required: false
+      default: null
     },
     altLink: {
       type: String,
-      required: false
+      default: null
     }
   }
 };

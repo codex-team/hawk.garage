@@ -24,7 +24,12 @@ export default {
   components: {
     Badge
   },
-  props: [ 'event' ]
+  props: {
+    event: {
+      type: Object,
+      required: true
+    }
+  }
 };
 </script>
 
