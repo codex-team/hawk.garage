@@ -7,13 +7,16 @@
       <div class="workspace-creation-dialog__description">
         Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.
       </div>
-      <form class="workspace-creation-dialog__form" @submit.prevent="createWorkspace">
+      <form
+        class="workspace-creation-dialog__form"
+        @submit.prevent="createWorkspace"
+      >
         <TextFieldset
+          v-model="name"
           class="workspace-creation-dialog__text-field"
           name="workspaceName"
           type="text"
           label="workspace name"
-          v-model="name"
         />
         <ImageUploader
           class="workspace-creation-dialog__image-uploader"
@@ -36,6 +39,11 @@ import ImageUploader from '../forms/ImageUploader';
 
 export default {
   name: 'WorkspaceCreationDialog',
+  components: {
+    PopupDialog,
+    TextFieldset,
+    ImageUploader
+  },
   data() {
     return {
       name: ''
@@ -57,11 +65,6 @@ export default {
         console.log(e);
       }
     }
-  },
-  components: {
-    PopupDialog,
-    TextFieldset,
-    ImageUploader
   }
 };
 </script>

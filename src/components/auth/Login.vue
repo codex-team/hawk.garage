@@ -3,13 +3,12 @@
     <Form
       class="auth-page__form"
       :fields="fields"
-      :submitText="submitText"
+      :submit-text="submitText"
       :message="message"
-      :altLink="altLink"
-      :altText="altText"
+      :alt-link="altLink"
+      :alt-text="altText"
       @submit="login"
-    >
-    </Form>
+    />
   </div>
 </template>
 
@@ -20,6 +19,9 @@ import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
   name: 'Login',
+  components: {
+    Form
+  },
   mixins: [ offlineErrorMessage ],
   data() {
     return {
@@ -63,9 +65,6 @@ export default {
         };
       }
     }
-  },
-  components: {
-    Form
   }
 };
 </script>

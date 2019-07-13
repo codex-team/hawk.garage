@@ -6,15 +6,18 @@
       />
       <div class="aside__right-column">
         <WorkspaceInfo
-          class="aside__workspace-info"
           v-if="currentWorkspace"
+          class="aside__workspace-info"
           :workspace="currentWorkspace"
           @createProjectButtonClicked="openProjectCreationDialog"
         />
         <SearchField
           class="aside__search-field"
         />
-        <div class="aside__projects-list" v-if="projects">
+        <div
+          v-if="projects"
+          class="aside__projects-list"
+        >
           <ProjectsMenuItem
             v-for="project in projects"
             :key="project.id"
@@ -25,9 +28,12 @@
       </div>
     </aside>
     <div class="app-shell__content">
-      <router-view :key="$route.fullPath"></router-view>
+      <router-view :key="$route.fullPath" />
     </div>
-    <component @close="modalDialog = null" :is="modalDialog"></component>
+    <component
+      :is="modalDialog"
+      @close="modalDialog = null"
+    />
   </div>
 </template>
 
@@ -59,43 +65,6 @@ export default {
       modalDialog: null
     };
   },
-  methods: {
-    /**
-     * Toggles theme (dark/light)
-     */
-    changeTheme() {
-      this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
-    },
-
-    /**
-     * Opens modal window to create new workspace
-     */
-    openWorkspaceCreationDialog() {
-      this.modalDialog = WorkspaceCreationDialog;
-    },
-
-    /**
-     * Opens modal window to create new project
-     */
-    openProjectCreationDialog() {
-      this.modalDialog = ProjectCreationDialog;
-    }
-  },
-
-  /**
-   * Vue hook. Called synchronously after the instance is created
-   */
-  created() {
-    /**
-     * Reset current workspace
-     */
-    this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
-
-    /**
-     * Fetch user data
-     */
-    this.$store.dispatch(FETCH_WORKSPACES);
-  },
   computed: {
     /**
      * @return {Array<Workspace>} - registered workspaces
@@ -120,6 +89,43 @@ export default {
      */
     currentWorkspace() {
       return this.$store.state.workspaces.current;
+    }
+  },
+
+  /**
+   * Vue hook. Called synchronously after the instance is created
+   */
+  created() {
+    /**
+     * Reset current workspace
+     */
+    this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
+
+    /**
+     * Fetch user data
+     */
+    this.$store.dispatch(FETCH_WORKSPACES);
+  },
+  methods: {
+    /**
+     * Toggles theme (dark/light)
+     */
+    changeTheme() {
+      this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
+    },
+
+    /**
+     * Opens modal window to create new workspace
+     */
+    openWorkspaceCreationDialog() {
+      this.modalDialog = WorkspaceCreationDialog;
+    },
+
+    /**
+     * Opens modal window to create new project
+     */
+    openProjectCreationDialog() {
+      this.modalDialog = ProjectCreationDialog;
     }
   }
 };

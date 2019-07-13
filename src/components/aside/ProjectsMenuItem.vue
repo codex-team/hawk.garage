@@ -3,14 +3,14 @@
     class="project-menu-item"
   >
     <EntityImage
+      :id="project.id"
       class="project-menu-item__picture"
       :name="project.name"
-      :id="project.id"
       :image="project.image"
     />
     <div class="project-menu-item__info">
       <div class="project-menu-item__name">
-        {{project.name}}
+        {{ project.name }}
       </div>
       <div class="project-menu-item__last-event">
         Uncaught TypeError: Cannot read property 'activate' of undefined фвцфцвфцвфцв
@@ -19,7 +19,7 @@
     <Badge
       content="343"
       class="project-menu-item__events-number"
-    ></Badge>
+    />
   </div>
 </template>
 
@@ -29,15 +29,15 @@ import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'ProjectsMenuItem',
+  components: {
+    Badge,
+    EntityImage
+  },
   props: {
     /**
      * @type {Project}
      */
     project: Object
-  },
-  components: {
-    Badge,
-    EntityImage
   }
 };
 </script>

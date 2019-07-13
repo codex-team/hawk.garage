@@ -4,25 +4,26 @@
       <div
         class="project-overview__icon"
         :style="{ backgroundImage: `url('${project.image}')` }"
-      ></div>
+      />
       <div class="project-overview__name">
-        {{project.name}}
+        {{ project.name }}
       </div>
-      <Icon class="project-overview__notifications" symbol="bell"/>
+      <Icon
+        class="project-overview__notifications"
+        symbol="bell"
+      />
     </div>
-    <div class="project-overview__chart">
-
-    </div>
+    <div class="project-overview__chart" />
     <div class="project-overview__events">
       <div class="project-overview__date">
         Today
       </div>
       <EventItem
-        class="project-overview__event"
         v-for="event in project.events"
         :key="event.id"
+        class="project-overview__event"
         :event="event"
-      ></EventItem>
+      />
     </div>
   </div>
 </template>
@@ -33,6 +34,10 @@ import Icon from '../utils/Icon';
 
 export default {
   name: 'ProjectOverview',
+  components: {
+    EventItem,
+    Icon
+  },
   data() {
     return {
       events: [
@@ -61,10 +66,6 @@ export default {
 
       return this.$store.getters.project(projectId);
     }
-  },
-  components: {
-    EventItem,
-    Icon
   }
 };
 </script>

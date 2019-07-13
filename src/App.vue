@@ -1,6 +1,9 @@
 <template>
-  <div id="app" :class="[themeClass]">
-    <router-view/>
+  <div
+    id="app"
+    :class="[themeClass]"
+  >
+    <router-view />
   </div>
 </template>
 
@@ -12,7 +15,7 @@ import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 
 export default {
-  name: 'app',
+  name: 'App',
   computed: {
     /**
      * Returns classname according to the theme name

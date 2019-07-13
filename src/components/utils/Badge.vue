@@ -3,7 +3,7 @@
     class="badge"
     :class="{'badge--empty': !content}"
   >
-    {{content | spacedNumber}}
+    {{ content | spacedNumber }}
   </span>
 </template>
 

@@ -6,7 +6,7 @@
       backgroundColor: bgColor
     }"
   >
-    {{!image ? $options.filters.abbreviation(name) : ''}}
+    {{ !image ? $options.filters.abbreviation(name) : '' }}
   </div>
 </template>
 

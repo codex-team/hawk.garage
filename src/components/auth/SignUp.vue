@@ -3,11 +3,10 @@
     <Form
       class="auth-page__form"
       :fields="fields"
-      :submitText="submitText"
+      :submit-text="submitText"
       :message="message"
       @submit="signUp"
-    >
-    </Form>
+    />
   </div>
 </template>
 
@@ -17,6 +16,9 @@ import { SIGN_UP } from '../../store/actions/auth';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
+  components: {
+    Form
+  },
   mixins: [ offlineErrorMessage ],
   data() {
     return {
@@ -50,9 +52,6 @@ export default {
         };
       }
     }
-  },
-  components: {
-    Form
   }
 };
 </script>

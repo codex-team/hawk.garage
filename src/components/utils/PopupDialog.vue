@@ -1,9 +1,15 @@
 <template>
-  <transition name="popup-dialog" appear>
-    <div class="popup-dialog__mask" @click.self="$emit('close')">
+  <transition
+    name="popup-dialog"
+    appear
+  >
+    <div
+      class="popup-dialog__mask"
+      @click.self="$emit('close')"
+    >
       <div class="popup-dialog__wrapper">
         <div class="popup-dialog__container">
-          <slot></slot>
+          <slot />
         </div>
         <CloseButton
           class="popup-dialog__close-button"
