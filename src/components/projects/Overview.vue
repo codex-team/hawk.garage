@@ -22,8 +22,10 @@
         v-for="event in project.events"
         :key="event.id"
         :event="event"
-      ></EventItem>
+        @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"
+      />
     </div>
+    <router-view/>
   </div>
 </template>
 
@@ -33,24 +35,6 @@ import Icon from '../utils/Icon';
 
 export default {
   name: 'ProjectOverview',
-  data() {
-    return {
-      events: [
-        {
-          id: '2342342edwdwed',
-          time: 'now',
-          count: 2342,
-          info: 'Error fetching remote / [ status 0 ] Could not resolve host: detik.com'
-        },
-        {
-          id: '2342342edwdwedqwd',
-          time: '13:51',
-          count: 232,
-          info: 'Uncaught Error: Can not find a Block from this child Node'
-        }
-      ]
-    };
-  },
   computed: {
     /**
      * Current viewed project
