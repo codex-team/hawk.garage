@@ -1,6 +1,6 @@
 <template>
-  <PopupDialog>
-
+  <PopupDialog @close="$router.push({name: 'project-overview', params:{projectId}})">
+    {{event}}
   </PopupDialog>
 </template>
 
