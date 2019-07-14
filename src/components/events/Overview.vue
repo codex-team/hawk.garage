@@ -7,23 +7,25 @@
         <h1 class="event-overview__title">
           {{ event.payload.title }}
         </h1>
-        <div class="event-overview__times">
-          <div class="event-overview__statistics-count">
-            156
+        <div class="event-overview__statistics">
+          <div class="event-overview__times">
+            <div class="event-overview__statistics-count">
+              156
+            </div>
+            times
           </div>
-          times
-        </div>
-        <div class="event-overview__days-repeating">
-          <div class="event-overview__statistics-count">
-            15
+          <div class="event-overview__days-repeating">
+            <div class="event-overview__statistics-count">
+              15
+            </div>
+            days repeating
           </div>
-          days repeating
-        </div>
-        <div class="event-overview__users-affected">
-          <div class="event-overview__statistics-count">
-            3 504
+          <div class="event-overview__users-affected">
+            <div class="event-overview__statistics-count">
+              3 504
+            </div>
+            users affected
           </div>
-          users affected
         </div>
         <div class="event-overview__filename">
           /var/www/alpha.ifmo.su/www/vendor/pavelzotikov/social-covers-generator/src/SocialCoversGenerator/Types/BackgroundImage.php
@@ -60,13 +62,18 @@ export default {
     min-width: 880px;
 
     &__header {
+      display: flex;
+      flex-direction: column;
       padding: 40px 40px 20px 40px;
       text-align: center;
       background-color: #121419;
     }
 
     &__title {
-      margin: 0;
+      flex-basis: 100%;
+      flex-grow: 1;
+      max-width: 650px;
+      margin: 0 auto;
       padding: 30px 0;
       font-weight: bold;
       font-size: 24px;
