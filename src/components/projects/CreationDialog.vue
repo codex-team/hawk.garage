@@ -7,19 +7,22 @@
       <div class="project-creation-dialog__description">
         To start track events from your application, add it as a Project and get an Integration Token.
       </div>
-      <form class="project-creation-dialog__form" @submit.prevent="createProject">
+      <form
+        class="project-creation-dialog__form"
+        @submit.prevent="createProject"
+      >
         <CustomSelect
+          v-model="workspace"
           class="project-creation-dialog__select-workspaces"
           :options="workspaces"
           label="SELECT WORKSPACE"
-          v-model="workspace"
         />
         <TextFieldset
+          v-model="name"
           class="project-creation-dialog__text-field"
           name="projectName"
           type="text"
           label="project name"
-          v-model="name"
         />
         <ImageUploader
           class="project-creation-dialog__image-uploader"
@@ -43,11 +46,25 @@ import CustomSelect from '../forms/CustomSelect';
 
 export default {
   name: 'ProjectCreationDialog',
+  components: {
+    PopupDialog,
+    TextFieldset,
+    ImageUploader,
+    CustomSelect
+  },
   data() {
     return {
       name: '', // project name
       workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0]// project's workspace id
     };
+  },
+  computed: {
+    /**
+     * @return {Array<Workspace>} - registered workspaces
+     */
+    workspaces() {
+      return this.$store.state.workspaces.list;
+    }
   },
   methods: {
     /**
@@ -68,20 +85,6 @@ export default {
         console.log(e);
       }
     }
-  },
-  computed: {
-    /**
-     * @return {Array<Workspace>} - registered workspaces
-     */
-    workspaces() {
-      return this.$store.state.workspaces.list;
-    }
-  },
-  components: {
-    PopupDialog,
-    TextFieldset,
-    ImageUploader,
-    CustomSelect
   }
 };
 </script>

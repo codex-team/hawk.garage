@@ -3,24 +3,30 @@
     <div
       class="sidebar__user-picture"
       @click="$router.push('/settings')"
-    ></div>
+    />
     <hr class="sidebar__delimiter">
     <div class="sidebar__button-create-wrapper">
       <div
         class="sidebar__button-create"
         @click="$emit('createWorkspaceButtonClicked')"
       >
-        <Icon symbol="plus"></Icon>
+        <Icon symbol="plus" />
       </div>
     </div>
     <hr class="sidebar__delimiter">
-    <div class="sidebar__workspaces-menu" v-if="workspaces.length">
-      <transition name="highlight-appearance" appear>
+    <div
+      v-if="workspaces.length"
+      class="sidebar__workspaces-menu"
+    >
+      <transition
+        name="highlight-appearance"
+        appear
+      >
         <div
-          class="sidebar__workspace-highlight"
           v-show="currentWorkspace"
+          class="sidebar__workspace-highlight"
           :style="{'top': highlightPosition}"
-        ></div>
+        />
       </transition>
       <WorkspacesMenuItem
         v-for="workspace in workspaces"
@@ -54,18 +60,6 @@ export default {
       highlightPosition: '0px'
     };
   },
-  methods: {
-    /**
-     * Works when workspace item is clicked
-     * @param {Workspace} workspace - clicked workspace
-     */
-    onWorkspaceItemClick(workspace) {
-      if (this.currentWorkspace && this.currentWorkspace.id === workspace.id) {
-        return this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
-      }
-      this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
-    }
-  },
   computed: {
     /**
      * @return {Array<Workspace>} - registered workspaces
@@ -90,6 +84,18 @@ export default {
       const workspaceItemHeight = 56;
 
       this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + 'px';
+    }
+  },
+  methods: {
+    /**
+     * Works when workspace item is clicked
+     * @param {Workspace} workspace - clicked workspace
+     */
+    onWorkspaceItemClick(workspace) {
+      if (this.currentWorkspace && this.currentWorkspace.id === workspace.id) {
+        return this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
+      }
+      this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
     }
   }
 };

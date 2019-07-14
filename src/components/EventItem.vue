@@ -1,7 +1,7 @@
 <template>
   <div class="event-item">
     <div class="event-item__time">
-      {{event.payload.timestamp | prettyDate}}
+      {{ event.payload.timestamp | prettyDate }}
     </div>
     <div class="event-item__badge-container">
       <Badge
@@ -10,9 +10,9 @@
       />
     </div>
     <div class="event-item__info">
-      {{event.payload.title}}
+      {{ event.payload.title }}
     </div>
-    <div class="event-item__assignee"></div>
+    <div class="event-item__assignee" />
   </div>
 </template>
 
@@ -21,9 +21,14 @@ import Badge from './utils/Badge';
 
 export default {
   name: 'EventItem',
-  props: [ 'event' ],
   components: {
     Badge
+  },
+  props: {
+    event: {
+      type: Object,
+      required: true
+    }
   }
 };
 </script>

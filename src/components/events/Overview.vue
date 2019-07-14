@@ -5,7 +5,7 @@
     <div class="event-overview">
       <div class="event-overview__header">
         <h1 class="event-overview__title">
-          {{event.payload.title}}
+          {{ event.payload.title }}
         </h1>
         <div class="event-overview__times">
           <div class="event-overview__statistics-count">
@@ -29,9 +29,7 @@
           /var/www/alpha.ifmo.su/www/vendor/pavelzotikov/social-covers-generator/src/SocialCoversGenerator/Types/BackgroundImage.php
         </div>
       </div>
-      <div class="event-overview__info">
-
-      </div>
+      <div class="event-overview__info" />
     </div>
   </PopupDialog>
 </template>
@@ -41,6 +39,9 @@ import PopupDialog from '../utils/PopupDialog';
 
 export default {
   name: 'EventOverview',
+  components: {
+    PopupDialog
+  },
   data() {
     const projectId = this.$route.params.projectId;
     const eventId = this.$route.params.eventId;
@@ -50,9 +51,6 @@ export default {
       event,
       projectId
     };
-  },
-  components: {
-    PopupDialog
   }
 };
 </script>

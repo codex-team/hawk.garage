@@ -1,10 +1,10 @@
 <template>
   <EntityImage
+    :id="workspace.id"
     class="workspaces-menu-item"
     :class="{'workspaces-menu-item--active': active}"
     :title="workspace.name"
     :name="workspace.name"
-    :id="workspace.id"
     :image="workspace.image"
   />
 </template>
@@ -14,6 +14,9 @@ import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'WorkspacesMenuItem',
+  components: {
+    EntityImage
+  },
   props: {
     /**
      * @type {workspace}
@@ -27,9 +30,6 @@ export default {
      * @type {Boolean} is item selected
      */
     active: Boolean
-  },
-  components: {
-    EntityImage
   }
 };
 </script>

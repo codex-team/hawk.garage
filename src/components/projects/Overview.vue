@@ -4,28 +4,29 @@
       <div
         class="project-overview__icon"
         :style="{ backgroundImage: `url('${project.image}')` }"
-      ></div>
+      />
       <div class="project-overview__name">
-        {{project.name}}
+        {{ project.name }}
       </div>
-      <Icon class="project-overview__notifications" symbol="bell"/>
+      <Icon
+        class="project-overview__notifications"
+        symbol="bell"
+      />
     </div>
-    <div class="project-overview__chart">
-
-    </div>
+    <div class="project-overview__chart" />
     <div class="project-overview__events">
       <div class="project-overview__date">
         Today
       </div>
       <EventItem
-        class="project-overview__event"
         v-for="event in project.events"
         :key="event.id"
+        class="project-overview__event"
         :event="event"
         @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"
       />
     </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -35,6 +36,28 @@ import Icon from '../utils/Icon';
 
 export default {
   name: 'ProjectOverview',
+  components: {
+    EventItem,
+    Icon
+  },
+  data() {
+    return {
+      events: [
+        {
+          id: '2342342edwdwed',
+          time: 'now',
+          count: 2342,
+          info: 'Error fetching remote / [ status 0 ] Could not resolve host: detik.com'
+        },
+        {
+          id: '2342342edwdwedqwd',
+          time: '13:51',
+          count: 232,
+          info: 'Uncaught Error: Can not find a Block from this child Node'
+        }
+      ]
+    };
+  },
   computed: {
     /**
      * Current viewed project
@@ -45,10 +68,6 @@ export default {
 
       return this.$store.getters.project(projectId);
     }
-  },
-  components: {
-    EventItem,
-    Icon
   }
 };
 </script>

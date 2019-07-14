@@ -3,7 +3,10 @@ module.exports = {
   env: {
     browser: true
   },
-  extends: ['codex', 'plugin:vue/essential'],
+  extends: [
+    'codex',
+    'plugin:vue/recommended',
+  ],
   rules: {
     'prefer-const': ['error', {
       'destructuring': 'all',
