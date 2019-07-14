@@ -1,13 +1,27 @@
 <template>
   <div class="auth-form">
-    <router-link class="auth-form__title" to="/">Hawk</router-link>
-    <div class="auth-form__caption">Time for quality</div>
+    <router-link
+      class="auth-form__title"
+      to="/"
+    >
+      Hawk
+    </router-link>
+    <div class="auth-form__caption">
+      Time for quality
+    </div>
     <div class="auth-form__container">
-      <div class="auth-form__picture"></div>
-      <form class="auth-form__fields-container" @submit.prevent="$emit('submit')">
+      <div class="auth-form__picture" />
+      <form
+        class="auth-form__fields-container"
+        @submit.prevent="$emit('submit')"
+      >
         <div class="auth-form__links">
-          <router-link to="/login">Login</router-link>
-          <router-link to="/sign-up">Sign up</router-link>
+          <router-link to="/login">
+            Login
+          </router-link>
+          <router-link to="/sign-up">
+            Sign up
+          </router-link>
         </div>
         <hr class="auth-form__delimiter">
         <div
@@ -19,12 +33,12 @@
         <TextFieldset
           v-for="(field, index) in fields"
           :key="index"
+          v-model="field.value"
           class="auth-form__section"
           :name="field.name"
           :type="field.type"
           :label="field.label"
           :placeholder="field.placeholder"
-          v-model="field.value"
         />
         <div class="auth-form__action-container">
           <input
@@ -52,6 +66,9 @@ import TextFieldset from '../forms/TextFieldset';
 
 export default {
   name: 'AuthForm',
+  components: {
+    TextFieldset
+  },
   props: {
     fields: {
       type: Array,
@@ -63,19 +80,16 @@ export default {
     },
     message: {
       type: Object,
-      required: false
+      default: null
     },
     altText: {
       type: String,
-      required: false
+      default: null
     },
     altLink: {
       type: String,
-      required: false
+      default: null
     }
-  },
-  components: {
-    TextFieldset
   }
 };
 </script>

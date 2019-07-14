@@ -1,23 +1,23 @@
 <template>
   <div class="workspace-info">
     <EntityImage
+      :id="workspace.id"
       class="workspace-info__image"
       :name="workspace.name"
       :image="workspace.image"
-      :id="workspace.id"
     />
     <div class="workspace-info__wrapper">
       <div class="workspace-info__name">
-        {{workspace.name}}
+        {{ workspace.name }}
       </div>
       <div class="workspace-info__settings-link">
         Workspace settings
       </div>
     </div>
     <Icon
-      @click.native="$emit('createProjectButtonClicked')"
       class="workspace-info__project-creation-button"
       symbol="plus"
+      @click.native="$emit('createProjectButtonClicked')"
     />
   </div>
 </template>
@@ -28,6 +28,10 @@ import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'WorkspaceInfo',
+  components: {
+    EntityImage,
+    Icon
+  },
   props: {
     /**
      * @type {Workspace} workspace whose information should be displayed
@@ -36,10 +40,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    EntityImage,
-    Icon
   }
 };
 </script>

@@ -1,43 +1,46 @@
 <template>
   <fieldset
+    v-click-outside="close"
     class="custom-select"
     :class="{'custom-select--opened': isOpened}"
     @click="isOpened = !isOpened"
-    v-click-outside="close"
   >
     <label class="custom-select__label">
-      {{label}}
+      {{ label }}
     </label>
     <div
       class="input custom-select__select"
     >
       <EntityImage
+        :id="value.id"
         class="custom-select__option-image"
         :image="value.image"
         :name="value.name"
-        :id="value.id"
       />
-      {{value.name}}
-      <Icon class="custom-select__expand-icon" symbol="arrow-down"/>
+      {{ value.name }}
+      <Icon
+        class="custom-select__expand-icon"
+        symbol="arrow-down"
+      />
     </div>
     <transition name="options-appear">
       <div
-        class="custom-select__options-wrapper"
         v-show="isOpened"
+        class="custom-select__options-wrapper"
       >
         <div
-          class="custom-select__option"
           v-for="option in filteredOption"
           :key="option.id"
+          class="custom-select__option"
           @click="$emit('input', option)"
         >
           <EntityImage
+            :id="option.id"
             class="custom-select__option-image"
             :image="option.image"
             :name="option.name"
-            :id="option.id"
           />
-          {{option.name}}
+          {{ option.name }}
         </div>
       </div>
     </transition>
@@ -50,12 +53,19 @@ import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'CustomSelect',
+  components: {
+    EntityImage,
+    Icon
+  },
   props: {
     options: {
       type: Array,
       required: true
     },
-    value: Object,
+    value: {
+      type: Object,
+      default: () => {}
+    },
     label: {
       type: String,
       required: true
@@ -66,6 +76,11 @@ export default {
       isOpened: false
     };
   },
+  computed: {
+    filteredOption() {
+      return this.options.filter(opt => opt !== this.value);
+    }
+  },
   methods: {
     /**
      * Close select
@@ -73,15 +88,6 @@ export default {
     close() {
       this.isOpened = false;
     }
-  },
-  computed: {
-    filteredOption() {
-      return this.options.filter(opt => opt !== this.value);
-    }
-  },
-  components: {
-    EntityImage,
-    Icon
   }
 }
 ;

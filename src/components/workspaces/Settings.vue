@@ -1,8 +1,17 @@
 <template>
   <form class="settings-form">
     <label for="name">Workspace name</label>
-    <input type="text" id="name" v-model="name">
-    <button class="button" @click="deleteWorkspace">Delete workspace</button>
+    <input
+      id="name"
+      v-model="name"
+      type="text"
+    >
+    <button
+      class="button"
+      @click="deleteWorkspace"
+    >
+      Delete workspace
+    </button>
   </form>
 </template>
 

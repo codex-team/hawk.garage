@@ -3,7 +3,7 @@
     <div class="settings-window">
       <div class="settings-window__menu">
         <div class="settings-window__header window-header clearfix">
-          <div class="window-header__logo"></div>
+          <div class="window-header__logo" />
           <div class="window-header__title">
             Hawk
           </div>
@@ -35,7 +35,7 @@
           Log out
         </div>
       </div>
-      <div class="settings-window__content"></div>
+      <div class="settings-window__content" />
     </div>
   </PopupWindow>
 </template>
@@ -46,6 +46,9 @@ import PopupWindow from './utils/PopupWindow';
 
 export default {
   name: 'SettingsWindow',
+  components: {
+    PopupWindow
+  },
   methods: {
     /**
      * Logouts user
@@ -53,9 +56,6 @@ export default {
     logout() {
       this.$store.dispatch(RESET_STORE);
     }
-  },
-  components: {
-    PopupWindow
   }
 };
 </script>

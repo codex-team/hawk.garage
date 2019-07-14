@@ -1,9 +1,12 @@
 <template>
-  <transition name="popup-window" appear>
+  <transition
+    name="popup-window"
+    appear
+  >
     <div class="popup-window">
       <div class="popup-window__container">
         <div class="popup-window__content">
-          <slot></slot>
+          <slot />
         </div>
       </div>
       <CloseButton

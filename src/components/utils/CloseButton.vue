@@ -1,7 +1,15 @@
 <template>
-  <div class="close-button" @click="$emit('close')">
-    <Icon class="close-button__icon" symbol="close"></Icon>
-    <div class="close-button__key">ESC</div>
+  <div
+    class="close-button"
+    @click="$emit('close')"
+  >
+    <Icon
+      class="close-button__icon"
+      symbol="close"
+    />
+    <div class="close-button__key">
+      ESC
+    </div>
   </div>
 </template>
 
