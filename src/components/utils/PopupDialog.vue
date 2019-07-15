@@ -65,7 +65,6 @@ export default {
 
     &__wrapper {
       position: relative;
-      display: flex;
       max-width: 90%;
       background-color: var(--color-bg-second);
       border-radius: 3px;
