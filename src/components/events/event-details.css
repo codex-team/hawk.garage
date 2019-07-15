@@ -7,15 +7,17 @@
     font-size: 12px;
     letter-spacing: 0.15px
   }
+
+  &__content-container {
+    max-width: 100%;
+  }
+
   &__content-block {
+    display: flex;
     width: 100%;
     margin-bottom: 3px;
     background-color: var(--color-bg-main);
     border-radius: 3px;
-  }
-
-  &__container {
-    max-width: 100%;
   }
 
   &__key, &__value {
@@ -23,14 +25,15 @@
   }
 
   &__key {
-    float: left;
-    width: 145px;
+    min-width: 145px;
+    max-width: 145px;
     font-weight: bold;
     font-size: 14px;
   }
 
   &__value {
+    overflow: hidden;
     font-size: 11px;
-    word-wrap:break-word;
+    word-wrap: break-word;
   }
 }

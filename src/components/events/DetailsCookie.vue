@@ -3,11 +3,11 @@
     <h2 class="event-details__header">
       COOKIES
     </h2>
-    <div class="event-details__container">
+    <div class="event-details__content-container">
       <div
         v-for="cookie in cookies"
         :key="cookie.key"
-        class="event-details__content-block clearfix"
+        class="event-details__content-block"
       >
         <div class="event-details__key">
           {{ cookie.key }}
