@@ -41,10 +41,12 @@
       <div class="event-overview__info">
         <DetailsBacktrace
           v-if="event.payload.backtrace"
+          class="event-overview__section"
           :backtrace="event.payload.backtrace"
         />
         <DetailsCookie
           v-if="event.payload.cookies"
+          class="event-overview__section"
           :cookies="event.payload.cookies"
         />
       </div>
@@ -193,10 +195,10 @@ export default {
 
     &__info {
       padding: 30px 20px 0 20px;
+    }
 
-      & > * {
-        margin-bottom: 30px;
-      }
+    &__section {
+      margin-bottom: 30px;
     }
   }
 </style>
