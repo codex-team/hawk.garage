@@ -66,6 +66,7 @@
     justify-content: center;
     overflow: hidden;
     font-size: 11px;
+    font-family: var(--font-monospace);
     word-wrap: break-word;
   }
 }

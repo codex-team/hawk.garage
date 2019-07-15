@@ -141,6 +141,7 @@ export default {
       height: 23px;
       margin: 0 auto;
       padding: 5px 8px 5px 10px;
+      border-radius: 4px;
     }
 
     &__title {
