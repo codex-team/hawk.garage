@@ -62,6 +62,37 @@ export default {
     const eventId = this.$route.params.eventId;
     const event = this.$store.getters.project(projectId).events.find(ev => ev.id === eventId);
 
+    event.payload.backtrace = [
+      {
+        'file': '/root/hawk.workers/tools/nodejs/bomber.js',
+        'line': 59
+      },
+      {
+        'file': '/root/hawk.workers/tools/nodejs/bomber.js',
+        'line': 126
+      },
+      {
+        'file': '/root/hawk.workers/tools/nodejs/bomber.js',
+        'line': 140
+      },
+      { 'file': 'internal/modules/cjs/loader.js', 'line': 776 },
+      {
+        'file': 'internal/modules/cjs/loader.js',
+        'line': 787
+      },
+      { 'file': 'internal/modules/cjs/loader.js', 'line': 653 },
+      {
+        'file': 'internal/modules/cjs/loader.js',
+        'line': 593
+      },
+      { 'file': 'internal/modules/cjs/loader.js', 'line': 585 },
+      {
+        'file': 'internal/modules/cjs/loader.js',
+        'line': 829
+      },
+      { 'file': 'internal/bootstrap/node.js', 'line': 283 }
+    ];
+
     event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
       {

@@ -3,9 +3,9 @@
     <h2 class="event-details__header">
       BACKTRACE
     </h2>
-    <div class="event-details__content-container clearfix">
+    <div class="event-details__content-container">
       <div
-        v-for="bt in backtrace"
+        v-for="bt in filteredBacktrace"
         :key="bt.file + bt.line"
         class="event-details__content-block"
       >
@@ -15,6 +15,13 @@
         <div class="details-backtrace__line">
           line {{ bt.line }}
         </div>
+      </div>
+      <div
+        v-if="backtrace.length > 3 && !isMoreFilesShown"
+        class="event-details__show-more"
+        @click="isMoreFilesShown = true"
+      >
+        {{ backtrace.length - 3 }} more files
       </div>
     </div>
   </div>
@@ -27,6 +34,16 @@ export default {
     backtrace: {
       type: Array,
       required: true
+    }
+  },
+  data() {
+    return {
+      isMoreFilesShown: this.backtrace.length === 4
+    };
+  },
+  computed: {
+    filteredBacktrace() {
+      return this.backtrace.length === 4 || this.isMoreFilesShown ? this.backtrace : this.backtrace.slice(0, 3);
     }
   }
 };
