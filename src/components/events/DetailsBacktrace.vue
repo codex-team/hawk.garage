@@ -17,7 +17,7 @@
         </div>
       </div>
       <div
-        v-if="backtrace.length > 3"
+        v-if="backtrace.length !== 4 && backtrace.length > 3"
         class="event-details__expand"
         @click="isMoreFilesShown = !isMoreFilesShown"
       >
@@ -47,10 +47,16 @@ export default {
   },
   data() {
     return {
-      isMoreFilesShown: this.backtrace.length === 4
+      /**
+       * Is block expanded.
+       */
+      isMoreFilesShown: false
     };
   },
   computed: {
+    /**
+     * Displayed backtrace items
+     */
     filteredBacktrace() {
       return this.backtrace.length === 4 || this.isMoreFilesShown ? this.backtrace : this.backtrace.slice(0, 3);
     }

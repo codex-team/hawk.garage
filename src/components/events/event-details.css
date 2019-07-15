@@ -13,6 +13,7 @@
   }
 
   &__content-block, &__expand {
+    display: flex;
     width: 100%;
     padding: 7px 10px;
     background-color: var(--color-bg-main);
@@ -20,7 +21,6 @@
   }
 
   &__content-block {
-    display: flex;
     margin-bottom: 3px;
 
     &:first-child {
@@ -35,7 +35,6 @@
   }
 
   &__expand {
-    display: flex;
     align-items: center;
     height: 36px;
     color: var(--color-text-second);
@@ -50,12 +49,10 @@
   }
 
   &__expand-icon {
-    display: inline;
     width: 15px;
     height: 3px;
     margin-right: 10px;
     margin-left: 5px;
-    vertical-align: baseline;
   }
 
   &__key {
