@@ -8,9 +8,7 @@
       @click.self="$emit('close')"
     >
       <div class="popup-dialog__wrapper">
-        <div class="popup-dialog__container">
-          <slot />
-        </div>
+        <slot />
         <CloseButton
           class="popup-dialog__close-button"
           @close="$emit('close')"
@@ -32,6 +30,8 @@ export default {
 </script>
 
 <style>
+  @import '../../styles/custom-properties.css';
+
   .popup-dialog {
     &-enter-active, &-leave-active {
       transition: all 150ms ease-in;
@@ -55,25 +55,22 @@ export default {
       left: 0;
       z-index: 9998;
       display: flex;
-      align-items: center;
       justify-content: center;
       width: 100%;
       height: 100%;
       padding: 50px;
+      overflow-y: auto;
       background-color: rgba(0, 0, 0, .6);
+      @apply --hide-scrollbar;
     }
 
     &__wrapper {
       position: relative;
       max-width: 90%;
+      margin: auto 0;
       background-color: var(--color-bg-second);
       border-radius: 3px;
       box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
-    }
-
-    &__container {
-      width: 100%;
-      margin: auto;
     }
 
     &__close-button {
