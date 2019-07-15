@@ -14,25 +14,23 @@
           {{ event.payload.title }}
         </h1>
         <div class="event-overview__statistics">
-          <div class="event-overview__statistics-container" style="position:relative;">
-            <div class="event-overview__times">
-              <div class="event-overview__statistics-count">
-                156
-              </div>
-              times
+          <div class="event-overview__times">
+            <div class="event-overview__statistics-count">
+              156
             </div>
-            <div class="event-overview__days-repeating">
-              <div class="event-overview__statistics-count">
-                15
-              </div>
-              days repeating
+            times
+          </div>
+          <div class="event-overview__days-repeating">
+            <div class="event-overview__statistics-count">
+              15
             </div>
-            <div class="event-overview__users-affected">
-              <div class="event-overview__statistics-count">
-                3 504
-              </div>
-              users affected
+            days repeating
+          </div>
+          <div class="event-overview__users-affected">
+            <div class="event-overview__statistics-count">
+              3 504
             </div>
+            users affected
           </div>
         </div>
         <div class="event-overview__filename">
@@ -133,6 +131,7 @@ export default {
     &__header {
       display: flex;
       flex-direction: column;
+      justify-content: center;
       padding: 40px 40px 20px 40px;
       text-align: center;
       background-color: #121419;
@@ -158,8 +157,8 @@ export default {
     }
 
     &__statistics {
-      display: flex;
-      justify-content: center;
+      position:relative;
+      margin: 0 auto;
     }
 
     &__times{
@@ -187,6 +186,7 @@ export default {
     }
 
     &__statistics-count {
+      margin-bottom: 4px;
       font-weight: bold;
       font-size: 20px;
       font-style: normal;
