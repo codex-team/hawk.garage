@@ -35,6 +35,9 @@ export default {
     DetailsBase
   },
   props: {
+    /**
+     * Event backtrace to show
+     */
     backtrace: {
       type: Array,
       required: true

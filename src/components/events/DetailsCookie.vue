@@ -36,6 +36,9 @@ export default {
     DetailsBase
   },
   props: {
+    /**
+     * Cookies to show
+     */
     cookies: {
       type: Array,
       required: true
@@ -43,16 +46,30 @@ export default {
   },
   data() {
     return {
+      /**
+       * Is all cookies shown
+       */
       isUninterestedShown: false
     };
   },
   computed: {
+    /**
+     * Cookies to display
+     */
     filteredCookies() {
       return this.cookies.filter(c => this.isUninterestedShown || !c.uninterested);
     },
+
+    /**
+     * Array of uninterested cookies
+     */
     uninterestedCookies() {
       return this.cookies.filter(c => c.uninterested);
     },
+
+    /**
+     * Text for expand button
+     */
     expandButtonText() {
       if (this.isUninterestedShown) return 'Hide';
       switch (this.uninterestedCookies.length) {
