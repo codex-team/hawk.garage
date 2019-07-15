@@ -14,23 +14,25 @@
           {{ event.payload.title }}
         </h1>
         <div class="event-overview__statistics">
-          <div class="event-overview__times">
-            <div class="event-overview__statistics-count">
-              156
+          <div class="event-overview__statistics-container" style="position:relative;">
+            <div class="event-overview__times">
+              <div class="event-overview__statistics-count">
+                156
+              </div>
+              times
             </div>
-            times
-          </div>
-          <div class="event-overview__days-repeating">
-            <div class="event-overview__statistics-count">
-              15
+            <div class="event-overview__days-repeating">
+              <div class="event-overview__statistics-count">
+                15
+              </div>
+              days repeating
             </div>
-            days repeating
-          </div>
-          <div class="event-overview__users-affected">
-            <div class="event-overview__statistics-count">
-              3 504
+            <div class="event-overview__users-affected">
+              <div class="event-overview__statistics-count">
+                3 504
+              </div>
+              users affected
             </div>
-            users affected
           </div>
         </div>
         <div class="event-overview__filename">
@@ -155,6 +157,26 @@ export default {
       line-height: 1.25;
     }
 
+    &__statistics {
+      display: flex;
+      justify-content: center;
+    }
+
+    &__times{
+      left: -60px;
+      transform: translateX(-100%);
+    }
+
+    &__users-affected {
+      right: -60px;
+      transform: translateX(100%);
+    }
+
+    &__times,
+    &__users-affected {
+      position: absolute;
+    }
+
     &__times,
     &__days-repeating,
     &__users-affected {
@@ -169,10 +191,6 @@ export default {
       font-size: 20px;
       font-style: normal;
       letter-spacing: -0.45px;
-    }
-
-    &__days-repeating {
-      margin: 0 60px;
     }
 
     &__filename {

@@ -35,9 +35,9 @@
   }
 
   &__expand {
-    height: 36px;
     display: flex;
     align-items: center;
+    height: 36px;
     color: var(--color-text-second);
     font-size: 13px;
     border-bottom-right-radius: 10px;
