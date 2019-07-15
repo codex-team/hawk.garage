@@ -163,7 +163,8 @@ export default {
       width: 100%;
       margin-top: 30px;
       font-size: 11px;
-      font-family: Monaco, sans-serif;
+      font-family: var(--font-monospace);
+      line-height: 1.4;
       opacity: 0.3;
     }
 

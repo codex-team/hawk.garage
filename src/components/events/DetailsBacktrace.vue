@@ -62,7 +62,8 @@ export default {
   .details-backtrace {
     &__filename, &__line {
       color: var(--color-text-second);
-      font-family: Monaco, sans-serif;
+      font-size: 12px;
+      font-family: var(--font-monospace);
     }
 
     &__filename {

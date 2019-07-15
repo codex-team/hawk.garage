@@ -46,11 +46,11 @@
 
   &__show-more-icon {
     display: inline;
+    width: 15px;
+    height: 3px;
     margin-right: 10px;
     margin-left: 5px;
     vertical-align: baseline;
-    width: 15px;
-    height: 3px;
   }
 
   &__key {

@@ -14,6 +14,9 @@
   --border-radius: 10px;
 
   --color-border-input: #1f2230;
+
+  --font-monospace: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+
 }
 
 .app--theme--light{
