@@ -16,18 +16,19 @@
           {{ cookie.value }}
         </div>
       </div>
+      <!--  eslint-disable vue/no-v-html-->
       <div
         v-if="!isUninterestedShown && uninterestedCookies.length"
         class="event-details__show-more"
         @click="isUninterestedShown = true"
-      >
-        {{ showMoreText }}
-      </div>
+        v-html="showMoreText"
+      />
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'DetailsCookie',
   props: {
@@ -53,12 +54,12 @@ export default {
         case 0:
           return;
         case 1:
-          return `Show ${this.uninterestedCookies[0].key}`;
+          return `Show <b>${this.uninterestedCookies[0].key}</b>`;
         case 2:
-          return `Show ${this.uninterestedCookies[0].key} and ${this.uninterestedCookies[1].key} cookies`;
+          return `Show <b>${this.uninterestedCookies[0].key}</b> and <b>${this.uninterestedCookies[1].key}</b> cookies`;
       }
 
-      return `Show ${this.uninterestedCookies[0].key}, ${this.uninterestedCookies[1].key} and other uninterested cookies`;
+      return `Show <b>${this.uninterestedCookies[0].key}</b>, <b>${this.uninterestedCookies[1].key}</b> and other uninterested cookies`;
     }
   }
 };

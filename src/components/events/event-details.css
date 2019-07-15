@@ -1,6 +1,4 @@
 .event-details {
-  margin-top: 30px;
-
   &__header {
     color: var(--color-text-second);
     font-weight: bold;
@@ -10,10 +8,10 @@
 
   &__content-container {
     max-width: 100%;
+    line-height: 1.91;
   }
 
   &__content-block, &__show-more {
-    display: flex;
     width: 100%;
     margin-bottom: 3px;
     padding: 10px;
@@ -22,6 +20,8 @@
   }
 
   &__content-block {
+    display: flex;
+
     &:first-child {
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
@@ -34,8 +34,11 @@
   }
 
   &__show-more {
+    color: var(--color-text-second);
+    font-size: 13px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
+    cursor: pointer;
   }
 
   &__key {
@@ -51,7 +54,6 @@
     justify-content: center;
     overflow: hidden;
     font-size: 11px;
-    line-height: 1.91;
     word-wrap: break-word;
   }
 }
