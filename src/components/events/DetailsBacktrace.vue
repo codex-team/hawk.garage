@@ -1,9 +1,12 @@
 <template>
-  <div class="event-details details-backtrace">
-    <h2 class="event-details__header">
+  <DetailsBase
+    :expand-showed="backtrace.length !== 4 && backtrace.length > 3"
+    @expandClicked="isMoreFilesShown = !isMoreFilesShown"
+  >
+    <template #header>
       BACKTRACE
-    </h2>
-    <div class="event-details__content-container">
+    </template>
+    <template #content>
       <div
         v-for="bt in filteredBacktrace"
         :key="bt.file + bt.line"
@@ -16,28 +19,20 @@
           line {{ bt.line }}
         </div>
       </div>
-      <div
-        v-if="backtrace.length !== 4 && backtrace.length > 3"
-        class="event-details__expand"
-        @click="isMoreFilesShown = !isMoreFilesShown"
-      >
-        <Icon
-          class="event-details__expand-icon"
-          symbol="dots"
-        />
-        {{ isMoreFilesShown? 'Hide':`${backtrace.length - 3} more files` }}
-      </div>
-    </div>
-  </div>
+    </template>
+    <template #expandButton>
+      {{ isMoreFilesShown? 'Hide':`${backtrace.length - 3} more files` }}
+    </template>
+  </DetailsBase>
 </template>
 
 <script>
-import Icon from '../utils/Icon';
+import DetailsBase from './DetailsBase';
 
 export default {
   name: 'DetailsBacktrace',
   components: {
-    Icon
+    DetailsBase
   },
   props: {
     backtrace: {

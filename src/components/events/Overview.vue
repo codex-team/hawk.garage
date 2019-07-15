@@ -90,8 +90,6 @@ export default {
 };
 </script>
 
-<style src="./event-details.css"></style>
-
 <style>
   .event-overview {
 

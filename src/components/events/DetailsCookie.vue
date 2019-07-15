@@ -1,9 +1,12 @@
 <template>
-  <div class="event-details">
-    <h2 class="event-details__header">
-      COOKIES
-    </h2>
-    <div class="event-details__content-container">
+  <DetailsBase
+    :expand-showed="uninterestedCookies.length"
+    @expandClicked="isUninterestedShown = !isUninterestedShown"
+  >
+    <template #header>
+      BACKTRACE
+    </template>
+    <template #content>
       <div
         v-for="cookie in filteredCookies"
         :key="cookie.key"
@@ -16,29 +19,21 @@
           {{ cookie.value }}
         </div>
       </div>
-      <div
-        v-if="uninterestedCookies.length"
-        class="event-details__expand"
-        @click="isUninterestedShown = !isUninterestedShown"
-      >
-        <Icon
-          class="event-details__expand-icon"
-          symbol="dots"
-        />
-        <!--  eslint-disable vue/no-v-html-->
-        <div v-html="expandButtonText" />
-      </div>
-    </div>
-  </div>
+    </template>
+    <template #expandButton>
+      <!--eslint-disable vue/no-v-html-->
+      <div v-html="expandButtonText" />
+    </template>
+  </DetailsBase>
 </template>
 
 <script>
-import Icon from '../utils/Icon';
+import DetailsBase from './DetailsBase';
 
 export default {
   name: 'DetailsCookie',
   components: {
-    Icon
+    DetailsBase
   },
   props: {
     cookies: {
