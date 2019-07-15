@@ -25,7 +25,7 @@
           class="event-details__expand-icon"
           symbol="dots"
         />
-        {{ isMoreFilesShown? 'hide':`${backtrace.length - 3} more files` }}
+        {{ isMoreFilesShown? 'Hide':`${backtrace.length - 3} more files` }}
       </div>
     </div>
   </div>
