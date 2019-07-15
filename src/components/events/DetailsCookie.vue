@@ -30,6 +30,9 @@
 <script>
 import DetailsBase from './DetailsBase';
 
+/**
+ * @type {string[]} Cookie keys to be marked as uninteresting
+ */
 const uninterestedCookieKeys = ['_ym_id', '_ga'];
 
 export default {
