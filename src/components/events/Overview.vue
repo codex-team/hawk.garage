@@ -31,23 +31,39 @@
           /var/www/alpha.ifmo.su/www/vendor/pavelzotikov/social-covers-generator/src/SocialCoversGenerator/Types/BackgroundImage.php
         </div>
       </div>
-      <div class="event-overview__info" />
+      <div class="event-overview__info">
+        <DetailsCookie
+          v-if="event.cookies"
+          :cookies="event.cookies"
+        />
+      </div>
     </div>
   </PopupDialog>
 </template>
 
 <script>
 import PopupDialog from '../utils/PopupDialog';
+import DetailsCookie from './DetailsCookie';
 
 export default {
   name: 'EventOverview',
   components: {
-    PopupDialog
+    PopupDialog,
+    DetailsCookie
   },
   data() {
     const projectId = this.$route.params.projectId;
     const eventId = this.$route.params.eventId;
     const event = this.$store.getters.project(projectId).events.find(ev => ev.id === eventId);
+
+    event.cookies = [
+      { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
+      {
+        key: 'auth_token',
+        value: '85fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d178655ed9edfb252fba3d72485fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d178655ed9edfb252fba3d72485fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d…'
+      },
+      { key: 'SIDCC', value: 'AN0-TYujb2wn-aCaJlABxCr33fkyJlZ31TAjxVYjZAa7SAsrTES16WEz_hT2Fz-1Sfqkm2iyWQY' }
+    ];
 
     return {
       event,
@@ -57,9 +73,10 @@ export default {
 };
 </script>
 
+<style src="./event-details.css"></style>
+
 <style>
   .event-overview {
-    min-width: 880px;
 
     &__header {
       display: flex;
@@ -106,6 +123,10 @@ export default {
       font-size: 11px;
       font-family: Monaco, sans-serif;
       opacity: 0.3;
+    }
+
+    &__info {
+      padding: 0 20px;
     }
   }
 </style>

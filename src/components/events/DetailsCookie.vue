@@ -1,0 +1,33 @@
+<template>
+  <div class="event-details">
+    <h2 class="event-details__header">
+      COOKIES
+    </h2>
+    <div class="event-details__container">
+      <div
+        v-for="cookie in cookies"
+        :key="cookie.key"
+        class="event-details__content-block clearfix"
+      >
+        <div class="event-details__key">
+          {{ cookie.key }}
+        </div>
+        <div class="event-details__value">
+          {{ cookie.value }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'DetailsCookie',
+  props: {
+    cookies: {
+      type: Array,
+      required: true
+    }
+  }
+};
+</script>
