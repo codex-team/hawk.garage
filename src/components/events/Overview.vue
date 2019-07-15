@@ -32,9 +32,13 @@
         </div>
       </div>
       <div class="event-overview__info">
+        <DetailsBacktrace
+          v-if="event.payload.backtrace"
+          :backtrace="event.payload.backtrace"
+        />
         <DetailsCookie
-          v-if="event.cookies"
-          :cookies="event.cookies"
+          v-if="event.payload.cookies"
+          :cookies="event.payload.cookies"
         />
       </div>
     </div>
@@ -44,19 +48,21 @@
 <script>
 import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
+import DetailsBacktrace from './DetailsBacktrace';
 
 export default {
   name: 'EventOverview',
   components: {
     PopupDialog,
-    DetailsCookie
+    DetailsCookie,
+    DetailsBacktrace
   },
   data() {
     const projectId = this.$route.params.projectId;
     const eventId = this.$route.params.eventId;
     const event = this.$store.getters.project(projectId).events.find(ev => ev.id === eventId);
 
-    event.cookies = [
+    event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
       {
         key: 'auth_token',

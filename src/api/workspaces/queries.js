@@ -17,6 +17,14 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         payload {
           title
           timestamp
+          backtrace {
+            file
+            line
+            sourceCode {
+              line
+              content
+            }
+          }
         }
       }
     }

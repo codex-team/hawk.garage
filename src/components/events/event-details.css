@@ -1,9 +1,10 @@
 .event-details {
   &__header {
+    margin: 0 0 10px 0;
     color: var(--color-text-second);
     font-weight: bold;
     font-size: 12px;
-    letter-spacing: 0.15px
+    letter-spacing: 0.15px;
   }
 
   &__content-container {
