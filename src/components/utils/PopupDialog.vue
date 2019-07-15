@@ -1,6 +1,6 @@
 <template>
   <transition
-    name="popup-dialog"
+    name="popup-dialog-animation"
     appear
   >
     <div
@@ -33,18 +33,20 @@ export default {
   @import '../../styles/custom-properties.css';
 
   .popup-dialog {
-    &-enter-active, &-leave-active {
-      transition: all 150ms ease-in;
-    }
+    &-animation {
+      &-enter-active, &-leave-active {
+        transition: all 150ms ease-in;
+      }
 
-    &-enter, &-leave-to {
-      transform: scale(1.05);
-      opacity: 0;
-    }
+      &-enter, &-leave-to {
+        transform: scale(1.05);
+        opacity: 0;
+      }
 
-    &-enter-to, &-leave {
-      transform: none;
-      opacity: 1;
+      &-enter-to, &-leave {
+        transform: none;
+        opacity: 1;
+      }
     }
 
     &__mask {

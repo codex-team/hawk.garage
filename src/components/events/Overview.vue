@@ -1,8 +1,9 @@
 <template>
   <PopupDialog
+    class="event-overview"
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
-    <div class="event-overview">
+    <div class="event-overview__container">
       <div class="event-overview__header">
         <Badge
           class="event-overview__badge"
@@ -126,7 +127,29 @@ export default {
 
 <style>
   .event-overview {
-    max-width: 850px;
+
+    &.popup-dialog {
+      &-animation-enter-active {
+        transition: all 150ms ease;
+      }
+
+      &-animation-enter {
+        transform: scale(1.02);
+        opacity: 1;
+      }
+
+      &-animation-enter-to {
+        transform: none;
+      }
+
+      &-animation-leave-active {
+        transition: none;
+      }
+    }
+
+    &__container {
+      max-width: 850px;
+    }
 
     &__header {
       display: flex;
