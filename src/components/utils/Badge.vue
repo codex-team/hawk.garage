@@ -1,7 +1,10 @@
 <template>
   <span
     class="badge"
-    :class="[{ 'badge--empty': !content }, `badge--${type}`]"
+    :class="[
+      { 'badge--empty': !content },
+      `badge--${type}`
+    ]"
   >
     <Icon
       v-if="withIcon"
@@ -28,10 +31,18 @@ export default {
       type: [String, Number],
       required: true
     },
+
+    /**
+     * Badge type (default, critical or medium)
+     */
     type: {
-      type: String, // default, critical or medium
+      type: String,
       default: 'default'
     },
+
+    /**
+     * Will icon show or not
+     */
     withIcon: {
       type: Boolean,
       default: false
