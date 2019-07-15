@@ -12,13 +12,16 @@
     max-width: 100%;
   }
 
-  &__content-block {
+  &__content-block, &__show-more {
     display: flex;
     width: 100%;
     margin-bottom: 3px;
+    padding: 10px;
     background-color: var(--color-bg-main);
     border-radius: 3px;
+  }
 
+  &__content-block {
     &--first {
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
@@ -30,8 +33,9 @@
     }
   }
 
-  &__key, &__value {
-    padding: 10px;
+  &__show-more {
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
 
   &__key {

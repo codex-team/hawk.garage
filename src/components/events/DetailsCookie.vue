@@ -5,12 +5,12 @@
     </h2>
     <div class="event-details__content-container">
       <div
-        v-for="(cookie, index) in cookies"
+        v-for="(cookie, index) in filteredCookies"
         :key="cookie.key"
         class="event-details__content-block"
         :class="{
           'event-details__content-block--first': index === 0,
-          'event-details__content-block--last': index === cookies.length - 1
+          'event-details__content-block--last': (isUninterestedShown || !uninterestedCookies.length) && (index === filteredCookies.length - 1)
         }"
       >
         <div class="event-details__key">
@@ -19,6 +19,13 @@
         <div class="event-details__value">
           {{ cookie.value }}
         </div>
+      </div>
+      <div
+        v-if="!isUninterestedShown && uninterestedCookies.length"
+        class="event-details__show-more"
+        @click="isUninterestedShown = true"
+      >
+        {{ showMoreText }}
       </div>
     </div>
   </div>
@@ -31,6 +38,31 @@ export default {
     cookies: {
       type: Array,
       required: true
+    }
+  },
+  data() {
+    return {
+      isUninterestedShown: false
+    };
+  },
+  computed: {
+    filteredCookies() {
+      return this.cookies.filter(c => this.isUninterestedShown || !c.uninterested);
+    },
+    uninterestedCookies() {
+      return this.cookies.filter(c => c.uninterested);
+    },
+    showMoreText() {
+      switch (this.uninterestedCookies.length) {
+        case 0:
+          return;
+        case 1:
+          return `Show ${this.uninterestedCookies[0].key}`;
+        case 2:
+          return `Show ${this.uninterestedCookies[0].key} and ${this.uninterestedCookies[1].key} cookies`;
+      }
+
+      return `Show ${this.uninterestedCookies[0].key}, ${this.uninterestedCookies[1].key} and other uninterested cookies`;
     }
   }
 };
