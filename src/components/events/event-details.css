@@ -42,6 +42,9 @@
   }
 
   &__value {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     overflow: hidden;
     font-size: 11px;
     word-wrap: break-word;
