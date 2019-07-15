@@ -3,6 +3,7 @@
     <use :xlink:href="`#${symbol}`" />
   </svg>
 </template>
+
 <script>
 export default {
   name: 'Icon',

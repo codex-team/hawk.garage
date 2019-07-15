@@ -28,7 +28,7 @@
       </div>
     </aside>
     <div class="app-shell__content">
-      <router-view/>
+      <router-view />
     </div>
     <component
       :is="modalDialog"

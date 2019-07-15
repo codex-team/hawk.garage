@@ -41,12 +41,12 @@ const router = new Router({
       ]
     },
     {
-      path: 'sign-up',
+      path: '/sign-up',
       name: 'sign-up',
       component: SignUp
     },
     {
-      path: 'login',
+      path: '/login',
       name: 'login',
       component: Login
     }
