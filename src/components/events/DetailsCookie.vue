@@ -17,16 +17,16 @@
         </div>
       </div>
       <div
-        v-if="!isUninterestedShown && uninterestedCookies.length"
-        class="event-details__show-more"
-        @click="isUninterestedShown = true"
+        v-if="uninterestedCookies.length"
+        class="event-details__expand"
+        @click="isUninterestedShown = !isUninterestedShown"
       >
         <Icon
-          class="event-details__show-more-icon"
+          class="event-details__expand-icon"
           symbol="dots"
         />
         <!--  eslint-disable vue/no-v-html-->
-        <div v-html="showMoreText" />
+        <div v-html="expandButtonText" />
       </div>
     </div>
   </div>
@@ -58,7 +58,8 @@ export default {
     uninterestedCookies() {
       return this.cookies.filter(c => c.uninterested);
     },
-    showMoreText() {
+    expandButtonText() {
+      if (this.isUninterestedShown) return 'Hide';
       switch (this.uninterestedCookies.length) {
         case 0:
           return;

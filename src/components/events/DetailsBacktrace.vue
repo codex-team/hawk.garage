@@ -17,15 +17,15 @@
         </div>
       </div>
       <div
-        v-if="backtrace.length > 3 && !isMoreFilesShown"
-        class="event-details__show-more"
-        @click="isMoreFilesShown = true"
+        v-if="backtrace.length > 3"
+        class="event-details__expand"
+        @click="isMoreFilesShown = !isMoreFilesShown"
       >
         <Icon
-          class="event-details__show-more-icon"
+          class="event-details__expand-icon"
           symbol="dots"
         />
-        {{ backtrace.length - 3 }} more files
+        {{ isMoreFilesShown? 'hide':`${backtrace.length - 3} more files` }}
       </div>
     </div>
   </div>
