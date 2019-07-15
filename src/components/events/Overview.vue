@@ -4,6 +4,12 @@
   >
     <div class="event-overview">
       <div class="event-overview__header">
+        <Badge
+          class="event-overview__badge"
+          with-icon
+          type="critical"
+          content="FATAL ERROR"
+        />
         <h1 class="event-overview__title">
           {{ event.payload.title }}
         </h1>
@@ -49,13 +55,15 @@
 import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
+import Badge from '../utils/Badge';
 
 export default {
   name: 'EventOverview',
   components: {
     PopupDialog,
     DetailsCookie,
-    DetailsBacktrace
+    DetailsBacktrace,
+    Badge
   },
   data() {
     const projectId = this.$route.params.projectId;
@@ -126,6 +134,13 @@ export default {
       padding: 40px 40px 20px 40px;
       text-align: center;
       background-color: #121419;
+    }
+
+    &__badge {
+      display: inline-flex;
+      height: 23px;
+      margin: 0 auto;
+      padding: 5px 8px 5px 10px;
     }
 
     &__title {

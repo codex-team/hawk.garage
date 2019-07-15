@@ -1,15 +1,25 @@
 <template>
   <span
     class="badge"
-    :class="{'badge--empty': !content}"
+    :class="[{ 'badge--empty': !content }, `badge--${type}`]"
   >
+    <Icon
+      v-if="withIcon"
+      class="badge__icon"
+      symbol="flash"
+    />
     {{ content | spacedNumber }}
   </span>
 </template>
 
 <script>
+import Icon from './Icon';
+
 export default {
   name: 'Badge',
+  components: {
+    Icon
+  },
   props: {
     /**
      * Badge content
@@ -17,6 +27,14 @@ export default {
     content: {
       type: [String, Number],
       required: true
+    },
+    type: {
+      type: String, // default, critical or medium
+      default: 'default'
+    },
+    withIcon: {
+      type: Boolean,
+      default: false
     }
   }
 };
@@ -24,6 +42,7 @@ export default {
 
 <style>
   .badge {
+    display: inline-flex;
     height: 20px;
     padding: 4px 7px 3px 7px;
     color: var(--color-text-main);
@@ -36,6 +55,17 @@ export default {
 
     &--empty {
       display: none;
+    }
+
+    &--critical {
+      background-color: var(--color-indicator-critical);
+    }
+
+    &__icon {
+      display: inline;
+      width: 7px;
+      height: 100%;
+      margin-right: 8px;
     }
   }
 </style>
