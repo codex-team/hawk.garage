@@ -35,11 +35,22 @@
   }
 
   &__show-more {
+    display: flex;
+    align-items: center;
     color: var(--color-text-second);
     font-size: 13px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     cursor: pointer;
+  }
+
+  &__show-more-icon {
+    display: inline;
+    margin-right: 10px;
+    margin-left: 5px;
+    vertical-align: baseline;
+    width: 15px;
+    height: 3px;
   }
 
   &__key {

@@ -21,6 +21,10 @@
         class="event-details__show-more"
         @click="isMoreFilesShown = true"
       >
+        <Icon
+          class="event-details__show-more-icon"
+          symbol="dots"
+        />
         {{ backtrace.length - 3 }} more files
       </div>
     </div>
@@ -28,8 +32,13 @@
 </template>
 
 <script>
+import Icon from '../utils/Icon';
+
 export default {
   name: 'DetailsBacktrace',
+  components: {
+    Icon
+  },
   props: {
     backtrace: {
       type: Array,

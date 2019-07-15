@@ -16,21 +16,30 @@
           {{ cookie.value }}
         </div>
       </div>
-      <!--  eslint-disable vue/no-v-html-->
       <div
         v-if="!isUninterestedShown && uninterestedCookies.length"
         class="event-details__show-more"
         @click="isUninterestedShown = true"
-        v-html="showMoreText"
-      />
+      >
+        <Icon
+          class="event-details__show-more-icon"
+          symbol="dots"
+        />
+        <!--  eslint-disable vue/no-v-html-->
+        <div v-html="showMoreText" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Icon from '../utils/Icon';
 
 export default {
   name: 'DetailsCookie',
+  components: {
+    Icon
+  },
   props: {
     cookies: {
       type: Array,
