@@ -29,6 +29,9 @@ export default {
     Icon
   },
   props: {
+    /**
+     * Show expand button or not
+     */
     expandShowed: {
       type: [Boolean, Number],
       default: false

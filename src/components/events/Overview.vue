@@ -93,21 +93,22 @@ export default {
 <style>
   .event-overview {
 
-    &.popup-dialog {
-      &-animation-enter-active {
+    /** Override Popup Dialog animation */
+    &.popup-dialog-animation {
+      &-enter-active {
         transition: all 100ms ease;
       }
 
-      &-animation-enter {
+      &-enter {
         transform: scale(1.02);
         opacity: 1;
       }
 
-      &-animation-enter-to {
+      &-enter-to {
         transform: none;
       }
 
-      &-animation-leave-active {
+      &-leave-active {
         transition: none;
       }
     }
