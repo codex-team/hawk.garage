@@ -135,7 +135,11 @@ export default {
     }
 
     &__info {
-      padding: 30px 20px;
+      padding: 30px 20px 0 20px;
+
+      & > * {
+        margin-bottom: 30px;
+      }
     }
   }
 </style>
