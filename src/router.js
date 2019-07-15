@@ -17,29 +17,36 @@ const router = new Router({
       component: AppShell,
       children: [
         {
-          path: '/settings/',
+          path: 'settings',
           name: 'settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/SettingsWindow')
         },
         {
-          path: '/workspaces/:workspaceId/settings',
+          path: 'workspaces/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings')
         },
         {
-          path: '/projects/:projectId',
+          path: 'projects/:projectId',
           name: 'project-overview',
-          component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/Overview.vue')
+          component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/Overview.vue'),
+          children: [
+            {
+              path: 'event/:eventId',
+              name: 'event-overview',
+              component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
+            }
+          ]
         }
       ]
     },
     {
-      path: '/sign-up',
+      path: 'sign-up',
       name: 'sign-up',
       component: SignUp
     },
     {
-      path: '/login',
+      path: 'login',
       name: 'login',
       component: Login
     }

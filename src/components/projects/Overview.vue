@@ -23,8 +23,10 @@
         :key="event.id"
         class="project-overview__event"
         :event="event"
+        @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"
       />
     </div>
+    <router-view />
   </div>
 </template>
 
@@ -73,7 +75,6 @@ export default {
 <style>
   .project-overview {
     height: 100%;
-    user-select: none;
 
     &__header {
       display: flex;
