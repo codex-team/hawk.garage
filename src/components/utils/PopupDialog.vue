@@ -1,24 +1,19 @@
 <template>
   <transition
-    :name="noMaskAnimation? null: 'popup-dialog-animation'"
+    name="popup-dialog"
     appear
   >
     <div
       class="popup-dialog__mask"
       @click.self="$emit('close')"
     >
-<!--      <transition-->
-<!--        name="popup-dialog-container-animation"-->
-<!--        appear-->
-<!--      >-->
-        <div class="popup-dialog__container">
-          <slot />
-          <CloseButton
-            class="popup-dialog__close-button"
-            @close="$emit('close')"
-          />
-        </div>
-<!--      </transition>-->
+      <div class="popup-dialog__wrapper">
+        <slot />
+        <CloseButton
+          class="popup-dialog__close-button"
+          @close="$emit('close')"
+        />
+      </div>
     </div>
   </transition>
 </template>
@@ -30,12 +25,6 @@ export default {
   name: 'PopupDialog',
   components: {
     CloseButton
-  },
-  props: {
-    noMaskAnimation: {
-      type: Boolean,
-      default: false
-    }
   }
 };
 </script>
@@ -44,24 +33,16 @@ export default {
   @import '../../styles/custom-properties.css';
 
   .popup-dialog {
-    &-animation-enter-active,
-    &-animation-leave-active {
+    &-enter-active, &-leave-active {
       transition: all 150ms ease-in;
     }
 
-    &-animation-enter,
-    &-animation-leave-to {
+    &-enter, &-leave-to {
       transform: scale(1.05);
       opacity: 0;
     }
 
-    &-animation-leave-to {
-      transform: none;
-      opacity: 1;
-    }
-
-    &-animation-enter-to,
-    &-animation-leave {
+    &-enter-to, &-leave {
       transform: none;
       opacity: 1;
     }
@@ -83,10 +64,11 @@ export default {
       @apply --hide-scrollbar;
     }
 
-    &__container {
+    &__wrapper {
       position: relative;
       max-width: 90%;
       margin: auto 0;
+      background-color: var(--color-bg-second);
       border-radius: 3px;
       box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
     }

@@ -1,60 +1,53 @@
 <template>
   <PopupDialog
-    no-mask-animation
-    class="event-overview"
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
-    <transition
-      name="event-overview-animation"
-      appear
-    >
-      <div class="event-overview__container">
-        <div class="event-overview__header">
-          <Badge
-            class="event-overview__badge"
-            with-icon
-            type="critical"
-            content="FATAL ERROR"
-          />
-          <h1 class="event-overview__title">
-            {{ event.payload.title }}
-          </h1>
-          <div class="event-overview__statistics">
-            <div class="event-overview__times">
-              <div class="event-overview__statistics-count">
-                156
-              </div>
-              times
+    <div class="event-overview">
+      <div class="event-overview__header">
+        <Badge
+          class="event-overview__badge"
+          with-icon
+          type="critical"
+          content="FATAL ERROR"
+        />
+        <h1 class="event-overview__title">
+          {{ event.payload.title }}
+        </h1>
+        <div class="event-overview__statistics">
+          <div class="event-overview__times">
+            <div class="event-overview__statistics-count">
+              156
             </div>
-            <div class="event-overview__days-repeating">
-              <div class="event-overview__statistics-count">
-                15
-              </div>
-              days repeating
-            </div>
-            <div class="event-overview__users-affected">
-              <div class="event-overview__statistics-count">
-                3 504
-              </div>
-              users affected
-            </div>
+            times
           </div>
-          <div class="event-overview__filename">
-            /var/www/alpha.ifmo.su/www/vendor/pavelzotikov/social-covers-generator/src/SocialCoversGenerator/Types/BackgroundImage.php
+          <div class="event-overview__days-repeating">
+            <div class="event-overview__statistics-count">
+              15
+            </div>
+            days repeating
+          </div>
+          <div class="event-overview__users-affected">
+            <div class="event-overview__statistics-count">
+              3 504
+            </div>
+            users affected
           </div>
         </div>
-        <div class="event-overview__info">
-          <DetailsBacktrace
-            v-if="event.payload.backtrace"
-            :backtrace="event.payload.backtrace"
-          />
-          <DetailsCookie
-            v-if="event.payload.cookies"
-            :cookies="event.payload.cookies"
-          />
+        <div class="event-overview__filename">
+          /var/www/alpha.ifmo.su/www/vendor/pavelzotikov/social-covers-generator/src/SocialCoversGenerator/Types/BackgroundImage.php
         </div>
       </div>
-    </transition>
+      <div class="event-overview__info">
+        <DetailsBacktrace
+          v-if="event.payload.backtrace"
+          :backtrace="event.payload.backtrace"
+        />
+        <DetailsCookie
+          v-if="event.payload.cookies"
+          :cookies="event.payload.cookies"
+        />
+      </div>
+    </div>
   </PopupDialog>
 </template>
 
@@ -133,28 +126,7 @@ export default {
 
 <style>
   .event-overview {
-    will-change: trasform;
-
-    &-animation {
-      &-enter-active {
-        transition: all 150ms ease;
-      }
-
-      &-enter,
-      &-leave-to {
-        transform: translateY(12px);
-      }
-
-      &-enter-to,
-      &-leave {
-        transform: none;
-      }
-    }
-
-    &__container {
-      max-width: 850px;
-      background-color: var(--color-bg-second);
-    }
+    max-width: 850px;
 
     &__header {
       display: flex;
