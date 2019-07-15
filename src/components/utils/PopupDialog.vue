@@ -59,18 +59,21 @@ export default {
       justify-content: center;
       width: 100%;
       height: 100%;
+      padding: 50px;
       background-color: rgba(0, 0, 0, .6);
     }
 
     &__wrapper {
       position: relative;
       display: flex;
+      max-width: 90%;
       background-color: var(--color-bg-second);
       border-radius: 3px;
       box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
     }
 
     &__container {
+      width: 100%;
       margin: auto;
     }
 
