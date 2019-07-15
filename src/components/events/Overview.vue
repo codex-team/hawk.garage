@@ -78,8 +78,8 @@ export default {
         value: '85fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d178655ed9edfb252fba3d72485fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d178655ed9edfb252fba3d72485fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d'
       },
       { key: 'SIDCC', value: 'AN0-TYujb2wn-aCaJlABxCr33fkyJlZ31TAjxVYjZAa7SAsrTES16WEz_hT2Fz-1Sfqkm2iyWQY' },
-      { key: '_ym_id', value: 'jqquuf36fq01l9jlbmjsgf93hi', uninterested: true },
-      { key: '_ga', value: 'jqquuasdadasdasf36fq01l9jlbmjsgf93hi', uninterested: true }
+      { key: '_ym_id', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
+      { key: '_ga', value: 'jqquuasdadasdasf36fq01l9jlbmjsgf93hi' }
     ];
 
     return {

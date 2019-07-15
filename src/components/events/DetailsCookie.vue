@@ -30,6 +30,8 @@
 <script>
 import DetailsBase from './DetailsBase';
 
+const uninterestedCookieKeys = ['_ym_id', '_ga'];
+
 export default {
   name: 'DetailsCookie',
   components: {
@@ -57,14 +59,14 @@ export default {
      * Cookies to display
      */
     filteredCookies() {
-      return this.cookies.filter(c => this.isUninterestedShown || !c.uninterested);
+      return this.cookies.filter(c => this.isUninterestedShown || !uninterestedCookieKeys.includes(c.key));
     },
 
     /**
      * Array of uninterested cookies
      */
     uninterestedCookies() {
-      return this.cookies.filter(c => c.uninterested);
+      return this.cookies.filter(c => uninterestedCookieKeys.includes(c.key));
     },
 
     /**
