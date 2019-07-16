@@ -13,18 +13,20 @@
         symbol="bell"
       />
     </div>
-    <div class="project-overview__chart" />
-    <div class="project-overview__events">
-      <div class="project-overview__date">
-        Today
+    <div class="project-overview__content">
+      <div class="project-overview__chart" />
+      <div class="project-overview__events">
+        <div class="project-overview__date">
+          Today
+        </div>
+        <EventItem
+          v-for="event in project.events"
+          :key="event.id"
+          class="project-overview__event"
+          :event="event"
+          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"
+        />
       </div>
-      <EventItem
-        v-for="event in project.events"
-        :key="event.id"
-        class="project-overview__event"
-        :event="event"
-        @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"
-      />
     </div>
     <router-view />
   </div>
@@ -39,24 +41,6 @@ export default {
   components: {
     EventItem,
     Icon
-  },
-  data() {
-    return {
-      events: [
-        {
-          id: '2342342edwdwed',
-          time: 'now',
-          count: 2342,
-          info: 'Error fetching remote / [ status 0 ] Could not resolve host: detik.com'
-        },
-        {
-          id: '2342342edwdwedqwd',
-          time: '13:51',
-          count: 232,
-          info: 'Uncaught Error: Can not find a Block from this child Node'
-        }
-      ]
-    };
   },
   computed: {
     /**
@@ -73,11 +57,17 @@ export default {
 </script>
 
 <style>
+  @import '../../styles/custom-properties.css';
+
   .project-overview {
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    overflow: hidden;
 
     &__header {
       display: flex;
+      flex-shrink: 0;
       align-items: center;
       height: 50px;
       box-shadow: 0 1px 5px 0 var(--color-bg-main), inset 0 1px 3px 0 rgba(0, 0, 0, 0.5);
@@ -105,6 +95,12 @@ export default {
       margin-right: 19px;
       margin-left: auto;
       cursor: pointer;
+    }
+
+    &__content {
+      align-self: stretch;
+      overflow-y: auto;
+      @apply --hide-scrollbar;
     }
 
     &__chart {
