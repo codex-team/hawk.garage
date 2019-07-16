@@ -40,12 +40,12 @@
       </div>
       <div class="event-overview__info">
         <DetailsBacktrace
-          v-if="event.payload.backtrace"
+          v-if="event.payload.backtrace.length"
           class="event-overview__section"
           :backtrace="event.payload.backtrace"
         />
         <DetailsCookie
-          v-if="event.payload.cookies"
+          v-if="event.payload.cookies.length"
           class="event-overview__section"
           :cookies="event.payload.cookies"
         />

@@ -4,7 +4,7 @@
     @expandClicked="isUninterestedShown = !isUninterestedShown"
   >
     <template #header>
-      BACKTRACE
+      COOKIES
     </template>
     <template #content>
       <div
