@@ -16,10 +16,10 @@
       <div class="catalog-item__description">
         {{ description }}
       </div>
-      <button class="button catalog-item__install-button">
-        INSTALL
-      </button>
     </div>
+    <button class="button button--small button--rounded catalog-item__install-button">
+      INSTALL
+    </button>
   </div>
 </template>
 
@@ -50,7 +50,10 @@ export default {
 
 <style>
 .catalog-item {
+  display: flex;
+  flex-direction: column;
   max-width: 230px;
+  height: 230px;
   background-color: var(--color-bg-main);
   border-radius: 4px;
   cursor: pointer;
@@ -85,14 +88,7 @@ export default {
   }
 
   &__install-button {
-    margin-top: 20px;
-    padding: 5px 15px;
-    color: var(--color-text-main);
-    font-weight: bold;
-    font-size: 11px;
-    letter-spacing: 0.14px;
-    background-color: var(--color-indicator-medium);
-    border-radius: 11.5px;
+    margin: 15px;
   }
 
   &__type {
