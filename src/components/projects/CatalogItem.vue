@@ -4,7 +4,10 @@
       class="catalog-item__header"
       :style="{'background-image': `url(${image})`}"
     >
-      <Badge content="CATCHER" />
+      <Badge
+        content="CATCHER"
+        class="catalog-item__type"
+      />
     </div>
     <div class="catalog-item__info">
       <div class="catalog-item__name">
@@ -80,6 +83,12 @@ export default {
     letter-spacing: 0.14px;
     background-color: var(--color-indicator-medium);
     border-radius: 11.5px;
+  }
+
+  &__type {
+    margin: 12px 0 0 13px;
+    background-color: #ed2f85;
+    border-radius: 4px;
   }
 }
 </style>
