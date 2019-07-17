@@ -28,6 +28,10 @@
       </div>
     </aside>
     <div class="app-shell__content">
+      <ProjectHeader
+        v-if="$route.params.projectId"
+        class="app-shell__project-header"
+      />
       <router-view />
     </div>
     <component
@@ -48,6 +52,7 @@ import ProjectCreationDialog from './projects/CreationDialog';
 import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
+import ProjectHeader from './projects/ProjectHeader';
 
 export default {
   name: 'AppShell',
@@ -55,7 +60,8 @@ export default {
     Sidebar,
     ProjectsMenuItem,
     SearchField,
-    WorkspaceInfo
+    WorkspaceInfo,
+    ProjectHeader
   },
   data() {
     return {
@@ -140,9 +146,15 @@ export default {
     min-height: 100%;
 
     &__content {
+      display: flex;
+      flex-direction: column;
       flex-grow: 1;
       overflow: hidden;
       background-color: var(--color-bg-second);
+    }
+
+    &__project-header {
+      flex-shrink: 0;
     }
   }
 

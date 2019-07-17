@@ -76,10 +76,15 @@ li {
 .button {
   padding: 12px 35px;
   line-height: 1em;
+  background-color: var(--color-indicator-medium);
   border: 0;
   border-radius: 2px;
   cursor: pointer;
   user-select: none;
+
+  &:hover {
+    background-color: #3A61B9;
+  }
 
   &--submit {
     min-width: 90px;
@@ -89,6 +94,21 @@ li {
     font-size: 14.4px;
     background-color: var(--color-indicator-medium);
     border-radius: 4px;
+  }
+
+  &--small {
+    width: 75px;
+    height: 23px;
+    padding: 5px 15px;
+    color: var(--color-text-main);
+    font-weight: bold;
+    font-size: 11px;
+    line-height: 13px;
+    letter-spacing: 0.14px;
+  }
+
+  &--rounded {
+    border-radius: 11.5px;
   }
 }
 

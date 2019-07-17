@@ -37,6 +37,11 @@ const router = new Router({
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
             }
           ]
+        },
+        {
+          path: 'projects/:projectId/add-catcher',
+          name: 'add-catcher',
+          component: () => import(/* webpackChunkName: 'project-add-catcher' */'./components/projects/AddCatcher.vue')
         }
       ]
     },
