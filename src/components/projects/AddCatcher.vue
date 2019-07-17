@@ -189,6 +189,7 @@ export default {
       min-height: 68px;
       margin: 40px auto 0 auto;
       padding: 14px 27px 14px 78px;
+      font-size: 14px;
       line-height: 1.43;
       background-color: var(--color-bg-second);
       background-image: url("../../assets/instruction.svg");
@@ -196,7 +197,7 @@ export default {
       background-position: 15px 50%;
       background-size: 48px;
       border: solid 1px #1a1d26;
-      border-radius: 5px;
+      border-radius: 4px;
 
       @media (max-width: 1152px) {
         max-width: 475px;
