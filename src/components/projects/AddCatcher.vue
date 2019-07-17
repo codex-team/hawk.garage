@@ -23,8 +23,10 @@
       <div class="project-add-catcher__info">
         To start track events, you need to connect one of our Catchers
       </div>
-      <div class="project-add-catcher__catcher-docs">
-        Catcher is a small script that will catch errors in your application and send it to your Hawk page.
+      <div class="project-add-catcher__catcher-docs clearfix">
+        <div class="project-add-catcher__catcher-docs-text">
+          Catcher is a small script that will catch errors in your application and send it to your Hawk page.
+        </div>
         <a
           href="#"
           class="project-add-catcher__catcher-docs-link"
@@ -178,9 +180,12 @@ export default {
 
     &__catcher-docs {
       display: flex;
+      align-items: stretch;
+      min-width: 312px;
       min-height: 68px;
       margin: 40px 115px 0;
       padding: 14px 27px 14px 78px;
+      line-height: 1.43;
       background-color: var(--color-bg-second);
       background-image: url("../../assets/instruction.svg");
       background-repeat: no-repeat;
@@ -190,9 +195,14 @@ export default {
       border-radius: 5px;
     }
 
+    &__catcher-docs-text,
     &__catcher-docs-link {
-      display: block;
-      margin: auto 0 auto 26px;
+      display: flex;
+      align-items: center;
+    }
+
+    &__catcher-docs-link {
+      margin-left:58px;
       color: var(--color-indicator-medium);
       font-weight: 500;
       font-size: 12px;
