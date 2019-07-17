@@ -45,7 +45,7 @@ export default {
   display: flex;
   align-items: center;
   height: 50px;
-  box-shadow: 0 1px 5px 0 var(--color-bg-main), inset 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid var(--color-bg-main);
 
   &__icon {
     width: 26px;
