@@ -146,11 +146,11 @@ export default {
     min-height: 100%;
 
     &__content {
+      display: flex;
+      flex-direction: column;
       flex-grow: 1;
       overflow: hidden;
       background-color: var(--color-bg-second);
-      display: flex;
-      flex-direction: column;
     }
 
     &__project-header {

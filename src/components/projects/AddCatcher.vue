@@ -224,6 +224,7 @@ export default {
       position: relative;
       left: 7.5px;
       flex-basis: 100%;
+      margin: 33px 0 12.5px 0;
       color: var(--color-text-second);
       font-weight: bold;
       font-size: 12px;

@@ -50,8 +50,8 @@ export default {
   &__icon {
     width: 26px;
     height: 26px;
-    line-height: 26px;
     margin-left: 15px;
+    line-height: 26px;
     background-position: center center;
     background-size: cover;
     border-radius: var(--border-radius);
