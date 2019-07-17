@@ -4,6 +4,10 @@
       <div class="project-add-catcher__steps">
         <div class="project-add-catcher__step">
           1
+          <Icon
+            class="project-add-catcher__tick-icon"
+            symbol="tick"
+          />
         </div>
         <div class="project-add-catcher__steps-bind" />
         <div class="project-add-catcher__step">
@@ -16,8 +20,13 @@
 </template>
 
 <script>
+import Icon from '../utils/Icon';
+
 export default {
-  name: 'ProjectAddCatcher'
+  name: 'ProjectAddCatcher',
+  components: {
+    Icon
+  }
 };
 </script>
 
@@ -44,8 +53,9 @@ export default {
     border-radius: 50%;
 
     &:first-child {
-      border: 1px solid var(--color-text-second);
+      position: relative;
       color: var(--color-text-second);
+      border: 1px solid var(--color-text-second);
     }
 
     &:last-child {
@@ -60,6 +70,18 @@ export default {
     border-width: 1px;
     border-image-source: linear-gradient(to right, #939baf, var(--color-text-main));
     border-image-slice: 1;
+  }
+
+  &__tick-icon {
+    position: absolute;
+    right: -17px;
+    bottom: -4px;
+    width: 28px;
+    height: 28px;
+    padding:6px;
+    color: var(--color-text-main);
+    background-color: #2ccf6c;
+    border-radius: 100%;
   }
 }
 </style>
