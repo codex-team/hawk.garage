@@ -10,7 +10,7 @@
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
     "lint": "yarn lint:js && yarn lint:css",
     "serve:prod": "http-server ./dist --push-state -c-0",
-    "svg": "svg-sprite-generate -d src/assets/svg -o src/assets/sprite.svg"
+    "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },
   "dependencies": {
     "@vue/cli-plugin-babel": "^3.9.0",

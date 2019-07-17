@@ -8,11 +8,29 @@
             class="project-add-catcher__tick-icon"
             symbol="tick"
           />
+          <div class="project-add-catcher__step-caption">
+            ADD A PROJECT
+          </div>
         </div>
         <div class="project-add-catcher__steps-bind" />
         <div class="project-add-catcher__step">
           2
+          <div class="project-add-catcher__step-caption">
+            INSTALL A CATCHER
+          </div>
         </div>
+      </div>
+      <div class="project-add-catcher__info">
+        To start track events, you need to connect one of our Catchers
+      </div>
+      <div class="project-add-catcher__catcher-docs">
+        Catcher is a small script that will catch errors in your application and send it to your Hawk page.
+        <a
+          href="#"
+          class="project-add-catcher__catcher-docs-link"
+        >
+          READ MORE
+        </a>
       </div>
     </div>
     <div class="project-add-catcher__catcher-catalog" />
@@ -34,6 +52,7 @@ export default {
 .project-add-catcher {
   &__header {
     padding-top: 80px;
+    padding-bottom: 27px;
     background-image: radial-gradient(circle at 52% 3%, #313748, var(--color-bg-main));
   }
 
@@ -44,6 +63,7 @@ export default {
   }
 
   &__step {
+    position: relative;
     width: 35px;
     height: 35px;
     font-weight: bold;
@@ -53,7 +73,6 @@ export default {
     border-radius: 50%;
 
     &:first-child {
-      position: relative;
       color: var(--color-text-second);
       border: 2px solid var(--color-text-second);
     }
@@ -64,9 +83,9 @@ export default {
   }
 
   &__steps-bind {
-    margin: 0 26px;
     width: 153px;
     height: 1px;
+    margin: 0 26px;
     border-style: solid;
     border-width: 1px;
     border-image-source: linear-gradient(to right, #939baf, var(--color-text-main));
@@ -83,6 +102,47 @@ export default {
     color: var(--color-text-main);
     background-color: #2ccf6c;
     border-radius: 100%;
+  }
+
+  &__step-caption {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 12px;
+    white-space: nowrap;
+    transform: translateX(-50%);
+  }
+
+  &__info {
+    margin-top: 68px;
+    text-align: center;
+  }
+
+  &__catcher-docs {
+    display: flex;
+    min-height: 68px;
+    margin: 40px 115px 0;
+    padding: 14px 27px 14px 78px;
+    background-color: var(--color-bg-second);
+    background-image: url("../../assets/instruction.svg");
+    background-repeat: no-repeat;
+    background-position: 15px 50%;
+    background-size: 48px;
+    border: solid 1px #1a1d26;
+    border-radius: 5px;
+  }
+
+  &__catcher-docs-link {
+    display: block;
+    margin: auto 0 auto 26px;
+    color: var(--color-indicator-medium);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.28px;
+    white-space: nowrap;
+
   }
 }
 </style>
