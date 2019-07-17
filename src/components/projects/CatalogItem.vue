@@ -4,7 +4,7 @@
       class="catalog-item__header"
       :style="{'background-image': `url(${image})`}"
     >
-      <Badge content="CATCHER"/>
+      <Badge content="CATCHER" />
     </div>
     <div class="catalog-item__info">
       <div class="catalog-item__name">
@@ -13,6 +13,9 @@
       <div class="catalog-item__description">
         {{ description }}
       </div>
+      <button class="button catalog-item__install-button">
+        INSTALL
+      </button>
     </div>
   </div>
 </template>
@@ -66,6 +69,17 @@ export default {
   &__description {
     font-size: 13px;
     line-height: 1.38;
+  }
+
+  &__install-button {
+    margin-top: 20px;
+    padding: 5px 15px;
+    color: var(--color-text-main);
+    font-weight: bold;
+    font-size: 11px;
+    letter-spacing: 0.14px;
+    background-color: var(--color-indicator-medium);
+    border-radius: 11.5px;
   }
 }
 </style>

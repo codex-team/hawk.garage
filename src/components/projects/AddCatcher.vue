@@ -101,8 +101,8 @@ export default {
 
 <style>
   .project-add-catcher {
-    overflow-y: auto;
     height: 100%;
+    overflow-y: auto;
     &__header {
       padding-top: 80px;
       padding-bottom: 27px;
