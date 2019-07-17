@@ -113,8 +113,7 @@ export default {
     @apply --hide-scrollbar;
 
     &__header {
-      padding-top: 80px;
-      padding-bottom: 27px;
+      padding: 80px 10px 27px 10px;
       background-image: radial-gradient(circle at 52% 3%, #313748, var(--color-bg-main));
     }
 
@@ -186,8 +185,9 @@ export default {
       display: flex;
       align-items: stretch;
       min-width: 312px;
+      max-width: 720px;
       min-height: 68px;
-      margin: 40px 115px 0;
+      margin: 40px auto 0 auto;
       padding: 14px 27px 14px 78px;
       line-height: 1.43;
       background-color: var(--color-bg-second);
@@ -197,6 +197,14 @@ export default {
       background-size: 48px;
       border: solid 1px #1a1d26;
       border-radius: 5px;
+
+      @media (max-width: 1152px) {
+        max-width: 475px;
+      }
+
+      @media (max-width: 907px) {
+        max-width: 230px;
+      }
     }
 
     &__catcher-docs-text,
