@@ -33,17 +33,20 @@
         </a>
       </div>
     </div>
-    <div class="project-add-catcher__catcher-catalog">
-      <h2 class="project-add-catcher__catcher-catalog-header">
-        SELECT CATCHER
-      </h2>
-      <CatalogItem
-        v-for="item in items"
-        :key="item.name"
-        :name="item.name"
-        :image="item.image"
-        :description="item.description"
-      />
+    <div class="project-add-catcher__catalog">
+      <div class="project-add-catcher__catalog-container">
+        <h2 class="project-add-catcher__catalog-header">
+          SELECT CATCHER
+        </h2>
+        <CatalogItem
+          v-for="item in items"
+          :key="item.name"
+          class="project-add-catcher__catalog-item"
+          :name="item.name"
+          :image="item.image"
+          :description="item.description"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -197,15 +200,31 @@ export default {
       white-space: nowrap;
     }
 
-    &__catcher-catalog {
-      padding: 33px 100px;
+    &__catalog {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    &__catcher-catalog-header {
-      margin-bottom: 110px;
+    &__catalog-header {
+      position: relative;
+      left: 7.5px;
+      flex-basis: 100%;
       color: var(--color-text-second);
       font-weight: bold;
       font-size: 12px;
+    }
+
+    &__catalog-item {
+      margin: 7.5px;
+    }
+
+    &__catalog-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      max-width: 735px;
+      margin: 0 auto;
     }
   }
 </style>
