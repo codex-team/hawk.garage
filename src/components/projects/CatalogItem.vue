@@ -4,10 +4,11 @@
       class="catalog-item__header"
       :style="{'background-image': `url(${image})`}"
     >
-      <Badge
-        content="CATCHER"
+      <div
         class="catalog-item__type"
-      />
+      >
+        CATCHER
+      </div>
     </div>
     <div class="catalog-item__info">
       <div class="catalog-item__name">
@@ -25,12 +26,8 @@
 
 <script>
 
-import Badge from '../utils/Badge';
 export default {
   name: 'CatalogItem',
-  components: {
-    Badge
-  },
   props: {
     name: {
       type: String,
@@ -92,8 +89,14 @@ export default {
   }
 
   &__type {
+    width: 60px;
+    height: 19px;
     margin: 12px 0 0 13px;
     color: #ffffff;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 19px;
+    text-align: center;
     background-color: #ed2f85;
     border-radius: 4px;
   }
