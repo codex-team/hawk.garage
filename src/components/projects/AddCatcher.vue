@@ -225,6 +225,14 @@ export default {
       justify-content: space-between;
       max-width: 735px;
       margin: 0 auto;
+
+      @media (max-width: 1152px) {
+        max-width: 490px;
+      }
+
+      @media (max-width: 907px) {
+        max-width: 245px;
+      }
     }
   }
 </style>
