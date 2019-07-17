@@ -105,9 +105,13 @@ export default {
 </script>
 
 <style>
+  @import '../../styles/custom-properties.css';
+
   .project-add-catcher {
     height: 100%;
     overflow-y: auto;
+    @apply --hide-scrollbar;
+
     &__header {
       padding-top: 80px;
       padding-bottom: 27px;
