@@ -90,6 +90,7 @@ export default {
 
   &__type {
     margin: 12px 0 0 13px;
+    color: #ffffff;
     background-color: #ed2f85;
     border-radius: 4px;
   }

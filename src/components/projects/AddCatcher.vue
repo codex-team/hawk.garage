@@ -161,8 +161,8 @@ export default {
       width: 28px;
       height: 28px;
       padding: 6px;
-      color: var(--color-text-main);
-      background-color: #2ccf6c;
+      color: #fff;
+      background-color: #09cf5d;
       border-radius: 100%;
     }
 
