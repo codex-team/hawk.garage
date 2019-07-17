@@ -41,7 +41,7 @@ const router = new Router({
         {
           path: 'projects/:projectId/add-catcher',
           name: 'add-catcher',
-          component: () => import('./components/projects/AddCatcher.vue')
+          component: () => import(/* webpackChunkName: 'project-add-catcher' */'./components/projects/AddCatcher.vue')
         }
       ]
     },
