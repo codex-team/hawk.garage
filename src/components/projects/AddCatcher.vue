@@ -47,23 +47,24 @@ export default {
     width: 35px;
     height: 35px;
     font-weight: bold;
-    line-height: 35px;
+    line-height: 32px;
     text-align: center;
-    border: 1px solid var(--color-text-second);
+    border: 2px solid var(--color-text-second);
     border-radius: 50%;
 
     &:first-child {
       position: relative;
       color: var(--color-text-second);
-      border: 1px solid var(--color-text-second);
+      border: 2px solid var(--color-text-second);
     }
 
     &:last-child {
-      border: 1px solid var(--color-text-main);
+      border: 2px solid var(--color-text-main);
     }
   }
 
   &__steps-bind {
+    margin: 0 26px;
     width: 153px;
     height: 1px;
     border-style: solid;
