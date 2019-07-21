@@ -14,15 +14,8 @@ import Vue from 'vue';
  * @typedef {object} Workspace - represents workspace
  * @property {string} id - workspace id
  * @property {string} name - workspace name
- * @property {String} image - link to the workspace picture
- * @property {String} description - workspace description
- * @property {[Project]} projects - projects associated with workspace
- */
-
-/**
- * @typedef {object} Project - represent project in workspace
- * @property {String} id - project id
- * @property {String} name - project name
+ * @property {String} [image] - link to the workspace picture
+ * @property {String} [description] - workspace description
  */
 
 /**
