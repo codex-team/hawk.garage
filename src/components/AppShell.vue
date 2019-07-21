@@ -43,8 +43,8 @@
 
 <script>
 
-import { THEME_CHANGE } from '../store/actions/app';
-import { FETCH_WORKSPACES, SET_CURRENT_WORKSPACE } from '../store/actions/workspaces';
+import { SET_THEME, FETCH_INITIAL_DATA } from '../store/actions/app';
+import { SET_CURRENT_WORKSPACE } from '../store/actions/workspaces';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
@@ -110,14 +110,14 @@ export default {
     /**
      * Fetch user data
      */
-    this.$store.dispatch(FETCH_WORKSPACES);
+    this.$store.dispatch(FETCH_INITIAL_DATA);
   },
   methods: {
     /**
      * Toggles theme (dark/light)
      */
     changeTheme() {
-      this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
+      this.$store.commit(SET_THEME, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
     },
 
     /**
