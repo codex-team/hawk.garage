@@ -37,7 +37,7 @@ const getters = {
    * @param {ProjectsModuleState} state - Vuex state
    * @return {function(String): Project}
    */
-  getById: state =>
+  getProjectById: state =>
     /**
      * @param {String} id project id to find
      * @return {Project}

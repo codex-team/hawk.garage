@@ -43,31 +43,6 @@ function initialState() {
   };
 }
 
-/**
- * Module getters
- */
-const getters = {
-  /**
-   * Returns number of user's workspaces
-   * @param {WorkspacesModuleState} state - Vuex state
-   * @return {number}
-   */
-  count: state => state.list.length,
-
-  /**
-   * Returns project by id
-   * @param {WorkspacesModuleState} state - Vuex state
-   * @param {object} getters - Vuex getters
-   * @return {function(String): Project}
-   */
-  project: (state, getters) =>
-    /**
-     * @param {String} id project id to find
-     * @return {Project}
-     */
-    id => getters.allProjects.find(project => project.id === id)
-};
-
 const actions = {
   /**
    * Send request to create new workspace
@@ -164,7 +139,6 @@ const mutations = {
 
 export default {
   state: initialState(),
-  getters,
   actions,
   mutations
 };
