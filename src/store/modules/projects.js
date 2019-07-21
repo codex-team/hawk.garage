@@ -1,9 +1,11 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
-  CREATE_PROJECT
+  CREATE_PROJECT,
+  SET_PROJECTS_LIST
 } from '../actions/projects';
 import { RESET_STORE } from '../actions';
 import * as workspaceApi from '../../api/workspaces';
+import Vue from 'vue';
 
 /**
  * @typedef {object} Project - represent project in workspace
@@ -57,6 +59,15 @@ const actions = {
   },
 
   /**
+   * Sets new projects list
+   * @param {function} commit - standard Vuex commit function
+   * @param {[Project]} projects - new projects list
+   */
+  [SET_PROJECTS_LIST]({ commit }, projects) {
+    commit(SET_PROJECTS_LIST, projects);
+  },
+
+  /**
    * Resets module state
    * @param {function} commit - standard Vuex commit function
    */
@@ -66,6 +77,15 @@ const actions = {
 };
 
 const mutations = {
+  /**
+   * Mutation for replacing projects list
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Array<Project>} newList - new list of projects
+   */
+  [SET_PROJECTS_LIST](state, newList) {
+    Vue.set(state, 'list', newList);
+  },
+
   /**
    * Resets module state
    * @param {ProjectsModuleState} state - Vuex state

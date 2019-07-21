@@ -71,6 +71,15 @@ const actions = {
   },
 
   /**
+   * Sets new workspaces list
+   * @param {function} commit - standard Vuex commit function
+   * @param {[Workspace]} workspaces - new workspaces list
+   */
+  [SET_WORKSPACES_LIST]({ commit }, workspaces) {
+    commit(SET_WORKSPACES_LIST, workspaces);
+  },
+
+  /**
    * Resets module state
    * @param {function} commit - standard Vuex commit function
    */

@@ -4,6 +4,7 @@
 
 // Set new projects list
 export const SET_PROJECTS_LIST = 'SET_PROJECTS_LIST';
+
 /**
  * Actions
  */
