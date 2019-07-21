@@ -3,8 +3,7 @@ import {
   CREATE_WORKSPACE,
   ADD_WORKSPACE,
   REMOVE_WORKSPACE,
-  FETCH_WORKSPACES,
-  SET_WORKSPACES, CREATE_PROJECT,
+  SET_WORKSPACES_LIST,
   SET_CURRENT_WORKSPACE
 } from '../actions/workspaces';
 import { RESET_STORE } from '../actions';
@@ -56,18 +55,6 @@ const getters = {
   count: state => state.list.length,
 
   /**
-   * Returns all projects in all workspaces
-   * @param {WorkspacesModuleState} state - Vuex state
-   * @return {Array<Project>}
-   */
-  allProjects: state => state.list.reduce((accumulator, workspace) => {
-    if (workspace.projects) {
-      accumulator.push(...workspace.projects);
-    }
-    return accumulator;
-  }, []),
-
-  /**
    * Returns project by id
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {object} getters - Vuex getters
@@ -104,27 +91,6 @@ const actions = {
     await workspaceApi.deleteWorkspace(workspaceId);
 
     commit(REMOVE_WORKSPACE, workspaceId);
-  },
-
-  /**
-   * Send query request to get information about all workspaces
-   * @param {function} commit - standard Vuex commit function
-   * @return {Promise<void>}
-   */
-  async [FETCH_WORKSPACES]({ commit }) {
-    const workspaces = await workspaceApi.getAllWorkspacesWithProjects();
-
-    commit(SET_WORKSPACES, workspaces);
-  },
-
-  /**
-   * Send request to create new project
-   * @param {function} dispatch - standard Vuex dispatch function
-   * @param {Project} project - project params for creation
-   * @return {Promise<void>}
-   */
-  async [CREATE_PROJECT]({ dispatch }, project) {
-    await workspaceApi.createProject(project);
   },
 
   /**
@@ -174,7 +140,7 @@ const mutations = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {Array<Workspace>} newList - new list of workspaces
    */
-  [SET_WORKSPACES](state, newList) {
+  [SET_WORKSPACES_LIST](state, newList) {
     Vue.set(state, 'list', newList);
   },
 
