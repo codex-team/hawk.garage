@@ -1,16 +1,18 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
+  ADD_PROJECT,
   CREATE_PROJECT,
   SET_PROJECTS_LIST
 } from '../actions/projects';
 import { RESET_STORE } from '../actions';
-import * as workspaceApi from '../../api/workspaces';
+import * as projectsApi from '../../api/projects';
 import Vue from 'vue';
 
 /**
  * @typedef {object} Project - represent project in workspace
  * @property {String} id - project id
  * @property {String} name - project name
+ * @property {String} workspaceId - ID of the workspace to which the project belongs
  * @property {String} [image] - project image
  */
 
@@ -51,11 +53,14 @@ const actions = {
   /**
    * Send request to create new project
    * @param {function} dispatch - standard Vuex dispatch function
-   * @param {Project} project - project params for creation
+   * @param {Project} projectData - project params for creation
    * @return {Promise<void>}
    */
-  async [CREATE_PROJECT]({ dispatch }, project) {
-    await workspaceApi.createProject(project);
+  async [CREATE_PROJECT]({ commit }, projectData) {
+    const newProjectData = await projectsApi.createProject(projectData);
+
+    newProjectData.workspaceId = projectData.workspaceId;
+    commit(ADD_PROJECT, newProjectData);
   },
 
   /**
@@ -84,6 +89,10 @@ const mutations = {
    */
   [SET_PROJECTS_LIST](state, newList) {
     Vue.set(state, 'list', newList);
+  },
+
+  [ADD_PROJECT](state, project) {
+    state.list.push(project);
   },
 
   /**

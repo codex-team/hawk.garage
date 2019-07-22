@@ -32,6 +32,9 @@ const actions = {
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
+        workspace.projects.forEach(project => {
+          project.workspaceId = workspace.id;
+        });
         accumulator.push(...workspace.projects);
         delete workspace.projects;
       }

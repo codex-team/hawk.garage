@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { CREATE_PROJECT, FETCH_WORKSPACES } from '../../store/actions/workspaces';
+import { CREATE_PROJECT } from '../../store/actions/projects';
 import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       name: '', // project name
-      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0]// project's workspace id
+      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0] // project's workspace
     };
   },
   computed: {
@@ -78,7 +78,6 @@ export default {
         };
 
         await this.$store.dispatch(CREATE_PROJECT, projectInfo);
-        this.$store.dispatch(FETCH_WORKSPACES);
 
         this.$emit('close');
       } catch (e) {

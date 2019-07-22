@@ -83,10 +83,9 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      if (!this.$store.state.workspaces.current) return this.$store.getters.allProjects;
-      return this.$store.state.workspaces.list
-        .find(ws => ws.id === this.$store.state.workspaces.current.id)
-        .projects;
+      if (!this.$store.state.workspaces.current) return this.$store.state.projects.list;
+      return this.$store.state.projects.list
+        .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);
     },
 
     /**
