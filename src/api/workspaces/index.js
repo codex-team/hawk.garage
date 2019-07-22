@@ -1,5 +1,5 @@
 import { HTTP_OK } from '../httpCodes';
-import { MUTATION_CREATE_PROJECT, MUTATION_CREATE_WORKSPACE } from './queries';
+import { MUTATION_CREATE_WORKSPACE } from './queries';
 import * as api from '../index';
 
 /**
@@ -52,13 +52,4 @@ export async function deleteWorkspace(workspaceId) {
   } else {
     throw new Error(WORKSPACES_ERROR.UNKNOWN);
   }
-}
-
-/**
- * Create project and returns its id
- * @param {Project} projectInfo - project to create
- * @return {Promise<Project.id>}
- */
-export async function createProject(projectInfo) {
-  return (await api.call(MUTATION_CREATE_PROJECT, projectInfo)).createProject;
 }
