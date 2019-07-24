@@ -20,16 +20,41 @@
         </div>
       </div>
     </div>
+    <div class="setup-php-catcher__instructions">
+      <div class="setup-php-catcher__instructions-header">
+        INSTALLATION
+      </div>
+      <InstructionBlock :step-number="1">
+        <template #header>
+          Get an Integration token
+        </template>
+        <template #content>
+          Your Integration token for codex.so PHP:
+          <CodeBlock>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTPeWVWuJwiA4xidun__FwFc0XyBBJKCUcKi79mp-uY</CodeBlock>
+        </template>
+      </InstructionBlock>
+      <InstructionBlock :step-number="2">
+        <template #header>
+          Follow the installation guide
+        </template>
+        <template #content>
+          Install module with Composer:
+        </template>
+      </InstructionBlock>
+    </div>
   </div>
 </template>
 
 <script>
 import CatcherLabel from './CatcherLabel';
-
+import InstructionBlock from './InstructionBlock'
+import CodeBlock from '../utils/CodeBlock';
 export default {
   name: 'SetupPhpCatcher',
   components: {
-    CatcherLabel
+    CatcherLabel,
+    InstructionBlock,
+    CodeBlock
   }
 };
 </script>
@@ -80,6 +105,17 @@ export default {
     &__last-version {
       margin-left: auto;
       font-weight: normal;
+    }
+
+    &__instructions {
+      padding: 40px
+    }
+
+    &__instructions-header {
+      color: var(--color-text-second);
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.15px;
     }
   }
 </style>
