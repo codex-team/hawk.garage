@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { CREATE_WORKSPACE } from '../../store/modules/workspaces/methodsTypes';
+import { CREATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';

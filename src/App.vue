@@ -9,7 +9,7 @@
 
 <script>
 import * as api from './api';
-import { REFRESH_TOKENS } from './store/modules/auth/methodsTypes';
+import { REFRESH_TOKENS } from './store/modules/auth/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import notifier from 'codex-notifier';
 import eventBus from './eventBus';

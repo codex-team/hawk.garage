@@ -3,7 +3,7 @@ import {
   ADD_PROJECT,
   CREATE_PROJECT,
   SET_PROJECTS_LIST
-} from './methodsTypes';
+} from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';

@@ -4,7 +4,7 @@ import {
   SET_TOKENS,
   SIGN_UP,
   REFRESH_TOKENS
-} from './methodsTypes';
+} from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as authApi from '../../../api/auth';
 

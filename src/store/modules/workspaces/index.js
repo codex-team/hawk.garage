@@ -5,7 +5,7 @@ import {
   REMOVE_WORKSPACE,
   SET_WORKSPACES_LIST,
   SET_CURRENT_WORKSPACE
-} from './methodsTypes';
+} from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces';
 import Vue from 'vue';

@@ -44,7 +44,7 @@
 
 import Icon from '../utils/Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
-import { SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/methodsTypes';
+import { SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'Sidebar',
