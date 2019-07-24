@@ -1,17 +1,15 @@
 <template>
-  <pre>
-    <code>
-      <slot/>
-    </code>
-  </pre>
+  <pre><code><slot /></code></pre>
 </template>
 
 <script>
+import hljs from 'highlight.js';
+
 export default {
-  name: 'CodeBlock'
+  name: 'CodeBlock',
+  mounted() {
+    hljs.highlightBlock(this.$el);
+  }
 };
 </script>
-
-<style>
-
-</style>
+<style src="highlight.js/styles/darcula.css"></style>
