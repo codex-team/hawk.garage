@@ -1,5 +1,5 @@
 import { HTTP_OK } from '../httpCodes';
-import { MUTATION_CREATE_WORKSPACE } from './queries';
+import { MUTATION_CREATE_WORKSPACE, QUERY_ALL_WORKSPACES_WITH_PROJECTS } from './queries';
 import * as api from '../index';
 
 /**
@@ -52,4 +52,12 @@ export async function deleteWorkspace(workspaceId) {
   } else {
     throw new Error(WORKSPACES_ERROR.UNKNOWN);
   }
+}
+
+/**
+ * Returns all user's workspaces and project.
+ * @return {Promise<[Workspace]>}
+ */
+export async function getAllWorkspacesWithProjects() {
+  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS)).workspaces;
 }

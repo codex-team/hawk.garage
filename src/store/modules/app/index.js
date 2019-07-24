@@ -1,6 +1,6 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import { SET_THEME, FETCH_INITIAL_DATA } from './methodsTypes';
-import * as commonApi from '../../../api/common';
+import * as workspacesApi from '../../../api/workspaces';
 import { SET_WORKSPACES_LIST } from '../workspaces/methodsTypes';
 import { SET_PROJECTS_LIST } from '../projects/methodsTypes';
 
@@ -28,7 +28,7 @@ const actions = {
    * @return {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
-    const workspaces = await commonApi.getAllWorkspacesWithProjects();
+    const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
