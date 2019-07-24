@@ -1,14 +1,22 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   CREATE_WORKSPACE,
-  ADD_WORKSPACE,
-  REMOVE_WORKSPACE,
   SET_WORKSPACES_LIST,
   SET_CURRENT_WORKSPACE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces';
 import Vue from 'vue';
+
+/**
+ * Mutations enum for this module
+ */
+const mutationTypes = {
+  ADD_WORKSPACE: 'ADD_WORKSPACE', // Add new workspace to the list
+  REMOVE_WORKSPACE: 'REMOVE_WORKSPACE', // Remove workspace from the list
+  SET_WORKSPACES_LIST: 'SET_WORKSPACES_LIST', // Set new workspaces list
+  SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE' // Set current user workspace
+};
 
 /**
  * @typedef {object} Workspace - represents workspace
@@ -46,7 +54,7 @@ const actions = {
   async [CREATE_WORKSPACE]({ commit }, workspace) {
     const createdWorkspace = await workspaceApi.createWorkspace(workspace);
 
-    commit(ADD_WORKSPACE, createdWorkspace);
+    commit(mutationTypes.ADD_WORKSPACE, createdWorkspace);
     return createdWorkspace;
   },
 
@@ -58,7 +66,7 @@ const actions = {
   async [REMOVE_WORKSPACE]({ commit }, workspaceId) {
     await workspaceApi.deleteWorkspace(workspaceId);
 
-    commit(REMOVE_WORKSPACE, workspaceId);
+    commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
   },
 
   /**
@@ -94,7 +102,7 @@ const mutations = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {Workspace} workspace - workspace params for creation
    */
-  [ADD_WORKSPACE](state, workspace) {
+  [mutationTypes.ADD_WORKSPACE](state, workspace) {
     state.list.push(workspace);
   },
 
@@ -103,7 +111,7 @@ const mutations = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {string} workspaceId - id of workspace for deleting
    */
-  [REMOVE_WORKSPACE](state, workspaceId) {
+  [mutationTypes.REMOVE_WORKSPACE](state, workspaceId) {
     let index = null;
 
     state.list.find((element, i) => {
@@ -117,7 +125,7 @@ const mutations = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {Array<Workspace>} newList - new list of workspaces
    */
-  [SET_WORKSPACES_LIST](state, newList) {
+  [mutationTypes.SET_WORKSPACES_LIST](state, newList) {
     Vue.set(state, 'list', newList);
   },
 
@@ -126,7 +134,7 @@ const mutations = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {Workspace} workspace - new current user workspace
    */
-  [SET_CURRENT_WORKSPACE](state, workspace) {
+  [mutationTypes.SET_CURRENT_WORKSPACE](state, workspace) {
     state.current = workspace;
   },
 

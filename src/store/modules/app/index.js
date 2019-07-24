@@ -1,8 +1,15 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { SET_THEME, FETCH_INITIAL_DATA } from './actionTypes';
+import { FETCH_INITIAL_DATA } from './actionTypes';
 import * as workspacesApi from '../../../api/workspaces';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
+
+/**
+ * Mutations enum for this module
+ */
+const mutationTypes = {
+  SET_THEME: 'SET_THEME' // Set theme name
+};
 
 /**
  * @enum {string} - Available themes
@@ -52,7 +59,7 @@ const mutations = {
    * @param {AppModuleState} state - app module state
    * @param {Themes} themeName - the name of the theme to be installed
    */
-  [SET_THEME](state, themeName) {
+  [mutationTypes.SET_THEME](state, themeName) {
     state.theme = themeName;
   }
 };

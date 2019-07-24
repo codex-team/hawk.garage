@@ -1,9 +1,4 @@
 /**
- * Constants for naming mutations and actions
+ * Send query request to get data for initial render
  */
 export const FETCH_INITIAL_DATA = 'FETCH_INITIAL_DATA';
-
-/**
- * Mutation for changing theme
- */
-export const SET_THEME = 'SET_THEME';

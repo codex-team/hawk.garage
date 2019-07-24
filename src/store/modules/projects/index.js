@@ -1,12 +1,19 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
-  ADD_PROJECT,
   CREATE_PROJECT,
   SET_PROJECTS_LIST
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';
+
+/**
+ * Mutations enum for this module
+ */
+const mutationTypes = {
+  ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
+  SET_PROJECTS_LIST: 'SET_PROJECTS_LIST' // Set new projects list
+};
 
 /**
  * @typedef {object} Project - represent project in workspace
@@ -60,7 +67,7 @@ const actions = {
     const newProjectData = await projectsApi.createProject(projectData);
 
     newProjectData.workspaceId = projectData.workspaceId;
-    commit(ADD_PROJECT, newProjectData);
+    commit(mutationTypes.ADD_PROJECT, newProjectData);
   },
 
   /**
@@ -69,7 +76,7 @@ const actions = {
    * @param {[Project]} projects - new projects list
    */
   [SET_PROJECTS_LIST]({ commit }, projects) {
-    commit(SET_PROJECTS_LIST, projects);
+    commit(mutationTypes.SET_PROJECTS_LIST, projects);
   },
 
   /**
@@ -87,11 +94,11 @@ const mutations = {
    * @param {ProjectsModuleState} state - Vuex state
    * @param {Array<Project>} newList - new list of projects
    */
-  [SET_PROJECTS_LIST](state, newList) {
+  [mutationTypes.SET_PROJECTS_LIST](state, newList) {
     Vue.set(state, 'list', newList);
   },
 
-  [ADD_PROJECT](state, project) {
+  [mutationTypes.ADD_PROJECT](state, project) {
     state.list.push(project);
   },
 

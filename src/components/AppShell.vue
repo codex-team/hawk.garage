@@ -43,7 +43,7 @@
 
 <script>
 
-import { SET_THEME, FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
+import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
 import { Themes } from '../store/modules/app';
 import Sidebar from './sidebar/Sidebar';
@@ -114,13 +114,6 @@ export default {
     this.$store.dispatch(FETCH_INITIAL_DATA);
   },
   methods: {
-    /**
-     * Toggles theme (dark/light)
-     */
-    changeTheme() {
-      this.$store.commit(SET_THEME, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
-    },
-
     /**
      * Opens modal window to create new workspace
      */
