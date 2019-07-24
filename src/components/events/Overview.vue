@@ -71,7 +71,7 @@ export default {
   data() {
     const projectId = this.$route.params.projectId;
     const eventId = this.$route.params.eventId;
-    const event = this.$store.getters.project(projectId).events.find(ev => ev.id === eventId);
+    const event = this.$store.getters.getProjectById(projectId).events.find(ev => ev.id === eventId);
 
     event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },

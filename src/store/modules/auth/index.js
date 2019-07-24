@@ -1,12 +1,18 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import {
   LOGIN,
-  SET_TOKENS,
   SIGN_UP,
   REFRESH_TOKENS
-} from '../actions/auth';
-import { RESET_STORE } from '../actions';
-import * as authApi from '../../api/auth';
+} from './actionTypes';
+import { RESET_STORE } from '../../methodsTypes';
+import * as authApi from '../../../api/auth';
+
+/**
+ * Mutations enum for this module
+ */
+const mutationTypes = {
+  SET_TOKENS: 'SET_TOKENS' // Sets user's auth tokens (for example, after authentication or updating tokens)
+};
 
 /**
  * @typedef {object} User - represents user
@@ -60,7 +66,7 @@ const actions = {
   async [LOGIN]({ commit }, user) {
     const tokens = await authApi.login(user.email, user.password);
 
-    commit(SET_TOKENS, tokens);
+    commit(mutationTypes.SET_TOKENS, tokens);
   },
 
   /**
@@ -72,7 +78,7 @@ const actions = {
   async [REFRESH_TOKENS]({ commit, state }) {
     const tokens = await authApi.refreshTokens(state.refreshToken);
 
-    commit(SET_TOKENS, tokens);
+    commit(mutationTypes.SET_TOKENS, tokens);
 
     return tokens;
   },
@@ -93,7 +99,7 @@ const mutations = {
    * @param {string} accessToken - user's access token
    * @param {string} refreshToken - user's refresh token for getting new tokens pair
    */
-  [SET_TOKENS](state, { accessToken, refreshToken }) {
+  [mutationTypes.SET_TOKENS](state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
   },

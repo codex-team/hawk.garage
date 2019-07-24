@@ -6,25 +6,16 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   workspaces {
     id
     name
-    description
     image
     projects {
       id
       name
       image
-      events {
+      events(limit: 30) {
         id
         payload {
           title
           timestamp
-          backtrace {
-            file
-            line
-            sourceCode {
-              line
-              content
-            }
-          }
         }
       }
     }
@@ -45,20 +36,6 @@ export const MUTATION_CREATE_WORKSPACE = `
       name
       description
       image
-    }
-  }
-`;
-
-/**
- * Mutation for creating new project
- */
-export const MUTATION_CREATE_PROJECT = `
-  mutation createProject(
-    $name: String!,
-    $workspaceId: ID!
-  ) {
-    createProject(name: $name, workspaceId: $workspaceId) {
-      id
     }
   }
 `;
