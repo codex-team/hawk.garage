@@ -2,6 +2,7 @@
 import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
+  REMOVE_WORKSPACE,
   SET_CURRENT_WORKSPACE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
