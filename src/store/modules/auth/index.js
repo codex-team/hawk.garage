@@ -4,9 +4,9 @@ import {
   SET_TOKENS,
   SIGN_UP,
   REFRESH_TOKENS
-} from '../actions/auth';
-import { RESET_STORE } from '../actions';
-import * as authApi from '../../api/auth';
+} from './methodsTypes';
+import { RESET_STORE } from '../../methodsTypes';
+import * as authApi from '../../../api/auth';
 
 /**
  * @typedef {object} User - represents user

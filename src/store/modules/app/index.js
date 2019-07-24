@@ -1,8 +1,8 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { SET_THEME, FETCH_INITIAL_DATA } from '../actions/app';
-import * as commonApi from '../../api/common';
-import { SET_WORKSPACES_LIST } from '../actions/workspaces';
-import { SET_PROJECTS_LIST } from '../actions/projects';
+import { SET_THEME, FETCH_INITIAL_DATA } from './methodsTypes';
+import * as commonApi from '../../../api/common';
+import { SET_WORKSPACES_LIST } from '../workspaces/methodsTypes';
+import { SET_PROJECTS_LIST } from '../projects/methodsTypes';
 
 /**
  * @enum {string} - Available themes

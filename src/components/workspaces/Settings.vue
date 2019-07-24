@@ -17,7 +17,7 @@
 
 <script>
 
-import { REMOVE_WORKSPACE } from '../../store/actions/workspaces';
+import { REMOVE_WORKSPACE } from '../../store/modules/workspaces/methodsTypes';
 
 export default {
   name: 'WorkspaceSettings',

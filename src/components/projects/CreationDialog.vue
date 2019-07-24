@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { CREATE_PROJECT } from '../../store/actions/projects';
+import { CREATE_PROJECT } from '../../store/modules/projects/methodsTypes';
 import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';

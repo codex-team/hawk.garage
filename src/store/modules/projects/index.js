@@ -3,9 +3,9 @@ import {
   ADD_PROJECT,
   CREATE_PROJECT,
   SET_PROJECTS_LIST
-} from '../actions/projects';
-import { RESET_STORE } from '../actions';
-import * as projectsApi from '../../api/projects';
+} from './methodsTypes';
+import { RESET_STORE } from '../../methodsTypes';
+import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';
 
 /**
