@@ -33,12 +33,13 @@
           <CodeBlock>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTPeWVWuJwiA4xidun__FwFc0XyBBJKCUcKi79mp-uY</CodeBlock>
         </template>
       </InstructionBlock>
-      <InstructionBlock :step-number="2">
+      <InstructionBlock :step-number="2" last>
         <template #header>
           Follow the installation guide
         </template>
         <template #content>
           Install module with Composer:
+          <CodeBlock>$ composer require codex-team/hawk.php</CodeBlock>
         </template>
       </InstructionBlock>
     </div>
@@ -112,6 +113,7 @@ export default {
     }
 
     &__instructions-header {
+      margin-bottom: 20px;
       color: var(--color-text-second);
       font-weight: bold;
       font-size: 12px;
