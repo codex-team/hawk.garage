@@ -34,7 +34,7 @@ export default {
     project() {
       const projectId = this.$route.params.projectId;
 
-      return this.$store.getters.project(projectId);
+      return this.$store.getters.getProjectById(projectId);
     }
   }
 };

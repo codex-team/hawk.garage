@@ -14,7 +14,7 @@
 
 <script>
 import Form from './Form';
-import { LOGIN } from '../../store/actions/auth';
+import { LOGIN } from '../../store/modules/auth/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {

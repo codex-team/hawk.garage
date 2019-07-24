@@ -43,9 +43,8 @@
 
 <script>
 
-import { THEME_CHANGE } from '../store/actions/app';
-import { FETCH_WORKSPACES, SET_CURRENT_WORKSPACE } from '../store/actions/workspaces';
-import { Themes } from '../store/modules/app';
+import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
+import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
 import Sidebar from './sidebar/Sidebar';
 import WorkspaceCreationDialog from './workspaces/CreationDialog';
 import ProjectCreationDialog from './projects/CreationDialog';
@@ -83,10 +82,11 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      if (!this.$store.state.workspaces.current) return this.$store.getters.allProjects;
-      return this.$store.state.workspaces.list
-        .find(ws => ws.id === this.$store.state.workspaces.current.id)
-        .projects;
+      if (!this.$store.state.workspaces.current) {
+        return this.$store.state.projects.list;
+      }
+      return this.$store.state.projects.list
+        .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);
     },
 
     /**
@@ -110,16 +110,9 @@ export default {
     /**
      * Fetch user data
      */
-    this.$store.dispatch(FETCH_WORKSPACES);
+    this.$store.dispatch(FETCH_INITIAL_DATA);
   },
   methods: {
-    /**
-     * Toggles theme (dark/light)
-     */
-    changeTheme() {
-      this.$store.commit(THEME_CHANGE, this.$store.state.app.theme === Themes.DARK ? Themes.LIGHT : Themes.DARK);
-    },
-
     /**
      * Opens modal window to create new workspace
      */

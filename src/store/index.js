@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import app from './modules/app';
 import auth from './modules/auth';
 import workspaces from './modules/workspaces';
+import projects from './modules/projects';
 
 import createPersistedState from 'vuex-persistedstate';
 
@@ -15,7 +16,8 @@ export default new Vuex.Store({
   modules: {
     app,
     auth,
-    workspaces
+    workspaces,
+    projects
   },
   plugins: [ createPersistedState() ],
   strict: debug

@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { RESET_STORE } from '../store/actions';
+import { RESET_STORE } from '../store/methodsTypes';
 import PopupWindow from './utils/PopupWindow';
 
 export default {
