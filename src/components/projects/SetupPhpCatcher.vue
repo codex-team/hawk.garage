@@ -1,7 +1,7 @@
 <template>
   <div class="setup-php-catcher">
     <div class="setup-php-catcher__header">
-      <CatcherLabel/>
+      <CatcherLabel />
       <div class="setup-php-catcher__name">
         PHP
       </div>
@@ -10,10 +10,10 @@
       </div>
       <div class="setup-php-catcher__info">
         <div class="setup-php-catcher__source-code">
-          View source
+          <a href="https://github.com/codex-team/hawk.php">View source</a>
         </div>
         <div class="setup-php-catcher__readme">
-          View README.md
+          <a href="https://github.com/codex-team/hawk.php/blob/master/README.md">View README.md</a>
         </div>
         <div class="setup-php-catcher__last-version">
           Last version: 1.2.3
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import CatcherLabel from './CatcherLabel';
+import CatcherLabel from './CatcherLabel';
 
 export default {
   name: 'SetupPhpCatcher',
@@ -65,6 +65,7 @@ export default {
       font-weight: 500;
       font-size: 14px;
       line-height: 20.5px;
+      white-space: nowrap;
     }
 
     &__source-code {
