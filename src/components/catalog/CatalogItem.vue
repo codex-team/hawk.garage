@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import CatcherLabel from './CatcherLabel';
+import CatcherLabel from './cathcers/CatcherLabel';
 
 export default {
   name: 'CatalogItem',

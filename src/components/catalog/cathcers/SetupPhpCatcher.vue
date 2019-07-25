@@ -86,10 +86,10 @@
 
 <script>
 import CatcherLabel from './CatcherLabel';
-import GuideStepBlock from './GuideStepBlock';
-import GuideSection from './GuideSection';
-import CodeBlock from '../utils/CodeBlock';
-import Icon from '../utils/Icon';
+import GuideStepBlock from '../GuideStepBlock';
+import GuideSection from '../GuideSection';
+import CodeBlock from '../../utils/CodeBlock';
+import Icon from '../../utils/Icon';
 
 export default {
   name: 'SetupPhpCatcher',
@@ -111,7 +111,7 @@ export default {
     &__header {
       height: 200px;
       padding: 20px;
-      background: radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url('../../assets/catalog/php.svg');
+      background: radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url('../../../assets/catalog/php.svg');
     }
 
     &__header-link {
@@ -154,7 +154,7 @@ export default {
 
     &__source-code {
       padding-left: 30px;
-      background: no-repeat  left/ auto 100%  url("../../assets/github.svg");
+      background: no-repeat  left/ auto 100%  url("../../../assets/github.svg");
     }
 
     &__readme {
