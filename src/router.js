@@ -46,7 +46,7 @@ const router = new Router({
         {
           path: 'projects/:projectId/setup-catcher/php',
           name: 'setup-catcher',
-          component: () => import(/* webpackChunkName: 'project-add-catcher' */'./components/projects/SetupPhpCatcher.vue')
+          component: () => import(/* webpackChunkName: 'project-setup-catcher' */'./components/projects/SetupPhpCatcher.vue')
         }
       ]
     },

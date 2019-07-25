@@ -1,7 +1,16 @@
 <template>
   <div class="setup-php-catcher">
     <div class="setup-php-catcher__header">
-      <CatcherLabel />
+      <router-link
+        class="setup-php-catcher__header-link"
+        :to="{name:'add-catcher', params: {projectId: $route.params.projectId}}"
+      >
+        <Icon
+          class="setup-php-catcher__header-link-icon"
+          symbol="arrow-left"
+        />
+        Back to other cathchers
+      </router-link>
       <div class="setup-php-catcher__name">
         PHP
       </div>
@@ -24,48 +33,96 @@
       <div class="setup-php-catcher__instructions-header">
         INSTALLATION
       </div>
-      <InstructionBlock :step-number="1">
+      <GuideStepBlock :step-number="1">
         <template #header>
-          Get an Integration token
+          GET AN INTEGRATION TOKEN
         </template>
         <template #content>
           Your Integration token for codex.so PHP:
           <CodeBlock>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTPeWVWuJwiA4xidun__FwFc0XyBBJKCUcKi79mp-uY</CodeBlock>
         </template>
-      </InstructionBlock>
-      <InstructionBlock :step-number="2" last>
+      </GuideStepBlock>
+      <GuideStepBlock
+        :step-number="2"
+        last
+      >
         <template #header>
-          Follow the installation guide
+          FOLLOW THE INSTALLATION GUIDE
         </template>
         <template #content>
           Install module with Composer:
           <CodeBlock>$ composer require codex-team/hawk.php</CodeBlock>
+          Next you can use module as standalone class or connect it with Monolog.
+          <ul>
+            <li><a href="#standalone-class">Use as standalone class</a></li>
+            <li><a href="#monolog-handler">Use as Monolog handler</a></li>
+          </ul>
         </template>
-      </InstructionBlock>
+      </GuideStepBlock>
+      <GuideSection>
+        <template #header>
+          Using as standalone class
+        </template>
+        <template #content>
+          Create an instance with Token at the entry point of your project.
+          <CodeBlock>\Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP</CodeBlock>
+          <h2>Enable handlers</h2>
+          By default Hawk will catch everything. You can run function with no params.
+          <CodeBlock>\Hawk\HawkCatcher::enableHandlers();</CodeBlock>
+          It is similar to
+          <CodeBlock>
+            \Hawk\HawkCatcher::enableHandlers(
+            true, // exceptions
+            true, // errors
+            true  // shitdown
+            );
+          </CodeBlock>
+          You can pass types of …
+        </template>
+      </GuideSection>
     </div>
   </div>
 </template>
 
 <script>
 import CatcherLabel from './CatcherLabel';
-import InstructionBlock from './InstructionBlock'
+import GuideStepBlock from './GuideStepBlock';
+import GuideSection from './GuideSection';
 import CodeBlock from '../utils/CodeBlock';
+import Icon from '../utils/Icon';
+
 export default {
   name: 'SetupPhpCatcher',
   components: {
-    CatcherLabel,
-    InstructionBlock,
-    CodeBlock
+    Icon,
+    GuideStepBlock,
+    CodeBlock,
+    GuideSection
   }
 };
 </script>
 
 <style>
   .setup-php-catcher {
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 14px;
+
     &__header {
       height: 200px;
       padding: 20px;
       background: radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url('../../assets/catalog/php.svg');
+    }
+
+    &__header-link {
+      font-size: 14px;
+      line-height: 16px;
+      opacity: 0.6;
+    }
+
+    &__header-link-icon {
+      width:7px;
+      height:12px
     }
 
     &__name {
@@ -84,6 +141,7 @@ export default {
       display: flex;
       margin-top: 40px;
     }
+
     &__source-code,
     &__readme,
     &__last-version {

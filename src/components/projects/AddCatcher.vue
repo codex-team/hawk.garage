@@ -47,6 +47,7 @@
           :name="item.name"
           :image="item.image"
           :description="item.description"
+          @click.native="$router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId}})"
         />
       </div>
     </div>
@@ -65,6 +66,7 @@ const catalogItems = [
   },
   {
     name: 'PHP',
+    page: 'php',
     description: 'Can be connected as standalone script or as monolog provider',
     image: require('../../assets/catalog/php.svg')
   },

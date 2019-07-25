@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'InstructionBlock',
+  name: 'GuideStepBlock',
   props: {
     stepNumber: {
       type: Number,
@@ -45,9 +45,9 @@ export default {
   &__step {
     position: relative;
     width: 28px;
-    font-size: 12px;
     height: 28px;
     font-weight: bold;
+    font-size: 12px;
     line-height: 25px;
     text-align: center;
     border: 2px solid var(--color-text-main);
@@ -57,8 +57,10 @@ export default {
   &__step-line {
     flex-grow: 3;
     width: 1px;
+
     margin: 7px auto;
     border: 1px solid var(--color-text-second);
+    opacity: 0.14;
   }
 
   &__header {
@@ -71,8 +73,8 @@ export default {
   }
 
   &__content {
-    font-size: 14px;
     margin-left: 10px;
+    font-size: 14px;
   }
 }
 </style>
