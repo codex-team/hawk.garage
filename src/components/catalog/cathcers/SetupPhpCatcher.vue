@@ -14,6 +14,7 @@
       <div class="setup-php-catcher__name">
         PHP
       </div>
+      <CatcherLabel class="setup-php-catcher__label" />
       <div class="setup-php-catcher__description">
         Can be connected as standalone script or as monolog provider
       </div>
@@ -53,7 +54,7 @@
           Install module with Composer:
           <CodeBlock>$ composer require codex-team/hawk.php</CodeBlock>
           Next you can use module as standalone class or connect it with Monolog.
-          <ul>
+          <ul class="setup-php-catcher__link-list">
             <li><a href="#standalone-class">Use as standalone class</a></li>
             <li><a href="#monolog-handler">Use as Monolog handler</a></li>
           </ul>
@@ -97,7 +98,8 @@ export default {
     Icon,
     GuideStepBlock,
     CodeBlock,
-    GuideSection
+    GuideSection,
+    CatcherLabel
   }
 };
 </script>
@@ -109,12 +111,15 @@ export default {
     font-size: 14px;
 
     &__header {
+      display: flex;
+      flex-wrap: wrap;
       height: 200px;
       padding: 20px;
       background: radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url('../../../assets/catalog/php.svg');
     }
 
     &__header-link {
+      flex-basis: 100%;
       font-size: 14px;
       line-height: 16px;
       opacity: 0.6;
@@ -132,6 +137,7 @@ export default {
     }
 
     &__description {
+      flex-basis: 100%;
       margin-top: 10px;
       font-size: 15px;
       line-height: 1.2;
@@ -139,9 +145,14 @@ export default {
 
     &__info {
       display: flex;
+      flex-basis: 100%;
       margin-top: 40px;
     }
 
+    &__label{
+      margin-top: 20px;
+      margin-left: 20px;
+    }
     &__source-code,
     &__readme,
     &__last-version {
@@ -176,6 +187,38 @@ export default {
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.15px;
+    }
+
+    &__link-list {
+      color: var(--color-indicator-medium);
+     & li {
+       display: flex;
+       align-items: center;
+       line-height: 16px;
+       margin-top: 15px;
+
+       :last-child {
+         margin-top: 0;
+       }
+
+       a {
+         border-bottom: 1px dashed var(--color-indicator-medium);
+       }
+
+       &::before {
+         display: inline-block;
+         min-width: 4px;
+         min-height: 4px;
+         margin-right: 8px;
+         margin-left: 8px;
+         color: var(--color-indicator-medium);
+         font-weight: bold;
+         background-color: var(--color-indicator-medium);
+         border-radius: 50%;
+         content: " ";
+       }
+     }
+
     }
   }
 </style>

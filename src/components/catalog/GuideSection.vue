@@ -18,15 +18,16 @@ export default {
 <style>
 .guide-section {
   position: relative;
+  margin-top: 20px;
   padding: 20px;
   border: solid 1px rgba(219, 230, 255, 0.2);
   border-radius: 5px;
 
   &__header {
     position: absolute;
-    padding: 7px;
     top: 0;
-    left: 20px;
+    left: 13px;
+    padding: 7px;
     font-weight: bold;
     font-size: 18px;
     background-color: var(--color-bg-second);
