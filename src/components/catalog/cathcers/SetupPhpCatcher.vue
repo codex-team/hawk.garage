@@ -66,7 +66,9 @@
         </template>
         <template #content>
           Create an instance with Token at the entry point of your project.
-          <CodeBlock>\Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP</CodeBlock>
+          <CodeBlock>
+            \Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP
+          </CodeBlock>
           <h2>Enable handlers</h2>
           By default Hawk will catch everything. You can run function with no params.
           <CodeBlock>\Hawk\HawkCatcher::enableHandlers();</CodeBlock>
@@ -75,7 +77,7 @@
             \Hawk\HawkCatcher::enableHandlers(
             true, // exceptions
             true, // errors
-            true  // shitdown
+            true // shitdown
             );
           </CodeBlock>
           You can pass types of …
@@ -126,8 +128,8 @@ export default {
     }
 
     &__header-link-icon {
-      width:7px;
-      height:12px
+      width: 7px;
+      height: 12px
     }
 
     &__name {
@@ -149,10 +151,11 @@ export default {
       margin-top: 40px;
     }
 
-    &__label{
+    &__label {
       margin-top: 20px;
       margin-left: 20px;
     }
+
     &__source-code,
     &__readme,
     &__last-version {
@@ -165,7 +168,7 @@ export default {
 
     &__source-code {
       padding-left: 30px;
-      background: no-repeat  left/ auto 100%  url("../../../assets/github.svg");
+      background: no-repeat left/ auto 100% url("../../../assets/github.svg");
     }
 
     &__readme {
@@ -191,33 +194,34 @@ export default {
 
     &__link-list {
       color: var(--color-indicator-medium);
-     & li {
-       display: flex;
-       align-items: center;
-       line-height: 16px;
-       margin-top: 15px;
 
-       :last-child {
-         margin-top: 0;
-       }
+      & li {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+        line-height: 16px;
 
-       a {
-         border-bottom: 1px dashed var(--color-indicator-medium);
-       }
+        :last-child {
+          margin-top: 0;
+        }
 
-       &::before {
-         display: inline-block;
-         min-width: 4px;
-         min-height: 4px;
-         margin-right: 8px;
-         margin-left: 8px;
-         color: var(--color-indicator-medium);
-         font-weight: bold;
-         background-color: var(--color-indicator-medium);
-         border-radius: 50%;
-         content: " ";
-       }
-     }
+        a {
+          border-bottom: 1px dashed var(--color-indicator-medium);
+        }
+
+        &::before {
+          display: inline-block;
+          min-width: 4px;
+          min-height: 4px;
+          margin-right: 8px;
+          margin-left: 8px;
+          color: var(--color-indicator-medium);
+          font-weight: bold;
+          background-color: var(--color-indicator-medium);
+          border-radius: 50%;
+          content: " ";
+        }
+      }
 
     }
   }
