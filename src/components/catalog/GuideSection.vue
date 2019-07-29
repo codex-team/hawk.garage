@@ -1,8 +1,8 @@
 <template>
   <div class="guide-section">
-    <h1 class="guide-section__header">
+    <h2 class="guide-section__header">
       <slot name="header" />
-    </h1>
+    </h2>
     <div class="guide-section__content">
       <slot name="content" />
     </div>
@@ -35,7 +35,7 @@ export default {
     transform: translateY(-50%);
   }
 
-  h2 {
+  h3 {
     margin: 20px 0 15px 0;
   }
 

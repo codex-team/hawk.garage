@@ -73,7 +73,7 @@
           <CodeBlock>
             \Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP
           </CodeBlock>
-          <h2>Enable handlers</h2>
+          <h3>Enable handlers</h3>
           <p>
             By default Hawk will catch everything. You can run function with no params.
           </p>
