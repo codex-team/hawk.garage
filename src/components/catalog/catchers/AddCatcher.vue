@@ -43,6 +43,7 @@
         <CatalogItem
           v-for="item in items"
           :key="item.name"
+          type="catcher"
           class="project-add-catcher__catalog-item"
           :name="item.name"
           :image="item.image"
@@ -56,7 +57,7 @@
 
 <script>
 import Icon from '../../utils/Icon';
-import CatalogItem from '../CatalogItem';
+import CatalogItem from '../Item';
 
 const catalogItems = [
   {

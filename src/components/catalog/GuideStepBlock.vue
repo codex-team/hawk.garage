@@ -4,7 +4,10 @@
       <div class="instruction-block__step">
         {{ stepNumber }}
       </div>
-      <div v-if="!last" class="instruction-block__step-line" />
+      <div
+        v-if="!last"
+        class="instruction-block__step-line"
+      />
     </div>
     <div class="instruction-block__content-container">
       <div class="instruction-block__header">

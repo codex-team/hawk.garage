@@ -2,13 +2,19 @@
   <div
     class="catcher-label"
   >
-    CATCHER
+    {{ itemType.toUpperCase() }}
   </div>
 </template>
 
 <script>
 export default {
-  name: 'CatcherLabel'
+  name: 'CatalogItemLabel',
+  props: {
+    itemType: {
+      type: String,
+      required: true
+    }
+  }
 };
 </script>
 

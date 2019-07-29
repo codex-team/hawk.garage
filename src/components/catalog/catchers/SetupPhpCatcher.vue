@@ -15,7 +15,10 @@
         <div class="guide-page__name">
           PHP
         </div>
-        <CatcherLabel class="guide-page__label" />
+        <CatalogItemLabel
+          class="guide-page__label"
+          item-type="catcher"
+        />
       </div>
       <div class="guide-page__description">
         Can be connected as standalone script or as monolog provider
@@ -98,7 +101,7 @@
 </template>
 
 <script>
-import CatcherLabel from './CatcherLabel';
+import CatalogItemLabel from '../ItemLabel';
 import GuideStepBlock from '../GuideStepBlock';
 import GuideSection from '../GuideSection';
 import CodeBlock from '../../utils/CodeBlock';
@@ -111,7 +114,7 @@ export default {
     GuideStepBlock,
     CodeBlock,
     GuideSection,
-    CatcherLabel
+    CatalogItemLabel
   }
 };
 </script>

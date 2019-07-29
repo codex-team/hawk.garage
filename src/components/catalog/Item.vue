@@ -4,7 +4,10 @@
       class="catalog-item__header"
       :style="{'background-image': `url(${image})`}"
     >
-      <CatcherLabel class="catalog-item__type"/>
+      <CatalogItemLabel
+        class="catalog-item__type"
+        :item-type="type"
+      />
     </div>
     <div class="catalog-item__info">
       <div class="catalog-item__name">
@@ -21,12 +24,12 @@
 </template>
 
 <script>
-import CatcherLabel from './catchers/CatcherLabel';
+import CatalogItemLabel from './ItemLabel';
 
 export default {
   name: 'CatalogItem',
   components: {
-    CatcherLabel
+    CatalogItemLabel
   },
   props: {
     name: {
@@ -38,6 +41,10 @@ export default {
       required: true
     },
     image: {
+      type: String,
+      required: true
+    },
+    type: {
       type: String,
       required: true
     }
