@@ -1,39 +1,39 @@
 <template>
-  <div class="setup-php-catcher">
-    <div class="setup-php-catcher__header">
+  <div class="guide-page">
+    <div class="guide-page__header">
       <router-link
-        class="setup-php-catcher__header-link"
+        class="guide-page__header-link"
         :to="{name:'add-catcher', params: {projectId: $route.params.projectId}}"
       >
         <Icon
-          class="setup-php-catcher__header-link-icon"
+          class="guide-page__header-link-icon"
           symbol="arrow-left"
         />
         Back to other catchers
       </router-link>
-      <div class="setup-php-catcher__name-container">
-        <div class="setup-php-catcher__name">
+      <div class="guide-page__name-container">
+        <div class="guide-page__name">
           PHP
         </div>
-        <CatcherLabel class="setup-php-catcher__label" />
+        <CatcherLabel class="guide-page__label" />
       </div>
-      <div class="setup-php-catcher__description">
+      <div class="guide-page__description">
         Can be connected as standalone script or as monolog provider
       </div>
-      <div class="setup-php-catcher__info">
-        <div class="setup-php-catcher__source-code">
+      <div class="guide-page__info">
+        <div class="guide-page__source-code">
           <a href="https://github.com/codex-team/hawk.php">View source</a>
         </div>
-        <div class="setup-php-catcher__readme">
+        <div class="guide-page__readme">
           <a href="https://github.com/codex-team/hawk.php/blob/master/README.md">View README.md</a>
         </div>
-        <div class="setup-php-catcher__last-version">
+        <div class="guide-page__last-version">
           Last version: 1.2.3
         </div>
       </div>
     </div>
-    <div class="setup-php-catcher__instructions">
-      <div class="setup-php-catcher__instructions-header">
+    <div class="guide-page__instructions">
+      <div class="guide-page__instructions-header">
         INSTALLATION
       </div>
       <GuideStepBlock :step-number="1">
@@ -56,7 +56,7 @@
           Install module with Composer:
           <CodeBlock>$ composer require codex-team/hawk.php</CodeBlock>
           Next you can use module as standalone class or connect it with Monolog.
-          <ul class="setup-php-catcher__link-list">
+          <ul class="guide-page__link-list">
             <li><a href="#standalone-class">Use as standalone class</a></li>
             <li><a href="#monolog-handler">Use as Monolog handler</a></li>
           </ul>
@@ -109,7 +109,7 @@ export default {
 </script>
 
 <style>
-  .setup-php-catcher {
+  .guide-page {
     overflow-x: hidden;
     overflow-y: auto;
     font-size: 14px;
@@ -135,12 +135,11 @@ export default {
     }
 
     &__name-container {
-      margin-top: 20px;
       display: flex;
+      margin-top: 20px;
     }
 
     &__name {
-      /*margin-top: 20px;*/
       font-weight: bold;
       font-size: 43px;
     }
@@ -227,7 +226,6 @@ export default {
           content: " ";
         }
       }
-
     }
   }
 </style>
