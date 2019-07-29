@@ -1,5 +1,5 @@
 <template>
-  <pre><code><slot /></code></pre>
+  <pre class="code-block"><code><slot /></code></pre>
 </template>
 
 <script>
