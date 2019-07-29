@@ -9,12 +9,14 @@
           class="setup-php-catcher__header-link-icon"
           symbol="arrow-left"
         />
-        Back to other cathchers
+        Back to other catchers
       </router-link>
-      <div class="setup-php-catcher__name">
-        PHP
+      <div class="setup-php-catcher__name-container">
+        <div class="setup-php-catcher__name">
+          PHP
+        </div>
+        <CatcherLabel class="setup-php-catcher__label" />
       </div>
-      <CatcherLabel class="setup-php-catcher__label" />
       <div class="setup-php-catcher__description">
         Can be connected as standalone script or as monolog provider
       </div>
@@ -114,14 +116,13 @@ export default {
 
     &__header {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       height: 200px;
       padding: 20px;
       background: radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url('../../../assets/catalog/php.svg');
     }
 
     &__header-link {
-      flex-basis: 100%;
       font-size: 14px;
       line-height: 16px;
       opacity: 0.6;
@@ -129,30 +130,34 @@ export default {
 
     &__header-link-icon {
       width: 7px;
-      height: 12px
+      height: 12px;
+      margin-right: 8px;
+    }
+
+    &__name-container {
+      margin-top: 20px;
+      display: flex;
     }
 
     &__name {
-      margin-top: 10px;
+      /*margin-top: 20px;*/
       font-weight: bold;
       font-size: 43px;
     }
 
     &__description {
-      flex-basis: 100%;
-      margin-top: 10px;
+      margin-top: 5px;
       font-size: 15px;
       line-height: 1.2;
-    }
+     }
 
     &__info {
       display: flex;
-      flex-basis: 100%;
-      margin-top: 40px;
+      margin-top: auto;
     }
 
     &__label {
-      margin-top: 20px;
+      margin-top: 10px;
       margin-left: 20px;
     }
 
