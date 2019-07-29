@@ -4,11 +4,10 @@
       class="catalog-item__header"
       :style="{'background-image': `url(${image})`}"
     >
-      <div
+      <CatalogItemLabel
         class="catalog-item__type"
-      >
-        CATCHER
-      </div>
+        :item-type="type"
+      />
     </div>
     <div class="catalog-item__info">
       <div class="catalog-item__name">
@@ -25,9 +24,13 @@
 </template>
 
 <script>
+import CatalogItemLabel from './ItemLabel';
 
 export default {
   name: 'CatalogItem',
+  components: {
+    CatalogItemLabel
+  },
   props: {
     name: {
       type: String,
@@ -38,6 +41,10 @@ export default {
       required: true
     },
     image: {
+      type: String,
+      required: true
+    },
+    type: {
       type: String,
       required: true
     }
@@ -89,16 +96,7 @@ export default {
   }
 
   &__type {
-    width: 60px;
-    height: 19px;
     margin: 12px 0 0 13px;
-    color: #ffffff;
-    font-weight: 500;
-    font-size: 11px;
-    line-height: 19px;
-    text-align: center;
-    background-color: #ed2f85;
-    border-radius: 4px;
   }
 }
 </style>

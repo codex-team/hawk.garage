@@ -43,10 +43,12 @@
         <CatalogItem
           v-for="item in items"
           :key="item.name"
+          type="catcher"
           class="project-add-catcher__catalog-item"
           :name="item.name"
           :image="item.image"
           :description="item.description"
+          @click.native="$router.push({name: item.page, params: {projectId: $route.params.projectId}})"
         />
       </div>
     </div>
@@ -54,39 +56,40 @@
 </template>
 
 <script>
-import Icon from '../utils/Icon';
-import CatalogItem from './CatalogItem';
+import Icon from '../../utils/Icon';
+import CatalogItem from '../Item';
 
 const catalogItems = [
   {
     name: 'NODE.JS',
     description: 'Track errors from your backend application written on JavaScript',
-    image: require('../../assets/catalog/nodejs.svg')
+    image: require('../../../assets/catalog/nodejs.svg')
   },
   {
     name: 'PHP',
+    page: 'setup-php-catcher',
     description: 'Can be connected as standalone script or as monolog provider',
-    image: require('../../assets/catalog/php.svg')
+    image: require('../../../assets/catalog/php.svg')
   },
   {
     name: 'PYTHON',
     description: 'Small, simple and full-featured catcher',
-    image: require('../../assets/catalog/python.svg')
+    image: require('../../../assets/catalog/python.svg')
   },
   {
     name: 'JAVASCRIPT',
     description: 'Advanced client catcher with errors bunching',
-    image: require('../../assets/catalog/javascript/js@3x.jpg')
+    image: require('../../../assets/catalog/javascript/js@3x.jpg')
   },
   {
     name: 'GO',
     description: 'Deadly simple and fast errors tracking',
-    image: require('../../assets/catalog/go/go@3x.jpg')
+    image: require('../../../assets/catalog/go/go@3x.jpg')
   },
   {
     name: 'SCALA',
     description: 'Boost your scala application quality',
-    image: require('../../assets/catalog/scala/scala@3x.jpg')
+    image: require('../../../assets/catalog/scala/scala@3x.jpg')
   }
 ];
 
@@ -105,7 +108,7 @@ export default {
 </script>
 
 <style>
-  @import '../../styles/custom-properties.css';
+  @import '../../../styles/custom-properties.css';
 
   .project-add-catcher {
     height: 100%;
@@ -192,7 +195,7 @@ export default {
       font-size: 14px;
       line-height: 1.43;
       background-color: var(--color-bg-second);
-      background-image: url("../../assets/instruction.svg");
+      background-image: url("../../../assets/instruction.svg");
       background-repeat: no-repeat;
       background-position: 15px 50%;
       background-size: 48px;

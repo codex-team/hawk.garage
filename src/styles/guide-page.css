@@ -1,0 +1,128 @@
+.guide-page {
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-size: 14px;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    padding: 20px;
+    background: radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url('../assets/catalog/php.svg');
+  }
+
+  &__header-link {
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.6;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__header-link-icon {
+    width: 7px;
+    height: 12px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  &__name-container {
+    display: flex;
+    margin-top: 20px;
+  }
+
+  &__name {
+    font-weight: bold;
+    font-size: 43px;
+  }
+
+  &__description {
+    margin-top: 5px;
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  &__info {
+    display: flex;
+    margin-top: auto;
+  }
+
+  &__label {
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+
+  &__source-code,
+  &__readme,
+  &__last-version {
+    height: 20.5px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20.5px;
+    white-space: nowrap;
+  }
+
+  &__source-code {
+    padding-left: 30px;
+    background: no-repeat left/ auto 100% url("../assets/github.svg");
+  }
+
+  &__readme {
+    margin-left: 20px;
+  }
+
+  &__last-version {
+    margin-left: auto;
+    font-weight: normal;
+  }
+
+  &__instructions {
+    padding: 40px
+  }
+
+  &__instructions-header {
+    margin-bottom: 20px;
+    color: var(--color-text-second);
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 0.15px;
+  }
+
+  &__link-list {
+    color: var(--color-indicator-medium);
+
+    & li {
+      display: flex;
+      align-items: center;
+      margin-top: 15px;
+      line-height: 16px;
+
+      :last-child {
+        margin-top: 0;
+      }
+
+      a {
+        padding-bottom: 2px;
+        border-bottom: 1px dashed var(--color-indicator-medium);
+      }
+
+      &::before {
+        display: inline-block;
+        min-width: 4px;
+        min-height: 4px;
+        margin: -2px 8px 0 8px;
+        color: var(--color-indicator-medium);
+        font-weight: bold;
+        background-color: var(--color-indicator-medium);
+        border-radius: 50%;
+        content: " ";
+      }
+    }
+  }
+
+  .code-block {
+    margin: 15px 0;
+  }
+}
