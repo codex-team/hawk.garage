@@ -36,7 +36,6 @@ export default {
 <style>
 .instruction-block {
   display: flex;
-  min-height: 210px;
 
   &__step-container {
     display: flex;
@@ -77,6 +76,10 @@ export default {
     margin-top: 15px;
     margin-left: 10px;
     font-size: 14px;
+  }
+
+  &__content-container {
+    margin-bottom: 80px;
   }
 }
 </style>
