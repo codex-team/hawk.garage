@@ -43,7 +43,7 @@ export default {
       ],
       altLink: '/reset',
       altText: 'Recover password',
-      submitText: 'Login',
+      submitText: this.$t('login.submitText'),
       message: null
     };
   },
@@ -70,3 +70,5 @@ export default {
 </script>
 
 <style src="../../styles/auth-page.css"></style>
+
+<i18n src="./translations.json"></i18n>

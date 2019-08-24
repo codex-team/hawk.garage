@@ -1,0 +1,12 @@
+{
+  "en": {
+    "login": {
+      "submitText": "Login"
+    }
+  },
+  "ru": {
+    "login": {
+      "submitText": "Войти"
+    }
+  }
+}
