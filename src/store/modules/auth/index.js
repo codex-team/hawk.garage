@@ -2,6 +2,7 @@
 import {
   LOGIN,
   SIGN_UP,
+  QUERY_SET_TOKENS,
   REFRESH_TOKENS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -66,6 +67,15 @@ const actions = {
   async [LOGIN]({ commit }, user) {
     const tokens = await authApi.login(user.email, user.password);
 
+    commit(mutationTypes.SET_TOKENS, tokens);
+  },
+
+  /**
+   * Set tokens after callback from OAuth
+   * @param {function} commit - standard Vuex commit function
+   * @param {User} tokens - user's auth tokens
+   */
+  async [QUERY_SET_TOKENS]({ commit }, tokens) {
     commit(mutationTypes.SET_TOKENS, tokens);
   },
 
