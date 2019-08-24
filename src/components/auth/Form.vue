@@ -6,8 +6,8 @@
       <div class="auth-form__caption">Time for quality</div>
     </div>
     <div class="auth-form__social-block">
-      <a class="auth-form__github-button" :href="$API_AUTH_GITHUB+'/auth/google'">Continue</a>
-      <a class="auth-form__google-button" :href="$API_AUTH_GOOGLE+'/auth/google'">Sign in</a>
+      <a class="auth-form__github-button" :href="$API_AUTH_GITHUB">Continue</a>
+      <a class="auth-form__google-button" :href="$API_AUTH_GOOGLE">Sign in</a>
     </div>
     <div class="auth-form__container">
       <div class="auth-form__picture" />
