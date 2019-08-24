@@ -88,14 +88,13 @@ export default {
     display: inline-block;
     color: #fff;
     font-weight: bold;
-    font-size: 19px;
+    font-size: 30px;
   }
 
   &__caption {
     display: inline-block;
-    margin-left: 15px;
     color: var(--color-text-second);
-    font-size: 14px;
+    font-size: 16px;
   }
 
   &__title {
@@ -121,8 +120,13 @@ export default {
     padding-right: 15px;
     margin-left: 15px;
     font-family: Roboto;
+    font-weight: 500;
     font-size: 14.4px;
     color: #ffffff;
+  }
+
+  &__github-button:hover {
+    background-color: #07080a;
   }
 
   &__google-button {
@@ -137,8 +141,13 @@ export default {
     padding-right: 15px;
     margin-left: 15px;
     font-family: Roboto;
+    font-weight: 500;
     font-size: 14.4px;
     color: var(--color-text-dark);
+  }
+
+  &__google-button:hover {
+    background-color: #e6eeff;
   }
 
   &__container {
