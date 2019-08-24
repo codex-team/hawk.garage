@@ -11,7 +11,7 @@ export const SIGN_UP = 'SIGN_UP';
 /**
  * Set tokens from query parameters
  */
-export const QUERY_SET_TOKENS = 'QUERY_SET_TOKENS';
+export const SET_TOKENS = 'SET_TOKENS';
 
 /**
  * Action for refreshing tokens pair
