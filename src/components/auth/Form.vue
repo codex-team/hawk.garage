@@ -1,26 +1,48 @@
 <template>
   <div class="auth-form">
     <div class="auth-form__block-title">
-      <router-link class="auth-form__title" to="/">Hawk</router-link>
-      <br />
-      <div class="auth-form__caption">Time for quality</div>
+      <router-link
+        class="auth-form__title"
+        to="/"
+      >
+        Hawk
+      </router-link>
+      <br>
+      <div class="auth-form__caption">
+        Time for quality
+      </div>
     </div>
     <div class="auth-form__social-block">
-      <a class="auth-form__github-button" :href="$API_AUTH_GITHUB">Continue</a>
-      <a class="auth-form__google-button" :href="$API_AUTH_GOOGLE">Sign in</a>
+      <a
+        class="auth-form__github-button"
+        :href="$API_AUTH_GITHUB"
+      >Continue</a>
+      <a
+        class="auth-form__google-button"
+        :href="$API_AUTH_GOOGLE"
+      >Sign in</a>
     </div>
     <div class="auth-form__container">
       <div class="auth-form__picture" />
-      <form class="auth-form__fields-container" @submit.prevent="$emit('submit')">
+      <form
+        class="auth-form__fields-container"
+        @submit.prevent="$emit('submit')"
+      >
         <div class="auth-form__links">
-          <router-link to="/login">Login</router-link>
-          <router-link to="/sign-up">Sign up</router-link>
+          <router-link to="/login">
+            Login
+          </router-link>
+          <router-link to="/sign-up">
+            Sign up
+          </router-link>
         </div>
-        <hr class="auth-form__delimiter" />
+        <hr class="auth-form__delimiter">
         <div
           v-if="message"
           :class="`auth-form__message auth-form__message--${message.type}`"
-        >{{ message.text }}</div>
+        >
+          {{ message.text }}
+        </div>
         <TextFieldset
           v-for="(field, index) in fields"
           :key="index"
@@ -32,12 +54,19 @@
           :placeholder="field.placeholder"
         />
         <div class="auth-form__action-container">
-          <input v-if="submitText" class="button button--submit" type="submit" :value="submitText" />
+          <input
+            v-if="submitText"
+            class="button button--submit"
+            type="submit"
+            :value="submitText"
+          >
           <router-link
             v-if="altText && altLink"
             class="auth-form__alt-button"
             :to="altLink"
-          >{{ altText }}</router-link>
+          >
+            {{ altText }}
+          </router-link>
         </div>
       </form>
     </div>
@@ -45,10 +74,10 @@
 </template>
 
 <script>
-import TextFieldset from "../forms/TextFieldset";
+import TextFieldset from '../forms/TextFieldset';
 
 export default {
-  name: "AuthForm",
+  name: 'AuthForm',
   components: {
     TextFieldset
   },
@@ -80,12 +109,13 @@ export default {
 <style>
 .auth-form {
   &__block-title {
-    text-align: center;
     margin-bottom: 25px;
+    text-align: center;
   }
 
   &__title {
     display: inline-block;
+    margin-bottom: 10px;
     color: #fff;
     font-weight: bold;
     font-size: 30px;
@@ -97,15 +127,11 @@ export default {
     font-size: 16px;
   }
 
-  &__title {
-    margin-bottom: 10px;
-  }
-
   &__social-block {
-    margin-bottom: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 30px;
   }
 
   &__github-button {
@@ -113,16 +139,16 @@ export default {
     align-items: center;
     justify-content: center;
     height: 40px;
-    border-radius: 4px;
-    background: no-repeat 15px/18px 100% url("../../assets/github.svg");
-    background-color: #101216;
-    padding-left: 44px;
-    padding-right: 15px;
     margin-left: 15px;
-    font-family: Roboto;
+    padding-right: 15px;
+    padding-left: 44px;
+    color: #ffffff;
     font-weight: 500;
     font-size: 14.4px;
-    color: #ffffff;
+    font-family: Roboto;
+    background: no-repeat 15px/18px 100% url("../../assets/github.svg");
+    background-color: #101216;
+    border-radius: 4px;
   }
 
   &__github-button:hover {
@@ -134,16 +160,16 @@ export default {
     align-items: center;
     justify-content: center;
     height: 40px;
-    border-radius: 4px;
-    background: no-repeat 15px/18px 100% url("../../assets/google.svg");
-    background-color: #ffffff;
-    padding-left: 44px;
-    padding-right: 15px;
     margin-left: 15px;
-    font-family: Roboto;
+    padding-right: 15px;
+    padding-left: 44px;
+    color: var(--color-text-dark);
     font-weight: 500;
     font-size: 14.4px;
-    color: var(--color-text-dark);
+    font-family: Roboto;
+    background: no-repeat 15px/18px 100% url("../../assets/google.svg");
+    background-color: #ffffff;
+    border-radius: 4px;
   }
 
   &__google-button:hover {
