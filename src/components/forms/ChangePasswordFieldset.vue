@@ -1,15 +1,15 @@
 <template>
-  <div class="change-password-module">
+  <fieldset class="fieldset change-password-fieldset">
     <section
       v-if="!showInputs"
       @click="showInputs = true"
     >
-      <label class="label change-password-module__label">
+      <label class="label change-password-fieldset__label">
         PASSWORD
       </label>
-      <button class="button button--quiet change-password-module__button">
+      <button class="button button--quiet change-password-fieldset__button">
         <Icon
-          class="change-password-module__key-icon"
+          class="change-password-fieldset__key-icon"
           symbol="key"
         />
         Change password
@@ -17,24 +17,23 @@
     </section>
     <template v-if="showInputs">
       <FormTextFieldset
-        class="change-password-module__section"
         label="Old password"
         type="password"
       />
       <FormTextFieldset
-        class="change-password-module__section"
+        class="change-password-fieldset__new-password"
         label="New password"
         type="password"
       />
     </template>
-  </div>
+  </fieldset>
 </template>
 
 <script>
 import Icon from '../utils/Icon';
 import FormTextFieldset from './TextFieldset';
 export default {
-  name: 'ChangePasswordButton',
+  name: 'ChangePasswordFieldset',
   components: { FormTextFieldset, Icon },
   data() {
     return {
@@ -45,11 +44,7 @@ export default {
 </script>
 
 <style>
-  .change-password-module {
-    &__section {
-      margin-bottom: 20px;
-    }
-
+  .change-password-fieldset {
     &__label {
       margin-bottom: 9px;
     }
@@ -58,6 +53,10 @@ export default {
       display: inline-flex;
       align-items: center;
       padding: 9px 17px 9px 10px;
+    }
+
+    &__new-password {
+      margin-top: 20px;
     }
 
     &__key-icon {

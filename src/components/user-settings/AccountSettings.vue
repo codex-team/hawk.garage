@@ -20,9 +20,10 @@
         label="Email"
         @input="showSubmitButton = true"
       />
-      <section class="account-settings__section">
-        <ChangePasswordButton @click.native="showSubmitButton = true"/>
-      </section>
+      <ChangePasswordFieldset
+        class="account-settings__section"
+        @click.native="showSubmitButton = true"
+      />
       <template v-if="showSubmitButton">
         <button class="button button--submit account-settings__submit-button">
           Submit
@@ -39,10 +40,10 @@
 <script>
 import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
-import ChangePasswordButton from '../forms/ChangePasswordModule';
+import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
 export default {
   name: 'AccountSettings',
-  components: { ChangePasswordButton, FormImageUploader, FormTextFieldset },
+  components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
   data() {
     return {
       showSubmitButton: false
