@@ -47,12 +47,3 @@ export default {
   }
 };
 </script>
-
-<style>
-
-    &__delimiter {
-      margin: 0;
-      border: 1px solid var(--color-text-second);
-      opacity: 0.1;
-    }
-</style>

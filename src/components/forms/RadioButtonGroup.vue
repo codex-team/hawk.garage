@@ -2,32 +2,39 @@
   <div class="radio-button-group">
     <label class="label">{{ label }}</label>
     <div
-      v-for="option in options"
+      v-for="(option, index) in options"
       :key="option.id"
-      class="radio-button-group__option"
     >
-      <input
-        :id="option.id"
-        :value="option.id"
-        :checked="option.id === value"
-        class="radio-button-group__option-input"
-        :name="name"
-        type="radio"
-        @input="$emit('input', option.id)"
-      >
-      <label
-        class="radio-button-group__option-label"
-        :style="{backgroundImage: `url('${option.image}')`}"
-        :for="option.id"
-      >
-        {{ option.name }}
-      </label>
       <div
-        class="radio-button-group__option-tick"
-        @click="$emit('input', option.id)"
+        class="radio-button-group__option"
       >
-        <Icon symbol="tick" />
+        <input
+          :id="option.id"
+          :value="option.id"
+          :checked="option.id === value"
+          class="radio-button-group__option-input"
+          :name="name"
+          type="radio"
+          @input="$emit('input', option.id)"
+        >
+        <label
+          class="radio-button-group__option-label"
+          :style="{backgroundImage: `url('${option.image}')`}"
+          :for="option.id"
+        >
+          {{ option.name }}
+        </label>
+        <div
+          class="radio-button-group__option-tick"
+          @click="$emit('input', option.id)"
+        >
+          <Icon symbol="tick" />
+        </div>
       </div>
+      <hr
+        v-if="index !== options.length - 1"
+        class="radio-button-group__delimiter"
+      >
     </div>
   </div>
 </template>
@@ -62,11 +69,13 @@ export default {
 <style>
   .radio-button-group{
     &__option {
+      cursor: pointer;
       padding: 15px;
       display: flex;
     }
 
     &__option-label {
+      cursor: pointer;
       width: 100%;
       display: flex;
       padding-left: 50px;
@@ -90,6 +99,7 @@ export default {
     }
 
     &__option-tick {
+      cursor: pointer;
       margin-left: auto;
       width: 28px;
       height: 28px;
@@ -110,6 +120,12 @@ export default {
         border-radius: 100%;
         height: 18px;
       }
+    }
+
+    &__delimiter {
+      margin: 0;
+      border: 1px solid var(--color-text-second);
+      opacity: 0.1;
     }
   }
 </style>
