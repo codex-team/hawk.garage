@@ -230,5 +230,3 @@ export default {
     }
   }
 </style>
-
-<i18n src="./translations.json"></i18n>

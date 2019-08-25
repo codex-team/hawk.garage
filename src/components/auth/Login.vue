@@ -70,5 +70,3 @@ export default {
 </script>
 
 <style src="../../styles/auth-page.css"></style>
-
-<i18n src="./translations.json"></i18n>
