@@ -24,11 +24,12 @@
         class="account-settings__section"
         @click.native="showSubmitButton = true"
       />
-      <template v-if="showSubmitButton">
-        <button class="button button--submit account-settings__submit-button">
-          Submit
-        </button>
-      </template>
+      <button
+        v-if="showSubmitButton"
+        class="button button--submit account-settings__submit-button"
+      >
+        Submit
+      </button>
     </form>
     <hr class="account-settings__horizontal-rule">
     <div class="account-settings__registered-info">
