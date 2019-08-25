@@ -1,34 +1,38 @@
 <template>
-  <div class="language-select">
-    <label class="label">Interface Language</label>
-    <div class="language-select__option language-select__option--ru">
-      <input
-        id="ru"
-        class="language-select__radio-button"
-        name="language"
-        type="radio"
-      >
-      <label for="ru">Russian</label>
-    </div>
-    <hr class="language-select__delimiter">
-    <div class="language-select__option language-select__option--en">
-      <input
-        id="en"
-        class="language-select__radio-button"
-        name="language"
-        type="radio"
-      >
-      <label for="en">English</label>
-    </div>
-  </div>
+  <RadioButtonGroup
+    :name="name"
+    :label="label"
+    :options="options"
+  />
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import { SET_LANGUAGE } from '../../store/modules/app/actionTypes';
-
+import RadioButtonGroup from './RadioButtonGroup';
 export default {
   name: 'LanguageSelect',
+  components: {
+    RadioButtonGroup
+  },
+  data() {
+    return {
+      name: 'language',
+      label: 'Interface Language',
+      options: [
+        {
+          name: 'Russia',
+          id: 'ru',
+          image: require('../../assets/ru.svg')
+        },
+        {
+          name: 'English',
+          id: 'en',
+          image: require('../../assets/uk.svg')
+        }
+      ]
+    };
+  },
   computed: mapState({
     language: state => state.app.language
   }),
@@ -47,10 +51,20 @@ export default {
       display: flex;
       line-height: 28px;
       letter-spacing: 0.19px;
-      justify-content: center;
+      position: relative;
 
-      label {
-        position: relative;
+      &:focus {
+        color: red;
+      }
+
+      &::after {
+        margin-left: auto;
+        content: '';
+        width: 28px;
+        height: 28px;
+        border: 1px solid var(--color-bg-sidebar);
+        border-radius: 100%;
+        background: var(--color-bg-main);
       }
 
       &--ru {
@@ -63,22 +77,15 @@ export default {
     }
 
     &__radio-button {
-      margin-left: auto;
-      opacity: 0;
-      /*position: fixed;*/
-      /*width: 0;*/
-      height: 28px;
+      /*opacity: 0;*/
 
-      &:checked ~ label::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 18px;
-        height: 18px;
-        border: 1px solid #ddd;
-        border-radius: 100%;
-        background: #fff;      }
+      &:checked + label::after {
+        background-image: url("../../assets/sprite-icons/tick.svg");
+      }
+
+      &:focus + label::after {
+        color: red;
+      }
     }
 
     &__delimiter {
