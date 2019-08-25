@@ -44,3 +44,15 @@ query getCurrentUser {
   }
 }
 `;
+
+/**
+ * Mutation to update user profile
+ */
+export const MUTATION_UPDATE_PROFILE = `
+mutation User($name: String!, $email: String!) {
+  updateProfile (
+    name: $name
+    email: $email
+  )
+}
+`;
