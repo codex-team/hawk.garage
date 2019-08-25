@@ -1,0 +1,10 @@
+{
+  "caption": "Time for quality",
+  "emailAddress": "Email",
+  "password": "Пароль",
+  "recoverPassword": "Восстановить пароль",
+  "login": "Войти",
+  "loginSubmitText": "Войти",
+  "signUp":"Зарегистрироваться",
+  "signUpSubmitText": "Зарегистрироваться"
+}
