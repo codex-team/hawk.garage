@@ -123,10 +123,7 @@ export default {
 
     &__content {
       width: 100%;
-      padding-top: 50px;
-      padding-right: 200px;
-      padding-bottom: 50px;
-      padding-left: 50px;
+      padding: 50px 200px 50px 50px;
     }
   }
 
