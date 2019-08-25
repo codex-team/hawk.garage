@@ -2,6 +2,7 @@
   /** Texts */
   --color-text-main: #dbe6ff;
   --color-text-second: color-mod(var(--color-text-main) alpha(60%));
+  --color-text-dark: var(--color-bg-main);
 
   /** Backgrounds */
   --color-bg-main: #242732;
@@ -15,11 +16,11 @@
 
   --color-border-input: #1f2230;
 
-  --font-monospace: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
-
+  --font-monospace: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,
+    monospace;
 }
 
-.app--theme--light{
+.app--theme--light {
   --color-bg-main: #ff0000;
 }
 

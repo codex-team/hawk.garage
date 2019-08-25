@@ -14,7 +14,7 @@
 
 <script>
 import Form from './Form';
-import { LOGIN } from '../../store/modules/auth/actionTypes';
+import { LOGIN, SET_TOKENS } from '../../store/modules/auth/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
@@ -46,6 +46,26 @@ export default {
       submitText: this.$t('loginSubmitText'),
       message: null
     };
+  },
+
+  async mounted() {
+    if (
+      this.$route.query.access_token &&
+      this.$route.query.refresh_token
+    ) {
+      try {
+        await this.$store.dispatch(SET_TOKENS, {
+          accessToken: this.$route.query.access_token,
+          refreshToken: this.$route.query.refresh_token
+        });
+        this.$router.push('/');
+      } catch (e) {
+        this.message = {
+          text: e.message,
+          type: 'error'
+        };
+      }
+    }
   },
   methods: {
     /**

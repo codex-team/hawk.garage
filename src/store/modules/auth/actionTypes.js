@@ -9,6 +9,11 @@ export const LOGIN = 'LOGIN';
 export const SIGN_UP = 'SIGN_UP';
 
 /**
+ * Set tokens from query parameters
+ */
+export const SET_TOKENS = 'SET_TOKENS';
+
+/**
  * Action for refreshing tokens pair
  */
 export const REFRESH_TOKENS = 'REFRESH_TOKENS';
