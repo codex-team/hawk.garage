@@ -11,22 +11,37 @@
             Made by CodeX
           </div>
         </div>
-        <div class="settings-window__menu-item">
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'account-settings'}"
+        >
           Account settings
-        </div>
-        <div class="settings-window__menu-item">
+        </router-link>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'home'}"
+        >
           Notifications
-        </div>
-        <div class="settings-window__menu-item">
+        </router-link>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'home'}"
+        >
           Billing information
-        </div>
+        </router-link>
         <hr class="settings-window__menu-delimiter">
-        <div class="settings-window__menu-item">
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'home'}"
+        >
           Appearance
-        </div>
-        <div class="settings-window__menu-item">
+        </router-link>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'home'}"
+        >
           Language
-        </div>
+        </router-link>
         <hr class="settings-window__menu-delimiter">
         <div
           class="settings-window__menu-item settings-window__menu-item--attention"
@@ -35,7 +50,9 @@
           Log out
         </div>
       </div>
-      <div class="settings-window__content" />
+      <div class="settings-window__content">
+        <router-view />
+      </div>
     </div>
   </PopupWindow>
 </template>
@@ -80,6 +97,7 @@ export default {
     }
 
     &__menu-item {
+      display: block;
       width: 220px;
       height: 34px;
       margin: 0 -10px 0 -10px;
@@ -90,7 +108,7 @@ export default {
       cursor: pointer;
       user-select: none;
 
-      &:hover {
+      &:hover, &.router-link-exact-active {
         background-color: var(--color-bg-second);
       }
 
@@ -101,6 +119,14 @@ export default {
 
     &__menu-delimiter {
       border: 1px solid var(--color-bg-second);
+    }
+
+    &__content {
+      width: 100%;
+      padding-top: 50px;
+      padding-right: 137px;
+      padding-bottom: 50px;
+      padding-left: 50px;
     }
   }
 
