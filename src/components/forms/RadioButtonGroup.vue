@@ -70,7 +70,7 @@ export default {
   .radio-button-group{
     &__option {
       cursor: pointer;
-      padding: 15px;
+      padding: 15px 0;
       display: flex;
     }
 
