@@ -1,0 +1,8 @@
+.settings-window-page {
+  &__title {
+    margin-bottom: 30px;
+    color: var(--color-text-main);
+    font-weight: bold;
+    font-size: 18px;
+  }
+}

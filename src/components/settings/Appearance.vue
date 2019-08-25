@@ -1,6 +1,6 @@
 <template>
-  <div class="appearance-settings">
-    <div class="account-settings__title">
+  <div class="appearance-settings settings-window-page">
+    <div class="settings-window-page__title">
       {{ $t('settings.appearance.title') }}
     </div>
     <LanguageSelect />
@@ -17,3 +17,5 @@ export default {
   }
 };
 </script>
+
+<style src="../../styles/settings-window-page.css"></style>

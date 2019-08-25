@@ -1,6 +1,6 @@
 <template>
-  <div class="account-settings">
-    <div class="account-settings__title">
+  <div class="account-settings settings-window-page">
+    <div class="settings-window-page__title">
       {{ $t('settings.account.title') }}
     </div>
     <form>
@@ -53,16 +53,11 @@ export default {
 };
 </script>
 
+<style src="../../styles/settings-window-page.css"></style>
+
 <style>
 .account-settings {
   width: 100%;
-
-  &__title {
-    margin-bottom: 30px;
-    color: var(--color-text-main);
-    font-weight: bold;
-    font-size: 18px;
-  }
 
   &__inline-elements {
     display: flex;
