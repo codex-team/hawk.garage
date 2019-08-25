@@ -1,10 +1,42 @@
 {
-  "caption": "Time for quality",
-  "emailAddress": "Email",
-  "password": "Пароль",
-  "recoverPassword": "Восстановить пароль",
-  "login": "Войти",
-  "loginSubmitText": "Войти",
-  "signUp":"Зарегистрироваться",
-  "signUpSubmitText": "Зарегистрироваться"
+  "authPages": {
+    "emailAddress": "Email address",
+    "password": "Password",
+    "recoverPassword": "Recover password",
+    "login": "Login",
+    "loginSubmitText": "Login",
+    "signUp": "Sign up",
+    "signUpSubmitText": "Register",
+    "githubButton": "Continue",
+    "googleButton": "Sign in"
+  },
+  "settings": {
+    "accountSettings": {
+      "title": "Account settings"
+    },
+    "notifications": {
+      "title": "Notifications"
+    },
+    "appearance": {
+      "title": "Гыгы"
+    }
+  },
+  "projects": {
+    "creationDialog": {
+      "title": "Add a project",
+      "description": "To start track events from your application, add it as a Project and get an Integration Token.",
+      "workspaceSelectLabel": "SELECT WORKSPACE",
+      "projectNameLabel": "PROJECT NAME",
+      "submitButton": "Create project"
+    }
+  },
+  "workspaces": {
+    "settings": {
+      "label": "Workspace settings"
+    }
+  },
+  "forms": {
+    "imageUploader": "UPLOAD LOGO",
+    "searchField": "Search"
+  }
 }

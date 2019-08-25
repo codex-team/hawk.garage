@@ -1,5 +1,8 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import { FETCH_INITIAL_DATA } from './actionTypes';
+import {
+  FETCH_INITIAL_DATA,
+  SET_LANGUAGE
+} from './actionTypes';
 import * as workspacesApi from '../../../api/workspaces';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
@@ -8,7 +11,8 @@ import { SET_PROJECTS_LIST } from '../projects/actionTypes';
  * Mutations enum for this module
  */
 const mutationTypes = {
-  SET_THEME: 'SET_THEME' // Set theme name
+  SET_THEME: 'SET_THEME', // Set theme name,
+  SET_LANGUAGE: 'SET_LANGUAGE' // Set new language
 };
 
 /**
@@ -20,12 +24,22 @@ export const Themes = {
 };
 
 /**
+ * @enum {string} - Available languages
+ */
+export const Languages = {
+  en: 'en',
+  ru: 'ru'
+};
+
+/**
  * Module state
  * @typedef {object} AppModuleState
  * @property {Themes} theme - name of the current theme
+ * @property {Languages} language - app language
  */
 const state = {
-  theme: Themes.DARK
+  theme: Themes.DARK,
+  language: Languages.en
 };
 
 const actions = {
@@ -50,6 +64,15 @@ const actions = {
 
     dispatch(SET_WORKSPACES_LIST, workspaces);
     dispatch(SET_PROJECTS_LIST, projects);
+  },
+
+  /**
+   * @param {function} commit - standard Vuex dispatch function
+   * @param {Languages} language - new language
+   * @return {Promise<void>}
+   */
+  async [SET_LANGUAGE]({ commit }, language) {
+    commit(mutationTypes.SET_LANGUAGE, language);
   }
 };
 
@@ -61,6 +84,15 @@ const mutations = {
    */
   [mutationTypes.SET_THEME](state, themeName) {
     state.theme = themeName;
+  },
+
+  /**
+   * Set app language
+   * @param {AppModuleState} state - app module state
+   * @param {Languages} language - new language
+   */
+  [mutationTypes.SET_LANGUAGE](state, language) {
+    state.language = language;
   }
 };
 
