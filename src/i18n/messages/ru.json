@@ -1,42 +1,63 @@
 {
-  "authPages": {
-    "emailAddress": "Email address",
-    "password": "Password",
-    "recoverPassword": "Recover password",
-    "login": "Login",
-    "loginSubmitText": "Login",
-    "signUp": "Sign up",
-    "signUpSubmitText": "Register",
-    "githubButton": "Continue",
-    "googleButton": "Sign in"
-  },
-  "settings": {
-    "accountSettings": {
-      "title": "Account settings"
-    },
-    "notifications": {
-      "title": "Notifications"
-    },
-    "appearance": {
-      "title": "Гыгы"
-    }
-  },
-  "projects": {
-    "creationDialog": {
-      "title": "Add a project",
-      "description": "To start track events from your application, add it as a Project and get an Integration Token.",
-      "workspaceSelectLabel": "SELECT WORKSPACE",
-      "projectNameLabel": "PROJECT NAME",
-      "submitButton": "Create project"
-    }
-  },
-  "workspaces": {
-    "settings": {
-      "label": "Workspace settings"
-    }
-  },
-  "forms": {
-    "imageUploader": "UPLOAD LOGO",
-    "searchField": "Search"
-  }
+	"authPages": {
+		"emailAddress": "Email",
+		"githubButton": "Продолжить",
+		"googleButton": "Войти",
+		"login": "Войти",
+		"loginSubmitText": "Войти",
+		"password": "ПАРОЛЬ",
+		"recoverPassword": "Восстановить пароль",
+		"signUp": "Зарегистрироваться",
+		"signUpSubmitText": "Зарегистрироваться"
+	},
+	"components": {
+		"changePasswordFieldSet": {
+			"newPassword": "Новый пароль",
+			"oldPassword": "Старый пароль"
+		}
+	},
+	"forms": {
+		"imageUploader": "ЗАГРУЗИТЬ ФОТО",
+		"searchField": "Поиск"
+	},
+	"projects": {
+		"creationDialog": {
+			"description": "Чтобы начать отслеживать события из вашего приложения, добавьте его в качестве проекта и получите токен интеграции.",
+			"projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",
+			"submitButton": "Создать проект",
+			"title": "Добавить проект",
+			"workspaceSelectLabel": "Выбрать воркспейс"
+		}
+	},
+	"settings": {
+		"account": {
+			"changePassword": "Сменить пароль",
+			"email": "EMAIL",
+			"name": "Имя",
+			"profileImage": "Изображение профиля",
+			"submit": "Сохранить",
+			"title": "Аккаунт"
+		},
+		"appearance": {
+			"title": "Внешний вид"
+		},
+		"billing": {
+			"title": "Платежи"
+		},
+		"logout": "Выйти",
+		"notifications": {
+			"title": "Уведомления"
+		}
+	},
+	"workspaces": {
+		"creationDialog": {
+			"description": "Воркспейс будет содержать ваши проекты. Вы сможете пригласить членов команды присоединиться к рабочей области и получить доступ к проектам.",
+			"submitButton": "Создать воркспейс",
+			"title": "Создать воркспейс",
+			"workspaceNameLabel": "название воркспейса"
+		},
+		"settings": {
+			"label": "Настройка воркспейса"
+		}
+	}
 }

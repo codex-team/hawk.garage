@@ -13,7 +13,7 @@ import { REFRESH_TOKENS } from './store/modules/auth/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import notifier from 'codex-notifier';
 import eventBus from './eventBus';
-import {loadLanguageAsync} from './i18n';
+import { loadLanguageAsync } from './i18n';
 
 export default {
   name: 'App',

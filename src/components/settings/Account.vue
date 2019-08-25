@@ -1,23 +1,23 @@
 <template>
   <div class="account-settings">
     <div class="account-settings__title">
-      Account Settings
+      {{ $t('settings.account.title') }}
     </div>
     <form>
       <div class="account-settings__inline-elements">
         <FormTextFieldset
           class="account-settings__section account-settings__name-section"
-          label="Name"
+          :label="$t('settings.account.name')"
           @input="showSubmitButton = true"
         />
         <section>
-          <label class="label account-settings__label">Profile picture</label>
+          <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
           <FormImageUploader @change="showSubmitButton = true" />
         </section>
       </div>
       <FormTextFieldset
         class="account-settings__section"
-        label="Email"
+        :label="$t('settings.account.email')"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
@@ -28,7 +28,7 @@
         v-if="showSubmitButton"
         class="button button--submit account-settings__submit-button"
       >
-        Submit
+        {{ $t('settings.account.submit') }}
       </button>
     </form>
     <hr class="account-settings__horizontal-rule">

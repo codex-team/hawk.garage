@@ -15,39 +15,33 @@
           class="settings-window__menu-item"
           :to="{ name: 'account-settings'}"
         >
-          {{ $t('settings.accountSettings.title') }}
+          {{ $t('settings.account.title') }}
         </router-link>
         <router-link
           class="settings-window__menu-item"
           :to="{ name: 'home'}"
         >
-          Notifications
+          {{ $t('settings.notifications.title') }}
         </router-link>
         <router-link
           class="settings-window__menu-item"
           :to="{ name: 'home'}"
         >
-          Billing information
+          {{ $t('settings.billing.title') }}
         </router-link>
         <hr class="settings-window__menu-delimiter">
         <router-link
           class="settings-window__menu-item"
           :to="{ name: 'appearance-settings'}"
         >
-          Appearance
-        </router-link>
-        <router-link
-          class="settings-window__menu-item"
-          :to="{ name: 'home'}"
-        >
-          Language
+          {{ $t('settings.appearance.title') }}
         </router-link>
         <hr class="settings-window__menu-delimiter">
         <div
           class="settings-window__menu-item settings-window__menu-item--attention"
           @click="logout"
         >
-          Log out
+          {{ $t('settings.logout') }}
         </div>
       </div>
       <div class="settings-window__content">
