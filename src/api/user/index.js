@@ -1,4 +1,4 @@
-import { MUTATION_LOGIN, MUTATION_REFRESH_TOKENS, MUTATION_SIGN_UP } from './queries';
+import { MUTATION_LOGIN, MUTATION_REFRESH_TOKENS, MUTATION_SIGN_UP, QUERY_CURRENT_USER } from './queries';
 import * as api from '../index';
 
 /**
@@ -12,7 +12,7 @@ import * as api from '../index';
  *
  * @param {string} email - Email
  * @param {string} password - Password
- * @returns {Promise<TokensPair>} - Auth token
+ * @return {Promise<TokensPair>} - Auth token
  */
 export async function login(email, password) {
   return (await api.call(MUTATION_LOGIN, { email, password })).login;
@@ -22,7 +22,7 @@ export async function login(email, password) {
  * Sign up by email and return status (true or false)
  *
  * @param {string} email - Email
- * @returns {Promise<Boolean>} Response status
+ * @return {Promise<Boolean>} Response status
  */
 export async function signUp(email) {
   return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
@@ -30,9 +30,19 @@ export async function signUp(email) {
 
 /**
  * Get new tokens pair by refreshToken
+ *
  * @param {String} refreshToken - user's refresh token
  * @return {Promise<TokensPair>}
  */
 export async function refreshTokens(refreshToken) {
   return (await api.call(MUTATION_REFRESH_TOKENS, { refreshToken })).refreshTokens;
+}
+
+/**
+ * Get current user
+ *
+ * @returns {Promise<module.exports.Query.me>}
+ */
+export async function fetchCurrentUser() {
+  return (await api.call(QUERY_CURRENT_USER)).me;
 }

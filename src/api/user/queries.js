@@ -30,3 +30,17 @@ mutation refreshTokens($refreshToken: String!) {
   }
 }
 `;
+
+/**
+ * Query to get current user
+ */
+export const QUERY_CURRENT_USER = `
+query getCurrentUser {
+  me {
+    id
+    name
+    email
+    image
+  }
+}
+`;
