@@ -73,7 +73,7 @@ const actions = {
   /**
    * Set tokens after callback from OAuth
    * @param {function} commit - standard Vuex commit function
-   * @param {User} tokens - user's auth tokens
+   * @param {TokensPair} tokens - user's auth tokens
    */
   async [SET_TOKENS]({ commit }, tokens) {
     commit(mutationTypes.SET_TOKENS, tokens);
