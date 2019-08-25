@@ -15,7 +15,7 @@
           class="settings-window__menu-item"
           :to="{ name: 'account-settings'}"
         >
-          {{ $t('settings.accountSettings.label') }}
+          {{ $t('settings.accountSettings.title') }}
         </router-link>
         <router-link
           class="settings-window__menu-item"
@@ -32,7 +32,7 @@
         <hr class="settings-window__menu-delimiter">
         <router-link
           class="settings-window__menu-item"
-          :to="{ name: 'home'}"
+          :to="{ name: 'appearance-settings'}"
         >
           Appearance
         </router-link>

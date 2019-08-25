@@ -25,7 +25,12 @@ const router = new Router({
             {
               path: 'account',
               name: 'account-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/settings/AccountSettings')
+              component: () => import(/* webpackChunkName: 'settings' */'./components/settings/Account')
+            },
+            {
+              path: 'appearance',
+              name: 'appearance-settings',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/settings/Appearance')
             }
           ]
         },
