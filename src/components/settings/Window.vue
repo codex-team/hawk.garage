@@ -58,8 +58,8 @@
 </template>
 
 <script>
-import { RESET_STORE } from '../store/methodsTypes';
-import PopupWindow from './utils/PopupWindow';
+import { RESET_STORE } from '../../store/methodsTypes';
+import PopupWindow from '../utils/PopupWindow';
 
 export default {
   name: 'SettingsWindow',
@@ -133,7 +133,7 @@ export default {
       width: 42px;
       height: 42px;
       margin-right: 20px;
-      background-image: url("../assets/hawk-logo.png");
+      background-image: url("../../assets/hawk-logo.png");
       background-position: center center;
       background-size: cover;
     }
