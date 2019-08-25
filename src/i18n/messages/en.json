@@ -1,10 +1,13 @@
 {
-  "caption": "Time for quality",
-  "emailAddress": "Email address",
-  "password": "Password",
-  "recoverPassword": "Recover password",
-  "login": "Login",
-  "loginSubmitText": "Login",
-  "signUp":"Sign up",
-  "signUpSubmitText": "Register"
+  "authPages": {
+    "emailAddress": "Email address",
+    "password": "Password",
+    "recoverPassword": "Recover password",
+    "login": "Login",
+    "loginSubmitText": "Login",
+    "signUp":"Sign up",
+    "signUpSubmitText": "Register",
+    "githubButton": "Continue",
+    "googleButton": "Sign in"
+  }
 }
