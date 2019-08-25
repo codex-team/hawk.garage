@@ -11,7 +11,7 @@
         {{ workspace.name }}
       </div>
       <div class="workspace-info__settings-link">
-        Workspace settings
+        {{$t('workspaces.settings.label')}}
       </div>
     </div>
     <Icon

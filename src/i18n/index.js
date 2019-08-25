@@ -7,10 +7,12 @@ Vue.use(VueI18n);
 const i18n = new VueI18n({
   locale: 'en',
   fallbackLocale: 'en',
-  messages
+  messages: {
+    en: messages
+  }
 });
 
-const loadedLanguages = [];
+const loadedLanguages = [ 'en' ];
 
 /**
  * Sets new i18n plugin locale

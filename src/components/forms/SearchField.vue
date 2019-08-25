@@ -3,7 +3,7 @@
     <input
       class="input form-search-field__input"
       type="search"
-      placeholder="Search"
+      :placeholder="$t('forms.searchField')"
     >
     <Icon
       class="form-search-field__search-icon"

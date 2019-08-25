@@ -15,7 +15,7 @@
           class="settings-window__menu-item"
           :to="{ name: 'account-settings'}"
         >
-          Account settings
+          {{ $t('settings.accountSettings.label') }}
         </router-link>
         <router-link
           class="settings-window__menu-item"

@@ -2,10 +2,10 @@
   <PopupDialog @close="$emit('close')">
     <div class="project-creation-dialog">
       <h1 class="project-creation-dialog__header">
-        Add a project
+        {{ $t('projects.creationDialog.title') }}
       </h1>
       <div class="project-creation-dialog__description">
-        To start track events from your application, add it as a Project and get an Integration Token.
+        {{ $t('projects.creationDialog.description') }}
       </div>
       <form
         class="project-creation-dialog__form"
@@ -15,14 +15,14 @@
           v-model="workspace"
           class="project-creation-dialog__select-workspaces"
           :options="workspaces"
-          label="SELECT WORKSPACE"
+          :label="$t('projects.creationDialog.workspaceSelectLabel')"
         />
         <TextFieldset
           v-model="name"
           class="project-creation-dialog__text-field"
           name="projectName"
           type="text"
-          label="project name"
+          :label="$t('projects.creationDialog.projectNameLabel')"
         />
         <ImageUploader
           class="project-creation-dialog__image-uploader"
@@ -30,7 +30,7 @@
         <input
           class="button button--submit project-creation-dialog__submit"
           type="submit"
-          value="Create project"
+          :value="$t('projects.creationDialog.submitButton')"
         >
       </form>
     </div>
