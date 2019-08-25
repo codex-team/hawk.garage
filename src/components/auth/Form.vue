@@ -7,7 +7,7 @@
       Hawk
     </router-link>
     <div class="auth-form__caption">
-      Time for quality
+      {{ $t('caption') }}
     </div>
     <div class="auth-form__container">
       <div class="auth-form__picture" />
@@ -17,10 +17,10 @@
       >
         <div class="auth-form__links">
           <router-link to="/login">
-            Login
+            {{ $t('login') }}
           </router-link>
           <router-link to="/sign-up">
-            Sign up
+            {{ $t('signUp') }}
           </router-link>
         </div>
         <hr class="auth-form__delimiter">
@@ -230,3 +230,5 @@ export default {
     }
   }
 </style>
+
+<i18n src="./translations.json"></i18n>

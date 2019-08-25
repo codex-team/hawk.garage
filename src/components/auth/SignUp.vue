@@ -24,14 +24,14 @@ export default {
     return {
       fields: [
         {
-          label: 'EMAIL ADDRESS',
+          label: this.$t('emailAddress'),
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
           type: 'email'
         }
       ],
-      submitText: 'Register',
+      submitText: this.$t('signUpSubmitText'),
       message: null
     };
   },
@@ -57,3 +57,5 @@ export default {
 </script>
 
 <style src="../../styles/auth-page.css"></style>
+
+<i18n src="./translations.json"></i18n>

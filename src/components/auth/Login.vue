@@ -27,14 +27,14 @@ export default {
     return {
       fields: [
         {
-          label: 'Email address',
+          label: this.$t('emailAddress'),
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
           type: 'email'
         },
         {
-          label: 'Password',
+          label: this.$t('password'),
           name: 'password',
           value: '',
           placeholder: '********',
@@ -42,8 +42,8 @@ export default {
         }
       ],
       altLink: '/reset',
-      altText: 'Recover password',
-      submitText: this.$t('login.submitText'),
+      altText: this.$t('recoverPassword'),
+      submitText: this.$t('loginSubmitText'),
       message: null
     };
   },
