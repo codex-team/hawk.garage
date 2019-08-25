@@ -1,6 +1,6 @@
 <template>
   <div class="form-image-uploader">
-    {{$t('forms.imageUploader')}}
+    {{ $t('forms.imageUploader') }}
   </div>
 </template>
 

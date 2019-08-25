@@ -16,6 +16,9 @@
     },
     "notifications": {
       "title": "Notifications"
+    },
+    "appearance": {
+      "title": "Appearance"
     }
   },
   "projects": {
