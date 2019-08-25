@@ -14,7 +14,7 @@
 
 <script>
 import Form from './Form';
-import { LOGIN, SET_TOKENS } from '../../store/modules/auth/actionTypes';
+import { LOGIN, SET_TOKENS } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
