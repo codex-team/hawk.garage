@@ -3,13 +3,13 @@
     <div class="account-settings__title">
       Account Settings
     </div>
-    <form>
+    <form @submit.prevent="save">
       <div class="account-settings__inline-elements">
         <FormTextFieldset
+          v-model="name"
           class="account-settings__section account-settings__name-section"
           label="Name"
           placeholder="Elon Musk"
-          :value="user.name"
           @input="showSubmitButton = true"
         />
         <section>
@@ -18,9 +18,9 @@
         </section>
       </div>
       <FormTextFieldset
+        v-model="email"
         class="account-settings__section"
         label="Email"
-        :value="user.email"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
@@ -45,18 +45,32 @@
 import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
+import { FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
 
 export default {
   name: 'AccountSettings',
   components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
   data() {
     return {
+      name: this.$store.state.user.data.name,
+      email: this.$store.state.user.data.email,
       showSubmitButton: false
     };
   },
-  computed: {
-    user() {
-      return this.$store.state.user.data;
+  methods: {
+    /**
+     * Form submit event handler
+     */
+    async save() {
+      try {
+        await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
+        await this.$store.dispatch(FETCH_CURRENT_USER);
+      } catch (e) {
+        this.message = {
+          text: e.message,
+          type: 'error'
+        };
+      }
     }
   }
 };

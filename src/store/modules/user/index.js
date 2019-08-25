@@ -4,7 +4,8 @@ import {
   SIGN_UP,
   SET_TOKENS,
   REFRESH_TOKENS,
-  FETCH_CURRENT_USER
+  FETCH_CURRENT_USER,
+  UPDATE_PROFILE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as authApi from '../../../api/user';
@@ -112,6 +113,16 @@ const actions = {
     const me = await authApi.fetchCurrentUser();
 
     commit(mutationTypes.SET_CURRENT_USER, me);
+  },
+
+  /**
+   * Send request to update user profile data
+   *
+   * @param {function} commit - standard Vuex commit function
+   * @param {User} user - user's params to update
+   */
+  async [UPDATE_PROFILE]({ commit }, user) {
+    return authApi.updateProfile(user.name, user.email);
   },
 
   /**

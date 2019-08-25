@@ -22,3 +22,8 @@ export const REFRESH_TOKENS = 'REFRESH_TOKENS';
  * Fetch current user data
  */
 export const FETCH_CURRENT_USER = 'FETCH_CURRENT_USER';
+
+/**
+ * Update user profile
+ */
+export const UPDATE_PROFILE = 'UPDATE_USER_PROFILE';
