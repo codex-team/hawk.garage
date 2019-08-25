@@ -13,7 +13,6 @@
     "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },
   "dependencies": {
-    "@kazupon/vue-i18n-loader": "^0.4.1",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-pwa": "^3.9.0",
     "@vue/cli-service": "^3.9.0",
@@ -23,7 +22,6 @@
     "highlight.js": "^9.15.8",
     "html-webpack-inline-svg-plugin": "^1.2.4",
     "http-server": "^0.11.1",
-    "i18next-browser-languagedetector": "^3.0.3",
     "normalize.css": "^8.0.1",
     "postcss-apply": "^0.12.0",
     "postcss-import": "^12.0.1",
