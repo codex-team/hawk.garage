@@ -1,8 +1,11 @@
 <template>
   <div class="sidebar">
-    <div
+    <EntityImage
+      :id="user.id"
       class="sidebar__user-picture"
-      @click="$router.push('/settings')"
+      :name="user.email"
+      :image="user.image"
+      @click.native="$router.push('/settings')"
     />
     <hr class="sidebar__delimiter">
     <div class="sidebar__button-create-wrapper">
@@ -45,10 +48,12 @@
 import Icon from '../utils/Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
 import { SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'Sidebar',
   components: {
+    EntityImage,
     WorkspacesMenuItem,
     Icon
   },
@@ -74,6 +79,14 @@ export default {
      */
     currentWorkspace() {
       return this.$store.state.workspaces.current;
+    },
+
+    /**
+     * Getter for current user workspace
+     * @return {User}
+     */
+    user() {
+      return this.$store.state.user.data;
     }
   },
   watch: {
@@ -114,9 +127,6 @@ export default {
       height: 36px;
       margin-top: 20px;
       margin-bottom: 18px;
-      background: url("https://capella.pics/a45c947c-8708-4d80-8ca2-e60f4d404bd8.jpg") center center;
-      background-size: cover;
-      border-radius: var(--border-radius);
       cursor: pointer;
     }
 
