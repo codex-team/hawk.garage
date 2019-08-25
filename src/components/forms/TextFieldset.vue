@@ -13,7 +13,7 @@
       :name="name"
       :value="value"
       :placeholder="placeholder"
-      required
+      :required="required"
       @input="$emit('input', $event.target.value)"
     >
   </fieldset>
@@ -42,7 +42,8 @@ export default {
     value: {
       type: String,
       default: null
-    }
+    },
+    required: Boolean
   }
 };
 </script>
