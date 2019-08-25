@@ -14,6 +14,11 @@
 		"changePasswordFieldSet": {
 			"newPassword": "New password",
 			"oldPassword": "Old password"
+		},
+		"languageSelect": {
+			"en": "English",
+			"label": "Interface Language",
+			"ru": "Russian"
 		}
 	},
 	"forms": {
