@@ -3,6 +3,8 @@
     :name="name"
     :label="label"
     :options="options"
+    :value="language"
+    @input="changeLanguage"
   />
 </template>
 
@@ -38,7 +40,7 @@ export default {
   }),
   methods: {
     changeLanguage(e) {
-      this.$store.dispatch(SET_LANGUAGE, e.target.value);
+      this.$store.dispatch(SET_LANGUAGE, e);
     }
   }
 };
