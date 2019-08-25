@@ -1,4 +1,10 @@
-import { MUTATION_LOGIN, MUTATION_REFRESH_TOKENS, MUTATION_SIGN_UP, QUERY_CURRENT_USER } from './queries';
+import {
+  MUTATION_LOGIN,
+  MUTATION_REFRESH_TOKENS,
+  MUTATION_SIGN_UP,
+  MUTATION_UPDATE_PROFILE,
+  QUERY_CURRENT_USER
+} from './queries';
 import * as api from '../index';
 
 /**
@@ -45,4 +51,15 @@ export async function refreshTokens(refreshToken) {
  */
 export async function fetchCurrentUser() {
   return (await api.call(QUERY_CURRENT_USER)).me;
+}
+
+/**
+ * Update user profile
+ *
+ * @param {string} name
+ * @param {string} email
+ * @returns {Promise<Boolean>}
+ */
+export async function updateProfile(name, email) {
+  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email })).updateProfile;
 }
