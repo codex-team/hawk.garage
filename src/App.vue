@@ -9,7 +9,7 @@
 
 <script>
 import * as api from './api';
-import { REFRESH_TOKENS } from './store/modules/auth/actionTypes';
+import { FETCH_CURRENT_USER, REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import notifier from 'codex-notifier';
 import eventBus from './eventBus';
@@ -37,6 +37,11 @@ export default {
     api.setAuthToken(this.$store.state.auth.accessToken);
     api.eventsHandlers.onTokenExpired = async () => (await this.$store.dispatch(REFRESH_TOKENS)).accessToken;
     api.eventsHandlers.onAuthError = () => this.$store.dispatch(RESET_STORE);
+
+    /**
+     * Fetch current user data
+     */
+    this.$store.dispatch(FETCH_CURRENT_USER);
 
     /**
      * Setup watching on auth state

@@ -8,6 +8,8 @@
         <FormTextFieldset
           class="account-settings__section account-settings__name-section"
           :label="$t('settings.account.name')"
+          placeholder="Elon Musk"
+          :value="user.name"
           @input="showSubmitButton = true"
         />
         <section>
@@ -18,6 +20,7 @@
       <FormTextFieldset
         class="account-settings__section"
         :label="$t('settings.account.email')"
+        :value="user.email"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
@@ -42,6 +45,7 @@
 import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
+
 export default {
   name: 'AccountSettings',
   components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
@@ -49,6 +53,11 @@ export default {
     return {
       showSubmitButton: false
     };
+  },
+  computed: {
+    user() {
+      return this.$store.state.user.data;
+    }
   }
 };
 </script>

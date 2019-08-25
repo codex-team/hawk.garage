@@ -17,3 +17,8 @@ export const SET_TOKENS = 'SET_TOKENS';
  * Action for refreshing tokens pair
  */
 export const REFRESH_TOKENS = 'REFRESH_TOKENS';
+
+/**
+ * Fetch current user data
+ */
+export const FETCH_CURRENT_USER = 'FETCH_CURRENT_USER';

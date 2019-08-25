@@ -3,29 +3,34 @@ import {
   LOGIN,
   SIGN_UP,
   SET_TOKENS,
-  REFRESH_TOKENS
+  REFRESH_TOKENS,
+  FETCH_CURRENT_USER
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
-import * as authApi from '../../../api/auth';
+import * as authApi from '../../../api/user';
 
 /**
  * Mutations enum for this module
  */
 const mutationTypes = {
-  SET_TOKENS: 'SET_TOKENS' // Sets user's auth tokens (for example, after authentication or updating tokens)
+  SET_TOKENS: 'SET_TOKENS', // Sets user's auth tokens (for example, after authentication or updating tokens)
+  SET_CURRENT_USER: 'SET_CURRENT_USER' // Sets user's field
 };
 
 /**
  * @typedef {object} User - represents user
+ * @property {string} id - user's id
  * @property {string} email - user's email
  * @property {string} password - user's password
  */
 
 /**
  * Module state
+ *
  * @typedef {object} AuthModuleState
  * @property {string} accessToken - user's access token
  * @property {string} refreshToken - user's refresh token for getting new tokens pair
+ * @property {object} data - user's data
  */
 
 /**
@@ -35,7 +40,8 @@ const mutationTypes = {
 function initialState() {
   return {
     accessToken: '',
-    refreshToken: ''
+    refreshToken: '',
+    data: null
   };
 }
 
@@ -51,6 +57,7 @@ const getters = {
 const actions = {
   /**
    * Send sign up request to the server and performs user login
+   *
    * @param {function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
    * @return {Promise<boolean>} - sign up status
@@ -61,6 +68,7 @@ const actions = {
 
   /**
    * Send login request to the server and performs user login
+   *
    * @param {function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
    */
@@ -72,6 +80,7 @@ const actions = {
 
   /**
    * Set tokens after callback from OAuth
+   *
    * @param {function} commit - standard Vuex commit function
    * @param {TokensPair} tokens - user's auth tokens
    */
@@ -81,6 +90,7 @@ const actions = {
 
   /**
    * Send request for refreshing tokens pair
+   *
    * @param {function} commit - standard Vuex commit function
    * @param {AuthModuleState} state - vuex state
    * @return {Promise<TokensPair>}
@@ -94,7 +104,19 @@ const actions = {
   },
 
   /**
+   * Send request to fetch current user data
+   *
+   * @param {function} commit - standard Vuex commit function
+   */
+  async [FETCH_CURRENT_USER]({ commit }) {
+    const me = await authApi.fetchCurrentUser();
+
+    commit(mutationTypes.SET_CURRENT_USER, me);
+  },
+
+  /**
    * Resets module state
+   *
    * @param {function} commit - standard Vuex commit function
    */
   [RESET_STORE]({ commit }) {
@@ -105,6 +127,7 @@ const actions = {
 const mutations = {
   /**
    * Mutation caused by successful authentication
+   *
    * @param {AuthModuleState} state - Vuex state
    * @param {string} accessToken - user's access token
    * @param {string} refreshToken - user's refresh token for getting new tokens pair
@@ -115,7 +138,18 @@ const mutations = {
   },
 
   /**
+   * Set users data to state
+   *
+   * @param {AuthModuleState} state - Vuex state
+   * @param {User} user – user's object to set
+   */
+  [mutationTypes.SET_CURRENT_USER](state, user) {
+    state.data = user;
+  },
+
+  /**
    * Resets module state
+   *
    * @param {AuthModuleState} state - Vuex state
    */
   [RESET_STORE](state) {
