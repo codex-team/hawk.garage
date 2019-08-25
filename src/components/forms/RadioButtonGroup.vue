@@ -22,7 +22,10 @@
       >
         {{ option.name }}
       </label>
-      <div class="radio-button-group__option-tick">
+      <div
+        class="radio-button-group__option-tick"
+        @click="$emit('input', option.id)"
+      >
         <Icon symbol="tick" />
       </div>
     </div>
