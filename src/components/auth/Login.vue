@@ -13,56 +13,56 @@
 </template>
 
 <script>
-import Form from "./Form";
-import { LOGIN, SET_TOKENS } from "../../store/modules/auth/actionTypes";
-import { offlineErrorMessage } from "../../mixins/offlineErrorMessage";
+import Form from './Form';
+import { LOGIN, SET_TOKENS } from '../../store/modules/auth/actionTypes';
+import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
-  name: "Login",
+  name: 'Login',
   components: {
     Form
   },
-  mixins: [offlineErrorMessage],
+  mixins: [ offlineErrorMessage ],
   data() {
     return {
       fields: [
         {
-          label: "Email address",
-          name: "email",
-          value: "",
-          placeholder: "name@best-team.com",
-          type: "email"
+          label: 'Email address',
+          name: 'email',
+          value: '',
+          placeholder: 'name@best-team.com',
+          type: 'email'
         },
         {
-          label: "Password",
-          name: "password",
-          value: "",
-          placeholder: "********",
-          type: "password"
+          label: 'Password',
+          name: 'password',
+          value: '',
+          placeholder: '********',
+          type: 'password'
         }
       ],
-      altLink: "/reset",
-      altText: "Recover password",
-      submitText: "Login",
+      altLink: '/reset',
+      altText: 'Recover password',
+      submitText: 'Login',
       message: null
     };
   },
 
   async mounted() {
     if (
-      this.$route.query["access_token"] &&
-      this.$route.query["refresh_token"]
+      this.$route.query.access_token &&
+      this.$route.query.refresh_token
     ) {
       try {
         await this.$store.dispatch(SET_TOKENS, {
-          accessToken: this.$route.query["access_token"],
-          refreshToken: this.$route.query["refresh_token"]
+          accessToken: this.$route.query.access_token,
+          refreshToken: this.$route.query.refresh_token
         });
-        this.$router.push("/");
+        this.$router.push('/');
       } catch (e) {
         this.message = {
           text: e.message,
-          type: "error"
+          type: 'error'
         };
       }
     }
@@ -77,11 +77,11 @@ export default {
 
       try {
         await this.$store.dispatch(LOGIN, { email, password });
-        this.$router.push("/");
+        this.$router.push('/');
       } catch (e) {
         this.message = {
           text: e.message,
-          type: "error"
+          type: 'error'
         };
       }
     }

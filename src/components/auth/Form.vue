@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import TextFieldset from "../forms/TextFieldset";
+import TextFieldset from '../forms/TextFieldset';
 
 export default {
-  name: "AuthForm",
+  name: 'AuthForm',
   components: {
     TextFieldset
   },
