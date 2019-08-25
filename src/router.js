@@ -19,7 +19,15 @@ const router = new Router({
         {
           path: 'settings',
           name: 'settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/SettingsWindow')
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/SettingsWindow'),
+          redirect: 'settings/account',
+          children: [
+            {
+              path: 'account',
+              name: 'account-settings',
+              component: () => import('./components/user-settings/AccountSettings')
+            }
+          ]
         },
         {
           path: 'workspaces/:workspaceId/settings',
