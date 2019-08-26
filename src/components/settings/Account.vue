@@ -26,8 +26,8 @@
       <ChangePasswordFieldset
         v-model="passwords"
         class="account-settings__section"
-        :show-inputs="showPasswordFieldset"
-        @click.native="expandForm"
+        :show-inputs.sync="showPasswordFieldset"
+        @input="showSubmitButton = true"
       />
       <button
         v-if="showSubmitButton"
