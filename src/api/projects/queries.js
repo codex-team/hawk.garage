@@ -1,6 +1,7 @@
 /**
  * Mutation for creating new project
  */
+// language=GraphQL
 export const MUTATION_CREATE_PROJECT = `
   mutation createProject(
     $name: String!,
@@ -11,5 +12,22 @@ export const MUTATION_CREATE_PROJECT = `
       name
       image
     }
+  }
+`;
+
+// language=GraphQL
+export const QUERY_RECENT_ERRORS = `  
+  query RecentErrors($projectId: ID!) {
+      recent(projectId: $projectId) {
+          date
+          count
+          event {
+              id
+              payload {
+                  title
+                  timestamp
+              }
+          }
+      }
   }
 `;
