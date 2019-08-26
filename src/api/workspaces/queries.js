@@ -16,6 +16,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
                     event {
                         payload {
                             title
+                            timestamp
                         }
                     }
                     count
