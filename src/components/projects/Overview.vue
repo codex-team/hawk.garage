@@ -4,7 +4,7 @@
       <div class="project-overview__chart" />
       <div class="project-overview__events">
         <div
-          v-for="(eventsByDate, date) in eventsListByDate"
+          v-for="(eventsByDate, date) in project.eventsListByDate"
           :key="date"
           class="project-overview__events-by-date"
         >
@@ -27,18 +27,7 @@
 
 <script>
 import EventItem from '../EventItem';
-import { FETCH_PROJECT_EVENTS } from '../../store/modules/projects/actionTypes';
-import * as api from '../../api';
-
-const groupBy = key => array =>
-  array.reduce((objectsByKeyValue, obj) => {
-    const value = obj[key];
-
-    objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
-    return objectsByKeyValue;
-  }, {});
-
-const groupByDate = groupBy('date');
+import { FETCH_RECENT_ERRORS } from '../../store/modules/projects/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -61,31 +50,8 @@ export default {
       return this.$store.getters.getProjectById(projectId);
     }
   },
-  async created() {
-    const projectId = this.$route.params.projectId;
-
-    // language=GraphQL
-    const request = `
-query RecentEvents (
-    $projectId: ID!
-    ){
-  recent(projectId: $projectId) {
-  count
-  date
-  event {
-    id
-    payload {
-        title
-        timestamp
-    }
-   }
-  }
-}
-      `;
-
-    const result = (await api.call(request, { projectId })).recent;
-
-    this.eventsListByDate = groupByDate(result);
+  created() {
+    this.$store.dispatch(FETCH_RECENT_ERRORS, this.$route.params.projectId);
   }
 };
 </script>
