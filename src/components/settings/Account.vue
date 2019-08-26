@@ -47,14 +47,21 @@ import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
 import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
+import notifier from 'codex-notifier';
+import { mapState } from 'vuex';
 
 export default {
   name: 'AccountSettings',
   components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
+  computed: mapState({
+    user: state => state.user.data
+  }),
   data() {
+    const user = this.$store.state.user.data;
+
     return {
-      name: this.$store.state.user.data.name || '',
-      email: this.$store.state.user.data.email,
+      name: user.name || '',
+      email: user.email,
       passwords: {
         old: '',
         new: ''
@@ -62,33 +69,35 @@ export default {
       showSubmitButton: false
     };
   },
+
   methods: {
     /**
      * Form submit event handler
      */
     async save() {
       try {
-        if (await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email })) {
+        if (this.user.name !== this.name || this.user.email !== this.email) {
+          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
           await this.$store.dispatch(FETCH_CURRENT_USER);
         }
-      } catch (e) {
-        this.message = {
-          text: e.message,
-          type: 'error'
-        };
-      }
 
-      if (this.passwords.old && this.passwords.new) {
-        try {
-          if (await this.$store.dispatch(CHANGE_PASSWORD, { old: this.passwords.old, new: this.passwords.new })) {
-            console.log('SUCCESS');
-          }
-        } catch (e) {
-          this.message = {
-            text: e.message,
-            type: 'error'
-          };
+        if (this.passwords.old && this.passwords.new) {
+          await this.$store.dispatch(CHANGE_PASSWORD, { old: this.passwords.old, new: this.passwords.new });
         }
+
+        this.showSubmitButton = false;
+
+        notifier.show({
+          message: this.$t('settings.account.profileUpdated'),
+          style: 'success',
+          time: 5000
+        });
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000
+        });
       }
     }
   }

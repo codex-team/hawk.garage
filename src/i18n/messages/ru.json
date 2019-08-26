@@ -41,7 +41,8 @@
 			"name": "Имя",
 			"profileImage": "Фотография",
 			"submit": "Сохранить",
-			"title": "Аккаунт"
+			"title": "Аккаунт",
+      "profileUpdated": "Профиль обновлён"
 		},
 		"appearance": {
 			"title": "Внешний вид"
