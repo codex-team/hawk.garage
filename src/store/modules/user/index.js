@@ -5,7 +5,8 @@ import {
   SET_TOKENS,
   REFRESH_TOKENS,
   FETCH_CURRENT_USER,
-  UPDATE_PROFILE
+  UPDATE_PROFILE,
+  CHANGE_PASSWORD
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as authApi from '../../../api/user';
@@ -23,6 +24,12 @@ const mutationTypes = {
  * @property {string} id - user's id
  * @property {string} email - user's email
  * @property {string} password - user's password
+ */
+
+/**
+ * @typedef {object} Passwords - represents password pair
+ * @property {string} old - user's old password
+ * @property {string} new - user's new password
  */
 
 /**
@@ -123,6 +130,16 @@ const actions = {
    */
   async [UPDATE_PROFILE]({ commit }, user) {
     return authApi.updateProfile(user.name, user.email);
+  },
+
+  /**
+   * Send request to change user password
+   *
+   * @param {function} commit - standard Vuex commit function
+   * @param {Passwords} passwords - user's pair of passwords
+   */
+  async [CHANGE_PASSWORD]({ commit }, passwords) {
+    return authApi.changePassword(passwords.old, passwords.new);
   },
 
   /**

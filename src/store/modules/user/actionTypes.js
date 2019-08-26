@@ -26,4 +26,9 @@ export const FETCH_CURRENT_USER = 'FETCH_CURRENT_USER';
 /**
  * Update user profile
  */
-export const UPDATE_PROFILE = 'UPDATE_USER_PROFILE';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+
+/**
+ * Change user password
+ */
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';

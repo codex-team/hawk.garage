@@ -17,10 +17,12 @@
     </section>
     <template v-if="showInputs">
       <FormTextFieldset
+        v-model="value.old"
         :label="$t('components.changePasswordFieldSet.oldPassword')"
         type="password"
       />
       <FormTextFieldset
+        v-model="value.new"
         class="change-password-fieldset__new-password"
         :label="$t('components.changePasswordFieldSet.newPassword')"
         type="password"
@@ -35,6 +37,12 @@ import FormTextFieldset from './TextFieldset';
 export default {
   name: 'ChangePasswordFieldset',
   components: { FormTextFieldset, Icon },
+  props: {
+    value: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       showInputs: false

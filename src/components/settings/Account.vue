@@ -24,6 +24,7 @@
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
+        v-model="passwords"
         class="account-settings__section"
         @click.native="showSubmitButton = true"
       />
@@ -45,15 +46,19 @@
 import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
-import { FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
+import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
 
 export default {
   name: 'AccountSettings',
   components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
   data() {
     return {
-      name: this.$store.state.user.data.name,
+      name: this.$store.state.user.data.name || '',
       email: this.$store.state.user.data.email,
+      passwords: {
+        old: '',
+        new: ''
+      },
       showSubmitButton: false
     };
   },
@@ -63,13 +68,27 @@ export default {
      */
     async save() {
       try {
-        await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
-        await this.$store.dispatch(FETCH_CURRENT_USER);
+        if (await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email })) {
+          await this.$store.dispatch(FETCH_CURRENT_USER);
+        }
       } catch (e) {
         this.message = {
           text: e.message,
           type: 'error'
         };
+      }
+
+      if (this.passwords.old && this.passwords.new) {
+        try {
+          if (await this.$store.dispatch(CHANGE_PASSWORD, { old: this.passwords.old, new: this.passwords.new })) {
+            console.log('SUCCESS');
+          }
+        } catch (e) {
+          this.message = {
+            text: e.message,
+            type: 'error'
+          };
+        }
       }
     }
   }

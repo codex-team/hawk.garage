@@ -56,3 +56,15 @@ mutation User($name: String!, $email: String!) {
   )
 }
 `;
+
+/**
+ * Mutation to change user password
+ */
+export const MUTATION_CHANGE_PASSWORD = `
+mutation User($oldPassword: String!, $newPassword: String!) {
+  changePassword (
+    oldPassword: $oldPassword
+    newPassword: $newPassword
+  )
+}
+`;
