@@ -14,6 +14,7 @@
           <EventItem
             v-for="eventByDate in eventsByDate"
             :key="eventByDate.event.id"
+            :count="eventByDate.count"
             class="project-overview__event"
             :event="eventByDate.event"
             @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"
