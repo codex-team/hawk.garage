@@ -6,6 +6,7 @@ import {
 import * as workspacesApi from '../../../api/workspaces';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
+import { groupBy } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -30,15 +31,7 @@ export const Languages = {
   en: 'en',
   ru: 'ru'
 };
-const groupBy = key => array =>
-  array.reduce((objectsByKeyValue, obj) => {
-    const value = obj[key];
 
-    objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
-    return objectsByKeyValue;
-  }, {});
-
-const groupByDate = groupBy('date');
 /**
  * Module state
  * @typedef {object} AppModuleState
@@ -57,6 +50,8 @@ const actions = {
    * @return {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
+    const groupByDate = groupBy('date');
+
     const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
 
     const projects = workspaces.reduce((accumulator, workspace) => {

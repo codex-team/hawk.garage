@@ -21,3 +21,11 @@ export function getEntityColor(id) {
 
   return colors[Math.floor(decimalId / 2)];
 }
+
+export const groupBy = key => array =>
+  array.reduce((objectsByKeyValue, obj) => {
+    const value = obj[key];
+
+    objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+    return objectsByKeyValue;
+  }, {});
