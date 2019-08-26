@@ -48,7 +48,7 @@ export async function refreshTokens(refreshToken) {
 /**
  * Get current user
  *
- * @returns {Promise<module.exports.Query.me>}
+ * @return {Promise<User>}
  */
 export async function fetchCurrentUser() {
   return (await api.call(QUERY_CURRENT_USER)).me;
