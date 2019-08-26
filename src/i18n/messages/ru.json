@@ -39,9 +39,11 @@
 			"changePassword": "Сменить пароль",
 			"email": "EMAIL",
 			"name": "Имя",
+      "namePlaceholder": "Elon Musk",
 			"profileImage": "Фотография",
 			"submit": "Сохранить",
-			"title": "Аккаунт"
+			"title": "Аккаунт",
+      "profileUpdated": "Профиль обновлён"
 		},
 		"appearance": {
 			"title": "Внешний вид"

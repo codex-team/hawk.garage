@@ -3,11 +3,13 @@
     <div class="settings-window-page__title">
       {{ $t('settings.account.title') }}
     </div>
-    <form>
+    <form @submit.prevent="save">
       <div class="account-settings__inline-elements">
         <FormTextFieldset
+          v-model="name"
           class="account-settings__section account-settings__name-section"
           :label="$t('settings.account.name')"
+          :placeholder="$t('settings.account.namePlaceholder')"
           @input="showSubmitButton = true"
         />
         <section>
@@ -16,13 +18,17 @@
         </section>
       </div>
       <FormTextFieldset
+        v-model="email"
         class="account-settings__section"
         :label="$t('settings.account.email')"
+        placeholder="example@example.com"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
+        v-model="passwords"
         class="account-settings__section"
-        @click.native="showSubmitButton = true"
+        :show-inputs.sync="showPasswordFieldset"
+        @input="showSubmitButton = true"
       />
       <button
         v-if="showSubmitButton"
@@ -42,13 +48,76 @@
 import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
+import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
+import notifier from 'codex-notifier';
+import { mapState } from 'vuex';
+
 export default {
   name: 'AccountSettings',
   components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
   data() {
+    const user = this.$store.state.user.data;
+
     return {
+      name: user.name || '',
+      email: user.email || '',
+      passwords: {
+        old: '',
+        new: ''
+      },
+      showPasswordFieldset: false,
       showSubmitButton: false
     };
+  },
+  computed: mapState({
+    user: state => state.user.data
+  }),
+  methods: {
+    /**
+     * Form submit event handler
+     */
+    async save() {
+      try {
+        if (this.user.name !== this.name || this.user.email !== this.email) {
+          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
+          await this.$store.dispatch(FETCH_CURRENT_USER);
+        }
+
+        if (this.passwords.old && this.passwords.new) {
+          await this.$store.dispatch(CHANGE_PASSWORD, { old: this.passwords.old, new: this.passwords.new });
+        }
+
+        this.hideForm();
+
+        notifier.show({
+          message: this.$t('settings.account.profileUpdated'),
+          style: 'success',
+          time: 5000
+        });
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000
+        });
+      }
+    },
+
+    /**
+     * Show password field set and submit button
+     */
+    async expandForm() {
+      this.showPasswordFieldset = true;
+      this.showSubmitButton = true;
+    },
+
+    /**
+     * Hide password field set and submit button
+     */
+    async hideForm() {
+      this.showPasswordFieldset = false;
+      this.showSubmitButton = false;
+    }
   }
 };
 </script>

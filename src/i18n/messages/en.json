@@ -37,11 +37,13 @@
 	"settings": {
 		"account": {
 			"changePassword": "Change password",
-			"email": "EMAIL ADDRESS",
+			"email": "Email address",
 			"name": "Name",
+      "namePlaceholder": "Elon Musk",
 			"profileImage": "Profile picture",
-			"submit": "Submit",
-			"title": "Account settings"
+			"submit": "Save",
+			"title": "Account settings",
+      "profileUpdated": "Profile was updated"
 		},
 		"appearance": {
 			"title": "Appearance"
