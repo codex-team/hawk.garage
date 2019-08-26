@@ -26,7 +26,8 @@
       <ChangePasswordFieldset
         v-model="passwords"
         class="account-settings__section"
-        @click.native="showSubmitButton = true"
+        :show-inputs="showPasswordFieldset"
+        @click.native="expandForm"
       />
       <button
         v-if="showSubmitButton"
@@ -53,9 +54,6 @@ import { mapState } from 'vuex';
 export default {
   name: 'AccountSettings',
   components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
-  computed: mapState({
-    user: state => state.user.data
-  }),
   data() {
     const user = this.$store.state.user.data;
 
@@ -66,10 +64,13 @@ export default {
         old: '',
         new: ''
       },
+      showPasswordFieldset: false,
       showSubmitButton: false
     };
   },
-
+  computed: mapState({
+    user: state => state.user.data
+  }),
   methods: {
     /**
      * Form submit event handler
@@ -85,7 +86,7 @@ export default {
           await this.$store.dispatch(CHANGE_PASSWORD, { old: this.passwords.old, new: this.passwords.new });
         }
 
-        this.showSubmitButton = false;
+        this.hideForm();
 
         notifier.show({
           message: this.$t('settings.account.profileUpdated'),
@@ -99,6 +100,22 @@ export default {
           time: 5000
         });
       }
+    },
+
+    /**
+     * Show password field set and submit button
+     */
+    async expandForm() {
+      this.showPasswordFieldset = true;
+      this.showSubmitButton = true;
+    },
+
+    /**
+     * Hide password field set and submit button
+     */
+    async hideForm() {
+      this.showPasswordFieldset = false;
+      this.showSubmitButton = false;
     }
   }
 };

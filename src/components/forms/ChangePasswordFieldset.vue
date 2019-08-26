@@ -2,12 +2,11 @@
   <fieldset class="fieldset change-password-fieldset">
     <section
       v-if="!showInputs"
-      @click="showInputs = true"
     >
       <label class="label change-password-fieldset__label">
         {{ $t('authPages.password') }}
       </label>
-      <button class="button button--quiet change-password-fieldset__button">
+      <button type="button" class="button button--quiet change-password-fieldset__button">
         <Icon
           class="change-password-fieldset__key-icon"
           symbol="key"
@@ -34,6 +33,7 @@
 <script>
 import Icon from '../utils/Icon';
 import FormTextFieldset from './TextFieldset';
+
 export default {
   name: 'ChangePasswordFieldset',
   components: { FormTextFieldset, Icon },
@@ -41,12 +41,8 @@ export default {
     value: {
       type: Object,
       required: true
-    }
-  },
-  data() {
-    return {
-      showInputs: false
-    };
+    },
+    showInputs: Boolean
   }
 };
 </script>
