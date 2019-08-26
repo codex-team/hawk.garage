@@ -13,7 +13,7 @@
         {{ project.name }}
       </div>
       <div class="project-menu-item__last-event">
-        Uncaught TypeError: Cannot read property 'activate' of undefined фвцфцвфцвфцв
+        {{ Object.values(project.eventsListByDate)[0][0].event.payload.title }}
       </div>
     </div>
     <Badge

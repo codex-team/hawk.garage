@@ -30,7 +30,15 @@ export const Languages = {
   en: 'en',
   ru: 'ru'
 };
+const groupBy = key => array =>
+  array.reduce((objectsByKeyValue, obj) => {
+    const value = obj[key];
 
+    objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+    return objectsByKeyValue;
+  }, {});
+
+const groupByDate = groupBy('date');
 /**
  * Module state
  * @typedef {object} AppModuleState
@@ -61,6 +69,11 @@ const actions = {
       }
       return accumulator;
     }, []);
+
+    projects.forEach(project => {
+      project.eventsListByDate = groupByDate(project.recentEvents);
+      delete project.recentEvents;
+    });
 
     dispatch(SET_WORKSPACES_LIST, workspaces);
     dispatch(SET_PROJECTS_LIST, projects);
