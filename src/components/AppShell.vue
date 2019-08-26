@@ -52,6 +52,7 @@ import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
 import ProjectHeader from './projects/ProjectHeader';
+import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 
 export default {
   name: 'AppShell',
@@ -111,6 +112,11 @@ export default {
      * Fetch user data
      */
     this.$store.dispatch(FETCH_INITIAL_DATA);
+
+    /**
+     * Fetch current user data
+     */
+    this.$store.dispatch(FETCH_CURRENT_USER);
   },
   methods: {
     /**
