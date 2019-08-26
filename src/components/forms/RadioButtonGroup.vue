@@ -72,19 +72,19 @@ export default {
 <style>
   .radio-button-group{
     &__option {
-      cursor: pointer;
-      padding: 15px 0;
       display: flex;
       align-items: center;
+      padding: 15px 0;
+      cursor: pointer;
     }
 
     &__option-image {
       width: 33px;
-      height: 22px;
       min-width: 33px;
+      height: 22px;
       min-height: 22px;
-      border-radius: 3px;
       background-size: cover;
+      border-radius: 3px;
     }
 
     &__option-label {
@@ -95,41 +95,40 @@ export default {
       background-size: 33px 100%;
     }
 
-    &__option-input {
-      opacity: 0;
-      position: fixed;
-      width: 0;
-
-      &:checked ~ .radio-button-group__option-tick .icon {
-        display: block;
-      }
-
-      &:focus ~ .radio-button-group__option-tick{
-        border-width: 2px;
-      }
-    }
-
     &__option-tick {
-      /*cursor: pointer;*/
-      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 28px;
-      height: 28px;
       min-width: 28px;
+      height: 28px;
       min-height: 28px;
+      margin-left: auto;
+      background: var(--color-bg-main);
       border: 1px solid var(--color-bg-sidebar);
       border-radius: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: var(--color-bg-main);
 
       .icon {
         display: none;
         width: 18px;
+        height: 18px;
         padding: 3px;
         background-color: #09cf5d;
         border-radius: 100%;
-        height: 18px;
+      }
+    }
+
+    &__option-input {
+      position: fixed;
+      width: 0;
+      opacity: 0;
+
+      &:focus ~ .radio-button-group__option-tick{
+        border-width: 2px;
+      }
+
+      &:checked ~ .radio-button-group__option-tick .icon {
+        display: block;
       }
     }
 
