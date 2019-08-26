@@ -39,6 +39,7 @@
 			"changePassword": "Change password",
 			"email": "Email address",
 			"name": "Name",
+      "namePlaceholder": "Elon Musk",
 			"profileImage": "Profile picture",
 			"submit": "Save",
 			"title": "Account settings",

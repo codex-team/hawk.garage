@@ -9,7 +9,7 @@
           v-model="name"
           class="account-settings__section account-settings__name-section"
           :label="$t('settings.account.name')"
-          placeholder="Elon Musk"
+          :placeholder="$t('settings.account.namePlaceholder')"
           @input="showSubmitButton = true"
         />
         <section>
