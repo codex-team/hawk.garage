@@ -24,14 +24,14 @@ export default {
     return {
       fields: [
         {
-          label: 'EMAIL ADDRESS',
+          label: this.$t('authPages.emailAddress'),
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
           type: 'email'
         }
       ],
-      submitText: 'Register',
+      submitText: this.$t('authPages.signUpSubmitText'),
       message: null
     };
   },

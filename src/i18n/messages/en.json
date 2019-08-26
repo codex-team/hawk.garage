@@ -1,0 +1,68 @@
+{
+	"authPages": {
+		"emailAddress": "Email address",
+		"githubButton": "Continue",
+		"googleButton": "Sign in",
+		"login": "Login",
+		"loginSubmitText": "Login",
+		"password": "PASSWORD",
+		"recoverPassword": "Recover password",
+		"signUp": "Sign up",
+		"signUpSubmitText": "Register"
+	},
+	"components": {
+		"changePasswordFieldSet": {
+			"newPassword": "New password",
+			"oldPassword": "Old password"
+		},
+		"languageSelect": {
+			"en": "English",
+			"label": "Interface Language",
+			"ru": "Russian"
+		}
+	},
+	"forms": {
+		"imageUploader": "UPLOAD LOGO",
+		"searchField": "Search"
+	},
+	"projects": {
+		"creationDialog": {
+			"description": "To start track events from your application, add it as a Project and get an Integration Token.",
+			"projectNameLabel": "PROJECT NAME",
+			"submitButton": "Create project",
+			"title": "Add a project",
+			"workspaceSelectLabel": "SELECT WORKSPACE"
+		}
+	},
+	"settings": {
+		"account": {
+			"changePassword": "Change password",
+			"email": "EMAIL ADDRESS",
+			"name": "Name",
+			"profileImage": "Profile picture",
+			"submit": "Submit",
+			"title": "Account settings"
+		},
+		"appearance": {
+			"title": "Appearance"
+		},
+		"billing": {
+			"title": "Billing information"
+		},
+		"logout": "Log out",
+		"notifications": {
+			"title": "Notifications"
+		}
+	},
+	"workspaces": {
+		"creationDialog": {
+			"description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
+			"submitButton": "Create workspace",
+			"title": "Organize new workspace",
+			"workspaceNameLabel": "workspace name"
+		},
+		"settings": {
+			"label": "Workspace settings"
+		}
+	}
+}

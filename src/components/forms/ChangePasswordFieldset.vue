@@ -5,24 +5,24 @@
       @click="showInputs = true"
     >
       <label class="label change-password-fieldset__label">
-        PASSWORD
+        {{ $t('authPages.password') }}
       </label>
       <button class="button button--quiet change-password-fieldset__button">
         <Icon
           class="change-password-fieldset__key-icon"
           symbol="key"
         />
-        Change password
+        {{ $t('settings.account.changePassword') }}
       </button>
     </section>
     <template v-if="showInputs">
       <FormTextFieldset
-        label="Old password"
+        :label="$t('components.changePasswordFieldSet.oldPassword')"
         type="password"
       />
       <FormTextFieldset
         class="change-password-fieldset__new-password"
-        label="New password"
+        :label="$t('components.changePasswordFieldSet.newPassword')"
         type="password"
       />
     </template>

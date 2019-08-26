@@ -27,8 +27,8 @@ export async function call(request, variables) {
  * @param {String|null} accessToken - user's access token. If null, token will be deleted from header
  */
 export function setAuthToken(accessToken) {
-  if (!accessToken) return delete axios.defaults.headers.common['Authorization'];
-  axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+  if (!accessToken) return delete axios.defaults.headers.common.Authorization;
+  axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 }
 
 /**
@@ -83,7 +83,7 @@ axios.interceptors.response.use(
     try {
       const newAccessToken = await eventsHandlers.onTokenExpired();
 
-      originalRequest.headers['Authorization'] = 'Bearer ' + newAccessToken;
+      originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
       return axios(originalRequest);
     } catch {
       eventsHandlers.onAuthError();

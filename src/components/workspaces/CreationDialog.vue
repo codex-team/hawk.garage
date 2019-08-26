@@ -2,10 +2,10 @@
   <PopupDialog @close="$emit('close')">
     <div class="workspace-creation-dialog">
       <h1 class="workspace-creation-dialog__header">
-        Organize new workspace
+        {{ $t('workspaces.creationDialog.title') }}
       </h1>
       <div class="workspace-creation-dialog__description">
-        Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.
+        {{ $t('workspaces.creationDialog.description') }}
       </div>
       <form
         class="workspace-creation-dialog__form"
@@ -16,7 +16,7 @@
           class="workspace-creation-dialog__text-field"
           name="workspaceName"
           type="text"
-          label="workspace name"
+          :label="$t('workspaces.creationDialog.workspaceNameLabel')"
         />
         <ImageUploader
           class="workspace-creation-dialog__image-uploader"
@@ -24,7 +24,7 @@
         <input
           class="button button--submit workspace-creation-dialog__submit"
           type="submit"
-          value="Create workspace"
+          :value="$t('workspaces.creationDialog.submitButton')"
         >
       </form>
     </div>

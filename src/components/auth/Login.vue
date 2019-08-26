@@ -27,14 +27,14 @@ export default {
     return {
       fields: [
         {
-          label: 'Email address',
+          label: this.$t('authPages.emailAddress'),
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
           type: 'email'
         },
         {
-          label: 'Password',
+          label: this.$t('authPages.password'),
           name: 'password',
           value: '',
           placeholder: '********',
@@ -42,8 +42,8 @@ export default {
         }
       ],
       altLink: '/reset',
-      altText: 'Recover password',
-      submitText: 'Login',
+      altText: this.$t('authPages.recoverPassword'),
+      submitText: this.$t('authPages.loginSubmitText'),
       message: null
     };
   },

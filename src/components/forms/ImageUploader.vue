@@ -1,6 +1,6 @@
 <template>
   <div class="form-image-uploader">
-    UPLOAD LOGO
+    {{ $t('forms.imageUploader') }}
   </div>
 </template>
 

@@ -12,11 +12,11 @@
       <a
         class="auth-form__github-button"
         :href="$API_AUTH_GITHUB"
-      >Continue</a>
+      >{{ $t('authPages.githubButton') }}</a>
       <a
         class="auth-form__google-button"
         :href="$API_AUTH_GOOGLE"
-      >Sign in</a>
+      >{{ $t('authPages.googleButton') }}</a>
     </div>
     <div class="auth-form__container">
       <div class="auth-form__picture" />
@@ -26,10 +26,10 @@
       >
         <div class="auth-form__links">
           <router-link to="/login">
-            Login
+            {{ $t('authPages.login') }}
           </router-link>
           <router-link to="/sign-up">
-            Sign up
+            {{ $t('authPages.signUp') }}
           </router-link>
         </div>
         <hr class="auth-form__delimiter">
