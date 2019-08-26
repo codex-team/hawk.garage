@@ -50,25 +50,36 @@ export default {
       eventsListByDate: null
     };
   },
+  computed: {
+    /**
+     * Current viewed project
+     * @return {Project}
+     */
+    project() {
+      const projectId = this.$route.params.projectId;
+
+      return this.$store.getters.getProjectById(projectId);
+    }
+  },
   async created() {
     const projectId = this.$route.params.projectId;
 
     // language=GraphQL
     const request = `
 query RecentEvents (
-$projectId: ID!
-){
-recent(projectId: $projectId) {
-count
-date
-event {
-        id
-        payload {
-          title
-          timestamp
-        }
-      }
-}
+    $projectId: ID!
+    ){
+  recent(projectId: $projectId) {
+  count
+  date
+  event {
+    id
+    payload {
+        title
+        timestamp
+    }
+   }
+  }
 }
       `;
 
