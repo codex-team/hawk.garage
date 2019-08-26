@@ -22,7 +22,8 @@ const mutationTypes = {
 /**
  * @typedef {object} User - represents user
  * @property {string} id - user's id
- * @property {string} email - user's email
+  * @property {string} email - user's email
+  * @property {string} name - user's name
  * @property {string} password - user's password
  */
 
