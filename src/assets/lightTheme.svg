@@ -1,27 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="33" height="22" viewBox="0 0 33 22">
-    <defs>
-        <linearGradient id="b" x1="50%" x2="50%" y1="0%" y2="100%">
-            <stop offset="0%" stop-color="#72BEFF"/>
-            <stop offset="100%" stop-color="#C9FFF1"/>
-        </linearGradient>
-        <path id="a" d="M3.846 0h25.308c1.337 0 1.822.14 2.311.4.49.262.873.646 1.134 1.135.262.489.401.974.401 2.31v14.31c0 1.336-.14 1.821-.4 2.31a2.726 2.726 0 0 1-1.135 1.134c-.489.262-.974.401-2.31.401H3.844c-1.336 0-1.821-.14-2.31-.4A2.726 2.726 0 0 1 .4 20.464C.139 19.976 0 19.491 0 18.155V3.844c0-1.336.14-1.821.4-2.31A2.726 2.726 0 0 1 1.536.4C2.024.139 2.509 0 3.845 0z"/>
-        <circle id="e" cx="23.5" cy="7.5" r="3.5"/>
-        <filter id="d" width="357.1%" height="357.1%" x="-128.6%" y="-128.6%" filterUnits="objectBoundingBox">
-            <feMorphology in="SourceAlpha" operator="dilate" radius="1" result="shadowSpreadOuter1"/>
-            <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2"/>
-            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.24923514 0"/>
-        </filter>
-    </defs>
-    <g fill="none" fill-rule="evenodd">
-        <mask id="c" fill="#fff">
-            <use xlink:href="#a"/>
-        </mask>
-        <use fill="url(#b)" xlink:href="#a"/>
-        <g mask="url(#c)">
-            <use fill="#000" filter="url(#d)" xlink:href="#e"/>
-            <use fill="#FFF" xlink:href="#e"/>
-        </g>
-        <path fill="#5DA7EF" d="M0 14l7-8 5 6 3-3 5 7h13v6H0z" mask="url(#c)"/>
-    </g>
+<svg width="33" height="22" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="superUniqueID23324">
+      <stop stop-color="#72BEFF" offset="0%"/>
+      <stop stop-color="#C9FFF1" offset="100%"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <path fill="url(#superUniqueID23324)" d="M0 0h33v22H0z"/>
+    <circle fill="#FFF" cx="23.5" cy="7.5" r="3.5"/>
+    <path fill="#5DA7EF" d="M0 14l7-8 5 6 3-3 5 7h13v6H0z"/>
+  </g>
 </svg>

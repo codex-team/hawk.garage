@@ -7,7 +7,12 @@
     >
       <div
         class="radio-button-group__option"
+        @click="$emit('input', option.id)"
       >
+        <div
+          class="radio-button-group__option-image"
+          :style="{backgroundImage: `url('${option.image}')`}"
+        />
         <input
           :id="option.id"
           :value="option.id"
@@ -19,14 +24,12 @@
         >
         <label
           class="radio-button-group__option-label"
-          :style="{backgroundImage: `url('${option.image}')`}"
           :for="option.id"
         >
           {{ option.name }}
         </label>
         <div
           class="radio-button-group__option-tick"
-          @click="$emit('input', option.id)"
         >
           <Icon symbol="tick" />
         </div>
@@ -72,13 +75,21 @@ export default {
       cursor: pointer;
       padding: 15px 0;
       display: flex;
+      align-items: center;
+    }
+
+    &__option-image {
+      width: 33px;
+      height: 22px;
+      min-width: 33px;
+      min-height: 22px;
+      border-radius: 3px;
+      background-size: cover;
     }
 
     &__option-label {
-      cursor: pointer;
-      width: 100%;
       display: flex;
-      padding-left: 50px;
+      padding-left: 15px;
       line-height: 28px;
       background-repeat: no-repeat;
       background-size: 33px 100%;
@@ -99,7 +110,7 @@ export default {
     }
 
     &__option-tick {
-      cursor: pointer;
+      /*cursor: pointer;*/
       margin-left: auto;
       width: 28px;
       height: 28px;
