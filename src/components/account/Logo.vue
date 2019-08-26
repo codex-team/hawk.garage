@@ -1,5 +1,5 @@
 <template>
-  <div class="account-settings__logo" />
+  <div class="account-settings__logo settings-window__logo" />
 </template>
 
 <script>

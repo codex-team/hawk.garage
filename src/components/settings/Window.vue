@@ -3,10 +3,10 @@
     <div class="settings-window">
       <div class="settings-window__menu">
         <div class="settings-window__header window-header clearfix">
-          <div :is="logo" class="settings-window__logo" />
-          <div :is="title" />
+          <slot name="logo" />
+          <slot name="title" />
         </div>
-        <div :is="menu" />
+        <slot name="menu" />
       </div>
       <div class="settings-window__content">
         <router-view />
@@ -23,7 +23,7 @@ export default {
   components: {
     PopupWindow
   },
-  props: ['onCloseRoute', 'logo', 'title', 'menu']
+  props: [ 'onCloseRoute' ]
 };
 </script>
 

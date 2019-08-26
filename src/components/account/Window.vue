@@ -1,10 +1,15 @@
 <template>
-  <SettingsWindow
-    :logo="AccountSettingsLogo"
-    :menu="AccountSettingsMenu"
-    :title="AccountSettingsTitle"
-    on-close-route="/"
-  />
+  <SettingsWindow on-close-route="/">
+    <template v-slot:logo>
+      <AccountSettingsLogo />
+    </template>
+    <template v-slot:title>
+      <AccountSettingsTitle />
+    </template>
+    <template v-slot:menu>
+      <AccountSettingsMenu />
+    </template>
+  </SettingsWindow>
 </template>
 
 <script>
@@ -16,14 +21,10 @@ import AccountSettingsTitle from './Title';
 export default {
   name: 'AccountSettingsWindow',
   components: {
+    AccountSettingsMenu,
+    AccountSettingsTitle,
+    AccountSettingsLogo,
     SettingsWindow
-  },
-  data() {
-    return {
-      AccountSettingsLogo,
-      AccountSettingsMenu,
-      AccountSettingsTitle
-    };
   }
 };
 </script>
