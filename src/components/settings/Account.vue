@@ -21,6 +21,7 @@
         v-model="email"
         class="account-settings__section"
         :label="$t('settings.account.email')"
+        placeholder="example@example.com"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
@@ -59,7 +60,7 @@ export default {
 
     return {
       name: user.name || '',
-      email: user.email,
+      email: user.email || '',
       passwords: {
         old: '',
         new: ''

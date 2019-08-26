@@ -3,7 +3,7 @@
     <EntityImage
       :id="user.id"
       class="sidebar__user-picture"
-      :name="user.email"
+      :name="user.email || 'H'"
       :image="user.image"
       @click.native="$router.push('/settings')"
     />
