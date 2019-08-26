@@ -38,7 +38,7 @@ const mutationTypes = {
  * @typedef {object} AuthModuleState
  * @property {string} accessToken - user's access token
  * @property {string} refreshToken - user's refresh token for getting new tokens pair
- * @property {object} data - user's data
+ * @property {User} data - user's data
  */
 
 /**
