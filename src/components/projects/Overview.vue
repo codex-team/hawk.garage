@@ -3,16 +3,22 @@
     <div class="project-overview__content">
       <div class="project-overview__chart" />
       <div class="project-overview__events">
-        <div class="project-overview__date">
-          Today
+        <div
+          v-for="(eventsByDate, date) in eventsListByDate"
+          :key="date"
+          class="project-overview__events-by-date"
+        >
+          <div class="project-overview__date">
+            {{ date }}
+          </div>
+          <EventItem
+            v-for="eventByDate in eventsByDate"
+            :key="eventByDate.event.id"
+            class="project-overview__event"
+            :event="eventByDate.event"
+            @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"
+          />
         </div>
-        <EventItem
-          v-for="event in project.events"
-          :key="event.id"
-          class="project-overview__event"
-          :event="event"
-          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"
-        />
       </div>
     </div>
     <router-view />
@@ -21,22 +27,54 @@
 
 <script>
 import EventItem from '../EventItem';
+import { FETCH_PROJECT_EVENTS } from '../../store/modules/projects/actionTypes';
+import * as api from '../../api';
+
+const groupBy = key => array =>
+  array.reduce((objectsByKeyValue, obj) => {
+    const value = obj[key];
+
+    objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+    return objectsByKeyValue;
+  }, {});
+
+const groupByDate = groupBy('date');
 
 export default {
   name: 'ProjectOverview',
   components: {
     EventItem
   },
-  computed: {
-    /**
-     * Current viewed project
-     * @return {Project}
-     */
-    project() {
-      const projectId = this.$route.params.projectId;
+  data() {
+    return {
+      eventsListByDate: null
+    };
+  },
+  async created() {
+    const projectId = this.$route.params.projectId;
 
-      return this.$store.getters.getProjectById(projectId);
-    }
+    // language=GraphQL
+    const request = `
+query RecentEvents (
+$projectId: ID!
+){
+recent(projectId: $projectId) {
+count
+date
+event {
+        id
+        payload {
+          title
+          timestamp
+        }
+      }
+}
+}
+      `;
+
+    const result = (await api.call(request, { projectId })).recent;
+
+    this.eventsListByDate = groupByDate(result);
   }
 };
 </script>
