@@ -9,11 +9,9 @@ export default {
 </script>
 
 <style scoped>
-  .account-settings {
-    &__logo {
+  .account-settings__logo {
       background-image: url("../../assets/hawk-logo.png");
       background-position: center center;
       background-size: cover;
-    }
   }
 </style>
