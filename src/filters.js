@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import i18n from './i18n';
 
 /**
  * Filter that add space after first digit in 4-digits number
@@ -28,7 +29,7 @@ Vue.filter('abbreviation', function (value) {
  * Returns prettifying time ('now' or time in hh:mm)
  * @return {string}
  */
-Vue.filter('prettyDate', function (value) {
+Vue.filter('prettyTime', function (value) {
   const date = new Date(value);
   const currentDate = new Date();
 
@@ -40,4 +41,24 @@ Vue.filter('prettyDate', function (value) {
   const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
 
   return `${date.getHours()}:${formattedMinutes}`;
+});
+
+/**
+ * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
+ * @return {string}
+ */
+Vue.filter('prettyDate', function (value) {
+  const [day, month] = value.split('-');
+
+  const currentDate = new Date().getDate();
+
+  if (+day === currentDate) {
+    return 'Today';
+  }
+
+  if (+day === currentDate - 1) {
+    return 'Yesterday';
+  }
+
+  return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
 });
