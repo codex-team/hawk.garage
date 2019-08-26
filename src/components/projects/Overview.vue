@@ -9,7 +9,7 @@
           class="project-overview__events-by-date"
         >
           <div class="project-overview__date">
-            {{ date | prettyDate}}
+            {{ date | prettyDate }}
           </div>
           <EventItem
             v-for="eventByDate in eventsByDate"
@@ -96,14 +96,18 @@ event {
 
     &__chart {
       height: 215px;
-      margin: 16px 15px 15px;
+      margin: 16px 15px 0;
       background-color: var(--color-bg-main);
     }
 
     &__events {
       display: flex;
       flex-direction: column;
-      margin: 50px 15px 15px;
+      padding: 0 15px 15px;
+    }
+
+    &__events-by-date {
+      margin-top: 50px;
     }
 
     &__date {
