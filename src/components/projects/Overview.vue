@@ -3,16 +3,30 @@
     <div class="project-overview__content">
       <div class="project-overview__chart" />
       <div class="project-overview__events">
-        <div class="project-overview__date">
-          Today
+        <div
+          v-for="(eventsByDate, date) in project.eventsListByDate"
+          :key="date"
+          class="project-overview__events-by-date"
+        >
+          <div class="project-overview__date">
+            {{ date | prettyDate }}
+          </div>
+          <EventItem
+            v-for="eventByDate in eventsByDate"
+            :key="eventByDate.event.id"
+            :count="eventByDate.count"
+            class="project-overview__event"
+            :event="eventByDate.event"
+            @onAssigneeIconClick="showAssigners"
+            @showEventOverview="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"
+          />
         </div>
-<!--        <EventItem-->
-<!--          v-for="event in project.events"-->
-<!--          :key="event.id"-->
-<!--          class="project-overview__event"-->
-<!--          :event="event"-->
-<!--          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"-->
-<!--        />-->
+        <AssignersList
+          v-if="isAssignersShowed"
+          v-click-outside="hideAssignersList"
+          :style="assignersListPosition"
+          class="project-overview__assigners-list"
+        />
       </div>
     </div>
     <router-view />
@@ -20,12 +34,25 @@
 </template>
 
 <script>
-import EventItem from '../EventItem';
+import EventItem from '../events/EventItem';
+import { FETCH_RECENT_ERRORS } from '../../store/modules/projects/actionTypes';
+import AssignersList from '../events/AssignersList';
 
 export default {
   name: 'ProjectOverview',
   components: {
-    EventItem
+    EventItem,
+    AssignersList
+  },
+  data() {
+    return {
+      eventsListByDate: null,
+      isAssignersShowed: false,
+      assignersListPosition: {
+        top: 0,
+        right: 0
+      }
+    };
   },
   computed: {
     /**
@@ -36,6 +63,24 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
+    }
+  },
+  created() {
+    this.$store.dispatch(FETCH_RECENT_ERRORS, this.$route.params.projectId);
+  },
+  methods: {
+    showAssigners(event) {
+      this.isAssignersShowed = true;
+      const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
+
+      this.assignersListPosition = {
+        top: boundingClientRect.y + 'px',
+        left: boundingClientRect.x + 'px'
+      };
+    },
+
+    hideAssignersList() {
+      this.isAssignersShowed = false;
     }
   }
 };
@@ -58,14 +103,18 @@ export default {
 
     &__chart {
       height: 215px;
-      margin: 16px 15px 15px;
+      margin: 16px 15px 0;
       background-color: var(--color-bg-main);
     }
 
     &__events {
       display: flex;
       flex-direction: column;
-      margin: 50px 15px 15px;
+      padding: 0 15px 15px;
+    }
+
+    &__events-by-date {
+      margin-top: 50px;
     }
 
     &__date {
@@ -77,6 +126,11 @@ export default {
 
     &__event {
       cursor: pointer;
+    }
+
+    &__assigners-list {
+      position: absolute;
+      transform: translateX(-100%) translate(-5px, -5px);
     }
   }
 </style>

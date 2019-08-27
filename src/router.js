@@ -19,18 +19,18 @@ const router = new Router({
         {
           path: 'settings',
           name: 'settings',
-          component: () => import(/* webpackChunkName: 'settings' */ './components/settings/Window'),
+          component: () => import(/* webpackChunkName: 'settings' */ './components/account/Window'),
           redirect: 'settings/account',
           children: [
             {
               path: 'account',
               name: 'account-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/settings/Account')
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Account')
             },
             {
               path: 'appearance',
               name: 'appearance-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/settings/Appearance')
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance')
             }
           ]
         },

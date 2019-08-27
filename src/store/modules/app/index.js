@@ -6,6 +6,7 @@ import {
 import * as workspacesApi from '../../../api/workspaces';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
+import { groupBy } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -49,6 +50,8 @@ const actions = {
    * @return {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
+    const groupByDate = groupBy('date');
+
     const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
 
     const projects = workspaces.reduce((accumulator, workspace) => {
@@ -61,6 +64,11 @@ const actions = {
       }
       return accumulator;
     }, []);
+
+    projects.forEach(project => {
+      project.eventsListByDate = groupByDate(project.recentEvents);
+      delete project.recentEvents;
+    });
 
     dispatch(SET_WORKSPACES_LIST, workspaces);
     dispatch(SET_PROJECTS_LIST, projects);

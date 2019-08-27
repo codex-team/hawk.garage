@@ -146,12 +146,13 @@ svg {
 body .cdx-notifies {
   right: 20px;
   left: auto;
+  z-index: 100;
   box-sizing: content-box;
 }
 
 body .cdx-notify {
   font-size: 13px;
-  background-color: var(--color-bg-second);
+  background-color: var(--color-bg-second) !important;
   box-shadow: 0 6px 17px -4px #0000009c;
 
   &__btns-wrapper {

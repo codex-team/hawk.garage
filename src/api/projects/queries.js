@@ -14,9 +14,22 @@ export const MUTATION_CREATE_PROJECT = `
   }
 `;
 
-/**
- * @type {string}
- */
+export const QUERY_RECENT_ERRORS = `
+  query RecentErrors($projectId: ID!) {
+    recent(projectId: $projectId) {
+      date
+      count
+      event {
+        id
+        payload {
+          title
+          timestamp
+        }
+      }
+    }
+  }
+`;
+
 export const QUERY_REPETITION_LIST = `
   query repetitionsList(
     $projectId: ID!,

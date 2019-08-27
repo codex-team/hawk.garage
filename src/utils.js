@@ -21,3 +21,37 @@ export function getEntityColor(id) {
 
   return colors[Math.floor(decimalId / 2)];
 }
+
+/**
+ * Group array of Objects by key
+ * @usage
+ *
+ * const cars = [
+ * { brand: 'Audi', color: 'black' },
+ * { brand: 'Audi', color: 'white' },
+ * { brand: 'Ferarri', color: 'red' },
+ * { brand: 'Ford', color: 'white' },
+ * { brand: 'Peugot', color: 'white' }
+ * ];
+ *
+ * const groupByBrand = groupBy('brand');
+ * const groupByColor = groupBy('color');
+ *
+ * console.log(
+ *   JSON.stringify({
+ *     carsByBrand: groupByBrand(cars),
+ *     carsByColor: groupByColor(cars)
+ *   }, null, 2)
+ * );
+ *
+ * @param {String} key - key for grouping
+ */
+export const groupBy =
+  key =>
+    array => // array of objects to group
+      array.reduce((objectsByKeyValue, obj) => {
+        const value = obj[key];
+
+        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        return objectsByKeyValue;
+      }, {});

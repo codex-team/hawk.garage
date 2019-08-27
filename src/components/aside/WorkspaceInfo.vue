@@ -10,9 +10,12 @@
       <div class="workspace-info__name">
         {{ workspace.name }}
       </div>
-      <div class="workspace-info__settings-link">
+      <router-link
+        class="workspace-info__settings-link"
+        :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id}}"
+      >
         {{ $t('workspaces.settings.label') }}
-      </div>
+      </router-link>
     </div>
     <Icon
       class="workspace-info__project-creation-button"

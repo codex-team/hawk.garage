@@ -59,5 +59,5 @@ export async function deleteWorkspace(workspaceId) {
  * @return {Promise<[Workspace]>}
  */
 export async function getAllWorkspacesWithProjects() {
-  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS)).workspaces;
+  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, null, { initial: true })).workspaces;
 }
