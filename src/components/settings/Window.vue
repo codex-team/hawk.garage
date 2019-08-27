@@ -20,7 +20,12 @@ export default {
   components: {
     PopupWindow
   },
-  props: [ 'onCloseRoute' ]
+  props: {
+    onCloseRoute: {
+      type: String,
+      default: undefined
+    }
+  }
 };
 </script>
 
