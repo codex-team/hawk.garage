@@ -1,7 +1,7 @@
 import { HTTP_OK } from '../httpCodes';
 import {
   MUTATION_CREATE_WORKSPACE,
-  QUERY_ALL_WORKSPACES_WITH_PROJECTS_AND_USERS,
+  QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   MUTATION_INVITE_TO_WORKSPACE,
   MUTATION_CONFIRM_INVITE,
   MUTATION_UPDATE_WORKSPACE,
@@ -65,8 +65,8 @@ export async function deleteWorkspace(workspaceId) {
  * Returns all user's workspaces and project.
  * @return {Promise<[Workspace]>}
  */
-export async function getAllWorkspacesWithProjectsAndUsers() {
-  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS_AND_USERS, null, { initial: true })).workspaces;
+export async function getAllWorkspacesWithProjects() {
+  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, null, { initial: true })).workspaces;
 }
 
 /**

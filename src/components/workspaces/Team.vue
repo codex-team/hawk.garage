@@ -59,15 +59,17 @@ export default {
   name: 'WorkspaceTeam',
   components: { TeamMember },
   data() {
-    const workspaceId = this.$route.params.workspaceId;
-
-    const workspace = this.$store.state.workspaces.list.find(element => element.id === workspaceId);
-
     return {
-      workspace,
       userEmail: '',
       baseUrl: window.location.origin
     };
+  },
+  computed: {
+    workspace() {
+      const workspaceId = this.$route.params.workspaceId;
+
+      return this.$store.getters.getWorkspaceById(workspaceId);
+    }
   },
   methods: {
     onLinkCopied() {

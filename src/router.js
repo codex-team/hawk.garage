@@ -108,8 +108,6 @@ const router = new Router({
           isSuccessful = false;
         }
 
-        console.log(i18n);
-
         notifier.show({
           message: isSuccessful ? i18n.t('workspaces.settings.team.joinNotification') : i18n.t('workspaces.settings.team.brokenLinkNotification'),
           style: isSuccessful ? 'success' : 'error',

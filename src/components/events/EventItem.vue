@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     closeAssignersList() {
-      console.log('close');
       this.showAssigners = false;
     }
   }

@@ -2,24 +2,12 @@
 /**
  * Query for getting all user's workspaces and project.
  */
-export const QUERY_ALL_WORKSPACES_WITH_PROJECTS_AND_USERS = `
+export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   {
     workspaces {
       id
       name
       image
-      users {
-        id
-        name
-        email
-        image
-        isAdmin
-        isPending
-      }
-      pendingUsers {
-        email
-        isPending
-      }
       projects {
         id
         name
@@ -89,12 +77,24 @@ export const MUTATION_CONFIRM_INVITE = `
  */
 export const QUERY_WORKSPACES = `
  query fetchWorkspaces($ids: [ID!]) {
-     workspaces(ids: $ids) {
-         id
-         name
-         description
-         image
+   workspaces(ids: $ids) {
+     id
+     name
+     description
+     image
+     users {
+       id
+       name
+       email
+       image
+       isAdmin
+       isPending
      }
+     pendingUsers {
+       email
+       isPending
+     }
+   }
  }
 `;
 
@@ -104,10 +104,10 @@ export const QUERY_WORKSPACES = `
  */
 export const MUTATION_UPDATE_WORKSPACE = `
   mutation updateWorkspace(
-      $id: ID!
-      $name: String!
-      $description: String
+    $id: ID!
+    $name: String!
+    $description: String
   ) {
-      updateWorkspace(id: $id, name: $name, description: $description)
+    updateWorkspace(id: $id, name: $name, description: $description)
   }
 `;
