@@ -54,7 +54,7 @@
 <script>
 import SettingsWindow from '../settings/Window';
 import { RESET_STORE } from '../../store/methodsTypes';
-import HorizontalRule from "../utils/HorizontalRule";
+import HorizontalRule from '../utils/HorizontalRule';
 
 export default {
   name: 'AccountSettingsWindow',
