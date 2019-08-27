@@ -8,4 +8,13 @@
     scrollbar-width: none; /* newer versions of Firefox */
     -ms-overflow-style: none; /* IE 10+ */
   };
+
+
+  --clearfix: {
+    &::after {
+      display: table;
+      clear: both;
+      content: "";
+    }
+  };
 }
