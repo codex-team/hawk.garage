@@ -143,6 +143,11 @@ svg {
   fill: currentColor;
 }
 
+.delimiter {
+  border: 1px solid var(--color-text-second);
+  opacity: 0.1;
+}
+
 body .cdx-notifies {
   right: 20px;
   left: auto;

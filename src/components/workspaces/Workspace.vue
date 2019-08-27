@@ -9,6 +9,7 @@
           v-model="name"
           class="workspace-settings__section workspace-settings__name-section"
           :label="$t('settings.account.name')"
+          required
           @input="showSubmitButton = true"
         />
         <section>
@@ -30,7 +31,7 @@
         {{ $t('workspaces.settings.workspace.submit') }}
       </button>
     </form>
-    <HorizontalRule />
+    <hr class="delimiter">
     <div class="workspace-settings__registered-info">
       {{ $t('workspaces.settings.workspace.created') }}
     </div>
@@ -41,13 +42,11 @@
 import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import notifier from 'codex-notifier';
-import HorizontalRule from '../utils/HorizontalRule';
 import { FETCH_WORKSPACE, UPDATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'WorkspaceSettings',
   components: {
-    HorizontalRule,
     FormImageUploader,
     FormTextFieldset
   },
@@ -137,6 +136,7 @@ export default {
   }
 
   &__registered-info {
+    margin-top: 15px;
     color: var(--color-text-second);
     font-size: 13px;
   }
