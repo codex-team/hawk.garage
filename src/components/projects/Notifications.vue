@@ -7,12 +7,13 @@
       <label class="label form-section__label">Channels</label>
       <div class="form-section__row">
         <div>Email</div>
-        <div class="form-section__row__main">
-          {{ notify.settings.email.value ||
-            'No notifications' }}
-        </div>
+        <FormTextFieldset
+          v-model="notify.settings.email.value"
+          placeholder="email"
+          @input="showSubmitButton=true"
+        />
         <input
-          :checked="notify.settings.email.enabled"
+          v-model="notify.settings.email.enabled"
           type="checkbox"
           class="checkbox"
           @change="save()"
@@ -26,14 +27,14 @@
             Alerts through the <u>Webhook app</u>
           </div>
           <FormTextFieldset
+            v-model="notify.settings.slack.value"
             label="Webhook URL"
-            :value="notify.settings.slack.value"
             @input="showSubmitButton=true"
           />
         </div>
 
         <input
-          :checked="notify.settings.slack.enabled"
+          v-model="notify.settings.slack.enabled"
           type="checkbox"
           class="checkbox"
           @change="save()"
@@ -47,13 +48,13 @@
             Alerts by CodeX Bot
           </div>
           <FormTextFieldset
+            v-model=" notify.settings.tg.value"
             label="Webhook URL"
-            :value=" notify.settings.tg.value"
             @input="showSubmitButton=true"
           />
         </div>
         <input
-          :checked="notify.settings.tg.enabled"
+          v-model="notify.settings.tg.enabled"
           type="checkbox"
           class="checkbox"
           @change="save()"
@@ -97,14 +98,10 @@ export default {
     async save() {
       const projectId = this.$route.params.projectId;
 
-      if (!this.$store.state.notify.settings.email.value) {
-        this.$store.state.notify.settings.email.value = this.$store.user.email;
-      }
-
       try {
         await this.$store.dispatch(UPDATE_NOTIFICATION_SETTINGS, {
           projectId,
-          notify: this.$store.state.notify
+          notify: this.notify
         });
       } catch (e) {
         notifier.show({

@@ -84,7 +84,7 @@ const mutations = {
    * @param {Notify} notify - Notify settings
    */
   [mutationTypes.SET_NOTIFICATION_SETTINGS](state, { projectId, notify }) {
-    state = notify;
+    Object.assign(state, notify);
   },
 
   /**
