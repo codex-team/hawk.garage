@@ -16,18 +16,18 @@ export const MUTATION_CREATE_PROJECT = `
 `;
 
 // language=GraphQL
-export const QUERY_RECENT_ERRORS = `  
+export const QUERY_RECENT_ERRORS = `
   query RecentErrors($projectId: ID!) {
-      recent(projectId: $projectId) {
-          date
-          count
-          event {
-              id
-              payload {
-                  title
-                  timestamp
-              }
-          }
+    recent(projectId: $projectId) {
+      date
+      count
+      event {
+        id
+        payload {
+          title
+          timestamp
+        }
       }
+    }
   }
 `;
