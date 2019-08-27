@@ -1,70 +1,70 @@
 {
-	"authPages": {
-		"emailAddress": "Email",
-		"githubButton": "Продолжить",
-		"googleButton": "Войти",
-		"login": "Войти",
-		"loginSubmitText": "Войти",
-		"password": "ПАРОЛЬ",
-		"recoverPassword": "Восстановить пароль",
-		"signUp": "Зарегистрироваться",
-		"signUpSubmitText": "Зарегистрироваться"
-	},
-	"components": {
-		"changePasswordFieldSet": {
-			"newPassword": "Новый пароль",
-			"oldPassword": "Старый пароль"
-		},
-		"languageSelect": {
-			"en": "Английский",
-			"label": "Язык интерфейса",
-			"ru": "Русский"
-		}
-	},
-	"forms": {
-		"imageUploader": "ЗАГР. ФОТО",
-		"searchField": "Поиск"
-	},
-	"projects": {
-		"creationDialog": {
-			"description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",
-			"projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",
-			"submitButton": "Создать проект",
-			"title": "Добавить проект",
-			"workspaceSelectLabel": "Выбрать воркспейс"
-		}
-	},
-	"settings": {
-		"account": {
-			"changePassword": "Сменить пароль",
-			"email": "EMAIL",
-			"name": "Имя",
+  "authPages": {
+    "emailAddress": "Email",
+    "githubButton": "Продолжить",
+    "googleButton": "Войти",
+    "login": "Войти",
+    "loginSubmitText": "Войти",
+    "password": "ПАРОЛЬ",
+    "recoverPassword": "Восстановить пароль",
+    "signUp": "Зарегистрироваться",
+    "signUpSubmitText": "Зарегистрироваться"
+  },
+  "components": {
+    "changePasswordFieldSet": {
+      "newPassword": "Новый пароль",
+      "oldPassword": "Старый пароль"
+    },
+    "languageSelect": {
+      "en": "Английский",
+      "label": "Язык интерфейса",
+      "ru": "Русский"
+    }
+  },
+  "forms": {
+    "imageUploader": "ЗАГР. ФОТО",
+    "searchField": "Поиск"
+  },
+  "projects": {
+    "creationDialog": {
+      "description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",
+      "projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",
+      "submitButton": "Создать проект",
+      "title": "Добавить проект",
+      "workspaceSelectLabel": "Выбрать воркспейс"
+    }
+  },
+  "settings": {
+    "account": {
+      "changePassword": "Сменить пароль",
+      "email": "EMAIL",
+      "name": "Имя",
       "namePlaceholder": "Elon Musk",
-			"profileImage": "Фотография",
-			"submit": "Сохранить",
-			"title": "Аккаунт",
+      "profileImage": "Фотография",
+      "submit": "Сохранить",
+      "title": "Аккаунт",
       "profileUpdated": "Профиль обновлён"
-		},
-		"appearance": {
-			"title": "Внешний вид"
-		},
-		"billing": {
-			"title": "Платежи"
-		},
-		"logout": "Выйти",
-		"notifications": {
-			"title": "Уведомления"
-		}
-	},
-	"workspaces": {
-		"creationDialog": {
-			"description": "Воркспейс объединяет несколько проектов. Вы сможете добавить коллег с доступом ко всем проектам внутри воркспейса.",
-			"submitButton": "Создать воркспейс",
-			"title": "Создать воркспейс",
-			"workspaceNameLabel": "название воркспейса"
-		},
-		"settings": {
-			"label": "Настройка воркспейса",
+    },
+    "appearance": {
+      "title": "Внешний вид"
+    },
+    "billing": {
+      "title": "Платежи"
+    },
+    "logout": "Выйти",
+    "notifications": {
+      "title": "Уведомления"
+    }
+  },
+  "workspaces": {
+    "creationDialog": {
+      "description": "Воркспейс объединяет несколько проектов. Вы сможете добавить коллег с доступом ко всем проектам внутри воркспейса.",
+      "submitButton": "Создать воркспейс",
+      "title": "Создать воркспейс",
+      "workspaceNameLabel": "название воркспейса"
+    },
+    "settings": {
+      "label": "Настройка воркспейса",
       "workspace": {
         "title": "Настройки воркспейса"
       },
@@ -75,5 +75,21 @@
         "title": "Платежи"
       }
     }
-	}
+  },
+  "common": {
+    "months": [
+      "января",
+      "февраля",
+      "марта",
+      "апреля",
+      "мая",
+      "июня",
+      "июля",
+      "августа",
+      "сентября",
+      "октября",
+      "ноября",
+      "декабря"
+    ]
+  }
 }

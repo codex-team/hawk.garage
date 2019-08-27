@@ -1,11 +1,11 @@
 <template>
   <div class="event-item">
     <div class="event-item__time">
-      {{ event.payload.timestamp | prettyDate }}
+      {{ event.payload.timestamp | prettyTime }}
     </div>
     <div class="event-item__badge-container">
       <Badge
-        content=""
+        :content="count"
         class="event-item__count"
       />
     </div>
@@ -28,6 +28,10 @@ export default {
     event: {
       type: Object,
       required: true
+    },
+    count: {
+      type: [String, Number],
+      default: ''
     }
   }
 };

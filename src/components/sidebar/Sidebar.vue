@@ -86,7 +86,11 @@ export default {
      * @return {User}
      */
     user() {
-      return this.$store.state.user.data;
+      if (this.$store.state.user.data) {
+        return this.$store.state.user.data;
+      } else {
+        return {};
+      }
     }
   },
   watch: {

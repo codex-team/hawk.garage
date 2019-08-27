@@ -7,16 +7,40 @@ const API_ENDPOINT =
   process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
 /**
+ * @type {Promise} A promise that will be resolved after the initialization request
+ */
+let blockingRequest = null;
+
+/**
+ * @typedef {Object} ApiCallSettings
+ * @property {Boolean} initial - if true, other requests will be waiting for resolving this query
+ * @property {Boolean} force - if true, this request will be performed despite of initial query state
+ */
+
+/**
  * Makes request to API
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
+ * @param {ApiCallSettings} [settings] - settings for call method
  * @return {Promise<*>} - request data
  */
-export async function call(request, variables) {
-  const response = await axios.post(API_ENDPOINT, {
+export async function call(request, variables, { initial, force } = { initial: false, force: false }) {
+  const promise = axios.post(API_ENDPOINT, {
     query: request,
     variables
   });
+
+  if (initial) {
+    blockingRequest = promise;
+  }
+
+  let response;
+
+  if (initial || force) {
+    response = await promise;
+  } else {
+    response = (await Promise.all([blockingRequest, promise]))[1];
+  }
 
   if (response.data.errors) throw response.data.errors[0];
   return response.data.data;
@@ -53,12 +77,14 @@ export const eventsHandlers = {
    * Called when a tokens pair needs to be updated
    * @return {String} access tokens
    */
-  onTokenExpired: () => {},
+  onTokenExpired: () => {
+  },
 
   /**
    * Called when auth failed
    */
-  onAuthError: () => {}
+  onAuthError: () => {
+  }
 };
 
 /**

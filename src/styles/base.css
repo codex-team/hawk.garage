@@ -144,9 +144,9 @@ svg {
 }
 
 body .cdx-notifies {
-  z-index: 100;
   right: 20px;
   left: auto;
+  z-index: 100;
   box-sizing: content-box;
 }
 

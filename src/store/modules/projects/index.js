@@ -1,18 +1,23 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   CREATE_PROJECT,
+  FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';
+import { groupBy } from '../../../utils';
+
+const groupByDate = groupBy('date');
 
 /**
  * Mutations enum for this module
  */
 const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
-  SET_PROJECTS_LIST: 'SET_PROJECTS_LIST' // Set new projects list
+  SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
+  SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE' // Set events list by date to project
 };
 
 /**
@@ -21,6 +26,18 @@ const mutationTypes = {
  * @property {String} name - project name
  * @property {String} workspaceId - ID of the workspace to which the project belongs
  * @property {String} [image] - project image
+ * @property {EventsListByDate} eventsListByDate - last projects event
+ */
+
+/**
+ * @typedef {Object<string, [RecentError]>} EventsListByDate
+ */
+
+/**
+ * @typedef {Object} RecentError
+ * @property {String} date - error date
+ * @property {String} error - occurred error
+ * @property {String} count - count of the errors of this type
  */
 
 /**
@@ -59,7 +76,7 @@ const getters = {
 const actions = {
   /**
    * Send request to create new project
-   * @param {function} dispatch - standard Vuex dispatch function
+   * @param {function} commit - standard Vuex commit function
    * @param {Project} projectData - project params for creation
    * @return {Promise<void>}
    */
@@ -68,6 +85,20 @@ const actions = {
 
     newProjectData.workspaceId = projectData.workspaceId;
     commit(mutationTypes.ADD_PROJECT, newProjectData);
+  },
+
+  /**
+   * Fetch latest project events
+   * @param {function} commit - standard Vuex commit function
+   * @param {String} projectId - id of the project to fetch
+   * @return {Promise<void>}
+   */
+  async [FETCH_RECENT_ERRORS]({ commit }, projectId) {
+    const recentEvents = await projectsApi.fetchRecentErrors(projectId);
+
+    const eventsListByDate = groupByDate(recentEvents);
+
+    commit(mutationTypes.SET_EVENTS_LIST_BY_DATE, { projectId, eventsListByDate });
   },
 
   /**
@@ -98,8 +129,25 @@ const mutations = {
     Vue.set(state, 'list', newList);
   },
 
+  /**
+   * Add project to the list
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Project} project - project to add
+   */
   [mutationTypes.ADD_PROJECT](state, project) {
     state.list.push(project);
+  },
+
+  /**
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {String} projectId - id of the project to set data
+   * @param {EventsListByDate} eventsListByDate - new event list
+   */
+  [mutationTypes.SET_EVENTS_LIST_BY_DATE](state, { projectId, eventsListByDate }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    Vue.set(project, 'eventsListByDate', eventsListByDate);
   },
 
   /**
