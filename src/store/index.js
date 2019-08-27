@@ -5,6 +5,7 @@ import app from './modules/app';
 import user from './modules/user';
 import workspaces from './modules/workspaces';
 import projects from './modules/projects';
+import notify from './modules/notify';
 
 import createPersistedState from 'vuex-persistedstate';
 
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     app,
     user,
     workspaces,
-    projects
+    projects,
+    notify
   },
   plugins: [ createPersistedState() ],
   strict: debug

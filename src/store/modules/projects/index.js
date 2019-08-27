@@ -2,9 +2,7 @@
 import {
   CREATE_PROJECT,
   FETCH_RECENT_ERRORS,
-  SET_PROJECTS_LIST,
-  GET_NOTIFICATION_SETTINGS,
-  UPDATE_NOTIFICATION_SETTINGS
+  SET_PROJECTS_LIST
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -19,8 +17,7 @@ const groupByDate = groupBy('date');
 const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
-  SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
-  SET_NOTIFICATION_SETTINGS: 'SET_NOTIFICATION_SETTINGS' // Set notification settings
+  SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE' // Set events list by date to project
 };
 
 /**
@@ -117,29 +114,6 @@ const actions = {
     commit(mutationTypes.SET_PROJECTS_LIST, projects);
   },
 
-  async [GET_NOTIFICATION_SETTINGS]({ commit }, projectId) {
-    const notify = await projectsApi.notificationSettings(projectId);
-
-    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, {
-      projectId,
-      notify
-    });
-  },
-
-  async [UPDATE_NOTIFICATION_SETTINGS]({ commit }, { projectId, notify }) {
-    const success =
-      await projectsApi.updateNotificationSettings(projectId, notify);
-
-    if (success) {
-      commit(mutationTypes.SET_NOTIFICATION_SETTINGS, {
-        projectId,
-        notify
-      });
-    } else {
-      return false;
-    }
-  },
-
   /**
    * Resets module state
    * @param {function} commit - standard Vuex commit function
@@ -178,10 +152,6 @@ const mutations = {
     const project = state.list.find(_project => _project.id === projectId);
 
     Vue.set(project, 'eventsListByDate', eventsListByDate);
-  },
-
-  [mutationTypes.SET_NOTIFICATION_SETTINGS](state, { projectId, notify }) {
-    state.settings[projectId] = notify;
   },
 
   /**
