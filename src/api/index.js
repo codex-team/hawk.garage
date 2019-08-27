@@ -6,6 +6,9 @@ import axios from 'axios';
 const API_ENDPOINT =
   process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
+/**
+ * @type {Promise} A promise that will be resolved after the initialization request
+ */
 let blockingRequest = null;
 
 /**

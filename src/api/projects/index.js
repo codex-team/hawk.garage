@@ -14,13 +14,13 @@ export async function createProject(projectInfo) {
  * @typedef RecentEvent
  * @property {Event} event - occurred event
  * @property {Number} count - number of this error
- * @property {Date} - date when error occurred
+ * @property {Date} date - date when error occurred
  */
 
 /**
  * Fetch latest project events
  * @param {Project} projectId - project to fetch errors
- * @return {[RecentEvent]}
+ * @return {Promise<RecentEvent[]>}
  */
 export async function fetchRecentErrors(projectId) {
   return (await api.call(QUERY_RECENT_ERRORS, { projectId })).recent;
