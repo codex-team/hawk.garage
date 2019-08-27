@@ -9,13 +9,19 @@ const API_ENDPOINT =
 let blockingRequest = null;
 
 /**
+ * @typedef {Object} ApiCallSettings
+ * @property {Boolean} initial - if true, other requests will be waiting for resolving this query
+ * @property {Boolean} force - if true, this request will be performed despite of initial query state
+ */
+
+/**
  * Makes request to API
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
- * @param initial
+ * @param {ApiCallSettings} [settings] - settings for call method
  * @return {Promise<*>} - request data
  */
-export async function call(request, variables, initial = false) {
+export async function call(request, variables, { initial, force } = { initial: false, force: false }) {
   const promise = axios.post(API_ENDPOINT, {
     query: request,
     variables
@@ -27,12 +33,12 @@ export async function call(request, variables, initial = false) {
 
   let response;
 
-  if (!initial) {
-    response = (await Promise.all([blockingRequest, promise]))[1];
-  } else {
+  if (initial || force) {
     response = await promise;
+  } else {
+    response = (await Promise.all([blockingRequest, promise]))[1];
   }
-  console.log('resolve ', initial);
+
   if (response.data.errors) throw response.data.errors[0];
   return response.data.data;
 }
@@ -88,8 +94,6 @@ axios.interceptors.response.use(
    * @return {Promise<AxiosResponse>} - processed request
    */
   async response => {
-    console.log('response');
-    console.log(response)
     const errors = response.data.errors;
     const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
 
