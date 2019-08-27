@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import EventItem from '../EventItem';
+import EventItem from '../events/EventItem';
 import { FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
 
 export default {
