@@ -13,7 +13,7 @@
       />
     </div>
     <div class="event-item__info">
-      {{ event.payload.title }} {{ showAssigners }}
+      {{ event.payload.title }}
     </div>
     <Icon
       symbol="assignee"
