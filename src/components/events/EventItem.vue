@@ -1,5 +1,8 @@
 <template>
-  <div class="event-item">
+  <div
+    class="event-item"
+    @click="$emit('showEventOverview')"
+  >
     <div class="event-item__time">
       {{ event.payload.timestamp | prettyTime }}
     </div>
@@ -12,34 +15,23 @@
     <div class="event-item__info">
       {{ event.payload.title }} {{ showAssigners }}
     </div>
-    <div
-      v-click-outside="closeAssignersList"
-      class="event-item__assignee-container"
-      @click="showAssigners = true"
-    >
-      <AssignersList
-        v-if="showAssigners"
-        class="event-item__assignee"
-      />
-      <Icon
-        symbol="assignee"
-        class="event-item__assignee-icon"
-      />
-    </div>
+    <Icon
+      symbol="assignee"
+      class="event-item__assignee-icon"
+      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+    />
   </div>
 </template>
 
 <script>
 import Badge from '../utils/Badge';
-import AssignersList from './AssignersList';
 import Icon from '../utils/Icon';
 
 export default {
   name: 'EventItem',
   components: {
     Badge,
-    Icon,
-    AssignersList
+    Icon
   },
   props: {
     event: {
@@ -95,17 +87,9 @@ export default {
 
     }
 
-    &__assignee {
-      position: absolute;
-      left: 0;
-      transform: translateX(-100%);
-    }
-
-    &__assignee-container {
-      position: relative;
-    }
-
     &__assignee-icon {
+      min-width: 26px;
+      min-height: 26px;
       width: 26px;
       height: 26px;
       margin-left: 10px;
