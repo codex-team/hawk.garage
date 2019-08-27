@@ -12,7 +12,7 @@
 
 <script>
 import Form from './Form';
-import { SIGN_UP } from '../../store/modules/auth/actionTypes';
+import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {

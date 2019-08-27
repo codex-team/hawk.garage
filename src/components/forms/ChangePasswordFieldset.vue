@@ -2,12 +2,15 @@
   <fieldset class="fieldset change-password-fieldset">
     <section
       v-if="!showInputs"
-      @click="showInputs = true"
     >
       <label class="label change-password-fieldset__label">
         {{ $t('authPages.password') }}
       </label>
-      <button class="button button--quiet change-password-fieldset__button">
+      <button
+        type="button"
+        class="button button--quiet change-password-fieldset__button"
+        @click="$emit('update:showInputs', true)"
+      >
         <Icon
           class="change-password-fieldset__key-icon"
           symbol="key"
@@ -17,13 +20,17 @@
     </section>
     <template v-if="showInputs">
       <FormTextFieldset
+        :value="value.old"
         :label="$t('components.changePasswordFieldSet.oldPassword')"
         type="password"
+        @input="oldPasswordInput"
       />
       <FormTextFieldset
+        :value="value.new"
         class="change-password-fieldset__new-password"
         :label="$t('components.changePasswordFieldSet.newPassword')"
         type="password"
+        @input="newPasswordInput"
       />
     </template>
   </fieldset>
@@ -32,13 +39,27 @@
 <script>
 import Icon from '../utils/Icon';
 import FormTextFieldset from './TextFieldset';
+
 export default {
   name: 'ChangePasswordFieldset',
   components: { FormTextFieldset, Icon },
-  data() {
-    return {
-      showInputs: false
-    };
+  props: {
+    value: {
+      type: Object,
+      required: true
+    },
+    showInputs: Boolean
+  },
+  methods: {
+    oldPasswordInput(value) {
+      this.value.old = value;
+      this.$emit('input', this.value);
+    },
+
+    newPasswordInput(value) {
+      this.value.new = value;
+      this.$emit('input', this.value);
+    }
   }
 };
 </script>

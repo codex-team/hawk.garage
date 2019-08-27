@@ -9,7 +9,7 @@
 
 <script>
 import * as api from './api';
-import { REFRESH_TOKENS } from './store/modules/auth/actionTypes';
+import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import notifier from 'codex-notifier';
 import eventBus from './eventBus';
@@ -34,7 +34,7 @@ export default {
     /**
      * Configure API
      */
-    api.setAuthToken(this.$store.state.auth.accessToken);
+    api.setAuthToken(this.$store.state.user.accessToken);
     api.eventsHandlers.onTokenExpired = async () => (await this.$store.dispatch(REFRESH_TOKENS)).accessToken;
     api.eventsHandlers.onAuthError = () => this.$store.dispatch(RESET_STORE);
 
@@ -42,7 +42,7 @@ export default {
      * Setup watching on auth state
      */
     this.$store.watch(
-      state => state.auth.accessToken,
+      state => state.user.accessToken,
       accessToken => {
         if (!accessToken) this.$router.push('/login');
         api.setAuthToken(accessToken);
