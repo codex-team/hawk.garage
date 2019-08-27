@@ -19,7 +19,7 @@ export async function createProject(projectInfo) {
 
 /**
  * Fetch latest project events
- * @param {Project} projectId - project to fetch errors
+ * @param {String} projectId - project to fetch errors
  * @return {Promise<RecentEvent[]>}
  */
 export async function fetchRecentErrors(projectId) {

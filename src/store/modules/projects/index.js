@@ -76,7 +76,7 @@ const getters = {
 const actions = {
   /**
    * Send request to create new project
-   * @param {function} dispatch - standard Vuex dispatch function
+   * @param {function} commit - standard Vuex commit function
    * @param {Project} projectData - project params for creation
    * @return {Promise<void>}
    */
@@ -87,6 +87,12 @@ const actions = {
     commit(mutationTypes.ADD_PROJECT, newProjectData);
   },
 
+  /**
+   * Fetch latest project events
+   * @param {function} commit - standard Vuex commit function
+   * @param {String} projectId - id of the project to fetch
+   * @return {Promise<void>}
+   */
   async [FETCH_RECENT_ERRORS]({ commit }, projectId) {
     const recentEvents = await projectsApi.fetchRecentErrors(projectId);
 
@@ -123,10 +129,21 @@ const mutations = {
     Vue.set(state, 'list', newList);
   },
 
+  /**
+   * Add project to the list
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Project} project - project to add
+   */
   [mutationTypes.ADD_PROJECT](state, project) {
     state.list.push(project);
   },
 
+  /**
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {String} projectId - id of the project to set data
+   * @param {EventsListByDate} eventsListByDate - new event list
+   */
   [mutationTypes.SET_EVENTS_LIST_BY_DATE](state, { projectId, eventsListByDate }) {
     const project = state.list.find(_project => _project.id === projectId);
 
