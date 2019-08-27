@@ -25,7 +25,7 @@
 
 <script>
 import EntityImage from '../utils/EntityImage';
-import Icon from '../utils/Icon'
+import Icon from '../utils/Icon';
 
 export default {
   name: 'AssignersList',
@@ -61,28 +61,28 @@ export default {
 <style>
   .event-assigners-list {
     width: 210px;
+    color: var(--color-bg-main);
+    background-color: var(--color-text-main);
     border-radius: var(--border-radius);
     box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
-    background-color: var(--color-text-main);
-    color: var(--color-bg-main);
 
     &__row {
-      display: flex;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 10px;
-      align-items: center;
       position: relative;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      font-weight: 500;
+      font-size: 14px;
 
       &::before {
-        content: "";
         position: absolute;
         right: 0;
         bottom: 0;
-        opacity: 0.14;
-        height: 1px;
         width: 177px;
+        height: 1px;
         border-bottom: 1px solid var(--color-bg-main);
+        opacity: 0.14;
+        content: "";
       }
 
       &--search {
@@ -91,15 +91,15 @@ export default {
     }
 
     &__image {
-      margin-right: 7px;
       width: 16px;
       height: 16px;
+      margin-right: 7px;
     }
 
     &__search-icon {
-      margin-right: 9px;
       width: 12px;
       height: 12px;
+      margin-right: 9px;
     }
   }
 </style>

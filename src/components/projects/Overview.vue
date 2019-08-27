@@ -18,8 +18,7 @@
             class="project-overview__event"
             :event="eventByDate.event"
           />
-<!--          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"-->
-
+          <!--          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"-->
         </div>
       </div>
     </div>

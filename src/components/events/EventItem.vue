@@ -10,12 +10,12 @@
       />
     </div>
     <div class="event-item__info">
-      {{ event.payload.title }} {{showAssigners}}
+      {{ event.payload.title }} {{ showAssigners }}
     </div>
     <div
+      v-click-outside="closeAssignersList"
       class="event-item__assignee-container"
       @click="showAssigners = true"
-      v-click-outside="closeAssignersList"
     >
       <AssignersList
         v-if="showAssigners"
