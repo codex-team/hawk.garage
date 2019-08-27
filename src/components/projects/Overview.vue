@@ -17,9 +17,16 @@
             :count="eventByDate.count"
             class="project-overview__event"
             :event="eventByDate.event"
-            @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"
+            @onAssigneeIconClick="showAssigners"
+            @showEventOverview="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"
           />
         </div>
+        <AssignersList
+          v-if="isAssignersShowed"
+          v-click-outside="hideAssignersList"
+          :style="assignersListPosition"
+          class="project-overview__assigners-list"
+        />
       </div>
     </div>
     <router-view />
@@ -27,17 +34,24 @@
 </template>
 
 <script>
-import EventItem from '../EventItem';
+import EventItem from '../events/EventItem';
 import { FETCH_RECENT_ERRORS } from '../../store/modules/projects/actionTypes';
+import AssignersList from '../events/AssignersList';
 
 export default {
   name: 'ProjectOverview',
   components: {
-    EventItem
+    EventItem,
+    AssignersList
   },
   data() {
     return {
-      eventsListByDate: null
+      eventsListByDate: null,
+      isAssignersShowed: false,
+      assignersListPosition: {
+        top: 0,
+        right: 0
+      }
     };
   },
   computed: {
@@ -53,6 +67,21 @@ export default {
   },
   created() {
     this.$store.dispatch(FETCH_RECENT_ERRORS, this.$route.params.projectId);
+  },
+  methods: {
+    showAssigners(event) {
+      this.isAssignersShowed = true;
+      const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
+
+      this.assignersListPosition = {
+        top: boundingClientRect.y + 'px',
+        left: boundingClientRect.x + 'px'
+      };
+    },
+
+    hideAssignersList() {
+      this.isAssignersShowed = false;
+    }
   }
 };
 </script>
@@ -97,6 +126,11 @@ export default {
 
     &__event {
       cursor: pointer;
+    }
+
+    &__assigners-list {
+      position: absolute;
+      transform: translateX(-100%) translate(-5px, -5px);
     }
   }
 </style>

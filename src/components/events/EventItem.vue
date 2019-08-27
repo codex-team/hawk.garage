@@ -1,5 +1,8 @@
 <template>
-  <div class="event-item">
+  <div
+    class="event-item"
+    @click="$emit('showEventOverview')"
+  >
     <div class="event-item__time">
       {{ event.payload.timestamp | prettyTime }}
     </div>
@@ -10,19 +13,25 @@
       />
     </div>
     <div class="event-item__info">
-      {{ event.payload.title }}
+      {{ event.payload.title }} {{ showAssigners }}
     </div>
-    <div class="event-item__assignee" />
+    <Icon
+      symbol="assignee"
+      class="event-item__assignee-icon"
+      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+    />
   </div>
 </template>
 
 <script>
-import Badge from './utils/Badge';
+import Badge from '../utils/Badge';
+import Icon from '../utils/Icon';
 
 export default {
   name: 'EventItem',
   components: {
-    Badge
+    Badge,
+    Icon
   },
   props: {
     event: {
@@ -32,6 +41,17 @@ export default {
     count: {
       type: [String, Number],
       default: ''
+    }
+  },
+  data() {
+    return {
+      showAssigners: false
+    };
+  },
+  methods: {
+    closeAssignersList() {
+      console.log('close');
+      this.showAssigners = false;
     }
   }
 };
@@ -67,11 +87,12 @@ export default {
 
     }
 
-    &__assignee {
+    &__assignee-icon {
       min-width: 26px;
       min-height: 26px;
+      width: 26px;
+      height: 26px;
       margin-left: 10px;
-      background-color: var(--color-bg-main);
     }
 
     &:hover {
