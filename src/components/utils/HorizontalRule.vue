@@ -10,8 +10,6 @@ export default {
 
 <style>
   .horizontal-rule {
-    margin-top: 0;
-    margin-bottom: 20px;
     border: 1px solid var(--color-text-second);
     opacity: 0.1;
   }

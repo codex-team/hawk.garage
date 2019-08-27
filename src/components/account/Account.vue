@@ -152,6 +152,7 @@ export default {
   }
 
   &__registered-info {
+    margin-top: 15px;
     color: var(--color-text-second);
     font-size: 13px;
   }

@@ -32,14 +32,14 @@
         >
           {{ $t('settings.billing.title') }}
         </router-link>
-        <hr class="settings-window__menu-delimiter">
+        <HorizontalRule />
         <router-link
           class="settings-window__menu-item"
           :to="{ name: 'appearance-settings'}"
         >
           {{ $t('settings.appearance.title') }}
         </router-link>
-        <hr class="settings-window__menu-delimiter">
+        <HorizontalRule />
         <div
           class="settings-window__menu-item settings-window__menu-item--attention"
           @click="logout"
@@ -54,10 +54,12 @@
 <script>
 import SettingsWindow from '../settings/Window';
 import { RESET_STORE } from '../../store/methodsTypes';
+import HorizontalRule from "../utils/HorizontalRule";
 
 export default {
   name: 'AccountSettingsWindow',
   components: {
+    HorizontalRule,
     SettingsWindow
   },
   methods: {
