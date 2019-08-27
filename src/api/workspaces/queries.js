@@ -44,3 +44,32 @@ export const MUTATION_CREATE_WORKSPACE = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Query for fetching workspaces with id
+ */
+export const QUERY_WORKSPACES = `
+ query fetchWorkspaces($ids: [ID!]) {
+     workspaces(ids: $ids) {
+         id
+         name
+         description
+         image
+     }
+ }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for workspace updating
+ */
+export const MUTATION_UPDATE_WORKSPACE = `
+  mutation updateWorkspace(
+      $id: ID!
+      $name: String!
+      $description: String
+  ) {
+      updateWorkspace(id: $id, name: $name, description: $description)
+  }
+`;
