@@ -10,19 +10,36 @@
       />
     </div>
     <div class="event-item__info">
-      {{ event.payload.title }}
+      {{ event.payload.title }} {{showAssigners}}
     </div>
-    <div class="event-item__assignee" />
+    <div
+      class="event-item__assignee-container"
+      @click="showAssigners = true"
+      v-click-outside="closeAssignersList"
+    >
+      <AssignersList
+        v-if="showAssigners"
+        class="event-item__assignee"
+      />
+      <Icon
+        symbol="assignee"
+        class="event-item__assignee-icon"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import Badge from './utils/Badge';
+import Badge from '../utils/Badge';
+import AssignersList from './AssignersList';
+import Icon from '../utils/Icon';
 
 export default {
   name: 'EventItem',
   components: {
-    Badge
+    Badge,
+    Icon,
+    AssignersList
   },
   props: {
     event: {
@@ -32,6 +49,17 @@ export default {
     count: {
       type: [String, Number],
       default: ''
+    }
+  },
+  data() {
+    return {
+      showAssigners: false
+    };
+  },
+  methods: {
+    closeAssignersList() {
+      console.log('close');
+      this.showAssigners = false;
     }
   }
 };
@@ -68,10 +96,19 @@ export default {
     }
 
     &__assignee {
-      min-width: 26px;
-      min-height: 26px;
+      position: absolute;
+      left: 0;
+      transform: translateX(-100%);
+    }
+
+    &__assignee-container {
+      position: relative;
+    }
+
+    &__assignee-icon {
+      width: 26px;
+      height: 26px;
       margin-left: 10px;
-      background-color: var(--color-bg-main);
     }
 
     &:hover {

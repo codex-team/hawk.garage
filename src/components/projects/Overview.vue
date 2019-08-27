@@ -17,8 +17,9 @@
             :count="eventByDate.count"
             class="project-overview__event"
             :event="eventByDate.event"
-            @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"
           />
+<!--          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"-->
+
         </div>
       </div>
     </div>
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-import EventItem from '../EventItem';
+import EventItem from '../events/EventItem';
 import { FETCH_RECENT_ERRORS } from '../../store/modules/projects/actionTypes';
 
 export default {

@@ -36,7 +36,7 @@ export default {
      * Entity id for picking default background color (hex string)
      */
     id: {
-      type: String,
+      type: [String, Number],
       default: null
     }
   },
