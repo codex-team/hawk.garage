@@ -6,18 +6,43 @@ import axios from 'axios';
 const API_ENDPOINT =
   process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
+let blockingInfo = {
+  config: null,
+  promise: null
+};
+
 /**
  * Makes request to API
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
  * @return {Promise<*>} - request data
  */
-export async function call(request, variables) {
-  const response = await axios.post(API_ENDPOINT, {
+export async function call(request, variables, initial = false) {
+  console.log('is initial request: ', initial);
+
+  const config = {
     query: request,
     variables
-  });
+  };
+  const promise = axios.post(API_ENDPOINT, config);
 
+  if (initial) {
+    console.log('block');
+    blockingInfo = {
+      promise,
+      config
+    };
+  }
+
+  if (!initial) {
+    console.log('awaiting');
+    await blockingInfo.promise;
+    console.log('end awaiting');
+  }
+  console.log('load ' + initial);
+  const response = await promise;
+
+  console.log(initial + ' loaded');
   if (response.data.errors) throw response.data.errors[0];
   return response.data.data;
 }
@@ -53,12 +78,14 @@ export const eventsHandlers = {
    * Called when a tokens pair needs to be updated
    * @return {String} access tokens
    */
-  onTokenExpired: () => {},
+  onTokenExpired: () => {
+  },
 
   /**
    * Called when auth failed
    */
-  onAuthError: () => {}
+  onAuthError: () => {
+  }
 };
 
 /**
@@ -71,6 +98,8 @@ axios.interceptors.response.use(
    * @return {Promise<AxiosResponse>} - processed request
    */
   async response => {
+    console.log('response');
+    console.log(response)
     const errors = response.data.errors;
     const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
 
@@ -91,3 +120,12 @@ axios.interceptors.response.use(
     }
   }
 );
+/*
+ *
+ * axios.interceptors.request.use(async (config) => {
+ *   return config;
+ * }, function (error) {
+ *   // Do something with request error
+ *   return Promise.reject(error);
+ * });
+ */
