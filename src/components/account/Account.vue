@@ -37,7 +37,7 @@
         {{ $t('settings.account.submit') }}
       </button>
     </form>
-    <hr class="account-settings__horizontal-rule">
+    <HorizontalRule />
     <div class="account-settings__registered-info">
       Registered at Aug 25, 2019
     </div>
@@ -51,10 +51,11 @@ import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
 import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
 import notifier from 'codex-notifier';
 import { mapState } from 'vuex';
+import HorizontalRule from '../utils/HorizontalRule';
 
 export default {
   name: 'AccountSettings',
-  components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
+  components: { HorizontalRule, ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
   data() {
     const user = this.$store.state.user.data;
 
@@ -148,13 +149,6 @@ export default {
   &__name-section {
     width: 280px;
     margin-right: 30px;
-  }
-
-  &__horizontal-rule {
-    margin-top: 0;
-    margin-bottom: 20px;
-    border: 1px solid var(--color-text-second);
-    opacity: 0.1;
   }
 
   &__registered-info {
