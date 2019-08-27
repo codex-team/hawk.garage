@@ -13,7 +13,7 @@
         {{ project.name }}
       </div>
       <div class="project-menu-item__last-event">
-        {{ Object.values(project.eventsListByDate)[0][0].event.payload.title }}
+        {{ lastEventTitle }}
       </div>
     </div>
     <Badge
@@ -37,6 +37,17 @@ export default {
     project: {
       type: Object, // @type {Project}
       required: true
+    }
+  },
+  computed: {
+    lastEventTitle() {
+      const valuesArray = Object.values(this.project.eventsListByDate);
+
+      if (valuesArray.length) {
+        return valuesArray[0][0].event.payload.title;
+      } else {
+        return '';
+      }
     }
   }
 };
