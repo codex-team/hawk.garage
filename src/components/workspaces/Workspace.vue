@@ -45,8 +45,12 @@ import HorizontalRule from '../utils/HorizontalRule';
 import { FETCH_WORKSPACE, UPDATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
-  name: 'AccountSettings',
-  components: { HorizontalRule, FormImageUploader, FormTextFieldset },
+  name: 'WorkspaceSettings',
+  components: {
+    HorizontalRule,
+    FormImageUploader,
+    FormTextFieldset
+  },
   data() {
     const workspaceId = this.$route.params.workspaceId;
 
@@ -72,7 +76,7 @@ export default {
      */
     async save() {
       try {
-        if (this.workspace.name !== this.name || this.wosrkspace.description !== this.description) {
+        if (this.workspace.name !== this.name || this.workspace.description !== this.description) {
           await this.$store.dispatch(
             UPDATE_WORKSPACE,
             {

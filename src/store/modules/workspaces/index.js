@@ -19,7 +19,7 @@ const mutationTypes = {
   REMOVE_WORKSPACE: 'REMOVE_WORKSPACE', // Remove workspace from the list
   SET_WORKSPACES_LIST: 'SET_WORKSPACES_LIST', // Set new workspaces list
   SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE', // Set current user workspace
-  SET_WORKSPACE: 'SET_WORKSPACE'
+  SET_WORKSPACE: 'SET_WORKSPACE' // Set workspace to user workspaces list
 };
 
 /**
@@ -107,8 +107,9 @@ const actions = {
 
   /**
    * Get workspaces by ids
-   * @param commit
-   * @param {number} id
+   * @param {function} commit - standard Vuex commit function
+   * @param {number} id – workspace id to fetch
+   * @return {Promise<Workspace>}
    */
   async [FETCH_WORKSPACE]({ commit }, id) {
     const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
@@ -120,8 +121,8 @@ const actions = {
 
   /**
    * Update workspace data
-   * @param commit
-   * @param {Workspace} workspace
+   * @param {function} commit - standard Vuex commit function
+   * @param {Workspace} workspace - workspace to update
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
@@ -141,17 +142,11 @@ const mutations = {
   /**
    * Set workspace data
    *
-   * @param state
-   * @param workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Workspace} workspace - workspace params for setting
    */
   [mutationTypes.SET_WORKSPACE](state, workspace) {
-    let index = null;
-
-    state.list.find((element, i) => {
-      if (element.id === workspace.id) {
-        index = i;
-      }
-    });
+    const index = state.list.findIndex(element => element.id === workspace.id);
 
     if (state.current && workspace.id === state.current.id) {
       state.current = workspace;
