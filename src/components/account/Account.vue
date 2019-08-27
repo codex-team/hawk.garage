@@ -37,7 +37,7 @@
         {{ $t('settings.account.submit') }}
       </button>
     </form>
-    <hr class="account-settings__horizontal-rule">
+    <hr class="delimiter">
     <div class="account-settings__registered-info">
       Registered at Aug 25, 2019
     </div>
@@ -54,7 +54,11 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'AccountSettings',
-  components: { ChangePasswordFieldset, FormImageUploader, FormTextFieldset },
+  components: {
+    ChangePasswordFieldset,
+    FormImageUploader,
+    FormTextFieldset
+  },
   data() {
     const user = this.$store.state.user.data;
 
@@ -150,14 +154,8 @@ export default {
     margin-right: 30px;
   }
 
-  &__horizontal-rule {
-    margin-top: 0;
-    margin-bottom: 20px;
-    border: 1px solid var(--color-text-second);
-    opacity: 0.1;
-  }
-
   &__registered-info {
+    margin-top: 15px;
     color: var(--color-text-second);
     font-size: 13px;
   }

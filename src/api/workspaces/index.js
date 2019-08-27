@@ -3,7 +3,9 @@ import {
   MUTATION_CREATE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS_AND_USERS,
   MUTATION_INVITE_TO_WORKSPACE,
-  MUTATION_CONFIRM_INVITE
+  MUTATION_CONFIRM_INVITE,
+  MUTATION_UPDATE_WORKSPACE,
+  QUERY_WORKSPACES
 } from './queries';
 import * as api from '../index';
 
@@ -87,4 +89,21 @@ export async function inviteToWorkspace(workspaceId, userEmail) {
  */
 export async function confirmInvite(workspaceId, inviteHash) {
   return api.call(MUTATION_CONFIRM_INVITE, { workspaceId, inviteHash });
+}
+
+/**
+ * Get workspaces
+ * @param {array} ids – id of fetching workspaces
+ * @return {Promise<[Workspace]>}
+ */
+export async function getWorkspaces(ids) {
+  return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
+}
+
+/**
+ * Update workspace data
+ * @returns {Promise<Boolean>}
+ */
+export async function updateWorkspace(id, name, description) {
+  return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description })).updateWorkspace;
 }

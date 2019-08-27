@@ -47,14 +47,12 @@ import SettingsWindow from '../settings/Window';
 export default {
   name: 'WorkspaceSettings',
   components: { SettingsWindow, EntityImage },
-  data() {
-    const workspaceId = this.$route.params.workspaceId;
+  computed: {
+    workspace() {
+      const workspaceId = this.$route.params.workspaceId;
 
-    const workspace = this.$store.state.workspaces.list.find(element => element.id === workspaceId);
-
-    return {
-      workspace
-    };
+      return this.$store.getters.getWorkspaceById(workspaceId);
+    }
   }
 };
 </script>

@@ -41,10 +41,12 @@ const router = new Router({
         {
           path: 'workspaces/:workspaceId',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings'),
+          redirect: to => ({ name: 'workspace-settings', params: { workspaceId: to.params.workspaceId } }),
           children: [
             {
               path: 'settings',
-              name: 'workspace-settings'
+              name: 'workspace-settings',
+              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace')
             },
             {
               path: 'team',
