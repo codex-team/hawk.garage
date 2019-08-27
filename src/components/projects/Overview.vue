@@ -71,7 +71,6 @@ export default {
   methods: {
     showAssigners(event) {
       this.isAssignersShowed = true;
-      console.dir(event.target.closest('.event-item__assignee-icon').getBoundingClientRect());
       const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
 
       this.assignersListPosition = {
