@@ -6,43 +6,33 @@ import axios from 'axios';
 const API_ENDPOINT =
   process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
-let blockingInfo = {
-  config: null,
-  promise: null
-};
+let blockingRequest = null;
 
 /**
  * Makes request to API
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
+ * @param initial
  * @return {Promise<*>} - request data
  */
 export async function call(request, variables, initial = false) {
-  console.log('is initial request: ', initial);
-
-  const config = {
+  const promise = axios.post(API_ENDPOINT, {
     query: request,
     variables
-  };
-  const promise = axios.post(API_ENDPOINT, config);
+  });
 
   if (initial) {
-    console.log('block');
-    blockingInfo = {
-      promise,
-      config
-    };
+    blockingRequest = promise;
   }
+
+  let response;
 
   if (!initial) {
-    console.log('awaiting');
-    await blockingInfo.promise;
-    console.log('end awaiting');
+    response = (await Promise.all([blockingRequest, promise]))[1];
+  } else {
+    response = await promise;
   }
-  console.log('load ' + initial);
-  const response = await promise;
-
-  console.log(initial + ' loaded');
+  console.log('resolve ', initial);
   if (response.data.errors) throw response.data.errors[0];
   return response.data.data;
 }
@@ -120,12 +110,3 @@ axios.interceptors.response.use(
     }
   }
 );
-/*
- *
- * axios.interceptors.request.use(async (config) => {
- *   return config;
- * }, function (error) {
- *   // Do something with request error
- *   return Promise.reject(error);
- * });
- */
