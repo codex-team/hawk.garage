@@ -48,6 +48,11 @@ const router = new Router({
               path: 'event/:eventId',
               name: 'event-overview',
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
+            },
+            {
+              path: 'event/:eventId/repetitions',
+              name: 'event-repetitions-overview',
+              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/RepetitionsList.vue')
             }
           ]
         },
@@ -60,7 +65,7 @@ const router = new Router({
           path: 'projects/:projectId/setup-catcher/php',
           name: 'setup-php-catcher',
           component: () => import(/* webpackChunkName: 'project-setup-catcher' */'./components/catalog/catchers/SetupPhpCatcher.vue')
-        }
+        },
       ]
     },
     {

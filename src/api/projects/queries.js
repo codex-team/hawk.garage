@@ -13,3 +13,22 @@ export const MUTATION_CREATE_PROJECT = `
     }
   }
 `;
+
+/**
+ * @type {string}
+ */
+export const QUERY_REPETITION_LIST = `
+  query repetitionsList(
+    $projectId: ID!,
+    $eventId: ID!
+  ) {
+    repetitions(projectId: $projectId, eventId: $eventId, limit: 30) {
+      id
+      catcherType
+      payload {
+         title
+         timestamp
+      }
+    }
+  } 
+`;

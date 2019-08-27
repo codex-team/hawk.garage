@@ -6,13 +6,13 @@
         <div class="project-overview__date">
           Today
         </div>
-        <EventItem
-          v-for="event in project.events"
-          :key="event.id"
-          class="project-overview__event"
-          :event="event"
-          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"
-        />
+<!--        <EventItem-->
+<!--          v-for="event in project.events"-->
+<!--          :key="event.id"-->
+<!--          class="project-overview__event"-->
+<!--          :event="event"-->
+<!--          @click.native="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: event.id }})"-->
+<!--        />-->
       </div>
     </div>
     <router-view />
