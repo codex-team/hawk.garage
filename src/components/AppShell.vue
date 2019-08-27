@@ -135,9 +135,9 @@ export default {
       const valuesArray = Object.values(project.eventsListByDate);
 
       if (!valuesArray.length) {
-        return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } });
+        return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } }, () => {});
       }
-      this.$router.push({ name: 'project-overview', params: { projectId: project.id } });
+      this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {});
     }
   }
 };
