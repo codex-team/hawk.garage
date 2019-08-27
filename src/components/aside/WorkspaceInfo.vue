@@ -12,7 +12,7 @@
       </div>
       <router-link
         class="workspace-info__settings-link"
-        :to="{ name: 'workspace-settings'}"
+        :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id}}"
       >
         {{ $t('workspaces.settings.label') }}
       </router-link>

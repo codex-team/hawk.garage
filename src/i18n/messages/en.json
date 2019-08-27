@@ -64,7 +64,16 @@
 			"workspaceNameLabel": "workspace name"
 		},
 		"settings": {
-			"label": "Workspace settings"
-		}
+			"label": "Workspace settings",
+      "workspace": {
+        "title": "Workspace settings"
+      },
+      "team": {
+        "title": "Team"
+      },
+      "billing": {
+        "title": "Billing information"
+      }
+    }
 	}
 }
