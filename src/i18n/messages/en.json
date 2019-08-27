@@ -66,7 +66,14 @@
     "settings": {
       "label": "Workspace settings",
       "workspace": {
-        "title": "Workspace settings"
+        "title": "Workspace settings",
+        "name": "Name",
+        "description": "Description",
+        "descriptionPlaceholder": "Awesome workspace",
+        "image": "Image",
+        "submit": "Save",
+        "created": "Created at Aug 25, 2019",
+        "updatedMessage": "Workspace was updated"
       },
       "team": {
         "title": "Team"
