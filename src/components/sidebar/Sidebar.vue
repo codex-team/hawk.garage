@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <EntityImage
-      :id="user.id || '1'"
+      :id="user.id"
       class="sidebar__user-picture"
       :name="user.email || 'H'"
       :image="user.image"

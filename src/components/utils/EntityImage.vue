@@ -45,7 +45,13 @@ export default {
      * @returns {String} image background color (if image URL is not provided)
      */
     bgColor() {
-      return this.image ? 'none' : getEntityColor(this.id);
+      if (this.image) {
+        return 'none';
+      }
+      if (this.id) {
+        return getEntityColor(this.id);
+      }
+      return 'rgba(0,0,0, 0.3)';
     }
   }
 };
