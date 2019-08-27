@@ -2,12 +2,24 @@
 /**
  * Query for getting all user's workspaces and project.
  */
-export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
+export const QUERY_ALL_WORKSPACES_WITH_PROJECTS_AND_USERS = `
   {
     workspaces {
       id
       name
       image
+      users {
+        id
+        name
+        email
+        image
+        isAdmin
+        isPending
+      }
+      pendingUsers {
+        email
+        isPending
+      }
       projects {
         id
         name
@@ -42,5 +54,29 @@ export const MUTATION_CREATE_WORKSPACE = `
       description
       image
     }
+  }
+`;
+
+/**
+ * Mutation to invite user to workspace
+ */
+export const MUTATION_INVITE_TO_WORKSPACE = `
+  mutation inviteToWorkspace(
+    $userEmail: String!,
+    $workspaceId: ID!
+  ) {
+    inviteToWorkspace(userEmail: $userEmail, workspaceId: $workspaceId)
+  }
+`;
+
+/**
+ * Mutation to confirm user invitation
+ */
+export const MUTATION_CONFIRM_INVITE = `
+  mutation confirmInvitation(
+    $workspaceId: ID!,
+    $inviteHash: String
+  ) {
+    confirmInvitation(workspaceId: $workspaceId, inviteHash: $inviteHash)
   }
 `;

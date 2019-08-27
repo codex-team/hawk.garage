@@ -3,7 +3,9 @@ import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
   REMOVE_WORKSPACE,
-  SET_CURRENT_WORKSPACE
+  SET_CURRENT_WORKSPACE,
+  INVITE_TO_WORKSPACE,
+  CONFIRM_INVITE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces';
@@ -16,7 +18,9 @@ const mutationTypes = {
   ADD_WORKSPACE: 'ADD_WORKSPACE', // Add new workspace to the list
   REMOVE_WORKSPACE: 'REMOVE_WORKSPACE', // Remove workspace from the list
   SET_WORKSPACES_LIST: 'SET_WORKSPACES_LIST', // Set new workspaces list
-  SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE' // Set current user workspace
+  SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE', // Set current user workspace,
+  INVITE_TO_WORKSPACE: 'INVITE_TO_WORKSPACE',
+  CONFIRM_INVITE: 'CONFIRM_INVITE'
 };
 
 /**
@@ -68,6 +72,27 @@ const actions = {
     await workspaceApi.deleteWorkspace(workspaceId);
 
     commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
+  },
+
+  /**
+   * Sent request to invite user to workspace
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} workspaceId - id of workspace to which user is invited
+   * @param {string} userEmail - email of the invited user
+   */
+  async [INVITE_TO_WORKSPACE]({ commit }, { workspaceId, userEmail }) {
+    await workspaceApi.inviteToWorkspace(workspaceId, userEmail);
+  },
+
+  /**
+   * Send request to confirm user invitation
+   *
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} workspaceId - id of workspace to which user is invited
+   * @param {string} inviteHash - hash passed to the invite link
+   */
+  async [CONFIRM_INVITE]({ commit }, { workspaceId, inviteHash }) {
+    await workspaceApi.confirmInvite(workspaceId, inviteHash);
   },
 
   /**

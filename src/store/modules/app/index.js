@@ -52,7 +52,9 @@ const actions = {
   async [FETCH_INITIAL_DATA]({ dispatch }) {
     const groupByDate = groupBy('date');
 
-    const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
+    const workspaces = await workspacesApi.getAllWorkspacesWithProjectsAndUsers();
+
+    console.log(workspaces);
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {

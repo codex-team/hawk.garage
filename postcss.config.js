@@ -43,6 +43,13 @@ module.exports = {
         'color-mod-function': {}
       }
     },
+
+    /**
+     * PostCSS plugin to reference any parent/ancestor selector in nested CSS.
+     * https://github.com/toomuchdesign/postcss-nested-ancestors
+     */
+    'postcss-nested-ancestors': {},
+
     /*
      * Nested rules unwrapper
      * https://github.com/postcss/postcss-nested
