@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <EntityImage
-      :id="user.id"
+      :id="user.id || '1'"
       class="sidebar__user-picture"
       :name="user.email || 'H'"
       :image="user.image"
@@ -86,7 +86,11 @@ export default {
      * @return {User}
      */
     user() {
-      return this.$store.state.user.data;
+      if (this.$store.state.user.data) {
+        return this.$store.state.user.data;
+      } else {
+        return {};
+      }
     }
   },
   watch: {
