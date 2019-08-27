@@ -26,6 +26,18 @@ const mutationTypes = {
  * @property {String} name - project name
  * @property {String} workspaceId - ID of the workspace to which the project belongs
  * @property {String} [image] - project image
+ * @property {EventsListByDate} eventsListByDate - last projects event
+ */
+
+/**
+ * @typedef {Object<string, [RecentError]>} EventsListByDate
+ */
+
+/**
+ * @typedef {Object} RecentError
+ * @property {String} date - error date
+ * @property {String} error - occurred error
+ * @property {String} count - count of the errors of this type
  */
 
 /**
@@ -116,7 +128,7 @@ const mutations = {
   },
 
   [mutationTypes.SET_EVENTS_LIST_BY_DATE](state, { projectId, eventsListByDate }) {
-    const project = state.list.find(project => project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     Vue.set(project, 'eventsListByDate', eventsListByDate);
   },
