@@ -32,6 +32,9 @@
       "submitButton": "Создать проект",
       "title": "Добавить проект",
       "workspaceSelectLabel": "Выбрать воркспейс"
+    },
+    "settings": {
+      "notifications": "Оповещения"
     }
   },
   "settings": {

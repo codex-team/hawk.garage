@@ -48,6 +48,19 @@ const router = new Router({
               path: 'event/:eventId',
               name: 'event-overview',
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
+            },
+            {
+              path: 'settings',
+              name: 'project-settings',
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Settings.vue'),
+              redirect: 'settings/notifications',
+              children: [
+                {
+                  path: 'notifications',
+                  name: 'project-notifications',
+                  component: () => import(/* webpackChunkName: 'project-notifications' */ './components/projects/Notifications.vue')
+                }
+              ]
             }
           ]
         },

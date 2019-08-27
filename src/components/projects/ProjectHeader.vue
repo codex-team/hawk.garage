@@ -1,13 +1,18 @@
 <template>
   <div class="project-header">
-    <EntityImage
-      :id="project.id"
-      :name="project.name"
-      :image="project.image"
-      class="project-header__icon"
-    />
-    <div class="project-header__name">
-      {{ project.name }}
+    <div
+      class="project-header__title-container"
+      @click="$router.push({name: 'project-settings', params: {projecId: project.id}})"
+    >
+      <EntityImage
+        :id="project.id"
+        :name="project.name"
+        :image="project.image"
+        class="project-header__icon"
+      />
+      <div class="project-header__name">
+        {{ project.name }}
+      </div>
     </div>
     <Icon
       class="project-header__notifications"
@@ -41,35 +46,47 @@ export default {
 </script>
 
 <style>
-.project-header {
-  display: flex;
-  align-items: center;
-  height: 50px;
-  border-bottom: 1px solid var(--color-bg-main);
+  .project-header {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    border-bottom: 1px solid var(--color-bg-main);
 
-  &__icon {
-    width: 26px;
-    height: 26px;
-    margin-left: 15px;
-    line-height: 26px;
-    background-position: center center;
-    background-size: cover;
-    border-radius: var(--border-radius);
-  }
+    &__title-container {
+      display: flex;
+      align-items: center;
+      height: 70%;
+      padding-right: 15px;
+      border-radius: var(--border-radius);
 
-  &__name {
-    margin-left: 10px;
-    color: var(--color-text-main);
-    font-weight: bold;
-    font-size: 15px;
-  }
+      &:hover {
+        background-color: #09cf5d;
+      }
+    }
 
-  &__notifications {
-    width: 17px;
-    height: 20px;
-    margin-right: 19px;
-    margin-left: auto;
-    cursor: pointer;
+    &__icon {
+      width: 26px;
+      height: 26px;
+      margin-left: 15px;
+      line-height: 26px;
+      background-position: center center;
+      background-size: cover;
+      border-radius: var(--border-radius);
+    }
+
+    &__name {
+      margin-left: 10px;
+      color: var(--color-text-main);
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    &__notifications {
+      width: 17px;
+      height: 20px;
+      margin-right: 19px;
+      margin-left: auto;
+      cursor: pointer;
+    }
   }
-}
 </style>

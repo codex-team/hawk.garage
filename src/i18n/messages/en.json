@@ -32,6 +32,9 @@
       "submitButton": "Create project",
       "title": "Add a project",
       "workspaceSelectLabel": "SELECT WORKSPACE"
+    },
+    "settings": {
+      "notifications": "Notifications"
     }
   },
   "settings": {

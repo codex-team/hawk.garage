@@ -1,5 +1,5 @@
 <template>
-  <PopupWindow @close="onCloseRoute ? $router.push(onCloseRoute) : $router.go(-1)">
+  <PopupWindow @close="onCloseRoute.name ? $router.push(onCloseRoute) : $router.go(-1)">
     <div class="settings-window">
       <div class="settings-window__menu">
         <slot name="header" />
@@ -22,8 +22,8 @@ export default {
   },
   props: {
     onCloseRoute: {
-      type: String,
-      default: undefined
+      type: Object,
+      default: () => ({})
     }
   }
 };
