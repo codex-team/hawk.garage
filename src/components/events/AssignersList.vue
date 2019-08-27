@@ -66,6 +66,19 @@ export default {
     border-radius: var(--border-radius);
     box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
 
+    &::after {
+      right: 0;
+      top: 10px;
+      transform: rotate(45deg) translateX(8.48px); /* 12 / sqrt(2) */
+      content: '';
+      height: 12px;
+      width: 12px;
+      background-color: var(--color-text-main);
+      position: absolute;
+      pointer-events: none;
+
+    }
+
     &__row {
       position: relative;
       display: flex;
