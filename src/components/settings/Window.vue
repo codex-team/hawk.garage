@@ -2,10 +2,7 @@
   <PopupWindow @close="onCloseRoute ? $router.push(onCloseRoute) : $router.go(-1)">
     <div class="settings-window">
       <div class="settings-window__menu">
-        <div class="settings-window__header window-header clearfix">
-          <slot name="logo" />
-          <slot name="title" />
-        </div>
+        <slot name="header" />
         <slot name="menu" />
       </div>
       <div class="settings-window__content">
@@ -28,6 +25,8 @@ export default {
 </script>
 
 <style>
+  @import '../../styles/custom-properties.css';
+
   .settings-window {
     display: flex;
     height: 100%;
@@ -43,7 +42,8 @@ export default {
 
     &__header {
       margin-bottom: 30px;
-      margin-left: -62px;
+
+      @apply --clearfix;
     }
 
     &__logo {
