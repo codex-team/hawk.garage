@@ -111,3 +111,31 @@ export const MUTATION_UPDATE_WORKSPACE = `
     updateWorkspace(id: $id, name: $name, description: $description)
   }
 `;
+
+// language=GraphQL
+/**
+ * Mutation for granting admin permissions
+ */
+export const MUTATION_GRANT_ADMIN_PERMISSIONS = `
+  mutation grantAdmin(
+    $workspaceId: ID!
+    $userId: ID!
+    $state: Boolean = true
+  ) {
+      grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation to remove user from workspace
+ */
+export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
+  mutation removeMemberFromWorkspace(
+    $workspaceId: ID!
+    $userId: ID,
+    $userEmail: String!  
+  ) {
+    removeMemberFromWorkspace(workspaceId: $workspaceId, userId: $userId, userEmail: $userEmail)
+  }
+`;

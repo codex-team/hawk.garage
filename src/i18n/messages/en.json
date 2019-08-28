@@ -87,7 +87,10 @@
         "copiedNotification": "Copied!",
         "sentNotification": "Invitation sent",
         "joinNotification": "You successfully join the workspace!",
-        "brokenLinkNotification": "It seems, your link is broken"
+        "brokenLinkNotification": "It seems, your link is broken",
+        "grantAdmin": "Grant Admin",
+        "withdrawPermissions": "Withdraw permissions",
+        "removeMember": "Remove"
       },
       "billing": {
         "title": "Billing information"

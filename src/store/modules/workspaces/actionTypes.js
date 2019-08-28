@@ -34,6 +34,16 @@ export const CONFIRM_INVITE = 'CONFIRM_INVITE';
 export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
 
 /**
- * Send request to get worksapces
+ * Send request to get workspaces
  */
 export const FETCH_WORKSPACE = 'FETCH_WORKSPACE';
+
+/**
+ * Send request to grant admin permissions
+ */
+export const GRANT_ADMIN_PERMISSIONS = 'GRANT_ADMIN_PERMISSIONS';
+
+/**
+ * Send request to remove user from workspace
+ */
+export const REMOVE_USER_FROM_WORKSPACE = 'REMOVE_USER_FROM_WORKSPACE';

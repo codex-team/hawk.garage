@@ -35,30 +35,73 @@
       {{ member.isAdmin ? $t('workspaces.settings.team.adminLabel') : $t('workspaces.settings.team.invitationSentLabel') }}
     </div>
 
-    <div class="team-member__dots-container">
-      <!-- @todo add popup -->
-      <div class="team-member__dots" />
-    </div>
+    <TooltipMenu
+      v-if="hasAdminPermissions && user.id !== member.id"
+      class="team-member__tooltip-menu"
+      :options="getTooltipMenuOptions(member)"
+    />
   </div>
 </template>
 
 <script>
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
+import TooltipMenu from '../utils/TooltipMenu';
+import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'TeamMember',
-  components: { EntityImage, Icon },
+  components: { TooltipMenu, EntityImage, Icon },
   props: {
+    workspaceId: {
+      type: String,
+      required: true
+    },
     member: {
       type: Object,
       required: true
+    },
+    hasAdminPermissions: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       user: this.$store.state.user.data
     };
+  },
+  methods: {
+    getTooltipMenuOptions(member) {
+      const options = [];
+
+      if (!member.isPending) {
+        options.push({
+          title: member.isAdmin ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin'),
+          onClick: this.grantAdmin(member.id, member.isAdmin)
+        });
+      }
+
+      options.push({
+        title: this.$t('workspaces.settings.team.removeMember'), onClick: this.removeUser(member.id, member.email)
+      });
+
+      return options;
+    },
+    grantAdmin(userId, previousState) {
+      return () => this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
+        workspaceId: this.workspaceId,
+        userId,
+        state: !previousState
+      });
+    },
+    removeUser(userId, userEmail) {
+      return () => this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
+        workspaceId: this.workspaceId,
+        userId,
+        userEmail
+      });
+    }
   }
 };
 </script>
@@ -101,43 +144,23 @@ export default {
       margin-right: 15px;
       margin-left: auto;
       color: var(--color-text-second);
+      user-select: none;
+
+      &:last-child {
+        margin-right: 28px;
+      }
 
       &--admin {
         color: #2ccf6c;
       }
 
-      & + ^&__dots-container {
+      & + ^&__tooltip-menu {
         margin-left: 0;
       }
     }
 
-    &__dots-container {
+    &__tooltip-menu {
       margin-left: auto;
-      padding: 6px 3px;
-      cursor: pointer;
-    }
-
-    &__dots {
-      position: relative;
-      width: 3px;
-      height: 3px;
-      background-color: rgba(219, 230, 255, 0.6);
-
-      &::before, &::after {
-        position: absolute;
-        width: 3px;
-        height: 3px;
-        background-color: rgba(219, 230, 255, 0.6);
-        content: '';
-      }
-
-      &::before {
-        top: -6px;
-      }
-
-      &::after {
-        top: 6px;
-      }
     }
   }
 </style>

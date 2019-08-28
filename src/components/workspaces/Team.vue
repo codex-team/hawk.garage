@@ -38,12 +38,16 @@
       <label class="label">{{ $t('workspaces.settings.team.title') }}</label>
       <TeamMember
         v-for="member in workspace.users"
-        v-bind:key="member.id"
+        :key="member.id"
+        :has-admin-permissions="currentMembership.isAdmin"
+        :workspace-id="workspace.id"
         :member="member"
       />
       <TeamMember
         v-for="member in workspace.pendingUsers"
-        v-bind:key="member.email"
+        :key="member.email"
+        :has-admin-permissions="currentMembership.isAdmin"
+        :workspace-id="workspace.id"
         :member="member"
       />
     </div>
@@ -61,7 +65,8 @@ export default {
   data() {
     return {
       userEmail: '',
-      baseUrl: window.location.origin
+      baseUrl: window.location.origin,
+      user: this.$store.state.user.data
     };
   },
   computed: {
@@ -69,6 +74,11 @@ export default {
       const workspaceId = this.$route.params.workspaceId;
 
       return this.$store.getters.getWorkspaceById(workspaceId);
+    },
+    currentMembership() {
+      const workspaceId = this.$route.params.workspaceId;
+
+      return this.$store.getters.getWorkspaceById(workspaceId).users.find(u => u.id === this.user.id);
     }
   },
   methods: {
@@ -93,6 +103,8 @@ export default {
           style: 'success',
           time: 10000
         });
+
+        this.userEmail = '';
       } catch (e) {
         notifier.show({
           message: e.message,
