@@ -49,7 +49,8 @@
       "title": "Внешний вид"
     },
     "billing": {
-      "title": "Платежи"
+      "title": "Платежи",
+      "ownedWorkspaces": "Воркспейсы"
     },
     "logout": "Выйти",
     "notifications": {
@@ -83,6 +84,24 @@
       }
     }
   },
+  "billing": {
+    "connectedCards": "Сохраненные карты",
+    "detachCard": "Открепить карту",
+    "addCardButton": "Добавить карту",
+    "members": "участника",
+    "currentBalance": "Баланс",
+    "currentPlan": "План",
+    "volume": "Емкость",
+    "volumeEvents": "событий",
+    "pay": "+",
+    "payCustomAmount": "Другая сумма",
+    "requestInvoice": "Запросить счет",
+    "paymentHistory": "История платежей",
+    "all": "Все",
+    "incomings": "Пополнения",
+    "charges": "Списания",
+    "autoPay": "Авто-платеж"
+  },
   "common": {
     "months": [
       "января",
@@ -97,6 +116,20 @@
       "октября",
       "ноября",
       "декабря"
+    ],
+    "shortMonths": [
+      "дек",
+      "фев",
+      "мар",
+      "апр",
+      "май",
+      "июн",
+      "июл",
+      "авг",
+      "сен",
+      "окт",
+      "ноя",
+      "дек"
     ]
   }
 }

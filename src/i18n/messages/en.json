@@ -49,7 +49,8 @@
       "title": "Appearance"
     },
     "billing": {
-      "title": "Billing information"
+      "title": "Billing information",
+      "ownedWorkspaces": "Owned workspaces"
     },
     "logout": "Log out",
     "notifications": {
@@ -83,6 +84,24 @@
       }
     }
   },
+  "billing": {
+    "connectedCards": "Connected cards",
+    "detachCard": "Detach card",
+    "addCardButton": "Add new card",
+    "members": "members",
+    "currentBalance": "Current balance",
+    "currentPlan": "Current plan",
+    "volume": "Volume",
+    "volumeEvents": "events",
+    "pay": "Pay",
+    "payCustomAmount": "Pay custom amount",
+    "requestInvoice": "Request invoice",
+    "paymentHistory": "Payment history",
+    "all": "All",
+    "incomings": "Incomings",
+    "charges": "Charges",
+    "autoPay": "Auto-pay"
+  },
   "common": {
     "months": [
       "january",
@@ -94,9 +113,23 @@
       "july",
       "august",
       "september",
-      "October",
+      "october",
       "november",
       "december"
+    ],
+    "shortMonths": [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "may",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "oct",
+      "nov",
+      "dec"
     ]
   }
 }

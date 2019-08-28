@@ -31,7 +31,7 @@
         </router-link>
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'home' }"
+          :to="{ name: 'workspace-billing' }"
         >
           {{ $t('workspaces.settings.billing.title') }}
         </router-link>
