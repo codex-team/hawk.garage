@@ -4,15 +4,9 @@ import {
   UPDATE_NOTIFICATION_SETTINGS,
   SET_ACTION_TYPE
 } from './actionTypes';
+import * as mutationTypes from './mutationTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
-
-/**
- * Mutations enum for this module
- */
-const mutationTypes = {
-  SET_NOTIFICATION_SETTINGS: 'SET_NOTIFICATION_SETTINGS' // Set notification settings
-};
 
 /**
  * Creates module state

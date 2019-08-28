@@ -65,20 +65,13 @@
           @change="save()"
         >
       </div>
-      <button
-        v-if="showSubmitButton"
-        class="button button--submit form-section__submit-button"
-        @click="save()"
-      >
-        Save
-      </button>
     </div>
     <div class="form-section">
       <label class="label form-section__label">What to receive</label>
       <div class="form-section__row">
         <div>Only new events</div>
-        <div class="form-section__main">
-          <div class="form-section__main__text">
+        <div class="form-section__row__main">
+          <div class="form-section__row__main__text">
             First occurrence of event
           </div>
         </div>
@@ -92,8 +85,8 @@
       <hr class="form-section__hr">
       <div class="form-section__row">
         <div>All events</div>
-        <div class="form-section__main">
-          <div class="form-section__main__text">
+        <div class="form-section__row__main">
+          <div class="form-section__row__main__text">
             All event occurances. Max frequency is 5 times/min.
           </div>
         </div>
@@ -104,7 +97,34 @@
           @input.prevent="changeRadio(actionTypes.ALL)"
         >
       </div>
+      <hr class="form-section__hr">
+      <div class="form-section__row">
+        <div>Custom filters</div>
+        <div class="form-section__row__main">
+          <div class="form-section__row__main__text">
+            Only events that includes passed words
+          </div>
+          <FormTextFieldset
+            v-model="notify.words"
+            label="Including words"
+            @input="showSubmitButton=true"
+          />
+        </div>
+        <input
+          type="radio"
+          class="radio"
+          :checked="notify.actionType === actionTypes.INCLUDING"
+          @input.prevent="changeRadio(actionTypes.INCLUDING)"
+        >
+      </div>
     </div>
+    <button
+      v-if="showSubmitButton"
+      class="button button--submit form-section__submit-button"
+      @click="save()"
+    >
+      Save
+    </button>
   </div>
 </template>
 
@@ -133,10 +153,11 @@ export default {
       }
     };
   },
-  computed:
-      mapState({
-        notify: state => state.notify
-      }),
+  computed: {
+    ...mapState({
+      notify: state => state.notify
+    })
+  },
   created() {
     this.$store.dispatch(GET_NOTIFICATION_SETTINGS, this.$route.params.projectId);
   },
@@ -167,9 +188,9 @@ export default {
     },
     async changeRadio(type) {
       console.log(type);
-      await this.$store.dispatch(SET_ACTION_TYPE, this.$store.state.notify.actionType);
+      await this.$store.dispatch(SET_ACTION_TYPE, type);
 
-      // await this.save();
+      await this.save();
     }
   }
 }
@@ -192,7 +213,7 @@ export default {
       padding-bottom: 20px;
 
       &__main {
-        width: 300px;
+        width: 280px;
         color: var(--color-text-second);
         font-weight: 500;
         font-size: 13px;
@@ -206,7 +227,7 @@ export default {
     }
 
     &__submit-button {
-      margin: 0 0 20px 0;
+      margin-bottom: 20px;
     }
 
   }
