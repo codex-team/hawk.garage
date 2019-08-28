@@ -13,7 +13,7 @@
       </router-link>
       <div class="guide-page__name-container">
         <div class="guide-page__name">
-          PHP
+          Node js
         </div>
         <CatalogItemLabel
           class="guide-page__label"
@@ -110,11 +110,11 @@
 </template>
 
 <script>
-import CatalogItemLabel from '../ItemLabel';
-import GuideStepBlock from '../GuideStepBlock';
-import GuideSection from '../GuideSection';
-import CodeBlock from '../../utils/CodeBlock';
-import Icon from '../../utils/Icon';
+import CatalogItemLabel from '../../ItemLabel';
+import GuideStepBlock from '../../GuideStepBlock';
+import GuideSection from '../../GuideSection';
+import CodeBlock from '../../../utils/CodeBlock';
+import Icon from '../../../utils/Icon';
 
 export default {
   name: 'SetupPhpCatcher',
@@ -128,4 +128,4 @@ export default {
 };
 </script>
 
-<style src="../../../styles/guide-page.css"></style>
+<style src="../../../../styles/guide-page.css"></style>

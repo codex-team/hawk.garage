@@ -65,9 +65,9 @@ const router = new Router({
           component: () => import(/* webpackChunkName: 'project-add-catcher' */'./components/catalog/catchers/AddCatcher.vue')
         },
         {
-          path: 'projects/:projectId/setup-catcher/php',
-          name: 'setup-php-catcher',
-          component: () => import(/* webpackChunkName: 'project-setup-catcher' */'./components/catalog/catchers/SetupPhpCatcher.vue')
+          path: 'projects/:projectId/setup-catcher/:page',
+          name: 'setup-catcher',
+          component: () => import(/* webpackChunkName: 'project-setup-catcher' */'./components/catalog/catchers/setupInstructions/dynamicLoadingPage.js')
         }
       ]
     },
