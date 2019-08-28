@@ -67,6 +67,8 @@ export default {
     }
 
     &__wrapper {
+      display: flex;
+      flex-grow: 1;
       position: relative;
       max-width: 90%;
       margin: auto 0;
