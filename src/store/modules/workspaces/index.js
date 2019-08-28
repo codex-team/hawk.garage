@@ -3,7 +3,9 @@ import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
   REMOVE_WORKSPACE,
-  SET_CURRENT_WORKSPACE
+  SET_CURRENT_WORKSPACE,
+  UPDATE_WORKSPACE,
+  FETCH_WORKSPACE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces';
@@ -16,7 +18,8 @@ const mutationTypes = {
   ADD_WORKSPACE: 'ADD_WORKSPACE', // Add new workspace to the list
   REMOVE_WORKSPACE: 'REMOVE_WORKSPACE', // Remove workspace from the list
   SET_WORKSPACES_LIST: 'SET_WORKSPACES_LIST', // Set new workspaces list
-  SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE' // Set current user workspace
+  SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE', // Set current user workspace
+  SET_WORKSPACE: 'SET_WORKSPACE' // Set workspace to user workspaces list
 };
 
 /**
@@ -44,6 +47,20 @@ function initialState() {
     current: null
   };
 }
+
+const getters = {
+  /**
+   * Returns workspace by id
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @return {function(String): Workspace}
+   */
+  getWorkspaceById: state =>
+  /**
+   * @param {String} id project id to find
+   * @return {Project}
+   */
+    id => state.list.find(workspace => workspace.id === id)
+};
 
 const actions = {
   /**
@@ -89,6 +106,30 @@ const actions = {
   },
 
   /**
+   * Get workspaces by ids
+   * @param {function} commit - standard Vuex commit function
+   * @param {number} id – workspace id to fetch
+   * @return {Promise<Workspace>}
+   */
+  async [FETCH_WORKSPACE]({ commit }, id) {
+    const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
+
+    commit(mutationTypes.SET_WORKSPACE, workspace);
+
+    return workspace;
+  },
+
+  /**
+   * Update workspace data
+   * @param {function} commit - standard Vuex commit function
+   * @param {Workspace} workspace - workspace to update
+   * @returns {Promise<Boolean>}
+   */
+  async [UPDATE_WORKSPACE]({ commit }, workspace) {
+    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description);
+  },
+
+  /**
    * Resets module state
    * @param {function} commit - standard Vuex commit function
    */
@@ -98,6 +139,22 @@ const actions = {
 };
 
 const mutations = {
+  /**
+   * Set workspace data
+   *
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Workspace} workspace - workspace params for setting
+   */
+  [mutationTypes.SET_WORKSPACE](state, workspace) {
+    const index = state.list.findIndex(element => element.id === workspace.id);
+
+    if (state.current && workspace.id === state.current.id) {
+      state.current = workspace;
+    }
+
+    Vue.set(state.list, index, workspace);
+  },
+
   /**
    * Mutation for adding new workspace
    * @param {WorkspacesModuleState} state - Vuex state
@@ -150,6 +207,7 @@ const mutations = {
 
 export default {
   state: initialState(),
+  getters,
   actions,
   mutations
 };

@@ -1,5 +1,10 @@
 import { HTTP_OK } from '../httpCodes';
-import { MUTATION_CREATE_WORKSPACE, QUERY_ALL_WORKSPACES_WITH_PROJECTS } from './queries';
+import {
+  MUTATION_CREATE_WORKSPACE,
+  MUTATION_UPDATE_WORKSPACE,
+  QUERY_ALL_WORKSPACES_WITH_PROJECTS,
+  QUERY_WORKSPACES
+} from './queries';
 import * as api from '../index';
 
 /**
@@ -60,4 +65,21 @@ export async function deleteWorkspace(workspaceId) {
  */
 export async function getAllWorkspacesWithProjects() {
   return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, null, { initial: true })).workspaces;
+}
+
+/**
+ * Get workspaces
+ * @param {array} ids – id of fetching workspaces
+ * @return {Promise<[Workspace]>}
+ */
+export async function getWorkspaces(ids) {
+  return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
+}
+
+/**
+ * Update workspace data
+ * @returns {Promise<Boolean>}
+ */
+export async function updateWorkspace(id, name, description) {
+  return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description })).updateWorkspace;
 }

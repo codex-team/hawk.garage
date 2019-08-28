@@ -79,10 +79,6 @@ export default {
       }
     }
 
-    &__menu-delimiter {
-      border: 1px solid var(--color-bg-second);
-    }
-
     &__content {
       width: 100%;
       padding: 50px 200px 50px 50px;
