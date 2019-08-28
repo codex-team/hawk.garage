@@ -80,7 +80,7 @@
           <p>
             Create an instance with Token at the entry point of your project.
           </p>
-          <CodeBlock>
+          <CodeBlock one-line>
             \Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP');
           </CodeBlock>
           <h3>Enable handlers</h3>

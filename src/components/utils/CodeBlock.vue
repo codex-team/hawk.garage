@@ -1,7 +1,7 @@
 <template>
   <div
     class="code-block"
-    :class="language"
+    :class="{[language]: language, 'code-block--one-line': oneLine}"
   >
     <slot />
   </div>
@@ -25,10 +25,25 @@ export default {
 };
 </script>
 <style>
+  @import "../../styles/custom-properties.css";
+
+  .code-block {
+    &--one-line {
+      white-space: nowrap;
+      overflow: hidden;
+
+      @apply --hide-scrollbar;
+    }
+
+    &--fullwidth {
+      width: 100%;
+    }
+  }
+
   .hljs {
     display: block;
     overflow-x: auto;
-    padding: 10px 15px;
+    padding: 15px;
     border-radius: 6px;
     border: solid 1px rgba(0, 0, 0, 0.18);
     background: var(--color-bg-main);
