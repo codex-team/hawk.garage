@@ -63,11 +63,15 @@ Vue.filter('prettyDate', function (value) {
   return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
 });
 
+/**
+ * Returns prettified date ('29 aug, 14:30')
+ * @returns {string}
+ */
 Vue.filter('prettyFullDate', function (value) {
   const day = value.getDate();
   const month = value.getMonth();
   const hours = value.getHours();
   const minutes = value.getMinutes();
 
-  return `${day} ${i18n.t(`common.shortMonths[${month - 1}]`)}, ${`0${hours}`.substr(-2)}:${`0${minutes}`.substr(-2)}`;
+  return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${`0${hours}`.substr(-2)}:${`0${minutes}`.substr(-2)}`;
 });
