@@ -34,10 +34,6 @@ export default {
 
       @apply --hide-scrollbar;
     }
-
-    &--fullwidth {
-      width: 100%;
-    }
   }
 
   .hljs {
