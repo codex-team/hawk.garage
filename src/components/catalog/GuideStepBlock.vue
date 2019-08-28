@@ -82,6 +82,8 @@ export default {
   }
 
   &__content-container {
+    overflow: hidden;
+    width: 100%;
     margin-bottom: 80px;
   }
 }
