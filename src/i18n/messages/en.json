@@ -100,7 +100,15 @@
     "all": "All",
     "incomings": "Incomings",
     "charges": "Charges",
-    "autoPay": "Auto-pay"
+    "autoPay": "Auto-pay",
+    "processPayment": {
+      "header": "Process payment",
+      "description": "To start track events from your application, add it as a Project and get an Integration Token.",
+      "workspaceSelectLabel": "Select workspace",
+      "cardSelectLabel": "Select card",
+      "amountLabel": "Amount",
+      "submitButton": "Continue"
+    }
   },
   "common": {
     "months": [

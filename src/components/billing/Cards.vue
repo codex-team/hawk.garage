@@ -4,7 +4,7 @@
     <div class="billing-cards__list">
       <div
         v-for="card in cards"
-        :key="card.number"
+        :key="card.id"
         class="billing-cards__card clearfix"
       >
         <Icon
@@ -31,15 +31,21 @@
 
 <script>
 import Icon from '../utils/Icon';
-const cards = [
+export const cards = [
   {
-    number: '**** **** **** 3123'
+    id: '1',
+    number: '**** **** **** 3123',
+    name: '**** **** **** 3123'
   },
   {
-    number: '**** **** **** 3122'
+    id: '2',
+    number: '**** **** **** 3122',
+    name: '**** **** **** 3122'
   },
   {
-    number: '**** **** **** 3121'
+    id: '3',
+    number: '**** **** **** 3121',
+    name: '**** **** **** 3121'
   }
 ];
 

@@ -11,7 +11,7 @@
     <div class="sidebar__button-create-wrapper">
       <div
         class="sidebar__button-create"
-        @click="$emit('createWorkspaceButtonClicked')"
+        @click="createWorkspaceButtonClicked"
       >
         <Icon symbol="plus" />
       </div>
@@ -49,6 +49,7 @@ import Icon from '../utils/Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
 import { SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 import EntityImage from '../utils/EntityImage';
+import { SET_MODAL_DIALOG } from '../../store/modules/modelDialog/actionTypes';
 
 export default {
   name: 'Sidebar',
@@ -113,6 +114,10 @@ export default {
         return this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
       }
       this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
+    },
+
+    createWorkspaceButtonClicked() {
+      this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
     }
   }
 };

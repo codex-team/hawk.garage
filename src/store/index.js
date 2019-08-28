@@ -5,6 +5,7 @@ import app from './modules/app';
 import user from './modules/user';
 import workspaces from './modules/workspaces';
 import projects from './modules/projects';
+import modalDialog from './modules/modelDialog';
 
 import createPersistedState from 'vuex-persistedstate';
 
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     app,
     user,
     workspaces,
-    projects
+    projects,
+    modalDialog
   },
   plugins: [ createPersistedState() ],
   strict: debug

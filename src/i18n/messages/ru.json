@@ -100,7 +100,15 @@
     "all": "Все",
     "incomings": "Пополнения",
     "charges": "Списания",
-    "autoPay": "Авто-платеж"
+    "autoPay": "Авто-платеж",
+    "processPayment": {
+      "header": "Пополнение баланса",
+      "description": "Чтобы получать события из вашего приложения, получите интеграционный токен, добавив проект.",
+      "workspaceSelectLabel": "Воркспейс",
+      "cardSelectLabel": "Карта",
+      "amountLabel": "Сумма",
+      "submitButton": "Продолжить"
+    }
   },
   "common": {
     "months": [

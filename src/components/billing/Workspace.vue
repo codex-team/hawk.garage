@@ -59,13 +59,22 @@
       </div>
     </div>
     <div class="billing-card__buttons">
-      <button class="button button--submit billing-card__button">
+      <button
+        class="button button--submit billing-card__button"
+        @click="processPayment(100)"
+      >
         {{ $t('billing.pay') }} 100$
       </button>
-      <button class="button button--submit billing-card__button">
+      <button
+        class="button button--submit billing-card__button"
+        @click="processPayment(1000)"
+      >
         {{ $t('billing.pay') }} 1000$
       </button>
-      <button class="button button--submit billing-card__button">
+      <button
+        class="button button--submit billing-card__button"
+        @click="processPayment()"
+      >
         {{ $t('billing.payCustomAmount') }}
       </button>
       <button class="button button--submit billing-card__button billing-card__button--invoice">
@@ -84,6 +93,7 @@ import EntityImage from '../utils/EntityImage';
 import Progress from '../utils/Progress';
 import Icon from '../utils/Icon';
 import CustomSwitch from '../forms/Switch';
+import { SET_MODAL_DIALOG } from '../../store/modules/modelDialog/actionTypes';
 
 export default {
   name: 'BillingCard',
@@ -92,6 +102,11 @@ export default {
     workspace: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    processPayment(amount) {
+      this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProcessPaymentDialog', data: { amount } });
     }
   }
 };
