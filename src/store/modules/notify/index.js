@@ -1,12 +1,17 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   GET_NOTIFICATION_SETTINGS,
-  UPDATE_NOTIFICATION_SETTINGS,
-  SET_ACTION_TYPE
+  UPDATE_NOTIFICATION_SETTINGS
 } from './actionTypes';
-import * as mutationTypes from './mutationTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
+
+/**
+ * Mutations enum for this module
+ */
+const mutationTypes = {
+  SET_NOTIFICATION_SETTINGS: 'SET_NOTIFICATION_SETTINGS' // Set notification settings
+};
 
 /**
  * Creates module state
@@ -62,16 +67,6 @@ const actions = {
     await projectsApi.updateNotificationSettings(projectId, notify);
 
     commit(mutationTypes.SET_NOTIFICATION_SETTINGS, notify);
-  },
-
-  /**
-   * Set action type
-   * @param {function} commit - standard Vuex commit function
-   * @param {number} actionType - action type
-   * @returns {Promise<void>}
-   */
-  [SET_ACTION_TYPE]({ commit }, actionType) {
-    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, { actionType });
   },
 
   /**

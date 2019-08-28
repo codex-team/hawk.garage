@@ -12,13 +12,13 @@
             Notifications on
           </div>
           <FormTextFieldset
-            v-model="notify.settings.email.value"
+            v-model="settings.email.value"
             label="email"
             @input="showSubmitButton=true"
           />
         </div>
         <input
-          v-model="notify.settings.email.enabled"
+          v-model="settings.email.enabled"
           type="checkbox"
           class="checkbox"
           @change="save()"
@@ -32,14 +32,14 @@
             Alerts through the <u>Webhook app</u>
           </div>
           <FormTextFieldset
-            v-model="notify.settings.slack.value"
+            v-model="settings.slack.value"
             label="Webhook URL"
             @input="showSubmitButton=true"
           />
         </div>
 
         <input
-          v-model="notify.settings.slack.enabled"
+          v-model="settings.slack.enabled"
           type="checkbox"
           class="checkbox"
           @change="save()"
@@ -53,13 +53,13 @@
             Alerts by CodeX Bot
           </div>
           <FormTextFieldset
-            v-model=" notify.settings.tg.value"
+            v-model=" settings.tg.value"
             label="Webhook URL"
             @input="showSubmitButton=true"
           />
         </div>
         <input
-          v-model="notify.settings.tg.enabled"
+          v-model="settings.tg.enabled"
           type="checkbox"
           class="checkbox"
           @change="save()"
@@ -78,7 +78,8 @@
         <input
           type="radio"
           class="radio"
-          :checked="notify.actionType === actionTypes.ONLY_NEW"
+          name="recieveMode"
+          :checked="actionType === actionTypes.ONLY_NEW"
           @input.prevent="changeRadio(actionTypes.ONLY_NEW)"
         >
       </div>
@@ -93,7 +94,8 @@
         <input
           type="radio"
           class="radio"
-          :checked="notify.actionType === actionTypes.ALL"
+          name="recieveMode"
+          :checked="actionType === actionTypes.ALL"
           @input.prevent="changeRadio(actionTypes.ALL)"
         >
       </div>
@@ -105,15 +107,16 @@
             Only events that includes passed words
           </div>
           <FormTextFieldset
-            v-model="notify.words"
+            v-model="words"
             label="Including words"
             @input="showSubmitButton=true"
           />
         </div>
         <input
           type="radio"
+          name="recieveMode"
           class="radio"
-          :checked="notify.actionType === actionTypes.INCLUDING"
+          :checked="actionType === actionTypes.INCLUDING"
           @input.prevent="changeRadio(actionTypes.INCLUDING)"
         >
       </div>
@@ -132,11 +135,9 @@
 import FormTextFieldset from '../forms/TextFieldset';
 import {
   GET_NOTIFICATION_SETTINGS,
-  UPDATE_NOTIFICATION_SETTINGS,
-  SET_ACTION_TYPE
+  UPDATE_NOTIFICATION_SETTINGS
 } from '../../store/modules/notify/actionTypes';
 import notifier from 'codex-notifier';
-import { mapState } from 'vuex';
 
 export default {
   name: 'ProjectNotifications',
@@ -144,7 +145,13 @@ export default {
     FormTextFieldset
   },
   data() {
+    const notify = JSON.parse(JSON.stringify(this.$store.state.notify));
+
     return {
+      actionType: notify.actionType || 0,
+      words: notify.words || '',
+      settings: notify.settings || {},
+
       showSubmitButton: false,
       actionTypes: {
         ONLY_NEW: 1,
@@ -154,9 +161,6 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      notify: state => state.notify
-    })
   },
   created() {
     this.$store.dispatch(GET_NOTIFICATION_SETTINGS, this.$route.params.projectId);
@@ -165,10 +169,22 @@ export default {
     async save() {
       const projectId = this.$route.params.projectId;
 
+      console.log({
+        notify: {
+          actionType: this.actionType,
+          words: this.words,
+          settings: this.settings
+        }
+      });
+
       try {
         await this.$store.dispatch(UPDATE_NOTIFICATION_SETTINGS, {
           projectId,
-          notify: this.notify
+          notify: {
+            actionType: this.actionType,
+            words: this.words,
+            settings: this.settings
+          }
         });
       } catch (e) {
         notifier.show({
@@ -187,9 +203,7 @@ export default {
       this.showSubmitButton = false;
     },
     async changeRadio(type) {
-      console.log(type);
-      await this.$store.dispatch(SET_ACTION_TYPE, type);
-
+      this.actionType = type;
       await this.save();
     }
   }
