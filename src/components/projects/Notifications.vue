@@ -1,15 +1,15 @@
 <template>
   <div class="project-notifications settings-window-page">
     <div class="settings-window-page__title">
-      {{ $t('projects.settings.notifications') }}
+      {{ $t('projects.settings.notifications.title') }}
     </div>
     <div class="form-section">
-      <label class="label form-section__label">Channels</label>
+      <label class="label form-section__label">{{ $t('projects.settings.notifications.channels')}}</label>
       <div class="form-section__row">
-        <div>Email</div>
+        <div>{{$t('projects.settings.notifications.email.title')}}</div>
         <div class="form-section__row__main ">
           <div class="form-section__row__main__text">
-            Notifications on
+            {{$t('projects.settings.notifications.email.notificationsOn')}}
           </div>
           <FormTextFieldset
             v-model="settings.email.value"
@@ -26,14 +26,14 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>Slack</div>
+        <div>{{$t('projects.settings.notifications.slack.title')}}</div>
         <div class="form-section__row__main">
           <div class="form-section__row__main__text">
-            Alerts through the <u>Webhook app</u>
+            {{$t('projects.settings.notifications.slack.alerts')}} <u>{{$t('projects.settings.notifications.slack.webhookApp')}}</u>
           </div>
           <FormTextFieldset
             v-model="settings.slack.value"
-            label="Webhook URL"
+            :label="$t('projects.settings.notifications.slack.webhookUrl')"
             @input="showSubmitButton=true"
           />
         </div>
@@ -47,14 +47,14 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>Telegram</div>
+        <div>{{$t('projects.settings.notifications.telegram.title')}}</div>
         <div class="form-section__row__main">
           <div class="form-section__row__main__text">
-            Alerts by CodeX Bot
+            {{$t('projects.settings.notifications.telegram.alertsBy')}}
           </div>
           <FormTextFieldset
             v-model=" settings.tg.value"
-            label="Webhook URL"
+            :label="$t('projects.settings.notifications.telegram.webhookUrl')"
             @input="showSubmitButton=true"
           />
         </div>
@@ -67,12 +67,12 @@
       </div>
     </div>
     <div class="form-section">
-      <label class="label form-section__label">What to receive</label>
+      <label class="label form-section__label">{{$t('projects.settings.notifications.actions.title')}}</label>
       <div class="form-section__row">
-        <div>Only new events</div>
+        <div>{{$t('projects.settings.notifications.actions.new.title')}}</div>
         <div class="form-section__row__main">
           <div class="form-section__row__main__text">
-            First occurrence of event
+            {{$t('projects.settings.notifications.actions.new.firstOccurrence')}}
           </div>
         </div>
         <input
@@ -85,10 +85,10 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>All events</div>
+        <div>{{$t('projects.settings.notifications.actions.all.title')}}</div>
         <div class="form-section__row__main">
           <div class="form-section__row__main__text">
-            All event occurances. Max frequency is 5 times/min.
+            {{$t('projects.settings.notifications.actions.all.allEvents')}}
           </div>
         </div>
         <input
@@ -101,14 +101,14 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>Custom filters</div>
+        <div>{{$t('projects.settings.notifications.actions.including.title')}}</div>
         <div class="form-section__row__main">
           <div class="form-section__row__main__text">
-            Only events that includes passed words
+            {{$t('projects.settings.notifications.actions.including.onlyIncluding')}}
           </div>
           <FormTextFieldset
             v-model="words"
-            label="Including words"
+            :label="$t('projects.settings.notifications.actions.including.words')"
             @input="showSubmitButton=true"
           />
         </div>

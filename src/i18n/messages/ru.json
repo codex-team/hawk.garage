@@ -34,7 +34,41 @@
       "workspaceSelectLabel": "Выбрать воркспейс"
     },
     "settings": {
-      "notifications": "Оповещения"
+      "notifications": {
+        "title": "Уведомления",
+        "channels": "Каналы",
+        "email": {
+          "title": "Email",
+          "notificationsOn": "Уведомления на"
+        },
+        "slack": {
+          "title": "Slack",
+          "alerts": "Уведомления через",
+          "webhookApp": "Webhook app",
+          "webhookUrl": "Webhook URL"
+        },
+        "telegram": {
+          "title":  "Telegram",
+          "alertsBy": "Уведомления через CodeX Bot",
+          "webhookUrl": "Webhook URL"
+        },
+        "actions": {
+          "title": "Типы уведомлений",
+          "new": {
+            "title": "Только новые события",
+            "firstOccurrence": "Первое появление ошибки"
+          },
+          "all": {
+            "title": "Все события",
+            "allEvents": "Все появления ошибок. Максимум 5 уведомлений в минуту."
+          },
+          "including": {
+            "title": "Включает слова",
+            "onlyIncluding": "Только события, которые включают заданные слова",
+            "words": "Слова"
+          }
+        }
+      }
     }
   },
   "settings": {

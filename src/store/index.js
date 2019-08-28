@@ -22,9 +22,11 @@ export default new Vuex.Store({
     notify
   },
   plugins: [createPersistedState(), store => {
-    store.subscribe((mutation, state) => {
-      console.log(`Invoking ${mutation.type}: ${JSON.stringify(mutation.payload, null, 2)} on ${JSON.stringify(state, null, 2)}`);
-    });
+    if (process.env.NODE_ENV) {
+      store.subscribe((mutation, state) => {
+        console.log(`Invoking ${mutation.type}: ${JSON.stringify(mutation.payload, null, 2)} on ${JSON.stringify(state, null, 2)}`);
+      });
+    }
   }],
   strict: debug
 });

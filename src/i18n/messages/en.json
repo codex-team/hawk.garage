@@ -34,9 +34,41 @@
       "workspaceSelectLabel": "SELECT WORKSPACE"
     },
     "settings": {
-      "notifications": "Notifications",
-      "channels": "Channels",
-      "email": "Email"
+      "notifications": {
+        "title": "Notifications",
+        "channels": "Channels",
+        "email": {
+          "title": "Email",
+          "notificationsOn": "Notifications on"
+        },
+        "slack": {
+          "title": "Slack",
+          "alerts": "Alerts through the",
+          "webhookApp": "Webhook app",
+          "webhookUrl": "Webhook URL"
+        },
+        "telegram": {
+          "title":  "Telegram",
+          "alertsBy": "Alerts by CodeX Bot",
+          "webhookUrl": "Webhook URL"
+        },
+        "actions": {
+          "title": "What to receive",
+          "new": {
+            "title": "Only new events",
+            "firstOccurrence": "First occurrence of event"
+          },
+          "all": {
+            "title": "All events",
+            "allEvents": "All event occurrences. Max frequency is 5 times/min."
+          },
+          "including": {
+            "title": "Custom filters",
+            "onlyIncluding": "Only events that includes passed words",
+            "words": "Including words"
+          }
+        }
+      }
     }
   },
   "settings": {

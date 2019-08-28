@@ -18,7 +18,7 @@
           class="settings-window__menu-item"
           :to="{ name: 'project-notifications'}"
         >
-          {{ $t('projects.settings.notifications') }}
+          {{ $t('projects.settings.notifications.title') }}
         </router-link>
       </div>
     </template>
