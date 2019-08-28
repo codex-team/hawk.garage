@@ -46,7 +46,7 @@ export default {
       if (valuesArray.length) {
         return valuesArray[0][0].event.payload.title;
       } else {
-        return '';
+        return 'No one catcher connected';
       }
     }
   }

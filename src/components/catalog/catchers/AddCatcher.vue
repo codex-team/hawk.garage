@@ -48,7 +48,7 @@
           :name="item.name"
           :image="item.image"
           :description="item.description"
-          @click.native="$router.push({name: item.page, params: {projectId: $route.params.projectId}})"
+          @click.native="$router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: item.page}})"
         />
       </div>
     </div>
@@ -62,12 +62,13 @@ import CatalogItem from '../Item';
 const catalogItems = [
   {
     name: 'NODE.JS',
+    page: 'nodejs',
     description: 'Track errors from your backend application written on JavaScript',
     image: require('../../../assets/catalog/nodejs.svg')
   },
   {
     name: 'PHP',
-    page: 'setup-php-catcher',
+    page: 'php',
     description: 'Can be connected as standalone script or as monolog provider',
     image: require('../../../assets/catalog/php.svg')
   },

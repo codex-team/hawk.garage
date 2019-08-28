@@ -47,6 +47,13 @@ li {
 }
 
 /**
+ * Cancel default pre tag styles
+ */
+pre {
+  margin: 0;
+}
+
+/**
  * Clearfix for float elements
  */
 .clearfix::after {
