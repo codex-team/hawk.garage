@@ -23,9 +23,7 @@
           class="billing-cards__plus-icon"
           symbol="plus"
         />
-        <span class="billing-cards__add-button-label">
-          {{ $t('billing.addCardButton') }}
-        </span>
+        {{ $t('billing.addCardButton') }}
       </div>
     </div>
   </div>
@@ -95,15 +93,31 @@ export default {
       letter-spacing: 0.13px;
       text-transform: uppercase;
       cursor: pointer;
+
+      &:hover {
+        color: var(--color-text-main);
+      }
     }
 
     &__add-button {
-      height: 42px;
-      padding: 13px;
+      height: 40px;
+      padding: 0 13px;
+      color: var(--color-text-second);
+      font-size: 12px;
+      line-height: 40px;
+      letter-spacing: 0.15px;
+      text-transform: uppercase;
       border: 1px dashed var(--color-text-second);
       border-radius: 8px;
       cursor: pointer;
       user-select: none;
+      fill: var(--color-text-second);
+
+      &:hover {
+        color: var(--color-text-main);
+        border-color: var(--color-text-main);
+        fill: var(--color-text-main);
+      }
     }
 
     &__plus-icon {
@@ -111,7 +125,6 @@ export default {
       height: 16px;
       margin-right: 5px;
       margin-bottom: -3px;
-      fill: var(--color-text-second);
     }
 
     &__add-button-label {
