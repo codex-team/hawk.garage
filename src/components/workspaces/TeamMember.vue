@@ -1,7 +1,7 @@
 <template>
   <div
     class="team-member"
-    :class="{'team-member--pending': member.isPending}"
+    :class="{'team-member--pending': member.isPending, 'team-member--admin': hasAdminPermissions}"
   >
     <Icon
       v-if="member.isPending"
@@ -123,6 +123,22 @@ export default {
       }
     }
 
+    &--admin {
+      ^&__status-label {
+        margin-right: 15px;
+
+        &:last-child {
+          margin-right: 28px;
+        }
+      }
+
+      &:last-child {
+        ^&__status-label {
+          margin-right: 0;
+        }
+      }
+    }
+
     &__image {
       width: 16px;
       height: 16px;
@@ -141,14 +157,10 @@ export default {
     }
 
     &__status-label {
-      margin-right: 15px;
+      margin-right: 0;
       margin-left: auto;
       color: var(--color-text-second);
       user-select: none;
-
-      &:last-child {
-        margin-right: 28px;
-      }
 
       &--admin {
         color: #2ccf6c;

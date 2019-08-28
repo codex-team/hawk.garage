@@ -91,31 +91,7 @@ const router = new Router({
     },
     {
       path: '/join/:workspaceId/:inviteHash?',
-      async beforeEnter(to, from, next) {
-        const { workspaceId, inviteHash } = to.params;
-
-        if (!store.getters.isAuthenticated) {
-          VueCookies.set('afterAuthRedirect', to.path, '1d');
-          next('/login');
-          return;
-        }
-
-        let isSuccessful = true;
-
-        try {
-          await store.dispatch(CONFIRM_INVITE, { workspaceId, inviteHash });
-        } catch (e) {
-          isSuccessful = false;
-        }
-
-        notifier.show({
-          message: isSuccessful ? i18n.t('workspaces.settings.team.joinNotification') : i18n.t('workspaces.settings.team.brokenLinkNotification'),
-          style: isSuccessful ? 'success' : 'error',
-          time: 10000
-        });
-
-        next('/');
-      }
+      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next)
     }
   ]
 });

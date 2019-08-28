@@ -26,7 +26,6 @@ const mutationTypes = {
   ADD_PENDING_MEMBER: 'ADD_PENDING_MEMBER', // Add user to workspace
   REMOVE_MEMBER: 'REMOVE_MEMBER', // Remove user from workspace
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
-  CONFIRM_INVITE: 'CONFIRM_INVITE', // Confirm user invitation
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER' // Update member in the workspace
 };

@@ -4,22 +4,29 @@
       {{ $t('workspaces.settings.team.title') }}
     </div>
 
-    <div class="workspace-team__section">
+    <div
+      v-if="currentMembership.isAdmin"
+      class="workspace-team__section"
+    >
       <label class="label">{{ $t('workspaces.settings.team.inviteByEmailLabel') }}</label>
-      <input
-        v-model="userEmail"
-        type="email"
-        class="input workspace-team__input"
-      >
-      <input
-        type="submit"
-        class="button button--submit"
-        :value="$t('workspaces.settings.team.sendButton')"
-        @click="onInvitationSent"
-      >
+      <form @submit.prevent="onInvitationSent">
+        <input
+          v-model="userEmail"
+          type="email"
+          class="input workspace-team__input"
+        >
+        <input
+          type="submit"
+          class="button button--submit"
+          :value="$t('workspaces.settings.team.sendButton')"
+        >
+      </form>
     </div>
 
-    <div class="workspace-team__section">
+    <div
+      v-if="currentMembership.isAdmin"
+      class="workspace-team__section"
+    >
       <label class="label">{{ $t('workspaces.settings.team.inviteByLinkLabel') }}</label>
       <div
         v-copyable="{selector: 'span', callback: onLinkCopied}"
@@ -35,7 +42,10 @@
     </div>
 
     <div class="workspace-team__section">
-      <label class="label">{{ $t('workspaces.settings.team.title') }}</label>
+      <label
+        v-if="currentMembership.isAdmin"
+        class="label"
+      >{{ $t('workspaces.settings.team.title') }}</label>
       <TeamMember
         v-for="member in workspace.users"
         :key="member.id"
@@ -78,7 +88,9 @@ export default {
     currentMembership() {
       const workspaceId = this.$route.params.workspaceId;
 
-      return this.$store.getters.getWorkspaceById(workspaceId).users.find(u => u.id === this.user.id);
+      const { users } = this.$store.getters.getWorkspaceById(workspaceId);
+
+      return users ? users.find(u => u.id === this.user.id) : {};
     }
   },
   methods: {
