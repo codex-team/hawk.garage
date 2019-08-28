@@ -132,7 +132,7 @@ export default {
         }
       }
 
-      &:last-child {
+      &:only-child {
         ^&__status-label {
           margin-right: 0;
         }

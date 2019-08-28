@@ -46,20 +46,15 @@
         v-if="currentMembership.isAdmin"
         class="label"
       >{{ $t('workspaces.settings.team.title') }}</label>
-      <TeamMember
-        v-for="member in workspace.users"
-        :key="member.id"
-        :has-admin-permissions="currentMembership.isAdmin"
-        :workspace-id="workspace.id"
-        :member="member"
-      />
-      <TeamMember
-        v-for="member in workspace.pendingUsers"
-        :key="member.email"
-        :has-admin-permissions="currentMembership.isAdmin"
-        :workspace-id="workspace.id"
-        :member="member"
-      />
+      <div>
+        <TeamMember
+          v-for="member in workspace.users.concat(workspace.pendingUsers)"
+          :key="member.id"
+          :has-admin-permissions="currentMembership.isAdmin"
+          :workspace-id="workspace.id"
+          :member="member"
+        />
+      </div>
     </div>
   </div>
 </template>
