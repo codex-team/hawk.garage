@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="container"
-    class="progress"
-  >
+  <div class="progress">
     <div class="progress__bar" :style="progressStyles"/>
   </div>
 </template>
@@ -40,9 +37,11 @@ export default {
 <style>
   .progress {
     overflow: hidden;
+    border-radius: 2px;
 
     &__bar {
       height: 100%;
+      border-radius: 2px;
       transition: width .1s linear;
     }
   }

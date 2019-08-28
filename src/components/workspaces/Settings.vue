@@ -1,5 +1,5 @@
 <template>
-  <SettingsWindow>
+  <SettingsWindow on-close-route="/">
     <template v-slot:header>
       <div class="settings-window__header workspace-settings__header">
         <EntityImage

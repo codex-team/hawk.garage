@@ -59,7 +59,7 @@ export default {
         position: absolute;
         width: 16px;
         height: 16px;
-        background-color: #3a61b9;
+        background-color: var(--color-text-main);
         border-radius: 50%;
         transform: translate3d(0, -3px, 0);
         transition: transform .1s linear, background-color .1s linear;

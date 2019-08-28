@@ -80,7 +80,7 @@ export default {
     }
 
     &__number {
-      margin: 7px 0 3px;
+      margin: 6px 0 2px;
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 12px;

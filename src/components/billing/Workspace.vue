@@ -100,6 +100,7 @@ export default {
 <style>
   .billing-card {
     width: 600px;
+    margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
     border: 1px solid var(--color-border);
@@ -113,14 +114,16 @@ export default {
       float: left;
       width: 34px;
       height: 34px;
+      margin-top: -1px;
       margin-right: 15px;
       line-height: 34px;
+      border-radius: 3px;
     }
 
     &__title {
       font-weight: bold;
       font-size: 15px;
-      line-height: 18px;
+      line-height: 20px;
       letter-spacing: 0.19px;
     }
 
@@ -195,7 +198,6 @@ export default {
       height: 5px;
       margin-top: 7px;
       background-color: rgba(219, 230, 255, 0.25);
-      border-radius: 2px;
     }
 
     &__buttons {

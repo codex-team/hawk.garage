@@ -173,19 +173,29 @@ export default {
       letter-spacing: 0.18px;
       cursor: pointer;
 
-      &--selected {
+      &:hover, &--selected {
         color: var(--color-text-main);
       }
     }
 
     &__row {
+      position: relative;
       display: flex;
       padding: 20px 0;
       color: var(--color-text-main);
       font-size: 13px;
       line-height: 15px;
       letter-spacing: 0.16px;
-      border-bottom: 1px solid var(--color-border);
+
+      &::after {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 1px;
+        background-color: var(--color-text-main);
+        opacity: 0.1;
+        content: '';
+      }
     }
 
     &__date {
@@ -203,6 +213,7 @@ export default {
     &__user-image {
       width: 16px;
       height: 16px;
+      margin-top: -1px;
       font-size: 10px;
       line-height: 16px;
       border-radius: 5px;
