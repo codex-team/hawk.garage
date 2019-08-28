@@ -52,6 +52,7 @@
           class="event-overview__section"
           :cookies="event.payload.cookies"
         />
+        <DetailsHttpPost />
       </div>
     </div>
   </PopupDialog>
@@ -61,6 +62,7 @@
 import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
+import DetailsHttpPost from './DetailsHttpPost';
 import Badge from '../utils/Badge';
 import * as eventApi from '../../api/events';
 
@@ -70,6 +72,7 @@ export default {
     PopupDialog,
     DetailsCookie,
     DetailsBacktrace,
+    DetailsHttpPost,
     Badge
   },
   data() {

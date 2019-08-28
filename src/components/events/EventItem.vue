@@ -88,10 +88,10 @@ export default {
     }
 
     &__assignee-icon {
-      min-width: 26px;
-      min-height: 26px;
       width: 26px;
+      min-width: 26px;
       height: 26px;
+      min-height: 26px;
       margin-left: 10px;
     }
 
