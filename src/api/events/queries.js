@@ -1,6 +1,6 @@
 // language=GraphQL
 /**
- * Login mutation
+ * Get specific error
  */
 export const QUERY_EVENT = `
 query Event($projectId: ID!, $eventId: ID!){
