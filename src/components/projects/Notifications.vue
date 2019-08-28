@@ -7,11 +7,16 @@
       <label class="label form-section__label">Channels</label>
       <div class="form-section__row">
         <div>Email</div>
-        <FormTextFieldset
-          v-model="notify.settings.email.value"
-          placeholder="email"
-          @input="showSubmitButton=true"
-        />
+        <div class="form-section__row__main ">
+          <div class="form-section__row__main__text">
+            Notifications on
+          </div>
+          <FormTextFieldset
+            v-model="notify.settings.email.value"
+            label="email"
+            @input="showSubmitButton=true"
+          />
+        </div>
         <input
           v-model="notify.settings.email.enabled"
           type="checkbox"
@@ -65,15 +70,51 @@
         class="button button--submit form-section__submit-button"
         @click="save()"
       >
-        {{ $t('settings.account.submit') }}
+        Save
       </button>
+    </div>
+    <div class="form-section">
+      <label class="label form-section__label">What to receive</label>
+      <div class="form-section__row">
+        <div>Only new events</div>
+        <div class="form-section__main">
+          <div class="form-section__main__text">
+            First occurrence of event
+          </div>
+        </div>
+        <input
+          type="radio"
+          class="radio"
+          :checked="notify.actionType === actionTypes.ONLY_NEW"
+          @input.prevent="changeRadio(actionTypes.ONLY_NEW)"
+        >
+      </div>
+      <hr class="form-section__hr">
+      <div class="form-section__row">
+        <div>All events</div>
+        <div class="form-section__main">
+          <div class="form-section__main__text">
+            All event occurances. Max frequency is 5 times/min.
+          </div>
+        </div>
+        <input
+          type="radio"
+          class="radio"
+          :checked="notify.actionType === actionTypes.ALL"
+          @input.prevent="changeRadio(actionTypes.ALL)"
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import FormTextFieldset from '../forms/TextFieldset';
-import { GET_NOTIFICATION_SETTINGS, UPDATE_NOTIFICATION_SETTINGS } from '../../store/modules/notify/actionTypes';
+import {
+  GET_NOTIFICATION_SETTINGS,
+  UPDATE_NOTIFICATION_SETTINGS,
+  SET_ACTION_TYPE
+} from '../../store/modules/notify/actionTypes';
 import notifier from 'codex-notifier';
 import { mapState } from 'vuex';
 
@@ -84,7 +125,12 @@ export default {
   },
   data() {
     return {
-      showSubmitButton: false
+      showSubmitButton: false,
+      actionTypes: {
+        ONLY_NEW: 1,
+        ALL: 2,
+        INCLUDING: 3
+      }
     };
   },
   computed:
@@ -118,6 +164,12 @@ export default {
         time: 5000
       });
       this.showSubmitButton = false;
+    },
+    async changeRadio(type) {
+      console.log(type);
+      await this.$store.dispatch(SET_ACTION_TYPE, this.$store.state.notify.actionType);
+
+      // await this.save();
     }
   }
 }
@@ -129,6 +181,7 @@ export default {
 <style>
   .form-section {
     display: block;
+    padding-bottom: 50px;
 
     &__row {
       display: flex;
@@ -139,6 +192,7 @@ export default {
       padding-bottom: 20px;
 
       &__main {
+        width: 300px;
         color: var(--color-text-second);
         font-weight: 500;
         font-size: 13px;
@@ -162,6 +216,11 @@ export default {
     height: 28px;
     background-color: var(--color-bg-second);
     border-radius: 4px;
+  }
+
+  .radio {
+    width: 28px;
+    height: 28px;
   }
 
 </style>

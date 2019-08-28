@@ -52,8 +52,7 @@ const mutationTypes = {
  */
 function initialState() {
   return {
-    list: [],
-    settings: {}
+    list: []
   };
 }
 

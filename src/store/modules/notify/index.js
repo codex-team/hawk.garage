@@ -1,7 +1,8 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   GET_NOTIFICATION_SETTINGS,
-  UPDATE_NOTIFICATION_SETTINGS
+  UPDATE_NOTIFICATION_SETTINGS,
+  SET_ACTION_TYPE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -44,27 +45,39 @@ const getters = {};
 
 const actions = {
 
+  /**
+   * Get notification settings
+   * @param {function} commit - standard Vuex commit function
+   * @param projectId - project ID
+   * @returns {Promise<void>}
+   */
   async [GET_NOTIFICATION_SETTINGS]({ commit }, projectId) {
     const notify = await projectsApi.notificationSettings(projectId);
 
-    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, {
-      projectId,
-      notify
-    });
+    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, notify);
   },
 
+  /**
+   * Update notification settings
+   * @param {function} commit - standard Vuex commit function
+   * @param projectId - project ID
+   * @param {Notify} notify - Notify
+   * @returns {Promise<void>}
+   */
   async [UPDATE_NOTIFICATION_SETTINGS]({ commit }, { projectId, notify }) {
-    const success =
-      await projectsApi.updateNotificationSettings(projectId, notify);
+    await projectsApi.updateNotificationSettings(projectId, notify);
 
-    if (success) {
-      commit(mutationTypes.SET_NOTIFICATION_SETTINGS, {
-        projectId,
-        notify
-      });
-    } else {
-      return false;
-    }
+    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, notify);
+  },
+
+  /**
+   * Set action type
+   * @param {function} commit - standard Vuex commit function
+   * @param {number} actionType - action type
+   * @returns {Promise<void>}
+   */
+  [SET_ACTION_TYPE]({ commit }, actionType) {
+    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, { actionType });
   },
 
   /**
@@ -80,10 +93,9 @@ const mutations = {
   /**
    * Set state by Notify
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {String} projectId - id of the project to set data
    * @param {Notify} notify - Notify settings
    */
-  [mutationTypes.SET_NOTIFICATION_SETTINGS](state, { projectId, notify }) {
+  [mutationTypes.SET_NOTIFICATION_SETTINGS](state, notify) {
     Object.assign(state, notify);
   },
 

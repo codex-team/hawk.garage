@@ -34,7 +34,9 @@
       "workspaceSelectLabel": "SELECT WORKSPACE"
     },
     "settings": {
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "channels": "Channels",
+      "email": "Email"
     }
   },
   "settings": {
