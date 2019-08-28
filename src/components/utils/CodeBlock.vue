@@ -29,17 +29,14 @@ export default {
     display: block;
     overflow-x: auto;
     padding: 10px 15px;
-    border-radius: 3px;
+    border-radius: 6px;
     border: solid 1px rgba(0, 0, 0, 0.18);
     background: var(--color-bg-main);
   }
 
-
-  /* Base color: saturation 0; */
-
   .hljs,
   .hljs-subst {
-    color: #444;
+    color: var(--color-text-second);
   }
 
   .hljs-comment {
@@ -54,7 +51,6 @@ export default {
   .hljs-name {
     font-weight: bold;
   }
-
 
   /* User color: hue: 0 */
 
