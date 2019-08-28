@@ -4,14 +4,6 @@ import VueCookies from 'vue-cookies';
 import store from './store';
 
 import AppShell from './components/AppShell';
-<<<<<<< HEAD
-import SignUp from './components/auth/SignUp';
-import Login from './components/auth/Login';
-import { CONFIRM_INVITE } from './store/modules/workspaces/actionTypes';
-import notifier from 'codex-notifier';
-import i18n from './i18n';
-=======
->>>>>>> 5e57a91c96b2372567f2cefe8f7108b7e9b254e7
 
 Vue.use(Router);
 
@@ -90,12 +82,11 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login')
     },
     {
       path: '/join/:workspaceId/:inviteHash?',
       beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next)
-      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login')
     }
   ]
 });
