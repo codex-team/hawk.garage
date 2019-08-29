@@ -3,7 +3,13 @@ import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
   REMOVE_WORKSPACE,
-  SET_CURRENT_WORKSPACE
+  SET_CURRENT_WORKSPACE,
+  INVITE_TO_WORKSPACE,
+  CONFIRM_INVITE,
+  UPDATE_WORKSPACE,
+  FETCH_WORKSPACE,
+  GRANT_ADMIN_PERMISSIONS,
+  REMOVE_USER_FROM_WORKSPACE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces';
@@ -16,7 +22,12 @@ const mutationTypes = {
   ADD_WORKSPACE: 'ADD_WORKSPACE', // Add new workspace to the list
   REMOVE_WORKSPACE: 'REMOVE_WORKSPACE', // Remove workspace from the list
   SET_WORKSPACES_LIST: 'SET_WORKSPACES_LIST', // Set new workspaces list
-  SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE' // Set current user workspace
+  SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE', // Set current user workspace,
+  ADD_PENDING_MEMBER: 'ADD_PENDING_MEMBER', // Add user to workspace
+  REMOVE_MEMBER: 'REMOVE_MEMBER', // Remove user from workspace
+  REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
+  SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
+  UPDATE_MEMBER: 'UPDATE_MEMBER' // Update member in the workspace
 };
 
 /**
@@ -45,6 +56,20 @@ function initialState() {
   };
 }
 
+const getters = {
+  /**
+   * Returns workspace by id
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @return {function(String): Workspace}
+   */
+  getWorkspaceById: state =>
+  /**
+   * @param {String} id project id to find
+   * @return {Project}
+   */
+    id => state.list.find(workspace => workspace.id === id)
+};
+
 const actions = {
   /**
    * Send request to create new workspace
@@ -71,6 +96,35 @@ const actions = {
   },
 
   /**
+   * Sent request to invite user to workspace
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} workspaceId - id of workspace to which user is invited
+   * @param {string} userEmail - email of the invited user
+   */
+  async [INVITE_TO_WORKSPACE]({ commit }, { workspaceId, userEmail }) {
+    const success = await workspaceApi.inviteToWorkspace(workspaceId, userEmail);
+
+    if (!success) {
+      return false;
+    }
+
+    commit(mutationTypes.ADD_PENDING_MEMBER, { workspaceId, data: { email: userEmail, isPending: true } });
+
+    return true;
+  },
+
+  /**
+   * Send request to confirm user invitation
+   *
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} workspaceId - id of workspace to which user is invited
+   * @param {string} inviteHash - hash passed to the invite link
+   */
+  async [CONFIRM_INVITE]({ commit }, { workspaceId, inviteHash }) {
+    await workspaceApi.confirmInvite(workspaceId, inviteHash);
+  },
+
+  /**
    * Sets current user workspace
    * @param {function} commit - standard Vuex commit function
    * @param {Workspace} workspace - new current user workspace
@@ -89,6 +143,75 @@ const actions = {
   },
 
   /**
+   * Get workspaces by ids
+   * @param {function} commit - standard Vuex commit function
+   * @param {number} id – workspace id to fetch
+   * @return {Promise<Workspace>}
+   */
+  async [FETCH_WORKSPACE]({ commit }, id) {
+    const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
+
+    commit(mutationTypes.SET_WORKSPACE, workspace);
+
+    return workspace;
+  },
+
+  /**
+   * Update workspace data
+   * @param {function} commit - standard Vuex commit function
+   * @param {Workspace} workspace - workspace to update
+   * @returns {Promise<Boolean>}
+   */
+  async [UPDATE_WORKSPACE]({ commit }, workspace) {
+    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description);
+  },
+
+  /**
+   * Grant admin permissions
+   *
+   * @param {function} commit - standard Vuex commit method
+   * @param {string} workspaceId - id of workspace where user is participate
+   * @param {string} userId - id of user to grant permissions
+   * @param {boolean} state - if true, grant permissions, if false, withdraw them
+   * @returns {Promise<Boolean>}
+   */
+  async [GRANT_ADMIN_PERMISSIONS]({ commit }, { workspaceId, userId, state = true }) {
+    const success = await workspaceApi.grantAdminPermissions(workspaceId, userId, state);
+
+    if (!success) {
+      return false;
+    }
+
+    const changes = {
+      isAdmin: state
+    };
+
+    commit(mutationTypes.UPDATE_MEMBER, { workspaceId, userId, changes });
+  },
+
+  /**
+   * Remove user from workspace
+   *
+   * @param {function} commit - standard Vuex dispatch methods
+   * @param {string} workspaceId - id of workspace where user is participate
+   * @param {string} userId - id of user to remove
+   * @returns {Promise<*>}
+   */
+  async [REMOVE_USER_FROM_WORKSPACE]({ commit }, { workspaceId, userId, userEmail }) {
+    const success = await workspaceApi.removeUserFromWorkspace(workspaceId, userId, userEmail);
+
+    if (!success) {
+      return;
+    }
+
+    if (userId) {
+      commit(mutationTypes.REMOVE_MEMBER, { workspaceId, userId });
+    } else {
+      commit(mutationTypes.REMOVE_PENDING_MEMBER, { workspaceId, userEmail });
+    }
+  },
+
+  /**
    * Resets module state
    * @param {function} commit - standard Vuex commit function
    */
@@ -98,6 +221,22 @@ const actions = {
 };
 
 const mutations = {
+  /**
+   * Set workspace data
+   *
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Workspace} workspace - workspace params for setting
+   */
+  [mutationTypes.SET_WORKSPACE](state, workspace) {
+    const index = state.list.findIndex(element => element.id === workspace.id);
+
+    if (state.current && workspace.id === state.current.id) {
+      state.current = workspace;
+    }
+
+    Vue.set(state.list, index, workspace);
+  },
+
   /**
    * Mutation for adding new workspace
    * @param {WorkspacesModuleState} state - Vuex state
@@ -140,6 +279,66 @@ const mutations = {
   },
 
   /**
+   * Update member in the user list
+   *
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} workspaceId - id of workspace where user should be updated
+   * @param {string} userId - id of user to update
+   * @param {object} changes - changes to update
+   */
+  [mutationTypes.UPDATE_MEMBER](state, { workspaceId, userId, changes }) {
+    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
+    const memberIndex = state.list[workspaceIndex].users.findIndex(u => u.id === userId);
+
+    Object.assign(state.list[workspaceIndex].users[memberIndex], changes);
+  },
+
+  /**
+   * Add pending member to workspace
+   *
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} workspaceId - id of workspace to which user should be added
+   * @param {object} data - user data
+   */
+  [mutationTypes.ADD_PENDING_MEMBER](state, { workspaceId, data }) {
+    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
+
+    if (!state.list[workspaceIndex].pendingUsers) {
+      Vue.set(state, `list.${workspaceIndex}.pendingUsers`, []);
+    }
+
+    state.list[workspaceIndex].pendingUsers.push(data);
+  },
+
+  /**
+   * Remove member from workspace
+   *
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} workspaceId - id of workspace from which user should be removed
+   * @param {string} userId - id of user to remove
+   */
+  [mutationTypes.REMOVE_MEMBER](state, { workspaceId, userId }) {
+    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
+    const memberIndex = state.list[workspaceIndex].users.findIndex(m => m.id === userId);
+
+    if (memberIndex > -1) state.list[workspaceIndex].users.splice(memberIndex, 1);
+  },
+
+  /**
+   * Remove pending member from workspace
+   *
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} workspaceId - id of workspace from which user should be removed
+   * @param {string} userEmail - email of user to remove
+   */
+  [mutationTypes.REMOVE_PENDING_MEMBER](state, { workspaceId, userEmail }) {
+    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
+    const memberIndex = state.list[workspaceIndex].pendingUsers.findIndex(m => m.email === userEmail);
+
+    if (memberIndex > -1) state.list[workspaceIndex].pendingUsers.splice(memberIndex, 1);
+  },
+
+  /**
    * Resets module state
    * @param {WorkspacesModuleState} state - Vuex state
    */
@@ -150,6 +349,7 @@ const mutations = {
 
 export default {
   state: initialState(),
+  getters,
   actions,
   mutations
 };

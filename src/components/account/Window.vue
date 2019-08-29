@@ -32,14 +32,14 @@
         >
           {{ $t('settings.billing.title') }}
         </router-link>
-        <hr class="settings-window__menu-delimiter">
+        <hr class="delimiter">
         <router-link
           class="settings-window__menu-item"
           :to="{ name: 'appearance-settings'}"
         >
           {{ $t('settings.appearance.title') }}
         </router-link>
-        <hr class="settings-window__menu-delimiter">
+        <hr class="delimiter">
         <div
           class="settings-window__menu-item settings-window__menu-item--attention"
           @click="logout"

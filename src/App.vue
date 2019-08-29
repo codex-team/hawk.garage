@@ -9,8 +9,6 @@
 
 <script>
 import * as api from './api';
-import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
-import { RESET_STORE } from './store/methodsTypes';
 import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
@@ -31,13 +29,6 @@ export default {
    * Vue hook. Called synchronously after the instance is created
    */
   created() {
-    /**
-     * Configure API
-     */
-    api.setAuthToken(this.$store.state.user.accessToken);
-    api.eventsHandlers.onTokenExpired = async () => (await this.$store.dispatch(REFRESH_TOKENS)).accessToken;
-    api.eventsHandlers.onAuthError = () => this.$store.dispatch(RESET_STORE);
-
     /**
      * Setup watching on auth state
      */

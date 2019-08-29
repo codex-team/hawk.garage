@@ -17,3 +17,33 @@ export const CREATE_WORKSPACE = 'CREATE_WORKSPACE';
  * Send request to remove workspace
  */
 export const REMOVE_WORKSPACE = 'REMOVE_WORKSPACE';
+
+/**
+ * Send request to invite user to workspace
+ */
+export const INVITE_TO_WORKSPACE = 'INVITE_TO_WORKSPACE';
+
+/**
+ * Send request to confirm user invitation
+ */
+export const CONFIRM_INVITE = 'CONFIRM_INVITE';
+
+/**
+ * Send request to update workspace
+ */
+export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
+
+/**
+ * Send request to get workspaces
+ */
+export const FETCH_WORKSPACE = 'FETCH_WORKSPACE';
+
+/**
+ * Send request to grant admin permissions
+ */
+export const GRANT_ADMIN_PERMISSIONS = 'GRANT_ADMIN_PERMISSIONS';
+
+/**
+ * Send request to remove user from workspace
+ */
+export const REMOVE_USER_FROM_WORKSPACE = 'REMOVE_USER_FROM_WORKSPACE';

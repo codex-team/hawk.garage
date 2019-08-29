@@ -66,10 +66,31 @@
     "settings": {
       "label": "Workspace settings",
       "workspace": {
-        "title": "Workspace settings"
+        "title": "Workspace settings",
+        "name": "Name",
+        "description": "Description",
+        "descriptionPlaceholder": "Awesome workspace",
+        "image": "Image",
+        "submit": "Save",
+        "created": "Created at Aug 25, 2019",
+        "updatedMessage": "Workspace was updated"
       },
       "team": {
-        "title": "Team"
+        "title": "Team",
+        "inviteByEmailLabel": "Invite by email",
+        "sendButton": "Send",
+        "inviteByLinkLabel": "Invite by link",
+        "copyButton": "COPY",
+        "youLabel": "you",
+        "adminLabel": "Admin",
+        "invitationSentLabel": "invitation sent",
+        "copiedNotification": "Copied!",
+        "sentNotification": "Invitation sent",
+        "joinNotification": "You successfully join the workspace!",
+        "brokenLinkNotification": "It seems, your link is broken",
+        "grantAdmin": "Grant Admin",
+        "withdrawPermissions": "Withdraw permissions",
+        "removeMember": "Remove"
       },
       "billing": {
         "title": "Billing information"

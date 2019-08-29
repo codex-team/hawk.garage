@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import VueCookies from 'vue-cookies';
 import store from './store';
 
 import AppShell from './components/AppShell';
-import SignUp from './components/auth/SignUp';
-import Login from './components/auth/Login';
 
 Vue.use(Router);
 
@@ -35,9 +34,21 @@ const router = new Router({
           ]
         },
         {
-          path: 'workspaces/:workspaceId/settings',
-          name: 'workspace-settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings')
+          path: 'workspaces/:workspaceId',
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings'),
+          redirect: to => ({ name: 'workspace-settings', params: { workspaceId: to.params.workspaceId } }),
+          children: [
+            {
+              path: 'settings',
+              name: 'workspace-settings',
+              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace')
+            },
+            {
+              path: 'team',
+              name: 'workspace-team',
+              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspaces/Team')
+            }
+          ]
         },
         {
           path: 'projects/:projectId',
@@ -59,37 +70,42 @@ const router = new Router({
         {
           path: 'projects/:projectId/add-catcher',
           name: 'add-catcher',
-          component: () => import(/* webpackChunkName: 'project-add-catcher' */'./components/catalog/catchers/AddCatcher.vue')
+          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue')
         },
         {
-          path: 'projects/:projectId/setup-catcher/php',
-          name: 'setup-php-catcher',
-          component: () => import(/* webpackChunkName: 'project-setup-catcher' */'./components/catalog/catchers/SetupPhpCatcher.vue')
-        },
+          path: 'projects/:projectId/setup-catcher/:page',
+          name: 'setup-catcher',
+          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadInstructionPage.js')
+        }
       ]
     },
     {
       path: '/sign-up',
       name: 'sign-up',
-      component: SignUp
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/SignUp')
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login')
+    },
+    {
+      path: '/join/:workspaceId/:inviteHash?',
+      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next)
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up)/;
+  const routesAvailableWithoutAuth = /^\/(join)/;
 
   if (store.getters.isAuthenticated) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
     }
   } else {
-    if (!authRoutes.test(to.fullPath)) {
+    if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
     }
   }
