@@ -59,9 +59,7 @@ export default {
       padding-right: 15px;
       border-radius: var(--border-radius);
 
-      &:hover {
-        cursor: pointer;
-      }
+      cursor: pointer;
     }
 
     &__icon {
