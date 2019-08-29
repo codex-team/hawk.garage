@@ -1,5 +1,5 @@
 <template>
-  <SettingsWindow>
+  <SettingsWindow on-close-route="/">
     <template v-slot:header>
       <div class="settings-window__header workspace-settings__header">
         <EntityImage
@@ -19,13 +19,13 @@
       <div>
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id}}"
+          :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.workspace.title') }}
         </router-link>
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'home' }"
+          :to="{ name: 'workspace-team', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
@@ -43,10 +43,16 @@
 <script>
 import EntityImage from '../utils/EntityImage';
 import SettingsWindow from '../settings/Window';
+import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'WorkspaceSettings',
   components: { SettingsWindow, EntityImage },
+  async created() {
+    const workspaceId = this.$route.params.workspaceId;
+
+    await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+  },
   computed: {
     workspace() {
       const workspaceId = this.$route.params.workspaceId;

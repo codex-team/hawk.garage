@@ -47,16 +47,54 @@ export const MUTATION_CREATE_WORKSPACE = `
 
 // language=GraphQL
 /**
+ * Mutation to invite user to workspace
+ */
+export const MUTATION_INVITE_TO_WORKSPACE = `
+  mutation inviteToWorkspace(
+    $userEmail: String!,
+    $workspaceId: ID!
+  ) {
+    inviteToWorkspace(userEmail: $userEmail, workspaceId: $workspaceId)
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation to confirm user invitation
+ */
+export const MUTATION_CONFIRM_INVITE = `
+  mutation confirmInvitation(
+    $workspaceId: ID!,
+    $inviteHash: String
+  ) {
+    confirmInvitation(workspaceId: $workspaceId, inviteHash: $inviteHash)
+  }
+`;
+
+// language=GraphQL
+/**
  * Query for fetching workspaces with id
  */
 export const QUERY_WORKSPACES = `
  query fetchWorkspaces($ids: [ID!]) {
-     workspaces(ids: $ids) {
-         id
-         name
-         description
-         image
+   workspaces(ids: $ids) {
+     id
+     name
+     description
+     image
+     users {
+       id
+       name
+       email
+       image
+       isAdmin
+       isPending
      }
+     pendingUsers {
+       email
+       isPending
+     }
+   }
  }
 `;
 
@@ -66,10 +104,38 @@ export const QUERY_WORKSPACES = `
  */
 export const MUTATION_UPDATE_WORKSPACE = `
   mutation updateWorkspace(
-      $id: ID!
-      $name: String!
-      $description: String
+    $id: ID!
+    $name: String!
+    $description: String
   ) {
-      updateWorkspace(id: $id, name: $name, description: $description)
+    updateWorkspace(id: $id, name: $name, description: $description)
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for granting admin permissions
+ */
+export const MUTATION_GRANT_ADMIN_PERMISSIONS = `
+  mutation grantAdmin(
+    $workspaceId: ID!
+    $userId: ID!
+    $state: Boolean = true
+  ) {
+      grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation to remove user from workspace
+ */
+export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
+  mutation removeMemberFromWorkspace(
+    $workspaceId: ID!
+    $userId: ID,
+    $userEmail: String!  
+  ) {
+    removeMemberFromWorkspace(workspaceId: $workspaceId, userId: $userId, userEmail: $userEmail)
   }
 `;
