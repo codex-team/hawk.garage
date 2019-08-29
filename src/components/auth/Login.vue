@@ -58,7 +58,12 @@ export default {
           accessToken: this.$route.query.access_token,
           refreshToken: this.$route.query.refresh_token
         });
-        this.$router.push('/');
+
+        const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
+
+        this.$router.push(afterAuthRedirect || '/');
+
+        this.$cookies.remove('afterAuthRedirect');
       } catch (e) {
         this.message = {
           text: e.message,
@@ -77,7 +82,12 @@ export default {
 
       try {
         await this.$store.dispatch(LOGIN, { email, password });
-        this.$router.push('/');
+
+        const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
+
+        this.$router.push(afterAuthRedirect || '/');
+
+        this.$cookies.remove('afterAuthRedirect');
       } catch (e) {
         this.message = {
           text: e.message,
