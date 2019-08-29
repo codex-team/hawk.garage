@@ -2,7 +2,10 @@
   <div
     class="code-block"
   >
-    <div class="code-block__line-numbers-container" v-if="showLinesNumbers">
+    <div
+      v-if="showLinesNumbers"
+      class="code-block__line-numbers-container"
+    >
       <div
         v-for="lineNumber in linesNumber"
         :key="lineNumber"
@@ -49,7 +52,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.highlightLines);
     hljs.highlightBlock(this.$refs.content);
     this.linesNumber = this.$refs.content.innerText.split('\n').length;
   }
@@ -59,12 +61,12 @@ export default {
   @import "../../styles/custom-properties.css";
 
   .code-block {
-    border-radius: 6px;
-    background: var(--color-bg-main);
-    display: flex;
     position: relative;
-    line-height: 21px;
+    display: flex;
     padding: 9px;
+    line-height: 21px;
+    background: var(--color-bg-main);
+    border-radius: 6px;
 
     &__line-numbers-container {
       color: var(--color-text-second);
@@ -76,15 +78,15 @@ export default {
     &__line-number {
       &--highlighted {
         &::before {
-          pointer-events: none;
-          content: '';
-          display: block;
           position: absolute;
-          left: 0;
-          transform: translateY(-1px);
-          background-color: rgba(255, 115, 212, 0.18);
           right: 0;
+          left: 0;
+          display: block;
           height: 21px;
+          background-color: rgba(255, 115, 212, 0.18);
+          transform: translateY(-1px);
+          content: '';
+          pointer-events: none;
         }
       }
     }
@@ -95,8 +97,8 @@ export default {
     }
 
     &--one-line {
-      white-space: nowrap;
       overflow: hidden;
+      white-space: nowrap;
 
       @apply --hide-scrollbar;
     }

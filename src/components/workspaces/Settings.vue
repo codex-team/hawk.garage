@@ -48,17 +48,17 @@ import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 export default {
   name: 'WorkspaceSettings',
   components: { SettingsWindow, EntityImage },
-  async created() {
-    const workspaceId = this.$route.params.workspaceId;
-
-    await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-  },
   computed: {
     workspace() {
       const workspaceId = this.$route.params.workspaceId;
 
       return this.$store.getters.getWorkspaceById(workspaceId);
     }
+  },
+  async created() {
+    const workspaceId = this.$route.params.workspaceId;
+
+    await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
   }
 };
 </script>

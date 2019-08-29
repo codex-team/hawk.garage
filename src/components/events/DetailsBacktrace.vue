@@ -114,17 +114,17 @@ export default {
     &__source-code {
       font-size: 12px;
       line-height: 21px;
-      border-radius: var(--border-radius);
       background-color: #171920;
+      border-radius: var(--border-radius);
     }
 
     &__arrow-down {
       position: absolute;
       top: 50%;
       right: 12px;
-      transform: translateY(-50%);
       width: 16px;
       height: 16px;
+      transform: translateY(-50%);
 
       &--opened {
         transform: rotate(180deg) translateY(50%);
@@ -132,17 +132,17 @@ export default {
     }
 
     &__header-row {
-      cursor: pointer;
       position: relative;
-      padding: 7px;
       display: flex;
       align-items: center;
+      padding: 7px;
+      cursor: pointer;
     }
 
     &__content-block {
       display: flex;
-      padding: 5px;
       flex-direction: column;
+      padding: 5px;
     }
 
     &__filename, &__line {
