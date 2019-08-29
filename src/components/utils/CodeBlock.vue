@@ -1,9 +1,24 @@
 <template>
   <div
     class="code-block"
-    :class="{[language]: language, 'code-block--one-line': oneLine}"
   >
-    <slot />
+    <div class="code-block__line-numbers-container">
+      <div
+        v-for="lineNumber in linesNumber"
+        :key="lineNumber"
+        class="code-block__line-number"
+        :class="{'code-block__line-number--highlighted': highlightLines === linesFrom + lineNumber - 1}"
+      >
+        {{ linesFrom + lineNumber - 1 }}
+      </div>
+    </div>
+    <div
+      ref="content"
+      class="code-block__content"
+      :class="{[language]: language, 'code-block--one-line': oneLine}"
+    >
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -17,10 +32,26 @@ export default {
       type: String,
       default: null
     },
+    linesFrom: {
+      type: Number,
+      default: 0
+    },
+    highlightLines: {
+      type: [Number, Array],
+      default: null
+    },
+    showLinesNumbers: Boolean,
     oneLine: Boolean
   },
+  data() {
+    return {
+      linesNumber: 0
+    };
+  },
   mounted() {
-    hljs.highlightBlock(this.$el);
+    console.log(this.highlightLines);
+    hljs.highlightBlock(this.$refs.content);
+    this.linesNumber = this.$refs.content.innerText.split('\n').length - 1;
   }
 };
 </script>
@@ -28,6 +59,41 @@ export default {
   @import "../../styles/custom-properties.css";
 
   .code-block {
+    border-radius: 6px;
+    background: var(--color-bg-main);
+    display: flex;
+    position: relative;
+    padding: 9px;
+    border: solid 1px rgba(0, 0, 0, 0.18);
+
+    &__line-numbers-container {
+      color: var(--color-text-second);
+      line-height: 21px;
+      height: 21px;
+      font-family: var(--font-monospace);
+      text-align: right;
+    }
+
+    &__line-number {
+      &--highlighted {
+        &::after {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          transform: translateY(-100%);
+          background-color: rgba(255, 115, 212, 0.18);
+          right: 0;
+          height: 21px;
+        }
+      }
+    }
+
+    &__content {
+      width: 100%;
+      margin-left: 7px;
+    }
+
     &--one-line {
       white-space: nowrap;
       overflow: hidden;
@@ -39,15 +105,11 @@ export default {
   .hljs {
     display: block;
     overflow-x: auto;
-    padding: 15px;
-    border-radius: 6px;
-    border: solid 1px rgba(0, 0, 0, 0.18);
-    background: var(--color-bg-main);
   }
 
   .hljs,
   .hljs-subst {
-    color: var(--color-text-second);
+    color: var(--color-text-main);
   }
 
   .hljs-comment {
@@ -73,7 +135,7 @@ export default {
   .hljs-quote,
   .hljs-template-tag,
   .hljs-deletion {
-    color: #880000;
+    color: var(--color-text-second);
   }
 
   .hljs-title,
@@ -92,7 +154,6 @@ export default {
     color: #BC6060;
   }
 
-
   /* Language color: hue: 90; */
 
   .hljs-literal {
@@ -106,7 +167,6 @@ export default {
     color: #397300;
   }
 
-
   /* Meta color: hue: 200 */
 
   .hljs-meta {
@@ -116,7 +176,6 @@ export default {
   .hljs-meta-string {
     color: #4d99bf;
   }
-
 
   /* Misc effects */
 

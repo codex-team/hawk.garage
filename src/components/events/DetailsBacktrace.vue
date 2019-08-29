@@ -13,7 +13,10 @@
         :key="index"
         class="event-details__content-block details-backtrace__content-block"
       >
-        <div class="details-backtrace__header-row">
+        <div
+          class="details-backtrace__header-row"
+          @click="toggleViewState(index)"
+        >
           <div class="details-backtrace__filename">
             {{ bt.file }}
           </div>
@@ -25,11 +28,13 @@
             :class="{'details-backtrace__arrow-down--opened': openedFilesView.includes(index) && bt.sourceCode}"
             symbol="arrow-down"
             class="details-backtrace__arrow-down"
-            @click.native="toggleViewState(index)"
           />
         </div>
         <CodeBlock
           v-if="openedFilesView.includes(index) && bt.sourceCode"
+          show-lines-numbers
+          :lines-from="bt.sourceCode[0].line"
+          :highlight-lines="bt.line"
           class="details-backtrace__source-code"
         >
           <pre>{{ joinSourceCodeLines(bt.sourceCode) }}</pre>
@@ -116,7 +121,6 @@ export default {
     &__arrow-down {
       position: absolute;
       top: 50%;
-      cursor: pointer;
       right: 12px;
       transform: translateY(-50%);
       width: 16px;
@@ -128,6 +132,7 @@ export default {
     }
 
     &__header-row {
+      cursor: pointer;
       position: relative;
       padding: 7px;
       display: flex;
