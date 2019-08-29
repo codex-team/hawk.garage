@@ -48,7 +48,7 @@
       >{{ $t('workspaces.settings.team.title') }}</label>
       <div>
         <TeamMember
-          v-for="member in workspace.users.concat(workspace.pendingUsers)"
+          v-for="member in (workspace.users ? workspace.users.concat(workspace.pendingUsers) : [])"
           :key="member.id"
           :has-admin-permissions="currentMembership.isAdmin"
           :workspace-id="workspace.id"
