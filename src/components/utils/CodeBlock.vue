@@ -2,7 +2,7 @@
   <div
     class="code-block"
   >
-    <div class="code-block__line-numbers-container">
+    <div class="code-block__line-numbers-container" v-if="showLinesNumbers">
       <div
         v-for="lineNumber in linesNumber"
         :key="lineNumber"
@@ -51,7 +51,7 @@ export default {
   mounted() {
     console.log(this.highlightLines);
     hljs.highlightBlock(this.$refs.content);
-    this.linesNumber = this.$refs.content.innerText.split('\n').length - 1;
+    this.linesNumber = this.$refs.content.innerText.split('\n').length;
   }
 };
 </script>
@@ -63,25 +63,26 @@ export default {
     background: var(--color-bg-main);
     display: flex;
     position: relative;
+    line-height: 21px;
     padding: 9px;
     border: solid 1px rgba(0, 0, 0, 0.18);
 
     &__line-numbers-container {
       color: var(--color-text-second);
-      line-height: 21px;
-      height: 21px;
+      font-size: 10px;
       font-family: var(--font-monospace);
       text-align: right;
     }
 
     &__line-number {
       &--highlighted {
-        &::after {
+        &::before {
+          pointer-events: none;
           content: '';
           display: block;
           position: absolute;
           left: 0;
-          transform: translateY(-100%);
+          transform: translateY(-1px);
           background-color: rgba(255, 115, 212, 0.18);
           right: 0;
           height: 21px;
