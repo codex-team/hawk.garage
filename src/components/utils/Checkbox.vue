@@ -22,7 +22,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
   .checkbox {
     width: 28px;
     height: 28px;

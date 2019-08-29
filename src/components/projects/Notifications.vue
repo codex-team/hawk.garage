@@ -4,12 +4,12 @@
       {{ $t('projects.settings.notifications.title') }}
     </div>
     <div class="form-section">
-      <label class="label form-section__label">{{ $t('projects.settings.notifications.channels')}}</label>
+      <label class="label form-section__label">{{ $t('projects.settings.notifications.channels') }}</label>
       <div class="form-section__row">
-        <div>{{$t('projects.settings.notifications.email.title')}}</div>
-        <div class="form-section__row__main ">
-          <div class="form-section__row__main__text">
-            {{$t('projects.settings.notifications.email.notificationsOn')}}
+        <div>{{ $t('projects.settings.notifications.email.title') }}</div>
+        <div class="form-section__row-main ">
+          <div class="form-section__row-main-text">
+            {{ $t('projects.settings.notifications.email.notificationsOn') }}
           </div>
           <FormTextFieldset
             v-model="settings.email.value"
@@ -26,10 +26,10 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>{{$t('projects.settings.notifications.slack.title')}}</div>
-        <div class="form-section__row__main">
-          <div class="form-section__row__main__text">
-            {{$t('projects.settings.notifications.slack.alerts')}} <u>{{$t('projects.settings.notifications.slack.webhookApp')}}</u>
+        <div>{{ $t('projects.settings.notifications.slack.title') }}</div>
+        <div class="form-section__row-main">
+          <div class="form-section__row-main-text">
+            {{ $t('projects.settings.notifications.slack.alerts') }} <u>{{ $t('projects.settings.notifications.slack.webhookApp') }}</u>
           </div>
           <FormTextFieldset
             v-model="settings.slack.value"
@@ -47,10 +47,10 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>{{$t('projects.settings.notifications.telegram.title')}}</div>
-        <div class="form-section__row__main">
-          <div class="form-section__row__main__text">
-            {{$t('projects.settings.notifications.telegram.alertsBy')}}
+        <div>{{ $t('projects.settings.notifications.telegram.title') }}</div>
+        <div class="form-section__row-main">
+          <div class="form-section__row-main-text">
+            {{ $t('projects.settings.notifications.telegram.alertsBy') }}
           </div>
           <FormTextFieldset
             v-model=" settings.tg.value"
@@ -67,12 +67,12 @@
       </div>
     </div>
     <div class="form-section">
-      <label class="label form-section__label">{{$t('projects.settings.notifications.actions.title')}}</label>
+      <label class="label form-section__label">{{ $t('projects.settings.notifications.actions.title') }}</label>
       <div class="form-section__row">
-        <div>{{$t('projects.settings.notifications.actions.new.title')}}</div>
-        <div class="form-section__row__main">
-          <div class="form-section__row__main__text">
-            {{$t('projects.settings.notifications.actions.new.firstOccurrence')}}
+        <div>{{ $t('projects.settings.notifications.actions.new.title') }}</div>
+        <div class="form-section__row-main">
+          <div class="form-section__row-main-text">
+            {{ $t('projects.settings.notifications.actions.new.firstOccurrence') }}
           </div>
         </div>
         <input
@@ -85,10 +85,10 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>{{$t('projects.settings.notifications.actions.all.title')}}</div>
-        <div class="form-section__row__main">
-          <div class="form-section__row__main__text">
-            {{$t('projects.settings.notifications.actions.all.allEvents')}}
+        <div>{{ $t('projects.settings.notifications.actions.all.title') }}</div>
+        <div class="form-section__row-main">
+          <div class="form-section__row-main-text">
+            {{ $t('projects.settings.notifications.actions.all.allEvents') }}
           </div>
         </div>
         <input
@@ -101,10 +101,10 @@
       </div>
       <hr class="form-section__hr">
       <div class="form-section__row">
-        <div>{{$t('projects.settings.notifications.actions.including.title')}}</div>
-        <div class="form-section__row__main">
-          <div class="form-section__row__main__text">
-            {{$t('projects.settings.notifications.actions.including.onlyIncluding')}}
+        <div>{{ $t('projects.settings.notifications.actions.including.title') }}</div>
+        <div class="form-section__row-main">
+          <div class="form-section__row-main-text">
+            {{ $t('projects.settings.notifications.actions.including.onlyIncluding') }}
           </div>
           <FormTextFieldset
             v-model="words"
@@ -160,22 +160,12 @@ export default {
       }
     };
   },
-  computed: {
-  },
   created() {
     this.$store.dispatch(GET_NOTIFICATION_SETTINGS, this.$route.params.projectId);
   },
   methods: {
     async save() {
       const projectId = this.$route.params.projectId;
-
-      console.log({
-        notify: {
-          actionType: this.actionType,
-          words: this.words,
-          settings: this.settings
-        }
-      });
 
       try {
         await this.$store.dispatch(UPDATE_NOTIFICATION_SETTINGS, {
@@ -226,13 +216,13 @@ export default {
       padding-top: 20px;
       padding-bottom: 20px;
 
-      &__main {
+      &-main {
         width: 280px;
         color: var(--color-text-second);
         font-weight: 500;
         font-size: 13px;
 
-        &__text {
+        &-text {
           padding-bottom: 15px;
         }
 

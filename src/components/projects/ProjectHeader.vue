@@ -60,7 +60,7 @@ export default {
       border-radius: var(--border-radius);
 
       &:hover {
-        background-color: #09cf5d;
+        cursor: pointer;
       }
     }
 
