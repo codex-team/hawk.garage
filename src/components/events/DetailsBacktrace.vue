@@ -1,5 +1,6 @@
 <template>
   <DetailsBase
+    class="details-backtrace"
     :expand-showed="backtrace.length !== 4 && backtrace.length > 3"
     @expandClicked="isMoreFilesShown = !isMoreFilesShown"
   >
@@ -8,16 +9,31 @@
     </template>
     <template #content>
       <div
-        v-for="bt in filteredBacktrace"
-        :key="bt.file + bt.line"
-        class="event-details__content-block"
+        v-for="(bt, index) in filteredBacktrace"
+        :key="index"
+        class="event-details__content-block details-backtrace__content-block"
       >
-        <div class="details-backtrace__filename">
-          {{ bt.file }}
+        <div class="details-backtrace__header-row">
+          <div class="details-backtrace__filename">
+            {{ bt.file }}
+          </div>
+          <div class="details-backtrace__line">
+            line {{ bt.line }}
+          </div>
+          <Icon
+            v-if="bt.sourceCode"
+            :class="{'details-backtrace__arrow-down--opened': openedFilesView.includes(index) && bt.sourceCode}"
+            symbol="arrow-down"
+            class="details-backtrace__arrow-down"
+            @click.native="toggleViewState(index)"
+          />
         </div>
-        <div class="details-backtrace__line">
-          line {{ bt.line }}
-        </div>
+        <CodeBlock
+          v-if="openedFilesView.includes(index) && bt.sourceCode"
+          class="details-backtrace__source-code"
+        >
+          <pre>{{ joinSourceCodeLines(bt.sourceCode) }}</pre>
+        </CodeBlock>
       </div>
     </template>
     <template #expandButton>
@@ -28,11 +44,15 @@
 
 <script>
 import DetailsBase from './DetailsBase';
+import CodeBlock from '../utils/CodeBlock';
+import Icon from '../utils/Icon';
 
 export default {
   name: 'DetailsBacktrace',
   components: {
-    DetailsBase
+    DetailsBase,
+    CodeBlock,
+    Icon
   },
   props: {
     /**
@@ -48,7 +68,8 @@ export default {
       /**
        * Is block expanded.
        */
-      isMoreFilesShown: false
+      isMoreFilesShown: false,
+      openedFilesView: []
     };
   },
   computed: {
@@ -58,12 +79,67 @@ export default {
     filteredBacktrace() {
       return this.backtrace.length === 4 || this.isMoreFilesShown ? this.backtrace : this.backtrace.slice(0, 3);
     }
+  },
+  methods: {
+    /**
+     *
+     * @param {Array} sourceCodeLinesArray
+     * @return {*}
+     */
+    joinSourceCodeLines(sourceCodeLinesArray) {
+      if (sourceCodeLinesArray) {
+        return sourceCodeLinesArray.map(sourceCode => sourceCode.content).join('\n');
+      }
+    },
+    toggleViewState(index) {
+      if (this.openedFilesView.includes(index)) {
+        const itemIndex = this.openedFilesView.indexOf(index);
+
+        this.openedFilesView.splice(itemIndex, 1);
+      } else {
+        this.openedFilesView.push(index);
+      }
+    }
   }
 };
 </script>
 
 <style>
   .details-backtrace {
+    &__source-code {
+      font-size: 12px;
+      line-height: 21px;
+      border-radius: var(--border-radius);
+      background-color: #171920;
+    }
+
+    &__arrow-down {
+      position: absolute;
+      top: 50%;
+      cursor: pointer;
+      right: 12px;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+
+      &--opened {
+        transform: rotate(180deg) translateY(50%);
+      }
+    }
+
+    &__header-row {
+      position: relative;
+      padding: 7px;
+      display: flex;
+      align-items: center;
+    }
+
+    &__content-block {
+      display: flex;
+      padding: 5px;
+      flex-direction: column;
+    }
+
     &__filename, &__line {
       color: var(--color-text-second);
       font-size: 12px;
@@ -75,6 +151,7 @@ export default {
     }
 
     &__line {
+      margin-right: 47px;
       margin-left: auto;
     }
   }
