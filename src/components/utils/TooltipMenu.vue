@@ -1,6 +1,6 @@
 <template>
   <div class="tooltip-menu">
-    <div class="tooltip-menu__dots"/>
+    <div class="tooltip-menu__dots" />
     <div class="tooltip-menu__popup">
       <div
         v-for="option in options"
@@ -120,8 +120,8 @@ export default {
 
       &:not(:first-child)::before {
         position: absolute;
-        right: 0;
         top: 0;
+        right: 0;
         width: calc(100% - 17px);
         height: 1px;
         background-color: var(--color-bg-main);

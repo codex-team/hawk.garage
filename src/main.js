@@ -11,6 +11,13 @@ import i18n from './i18n';
 import * as api from './api';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
+import HawkCatcher from 'hawk.javascript';
+
+if (process.env.VUE_APP_HAWK_TOKEN) {
+  const hawk = new HawkCatcher(process.env.VUE_APP_HAWK_TOKEN);
+
+  hawk.test();
+}
 
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
 Vue.config.debug = process.env.NODE_ENV !== 'production';

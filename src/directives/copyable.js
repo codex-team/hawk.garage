@@ -10,7 +10,7 @@ export default {
     if (typeof binding.value.selector !== 'string') {
       const compName = vNode.context.name;
 
-      let warn = `[Vue-copyable:] provided selector is not a string, but has to be`;
+      let warn = '[Vue-copyable:] provided selector is not a string, but has to be';
 
       if (compName) {
         warn += `Found in component '${compName}'`;

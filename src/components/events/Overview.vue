@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="event-overview__filename">
-          /var/www/alpha.ifmo.su/www/vendor/pavelzotikov/social-covers-generator/src/SocialCoversGenerator/Types/BackgroundImage.php
+          {{ event.payload.backtrace[0].file }}
         </div>
       </div>
       <div class="event-overview__info">
@@ -83,6 +83,10 @@ export default {
       projectId
     };
   },
+  /**
+   * Vue created hook. Fetchs error's data
+   * @return {Promise<void>}
+   */
   async created() {
     const eventId = this.$route.params.eventId;
 

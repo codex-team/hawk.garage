@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     lastEventTitle() {
-      const valuesArray = Object.values(this.project.eventsListByDate);
+      const valuesArray = Object.values(this.project.eventsListByDate || {});
 
       if (valuesArray.length) {
         return valuesArray[0][0].event.payload.title;
