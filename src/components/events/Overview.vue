@@ -83,6 +83,10 @@ export default {
       projectId
     };
   },
+  /**
+   * Vue created hook. Fetchs error's data
+   * @return {Promise<void>}
+   */
   async created() {
     const eventId = this.$route.params.eventId;
 

@@ -51,6 +51,9 @@ export default {
       linesNumber: 0
     };
   },
+  /**
+   * Vue mounted hook. Used to render highlighting
+   */
   mounted() {
     hljs.highlightBlock(this.$refs.content);
     this.linesNumber = this.$refs.content.innerText.split('\n').length;

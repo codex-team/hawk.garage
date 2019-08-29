@@ -87,15 +87,20 @@ export default {
   },
   methods: {
     /**
-     *
-     * @param {Array} sourceCodeLinesArray
-     * @return {*}
+     * Join array of source code lines into one string to display it
+     * @param {Array} sourceCodeLinesArray - array o source code lines
+     * @return {String}
      */
     joinSourceCodeLines(sourceCodeLinesArray) {
       if (sourceCodeLinesArray) {
         return sourceCodeLinesArray.map(sourceCode => sourceCode.content).join('\n');
       }
     },
+
+    /**
+     * Switches the state of the spoiler to view the code
+     * @param {Number} index - backtrace info index
+     */
     toggleViewState(index) {
       if (this.openedFilesView.includes(index)) {
         const itemIndex = this.openedFilesView.indexOf(index);
