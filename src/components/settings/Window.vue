@@ -80,8 +80,10 @@ export default {
     }
 
     &__content {
+      @apply --hide-scrollbar;
       width: 100%;
-      padding: 50px 200px 50px 50px;
+      margin: 50px 200px 50px 50px;
+      overflow: auto;
     }
   }
 </style>
