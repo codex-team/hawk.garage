@@ -3,6 +3,7 @@
   --color-text-main: #dbe6ff;
   --color-text-second: color-mod(var(--color-text-main) alpha(60%));
   --color-text-dark: var(--color-bg-main);
+  --color-text-highlighted: #719dff;
 
   /** Backgrounds */
   --color-bg-main: #242732;
@@ -10,7 +11,9 @@
   --color-bg-sidebar: #1a1d26;
 
   --color-indicator-critical: #d94848;
+
   --color-indicator-medium: #4979e4;
+  --color-indicator-medium-dark: #3a61b9;
 
   --border-radius: 10px;
 

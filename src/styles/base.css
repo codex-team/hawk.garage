@@ -47,6 +47,13 @@ li {
 }
 
 /**
+ * Cancel default pre tag styles
+ */
+pre {
+  margin: 0;
+}
+
+/**
  * Clearfix for float elements
  */
 .clearfix::after {
@@ -83,7 +90,7 @@ li {
   user-select: none;
 
   &:hover {
-    background-color: #3A61B9;
+    background-color: var(--color-indicator-medium-dark);
   }
 
   &--submit {
