@@ -9,6 +9,14 @@ query Event($projectId: ID!, $eventId: ID!){
     catcherType
     payload {
       title
+      backtrace {
+        line
+        sourceCode {
+          line
+          content
+        }
+        file
+      }
     }
   }
 }
