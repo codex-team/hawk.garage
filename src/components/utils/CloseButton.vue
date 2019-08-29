@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     onEscapeKeyUp(event) {
-      console.log('here');
       const ESCAPE_KEY = 27;
 
       if (event.which === ESCAPE_KEY) {

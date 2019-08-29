@@ -47,6 +47,7 @@ import PopupDialog from '../utils/PopupDialog';
 import CustomSelect from '../forms/CustomSelect';
 import { cards } from '../billing/Cards';
 import { mapState } from 'vuex';
+import * as billingApi from '../../api/billing';
 
 export default {
   name: 'ProcessPaymentDialog',
@@ -60,15 +61,24 @@ export default {
   },
   computed: {
     ...mapState({
-      workspaces: state => state.workspaces.list,
+      workspaces: state => state.workspaces.list
     }),
     cards() {
       return cards;
     }
   },
   methods: {
-    processPayment() {
-      this.$emit('close');
+    async processPayment() {
+      console.log(this.workspace, this.amount);
+      const language = this.$store.state.app.language;
+
+      const { PaymentURL } = await billingApi.getPaymentLink({
+        workspaceId: this.workspace.id,
+        amount: this.amount,
+        language
+      });
+
+      window.location.replace(PaymentURL);
     }
   }
 };

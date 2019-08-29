@@ -134,6 +134,7 @@ export default {
       top: 100%;
       right: 0;
       left: 0;
+      z-index: 1;
       margin-top: -5px;
       padding-top: 5px;
       background-color: var(--color-bg-main);
