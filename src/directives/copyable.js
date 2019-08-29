@@ -1,7 +1,7 @@
 /**
  * Custom directive 'copyable' to allow content copy-by-click on the element
  * @usage 1) connect   -> Vue.directive('copyable', DirectiveCopyable);
- * @usage 2) enjoy     -> <component v-click-outside="SELECTOR" />
+ * @usage 2) enjoy     -> <component v-copyable="{selector: CHILD_SELECTOR, callback: CALLBACK_FUNCTION" />
  *
  * Where selector is selector of child element whose content should be copied
  */
