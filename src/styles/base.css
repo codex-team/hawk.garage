@@ -90,7 +90,7 @@ pre {
   user-select: none;
 
   &:hover {
-    background-color: #3A61B9;
+    background-color: var(--color-indicator-medium-dark);
   }
 
   &--submit {

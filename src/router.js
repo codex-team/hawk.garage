@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import VueCookies from 'vue-cookies';
 import store from './store';
 
 import AppShell from './components/AppShell';
@@ -33,15 +34,19 @@ const router = new Router({
           ]
         },
         {
-          path: 'workspaces/:workspaceId/settings',
-          name: 'workspace-settings',
+          path: 'workspaces/:workspaceId',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings'),
-          redirect: 'workspaces/:workspaceId/settings/workspace',
+          redirect: to => ({ name: 'workspace-settings', params: { workspaceId: to.params.workspaceId } }),
           children: [
             {
-              path: 'workspace',
-              name: 'workspace-settings-workspace',
+              path: 'settings',
+              name: 'workspace-settings',
               component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace')
+            },
+            {
+              path: 'team',
+              name: 'workspace-team',
+              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspaces/Team')
             }
           ]
         },
@@ -78,19 +83,24 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login')
+    },
+    {
+      path: '/join/:workspaceId/:inviteHash?',
+      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next)
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up)/;
+  const routesAvailableWithoutAuth = /^\/(join)/;
 
   if (store.getters.isAuthenticated) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
     }
   } else {
-    if (!authRoutes.test(to.fullPath)) {
+    if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
     }
   }

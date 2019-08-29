@@ -76,7 +76,21 @@
         "updatedMessage": "Воркспейс успешно обновлён"
       },
       "team": {
-        "title": "Команда"
+        "title": "Команда",
+        "inviteByEmailLabel": "Пригласить по email",
+        "sendButton": "Отправить",
+        "inviteByLinkLabel": "Пригласить по ссылке",
+        "copyButton": "Скопировать",
+        "youLabel": "вы",
+        "adminLabel": "Администратор",
+        "invitationSentLabel": "приглашение отправлено",
+        "copiedNotification": "Скопировано!",
+        "sentNotification": "Приглашение отправлено",
+        "joinNotification": "Вы успешно присоединились к воркспейсу!",
+        "brokenLinkNotification": "Ваша ссылка не действительна",
+        "grantAdmin": "Администратор",
+        "withdrawPermissions": "Не администратор",
+        "removeMember": "Удалить"
       },
       "billing": {
         "title": "Платежи"
