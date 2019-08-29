@@ -79,7 +79,8 @@
   }
 
   &__instructions {
-    padding: 40px
+    padding: 40px;
+    overflow: hidden;
   }
 
   &__instructions-header {
