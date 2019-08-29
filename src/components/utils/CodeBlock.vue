@@ -65,7 +65,6 @@ export default {
     position: relative;
     line-height: 21px;
     padding: 9px;
-    border: solid 1px rgba(0, 0, 0, 0.18);
 
     &__line-numbers-container {
       color: var(--color-text-second);
