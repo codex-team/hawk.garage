@@ -1,0 +1,3 @@
+export const FETCH_EVENT_BY_ID = 'FETCH_EVENT_BY_ID';
+
+export const SET_EVENTS_LIST = 'SET_EVENTS_LIST';

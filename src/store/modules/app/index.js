@@ -6,6 +6,7 @@ import {
 import * as workspacesApi from '../../../api/workspaces';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
+import { SET_EVENTS_LIST } from '../events/actionTypes';
 import { groupBy } from '../../../utils';
 
 /**
@@ -51,6 +52,7 @@ const actions = {
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
     const groupByDate = groupBy('date');
+    const groupById = groupBy('id');
 
     const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
 
@@ -65,13 +67,24 @@ const actions = {
       return accumulator;
     }, []);
 
+    const events = {};
+    const recentEvents = {};
+
     projects.forEach(project => {
-      project.eventsListByDate = groupByDate(project.recentEvents);
-      delete project.recentEvents;
+      if (!project.recentEvents) {
+        return;
+      }
+
+      recentEvents[project.id] = groupByDate(project.recentEvents.dailyInfo);
+
+      project.recentEvents.events.forEach(event => {
+        events[event.id] = event;
+      });
     });
 
     dispatch(SET_WORKSPACES_LIST, workspaces);
     dispatch(SET_PROJECTS_LIST, projects);
+    dispatch(SET_EVENTS_LIST, { events, recentEvents });
   },
 
   /**
