@@ -63,13 +63,12 @@ const eventsByGroupHash = {};
  */
 const getters = {
   /**
-   * Vuex getter with param
+   * Returns event by it's group hash and project id
    * @param {EventsModuleState} state - Vuex state
    * @return {Function}
    */
   getEventByProjectIdAndGroupHash: state =>
     /**
-     * Returns event by it's group hash and project id
      * @param {string} projectId - event's project id
      * @param {string} groupHash - event group hash
      * @return {GroupedEvent}
@@ -88,13 +87,12 @@ const getters = {
     },
 
   /**
-   * Vuex getter with param
+   * Returns recent event of the project by its id
    * @param {EventsModuleState} state - Vuex state
    * @return {function(*): *}
    */
   getRecentEventsByProjectId: state =>
     /**
-     * returns recent event of the project by its id
      * @param {String} projectId - event's project id
      * @return {RecentInfoByDate}
      */

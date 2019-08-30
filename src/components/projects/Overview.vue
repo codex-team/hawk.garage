@@ -67,7 +67,8 @@ export default {
     },
 
     /**
-     * @return {RecentInfoByDate} Project recent errors
+     * Project recent errors
+     * @return {RecentInfoByDate}
      */
     recentEvents() {
       return this.$store.getters.getRecentEventsByProjectId(this.project.id);
