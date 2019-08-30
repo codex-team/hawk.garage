@@ -49,7 +49,7 @@ import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
 import ProjectHeader from './projects/ProjectHeader';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
-import { RESET_MODAL_DIALOG } from '../store/modules/modelDialog/actionTypes';
+import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState } from 'vuex';
 
 export default {

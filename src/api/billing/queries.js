@@ -13,3 +13,29 @@ export const QUERY_PAYMENT_LINK = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Query to fetch transactions info by workspaces ids
+ * @type {string}
+ */
+export const QUERY_TRANSACTIONS = `
+  query transactions($ids: [ID] = []) {
+    transactions(ids: $ids) {
+        type
+        amount
+        date
+        workspace {
+            id
+            name
+        }
+        user {
+            id
+            image
+            name
+            email
+        }
+        cardPan
+    }
+  }
+`;

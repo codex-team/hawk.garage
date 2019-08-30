@@ -4,7 +4,7 @@
       {{ $t('workspaces.settings.billing.title') }}
     </div>
     <BillingCard :workspace="workspace" />
-    <BillingHistory />
+    <BillingHistory :workspace="workspace" />
   </div>
 </template>
 

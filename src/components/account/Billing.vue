@@ -7,7 +7,7 @@
     <label class="label account-billing__label">{{ $t('settings.billing.ownedWorkspaces') }}</label>
     <BillingCard
       v-for="workspace in workspaces"
-      v-bind:key="workspace.id"
+      :key="workspace.id"
       :workspace="workspace"
     />
     <BillingHistory />
@@ -18,6 +18,7 @@
 import BillingCard from '../billing/Workspace';
 import BillingHistory from '../billing/History';
 import BillingCards from '../billing/Cards';
+import { FETCH_WORKSPACES } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'AccountBilling',
@@ -26,12 +27,13 @@ export default {
     BillingCard,
     BillingHistory
   },
-  data() {
-    const workspaces = this.$store.state.workspaces.list;
-
-    return {
-      workspaces
-    };
+  computed: {
+    workspaces() {
+      return this.$store.state.workspaces.list;
+    }
+  },
+  created() {
+    this.$store.dispatch(FETCH_WORKSPACES, { withTransactions: true });
   }
 };
 </script>

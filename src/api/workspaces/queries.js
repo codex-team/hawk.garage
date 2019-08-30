@@ -82,6 +82,14 @@ export const QUERY_WORKSPACES = `
      name
      description
      image
+     balance
+     plan {
+       name  
+       subscriptionDate
+       lastChargeDate
+       monthlyCharge  
+       eventsLimit
+     }
      users {
        id
        name

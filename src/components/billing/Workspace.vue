@@ -16,7 +16,7 @@
         {{ workspace.name }}
       </div>
       <div class="billing-card__members-count">
-        2 {{ $t('billing.members') }}
+        {{ $tc('billing.members', workspace.users ? workspace.users.length : 0) }}
       </div>
     </div>
     <div class="billing-card__info">
@@ -25,7 +25,7 @@
           {{ $t('billing.currentBalance') }}
         </div>
         <div class="billing-card__balance">
-          200 $
+          {{ workspace.balance || 0 }} $
         </div>
       </div>
       <div class="billing-card__info-card">
@@ -34,10 +34,10 @@
         </div>
         <div class="billing-card__plan">
           <div class="billing-card__plan-name">
-            Basic
+            {{ plan.name || 'Free' }}
           </div>
           <div class="billing-card__plan-coast">
-            100$/mo
+            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
           </div>
         </div>
       </div>
@@ -47,12 +47,12 @@
         </div>
         <div class="billing-card__volume">
           <div class="billing-card__events">
-            83 432 / 100 000 {{ $t('billing.volumeEvents') }}
+            {{ eventsCount | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
           </div>
           <Progress
-            :max="100000"
-            :current="83432"
-            :color="83432/100000 > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+            :max="plan.eventsLimit || 0"
+            :current="eventsCount"
+            :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
             class="billing-card__volume-progress"
           />
         </div>
@@ -93,7 +93,8 @@ import EntityImage from '../utils/EntityImage';
 import Progress from '../utils/Progress';
 import Icon from '../utils/Icon';
 import CustomSwitch from '../forms/Switch';
-import { SET_MODAL_DIALOG } from '../../store/modules/modelDialog/actionTypes';
+import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { GET_TRANSACTIONS } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'BillingCard',
@@ -102,6 +103,14 @@ export default {
     workspace: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    plan() {
+      return this.workspace.plan || {};
+    },
+    eventsCount() {
+      return 6789;
     }
   },
   methods: {

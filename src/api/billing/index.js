@@ -1,4 +1,4 @@
-import { QUERY_PAYMENT_LINK } from './queries';
+import { QUERY_PAYMENT_LINK, QUERY_TRANSACTIONS } from './queries';
 import * as api from '../index';
 
 /**
@@ -12,4 +12,14 @@ import * as api from '../index';
  */
 export async function getPaymentLink(paymentQuery) {
   return (await api.call(QUERY_PAYMENT_LINK, { paymentQuery })).paymentLink;
+}
+
+/**
+ * Request transactions info for passed workspaces
+ *
+ * @param {string[]} ids - ids of workspaces
+ * @returns {Promise<Transaction>}
+ */
+export async function getTransactions(ids) {
+  return (await api.call(QUERY_TRANSACTIONS, { ids })).transactions;
 }

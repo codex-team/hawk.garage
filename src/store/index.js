@@ -5,7 +5,7 @@ import app from './modules/app';
 import user from './modules/user';
 import workspaces from './modules/workspaces';
 import projects from './modules/projects';
-import modalDialog from './modules/modelDialog';
+import modalDialog from './modules/modalDialog';
 
 import createPersistedState from 'vuex-persistedstate';
 

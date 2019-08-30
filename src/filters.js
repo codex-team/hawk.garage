@@ -11,8 +11,17 @@ Vue.filter('spacedNumber', function (value) {
 
   const count = value.toString();
 
-  if (count.length === 4) return `${count.slice(0, 1)} ${count.slice(1)}`;
-  return value;
+  if (count.length < 3) {
+    return count;
+  }
+
+  let result = '';
+
+  for (let i = 1; i <= Math.ceil(count.length / 3); i++) {
+    result = `${count.slice(-3 * i, -3 * (i - 1) || undefined)} ` + result;
+  }
+
+  return result.trim();
 });
 
 /**
@@ -20,6 +29,8 @@ Vue.filter('spacedNumber', function (value) {
  * @return {string}
  */
 Vue.filter('abbreviation', function (value) {
+  if (!value) return '';
+
   const words = value.split(' ');
 
   return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();

@@ -25,21 +25,22 @@
       </div>
     </div>
     <div
-      v-for="transaction in transactions"
-      :key="transaction.id"
+      v-for="(transaction, i) in transactions"
+      :key="i"
       class="billing-history__row"
     >
       <div class="billing-history__date">
-        {{ transaction.date | prettyFullDate }}
+        {{ new Date(transaction.date) | prettyFullDate }}
       </div>
       <div class="billing-history__description">
-        {{ transaction.description }}
+        {{ getDescription(transaction) }}
       </div>
       <div class="billing-history__user">
         <EntityImage
           v-if="transaction.type === TYPES.INCOME"
-          id="1"
-          name="User"
+          :id="transaction.user.id"
+          :name="transaction.user.name || transaction.user.email"
+          :image="transaction.user.image"
           class="billing-history__user-image"
         />
       </div>
@@ -55,68 +56,17 @@
 
 <script>
 import EntityImage from '../utils/EntityImage';
-const transactions = [
-  {
-    id: 1,
-    type: 'income',
-    date: new Date('August 27, 2019 14:43:00'),
-    description: 'Payment by card **** **** **** 1321',
-    amount: 300
-  },
-  {
-    id: 2,
-    type: 'charge',
-    date: new Date('August 1, 2019 00:00:00'),
-    description: 'Payment for CodeX current plan',
-    amount: 100
-  },
-  {
-    id: 3,
-    type: 'income',
-    date: new Date('August 27, 2019 14:43:00'),
-    description: 'Payment by card **** **** **** 1321',
-    amount: 300
-  },
-  {
-    id: 4,
-    type: 'charge',
-    date: new Date('August 1, 2019 00:00:00'),
-    description: 'Payment for CodeX current plan',
-    amount: 100
-  },
-  {
-    id: 5,
-    type: 'income',
-    date: new Date('August 27, 2019 14:43:00'),
-    description: 'Payment by card **** **** **** 1321',
-    amount: 300
-  },
-  {
-    id: 6,
-    type: 'charge',
-    date: new Date('August 1, 2019 00:00:00'),
-    description: 'Payment for CodeX current plan',
-    amount: 100
-  },
-  {
-    id: 7,
-    type: 'income',
-    date: new Date('August 27, 2019 14:43:00'),
-    description: 'Payment by card **** **** **** 1321',
-    amount: 300
-  },
-  {
-    id: 8,
-    type: 'charge',
-    date: new Date('August 1, 2019 00:00:00'),
-    description: 'Payment for CodeX current plan',
-    amount: 100
-  }
-];
+import { GET_TRANSACTIONS } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'BillingHistory',
   components: { EntityImage },
+  props: {
+    workspace: {
+      type: Object,
+      default: undefined
+    }
+  },
   data() {
     return {
       FILTERS: {
@@ -133,6 +83,18 @@ export default {
   },
   computed: {
     transactions() {
+      let transactions = [];
+
+      if (this.workspace) {
+        transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
+      } else {
+        transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
+          return acc.concat(workspace.transactions || []);
+        }, []);
+
+        transactions.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+      }
+
       switch (this.filter) {
         case this.FILTERS.INCOMINGS:
           return transactions.filter(t => t.type === this.TYPES.INCOME);
@@ -145,9 +107,26 @@ export default {
       }
     }
   },
+  created() {
+    const ids = [];
+
+    if (this.workspace) {
+      ids.push(this.workspace.id);
+    }
+
+    this.$store.dispatch(GET_TRANSACTIONS, { ids });
+  },
   methods: {
     applyFilter(filter) {
       this.filter = filter;
+    },
+    getDescription(transaction) {
+      switch (transaction.type) {
+        case this.TYPES.INCOME:
+          return `Payment by card **** **** ***** ${transaction.cardPan} for ${transaction.workspace.name}`;
+        case this.TYPES.CHARGE:
+          return `Payment for ${transaction.workspace.name} current plan`;
+      }
     }
   }
 };
