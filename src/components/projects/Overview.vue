@@ -37,7 +37,7 @@
 import EventItem from '../events/EventItem';
 import AssignersList from '../events/AssignersList';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_PROJECT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -73,7 +73,7 @@ export default {
     ...mapGetters([ 'eventByGroupHash' ])
   },
   created() {
-    this.$store.dispatch(FETCH_RECENT_PROJECT_EVENTS, { projectId: this.project.id });
+    this.$store.dispatch(FETCH_PROJECT_RECENT_EVENTS, { projectId: this.project.id });
   },
   methods: {
     showAssigners(event) {

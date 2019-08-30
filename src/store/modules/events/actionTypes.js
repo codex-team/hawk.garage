@@ -1,3 +1,9 @@
-export const FETCH_RECENT_PROJECT_EVENTS = 'FETCH_RECENT_PROJECT_EVENTS';
+/**
+ * Action for initialization this module
+ */
+export const INIT_EVENTS_MODULE = 'INIT_EVENTS_MODULE';
 
-export const SET_EVENTS_LIST = 'SET_EVENTS_LIST';
+/**
+ * Fetch project recent events
+ */
+export const FETCH_PROJECT_RECENT_EVENTS = 'FETCH_PROJECT_RECENT_EVENTS';
