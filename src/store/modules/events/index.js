@@ -85,7 +85,6 @@ const mutations = {
    * @param {Array<Project>} newList - new list of events
    */
   [mutationTypes.SET_EVENTS_LIST](state, newList) {
-    console.log(newList)
     Vue.set(state, 'list', newList);
   },
 
@@ -95,7 +94,6 @@ const mutations = {
    * @param {Array<Project>} newList - new list of events
    */
   [mutationTypes.SET_RECENT_EVENTS_LIST](state, newList) {
-    console.log(newList)
     Vue.set(state, 'recent', newList);
   },
 

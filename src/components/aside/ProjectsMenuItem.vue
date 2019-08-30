@@ -41,13 +41,16 @@ export default {
   },
   computed: {
     lastEventTitle() {
-      const valuesArray = Object.values(this.project.eventsListByDate || {});
+      const recentProjectEvents = this.$store.state.events.recent[this.project.id];
 
-      if (valuesArray.length) {
-        return valuesArray[0][0].event.payload.title;
-      } else {
-        return 'No one catcher connected';
+      if (recentProjectEvents) {
+        const lastEventGroupHash = Object.values(recentProjectEvents)[0][0].groupHash;
+        const lastEvent = Object.values(this.$store.state.events.list).find(event => event.groupHash === lastEventGroupHash);
+
+        return lastEvent.payload.title;
       }
+
+      return 'No one catcher connected';
     }
   }
 };
