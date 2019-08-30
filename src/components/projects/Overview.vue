@@ -4,7 +4,7 @@
       <div class="project-overview__chart" />
       <div class="project-overview__events">
         <div
-          v-for="(eventsByDate, date) in project.eventsListByDate"
+          v-for="(eventsByDate, date) in recentEvents"
           :key="date"
           class="project-overview__events-by-date"
         >
@@ -12,13 +12,13 @@
             {{ date | prettyDate }}
           </div>
           <EventItem
-            v-for="eventByDate in eventsByDate"
-            :key="eventByDate.event.id"
-            :count="eventByDate.count"
+            v-for="dailyEventInfo in eventsByDate"
+            :key="dailyEventInfo.groupHash"
+            :count="dailyEventInfo.count"
             class="project-overview__event"
-            :event="eventByDate.event"
+            :event="eventByGroupHash(dailyEventInfo.groupHash)"
             @onAssigneeIconClick="showAssigners"
-            @showEventOverview="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByDate.event.id }})"
+            @showEventOverview="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByGroupHash(dailyEventInfo.groupHash).id }})"
           />
         </div>
         <AssignersList
@@ -35,8 +35,9 @@
 
 <script>
 import EventItem from '../events/EventItem';
-import { FETCH_RECENT_ERRORS } from '../../store/modules/projects/actionTypes';
 import AssignersList from '../events/AssignersList';
+import { mapGetters } from 'vuex';
+import { FETCH_RECENT_PROJECT_EVENTS } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -63,10 +64,16 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
-    }
+    },
+
+    recentEvents() {
+      return this.$store.state.events.recent[this.project.id];
+    },
+
+    ...mapGetters([ 'eventByGroupHash' ])
   },
   created() {
-    this.$store.dispatch(FETCH_RECENT_ERRORS, this.$route.params.projectId);
+    this.$store.dispatch(FETCH_RECENT_PROJECT_EVENTS, { projectId: this.project.id });
   },
   methods: {
     showAssigners(event) {

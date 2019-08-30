@@ -1,5 +1,6 @@
 import {
-  QUERY_EVENT
+  QUERY_EVENT,
+  QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '../index';
 
@@ -12,4 +13,8 @@ import * as api from '../index';
  */
 export async function getEvent(projectId, eventId) {
   return (await api.call(QUERY_EVENT, { projectId, eventId })).event;
+}
+
+export async function fetchRecentProjectEvents(projectId, limit, skip) {
+  return (await api.call(QUERY_RECENT_PROJECT_EVENTS, { projectId })).project.recentEvents;
 }
