@@ -7,7 +7,10 @@
       class="popup-dialog__mask"
       @click.self="$emit('close')"
     >
-      <div class="popup-dialog__wrapper">
+      <div
+        class="popup-dialog__wrapper"
+        :class="{'popup-dialog__wrapper--big': big}"
+      >
         <slot />
         <CloseButton
           class="popup-dialog__close-button"
@@ -25,6 +28,9 @@ export default {
   name: 'PopupDialog',
   components: {
     CloseButton
+  },
+  props: {
+    big: Boolean
   }
 };
 </script>
@@ -68,13 +74,16 @@ export default {
 
     &__wrapper {
       position: relative;
-      /*display: flex;*/
-      /*flex-grow: 1;*/
+      display: flex;
       max-width: 90%;
       margin: auto 0;
       background-color: var(--color-bg-second);
       border-radius: 3px;
       box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
+
+      &--big {
+        flex-grow: 1;
+      }
     }
 
     &__close-button {

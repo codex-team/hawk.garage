@@ -45,14 +45,12 @@ function initialState() {
  * Module getters
  */
 const getters = {
-
+  getRepetitions: (state) => (eventId) => {
+    return state.repetitions[eventId];
+  }
 };
 
 const actions = {
-  getEventRepetitions({ commit, state }, { eventId }) {
-    return state.repetitions[eventId];
-  },
-
   async [FETCH_EVENT_REPETITIONS]({ commit }, { projectId, eventId }) {
     const repetitions = await eventsApi.getRepetitions(projectId, eventId);
 

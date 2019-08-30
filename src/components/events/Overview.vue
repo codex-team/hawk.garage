@@ -1,6 +1,7 @@
 <template>
   <PopupDialog
     class="event-overview"
+    big
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
     <div
@@ -18,7 +19,10 @@
           {{ event.payload.title }}
         </h1>
         <div class="event-overview__statistics">
-          <div class="event-overview__times">
+          <div
+            class="event-overview__times"
+            @click="$router.push({name: 'event-repetitions-overview', params: { projectId: projectId, eventId: event.id }})"
+          >
             <div class="event-overview__statistics-count">
               156
             </div>
@@ -130,7 +134,7 @@ export default {
     }
 
     &__container {
-      max-width: 850px;
+      width: 100%;
     }
 
     &__header {
@@ -169,6 +173,7 @@ export default {
     &__times {
       left: -60px;
       transform: translateX(-100%);
+      cursor: pointer;
     }
 
     &__users-affected {

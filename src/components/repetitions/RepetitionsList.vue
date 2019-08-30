@@ -1,24 +1,40 @@
 <template>
-  <div class="repetitions-list">
-    <div class="repetitions-list__by-date">
-      <table class="event-repetitions">
-        <tr class="event-repetitions__only-date">
-          <td class="event-repetitions__item-date"></td>
-        </tr>
-        <tr
-          v-for="repetition in repetitions"
-          class="event-repetitions__item"
-        >
-          <td class="event-repetitions__item-time">{{ repetition.payload.timestamp | prettyTime}}</td>
-          <td class="event-repetitions__item-user-photo">{{ repetition.payload.user ? repetition.payload.user.image : ''}}</td>
-          <td class="event-repetitions__item-user-name">{{ repetition.payload.user ? repetition.payload.user.name : ''}}</td>
-          <td class="event-repetitions__item-user-os">Linux</td>
-          <td class="event-repetitions__item-user-browser">Firefox 61.0</td>
-          <td class="event-repetitions__item-user-screen">1920x946</td>
-          <td class="event-repetitions__item-page">/startup/primeliber-com/blog/15598/8-instrumentov-dl…</td>
-        </tr>
-      </table>
+  <div class="repetitions-list repetitions-list--by-date">
+    <div class="repetitions-list__date">
+      7 may
     </div>
+    <table class="repetitions-table">
+      <tr
+        v-for="repetition in repetitions"
+        class="repetitions-table__row"
+      >
+        <td class="repetitions-table__col">
+          {{ repetition.payload.timestamp | prettyTime }}
+        </td>
+        <td class="repetitions-table__col user-info">
+          <img
+            class="user-info__photo"
+            src="https://as1.ftcdn.net/jpg/02/18/69/42/500_F_218694229_V1sjTE7s6ROXQYGPyUcZSIHatGT4nOK9.jpg"
+            alt=""
+          >
+        </td>
+        <td class="repetitions-table__col user-info">
+          <span class="user-info__name">{{ repetition.payload.user ? repetition.payload.user.name : 'username' }}</span>
+        </td>
+        <td class="repetitions-table__col user-info">
+          <span class="user-info__os">Linux</span>
+        </td>
+        <td class="repetitions-table__col user-info">
+          <span class="user-info__browser">Firefox 61.0</span>
+        </td>
+        <td class="repetitions-table__col user-info">
+          <span class="user-info__screen">1920x946</span>
+        </td>
+        <td class="repetitions-table__col user-info">
+          <span class="user-info__url">/startup/primeliber-com/blog/15598/8-instrumentov-dl…</span>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -37,7 +53,7 @@ export default {
   },
   computed: {
     repetitions() {
-      return this.$store.state.events.repetitions[this.eventId];
+      return this.$store.getters.getRepetitions(this.eventId);
     }
   },
   mounted() {
@@ -47,43 +63,67 @@ export default {
     this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId, eventId });
   },
   methods: {
-    // prettyTime
   }
 };
 </script>
 
 <style>
   .repetitions-list {
-    &__by-date {
+    margin-bottom: 20px;
+    &--by-date {
       color: var(--color-text-main);
       font-size: 14px;
       opacity: 0.6;
     }
+
+    &__date {
+      margin-bottom: 18px;
+    }
   }
 
-  .event-repetitions {
+  .repetitions-table {
+    width: 100%;
+    margin-left: -10px;
+    border-spacing: 0;
+
+    &__row:nth-child(even) {
+      background-color: #242732;
+    }
+
+    &__col {
+      padding: 14px 10px;
+    }
+
     &__only-date {
       display: block;
       margin-top: 20px;
       margin-bottom: 18px;
     }
 
-    &__item {
-      &-date,
-      &-time {
-        width: 45px;
-      }
+    &__item-time {
+      width: 40px;
+    }
+  }
 
-      &-user-name,
-      &-user-os,
-      &-user-browser {
-        font-weight: bold;
-        font-size: 13px;
-      }
+  .user-info {
+    &__photo {
+      width: 25px;
+      height: 25px;
+      border-radius: 3px;
+    }
 
-      &-page {
-        color: rgba(219, 230, 255, 0.6);
-      }
+    &__name {
+    }
+
+    &__name,
+    &__os,
+    &__browser {
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    &__url {
+      color: rgba(219, 230, 255, 0.6);
     }
   }
 </style>

@@ -1,13 +1,17 @@
 <template>
   <PopupDialog
     class="repetitions-overview"
-    @close="$router.push({name: 'project-overview', params: {  }})"
+    big
+    @close="$router.push({name: 'event-overview', params: { projectId: '', eventId: '' }})"
   >
     <div class="repetitions-overview__container">
       <!-- HEADER -->
       <div class="repetitions-overview__header">
         <!-- Header arrow icon -->
-        <div class="repetitions-overview__header-arrow">
+        <div
+          class="repetitions-overview__header-arrow"
+          @click="$router.push({name: 'event-overview', params: { projectId: '', eventId: '' }})"
+        >
           <div class="header-arrow">
             <Icon
               class="badge__icon header-arrow__icon"
@@ -28,23 +32,35 @@
           {{ this.lastEvent ? this.lastEvent.payload.title : '' }}
         </div>
 
-        <div class="repetitions-overview__header-time">today, 13:15: {{ this.lastEvent ? this.lastEvent.payload.timestamp : ''}}</div>
+        <div class="repetitions-overview__header-time">
+          today, 13:15: {{ this.lastEvent ? this.lastEvent.payload.timestamp : '' }}
+        </div>
       </div>
 
       <!-- Content -->
       <div class="repetitions-overview__content">
         <div class="repetitions-overview__section event-info">
-          <div class="event-info__label">Total</div>
-          <div class="event-info__repeats">{{ this.lastEvent ? this.lastEvent.count : 0}} times</div>
+          <div class="event-info__label">
+            Total
+          </div>
+          <div class="event-info__repeats">
+            152 times
+          </div>
         </div>
 
         <div class="repetitions-overview__section event-info">
-          <div class="event-info__label">Since</div>
-          <div class="event-info__since">12 aug 2019, 14:30: {{ this.firstEvent ? this.firstEvent.payload.timestamp : '' }} <span>— 352 days</span></div>
+          <div class="event-info__label">
+            Since
+          </div>
+          <div class="event-info__since">
+            12 aug 2019, 14:30: {{ this.firstEvent ? this.firstEvent.payload.timestamp : '' }} <span>— 352 days</span>
+          </div>
         </div>
 
         <div class="repetitions-overview__section event-info">
-          <div class="event-info__label">Repetitions</div>
+          <div class="event-info__label">
+            Repetitions
+          </div>
           <div class="event-info__repetitions">
             <RepetitionsList />
           </div>
@@ -72,7 +88,7 @@ export default {
   data() {
     return {
       repetitions: [],
-      loaded: false,
+      loaded: false
     };
   },
   computed: {
@@ -80,28 +96,30 @@ export default {
      * @return {*}
      */
     firstEvent() {
-      return null; //this.repetitions[0];
+      return null; // this.repetitions[0];
     },
 
     /**
      * @return {*}
      */
     lastEvent() {
-      return null; //this.repetitions[this.repetitions.length - 1];
+      return null; // this.repetitions[this.repetitions.length - 1];
     }
   },
   created() {
-    // this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
-    //   projectId: this.projectId,
-    //   eventId: this.eventId
-    // })
-    //   .then((repetitions) => {
-    //     console.log('repetitions', repetitions);
-    //     this.repetitions = repetitions;
-    //     this.loaded = true;
-    //   });
+    /*
+     * this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
+     *   projectId: this.projectId,
+     *   eventId: this.eventId
+     * })
+     *   .then((repetitions) => {
+     *     console.log('repetitions', repetitions);
+     *     this.repetitions = repetitions;
+     *     this.loaded = true;
+     *   });
+     */
   }
-}
+};
 </script>
 
 <style scoped>
@@ -114,8 +132,7 @@ export default {
 
   .repetitions-overview {
     &__container {
-      /* ATTENTION HARDCODING!!!! */
-      width: 1000px;
+      flex-grow: 1;
     }
 
     &__header {
@@ -124,6 +141,10 @@ export default {
       padding: 18px 20px;
       font-size: 16px;
       background-color: #000;
+
+      &-arrow {
+        cursor: pointer;
+      }
 
       &-badge {
         margin-left: 15px;
@@ -175,6 +196,10 @@ export default {
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 15px;
+    }
+
+    &__repetitions {
+      margin-top: 20px;
     }
   }
 </style>
