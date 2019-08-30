@@ -16,9 +16,9 @@
             :key="dailyEventInfo.groupHash"
             :count="dailyEventInfo.count"
             class="project-overview__event"
-            :event="eventByGroupHash(dailyEventInfo.groupHash)"
+            :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
             @onAssigneeIconClick="showAssigners"
-            @showEventOverview="$router.push({name: 'event-overview', params: { projectId: project.id, eventId: eventByGroupHash(dailyEventInfo.groupHash).id }})"
+            @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash)"
           />
         </div>
         <AssignersList
@@ -70,10 +70,10 @@ export default {
      * Project recent errors
      */
     recentEvents() {
-      return this.$store.getters.recentEventsByProjectId(this.project.id);
+      return this.$store.getters.getRecentEventsByProjectId(this.project.id);
     },
 
-    ...mapGetters([ 'eventByGroupHash' ])
+    ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
   created() {
     this.$store.dispatch(FETCH_PROJECT_RECENT_EVENTS, { projectId: this.project.id });
@@ -87,6 +87,16 @@ export default {
         top: boundingClientRect.y + 'px',
         left: boundingClientRect.x + 'px'
       };
+    },
+
+    showEventOverview(projectId, groupHash) {
+      this.$router.push({
+        name: 'event-overview',
+        params: {
+          projectId: projectId,
+          eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id
+        }
+      });
     },
 
     hideAssignersList() {

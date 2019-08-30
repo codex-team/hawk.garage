@@ -75,7 +75,7 @@ const actions = {
       recentEvents[project.id] = groupByDate(project.recentEvents.dailyInfo);
 
       project.recentEvents.events.forEach(event => {
-        events[event.id] = event;
+        events[project.id + ':' + event.id] = event;
       });
       delete project.recentEvents;
     });

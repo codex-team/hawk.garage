@@ -59,19 +59,21 @@ const eventsByGroupHash = {};
  */
 const getters = {
   // Returns event by it's group hash
-  eventByGroupHash: state => groupHash => {
-    if (eventsByGroupHash[groupHash]) {
-      return eventsByGroupHash[groupHash];
+  getEventByProjectIdAndGroupHash: state => (projectId, groupHash) => {
+    const uniqueId = projectId + ':' + groupHash;
+
+    if (eventsByGroupHash[uniqueId]) {
+      return eventsByGroupHash[uniqueId];
     }
 
     const event = Object.values(state.list).find(_event => _event.groupHash === groupHash);
 
-    eventsByGroupHash[groupHash] = event;
+    eventsByGroupHash[uniqueId] = event;
     return event;
   },
 
   // returns recent event of the project by its id
-  recentEventsByProjectId: state => projectId => state.recent[projectId],
+  getRecentEventsByProjectId: state => projectId => state.recent[projectId]
 };
 
 const actions = {
@@ -132,18 +134,19 @@ const mutations = {
   /**
    * Mutation for adding new events to the store
    * @param {EventsModuleState} state - Vuex state
+   * @param {String} projectId - id of the project to add
    * @param {Array<GroupedEvent>} eventsList - new list of events
    */
-  [mutationTypes.ADD_TO_EVENTS_LIST](state, { eventsList }) {
+  [mutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }) {
     eventsList.forEach(event => {
-      state.list[event.id] = event;
+      state.list[projectId + ':' + event.id] = event;
     });
   },
 
   /**
    * Mutation for replacing recent events list
    * @param {EventsModuleState} state - Vuex state
-   * @param {Array<Project>} newList - new list of events
+   * @param {Array<Project>} newList - new list of recent events
    */
   [mutationTypes.SET_RECENT_EVENTS_LIST](state, newList) {
     Vue.set(state, 'recent', newList);
