@@ -1,5 +1,5 @@
 /**
- * Action for initialization this module
+ * Action for initialization this module. The transferred list (events, recent events) values are assigned to the state
  */
 export const INIT_EVENTS_MODULE = 'INIT_EVENTS_MODULE';
 

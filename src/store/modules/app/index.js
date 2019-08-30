@@ -64,7 +64,14 @@ const actions = {
       return accumulator;
     }, []);
 
+    /**
+     * @type {Object<string, GroupedEvent>} - all fetched events
+     */
     const events = {};
+
+    /**
+     * @type {RecentInfoByDate} - latest event from all projects
+     */
     const recentEvents = {};
 
     projects.forEach(project => {

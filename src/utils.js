@@ -56,5 +56,8 @@ export const groupBy =
         return objectsByKeyValue;
       }, {});
 
-// function for grouping by date
+/**
+ * Group array of object by 'date' field
+ * @type {function(Array[Object]): Object}
+ */
 export const groupByDate = groupBy('date');

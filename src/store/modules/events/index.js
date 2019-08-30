@@ -34,7 +34,11 @@ const mutationTypes = {
 /**
  * @typedef {Object} EventsModuleState
  * @property {Object<string, GroupedEvent>} list - map for storing GroupedEvent by their unique key (projectId:eventId)
- * @property {Object<string, Object<string, RecentEvents[]>>} recent - project's recent events grouped by date
+ * @property {RecentInfoByDate} recent - project's recent events grouped by date
+ */
+
+/**
+ * @typedef {Object<string, Object<string, RecentEvents[]>>} RecentInfoByDate - information about recent events grouped by date
  */
 
 /**
@@ -58,22 +62,43 @@ const eventsByGroupHash = {};
  * Module getters
  */
 const getters = {
-  // Returns event by it's group hash
-  getEventByProjectIdAndGroupHash: state => (projectId, groupHash) => {
-    const uniqueId = projectId + ':' + groupHash;
+  /**
+   * Vuex getter with param
+   * @param {EventsModuleState} state - Vuex state
+   * @return {Function}
+   */
+  getEventByProjectIdAndGroupHash: state =>
+    /**
+     * Returns event by it's group hash and project id
+     * @param {string} projectId - event's project id
+     * @param {string} groupHash - event group hash
+     * @return {GroupedEvent}
+     */
+    (projectId, groupHash) => {
+      const uniqueId = projectId + ':' + groupHash;
 
-    if (eventsByGroupHash[uniqueId]) {
-      return eventsByGroupHash[uniqueId];
-    }
+      if (eventsByGroupHash[uniqueId]) {
+        return eventsByGroupHash[uniqueId];
+      }
 
-    const event = Object.values(state.list).find(_event => _event.groupHash === groupHash);
+      const event = Object.values(state.list).find(_event => _event.groupHash === groupHash);
 
-    eventsByGroupHash[uniqueId] = event;
-    return event;
-  },
+      eventsByGroupHash[uniqueId] = event;
+      return event;
+    },
 
-  // returns recent event of the project by its id
-  getRecentEventsByProjectId: state => projectId => state.recent[projectId]
+  /**
+   * Vuex getter with param
+   * @param {EventsModuleState} state - Vuex state
+   * @return {function(*): *}
+   */
+  getRecentEventsByProjectId: state =>
+    /**
+     * returns recent event of the project by its id
+     * @param {String} projectId - event's project id
+     * @return {RecentInfoByDate}
+     */
+    projectId => state.recent[projectId]
 };
 
 const actions = {
@@ -115,7 +140,7 @@ const actions = {
 const mutations = {
   /**
    * Mutation for replacing events list
-   * @param {ProjectsModuleState} state - Vuex state
+   * @param {EventsModuleState} state - Vuex state
    * @param {Array<Project>} newList - new list of events
    */
   [mutationTypes.SET_EVENTS_LIST](state, newList) {
