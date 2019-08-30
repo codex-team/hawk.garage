@@ -4,7 +4,7 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
-import Vue from 'vue';
+import * as eventsApi from '../../../api/events';
 
 /**
  * Mutations enum for this module
@@ -33,7 +33,11 @@ const mutationTypes = {
  */
 function initialState() {
   return {
-    repetitions: []
+    /**
+     * Holds event's repetitions
+     * object key is event id
+     */
+    repetitions: {}
   };
 }
 
@@ -41,19 +45,29 @@ function initialState() {
  * Module getters
  */
 const getters = {
+
 };
 
 const actions = {
+  getEventRepetitions({ commit, state }, { eventId }) {
+    return state.repetitions[eventId];
+  },
+
   async [FETCH_EVENT_REPETITIONS]({ commit }, { projectId, eventId }) {
-    return projectsApi.getRepetitions(projectId, eventId);
+    const repetitions = await eventsApi.getRepetitions(projectId, eventId);
+
+    commit(mutationTypes.SET_REPETITIONS_LIST, {
+      eventId,
+      repetitions
+    });
   }
 };
 
 const mutations = {
   /**
    */
-  [mutationTypes.SET_REPETITIONS_LIST](state, repetitions) {
-    Vue.set(state, 'repetitions', repetitions);
+  [mutationTypes.SET_REPETITIONS_LIST](state, { eventId, repetitions }) {
+    state.repetitions[eventId] = repetitions;
   },
 
   /**

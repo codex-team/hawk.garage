@@ -67,9 +67,9 @@ export default {
     }
 
     &__wrapper {
-      display: flex;
-      flex-grow: 1;
       position: relative;
+      /*display: flex;*/
+      /*flex-grow: 1;*/
       max-width: 90%;
       margin: auto 0;
       background-color: var(--color-bg-second);

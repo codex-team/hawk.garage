@@ -63,7 +63,7 @@ const router = new Router({
             {
               path: 'event/:eventId/repetitions',
               name: 'event-repetitions-overview',
-              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/RepetitionsList.vue')
+              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/Overview.vue')
             }
           ]
         },
