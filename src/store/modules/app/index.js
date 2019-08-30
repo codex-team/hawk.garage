@@ -6,7 +6,8 @@ import {
 import * as workspacesApi from '../../../api/workspaces';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
-import { groupBy } from '../../../utils';
+import { INIT_EVENTS_MODULE } from '../events/actionTypes';
+import { groupByDate } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -45,13 +46,11 @@ const state = {
 
 const actions = {
   /**
-   * Send query request to get information about all workspaces
+   * Send query request to get information about all workspaces, projects and latest project's event
    * @param {function} dispatch - standard Vuex dispatch function
    * @return {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
-    const groupByDate = groupBy('date');
-
     const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
 
     const projects = workspaces.reduce((accumulator, workspace) => {
@@ -65,13 +64,32 @@ const actions = {
       return accumulator;
     }, []);
 
+    /**
+     * @type {Object<string, GroupedEvent>} - all fetched events
+     */
+    const events = {};
+
+    /**
+     * @type {RecentInfoByDate} - latest event from all projects
+     */
+    const recentEvents = {};
+
     projects.forEach(project => {
-      project.eventsListByDate = groupByDate(project.recentEvents);
+      if (!project.recentEvents) {
+        return;
+      }
+
+      recentEvents[project.id] = groupByDate(project.recentEvents.dailyInfo);
+
+      project.recentEvents.events.forEach(event => {
+        events[project.id + ':' + event.id] = event;
+      });
       delete project.recentEvents;
     });
 
     dispatch(SET_WORKSPACES_LIST, workspaces);
     dispatch(SET_PROJECTS_LIST, projects);
+    dispatch(INIT_EVENTS_MODULE, { events, recentEvents });
   },
 
   /**
