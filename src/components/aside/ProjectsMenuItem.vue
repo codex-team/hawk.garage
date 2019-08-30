@@ -41,8 +41,8 @@ export default {
   },
   computed: {
     lastEventTitle() {
-      const recentProjectEvents = this.$store.state.events.recent[this.project.id];
-      console.log(recentProjectEvents)
+      const recentProjectEvents = this.$store.getters.recentEventsByProjectId(this.project.id);
+
       if (recentProjectEvents) {
         const lastEventGroupHash = Object.values(recentProjectEvents)[0][0].groupHash;
         const lastEvent = Object.values(this.$store.state.events.list).find(event => event.groupHash === lastEventGroupHash);

@@ -68,7 +68,10 @@ const getters = {
 
     eventsByGroupHash[groupHash] = event;
     return event;
-  }
+  },
+
+  // returns recent event of the project by its id
+  recentEventsByProjectId: state => projectId => state.recent[projectId],
 };
 
 const actions = {
