@@ -2,7 +2,7 @@
   <PopupDialog
     class="repetitions-overview"
     big
-    @close="$router.push({name: 'event-overview', params: { projectId: '', eventId: '' }})"
+    @close="$router.push({name: 'event-overview', params: { projectId: projectId, eventId: eventId }})"
   >
     <div class="repetitions-overview__container">
       <!-- HEADER -->
@@ -10,7 +10,7 @@
         <!-- Header arrow icon -->
         <div
           class="repetitions-overview__header-arrow"
-          @click="$router.push({name: 'event-overview', params: { projectId: '', eventId: '' }})"
+          @click="$router.push({name: 'event-overview', params: { projectId: projectId, eventId: eventId }})"
         >
           <div class="header-arrow">
             <Icon
@@ -29,11 +29,11 @@
         />
 
         <div class="repetitions-overview__header-title">
-          {{ this.lastEvent ? this.lastEvent.payload.title : '' }}
+          {{ event.payload.title }}
         </div>
 
         <div class="repetitions-overview__header-time">
-          today, 13:15: {{ this.lastEvent ? this.lastEvent.payload.timestamp : '' }}
+          {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
         </div>
       </div>
 
@@ -44,7 +44,7 @@
             Total
           </div>
           <div class="event-info__repeats">
-            152 times
+            {{ event.count }} times
           </div>
         </div>
 
@@ -53,7 +53,7 @@
             Since
           </div>
           <div class="event-info__since">
-            12 aug 2019, 14:30: {{ this.firstEvent ? this.firstEvent.payload.timestamp : '' }} <span>— 352 days</span>
+            12 aug 2019, 14:30 <span>— 352 days</span>
           </div>
         </div>
 
@@ -75,7 +75,6 @@ import PopupDialog from '../utils/PopupDialog';
 import Icon from '../utils/Icon';
 import Badge from '../utils/Badge';
 import RepetitionsList from './RepetitionsList';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'RepetitionsOverview',
@@ -86,38 +85,21 @@ export default {
     RepetitionsList
   },
   data() {
+    const projectId = this.$route.params.projectId;
+    const eventId = this.$route.params.eventId;
+
     return {
-      repetitions: [],
-      loaded: false
+      projectId,
+      eventId
     };
   },
   computed: {
     /**
-     * @return {*}
+     * @return {Event}
      */
-    firstEvent() {
-      return null; // this.repetitions[0];
-    },
-
-    /**
-     * @return {*}
-     */
-    lastEvent() {
-      return null; // this.repetitions[this.repetitions.length - 1];
+    event() {
+      return this.$store.getters.findProjectEventById(this.projectId, this.eventId);
     }
-  },
-  created() {
-    /*
-     * this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
-     *   projectId: this.projectId,
-     *   eventId: this.eventId
-     * })
-     *   .then((repetitions) => {
-     *     console.log('repetitions', repetitions);
-     *     this.repetitions = repetitions;
-     *     this.loaded = true;
-     *   });
-     */
   }
 };
 </script>

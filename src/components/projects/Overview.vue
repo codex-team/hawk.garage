@@ -9,7 +9,7 @@
           class="project-overview__events-by-date"
         >
           <div class="project-overview__date">
-            {{ date | prettyDate }}
+            {{ date | prettyDateStr }}
           </div>
           <EventItem
             v-for="dailyEventInfo in eventsByDate"

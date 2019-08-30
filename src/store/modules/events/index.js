@@ -2,7 +2,8 @@
 import {
   INIT_EVENTS_MODULE,
   FETCH_PROJECT_RECENT_EVENTS,
-  FETCH_EVENT_REPETITIONS
+  FETCH_EVENT_REPETITIONS,
+  SAVE_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -17,7 +18,8 @@ const mutationTypes = {
   SET_RECENT_EVENTS_LIST: 'SET_RECENT_EVENTS_LIST', // Set new recent events list
   SET_REPETITIONS_LIST: 'SET_REPETITIONS_LIST', // something...
   ADD_TO_RECENT_EVENTS_LIST: 'ADD_TO_RECENT_EVENTS_LIST', // add new data to recent event list
-  ADD_TO_EVENTS_LIST: 'ADD_TO_EVENTS_LIST' // add new data to event list
+  ADD_TO_EVENTS_LIST: 'ADD_TO_EVENTS_LIST', // add new data to event list
+  UPDATE_EVENTS_LIST: 'UPDATE_TO_LIST'
 };
 
 /**
@@ -50,8 +52,7 @@ const mutationTypes = {
 function initialState() {
   return {
     list: {},
-    recent: {},
-    repetitions: {}
+    recent: {}
   };
 }
 
@@ -65,15 +66,6 @@ const eventsByGroupHash = {};
  * Module getters
  */
 const getters = {
-  /**
-   * something..
-   * @param state
-   * @return {function(*): *}
-   */
-  getRepetitions: (state) => (eventId) => {
-    return state.repetitions[eventId];
-  },
-
   /**
    * Returns event by it's group hash and project id
    * @param {EventsModuleState} state - Vuex state
@@ -108,7 +100,17 @@ const getters = {
      * @param {String} projectId - event's project id
      * @return {RecentInfoByDate}
      */
-    projectId => state.recent[projectId]
+    projectId => state.recent[projectId],
+
+  /**
+   * @param state
+   * @return {Function}
+   */
+  findProjectEventById: state => (projectId, eventId) => {
+    const key = projectId + ':' + eventId;
+
+    return state.list[key];
+  }
 };
 
 const actions = {
@@ -125,6 +127,16 @@ const actions = {
   },
 
   /**
+   * Puts single event to the events list
+   * @param commit
+   * @param projectId
+   * @param event
+   */
+  [SAVE_EVENT]({ commit }, { projectId, event }) {
+    commit(mutationTypes.UPDATE_EVENTS_LIST, { projectId, event });
+  },
+
+  /**
    * Get latest project events
    * @param {function} commit - standard Vuex commit function
    * @param {String} projectId - id of the project to fetch data
@@ -138,13 +150,15 @@ const actions = {
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
   },
 
+  /**
+   *
+   * @param commit
+   * @param projectId
+   * @param eventId
+   * @return {Promise<void>}
+   */
   async [FETCH_EVENT_REPETITIONS]({ commit }, { projectId, eventId }) {
-    const repetitions = await eventsApi.getRepetitions(projectId, eventId);
-
-    commit(mutationTypes.SET_REPETITIONS_LIST, {
-      eventId,
-      repetitions
-    });
+    return eventsApi.getRepetitions(projectId, eventId);
   },
 
   /**
@@ -197,13 +211,15 @@ const mutations = {
   },
 
   /**
-   * sss
+   *
    * @param state
-   * @param eventId
-   * @param repetitions
+   * @param projectId
+   * @param event
    */
-  [mutationTypes.SET_REPETITIONS_LIST](state, { eventId, repetitions }) {
-    state.repetitions[eventId] = repetitions;
+  [mutationTypes.UPDATE_EVENTS_LIST](state, { projectId, event }) {
+    const key = projectId + ':' + event.id;
+
+    state.list[key] = event;
   },
 
   /**

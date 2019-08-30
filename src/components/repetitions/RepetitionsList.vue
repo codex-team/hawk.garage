@@ -46,23 +46,24 @@ export default {
   components: {
   },
   data() {
+    const projectId = this.$route.params.projectId;
+    const eventId = this.$route.params.eventId;
+    const currentEvent = this.$store.getters.findProjectEventById(projectId, eventId);
+
     return {
-      projectId: this.$route.params.projectId,
-      eventId: this.$route.params.eventId
+      projectId: projectId,
+      eventId: eventId,
+      repetitions: [ currentEvent ]
     };
   },
-  computed: {
-    repetitions() {
-      return this.$store.getters.getRepetitions(this.eventId);
-    }
-  },
-  mounted() {
+  async created() {
     const projectId = this.projectId;
     const eventId = this.eventId;
+    const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId, eventId });
 
-    this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId, eventId });
-  },
-  methods: {
+    repetitions.forEach(event => {
+      this.repetitions.push(event);
+    });
   }
 };
 </script>

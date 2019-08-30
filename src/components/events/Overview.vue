@@ -24,7 +24,7 @@
             @click="$router.push({name: 'event-repetitions-overview', params: { projectId: projectId, eventId: event.id }})"
           >
             <div class="event-overview__statistics-count">
-              156
+              {{ event.count }}
             </div>
             times
           </div>
@@ -69,6 +69,7 @@ import DetailsBacktrace from './DetailsBacktrace';
 import DetailsHttpPost from './DetailsHttpPost';
 import Badge from '../utils/Badge';
 import * as eventApi from '../../api/events';
+import { SAVE_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventOverview',
@@ -95,6 +96,8 @@ export default {
     const eventId = this.$route.params.eventId;
 
     this.event = await eventApi.getEvent(this.projectId, eventId);
+
+    await this.$store.dispatch(SAVE_EVENT, { projectId: this.projectId, event: this.event });
 
     this.event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },

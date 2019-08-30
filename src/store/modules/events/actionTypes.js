@@ -12,3 +12,8 @@ export const FETCH_PROJECT_RECENT_EVENTS = 'FETCH_PROJECT_RECENT_EVENTS';
  * @type {string}
  */
 export const FETCH_EVENT_REPETITIONS = 'FETCH_EVENT_REPETITIONS';
+
+/**
+ * @type {string}
+ */
+export const SAVE_EVENT = 'FETCH_EVENT';

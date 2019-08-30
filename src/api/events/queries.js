@@ -6,8 +6,19 @@ export const QUERY_EVENT = `
     event(projectId: $projectId, eventId: $eventId) {
       id
       catcherType
+      count
+      groupHash
       payload {
         title
+        release
+        timestamp
+        context
+        user {
+          id
+          name
+          photo
+        }
+        get
         backtrace {
           line
           sourceCode {
@@ -21,7 +32,6 @@ export const QUERY_EVENT = `
   }
 `;
 
-// language=GraphQL
 /**
  * Get project recent events
  */
@@ -34,6 +44,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
         events {
           id
           groupHash
+          count
           payload {
             timestamp
             title
