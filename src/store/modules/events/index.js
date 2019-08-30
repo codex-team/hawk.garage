@@ -120,6 +120,10 @@ const actions = {
    */
   async [FETCH_PROJECT_RECENT_EVENTS]({ commit }, { projectId }) {
     const recentEvents = await eventsApi.fetchRecentProjectEvents(projectId);
+
+    if (!recentEvents) {
+      return;
+    }
     const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });

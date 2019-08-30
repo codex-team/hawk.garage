@@ -23,6 +23,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           }
           dailyInfo {
             groupHash
+            timestamp
             count
             date
           }
