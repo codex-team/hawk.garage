@@ -235,17 +235,4 @@ export default {
     }
 
   }
-
-  .checkbox {
-    width: 28px;
-    height: 28px;
-    background-color: var(--color-bg-second);
-    border-radius: 4px;
-  }
-
-  .radio {
-    width: 28px;
-    height: 28px;
-  }
-
 </style>

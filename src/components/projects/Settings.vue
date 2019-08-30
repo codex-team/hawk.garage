@@ -32,8 +32,7 @@ export default {
   name: 'ProjectSettingsWindow',
   components: {
     SettingsWindow
-  },
-  methods: {}
+  }
 };
 </script>
 

@@ -23,7 +23,7 @@ export default {
   props: {
     onCloseRoute: {
       type: [Object, String],
-      default: () => undefined
+      default: null
     }
   }
 };

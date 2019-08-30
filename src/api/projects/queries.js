@@ -15,6 +15,9 @@ export const MUTATION_CREATE_PROJECT = `
   }
 `;
 
+/**
+ * Query recent errors
+ */
 // language=GraphQL
 export const QUERY_RECENT_ERRORS = `
   query RecentErrors($projectId: ID!) {
@@ -32,6 +35,9 @@ export const QUERY_RECENT_ERRORS = `
   }
 `;
 
+/**
+ * Query project notification settings
+ */
 // language=GraphQL
 export const QUERY_NOTIFICATION_SETTINGS = `
   query NotifiactionSettings($projectId: ID!){
@@ -56,6 +62,9 @@ export const QUERY_NOTIFICATION_SETTINGS = `
   }
 `;
 
+/**
+ * Mutation for updating notifications settings
+ */
 // language=GraphQL
 export const MUTATION_UPDATE_NOTIFICATION_SETTINGS = `
   mutation UpdateNotificationSettings(

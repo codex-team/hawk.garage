@@ -4,7 +4,7 @@
 /**
  * Base site styles
  */
-html,body {
+html, body {
   height: 100%;
 }
 
@@ -170,4 +170,16 @@ body .cdx-notify {
   &__btns-wrapper {
     margin-top: 8px;
   }
+}
+
+.checkbox {
+  width: 28px;
+  height: 28px;
+  background-color: var(--color-bg-second);
+  border-radius: 4px;
+}
+
+.radio {
+  width: 28px;
+  height: 28px;
 }
