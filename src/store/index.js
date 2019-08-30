@@ -20,7 +20,7 @@ export default new Vuex.Store({
     user,
     workspaces,
     projects,
-    notify
+    notify,
     events
   },
   plugins: [ createPersistedState() ],
