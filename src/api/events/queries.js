@@ -31,7 +31,6 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
     $projectId: ID!
   ) {
     project(id: $projectId) {
-      id
       recentEvents(limit: 30) {
         events {
           id
