@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import VueCookies from 'vue-cookies';
 import store from './store';
 
 import AppShell from './components/AppShell';
@@ -30,6 +29,11 @@ const router = new Router({
               path: 'appearance',
               name: 'appearance-settings',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance')
+            },
+            {
+              path: 'billing',
+              name: 'billing-settings',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing')
             }
           ]
         },
