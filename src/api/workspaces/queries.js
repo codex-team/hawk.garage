@@ -13,14 +13,20 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         name
         image
         recentEvents(limit: 1) {
-          event {
+          events {
+            id
+            groupHash
             payload {
-              title
               timestamp
+              title
             }
           }
-          count
-          date
+          dailyInfo {
+            groupHash
+            timestamp
+            count
+            date
+          }
         }
       }
     }
