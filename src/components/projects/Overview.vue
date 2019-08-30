@@ -66,8 +66,11 @@ export default {
       return this.$store.getters.getProjectById(projectId);
     },
 
+    /**
+     * Project recent errors
+     */
     recentEvents() {
-      return this.$store.state.events.recent[this.project.id];
+      return this.$store.getters.recentEventsByProjectId(this.project.id);
     },
 
     ...mapGetters([ 'eventByGroupHash' ])
