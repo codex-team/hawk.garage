@@ -49,11 +49,39 @@
       "title": "Внешний вид"
     },
     "billing": {
-      "title": "Платежи"
+      "title": "Платежи",
+      "ownedWorkspaces": "Воркспейсы"
     },
     "logout": "Выйти",
     "notifications": {
       "title": "Уведомления"
+    }
+  },
+  "billing": {
+    "connectedCards": "Сохраненные карты",
+    "detachCard": "Открепить карту",
+    "addCardButton": "Добавить карту",
+    "members": "0 участников | 1 участник | {n} участника | {n} участников",
+    "currentBalance": "Баланс",
+    "currentPlan": "План",
+    "volume": "Емкость",
+    "volumeEvents": "событий | событие | события | событий",
+    "pay": "+",
+    "payCustomAmount": "Другая сумма",
+    "requestInvoice": "Запросить счет",
+    "paymentHistory": "История платежей",
+    "all": "Все",
+    "incomings": "Пополнения",
+    "charges": "Списания",
+    "autoPay": "Авто-платеж",
+    "payPeriod": "мес",
+    "processPayment": {
+      "header": "Пополнение баланса",
+      "description": "Чтобы получать события из вашего приложения, получите интеграционный токен, добавив проект.",
+      "workspaceSelectLabel": "Воркспейс",
+      "cardSelectLabel": "Карта",
+      "amountLabel": "Сумма",
+      "submitButton": "Продолжить"
     }
   },
   "workspaces": {
