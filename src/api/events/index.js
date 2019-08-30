@@ -15,6 +15,11 @@ export async function getEvent(projectId, eventId) {
   return (await api.call(QUERY_EVENT, { projectId, eventId })).event;
 }
 
-export async function fetchRecentProjectEvents(projectId, limit, skip) {
+/**
+ * Returns latest project events
+ * @param {String} projectId - id of the project to fetch recent errors
+ * @return {Promise<RecentEvents>}
+ */
+export async function fetchRecentProjectEvents(projectId) {
   return (await api.call(QUERY_RECENT_PROJECT_EVENTS, { projectId })).project.recentEvents;
 }

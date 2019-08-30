@@ -23,6 +23,9 @@ export const QUERY_EVENT = `
 `;
 
 // language=GraphQL
+/**
+ * Get project recent events
+ */
 export const QUERY_RECENT_PROJECT_EVENTS = `
   query ProjectRecentEvents (
     $projectId: ID!
