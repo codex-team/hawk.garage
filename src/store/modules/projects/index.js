@@ -7,9 +7,7 @@ import {
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';
-import { groupBy } from '../../../utils';
-
-const groupByDate = groupBy('date');
+import { groupByDate } from '../../../utils';
 
 /**
  * Mutations enum for this module
