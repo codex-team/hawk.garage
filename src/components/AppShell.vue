@@ -132,9 +132,9 @@ export default {
      * @param {Project} project - clicked project
      */
     onProjectMenuItemClick(project) {
-      const valuesArray = Object.values(project.eventsListByDate);
+      const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(project.id);
 
-      if (!valuesArray.length) {
+      if (!recentProjectEvents) {
         return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } }, () => {});
       }
       this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {});
