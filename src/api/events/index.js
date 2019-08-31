@@ -1,7 +1,8 @@
 import {
   QUERY_EVENT,
   QUERY_RECENT_PROJECT_EVENTS,
-  QUERY_REPETITION_LIST
+  QUERY_REPETITION_LIST,
+  QUERY_LATEST_REPETITION
 } from './queries';
 import * as api from '../index';
 
@@ -34,4 +35,8 @@ export async function fetchRecentProjectEvents(projectId) {
  */
 export async function getRepetitions(projectId, eventId) {
   return (await api.call(QUERY_REPETITION_LIST, { projectId, eventId })).repetitions;
+}
+
+export async function getLatestRepetitions(projectId, eventId) {
+  return (await api.call(QUERY_LATEST_REPETITION, { projectId, eventId })).repetitions;
 }

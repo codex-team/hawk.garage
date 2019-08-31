@@ -77,3 +77,24 @@ export const QUERY_REPETITION_LIST = `
     }
   } 
 `;
+
+// language=GraphQL
+export const QUERY_LATEST_REPETITION = `
+  query LatestRepetition(
+    $projectId: ID!,
+    $eventId: ID!
+  ) {
+    project(id: $projectId){
+      event(id: $eventId) {
+        repetitions(limit: 1) {
+          id
+          catcherType
+          payload {
+            title
+            timestamp
+          }
+        }
+      }
+    }
+  } 
+`;
