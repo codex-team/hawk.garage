@@ -79,3 +79,13 @@ Vue.filter('prettyDate', function (value) {
 
   return `${day} ${i18n.t('common.months[' + month + ']')}`;
 });
+
+Vue.filter('prettySince', function (value) {
+  const targetDate = new Date(value);
+
+  const day = targetDate.getDate();
+  const month = targetDate.getMonth();
+  const year = targetDate.getFullYear();
+
+  return `${day} ${i18n.t('common.months[' + month + ']')} ${year}`;
+});

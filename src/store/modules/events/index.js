@@ -106,7 +106,7 @@ const getters = {
    * @param state
    * @return {Function}
    */
-  findProjectEventById: state => (projectId, eventId) => {
+  getProjectEventById: state => (projectId, eventId) => {
     const key = projectId + ':' + eventId;
 
     return state.list[key];

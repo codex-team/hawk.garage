@@ -19,7 +19,7 @@
           >
         </td>
         <td class="repetitions-table__col user-info">
-          <span class="user-info__name">{{ repetition.payload.user ? repetition.payload.user.name : 'username' }}</span>
+          <span class="user-info__name">{{ repetition.payload.user ? repetition.payload.user.name : '' }}</span>
         </td>
         <td class="repetitions-table__col user-info">
           <span class="user-info__os">Linux</span>

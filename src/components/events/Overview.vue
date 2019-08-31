@@ -97,6 +97,9 @@ export default {
 
     this.event = await eventApi.getEvent(this.projectId, eventId);
 
+    /**
+     * @todo this line must be in actions, refactor somehow
+     */
     await this.$store.dispatch(SAVE_EVENT, { projectId: this.projectId, event: this.event });
 
     this.event.payload.cookies = [

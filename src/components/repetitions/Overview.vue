@@ -53,7 +53,7 @@
             Since
           </div>
           <div class="event-info__since">
-            12 aug 2019, 14:30 <span>— 352 days</span>
+            {{ event.firstOccurence | prettySince }}
           </div>
         </div>
 
@@ -98,13 +98,13 @@ export default {
      * @return {Event}
      */
     event() {
-      return this.$store.getters.findProjectEventById(this.projectId, this.eventId);
+      return this.$store.getters.getProjectEventById(this.projectId, this.eventId);
     }
   }
 };
 </script>
 
-<style scoped>
+<style>
   .header-arrow {
     &__icon {
       width: 13px;

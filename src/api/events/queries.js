@@ -8,6 +8,7 @@ export const QUERY_EVENT = `
       catcherType
       count
       groupHash
+      firstOccurence
       payload {
         title
         release
