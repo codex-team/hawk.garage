@@ -17,7 +17,7 @@
 import WorkspaceBilling from '../billing/WorkspaceCard';
 
 export default {
-  name: 'AccountBilling',
+  name: 'AccountBillingSettings',
   components: {
     WorkspaceBilling
   },

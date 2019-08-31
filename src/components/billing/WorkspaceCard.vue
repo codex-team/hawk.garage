@@ -109,9 +109,17 @@ export default {
     }
   },
   computed: {
+    /**
+     * Workspace tariff plan
+     */
     plan() {
       return this.workspace.plan || {};
     },
+
+    /**
+     * Workspace event count per month
+     * @return {number}
+     */
     eventsCount() {
       return 6789;
     }
