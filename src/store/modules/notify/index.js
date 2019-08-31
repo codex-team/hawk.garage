@@ -1,7 +1,10 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
+import Vue from 'vue';
 import {
-  GET_NOTIFICATION_SETTINGS,
-  UPDATE_NOTIFICATION_SETTINGS
+  GET_PERSONAL_NOTIFICATION_SETTINGS,
+  GET_COMMON_NOTIFICATION_SETTINGS,
+  UPDATE_PERSONAL_NOTIFICATION_SETTINGS,
+  UPDATE_COMMON_NOTIFICATION_SETTINGS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -10,7 +13,8 @@ import * as projectsApi from '../../../api/projects';
  * Mutations enum for this module
  */
 const mutationTypes = {
-  SET_NOTIFICATION_SETTINGS: 'SET_NOTIFICATION_SETTINGS' // Set notification settings
+  SET_PERSONAL_NOTIFICATION_SETTINGS: 'SET_PERSONAL_NOTIFICATION_SETTINGS', // Set personal notification settings
+  SET_COMMON_NOTIFICATION_SETTINGS: 'SET_COMMON_NOTIFICATION_SETTINGS' // Set common notification settings
 };
 
 /**
@@ -18,20 +22,40 @@ const mutationTypes = {
  */
 function initialState() {
   return {
-    actionType: 1,
-    words: '',
-    settings: {
-      email: {
-        enabled: false,
-        value: ''
-      },
-      tg: {
-        enabled: false,
-        value: ''
-      },
-      slack: {
-        enabled: false,
-        value: ''
+    personal: {
+      actionType: 1,
+      words: '',
+      settings: {
+        email: {
+          enabled: false,
+          value: ''
+        },
+        tg: {
+          enabled: false,
+          value: ''
+        },
+        slack: {
+          enabled: false,
+          value: ''
+        }
+      }
+    },
+    common: {
+      actionType: 1,
+      words: '',
+      settings: {
+        email: {
+          enabled: false,
+          value: ''
+        },
+        tg: {
+          enabled: false,
+          value: ''
+        },
+        slack: {
+          enabled: false,
+          value: ''
+        }
       }
     }
   };
@@ -45,28 +69,53 @@ const getters = {};
 const actions = {
 
   /**
-   * Get notification settings
+   * Get project personal notification settings
    * @param {function} commit - standard Vuex commit function
    * @param projectId - project ID
    * @returns {Promise<void>}
    */
-  async [GET_NOTIFICATION_SETTINGS]({ commit }, projectId) {
-    const notify = await projectsApi.notificationSettings(projectId);
+  async [GET_PERSONAL_NOTIFICATION_SETTINGS]({ commit }, projectId) {
+    const notify = await projectsApi.personalNotificationSettings(projectId);
 
-    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, notify);
+    commit(mutationTypes.SET_PERSONAL_NOTIFICATION_SETTINGS, notify);
   },
 
   /**
-   * Update notification settings
+   * Get project common notification settings
+   * @param {function} commit - standard Vuex commit function
+   * @param projectId - project ID
+   * @returns {Promise<void>}
+   */
+  async [GET_COMMON_NOTIFICATION_SETTINGS]({ commit }, projectId) {
+    const notify = await projectsApi.commonNotificationSettings(projectId);
+
+    commit(mutationTypes.SET_COMMON_NOTIFICATION_SETTINGS, notify);
+  },
+
+  /**
+   * Update project personal notification settings
    * @param {function} commit - standard Vuex commit function
    * @param projectId - project ID
    * @param {Notify} notify - Notify
    * @returns {Promise<void>}
    */
-  async [UPDATE_NOTIFICATION_SETTINGS]({ commit }, { projectId, notify }) {
-    await projectsApi.updateNotificationSettings(projectId, notify);
+  async [UPDATE_PERSONAL_NOTIFICATION_SETTINGS]({ commit }, { projectId, notify }) {
+    notify = await projectsApi.updatePersonalNotificationSettings(projectId, notify);
 
-    commit(mutationTypes.SET_NOTIFICATION_SETTINGS, notify);
+    commit(mutationTypes.SET_PERSONAL_NOTIFICATION_SETTINGS, notify);
+  },
+
+  /**
+   * Update project personal notification settings
+   * @param {function} commit - standard Vuex commit function
+   * @param projectId - project ID
+   * @param {Notify} notify - Notify
+   * @returns {Promise<void>}
+   */
+  async [UPDATE_COMMON_NOTIFICATION_SETTINGS]({ commit }, { projectId, notify }) {
+    notify = await projectsApi.updateCommonNotificationSettings(projectId, notify);
+
+    commit(mutationTypes.SET_COMMON_NOTIFICATION_SETTINGS, notify);
   },
 
   /**
@@ -80,12 +129,21 @@ const actions = {
 
 const mutations = {
   /**
-   * Set state by Notify
+   * Set personal state by Notify
    * @param {ProjectsModuleState} state - Vuex state
    * @param {Notify} notify - Notify settings
    */
-  [mutationTypes.SET_NOTIFICATION_SETTINGS](state, notify) {
-    Object.assign(state, notify);
+  [mutationTypes.SET_PERSONAL_NOTIFICATION_SETTINGS](state, notify) {
+    Vue.set(state, 'personal', notify);
+  },
+
+  /**
+   * Set common state by Notify
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Notify} notify - Notify settings
+   */
+  [mutationTypes.SET_COMMON_NOTIFICATION_SETTINGS](state, notify) {
+    Vue.set(state, 'common', notify);
   },
 
   /**

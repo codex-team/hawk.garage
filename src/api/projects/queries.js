@@ -36,12 +36,12 @@ export const QUERY_RECENT_ERRORS = `
 `;
 
 /**
- * Query project notification settings
+ * Query project personal notification settings
  */
 // language=GraphQL
-export const QUERY_NOTIFICATION_SETTINGS = `
-  query NotifiactionSettings($projectId: ID!){
-    notificationSettings(projectId: $projectId){
+export const QUERY_PERSONAL_NOTIFICATION_SETTINGS = `
+  query personalNotificationSettings($projectId: ID!){
+    personalNotificationSettings(projectId: $projectId){
       actionType
       words
       settings {
@@ -63,14 +63,85 @@ export const QUERY_NOTIFICATION_SETTINGS = `
 `;
 
 /**
- * Mutation for updating notifications settings
+ * Query project common notification settings. Admins only.
  */
 // language=GraphQL
-export const MUTATION_UPDATE_NOTIFICATION_SETTINGS = `
-  mutation UpdateNotificationSettings(
+export const QUERY_COMMON_NOTIFICATION_SETTINGS = `
+  query commonNotificationSettings($projectId: ID!){
+    commonNotificationSettings(projectId: $projectId){
+      actionType
+      words
+      settings {
+        email {
+          enabled
+          value
+        }
+        tg {
+          enabled
+          value
+        }
+        slack {
+          enabled
+          value
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * Mutation for updating project personal notifications settings
+ */
+// language=GraphQL
+export const MUTATION_UPDATE_PERSONAL_NOTIFICATION_SETTINGS = `
+  mutation updatePersonalNotificationSettings(
     $projectId: ID!,
     $notify: NotifyInput!
   ){
-    updateNotificationSettings(projectId: $projectId, notify: $notify )
+    updatePersonalNotificationSettings(projectId: $projectId, notify: $notify){
+      actionType
+      words
+      settings {
+        email {
+          enabled
+          value
+        }
+        tg {
+          enabled
+          value
+        }
+        slack {
+          enabled
+          value
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * Mutation for updating project common notifications settings
+ */
+// language=GraphQL
+export const MUTATION_UPDATE_COMMON_NOTIFICATION_SETTINGS = `
+  mutation updateCommonNotificationSettings($projectId: ID!, $notify: NotifyInput!){
+    updateCommonNotificationSettings(projectId: $projectId, notify: $notify ){
+      actionType
+      words
+      settings {
+        email {
+          enabled
+          value
+        }
+        tg {
+          enabled
+          value
+        }
+        slack {
+          enabled
+          value
+        }
+      }
+    }
   }
 `;

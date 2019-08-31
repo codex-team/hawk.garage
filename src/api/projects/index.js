@@ -1,7 +1,7 @@
 import {
   MUTATION_CREATE_PROJECT,
-  MUTATION_UPDATE_NOTIFICATION_SETTINGS,
-  QUERY_NOTIFICATION_SETTINGS,
+  MUTATION_UPDATE_PERSONAL_NOTIFICATION_SETTINGS, QUERY_COMMON_NOTIFICATION_SETTINGS, QUERY_COMMON_SETTINGS,
+  QUERY_PERSONAL_NOTIFICATION_SETTINGS,
   QUERY_RECENT_ERRORS
 } from './queries';
 import * as api from '../index';
@@ -52,23 +52,45 @@ export async function fetchRecentErrors(projectId) {
  */
 
 /**
- * Get notification settings
+ * Get project personal notification settings
  * @param projectId - Project ID
  * @returns {Promise<Notify>}
  */
-export async function notificationSettings(projectId) {
-  return (await api.call(QUERY_NOTIFICATION_SETTINGS, { projectId })).notificationSettings;
+export async function personalNotificationSettings(projectId) {
+  return (await api.call(QUERY_PERSONAL_NOTIFICATION_SETTINGS, { projectId })).personalNotificationSettings;
 }
 
 /**
- * Update notificaion settings
+ * Get project common notification settings
+ * @param projectId - Project ID
+ * @returns {Promise<Notify>}
+ */
+export async function commonNotificationSettings(projectId) {
+  return (await api.call(QUERY_COMMON_NOTIFICATION_SETTINGS, { projectId })).commonNotificationSettings;
+}
+
+/**
+ * Update project personal notificaion settings
  * @param {string} projectId - Project ID
  * @param {Notify} notify - Notify object
- * @returns {Promise<Boolean>}
+ * @returns {Promise<Notify>}
  */
-export async function updateNotificationSettings(projectId, notify) {
-  return (await api.call(MUTATION_UPDATE_NOTIFICATION_SETTINGS, {
+export async function updatePersonalNotificationSettings(projectId, notify) {
+  return (await api.call(MUTATION_UPDATE_PERSONAL_NOTIFICATION_SETTINGS, {
     projectId,
     notify
-  })).updateNotificationSettings;
+  })).updatePersonalNotificationSettings;
+}
+
+/**
+ * Update project common notificaion settings
+ * @param {string} projectId - Project ID
+ * @param {Notify} notify - Notify object
+ * @returns {Promise<Notify>}
+ */
+export async function updateCommonNotificationSettings(projectId, notify) {
+  return (await api.call(MUTATION_UPDATE_PERSONAL_NOTIFICATION_SETTINGS, {
+    projectId,
+    notify
+  })).updateCommonNotificationSettings;
 }
