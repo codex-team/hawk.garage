@@ -43,6 +43,7 @@ export default {
     display: flex;
     cursor: pointer;
     user-select: none;
+
     &__slider {
       position: relative;
       width: 25px;
@@ -50,6 +51,7 @@ export default {
       margin-top: 3px;
       background-color: rgba(219, 230, 255, 0.25);
       border-radius: 10px;
+
       &::before {
         position: absolute;
         width: 16px;
@@ -60,11 +62,13 @@ export default {
         transition: transform .1s linear, background-color .1s linear;
         content: '';
       }
+
       ^&--checked &::before {
         background-color: var(--color-indicator-medium);
         transform: translate3d(9px, -3px, 0);
       }
     }
+
     &__label {
       margin-left: 8px;
       color: var(--color-text-second);
@@ -72,6 +76,7 @@ export default {
       font-size: 14px;
       line-height: 16px;
       letter-spacing: 0.18px;
+
       ^&--checked & {
         color: var(--color-text-main);
       }
