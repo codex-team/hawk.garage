@@ -6,7 +6,7 @@ import * as api from '../index';
  *
  * @param {object} paymentQuery
  * @param {string} paymentQuery.language — interface language
- * @oaram {string} paymentQuery.workspaceId - id of workspace for which payment should be proceeded
+ * @param {string} paymentQuery.workspaceId - id of workspace for which payment should be proceeded
  * @param {number} paymentQuery.amount — payment amount
  * @returns {Promise<PaymentLink>}
  */
