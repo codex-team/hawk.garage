@@ -55,6 +55,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupHash
           count
           date
+          timestamp
         }
       }
     }

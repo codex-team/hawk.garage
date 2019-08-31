@@ -4,7 +4,7 @@
     @click="$emit('showEventOverview')"
   >
     <div class="event-item__time">
-      {{ event.payload.timestamp | prettyTime }}
+      {{ lastOccurrenceTimestamp | prettyTime }}
     </div>
     <div class="event-item__badge-container">
       <Badge
@@ -34,10 +34,23 @@ export default {
     Icon
   },
   props: {
+    /**
+     * @type {GroupedEvent} - event to display
+     */
     event: {
       type: Object,
       required: true
     },
+    /**
+     * @type {String} - timestamp of the last event
+     */
+    lastOccurrenceTimestamp: {
+      type: String,
+      required: true
+    },
+    /**
+     * @type {Number} - number of events per day
+     */
     count: {
       type: [String, Number],
       default: ''
