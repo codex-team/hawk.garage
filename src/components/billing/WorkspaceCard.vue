@@ -1,30 +1,32 @@
 <template>
   <div class="workspace-billing-card">
-    <CustomSwitch
-      class="workspace-billing-card__switch"
-      :label="$t('billing.autoPay')"
-    />
-    <div class="clearfix">
-      <EntityImage
-        :id="workspace.id"
-        class="workspace-billing-card__image"
-        :title="workspace.name"
-        :name="workspace.name"
-        :image="workspace.image"
+    <div class="workspace-billing-card__header-row">
+      <div class="workspace-billing-card__short-info">
+        <EntityImage
+          :id="workspace.id"
+          class="workspace-billing-card__image"
+          :title="workspace.name"
+          :name="workspace.name"
+          :image="workspace.image"
+        />
+        <div class="workspace-billing-card__name">
+          {{ workspace.name }}
+        </div>
+        <div class="workspace-billing-card__members-count">
+          {{ $tc('billing.members', workspace.users ? workspace.users.length : 0) }}
+        </div>
+      </div>
+      <CustomSwitch
+        class="workspace-billing-card__switch"
+        :label="$t('billing.autoPay')"
       />
-      <div class="workspace-billing-card__title">
-        {{ workspace.name }}
-      </div>
-      <div class="workspace-billing-card__members-count">
-        {{ $tc('billing.members', workspace.users ? workspace.users.length : 0) }}
-      </div>
     </div>
     <div class="workspace-billing-card__info">
       <div class="workspace-billing-card__info-card">
         <div class="workspace-billing-card__label">
           {{ $t('billing.currentBalance') }}
         </div>
-        <div class="billing-card__balance">
+        <div class="workspace-billing-card__balance">
           {{ workspace.balance || 0 }} $
         </div>
       </div>
@@ -115,27 +117,35 @@ export default {
 <style>
   .workspace-billing-card {
     width: 600px;
-    margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
     border: 1px solid rgba(219, 230, 255, 0.2);
     border-radius: 4px;
 
+    &__header-row {
+      display: flex;
+    }
+
+    &__short-info {
+      height: 34px;
+      display: flex;
+      flex-flow: column wrap;
+    }
+
     &__switch {
-      float: right;
+      margin-left: auto;
     }
 
     &__image {
-      float: left;
+      flex-basis: 100%;
       width: 34px;
       height: 34px;
-      margin-top: -1px;
       margin-right: 15px;
       line-height: 34px;
       border-radius: 3px;
     }
 
-    &__title {
+    &__name {
       font-weight: bold;
       font-size: 15px;
       line-height: 20px;
