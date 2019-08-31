@@ -18,12 +18,12 @@
           GET AN INTEGRATION TOKEN
         </template>
         <template #content>
-          Your Integration token for codex.so PHP:
+          Your Integration token for <b>{{ project.token }}</b>:
           <CodeBlock
             language="plaintext"
             one-line
           >
-            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTPeWVWuJwiA4xidun__FwFc0XyBBJKCUcKi79mp-uY
+            {{ project.token }}
           </CodeBlock>
         </template>
       </GuideStepBlock>
@@ -96,6 +96,17 @@ export default {
     CodeBlock,
     GuideSection,
     GuideHeader
+  },
+  computed: {
+    /**
+     * Current viewed project
+     * @return {Project}
+     */
+    project() {
+      const projectId = this.$route.params.projectId;
+
+      return this.$store.getters.getProjectById(projectId);
+    }
   }
 };
 </script>
