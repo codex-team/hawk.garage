@@ -48,7 +48,8 @@
           :name="item.name"
           :image="item.image"
           :description="item.description"
-          @click.native="$router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: item.page}})"
+          :class="{'project-add-catcher__catalog-item--not-implemented': !item.page}"
+          @click.native="item.page && $router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: item.page}})"
         />
       </div>
     </div>
@@ -245,6 +246,10 @@ export default {
 
     &__catalog-item {
       margin: 7.5px;
+
+      &--not-implemented {
+        opacity: 0.3;
+      }
     }
 
     &__catalog-container {
