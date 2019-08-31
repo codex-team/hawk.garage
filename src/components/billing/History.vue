@@ -83,12 +83,18 @@ export default {
   },
   computed: {
     transactions() {
+      const user = this.$store.state.user.data;
+
       let transactions = [];
 
       if (this.workspace) {
         transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
       } else {
         transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
+          if (!workspace.users || !workspace.users.find(u => u.id === user.id).isAdmin) {
+            return acc;
+          }
+
           return acc.concat(workspace.transactions || []);
         }, []);
 

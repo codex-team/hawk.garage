@@ -163,18 +163,12 @@ const actions = {
   /**
    * Get workspaces by ids
    * @param {function} commit - standard Vuex commit function
-   * @param {object} options
-   * @param {boolean} options.withTransactions - if true, fetches transactions
    * @return {Promise<Workspace>}
    */
-  async [FETCH_WORKSPACES]({ commit, dispatch }, options = {}) {
+  async [FETCH_WORKSPACES]({ commit }) {
     const workspaces = (await workspaceApi.getWorkspaces([]));
 
     commit(mutationTypes.SET_WORKSPACES_LIST, workspaces);
-
-    if (options.withTransactions) {
-      dispatch(GET_TRANSACTIONS, { ids: [] });
-    }
   },
 
   /**

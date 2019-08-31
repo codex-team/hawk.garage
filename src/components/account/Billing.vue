@@ -18,7 +18,7 @@
 import BillingCard from '../billing/Workspace';
 import BillingHistory from '../billing/History';
 import BillingCards from '../billing/Cards';
-import { FETCH_WORKSPACES } from '../../store/modules/workspaces/actionTypes';
+import { FETCH_WORKSPACES, GET_TRANSACTIONS } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'AccountBilling',
@@ -29,11 +29,29 @@ export default {
   },
   computed: {
     workspaces() {
-      return this.$store.state.workspaces.list;
+      return this.$store.state.workspaces.list.filter(workspace => this.isAdmin(workspace));
     }
   },
-  created() {
-    this.$store.dispatch(FETCH_WORKSPACES, { withTransactions: true });
+  async created() {
+    /**
+     * Fetch info about workspaces members
+     */
+    await this.$store.dispatch(FETCH_WORKSPACES);
+    /**
+     * Fetch workspaces transactions
+     */
+    await this.$store.dispatch(GET_TRANSACTIONS, { ids: [] });
+  },
+  methods: {
+    isAdmin(workspace) {
+      if (!workspace.users) {
+        return false;
+      }
+
+      const user = this.$store.state.user.data;
+
+      return workspace.users.find(u => u.id === user.id).isAdmin;
+    }
   }
 };
 </script>

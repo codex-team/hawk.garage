@@ -15,6 +15,19 @@ export async function getPaymentLink(paymentQuery) {
 }
 
 /**
+ * Transaction info
+ *
+ * @typedef {object} Transaction
+ * @property {string} id - transaction id
+ * @property {string} type - transaction type ('income' or 'charge')
+ * @property {number} amount - transaction amount
+ * @property {Workspace} workspace - workspace for which transaction has been proceed
+ * @property {number} date - transaction date
+ * @property {User} user - user by whom transaction has been made (income transactions only)
+ * @property {number} cardPan - PAN of card by which transaction was made (income transactions only)
+ */
+
+/**
  * Request transactions info for passed workspaces
  *
  * @param {string[]} ids - ids of workspaces

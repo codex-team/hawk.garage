@@ -117,12 +117,10 @@ export default {
       border-radius: 8px;
       cursor: pointer;
       user-select: none;
-      fill: var(--color-text-second);
 
       &:hover {
         color: var(--color-text-main);
         border-color: var(--color-text-main);
-        fill: var(--color-text-main);
       }
     }
 
