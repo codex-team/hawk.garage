@@ -17,3 +17,5 @@ export const FETCH_EVENT_REPETITIONS = 'FETCH_EVENT_REPETITIONS';
  * @type {string}
  */
 export const SAVE_EVENT = 'FETCH_EVENT';
+
+export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';

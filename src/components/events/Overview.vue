@@ -68,8 +68,7 @@ import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import DetailsHttpPost from './DetailsHttpPost';
 import Badge from '../utils/Badge';
-import * as eventApi from '../../api/events';
-import { SAVE_EVENT } from '../../store/modules/events/actionTypes';
+import { GET_LATEST_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventOverview',
@@ -95,12 +94,7 @@ export default {
   async created() {
     const eventId = this.$route.params.eventId;
 
-    this.event = await eventApi.getEvent(this.projectId, eventId);
-
-    /**
-     * @todo this line must be in actions, refactor somehow
-     */
-    await this.$store.dispatch(SAVE_EVENT, { projectId: this.projectId, event: this.event });
+    this.event = await this.$store.dispatch(GET_LATEST_EVENT, { projectId: this.projectId, eventId });
 
     this.event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },

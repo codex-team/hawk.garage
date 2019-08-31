@@ -3,12 +3,13 @@ import {
   INIT_EVENTS_MODULE,
   FETCH_PROJECT_RECENT_EVENTS,
   FETCH_EVENT_REPETITIONS,
-  SAVE_EVENT
+  SAVE_EVENT,
+  GET_LATEST_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import * as eventsApi from '../../../api/events';
-import { groupByDate } from '../../../utils';
+import { groupByDate, deepMerge } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -52,7 +53,8 @@ const mutationTypes = {
 function initialState() {
   return {
     list: {},
-    recent: {}
+    recent: {},
+    repetitions: {}
   };
 }
 
@@ -161,8 +163,19 @@ const actions = {
    * @param eventId
    * @return {Promise<void>}
    */
-  async [FETCH_EVENT_REPETITIONS]({ commit }, { projectId, eventId }) {
-    return eventsApi.getRepetitions(projectId, eventId);
+  async [FETCH_EVENT_REPETITIONS]({ commit, getters }, { projectId, eventId }) {
+    return deepMerge(eventsApi.getRepetitions(projectId, eventId));
+  },
+
+  async [GET_LATEST_EVENT]({ commit, getters }, { projectId, eventId }) {
+    const originalEvent = await eventsApi.getEvent(projectId, eventId);
+
+    const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
+
+    return {
+      id: originalEvent.id,
+      payload: deepMerge(originalEvent.payload, repetition.payload)
+    };
   },
 
   /**

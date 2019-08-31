@@ -14,7 +14,7 @@ import * as api from '../index';
  * @return {Promise<Object>}
  */
 export async function getEvent(projectId, eventId) {
-  return (await api.call(QUERY_EVENT, { projectId, eventId })).event;
+  return (await api.call(QUERY_EVENT, { projectId, eventId })).project.event;
 }
 
 /**
@@ -37,6 +37,6 @@ export async function getRepetitions(projectId, eventId) {
   return (await api.call(QUERY_REPETITION_LIST, { projectId, eventId })).repetitions;
 }
 
-export async function getLatestRepetitions(projectId, eventId) {
-  return (await api.call(QUERY_LATEST_REPETITION, { projectId, eventId })).repetitions;
+export async function getLatestRepetition(projectId, eventId) {
+  return (await api.call(QUERY_LATEST_REPETITION, { projectId, eventId })).project.event.repetitions.shift();
 }

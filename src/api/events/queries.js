@@ -1,35 +1,38 @@
+// language=GraphQL
 /**
  * Get specific error
  */
 export const QUERY_EVENT = `
   query Event($projectId: ID!, $eventId: ID!){
-    event(projectId: $projectId, eventId: $eventId) {
-      id
-      catcherType
-      count
-      groupHash
-      firstOccurence
-      payload {
-        title
-        release
-        timestamp
-        context
-        user {
-          id
-          name
-          photo
-        }
-        get
-        backtrace {
-          line
-          sourceCode {
-            line
-            content
+    project(id: $projectId) {
+      event(id: $eventId) {
+        id
+        catcherType
+        totalCount
+        groupHash
+        payload {
+          title
+          release
+          timestamp
+          context
+          user {
+            id
+            name
+            photo
           }
-          file
+          get
+          backtrace {
+            line
+            sourceCode {
+              line
+              content
+            }
+            file
+          }
         }
       }
     }
+
   }
 `;
 
@@ -45,7 +48,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
         events {
           id
           groupHash
-          count
+          totalCount
           payload {
             timestamp
             title
@@ -88,14 +91,9 @@ export const QUERY_LATEST_REPETITION = `
     project(id: $projectId){
       event(id: $eventId) {
         repetitions(limit: 1) {
-          id
-          catcherType
-          payload {
-            title
-            timestamp
-          }
+          payload
         }
       }
     }
-  } 
+  }
 `;
