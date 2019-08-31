@@ -134,7 +134,7 @@ export default {
       top: 100%;
       right: 0;
       left: 0;
-      z-index: 1;
+      z-index: 2;
       margin-top: -5px;
       padding-top: 5px;
       background-color: var(--color-bg-main);
@@ -175,6 +175,7 @@ export default {
       border-bottom: 1px solid transparent;
       border-bottom-right-radius: unset;
       border-bottom-left-radius: unset;
+      z-index: 3;
     }
 
     &--opened &__option,
