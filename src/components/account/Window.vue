@@ -28,7 +28,7 @@
         </router-link>
         <router-link
           class="settings-window__menu-item"
-          :to="{ name: 'home'}"
+          :to="{ name: 'billing-settings'}"
         >
           {{ $t('settings.billing.title') }}
         </router-link>

@@ -23,6 +23,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           }
           dailyInfo {
             groupHash
+            timestamp
             count
             date
           }
@@ -87,6 +88,14 @@ export const QUERY_WORKSPACES = `
      name
      description
      image
+     balance
+     plan {
+       name  
+       subscriptionDate
+       lastChargeDate
+       monthlyCharge  
+       eventsLimit
+     }
      users {
        id
        name

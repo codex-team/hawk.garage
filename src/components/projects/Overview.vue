@@ -14,6 +14,7 @@
           <EventItem
             v-for="dailyEventInfo in eventsByDate"
             :key="dailyEventInfo.groupHash"
+            :last-occurrence-timestamp="dailyEventInfo.timestamp"
             :count="dailyEventInfo.count"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
