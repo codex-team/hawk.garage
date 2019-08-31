@@ -80,6 +80,7 @@ const catalogItems = [
   },
   {
     name: 'JAVASCRIPT',
+    page: 'javascript',
     description: 'Advanced client catcher with errors bunching',
     image: require('../../../assets/catalog/javascript/js@3x.jpg')
   },
