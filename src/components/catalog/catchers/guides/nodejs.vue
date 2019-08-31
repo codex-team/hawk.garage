@@ -1,40 +1,14 @@
 <template>
   <div class="guide-page">
-    <div class="guide-page__header">
-      <router-link
-        class="guide-page__header-link"
-        :to="{name:'add-catcher', params: {projectId: $route.params.projectId}}"
-      >
-        <Icon
-          class="guide-page__header-link-icon"
-          symbol="arrow-left"
-        />
-        Back to other catchers
-      </router-link>
-      <div class="guide-page__name-container">
-        <div class="guide-page__name">
-          Node js
-        </div>
-        <CatalogItemLabel
-          class="guide-page__label"
-          item-type="catcher"
-        />
-      </div>
-      <div class="guide-page__description">
-        Can be connected as standalone script or as monolog provider
-      </div>
-      <div class="guide-page__info">
-        <div class="guide-page__source-code">
-          <a href="https://github.com/codex-team/hawk.php">View source</a>
-        </div>
-        <div class="guide-page__readme">
-          <a href="https://github.com/codex-team/hawk.php/blob/master/README.md">View README.md</a>
-        </div>
-        <div class="guide-page__last-version">
-          Last version: 1.2.3
-        </div>
-      </div>
-    </div>
+    <GuideHeader
+      class="guide-page__header"
+      :background-image="require('../../../../assets/catalog/nodejs.svg')"
+      github-link="https://github.com/codex-team/hawk.nodejs"
+      catcher-name="Javascript"
+      description="Track errors from your backend application written on JavaScript"
+      readme-link="https://github.com/codex-team/hawk.nodejs/blob/master/README.md"
+      last-version="2.0"
+    />
     <div class="guide-page__instructions">
       <div class="guide-page__instructions-header">
         INSTALLATION
@@ -110,20 +84,18 @@
 </template>
 
 <script>
-import CatalogItemLabel from '../../ItemLabel';
+import GuideHeader from '../../GuidePageHeader';
 import GuideStepBlock from '../../GuideStepBlock';
 import GuideSection from '../../GuideSection';
 import CodeBlock from '../../../utils/CodeBlock';
-import Icon from '../../../utils/Icon';
 
 export default {
   name: 'SetupPhpCatcher',
   components: {
-    Icon,
     GuideStepBlock,
     CodeBlock,
     GuideSection,
-    CatalogItemLabel
+    GuideHeader
   }
 };
 </script>
