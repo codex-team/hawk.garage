@@ -81,6 +81,7 @@ export default {
 
     &__content {
       width: 100%;
+      overflow: auto;
       padding: 50px 200px 50px 50px;
     }
   }
