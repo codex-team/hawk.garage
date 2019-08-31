@@ -61,7 +61,7 @@
         </div>
       </div>
     </div>
-    <div class="workspace-billing-card__buttons">
+    <div class="workspace-billing-card__buttons-container">
       <button
         class="button button--submit workspace-billing-card__button"
       >
@@ -96,7 +96,12 @@ import CustomSwitch from '../forms/Switch';
 
 export default {
   name: 'WorkspaceBillingCard',
-  components: { CustomSwitch, Icon, Progress, EntityImage },
+  components: {
+    CustomSwitch,
+    Icon,
+    Progress,
+    EntityImage
+  },
   props: {
     workspace: {
       type: Object,
@@ -225,29 +230,30 @@ export default {
       background-color: rgba(219, 230, 255, 0.25);
     }
 
-    &__buttons {
+    &__buttons-container {
       margin-top: 25px;
+      display: flex;
+      justify-content: space-between;
     }
 
     &__button {
-      margin-right: 15px;
-      padding: 10px 12px;
+      padding: 10px 15px;
       line-height: 17px;
-    }
 
-    &__button--invoice {
-      background-color: #50638c;
+      &--invoice {
+        background-color: #50638c;
 
-      &:hover {
-        background-color: #475980;
+        &:hover {
+          background-color: #475980;
+        }
+
+        .icon {
+          width: 12px;
+          height: 13px;
+          margin-right: 7px;
+          margin-bottom: -2px;
+        }
       }
-    }
-
-    &__invoice-icon {
-      width: 12px;
-      height: 13px;
-      margin-right: 7px;
-      margin-bottom: -2px;
     }
   }
 </style>
