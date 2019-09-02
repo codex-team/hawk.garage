@@ -18,7 +18,7 @@
           GET AN INTEGRATION TOKEN
         </template>
         <template #content>
-          Your Integration token for <b>{{ project.token }}</b>:
+          Your Integration token for <b>{{ project.name }}</b>:
           <CodeBlock
             language="plaintext"
             one-line
