@@ -34,7 +34,7 @@
       >
         <span>{{ `${baseUrl}/join/${workspace.id}` }}</span>
         <input
-          type="submit"
+          type="button"
           class="workspace-team__copy-button"
           :value="$t('workspaces.settings.team.copyButton')"
         >

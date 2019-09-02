@@ -25,6 +25,8 @@
           <CodeBlock
             language="plaintext"
             one-line
+            copyable
+            class="guide-page__token"
           >
             {{ project.token }}
           </CodeBlock>

@@ -8,6 +8,14 @@
     overflow: hidden;
   }
 
+  &__token {
+    text-shadow: 0 0 5px rgba(17, 255, 115, 0.29);
+    letter-spacing: 0.15px;
+    color: #34ffa8;
+    font-size: 12px;
+    border-radius: 3px;
+  }
+
   &__instructions-header {
     margin-bottom: 20px;
     color: var(--color-text-second);
