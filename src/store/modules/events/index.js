@@ -20,7 +20,7 @@ const mutationTypes = {
   SET_REPETITIONS_LIST: 'SET_REPETITIONS_LIST', // something...
   ADD_TO_RECENT_EVENTS_LIST: 'ADD_TO_RECENT_EVENTS_LIST', // add new data to recent event list
   ADD_TO_EVENTS_LIST: 'ADD_TO_EVENTS_LIST', // add new data to event list
-  UPDATE_EVENTS_LIST: 'UPDATE_TO_LIST'
+  ADD_REPETITION_PAYLOAD: 'ADD_REPETITION_PAYLOAD' // save loaded event
 };
 
 /**
@@ -105,13 +105,28 @@ const getters = {
     projectId => state.recent[projectId],
 
   /**
-   * @param state
-   * @return {Function}
+   * List state keeps only original Event
+   *
+   * @return {Event}
    */
-  getProjectEventById: state => (projectId, eventId) => {
+  getProjectEventById: (state) => (projectId, eventId) => {
     const key = projectId + ':' + eventId;
 
     return state.list[key];
+  },
+
+  /**
+   * @return {Event}
+   */
+  getActualEvent: (state) => (projectId, eventId) => {
+    const key = projectId + ':' + eventId;
+
+    const originalEvent = state.list[key];
+    const repetition = state.repetitions[key];
+    const actualEvent = originalEvent;
+
+    // actualEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+    return actualEvent;
   }
 };
 
@@ -126,16 +141,6 @@ const actions = {
   [INIT_EVENTS_MODULE]({ commit }, { events, recentEvents }) {
     commit(mutationTypes.SET_EVENTS_LIST, events);
     commit(mutationTypes.SET_RECENT_EVENTS_LIST, recentEvents);
-  },
-
-  /**
-   * Puts single event to the events list
-   * @param commit
-   * @param projectId
-   * @param event
-   */
-  [SAVE_EVENT]({ commit }, { projectId, event }) {
-    commit(mutationTypes.UPDATE_EVENTS_LIST, { projectId, event });
   },
 
   /**
@@ -157,25 +162,28 @@ const actions = {
   },
 
   /**
-   *
-   * @param commit
-   * @param projectId
-   * @param eventId
-   * @return {Promise<void>}
+   * @param {String} projectId
+   * @param {String} eventId
+   * @return {Promise<Event[]>}
    */
-  async [FETCH_EVENT_REPETITIONS]({ commit, getters }, { projectId, eventId }) {
-    return deepMerge(eventsApi.getRepetitions(projectId, eventId));
+  async [FETCH_EVENT_REPETITIONS]({ commit, getters, state }, { projectId, eventId, limit }) {
+    const originalEvent = state.list[projectId + ':' + eventId];
+    const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
+
+    const evns = repetitions.map(repetition => {
+      return deepMerge(originalEvent.payload, repetition.payload);
+    });
   },
 
   async [GET_LATEST_EVENT]({ commit, getters }, { projectId, eventId }) {
     const originalEvent = await eventsApi.getEvent(projectId, eventId);
-
     const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
+    const actualEvent = originalEvent;
 
-    return {
-      id: originalEvent.id,
-      payload: deepMerge(originalEvent.payload, repetition.payload)
-    };
+    commit(mutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
+
+    actualEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+    return actualEvent;
   },
 
   /**
@@ -228,15 +236,16 @@ const mutations = {
   },
 
   /**
+   * Updates list state
    *
-   * @param state
-   * @param projectId
-   * @param event
+   * @param {String} projectId
+   * @param {String} eventId
+   * @param {Event} event
    */
-  [mutationTypes.UPDATE_EVENTS_LIST](state, { projectId, event }) {
-    const key = projectId + ':' + event.id;
+  [mutationTypes.ADD_REPETITION_PAYLOAD](state, { projectId, eventId, repetition }) {
+    const key = projectId + ':' + eventId;
 
-    state.list[key] = event;
+    state.repetitions[key] = repetition;
   },
 
   /**

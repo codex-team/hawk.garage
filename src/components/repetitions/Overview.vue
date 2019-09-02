@@ -29,11 +29,11 @@
         />
 
         <div class="repetitions-overview__header-title">
-          {{ event.payload.title }}
+          {{ actualEvent }}
         </div>
 
         <div class="repetitions-overview__header-time">
-          {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
+          {{ actualEvent.payload.timestamp | prettyDate }}, {{ actualEvent.payload.timestamp | prettyTime }}
         </div>
       </div>
 
@@ -44,7 +44,7 @@
             Total
           </div>
           <div class="event-info__repeats">
-            {{ event.count }} times
+            {{ actualEvent.totalCount }} times
           </div>
         </div>
 
@@ -53,7 +53,7 @@
             Since
           </div>
           <div class="event-info__since">
-            {{ event.firstOccurence | prettySince }}
+            {{ event.payload.timestamp | prettySince }}
           </div>
         </div>
 
@@ -99,6 +99,13 @@ export default {
      */
     event() {
       return this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+    },
+
+    /**
+     * @return {Event}
+     */
+    actualEvent() {
+      return this.$store.getters.getActualEvent(this.projectId, this.eventId);
     }
   }
 };

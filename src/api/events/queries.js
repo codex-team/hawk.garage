@@ -86,11 +86,12 @@ export const QUERY_REPETITION_LIST = `
 export const QUERY_LATEST_REPETITION = `
   query LatestRepetition(
     $projectId: ID!,
-    $eventId: ID!
+    $eventId: ID!,
+    $limit: Int
   ) {
     project(id: $projectId){
       event(id: $eventId) {
-        repetitions(limit: 1) {
+        repetitions(limit: $limit) {
           payload
         }
       }

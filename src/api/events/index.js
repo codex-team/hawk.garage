@@ -27,16 +27,21 @@ export async function fetchRecentProjectEvents(projectId) {
 }
 
 /**
- * Returns Event's repetitions
- *
  * @param {String} projectId
  * @param {String} eventId
+ * @param {Number} limit
+ *
  * @return {Promise<Event[]>}
  */
-export async function getRepetitions(projectId, eventId) {
-  return (await api.call(QUERY_REPETITION_LIST, { projectId, eventId })).repetitions;
+export async function getLatestRepetitions(projectId, eventId, limit) {
+  return (await api.call(QUERY_LATEST_REPETITION, { projectId, eventId, limit })).project.event.repetitions;
 }
 
+/**
+ * @param {String} projectId
+ * @param {String} eventId
+ * @return {Promise<Event>}
+ */
 export async function getLatestRepetition(projectId, eventId) {
   return (await api.call(QUERY_LATEST_REPETITION, { projectId, eventId })).project.event.repetitions.shift();
 }

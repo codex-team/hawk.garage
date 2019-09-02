@@ -48,22 +48,15 @@ export default {
   data() {
     const projectId = this.$route.params.projectId;
     const eventId = this.$route.params.eventId;
-    const currentEvent = this.$store.getters.findProjectEventById(projectId, eventId);
 
     return {
       projectId: projectId,
       eventId: eventId,
-      repetitions: [ currentEvent ]
+      repetitions: []
     };
   },
-  async created() {
-    const projectId = this.projectId;
-    const eventId = this.eventId;
-    const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId, eventId });
-
-    repetitions.forEach(event => {
-      this.repetitions.push(event);
-    });
+  created() {
+    // this.repetitions = this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });
   }
 };
 </script>

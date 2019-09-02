@@ -24,7 +24,7 @@
             @click="$router.push({name: 'event-repetitions-overview', params: { projectId: projectId, eventId: event.id }})"
           >
             <div class="event-overview__statistics-count">
-              {{ event.count }}
+              {{ event.totalCount }}
             </div>
             times
           </div>
