@@ -102,6 +102,8 @@ const actions = {
   async [UPDATE_PERSONAL_NOTIFICATION_SETTINGS]({ commit }, { projectId, notify }) {
     notify = await projectsApi.updatePersonalNotificationSettings(projectId, notify);
 
+    if (!notify) return;
+
     commit(mutationTypes.SET_PERSONAL_NOTIFICATION_SETTINGS, notify);
   },
 
@@ -114,6 +116,8 @@ const actions = {
    */
   async [UPDATE_COMMON_NOTIFICATION_SETTINGS]({ commit }, { projectId, notify }) {
     notify = await projectsApi.updateCommonNotificationSettings(projectId, notify);
+
+    if (!notify) return;
 
     commit(mutationTypes.SET_COMMON_NOTIFICATION_SETTINGS, notify);
   },

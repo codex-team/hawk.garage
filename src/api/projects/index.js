@@ -1,6 +1,6 @@
 import {
-  MUTATION_CREATE_PROJECT,
-  MUTATION_UPDATE_PERSONAL_NOTIFICATION_SETTINGS, QUERY_COMMON_NOTIFICATION_SETTINGS, QUERY_COMMON_SETTINGS,
+  MUTATION_CREATE_PROJECT, MUTATION_UPDATE_COMMON_NOTIFICATION_SETTINGS,
+  MUTATION_UPDATE_PERSONAL_NOTIFICATION_SETTINGS, QUERY_COMMON_NOTIFICATION_SETTINGS,
   QUERY_PERSONAL_NOTIFICATION_SETTINGS,
   QUERY_RECENT_ERRORS
 } from './queries';
@@ -89,7 +89,7 @@ export async function updatePersonalNotificationSettings(projectId, notify) {
  * @returns {Promise<Notify>}
  */
 export async function updateCommonNotificationSettings(projectId, notify) {
-  return (await api.call(MUTATION_UPDATE_PERSONAL_NOTIFICATION_SETTINGS, {
+  return (await api.call(MUTATION_UPDATE_COMMON_NOTIFICATION_SETTINGS, {
     projectId,
     notify
   })).updateCommonNotificationSettings;
