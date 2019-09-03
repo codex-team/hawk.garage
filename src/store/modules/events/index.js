@@ -52,6 +52,9 @@ function initialState() {
   };
 }
 
+/**
+ * @type {Object<string, Number>} Object for storing count of loaded events per project
+ */
 const eventsCount = {};
 
 /**
@@ -121,20 +124,15 @@ const actions = {
    * @return {Promise<void>}
    */
   async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
-    // console.log('fetch');
     const recentEvents = await eventsApi.fetchRecentEvents(projectId, eventsCount[projectId] || 0);
 
-    // console.log(recentEvents);
     if (!recentEvents) {
       return;
     }
 
-    // console.log(recentEvents.dailyInfo);
-
     const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
     eventsCount[projectId] = (eventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
-    // console.log(eventsCount[projectId]);
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
   },
