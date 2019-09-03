@@ -1,6 +1,9 @@
 <template>
   <div class="project-overview">
-    <div class="project-overview__content">
+    <div
+      v-infinite-scroll="loadMoreEvents"
+      class="project-overview__content"
+    >
       <div class="project-overview__chart" />
       <div class="project-overview__events">
         <div
@@ -83,7 +86,7 @@ export default {
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
   created() {
-    // this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+    this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
   },
   methods: {
     loadMoreEvents() {
