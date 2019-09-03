@@ -92,7 +92,26 @@ export const QUERY_LATEST_REPETITION = `
     project(id: $projectId){
       event(id: $eventId) {
         repetitions(limit: $limit) {
-          payload
+          id
+          payload {
+            release
+            timestamp
+            context
+            user {
+              id
+              name
+              photo
+            }
+            get
+            backtrace {
+              line
+              sourceCode {
+                line
+                content
+              }
+              file
+            }
+          }
         }
       }
     }

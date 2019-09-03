@@ -55,8 +55,8 @@ export default {
       repetitions: []
     };
   },
-  created() {
-    // this.repetitions = this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });
+  async created() {
+    this.repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });;
   }
 };
 </script>
@@ -79,6 +79,10 @@ export default {
     width: 100%;
     margin-left: -10px;
     border-spacing: 0;
+
+    &__row {
+      cursor: pointer;
+    }
 
     &__row:nth-child(even) {
       background-color: #242732;

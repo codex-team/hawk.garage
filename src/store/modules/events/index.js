@@ -3,8 +3,8 @@ import {
   INIT_EVENTS_MODULE,
   FETCH_PROJECT_RECENT_EVENTS,
   FETCH_EVENT_REPETITIONS,
-  SAVE_EVENT,
-  GET_LATEST_EVENT
+  GET_LATEST_EVENT,
+  GET_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -113,20 +113,6 @@ const getters = {
     const key = projectId + ':' + eventId;
 
     return state.list[key];
-  },
-
-  /**
-   * @return {Event}
-   */
-  getActualEvent: (state) => (projectId, eventId) => {
-    const key = projectId + ':' + eventId;
-
-    const originalEvent = state.list[key];
-    const repetition = state.repetitions[key];
-    const actualEvent = originalEvent;
-
-    // actualEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
-    return actualEvent;
   }
 };
 
@@ -170,8 +156,11 @@ const actions = {
     const originalEvent = state.list[projectId + ':' + eventId];
     const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
 
-    const evns = repetitions.map(repetition => {
-      return deepMerge(originalEvent.payload, repetition.payload);
+    return repetitions.map(repetition => {
+      const newEvent = Object.assign({}, originalEvent);
+
+      newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+      return newEvent;
     });
   },
 
@@ -183,7 +172,19 @@ const actions = {
     commit(mutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
 
     actualEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+
     return actualEvent;
+  },
+
+  [GET_EVENT]({ commit, state }, { projectId, eventId }) {
+    const key = projectId + ':' + eventId;
+
+    const originalEvent = state.list[key];
+    const repetition = state.repetitions[key];
+    const actualEvent = Object.assign({}, originalEvent);
+
+    actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
+    return originalEvent;
   },
 
   /**

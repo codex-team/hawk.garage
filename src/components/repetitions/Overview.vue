@@ -28,11 +28,16 @@
           content="FATAL ERROR"
         />
 
-        <div class="repetitions-overview__header-title">
-          {{ actualEvent }}
+        <div
+          class="repetitions-overview__header-title"
+          v-if="actualEvent.payload"
+        >
+          {{ actualEvent.payload.title }}
         </div>
 
-        <div class="repetitions-overview__header-time">
+        <div class="repetitions-overview__header-time"
+           v-if="actualEvent.payload"
+        >
           {{ actualEvent.payload.timestamp | prettyDate }}, {{ actualEvent.payload.timestamp | prettyTime }}
         </div>
       </div>
@@ -75,6 +80,7 @@ import PopupDialog from '../utils/PopupDialog';
 import Icon from '../utils/Icon';
 import Badge from '../utils/Badge';
 import RepetitionsList from './RepetitionsList';
+import { GET_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'RepetitionsOverview',
@@ -90,7 +96,8 @@ export default {
 
     return {
       projectId,
-      eventId
+      eventId,
+      actualEvent: {}
     };
   },
   computed: {
@@ -99,14 +106,10 @@ export default {
      */
     event() {
       return this.$store.getters.getProjectEventById(this.projectId, this.eventId);
-    },
-
-    /**
-     * @return {Event}
-     */
-    actualEvent() {
-      return this.$store.getters.getActualEvent(this.projectId, this.eventId);
     }
+  },
+  async created() {
+    this.actualEvent = await this.$store.dispatch(GET_EVENT, { projectId: this.projectId, eventId: this.eventId });
   }
 };
 </script>
