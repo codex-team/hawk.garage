@@ -1,6 +1,8 @@
 <template>
   <div
+    v-copyable="{selector: copyable? '.code-block__content' : null}"
     class="code-block"
+    :class="{'code-block--one-line': oneLine, 'code-block--copyable': copyable}"
   >
     <div
       v-if="showLinesNumbers"
@@ -18,10 +20,17 @@
     <div
       ref="content"
       class="code-block__content"
-      :class="{[language]: language, 'code-block--one-line': oneLine}"
+      :class="{[language]: language}"
     >
       <slot />
     </div>
+    <button
+      v-if="copyable"
+      class="button button--copy code-block__copy-button"
+      type="button"
+    >
+      {{$t('workspaces.settings.team.copyButton')}}
+    </button>
   </div>
 </template>
 
@@ -43,6 +52,7 @@ export default {
       type: [Number, Array],
       default: null
     },
+    copyable: Boolean,
     showLinesNumbers: Boolean,
     oneLine: Boolean
   },
@@ -55,7 +65,9 @@ export default {
    * Vue mounted hook. Used to render highlighting
    */
   mounted() {
-    hljs.highlightBlock(this.$refs.content);
+    if (this.language !== 'plaintext') {
+      hljs.highlightBlock(this.$refs.content);
+    }
     this.linesNumber = this.$refs.content.innerText.split('\n').length;
   }
 };
@@ -64,14 +76,17 @@ export default {
   @import "../../styles/custom-properties.css";
 
   .code-block {
+    border: solid 1px rgba(0, 0, 0, 0.18);
     position: relative;
     display: flex;
-    padding: 9px;
-    line-height: 21px;
+    align-items: center;
+    padding: 14.2px 15px;
+    font-family: var(--font-monospace);
     background: var(--color-bg-main);
     border-radius: 6px;
 
     &__line-numbers-container {
+      margin-right: 7px;
       color: var(--color-text-second);
       font-size: 10px;
       font-family: var(--font-monospace);
@@ -96,14 +111,41 @@ export default {
 
     &__content {
       width: 100%;
-      margin-left: 7px;
+      position: relative;
+
+      @apply --hide-scrollbar;
     }
 
     &--one-line {
-      overflow: hidden;
-      white-space: nowrap;
+      ^&__content {
+        overflow: hidden;
+        white-space: nowrap;
+        @apply --hide-scrollbar;
+      }
 
-      @apply --hide-scrollbar;
+      ^&__copy-button {
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    &--copyable {
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        content: "";
+        width: 120px;
+        background-image: linear-gradient(to left, var(--color-bg-main) 90px, transparent);
+      }
+    }
+
+    &__copy-button {
+      z-index: 1;
+      position: absolute;
+      top: 10px;
+      right: 15px;
     }
   }
 
