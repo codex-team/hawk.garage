@@ -25,10 +25,11 @@
             @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash)"
           />
         </div>
-        <div class="project-overview__load-more">
-          <button @click="loadMoreEvents">
-            Load more
-          </button>
+        <div
+          class="project-overview__load-more"
+          @click="loadMoreEvents"
+        >
+          Load more events...
         </div>
         <AssignersList
           v-if="isAssignersShowed"
@@ -89,10 +90,17 @@ export default {
     this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
   },
   methods: {
+    /**
+     * Load older events to the list
+     */
     loadMoreEvents() {
       this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
     },
 
+    /**
+     * Shows assigners list for the specific event
+     * @param {GroupedEvent} event - event to display assigners list
+     */
     showAssigners(event) {
       this.isAssignersShowed = true;
       const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
@@ -103,6 +111,11 @@ export default {
       };
     },
 
+    /**
+     * Opens event overview popup
+     * @param {String} projectId - id of the event's project
+     * @param {String} groupHash - event's group hash
+     */
     showEventOverview(projectId, groupHash) {
       this.$router.push({
         name: 'event-overview',
@@ -165,6 +178,19 @@ export default {
     &__assigners-list {
       position: absolute;
       transform: translateX(-100%) translate(-5px, -5px);
+    }
+
+    &__load-more {
+      height: 46px;
+      padding: 13px 11px 13px 15px;
+      border-radius: 9px;
+      cursor: pointer;
+      line-height: 20px;
+      margin-top: 50px;
+
+      &:hover {
+        background-color: var(--color-bg-main);
+      }
     }
   }
 </style>
