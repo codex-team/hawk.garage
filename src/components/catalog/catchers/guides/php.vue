@@ -1,40 +1,14 @@
 <template>
   <div class="guide-page">
-    <div class="guide-page__header">
-      <router-link
-        class="guide-page__header-link"
-        :to="{name:'add-catcher', params: {projectId: $route.params.projectId}}"
-      >
-        <Icon
-          class="guide-page__header-link-icon"
-          symbol="arrow-left"
-        />
-        Back to other catchers
-      </router-link>
-      <div class="guide-page__name-container">
-        <div class="guide-page__name">
-          Node js
-        </div>
-        <CatalogItemLabel
-          class="guide-page__label"
-          item-type="catcher"
-        />
-      </div>
-      <div class="guide-page__description">
-        Can be connected as standalone script or as monolog provider
-      </div>
-      <div class="guide-page__info">
-        <div class="guide-page__source-code">
-          <a href="https://github.com/codex-team/hawk.php">View source</a>
-        </div>
-        <div class="guide-page__readme">
-          <a href="https://github.com/codex-team/hawk.php/blob/master/README.md">View README.md</a>
-        </div>
-        <div class="guide-page__last-version">
-          Last version: 1.2.3
-        </div>
-      </div>
-    </div>
+    <GuideHeader
+      class="guide-page__header"
+      :background-image="require('../../../../assets/catalog/php.svg')"
+      github-link="https://github.com/codex-team/hawk.php"
+      catcher-name="PHP"
+      description="Can be connected as standalone script or as monolog provider"
+      readme-link="https://github.com/codex-team/hawk.php/blob/master/README.md"
+      last-version="2.0"
+    />
     <div class="guide-page__instructions">
       <div class="guide-page__instructions-header">
         INSTALLATION
@@ -44,12 +18,14 @@
           GET AN INTEGRATION TOKEN
         </template>
         <template #content>
-          Your Integration token for codex.so PHP:
+          Your Integration token for <b>{{ project.name }}</b>:
           <CodeBlock
             language="plaintext"
             one-line
+            class="guide-page__token"
+            copyable
           >
-            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTPeWVWuJwiA4xidun__FwFc0XyBBJKCUcKi79mp-uY
+            {{ project.token }}
           </CodeBlock>
         </template>
       </GuideStepBlock>
@@ -62,7 +38,7 @@
         </template>
         <template #content>
           Install module with Composer:
-          <CodeBlock class="php">
+          <CodeBlock class="php" copyable>
             $ composer require codex-team/hawk.php
           </CodeBlock>
           Next you can use module as standalone class or connect it with Monolog.
@@ -80,20 +56,20 @@
           <p>
             Create an instance with Token at the entry point of your project.
           </p>
-          <CodeBlock>
+          <CodeBlock one-line copyable>
             \Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP');
           </CodeBlock>
           <h3>Enable handlers</h3>
           <p>
             By default Hawk will catch everything. You can run function with no params.
           </p>
-          <CodeBlock language="php">
+          <CodeBlock language="php" copyable>
             <code>\Hawk\HawkCatcher::enableHandlers();</code>
           </CodeBlock>
           <p>
             It is similar to
           </p>
-          <CodeBlock language="php">
+          <CodeBlock language="php" copyable>
             <pre>\Hawk\HawkCatcher::enableHandlers(
   true, // exceptions
   true, // errors
@@ -110,20 +86,29 @@
 </template>
 
 <script>
-import CatalogItemLabel from '../../ItemLabel';
 import GuideStepBlock from '../../GuideStepBlock';
 import GuideSection from '../../GuideSection';
 import CodeBlock from '../../../utils/CodeBlock';
-import Icon from '../../../utils/Icon';
+import GuideHeader from '../../GuidePageHeader';
 
 export default {
   name: 'SetupPhpCatcher',
   components: {
-    Icon,
     GuideStepBlock,
     CodeBlock,
     GuideSection,
-    CatalogItemLabel
+    GuideHeader
+  },
+  computed: {
+    /**
+     * Current viewed project
+     * @return {Project}
+     */
+    project() {
+      const projectId = this.$route.params.projectId;
+
+      return this.$store.getters.getProjectById(projectId);
+    }
   }
 };
 </script>

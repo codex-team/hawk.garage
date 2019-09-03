@@ -7,6 +7,10 @@
  */
 export default {
   bind(el, binding, vNode) {
+    if (!binding.value.selector) {
+      return;
+    }
+
     if (typeof binding.value.selector !== 'string') {
       const compName = vNode.context.name;
 
