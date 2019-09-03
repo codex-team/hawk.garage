@@ -22,6 +22,11 @@
             @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash)"
           />
         </div>
+        <div class="project-overview__load-more">
+          <button @click="loadMoreEvents">
+            Load more
+          </button>
+        </div>
         <AssignersList
           v-if="isAssignersShowed"
           v-click-outside="hideAssignersList"
@@ -38,7 +43,7 @@
 import EventItem from '../events/EventItem';
 import AssignersList from '../events/AssignersList';
 import { mapGetters } from 'vuex';
-import { FETCH_PROJECT_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -78,9 +83,13 @@ export default {
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
   created() {
-    this.$store.dispatch(FETCH_PROJECT_RECENT_EVENTS, { projectId: this.project.id });
+    // this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
   },
   methods: {
+    loadMoreEvents() {
+      this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+    },
+
     showAssigners(event) {
       this.isAssignersShowed = true;
       const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();

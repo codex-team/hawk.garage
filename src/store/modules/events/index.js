@@ -1,7 +1,7 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   INIT_EVENTS_MODULE,
-  FETCH_PROJECT_RECENT_EVENTS
+  FETCH_RECENT_EVENTS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -51,6 +51,8 @@ function initialState() {
     recent: {}
   };
 }
+
+const eventsCount = {};
 
 /**
  * Cache for storing the connection between the code and the event
@@ -118,14 +120,21 @@ const actions = {
    * @param {String} projectId - id of the project to fetch data
    * @return {Promise<void>}
    */
-  async [FETCH_PROJECT_RECENT_EVENTS]({ commit }, { projectId }) {
-    const recentEvents = await eventsApi.fetchRecentProjectEvents(projectId);
+  async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
+    // console.log('fetch');
+    const recentEvents = await eventsApi.fetchRecentEvents(projectId, eventsCount[projectId] || 0);
 
+    // console.log(recentEvents);
     if (!recentEvents) {
       return;
     }
+
+    // console.log(recentEvents.dailyInfo);
+
     const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
+    eventsCount[projectId] = (eventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
+    // console.log(eventsCount[projectId]);
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
   },
@@ -155,7 +164,23 @@ const mutations = {
    * @param {Array<RecentEvents>} eventsList - new list of events
    */
   [mutationTypes.ADD_TO_RECENT_EVENTS_LIST](state, { projectId, recentEventsInfoByDate }) {
-    Object.assign(state.recent[projectId], recentEventsInfoByDate); // @todo merge lists on fetching new data
+    Object.keys(recentEventsInfoByDate).forEach(date => {
+      if (!state.recent[projectId][date]) {
+        Vue.set(state.recent[projectId], date, recentEventsInfoByDate[date]);
+        return;
+      }
+      const dailyEvents = recentEventsInfoByDate[date];
+
+      dailyEvents.forEach(dailyEvent => {
+        const infoIndex = state.recent[projectId][date].findIndex(e => e.groupHash === dailyEvent.groupHash);
+
+        if (infoIndex !== -1) {
+          state.recent[projectId][date][infoIndex] = dailyEvent;
+        } else {
+          state.recent[projectId][date].push(dailyEvent);
+        }
+      });
+    });
   },
 
   /**

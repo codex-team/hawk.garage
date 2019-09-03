@@ -28,10 +28,11 @@ export const QUERY_EVENT = `
  */
 export const QUERY_RECENT_PROJECT_EVENTS = `
   query ProjectRecentEvents (
-    $projectId: ID!
+    $projectId: ID!,
+    $skip: Int!
   ) {
     project(id: $projectId) {
-      recentEvents(limit: 30) {
+      recentEvents(limit: 2, skip: $skip) {
         events {
           id
           groupHash
