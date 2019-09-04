@@ -36,6 +36,61 @@
       >
         {{ $t('settings.account.submit') }}
       </button>
+      <label class="label account-settings__label">
+        GitHub
+      </label>
+      <div class="provider-row">
+        <a
+          v-if="!github"
+          class="github-button account-settings__github-button"
+          @click="linkGithub()"
+        >Connect</a>
+        <div
+          v-if="github"
+          class="provider-row__content"
+        >
+          <EntityImage
+            id="github"
+            name="github-avatar"
+            class="provider-row__image"
+            :image="github.image"
+          />
+          <div class="provider-row__text">
+            {{ github.username }}
+          </div>
+          <div class="button button--quiet provider-row__button">
+            Disconnect
+          </div>
+        </div>
+      </div>
+
+      <label class="label account-settings__label">
+        Google
+      </label>
+      <div class="provider-row">
+        <a
+          v-if="!google"
+          class="google-button account-settings__google-button"
+          @click="linkGoogle()"
+        >Connect</a>
+        <div
+          v-if="google"
+          class="provider-row__content"
+        >
+          <EntityImage
+            id="google"
+            name="google-avatar"
+            class="provider-row__image"
+            :image="google.image"
+          />
+          <div class="provider-row__text">
+            {{ google.email }}
+          </div>
+          <div class="button button--quiet provider-row__button">
+            Disconnect
+          </div>
+        </div>
+      </div>
     </form>
     <hr class="delimiter">
     <div class="account-settings__registered-info">
@@ -48,6 +103,7 @@
 import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
+import EntityImage from '../utils/EntityImage';
 import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
 import notifier from 'codex-notifier';
 import { mapState } from 'vuex';
@@ -57,7 +113,8 @@ export default {
   components: {
     ChangePasswordFieldset,
     FormImageUploader,
-    FormTextFieldset
+    FormTextFieldset,
+    EntityImage
   },
   data() {
     const user = this.$store.state.user.data;
@@ -65,6 +122,8 @@ export default {
     return {
       name: user.name || '',
       email: user.email || '',
+      github: user.github || {},
+      google: user.google || {},
       passwords: {
         old: '',
         new: ''
@@ -83,12 +142,18 @@ export default {
     async save() {
       try {
         if (this.user.name !== this.name || this.user.email !== this.email) {
-          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
+          await this.$store.dispatch(UPDATE_PROFILE, {
+            name: this.name,
+            email: this.email
+          });
           await this.$store.dispatch(FETCH_CURRENT_USER);
         }
 
         if (this.passwords.old && this.passwords.new) {
-          await this.$store.dispatch(CHANGE_PASSWORD, { old: this.passwords.old, new: this.passwords.new });
+          await this.$store.dispatch(CHANGE_PASSWORD, {
+            old: this.passwords.old,
+            new: this.passwords.new
+          });
         }
 
         this.hideForm();
@@ -121,6 +186,12 @@ export default {
     async hideForm() {
       this.showPasswordFieldset = false;
       this.showSubmitButton = false;
+    },
+    async linkGithub() {
+      window.location = `${this.$API_AUTH_GITHUB_LINK}?access_token=${this.$store.state.user.accessToken}`;
+    },
+    async linkGoogle() {
+      window.location = `${this.$API_AUTH_GOOGLE_LINK}?access_token=${this.$store.state.user.accessToken}`;
     }
   }
 };
@@ -129,35 +200,81 @@ export default {
 <style src="../../styles/settings-window-page.css"></style>
 
 <style>
-.account-settings {
-  width: 100%;
+  .account-settings {
+    width: 100%;
 
-  &__inline-elements {
-    display: flex;
+    &__inline-elements {
+      display: flex;
+    }
+
+    &__label {
+      margin-bottom: 9px;
+    }
+
+    &__section {
+      max-width: 280px;
+    }
+
+    &__section,
+    &__submit-button {
+      margin: 0 0 20px 0;
+    }
+
+    &__name-section {
+      width: 280px;
+      margin-right: 30px;
+    }
+
+    &__registered-info {
+      margin-top: 15px;
+      color: var(--color-text-second);
+      font-size: 13px;
+    }
+
+    &__github-button {
+      /*margin-bottom: 20px;*/
+      margin-left: 0;
+    }
+
+    &__google-button {
+      /*margin-bottom: 20px;*/
+      margin-left: 0;
+    }
   }
 
-  &__label {
-    margin-bottom: 9px;
+  .provider-row {
+    margin-bottom: 20px;
+
+    &__content {
+      display: inline-flex;
+      align-items: center;
+      color: var(--color-text-second);
+      font-size: 14px;
+    }
+
+    &__image {
+      width: 34px;
+      height: 34px;
+      margin-right: 10px;
+      border-radius: 4px;
+    }
+
+    &__text {
+      margin-right: 30px;
+    }
+
+    &__button {
+      /*display: inline-flex;*/
+      /*align-items: center;*/
+      /*justify-content: center;*/
+      /*height: 34px;*/
+      padding-right: 15px;
+      padding-left: 15px;
+
+      /*&:hover {*/
+      /*  cursor: pointer;*/
+      /*}*/
+    }
   }
 
-  &__section {
-    max-width: 280px;
-  }
-
-  &__section,
-  &__submit-button {
-    margin: 0 0 20px 0;
-  }
-
-  &__name-section {
-    width: 280px;
-    margin-right: 30px;
-  }
-
-  &__registered-info {
-    margin-top: 15px;
-    color: var(--color-text-second);
-    font-size: 13px;
-  }
-}
 </style>

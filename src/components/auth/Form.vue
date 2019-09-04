@@ -10,11 +10,11 @@
     </div>
     <div class="auth-form__social-block">
       <a
-        class="auth-form__github-button"
+        class="github-button"
         :href="$API_AUTH_GITHUB"
       >{{ $t('authPages.githubButton') }}</a>
       <a
-        class="auth-form__google-button"
+        class="google-button"
         :href="$API_AUTH_GOOGLE"
       >{{ $t('authPages.googleButton') }}</a>
     </div>

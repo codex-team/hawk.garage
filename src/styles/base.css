@@ -129,9 +129,9 @@ pre {
   &--copy {
     width: 60px;
     height: 23px;
+    padding: 0;
     color: var(--color-text-main);
     font-size: 11px;
-    padding: 0;
     line-height: 23px;
     letter-spacing: 0.14px;
     background-color: var(--color-indicator-medium);
@@ -183,5 +183,57 @@ body .cdx-notify {
 
   &__btns-wrapper {
     margin-top: 8px;
+  }
+}
+
+.checkbox {
+  width: 28px;
+  height: 28px;
+  background-color: var(--color-bg-second);
+  border-radius: 4px;
+}
+
+.radio {
+  width: 28px;
+  height: 28px;
+}
+
+.github-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  margin-left: 15px;
+  padding-right: 15px;
+  padding-left: 44px;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 14.4px;
+  background: #101216 url("../assets/github.svg") no-repeat 15px 15px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #07080a;
+    cursor: pointer;
+  }
+}
+
+.google-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  margin-left: 15px;
+  padding-right: 15px;
+  padding-left: 44px;
+  color: var(--color-text-dark);
+  font-weight: 500;
+  font-size: 14.4px;
+  background: #ffffff url("../assets/google.svg") no-repeat 15px 15px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #e6eeff;
+    cursor: pointer;
   }
 }

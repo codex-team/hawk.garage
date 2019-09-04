@@ -41,6 +41,17 @@ query getCurrentUser {
     name
     email
     image
+    github {
+      name
+      image
+      email
+      username
+    }
+    google {
+      name
+      image
+      email
+    }
   }
 }
 `;
