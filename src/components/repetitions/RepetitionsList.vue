@@ -1,37 +1,35 @@
 <template>
-  <div class="repetitions-list repetitions-list--by-date">
+  <div class="repetitions-list">
     <div class="repetitions-list__date">
-      7 may
+      {{ date }}
     </div>
-    <table class="repetitions-table">
+
+    <table class="repetitions-list__table">
       <tr
         v-for="repetition in repetitions"
-        class="repetitions-table__row"
+        class="repetitions-list__row"
       >
-        <td class="repetitions-table__col">
-          {{ repetition.payload.timestamp | prettyTime }}
+        <td class="repetitions-list__col">
+          <span class="repetitions-list__time" >{{ repetition.payload.timestamp | prettyTime }}</span>
         </td>
-        <td class="repetitions-table__col user-info">
+        <td class="repetitions-list__col">
           <img
-            class="user-info__photo"
+            class="repetitions-list__user-photo"
             src="https://as1.ftcdn.net/jpg/02/18/69/42/500_F_218694229_V1sjTE7s6ROXQYGPyUcZSIHatGT4nOK9.jpg"
             alt=""
           >
         </td>
-        <td class="repetitions-table__col user-info">
-          <span class="user-info__name">{{ repetition.payload.user ? repetition.payload.user.name : '' }}</span>
+        <td class="repetitions-list__col">
+          <span class="repetitions-list__user-name">{{ repetition.payload.user ? repetition.payload.user.name : '' }}</span>
         </td>
-        <td class="repetitions-table__col user-info">
-          <span class="user-info__os">Linux</span>
+        <td class="repetitions-list__col">
+          <span class="repetitions-list__user-browser">Firefox 61.0</span>
         </td>
-        <td class="repetitions-table__col user-info">
-          <span class="user-info__browser">Firefox 61.0</span>
+        <td class="repetitions-list__col">
+          <span class="repetitions-list__user-screen">1920x946</span>
         </td>
-        <td class="repetitions-table__col user-info">
-          <span class="user-info__screen">1920x946</span>
-        </td>
-        <td class="repetitions-table__col user-info">
-          <span class="user-info__url">/startup/primeliber-com/blog/15598/8-instrumentov-dl…</span>
+        <td class="repetitions-list__col">
+          <span class="repetitions-list__url">/startup/primeliber-com/blog/15598/8-instrumentov-dl…</span>
         </td>
       </tr>
     </table>
@@ -39,46 +37,34 @@
 </template>
 
 <script>
-import { FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
-
 export default {
-  name: 'RepetitionsList',
-  components: {
-  },
-  data() {
-    const projectId = this.$route.params.projectId;
-    const eventId = this.$route.params.eventId;
-
-    return {
-      projectId: projectId,
-      eventId: eventId,
-      repetitions: []
-    };
-  },
-  async created() {
-    this.repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });;
+  name: 'RepetitionsTable',
+  props: {
+    repetitions: {
+      type: Array,
+      required: true
+    },
+    date: {
+      type: String,
+      required: true
+    }
   }
 };
 </script>
 
 <style>
   .repetitions-list {
-    margin-bottom: 20px;
-    &--by-date {
-      color: var(--color-text-main);
+    &__date {
+      margin-bottom: 20px;
       font-size: 14px;
       opacity: 0.6;
     }
 
-    &__date {
-      margin-bottom: 18px;
+    &__table {
+      width: 100%;
+      margin-left: -10px;
+      border-spacing: 0;
     }
-  }
-
-  .repetitions-table {
-    width: 100%;
-    margin-left: -10px;
-    border-spacing: 0;
 
     &__row {
       cursor: pointer;
@@ -90,34 +76,20 @@ export default {
 
     &__col {
       padding: 14px 10px;
+      font-weight: bold;
+      font-size: 13px;
     }
 
-    &__only-date {
-      display: block;
-      margin-top: 20px;
-      margin-bottom: 18px;
-    }
-
-    &__item-time {
-      width: 40px;
-    }
-  }
-
-  .user-info {
-    &__photo {
+    &__user-photo {
       width: 25px;
       height: 25px;
       border-radius: 3px;
     }
 
-    &__name {
-    }
-
-    &__name,
-    &__os,
-    &__browser {
-      font-weight: bold;
-      font-size: 13px;
+    &__time {
+      width: 40px;
+      color: rgba(219, 230, 255, 0.6);
+      letter-spacing: 0.16px;
     }
 
     &__url {

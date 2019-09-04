@@ -29,14 +29,15 @@
         />
 
         <div
-          class="repetitions-overview__header-title"
           v-if="actualEvent.payload"
+          class="repetitions-overview__header-title"
         >
           {{ actualEvent.payload.title }}
         </div>
 
-        <div class="repetitions-overview__header-time"
-           v-if="actualEvent.payload"
+        <div
+          v-if="actualEvent.payload"
+          class="repetitions-overview__header-time"
         >
           {{ actualEvent.payload.timestamp | prettyDate }}, {{ actualEvent.payload.timestamp | prettyTime }}
         </div>
@@ -44,33 +45,41 @@
 
       <!-- Content -->
       <div class="repetitions-overview__content">
-        <div class="repetitions-overview__section event-info">
-          <div class="event-info__label">
+        <div class="repetitions-overview__section">
+          <div class="repetitions-overview__label">
             Total
           </div>
-          <div class="event-info__repeats">
+          <div class="repetitions-overview__repeats">
             {{ actualEvent.totalCount }} times
           </div>
         </div>
 
-        <div class="repetitions-overview__section event-info">
-          <div class="event-info__label">
+        <div class="repetitions-overview__section">
+          <div class="repetitions-overview__label">
             Since
           </div>
-          <div class="event-info__since">
+          <div class="repetitions-overview__since">
             {{ event.payload.timestamp | prettySince }}
           </div>
         </div>
 
-        <div class="repetitions-overview__section event-info">
-          <div class="event-info__label">
+        <div class="repetitions-overview__section">
+          <div class="repetitions-overview__label">
             Repetitions
           </div>
-          <div class="event-info__repetitions">
-            <RepetitionsList />
+
+          <div
+            v-for="date in groupedRepetitions.keys()"
+            class="repetitions-overview__table"
+          >
+            <RepetitionsList
+              :repetitions="groupedRepetitions.get(date)"
+              :date="date"
+            />
           </div>
         </div>
       </div>
+    </div>
     </div>
   </PopupDialog>
 </template>
@@ -79,16 +88,17 @@
 import PopupDialog from '../utils/PopupDialog';
 import Icon from '../utils/Icon';
 import Badge from '../utils/Badge';
+import { GET_LATEST_EVENT, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
+import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList';
-import { GET_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'RepetitionsOverview',
   components: {
+    RepetitionsList,
     Icon,
     Badge,
-    PopupDialog,
-    RepetitionsList
+    PopupDialog
   },
   data() {
     const projectId = this.$route.params.projectId;
@@ -97,7 +107,8 @@ export default {
     return {
       projectId,
       eventId,
-      actualEvent: {}
+      actualEvent: {},
+      groupedRepetitions: []
     };
   },
   computed: {
@@ -109,7 +120,33 @@ export default {
     }
   },
   async created() {
-    this.actualEvent = await this.$store.dispatch(GET_EVENT, { projectId: this.projectId, eventId: this.eventId });
+    this.actualEvent = await this.$store.dispatch(GET_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
+
+    console.log(this.actualEvent);
+
+    const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });
+    const groupedRepetitions = new Map();
+
+    repetitions.map((repetition) => {
+      const date = this.getDate(repetition.payload.timestamp);
+
+      if (!groupedRepetitions.get(date)) {
+        groupedRepetitions.set(date, []);
+      }
+
+      groupedRepetitions.get(date).push(repetition);
+    });
+
+    this.groupedRepetitions = groupedRepetitions;
+  },
+  methods: {
+    getDate(timestamp) {
+      const targetDate = new Date(timestamp);
+      const day = targetDate.getDate();
+      const month = targetDate.getMonth();
+
+      return `${day} ${i18n.t('common.months[' + month + ']')}`;
+    }
   }
 };
 </script>
@@ -166,9 +203,7 @@ export default {
     &__section {
       margin-top: 30px;
     }
-  }
 
-  .event-info {
     &__label {
       margin-bottom: 10px;
       color: rgba(219, 230, 255, 0.6);
@@ -183,14 +218,13 @@ export default {
       font-weight: bold;
       font-size: 24px;
     }
-
     &__since {
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 15px;
     }
 
-    &__repetitions {
+    &__table {
       margin-top: 20px;
     }
   }
