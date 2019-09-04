@@ -41,7 +41,7 @@ function initialState() {
       }
     },
     common: {
-      actionType: 1,
+      actionType: -1,
       words: '',
       settings: {
         email: {
