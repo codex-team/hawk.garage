@@ -203,7 +203,7 @@ const actions = {
     const actualEvent = Object.assign({}, originalEvent);
 
     actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
-    return originalEvent;
+    return actualEvent;
   },
 
   /**

@@ -122,7 +122,7 @@ export default {
   async created() {
     this.actualEvent = await this.$store.dispatch(GET_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
 
-    console.log(this.actualEvent);
+    this.getDate(this.actualEvent.payload.timestamp);
 
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });
     const groupedRepetitions = new Map();

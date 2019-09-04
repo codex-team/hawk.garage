@@ -55,7 +55,7 @@ export default {
 <style>
   .repetitions-list {
     &__date {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-size: 14px;
       opacity: 0.6;
     }
