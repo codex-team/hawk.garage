@@ -12,6 +12,7 @@
           @createProjectButtonClicked="openProjectCreationDialog"
         />
         <SearchField
+          v-model="searchQuery"
           class="aside__search-field"
         />
         <div
@@ -32,7 +33,7 @@
         v-if="$route.params.projectId"
         class="app-shell__project-header"
       />
-      <router-view :key="$route.params.projectId"/>
+      <router-view :key="$route.params.projectId" />
     </div>
     <component
       :is="modalDialog"
@@ -68,7 +69,8 @@ export default {
       /**
        * Current opened modal window
        */
-      modalDialog: null
+      modalDialog: null,
+      searchQuery: ''
     };
   },
   computed: {
@@ -83,14 +85,17 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      const projectList = this.$store.state.projects.list.map(project => {
-        const latestEventInfo = this.$store.getters.getLatestEventDailyInfo(project.id);
+      const projectList = this.$store.state.projects.list
+        .map(project => {
+          const latestEventInfo = this.$store.getters.getLatestEventDailyInfo(project.id);
 
-        return {
-          id: project.id,
-          timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
-        };
-      });
+          return {
+            id: project.id,
+            name: project.name,
+            timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
+          };
+        })
+        .filter(project => new RegExp(this.searchQuery, 'i').test(project.name));
 
       projectList.sort((firstProject, secondProject) => {
         return secondProject.timestamp - firstProject.timestamp;
