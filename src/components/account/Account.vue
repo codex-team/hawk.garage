@@ -127,7 +127,7 @@ export default {
     EntityImage
   },
   data() {
-    const user = JSON.parse(JSON.stringify(this.$store.state.user.data));
+    const user = this.$store.state.user.data;
 
     return {
       name: user.name || '',
