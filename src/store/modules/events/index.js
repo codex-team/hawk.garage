@@ -108,13 +108,20 @@ const getters = {
   getLatestEventDailyInfo: state =>
     /**
      * @param {String} projectId - event's project id
-     * @return {RecentInfoByDate}
+     * @return {DailyEventInfo}
      */
     projectId => {
       const recentProjectEvents = state.recent[projectId];
 
       if (recentProjectEvents) {
-        return Object.values(recentProjectEvents)[0][0];
+        /**
+         * @type {DailyEventInfo[]}
+         */
+        const latestDailyInfo = Object.values(recentProjectEvents)[0];
+
+        if (latestDailyInfo) {
+          return latestDailyInfo[0];
+        }
       }
     },
 
