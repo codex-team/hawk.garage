@@ -17,7 +17,7 @@
       </div>
     </div>
     <Badge
-      content="343"
+      content=""
       class="project-menu-item__events-number"
     />
   </div>
@@ -34,20 +34,22 @@ export default {
     EntityImage
   },
   props: {
-    project: {
-      type: Object, // @type {Project}
+    projectId: {
+      type: String,
       required: true
     }
   },
+  data() {
+    return {
+      project: this.$store.state.projects.list.find(_project => _project.id === this.projectId)
+    };
+  },
   computed: {
     lastEventTitle() {
-      const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(this.project.id);
+      const latestEvents = this.$store.getters.getLatestEvent(this.project.id);
 
-      if (recentProjectEvents) {
-        const lastEventGroupHash = Object.values(recentProjectEvents)[0][0].groupHash;
-        const lastEvent = Object.values(this.$store.state.events.list).find(event => event.groupHash === lastEventGroupHash);
-
-        return lastEvent.payload.title;
+      if (latestEvents) {
+        return latestEvents.payload.title;
       }
 
       return 'No one catcher connected';

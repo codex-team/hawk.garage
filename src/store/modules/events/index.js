@@ -1,8 +1,5 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
-import {
-  INIT_EVENTS_MODULE,
-  FETCH_RECENT_EVENTS
-} from './actionTypes';
+import { FETCH_RECENT_EVENTS, INIT_EVENTS_MODULE } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import * as eventsApi from '../../../api/events';
@@ -101,7 +98,53 @@ const getters = {
      * @param {String} projectId - event's project id
      * @return {RecentInfoByDate}
      */
-    projectId => state.recent[projectId]
+    projectId => state.recent[projectId],
+
+  /**
+   * Returns latest recent event of the project by its id
+   * @param {EventsModuleState} state - Vuex state
+   * @return {function(*): *}
+   */
+  getLatestEventDailyInfo: state =>
+    /**
+     * @param {String} projectId - event's project id
+     * @return {DailyEventInfo}
+     */
+    projectId => {
+      const recentProjectEvents = state.recent[projectId];
+
+      if (recentProjectEvents) {
+        /**
+         * @type {DailyEventInfo[]}
+         */
+        const latestDailyInfo = Object.values(recentProjectEvents)[0];
+
+        if (latestDailyInfo) {
+          return latestDailyInfo[0];
+        }
+      }
+    },
+
+  /**
+   * Returns latest event for certain project
+   * @param {EventsModuleState} state - Vuex state
+   * @param {Object} getters - module getters
+   * @return {Function}
+   */
+  getLatestEvent: (state, getters) =>
+    /**
+     * @param {String} projectId - event's project id
+     * @return {GroupedEvent}
+     */
+    projectId => {
+      const recentProjectEvents = getters.getLatestEventDailyInfo(projectId);
+
+      if (recentProjectEvents) {
+        const lastEventGroupHash = recentProjectEvents.groupHash;
+
+        return Object.values(state.list).find(event => event.groupHash === lastEventGroupHash);
+      }
+    }
 };
 
 const actions = {
@@ -124,6 +167,7 @@ const actions = {
    * @return {Promise<boolean>} - true if there are no more events
    */
   async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
+    const RECENT_EVENTS_FETCH_LIMIT = 15;
     const recentEvents = await eventsApi.fetchRecentEvents(projectId, loadedEventsCount[projectId] || 0);
 
     if (!recentEvents) {
@@ -135,7 +179,7 @@ const actions = {
     loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
-    return false;
+    return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
   },
 
   /**
