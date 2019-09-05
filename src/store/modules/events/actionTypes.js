@@ -11,7 +11,7 @@ export const FETCH_LATEST_EVENT = 'FETCH_LATEST_EVENT';
 /**
  * Fetch project recent events
  */
-export const FETCH_PROJECT_RECENT_EVENTS = 'FETCH_PROJECT_RECENT_EVENTS';
+export const FETCH_RECENT_EVENTS = 'FETCH_RECENT_EVENTS';
 
 /**
  * Action for fetching latest event's repetitions

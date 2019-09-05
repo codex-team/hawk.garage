@@ -75,7 +75,7 @@ const router = new Router({
         {
           path: 'projects/:projectId/setup-catcher/:page',
           name: 'setup-catcher',
-          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadInstructionPage.js')
+          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadGuidePages.js')
         }
       ]
     },

@@ -1,7 +1,7 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   INIT_EVENTS_MODULE,
-  FETCH_PROJECT_RECENT_EVENTS,
+  FETCH_RECENT_EVENTS,
   FETCH_EVENT_REPETITIONS,
   FETCH_LATEST_EVENT,
   GET_LATEST_EVENT
@@ -57,6 +57,11 @@ function initialState() {
     repetitions: {}
   };
 }
+
+/**
+ * @type {Object<string, Number>} Object for storing count of loaded events per project
+ */
+const loadedEventsCount = {};
 
 /**
  * Cache for storing the connection between the code and the event
@@ -133,18 +138,21 @@ const actions = {
    * Get latest project events
    * @param {function} commit - standard Vuex commit function
    * @param {String} projectId - id of the project to fetch data
-   * @return {Promise<void>}
+   * @return {Promise<boolean>} - true if there are no more events
    */
-  async [FETCH_PROJECT_RECENT_EVENTS]({ commit }, { projectId }) {
-    const recentEvents = await eventsApi.fetchRecentProjectEvents(projectId);
+  async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
+    const recentEvents = await eventsApi.fetchRecentEvents(projectId, loadedEventsCount[projectId] || 0);
 
     if (!recentEvents) {
-      return;
+      return true;
     }
+
     const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
+    loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
+    return false;
   },
 
   /**
@@ -231,7 +239,35 @@ const mutations = {
    * @param {Array<RecentEvents>} eventsList - new list of events
    */
   [mutationTypes.ADD_TO_RECENT_EVENTS_LIST](state, { projectId, recentEventsInfoByDate }) {
-    Object.assign(state.recent[projectId], recentEventsInfoByDate); // @todo merge lists on fetching new data
+    /**
+     * Algorithm for merging the list of recent events from vuex store and server response
+     */
+    Object.keys(recentEventsInfoByDate).forEach(date => {
+      /**
+       * If there is no data for this date, then assign a value without merging
+       */
+      if (!state.recent[projectId][date]) {
+        Vue.set(state.recent[projectId], date, recentEventsInfoByDate[date]);
+        return;
+      }
+      const dailyEvents = recentEventsInfoByDate[date];
+
+      /**
+       * Merge all daily events info separately
+       */
+      dailyEvents.forEach(dailyEvent => {
+        const infoIndex = state.recent[projectId][date].findIndex(e => e.groupHash === dailyEvent.groupHash);
+
+        /**
+         * If there is data about this event in store then update it. Else just push it to the list
+         */
+        if (infoIndex !== -1) {
+          state.recent[projectId][date][infoIndex] = dailyEvent;
+        } else {
+          state.recent[projectId][date].push(dailyEvent);
+        }
+      });
+    });
   },
 
   /**

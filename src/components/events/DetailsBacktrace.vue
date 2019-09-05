@@ -119,6 +119,8 @@ export default {
     &__source-code {
       font-size: 12px;
       line-height: 21px;
+      padding: 3px 9px;
+      border: none;
       background-color: #171920;
       border-radius: var(--border-radius);
     }

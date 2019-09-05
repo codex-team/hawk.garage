@@ -19,10 +19,11 @@ export async function getEvent(projectId, eventId) {
 /**
  * Returns latest project events
  * @param {String} projectId - id of the project to fetch recent errors
+ * @param {Number} skip - certain number of documents to skip
  * @return {Promise<RecentEvents>}
  */
-export async function fetchRecentProjectEvents(projectId) {
-  return (await api.call(QUERY_RECENT_PROJECT_EVENTS, { projectId })).project.recentEvents;
+export async function fetchRecentEvents(projectId, skip = 0) {
+  return (await api.call(QUERY_RECENT_PROJECT_EVENTS, { projectId, skip })).project.recentEvents;
 }
 
 /**
