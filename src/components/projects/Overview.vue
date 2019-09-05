@@ -60,9 +60,8 @@ export default {
   },
   data() {
     return {
-      noMoreEvents: false,
+      noMoreEvents: true,
       isLoadingEvents: false,
-      eventsListByDate: null,
       isAssignersShowed: false,
       assignersListPosition: {
         top: 0,
@@ -91,8 +90,8 @@ export default {
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
-  created() {
-    this.loadMoreEvents();
+  async created() {
+    this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
   },
   methods: {
     /**

@@ -32,7 +32,7 @@
         v-if="$route.params.projectId"
         class="app-shell__project-header"
       />
-      <router-view />
+      <router-view :key="$route.params.projectId"/>
     </div>
     <component
       :is="modalDialog"

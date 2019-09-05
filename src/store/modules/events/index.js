@@ -159,6 +159,7 @@ const actions = {
    * @return {Promise<boolean>} - true if there are no more events
    */
   async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
+    const RECENT_EVENTS_FETCH_LIMIT = 15;
     const recentEvents = await eventsApi.fetchRecentEvents(projectId, loadedEventsCount[projectId] || 0);
 
     if (!recentEvents) {
@@ -170,7 +171,7 @@ const actions = {
     loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
-    return false;
+    return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
   },
 
   /**
