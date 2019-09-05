@@ -163,20 +163,28 @@ const mutations = {
    * @param {Array<RecentEvents>} eventsList - new list of events
    */
   [mutationTypes.ADD_TO_RECENT_EVENTS_LIST](state, { projectId, recentEventsInfoByDate }) {
-    // Algorithm for merging the list of recent events from vuex store and server response
+    /**
+     * Algorithm for merging the list of recent events from vuex store and server response
+     */
     Object.keys(recentEventsInfoByDate).forEach(date => {
-      // if there is no data for this date, then assign a value without merging
+      /**
+       * If there is no data for this date, then assign a value without merging
+       */
       if (!state.recent[projectId][date]) {
         Vue.set(state.recent[projectId], date, recentEventsInfoByDate[date]);
         return;
       }
       const dailyEvents = recentEventsInfoByDate[date];
 
-      // merge all daily events info separately
+      /**
+       * Merge all daily events info separately
+       */
       dailyEvents.forEach(dailyEvent => {
         const infoIndex = state.recent[projectId][date].findIndex(e => e.groupHash === dailyEvent.groupHash);
 
-        // if there is data about this event in store then update it. Else just push it to the list
+        /**
+         * If there is data about this event in store then update it. Else just push it to the list
+         */
         if (infoIndex !== -1) {
           state.recent[projectId][date][infoIndex] = dailyEvent;
         } else {
