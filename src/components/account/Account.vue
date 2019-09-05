@@ -41,22 +41,22 @@
       </label>
       <div class="provider-row">
         <a
-          v-if="!github"
+          v-if="!user.github"
           class="github-button account-settings__github-button"
           @click="linkGithub()"
         >{{ $t('settings.account.connect') }}</a>
         <div
-          v-if="github"
+          v-if="user.github"
           class="provider-row__content"
         >
           <EntityImage
             id="github"
             name="github-avatar"
             class="provider-row__image"
-            :image="github.image"
+            :image="user.github.image"
           />
           <div class="provider-row__text">
-            {{ github.username }}
+            {{ user.github.username }}
           </div>
           <div
             class="button button--quiet provider-row__button"
@@ -72,22 +72,22 @@
       </label>
       <div class="provider-row">
         <a
-          v-if="!google"
+          v-if="!user.google"
           class="google-button account-settings__google-button"
           @click="linkGoogle()"
         >{{ $t('settings.account.connect') }}</a>
         <div
-          v-if="google"
+          v-if="user.google"
           class="provider-row__content"
         >
           <EntityImage
             id="google"
             name="google-avatar"
             class="provider-row__image"
-            :image="google.image"
+            :image="user.google.image"
           />
           <div class="provider-row__text">
-            {{ google.email }}
+            {{ user.google.email }}
           </div>
           <div
             class="button button--quiet provider-row__button"
@@ -113,9 +113,7 @@ import EntityImage from '../utils/EntityImage';
 import {
   CHANGE_PASSWORD,
   FETCH_CURRENT_USER,
-  UPDATE_PROFILE,
-  RESET_GITHUB,
-  RESET_GOOGLE
+  UPDATE_PROFILE
 } from '../../store/modules/user/actionTypes';
 import notifier from 'codex-notifier';
 import { mapState } from 'vuex';
@@ -129,13 +127,11 @@ export default {
     EntityImage
   },
   data() {
-    const user = this.$store.state.user.data;
+    const user = JSON.parse(JSON.stringify(this.$store.state.user.data));
 
     return {
       name: user.name || '',
       email: user.email || '',
-      github: user.github || null,
-      google: user.google || null,
       passwords: {
         old: '',
         new: ''
@@ -147,6 +143,9 @@ export default {
   computed: mapState({
     user: state => state.user.data
   }),
+  created() {
+    this.$store.dispatch(FETCH_CURRENT_USER);
+  },
   methods: {
     /**
      * Form submit event handler
@@ -206,13 +205,9 @@ export default {
       window.location = `${this.$API_AUTH_GOOGLE_LINK}?access_token=${this.$store.state.user.accessToken}`;
     },
     async disconnectGithub() {
-      await this.$store.dispatch(RESET_GITHUB);
-
       window.location = `${this.$API_AUTH_GITHUB_UNLINK}?access_token=${this.$store.state.user.accessToken}`;
     },
     async disconnectGoogle() {
-      await this.$store.dispatch(RESET_GOOGLE);
-
       window.location = `${this.$API_AUTH_GOOGLE_UNLINK}?access_token=${this.$store.state.user.accessToken}`;
     }
   }
@@ -254,12 +249,10 @@ export default {
     }
 
     &__github-button {
-      /*margin-bottom: 20px;*/
       margin-left: 0;
     }
 
     &__google-button {
-      /*margin-bottom: 20px;*/
       margin-left: 0;
     }
   }

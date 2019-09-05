@@ -1,5 +1,4 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
-import Vue from 'vue';
 import {
   LOGIN,
   SIGN_UP,
@@ -7,9 +6,7 @@ import {
   REFRESH_TOKENS,
   FETCH_CURRENT_USER,
   UPDATE_PROFILE,
-  CHANGE_PASSWORD,
-  RESET_GITHUB,
-  RESET_GOOGLE
+  CHANGE_PASSWORD
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as authApi from '../../../api/user';
@@ -19,9 +16,7 @@ import * as authApi from '../../../api/user';
  */
 const mutationTypes = {
   SET_TOKENS: 'SET_TOKENS', // Sets user's auth tokens (for example, after authentication or updating tokens)
-  SET_CURRENT_USER: 'SET_CURRENT_USER', // Sets user's field
-  RESET_GITHUB: 'RESET_GITHUB',
-  RESET_GOOGLE: 'RESET_GOOGLE'
+  SET_CURRENT_USER: 'SET_CURRENT_USER' // Sets user's field
 };
 
 /**
@@ -159,24 +154,6 @@ const actions = {
   },
 
   /**
-   * Resets github data
-   *
-   * @param {function} commit - standard Vuex commit function
-   */
-  async [RESET_GITHUB]({ commit }) {
-    commit(mutationTypes.RESET_GITHUB);
-  },
-
-  /**
-   * Resets google data
-   *
-   * @param {function} commit - standard Vuex commit function
-   */
-  async [RESET_GOOGLE]({ commit }) {
-    commit(mutationTypes.RESET_GOOGLE);
-  },
-
-  /**
    * Resets module state
    *
    * @param {function} commit - standard Vuex commit function
@@ -207,24 +184,6 @@ const mutations = {
    */
   [mutationTypes.SET_CURRENT_USER](state, user) {
     state.data = user;
-  },
-
-  /**
-   * Reset github data
-   *
-   * @param {AuthModuleState} state - Vuex state
-   */
-  [mutationTypes.RESET_GITHUB](state) {
-    Vue.set(state, 'github', {});
-  },
-
-  /**
-   * Reset google data
-   *
-   * @param {AuthModuleState} state - Vuex state
-   */
-  [mutationTypes.RESET_GOOGLE](state) {
-    Vue.set(state, 'google', {});
   },
 
   /**
