@@ -185,3 +185,33 @@ body .cdx-notify {
     margin-top: 8px;
   }
 }
+
+/**
+ * Loader
+ */
+.loader {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid var(--color-text-main);
+    border-left-color: var(--color-indicator-medium);
+    border-radius: 50%;
+    animation: loaderRotation 500ms infinite linear;
+  }
+}
+
+@keyframes loaderRotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,6 +1,10 @@
 <template>
   <div class="project-overview">
-    <div class="project-overview__content">
+    <div
+      v-infinite-scroll="loadMoreEvents"
+      infinite-scroll-distance="300"
+      class="project-overview__content"
+    >
       <div class="project-overview__chart" />
       <div class="project-overview__events">
         <div
@@ -22,6 +26,14 @@
             @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash)"
           />
         </div>
+        <div
+          v-if="!noMoreEvents"
+          class="project-overview__load-more"
+          :class="{'loader': isLoadingEvents}"
+          @click="loadMoreEvents"
+        >
+          <span v-if="!isLoadingEvents">Load more events</span>
+        </div>
         <AssignersList
           v-if="isAssignersShowed"
           v-click-outside="hideAssignersList"
@@ -38,7 +50,7 @@
 import EventItem from '../events/EventItem';
 import AssignersList from '../events/AssignersList';
 import { mapGetters } from 'vuex';
-import { FETCH_PROJECT_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -48,6 +60,8 @@ export default {
   },
   data() {
     return {
+      noMoreEvents: false,
+      isLoadingEvents: false,
       eventsListByDate: null,
       isAssignersShowed: false,
       assignersListPosition: {
@@ -78,9 +92,25 @@ export default {
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
   created() {
-    this.$store.dispatch(FETCH_PROJECT_RECENT_EVENTS, { projectId: this.project.id });
+    this.loadMoreEvents();
   },
   methods: {
+    /**
+     * Load older events to the list
+     */
+    async loadMoreEvents() {
+      if (this.noMoreEvents) {
+        return;
+      }
+      this.isLoadingEvents = true;
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+      this.isLoadingEvents = false;
+    },
+
+    /**
+     * Shows assigners list for the specific event
+     * @param {GroupedEvent} event - event to display assigners list
+     */
     showAssigners(event) {
       this.isAssignersShowed = true;
       const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
@@ -91,6 +121,11 @@ export default {
       };
     },
 
+    /**
+     * Opens event overview popup
+     * @param {String} projectId - id of the event's project
+     * @param {String} groupHash - event's group hash
+     */
     showEventOverview(projectId, groupHash) {
       this.$router.push({
         name: 'event-overview',
@@ -153,6 +188,17 @@ export default {
     &__assigners-list {
       position: absolute;
       transform: translateX(-100%) translate(-5px, -5px);
+    }
+
+    &__load-more {
+      height: 46px;
+      padding: 13px 11px 13px 15px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 500;
+      line-height: 20px;
+      margin-top: 50px;
+      background-color: var(--color-bg-main);
     }
   }
 </style>
