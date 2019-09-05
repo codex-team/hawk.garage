@@ -55,7 +55,7 @@ function initialState() {
 /**
  * @type {Object<string, Number>} Object for storing count of loaded events per project
  */
-const eventsCount = {};
+const loadedEventsCount = {};
 
 /**
  * Cache for storing the connection between the code and the event
@@ -124,7 +124,7 @@ const actions = {
    * @return {Promise<boolean>} - true if there are no more events
    */
   async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
-    const recentEvents = await eventsApi.fetchRecentEvents(projectId, eventsCount[projectId] || 0);
+    const recentEvents = await eventsApi.fetchRecentEvents(projectId, loadedEventsCount[projectId] || 0);
 
     if (!recentEvents) {
       return true;
@@ -132,7 +132,7 @@ const actions = {
 
     const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
-    eventsCount[projectId] = (eventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
+    loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
     return false;
@@ -163,16 +163,20 @@ const mutations = {
    * @param {Array<RecentEvents>} eventsList - new list of events
    */
   [mutationTypes.ADD_TO_RECENT_EVENTS_LIST](state, { projectId, recentEventsInfoByDate }) {
+    // Algorithm for merging the list of recent events from vuex store and server response
     Object.keys(recentEventsInfoByDate).forEach(date => {
+      // if there is no data for this date, then assign a value without merging
       if (!state.recent[projectId][date]) {
         Vue.set(state.recent[projectId], date, recentEventsInfoByDate[date]);
         return;
       }
       const dailyEvents = recentEventsInfoByDate[date];
 
+      // merge all daily events info separately
       dailyEvents.forEach(dailyEvent => {
         const infoIndex = state.recent[projectId][date].findIndex(e => e.groupHash === dailyEvent.groupHash);
 
+        // if there is data about this event in store then update it. Else just push it to the list
         if (infoIndex !== -1) {
           state.recent[projectId][date][infoIndex] = dailyEvent;
         } else {
