@@ -100,9 +100,9 @@ export default {
 
       if (this.searchQuery) {
         projectList = projectList.filter(project => {
-          const searchRegExp = new RegExp(this.searchQuery, 'i');
+          const projectNameLower = project.name.toLowerCase();
 
-          return searchRegExp.test(project.name) || searchRegExp.test(misTranslit(project.name));
+          return projectNameLower.includes(this.searchQuery) || misTranslit(projectNameLower).includes(this.searchQuery)
         });
       }
 

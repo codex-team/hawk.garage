@@ -11,8 +11,17 @@
     <div class="project-menu-item__info">
       <div
         class="project-menu-item__name"
-        v-html="name"
-      />
+      >
+        <template v-for="item in name">
+          <span
+            v-if="item.searched"
+            class="searched"
+          >{{ item.value }}</span>
+          <template v-else>
+            {{ item.value }}
+          </template>
+        </template>
+      </div>
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
       </div>
@@ -61,13 +70,25 @@ export default {
       return 'No one catcher connected';
     },
     name() {
-      if (this.searchQuery) {
-        return this.project.name.replace(new RegExp(`${this.searchQuery}|${misTranslit(this.searchQuery)}`, 'gi'), (match) => {
-          return `<span class="searched">${match}</span>`;
-        });
-      } else {
-        return this.project.name;
+      if (!this.searchQuery) {
+        return [
+          {
+            value: this.project.name
+          }
+        ];
       }
+      const regexp = new RegExp(`${this.searchQuery}|${misTranslit(this.searchQuery)}`, 'gi');
+      const splitResult = this.project.name
+        .split(regexp)
+        .map(item => '(' + item + ')');
+      const stringMask = splitResult.join('(.{' + this.searchQuery.length + '})');
+      const array = new RegExp(stringMask, 'ig').exec(this.project.name);
+
+      array.shift();
+      return array.map(element => ({
+        value: element,
+        searched: regexp.test(element)
+      }));
     }
   }
 };
