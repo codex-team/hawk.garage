@@ -4,7 +4,7 @@
 export const INIT_EVENTS_MODULE = 'INIT_EVENTS_MODULE';
 
 /**
- * @type {string}
+ * Action for fetching latest event
  */
 export const FETCH_LATEST_EVENT = 'FETCH_LATEST_EVENT';
 
@@ -14,11 +14,11 @@ export const FETCH_LATEST_EVENT = 'FETCH_LATEST_EVENT';
 export const FETCH_PROJECT_RECENT_EVENTS = 'FETCH_PROJECT_RECENT_EVENTS';
 
 /**
- * @type {string}
+ * Action for fetching latest event's repetitions
  */
 export const FETCH_EVENT_REPETITIONS = 'FETCH_EVENT_REPETITIONS';
 
 /**
- * @type {string}
+ * Action that returns last event: original event merged with last repetition
  */
 export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';

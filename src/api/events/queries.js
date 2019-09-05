@@ -66,22 +66,10 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 
 `;
 
-export const QUERY_REPETITION_LIST = `
-  query repetitionsList(
-    $projectId: ID!,
-    $eventId: ID!
-  ) {
-    repetitions(projectId: $projectId, eventId: $eventId, limit: 30) {
-      id
-      catcherType
-      payload {
-         title
-         timestamp
-      }
-    }
-  } 
-`;
-
+/**
+ * GraphQL query for latest repetitions
+ * @type {string}
+ */
 // language=GraphQL
 export const QUERY_LATEST_REPETITION = `
   query LatestRepetition(

@@ -63,6 +63,11 @@ Vue.filter('prettyDateStr', function (value) {
   return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
 });
 
+/**
+ * Returns prettified date from string
+ *
+ * @return {string}
+ */
 Vue.filter('prettyDate', function (value) {
   const date = new Date(value);
   const day = date.getDate();
@@ -78,14 +83,4 @@ Vue.filter('prettyDate', function (value) {
   }
 
   return `${day} ${i18n.t('common.months[' + month + ']')}`;
-});
-
-Vue.filter('prettySince', function (value) {
-  const targetDate = new Date(value);
-
-  const day = targetDate.getDate();
-  const month = targetDate.getMonth();
-  const year = targetDate.getFullYear();
-
-  return `${day} ${i18n.t('common.months[' + month + ']')} ${year}`;
 });

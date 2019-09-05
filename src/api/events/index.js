@@ -1,7 +1,6 @@
 import {
   QUERY_EVENT,
   QUERY_RECENT_PROJECT_EVENTS,
-  QUERY_REPETITION_LIST,
   QUERY_LATEST_REPETITION
 } from './queries';
 import * as api from '../index';
@@ -27,6 +26,8 @@ export async function fetchRecentProjectEvents(projectId) {
 }
 
 /**
+ * Fetches latest event's repetitions from project
+ *
  * @param {String} projectId
  * @param {String} eventId
  * @param {Number} limit
@@ -38,6 +39,8 @@ export async function getLatestRepetitions(projectId, eventId, limit) {
 }
 
 /**
+ * Fetches event's repetition from project and returns last
+ *
  * @param {String} projectId
  * @param {String} eventId
  * @return {Promise<Event>}

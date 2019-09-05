@@ -71,7 +71,7 @@ export default {
     }
 
     &__row:nth-child(even) {
-      background-color: #242732;
+      background-color: var(--color-bg-main);
     }
 
     &__col {
@@ -88,12 +88,12 @@ export default {
 
     &__time {
       width: 40px;
-      color: rgba(219, 230, 255, 0.6);
+      color: var(--color-text-second);
       letter-spacing: 0.16px;
     }
 
     &__url {
-      color: rgba(219, 230, 255, 0.6);
+      color: var(--color-text-second);
     }
   }
 </style>

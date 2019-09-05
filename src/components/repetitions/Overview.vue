@@ -59,7 +59,7 @@
             Since
           </div>
           <div class="repetitions-overview__since">
-            {{ event.payload.timestamp | prettySince }}
+            {{ event.payload.timestamp | prettyDate }}
           </div>
         </div>
 
@@ -79,7 +79,6 @@
           </div>
         </div>
       </div>
-    </div>
     </div>
   </PopupDialog>
 </template>
@@ -120,13 +119,30 @@ export default {
     }
   },
   async created() {
+    /**
+     * actual event is original event merged with latest repetitions
+     *
+     * For that we use GET_LATEST_EVENT action that merges event from store with repetition
+     * @type {any}
+     */
     this.actualEvent = await this.$store.dispatch(GET_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
 
-    this.getDate(this.actualEvent.payload.timestamp);
-
+    /**
+     * Dispatching action that fetches several latest repetitions
+     * @type {any}
+     */
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });
+
+    /**
+     * We use Map here to save the key's order,
+     * `Object` does not guarantee the iteration order
+     * @type {Map<any, any>}
+     */
     const groupedRepetitions = new Map();
 
+    /**
+     * Grouping repetitions by date
+     */
     repetitions.map((repetition) => {
       const date = this.getDate(repetition.payload.timestamp);
 
@@ -140,6 +156,13 @@ export default {
     this.groupedRepetitions = groupedRepetitions;
   },
   methods: {
+    /**
+     * Returns prettified date from timestamp
+     *
+     * @param {String} timestamp
+     *
+     * @return {string}
+     */
     getDate(timestamp) {
       const targetDate = new Date(timestamp);
       const day = targetDate.getDate();
