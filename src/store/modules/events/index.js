@@ -121,18 +121,19 @@ const getters = {
   /**
    * Returns latest event for certain project
    * @param {EventsModuleState} state - Vuex state
+   * @param {Object} getters - module getters
    * @return {Function}
    */
-  getLatestEvent: state =>
+  getLatestEvent: (state, getters) =>
     /**
      * @param {String} projectId - event's project id
      * @return {GroupedEvent}
      */
     projectId => {
-      const recentProjectEvents = state.recent[projectId];
+      const recentProjectEvents = getters.getLatestEventDailyInfo(projectId);
 
       if (recentProjectEvents) {
-        const lastEventGroupHash = Object.values(recentProjectEvents)[0][0].groupHash;
+        const lastEventGroupHash = recentProjectEvents.groupHash;
 
         return Object.values(state.list).find(event => event.groupHash === lastEventGroupHash);
       }
