@@ -218,8 +218,11 @@ body .cdx-notify {
 
 .searched {
   display: inline-block;
-  background: rgba(31, 173, 255, 0.35);
-  animation: bounce 200ms ease-in;
+  background: rgb(113, 192, 253);
+  animation: bounce .2s ease-in;
+  color: #17160a;
+  padding: 0 1px;
+  border-radius: 4px;
 }
 
 @keyframes bounce {
