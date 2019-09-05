@@ -123,20 +123,20 @@ export default {
      * actual event is original event merged with latest repetitions
      *
      * For that we use GET_LATEST_EVENT action that merges event from store with repetition
-     * @type {any}
+     * @type {Event}
      */
     this.actualEvent = await this.$store.dispatch(GET_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
 
     /**
      * Dispatching action that fetches several latest repetitions
-     * @type {any}
+     * @type {Event[]}
      */
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });
 
     /**
      * We use Map here to save the key's order,
      * `Object` does not guarantee the iteration order
-     * @type {Map<any, any>}
+     * @type {Map<String, Event[]>}
      */
     const groupedRepetitions = new Map();
 

@@ -24,6 +24,33 @@ const mutationTypes = {
 };
 
 /**
+ * @typedef {Object} Event - event's information
+ * @property {String} id - event's identifier
+ * @property {String} groupHash - event's grouping hash
+ * @property {Number} totalCount - total event's occurrence
+ * @property {String} catcherType - event's catcher type
+ * @property {EventPayload} payload - event's payload
+ */
+
+/**
+ * @typedef {Object} EventPayload - event's payload
+ * @property {String} title - event's title
+ * @property {String} release - release of project when event occurred
+ * @property {String} timestamp - when the event occurred
+ * @property {Object} context - some additional data
+ * @property {EventUser} user - on whom event occurred
+ * @property {Object} get - get parameters
+ */
+
+/**
+ * @typedef {Object} EventUser - event user representation
+ * @property {String} id - user identifier
+ * @property {String} name - user name
+ * @property {String} url - user profile url
+ * @property {String} photo - user photo
+ */
+
+/**
  * @typedef {Object} RecentEvents - Event information per day with these events
  * @property {GroupedEvent[]} events - recent error list
  * @property {DailyEventInfo} dailyInfo - Information about occurred events per day
@@ -174,7 +201,7 @@ const actions = {
    * @param {String} projectId
    * @param {String} eventId
    *
-   * @return {GroupedEvent}
+   * @return {Event}
    */
   async [FETCH_LATEST_EVENT]({ commit, getters }, { projectId, eventId }) {
     const originalEvent = await eventsApi.getEvent(projectId, eventId);
@@ -193,7 +220,7 @@ const actions = {
    * @param {String} projectId
    * @param {String} eventId
    *
-   * @return {GroupedEvent}
+   * @return {Event}
    */
   [GET_LATEST_EVENT]({ commit, state }, { projectId, eventId }) {
     const key = projectId + ':' + eventId;
@@ -238,7 +265,7 @@ const mutations = {
    * Mutation for adding new events to the store
    * @param {EventsModuleState} state - Vuex state
    * @param {String} projectId - id of the project to add
-   * @param {Array<GroupedEvent>} eventsList - new list of events
+   * @param {Array<Event>} eventsList - new list of events
    */
   [mutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }) {
     eventsList.forEach(event => {
