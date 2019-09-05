@@ -32,3 +32,13 @@ export const UPDATE_PROFILE = 'UPDATE_PROFILE';
  * Change user password
  */
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+
+/**
+ * Reset github data
+ */
+export const RESET_GITHUB = 'RESET_GITHUB';
+
+/**
+ * Reset google data
+ */
+export const RESET_GOOGLE = 'RESET_GOOGLE';

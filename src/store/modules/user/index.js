@@ -1,4 +1,5 @@
 /* eslint no-shadow: ["error", { "allow": ["state"] }] */
+import Vue from 'vue';
 import {
   LOGIN,
   SIGN_UP,
@@ -6,7 +7,9 @@ import {
   REFRESH_TOKENS,
   FETCH_CURRENT_USER,
   UPDATE_PROFILE,
-  CHANGE_PASSWORD
+  CHANGE_PASSWORD,
+  RESET_GITHUB,
+  RESET_GOOGLE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as authApi from '../../../api/user';
@@ -16,7 +19,9 @@ import * as authApi from '../../../api/user';
  */
 const mutationTypes = {
   SET_TOKENS: 'SET_TOKENS', // Sets user's auth tokens (for example, after authentication or updating tokens)
-  SET_CURRENT_USER: 'SET_CURRENT_USER' // Sets user's field
+  SET_CURRENT_USER: 'SET_CURRENT_USER', // Sets user's field
+  RESET_GITHUB: 'RESET_GITHUB',
+  RESET_GOOGLE: 'RESET_GOOGLE'
 };
 
 /**
@@ -25,6 +30,16 @@ const mutationTypes = {
  * @property {string} email - user's email
  * @property {string} name - user's name
  * @property {string} password - user's password
+ * @property {object} [github] - github authn data
+ * @property {number} [github.id] - github id
+ * @property {string} [github.login] - github login
+ * @property {string} [github.email] - github email
+ * @property {string} [github.name] - github name
+ * @property {object} [google] - google authn data
+ * @property {number} [google.id] - google id
+ * @property {string} [google.login] - google login
+ * @property {string} [google.email] - google email
+ * @property {string} [google.name] - google name
  */
 
 /**
@@ -144,6 +159,24 @@ const actions = {
   },
 
   /**
+   * Resets github data
+   *
+   * @param {function} commit - standard Vuex commit function
+   */
+  async [RESET_GITHUB]({ commit }) {
+    commit(mutationTypes.RESET_GITHUB);
+  },
+
+  /**
+   * Resets google data
+   *
+   * @param {function} commit - standard Vuex commit function
+   */
+  async [RESET_GOOGLE]({ commit }) {
+    commit(mutationTypes.RESET_GOOGLE);
+  },
+
+  /**
    * Resets module state
    *
    * @param {function} commit - standard Vuex commit function
@@ -174,6 +207,24 @@ const mutations = {
    */
   [mutationTypes.SET_CURRENT_USER](state, user) {
     state.data = user;
+  },
+
+  /**
+   * Reset github data
+   *
+   * @param {AuthModuleState} state - Vuex state
+   */
+  [mutationTypes.RESET_GITHUB](state) {
+    Vue.set(state, 'github', {});
+  },
+
+  /**
+   * Reset google data
+   *
+   * @param {AuthModuleState} state - Vuex state
+   */
+  [mutationTypes.RESET_GOOGLE](state) {
+    Vue.set(state, 'google', {});
   },
 
   /**

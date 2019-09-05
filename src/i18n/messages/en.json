@@ -43,7 +43,9 @@
       "profileImage": "Profile picture",
       "submit": "Save",
       "title": "Account settings",
-      "profileUpdated": "Profile was updated"
+      "profileUpdated": "Profile was updated",
+      "connect": "Connect",
+      "disconnect": "Disconnect"
     },
     "appearance": {
       "title": "Appearance"

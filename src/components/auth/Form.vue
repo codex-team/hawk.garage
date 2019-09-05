@@ -129,46 +129,6 @@ export default {
     margin-bottom: 30px;
   }
 
-  &__github-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    margin-left: 15px;
-    padding-right: 15px;
-    padding-left: 44px;
-    color: #ffffff;
-    font-weight: 500;
-    font-size: 14.4px;
-    background: no-repeat 15px/18px 100% url("../../assets/github.svg");
-    background-color: #101216;
-    border-radius: 4px;
-  }
-
-  &__github-button:hover {
-    background-color: #07080a;
-  }
-
-  &__google-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 40px;
-    margin-left: 15px;
-    padding-right: 15px;
-    padding-left: 44px;
-    color: var(--color-text-dark);
-    font-weight: 500;
-    font-size: 14.4px;
-    background: no-repeat 15px/18px 100% url("../../assets/google.svg");
-    background-color: #ffffff;
-    border-radius: 4px;
-  }
-
-  &__google-button:hover {
-    background-color: #e6eeff;
-  }
-
   &__container {
     display: flex;
     height: 345px;
@@ -206,11 +166,6 @@ export default {
 
     @media (--media-mobile) {
       font-size: 15px;
-    }
-
-    .router-link-active {
-      order: 1;
-      color: var(--color-text-main);
     }
 
     a:hover {

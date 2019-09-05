@@ -24,8 +24,10 @@ Vue.config.debug = process.env.NODE_ENV !== 'production';
 
 Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://127.0.0.1:4000/auth/github';
 Vue.prototype.$API_AUTH_GITHUB_LINK = process.env.VUE_APP_API_AUTH_GITHUB_LINK || 'http://127.0.0.1:4000/auth/github/link';
+Vue.prototype.$API_AUTH_GITHUB_UNLINK = process.env.VUE_APP_API_AUTH_GITHUB_UNLINK || 'http://127.0.0.1:4000/auth/github/unlink';
 Vue.prototype.$API_AUTH_GOOGLE = process.env.VUE_APP_API_AUTH_GOOGLE || 'http://127.0.0.1:4000/auth/google';
 Vue.prototype.$API_AUTH_GOOGLE_LINK = process.env.VUE_APP_API_AUTH_GOOGLE_LINK || 'http://127.0.0.1:4000/auth/google/link';
+Vue.prototype.$API_AUTH_GOOGLE_UNLINK = process.env.VUE_APP_API_AUTH_GOOGLE_UNLINK || 'http://127.0.0.1:4000/auth/google/unlink';
 
 Vue.use(VueCookies);
 

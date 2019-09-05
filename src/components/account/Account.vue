@@ -44,7 +44,7 @@
           v-if="!github"
           class="github-button account-settings__github-button"
           @click="linkGithub()"
-        >Connect</a>
+        >{{ $t('settings.account.connect') }}</a>
         <div
           v-if="github"
           class="provider-row__content"
@@ -58,8 +58,11 @@
           <div class="provider-row__text">
             {{ github.username }}
           </div>
-          <div class="button button--quiet provider-row__button">
-            Disconnect
+          <div
+            class="button button--quiet provider-row__button"
+            @click="disconnectGithub()"
+          >
+            {{ $t('settings.account.disconnect') }}
           </div>
         </div>
       </div>
@@ -72,7 +75,7 @@
           v-if="!google"
           class="google-button account-settings__google-button"
           @click="linkGoogle()"
-        >Connect</a>
+        >{{ $t('settings.account.connect') }}</a>
         <div
           v-if="google"
           class="provider-row__content"
@@ -86,8 +89,11 @@
           <div class="provider-row__text">
             {{ google.email }}
           </div>
-          <div class="button button--quiet provider-row__button">
-            Disconnect
+          <div
+            class="button button--quiet provider-row__button"
+            @click="disconnectGoogle()"
+          >
+            {{ $t('settings.account.disconnect') }}
           </div>
         </div>
       </div>
@@ -104,7 +110,13 @@ import FormTextFieldset from '../forms/TextFieldset';
 import FormImageUploader from '../forms/ImageUploader';
 import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
 import EntityImage from '../utils/EntityImage';
-import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
+import {
+  CHANGE_PASSWORD,
+  FETCH_CURRENT_USER,
+  UPDATE_PROFILE,
+  RESET_GITHUB,
+  RESET_GOOGLE
+} from '../../store/modules/user/actionTypes';
 import notifier from 'codex-notifier';
 import { mapState } from 'vuex';
 
@@ -122,8 +134,8 @@ export default {
     return {
       name: user.name || '',
       email: user.email || '',
-      github: user.github || {},
-      google: user.google || {},
+      github: user.github || null,
+      google: user.google || null,
       passwords: {
         old: '',
         new: ''
@@ -192,6 +204,16 @@ export default {
     },
     async linkGoogle() {
       window.location = `${this.$API_AUTH_GOOGLE_LINK}?access_token=${this.$store.state.user.accessToken}`;
+    },
+    async disconnectGithub() {
+      await this.$store.dispatch(RESET_GITHUB);
+
+      window.location = `${this.$API_AUTH_GITHUB_UNLINK}?access_token=${this.$store.state.user.accessToken}`;
+    },
+    async disconnectGoogle() {
+      await this.$store.dispatch(RESET_GOOGLE);
+
+      window.location = `${this.$API_AUTH_GOOGLE_UNLINK}?access_token=${this.$store.state.user.accessToken}`;
     }
   }
 };

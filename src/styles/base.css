@@ -209,7 +209,7 @@ body .cdx-notify {
   color: #ffffff;
   font-weight: 500;
   font-size: 14.4px;
-  background: #101216 url("../assets/github.svg") no-repeat 15px 15px;
+  background: #101216 no-repeat 15px/18px 100% url("../assets/github.svg");
   border-radius: 4px;
 
   &:hover {
@@ -229,7 +229,7 @@ body .cdx-notify {
   color: var(--color-text-dark);
   font-weight: 500;
   font-size: 14.4px;
-  background: #ffffff url("../assets/google.svg") no-repeat 15px 15px;
+  background: #ffffff no-repeat 15px/18px 100% url("../assets/google.svg");
   border-radius: 4px;
 
   &:hover {
