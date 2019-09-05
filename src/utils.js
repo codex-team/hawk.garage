@@ -123,7 +123,10 @@ export function misTranslit(string) {
     'м': 'v',
     'и': 'b',
     'т': 'n',
-    'ь': 'm'
+    'ь': 'm',
+    'ю': '.',
+    'б': ',',
+    ' ': ' '
   };
 
   let newString = '';
