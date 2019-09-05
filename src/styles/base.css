@@ -215,3 +215,27 @@ body .cdx-notify {
     transform: rotate(360deg);
   }
 }
+
+.searched {
+  display: inline-block;
+  background: rgba(31, 173, 255, 0.35);
+  animation: bounce 200ms ease-in;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0.95);
+  }
+
+  70% {
+    transform: scale(1.2);
+  }
+
+  90% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

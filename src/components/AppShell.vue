@@ -22,6 +22,7 @@
           <ProjectsMenuItem
             v-for="project in projects"
             :key="project.id"
+            :search-query="searchQuery"
             :project-id="project.id"
             @click.native="onProjectMenuItemClick(project)"
           />
@@ -54,6 +55,7 @@ import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
 import ProjectHeader from './projects/ProjectHeader';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
+import { misTranslit } from '../utils';
 
 export default {
   name: 'AppShell',
@@ -85,7 +87,7 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      const projectList = this.$store.state.projects.list
+      let projectList = this.$store.state.projects.list
         .map(project => {
           const latestEventInfo = this.$store.getters.getLatestEventDailyInfo(project.id);
 
@@ -94,8 +96,15 @@ export default {
             name: project.name,
             timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
           };
-        })
-        .filter(project => new RegExp(this.searchQuery, 'i').test(project.name));
+        });
+
+      if (this.searchQuery) {
+        projectList = projectList.filter(project => {
+          const searchRegExp = new RegExp(this.searchQuery, 'i');
+
+          return searchRegExp.test(project.name) || searchRegExp.test(misTranslit(project.name));
+        });
+      }
 
       projectList.sort((firstProject, secondProject) => {
         return secondProject.timestamp - firstProject.timestamp;
@@ -159,9 +168,11 @@ export default {
       const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(project.id);
 
       if (!recentProjectEvents) {
-        return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } }, () => {});
+        return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } }, () => {
+        });
       }
-      this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {});
+      this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {
+      });
     }
   }
 };

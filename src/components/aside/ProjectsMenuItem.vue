@@ -9,9 +9,10 @@
       :image="project.image"
     />
     <div class="project-menu-item__info">
-      <div class="project-menu-item__name">
-        {{ project.name }}
-      </div>
+      <div
+        class="project-menu-item__name"
+        v-html="name"
+      />
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
       </div>
@@ -26,6 +27,7 @@
 <script>
 import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
+import { misTranslit } from '../../utils';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -37,6 +39,10 @@ export default {
     projectId: {
       type: String,
       required: true
+    },
+    searchQuery: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -53,6 +59,15 @@ export default {
       }
 
       return 'No one catcher connected';
+    },
+    name() {
+      if (this.searchQuery) {
+        return this.project.name.replace(new RegExp(`${this.searchQuery}|${misTranslit(this.searchQuery)}`, 'gi'), (match) => {
+          return `<span class="searched">${match}</span>`;
+        });
+      } else {
+        return this.project.name;
+      }
     }
   }
 };
