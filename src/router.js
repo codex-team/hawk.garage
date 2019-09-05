@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import VueCookies from 'vue-cookies';
+import notifier from 'codex-notifier';
 import store from './store';
 
 import AppShell from './components/AppShell';
@@ -36,7 +36,10 @@ const router = new Router({
         {
           path: 'workspaces/:workspaceId',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings'),
-          redirect: to => ({ name: 'workspace-settings', params: { workspaceId: to.params.workspaceId } }),
+          redirect: to => ({
+            name: 'workspace-settings',
+            params: { workspaceId: to.params.workspaceId }
+          }),
           children: [
             {
               path: 'settings',
@@ -103,6 +106,17 @@ router.beforeEach((to, from, next) => {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
     }
+  }
+  next();
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.query.error) {
+    notifier.show({
+      message: to.query.error,
+      style: 'error',
+      time: 5000
+    });
   }
   next();
 });
