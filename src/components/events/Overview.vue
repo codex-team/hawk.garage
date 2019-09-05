@@ -21,7 +21,7 @@
         <div class="event-overview__statistics">
           <div
             class="event-overview__times"
-            @click="$router.push({name: 'event-repetitions-overview', params: { projectId: projectId, eventId: event.id }})"
+            @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId: event.id }})"
           >
             <div class="event-overview__statistics-count">
               {{ event.totalCount }}
