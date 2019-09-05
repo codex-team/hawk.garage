@@ -2,6 +2,7 @@
   <div class="project-overview">
     <div
       v-infinite-scroll="loadMoreEvents"
+      infinite-scroll-distance="300"
       class="project-overview__content"
     >
       <div class="project-overview__chart" />
@@ -26,10 +27,12 @@
           />
         </div>
         <div
+          v-if="!noMoreEvents"
           class="project-overview__load-more"
+          :class="{'loader': isLoadingEvents}"
           @click="loadMoreEvents"
         >
-          Load more events...
+          <span v-if="!isLoadingEvents">Load more events</span>
         </div>
         <AssignersList
           v-if="isAssignersShowed"
@@ -57,6 +60,8 @@ export default {
   },
   data() {
     return {
+      noMoreEvents: false,
+      isLoadingEvents: false,
       eventsListByDate: null,
       isAssignersShowed: false,
       assignersListPosition: {
@@ -87,14 +92,19 @@ export default {
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
   created() {
-    this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+    this.loadMoreEvents();
   },
   methods: {
     /**
      * Load older events to the list
      */
-    loadMoreEvents() {
-      this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+    async loadMoreEvents() {
+      if (this.noMoreEvents) {
+        return;
+      }
+      this.isLoadingEvents = true;
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+      this.isLoadingEvents = false;
     },
 
     /**
@@ -185,12 +195,10 @@ export default {
       padding: 13px 11px 13px 15px;
       border-radius: 9px;
       cursor: pointer;
+      font-weight: 500;
       line-height: 20px;
       margin-top: 50px;
-
-      &:hover {
-        background-color: var(--color-bg-main);
-      }
+      background-color: var(--color-bg-main);
     }
   }
 </style>

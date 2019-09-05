@@ -121,13 +121,13 @@ const actions = {
    * Get latest project events
    * @param {function} commit - standard Vuex commit function
    * @param {String} projectId - id of the project to fetch data
-   * @return {Promise<void>}
+   * @return {Promise<boolean>} - true if there are no more events
    */
   async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
     const recentEvents = await eventsApi.fetchRecentEvents(projectId, eventsCount[projectId] || 0);
 
     if (!recentEvents) {
-      return;
+      return true;
     }
 
     const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
@@ -135,6 +135,7 @@ const actions = {
     eventsCount[projectId] = (eventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
+    return false;
   },
 
   /**
