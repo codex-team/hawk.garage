@@ -21,7 +21,7 @@
           <ProjectsMenuItem
             v-for="project in projects"
             :key="project.id"
-            :project="project"
+            :project-id="project.id"
             @click.native="onProjectMenuItemClick(project)"
           />
         </div>
@@ -83,8 +83,21 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
+      const projectList = this.$store.state.projects.list.map(project => {
+        const latestEventInfo = this.$store.getters.getLatestEventDailyInfo(project.id);
+
+        return {
+          id: project.id,
+          timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
+        };
+      });
+
+      projectList.sort((firstProject, secondProject) => {
+        return secondProject.timestamp - firstProject.timestamp;
+      });
+
       if (!this.$store.state.workspaces.current) {
-        return this.$store.state.projects.list;
+        return projectList;
       }
       return this.$store.state.projects.list
         .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);

@@ -1,8 +1,5 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
-import {
-  INIT_EVENTS_MODULE,
-  FETCH_RECENT_EVENTS
-} from './actionTypes';
+import { FETCH_RECENT_EVENTS, INIT_EVENTS_MODULE } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import * as eventsApi from '../../../api/events';
@@ -101,7 +98,45 @@ const getters = {
      * @param {String} projectId - event's project id
      * @return {RecentInfoByDate}
      */
-    projectId => state.recent[projectId]
+    projectId => state.recent[projectId],
+
+  /**
+   * Returns latest recent event of the project by its id
+   * @param {EventsModuleState} state - Vuex state
+   * @return {function(*): *}
+   */
+  getLatestEventDailyInfo: state =>
+    /**
+     * @param {String} projectId - event's project id
+     * @return {RecentInfoByDate}
+     */
+    projectId => {
+      const recentProjectEvents = state.recent[projectId];
+
+      if (recentProjectEvents) {
+        return Object.values(recentProjectEvents)[0][0];
+      }
+    },
+
+  /**
+   * Returns latest event for certain project
+   * @param {EventsModuleState} state - Vuex state
+   * @return {Function}
+   */
+  getLatestEvent: state =>
+    /**
+     * @param {String} projectId - event's project id
+     * @return {GroupedEvent}
+     */
+    projectId => {
+      const recentProjectEvents = state.recent[projectId];
+
+      if (recentProjectEvents) {
+        const lastEventGroupHash = Object.values(recentProjectEvents)[0][0].groupHash;
+
+        return Object.values(state.list).find(event => event.groupHash === lastEventGroupHash);
+      }
+    }
 };
 
 const actions = {
