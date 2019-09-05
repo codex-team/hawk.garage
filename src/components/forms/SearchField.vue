@@ -23,7 +23,12 @@ export default {
   components: {
     Icon
   },
-  props: [ 'value' ]
+  props: {
+    value: {
+      type: String,
+      required: true
+    }
+  }
 };
 </script>
 
