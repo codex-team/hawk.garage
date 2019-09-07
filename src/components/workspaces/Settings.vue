@@ -30,8 +30,9 @@
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
         <router-link
+          v-if="isAdmin"
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'home' }"
+          :to="{ name: 'workspace-billing' }"
         >
           {{ $t('workspaces.settings.billing.title') }}
         </router-link>
@@ -53,12 +54,21 @@ export default {
       const workspaceId = this.$route.params.workspaceId;
 
       return this.$store.getters.getWorkspaceById(workspaceId);
+    },
+    isAdmin() {
+      if (!this.workspace.users) {
+        return false;
+      }
+
+      const user = this.$store.state.user.data;
+
+      return this.workspace.users.find(u => u.id === user.id).isAdmin;
     }
   },
-  async created() {
+  created() {
     const workspaceId = this.$route.params.workspaceId;
 
-    await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+    this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
   }
 };
 </script>
