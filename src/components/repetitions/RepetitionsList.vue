@@ -10,7 +10,7 @@
         class="repetitions-list__row"
       >
         <td class="repetitions-list__col">
-          <span class="repetitions-list__time" >{{ repetition.payload.timestamp | prettyTime }}</span>
+          <span class="repetitions-list__time">{{ repetition.payload.timestamp | prettyTime }}</span>
         </td>
         <td class="repetitions-list__col">
           <img
@@ -75,14 +75,13 @@ export default {
     }
 
     &__col {
-      padding: 14px 10px;
-      font-weight: bold;
+      padding: 6px 10px;
       font-size: 13px;
     }
 
     &__user-photo {
-      width: 25px;
-      height: 25px;
+      width: 24px;
+      height: 24px;
       border-radius: 3px;
     }
 
@@ -90,6 +89,12 @@ export default {
       width: 40px;
       color: var(--color-text-second);
       letter-spacing: 0.16px;
+    }
+
+    &__time,
+    &__user-name,
+    &__user-browser {
+      font-weight: bold;
     }
 
     &__url {

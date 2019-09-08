@@ -58,8 +58,10 @@
           <div class="repetitions-overview__label">
             Since
           </div>
-          <div class="repetitions-overview__since">
-            {{ event.payload.timestamp | prettyDate }}
+          <div class="repetitions-overview__since"
+            v-if="event"
+          >
+            {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }} <span class="repetitions-overview__since-days">— {{ since }}</span>
           </div>
         </div>
 
@@ -116,6 +118,14 @@ export default {
      */
     event() {
       return this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+    },
+
+    since() {
+      const now = new Date();
+      const firstOccurence = new Date(this.event.payload.timestamp);
+      const differenceInDays = (now - firstOccurence) / (1000 * 3600 * 24);
+
+      return `${Math.round(differenceInDays)} days`;
     }
   },
   async created() {
@@ -245,10 +255,15 @@ export default {
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 15px;
+
+      &-days {
+        color: var(--color-text-second);
+      }
     }
 
     &__table {
       margin-top: 20px;
+      margin-bottom: 20px;
     }
   }
 </style>

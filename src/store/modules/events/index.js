@@ -250,10 +250,15 @@ const actions = {
    *
    * @return {GroupedEvent}
    */
-  [GET_LATEST_EVENT]({ commit, state }, { projectId, eventId }) {
+  async [GET_LATEST_EVENT]({ commit, state }, { projectId, eventId }) {
     const key = projectId + ':' + eventId;
 
     const originalEvent = state.list[key];
+
+    if (!originalEvent) {
+      return this.dispatch(FETCH_LATEST_EVENT, { projectId, eventId });
+    }
+
     const repetition = state.repetitions[key];
     const actualEvent = Object.assign({}, originalEvent);
 

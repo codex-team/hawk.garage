@@ -82,5 +82,5 @@ Vue.filter('prettyDate', function (value) {
     return 'Yesterday';
   }
 
-  return `${day} ${i18n.t('common.months[' + month + ']')}`;
+  return `${day} ${i18n.t('common.months[' + month + ']')} ${date.getFullYear()}`;
 });
