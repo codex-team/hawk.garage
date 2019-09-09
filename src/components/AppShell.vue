@@ -66,11 +66,10 @@ export default {
   },
   data() {
     return {
-      modalComponent: null
       /**
        * Current opened modal window
        */
-      modalDialog: null,
+      modalComponent: null,
       searchQuery: ''
     };
   },
@@ -100,6 +99,7 @@ export default {
           return {
             id: project.id,
             name: project.name,
+            workspaceId: project.workspaceId,
             timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
           };
         });
@@ -119,7 +119,7 @@ export default {
       if (!this.$store.state.workspaces.current) {
         return projectList;
       }
-      return this.$store.state.projects.list
+      return projectList
         .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);
     },
 
@@ -129,6 +129,16 @@ export default {
      */
     currentWorkspace() {
       return this.$store.state.workspaces.current;
+    }
+  },
+  watch: {
+    modalDialogComponent(componentName) {
+      if (!componentName) {
+        this.modalComponent = null;
+        return;
+      }
+
+      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
     }
   },
 
@@ -171,17 +181,6 @@ export default {
       }
       this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {
       });
-    }
-  },
-
-  watch: {
-    modalDialogComponent(componentName) {
-      if (!componentName) {
-        this.modalComponent = null;
-        return;
-      }
-
-      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
     }
   }
 };
