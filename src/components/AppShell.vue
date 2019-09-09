@@ -1,15 +1,12 @@
 <template>
   <div class="app-shell">
     <aside class="aside">
-      <Sidebar
-        @createWorkspaceButtonClicked="openWorkspaceCreationDialog"
-      />
+      <Sidebar />
       <div class="aside__right-column">
         <WorkspaceInfo
           v-if="currentWorkspace"
           class="aside__workspace-info"
           :workspace="currentWorkspace"
-          @createProjectButtonClicked="openProjectCreationDialog"
         />
         <SearchField
           v-model="searchQuery"
@@ -37,24 +34,25 @@
       <router-view :key="$route.params.projectId" />
     </div>
     <component
-      :is="modalDialog"
-      @close="modalDialog = null"
+      :is="modalComponent"
+      @close="onModalClose"
     />
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
 import Sidebar from './sidebar/Sidebar';
-import WorkspaceCreationDialog from './workspaces/CreationDialog';
-import ProjectCreationDialog from './projects/CreationDialog';
 import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
 import ProjectHeader from './projects/ProjectHeader';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
+import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
+import { mapState } from 'vuex';
 import { misTranslit } from '../utils';
 
 export default {
@@ -68,6 +66,7 @@ export default {
   },
   data() {
     return {
+      modalComponent: null
       /**
        * Current opened modal window
        */
@@ -76,6 +75,13 @@ export default {
     };
   },
   computed: {
+    /**
+     * Current opened modal window
+     */
+    ...mapState({
+      modalDialogComponent: state => state.modalDialog.component
+    }),
+
     /**
      * @return {Array<Workspace>} - registered workspaces
      */
@@ -144,20 +150,12 @@ export default {
      * Fetch current user data
      */
     this.$store.dispatch(FETCH_CURRENT_USER);
+
+    this.$store.dispatch(RESET_MODAL_DIALOG);
   },
   methods: {
-    /**
-     * Opens modal window to create new workspace
-     */
-    openWorkspaceCreationDialog() {
-      this.modalDialog = WorkspaceCreationDialog;
-    },
-
-    /**
-     * Opens modal window to create new project
-     */
-    openProjectCreationDialog() {
-      this.modalDialog = ProjectCreationDialog;
+    onModalClose() {
+      this.$store.dispatch(RESET_MODAL_DIALOG);
     },
 
     /**
@@ -173,6 +171,17 @@ export default {
       }
       this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {
       });
+    }
+  },
+
+  watch: {
+    modalDialogComponent(componentName) {
+      if (!componentName) {
+        this.modalComponent = null;
+        return;
+      }
+
+      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
     }
   }
 };
