@@ -9,6 +9,7 @@
       :image="project.image"
     />
     <div class="project-menu-item__info">
+      <!-- eslint-disable vue/no-v-html -->
       <div
         class="project-menu-item__name"
         v-html="name"

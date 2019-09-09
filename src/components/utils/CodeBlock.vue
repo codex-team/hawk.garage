@@ -29,7 +29,7 @@
       class="button button--copy code-block__copy-button"
       type="button"
     >
-      {{$t('workspaces.settings.team.copyButton')}}
+      {{ $t('workspaces.settings.team.copyButton') }}
     </button>
   </div>
 </template>
@@ -76,13 +76,13 @@ export default {
   @import "../../styles/custom-properties.css";
 
   .code-block {
-    border: solid 1px rgba(0, 0, 0, 0.18);
     position: relative;
     display: flex;
     align-items: center;
     padding: 14.2px 15px;
     font-family: var(--font-monospace);
     background: var(--color-bg-main);
+    border: solid 1px rgba(0, 0, 0, 0.18);
     border-radius: 6px;
 
     &__line-numbers-container {
@@ -110,8 +110,8 @@ export default {
     }
 
     &__content {
-      width: 100%;
       position: relative;
+      width: 100%;
 
       @apply --hide-scrollbar;
     }
@@ -135,17 +135,17 @@ export default {
         top: 0;
         right: 0;
         bottom: 0;
-        content: "";
         width: 120px;
         background-image: linear-gradient(to left, var(--color-bg-main) 90px, transparent);
+        content: "";
       }
     }
 
     &__copy-button {
-      z-index: 1;
       position: absolute;
       top: 10px;
       right: 15px;
+      z-index: 1;
     }
   }
 

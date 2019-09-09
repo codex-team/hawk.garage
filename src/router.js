@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import VueCookies from 'vue-cookies';
 import store from './store';
 
 import AppShell from './components/AppShell';
