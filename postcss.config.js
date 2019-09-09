@@ -63,6 +63,6 @@ module.exports = {
      * Compression tool
      * https://github.com/cssnano/cssnano
      */
-    'cssnano': {}
+    cssnano: {}
   }
 };
