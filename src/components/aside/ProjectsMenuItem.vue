@@ -9,9 +9,11 @@
       :image="project.image"
     />
     <div class="project-menu-item__info">
-      <div class="project-menu-item__name">
-        {{ project.name }}
-      </div>
+      <!-- eslint-disable vue/no-v-html -->
+      <div
+        class="project-menu-item__name"
+        v-html="name"
+      />
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
       </div>
@@ -26,6 +28,7 @@
 <script>
 import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
+import { misTranslit, escape } from '../../utils';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -37,6 +40,10 @@ export default {
     projectId: {
       type: String,
       required: true
+    },
+    searchQuery: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -53,6 +60,24 @@ export default {
       }
 
       return 'No one catcher connected';
+    },
+    name() {
+      const escapedName = escape(this.project.name);
+
+      const searchConditions = [
+        this.searchQuery,
+        escape(this.searchQuery),
+        misTranslit(this.searchQuery),
+        escape(misTranslit(this.searchQuery))
+      ];
+
+      if (this.searchQuery) {
+        return escapedName.replace(new RegExp(`${searchConditions.join('|')}`, 'gi'), (match) => {
+          return `<span class="searched">${match}</span>`;
+        });
+      } else {
+        return escapedName;
+      }
     }
   }
 };

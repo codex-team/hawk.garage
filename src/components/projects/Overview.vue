@@ -191,13 +191,13 @@ export default {
 
     &__load-more {
       height: 46px;
+      margin-top: 50px;
       padding: 13px 11px 13px 15px;
-      border-radius: 9px;
-      cursor: pointer;
       font-weight: 500;
       line-height: 20px;
-      margin-top: 50px;
       background-color: var(--color-bg-main);
+      border-radius: 9px;
+      cursor: pointer;
     }
   }
 </style>

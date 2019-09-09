@@ -9,6 +9,7 @@
           :workspace="currentWorkspace"
         />
         <SearchField
+          v-model="searchQuery"
           class="aside__search-field"
         />
         <div
@@ -18,6 +19,7 @@
           <ProjectsMenuItem
             v-for="project in projects"
             :key="project.id"
+            :search-query="searchQuery"
             :project-id="project.id"
             @click.native="onProjectMenuItemClick(project)"
           />
@@ -29,7 +31,7 @@
         v-if="$route.params.projectId"
         class="app-shell__project-header"
       />
-      <router-view :key="$route.params.projectId"/>
+      <router-view :key="$route.params.projectId" />
     </div>
     <component
       :is="modalComponent"
@@ -51,6 +53,7 @@ import ProjectHeader from './projects/ProjectHeader';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState } from 'vuex';
+import { misTranslit } from '../utils';
 
 export default {
   name: 'AppShell',
@@ -63,7 +66,11 @@ export default {
   },
   data() {
     return {
-      modalComponent: null
+      /**
+       * Current opened modal window
+       */
+      modalComponent: null,
+      searchQuery: ''
     };
   },
   computed: {
@@ -85,14 +92,25 @@ export default {
      * @return {Array<Project>} - list of current projects
      */
     projects() {
-      const projectList = this.$store.state.projects.list.map(project => {
-        const latestEventInfo = this.$store.getters.getLatestEventDailyInfo(project.id);
+      let projectList = this.$store.state.projects.list
+        .map(project => {
+          const latestEventInfo = this.$store.getters.getLatestEventDailyInfo(project.id);
 
-        return {
-          id: project.id,
-          timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
-        };
-      });
+          return {
+            id: project.id,
+            name: project.name,
+            workspaceId: project.workspaceId,
+            timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
+          };
+        });
+
+      if (this.searchQuery) {
+        projectList = projectList.filter(project => {
+          const searchQueryLowerCased = this.searchQuery.toLowerCase();
+
+          return project.name.includes(searchQueryLowerCased) || project.name.includes(misTranslit(searchQueryLowerCased));
+        });
+      }
 
       projectList.sort((firstProject, secondProject) => {
         return secondProject.timestamp - firstProject.timestamp;
@@ -101,7 +119,7 @@ export default {
       if (!this.$store.state.workspaces.current) {
         return projectList;
       }
-      return this.$store.state.projects.list
+      return projectList
         .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);
     },
 
@@ -111,6 +129,16 @@ export default {
      */
     currentWorkspace() {
       return this.$store.state.workspaces.current;
+    }
+  },
+  watch: {
+    modalDialogComponent(componentName) {
+      if (!componentName) {
+        this.modalComponent = null;
+        return;
+      }
+
+      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
     }
   },
 
@@ -148,20 +176,11 @@ export default {
       const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(project.id);
 
       if (!recentProjectEvents) {
-        return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } }, () => {});
+        return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } }, () => {
+        });
       }
-      this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {});
-    }
-  },
-
-  watch: {
-    modalDialogComponent(componentName) {
-      if (!componentName) {
-        this.modalComponent = null;
-        return;
-      }
-
-      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
+      this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {
+      });
     }
   }
 };

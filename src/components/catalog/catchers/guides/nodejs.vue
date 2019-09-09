@@ -39,7 +39,6 @@
 <script>
 import GuideHeader from '../../GuidePageHeader';
 import GuideStepBlock from '../../GuideStepBlock';
-import GuideSection from '../../GuideSection';
 import CodeBlock from '../../../utils/CodeBlock';
 
 export default {
@@ -47,7 +46,6 @@ export default {
   components: {
     GuideStepBlock,
     CodeBlock,
-    GuideSection,
     GuideHeader
   },
   computed: {

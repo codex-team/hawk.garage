@@ -4,6 +4,9 @@ module.exports = {
     'stylelint-config-rational-order'
   ],
   rules: {
-    'plugin/rational-order': [true]
+    'plugin/rational-order': [true],
+    'selector-type-no-unknown': [true, {
+      ignoreTypes: [/\^/]
+    }]
   }
 };
