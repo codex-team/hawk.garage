@@ -33,34 +33,6 @@ export default {
     padding: 6px 15px 6px 3px;
     cursor: pointer;
 
-    &:hover &__popup {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    &__dots {
-      position: relative;
-      width: 3px;
-      height: 3px;
-      background-color: var(--color-text-second);
-
-      &::before, &::after {
-        position: absolute;
-        width: 3px;
-        height: 3px;
-        background-color: var(--color-text-second);
-        content: '';
-      }
-
-      &::before {
-       top: -6px;
-      }
-
-      &::after {
-        top: 6px;
-      }
-    }
-
     &__popup {
       position: absolute;
       top: 6px;
@@ -92,6 +64,34 @@ export default {
       }
     }
 
+    &:hover &__popup {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    &__dots {
+      position: relative;
+      width: 3px;
+      height: 3px;
+      background-color: var(--color-text-second);
+
+      &::before, &::after {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background-color: var(--color-text-second);
+        content: '';
+      }
+
+      &::before {
+        top: -6px;
+      }
+
+      &::after {
+        top: 6px;
+      }
+    }
+
     &__option {
       position: relative;
       padding: 9px 17px;
@@ -99,24 +99,6 @@ export default {
       border: none;
       cursor: pointer;
       user-select: none;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.06);
-
-        &::before, & + ^&__option::before {
-          display: none;
-        }
-      }
-
-      &:first-child {
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-      }
-
-      &:last-child {
-         border-bottom-right-radius: 8px;
-         border-bottom-left-radius: 8px;
-      }
 
       &:not(:first-child)::before {
         position: absolute;
@@ -127,6 +109,24 @@ export default {
         background-color: var(--color-bg-main);
         opacity: 0.14;
         content: '';
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.06);
+
+        &::before, & + ^ &__option::before {
+          display: none;
+        }
+      }
+
+      &:first-child {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+
+      &:last-child {
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
       }
     }
   }
