@@ -27,7 +27,7 @@
 <script>
 import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
-import { misTranslit } from '../../utils';
+import { misTranslit, escape } from '../../utils';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -61,12 +61,21 @@ export default {
       return 'No one catcher connected';
     },
     name() {
+      const escapedName = escape(this.project.name);
+
+      const searchConditions = [
+        this.searchQuery,
+        escape(this.searchQuery),
+        misTranslit(this.searchQuery),
+        escape(misTranslit(this.searchQuery))
+      ];
+
       if (this.searchQuery) {
-        return this.project.name.replace(new RegExp(`${this.searchQuery}|${misTranslit(this.searchQuery)}`, 'gi'), (match) => {
+        return escapedName.replace(new RegExp(`${searchConditions.join('|')}`, 'gi'), (match) => {
           return `<span class="searched">${match}</span>`;
         });
       } else {
-        return this.project.name;
+        return escapedName;
       }
     }
   }

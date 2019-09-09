@@ -137,3 +137,17 @@ export function misTranslit(string) {
 
   return newString;
 }
+
+/**
+ * Encodes HTML special characters (examples: &, <, >)
+ * @param {String} string - string to encode
+ * @return {String} - encoded string
+ */
+export function escape(string) {
+  return string
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
