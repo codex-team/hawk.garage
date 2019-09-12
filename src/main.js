@@ -22,6 +22,7 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
 Vue.config.debug = process.env.NODE_ENV !== 'production';
 
+Vue.prototype.$API_AUTH_INIT = process.env.VUE_APP_API_AUTH_INIT || 'http://127.0.0.1:4000/auth/init';
 Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://127.0.0.1:4000/auth/github';
 Vue.prototype.$API_AUTH_GITHUB_LINK = process.env.VUE_APP_API_AUTH_GITHUB_LINK || 'http://127.0.0.1:4000/auth/github/link';
 Vue.prototype.$API_AUTH_GITHUB_UNLINK = process.env.VUE_APP_API_AUTH_GITHUB_UNLINK || 'http://127.0.0.1:4000/auth/github/unlink';

@@ -115,6 +115,7 @@ import {
   FETCH_CURRENT_USER,
   UPDATE_PROFILE
 } from '../../store/modules/user/actionTypes';
+import { authInit } from '../../api/auth';
 import notifier from 'codex-notifier';
 import { mapState } from 'vuex';
 
@@ -198,17 +199,37 @@ export default {
       this.showPasswordFieldset = false;
       this.showSubmitButton = false;
     },
+    /**
+     * Link GitHub account
+     */
     async linkGithub() {
-      window.location = `${this.$API_AUTH_GITHUB_LINK}?access_token=${this.$store.state.user.accessToken}`;
+      await authInit();
+
+      window.location = `${this.$API_AUTH_GITHUB_LINK}`;
     },
+    /**
+     * Link Google account
+     */
     async linkGoogle() {
-      window.location = `${this.$API_AUTH_GOOGLE_LINK}?access_token=${this.$store.state.user.accessToken}`;
+      await authInit();
+
+      window.location = `${this.$API_AUTH_GOOGLE_LINK}`;
     },
+    /**
+     * Unlink GitHub account
+     */
     async disconnectGithub() {
-      window.location = `${this.$API_AUTH_GITHUB_UNLINK}?access_token=${this.$store.state.user.accessToken}`;
+      await authInit();
+
+      window.location = `${this.$API_AUTH_GITHUB_UNLINK}`;
     },
+    /**
+     * Unlink Google account
+     */
     async disconnectGoogle() {
-      window.location = `${this.$API_AUTH_GOOGLE_UNLINK}?access_token=${this.$store.state.user.accessToken}`;
+      await authInit();
+
+      window.location = `${this.$API_AUTH_GOOGLE_UNLINK}`;
     }
   }
 };
