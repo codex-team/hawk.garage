@@ -239,7 +239,7 @@ export default {
 
     &__label {
       margin-bottom: 10px;
-      color: rgba(219, 230, 255, 0.6);
+      color: var(--color-text-second);
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.15px;
