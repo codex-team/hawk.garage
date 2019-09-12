@@ -38,7 +38,10 @@
         </template>
         <template #content>
           Install module with Composer:
-          <CodeBlock class="php" copyable>
+          <CodeBlock
+            class="php"
+            copyable
+          >
             $ composer require codex-team/hawk.php
           </CodeBlock>
           Next you can use module as standalone class or connect it with Monolog.
@@ -56,20 +59,29 @@
           <p>
             Create an instance with Token at the entry point of your project.
           </p>
-          <CodeBlock one-line copyable>
+          <CodeBlock
+            one-line
+            copyable
+          >
             \Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP');
           </CodeBlock>
           <h3>Enable handlers</h3>
           <p>
             By default Hawk will catch everything. You can run function with no params.
           </p>
-          <CodeBlock language="php" copyable>
+          <CodeBlock
+            language="php"
+            copyable
+          >
             <code>\Hawk\HawkCatcher::enableHandlers();</code>
           </CodeBlock>
           <p>
             It is similar to
           </p>
-          <CodeBlock language="php" copyable>
+          <CodeBlock
+            language="php"
+            copyable
+          >
             <pre>\Hawk\HawkCatcher::enableHandlers(
   true, // exceptions
   true, // errors

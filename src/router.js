@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import VueCookies from 'vue-cookies';
 import store from './store';
 
 import AppShell from './components/AppShell';
@@ -30,18 +29,29 @@ const router = new Router({
               path: 'appearance',
               name: 'appearance-settings',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance')
+            },
+            {
+              path: 'billing',
+              name: 'billing-settings',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing')
             }
           ]
         },
         {
           path: 'workspaces/:workspaceId',
+          name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings'),
-          redirect: to => ({ name: 'workspace-settings', params: { workspaceId: to.params.workspaceId } }),
+          redirect: 'workspaces/:workspaceId/settings',
           children: [
             {
               path: 'settings',
-              name: 'workspace-settings',
+              name: 'workspace-settings-workspace',
               component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace')
+            },
+            {
+              path: 'billing',
+              name: 'workspace-billing',
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspaces/Billing')
             },
             {
               path: 'team',
