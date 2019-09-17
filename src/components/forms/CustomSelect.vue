@@ -172,10 +172,10 @@ export default {
     }
 
     &--opened &__select {
+      z-index: 3;
       border-bottom: 1px solid transparent;
       border-bottom-right-radius: unset;
       border-bottom-left-radius: unset;
-      z-index: 3;
     }
 
     &--opened &__option,

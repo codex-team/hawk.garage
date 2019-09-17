@@ -54,8 +54,8 @@ export default {
 
   &__title-container {
     display:flex;
-    height: 100%;
     align-items: center;
+    height: 100%;
     padding: 0 15px;
     cursor: pointer;
   }

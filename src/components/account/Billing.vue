@@ -59,8 +59,6 @@ export default {
 <style src="../../styles/settings-window-page.css"></style>
 
 <style>
-  @import "../../styles/settings-window-page.css";
-
   .account-billing {
     &__label {
       margin-bottom: 15px;

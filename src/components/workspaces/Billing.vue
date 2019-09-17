@@ -45,6 +45,5 @@ export default {
 };
 </script>
 
-<style>
-  @import "../../styles/settings-window-page.css";
-</style>
+<style src="../../styles/settings-window-page.css"></style>
+

@@ -124,9 +124,9 @@ export default {
 };
 </script>
 
-<style>
-  @import "../../styles/settings-window-page.css";
+<style src="../../styles/settings-window-page.css"></style>
 
+<style>
   .workspace-team {
     &__section {
       margin-bottom: 30px;
