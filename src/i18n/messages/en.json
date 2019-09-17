@@ -32,6 +32,11 @@
       "submitButton": "Create project",
       "title": "Add a project",
       "workspaceSelectLabel": "SELECT WORKSPACE"
+    },
+    "settings": {
+      "integrations": {
+        "title": "Integrations"
+      }
     }
   },
   "settings": {
