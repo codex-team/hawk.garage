@@ -12,12 +12,10 @@
           class="repetitions-overview__header-arrow"
           @click="$router.push({name: 'event-overview', params: { projectId: projectId, eventId: eventId }})"
         >
-          <div class="header-arrow">
-            <Icon
-              class="badge__icon header-arrow__icon"
-              symbol="arrow-left"
-            />
-          </div>
+          <Icon
+            class="badge__icon repetitions-overview__header-arrow-icon"
+            symbol="arrow-left"
+          />
         </div>
 
         <!-- Header error type badge -->
@@ -185,13 +183,6 @@ export default {
 </script>
 
 <style>
-  .header-arrow {
-    &__icon {
-      width: 13px;
-      height: 13px;
-    }
-  }
-
   .repetitions-overview {
     &__container {
       flex-grow: 1;
@@ -206,6 +197,11 @@ export default {
 
       &-arrow {
         cursor: pointer;
+
+        &-icon {
+          width: 13px;
+          height: 13px;
+        }
       }
 
       &-badge {

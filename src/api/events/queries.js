@@ -72,8 +72,8 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
  * @type {string}
  */
 // language=GraphQL
-export const QUERY_LATEST_REPETITION = `
-  query LatestRepetition(
+export const QUERY_LATEST_REPETITIONS = `
+  query LatestRepetitions(
     $projectId: ID!,
     $eventId: ID!,
     $limit: Int

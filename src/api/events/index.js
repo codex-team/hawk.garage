@@ -1,7 +1,7 @@
 import {
   QUERY_EVENT,
   QUERY_RECENT_PROJECT_EVENTS,
-  QUERY_LATEST_REPETITION
+  QUERY_LATEST_REPETITIONS
 } from './queries';
 import * as api from '../index';
 
@@ -29,23 +29,23 @@ export async function fetchRecentEvents(projectId, skip = 0) {
 /**
  * Fetches latest event's repetitions from project
  *
- * @param {String} projectId
- * @param {String} eventId
- * @param {Number} limit
+ * @param {String} projectId - project's identifier
+ * @param {String} eventId - event's identifier
+ * @param {Number} limit - the number of repetitions
  *
  * @return {Promise<Event[]>}
  */
 export async function getLatestRepetitions(projectId, eventId, limit) {
-  return (await api.call(QUERY_LATEST_REPETITION, { projectId, eventId, limit })).project.event.repetitions;
+  return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId, limit })).project.event.repetitions;
 }
 
 /**
  * Fetches event's repetition from project and returns last
  *
- * @param {String} projectId
- * @param {String} eventId
+ * @param {String} projectId - project's identifier
+ * @param {String} eventId - event's identifier
  * @return {Promise<Event>}
  */
 export async function getLatestRepetition(projectId, eventId) {
-  return (await api.call(QUERY_LATEST_REPETITION, { projectId, eventId })).project.event.repetitions.shift();
+  return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId })).project.event.repetitions.shift();
 }
