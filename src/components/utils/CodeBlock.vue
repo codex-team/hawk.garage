@@ -1,6 +1,6 @@
 <template>
   <div
-    v-copyable="{selector: copyable? '.code-block__content' : null}"
+    v-copyable="{selector: copyable? '.code-block__content' : null, callback: onLinkCopied}"
     class="code-block"
     :class="{'code-block--one-line': oneLine, 'code-block--copyable': copyable}"
   >
@@ -38,6 +38,7 @@
 
 <script>
 import hljs from 'highlight.js';
+import notifier from 'codex-notifier';
 
 export default {
   name: 'CodeBlock',
@@ -71,6 +72,15 @@ export default {
       hljs.highlightBlock(this.$refs.content);
     }
     this.linesNumber = this.$refs.content.innerText.split('\n').length;
+  },
+  methods: {
+    onLinkCopied() {
+      notifier.show({
+        message: this.$t('workspaces.settings.team.copiedNotification'),
+        style: 'success',
+        time: 2000
+      });
+    }
   }
 };
 </script>

@@ -93,7 +93,7 @@ export default {
       notifier.show({
         message: this.$t('workspaces.settings.team.copiedNotification'),
         style: 'success',
-        time: 10000
+        time: 2000
       });
     },
     async onInvitationSent() {
