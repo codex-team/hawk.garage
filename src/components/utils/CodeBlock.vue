@@ -76,7 +76,7 @@ export default {
   methods: {
     onLinkCopied() {
       notifier.show({
-        message: this.$t('workspaces.settings.team.copiedNotification'),
+        message: this.$t('common.copiedNotification'),
         style: 'success',
         time: 2000
       });
@@ -84,6 +84,7 @@ export default {
   }
 };
 </script>
+
 <style>
   @import "../../styles/custom-properties.css";
 
