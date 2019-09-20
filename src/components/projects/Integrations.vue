@@ -4,7 +4,7 @@
       {{ $t('projects.settings.integrations.title') }}
     </div>
     <div>
-      Your Integration token for <b>{{ project.name }}</b>:
+      {{ $t('projects.settings.integrations.projectTokenLabel') }} <b>{{ project.name }}</b>:
     </div>
     <TokenBlock
       class="projects-integrations-settings-page__token"

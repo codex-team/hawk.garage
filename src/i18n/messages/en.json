@@ -35,7 +35,8 @@
     },
     "settings": {
       "integrations": {
-        "title": "Integrations"
+        "title": "Integrations",
+        "projectTokenLabel": "Your Integration token for"
       }
     }
   },

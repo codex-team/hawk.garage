@@ -46,4 +46,3 @@ export default {
 </script>
 
 <style src="../../styles/settings-window-page.css"></style>
-

@@ -127,9 +127,8 @@ pre {
   }
 
   &--copy {
-    width: 60px;
     height: 23px;
-    padding: 0;
+    padding: 0 15px;
     color: var(--color-text-main);
     font-size: 11px;
     line-height: 23px;

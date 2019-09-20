@@ -32,6 +32,12 @@
       "submitButton": "Создать проект",
       "title": "Добавить проект",
       "workspaceSelectLabel": "Выбрать воркспейс"
+    },
+    "settings": {
+      "integrations": {
+        "title": "Интеграции",
+        "projectTokenLabel": "Интеграционный токен для проекта"
+      }
     }
   },
   "settings": {

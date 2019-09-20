@@ -24,13 +24,15 @@
     >
       <slot />
     </div>
-    <button
-      v-if="copyable"
-      class="button button--copy code-block__copy-button"
-      type="button"
-    >
-      {{ $t('workspaces.settings.team.copyButton') }}
-    </button>
+    <div class="code-block__button-wrapper">
+      <button
+        v-if="copyable"
+        class="button button--copy code-block__copy-button"
+        type="button"
+      >
+        {{ $t('workspaces.settings.team.copyButton') }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -123,29 +125,19 @@ export default {
         @apply --hide-scrollbar;
       }
 
-      ^&__copy-button {
+      ^&__button-wrapper {
         top: 50%;
         transform: translateY(-50%);
       }
     }
 
-    &--copyable {
-      &::after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 120px;
-        background-image: linear-gradient(to left, var(--color-bg-main) 90px, transparent);
-        content: "";
-      }
-    }
-
-    &__copy-button {
+    &__button-wrapper {
       position: absolute;
       top: 10px;
-      right: 15px;
-      z-index: 1;
+      right: 0;
+      padding-right: 15px;
+      padding-left: 20px;
+      background-image: linear-gradient(to left, var(--color-bg-main) 90%, transparent);
     }
   }
 
