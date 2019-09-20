@@ -30,7 +30,6 @@ export default {
     project() {
       const projectId = this.$route.params.projectId;
 
-      console.log(projectId);
       return this.$store.getters.getProjectById(projectId);
     }
   }
