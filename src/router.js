@@ -69,6 +69,11 @@ const router = new Router({
               path: 'event/:eventId',
               name: 'event-overview',
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
+            },
+            {
+              path: 'event/:eventId/repetitions',
+              name: 'event-repetitions-overview',
+              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/Overview.vue')
             }
           ]
         },
