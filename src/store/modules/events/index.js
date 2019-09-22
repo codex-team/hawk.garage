@@ -1,12 +1,15 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   INIT_EVENTS_MODULE,
-  FETCH_RECENT_EVENTS
+  FETCH_RECENT_EVENTS,
+  FETCH_EVENT_REPETITIONS,
+  FETCH_LATEST_EVENT,
+  GET_LATEST_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import * as eventsApi from '../../../api/events';
-import { groupByDate } from '../../../utils';
+import { groupByDate, deepMerge } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -14,8 +17,10 @@ import { groupByDate } from '../../../utils';
 const mutationTypes = {
   SET_EVENTS_LIST: 'SET_EVENTS_LIST', // Set new events list
   SET_RECENT_EVENTS_LIST: 'SET_RECENT_EVENTS_LIST', // Set new recent events list
+  SET_REPETITIONS_LIST: 'SET_REPETITIONS_LIST', // something...
   ADD_TO_RECENT_EVENTS_LIST: 'ADD_TO_RECENT_EVENTS_LIST', // add new data to recent event list
-  ADD_TO_EVENTS_LIST: 'ADD_TO_EVENTS_LIST' // add new data to event list
+  ADD_TO_EVENTS_LIST: 'ADD_TO_EVENTS_LIST', // add new data to event list
+  ADD_REPETITION_PAYLOAD: 'ADD_REPETITION_PAYLOAD' // save loaded event
 };
 
 /**
@@ -48,7 +53,8 @@ const mutationTypes = {
 function initialState() {
   return {
     list: {},
-    recent: {}
+    recent: {},
+    repetitions: {}
   };
 }
 
@@ -101,7 +107,64 @@ const getters = {
      * @param {String} projectId - event's project id
      * @return {RecentInfoByDate}
      */
-    projectId => state.recent[projectId]
+    projectId => state.recent[projectId],
+
+  /**
+   * List state keeps only original Event
+   *
+   * @return {GroupedEvent}
+   */
+  getProjectEventById: (state) => (projectId, eventId) => {
+    const key = projectId + ':' + eventId;
+
+    return state.list[key];
+  },
+
+  /**
+   * Returns latest recent event of the project by its id
+   * @param {EventsModuleState} state - Vuex state
+   * @return {function(*): *}
+   */
+  getLatestEventDailyInfo: state =>
+    /**
+     * @param {String} projectId - event's project id
+     * @return {DailyEventInfo}
+     */
+    projectId => {
+      const recentProjectEvents = state.recent[projectId];
+
+      if (recentProjectEvents) {
+        /**
+         * @type {DailyEventInfo[]}
+         */
+        const latestDailyInfo = Object.values(recentProjectEvents)[0];
+
+        if (latestDailyInfo) {
+          return latestDailyInfo[0];
+        }
+      }
+    },
+
+  /**
+   * Returns latest event for certain project
+   * @param {EventsModuleState} state - Vuex state
+   * @param {Object} getters - module getters
+   * @return {Function}
+   */
+  getLatestEvent: (state, getters) =>
+    /**
+     * @param {String} projectId - event's project id
+     * @return {GroupedEvent}
+     */
+    projectId => {
+      const recentProjectEvents = getters.getLatestEventDailyInfo(projectId);
+
+      if (recentProjectEvents) {
+        const lastEventGroupHash = recentProjectEvents.groupHash;
+
+        return Object.values(state.list).find(event => event.groupHash === lastEventGroupHash);
+      }
+    }
 };
 
 const actions = {
@@ -124,6 +187,7 @@ const actions = {
    * @return {Promise<boolean>} - true if there are no more events
    */
   async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
+    const RECENT_EVENTS_FETCH_LIMIT = 15;
     const recentEvents = await eventsApi.fetchRecentEvents(projectId, loadedEventsCount[projectId] || 0);
 
     if (!recentEvents) {
@@ -135,7 +199,71 @@ const actions = {
     loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
     commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
     commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
-    return false;
+    return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
+  },
+
+  /**
+   * Fetches latest repetitions
+   *
+   * @param {String} projectId
+   * @param {String} eventId
+   * @param {Number} limit
+   *
+   * @return {Promise<GroupedEvent[]>}
+   */
+  async [FETCH_EVENT_REPETITIONS]({ commit, getters, state }, { projectId, eventId, limit }) {
+    const originalEvent = state.list[projectId + ':' + eventId];
+    const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
+
+    return repetitions.map(repetition => {
+      const newEvent = Object.assign({}, originalEvent);
+
+      newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+      return newEvent;
+    });
+  },
+
+  /**
+   * Fetches original event and latest repetition
+   *
+   * @param {String} projectId
+   * @param {String} eventId
+   *
+   * @return {GroupedEvent}
+   */
+  async [FETCH_LATEST_EVENT]({ commit, getters }, { projectId, eventId }) {
+    const originalEvent = await eventsApi.getEvent(projectId, eventId);
+    const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
+    const actualEvent = Object.assign({}, originalEvent);
+
+    commit(mutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
+
+    actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
+    return actualEvent;
+  },
+
+  /**
+   * Returns original event merged with latest repetition from store
+   *
+   * @param {String} projectId
+   * @param {String} eventId
+   *
+   * @return {GroupedEvent}
+   */
+  async [GET_LATEST_EVENT]({ commit, state }, { projectId, eventId }) {
+    const key = projectId + ':' + eventId;
+
+    const originalEvent = state.list[key];
+
+    if (!originalEvent) {
+      return this.dispatch(FETCH_LATEST_EVENT, { projectId, eventId });
+    }
+
+    const repetition = state.repetitions[key];
+    const actualEvent = Object.assign({}, originalEvent);
+
+    actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
+    return actualEvent;
   },
 
   /**
@@ -213,6 +341,19 @@ const mutations = {
    */
   [mutationTypes.SET_RECENT_EVENTS_LIST](state, newList) {
     Vue.set(state, 'recent', newList);
+  },
+
+  /**
+   * Updates list state
+   *
+   * @param {String} projectId
+   * @param {String} eventId
+   * @param {GroupedEvent} event
+   */
+  [mutationTypes.ADD_REPETITION_PAYLOAD](state, { projectId, eventId, repetition }) {
+    const key = projectId + ':' + eventId;
+
+    state.repetitions[key] = repetition;
   },
 
   /**

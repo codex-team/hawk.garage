@@ -30,11 +30,17 @@ const router = new Router({
               path: 'appearance',
               name: 'appearance-settings',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance')
+            },
+            {
+              path: 'billing',
+              name: 'billing-settings',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing')
             }
           ]
         },
         {
           path: 'workspaces/:workspaceId',
+          name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings'),
           redirect: to => ({
             name: 'workspace-settings',
@@ -43,8 +49,13 @@ const router = new Router({
           children: [
             {
               path: 'settings',
-              name: 'workspace-settings',
+              name: 'workspace-settings-workspace',
               component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace')
+            },
+            {
+              path: 'billing',
+              name: 'workspace-billing',
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspaces/Billing')
             },
             {
               path: 'team',
@@ -62,6 +73,11 @@ const router = new Router({
               path: 'event/:eventId',
               name: 'event-overview',
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
+            },
+            {
+              path: 'event/:eventId/repetitions',
+              name: 'event-repetitions-overview',
+              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/Overview.vue')
             }
           ]
         },

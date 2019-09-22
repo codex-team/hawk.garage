@@ -1,3 +1,5 @@
+const mergeWith = require('lodash.mergewith');
+
 /**
  * Returns entity color from predefined list
  * @param {String} [id] - for id-base picking colors (hex string)
@@ -61,3 +63,127 @@ export const groupBy =
  * @type {function(Array[Object]): Object}
  */
 export const groupByDate = groupBy('date');
+
+/**
+ * Merge to objects recursively
+ * @param {object} target
+ * @param {object[]} sources
+ * @return {object}
+ */
+export function deepMerge(target, ...sources) {
+  const isObject = (item) => item && typeOf(item) === 'object';
+
+  return mergeWith({}, target, ...sources, function (_subject, _target) {
+    if (Array.isArray(_subject) && Array.isArray(_target)) {
+      const biggerArray = _subject.length > _target.length ? _subject : _target;
+      const lesser = _subject.length > _target.length ? _target : _subject;
+
+      return biggerArray.map((el, i) => {
+        if (isObject(el) && isObject(lesser[i])) {
+          return mergeWith({}, el, lesser[i]);
+        } else {
+          return el;
+        }
+      });
+    }
+  });
+}
+
+/**
+ * Returns real type of passed variable
+ * @param obj
+ * @return {string}
+ */
+function typeOf(obj) {
+  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+}
+
+/**
+ * Converts string in wrong language to the translited equal
+ * @param {string} string
+ * @return {String}
+ */
+export function misTranslit(string) {
+  string = string.toLowerCase();
+
+  /* eslint-disable quote-props */
+  const map = {
+    'q': 'й',
+    'w': 'ц',
+    'e': 'у',
+    'r': 'к',
+    't': 'е',
+    'y': 'н',
+    'u': 'г',
+    'i': 'ш',
+    'o': 'щ',
+    'p': 'з',
+    'a': 'ф',
+    's': 'ы',
+    'd': 'в',
+    'f': 'а',
+    'g': 'п',
+    'h': 'р',
+    'j': 'о',
+    'k': 'л',
+    'l': 'д',
+    'z': 'я',
+    'x': 'ч',
+    'c': 'с',
+    'v': 'м',
+    'b': 'и',
+    'n': 'т',
+    'm': 'ь',
+    'й': 'q',
+    'ц': 'w',
+    'у': 'e',
+    'к': 'r',
+    'е': 't',
+    'н': 'y',
+    'г': 'u',
+    'ш': 'i',
+    'щ': 'o',
+    'з': 'p',
+    'ф': 'a',
+    'ы': 's',
+    'в': 'd',
+    'а': 'f',
+    'п': 'g',
+    'р': 'h',
+    'о': 'j',
+    'л': 'k',
+    'д': 'l',
+    'я': 'z',
+    'ч': 'x',
+    'с': 'c',
+    'м': 'v',
+    'и': 'b',
+    'т': 'n',
+    'ь': 'm',
+    'ю': '.',
+    'б': ',',
+    ' ': ' '
+  };
+
+  let newString = '';
+
+  for (let i = 0, lenCached = string.length; i < lenCached; i++) {
+    newString += map[string[i]];
+  }
+
+  return newString;
+}
+
+/**
+ * Encodes HTML special characters (examples: &, <, >)
+ * @param {String} string - string to encode
+ * @return {String} - encoded string
+ */
+export function escape(string) {
+  return string
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}

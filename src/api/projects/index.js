@@ -1,4 +1,4 @@
-import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS } from './queries';
+import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS, QUERY_REPETITION_LIST } from './queries';
 import * as api from '../index';
 
 /**

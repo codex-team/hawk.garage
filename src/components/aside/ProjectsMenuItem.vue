@@ -9,15 +9,17 @@
       :image="project.image"
     />
     <div class="project-menu-item__info">
-      <div class="project-menu-item__name">
-        {{ project.name }}
-      </div>
+      <!-- eslint-disable vue/no-v-html -->
+      <div
+        class="project-menu-item__name"
+        v-html="name"
+      />
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
       </div>
     </div>
     <Badge
-      content="343"
+      content=""
       class="project-menu-item__events-number"
     />
   </div>
@@ -26,6 +28,7 @@
 <script>
 import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
+import { misTranslit, escape } from '../../utils';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -34,23 +37,47 @@ export default {
     EntityImage
   },
   props: {
-    project: {
-      type: Object, // @type {Project}
+    projectId: {
+      type: String,
       required: true
+    },
+    searchQuery: {
+      type: String,
+      default: null
     }
+  },
+  data() {
+    return {
+      project: this.$store.state.projects.list.find(_project => _project.id === this.projectId)
+    };
   },
   computed: {
     lastEventTitle() {
-      const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(this.project.id);
+      const latestEvents = this.$store.getters.getLatestEvent(this.project.id);
 
-      if (recentProjectEvents) {
-        const lastEventGroupHash = Object.values(recentProjectEvents)[0][0].groupHash;
-        const lastEvent = Object.values(this.$store.state.events.list).find(event => event.groupHash === lastEventGroupHash);
-
-        return lastEvent.payload.title;
+      if (latestEvents) {
+        return latestEvents.payload.title;
       }
 
       return 'No one catcher connected';
+    },
+    name() {
+      const escapedName = escape(this.project.name);
+
+      const searchConditions = [
+        this.searchQuery,
+        escape(this.searchQuery),
+        misTranslit(this.searchQuery),
+        escape(misTranslit(this.searchQuery))
+      ];
+
+      if (this.searchQuery) {
+        return escapedName.replace(new RegExp(`${searchConditions.join('|')}`, 'gi'), (match) => {
+          return `<span class="searched">${match}</span>`;
+        });
+      } else {
+        return escapedName;
+      }
     }
   }
 };

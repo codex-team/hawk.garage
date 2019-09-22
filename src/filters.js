@@ -11,8 +11,17 @@ Vue.filter('spacedNumber', function (value) {
 
   const count = value.toString();
 
-  if (count.length === 4) return `${count.slice(0, 1)} ${count.slice(1)}`;
-  return value;
+  if (count.length < 3) {
+    return count;
+  }
+
+  let result = '';
+
+  for (let i = 1; i <= Math.ceil(count.length / 3); i++) {
+    result = `${count.slice(-3 * i, -3 * (i - 1) || undefined)} ` + result;
+  }
+
+  return result.trim();
 });
 
 /**
@@ -20,6 +29,8 @@ Vue.filter('spacedNumber', function (value) {
  * @return {string}
  */
 Vue.filter('abbreviation', function (value) {
+  if (!value) return '';
+
   const words = value.split(' ');
 
   return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
@@ -47,7 +58,7 @@ Vue.filter('prettyTime', function (value) {
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
  * @return {string}
  */
-Vue.filter('prettyDate', function (value) {
+Vue.filter('prettyDateStr', function (value) {
   const [day, month] = value.split('-');
 
   const currentDate = new Date().getDate();
@@ -61,4 +72,39 @@ Vue.filter('prettyDate', function (value) {
   }
 
   return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
+});
+
+/**
+ * Returns prettified date from string
+ *
+ * @return {string}
+ */
+Vue.filter('prettyDate', function (value) {
+  const date = new Date(value);
+  const day = date.getDate();
+  const month = date.getMonth();
+  const currentDate = new Date().getDate();
+
+  if (+day === currentDate) {
+    return 'Today';
+  }
+
+  if (+day === currentDate - 1) {
+    return 'Yesterday';
+  }
+
+  return `${day} ${i18n.t('common.months[' + month + ']')} ${date.getFullYear()}`;
+});
+
+/**
+ * Returns prettified date ('29 aug, 14:30')
+ * @returns {string}
+ */
+Vue.filter('prettyFullDate', function (value) {
+  const day = value.getDate();
+  const month = value.getMonth();
+  const hours = value.getHours();
+  const minutes = value.getMinutes();
+
+  return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${`0${hours}`.substr(-2)}:${`0${minutes}`.substr(-2)}`;
 });

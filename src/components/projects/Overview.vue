@@ -13,7 +13,7 @@
           class="project-overview__events-by-date"
         >
           <div class="project-overview__date">
-            {{ date | prettyDate }}
+            {{ date | prettyDateStr }}
           </div>
           <EventItem
             v-for="dailyEventInfo in eventsByDate"
@@ -60,9 +60,8 @@ export default {
   },
   data() {
     return {
-      noMoreEvents: false,
+      noMoreEvents: true,
       isLoadingEvents: false,
-      eventsListByDate: null,
       isAssignersShowed: false,
       assignersListPosition: {
         top: 0,
@@ -91,8 +90,8 @@ export default {
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
-  created() {
-    this.loadMoreEvents();
+  async created() {
+    this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
   },
   methods: {
     /**
@@ -192,13 +191,13 @@ export default {
 
     &__load-more {
       height: 46px;
+      margin-top: 50px;
       padding: 13px 11px 13px 15px;
-      border-radius: 9px;
-      cursor: pointer;
       font-weight: 500;
       line-height: 20px;
-      margin-top: 50px;
       background-color: var(--color-bg-main);
+      border-radius: 9px;
+      cursor: pointer;
     }
   }
 </style>
