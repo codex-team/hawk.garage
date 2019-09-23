@@ -1,4 +1,4 @@
-import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS, QUERY_REPETITION_LIST } from './queries';
+import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS, MUTATION_SET_LAST_VISIT } from './queries';
 import * as api from '../index';
 
 /**
@@ -24,4 +24,14 @@ export async function createProject(projectInfo) {
  */
 export async function fetchRecentErrors(projectId) {
   return (await api.call(QUERY_RECENT_ERRORS, { projectId })).recent;
+}
+
+/**
+ * Sets project last visit time and returns it
+ *
+ * @param {String} projectId - project ID
+ * @return {Promise<Number>}
+ */
+export async function setProjectLastVisit(projectId) {
+  return (await api.call(MUTATION_SET_LAST_VISIT, { projectId })).setLastProjectVisit;
 }

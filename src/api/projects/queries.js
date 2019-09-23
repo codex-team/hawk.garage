@@ -31,3 +31,10 @@ export const QUERY_RECENT_ERRORS = `
     }
   }
 `;
+
+// language=GraphQL
+export const MUTATION_SET_LAST_VISIT = `
+    mutation lastProjectVisit($projectId: ID!) {
+        setLastProjectVisit(projectId: $projectId)
+    }
+`;
