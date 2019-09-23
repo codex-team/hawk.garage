@@ -19,7 +19,7 @@
       </div>
     </div>
     <Badge
-      content=""
+      :content="project.unreadCount"
       class="project-menu-item__events-number"
     />
   </div>

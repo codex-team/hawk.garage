@@ -24,6 +24,7 @@ const mutationTypes = {
  * @property {String} name - project name
  * @property {String} workspaceId - ID of the workspace to which the project belongs
  * @property {String} [image] - project image
+ * @property {Number} unreadCount - project's "unreadCount" badge
  * @property {EventsListByDate} eventsListByDate - last projects event
  */
 

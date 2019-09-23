@@ -13,6 +13,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         token
         name
         image
+        unreadCount
         recentEvents(limit: 1) {
           events {
             id
