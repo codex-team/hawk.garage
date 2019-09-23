@@ -16,4 +16,4 @@ export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';
 /**
  * Sends request to set last project visit
  */
-export const FETCH_PROJECT_LAST_VISIT = 'FETCH_PROJECT_LAST_VISIT';
+export const UPDATE_PROJECT_LAST_VISIT = 'UPDATE_PROJECT_LAST_VISIT';

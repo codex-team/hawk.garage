@@ -3,7 +3,7 @@ import {
   CREATE_PROJECT,
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
-  FETCH_PROJECT_LAST_VISIT
+  UPDATE_PROJECT_LAST_VISIT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -108,8 +108,8 @@ const actions = {
    * @param {String} projectId - project's identifier
    * @return {Promise<void>}
    */
-  [FETCH_PROJECT_LAST_VISIT]({ commit, getters }, { projectId }) {
-    projectsApi.updateLastProjectVisit(projectId);
+  async [UPDATE_PROJECT_LAST_VISIT]({ commit, getters }, { projectId }) {
+    await projectsApi.updateLastProjectVisit(projectId);
 
     commit(mutationTypes.SET_PROJECT_UNREAD_COUNT, { projectId });
   },
