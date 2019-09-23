@@ -109,7 +109,7 @@ const actions = {
    * @return {Promise<void>}
    */
   [FETCH_PROJECT_LAST_VISIT]({ commit, getters }, { projectId }) {
-    projectsApi.setProjectLastVisit(projectId);
+    projectsApi.updateLastProjectVisit(projectId);
 
     commit(mutationTypes.SET_PROJECT_UNREAD_COUNT, { projectId });
   },

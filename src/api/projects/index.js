@@ -27,11 +27,11 @@ export async function fetchRecentErrors(projectId) {
 }
 
 /**
- * Sets project last visit time and returns it
+ * Updates project last visit time and returns it
  *
  * @param {String} projectId - project ID
  * @return {Promise<Number>}
  */
-export async function setProjectLastVisit(projectId) {
+export async function updateLastProjectVisit(projectId) {
   return (await api.call(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
 }
