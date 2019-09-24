@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
-
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -8,11 +7,9 @@ import './filters';
 import './directives';
 import './registerServiceWorker';
 import i18n from './i18n';
-import * as api from './api';
+import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-
-// @ts-ignore
 import HawkCatcher from 'hawk.javascript';
 
 if (process.env.VUE_APP_HAWK_TOKEN) {
@@ -32,7 +29,6 @@ Vue.use(VueCookies);
  * Configure API
  */
 api.setAuthToken(store.state.user.accessToken);
-// @ts-ignore
 api.eventsHandlers.onTokenExpired = async () => (await store.dispatch(REFRESH_TOKENS)).accessToken;
 api.eventsHandlers.onAuthError = () => store.dispatch(RESET_STORE);
 
@@ -40,5 +36,5 @@ new Vue({
   router,
   store,
   i18n,
-  render: h => h(App)
+  render: (h) => h(App)
 }).$mount('#app');

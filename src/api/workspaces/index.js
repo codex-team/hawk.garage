@@ -1,4 +1,4 @@
-import { HTTP_OK } from '../httpCodes';
+import { HTTP_OK } from "../httpCodes";
 import {
   MUTATION_CREATE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
@@ -6,9 +6,9 @@ import {
   MUTATION_CONFIRM_INVITE,
   MUTATION_UPDATE_WORKSPACE,
   QUERY_WORKSPACES,
-  MUTATION_GRANT_ADMIN_PERMISSIONS, MUTATION_REMOVE_MEMBER_FROM_WORKSPACE
-} from './queries';
-import * as api from '../index';
+  MUTATION_GRANT_ADMIN_PERMISSIONS, MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
+} from "./queries";
+import * as api from "../index.ts";
 
 /**
  * Mock api? true/false
@@ -20,9 +20,9 @@ const MOCK = process.env.VUE_APP_API_MOCK;
  * @enum {String}
  */
 export const WORKSPACES_ERROR = {
-  CREATE: 'An error occurred during the creating attempt',
-  DELETE: 'An error occurred during the deletion attempt',
-  UNKNOWN: 'Unknown error occurred'
+  CREATE: "An error occurred during the creating attempt",
+  DELETE: "An error occurred during the deletion attempt",
+  UNKNOWN: "Unknown error occurred",
 };
 
 /**
@@ -48,7 +48,7 @@ export async function deleteWorkspace(workspaceId) {
       // @todo make real request to API
     } else {
       resp = {
-        status: HTTP_OK
+        status: HTTP_OK,
       };
     }
   } catch (e) {

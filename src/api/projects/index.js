@@ -1,5 +1,5 @@
-import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS, MUTATION_UPDATE_LAST_VISIT } from './queries';
-import * as api from '../index';
+import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS, MUTATION_UPDATE_LAST_VISIT } from "./queries";
+import * as api from "../index.ts";
 
 /**
  * Create project and returns its id

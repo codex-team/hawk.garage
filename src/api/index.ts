@@ -1,21 +1,30 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 /**
  * Hawk API endpoint URL
  */
-const API_ENDPOINT =
+const API_ENDPOINT: string =
   process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
 
 /**
- * @type {Promise} A promise that will be resolved after the initialization request
+ * A promise that will be resolved after the initialization request
  */
-let blockingRequest = null;
+let blockingRequest: Promise<AxiosResponse>;
 
 /**
- * @typedef {Object} ApiCallSettings
- * @property {Boolean} initial - if true, other requests will be waiting for resolving this query
- * @property {Boolean} force - if true, this request will be performed despite of initial query state
+ * Settings that can be passed in api.call() method (see below)
  */
+interface ApiCallSettings {
+  /**
+   * If true, other requests will be waiting for resolving this query
+   */
+  initial?: boolean;
+
+  /**
+   * If true, this request will be performed despite of initial query state
+   */
+  force?: boolean;
+}
 
 /**
  * Makes request to API
@@ -24,7 +33,11 @@ let blockingRequest = null;
  * @param {ApiCallSettings} [settings] - settings for call method
  * @return {Promise<*>} - request data
  */
-export async function call(request, variables, { initial, force } = { initial: false, force: false }) {
+export async function call(
+  request: string,
+  variables?: object,
+  { initial = false, force = false }: ApiCallSettings = {}
+): Promise<any> {
   const promise = axios.post(API_ENDPOINT, {
     query: request,
     variables
@@ -42,7 +55,7 @@ export async function call(request, variables, { initial, force } = { initial: f
     response = (await Promise.all([blockingRequest, promise]))[1];
   }
 
-  if (response.data.errors) throw response.data.errors[0];
+  if (response.data.errors) { throw response.data.errors[0]; }
   return response.data.data;
 }
 
@@ -50,9 +63,12 @@ export async function call(request, variables, { initial, force } = { initial: f
  * Set or remove auth token in request header
  * @param {String|null} accessToken - user's access token. If null, token will be deleted from header
  */
-export function setAuthToken(accessToken) {
-  if (!accessToken) return delete axios.defaults.headers.common.Authorization;
-  axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+export function setAuthToken(accessToken: string | null): void {
+  if (!accessToken) {
+    delete axios.defaults.headers.common.Authorization;
+  } else {
+    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  }
 }
 
 /**
@@ -96,7 +112,7 @@ axios.interceptors.response.use(
    * @param {AxiosResponse} response - axios response object
    * @return {Promise<AxiosResponse>} - processed request
    */
-  async response => {
+  async (response: AxiosResponse): Promise<AxiosResponse> => {
     const errors = response.data.errors;
     const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
 
