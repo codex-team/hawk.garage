@@ -14,7 +14,7 @@ import {
   FETCH_WORKSPACES
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
-import * as workspaceApi from '../../../api/workspaces';
+import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
 import Vue from 'vue';
 

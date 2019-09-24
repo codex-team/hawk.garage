@@ -33,11 +33,11 @@ interface ApiCallSettings {
  * @param {ApiCallSettings} [settings] - settings for call method
  * @return {Promise<*>} - request data
  */
-export async function call(
+export async function call<VariablesInterface, ResponseInterface>(
   request: string,
-  variables?: object,
+  variables?: VariablesInterface,
   { initial = false, force = false }: ApiCallSettings = {}
-): Promise<any> {
+): Promise<ResponseInterface> {
   const promise = axios.post(API_ENDPOINT, {
     query: request,
     variables
