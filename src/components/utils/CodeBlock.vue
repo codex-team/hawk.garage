@@ -148,7 +148,7 @@ export default {
       right: 0;
       padding-right: 15px;
       padding-left: 30px;
-      background-image: linear-gradient(to right, rgba(36, 39, 50, 0), var(--color-bg-main) 20%)
+      background-image: linear-gradient(to right, var(--color-bg-main-transparent), var(--color-bg-main) 20%)
     }
   }
 
