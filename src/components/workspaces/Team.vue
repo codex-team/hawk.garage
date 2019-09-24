@@ -91,9 +91,9 @@ export default {
   methods: {
     onLinkCopied() {
       notifier.show({
-        message: this.$t('workspaces.settings.team.copiedNotification'),
+        message: this.$t('common.copiedNotification'),
         style: 'success',
-        time: 10000
+        time: 2000
       });
     },
     async onInvitationSent() {
@@ -124,9 +124,9 @@ export default {
 };
 </script>
 
-<style>
-  @import "../../styles/settings-window-page.css";
+<style src="../../styles/settings-window-page.css"></style>
 
+<style>
   .workspace-team {
     &__section {
       margin-bottom: 30px;

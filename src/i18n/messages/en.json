@@ -32,6 +32,12 @@
       "submitButton": "Create project",
       "title": "Add a project",
       "workspaceSelectLabel": "SELECT WORKSPACE"
+    },
+    "settings": {
+      "integrations": {
+        "title": "Integrations",
+        "projectTokenLabel": "Your Integration token for"
+      }
     }
   },
   "settings": {
@@ -85,7 +91,6 @@
         "youLabel": "you",
         "adminLabel": "Admin",
         "invitationSentLabel": "invitation sent",
-        "copiedNotification": "Copied!",
         "sentNotification": "Invitation sent",
         "joinNotification": "You successfully join the workspace!",
         "brokenLinkNotification": "It seems, your link is broken",
@@ -126,6 +131,7 @@
     }
   },
   "common": {
+    "copiedNotification": "Copied!",
     "months": [
       "january",
       "february",

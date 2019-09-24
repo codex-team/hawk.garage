@@ -74,6 +74,19 @@ const router = new Router({
               path: 'event/:eventId/repetitions',
               name: 'event-repetitions-overview',
               component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/Overview.vue')
+            },
+            {
+              path: 'settings',
+              name: 'project-settings',
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Settings.vue'),
+              redirect: 'settings/integrations',
+              children: [
+                {
+                  path: 'integrations',
+                  name: 'project-integrations',
+                  component: () => import(/* webpackChunkName: 'project-integrations' */ './components/projects/Integrations.vue')
+                }
+              ]
             }
           ]
         },

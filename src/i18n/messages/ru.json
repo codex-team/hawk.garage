@@ -32,6 +32,12 @@
       "submitButton": "Создать проект",
       "title": "Добавить проект",
       "workspaceSelectLabel": "Выбрать воркспейс"
+    },
+    "settings": {
+      "integrations": {
+        "title": "Интеграции",
+        "projectTokenLabel": "Интеграционный токен для проекта"
+      }
     }
   },
   "settings": {
@@ -85,7 +91,6 @@
         "youLabel": "вы",
         "adminLabel": "Администратор",
         "invitationSentLabel": "приглашение отправлено",
-        "copiedNotification": "Скопировано!",
         "sentNotification": "Приглашение отправлено",
         "joinNotification": "Вы успешно присоединились к воркспейсу!",
         "brokenLinkNotification": "Ваша ссылка не действительна",
@@ -126,6 +131,7 @@
     }
   },
   "common": {
+    "copiedNotification": "Скопировано!",
     "months": [
       "января",
       "февраля",

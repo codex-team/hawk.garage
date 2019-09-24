@@ -19,14 +19,9 @@
         </template>
         <template #content>
           Your Integration token for <b>{{ project.name }}</b>:
-          <CodeBlock
-            language="plaintext"
-            one-line
-            class="guide-page__token"
-            copyable
-          >
-            {{ project.token }}
-          </CodeBlock>
+          <TokenBlock
+            :token="project.token"
+          />
         </template>
       </GuideStepBlock>
       <GuideStepBlock
@@ -102,6 +97,7 @@ import GuideStepBlock from '../../GuideStepBlock';
 import GuideSection from '../../GuideSection';
 import CodeBlock from '../../../utils/CodeBlock';
 import GuideHeader from '../../GuidePageHeader';
+import TokenBlock from '../../../projects/TokenBlock';
 
 export default {
   name: 'SetupPhpCatcher',
@@ -109,6 +105,7 @@ export default {
     GuideStepBlock,
     CodeBlock,
     GuideSection,
+    TokenBlock,
     GuideHeader
   },
   computed: {

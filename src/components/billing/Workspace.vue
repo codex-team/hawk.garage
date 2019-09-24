@@ -94,7 +94,6 @@ import Progress from '../utils/Progress';
 import Icon from '../utils/Icon';
 import CustomSwitch from '../forms/Switch';
 import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
-import { GET_TRANSACTIONS } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'BillingCard',

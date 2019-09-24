@@ -28,7 +28,6 @@
 <script>
 import Icon from '../utils/Icon';
 import EntityImage from '../utils/EntityImage';
-import ProjectCreationDialog from '../modals/ProjectCreationDialog';
 import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 
 export default {

@@ -1,6 +1,6 @@
 <template>
   <div
-    v-copyable="{selector: copyable? '.code-block__content' : null}"
+    v-copyable="{selector: copyable? '.code-block__content' : null, callback: onLinkCopied}"
     class="code-block"
     :class="{'code-block--one-line': oneLine, 'code-block--copyable': copyable}"
   >
@@ -24,18 +24,21 @@
     >
       <slot />
     </div>
-    <button
-      v-if="copyable"
-      class="button button--copy code-block__copy-button"
-      type="button"
-    >
-      {{ $t('workspaces.settings.team.copyButton') }}
-    </button>
+    <div class="code-block__button-wrapper">
+      <button
+        v-if="copyable"
+        class="button button--copy code-block__copy-button"
+        type="button"
+      >
+        {{ $t('workspaces.settings.team.copyButton') }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import hljs from 'highlight.js';
+import notifier from 'codex-notifier';
 
 export default {
   name: 'CodeBlock',
@@ -69,9 +72,19 @@ export default {
       hljs.highlightBlock(this.$refs.content);
     }
     this.linesNumber = this.$refs.content.innerText.split('\n').length;
+  },
+  methods: {
+    onLinkCopied() {
+      notifier.show({
+        message: this.$t('common.copiedNotification'),
+        style: 'success',
+        time: 2000
+      });
+    }
   }
 };
 </script>
+
 <style>
   @import "../../styles/custom-properties.css";
 
@@ -123,29 +136,19 @@ export default {
         @apply --hide-scrollbar;
       }
 
-      ^&__copy-button {
+      ^&__button-wrapper {
         top: 50%;
         transform: translateY(-50%);
       }
     }
 
-    &--copyable {
-      &::after {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        width: 120px;
-        background-image: linear-gradient(to left, var(--color-bg-main) 90px, transparent);
-        content: "";
-      }
-    }
-
-    &__copy-button {
+    &__button-wrapper {
       position: absolute;
       top: 10px;
-      right: 15px;
-      z-index: 1;
+      right: 0;
+      padding-right: 15px;
+      padding-left: 30px;
+      background-image: linear-gradient(to right, var(--color-bg-main-transparent), var(--color-bg-main) 20%)
     }
   }
 
