@@ -56,8 +56,9 @@
           <div class="repetitions-overview__label">
             Since
           </div>
-          <div class="repetitions-overview__since"
+          <div
             v-if="event"
+            class="repetitions-overview__since"
           >
             {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }} <span class="repetitions-overview__since-days">— {{ since }}</span>
           </div>

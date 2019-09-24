@@ -2,13 +2,12 @@
   "name": "hawk.so",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint:js": "eslint src/ --ext .js --ext .vue --fix",
+    "lint": "vue-cli-service lint",
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
-    "lint": "yarn lint:js && yarn lint:css",
+    "lint:js": "eslint src/ --ext .js --ext .vue --fix",
     "serve:prod": "http-server ./dist --push-state -c-0",
     "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },
@@ -33,24 +32,41 @@
     "register-service-worker": "^1.6.2",
     "spa-http-server": "^0.9.0",
     "vue": "^2.6.6",
+    "vue-class-component": "^7.0.2",
     "vue-cookies": "^1.5.13",
     "vue-i18n": "^8.14.0",
     "vue-infinite-scroll": "^2.0.2",
     "vue-json-viewer": "^2.2.2",
+    "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.7",
     "vue-template-compiler": "^2.5.21",
     "vuex": "^3.1.0",
     "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
+    "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-plugin-typescript": "^3.11.0",
+    "@vue/eslint-config-typescript": "^4.0.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.0.1",
     "eslint-config-codex": "github:codex-team/eslint-config",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "lint-staged": "^8.1.5",
     "stylelint": "^10.1.0",
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^2.2.0",
-    "svg-sprite-generator": "^0.0.7"
+    "svg-sprite-generator": "^0.0.7",
+    "typescript": "^3.4.3"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "license": "UNLICENSED",
+  "lint-staged": {
+    "*.{js,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   }
 }
