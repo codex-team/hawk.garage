@@ -51,7 +51,7 @@ import EventItem from '../events/EventItem';
 import AssignersList from '../events/AssignersList';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
-import { FETCH_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
+import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -95,7 +95,7 @@ export default {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
   },
   mounted() {
-    this.$store.dispatch(FETCH_PROJECT_LAST_VISIT, { projectId: this.project.id });
+    this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.project.id });
   },
   methods: {
     /**

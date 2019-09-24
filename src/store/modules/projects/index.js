@@ -17,7 +17,7 @@ const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
-  SET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT' // Set project unread count
+  RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT' // Set project unread count
 };
 
 /**
@@ -111,7 +111,7 @@ const actions = {
   async [UPDATE_PROJECT_LAST_VISIT]({ commit, getters }, { projectId }) {
     await projectsApi.updateLastProjectVisit(projectId);
 
-    commit(mutationTypes.SET_PROJECT_UNREAD_COUNT, { projectId });
+    commit(mutationTypes.RESET_PROJECT_UNREAD_COUNT, { projectId });
   },
 
   /**
@@ -166,7 +166,7 @@ const mutations = {
    * @param {ProjectsModuleState} state - Vuex state
    * @param {String} projectId - id of the project to set data
    */
-  [mutationTypes.SET_PROJECT_UNREAD_COUNT](state, { projectId }) {
+  [mutationTypes.RESET_PROJECT_UNREAD_COUNT](state, { projectId }) {
     const project = state.list.find(_project => _project.id === projectId);
 
     Vue.set(project, 'unreadCount', 0);
