@@ -1,5 +1,5 @@
 <template>
-  <div class="event-details details-backtrace">
+  <div class="event-details">
     <h2 class="event-details__header">
       <slot name="header" />
     </h2>

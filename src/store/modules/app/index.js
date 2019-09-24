@@ -75,7 +75,7 @@ const actions = {
     const recentEvents = {};
 
     projects.forEach(project => {
-      if (!project.recentEvents) {
+      if (!project.recentEvents || !project.recentEvents.dailyInfo) {
         return;
       }
 

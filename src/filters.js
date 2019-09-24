@@ -58,7 +58,7 @@ Vue.filter('prettyTime', function (value) {
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
  * @return {string}
  */
-Vue.filter('prettyDate', function (value) {
+Vue.filter('prettyDateStr', function (value) {
   const [day, month] = value.split('-');
 
   const currentDate = new Date().getDate();
@@ -72,6 +72,28 @@ Vue.filter('prettyDate', function (value) {
   }
 
   return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
+});
+
+/**
+ * Returns prettified date from string
+ *
+ * @return {string}
+ */
+Vue.filter('prettyDate', function (value) {
+  const date = new Date(value);
+  const day = date.getDate();
+  const month = date.getMonth();
+  const currentDate = new Date().getDate();
+
+  if (+day === currentDate) {
+    return 'Today';
+  }
+
+  if (+day === currentDate - 1) {
+    return 'Yesterday';
+  }
+
+  return `${day} ${i18n.t('common.months[' + month + ']')} ${date.getFullYear()}`;
 });
 
 /**

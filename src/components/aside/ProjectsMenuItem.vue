@@ -19,7 +19,7 @@
       </div>
     </div>
     <Badge
-      content=""
+      :content="project.unreadCount"
       class="project-menu-item__events-number"
     />
   </div>
@@ -46,14 +46,12 @@ export default {
       default: null
     }
   },
-  data() {
-    return {
-      project: this.$store.state.projects.list.find(_project => _project.id === this.projectId)
-    };
-  },
   computed: {
+    project() {
+      return this.$store.state.projects.list.find(_project => _project.id === this.projectId);
+    },
     lastEventTitle() {
-      const latestEvents = this.$store.getters.getLatestEvent(this.project.id);
+      const latestEvents = this.$store.getters.getLatestEvent(this.projectId);
 
       if (latestEvents) {
         return latestEvents.payload.title;

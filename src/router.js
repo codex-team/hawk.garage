@@ -71,6 +71,11 @@ const router = new Router({
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
             },
             {
+              path: 'event/:eventId/repetitions',
+              name: 'event-repetitions-overview',
+              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/Overview.vue')
+            },
+            {
               path: 'settings',
               name: 'project-settings',
               component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Settings.vue'),
