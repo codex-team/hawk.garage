@@ -7,15 +7,43 @@ import {
   MUTATION_UPDATE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   QUERY_WORKSPACES
-} from './queries.ts';
+} from './queries';
 import * as api from '../index';
 
+/**
+ * Workspace representation
+ */
 interface Workspace {
+  /**
+   * Workspace id
+   */
   id: string;
+
+  /**
+   * Workspace name
+   */
+  name: string;
+
+  /**
+   * Workspace description
+   */
+  description?: string;
+
+  /**
+   * Workspace image
+   */
+  image?: string;
 }
 
-interface CreateWorkspaceMutationVariables {
+interface CreateWorkspaceInput {
+  /**
+   * Workspace name to create
+   */
   name: string;
+
+  /**
+   * Workspace image
+   */
   image?: string;
 }
 
@@ -24,7 +52,7 @@ interface CreateWorkspaceMutationVariables {
  * @param {Workspace} workspaceInfo - workspace to create
  * @returns {Promise<Workspace>} created workspace
  */
-export async function createWorkspace(workspaceInfo: CreateWorkspaceMutationVariables): Promise<Workspace> {
+export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
   return (await api.call(MUTATION_CREATE_WORKSPACE, workspaceInfo)).createWorkspace;
 }
 
