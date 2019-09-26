@@ -6,6 +6,11 @@ declare var process: {
     NODE_ENV: string,
 
     /**
+     * Hawk GraphQL API endpoint
+     */
+    VUE_APP_API_ENDPOINT: string,
+
+    /**
      * Hawk token for error catching
      */
     VUE_APP_HAWK_TOKEN?: string,
