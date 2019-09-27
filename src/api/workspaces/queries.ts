@@ -92,10 +92,10 @@ export const QUERY_WORKSPACES = `
      image
      balance
      plan {
-       name  
+       name
        subscriptionDate
        lastChargeDate
-       monthlyCharge  
+       monthlyCharge
        eventsLimit
      }
      users {
@@ -150,7 +150,7 @@ export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
   mutation removeMemberFromWorkspace(
     $workspaceId: ID!
     $userId: ID,
-    $userEmail: String!  
+    $userEmail: String!
   ) {
     removeMemberFromWorkspace(workspaceId: $workspaceId, userId: $userId, userEmail: $userEmail)
   }
