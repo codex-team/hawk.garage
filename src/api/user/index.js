@@ -4,9 +4,9 @@ import {
   MUTATION_REFRESH_TOKENS,
   MUTATION_SIGN_UP,
   MUTATION_UPDATE_PROFILE,
-  QUERY_CURRENT_USER,
-} from "./queries";
-import * as api from "../index.ts";
+  QUERY_CURRENT_USER
+} from './queries';
+import * as api from '../index.ts';
 
 /**
  * @typedef {Object} TokensPair

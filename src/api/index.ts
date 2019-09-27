@@ -3,8 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 /**
  * Hawk API endpoint URL
  */
-const API_ENDPOINT: string =
-  process.env.VUE_APP_API_ENDPOINT || 'http://localhost:4000/graphql';
+const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT;
 
 /**
  * A promise that will be resolved after the initialization request

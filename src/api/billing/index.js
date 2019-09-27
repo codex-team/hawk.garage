@@ -1,5 +1,5 @@
-import { QUERY_PAYMENT_LINK, QUERY_TRANSACTIONS } from "./queries";
-import * as api from "../index.ts";
+import { QUERY_PAYMENT_LINK, QUERY_TRANSACTIONS } from './queries';
+import * as api from '../index.ts';
 
 /**
  * Request payment link
