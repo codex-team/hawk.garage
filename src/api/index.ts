@@ -54,7 +54,9 @@ export async function call(
     response = (await Promise.all([blockingRequest, promise]))[1];
   }
 
-  if (response.data.errors) { throw response.data.errors[0]; }
+  if (response.data.errors) {
+    throw response.data.errors[0];
+  }
   return response.data.data;
 }
 
