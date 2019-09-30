@@ -1,73 +1,67 @@
-import { HTTP_OK } from '../httpCodes';
 import {
-  MUTATION_CREATE_WORKSPACE,
-  QUERY_ALL_WORKSPACES_WITH_PROJECTS,
-  MUTATION_INVITE_TO_WORKSPACE,
   MUTATION_CONFIRM_INVITE,
+  MUTATION_CREATE_WORKSPACE,
+  MUTATION_GRANT_ADMIN_PERMISSIONS,
+  MUTATION_INVITE_TO_WORKSPACE,
+  MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
   MUTATION_UPDATE_WORKSPACE,
-  QUERY_WORKSPACES,
-  MUTATION_GRANT_ADMIN_PERMISSIONS, MUTATION_REMOVE_MEMBER_FROM_WORKSPACE
+  QUERY_ALL_WORKSPACES_WITH_PROJECTS,
+  QUERY_WORKSPACES
 } from './queries';
 import * as api from '../index';
 
 /**
- * Mock api? true/false
+ * Workspace representation
  */
-const MOCK = process.env.VUE_APP_API_MOCK;
+interface Workspace {
+  /**
+   * Workspace id
+   */
+  id: string;
 
-/**
- * Enum of workspaces module errors
- * @enum {String}
- */
-export const WORKSPACES_ERROR = {
-  CREATE: 'An error occurred during the creating attempt',
-  DELETE: 'An error occurred during the deletion attempt',
-  UNKNOWN: 'Unknown error occurred'
-};
+  /**
+   * Workspace name
+   */
+  name: string;
+
+  /**
+   * Workspace description
+   */
+  description?: string;
+
+  /**
+   * Workspace image
+   */
+  image?: string;
+}
+
+interface CreateWorkspaceInput {
+  /**
+   * Workspace name to create
+   */
+  name: string;
+
+  /**
+   * Workspace image
+   */
+  image?: string;
+}
 
 /**
  * Create workspace and return it
  * @param {Workspace} workspaceInfo - workspace to create
  * @returns {Promise<Workspace>} created workspace
  */
-export async function createWorkspace(workspaceInfo) {
+export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
   return (await api.call(MUTATION_CREATE_WORKSPACE, workspaceInfo)).createWorkspace;
-}
-
-/**
- * Remove workspace by id return status (ok)
- * @param {string} workspaceId - workspaces id to delete
- * @returns {Promise<boolean>} Response status
- * @throws {Error} Workspaces error occured.
- */
-export async function deleteWorkspace(workspaceId) {
-  let resp;
-
-  try {
-    if (!MOCK) {
-      // @todo make real request to API
-    } else {
-      resp = {
-        status: HTTP_OK
-      };
-    }
-  } catch (e) {
-    throw new Error(WORKSPACES_ERROR.DELETE);
-  }
-
-  if (resp.status === HTTP_OK) {
-    return true;
-  } else {
-    throw new Error(WORKSPACES_ERROR.UNKNOWN);
-  }
 }
 
 /**
  * Returns all user's workspaces and project.
  * @return {Promise<[Workspace]>}
  */
-export async function getAllWorkspacesWithProjects() {
-  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, null, { initial: true })).workspaces;
+export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
+  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, { initial: true })).workspaces;
 }
 
 /**
@@ -77,7 +71,7 @@ export async function getAllWorkspacesWithProjects() {
  * @param {string} userEmail - invited user`s email
  * @returns {Promise<boolean>} true if user invited successfully
  */
-export async function inviteToWorkspace(workspaceId, userEmail) {
+export async function inviteToWorkspace(workspaceId: string, userEmail: string): Promise<boolean> {
   return (await api.call(MUTATION_INVITE_TO_WORKSPACE, { workspaceId, userEmail })).inviteToWorkspace;
 }
 
@@ -86,9 +80,9 @@ export async function inviteToWorkspace(workspaceId, userEmail) {
  *
  * @param {string} workspaceId - id of workspace where invitation should be confirmed
  * @param {string} inviteHash - hash passed to the invite link
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>}
  */
-export async function confirmInvite(workspaceId, inviteHash) {
+export async function confirmInvite(workspaceId: string, inviteHash: string): Promise<boolean> {
   return (await api.call(MUTATION_CONFIRM_INVITE, { workspaceId, inviteHash })).confirmInvitation;
 }
 
@@ -97,7 +91,7 @@ export async function confirmInvite(workspaceId, inviteHash) {
  * @param {array} ids – id of fetching workspaces
  * @return {Promise<[Workspace]>}
  */
-export async function getWorkspaces(ids) {
+export async function getWorkspaces(ids: string): Promise<Workspace> {
   return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
 }
 
@@ -105,30 +99,36 @@ export async function getWorkspaces(ids) {
  * Update workspace data
  * @returns {Promise<Boolean>}
  */
-export async function updateWorkspace(id, name, description) {
+export async function updateWorkspace(id: string, name: string, description: string): Promise<boolean> {
   return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description })).updateWorkspace;
 }
 
 /**
  * Grant admin permission for passed user
- *
  * @param {string} workspaceId - id of workspace where user is participate
  * @param {string} userId - id of user to grant permissions
  * @param {boolean} state - if true, grant permissions, if false, withdraw them
  * @returns {Promise<Boolean>}
  */
-export async function grantAdminPermissions(workspaceId, userId, state = true) {
+export async function grantAdminPermissions(workspaceId: string, userId: string, state = true): Promise<boolean> {
   return (await api.call(MUTATION_GRANT_ADMIN_PERMISSIONS, { workspaceId, userId, state })).grantAdmin;
 }
 
 /**
  * Remove user from workspace
- *
  * @param {string} workspaceId - id of workspace where user is participate
  * @param {string} userId - id of user to remove
  * @param {string} userEmail - email of user to remove
- * @returns {Promise<*>}
+ * @returns {Promise<boolean>}
  */
-export async function removeUserFromWorkspace(workspaceId, userId, userEmail) {
-  return (await api.call(MUTATION_REMOVE_MEMBER_FROM_WORKSPACE, { workspaceId, userId, userEmail })).removeMemberFromWorkspace;
+export async function removeUserFromWorkspace(
+  workspaceId: string,
+  userId: string,
+  userEmail: string
+): Promise<boolean> {
+  return (await api.call(MUTATION_REMOVE_MEMBER_FROM_WORKSPACE, {
+    workspaceId,
+    userId,
+    userEmail
+  })).removeMemberFromWorkspace;
 }

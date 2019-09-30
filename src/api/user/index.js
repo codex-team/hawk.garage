@@ -6,7 +6,7 @@ import {
   MUTATION_UPDATE_PROFILE,
   QUERY_CURRENT_USER
 } from './queries';
-import * as api from '../index';
+import * as api from '../index.ts';
 
 /**
  * @typedef {Object} TokensPair

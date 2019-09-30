@@ -3,7 +3,7 @@ import {
   QUERY_RECENT_PROJECT_EVENTS,
   QUERY_LATEST_REPETITIONS
 } from './queries';
-import * as api from '../index';
+import * as api from '../index.ts';
 
 /**
  * Get specific event
