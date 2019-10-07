@@ -12,6 +12,10 @@ import * as eventsApi from '../../../api/events';
 import {deepMerge, groupByDate} from '@/utils';
 import {HawkEvent, HawkEventDailyInfo} from '@/types/events';
 
+/**
+ * Root store state
+ * @todo move to @/store/index.js
+ */
 interface RootState {
   events: EventsModuleState;
 }
@@ -28,6 +32,9 @@ const mutationTypes = {
   ADD_REPETITION_PAYLOAD: 'ADD_REPETITION_PAYLOAD' // save loaded event
 };
 
+/**
+ * State of the Events module
+ */
 interface EventsModuleState {
   /**
    * Map for storing HawkEvent by their unique key (projectId:eventId)
@@ -38,17 +45,30 @@ interface EventsModuleState {
    * Project's recent events grouped by date RecentInfoByDate
    */
   recent: HawkEventsDailyInfoByProject;
+
+  /**
+   * Event's repetitions map
+   */
   repetitions: any;
 }
 
+/**
+ * Map for events storing
+ */
 interface EventsMap {
   [key: string]: HawkEvent;
 }
 
+/**
+ * Map for storing Event's daily info grouped by date per project
+ */
 interface HawkEventsDailyInfoByProject {
   [key: string]: HawkEventsDailyInfoByDate;
 }
 
+/**
+ *  Map to store Event's daily info grouped by date
+ */
 interface HawkEventsDailyInfoByDate {
   [key: string]: HawkEventDailyInfo[];
 }
@@ -75,9 +95,8 @@ const loadedEventsCount: { [key: string]: number } = {};
 const eventsByGroupHash: { [key: string]: HawkEvent } = {};
 
 /**
- * Module getters
+ * Events module
  */
-
 const module: Module<EventsModuleState, RootState> = {
   state: initialState(),
   getters: {
