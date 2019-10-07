@@ -12,7 +12,7 @@ import {EventsWithDailyInfo, HawkEvent, HawkEventRepetition} from '@/types/event
  * @param {string} eventId - id of the event
  * @return {Promise<HawkEvent>}
  */
-export async function getEvent(projectId: string, eventId: string): Promise<HawkEvent> {
+export async function getEvent(projectId: string, eventId: string): Promise<HawkEvent | null> {
   return (await api.call(QUERY_EVENT, { projectId, eventId })).project.event;
 }
 
@@ -22,7 +22,7 @@ export async function getEvent(projectId: string, eventId: string): Promise<Hawk
  * @param {number} skip - certain number of documents to skip
  * @return {Promise<EventsWithDailyInfo>}
  */
-export async function fetchRecentEvents(projectId: string, skip = 0): Promise<EventsWithDailyInfo> {
+export async function fetchRecentEvents(projectId: string, skip = 0): Promise<EventsWithDailyInfo | null> {
   return (await api.call(QUERY_RECENT_PROJECT_EVENTS, { projectId, skip })).project.recentEvents;
 }
 
