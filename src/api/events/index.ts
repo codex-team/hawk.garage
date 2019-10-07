@@ -45,7 +45,7 @@ export async function getLatestRepetitions(
  * Fetches event's repetition from project and returns last
  * @param {string} projectId - project's identifier
  * @param {string} eventId - event's identifier
- * @return {Promise<Promise<HawkEventRepetition | null>>}
+ * @return {Promise<HawkEventRepetition | null>}
  */
 export async function getLatestRepetition(projectId: string, eventId: string): Promise<HawkEventRepetition | null> {
   return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId })).project.event.repetitions.shift() || null;
