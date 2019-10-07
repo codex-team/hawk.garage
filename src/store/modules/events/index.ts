@@ -1,15 +1,21 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
-  INIT_EVENTS_MODULE,
-  FETCH_RECENT_EVENTS,
   FETCH_EVENT_REPETITIONS,
   FETCH_LATEST_EVENT,
-  GET_LATEST_EVENT
+  FETCH_RECENT_EVENTS,
+  GET_LATEST_EVENT,
+  INIT_EVENTS_MODULE
 } from './actionTypes';
-import { RESET_STORE } from '../../methodsTypes';
+import {RESET_STORE} from '../../methodsTypes';
 import Vue from 'vue';
+import {ActionTree, Module, MutationTree} from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { groupByDate, deepMerge } from '../../../utils';
+import {deepMerge, groupByDate} from '@/utils';
+import {HawkEvent, HawkEventDailyInfo, HawkEventRepetition} from '@/types/events';
+
+interface RootState {
+  events: EventsModuleState;
+}
 
 /**
  * Mutations enum for this module
@@ -23,34 +29,35 @@ const mutationTypes = {
   ADD_REPETITION_PAYLOAD: 'ADD_REPETITION_PAYLOAD' // save loaded event
 };
 
-/**
- * @typedef {Object} RecentEvents - Event information per day with these events
- * @property {GroupedEvent[]} events - recent error list
- * @property {DailyEventInfo} dailyInfo - Information about occurred events per day
- */
+interface EventsModuleState {
+  /**
+   * Map for storing HawkEvent by their unique key (projectId:eventId)
+   */
+  list: EventsMap;
+
+  /**
+   * Project's recent events grouped by date RecentInfoByDate
+   */
+  recent: HawkEventsDailyInfoByProject;
+  repetitions: any;
+}
+
+interface EventsMap {
+  [key: string]: HawkEvent;
+}
+
+interface HawkEventsDailyInfoByProject {
+  [key: string]: HawkEventsDailyInfoByDate;
+}
+
+interface HawkEventsDailyInfoByDate {
+  [key: string]: HawkEventDailyInfo[];
+}
 
 /**
- * @typedef {Object} DailyEventInfo - Information about event per day
- * @property {String} groupHash - event hash for grouping
- * @property {Number} count - event occurrence count
- * @property {String} date - event occurrence date
+ * Creates and return module state
  */
-
-/**
- * @typedef {Object} EventsModuleState
- * @property {Object<string, GroupedEvent>} list - map for storing GroupedEvent by their unique key (projectId:eventId)
- * @property {RecentInfoByDate} recent - project's recent events grouped by date
- */
-
-/**
- * @typedef {Object<string, Object<string, RecentEvents[]>>} RecentInfoByDate - information about recent events grouped by date
- */
-
-/**
- * Creates module state
- * @return {EventsModuleState}
- */
-function initialState() {
+function initialState(): EventsModuleState {
   return {
     list: {},
     recent: {},
@@ -59,15 +66,14 @@ function initialState() {
 }
 
 /**
- * @type {Object<string, Number>} Object for storing count of loaded events per project
+ * Object for storing count of loaded events per project
  */
-const loadedEventsCount = {};
+const loadedEventsCount: { [key: string]: number } = {};
 
 /**
  * Cache for storing the connection between the code and the event
- * @type {Object<string, GroupedEvent>}
  */
-const eventsByGroupHash = {};
+const eventsByGroupHash: { [key: string]: HawkEvent } = {};
 
 /**
  * Module getters
@@ -78,23 +84,26 @@ const getters = {
    * @param {EventsModuleState} state - Vuex state
    * @return {Function}
    */
-  getEventByProjectIdAndGroupHash: state =>
+  getEventByProjectIdAndGroupHash: (state: EventsModuleState) =>
     /**
      * @param {string} projectId - event's project id
      * @param {string} groupHash - event group hash
-     * @return {GroupedEvent}
+     * @return {HawkEvent}
      */
-    (projectId, groupHash) => {
+    (projectId: string, groupHash: string): HawkEvent | null => {
       const uniqueId = projectId + ':' + groupHash;
 
       if (eventsByGroupHash[uniqueId]) {
         return eventsByGroupHash[uniqueId];
       }
 
-      const event = Object.values(state.list).find(_event => _event.groupHash === groupHash);
+      const event = Object.values(state.list).find((_event) => _event.groupHash === groupHash);
 
-      eventsByGroupHash[uniqueId] = event;
-      return event;
+      if (event) {
+        eventsByGroupHash[uniqueId] = event;
+        return event;
+      }
+      return null;
     },
 
   /**
@@ -102,41 +111,39 @@ const getters = {
    * @param {EventsModuleState} state - Vuex state
    * @return {function(*): *}
    */
-  getRecentEventsByProjectId: state =>
+  getRecentEventsByProjectId: (state: EventsModuleState) =>
     /**
      * @param {String} projectId - event's project id
-     * @return {RecentInfoByDate}
+     * @return {HawkEventsDailyInfoByProject}
      */
-    projectId => state.recent[projectId],
+    (projectId: string) => state.recent[projectId],
 
   /**
    * List state keeps only original Event
    *
-   * @return {GroupedEvent}
+   * @return {HawkEvent}
    */
-  getProjectEventById: (state) => (projectId, eventId) => {
-    const key = projectId + ':' + eventId;
+  getProjectEventById: (state: EventsModuleState) =>
+    (projectId: string, eventId: string) => {
+      const key = projectId + ':' + eventId;
 
-    return state.list[key];
-  },
+      return state.list[key];
+    },
 
   /**
    * Returns latest recent event of the project by its id
    * @param {EventsModuleState} state - Vuex state
    * @return {function(*): *}
    */
-  getLatestEventDailyInfo: state =>
+  getLatestEventDailyInfo: (state: EventsModuleState) =>
     /**
      * @param {String} projectId - event's project id
-     * @return {DailyEventInfo}
+     * @return {HawkEventDailyInfo}
      */
-    projectId => {
+    (projectId: string) => {
       const recentProjectEvents = state.recent[projectId];
 
       if (recentProjectEvents) {
-        /**
-         * @type {DailyEventInfo[]}
-         */
         const latestDailyInfo = Object.values(recentProjectEvents)[0];
 
         if (latestDailyInfo) {
@@ -151,31 +158,32 @@ const getters = {
    * @param {Object} getters - module getters
    * @return {Function}
    */
-  getLatestEvent: (state, getters) =>
+  // tslint:disable-next-line:no-shadowed-variable
+  getLatestEvent: (state: EventsModuleState, getters: any) =>
     /**
      * @param {String} projectId - event's project id
-     * @return {GroupedEvent}
+     * @return {HawkEvent}
      */
-    projectId => {
+    (projectId: string) => {
       const recentProjectEvents = getters.getLatestEventDailyInfo(projectId);
 
       if (recentProjectEvents) {
         const lastEventGroupHash = recentProjectEvents.groupHash;
 
-        return Object.values(state.list).find(event => event.groupHash === lastEventGroupHash);
+        return Object.values(state.list).find((event) => event.groupHash === lastEventGroupHash);
       }
     }
 };
 
-const actions = {
+const actions: ActionTree<EventsModuleState, RootState> = {
   /**
    * Initializes the module
    * @param {function} commit - standard Vuex commit function
-   * @param {Object<string, GroupedEvent>} events - events list
+   * @param {Object<string, HawkEvent>} events - events list
    * @param {Object<string, RecentEvents[]>} recentEvents - projects recent events
    * @param {[Event]} projects - new events list
    */
-  [INIT_EVENTS_MODULE]({ commit }, { events, recentEvents }) {
+  [INIT_EVENTS_MODULE]({commit}, {events, recentEvents}) {
     commit(mutationTypes.SET_EVENTS_LIST, events);
     commit(mutationTypes.SET_RECENT_EVENTS_LIST, recentEvents);
   },
@@ -186,7 +194,7 @@ const actions = {
    * @param {String} projectId - id of the project to fetch data
    * @return {Promise<boolean>} - true if there are no more events
    */
-  async [FETCH_RECENT_EVENTS]({ commit }, { projectId }) {
+  async [FETCH_RECENT_EVENTS]({commit}, {projectId}) {
     const RECENT_EVENTS_FETCH_LIMIT = 15;
     const recentEvents = await eventsApi.fetchRecentEvents(projectId, loadedEventsCount[projectId] || 0);
 
@@ -197,25 +205,29 @@ const actions = {
     const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
     loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
-    commit(mutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
-    commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
+    commit(mutationTypes.ADD_TO_EVENTS_LIST, {projectId, eventsList: recentEvents.events});
+    commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, {projectId, recentEventsInfoByDate: dailyInfoByDate});
     return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
   },
 
   /**
    * Fetches latest repetitions
    *
+   * @param commit
+   * @param getters
+   * @param state
    * @param {String} projectId
    * @param {String} eventId
    * @param {Number} limit
    *
-   * @return {Promise<GroupedEvent[]>}
+   * @return {Promise<HawkEvent[]>}
    */
-  async [FETCH_EVENT_REPETITIONS]({ commit, getters, state }, { projectId, eventId, limit }) {
+  // tslint:disable-next-line:no-shadowed-variable
+  async [FETCH_EVENT_REPETITIONS]({commit, getters, state}, {projectId, eventId, limit}) {
     const originalEvent = state.list[projectId + ':' + eventId];
     const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
 
-    return repetitions.map(repetition => {
+    return repetitions.map((repetition) => {
       const newEvent = Object.assign({}, originalEvent);
 
       newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
@@ -229,14 +241,15 @@ const actions = {
    * @param {String} projectId
    * @param {String} eventId
    *
-   * @return {GroupedEvent}
+   * @return {HawkEvent}
    */
-  async [FETCH_LATEST_EVENT]({ commit, getters }, { projectId, eventId }) {
+  // tslint:disable-next-line:no-shadowed-variable
+  async [FETCH_LATEST_EVENT]({commit, getters}, {projectId, eventId}) {
     const originalEvent = await eventsApi.getEvent(projectId, eventId);
     const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
     const actualEvent = Object.assign({}, originalEvent);
 
-    commit(mutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
+    commit(mutationTypes.ADD_REPETITION_PAYLOAD, {projectId, eventId, repetition});
 
     actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
     return actualEvent;
@@ -248,15 +261,15 @@ const actions = {
    * @param {String} projectId
    * @param {String} eventId
    *
-   * @return {GroupedEvent}
+   * @return {HawkEvent}
    */
-  async [GET_LATEST_EVENT]({ commit, state }, { projectId, eventId }) {
+  async [GET_LATEST_EVENT]({commit, state}, {projectId, eventId}) {
     const key = projectId + ':' + eventId;
 
     const originalEvent = state.list[key];
 
     if (!originalEvent) {
-      return this.dispatch(FETCH_LATEST_EVENT, { projectId, eventId });
+      return this.dispatch(FETCH_LATEST_EVENT, {projectId, eventId});
     }
 
     const repetition = state.repetitions[key];
@@ -270,12 +283,12 @@ const actions = {
    * Resets module state
    * @param {function} commit - standard Vuex commit function
    */
-  [RESET_STORE]({ commit }) {
+  [RESET_STORE]({commit}) {
     commit(RESET_STORE);
   }
 };
 
-const mutations = {
+const mutations: MutationTree<EventsModuleState> = {
   /**
    * Mutation for replacing events list
    * @param {EventsModuleState} state - Vuex state
@@ -290,11 +303,13 @@ const mutations = {
    * @param {EventsModuleState} state - Vuex state
    * @param {Array<RecentEvents>} eventsList - new list of events
    */
-  [mutationTypes.ADD_TO_RECENT_EVENTS_LIST](state, { projectId, recentEventsInfoByDate }) {
+  [mutationTypes.ADD_TO_RECENT_EVENTS_LIST](
+    state, {projectId, recentEventsInfoByDate}: { projectId: string, recentEventsInfoByDate: HawkEventsDailyInfoByDate }
+  ) {
     /**
      * Algorithm for merging the list of recent events from vuex store and server response
      */
-    Object.keys(recentEventsInfoByDate).forEach(date => {
+    Object.keys(recentEventsInfoByDate).forEach((date) => {
       /**
        * If there is no data for this date, then assign a value without merging
        */
@@ -307,8 +322,8 @@ const mutations = {
       /**
        * Merge all daily events info separately
        */
-      dailyEvents.forEach(dailyEvent => {
-        const infoIndex = state.recent[projectId][date].findIndex(e => e.groupHash === dailyEvent.groupHash);
+      dailyEvents.forEach((dailyEvent) => {
+        const infoIndex = state.recent[projectId][date].findIndex((e) => e.groupHash === dailyEvent.groupHash);
 
         /**
          * If there is data about this event in store then update it. Else just push it to the list
@@ -326,10 +341,10 @@ const mutations = {
    * Mutation for adding new events to the store
    * @param {EventsModuleState} state - Vuex state
    * @param {String} projectId - id of the project to add
-   * @param {Array<GroupedEvent>} eventsList - new list of events
+   * @param {Array<HawkEvent>} eventsList - new list of events
    */
-  [mutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }) {
-    eventsList.forEach(event => {
+  [mutationTypes.ADD_TO_EVENTS_LIST](state, {projectId, eventsList}: {projectId: string, eventsList: HawkEvent[]}) {
+    eventsList.forEach((event) => {
       state.list[projectId + ':' + event.id] = event;
     });
   },
@@ -346,11 +361,12 @@ const mutations = {
   /**
    * Updates list state
    *
+   * @param state
    * @param {String} projectId
    * @param {String} eventId
-   * @param {GroupedEvent} event
+   * @param {HawkEvent} event
    */
-  [mutationTypes.ADD_REPETITION_PAYLOAD](state, { projectId, eventId, repetition }) {
+  [mutationTypes.ADD_REPETITION_PAYLOAD](state, {projectId, eventId, repetition}) {
     const key = projectId + ':' + eventId;
 
     state.repetitions[key] = repetition;
@@ -360,14 +376,16 @@ const mutations = {
    * Resets module state
    * @param {EventsModuleState} state - Vuex state
    */
-  [RESET_STORE](state) {
+  [RESET_STORE](state: EventsModuleState) {
     Object.assign(state, initialState());
   }
 };
 
-export default {
+const module: Module<EventsModuleState, RootState> = {
   state: initialState(),
   getters,
   actions,
   mutations
 };
+
+export default module;

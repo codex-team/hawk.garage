@@ -7,22 +7,38 @@ export interface HawkEvent {
   repetitions: HawkEventRepetition[];
 }
 
-export interface RecentEvents {
+export interface EventsWithDailyInfo {
   events: HawkEvent[];
   dailyInfo: HawkEventDailyInfo[];
 }
 
-interface HawkEventDailyInfo {
-  groupHash: string;
-  count: number;
-  date: string;
-  timestamp: Date;
+export interface HawkEventDailyInfo {
+  /**
+   * Event hash for grouping
+   */
+  readonly groupHash: string;
+
+  /**
+   * Event occurrence count
+   */
+  readonly count: number;
+
+  /**
+   * Event occurrence date
+   */
+  readonly date: string;
+
+  /**
+   * Last event occurrence timestamp
+   */
+  readonly timestamp: Date;
 }
 
 interface HawkEventPayload {
   title: string;
 }
 
-interface HawkEventRepetition {
+export interface HawkEventRepetition {
   id: string;
+  payload: HawkEventPayload;
 }
