@@ -4,7 +4,7 @@ import {
   QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
-import {HawkEvent, EventsWithDailyInfo, HawkEventRepetition} from '@/types/events';
+import {EventsWithDailyInfo, HawkEvent, HawkEventRepetition} from '@/types/events';
 
 /**
  * Get specific event
@@ -29,8 +29,8 @@ export async function fetchRecentEvents(projectId: string, skip = 0): Promise<Ev
 /**
  * Fetches latest event's repetitions from project
  *
- * @param {String} projectId - project's identifier
- * @param {String} eventId - event's identifier
+ * @param {string} projectId - project's identifier
+ * @param {string} eventId - event's identifier
  * @param {Number} limit - the number of repetitions
  *
  * @return {Promise<Event[]>}
@@ -43,10 +43,10 @@ export async function getLatestRepetitions(
 
 /**
  * Fetches event's repetition from project and returns last
- * @param {String} projectId - project's identifier
- * @param {String} eventId - event's identifier
- * @return {Promise<Event>}
+ * @param {string} projectId - project's identifier
+ * @param {string} eventId - event's identifier
+ * @return {Promise<Promise<HawkEventRepetition | null>>}
  */
-export async function getLatestRepetition(projectId: string, eventId: string) {
-  return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId })).project.event.repetitions.shift();
+export async function getLatestRepetition(projectId: string, eventId: string): Promise<HawkEventRepetition | null> {
+  return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId })).project.event.repetitions.shift() || null;
 }

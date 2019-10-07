@@ -225,7 +225,7 @@ const module: Module<EventsModuleState, RootState> = {
     async [FETCH_EVENT_REPETITIONS]({commit, getters, state}, {projectId, eventId, limit}) {
       const originalEvent = state.list[projectId + ':' + eventId];
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
-
+      console.log(repetitions)
       return repetitions.map((repetition) => {
         const newEvent = Object.assign({}, originalEvent);
 
@@ -251,7 +251,9 @@ const module: Module<EventsModuleState, RootState> = {
 
       commit(mutationTypes.ADD_REPETITION_PAYLOAD, {projectId, eventId, repetition});
 
-      actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
+      if (repetition) {
+        actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
+      }
       return actualEvent;
     },
 
