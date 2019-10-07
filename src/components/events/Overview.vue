@@ -42,7 +42,7 @@
           </div>
         </div>
         <div class="event-overview__filename">
-          {{ event.payload.backtrace[0].file }}
+          {{ event.payload.backtrace && event.payload.backtrace[0] && event.payload.backtrace[0].file }}
         </div>
       </div>
       <div class="event-overview__info">
