@@ -23,14 +23,37 @@ interface RootState {
 /**
  * Mutations enum for this module
  */
-const mutationTypes = {
-  SET_EVENTS_LIST: 'SET_EVENTS_LIST', // Set new events list
-  SET_RECENT_EVENTS_LIST: 'SET_RECENT_EVENTS_LIST', // Set new recent events list
-  SET_REPETITIONS_LIST: 'SET_REPETITIONS_LIST', // something...
-  ADD_TO_RECENT_EVENTS_LIST: 'ADD_TO_RECENT_EVENTS_LIST', // add new data to recent event list
-  ADD_TO_EVENTS_LIST: 'ADD_TO_EVENTS_LIST', // add new data to event list
-  ADD_REPETITION_PAYLOAD: 'ADD_REPETITION_PAYLOAD' // save loaded event
-};
+enum MutationTypes {
+  /**
+   * Set new events list
+   */
+  SET_EVENTS_LIST = 'SET_EVENTS_LIST',
+
+  /**
+   * Set new recent events list
+   */
+  SET_RECENT_EVENTS_LIST = 'SET_RECENT_EVENTS_LIST',
+
+  /**
+   * Set new repetitions list
+   */
+  SET_REPETITIONS_LIST = 'SET_REPETITIONS_LIST',
+
+  /**
+   * Add new data to recent event list
+   */
+  ADD_TO_RECENT_EVENTS_LIST = 'ADD_TO_RECENT_EVENTS_LIST',
+
+  /**
+   * Add new data to event list
+   */
+  ADD_TO_EVENTS_LIST = 'ADD_TO_EVENTS_LIST',
+
+  /**
+   * Save loaded event
+   */
+  ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD'
+}
 
 /**
  * State of the Events module
@@ -196,8 +219,8 @@ const module: Module<EventsModuleState, RootState> = {
     [INIT_EVENTS_MODULE](
       {commit}, {events, recentEvents}: { events: EventsMap, recentEvents: HawkEventsDailyInfoByProject }
     ): void {
-      commit(mutationTypes.SET_EVENTS_LIST, events);
-      commit(mutationTypes.SET_RECENT_EVENTS_LIST, recentEvents);
+      commit(MutationTypes.SET_EVENTS_LIST, events);
+      commit(MutationTypes.SET_RECENT_EVENTS_LIST, recentEvents);
     },
 
     /**
@@ -217,8 +240,8 @@ const module: Module<EventsModuleState, RootState> = {
       const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
-      commit(mutationTypes.ADD_TO_EVENTS_LIST, {projectId, eventsList: recentEvents.events});
-      commit(mutationTypes.ADD_TO_RECENT_EVENTS_LIST, {projectId, recentEventsInfoByDate: dailyInfoByDate});
+      commit(MutationTypes.ADD_TO_EVENTS_LIST, {projectId, eventsList: recentEvents.events});
+      commit(MutationTypes.ADD_TO_RECENT_EVENTS_LIST, {projectId, recentEventsInfoByDate: dailyInfoByDate});
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
 
@@ -234,7 +257,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_EVENT_REPETITIONS](
       {state},
-      {projectId, eventId, limit}: {projectId: string, eventId: string, limit: number}
+      {projectId, eventId, limit}: { projectId: string, eventId: string, limit: number }
     ): Promise<HawkEvent[]> {
       const originalEvent = state.list[projectId + ':' + eventId];
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
@@ -260,7 +283,7 @@ const module: Module<EventsModuleState, RootState> = {
       const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
       const actualEvent = Object.assign({}, originalEvent);
 
-      commit(mutationTypes.ADD_REPETITION_PAYLOAD, {projectId, eventId, repetition});
+      commit(MutationTypes.ADD_REPETITION_PAYLOAD, {projectId, eventId, repetition});
 
       if (repetition) {
         actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
@@ -305,7 +328,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - Vuex state
      * @param {EventsMap} eventsMap - new list of events
      */
-    [mutationTypes.SET_EVENTS_LIST](state, eventsMap: EventsMap) {
+    [MutationTypes.SET_EVENTS_LIST](state, eventsMap: EventsMap) {
       Vue.set(state, 'list', eventsMap);
     },
 
@@ -315,7 +338,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId
      * @param {HawkEventsDailyInfoByDate} recentEventsInfoByDate
      */
-    [mutationTypes.ADD_TO_RECENT_EVENTS_LIST](
+    [MutationTypes.ADD_TO_RECENT_EVENTS_LIST](
       state,
       {projectId, recentEventsInfoByDate}: { projectId: string, recentEventsInfoByDate: HawkEventsDailyInfoByDate }
     ) {
@@ -356,7 +379,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId - id of the project to add
      * @param {Array<HawkEvent>} eventsList - new list of events
      */
-    [mutationTypes.ADD_TO_EVENTS_LIST](state, {projectId, eventsList}: { projectId: string, eventsList: HawkEvent[] }) {
+    [MutationTypes.ADD_TO_EVENTS_LIST](state, {projectId, eventsList}: { projectId: string, eventsList: HawkEvent[] }) {
       eventsList.forEach((event) => {
         state.list[projectId + ':' + event.id] = event;
       });
@@ -367,7 +390,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - Vuex state
      * @param {HawkEventsDailyInfoByProject} newList - new list of recent events
      */
-    [mutationTypes.SET_RECENT_EVENTS_LIST](state, newList: HawkEventsDailyInfoByProject) {
+    [MutationTypes.SET_RECENT_EVENTS_LIST](state, newList: HawkEventsDailyInfoByProject) {
       Vue.set(state, 'recent', newList);
     },
 
@@ -379,7 +402,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} eventId
      * @param {HawkEvent} event
      */
-    [mutationTypes.ADD_REPETITION_PAYLOAD](state, {projectId, eventId, repetition}) {
+    [MutationTypes.ADD_REPETITION_PAYLOAD](state, {projectId, eventId, repetition}) {
       const key = projectId + ':' + eventId;
 
       state.repetitions[key] = repetition;
