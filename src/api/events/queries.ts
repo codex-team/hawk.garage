@@ -77,9 +77,9 @@ export const QUERY_LATEST_REPETITIONS = `
   query LatestRepetitions(
     $projectId: ID!,
     $eventId: ID!,
-    $limit: Int!
+    $limit: Int
   ) {
-    project(id: $projectId){
+    project(id: $projectId) {
       event(id: $eventId) {
         repetitions(limit: $limit) {
           id
