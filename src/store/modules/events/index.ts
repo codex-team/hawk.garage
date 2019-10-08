@@ -127,12 +127,12 @@ const module: Module<EventsModuleState, RootState> = {
      * Returns event by it's group hash and project id
      * @param {EventsModuleState} state - Vuex state
      */
-    getEventByProjectIdAndGroupHash: (state) =>
+    getEventByProjectIdAndGroupHash(state) {
       /**
        * @param {string} projectId - event's project id
        * @param {string} groupHash - event group hash
        */
-      (projectId: string, groupHash: string): HawkEvent | null => {
+      return (projectId: string, groupHash: string): HawkEvent | null => {
         const uniqueId = projectId + ':' + groupHash;
 
         if (eventsByGroupHash[uniqueId]) {
@@ -146,37 +146,44 @@ const module: Module<EventsModuleState, RootState> = {
           return event;
         }
         return null;
-      },
+      };
+    },
 
     /**
      * Returns recent event of the project by its id
      * @param {EventsModuleState} state - Vuex state
      */
-    getRecentEventsByProjectId: (state) =>
+    getRecentEventsByProjectId(state) {
       /**
        * @param {string} projectId - event's project id
+       * @param {string} eventId - event id
        */
-      (projectId: string): HawkEventsDailyInfoByDate => state.recent[projectId],
+      return (projectId: string): HawkEventsDailyInfoByDate => state.recent[projectId];
+    },
 
     /**
      * List state keeps only original Event
      */
-    getProjectEventById: (state) =>
-      (projectId: string, eventId: string): HawkEvent | null => {
+    getProjectEventById(state) {
+      /**
+       * @param {}
+       */
+      return (projectId: string, eventId: string): HawkEvent | null => {
         const key = projectId + ':' + eventId;
 
         return state.list[key] || null;
-      },
+      };
+    },
 
     /**
      * Returns latest recent event of the project by its id
      * @param {EventsModuleState} state - Vuex state
      */
-    getLatestEventDailyInfo: (state) =>
+    getLatestEventDailyInfo(state) {
       /**
        * @param {string} projectId - event's project id
        */
-      (projectId: string): HawkEventDailyInfo | null => {
+      return (projectId: string): HawkEventDailyInfo | null => {
         const recentProjectEvents = state.recent[projectId];
 
         if (recentProjectEvents) {
@@ -187,18 +194,19 @@ const module: Module<EventsModuleState, RootState> = {
           }
         }
         return null;
-      },
+      };
+    },
 
     /**
      * Returns latest event for certain project
      * @param {EventsModuleState} state - Vuex state
      * @param {Object} getters - module getters
      */
-    getLatestEvent: (state, getters) =>
+    getLatestEvent(state, getters) {
       /**
        * @param {string} projectId - event's project id
        */
-      (projectId: string): HawkEvent | null => {
+      return (projectId: string): HawkEvent | null => {
         const recentProjectEvents = getters.getLatestEventDailyInfo(projectId);
 
         if (recentProjectEvents) {
@@ -207,7 +215,8 @@ const module: Module<EventsModuleState, RootState> = {
           return Object.values(state.list).find((event) => event.groupHash === lastEventGroupHash) || null;
         }
         return null;
-      }
+      };
+    }
   },
   actions: {
     /**
