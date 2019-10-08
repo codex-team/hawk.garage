@@ -36,6 +36,7 @@ export const QUERY_EVENT = `
   }
 `;
 
+// language=GraphQL
 /**
  * Get project recent events
  */
@@ -67,18 +68,18 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 
 `;
 
+// language=GraphQL
 /**
  * GraphQL query for latest repetitions
  * @type {string}
  */
-// language=GraphQL
 export const QUERY_LATEST_REPETITIONS = `
   query LatestRepetitions(
     $projectId: ID!,
     $eventId: ID!,
     $limit: Int
   ) {
-    project(id: $projectId){
+    project(id: $projectId) {
       event(id: $eventId) {
         repetitions(limit: $limit) {
           id
