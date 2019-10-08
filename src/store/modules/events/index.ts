@@ -156,7 +156,6 @@ const module: Module<EventsModuleState, RootState> = {
     getRecentEventsByProjectId(state) {
       /**
        * @param {string} projectId - event's project id
-       * @param {string} eventId - event id
        */
       return (projectId: string): HawkEventsDailyInfoByDate => state.recent[projectId];
     },
@@ -166,7 +165,8 @@ const module: Module<EventsModuleState, RootState> = {
      */
     getProjectEventById(state) {
       /**
-       * @param {}
+       * @param {string} projectId - event's project id
+       * @param {string} eventId - event id
        */
       return (projectId: string, eventId: string): HawkEvent | null => {
         const key = projectId + ':' + eventId;
