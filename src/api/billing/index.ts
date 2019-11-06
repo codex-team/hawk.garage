@@ -37,6 +37,9 @@ interface PayOnceInput {
   language: SupportedBillingLanguages;
 }
 
+/**
+ * Billing session. Creates after payment query
+ */
 interface BillingSession {
   /**
    * Total payment amount in kopecs
@@ -60,7 +63,7 @@ interface BillingSession {
 }
 
 /**
- *
+ * Object represents cash transfer operation
  */
 interface Transaction {
   /**
