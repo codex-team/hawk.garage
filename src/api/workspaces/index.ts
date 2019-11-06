@@ -9,31 +9,7 @@ import {
   QUERY_WORKSPACES
 } from './queries';
 import * as api from '../index';
-
-/**
- * Workspace representation
- */
-interface Workspace {
-  /**
-   * Workspace id
-   */
-  id: string;
-
-  /**
-   * Workspace name
-   */
-  name: string;
-
-  /**
-   * Workspace description
-   */
-  description?: string;
-
-  /**
-   * Workspace image
-   */
-  image?: string;
-}
+import { Workspace } from '@/types/workspaces';
 
 interface CreateWorkspaceInput {
   /**

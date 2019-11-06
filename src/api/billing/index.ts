@@ -1,4 +1,4 @@
-import {QUERY_PAYMENT_LINK, QUERY_TRANSACTIONS} from './queries';
+import { QUERY_PAYMENT_LINK, QUERY_TRANSACTIONS } from './queries';
 import * as api from '../';
 
 /**
@@ -99,7 +99,7 @@ interface Transaction {
  * @param paymentInput - data for payment
  */
 export async function getPaymentLink(paymentInput: PayOnceInput): Promise<BillingSession> {
-  return (await api.call(QUERY_PAYMENT_LINK, {paymentInput})).payOnce;
+  return (await api.call(QUERY_PAYMENT_LINK, { paymentInput })).payOnce;
 }
 
 /**
@@ -107,5 +107,5 @@ export async function getPaymentLink(paymentInput: PayOnceInput): Promise<Billin
  * @param ids - ids of workspaces
  */
 export async function getTransactions(ids: string[]): Promise<Transaction[]> {
-  return (await api.call(QUERY_TRANSACTIONS, {ids})).transactions;
+  return (await api.call(QUERY_TRANSACTIONS, { ids })).transactions;
 }
