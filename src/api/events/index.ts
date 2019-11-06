@@ -4,7 +4,7 @@ import {
   QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
-import {EventsWithDailyInfo, HawkEvent, HawkEventRepetition} from '@/types/events';
+import { EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
 
 /**
  * Get specific event
