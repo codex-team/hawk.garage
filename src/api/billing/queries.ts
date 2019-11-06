@@ -1,15 +1,14 @@
 // language=GraphQL
 /**
  * Query to retrieve payment link
- * @type {string}
  */
 export const QUERY_PAYMENT_LINK = `
-  query paymentLink($paymentQuery: PaymentQuery!) {
-    paymentLink(paymentQuery: $paymentQuery) {
-      Amount
-      Status
-      Success
-      PaymentURL
+  mutation PayOnce($paymentInput: PayOnceInput!) {
+    payOnce(input: $paymentInput) {
+      amount
+      status
+      success
+      paymentURL
     }
   }
 `;
@@ -17,10 +16,9 @@ export const QUERY_PAYMENT_LINK = `
 // language=GraphQL
 /**
  * Query to fetch transactions info by workspaces ids
- * @type {string}
  */
 export const QUERY_TRANSACTIONS = `
-  query transactions($ids: [ID] = []) {
+  query transactions($ids: [ID!] = []) {
     transactions(ids: $ids) {
         type
         amount

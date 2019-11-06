@@ -69,16 +69,15 @@ export default {
   },
   methods: {
     async processPayment() {
-      console.log(this.workspace, this.amount);
-      const language = this.$store.state.app.language;
+      const language = this.$store.state.app.language.toUpperCase();
 
-      const { PaymentURL } = await billingApi.getPaymentLink({
+      const { paymentURL } = await billingApi.getPaymentLink({
         workspaceId: this.workspace.id,
         amount: this.amount,
         language
       });
 
-      window.location.replace(PaymentURL);
+      window.location.replace(paymentURL);
     }
   }
 };
