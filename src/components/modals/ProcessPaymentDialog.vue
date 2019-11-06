@@ -42,43 +42,66 @@
   </PopupDialog>
 </template>
 
-<script>
-import PopupDialog from '../utils/PopupDialog';
-import CustomSelect from '../forms/CustomSelect';
-import { cards } from '../billing/Cards';
+<script lang="ts">
+import PopupDialog from '../utils/PopupDialog.vue';
+import CustomSelect from '../forms/CustomSelect.vue';
+import cards from '../billing/testCards';
 import { mapState } from 'vuex';
 import * as billingApi from '../../api/billing';
+import { Vue, Component } from 'vue-property-decorator';
+import { Workspace } from '@/types/workspaces';
 
-export default {
+@Component({
   name: 'ProcessPaymentDialog',
   components: { PopupDialog, CustomSelect },
-  data() {
-    return {
-      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0],
-      card: cards[0],
-      amount: this.$store.state.modalDialog.data.amount
-    };
-  },
   computed: {
     ...mapState({
-      workspaces: state => state.workspaces.list
-    }),
-    cards() {
-      return cards;
-    }
-  },
-  methods: {
-    async processPayment() {
-      const language = this.$store.state.app.language.toUpperCase();
+      workspaces: (state: any) => state.workspaces.list as Workspace
+    })
+  }
+})
+/**
+ * Dialog for payment
+ */
+export default class ProcessPaymentDialog extends Vue {
+  /**
+   * Workspace to pay for
+   */
+  private workspace: Workspace;
 
-      const { paymentURL } = await billingApi.getPaymentLink({
-        workspaceId: this.workspace.id,
-        amount: this.amount,
-        language
-      });
+  /**
+   * Card to pay from
+   */
+  private card: object;
 
-      window.location.replace(paymentURL);
-    }
+  /**
+   * Amount of money to pay
+   */
+  private amount: number;
+
+  /**
+   * Component constructor for data initialization
+   */
+  constructor() {
+    super();
+    this.workspace = this.$store.state.workspaces.current || this.$store.state.workspaces.list[0];
+    this.card = cards[0];
+    this.amount = this.$store.state.modalDialog.data.amount;
+  }
+
+  /**
+   * Method for payment processing
+   */
+  async processPayment() {
+    const language = this.$store.state.app.language.toUpperCase();
+
+    const { paymentURL } = await billingApi.getPaymentLink({
+      workspaceId: this.workspace.id,
+      amount: this.amount,
+      language
+    });
+
+    window.location.replace(paymentURL);
   }
 };
 </script>
