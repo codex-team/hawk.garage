@@ -95,7 +95,7 @@ export default class ProcessPaymentDialog extends Vue {
 
     const { paymentURL } = await billingApi.getPaymentLink({
       workspaceId: this.workspace.id,
-      amount: this.amount,
+      amount: +this.amount,
       language
     });
 
