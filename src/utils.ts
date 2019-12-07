@@ -5,7 +5,7 @@ const mergeWith = require('lodash.mergewith');
  * @param {String} [id] - for id-base picking colors (hex string)
  * @return {String} color
  */
-export function getEntityColor(id) {
+export function getEntityColor(id: string): string {
   const colors = [
     '#15c46d',
     '#36a9e0',
@@ -17,7 +17,9 @@ export function getEntityColor(id) {
     '#505b74'
   ];
 
-  if (!id) return colors[Math.floor(Math.random() * colors.length)];
+  if (!id) {
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
 
   const decimalId = parseInt(id.substr(-1), 16); // take last id char and convert to decimal number system
 
@@ -49,8 +51,8 @@ export function getEntityColor(id) {
  * @param {String} key - key for grouping
  */
 export const groupBy =
-  key =>
-    array => // array of objects to group
+  (key: string) =>
+    (array: any[]) => // array of objects to group
       array.reduce((objectsByKeyValue, obj) => {
         const value = obj[key];
 
@@ -70,10 +72,10 @@ export const groupByDate = groupBy('date');
  * @param {object[]} sources
  * @return {object}
  */
-export function deepMerge(target, ...sources) {
-  const isObject = (item) => item && typeOf(item) === 'object';
+export function deepMerge(target: object, ...sources: object[]) {
+  const isObject = (item: any) => item && typeOf(item) === 'object';
 
-  return mergeWith({}, target, ...sources, function (_subject, _target) {
+  return mergeWith({}, target, ...sources, function(_subject: any, _target: any) {
     if (Array.isArray(_subject) && Array.isArray(_target)) {
       const biggerArray = _subject.length > _target.length ? _subject : _target;
       const lesser = _subject.length > _target.length ? _target : _subject;
@@ -92,10 +94,9 @@ export function deepMerge(target, ...sources) {
 /**
  * Returns real type of passed variable
  * @param obj
- * @return {string}
  */
-function typeOf(obj) {
-  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+function typeOf(obj: any): string {
+  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)![1].toLowerCase();
 }
 
 /**
@@ -103,11 +104,11 @@ function typeOf(obj) {
  * @param {string} string
  * @return {String}
  */
-export function misTranslit(string) {
+export function misTranslit(string: string): string {
   string = string.toLowerCase();
 
   /* eslint-disable quote-props */
-  const map = {
+  const map: { [key: string]: string } = {
     'q': 'й',
     'w': 'ц',
     'e': 'у',
@@ -179,7 +180,7 @@ export function misTranslit(string) {
  * @param {String} string - string to encode
  * @return {String} - encoded string
  */
-export function escape(string) {
+export function escape(string: string): string {
   return string
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')

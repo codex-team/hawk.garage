@@ -3,12 +3,9 @@ import i18n from './i18n';
 
 /**
  * Filter that add space after first digit in 4-digits number
- * @param {Number} value - filter value
- * @return {String} - filter result
+ * @param value - filter value
  */
-Vue.filter('spacedNumber', function (value) {
-  if (typeof value !== 'number') return value;
-
+Vue.filter('spacedNumber', function (value: number): string {
   const count = value.toString();
 
   if (count.length < 3) {
@@ -28,7 +25,7 @@ Vue.filter('spacedNumber', function (value) {
  * Return workspace name abbreviation (one or two symbols)
  * @return {string}
  */
-Vue.filter('abbreviation', function (value) {
+Vue.filter('abbreviation', function (value: string): string {
   if (!value) return '';
 
   const words = value.split(' ');
@@ -40,13 +37,13 @@ Vue.filter('abbreviation', function (value) {
  * Returns prettifying time ('now' or time in hh:mm)
  * @return {string}
  */
-Vue.filter('prettyTime', function (value) {
+Vue.filter('prettyTime', function (value: Date | string) {
   const date = new Date(value);
   const currentDate = new Date();
 
   const ONE_MINUTE_IN_MS = 1000 * 60;
 
-  if ((currentDate - date) / (ONE_MINUTE_IN_MS) < 1) return 'now';
+  if ((currentDate.getTime() - date.getTime()) / (ONE_MINUTE_IN_MS) < 1) return 'now';
 
   const minutes = date.getMinutes();
   const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
@@ -56,10 +53,9 @@ Vue.filter('prettyTime', function (value) {
 
 /**
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
- * @return {string}
  */
-Vue.filter('prettyDateStr', function (value) {
-  const [day, month] = value.split('-');
+Vue.filter('prettyDateStr', function (value: string): string {
+  const [day, month]: number[] = value.split('-').map(stringValue => +stringValue);
 
   const currentDate = new Date().getDate();
 
@@ -79,7 +75,7 @@ Vue.filter('prettyDateStr', function (value) {
  *
  * @return {string}
  */
-Vue.filter('prettyDate', function (value) {
+Vue.filter('prettyDate', function (value: Date | string) {
   const date = new Date(value);
   const day = date.getDate();
   const month = date.getMonth();
@@ -100,7 +96,7 @@ Vue.filter('prettyDate', function (value) {
  * Returns prettified date ('29 aug, 14:30')
  * @returns {string}
  */
-Vue.filter('prettyFullDate', function (value) {
+Vue.filter('prettyFullDate', function (value: Date) {
   const day = value.getDate();
   const month = value.getMonth();
   const hours = value.getHours();
