@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 
-import AppShell from './components/AppShell';
+import AppShell from './components/AppShell.vue';
 
 Vue.use(Router);
 
@@ -17,46 +17,46 @@ const router = new Router({
         {
           path: 'settings',
           name: 'settings',
-          component: () => import(/* webpackChunkName: 'settings' */ './components/account/Window'),
+          component: () => import(/* webpackChunkName: 'settings' */ './components/account/Window.vue'),
           redirect: 'settings/account',
           children: [
             {
               path: 'account',
               name: 'account-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Account')
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Account.vue')
             },
             {
               path: 'appearance',
               name: 'appearance-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance')
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance.vue')
             },
             {
               path: 'billing',
               name: 'billing-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing')
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing.vue')
             }
           ]
         },
         {
           path: 'workspaces/:workspaceId',
           name: 'workspace-settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings'),
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings.vue'),
           redirect: 'workspaces/:workspaceId/settings',
           children: [
             {
               path: 'settings',
               name: 'workspace-settings-workspace',
-              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace')
+              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace.vue')
             },
             {
               path: 'billing',
               name: 'workspace-billing',
-              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspaces/Billing')
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspaces/Billing.vue')
             },
             {
               path: 'team',
               name: 'workspace-team',
-              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspaces/Team')
+              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspaces/Team.vue')
             }
           ]
         },
@@ -105,12 +105,12 @@ const router = new Router({
     {
       path: '/sign-up',
       name: 'sign-up',
-      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/SignUp')
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/SignUp.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login')
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue')
     },
     {
       path: '/join/:workspaceId/:inviteHash?',
