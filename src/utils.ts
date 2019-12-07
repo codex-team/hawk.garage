@@ -72,10 +72,10 @@ export const groupByDate = groupBy('date');
  * @param {object[]} sources
  * @return {object}
  */
-export function deepMerge(target, ...sources) {
-  const isObject = (item) => item && typeOf(item) === 'object';
+export function deepMerge(target: object, ...sources: object[]) {
+  const isObject = (item: any) => item && typeOf(item) === 'object';
 
-  return mergeWith({}, target, ...sources, function(_subject, _target) {
+  return mergeWith({}, target, ...sources, function(_subject: any, _target: any) {
     if (Array.isArray(_subject) && Array.isArray(_target)) {
       const biggerArray = _subject.length > _target.length ? _subject : _target;
       const lesser = _subject.length > _target.length ? _target : _subject;
