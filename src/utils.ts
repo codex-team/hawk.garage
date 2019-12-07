@@ -96,9 +96,7 @@ export function deepMerge(target: object, ...sources: object[]) {
  * @param obj
  */
 function typeOf(obj: any): string {
-  // @todo remove ignore
-  // @ts-ignore
-  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)![1].toLowerCase();
 }
 
 /**
