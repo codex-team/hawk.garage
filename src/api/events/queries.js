@@ -10,12 +10,15 @@ export const QUERY_EVENT = `
       payload {
         title
         backtrace {
+          file
           line
+          column
           sourceCode {
             line
             content
           }
-          file
+          function
+          arguments
         }
       }
     }
