@@ -23,6 +23,13 @@ export default new Vuex.Store({
     modalDialog,
     events
   },
-  plugins: [ createPersistedState() ],
+  plugins: [
+    createPersistedState({
+      paths: [
+        'app',
+        'user'
+      ]
+    })
+  ],
   strict: debug
 });
