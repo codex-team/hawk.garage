@@ -36,20 +36,18 @@
           </div>
           <Icon
             v-if="bt.sourceCode"
-            :class="{'details-backtrace__arrow-down--opened': openedFilesView.includes(index) && bt.sourceCode}"
+            :class="{'details-backtrace__arrow-down--opened': openedFrames.includes(index) && bt.sourceCode}"
             symbol="arrow-down"
             class="details-backtrace__arrow-down"
           />
         </div>
-        <CodeBlock
-          v-if="openedFilesView.includes(index) && bt.sourceCode"
-          show-lines-numbers
-          :lines-from="bt.sourceCode[0].line"
-          :highlight-lines="bt.line"
-          class="details-backtrace__source-code"
+        <CodePreview
+          v-if="openedFrames.includes(index) && bt.sourceCode"
+          :lines-highlighted="[bt.line]"
+          :frames="bt.sourceCode"
+          lang="javascript"
         >
-          <pre>{{ joinSourceCodeLines(bt.sourceCode) }}</pre>
-        </CodeBlock>
+        </CodePreview>
       </div>
     </template>
     <template #expandButton>
@@ -60,14 +58,14 @@
 
 <script>
 import DetailsBase from './DetailsBase';
-import CodeBlock from '../utils/CodeBlock';
+import CodePreview from '../utils/CodePreview';
 import Icon from '../utils/Icon';
 
 export default {
   name: 'DetailsBacktrace',
   components: {
     DetailsBase,
-    CodeBlock,
+    CodePreview,
     Icon
   },
   props: {
@@ -85,7 +83,12 @@ export default {
        * Is block expanded.
        */
       isMoreFilesShown: false,
-      openedFilesView: []
+
+      /**
+       * Indexes of opened frames
+       * By default, open first frame
+       */
+      openedFrames: [ 0 ]
     };
   },
   computed: {
@@ -113,12 +116,12 @@ export default {
      * @param {Number} index - backtrace info index
      */
     toggleViewState(index) {
-      if (this.openedFilesView.includes(index)) {
-        const itemIndex = this.openedFilesView.indexOf(index);
+      if (this.openedFrames.includes(index)) {
+        const itemIndex = this.openedFrames.indexOf(index);
 
-        this.openedFilesView.splice(itemIndex, 1);
+        this.openedFrames.splice(itemIndex, 1);
       } else {
-        this.openedFilesView.push(index);
+        this.openedFrames.push(index);
       }
     }
   }
