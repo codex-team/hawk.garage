@@ -86,9 +86,8 @@ export default {
 
       /**
        * Indexes of opened frames
-       * By default, open first frame
        */
-      openedFrames: [ 0 ]
+      openedFrames: []
     };
   },
   computed: {
@@ -98,6 +97,12 @@ export default {
     filteredBacktrace() {
       return this.backtrace.length === 4 || this.isMoreFilesShown ? this.backtrace : this.backtrace.slice(0, 3);
     }
+  },
+  mounted(){
+    /**
+     * By default, open first frame that has a source code
+     */
+    this.openedFrames.push(this.backtrace.findIndex(frame => !!frame.sourceCode));
   },
   methods: {
     /**
