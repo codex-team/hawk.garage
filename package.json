@@ -59,7 +59,7 @@
     "typescript": "^3.7.3"
   },
   "gitHooks": {
-
+    "pre-commit": "lint-staged"
   },
   "license": "UNLICENSED",
   "lint-staged": {
