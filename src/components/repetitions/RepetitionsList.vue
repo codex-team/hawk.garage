@@ -7,6 +7,7 @@
     <table class="repetitions-list__table">
       <tr
         v-for="repetition in repetitions"
+        :key="repetition.id"
         class="repetitions-list__row"
       >
         <td class="repetitions-list__col">

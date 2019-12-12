@@ -21,8 +21,10 @@
             <span v-if="bt.function">
               {{ bt.function }}
             </span>
-            <span v-else
-                  class="details-backtrace__left-anonymous-function">
+            <span
+              v-else
+              class="details-backtrace__left-anonymous-function"
+            >
               (anonymous function)
             </span>
           </div>

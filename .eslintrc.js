@@ -10,6 +10,7 @@ module.exports = {
       destructuring: 'all',
       ignoreReadBeforeAssign: false
     } ],
+    '@typescript-eslint/no-unused-vars': [2, { args: 'none' }],
     'multiline-comment-style': ['error', 'starred-block']
   },
 
