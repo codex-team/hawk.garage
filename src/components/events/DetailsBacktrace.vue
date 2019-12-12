@@ -30,7 +30,9 @@
           </div>
           <div class="details-backtrace__right">
             {{ bt.file }}
-            line {{ bt.line }}:{{ bt.column }}
+            <template v-if="bt.line">
+              line {{ bt.line }}:{{ bt.column }}
+            </template>
           </div>
           <Icon
             v-if="bt.sourceCode"
@@ -153,6 +155,8 @@ export default {
       align-items: center;
       padding: 7px;
       cursor: pointer;
+      font-size: 12px;
+      font-family: var(--font-monospace);
     }
 
     &__content-block {
