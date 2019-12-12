@@ -71,6 +71,7 @@
 
           <div
             v-for="date in groupedRepetitions.keys()"
+            :key="date"
             class="repetitions-overview__table"
           >
             <RepetitionsList

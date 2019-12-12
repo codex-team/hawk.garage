@@ -17,11 +17,22 @@
           class="details-backtrace__header-row"
           @click="toggleViewState(index)"
         >
-          <div class="details-backtrace__filename">
-            {{ bt.file }}
+          <div class="details-backtrace__left">
+            <span v-if="bt.function">
+              {{ bt.function }}
+            </span>
+            <span
+              v-else
+              class="details-backtrace__left-anonymous-function"
+            >
+              (anonymous function)
+            </span>
           </div>
-          <div class="details-backtrace__line">
-            line {{ bt.line }}
+          <div class="details-backtrace__right">
+            {{ bt.file }}
+            <template v-if="bt.line">
+              line {{ bt.line }}<template v-if="bt.column">:{{ bt.column }}</template>
+            </template>
           </div>
           <Icon
             v-if="bt.sourceCode"
@@ -143,6 +154,8 @@ export default {
       display: flex;
       align-items: center;
       padding: 7px;
+      font-size: 12px;
+      font-family: var(--font-monospace);
       cursor: pointer;
     }
 
@@ -158,11 +171,15 @@ export default {
       font-family: var(--font-monospace);
     }
 
-    &__filename {
+    &__left {
       letter-spacing: -0.3px;
+
+      &-anonymous-function{
+        opacity: 0.3;
+      }
     }
 
-    &__line {
+    &__right {
       margin-right: 47px;
       margin-left: auto;
     }

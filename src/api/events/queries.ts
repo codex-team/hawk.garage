@@ -22,12 +22,15 @@ export const QUERY_EVENT = `
           }
           get
           backtrace {
-            line
-            sourceCode {
-              line
-              content
-            }
             file
+            line
+            column
+            sourceCode {
+                line
+                content
+            }
+            function
+            arguments
           }
         }
       }
