@@ -2,7 +2,7 @@
   <div
     ref="content"
     class="code-preview"
-    :class="lang"
+    :class="syntax"
   >
     <pre
       v-for="frame in frames"
@@ -18,6 +18,15 @@ import hljs from 'highlight.js';
 
 export default {
   name: 'CodePreview',
+  data(){
+    return {
+      /**
+       * Highlighting syntax.
+       * Can be overridden in some cases, {@link mounted}
+       */
+      syntax: null
+    };
+  },
   props: {
     /**
      * Array fo stack frames
@@ -51,8 +60,18 @@ export default {
    * Vue mounted hook. Used to render highlighting
    */
   mounted() {
-    if (this.lang !== 'plaintext') {
+    this.syntax = this.lang;
+
+    if (this.syntax !== 'plaintext') {
       hljs.highlightBlock(this.$refs.content);
+    }
+
+    /**
+     * Sometimes the JavaScript error can be triggered from inline scripts in HTML markup
+     * We need to highlight such code fragments as 'html' syntax instead of 'javascript'
+     */
+    if (this.syntax === 'javascript' && this.isHtmlScope()) {
+      this.syntax = 'html';
     }
   },
   methods: {
@@ -63,14 +82,29 @@ export default {
      */
     isCurrentLine(line) {
       return this.linesHighlighted.includes(line);
+    },
+
+    /**
+     * Check if current code is an HTML scope
+     * Used to highlight inline JavaScript errors with 'html' syntax
+     *
+     * @return {boolean}
+     */
+    isHtmlScope() {
+      const code = this.frames.map(frame => frame.content).join('\n');
+      const div = document.createElement('div');
+
+      div.innerHTML = code;
+
+      console.log('div.children', div.children);
+
+      return div.children.length > 0;
     }
   }
 };
 </script>
 
 <style>
-  @import "../../styles/custom-properties.css";
-
   .code-preview {
     font-family: var(--font-monospace);
     background-color: #171920;
