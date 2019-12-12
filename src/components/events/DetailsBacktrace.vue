@@ -154,9 +154,9 @@ export default {
       display: flex;
       align-items: center;
       padding: 7px;
-      cursor: pointer;
       font-size: 12px;
       font-family: var(--font-monospace);
+      cursor: pointer;
     }
 
     &__content-block {
