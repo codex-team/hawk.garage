@@ -31,7 +31,7 @@
           <div class="details-backtrace__right">
             {{ bt.file }}
             <template v-if="bt.line">
-              line {{ bt.line }}:{{ bt.column }}
+              line {{ bt.line }}<template v-if="bt.column">:{{ bt.column }}</template>
             </template>
           </div>
           <Icon
