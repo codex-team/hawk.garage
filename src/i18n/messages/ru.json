@@ -32,6 +32,12 @@
       "submitButton": "Создать проект",
       "title": "Добавить проект",
       "workspaceSelectLabel": "Выбрать воркспейс"
+    },
+    "settings": {
+      "integrations": {
+        "title": "Интеграции",
+        "projectTokenLabel": "Интеграционный токен для проекта"
+      }
     }
   },
   "settings": {
@@ -49,7 +55,8 @@
       "title": "Внешний вид"
     },
     "billing": {
-      "title": "Платежи"
+      "title": "Платежи",
+      "ownedWorkspaces": "Воркспейсы"
     },
     "logout": "Выйти",
     "notifications": {
@@ -84,7 +91,6 @@
         "youLabel": "вы",
         "adminLabel": "Администратор",
         "invitationSentLabel": "приглашение отправлено",
-        "copiedNotification": "Скопировано!",
         "sentNotification": "Приглашение отправлено",
         "joinNotification": "Вы успешно присоединились к воркспейсу!",
         "brokenLinkNotification": "Ваша ссылка не действительна",
@@ -97,7 +103,35 @@
       }
     }
   },
+  "billing": {
+    "connectedCards": "Сохраненные карты",
+    "detachCard": "Открепить карту",
+    "addCardButton": "Добавить карту",
+    "members": "Нет участников | 1 участник | {n} участника | {n} участников",
+    "currentBalance": "Баланс",
+    "currentPlan": "План",
+    "volume": "Емкость",
+    "volumeEvents": "событий | событие | события | событий",
+    "pay": "+",
+    "payCustomAmount": "Другая сумма",
+    "requestInvoice": "Запросить счет",
+    "paymentHistory": "История платежей",
+    "all": "Все",
+    "incomings": "Пополнения",
+    "charges": "Списания",
+    "autoPay": "Авто-платеж",
+    "payPeriod": "мес",
+    "processPayment": {
+      "header": "Пополнение баланса",
+      "description": "Здесь вы можете пополнить баланс воркспейса. После выбора суммы, вы будете переправлены на страницу платежной системы.",
+      "workspaceSelectLabel": "Воркспейс",
+      "cardSelectLabel": "Карта",
+      "amountLabel": "Сумма",
+      "submitButton": "Продолжить"
+    }
+  },
   "common": {
+    "copiedNotification": "Скопировано!",
     "months": [
       "января",
       "февраля",
@@ -111,6 +145,20 @@
       "октября",
       "ноября",
       "декабря"
+    ],
+    "shortMonths": [
+      "дек",
+      "фев",
+      "мар",
+      "апр",
+      "май",
+      "июн",
+      "июл",
+      "авг",
+      "сен",
+      "окт",
+      "ноя",
+      "дек"
     ]
   }
 }

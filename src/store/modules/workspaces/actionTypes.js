@@ -39,6 +39,11 @@ export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
 export const FETCH_WORKSPACE = 'FETCH_WORKSPACE';
 
 /**
+ * Fetch many workspaces by their ids
+ */
+export const FETCH_WORKSPACES = 'FETCH_WORKSPACE';
+
+/**
  * Send request to grant admin permissions
  */
 export const GRANT_ADMIN_PERMISSIONS = 'GRANT_ADMIN_PERMISSIONS';
@@ -47,3 +52,8 @@ export const GRANT_ADMIN_PERMISSIONS = 'GRANT_ADMIN_PERMISSIONS';
  * Send request to remove user from workspace
  */
 export const REMOVE_USER_FROM_WORKSPACE = 'REMOVE_USER_FROM_WORKSPACE';
+
+/**
+ * Fetch transactions
+ */
+export const GET_TRANSACTIONS = 'GET_TRANSACTIONS';

@@ -124,9 +124,11 @@ export default {
 <style>
   .details-backtrace {
     &__source-code {
+      padding: 3px 9px;
       font-size: 12px;
       line-height: 21px;
       background-color: #171920;
+      border: none;
       border-radius: var(--border-radius);
     }
 

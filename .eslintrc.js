@@ -1,22 +1,28 @@
 module.exports = {
   root: true,
+
   env: {
     browser: true
   },
-  extends: [
-    'codex',
-    'plugin:vue/recommended',
-  ],
+
   rules: {
     'prefer-const': ['error', {
-      'destructuring': 'all',
-      'ignoreReadBeforeAssign': false
+      destructuring: 'all',
+      ignoreReadBeforeAssign: false
     } ],
     'multiline-comment-style': ['error', 'starred-block']
   },
+
   plugins: [ 'import' ],
+
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@typescript-eslint/parser',
     sourceType: 'module'
-  }
+  },
+
+  extends: [
+    'codex',
+    'plugin:vue/recommended',
+    '@vue/typescript'
+  ]
 };

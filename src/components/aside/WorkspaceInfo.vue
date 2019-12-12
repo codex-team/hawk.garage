@@ -20,7 +20,7 @@
     <Icon
       class="workspace-info__project-creation-button"
       symbol="plus"
-      @click.native="$emit('createProjectButtonClicked')"
+      @click.native="createProjectButtonClicked"
     />
   </div>
 </template>
@@ -28,6 +28,7 @@
 <script>
 import Icon from '../utils/Icon';
 import EntityImage from '../utils/EntityImage';
+import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 
 export default {
   name: 'WorkspaceInfo',
@@ -42,6 +43,11 @@ export default {
     workspace: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    createProjectButtonClicked() {
+      this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
     }
   }
 };

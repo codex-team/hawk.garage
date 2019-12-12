@@ -1,13 +1,18 @@
 <template>
   <div class="project-header">
-    <EntityImage
-      :id="project.id"
-      :name="project.name"
-      :image="project.image"
-      class="project-header__icon"
-    />
-    <div class="project-header__name">
-      {{ project.name }}
+    <div
+      class="project-header__title-container"
+      @click="$router.push({name: 'project-settings', params: {projectId: project.id}})"
+    >
+      <EntityImage
+        :id="project.id"
+        :name="project.name"
+        :image="project.image"
+        class="project-header__icon"
+      />
+      <div class="project-header__name">
+        {{ project.name }}
+      </div>
     </div>
     <Icon
       class="project-header__notifications"
@@ -47,10 +52,17 @@ export default {
   height: 50px;
   border-bottom: 1px solid var(--color-bg-main);
 
+  &__title-container {
+    display:flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 15px;
+    cursor: pointer;
+  }
+
   &__icon {
     width: 26px;
     height: 26px;
-    margin-left: 15px;
     line-height: 26px;
     background-position: center center;
     background-size: cover;

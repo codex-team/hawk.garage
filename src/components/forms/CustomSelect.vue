@@ -12,7 +12,8 @@
       class="input custom-select__select"
     >
       <EntityImage
-        :id="value.id"
+        v-if="needImage"
+        :id="value.id || '1'"
         class="custom-select__option-image"
         :image="value.image"
         :name="value.name"
@@ -35,6 +36,7 @@
           @click="$emit('input', option)"
         >
           <EntityImage
+            v-if="needImage"
             :id="option.id"
             class="custom-select__option-image"
             :image="option.image"
@@ -69,6 +71,10 @@ export default {
     label: {
       type: String,
       required: true
+    },
+    needImage: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -128,6 +134,7 @@ export default {
       top: 100%;
       right: 0;
       left: 0;
+      z-index: 2;
       margin-top: -5px;
       padding-top: 5px;
       background-color: var(--color-bg-main);
@@ -165,6 +172,7 @@ export default {
     }
 
     &--opened &__select {
+      z-index: 3;
       border-bottom: 1px solid transparent;
       border-bottom-right-radius: unset;
       border-bottom-left-radius: unset;

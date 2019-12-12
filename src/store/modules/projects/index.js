@@ -2,7 +2,8 @@
 import {
   CREATE_PROJECT,
   FETCH_RECENT_ERRORS,
-  SET_PROJECTS_LIST
+  SET_PROJECTS_LIST,
+  UPDATE_PROJECT_LAST_VISIT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -15,7 +16,8 @@ import { groupByDate } from '../../../utils';
 const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
-  SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE' // Set events list by date to project
+  SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
+  RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT' // Set project unread count
 };
 
 /**
@@ -24,6 +26,7 @@ const mutationTypes = {
  * @property {String} name - project name
  * @property {String} workspaceId - ID of the workspace to which the project belongs
  * @property {String} [image] - project image
+ * @property {Number} unreadCount - project's "unreadCount" badge
  * @property {EventsListByDate} eventsListByDate - last projects event
  */
 
@@ -100,6 +103,18 @@ const actions = {
   },
 
   /**
+   * @param {Function} commit - standard Vuex commit function
+   * @param {Object} getters - standard Vuex getters
+   * @param {String} projectId - project's identifier
+   * @return {Promise<void>}
+   */
+  async [UPDATE_PROJECT_LAST_VISIT]({ commit, getters }, { projectId }) {
+    await projectsApi.updateLastProjectVisit(projectId);
+
+    commit(mutationTypes.RESET_PROJECT_UNREAD_COUNT, { projectId });
+  },
+
+  /**
    * Sets new projects list
    * @param {function} commit - standard Vuex commit function
    * @param {[Project]} projects - new projects list
@@ -137,7 +152,6 @@ const mutations = {
   },
 
   /**
-   *
    * @param {ProjectsModuleState} state - Vuex state
    * @param {String} projectId - id of the project to set data
    * @param {EventsListByDate} eventsListByDate - new event list
@@ -146,6 +160,16 @@ const mutations = {
     const project = state.list.find(_project => _project.id === projectId);
 
     Vue.set(project, 'eventsListByDate', eventsListByDate);
+  },
+
+  /**
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {String} projectId - id of the project to set data
+   */
+  [mutationTypes.RESET_PROJECT_UNREAD_COUNT](state, { projectId }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    Vue.set(project, 'unreadCount', 0);
   },
 
   /**

@@ -9,10 +9,13 @@ import {
   UPDATE_WORKSPACE,
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
-  REMOVE_USER_FROM_WORKSPACE
+  REMOVE_USER_FROM_WORKSPACE,
+  GET_TRANSACTIONS,
+  FETCH_WORKSPACES
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
-import * as workspaceApi from '../../../api/workspaces';
+import * as workspaceApi from '../../../api/workspaces/index.ts';
+import * as billingApi from '../../../api/billing';
 import Vue from 'vue';
 
 /**
@@ -27,7 +30,8 @@ const mutationTypes = {
   REMOVE_MEMBER: 'REMOVE_MEMBER', // Remove user from workspace
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
-  UPDATE_MEMBER: 'UPDATE_MEMBER' // Update member in the workspace
+  UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
+  SET_TRANSACTIONS: 'SET_TRANSACTIONS' // Set transactions info
 };
 
 /**
@@ -157,6 +161,17 @@ const actions = {
   },
 
   /**
+   * Get workspaces by ids
+   * @param {function} commit - standard Vuex commit function
+   * @return {Promise<Workspace>}
+   */
+  async [FETCH_WORKSPACES]({ commit }) {
+    const workspaces = (await workspaceApi.getWorkspaces([]));
+
+    commit(mutationTypes.SET_WORKSPACES_LIST, workspaces);
+  },
+
+  /**
    * Update workspace data
    * @param {function} commit - standard Vuex commit function
    * @param {Workspace} workspace - workspace to update
@@ -212,6 +227,18 @@ const actions = {
   },
 
   /**
+   * Fetch transactions and set them to store
+   * @param {function} commit - standard Vuex commit method
+   * @param {string[]} ids - workspaces ids
+   * @returns {Promise<void>}
+   */
+  async [GET_TRANSACTIONS]({ commit }, { ids }) {
+    const transactions = await billingApi.getTransactions(ids);
+
+    commit(mutationTypes.SET_TRANSACTIONS, transactions || []);
+  },
+
+  /**
    * Resets module state
    * @param {function} commit - standard Vuex commit function
    */
@@ -234,7 +261,11 @@ const mutations = {
       state.current = workspace;
     }
 
-    Vue.set(state.list, index, workspace);
+    state.list = [
+      ...state.list.slice(0, index),
+      { ...state.list[index], ...workspace },
+      ...state.list.slice(index + 1)
+    ];
   },
 
   /**
@@ -304,7 +335,7 @@ const mutations = {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
 
     if (!state.list[workspaceIndex].pendingUsers) {
-      Vue.set(state, `list.${workspaceIndex}.pendingUsers`, []);
+      Vue.set(state.list[workspaceIndex], 'pendingUsers', []);
     }
 
     state.list[workspaceIndex].pendingUsers.push(data);
@@ -336,6 +367,42 @@ const mutations = {
     const memberIndex = state.list[workspaceIndex].pendingUsers.findIndex(m => m.email === userEmail);
 
     if (memberIndex > -1) state.list[workspaceIndex].pendingUsers.splice(memberIndex, 1);
+  },
+
+  /**
+   * Set transactions info to workspaces by ids
+   * @param {WorkspacesModuleState} state - current state
+   * @param {Transaction[]} transactions - transactions to set
+   */
+  [mutationTypes.SET_TRANSACTIONS](state, transactions = []) {
+    const groupedByWorkspaceId = transactions.reduce(
+      (acc, transaction) => {
+        const { workspace } = transaction;
+
+        if (!acc[workspace.id]) {
+          acc[workspace.id] = [];
+        }
+
+        acc[workspace.id].push(transaction);
+
+        return acc;
+      },
+      {}
+    );
+
+    Object.entries(groupedByWorkspaceId).forEach(([workspaceId, data]) => {
+      const index = state.list.findIndex(w => w.id === workspaceId);
+
+      const workspace = state.list[index];
+
+      Vue.set(workspace, 'transactions', data);
+
+      state.list = [
+        ...state.list.slice(0, index),
+        workspace,
+        ...state.list.slice(index + 1)
+      ];
+    });
   },
 
   /**

@@ -10,8 +10,10 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       image
       projects {
         id
+        token
         name
         image
+        unreadCount
         recentEvents(limit: 1) {
           events {
             id
@@ -88,6 +90,14 @@ export const QUERY_WORKSPACES = `
      name
      description
      image
+     balance
+     plan {
+       name
+       subscriptionDate
+       lastChargeDate
+       monthlyCharge
+       eventsLimit
+     }
      users {
        id
        name
@@ -140,7 +150,7 @@ export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
   mutation removeMemberFromWorkspace(
     $workspaceId: ID!
     $userId: ID,
-    $userEmail: String!  
+    $userEmail: String!
   ) {
     removeMemberFromWorkspace(workspaceId: $workspaceId, userId: $userId, userEmail: $userEmail)
   }

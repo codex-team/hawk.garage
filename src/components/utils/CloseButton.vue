@@ -21,11 +21,18 @@ export default {
   components: {
     Icon
   },
+  data() {
+    return {
+      oldKeyup: undefined
+    };
+  },
   created() {
-    window.addEventListener('keyup', this.onEscapeKeyUp);
+    this.oldKeyup = window.onkeyup;
+
+    window.onkeyup = this.onEscapeKeyUp;
   },
   beforeDestroy() {
-    window.removeEventListener('keyup', this.onEscapeKeyUp);
+    window.onkeyup = this.oldKeyup;
   },
   methods: {
     onEscapeKeyUp(event) {

@@ -3,7 +3,7 @@ import {
   FETCH_INITIAL_DATA,
   SET_LANGUAGE
 } from './actionTypes';
-import * as workspacesApi from '../../../api/workspaces';
+import * as workspacesApi from '../../../api/workspaces/index.ts';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
 import { INIT_EVENTS_MODULE } from '../events/actionTypes';
@@ -75,7 +75,7 @@ const actions = {
     const recentEvents = {};
 
     projects.forEach(project => {
-      if (!project.recentEvents) {
+      if (!project.recentEvents || !project.recentEvents.dailyInfo) {
         return;
       }
 

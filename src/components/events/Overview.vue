@@ -1,6 +1,7 @@
 <template>
   <PopupDialog
     class="event-overview"
+    big
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
     <div
@@ -18,9 +19,12 @@
           {{ event.payload.title }}
         </h1>
         <div class="event-overview__statistics">
-          <div class="event-overview__times">
+          <div
+            class="event-overview__times"
+            @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId: event.id }})"
+          >
             <div class="event-overview__statistics-count">
-              156
+              {{ event.totalCount }}
             </div>
             times
           </div>
@@ -38,7 +42,7 @@
           </div>
         </div>
         <div class="event-overview__filename">
-          {{ event.payload.backtrace[0].file }}
+          {{ event.payload.backtrace && event.payload.backtrace[0] && event.payload.backtrace[0].file }}
         </div>
       </div>
       <div class="event-overview__info">
@@ -64,7 +68,7 @@ import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import DetailsHttpPost from './DetailsHttpPost';
 import Badge from '../utils/Badge';
-import * as eventApi from '../../api/events';
+import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventOverview',
@@ -90,7 +94,7 @@ export default {
   async created() {
     const eventId = this.$route.params.eventId;
 
-    this.event = await eventApi.getEvent(this.projectId, eventId);
+    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId });
 
     this.event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
@@ -130,7 +134,7 @@ export default {
     }
 
     &__container {
-      max-width: 850px;
+      width: 100%;
     }
 
     &__header {
@@ -169,6 +173,7 @@ export default {
     &__times {
       left: -60px;
       transform: translateX(-100%);
+      cursor: pointer;
     }
 
     &__users-affected {
