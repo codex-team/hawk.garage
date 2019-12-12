@@ -9,7 +9,7 @@
     </template>
     <template #content>
       <div
-        v-for="(bt, index) in filteredBacktrace"
+        v-for="(frame, index) in filteredBacktrace"
         :key="index"
         class="event-details__content-block details-backtrace__content-block"
       >
@@ -18,8 +18,8 @@
           @click="toggleViewState(index)"
         >
           <div class="details-backtrace__left">
-            <span v-if="bt.function">
-              {{ bt.function }}
+            <span v-if="frame.function">
+              {{ frame.function }}
             </span>
             <span
               v-else
@@ -29,25 +29,24 @@
             </span>
           </div>
           <div class="details-backtrace__right">
-            {{ bt.file }}
-            <template v-if="bt.line">
-              line {{ bt.line }}<template v-if="bt.column">:{{ bt.column }}</template>
+            {{ frame.file }}
+            <template v-if="frame.line">
+              line {{ getLocation(frame) }}
             </template>
           </div>
           <Icon
-            v-if="bt.sourceCode"
-            :class="{'details-backtrace__arrow-down--opened': openedFrames.includes(index) && bt.sourceCode}"
+            v-if="frame.sourceCode"
+            :class="{'details-backtrace__arrow-down--opened': openedFrames.includes(index) && frame.sourceCode}"
             symbol="arrow-down"
             class="details-backtrace__arrow-down"
           />
         </div>
         <CodePreview
-          v-if="openedFrames.includes(index) && bt.sourceCode"
-          :lines-highlighted="[bt.line]"
-          :frames="bt.sourceCode"
-          lang="javascript"
-        >
-        </CodePreview>
+          v-if="openedFrames.includes(index) && frame.sourceCode"
+          :lines-highlighted="[frame.line]"
+          :frames="frame.sourceCode"
+          :lang="lang"
+        />
       </div>
     </template>
     <template #expandButton>
@@ -75,6 +74,14 @@ export default {
     backtrace: {
       type: Array,
       required: true
+    },
+
+    /**
+     * Error environment language
+     */
+    lang: {
+      type: String,
+      default: undefined
     }
   },
   data() {
@@ -98,7 +105,7 @@ export default {
       return this.backtrace.length === 4 || this.isMoreFilesShown ? this.backtrace : this.backtrace.slice(0, 3);
     }
   },
-  mounted(){
+  mounted() {
     /**
      * By default, open first frame that has a source code
      */
@@ -128,6 +135,23 @@ export default {
       } else {
         this.openedFrames.push(index);
       }
+    },
+
+    /**
+     * Return concatenated "line:column" with the necessary checkups
+     *
+     * @param {number} line - calling line number
+     * @param {number} [column] - calling column number
+     * @return {string}
+     */
+    getLocation({ line, column }) {
+      let str = line;
+
+      if (!isNaN(parseInt(column))) {
+        str += ':' + column;
+      }
+
+      return str;
     }
   }
 };

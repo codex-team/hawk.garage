@@ -1,5 +1,9 @@
 <template>
-  <div class="code-preview" ref="content" :class="lang">
+  <div
+    ref="content"
+    class="code-preview"
+    :class="lang"
+  >
     <pre
       v-for="frame in frames"
       :key="frame.line"
@@ -21,7 +25,7 @@ export default {
      */
     frames: {
       type: Array,
-      default(){
+      default() {
         return [];
       }
     },
@@ -43,6 +47,14 @@ export default {
       default: 'plaintext'
     }
   },
+  /**
+   * Vue mounted hook. Used to render highlighting
+   */
+  mounted() {
+    if (this.lang !== 'plaintext') {
+      hljs.highlightBlock(this.$refs.content);
+    }
+  },
   methods: {
     /**
      * Check if passed line should be highlighted
@@ -52,15 +64,7 @@ export default {
     isCurrentLine(line) {
       return this.linesHighlighted.includes(line);
     }
-  },
-  /**
-   * Vue mounted hook. Used to render highlighting
-   */
-  mounted() {
-    if (this.lang !== 'plaintext') {
-      hljs.highlightBlock(this.$refs.content);
-    }
-  },
+  }
 };
 </script>
 
@@ -68,9 +72,9 @@ export default {
   @import "../../styles/custom-properties.css";
 
   .code-preview {
+    font-family: var(--font-monospace);
     background-color: #171920;
     border-radius: var(--border-radius);
-    font-family: var(--font-monospace);
 
     &__line {
       display: flex;
