@@ -18,15 +18,6 @@ import hljs from 'highlight.js';
 
 export default {
   name: 'CodePreview',
-  data(){
-    return {
-      /**
-       * Highlighting syntax.
-       * Can be overridden in some cases, {@link mounted}
-       */
-      syntax: null
-    };
-  },
   props: {
     /**
      * Array fo stack frames
@@ -55,6 +46,15 @@ export default {
       type: String,
       default: 'plaintext'
     }
+  },
+  data() {
+    return {
+      /**
+       * Highlighting syntax.
+       * Can be overridden in some cases, {@link mounted}
+       */
+      syntax: null
+    };
   },
   /**
    * Vue mounted hook. Used to render highlighting
