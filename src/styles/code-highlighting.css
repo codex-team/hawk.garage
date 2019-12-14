@@ -18,7 +18,15 @@
 .hljs-meta-keyword,
 .hljs-doctag,
 .hljs-name {
-  font-weight: bold;
+  color: #e961d0;
+}
+
+.hljs-attr {
+  color: #f5d50e;
+}
+
+.hljs-params {
+  color: #f08a1e;
 }
 
 /* User color: hue: 0 */
@@ -31,13 +39,12 @@
 .hljs-quote,
 .hljs-template-tag,
 .hljs-deletion {
-  color: var(--color-text-second);
+  color: #2ccf6c;
 }
 
 .hljs-title,
 .hljs-section {
-  color: #880000;
-  font-weight: bold;
+  color: #27a4ef;
 }
 
 .hljs-regexp,

@@ -1,29 +1,32 @@
 <template>
   <div
-    ref="content"
     class="code-preview"
-    :class="syntax"
+    ref="content"
   >
     <pre
-      v-for="frame in frames"
-      :key="frame.line"
+      v-for="line in lines"
+      :key="line.line"
       class="code-preview__line"
-      :class="{'code-preview__line--current': isCurrentLine(frame.line)}"
-    ><span class="code-preview__line-num">{{ frame.line }}</span>{{ frame.content }}</pre>
+      :class="{'code-preview__line--current': isCurrentLine(line.line), [syntax]: true }"
+    ><span class="code-preview__line-num" :data-line="line.line"></span><code>{{ line.content }}</code></pre>
   </div>
 </template>
 
 <script>
 import hljs from 'highlight.js';
 
+/**
+ * This component is using to render some code fragment, for example in stack trace description
+ * It requires the 'lines' property as array of {line: number, content: string}
+ */
 export default {
-  name: 'CodePreview',
+  name: 'CodeFragment',
   props: {
     /**
-     * Array fo stack frames
+     * Array of code fragment lines
      * @type {{line: number, content: string}[]}
      */
-    frames: {
+    lines: {
       type: Array,
       default() {
         return [];
@@ -56,15 +59,24 @@ export default {
       syntax: null
     };
   },
+  computed: {
+    /**
+     * Concatenated code lines
+     * @return {string}
+     */
+    code() {
+      return this.lines.map(line => line.content).join('\n');
+    }
+  },
   /**
    * Vue mounted hook. Used to render highlighting
    */
   mounted() {
+    /**
+     * Set highlight.js syntax name based on catcher language
+     * @see https://github.com/highlightjs/highlight.js/tree/master/src/languages
+     */
     this.syntax = this.lang;
-
-    if (this.syntax !== 'plaintext') {
-      hljs.highlightBlock(this.$refs.content);
-    }
 
     /**
      * Sometimes the JavaScript error can be triggered from inline scripts in HTML markup
@@ -72,6 +84,21 @@ export default {
      */
     if (this.syntax === 'javascript' && this.isHtmlScope()) {
       this.syntax = 'html';
+    }
+
+    if (this.syntax !== 'plaintext') {
+      /**
+       * Timeout used to prevent Vue override 'hljs' class
+       */
+      setTimeout(() => {
+        /**
+         * We supposed to highlight each line separately because the code can be trimmed.
+         * This looks more suitable than incorrect highlighting of a whole block;
+         */
+        this.$refs.content.querySelectorAll('pre').forEach(el => {
+          hljs.highlightBlock(el);
+        });
+      });
     }
   },
   methods: {
@@ -91,12 +118,10 @@ export default {
      * @return {boolean}
      */
     isHtmlScope() {
-      const code = this.frames.map(frame => frame.content).join('\n');
+      const code = this.lines.map(frame => frame.content).join('\n');
       const div = document.createElement('div');
 
       div.innerHTML = code;
-
-      console.log('div.children', div.children);
 
       return div.children.length > 0;
     }
@@ -107,7 +132,7 @@ export default {
 <style>
   .code-preview {
     font-family: var(--font-monospace);
-    background-color: #171920;
+    background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
 
     &__line {
@@ -116,7 +141,7 @@ export default {
       line-height: 21px;
 
       &--current {
-        background-color: rgba(255, 115, 212, 0.18);
+        background-color: var(--color-bg-code-fragment-line-highlighted);
       }
 
       &-num {
@@ -125,8 +150,13 @@ export default {
         padding: 0 10px;
         font-size: 10px;
         vertical-align: bottom;
+        color: var(--color-text-main);
+        opacity: 0.4;
+
+        &::before {
+          content: attr(data-line)
+        }
       }
     }
   }
-
 </style>

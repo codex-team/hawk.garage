@@ -41,10 +41,10 @@
             class="details-backtrace__arrow-down"
           />
         </div>
-        <CodePreview
+        <CodeFragment
           v-if="openedFrames.includes(index) && frame.sourceCode"
+          :lines="frame.sourceCode"
           :lines-highlighted="[frame.line]"
-          :frames="frame.sourceCode"
           :lang="lang"
         />
       </div>
@@ -57,14 +57,14 @@
 
 <script>
 import DetailsBase from './DetailsBase';
-import CodePreview from '../utils/CodePreview';
+import CodeFragment from '../utils/CodeFragment';
 import Icon from '../utils/Icon';
 
 export default {
   name: 'DetailsBacktrace',
   components: {
     DetailsBase,
-    CodePreview,
+    CodeFragment,
     Icon
   },
   props: {
