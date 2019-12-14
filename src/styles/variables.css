@@ -21,8 +21,13 @@
   --color-border-input: #1f2230;
   --color-border: rgba(219, 230, 255, 0.2);
 
-  --font-monospace: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,
-    monospace;
+  --font-monospace: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+
+  /**
+   * Code fragment colors
+   */
+  --color-bg-code-fragment: #171920;
+  --color-bg-code-fragment-line-highlighted: rgba(255, 7, 172, 0.12);
 }
 
 .app--theme--light {

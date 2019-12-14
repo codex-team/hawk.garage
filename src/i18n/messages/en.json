@@ -19,6 +19,9 @@
       "en": "English",
       "label": "Interface Language",
       "ru": "Russian"
+    },
+    "codeBlock": {
+      "copy": "COPY"
     }
   },
   "forms": {
@@ -87,7 +90,6 @@
         "inviteByEmailLabel": "Invite by email",
         "sendButton": "Send",
         "inviteByLinkLabel": "Invite by link",
-        "copyButton": "COPY",
         "youLabel": "you",
         "adminLabel": "Admin",
         "invitationSentLabel": "invitation sent",

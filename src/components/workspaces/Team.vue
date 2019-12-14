@@ -36,7 +36,7 @@
         <input
           type="button"
           class="workspace-team__copy-button"
-          :value="$t('workspaces.settings.team.copyButton')"
+          :value="$t('components.codeBlock.copy')"
         >
       </div>
     </div>

@@ -19,6 +19,9 @@
       "en": "Английский",
       "label": "Язык интерфейса",
       "ru": "Русский"
+    },
+    "codeBlock": {
+      "copy": "СКОПИРОВАТЬ"
     }
   },
   "forms": {
@@ -87,7 +90,6 @@
         "inviteByEmailLabel": "Пригласить по email",
         "sendButton": "Отправить",
         "inviteByLinkLabel": "Пригласить по ссылке",
-        "copyButton": "Скопировать",
         "youLabel": "вы",
         "adminLabel": "Администратор",
         "invitationSentLabel": "приглашение отправлено",

@@ -50,6 +50,7 @@
           v-if="event.payload.backtrace && event.payload.backtrace.length"
           class="event-overview__section"
           :backtrace="event.payload.backtrace"
+          :lang="lang"
         />
         <DetailsCookie
           v-if="event.payload.cookies && event.payload.cookies.length"
@@ -86,6 +87,17 @@ export default {
       event: null,
       projectId
     };
+  },
+  computed: {
+    /**
+     * Get calling env language based on event.catcherType
+     * errors/javascript -> javascript
+     *
+     * @return {string}
+     */
+    lang() {
+      return this.event.catcherType.split('/').pop();
+    }
   },
   /**
    * Vue created hook. Fetchs error's data

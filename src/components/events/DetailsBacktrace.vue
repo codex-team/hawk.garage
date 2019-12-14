@@ -9,7 +9,7 @@
     </template>
     <template #content>
       <div
-        v-for="(bt, index) in filteredBacktrace"
+        v-for="(frame, index) in filteredBacktrace"
         :key="index"
         class="event-details__content-block details-backtrace__content-block"
       >
@@ -18,8 +18,8 @@
           @click="toggleViewState(index)"
         >
           <div class="details-backtrace__left">
-            <span v-if="bt.function">
-              {{ bt.function }}
+            <span v-if="frame.function">
+              {{ frame.function }}
             </span>
             <span
               v-else
@@ -29,27 +29,24 @@
             </span>
           </div>
           <div class="details-backtrace__right">
-            {{ bt.file }}
-            <template v-if="bt.line">
-              line {{ bt.line }}<template v-if="bt.column">:{{ bt.column }}</template>
+            {{ frame.file }}
+            <template v-if="frame.line">
+              line {{ getLocation(frame) }}
             </template>
           </div>
           <Icon
-            v-if="bt.sourceCode"
-            :class="{'details-backtrace__arrow-down--opened': openedFilesView.includes(index) && bt.sourceCode}"
+            v-if="frame.sourceCode"
+            :class="{'details-backtrace__arrow-down--opened': openedFrames.includes(index) && frame.sourceCode}"
             symbol="arrow-down"
             class="details-backtrace__arrow-down"
           />
         </div>
-        <CodeBlock
-          v-if="openedFilesView.includes(index) && bt.sourceCode"
-          show-lines-numbers
-          :lines-from="bt.sourceCode[0].line"
-          :highlight-lines="bt.line"
-          class="details-backtrace__source-code"
-        >
-          <pre>{{ joinSourceCodeLines(bt.sourceCode) }}</pre>
-        </CodeBlock>
+        <CodeFragment
+          v-if="openedFrames.includes(index) && frame.sourceCode"
+          :lines="frame.sourceCode"
+          :lines-highlighted="[frame.line]"
+          :lang="lang"
+        />
       </div>
     </template>
     <template #expandButton>
@@ -60,14 +57,14 @@
 
 <script>
 import DetailsBase from './DetailsBase';
-import CodeBlock from '../utils/CodeBlock';
+import CodeFragment from '../utils/CodeFragment';
 import Icon from '../utils/Icon';
 
 export default {
   name: 'DetailsBacktrace',
   components: {
     DetailsBase,
-    CodeBlock,
+    CodeFragment,
     Icon
   },
   props: {
@@ -77,6 +74,14 @@ export default {
     backtrace: {
       type: Array,
       required: true
+    },
+
+    /**
+     * Error environment language
+     */
+    lang: {
+      type: String,
+      default: undefined
     }
   },
   data() {
@@ -85,7 +90,11 @@ export default {
        * Is block expanded.
        */
       isMoreFilesShown: false,
-      openedFilesView: []
+
+      /**
+       * Indexes of opened frames
+       */
+      openedFrames: []
     };
   },
   computed: {
@@ -95,6 +104,12 @@ export default {
     filteredBacktrace() {
       return this.backtrace.length === 4 || this.isMoreFilesShown ? this.backtrace : this.backtrace.slice(0, 3);
     }
+  },
+  mounted() {
+    /**
+     * By default, open first frame that has a source code
+     */
+    this.openedFrames.push(this.backtrace.findIndex(frame => !!frame.sourceCode));
   },
   methods: {
     /**
@@ -113,13 +128,30 @@ export default {
      * @param {Number} index - backtrace info index
      */
     toggleViewState(index) {
-      if (this.openedFilesView.includes(index)) {
-        const itemIndex = this.openedFilesView.indexOf(index);
+      if (this.openedFrames.includes(index)) {
+        const itemIndex = this.openedFrames.indexOf(index);
 
-        this.openedFilesView.splice(itemIndex, 1);
+        this.openedFrames.splice(itemIndex, 1);
       } else {
-        this.openedFilesView.push(index);
+        this.openedFrames.push(index);
       }
+    },
+
+    /**
+     * Return concatenated "line:column" with the necessary checkups
+     *
+     * @param {number} line - calling line number
+     * @param {number} [column] - calling column number
+     * @return {string}
+     */
+    getLocation({ line, column }) {
+      let str = line;
+
+      if (!isNaN(parseInt(column))) {
+        str += ':' + column;
+      }
+
+      return str;
     }
   }
 };
