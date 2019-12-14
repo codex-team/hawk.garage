@@ -46,7 +46,7 @@ export default {
     /**
      * Return true if there is a single line of a code
      */
-    isSingleLine(){
+    isSingleLine() {
       return this.$slots.default[0].text.includes('\n') === false;
     }
   },
@@ -94,9 +94,9 @@ export default {
     &--one-line {
       ^&__content {
         @apply --hide-scrollbar;
+        height: 1em;
         overflow: hidden;
         white-space: nowrap;
-        height: 1em;
       }
 
       ^&__button-wrapper {
