@@ -4,14 +4,14 @@
     class="code-preview"
   >
     <pre
-      v-for="line in lines"
-      :key="line.line"
+      v-for="row in lines"
+      :key="row.line"
       class="code-preview__line"
-      :class="{'code-preview__line--current': isCurrentLine(line.line), [syntax]: true }"
+      :class="{'code-preview__line--current': isCurrentLine(row.line), [syntax]: true }"
     ><span
 class="code-preview__line-num"
-           :data-line="line.line"
-    /><code>{{ line.content }}</code></pre>
+           :data-line="row.line"
+    /><code>{{ row.content }}</code></pre>
   </div>
 </template>
 
