@@ -128,8 +128,8 @@ pre {
   }
 
   &--copy {
-    height: 23px;
-    padding: 0 15px;
+    height: 22px;
+    padding: 0 13px;
     color: var(--color-text-main);
     font-size: 11px;
     line-height: 23px;

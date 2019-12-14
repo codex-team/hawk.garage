@@ -1,14 +1,17 @@
 <template>
   <div
-    class="code-preview"
     ref="content"
+    class="code-preview"
   >
     <pre
       v-for="line in lines"
       :key="line.line"
       class="code-preview__line"
       :class="{'code-preview__line--current': isCurrentLine(line.line), [syntax]: true }"
-    ><span class="code-preview__line-num" :data-line="line.line"></span><code>{{ line.content }}</code></pre>
+    ><span
+class="code-preview__line-num"
+           :data-line="line.line"
+    /><code>{{ line.content }}</code></pre>
   </div>
 </template>
 
@@ -148,9 +151,9 @@ export default {
         display: inline-block;
         width: 35px;
         padding: 0 10px;
+        color: var(--color-text-main);
         font-size: 10px;
         vertical-align: bottom;
-        color: var(--color-text-main);
         opacity: 0.4;
 
         &::before {
