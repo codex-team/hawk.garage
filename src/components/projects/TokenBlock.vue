@@ -1,7 +1,6 @@
 <template>
   <CodeBlock
     language="plaintext"
-    one-line
     copyable
     class="project-token-block"
   >

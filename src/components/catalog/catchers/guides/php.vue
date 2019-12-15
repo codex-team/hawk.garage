@@ -54,10 +54,7 @@
           <p>
             Create an instance with Token at the entry point of your project.
           </p>
-          <CodeBlock
-            one-line
-            copyable
-          >
+          <CodeBlock copyable>
             \Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP');
           </CodeBlock>
           <h3>Enable handlers</h3>
