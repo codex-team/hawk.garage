@@ -175,7 +175,6 @@ export function misTranslit(string: string): string {
   return newString;
 }
 
-
 /**
  * Encodes HTML special characters (examples: &, <, >)
  * @param {string} string - string to encode
