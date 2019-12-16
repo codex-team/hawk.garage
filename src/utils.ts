@@ -175,6 +175,23 @@ export function misTranslit(string: string): string {
   return newString;
 }
 
+
+/**
+ * Encodes HTML special characters (examples: &, <, >)
+ * @param {string} string - string to encode
+ * @return escaped string
+ */
+export function escape(string: string): string;
+
+/**
+ * Encodes HTML special characters (examples: &, <, >)
+ * @param {string} string - string to encode
+ * @param {boolean} withCount - pass true if you need to know how many substitutions was
+ *                              replaced and total length of new chars added
+ * @return object with escaped string, count and length
+ */
+export function escape(string: string, withCount: boolean): {value: string, count: number, length: number};
+
 /**
  * Encodes HTML special characters (examples: &, <, >)
  * @param {string} string - string to encode
@@ -213,6 +230,8 @@ export function escape(string: string, withCount: boolean = false): string | {va
  * @param {string} string - source string
  * @param {number} index - char position
  * @param {string} replacement - charts to replace with
+ *
+ * @return {string}
  */
 export function strReplaceAt(string: string, index: number, replacement: string): string {
   const leftPart = string.substr(0, index);
