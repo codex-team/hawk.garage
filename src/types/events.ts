@@ -61,6 +61,11 @@ export interface HawkEventDailyInfo {
   readonly date: string;
 
   /**
+   * Event's last repetition id
+   */
+  readonly lastRepetitionId: string;
+
+  /**
    * Last event occurrence timestamp
    */
   readonly timestamp: Date;

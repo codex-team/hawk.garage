@@ -69,7 +69,7 @@ import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import DetailsHttpPost from './DetailsHttpPost';
 import Badge from '../utils/Badge';
-import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
+import { FETCH_EVENT_REPETITION } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventOverview',
@@ -100,13 +100,18 @@ export default {
     }
   },
   /**
-   * Vue created hook. Fetchs error's data
+   * Vue created hook. Fetches error's data
    * @return {Promise<void>}
    */
   async created() {
     const eventId = this.$route.params.eventId;
+    const repetitionId = this.$route.params.repetitionId;
 
-    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId });
+    this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+      projectId: this.projectId,
+      eventId,
+      repetitionId
+    });
 
     this.event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },

@@ -23,7 +23,7 @@
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
             @onAssigneeIconClick="showAssigners"
-            @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash)"
+            @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
           />
         </div>
         <div
@@ -86,7 +86,11 @@ export default {
      * @return {RecentInfoByDate}
      */
     recentEvents() {
-      return this.$store.getters.getRecentEventsByProjectId(this.project.id);
+      const events = this.$store.getters.getRecentEventsByProjectId(this.project.id);
+
+      console.log('events', events);
+
+      return events;
     },
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
@@ -128,13 +132,15 @@ export default {
      * Opens event overview popup
      * @param {String} projectId - id of the event's project
      * @param {String} groupHash - event's group hash
+     * @param {String} repetitionId - event's repetition id
      */
-    showEventOverview(projectId, groupHash) {
+    showEventOverview(projectId, groupHash, repetitionId) {
       this.$router.push({
         name: 'event-overview',
         params: {
           projectId: projectId,
-          eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id
+          eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
+          repetitionId: repetitionId
         }
       });
     },

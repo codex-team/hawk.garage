@@ -66,7 +66,7 @@ const router = new Router({
           component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/Overview.vue'),
           children: [
             {
-              path: 'event/:eventId',
+              path: 'event/:eventId/:repetitionId?',
               name: 'event-overview',
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue')
             },

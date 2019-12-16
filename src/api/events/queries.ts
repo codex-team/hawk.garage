@@ -3,9 +3,9 @@
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!){
+  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID){
     project(id: $projectId) {
-      event(id: $eventId) {
+      event(id: $eventId, repetitionId: $repetitionId) {
         id
         catcherType
         totalCount
@@ -63,6 +63,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupHash
           count
           date
+          lastRepetitionId
           timestamp
         }
       }
