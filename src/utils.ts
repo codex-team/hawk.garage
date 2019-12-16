@@ -258,7 +258,7 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
       position++;
     }
 
-    if (currentLine === line && position === column){
+    if (currentLine === line && position === column) {
       offset = i + 1;
       break;
     }

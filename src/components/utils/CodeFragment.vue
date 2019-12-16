@@ -14,7 +14,7 @@
       class="code-preview__content"
       :class="{[syntax]: true }"
       v-html="escapedCodeWithPointer"
-    ></pre>
+    />
   </div>
 </template>
 
@@ -100,7 +100,7 @@ export default {
      * Prepare and return html-escaped code with the column pointer for highlighted line
      * @return {string}
      */
-    escapedCodeWithPointer(){
+    escapedCodeWithPointer() {
       const code = this.fixUnclosedComment(this.code);
 
       /**
@@ -219,19 +219,19 @@ export default {
      *
      * @param {string} code
      */
-    fixUnclosedComment(code){
+    fixUnclosedComment(code) {
       const lines = code.split('\n').map(line => line.trim());
       const firstLine = lines.shift();
 
       /**
        * If code fragment starts with "* /" we need to add opening comment and the second *
        */
-      if (firstLine.substr(0, 2) === '*/'){
+      if (firstLine.substr(0, 2) === '*/') {
         code = code.replace(/\s?\*/, '/* … *');
         /**
          * Case when the fragment start with *
          */
-      } else if (firstLine.substr(0, 1) === '*'){
+      } else if (firstLine.substr(0, 1) === '*') {
         code = code.replace(/\s?\*/, '/* … ');
       }
 
@@ -260,13 +260,13 @@ export default {
       width: 35px;
 
       span {
-        flex-grow: 1;
         display: flex;
-        line-height: 21px;
+        flex-grow: 1;
         align-items: center;
         padding: 0 10px;
         color: var(--color-text-main);
         font-size: 10px;
+        line-height: 21px;
         vertical-align: bottom;
         opacity: 0.4;
 
