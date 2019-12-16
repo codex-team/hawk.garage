@@ -13,10 +13,10 @@
      :data-line="row.line"
     /><code v-html="contentWithPointer(row)" /></pre>
 
-    <!--    <pre-->
-    <!--      class="code-preview__content"-->
-    <!--      :class="{[syntax]: true }"-->
-    <!--    >{{ checkComment(code)}}</pre>-->
+<!--        <pre-->
+<!--          class="code-preview__content"-->
+<!--          :class="{[syntax]: true }"-->
+<!--        >{{ checkComment(code)}}</pre>-->
   </div>
 </template>
 
@@ -173,9 +173,9 @@ export default {
     },
 
     /**
-     * Prepare and return
-     * @param {codeRow} row
-     * @return {string|*}
+     * Prepare and return code row with the column pointer for current line
+     * @param {codeRow} row - one row of a code
+     * @return {string}
      */
     contentWithPointer(row) {
       if (!this.isCurrentLine(row.line)) {
@@ -252,13 +252,13 @@ export default {
 
         &::after {
           position: absolute;
-          top: calc(100% + 4px);
-          left: -1px;
-          width: 10px;
-          height: 10px;
+          top: calc(100% + 3px);
+          left: 1px;
+          width: 6px;
+          height: 6px;
           border: 2px solid var(--color-code-pointer);
           border-width: 2px 2px 0 0;
-          box-shadow: 2px -2px 4px color-mod(var(--color-code-pointer) alpha(40%));
+          box-shadow: 1px -1px 4px color-mod(var(--color-code-pointer) alpha(40%));
           transform: rotate(-45deg);
           content: '';
         }
