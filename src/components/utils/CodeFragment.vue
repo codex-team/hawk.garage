@@ -28,7 +28,7 @@ import * as _ from './../../utils';
  * This component is using to render some code fragment, for example in stack trace description
  * It requires the 'lines' property as array of {line: number, content: string}
  *
- * @typedef {object} codeRow
+ * @typedef {object} CodeRow
  * @property {number} line - line number
  * @property {string} content - line content
  */
@@ -37,7 +37,7 @@ export default {
   props: {
     /**
      * Array of code fragment lines
-     * @type {codeRow[]}
+     * @type {CodeRow[]}
      */
     lines: {
       type: Array,
@@ -174,7 +174,7 @@ export default {
 
     /**
      * Prepare and return code row with the column pointer for current line
-     * @param {codeRow} row - one row of a code
+     * @param {CodeRow} row - one row of a code
      * @return {string}
      */
     contentWithPointer(row) {
