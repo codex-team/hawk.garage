@@ -13,10 +13,10 @@
      :data-line="row.line"
     /><code v-html="contentWithPointer(row)" /></pre>
 
-<!--        <pre-->
-<!--          class="code-preview__content"-->
-<!--          :class="{[syntax]: true }"-->
-<!--        >{{ checkComment(code)}}</pre>-->
+    <!--        <pre-->
+    <!--          class="code-preview__content"-->
+    <!--          :class="{[syntax]: true }"-->
+    <!--        >{{ checkComment(code)}}</pre>-->
   </div>
 </template>
 
