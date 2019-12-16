@@ -9,25 +9,35 @@
       class="code-preview__line"
       :class="{'code-preview__line--current': isCurrentLine(row.line), [syntax]: true }"
     ><span
-class="code-preview__line-num"
-           :data-line="row.line"
-    /><code>{{ row.content }}</code></pre>
+      class="code-preview__line-num"
+     :data-line="row.line"
+    /><code v-html="contentWithPointer(row)"></code></pre>
+
+<!--    <pre-->
+<!--      class="code-preview__content"-->
+<!--      :class="{[syntax]: true }"-->
+<!--    >{{ checkComment(code)}}</pre>-->
   </div>
 </template>
 
 <script>
 import hljs from 'highlight.js';
+import * as _ from './../../utils';
 
 /**
  * This component is using to render some code fragment, for example in stack trace description
  * It requires the 'lines' property as array of {line: number, content: string}
+ *
+ * @typedef {object} codeRow
+ * @property {number} line - line number
+ * @property {string} content - line content
  */
 export default {
   name: 'CodeFragment',
   props: {
     /**
      * Array of code fragment lines
-     * @type {{line: number, content: string}[]}
+     * @type {codeRow[]}
      */
     lines: {
       type: Array,
@@ -51,6 +61,23 @@ export default {
     lang: {
       type: String,
       default: 'plaintext'
+    },
+
+    /**
+     * In what column of highlighted line we should set a pointer
+     */
+    columnPointer: {
+      type: Number,
+      default: null
+    },
+
+    /**
+     * Source code filename,
+     * sometimes it can be helpful to determine syntax overrides
+     */
+    filename: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -69,7 +96,8 @@ export default {
      */
     code() {
       return this.lines.map(line => line.content).join('\n');
-    }
+    },
+
   },
   /**
    * Vue mounted hook. Used to render highlighting
@@ -87,6 +115,14 @@ export default {
      */
     if (this.syntax === 'javascript' && this.isHtmlScope()) {
       this.syntax = 'html';
+    }
+
+    /**
+     * Sometimes error can be triggered from a JS-bundle, but source code is written on TS.
+     * If we've extracted real filenames from the source-map, we can detect TS scope by a filename
+     */
+    if (this.isTypeScriptScope()){
+      this.syntax = 'typescript';
     }
 
     if (this.syntax !== 'plaintext') {
@@ -127,7 +163,51 @@ export default {
       div.innerHTML = code;
 
       return div.children.length > 0;
-    }
+    },
+
+    /**
+     * Check if current code fragment is a TypeScript code
+     */
+    isTypeScriptScope(){
+      return this.filename.split('.').pop() === 'ts';
+    },
+
+    /**
+     * Prepare and return
+     * @param {codeRow} row
+     * @return {string|*}
+     */
+    contentWithPointer(row){
+      if (!this.isCurrentLine(row.line)){
+        return _.escape(row.content);
+      }
+
+      if (this.columnPointer) {
+        const contentEscaped = _.escape(row.content);
+        const leftPartEscaped = _.escape(row.content.substr(0, this.columnPointer), true);
+
+        /**
+         * If there are some escaping symbols added before the column-pointer,
+         * we need to increase real column for this number of symbols.
+         * Also, do -1 decrement, because of the line-break char, so real position starts from 1 instead of 0
+         */
+        const columnWithEscapedCharsLength = leftPartEscaped.count === 0 ? this.columnPointer : this.columnPointer + leftPartEscaped.length - 1;
+
+        return _.strReplaceAt(contentEscaped, columnWithEscapedCharsLength, `<span class="column-pointer">${contentEscaped[columnWithEscapedCharsLength]}</span>`);
+      }
+      return row.content;
+    },
+
+    // checkComment(code){
+    //   let lines = code.split('\n').map(line => line.trim());
+    //
+    //   console.log('lines', lines);
+    //
+    //   if (lines && lines[0].substr(0, 1) === '*'){
+    //     return code.replace(/\s?\*/, '/* ...');
+    //   }
+    //   return code;
+    // }
   }
 };
 </script>
@@ -138,10 +218,16 @@ export default {
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
 
+    &__content {
+      font-size: 12px;
+      line-height: 21px;
+    }
+
     &__line {
       display: flex;
       font-size: 12px;
       line-height: 21px;
+      overflow: visible;
 
       &--current {
         background-color: var(--color-bg-code-fragment-line-highlighted);
@@ -158,6 +244,23 @@ export default {
 
         &::before {
           content: attr(data-line)
+        }
+      }
+
+      .column-pointer {
+        position: relative;
+
+        &::after {
+          content: '';
+          width: 10px;
+          height: 10px;
+          border: 2px solid var(--color-code-pointer);
+          box-shadow: 2px -2px 4px color-mod(var(--color-code-pointer) alpha(40%));
+          border-width: 2px 2px 0 0;
+          transform: rotate(-45deg);
+          position: absolute;
+          top: calc(100% + 4px);
+          left: -1px;
         }
       }
     }

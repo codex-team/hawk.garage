@@ -5,11 +5,11 @@
 
 .hljs,
 .hljs-subst {
-  color: var(--color-text-main);
+  color: color-mod(var(--color-text-main) alpha(65%));
 }
 
 .hljs-comment {
-  color: #888888;
+  color: color-mod(var(--color-text-main) alpha(35%));
 }
 
 .hljs-keyword,
@@ -60,20 +60,20 @@
 /* Language color: hue: 90; */
 
 .hljs-literal {
-  color: #78A960;
+  color: #a86cde;
 }
 
 .hljs-built_in,
 .hljs-bullet,
 .hljs-code,
 .hljs-addition {
-  color: #397300;
+  color: #ff9be8;
 }
 
 /* Meta color: hue: 200 */
 
 .hljs-meta {
-  color: #1f7199;
+  color: #a16fd2;
 }
 
 .hljs-meta-string {

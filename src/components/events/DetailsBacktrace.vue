@@ -45,6 +45,8 @@
           v-if="openedFrames.includes(index) && frame.sourceCode"
           :lines="frame.sourceCode"
           :lines-highlighted="[frame.line]"
+          :column-pointer="frame.column"
+          :filename="frame.file"
           :lang="lang"
         />
       </div>
