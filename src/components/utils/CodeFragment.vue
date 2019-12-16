@@ -325,11 +325,5 @@ export default {
         content: '';
       }
     }
-
-    &__line {
-      &--current {
-        background-color: var(--color-bg-code-fragment-line-highlighted);
-      }
-    }
   }
 </style>
