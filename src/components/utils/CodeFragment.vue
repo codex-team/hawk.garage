@@ -111,11 +111,14 @@ export default {
       const code = this.fixUnclosedComment(this.code);
 
       /**
-       * Add column pointer to the specific line and column
+       * To add column pointer, we need to compute real offset from the start of code, not just a current line.
        */
       const lineIndex = this.lines.map(row => row.line).indexOf(this.linesHighlighted[0]);
       const offset = _.findOffsetByLineAndCol(code, lineIndex, this.columnPointer);
 
+      /**
+       * Add column pointer to the specific line and column
+       */
       if (offset) {
         return this.addColumnPointerToStringEscaped(code, offset);
       }
