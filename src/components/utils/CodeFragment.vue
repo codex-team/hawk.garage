@@ -252,17 +252,17 @@ export default {
 
 <style>
   .code-preview {
+    position: relative;
     display: flex;
     font-family: var(--font-monospace);
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
-    position: relative;
 
     &__content {
+      z-index: 2;
       flex-grow: 2;
       font-size: 12px;
       line-height: 21px;
-      z-index: 2;
     }
 
     &__lines {
@@ -271,13 +271,13 @@ export default {
       width: 35px;
 
       span {
-        flex-grow: 1;
         display: flex;
-        line-height: 21px;
+        flex-grow: 1;
         align-items: center;
         padding: 0 10px;
         color: var(--color-text-main);
         font-size: 10px;
+        line-height: 21px;
         vertical-align: bottom;
         opacity: 0.4;
 
@@ -293,9 +293,9 @@ export default {
       right: 0;
       bottom: 0;
       left: 0;
+      z-index: 1;
       display: flex;
       flex-direction: column;
-      z-index: 1;
 
       div {
         flex-grow: 1;
