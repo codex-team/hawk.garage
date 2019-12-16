@@ -11,12 +11,12 @@
     ><span
       class="code-preview__line-num"
      :data-line="row.line"
-    /><code v-html="contentWithPointer(row)"></code></pre>
+    /><code v-html="contentWithPointer(row)" /></pre>
 
-<!--    <pre-->
-<!--      class="code-preview__content"-->
-<!--      :class="{[syntax]: true }"-->
-<!--    >{{ checkComment(code)}}</pre>-->
+    <!--    <pre-->
+    <!--      class="code-preview__content"-->
+    <!--      :class="{[syntax]: true }"-->
+    <!--    >{{ checkComment(code)}}</pre>-->
   </div>
 </template>
 
@@ -96,7 +96,7 @@ export default {
      */
     code() {
       return this.lines.map(line => line.content).join('\n');
-    },
+    }
 
   },
   /**
@@ -121,7 +121,7 @@ export default {
      * Sometimes error can be triggered from a JS-bundle, but source code is written on TS.
      * If we've extracted real filenames from the source-map, we can detect TS scope by a filename
      */
-    if (this.isTypeScriptScope()){
+    if (this.isTypeScriptScope()) {
       this.syntax = 'typescript';
     }
 
@@ -168,7 +168,7 @@ export default {
     /**
      * Check if current code fragment is a TypeScript code
      */
-    isTypeScriptScope(){
+    isTypeScriptScope() {
       return this.filename.split('.').pop() === 'ts';
     },
 
@@ -177,8 +177,8 @@ export default {
      * @param {codeRow} row
      * @return {string|*}
      */
-    contentWithPointer(row){
-      if (!this.isCurrentLine(row.line)){
+    contentWithPointer(row) {
+      if (!this.isCurrentLine(row.line)) {
         return _.escape(row.content);
       }
 
@@ -196,7 +196,7 @@ export default {
         return _.strReplaceAt(contentEscaped, columnWithEscapedCharsLength, `<span class="column-pointer">${contentEscaped[columnWithEscapedCharsLength]}</span>`);
       }
       return row.content;
-    },
+    }
 
     // checkComment(code){
     //   let lines = code.split('\n').map(line => line.trim());
@@ -225,9 +225,9 @@ export default {
 
     &__line {
       display: flex;
+      overflow: visible;
       font-size: 12px;
       line-height: 21px;
-      overflow: visible;
 
       &--current {
         background-color: var(--color-bg-code-fragment-line-highlighted);
@@ -251,16 +251,16 @@ export default {
         position: relative;
 
         &::after {
-          content: '';
-          width: 10px;
-          height: 10px;
-          border: 2px solid var(--color-code-pointer);
-          box-shadow: 2px -2px 4px color-mod(var(--color-code-pointer) alpha(40%));
-          border-width: 2px 2px 0 0;
-          transform: rotate(-45deg);
           position: absolute;
           top: calc(100% + 4px);
           left: -1px;
+          width: 10px;
+          height: 10px;
+          border: 2px solid var(--color-code-pointer);
+          border-width: 2px 2px 0 0;
+          box-shadow: 2px -2px 4px color-mod(var(--color-code-pointer) alpha(40%));
+          transform: rotate(-45deg);
+          content: '';
         }
       }
     }
