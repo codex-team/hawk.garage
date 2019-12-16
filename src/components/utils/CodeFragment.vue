@@ -10,6 +10,13 @@
         :data-line="row.line"
       />
     </div>
+    <div class="code-preview__rows">
+      <div
+        v-for="row in lines"
+        :key="row.line"
+        :class="{'current': isCurrentLine(row.line)}"
+      />
+    </div>
     <pre
       class="code-preview__content"
       :class="{[syntax]: true }"
@@ -184,6 +191,7 @@ export default {
 
     /**
      * Check if current code fragment is a TypeScript code
+     * @return {boolean}
      */
     isTypeScriptScope() {
       return this.filename.split('.').pop() === 'ts';
@@ -218,6 +226,7 @@ export default {
      * add opening comment chars to prevent breaking of highlighting.
      *
      * @param {string} code
+     * @return {string}
      */
     fixUnclosedComment(code) {
       const lines = code.split('\n').map(line => line.trim());
@@ -247,11 +256,13 @@ export default {
     font-family: var(--font-monospace);
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
+    position: relative;
 
     &__content {
       flex-grow: 2;
       font-size: 12px;
       line-height: 21px;
+      z-index: 2;
     }
 
     &__lines {
@@ -260,19 +271,38 @@ export default {
       width: 35px;
 
       span {
-        display: flex;
         flex-grow: 1;
+        display: flex;
+        line-height: 21px;
         align-items: center;
         padding: 0 10px;
         color: var(--color-text-main);
         font-size: 10px;
-        line-height: 21px;
         vertical-align: bottom;
         opacity: 0.4;
 
         &::before {
           content: attr(data-line)
         }
+      }
+    }
+
+    &__rows {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+
+      div {
+        flex-grow: 1;
+      }
+
+      .current {
+        background: var(--color-bg-code-fragment-line-highlighted);
       }
     }
 
@@ -294,11 +324,6 @@ export default {
     }
 
     &__line {
-      display: flex;
-      overflow: visible;
-      font-size: 12px;
-      line-height: 21px;
-
       &--current {
         background-color: var(--color-bg-code-fragment-line-highlighted);
       }
