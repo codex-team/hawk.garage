@@ -238,3 +238,31 @@ export function strReplaceAt(string: string, index: number, replacement: string)
 
   return leftPart + replacement + rightPart;
 }
+
+/**
+ * Return real offset by line number and column number of string
+ * @param {string} string - where to find
+ * @param {number} line - searching line number
+ * @param {number} column - searching column number
+ */
+export function findOffsetByLineAndCol(string: string, line: number, column: number): number {
+  let currentLine = 0;
+  let position = 0;
+  let offset = 0;
+
+  for (let i = 0, lenCached = string.length; i < lenCached; i++) {
+    if (string[i] === '\n') {
+      currentLine++;
+      position = 0;
+    } else {
+      position++;
+    }
+
+    if (currentLine === line && position === column){
+      offset = i + 1;
+      break;
+    }
+  }
+
+  return offset;
+}
