@@ -3,7 +3,7 @@
     ref="content"
     class="code-preview"
   >
-    <div class="code-preview__lines">
+    <div class="code-preview__line-numbers">
       <span
         v-for="row in lines"
         :key="row.line"
@@ -268,7 +268,7 @@ export default {
       line-height: 21px;
     }
 
-    &__lines {
+    &__line-numbers {
       display: flex;
       flex-direction: column;
       width: 35px;
