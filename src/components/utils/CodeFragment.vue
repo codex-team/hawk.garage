@@ -3,20 +3,25 @@
     ref="content"
     class="code-preview"
   >
+    <div class="code-preview__line-numbers">
+      <span
+        v-for="row in lines"
+        :key="row.line"
+        :data-line="row.line"
+      />
+    </div>
+    <div class="code-preview__rows">
+      <div
+        v-for="row in lines"
+        :key="row.line"
+        :class="{'current': isCurrentLine(row.line)}"
+      />
+    </div>
     <pre
-      v-for="row in lines"
-      :key="row.line"
-      class="code-preview__line"
-      :class="{'code-preview__line--current': isCurrentLine(row.line), [syntax]: true }"
-    ><span
-      class="code-preview__line-num"
-     :data-line="row.line"
-    /><code v-html="contentWithPointer(row)" /></pre>
-
-    <!--        <pre-->
-    <!--          class="code-preview__content"-->
-    <!--          :class="{[syntax]: true }"-->
-    <!--        >{{ checkComment(code)}}</pre>-->
+      class="code-preview__content"
+      :class="{[syntax]: true }"
+      v-html="escapedCodeWithPointer"
+    />
   </div>
 </template>
 
@@ -96,8 +101,30 @@ export default {
      */
     code() {
       return this.lines.map(line => line.content).join('\n');
-    }
+    },
 
+    /**
+     * Prepare and return html-escaped code with the column pointer for highlighted line
+     * @return {string}
+     */
+    escapedCodeWithPointer() {
+      const code = this.fixUnclosedComment(this.code);
+
+      /**
+       * To add column pointer, we need to compute real offset from the start of code, not just a current line.
+       */
+      const lineIndex = this.lines.map(row => row.line).indexOf(this.linesHighlighted[0]);
+      const offset = _.findOffsetByLineAndCol(code, lineIndex, this.columnPointer);
+
+      /**
+       * Add column pointer to the specific line and column
+       */
+      if (offset) {
+        return this.addColumnPointerToStringEscaped(code, offset);
+      }
+
+      return _.escape(code);
+    }
   },
   /**
    * Vue mounted hook. Used to render highlighting
@@ -167,78 +194,93 @@ export default {
 
     /**
      * Check if current code fragment is a TypeScript code
+     * @return {boolean}
      */
     isTypeScriptScope() {
       return this.filename.split('.').pop() === 'ts';
     },
 
     /**
-     * Prepare and return code row with the column pointer for current line
-     * @param {CodeRow} row - one row of a code
+     * Adds column pointer to the string with escaping-chars offset support
+     *
+     * @param {string} string - unescaped string
+     * @param {number} position - original column number, before escape
      * @return {string}
      */
-    contentWithPointer(row) {
-      if (!this.isCurrentLine(row.line)) {
-        return _.escape(row.content);
-      }
+    addColumnPointerToStringEscaped(string, position) {
+      const contentEscaped = _.escape(string);
+      const leftPartEscaped = _.escape(string.substr(0, position), true);
 
-      if (this.columnPointer) {
-        const contentEscaped = _.escape(row.content);
-        const leftPartEscaped = _.escape(row.content.substr(0, this.columnPointer), true);
+      /**
+       * If there are some escaping symbols added before the column-pointer,
+       * we need to increase real column for this number of symbols.
+       */
+      const newColumnPosition = leftPartEscaped.count === 0 ? position : position + leftPartEscaped.length;
 
+      return _.strReplaceAt(
+        contentEscaped,
+        newColumnPosition,
+        `<span class="column-pointer">${contentEscaped[newColumnPosition]}</span>`
+      );
+    },
+
+    /**
+     * If the code fragment start with trimmed comment,
+     * add opening comment chars to prevent breaking of highlighting.
+     *
+     * @param {string} code
+     * @return {string}
+     */
+    fixUnclosedComment(code) {
+      const lines = code.split('\n').map(line => line.trim());
+      const firstLine = lines.shift();
+
+      /**
+       * If code fragment starts with "* /" we need to add opening comment and the second *
+       */
+      if (firstLine.substr(0, 2) === '*/') {
+        code = code.replace(/\s?\*/, '/* … *');
         /**
-         * If there are some escaping symbols added before the column-pointer,
-         * we need to increase real column for this number of symbols.
-         * Also, do -1 decrement, because of the line-break char, so real position starts from 1 instead of 0
+         * Case when the fragment start with *
          */
-        const columnWithEscapedCharsLength = leftPartEscaped.count === 0 ? this.columnPointer : this.columnPointer + leftPartEscaped.length - 1;
-
-        return _.strReplaceAt(contentEscaped, columnWithEscapedCharsLength, `<span class="column-pointer">${contentEscaped[columnWithEscapedCharsLength]}</span>`);
+      } else if (firstLine.substr(0, 1) === '*') {
+        code = code.replace(/\s?\*/, '/* … ');
       }
-      return row.content;
-    }
 
-    // checkComment(code){
-    //   let lines = code.split('\n').map(line => line.trim());
-    //
-    //   console.log('lines', lines);
-    //
-    //   if (lines && lines[0].substr(0, 1) === '*'){
-    //     return code.replace(/\s?\*/, '/* ...');
-    //   }
-    //   return code;
-    // }
+      return code;
+    }
   }
 };
 </script>
 
 <style>
   .code-preview {
+    position: relative;
+    display: flex;
     font-family: var(--font-monospace);
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
 
     &__content {
+      z-index: 2;
+      flex-grow: 2;
       font-size: 12px;
       line-height: 21px;
     }
 
-    &__line {
+    &__line-numbers {
       display: flex;
-      overflow: visible;
-      font-size: 12px;
-      line-height: 21px;
+      flex-direction: column;
+      width: 35px;
 
-      &--current {
-        background-color: var(--color-bg-code-fragment-line-highlighted);
-      }
-
-      &-num {
-        display: inline-block;
-        width: 35px;
+      span {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
         padding: 0 10px;
         color: var(--color-text-main);
         font-size: 10px;
+        line-height: 21px;
         vertical-align: bottom;
         opacity: 0.4;
 
@@ -246,22 +288,41 @@ export default {
           content: attr(data-line)
         }
       }
+    }
 
-      .column-pointer {
-        position: relative;
+    &__rows {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
 
-        &::after {
-          position: absolute;
-          top: calc(100% + 3px);
-          left: 1px;
-          width: 6px;
-          height: 6px;
-          border: 2px solid var(--color-code-pointer);
-          border-width: 2px 2px 0 0;
-          box-shadow: 1px -1px 4px color-mod(var(--color-code-pointer) alpha(40%));
-          transform: rotate(-45deg);
-          content: '';
-        }
+      div {
+        flex-grow: 1;
+      }
+
+      .current {
+        background: var(--color-bg-code-fragment-line-highlighted);
+      }
+    }
+
+    .column-pointer {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        top: calc(100% + 3px);
+        left: 1px;
+        width: 6px;
+        height: 6px;
+        border: 2px solid var(--color-code-pointer);
+        border-width: 2px 2px 0 0;
+        box-shadow: 1px -1px 4px color-mod(var(--color-code-pointer) alpha(40%));
+        transform: rotate(-45deg);
+        content: '';
       }
     }
   }
