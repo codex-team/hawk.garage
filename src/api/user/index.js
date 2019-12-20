@@ -61,8 +61,8 @@ export async function fetchCurrentUser() {
  * @param {string} email
  * @returns {Promise<Boolean>}
  */
-export async function updateProfile(name, email) {
-  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email })).updateProfile;
+export async function updateProfile(name, email, image) {
+  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email, image })).updateProfile;
 }
 
 /**

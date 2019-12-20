@@ -29,18 +29,50 @@ interface ApiCallSettings {
  * Makes request to API
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
+ * @param {Object} files - files to upload
  * @param {ApiCallSettings} [settings] - settings for call method
  * @return {Promise<*>} - request data
  */
 export async function call(
   request: string,
   variables?: any,
+  files?: {[name: string]: File},
   { initial = false, force = false }: ApiCallSettings = {}
 ): Promise<any> {
-  const promise = axios.post(API_ENDPOINT, {
-    query: request,
-    variables
-  });
+  let promise: Promise<AxiosResponse>;
+
+  if (files && Object.keys(files).length) {
+    const operation = {
+      query: request,
+      variables
+    };
+
+    const map: {[name: string]: string[]} = {};
+
+    Object
+      .keys(files)
+      .forEach(name => {
+        map[name] = [ `variables.${name}` ];
+      });
+
+    const formData = new FormData();
+
+    formData.append('operations', JSON.stringify(operation));
+    formData.append('map', JSON.stringify(map));
+
+    Object
+      .entries(files)
+      .forEach(([name, file]) => {
+        formData.append(name, file, file.name);
+      });
+
+    promise = axios.post(API_ENDPOINT, formData);
+  } else {
+    promise = axios.post(API_ENDPOINT, {
+      query: request,
+      variables
+    });
+  }
 
   if (initial) {
     blockingRequest = promise;
