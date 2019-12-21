@@ -317,19 +317,17 @@ const module: Module<EventsModuleState, RootState> = {
      * @return {HawkEvent}
      */
     async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<HawkEvent | null> {
-      // const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
-      /*
-       * const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
-       * const actualEvent = Object.assign({}, originalEvent);
-       *
-       * commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
-       *
-       * if (repetition) {
-       *   actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
-       * }
-       */
+      const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
 
-      return null;
+      if (!event) {
+        return null;
+      }
+
+      if (event.repetition !== null) {
+        event.payload = deepMerge(event.payload, event.repetition.payload);
+      }
+
+      return event;
     },
 
     /**

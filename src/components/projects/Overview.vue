@@ -88,8 +88,6 @@ export default {
     recentEvents() {
       const events = this.$store.getters.getRecentEventsByProjectId(this.project.id);
 
-      console.log('events', events);
-
       return events;
     },
 

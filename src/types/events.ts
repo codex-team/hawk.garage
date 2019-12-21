@@ -28,6 +28,11 @@ export interface HawkEvent {
   payload: HawkEventPayload;
 
   /**
+   * Event repetition
+   */
+  repetition: HawkEventRepetition;
+
+  /**
    * Event repetitions
    */
   repetitions: HawkEventRepetition[];

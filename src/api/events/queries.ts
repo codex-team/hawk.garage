@@ -5,7 +5,7 @@
 export const QUERY_EVENT = `
   query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID){
     project(id: $projectId) {
-      event(id: $eventId, repetitionId: $repetitionId) {
+      event(id: $eventId) {
         id
         catcherType
         totalCount
@@ -31,6 +31,27 @@ export const QUERY_EVENT = `
             }
             function
             arguments
+          }
+        }
+        repetition(id: $repetitionId) {
+          id
+          payload {
+            timestamp
+            level
+            user {
+              id
+              name
+              photo
+            }
+            get
+              backtrace {
+                file
+                line
+                sourceCode {
+                  line
+                  content
+                }
+              }
           }
         }
       }
