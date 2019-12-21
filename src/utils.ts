@@ -177,14 +177,92 @@ export function misTranslit(string: string): string {
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
- * @param {String} string - string to encode
- * @return {String} - encoded string
+ * @param {string} string - string to encode
+ * @return escaped string
  */
-export function escape(string: string): string {
-  return string
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+export function escape(string: string): string;
+
+/**
+ * Encodes HTML special characters (examples: &, <, >)
+ * @param {string} string - string to encode
+ * @param {boolean} withCount - pass true if you need to know how many substitutions was
+ *                              replaced and total length of new chars added
+ * @return object with escaped string, count and length
+ */
+export function escape(string: string, withCount: boolean): {value: string, count: number, length: number};
+
+/**
+ * Encodes HTML special characters (examples: &, <, >)
+ * @param {string} string - string to encode
+ * @param {boolean} withCount - pass true if you need to know how many substitutions was
+ *                              replaced and total length of new chars added
+ * @return escaped string or object with escaped string, count and length
+ */
+export function escape(string: string, withCount: boolean = false): string | {value: string, count: number, length: number} {
+  let count = 0;
+  let length = 0;
+
+  const dictionary = [
+    [/&/g, '&amp;'],
+    [/"/g, '&quot;'],
+    [/'/g, '&#39;'],
+    [/</g, '&lt;'],
+    [/>/g, '&gt;']
+  ];
+
+  const replaced = dictionary.reduce((accumulator, pair) => {
+    const [regex, replaceWith] = pair as [RegExp, string];
+
+    return accumulator.replace(regex, () => {
+      count++;
+      length += replaceWith.length - 1; // 1 is original symbol's length (in regexp)
+
+      return replaceWith;
+    });
+  }, string);
+
+  return !withCount ? replaced : { value: replaced, count, length };
+}
+
+/**
+ * Replace char at passed index to the new chars
+ * @param {string} string - source string
+ * @param {number} index - char position
+ * @param {string} replacement - charts to replace with
+ *
+ * @return {string}
+ */
+export function strReplaceAt(string: string, index: number, replacement: string): string {
+  const leftPart = string.substr(0, index);
+  const rightPart = string.substr(index + 1);
+
+  return leftPart + replacement + rightPart;
+}
+
+/**
+ * Return real offset by line number and column number of string
+ * @param {string} string - where to find
+ * @param {number} line - searching line number
+ * @param {number} column - searching column number
+ */
+export function findOffsetByLineAndCol(string: string, line: number, column: number): number {
+  let currentLine = 0;
+  let position = 0;
+  let offset = 0;
+
+  for (let i = 0, lenCached = string.length; i < lenCached; i++) {
+    if (string[i] === '\n') {
+      currentLine++;
+      position = 0;
+    } else {
+      position++;
+    }
+
+    if (currentLine === line && position === column) {
+      offset = i + 1;
+      break;
+    }
+  }
+
+  return offset;
 }
