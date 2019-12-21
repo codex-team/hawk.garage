@@ -44,14 +44,14 @@ export const QUERY_EVENT = `
               photo
             }
             get
-              backtrace {
-                file
+            backtrace {
+              file
+              line
+              sourceCode {
                 line
-                sourceCode {
-                  line
-                  content
-                }
+                content
               }
+            }
           }
         }
       }

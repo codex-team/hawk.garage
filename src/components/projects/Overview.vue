@@ -86,9 +86,7 @@ export default {
      * @return {RecentInfoByDate}
      */
     recentEvents() {
-      const events = this.$store.getters.getRecentEventsByProjectId(this.project.id);
-
-      return events;
+      return this.$store.getters.getRecentEventsByProjectId(this.project.id);
     },
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
