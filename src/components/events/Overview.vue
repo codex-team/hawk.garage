@@ -49,7 +49,8 @@
       </div>
       <div class="event-overview__info">
         <template
-          v-if="!loading">
+          v-if="!loading"
+        >
           <DetailsBacktrace
             v-if="event.payload.backtrace && event.payload.backtrace.length"
             class="event-overview__section"
@@ -121,9 +122,10 @@ export default {
      */
     location() {
       const trace = this.event.payload.backtrace;
+      const unknownLocation = 'Unknown location';
 
-      if (!trace){
-        return 'Unkown';
+      if (!trace) {
+        return unknownLocation;
       }
 
       const firstWithFile = trace.find(frame => !!frame.file);
@@ -132,7 +134,7 @@ export default {
         return firstWithFile.file;
       }
 
-      return 'Unkown';
+      return unknownLocation;
     }
   },
   /**
