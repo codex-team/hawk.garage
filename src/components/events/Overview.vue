@@ -117,7 +117,7 @@ export default {
       eventId,
 
       /**
-       * Status of repetitions-diff fetching
+       * Status of repetition-diff fetching
        * @type {boolean}
        */
       loading: true
