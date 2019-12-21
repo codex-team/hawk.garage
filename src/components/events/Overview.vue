@@ -38,41 +38,37 @@
             users affected
           </div>
         </div>
-        <div
-          v-if="event.payload.backtrace"
-          class="event-overview__filename"
-        >
-          {{ event.payload.backtrace && event.payload.backtrace[0] && event.payload.backtrace[0].file }}
+        <div class="event-overview__filename">
+          <template v-if="loading">
+            Loading...
+          </template>
+          <template v-else>
+            {{ location }}
+          </template>
         </div>
+      </div>
+      <div class="event-overview__info">
+        <template
+          v-if="!loading">
+          <DetailsBacktrace
+            v-if="event.payload.backtrace && event.payload.backtrace.length"
+            class="event-overview__section"
+            :backtrace="event.payload.backtrace"
+            :lang="lang"
+          />
+          <DetailsCookie
+            v-if="event.payload.cookies && event.payload.cookies.length"
+            class="event-overview__section"
+            :cookies="event.payload.cookies"
+          />
+          <DetailsHttpPost />
+        </template>
         <div
           v-else
-          class="event-overview__filename"
+          class="event-overview__loading"
         >
-          ...
+          <span>Loading...</span>
         </div>
-      </div>
-      <div
-        v-if="!loading"
-        class="event-overview__info"
-      >
-        <DetailsBacktrace
-          v-if="event.payload.backtrace && event.payload.backtrace.length"
-          class="event-overview__section"
-          :backtrace="event.payload.backtrace"
-          :lang="lang"
-        />
-        <DetailsCookie
-          v-if="event.payload.cookies && event.payload.cookies.length"
-          class="event-overview__section"
-          :cookies="event.payload.cookies"
-        />
-        <DetailsHttpPost />
-      </div>
-      <div
-        v-else
-        class="event-overview__loading"
-      >
-        <span>Loading...</span>
       </div>
     </div>
   </PopupDialog>
@@ -116,6 +112,27 @@ export default {
      */
     lang() {
       return this.event.catcherType.split('/').pop();
+    },
+
+    /**
+     * Event location got from the first backtrace frame
+     *
+     * @return {string}
+     */
+    location() {
+      const trace = this.event.payload.backtrace;
+
+      if (!trace){
+        return 'Unkown';
+      }
+
+      const firstWithFile = trace.find(frame => !!frame.file);
+
+      if (firstWithFile) {
+        return firstWithFile.file;
+      }
+
+      return 'Unkown';
     }
   },
   /**
@@ -242,7 +259,7 @@ export default {
     }
 
     &__info {
-      padding: 30px 20px 0 20px;
+      padding: 30px 20px;
     }
 
     &__section {
@@ -251,9 +268,13 @@ export default {
 
     &__loading {
       height: 46px;
+      margin-top: 50px;
       padding: 13px 11px 13px 15px;
       font-weight: 500;
       line-height: 20px;
+      background-color: var(--color-bg-main);
+      border-radius: 9px;
+      cursor: pointer;
     }
   }
 </style>
