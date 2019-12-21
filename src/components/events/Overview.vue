@@ -48,34 +48,31 @@
           v-else
           class="event-overview__filename"
         >
-          Loading...
+          ...
         </div>
       </div>
-      <div class="event-overview__info">
+      <div
+        v-if="!loading"
+        class="event-overview__info"
+      >
         <DetailsBacktrace
           v-if="event.payload.backtrace && event.payload.backtrace.length"
           class="event-overview__section"
           :backtrace="event.payload.backtrace"
           :lang="lang"
         />
-        <div
-          v-else
-          class="event-overview__section"
-        >
-          Loading...
-        </div>
         <DetailsCookie
           v-if="event.payload.cookies && event.payload.cookies.length"
           class="event-overview__section"
           :cookies="event.payload.cookies"
         />
-        <div
-          v-else
-          class="event-overview__section"
-        >
-          Loading...
-        </div>
         <DetailsHttpPost />
+      </div>
+      <div
+        v-else
+        class="event-overview__loading"
+      >
+        <span>Loading...</span>
       </div>
     </div>
   </PopupDialog>
@@ -106,7 +103,8 @@ export default {
     return {
       event,
       projectId,
-      eventId
+      eventId,
+      loading: true
     };
   },
   computed: {
@@ -136,6 +134,7 @@ export default {
       { key: '_ym_id', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
       { key: '_ga', value: 'jqquuasdadasdasf36fq01l9jlbmjsgf93hi' }
     ];
+    this.loading = false;
   }
 };
 </script>
@@ -248,6 +247,13 @@ export default {
 
     &__section {
       margin-bottom: 30px;
+    }
+
+    &__loading {
+      height: 46px;
+      padding: 13px 11px 13px 15px;
+      font-weight: 500;
+      line-height: 20px;
     }
   }
 </style>
