@@ -7,7 +7,9 @@ import * as api from '../index.ts';
  * @return {Promise<Project.id>}
  */
 export async function createProject(projectInfo) {
-  return (await api.call(MUTATION_CREATE_PROJECT, projectInfo)).createProject;
+  const { image, ...rest } = projectInfo;
+
+  return (await api.call(MUTATION_CREATE_PROJECT, { ...rest }, { image })).createProject;
 }
 
 /**

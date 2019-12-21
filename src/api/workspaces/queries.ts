@@ -123,8 +123,9 @@ export const MUTATION_UPDATE_WORKSPACE = `
     $id: ID!
     $name: String!
     $description: String
+    $image: Upload
   ) {
-    updateWorkspace(id: $id, name: $name, description: $description)
+    updateWorkspace(id: $id, name: $name, description: $description, image: $image)
   }
 `;
 

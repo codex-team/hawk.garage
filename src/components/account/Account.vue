@@ -14,7 +14,7 @@
         />
         <section>
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
-          <FormImageUploader @change="showSubmitButton = true" />
+          <FormImageUploader :image="image" @change="onImageUpload" />
         </section>
       </div>
       <FormTextFieldset
@@ -65,6 +65,8 @@ export default {
     return {
       name: user.name || '',
       email: user.email || '',
+      image: user.image || '',
+      imageFile: null,
       passwords: {
         old: '',
         new: ''
@@ -77,13 +79,19 @@ export default {
     user: state => state.user.data
   }),
   methods: {
+    onImageUpload(file) {
+      this.imageFile = file;
+
+      this.showSubmitButton = true;
+    },
+
     /**
      * Form submit event handler
      */
     async save() {
       try {
-        if (this.user.name !== this.name || this.user.email !== this.email) {
-          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
+        if (this.user.name !== this.name || this.user.email !== this.email || this.imageFile) {
+          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email, image: this.imageFile });
           await this.$store.dispatch(FETCH_CURRENT_USER);
         }
 

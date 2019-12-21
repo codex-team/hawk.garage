@@ -36,12 +36,18 @@ interface ApiCallSettings {
 export async function call(
   request: string,
   variables?: any,
-  files?: {[name: string]: File},
+  files?: {[name: string]: File | undefined},
   { initial = false, force = false }: ApiCallSettings = {}
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
 
   if (files && Object.keys(files).length) {
+    Object
+      .keys(files)
+      .forEach(name => {
+        variables[name] = null;
+      });
+
     const operation = {
       query: request,
       variables
@@ -63,7 +69,7 @@ export async function call(
     Object
       .entries(files)
       .forEach(([name, file]) => {
-        formData.append(name, file, file.name);
+        formData.append(name, file!, file!.name);
       });
 
     promise = axios.post(API_ENDPOINT, formData);

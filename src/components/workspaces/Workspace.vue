@@ -14,7 +14,7 @@
         />
         <section>
           <label class="label workspace-settings__label">{{ $t('workspaces.settings.workspace.image') }}</label>
-          <FormImageUploader @change="showSubmitButton = true" />
+          <FormImageUploader @change="onImageUpload" :image="image"/>
         </section>
       </div>
       <FormTextFieldset
@@ -58,7 +58,9 @@ export default {
     return {
       name: this.workspace.name,
       description: this.workspace.description || '',
-      showSubmitButton: false
+      showSubmitButton: false,
+      image: this.workspace.image,
+      imageFile: null,
     };
   },
   created() {
@@ -70,18 +72,24 @@ export default {
 
       await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
     },
+    onImageUpload(file) {
+      this.imageFile = file;
+
+      this.showSubmitButton = true;
+    },
     /**
      * Form submit event handler
      */
     async save() {
       try {
-        if (this.workspace.name !== this.name || this.workspace.description !== this.description) {
+        if (this.workspace.name !== this.name || this.workspace.description !== this.description || this.imageFile) {
           await this.$store.dispatch(
             UPDATE_WORKSPACE,
             {
               id: this.workspace.id,
               name: this.name,
-              description: this.description
+              description: this.description,
+              image: this.imageFile
             }
           );
         }

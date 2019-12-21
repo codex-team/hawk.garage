@@ -59,10 +59,11 @@ export async function fetchCurrentUser() {
  *
  * @param {string} name
  * @param {string} email
+ * @param {File} image
  * @returns {Promise<Boolean>}
  */
 export async function updateProfile(name, email, image) {
-  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email, image })).updateProfile;
+  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email }, { image })).updateProfile;
 }
 
 /**

@@ -8,7 +8,7 @@ export const MUTATION_CREATE_PROJECT = `
     $workspaceId: ID!
     $image: Upload
   ) {
-    createProject(name: $name, workspaceId: $workspaceId, image: Upload) {
+    createProject(name: $name, workspaceId: $workspaceId, image: $image) {
       id
       name
       image

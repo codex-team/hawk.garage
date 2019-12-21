@@ -29,7 +29,9 @@ interface CreateWorkspaceInput {
  * @returns {Promise<Workspace>} created workspace
  */
 export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
-  return (await api.call(MUTATION_CREATE_WORKSPACE, workspaceInfo)).createWorkspace;
+  const { image, ...rest } = workspaceInfo;
+
+  return (await api.call(MUTATION_CREATE_WORKSPACE, { ...rest }, { image })).createWorkspace;
 }
 
 /**
@@ -76,7 +78,7 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
  * @returns {Promise<Boolean>}
  */
 export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<boolean> {
-  return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description, image })).updateWorkspace;
+  return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description }, { image })).updateWorkspace;
 }
 
 /**

@@ -20,6 +20,7 @@
         />
         <ImageUploader
           class="workspace-creation-dialog__image-uploader"
+          @change="onImageUpload"
         />
         <input
           class="button button--submit workspace-creation-dialog__submit"
@@ -46,10 +47,14 @@ export default {
   },
   data() {
     return {
-      name: ''
+      name: '',
+      image: null,
     };
   },
   methods: {
+    onImageUpload(file) {
+      this.image = file;
+    },
     /**
      * Creates new workspace
      */
@@ -58,6 +63,10 @@ export default {
         const workspaceInfo = {
           name: this.name
         };
+
+        if (this.image) {
+          workspaceInfo.image = this.image;
+        }
 
         await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
         this.$emit('close');
