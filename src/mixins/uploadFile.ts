@@ -5,7 +5,7 @@ export interface UploadFileOptions {
 
 export const uploadFile = {
   methods: {
-    async uploadFile(options: UploadFileOptions = {}): Promise<FileList> {
+    async uploadFile(options: UploadFileOptions = {}): Promise<FileList | null> {
       const input = document.createElement('input');
 
       input.type = 'file';

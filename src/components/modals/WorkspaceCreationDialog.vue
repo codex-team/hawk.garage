@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       name: '',
-      image: null,
+      image: null
     };
   },
   methods: {

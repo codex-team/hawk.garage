@@ -14,7 +14,10 @@
         />
         <section>
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
-          <FormImageUploader :image="image" @change="onImageUpload" />
+          <FormImageUploader
+            :image="image"
+            @change="onImageUpload"
+          />
         </section>
       </div>
       <FormTextFieldset

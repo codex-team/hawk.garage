@@ -14,7 +14,10 @@
         />
         <section>
           <label class="label workspace-settings__label">{{ $t('workspaces.settings.workspace.image') }}</label>
-          <FormImageUploader @change="onImageUpload" :image="image"/>
+          <FormImageUploader
+            :image="image"
+            @change="onImageUpload"
+          />
         </section>
       </div>
       <FormTextFieldset
@@ -60,7 +63,7 @@ export default {
       description: this.workspace.description || '',
       showSubmitButton: false,
       image: this.workspace.image,
-      imageFile: null,
+      imageFile: null
     };
   },
   created() {

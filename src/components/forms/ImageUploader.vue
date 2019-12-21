@@ -73,7 +73,7 @@ export default {
 
   .form-image-uploader--with-image:hover,
   .form-image-uploader:not(.form-image-uploader--with-image) {
-    border: 1px dashed var(--color-text-second);
     color: var(--color-text-second);
+    border: 1px dashed var(--color-text-second);
   }
 </style>
