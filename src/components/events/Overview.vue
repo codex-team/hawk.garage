@@ -98,9 +98,28 @@ export default {
     const event = this.$store.getters.getProjectEventById(projectId, eventId);
 
     return {
+      /**
+       * Original (first) event data
+       * @type {HawkEvent}
+       */
       event,
+
+      /**
+       * Current project id
+       * @type {string}
+       */
       projectId,
+
+      /**
+       * Current event id
+       * @type {string}
+       */
       eventId,
+
+      /**
+       * Status of repetitions-diff fetching
+       * @type {boolean}
+       */
       loading: true
     };
   },
