@@ -4,10 +4,7 @@
     big
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
-    <div
-      v-if="event"
-      class="event-overview__container"
-    >
+    <div class="event-overview__container">
       <div class="event-overview__header">
         <Badge
           class="event-overview__badge"
@@ -21,7 +18,7 @@
         <div class="event-overview__statistics">
           <div
             class="event-overview__times"
-            @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId: event.id }})"
+            @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId }})"
           >
             <div class="event-overview__statistics-count">
               {{ event.totalCount }}
@@ -41,8 +38,17 @@
             users affected
           </div>
         </div>
-        <div class="event-overview__filename">
+        <div
+          v-if="event.payload.backtrace"
+          class="event-overview__filename"
+        >
           {{ event.payload.backtrace && event.payload.backtrace[0] && event.payload.backtrace[0].file }}
+        </div>
+        <div
+          v-else
+          class="event-overview__filename"
+        >
+          Loading...
         </div>
       </div>
       <div class="event-overview__info">
@@ -52,11 +58,23 @@
           :backtrace="event.payload.backtrace"
           :lang="lang"
         />
+        <div
+          v-else
+          class="event-overview__section"
+        >
+          Loading...
+        </div>
         <DetailsCookie
           v-if="event.payload.cookies && event.payload.cookies.length"
           class="event-overview__section"
           :cookies="event.payload.cookies"
         />
+        <div
+          v-else
+          class="event-overview__section"
+        >
+          Loading...
+        </div>
         <DetailsHttpPost />
       </div>
     </div>
@@ -82,10 +100,13 @@ export default {
   },
   data() {
     const projectId = this.$route.params.projectId;
+    const eventId = this.$route.params.eventId;
+    const event = this.$store.getters.getProjectEventById(projectId, eventId);
 
     return {
-      event: null,
-      projectId
+      event,
+      projectId,
+      eventId
     };
   },
   computed: {
@@ -104,10 +125,7 @@ export default {
    * @return {Promise<void>}
    */
   async created() {
-    const eventId = this.$route.params.eventId;
-
-    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId });
-
+    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
     this.event.payload.cookies = [
       { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
       {
