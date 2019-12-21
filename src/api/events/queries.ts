@@ -22,22 +22,15 @@ export const QUERY_EVENT = `
           }
           get
           backtrace {
-            file
-            line
-            column
-            sourceCode {
-                line
-                content
-            }
-            function
-            arguments
+            ...eventBacktrace
           }
         }
         repetition(id: $repetitionId) {
           id
           payload {
+            release
             timestamp
-            level
+            context
             user {
               id
               name
@@ -45,18 +38,24 @@ export const QUERY_EVENT = `
             }
             get
             backtrace {
-              file
-              line
-              sourceCode {
-                line
-                content
-              }
+              ...eventBacktrace
             }
           }
         }
       }
     }
-
+  }
+  
+  fragment eventBacktrace on EventBacktraceFrame {
+    file
+    line
+    column
+    sourceCode {
+      line
+      content
+    }
+    function
+    arguments
   }
 `;
 
