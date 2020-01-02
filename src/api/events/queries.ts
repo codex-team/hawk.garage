@@ -32,6 +32,7 @@ export const QUERY_EVENT = `
             function
             arguments
           }
+          addons
         }
       }
     }
