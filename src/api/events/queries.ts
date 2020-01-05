@@ -105,6 +105,7 @@ export const QUERY_LATEST_REPETITIONS = `
               }
               file
             }
+            addons
           }
         }
       }
