@@ -9,7 +9,7 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   const { workspaceId, inviteHash } = to.params;
 
   if (!store.getters.isAuthenticated) {
-    Vue.cookies.set('afterAuthRedirect', to.path, '1d');
+    Vue.$cookies.set('afterAuthRedirect', to.path, '1d');
     next('/login');
     return;
   }

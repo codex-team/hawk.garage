@@ -323,8 +323,11 @@ const module: Module<EventsModuleState, RootState> = {
         return null;
       }
 
-      if (event.repetition !== null) {
-        event.payload = deepMerge(event.payload, event.repetition.payload);
+      const repetition = event.repetition;
+
+      if (repetition !== null) {
+        event.payload = deepMerge(event.payload, repetition.payload);
+        commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
       }
 
       return event;
@@ -343,7 +346,7 @@ const module: Module<EventsModuleState, RootState> = {
       const originalEvent = state.list[key];
 
       if (!originalEvent) {
-        return this.dispatch(FETCH_LATEST_EVENT, { projectId, eventId });
+        return this.dispatch(FETCH_EVENT_REPETITION, { projectId, eventId });
       }
 
       const repetition = state.repetitions[key];
