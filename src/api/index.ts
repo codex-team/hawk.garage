@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import {prepareFormData} from "@/api/utils";
 
 /**
  * Hawk API endpoint URL
@@ -42,35 +43,7 @@ export async function call(
   let promise: Promise<AxiosResponse>;
 
   if (files && Object.keys(files).length) {
-    Object
-      .keys(files)
-      .forEach(name => {
-        variables[name] = null;
-      });
-
-    const operation = {
-      query: request,
-      variables
-    };
-
-    const map: {[name: string]: string[]} = {};
-
-    Object
-      .keys(files)
-      .forEach(name => {
-        map[name] = [ `variables.${name}` ];
-      });
-
-    const formData = new FormData();
-
-    formData.append('operations', JSON.stringify(operation));
-    formData.append('map', JSON.stringify(map));
-
-    Object
-      .entries(files)
-      .forEach(([name, file]) => {
-        formData.append(name, file!, file!.name);
-      });
+    const formData = prepareFormData(request, variables, files);
 
     promise = axios.post(API_ENDPOINT, formData);
   } else {

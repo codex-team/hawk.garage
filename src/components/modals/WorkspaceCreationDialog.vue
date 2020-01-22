@@ -52,6 +52,11 @@ export default {
     };
   },
   methods: {
+    /**
+     * Image upload callback
+     *
+     * @param {File} file - image file object
+     */
     onImageUpload(file) {
       this.image = file;
     },

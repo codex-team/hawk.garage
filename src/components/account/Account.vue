@@ -68,6 +68,9 @@ export default {
     return {
       name: user.name || '',
       email: user.email || '',
+      /**
+       * @param {string} image - URL to user image
+       */
       image: user.image || '',
       imageFile: null,
       passwords: {
@@ -82,6 +85,11 @@ export default {
     user: state => state.user.data
   }),
   methods: {
+    /**
+     * Image upload callback
+     *
+     * @param {File} file - image file object
+     */
     onImageUpload(file) {
       this.imageFile = file;
 

@@ -18,12 +18,18 @@ export default {
   name: 'FormImageUploader',
   mixins: [ uploadFile ],
   props: {
+    /**
+     * Watched prop to pass image URL from external
+     */
     image: {
       type: String,
       default: null
     }
   },
   data: () => ({
+    /**
+     * Internal field for URL to uploaded image
+     */
     imageSrc: null
   }),
   watch: {

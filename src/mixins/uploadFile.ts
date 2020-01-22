@@ -3,8 +3,16 @@ export interface UploadFileOptions {
   accept?: string;
 }
 
+/**
+ * Mixin to add uploadFile method to component
+ */
 export const uploadFile = {
   methods: {
+    /**
+     * Creates file input and requests from user a file to upload
+     *
+     * @param {UploadFileOptions} options
+     */
     async uploadFile(options: UploadFileOptions = {}): Promise<FileList | null> {
       const input = document.createElement('input');
 
