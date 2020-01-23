@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import { Vue, Component } from 'vue-property-decorator';
 import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
@@ -77,8 +78,7 @@ import DetailsAddon from './DetailsAddon';
 import Badge from '../utils/Badge';
 import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
 
-export default {
-  name: 'EventOverview',
+@Component({
   components: {
     PopupDialog,
     DetailsCookie,
@@ -86,7 +86,16 @@ export default {
     DetailsHttpPost,
     DetailsAddon,
     Badge
-  },
+  }
+})
+
+/**
+ * Event overview component
+ */
+export default class EventOverview extends Vue {
+  /**
+   * Component data
+   */
   data() {
     const projectId = this.$route.params.projectId;
 
@@ -94,18 +103,18 @@ export default {
       event: null,
       projectId
     };
-  },
-  computed: {
-    /**
-     * Get calling env language based on event.catcherType
-     * errors/javascript -> javascript
-     *
-     * @return {string}
-     */
-    lang() {
-      return this.event.catcherType.split('/').pop();
-    }
-  },
+  }
+
+  /**
+   * Get calling env language based on event.catcherType
+   * errors/javascript -> javascript
+   *
+   * @return {string}
+   */
+  get lang() {
+    return this.event.catcherType.split('/').pop();
+  }
+
   /**
    * Vue created hook. Fetchs error's data
    * @return {Promise<void>}
@@ -126,7 +135,7 @@ export default {
       { key: '_ga', value: 'jqquuasdadasdasf36fq01l9jlbmjsgf93hi' }
     ];
   }
-};
+}
 </script>
 
 <style>
