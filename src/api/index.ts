@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import {prepareFormData} from "@/api/utils";
+import { prepareFormData } from '@/api/utils';
 
 /**
  * Hawk API endpoint URL

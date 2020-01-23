@@ -38,7 +38,17 @@ export default {
     }
   },
   mounted() {
-    this.imageSrc = this.image;
+    const img = new Image();
+
+    img.src = this.image;
+
+    img.onload = () => {
+      this.imageSrc = this.image;
+    };
+
+    img.onerror = (e) => {
+      this.imageSrc = null;
+    };
   },
   methods: {
     async upload() {
