@@ -74,7 +74,7 @@ import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import DetailsHttpPost from './DetailsHttpPost';
-import DetailsAddons from './DetailsAddon';
+import DetailsAddons from './DetailsAddons';
 import Badge from '../utils/Badge';
 import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
 
