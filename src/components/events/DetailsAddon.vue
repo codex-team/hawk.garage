@@ -1,13 +1,13 @@
 <template>
-  <DetailsBase class="details-addon">
+  <DetailsBase class="details-addons">
     <template #header>
       ADDONS
     </template>
     <template #content>
       <div
-        class="event-details__content-block"
         v-for="(value, key) in addons"
         :key="key"
+        class="event-details__content-block"
       >
         <div class="event-details__key">
           {{ key }}
@@ -29,7 +29,7 @@ import DetailsBase from './DetailsBase';
 import JsonViewer from 'vue-json-viewer';
 
 export default {
-  name: 'DetailsAddon',
+  name: 'DetailsAddons',
   components: {
     DetailsBase,
     JsonViewer
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style>
-  .details-addon {
+  .details-addons {
     .event-details__value {
       width: 100%;
     }

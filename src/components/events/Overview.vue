@@ -58,7 +58,7 @@
           :cookies="event.payload.cookies"
         />
         <DetailsHttpPost class="event-overview__section" />
-        <DetailsAddon
+        <DetailsAddons
           v-if="event.payload.addons"
           class="event-overview__section"
           :addons="event.payload.addons"
@@ -74,7 +74,7 @@ import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import DetailsHttpPost from './DetailsHttpPost';
-import DetailsAddon from './DetailsAddon';
+import DetailsAddons from './DetailsAddon';
 import Badge from '../utils/Badge';
 import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
 
@@ -84,7 +84,7 @@ import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
     DetailsCookie,
     DetailsBacktrace,
     DetailsHttpPost,
-    DetailsAddon,
+    DetailsAddons,
     Badge
   }
 })
