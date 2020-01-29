@@ -141,7 +141,12 @@ export default {
      * Dispatching action that fetches several latest repetitions
      * @type {GroupedEvent[]}
      */
-    const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, { projectId: this.projectId, eventId: this.eventId });
+    const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
+      projectId: this.projectId,
+      eventId: this.eventId
+    });
+
+    console.log('repetitions', repetitions);
 
     /**
      * We use Map here to save the key's order,

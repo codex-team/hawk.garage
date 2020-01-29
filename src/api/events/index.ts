@@ -10,10 +10,11 @@ import { EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/eve
  * Get specific event
  * @param {string} projectId - event's project
  * @param {string} eventId - id of the event
+ * @param {string} repetitionId - event's concrete repetition. This param is optional
  * @return {Promise<HawkEvent>}
  */
-export async function getEvent(projectId: string, eventId: string): Promise<HawkEvent | null> {
-  return (await api.call(QUERY_EVENT, { projectId, eventId })).project.event;
+export async function getEvent(projectId: string, eventId: string, repetitionId: string): Promise<HawkEvent | null> {
+  return (await api.call(QUERY_EVENT, { projectId, eventId, repetitionId })).project.event;
 }
 
 /**

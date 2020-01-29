@@ -28,6 +28,11 @@ export interface HawkEvent {
   payload: HawkEventPayload;
 
   /**
+   * Event repetition
+   */
+  repetition: HawkEventRepetition;
+
+  /**
    * Event repetitions
    */
   repetitions: HawkEventRepetition[];
@@ -59,6 +64,11 @@ export interface HawkEventDailyInfo {
    * Event occurrence date
    */
   readonly date: string;
+
+  /**
+   * Event's last repetition id
+   */
+  readonly lastRepetitionId: string;
 
   /**
    * Last event occurrence timestamp
