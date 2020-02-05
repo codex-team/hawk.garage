@@ -83,6 +83,7 @@ export default {
 
       &--big {
         flex-grow: 1;
+        margin: 0 0 auto;
       }
     }
 

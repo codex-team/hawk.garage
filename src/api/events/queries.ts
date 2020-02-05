@@ -3,7 +3,7 @@
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!){
+  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID){
     project(id: $projectId) {
       event(id: $eventId) {
         id
@@ -22,20 +22,40 @@ export const QUERY_EVENT = `
           }
           get
           backtrace {
-            file
-            line
-            column
-            sourceCode {
-                line
-                content
+            ...eventBacktrace
+          }
+        }
+        repetition(id: $repetitionId) {
+          id
+          payload {
+            release
+            timestamp
+            context
+            user {
+              id
+              name
+              photo
             }
-            function
-            arguments
+            get
+            backtrace {
+              ...eventBacktrace
+            }
           }
         }
       }
     }
-
+  }
+  
+  fragment eventBacktrace on EventBacktraceFrame {
+    file
+    line
+    column
+    sourceCode {
+      line
+      content
+    }
+    function
+    arguments
   }
 `;
 
@@ -63,6 +83,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupHash
           count
           date
+          lastRepetitionId
           timestamp
         }
       }
