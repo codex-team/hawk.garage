@@ -4,7 +4,7 @@
     :class="{
       'form-image-uploader--with-image': imageSrc !== null
     }"
-    :style="{backgroundImage: `url(${imageSrc})`}"
+    :style="{backgroundImage: imageSrc ? `url(${imageSrc})` : 'none'}"
     @click="upload"
   >
     {{ $t('forms.imageUploader') }}
@@ -38,6 +38,11 @@ export default {
     }
   },
   mounted() {
+    if (!this.image) {
+      this.imageSrc = null;
+      return;
+    }
+
     const img = new Image();
 
     img.src = this.image;

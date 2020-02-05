@@ -63,6 +63,11 @@ export default {
     }
   },
   mounted() {
+    if (!this.image) {
+      this.imageSrc = null;
+      return;
+    }
+
     const img = new Image();
 
     img.src = this.image;
