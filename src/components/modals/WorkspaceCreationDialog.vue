@@ -19,8 +19,8 @@
           :label="$t('workspaces.creationDialog.workspaceNameLabel')"
         />
         <ImageUploader
+          v-model="image"
           class="workspace-creation-dialog__image-uploader"
-          @change="onImageUpload"
         />
         <input
           class="button button--submit workspace-creation-dialog__submit"
@@ -52,14 +52,6 @@ export default {
     };
   },
   methods: {
-    /**
-     * Image upload callback
-     *
-     * @param {File} file - image file object
-     */
-    onImageUpload(file) {
-      this.image = file;
-    },
     /**
      * Creates new workspace
      */

@@ -19,10 +19,10 @@ export default {
   mixins: [ uploadFile ],
   props: {
     /**
-     * Watched prop to pass image URL from external
+     * V-Model value
      */
-    image: {
-      type: String,
+    value: {
+      type: [String, File],
       default: null
     }
   },
@@ -32,23 +32,18 @@ export default {
      */
     imageSrc: null
   }),
-  watch: {
-    image(newVal) {
-      this.imageSrc = newVal;
-    }
-  },
   mounted() {
-    if (!this.image) {
+    if (!this.value) {
       this.imageSrc = null;
       return;
     }
 
     const img = new Image();
 
-    img.src = this.image;
+    img.src = this.value;
 
     img.onload = () => {
-      this.imageSrc = this.image;
+      this.imageSrc = this.value;
     };
 
     img.onerror = (e) => {
@@ -61,7 +56,7 @@ export default {
 
       this.useTempImage(files[0]);
 
-      this.$emit('change', files[0]);
+      this.$emit('input', files[0]);
     },
     useTempImage(file) {
       this.imageSrc = URL.createObjectURL(file);

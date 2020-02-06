@@ -15,8 +15,8 @@
         <section>
           <label class="label workspace-settings__label">{{ $t('workspaces.settings.workspace.image') }}</label>
           <FormImageUploader
-            :image="image"
-            @change="onImageUpload"
+            v-model="image"
+            @input="showSubmitButton = true"
           />
         </section>
       </div>
@@ -62,8 +62,7 @@ export default {
       name: this.workspace.name,
       description: this.workspace.description || '',
       showSubmitButton: false,
-      image: this.workspace.image,
-      imageFile: null
+      image: this.workspace.image
     };
   },
   created() {
@@ -75,25 +74,29 @@ export default {
 
       await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
     },
-    onImageUpload(file) {
-      this.imageFile = file;
-
-      this.showSubmitButton = true;
-    },
     /**
      * Form submit event handler
      */
     async save() {
       try {
-        if (this.workspace.name !== this.name || this.workspace.description !== this.description || this.imageFile) {
+        if (
+          this.workspace.name !== this.name ||
+          this.workspace.description !== this.description ||
+          this.workspace.image !== this.image
+        ) {
+          const payload = {
+            id: this.workspace.id,
+            name: this.name,
+            description: this.description
+          };
+
+          if (typeof this.image !== 'string') {
+            payload.image = this.image;
+          }
+
           await this.$store.dispatch(
             UPDATE_WORKSPACE,
-            {
-              id: this.workspace.id,
-              name: this.name,
-              description: this.description,
-              image: this.imageFile
-            }
+            payload
           );
         }
 

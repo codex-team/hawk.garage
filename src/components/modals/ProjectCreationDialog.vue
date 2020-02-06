@@ -25,8 +25,8 @@
           :label="$t('projects.creationDialog.projectNameLabel')"
         />
         <ImageUploader
+          v-model="image"
           class="project-creation-dialog__image-uploader"
-          @change="onImageUpload"
         />
         <input
           class="button button--submit project-creation-dialog__submit"
@@ -69,9 +69,6 @@ export default {
     }
   },
   methods: {
-    onImageUpload(file) {
-      this.image = file;
-    },
     /**
      * Creates new project
      */

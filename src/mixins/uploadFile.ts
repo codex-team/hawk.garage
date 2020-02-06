@@ -18,6 +18,12 @@ export const uploadFile = {
 
       input.type = 'file';
 
+      /**
+       * Append element to the body to make upload fork on mobile devices and in Safari
+       */
+      input.style.display = 'none';
+      document.body.appendChild(input);
+
       if (options.multiple) {
         input.setAttribute('multiple', 'multiple');
       }
@@ -27,9 +33,15 @@ export const uploadFile = {
       }
 
       return new Promise(resolve => {
-        input.addEventListener('change', () => {
+        /**
+         * Input onChange callback
+         */
+        function onChange() {
+          input.removeEventListener('change', onChange);
           resolve(input.files);
-        });
+        }
+
+        input.addEventListener('change', onChange);
 
         input.click();
       });

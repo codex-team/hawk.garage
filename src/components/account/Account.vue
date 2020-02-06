@@ -15,8 +15,8 @@
         <section>
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
           <FormImageUploader
-            :image="image"
-            @change="onImageUpload"
+            v-model="image"
+            @input="showSubmitButton = true"
           />
         </section>
       </div>
@@ -72,7 +72,6 @@ export default {
        * @param {string} image - URL to user image
        */
       image: user.image || '',
-      imageFile: null,
       passwords: {
         old: '',
         new: ''
@@ -86,23 +85,18 @@ export default {
   }),
   methods: {
     /**
-     * Image upload callback
-     *
-     * @param {File} file - image file object
-     */
-    onImageUpload(file) {
-      this.imageFile = file;
-
-      this.showSubmitButton = true;
-    },
-
-    /**
      * Form submit event handler
      */
     async save() {
       try {
-        if (this.user.name !== this.name || this.user.email !== this.email || this.imageFile) {
-          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email, image: this.imageFile });
+        if (this.user.name !== this.name || this.user.email !== this.email || this.user.image !== this.image) {
+          const payload = { name: this.name, email: this.email };
+
+          if (typeof this.image !== 'string') {
+            payload.image = this.image;
+          }
+
+          await this.$store.dispatch(UPDATE_PROFILE, payload);
           await this.$store.dispatch(FETCH_CURRENT_USER);
         }
 
