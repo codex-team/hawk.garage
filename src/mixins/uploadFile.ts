@@ -38,7 +38,12 @@ export const uploadFile = {
          */
         function onChange() {
           input.removeEventListener('change', onChange);
-          resolve(input.files);
+
+          const files = input.files;
+
+          input.remove();
+
+          resolve(files);
         }
 
         input.addEventListener('change', onChange);
