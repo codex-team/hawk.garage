@@ -167,15 +167,14 @@ export default {
       repetitionId
     });
     this.loading = false;
-  },
-  /**
-   * Dispatch VISIT_EVENT action on component mount
-   */
-  mounted() {
+
     const userId = this.$store.state.user.data.id;
 
+    /**
+     * Dispatch VISIT_EVENT action on component create
+     */
     if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
-      this.$store.dispatch(VISIT_EVENT, { projectId: this.projectId, eventId: this.event.id });
+      this.$store.dispatch(VISIT_EVENT, { projectId: this.projectId, eventId });
     }
   }
 };

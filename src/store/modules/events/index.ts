@@ -12,14 +12,14 @@ import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByDate } from '@/utils';
 import { HawkEvent, HawkEventDailyInfo } from '@/types/events';
-import store from '../../index';
 
 /**
  * Root store state
- * @todo move to @/store/index.js
+ * @todo move to @/store/index.js and create interfaces for other states
  */
 interface RootState {
   events: EventsModuleState;
+  user: any;
 }
 
 /**
@@ -372,8 +372,10 @@ const module: Module<EventsModuleState, RootState> = {
     async [VISIT_EVENT]({ commit }, { projectId, eventId }): Promise<void> {
       const result = await eventsApi.visitEvent(projectId, eventId);
 
+      const userId = (this.state as RootState).user.data.id;
+
       if (result) {
-        commit(MutationTypes.MARK_AS_VISITED, { projectId, eventId });
+        commit(MutationTypes.MARK_AS_VISITED, { projectId, eventId, userId });
       }
     },
 
@@ -477,9 +479,9 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state
      * @param {string} projectId - project event is related to
      * @param {string} eventId - visited event
+     * @param {string} userId - user who visited event
      */
-    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId }) {
-      const userId = store.state.user.data.id;
+    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId, userId }) {
       const key = projectId + ':' + eventId;
 
       const event = state.list[key];
