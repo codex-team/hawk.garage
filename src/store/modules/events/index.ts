@@ -4,7 +4,7 @@ import {
   FETCH_LATEST_EVENT,
   FETCH_RECENT_EVENTS,
   GET_LATEST_EVENT,
-  INIT_EVENTS_MODULE
+  INIT_EVENTS_MODULE, VISIT_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -12,6 +12,7 @@ import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByDate } from '@/utils';
 import { HawkEvent, HawkEventDailyInfo } from '@/types/events';
+import store from '../../index';
 
 /**
  * Root store state
@@ -53,7 +54,12 @@ enum MutationTypes {
   /**
    * Save loaded event
    */
-  ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD'
+  ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
+
+  /**
+   * Mark event as visited
+   */
+  MARK_AS_VISITED = 'MARK_AS_VISITED'
 }
 
 /**
@@ -357,6 +363,21 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
+     * Send request to mark event as visited
+     *
+     * @param {function} commit
+     * @param {string} projectId - project event is related to
+     * @param {string} eventId - visited event
+     */
+    async [VISIT_EVENT]({ commit }, { projectId, eventId }): Promise<void> {
+      const result = await eventsApi.visitEvent(projectId, eventId);
+
+      if (result) {
+        commit(MutationTypes.MARK_AS_VISITED, { projectId, eventId });
+      }
+    },
+
+    /**
      * Resets module state
      * @param {function} commit - standard Vuex commit function
      */
@@ -448,6 +469,28 @@ const module: Module<EventsModuleState, RootState> = {
       const key = projectId + ':' + eventId;
 
       state.repetitions[key] = repetition;
+    },
+
+    /**
+     * Mark event as visited in state
+     *
+     * @param {EventsModuleState} state
+     * @param {string} projectId - project event is related to
+     * @param {string} eventId - visited event
+     */
+    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId }) {
+      const userId = store.state.user.data.id;
+      const key = projectId + ':' + eventId;
+
+      const event = state.list[key];
+      const visitedBy = new Set([...(event.visitedBy ? event.visitedBy : []), userId])
+
+      Vue.set(event, 'visitedBy', Array.from(visitedBy));
+
+      Vue.set(state, 'list', {
+        ...state.list,
+        [key]: event
+      });
     },
 
     /**

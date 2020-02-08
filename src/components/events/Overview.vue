@@ -79,7 +79,7 @@ import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import Badge from '../utils/Badge';
-import { FETCH_EVENT_REPETITION } from '../../store/modules/events/actionTypes';
+import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventOverview',
@@ -167,6 +167,14 @@ export default {
       repetitionId
     });
     this.loading = false;
+  },
+  /**
+   * Dispatch VISIT_EVENT action on component mount
+   */
+  mounted() {
+    const eventId = this.$route.params.eventId;
+
+    this.$store.dispatch(VISIT_EVENT, { projectId: this.projectId, eventId });
   }
 };
 </script>

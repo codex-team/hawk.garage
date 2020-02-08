@@ -1,4 +1,5 @@
 import {
+  MUTATION_VISIT_EVENT,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS
@@ -50,4 +51,14 @@ export async function getLatestRepetitions(
  */
 export async function getLatestRepetition(projectId: string, eventId: string): Promise<HawkEventRepetition | null> {
   return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId })).project.event.repetitions.shift() || null;
+}
+
+/**
+ * Mark event as visited for current user
+ *
+ * @param {string} eventId — visited event
+ * @return {Promise<boolean>}
+ */
+export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
+  return (await api.call(MUTATION_VISIT_EVENT, { projectId, eventId })).visitEvent;
 }

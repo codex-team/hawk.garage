@@ -74,6 +74,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           id
           groupHash
           totalCount
+          visitedBy
           payload {
             timestamp
             title
@@ -85,6 +86,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           date
           lastRepetitionId
           timestamp
+          visitedBy
         }
       }
     }
@@ -129,5 +131,15 @@ export const QUERY_LATEST_REPETITIONS = `
         }
       }
     }
+  }
+`;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to mark event as visited
+ */
+export const MUTATION_VISIT_EVENT = `
+  mutation visitEvent($projectId: ID!, $eventId: ID!) {
+    visitEvent(project: $projectId, id: $eventId)
   }
 `;
