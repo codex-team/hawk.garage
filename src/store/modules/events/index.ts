@@ -9,7 +9,7 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByDate } from '@/utils';
-import {HawkEvent, HawkEventDailyInfo, HawkEventRepetition} from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
 
 /**
  * Root store state
@@ -221,7 +221,7 @@ const module: Module<EventsModuleState, RootState> = {
         }
         return null;
       };
-    },
+    }
 
     // getEventRepetition()
   },
@@ -279,12 +279,14 @@ const module: Module<EventsModuleState, RootState> = {
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
 
       return repetitions;
-      // return repetitions.map((repetition) => {
-      //   const newEvent = Object.assign({}, originalEvent);
-      //
-      //   newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
-      //   return newEvent;
-      // });
+      /*
+       * return repetitions.map((repetition) => {
+       *   const newEvent = Object.assign({}, originalEvent);
+       *
+       *   newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+       *   return newEvent;
+       * });
+       */
     },
 
     /**
