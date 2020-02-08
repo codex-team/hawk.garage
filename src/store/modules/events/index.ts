@@ -372,7 +372,7 @@ const module: Module<EventsModuleState, RootState> = {
     async [VISIT_EVENT]({ commit, rootState }, { projectId, eventId }): Promise<void> {
       const result = await eventsApi.visitEvent(projectId, eventId);
 
-      const userId = (this.state as RootState).user.data.id;
+      const userId = (rootState as RootState).user.data.id;
 
       if (result) {
         commit(MutationTypes.MARK_AS_VISITED, { projectId, eventId, userId });
