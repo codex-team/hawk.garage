@@ -485,12 +485,7 @@ const module: Module<EventsModuleState, RootState> = {
       const event = state.list[key];
       const visitedBy = new Set([...(event.visitedBy ? event.visitedBy : []), userId]);
 
-      Vue.set(event, 'visitedBy', Array.from(visitedBy));
-
-      Vue.set(state, 'list', {
-        ...state.list,
-        [key]: event
-      });
+      Vue.set(state.list[key], 'visitedBy', Array.from(visitedBy));
     },
 
     /**
