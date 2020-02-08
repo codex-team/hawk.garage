@@ -85,7 +85,7 @@ export default {
      * @return {Array<Workspace>} - registered workspaces
      */
     workspaces() {
-      return this.$store.state.workspaces.list;
+      return this.$store.getters.getAllWorkspaces;
     },
 
     /**
@@ -116,11 +116,11 @@ export default {
         return secondProject.timestamp - firstProject.timestamp;
       });
 
-      if (!this.$store.state.workspaces.current) {
+      if (!this.currentWorkspace) {
         return projectList;
       }
       return projectList
-        .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);
+        .filter(project => project.workspaceId === this.currentWorkspace.id);
     },
 
     /**
@@ -128,7 +128,7 @@ export default {
      * @return {Workspace}
      */
     currentWorkspace() {
-      return this.$store.state.workspaces.current;
+      return this.$store.getters.getCurrentWorkspace;
     }
   },
   watch: {

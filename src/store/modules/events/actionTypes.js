@@ -4,11 +4,6 @@
 export const INIT_EVENTS_MODULE = 'INIT_EVENTS_MODULE';
 
 /**
- * Action for fetching latest event
- */
-export const FETCH_LATEST_EVENT = 'FETCH_LATEST_EVENT';
-
-/**
  * Action for fetching event concrete repetition
  */
 export const FETCH_EVENT_REPETITION = 'FETCH_EVENT_REPETITION';

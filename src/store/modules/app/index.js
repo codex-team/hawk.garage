@@ -51,7 +51,7 @@ const actions = {
    * @return {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
-    const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
+    const workspaces = await workspacesApi.fetchAllWorkspacesWithProjects();
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {

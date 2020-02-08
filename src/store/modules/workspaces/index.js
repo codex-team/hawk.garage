@@ -62,6 +62,24 @@ function initialState() {
 
 const getters = {
   /**
+   * Returns all workspaces from list
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @return {Workspace[]}
+   */
+  getAllWorkspaces: state => {
+    return state.list;
+  },
+
+  /**
+   * Returns current workspace
+   * @param {WorkspacesModuleState} state
+   * @return {Workspace}
+   */
+  getCurrentWorkspace: state => {
+    return state.current;
+  },
+
+  /**
    * Returns workspace by id
    * @param {WorkspacesModuleState} state - Vuex state
    * @return {function(String): Workspace}

@@ -89,7 +89,7 @@
 import PopupDialog from '../utils/PopupDialog';
 import Icon from '../utils/Icon';
 import Badge from '../utils/Badge';
-import { GET_LATEST_EVENT, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
+import { FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList';
 
@@ -114,7 +114,7 @@ export default {
   },
   computed: {
     /**
-     * @return {GroupedEvent}
+     * @return {HawkEvent}
      */
     event() {
       return this.$store.getters.getProjectEventById(this.projectId, this.eventId);
@@ -130,35 +130,26 @@ export default {
   },
   async created() {
     /**
-     * actual event is original event merged with latest repetitions
-     *
-     * For that we use GET_LATEST_EVENT action that merges event from store with repetition
-     * @type {GroupedEvent}
-     */
-    this.actualEvent = await this.$store.dispatch(GET_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
-
-    /**
      * Dispatching action that fetches several latest repetitions
-     * @type {GroupedEvent[]}
      */
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
       projectId: this.projectId,
       eventId: this.eventId
     });
 
-    console.log('repetitions', repetitions);
+    this.actualEvent = this.event;
 
     /**
      * We use Map here to save the key's order,
      * `Object` does not guarantee the iteration order
-     * @type {Map<String, GroupedEvent[]>}
+     * @type {Map<String, HawkEvent[]>}
      */
     const groupedRepetitions = new Map();
 
     /**
      * Grouping repetitions by date
      */
-    repetitions.map((repetition) => {
+    repetitions.map(repetition => {
       const date = this.getDate(repetition.payload.timestamp);
 
       if (!groupedRepetitions.get(date)) {

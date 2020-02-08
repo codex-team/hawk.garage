@@ -1,9 +1,7 @@
 import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
-  FETCH_LATEST_EVENT,
   FETCH_RECENT_EVENTS,
-  GET_LATEST_EVENT,
   INIT_EVENTS_MODULE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -11,7 +9,7 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByDate } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo } from '@/types/events';
+import {HawkEvent, HawkEventDailyInfo, HawkEventRepetition} from '@/types/events';
 
 /**
  * Root store state
@@ -53,7 +51,12 @@ enum MutationTypes {
   /**
    * Save loaded event
    */
-  ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD'
+  ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
+
+  /**
+   * Update event payload when it is fully fetched
+   */
+  UPDATE_EVENT_PAYLOAD = 'UPDATE_EVENT_PAYLOAD',
 }
 
 /**
@@ -73,7 +76,7 @@ interface EventsModuleState {
   /**
    * Event's repetitions map
    */
-  repetitions: any;
+  repetitions: {[key: string]: HawkEventRepetition[]};
 }
 
 /**
@@ -128,7 +131,7 @@ const module: Module<EventsModuleState, RootState> = {
      * Returns event by it's group hash and project id
      * @param {EventsModuleState} state - Vuex state
      */
-    getEventByProjectIdAndGroupHash(state) {
+    getEventByProjectIdAndGroupHash: state => {
       /**
        * @param {string} projectId - event's project id
        * @param {string} groupHash - event group hash
@@ -155,7 +158,7 @@ const module: Module<EventsModuleState, RootState> = {
      * Returns recent event of the project by its id
      * @param {EventsModuleState} state - Vuex state
      */
-    getRecentEventsByProjectId(state) {
+    getRecentEventsByProjectId: state => {
       /**
        * @param {string} projectId - event's project id
        */
@@ -165,7 +168,7 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * List state keeps only original Event
      */
-    getProjectEventById(state) {
+    getProjectEventById: state => {
       /**
        * @param {string} projectId - event's project id
        * @param {string} eventId - event id
@@ -181,7 +184,7 @@ const module: Module<EventsModuleState, RootState> = {
      * Returns latest recent event of the project by its id
      * @param {EventsModuleState} state - Vuex state
      */
-    getLatestEventDailyInfo(state) {
+    getLatestEventDailyInfo: state => {
       /**
        * @param {string} projectId - event's project id
        */
@@ -218,7 +221,9 @@ const module: Module<EventsModuleState, RootState> = {
         }
         return null;
       };
-    }
+    },
+
+    // getEventRepetition()
   },
   actions: {
     /**
@@ -269,41 +274,17 @@ const module: Module<EventsModuleState, RootState> = {
     async [FETCH_EVENT_REPETITIONS](
       { state },
       { projectId, eventId, limit }: { projectId: string, eventId: string, limit: number }
-    ): Promise<HawkEvent[]> {
-      const originalEvent = state.list[projectId + ':' + eventId];
+    ): Promise<HawkEventRepetition[]> {
+      // const originalEvent = state.list[projectId + ':' + eventId];
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
 
-      return repetitions.map((repetition) => {
-        const newEvent = Object.assign({}, originalEvent);
-
-        newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
-        return newEvent;
-      });
-    },
-
-    /**
-     * @deprecated
-     * Fetches original event's repetition
-     *
-     * @param {function} commit - standard Vuex commit function
-     * @param {string} projectId
-     * @param {string} eventId
-     * @param {string} repetitionId
-     *
-     * @return {HawkEvent}
-     */
-    async [FETCH_LATEST_EVENT]({ commit }, { projectId, eventId, repetitionId }): Promise<HawkEvent | null> {
-      const originalEvent = await eventsApi.getEvent(projectId, eventId, repetitionId);
-      const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
-      const actualEvent = Object.assign({}, originalEvent);
-
-      commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
-
-      if (repetition) {
-        actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
-      }
-
-      return actualEvent;
+      return repetitions;
+      // return repetitions.map((repetition) => {
+      //   const newEvent = Object.assign({}, originalEvent);
+      //
+      //   newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+      //   return newEvent;
+      // });
     },
 
     /**
@@ -330,30 +311,9 @@ const module: Module<EventsModuleState, RootState> = {
         commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
       }
 
+      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, { projectId, event });
+
       return event;
-    },
-
-    /**
-     * Returns original event merged with latest repetition from store
-     * @param {EventsModuleState} state - module state
-     * @param {string} projectId
-     * @param {string} eventId
-     * @return {Promise<HawkEvent | null>}
-     */
-    async [GET_LATEST_EVENT]({ state }, { projectId, eventId }): Promise<HawkEvent | null> {
-      const key = projectId + ':' + eventId;
-
-      const originalEvent = state.list[key];
-
-      if (!originalEvent) {
-        return this.dispatch(FETCH_EVENT_REPETITION, { projectId, eventId });
-      }
-
-      const repetition = state.repetitions[key];
-      const actualEvent = Object.assign({}, originalEvent);
-
-      actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
-      return actualEvent;
     },
 
     /**
@@ -437,7 +397,7 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Updates list state
+     * Updates repetitions for event id
      *
      * @param state
      * @param {string} projectId
@@ -447,7 +407,24 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.ADD_REPETITION_PAYLOAD](state, { projectId, eventId, repetition }) {
       const key = projectId + ':' + eventId;
 
-      state.repetitions[key] = repetition;
+      if (!state.repetitions[key]) {
+        state.repetitions[key] = [];
+      }
+
+      state.repetitions[key].push(repetition);
+    },
+
+    /**
+     * Update
+     *
+     * @param state
+     * @param {string} projectId
+     * @param {HawkEvent} event
+     */
+    [MutationTypes.UPDATE_EVENT_PAYLOAD](state, { projectId, event }) {
+      const key = projectId + ':' + event.id;
+
+      state.list[key].payload = event.payload;
     },
 
     /**
