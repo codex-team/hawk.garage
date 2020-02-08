@@ -369,7 +369,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId - project event is related to
      * @param {string} eventId - visited event
      */
-    async [VISIT_EVENT]({ commit }, { projectId, eventId }): Promise<void> {
+    async [VISIT_EVENT]({ commit, rootState }, { projectId, eventId }): Promise<void> {
       const result = await eventsApi.visitEvent(projectId, eventId);
 
       const userId = (this.state as RootState).user.data.id;
