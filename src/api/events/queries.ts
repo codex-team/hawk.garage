@@ -45,7 +45,7 @@ export const QUERY_EVENT = `
       }
     }
   }
-  
+
   fragment eventBacktrace on EventBacktraceFrame {
     file
     line
@@ -86,7 +86,6 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           date
           lastRepetitionId
           timestamp
-          visitedBy
         }
       }
     }
