@@ -18,6 +18,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           events {
             id
             groupHash
+            visitedBy
             payload {
               timestamp
               title

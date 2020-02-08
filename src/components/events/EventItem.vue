@@ -58,16 +58,6 @@ export default {
       default: ''
     }
   },
-  data() {
-    return {
-      showAssigners: false
-    };
-  },
-  methods: {
-    closeAssignersList() {
-      this.showAssigners = false;
-    }
-  },
   computed: {
     /**
      * Return true if user visited current event
