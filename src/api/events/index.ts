@@ -56,6 +56,7 @@ export async function getLatestRepetition(projectId: string, eventId: string): P
 /**
  * Mark event as visited for current user
  *
+ * @param {string} projectId - project event related to
  * @param {string} eventId — visited event
  * @return {Promise<boolean>}
  */

@@ -172,9 +172,11 @@ export default {
    * Dispatch VISIT_EVENT action on component mount
    */
   mounted() {
-    const eventId = this.$route.params.eventId;
+    const userId = this.$store.state.user.data.id;
 
-    this.$store.dispatch(VISIT_EVENT, { projectId: this.projectId, eventId });
+    if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
+      this.$store.dispatch(VISIT_EVENT, { projectId: this.projectId, eventId: this.event.id });
+    }
   }
 };
 </script>
