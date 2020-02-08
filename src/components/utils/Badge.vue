@@ -73,6 +73,7 @@ export default {
     }
 
     &--visited {
+      color: var(--color-text-second);
       background-color: var(--color-bg-main);
     }
 
