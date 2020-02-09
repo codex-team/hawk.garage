@@ -172,14 +172,7 @@ export default class EventOverview extends Vue {
    * @return {Promise<void>}
    */
   async created() {
-    const eventId = this.$route.params.eventId;
-    const repetitionId = this.$route.params.repetitionId;
-
-    this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
-      projectId: this.projectId,
-      eventId,
-      repetitionId
-    });
+    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
     this.loading = false;
   }
 }
