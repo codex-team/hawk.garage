@@ -4,10 +4,7 @@
     big
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
-    <div
-      v-if="event"
-      class="event-overview__container"
-    >
+    <div class="event-overview__container">
       <div class="event-overview__header">
         <Badge
           class="event-overview__badge"
@@ -21,7 +18,7 @@
         <div class="event-overview__statistics">
           <div
             class="event-overview__times"
-            @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId: event.id }})"
+            @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId }})"
           >
             <div class="event-overview__statistics-count">
               {{ event.totalCount }}
@@ -42,33 +39,47 @@
           </div>
         </div>
         <div class="event-overview__filename">
-          {{ event.payload.backtrace && event.payload.backtrace[0] && event.payload.backtrace[0].file }}
+          <template v-if="loading">
+            Loading...
+          </template>
+          <template v-else>
+            {{ location }}
+          </template>
         </div>
       </div>
       <div class="event-overview__info">
-        <DetailsBacktrace
-          v-if="event.payload.backtrace && event.payload.backtrace.length"
-          class="event-overview__section"
-          :backtrace="event.payload.backtrace"
-          :lang="lang"
-        />
-        <DetailsCookie
-          v-if="event.payload.cookies && event.payload.cookies.length"
-          class="event-overview__section"
-          :cookies="event.payload.cookies"
-        />
-        <DetailsHttpPost class="event-overview__section" />
-        <DetailsAddons
-          v-if="event.payload.addons"
-          class="event-overview__section"
-          :addons="event.payload.addons"
-        />
+        <template
+          v-if="!loading"
+        >
+          <DetailsBacktrace
+            v-if="event.payload.backtrace && event.payload.backtrace.length"
+            class="event-overview__section"
+            :backtrace="event.payload.backtrace"
+            :lang="lang"
+          />
+          <DetailsCookie
+            v-if="event.payload.cookies && event.payload.cookies.length"
+            class="event-overview__section"
+            :cookies="event.payload.cookies"
+          />
+          <DetailsAddons
+            v-if="event.payload.addons"
+            class="event-overview__section"
+            :addons="event.payload.addons"
+          />
+        </template>
+        <div
+          v-else
+          class="event-overview__loading"
+        >
+          <span>Loading...</span>
+        </div>
       </div>
     </div>
   </PopupDialog>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
@@ -77,6 +88,7 @@ import DetailsHttpPost from './DetailsHttpPost';
 import DetailsAddons from './DetailsAddons';
 import Badge from '../utils/Badge';
 import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
+import { HawkEvent, HawkEventBacktraceFrame } from "../../types/events";
 
 @Component({
   components: {
@@ -94,15 +106,54 @@ import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
  */
 export default class EventOverview extends Vue {
   /**
+   * Status of repetition-diff fetching
+   * @type {boolean}
+   */
+  loading: boolean = true;
+
+  /**
    * Component data
    */
   data() {
-    const projectId = this.$route.params.projectId;
-
+    const projectId: string = this.$route.params.projectId;
+    const eventId: string = this.$route.params.eventId;
+    const event: HawkEvent = this.$store.getters.getProjectEventById(projectId, eventId);
     return {
-      event: null,
-      projectId
+      /**
+       * Original (first) event data
+       * @type {HawkEvent}
+       */
+      event,
+
+      /**
+       * Current project id
+       * @type {string}
+       */
+      projectId,
+
+      /**
+       * Current event id
+       * @type {string}
+       */
+      eventId
     };
+  }
+
+  /**
+   * Event location got from the first backtrace frame
+   * @return {string}
+   */
+  get location(): string {
+    const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
+    const unknownLocation = 'Unknown location';
+    if (!trace) {
+      return unknownLocation;
+    }
+    const firstWithFile = trace.find((frame: HawkEventBacktraceFrame) => !!frame.file);
+    if (firstWithFile) {
+      return firstWithFile.file;
+    }
+    return unknownLocation;
   }
 
   /**
@@ -111,7 +162,7 @@ export default class EventOverview extends Vue {
    *
    * @return {string}
    */
-  get lang() {
+  get lang(): string {
     return this.event.catcherType.split('/').pop();
   }
 
@@ -120,20 +171,8 @@ export default class EventOverview extends Vue {
    * @return {Promise<void>}
    */
   async created() {
-    const eventId = this.$route.params.eventId;
-
-    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId });
-
-    this.event.payload.cookies = [
-      { key: 'session', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
-      {
-        key: 'auth_token',
-        value: '85fa65fad6a6006af2MUTATION_LOGIN199533e2db7c515dcf1f1a~f9dd12459e993f1d178655ed9edfb252fba3d72485fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d178655ed9edfb252fba3d72485fa65fad6a6006af2199533e2db7c515dcf1f1a~f9dd12459e993f1d'
-      },
-      { key: 'SIDCC', value: 'AN0-TYujb2wn-aCaJlABxCr33fkyJlZ31TAjxVYjZAa7SAsrTES16WEz_hT2Fz-1Sfqkm2iyWQY' },
-      { key: '_ym_id', value: 'jqquuf36fq01l9jlbmjsgf93hi' },
-      { key: '_ga', value: 'jqquuasdadasdasf36fq01l9jlbmjsgf93hi' }
-    ];
+    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
+    this.loading = false;
   }
 }
 </script>
@@ -241,11 +280,22 @@ export default class EventOverview extends Vue {
     }
 
     &__info {
-      padding: 30px 20px 0 20px;
+      padding: 30px 20px;
     }
 
     &__section {
       margin-bottom: 30px;
+    }
+
+    &__loading {
+      height: 46px;
+      margin-top: 50px;
+      padding: 13px 11px 13px 15px;
+      font-weight: 500;
+      line-height: 20px;
+      background-color: var(--color-bg-main);
+      border-radius: 9px;
+      cursor: pointer;
     }
   }
 </style>

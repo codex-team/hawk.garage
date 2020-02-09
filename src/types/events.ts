@@ -74,6 +74,51 @@ interface HawkEventPayload {
    * Event title
    */
   title: string;
+
+  /**
+   *Event timestamp
+   */
+  timestamp: string
+
+  /**
+   * Event stack array from the latest call to the earliest
+   */
+  backtrace: HawkEventBacktraceFrame[];
+
+  /**
+   * Additional data about GET request
+   */
+  get: object;
+
+  /**
+   * Additional data about POST request
+   */
+  post: object;
+
+  /**
+   * HTTP headers
+   */
+  headers: object;
+
+  /**
+   * Source code version identifier
+   */
+  release: string;
+
+  /**
+   * Current authenticated user
+   */
+  user: EventUser;
+
+  /**
+   * Any additional data of Event
+   */
+  context: object;
+
+  /**
+   * Custom data provided by project users
+   */
+  addons: object;
 }
 
 /**
@@ -82,4 +127,70 @@ interface HawkEventPayload {
 export interface HawkEventRepetition {
   id: string;
   payload: HawkEventPayload;
+}
+
+export interface HawkEventBacktraceFrame {
+  /**
+   * Source filepath
+   */
+  file: string;
+
+  /**
+   * Called line
+   */
+  line: number;
+
+  /**
+   * Called column
+   */
+  column: number;
+
+  /**
+   * Part of source code file near the called line
+   */
+  sourceCode: BacktraceSourceCode[];
+
+  /**
+   * Function name extracted from current stack frame
+   */
+  function: string;
+
+  /**
+   * Function arguments extracted from current stack frame
+   */
+  arguments: string[];
+}
+
+export interface BacktraceSourceCode {
+  /**
+   * line's number
+   */
+  line: number;
+
+  /**
+   * line's content
+   */
+  content: string;
+}
+
+export interface EventUser {
+  /**
+   * User id
+   */
+  id: number;
+
+  /**
+   * User name
+   */
+  name: string;
+
+  /**
+   * User url
+   */
+  url: string;
+
+  /**
+   * User photo
+   */
+  photo: string;
 }
