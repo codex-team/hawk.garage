@@ -88,7 +88,7 @@ import DetailsHttpPost from './DetailsHttpPost';
 import DetailsAddons from './DetailsAddons';
 import Badge from '../utils/Badge';
 import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
-import { HawkEvent, HawkEventBacktraceFrame } from "../../types/events";
+import { HawkEvent, HawkEventBacktraceFrame } from '../../types/events';
 
 @Component({
   components: {
@@ -118,6 +118,7 @@ export default class EventOverview extends Vue {
     const projectId: string = this.$route.params.projectId;
     const eventId: string = this.$route.params.eventId;
     const event: HawkEvent = this.$store.getters.getProjectEventById(projectId, eventId);
+
     return {
       /**
        * Original (first) event data
@@ -146,10 +147,12 @@ export default class EventOverview extends Vue {
   get location(): string {
     const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
     const unknownLocation = 'Unknown location';
+
     if (!trace) {
       return unknownLocation;
     }
     const firstWithFile = trace.find((frame: HawkEventBacktraceFrame) => !!frame.file);
+
     if (firstWithFile) {
       return firstWithFile.file;
     }
