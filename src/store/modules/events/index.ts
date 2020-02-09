@@ -1,5 +1,6 @@
 import {
   FETCH_EVENT_REPETITIONS,
+  FETCH_EVENT_REPETITION,
   FETCH_LATEST_EVENT,
   FETCH_RECENT_EVENTS,
   GET_LATEST_EVENT,
@@ -141,11 +142,12 @@ const module: Module<EventsModuleState, RootState> = {
 
         const event = Object.values(state.list).find((_event) => _event.groupHash === groupHash);
 
-        if (event) {
-          eventsByGroupHash[uniqueId] = event;
-          return event;
+        if (!event) {
+          return null;
         }
-        return null;
+
+        eventsByGroupHash[uniqueId] = event;
+        return event;
       };
     },
 
@@ -280,15 +282,18 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Fetches original event and latest repetition
+     * @deprecated
+     * Fetches original event's repetition
+     *
      * @param {function} commit - standard Vuex commit function
      * @param {string} projectId
      * @param {string} eventId
+     * @param {string} repetitionId
      *
      * @return {HawkEvent}
      */
-    async [FETCH_LATEST_EVENT]({ commit }, { projectId, eventId }): Promise<HawkEvent | null> {
-      const originalEvent = await eventsApi.getEvent(projectId, eventId);
+    async [FETCH_LATEST_EVENT]({ commit }, { projectId, eventId, repetitionId }): Promise<HawkEvent | null> {
+      const originalEvent = await eventsApi.getEvent(projectId, eventId, repetitionId);
       const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
       const actualEvent = Object.assign({}, originalEvent);
 
@@ -297,7 +302,35 @@ const module: Module<EventsModuleState, RootState> = {
       if (repetition) {
         actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
       }
+
       return actualEvent;
+    },
+
+    /**
+     * Fetches original event's repetition or last repetition if repetition id was not passed
+     *
+     * @param {function} commit - standard Vuex commit function
+     * @param {string} projectId
+     * @param {string} eventId
+     * @param {string} repetitionId
+     *
+     * @return {HawkEvent}
+     */
+    async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<HawkEvent | null> {
+      const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
+
+      if (!event) {
+        return null;
+      }
+
+      const repetition = event.repetition;
+
+      if (repetition !== null) {
+        event.payload = deepMerge(event.payload, repetition.payload);
+        commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
+      }
+
+      return event;
     },
 
     /**
@@ -313,7 +346,7 @@ const module: Module<EventsModuleState, RootState> = {
       const originalEvent = state.list[key];
 
       if (!originalEvent) {
-        return this.dispatch(FETCH_LATEST_EVENT, { projectId, eventId });
+        return this.dispatch(FETCH_EVENT_REPETITION, { projectId, eventId });
       }
 
       const repetition = state.repetitions[key];

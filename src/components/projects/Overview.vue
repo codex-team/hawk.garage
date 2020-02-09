@@ -1,6 +1,7 @@
 <template>
   <div class="project-overview">
     <div
+      v-if="project"
       v-infinite-scroll="loadMoreEvents"
       infinite-scroll-distance="300"
       class="project-overview__content"
@@ -23,7 +24,7 @@
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
             @onAssigneeIconClick="showAssigners"
-            @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash)"
+            @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
           />
         </div>
         <div
@@ -72,13 +73,19 @@ export default {
   },
   computed: {
     /**
+     * Returns project id from the route
+     * @return {string}
+     */
+    projectId() {
+      return this.$route.params.projectId;
+    },
+
+    /**
      * Current viewed project
      * @return {Project}
      */
     project() {
-      const projectId = this.$route.params.projectId;
-
-      return this.$store.getters.getProjectById(projectId);
+      return this.$store.getters.getProjectById(this.projectId);
     },
 
     /**
@@ -86,16 +93,30 @@ export default {
      * @return {RecentInfoByDate}
      */
     recentEvents() {
-      return this.$store.getters.getRecentEventsByProjectId(this.project.id);
+      if (!this.project) {
+        return null;
+      }
+
+      return this.$store.getters.getRecentEventsByProjectId(this.projectId);
     },
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
   },
+
+  /**
+   * Vue created hook
+   * Used to fetch events on component creation
+   */
   async created() {
-    this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+    this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
   },
+
+  /**
+   * Vue mounted hook
+   * Used to update user's last project visit time
+   */
   mounted() {
-    this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.project.id });
+    this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
   },
   methods: {
     /**
@@ -106,7 +127,7 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.project.id });
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
       this.isLoadingEvents = false;
     },
 
@@ -128,13 +149,15 @@ export default {
      * Opens event overview popup
      * @param {String} projectId - id of the event's project
      * @param {String} groupHash - event's group hash
+     * @param {String} repetitionId - event's repetition id
      */
-    showEventOverview(projectId, groupHash) {
+    showEventOverview(projectId, groupHash, repetitionId) {
       this.$router.push({
         name: 'event-overview',
         params: {
           projectId: projectId,
-          eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id
+          eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
+          repetitionId: repetitionId
         }
       });
     },

@@ -1,5 +1,8 @@
 <template>
-  <div class="project-header">
+  <div
+    v-if="project"
+    class="project-header"
+  >
     <div
       class="project-header__title-container"
       @click="$router.push({name: 'project-settings', params: {projectId: project.id}})"

@@ -84,7 +84,6 @@ import { Vue, Component } from 'vue-property-decorator';
 import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
-import DetailsHttpPost from './DetailsHttpPost';
 import DetailsAddons from './DetailsAddons';
 import Badge from '../utils/Badge';
 import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
@@ -95,7 +94,6 @@ import { HawkEvent, HawkEventBacktraceFrame } from '../../types/events';
     PopupDialog,
     DetailsCookie,
     DetailsBacktrace,
-    DetailsHttpPost,
     DetailsAddons,
     Badge
   }
@@ -170,11 +168,18 @@ export default class EventOverview extends Vue {
   }
 
   /**
-   * Vue created hook. Fetchs error's data
+   * Vue created hook. Fetches error's data
    * @return {Promise<void>}
    */
   async created() {
-    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
+    const eventId = this.$route.params.eventId;
+    const repetitionId = this.$route.params.repetitionId;
+
+    this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+      projectId: this.projectId,
+      eventId,
+      repetitionId
+    });
     this.loading = false;
   }
 }
