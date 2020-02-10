@@ -16,29 +16,31 @@
         <Icon symbol="plus" />
       </div>
     </div>
-    <hr class="sidebar__delimiter">
+    <hr class="sidebar__delimiter sidebar__delimiter--with-gradient">
     <div
       v-if="workspaces.length"
       class="sidebar__workspaces-menu"
     >
-      <transition
-        name="highlight-appearance"
-        appear
-      >
-        <div
-          v-show="currentWorkspace"
-          class="sidebar__workspace-highlight"
-          :style="{'top': highlightPosition}"
+      <div class="sidebar__scrollable">
+        <transition
+          name="highlight-appearance"
+          appear
+        >
+          <div
+            v-show="currentWorkspace"
+            class="sidebar__workspace-highlight"
+            :style="{'top': highlightPosition}"
+          />
+        </transition>
+        <WorkspacesMenuItem
+          v-for="workspace in workspaces"
+          :key="workspace.id"
+          :workspace="workspace"
+          :active="currentWorkspace ? currentWorkspace.id === workspace.id : false"
+          class="sidebar__workspace-item"
+          @click.native="onWorkspaceItemClick(workspace)"
         />
-      </transition>
-      <WorkspacesMenuItem
-        v-for="workspace in workspaces"
-        :key="workspace.id"
-        :workspace="workspace"
-        :active="currentWorkspace ? currentWorkspace.id === workspace.id : false"
-        class="sidebar__workspace-item"
-        @click.native="onWorkspaceItemClick(workspace)"
-      />
+      </div>
     </div>
   </div>
 </template>
@@ -124,6 +126,8 @@ export default {
 </script>
 
 <style>
+  @import "../../styles/custom-properties.css";
+
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -149,6 +153,7 @@ export default {
     &__delimiter {
       width: 36px;
       margin: 0;
+      position: relative;
       border: 0.5px solid color-mod(var(--color-text-second) alpha(10%));
     }
 
@@ -169,13 +174,46 @@ export default {
 
     &__workspaces-menu {
       position: relative;
-      margin-top: 20px;
+      overflow: hidden;
+      margin-bottom: 20px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 11;
+        right: 0;
+        height: 20px;
+        background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 0%, rgba(26, 29, 38, 0) 100%);
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 11;
+        right: 0;
+        height: 20px;
+        background: linear-gradient(to bottom, rgba(26, 29, 38, 0) 0%,  rgba(26, 29, 38, 1)90%);
+      }
+    }
+
+    &__scrollable {
+      @apply --hide-scrollbar;
+      height: 100%;
+      overflow: auto;
+
+      *:first-child {
+        margin-top: 30px;
+      }
     }
 
     &__workspace-item {
       position: relative;
       z-index: 10;
-      margin-bottom: 20px;
+      margin-top: 20px;
     }
 
     &__workspace-highlight {
