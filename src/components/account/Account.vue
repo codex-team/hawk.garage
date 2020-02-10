@@ -14,7 +14,10 @@
         />
         <section>
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
-          <FormImageUploader @change="showSubmitButton = true" />
+          <FormImageUploader
+            v-model="image"
+            @input="showSubmitButton = true"
+          />
         </section>
       </div>
       <FormTextFieldset
@@ -65,6 +68,10 @@ export default {
     return {
       name: user.name || '',
       email: user.email || '',
+      /**
+       * @param {string} image - URL to user image
+       */
+      image: user.image || '',
       passwords: {
         old: '',
         new: ''
@@ -82,8 +89,14 @@ export default {
      */
     async save() {
       try {
-        if (this.user.name !== this.name || this.user.email !== this.email) {
-          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
+        if (this.user.name !== this.name || this.user.email !== this.email || this.user.image !== this.image) {
+          const payload = { name: this.name, email: this.email };
+
+          if (typeof this.image !== 'string') {
+            payload.image = this.image;
+          }
+
+          await this.$store.dispatch(UPDATE_PROFILE, payload);
           await this.$store.dispatch(FETCH_CURRENT_USER);
         }
 

@@ -20,7 +20,7 @@ interface CreateWorkspaceInput {
   /**
    * Workspace image
    */
-  image?: string;
+  image?: File;
 }
 
 /**
@@ -29,7 +29,9 @@ interface CreateWorkspaceInput {
  * @returns {Promise<Workspace>} created workspace
  */
 export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
-  return (await api.call(MUTATION_CREATE_WORKSPACE, workspaceInfo)).createWorkspace;
+  const { image, ...rest } = workspaceInfo;
+
+  return (await api.call(MUTATION_CREATE_WORKSPACE, rest, { image })).createWorkspace;
 }
 
 /**
@@ -37,7 +39,7 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
  * @return {Promise<[Workspace]>}
  */
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
-  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, { initial: true })).workspaces;
+  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, { initial: true })).workspaces;
 }
 
 /**
@@ -75,8 +77,8 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
  * Update workspace data
  * @returns {Promise<Boolean>}
  */
-export async function updateWorkspace(id: string, name: string, description: string): Promise<boolean> {
-  return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description })).updateWorkspace;
+export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<boolean> {
+  return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description }, { image })).updateWorkspace;
 }
 
 /**
