@@ -196,9 +196,9 @@ export default {
     }
 
     &__workspaces-menu {
-      padding-top: 20px;
       position: relative;
       margin-bottom: 20px;
+      padding-top: 20px;
       overflow: hidden;
 
       &::after {
