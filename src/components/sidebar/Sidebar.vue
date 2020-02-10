@@ -16,12 +16,15 @@
         <Icon symbol="plus" />
       </div>
     </div>
-    <hr class="sidebar__delimiter sidebar__delimiter--with-gradient">
+    <hr class="sidebar__delimiter">
     <div
-      v-if="workspaces.length"
+      :class="{'sidebar__workspaces-menu--scrolled': isWorkspaceMenuScrolled}"
       class="sidebar__workspaces-menu"
     >
-      <div class="sidebar__scrollable">
+      <div
+        ref="sidebarScrollable"
+        class="sidebar__scrollable"
+      >
         <transition
           name="highlight-appearance"
           appear
@@ -65,7 +68,8 @@ export default {
       /**
        * Position of the highlight element
        */
-      highlightPosition: '0px'
+      highlightPosition: '0px',
+      isWorkspaceMenuScrolled: false
     };
   },
   computed: {
@@ -106,6 +110,12 @@ export default {
       this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + 'px';
     }
   },
+  mounted() {
+    this.$refs.sidebarScrollable.addEventListener('scroll', this.activateScrollableGradient);
+  },
+  beforeDestroy() {
+    this.$refs.sidebarScrollable.removeEventListener('scroll', this.activateScrollableGradient);
+  },
   methods: {
     /**
      * Works when workspace item is clicked
@@ -120,6 +130,19 @@ export default {
 
     createWorkspaceButtonClicked() {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
+    },
+
+    activateScrollableGradient(event) {
+      /**
+       * Scroll top offset to show gradient
+       */
+      const minimumDistance = 5;
+
+      if (event.target.scrollTop > minimumDistance) {
+        this.isWorkspaceMenuScrolled = true;
+      } else {
+        this.isWorkspaceMenuScrolled = false;
+      }
     }
   }
 };
@@ -173,20 +196,10 @@ export default {
     }
 
     &__workspaces-menu {
+      padding-top: 20px;
       position: relative;
       margin-bottom: 20px;
       overflow: hidden;
-
-      &::before {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 11;
-        height: 20px;
-        background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 0%, rgba(26, 29, 38, 0) 100%);
-        content: '';
-      }
 
       &::after {
         position: absolute;
@@ -198,22 +211,31 @@ export default {
         background: linear-gradient(to bottom, rgba(26, 29, 38, 0) 0%,  rgba(26, 29, 38, 1)90%);
         content: '';
       }
+
+      &--scrolled {
+        &::before {
+          position: absolute;
+          top: 20px;
+          right: 0;
+          left: 0;
+          z-index: 11;
+          height: 20px;
+          background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 0%, rgba(26, 29, 38, 0) 100%);
+          content: '';
+        }
+      }
     }
 
     &__scrollable {
       @apply --hide-scrollbar;
       height: 100%;
       overflow: auto;
-
-      *:first-child {
-        margin-top: 30px;
-      }
     }
 
     &__workspace-item {
       position: relative;
       z-index: 10;
-      margin-top: 20px;
+      margin-bottom: 20px;
     }
 
     &__workspace-highlight {
