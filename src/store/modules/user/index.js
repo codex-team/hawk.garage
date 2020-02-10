@@ -130,7 +130,7 @@ const actions = {
    * @param {User} user - user's params to update
    */
   async [UPDATE_PROFILE]({ commit }, user) {
-    return authApi.updateProfile(user.name, user.email);
+    return authApi.updateProfile(user.name, user.email, user.image);
   },
 
   /**

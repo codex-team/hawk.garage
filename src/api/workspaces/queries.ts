@@ -42,7 +42,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
 export const MUTATION_CREATE_WORKSPACE = `
   mutation createWorkspace(
     $name: String!,
-    $image: String
+    $image: Upload
   ) {
     createWorkspace(name: $name, image: $image) {
       id
@@ -123,8 +123,9 @@ export const MUTATION_UPDATE_WORKSPACE = `
     $id: ID!
     $name: String!
     $description: String
+    $image: Upload
   ) {
-    updateWorkspace(id: $id, name: $name, description: $description)
+    updateWorkspace(id: $id, name: $name, description: $description, image: $image)
   }
 `;
 

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { prepareFormData } from '@/api/utils';
 
 /**
  * Hawk API endpoint URL
@@ -29,18 +30,28 @@ interface ApiCallSettings {
  * Makes request to API
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
+ * @param {Object} [files] - files to upload
  * @param {ApiCallSettings} [settings] - settings for call method
  * @return {Promise<*>} - request data
  */
 export async function call(
   request: string,
   variables?: any,
+  files?: {[name: string]: File | undefined},
   { initial = false, force = false }: ApiCallSettings = {}
 ): Promise<any> {
-  const promise = axios.post(API_ENDPOINT, {
-    query: request,
-    variables
-  });
+  let promise: Promise<AxiosResponse>;
+
+  if (files && Object.keys(files).length) {
+    const formData = prepareFormData(request, variables, files);
+
+    promise = axios.post(API_ENDPOINT, formData);
+  } else {
+    promise = axios.post(API_ENDPOINT, {
+      query: request,
+      variables
+    });
+  }
 
   if (initial) {
     blockingRequest = promise;

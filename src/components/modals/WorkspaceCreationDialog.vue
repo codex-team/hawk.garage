@@ -19,6 +19,7 @@
           :label="$t('workspaces.creationDialog.workspaceNameLabel')"
         />
         <ImageUploader
+          v-model="image"
           class="workspace-creation-dialog__image-uploader"
         />
         <input
@@ -46,7 +47,8 @@ export default {
   },
   data() {
     return {
-      name: ''
+      name: '',
+      image: null
     };
   },
   methods: {
@@ -58,6 +60,10 @@ export default {
         const workspaceInfo = {
           name: this.name
         };
+
+        if (this.image) {
+          workspaceInfo.image = this.image;
+        }
 
         await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
         this.$emit('close');
