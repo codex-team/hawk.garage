@@ -31,7 +31,7 @@ interface CreateWorkspaceInput {
 export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
   const { image, ...rest } = workspaceInfo;
 
-  return (await api.call(MUTATION_CREATE_WORKSPACE, { ...rest }, { image })).createWorkspace;
+  return (await api.call(MUTATION_CREATE_WORKSPACE, rest, { image })).createWorkspace;
 }
 
 /**
