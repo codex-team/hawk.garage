@@ -125,6 +125,18 @@ const loadedEventsCount: { [key: string]: number } = {};
 const eventsByGroupHash: { [key: string]: HawkEvent } = {};
 
 /**
+ * Compose events list key
+ *
+ * @param {string} projectId
+ * @param {string} eventId
+ *
+ * @return {string} key
+ */
+function getEventsListKey(projectId: string, eventId: string): string {
+  return `${projectId}:${eventId}`;
+}
+
+/**
  * Events module
  */
 const module: Module<EventsModuleState, RootState> = {
@@ -177,7 +189,7 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} eventId - event id
        */
       return (projectId: string, eventId: string): HawkEvent | null => {
-        const key = projectId + ':' + eventId;
+        const key = getEventsListKey(projectId, eventId);
 
         return state.list[key] || null;
       };
@@ -276,7 +288,7 @@ const module: Module<EventsModuleState, RootState> = {
       { state },
       { projectId, eventId, limit }: { projectId: string, eventId: string, limit: number }
     ): Promise<HawkEvent[]> {
-      const originalEvent = state.list[projectId + ':' + eventId];
+      const originalEvent = state.list[getEventsListKey(projectId, eventId)];
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
 
       return repetitions.map((repetition) => {
@@ -347,7 +359,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @return {Promise<HawkEvent | null>}
      */
     async [GET_LATEST_EVENT]({ state }, { projectId, eventId }): Promise<HawkEvent | null> {
-      const key = projectId + ':' + eventId;
+      const key = getEventsListKey(projectId, eventId);
 
       const originalEvent = state.list[key];
 
@@ -446,7 +458,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }: { projectId: string, eventsList: HawkEvent[] }) {
       eventsList.forEach((event) => {
-        state.list[projectId + ':' + event.id] = event;
+        state.list[getEventsListKey(projectId, event.id)] = event;
       });
     },
 
@@ -468,7 +480,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEvent} event
      */
     [MutationTypes.ADD_REPETITION_PAYLOAD](state, { projectId, eventId, repetition }) {
-      const key = projectId + ':' + eventId;
+      const key = getEventsListKey(projectId, eventId);
 
       state.repetitions[key] = repetition;
     },
@@ -482,7 +494,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} userId - user who visited event
      */
     [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId, userId }) {
-      const key = projectId + ':' + eventId;
+      const key = getEventsListKey(projectId, eventId);
 
       const event = state.list[key];
       const visitedBy = new Set([...(event.visitedBy ? event.visitedBy : []), userId]);
