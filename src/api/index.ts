@@ -30,7 +30,7 @@ interface ApiCallSettings {
  * Makes request to API
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
- * @param {Object} files - files to upload
+ * @param {Object} [files] - files to upload
  * @param {ApiCallSettings} [settings] - settings for call method
  * @return {Promise<*>} - request data
  */
