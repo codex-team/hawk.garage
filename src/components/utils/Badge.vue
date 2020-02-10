@@ -72,6 +72,11 @@ export default {
       background-color: var(--color-indicator-critical);
     }
 
+    &--visited {
+      color: var(--color-text-second);
+      background-color: var(--color-bg-main);
+    }
+
     &__icon {
       display: inline;
       width: 7px;
