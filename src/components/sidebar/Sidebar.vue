@@ -151,9 +151,9 @@ export default {
     }
 
     &__delimiter {
+      position: relative;
       width: 36px;
       margin: 0;
-      position: relative;
       border: 0.5px solid color-mod(var(--color-text-second) alpha(10%));
     }
 
@@ -174,29 +174,29 @@ export default {
 
     &__workspaces-menu {
       position: relative;
-      overflow: hidden;
       margin-bottom: 20px;
+      overflow: hidden;
 
       &::before {
-        content: '';
         position: absolute;
         top: 0;
+        right: 0;
         left: 0;
         z-index: 11;
-        right: 0;
         height: 20px;
         background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 0%, rgba(26, 29, 38, 0) 100%);
+        content: '';
       }
 
       &::after {
-        content: '';
         position: absolute;
+        right: 0;
         bottom: 0;
         left: 0;
         z-index: 11;
-        right: 0;
         height: 20px;
         background: linear-gradient(to bottom, rgba(26, 29, 38, 0) 0%,  rgba(26, 29, 38, 1)90%);
+        content: '';
       }
     }
 
