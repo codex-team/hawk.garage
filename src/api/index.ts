@@ -42,7 +42,7 @@ export async function call(
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
 
-  if (files && Object.keys(files).length) {
+  if (files && Object.values(files).filter(Boolean).length) {
     const formData = prepareFormData(request, variables, files);
 
     promise = axios.post(API_ENDPOINT, formData);
