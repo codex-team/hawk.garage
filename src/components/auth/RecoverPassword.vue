@@ -26,18 +26,17 @@ export default class RecoverPassword extends Vue {
   /**
    * Fields for reset password form
    */
-  private fields: object[];
+  private fields!: object[];
 
   /**
    * Text for submit button in reset password form
    */
-  private submitText: VueI18n.TranslateResult;
+  private submitText!: VueI18n.TranslateResult;
 
   /**
-   * Component constructor for data initialization
+   * Vue created hook for data initialization
    */
-  constructor() {
-    super();
+  created() {
     this.fields = [
       {
         label: this.$t('authPages.emailAddress'),

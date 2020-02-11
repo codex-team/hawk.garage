@@ -118,7 +118,7 @@ const router = new Router({
     },
     {
       path: '/reset',
-      name: 'recoverPassword',
+      name: 'reset',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/RecoverPassword.vue')
     }
   ]
