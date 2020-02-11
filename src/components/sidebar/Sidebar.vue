@@ -203,7 +203,7 @@ export default {
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: 11;
+        z-index: 10;
         height: 20px;
         background: linear-gradient(to bottom, rgba(26, 29, 38, 0) 0%,  rgba(26, 29, 38, 1)90%);
         content: '';
@@ -212,10 +212,10 @@ export default {
       &--scrolled {
         &::before {
           position: absolute;
-          top: 0px;
+          top: 0;
           right: 0;
           left: 0;
-          z-index: 11;
+          z-index: 10;
           height: 40px;
           background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 50%, rgba(26, 29, 38, 0) 100%);
           content: '';
@@ -233,7 +233,7 @@ export default {
 
     &__workspace-item {
       position: relative;
-      z-index: 10;
+      z-index: 1;
       margin: 0 20px 20px 20px;
     }
 
@@ -241,7 +241,6 @@ export default {
       position: absolute;
       top: -300px;
       right: 0;
-      z-index: 0;
       width: 65px;
       height: 54px;
       background: var(--color-bg-main);
