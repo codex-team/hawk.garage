@@ -22,8 +22,8 @@
       class="sidebar__workspaces-menu"
     >
       <div
-        ref="sidebarScrollable"
         class="sidebar__scrollable"
+        @scroll.passive="activateScrollableGradient"
       >
         <transition
           name="highlight-appearance"
@@ -110,12 +110,6 @@ export default {
       this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + 20 + 'px';
     }
   },
-  mounted() {
-    this.$refs.sidebarScrollable.addEventListener('scroll', this.activateScrollableGradient);
-  },
-  beforeDestroy() {
-    this.$refs.sidebarScrollable.removeEventListener('scroll', this.activateScrollableGradient);
-  },
   methods: {
     /**
      * Works when workspace item is clicked
@@ -132,17 +126,17 @@ export default {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
     },
 
+    /**
+     * When user scroll down workspaces list show gradients on top and hide it if user scrolled up
+     * @param {Event} event - scroll event
+     */
     activateScrollableGradient(event) {
       /**
        * Scroll top offset to show gradient
        */
       const minimumDistance = 5;
 
-      if (event.target.scrollTop > minimumDistance) {
-        this.isWorkspaceMenuScrolled = true;
-      } else {
-        this.isWorkspaceMenuScrolled = false;
-      }
+      this.isWorkspaceMenuScrolled = event.target.scrollTop > minimumDistance;
     }
   }
 };
@@ -195,10 +189,10 @@ export default {
     &__workspaces-menu {
       position: relative;
       display: flex;
+      align-content: center;
+      width: 100%;
       margin-bottom: 20px;
       overflow: hidden;
-      width: 100%;
-      align-content: center;
 
       &::after {
         position: absolute;
@@ -227,9 +221,9 @@ export default {
 
     &__scrollable {
       @apply --hide-scrollbar;
+      position: relative;
       max-height: 100%;
       padding-top: 20px;
-      position: relative;
       overflow: scroll;
     }
 
@@ -242,10 +236,10 @@ export default {
     &__workspace-highlight {
       position: absolute;
       top: -300px;
+      right: 0;
       z-index: 0;
       width: 65px;
       height: 54px;
-      right: 0;
       background: var(--color-bg-main);
       border-top-left-radius: var(--border-radius);
       border-bottom-left-radius: var(--border-radius);
