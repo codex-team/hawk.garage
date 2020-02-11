@@ -210,15 +210,15 @@ export default {
       }
 
       &::before {
-        opacity: 0;
         position: absolute;
         top: 0;
         right: 0;
         left: 0;
-        transition: all 170ms ease;
         z-index: 10;
         height: 40px;
         background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 50%, rgba(26, 29, 38, 0) 100%);
+        opacity: 0;
+        transition: opacity 170ms ease;
         content: '';
       }
 
