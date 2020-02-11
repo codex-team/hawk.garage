@@ -217,6 +217,7 @@ export default {
         z-index: 10;
         height: 40px;
         background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 50%, rgba(26, 29, 38, 0) 100%);
+        visibility: hidden;
         opacity: 0;
         transition: opacity 170ms ease;
         content: '';
@@ -224,6 +225,7 @@ export default {
 
       &--scrolled {
         &::before {
+          visibility: visible;
           opacity: 1;
         }
       }
