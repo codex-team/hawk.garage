@@ -109,18 +109,21 @@ export default {
     };
   },
   computed: {
+    eventId() {
+      return this.$route.params.eventId;
+    },
+    projectId() {
+      return this.$route.params.projectId;
+    },
     since() {
       const now = new Date();
-      const firstOccurence = new Date(this.event.payload.timestamp);
-      const differenceInDays = (now - firstOccurence) / (1000 * 3600 * 24);
+      const firstOccurrence = new Date(this.event.payload.timestamp);
+      const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
       return `${Math.round(differenceInDays)} days`;
     }
   },
   async created() {
-    this.projectId = this.$route.params.projectId;
-    this.eventId = this.$route.params.eventId;
-
     this.event = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
 
     if (!this.event || this.event.payload) {
