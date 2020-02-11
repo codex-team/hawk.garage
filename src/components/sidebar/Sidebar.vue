@@ -113,7 +113,6 @@ export default {
       const workspacesListPadding = 20;
 
       this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + workspacesListPadding + 'px';
-      this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + workspacesListPadding + 'px';
     }
   },
   methods: {
