@@ -27,17 +27,16 @@
         />
 
         <div
-          v-if="actualEvent.payload"
+          v-if="event && event.payload"
           class="repetitions-overview__header-title"
         >
-          {{ actualEvent.payload.title }}
+          {{ event.payload.title }}
         </div>
-
         <div
-          v-if="actualEvent.payload"
+          v-if="event && event.payload"
           class="repetitions-overview__header-time"
         >
-          {{ actualEvent.payload.timestamp | prettyDate }}, {{ actualEvent.payload.timestamp | prettyTime }}
+          {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
         </div>
       </div>
 
@@ -47,8 +46,11 @@
           <div class="repetitions-overview__label">
             Total
           </div>
-          <div class="repetitions-overview__repeats">
-            {{ actualEvent.totalCount }} times
+          <div
+            v-if="event"
+            class="repetitions-overview__repeats"
+          >
+            {{ event.totalCount }} times
           </div>
         </div>
 
@@ -70,13 +72,13 @@
           </div>
 
           <div
-            v-for="date in groupedRepetitions.keys()"
-            :key="date"
+            v-for="key in groupedRepetitions.keys()"
+            :key="key"
             class="repetitions-overview__table"
           >
             <RepetitionsList
-              :repetitions="groupedRepetitions.get(date)"
-              :date="date"
+              :repetitions="groupedRepetitions.get(key)"
+              :date="key"
             />
           </div>
         </div>
@@ -89,7 +91,7 @@
 import PopupDialog from '../utils/PopupDialog';
 import Icon from '../utils/Icon';
 import Badge from '../utils/Badge';
-import { FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
+import { FETCH_EVENT_REPETITION, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList';
 
@@ -101,25 +103,13 @@ export default {
     Badge,
     PopupDialog
   },
-  data() {
-    const projectId = this.$route.params.projectId;
-    const eventId = this.$route.params.eventId;
-
+  data: function () {
     return {
-      projectId,
-      eventId,
-      actualEvent: {},
-      groupedRepetitions: []
+      event: null,
+      groupedRepetitions: new Map()
     };
   },
   computed: {
-    /**
-     * @return {HawkEvent}
-     */
-    event() {
-      return this.$store.getters.getProjectEventById(this.projectId, this.eventId);
-    },
-
     since() {
       const now = new Date();
       const firstOccurence = new Date(this.event.payload.timestamp);
@@ -129,15 +119,26 @@ export default {
     }
   },
   async created() {
+    this.projectId = this.$route.params.projectId;
+    this.eventId = this.$route.params.eventId;
+
+    this.event = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+
+    if (!this.event || this.event.payload) {
+      this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+        projectId: this.projectId,
+        eventId: this.eventId
+      });
+    }
+
     /**
      * Dispatching action that fetches several latest repetitions
      */
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
       projectId: this.projectId,
-      eventId: this.eventId
+      eventId: this.eventId,
+      limit: 10
     });
-
-    this.actualEvent = this.event;
 
     /**
      * We use Map here to save the key's order,
@@ -146,17 +147,14 @@ export default {
      */
     const groupedRepetitions = new Map();
 
-    /**
-     * Grouping repetitions by date
-     */
     repetitions.map(repetition => {
-      const date = this.getDate(repetition.payload.timestamp);
+      const key = this.getDate(repetition.payload.timestamp);
 
-      if (!groupedRepetitions.get(date)) {
-        groupedRepetitions.set(date, []);
+      if (!groupedRepetitions.get(key)) {
+        groupedRepetitions.set(key, []);
       }
 
-      groupedRepetitions.get(date).push(repetition);
+      groupedRepetitions.get(key).push(repetition);
     });
 
     this.groupedRepetitions = groupedRepetitions;

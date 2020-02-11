@@ -66,7 +66,7 @@ const getters = {
    * @param {WorkspacesModuleState} state - Vuex state
    * @return {Workspace[]}
    */
-  getAllWorkspaces: state => {
+  workspaces: state => {
     return state.list;
   },
 
@@ -75,7 +75,7 @@ const getters = {
    * @param {WorkspacesModuleState} state
    * @return {Workspace}
    */
-  getCurrentWorkspace: state => {
+  currentWorkspace: state => {
     return state.current;
   },
 

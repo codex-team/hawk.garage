@@ -16,7 +16,7 @@
         <td class="repetitions-list__col">
           <img
             class="repetitions-list__user-photo"
-            src="https://as1.ftcdn.net/jpg/02/18/69/42/500_F_218694229_V1sjTE7s6ROXQYGPyUcZSIHatGT4nOK9.jpg"
+            src="https://i.ya-webdesign.com/images/avatar-png-1.png"
             alt=""
           >
         </td>
