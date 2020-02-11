@@ -30,10 +30,17 @@ Vue.use(VueCookies);
  */
 api.setAuthToken(store.state.user.accessToken);
 api.setupApiModuleHandlers({
+  /**
+   * Call Vuex action for refreshing tokens.
+   * Action will update access token in store and return it
+   */
   async onTokenExpired() {
     return (await store.dispatch(REFRESH_TOKENS)).accessToken;
   },
 
+  /**
+   * If user refresh token is invalid then log out user
+   */
   onAuthError() {
     store.dispatch(RESET_STORE);
   }

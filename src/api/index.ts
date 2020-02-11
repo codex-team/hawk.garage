@@ -143,6 +143,10 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers) {
       const originalRequest = response.config;
 
       try {
+        /**
+         * If there is no pending requests for token refreshing then await it
+         * Else send new request
+         */
         if (!tokenRefreshingRequest) {
           tokenRefreshingRequest = eventsHandlers.onTokenExpired();
         }
@@ -153,7 +157,8 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers) {
 
         originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
         return axios(originalRequest);
-      } catch {
+      } catch (error) {
+        console.error(error);
         eventsHandlers.onAuthError();
         return response;
       }
