@@ -205,20 +205,26 @@ export default {
         left: 0;
         z-index: 10;
         height: 20px;
-        background: linear-gradient(to bottom, rgba(26, 29, 38, 0) 0%,  rgba(26, 29, 38, 1)90%);
+        background: linear-gradient(to bottom, rgba(26, 29, 38, 0) 0%, rgba(26, 29, 38, 1) 90%);
+        content: '';
+      }
+
+      &::before {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        transition: all 170ms ease;
+        z-index: 10;
+        height: 40px;
+        background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 50%, rgba(26, 29, 38, 0) 100%);
         content: '';
       }
 
       &--scrolled {
         &::before {
-          position: absolute;
-          top: 0;
-          right: 0;
-          left: 0;
-          z-index: 10;
-          height: 40px;
-          background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 50%, rgba(26, 29, 38, 0) 100%);
-          content: '';
+          opacity: 1;
         }
       }
     }
