@@ -49,10 +49,11 @@ query getCurrentUser {
  * Mutation to update user profile
  */
 export const MUTATION_UPDATE_PROFILE = `
-mutation User($name: String!, $email: String!) {
+mutation User($name: String!, $email: String!, $image: Upload) {
   updateProfile (
     name: $name
     email: $email
+    image: $image
   )
 }
 `;

@@ -23,6 +23,11 @@ export interface HawkEvent {
   totalCount: string;
 
   /**
+   * Users who visited this event
+   */
+  visitedBy: string[];
+
+  /**
    * Event payload
    */
   payload: HawkEventPayload;

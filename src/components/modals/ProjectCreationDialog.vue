@@ -25,6 +25,7 @@
           :label="$t('projects.creationDialog.projectNameLabel')"
         />
         <ImageUploader
+          v-model="image"
           class="project-creation-dialog__image-uploader"
         />
         <input
@@ -55,7 +56,8 @@ export default {
   data() {
     return {
       name: '', // project name
-      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0] // project's workspace
+      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0], // project's workspace
+      image: null
     };
   },
   computed: {
@@ -76,6 +78,10 @@ export default {
           name: this.name,
           workspaceId: this.workspace.id
         };
+
+        if (this.image) {
+          projectInfo.image = this.image;
+        }
 
         await this.$store.dispatch(CREATE_PROJECT, projectInfo);
 

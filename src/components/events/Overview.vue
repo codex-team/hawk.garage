@@ -79,7 +79,7 @@ import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import Badge from '../utils/Badge';
-import { FETCH_EVENT_REPETITION } from '../../store/modules/events/actionTypes';
+import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventOverview',
@@ -167,6 +167,15 @@ export default {
       repetitionId
     });
     this.loading = false;
+
+    const userId = this.$store.state.user.data.id;
+
+    /**
+     * Dispatch VISIT_EVENT action on component create
+     */
+    if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
+      this.$store.dispatch(VISIT_EVENT, { projectId: this.projectId, eventId });
+    }
   }
 };
 </script>

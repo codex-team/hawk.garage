@@ -42,7 +42,7 @@ export async function signUp(email) {
  * @return {Promise<TokensPair>}
  */
 export async function refreshTokens(refreshToken) {
-  return (await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, { force: true })).refreshTokens;
+  return (await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true })).refreshTokens;
 }
 
 /**
@@ -59,10 +59,11 @@ export async function fetchCurrentUser() {
  *
  * @param {string} name
  * @param {string} email
+ * @param {File} image
  * @returns {Promise<Boolean>}
  */
-export async function updateProfile(name, email) {
-  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email })).updateProfile;
+export async function updateProfile(name, email, image) {
+  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email }, { image })).updateProfile;
 }
 
 /**

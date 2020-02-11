@@ -178,7 +178,7 @@ const actions = {
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
-    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description);
+    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
   },
 
   /**
