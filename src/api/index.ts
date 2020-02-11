@@ -144,7 +144,7 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers) {
 
       try {
         /**
-         * If there is no pending requests for token refreshing then await it
+         * If there is a pending request for token refreshing then await it
          * Else send new request
          */
         if (!tokenRefreshingRequest) {
