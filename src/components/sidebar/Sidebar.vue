@@ -69,6 +69,10 @@ export default {
        * Position of the highlight element
        */
       highlightPosition: '0px',
+
+      /**
+       * If true, gradient in workspaces list will be applied
+       */
       isWorkspaceMenuScrolled: false
     };
   },
@@ -106,8 +110,10 @@ export default {
       const workspaceIndex = this.workspaces.findIndex(ws => ws.id === this.currentWorkspace.id);
       const highlightPadding = 9;
       const workspaceItemHeight = 56;
+      const workspacesListPadding = 20;
 
-      this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + 20 + 'px';
+      this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + workspacesListPadding + 'px';
+      this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + workspacesListPadding + 'px';
     }
   },
   methods: {
@@ -165,7 +171,6 @@ export default {
     }
 
     &__delimiter {
-      position: relative;
       width: 36px;
       margin: 0;
       border: 0.5px solid color-mod(var(--color-text-second) alpha(10%));
