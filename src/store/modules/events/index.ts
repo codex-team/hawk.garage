@@ -470,7 +470,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEvent} event
      */
     [MutationTypes.UPDATE_EVENT_PAYLOAD](state, { projectId, event }) {
-      const key = projectId + ':' + event.id;
+      const key = getEventsListKey(projectId, event.id);
 
       state.list[key].payload = event.payload;
     },
