@@ -35,7 +35,7 @@ export function prepareFormData(
 
   formData.append('operations', JSON.stringify(operation));
   formData.append('map', JSON.stringify(map));
-  console.log(files);
+
   Object
     .entries(files)
     .forEach(([name, file]) => {
