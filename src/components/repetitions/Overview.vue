@@ -72,13 +72,13 @@
           </div>
 
           <div
-            v-for="key in groupedRepetitions.keys()"
-            :key="key"
+            v-for="date in groupedRepetitions.keys()"
+            :key="date"
             class="repetitions-overview__table"
           >
             <RepetitionsList
-              :repetitions="groupedRepetitions.get(key)"
-              :date="key"
+              :repetitions="groupedRepetitions.get(date)"
+              :date="date"
             />
           </div>
         </div>
@@ -147,13 +147,13 @@ export default {
     const groupedRepetitions = new Map();
 
     repetitions.map(repetition => {
-      const key = this.getDate(repetition.payload.timestamp);
+      const date = this.getDate(repetition.payload.timestamp);
 
-      if (!groupedRepetitions.get(key)) {
-        groupedRepetitions.set(key, []);
+      if (!groupedRepetitions.get(date)) {
+        groupedRepetitions.set(date, []);
       }
 
-      groupedRepetitions.get(key).push(repetition);
+      groupedRepetitions.get(date).push(repetition);
     });
 
     this.groupedRepetitions = groupedRepetitions;

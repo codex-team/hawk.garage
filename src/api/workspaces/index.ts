@@ -36,7 +36,7 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
  * Returns all user's workspaces and project.
  * @return {Promise<[Workspace]>}
  */
-export async function fetchAllWorkspacesWithProjects(): Promise<Workspace[]> {
+export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
   return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, { initial: true })).workspaces;
 }
 
