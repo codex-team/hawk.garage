@@ -107,7 +107,7 @@ export default {
       const highlightPadding = 9;
       const workspaceItemHeight = 56;
 
-      this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + 'px';
+      this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + 20 + 'px';
     }
   },
   mounted() {
@@ -167,9 +167,6 @@ export default {
     }
 
     &__button-create-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       padding: 20px 0;
     }
 
@@ -197,9 +194,11 @@ export default {
 
     &__workspaces-menu {
       position: relative;
+      display: flex;
       margin-bottom: 20px;
-      padding-top: 20px;
       overflow: hidden;
+      width: 100%;
+      align-content: center;
 
       &::after {
         position: absolute;
@@ -215,12 +214,12 @@ export default {
       &--scrolled {
         &::before {
           position: absolute;
-          top: 20px;
+          top: 0px;
           right: 0;
           left: 0;
           z-index: 11;
-          height: 20px;
-          background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 0%, rgba(26, 29, 38, 0) 100%);
+          height: 40px;
+          background: linear-gradient(to bottom, rgba(26, 29, 38, 1) 50%, rgba(26, 29, 38, 0) 100%);
           content: '';
         }
       }
@@ -228,14 +227,16 @@ export default {
 
     &__scrollable {
       @apply --hide-scrollbar;
-      height: 100%;
-      overflow: auto;
+      max-height: 100%;
+      padding-top: 20px;
+      position: relative;
+      overflow: scroll;
     }
 
     &__workspace-item {
       position: relative;
       z-index: 10;
-      margin-bottom: 20px;
+      margin: 0 20px 20px 20px;
     }
 
     &__workspace-highlight {
@@ -244,7 +245,7 @@ export default {
       z-index: 0;
       width: 65px;
       height: 54px;
-      margin-left: -9px;
+      right: 0;
       background: var(--color-bg-main);
       border-top-left-radius: var(--border-radius);
       border-bottom-left-radius: var(--border-radius);
