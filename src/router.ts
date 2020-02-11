@@ -115,12 +115,17 @@ const router = new Router({
     {
       path: '/join/:workspaceId/:inviteHash?',
       beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next)
+    },
+    {
+      path: '/recover',
+      name: 'recover',
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/RecoverPassword.vue')
     }
   ]
 });
 
 router.beforeEach((to, from, next) => {
-  const authRoutes = /^\/(login|sign-up)/;
+  const authRoutes = /^\/(login|sign-up|reset)/;
   const routesAvailableWithoutAuth = /^\/(join)/;
 
   if (store.getters.isAuthenticated) {
