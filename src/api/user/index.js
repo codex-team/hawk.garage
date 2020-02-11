@@ -42,7 +42,7 @@ export async function signUp(email) {
  * @return {Promise<TokensPair>}
  */
 export async function refreshTokens(refreshToken) {
-  return (await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, { force: true })).refreshTokens;
+  return (await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true })).refreshTokens;
 }
 
 /**

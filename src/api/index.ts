@@ -12,6 +12,11 @@ const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT;
 let blockingRequest: Promise<AxiosResponse>;
 
 /**
+ * If contains Promise, request for token refreshing was already send and need wait for it
+ */
+let tokenRefreshingRequest: Promise<string> | null;
+
+/**
  * Settings that can be passed in api.call() method (see below)
  */
 interface ApiCallSettings {
@@ -98,50 +103,65 @@ export const errorCodes = {
 };
 
 /**
- * Callback functions for different situations
+ * Handlers for API module for getting necessary data or calling function on error occurrence
  */
-export const eventsHandlers = {
+interface ApiModuleHandlers {
   /**
    * Called when a tokens pair needs to be updated
-   * @return {String} access tokens
+   * @return {string} access tokens
    */
-  onTokenExpired: () => {
-  },
+  onTokenExpired(): Promise<string>;
 
   /**
    * Called when auth failed
    */
-  onAuthError: () => {
-  }
-};
+  onAuthError(): void;
+}
 
 /**
- * Interceptors that handles the error of expired tokens
+ * Setup handlers for API module, for example, functions for refreshing token
+ * @param {ApiModuleHandlers} eventsHandlers - object with handlers
  */
-axios.interceptors.response.use(
+export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers) {
   /**
-   * Interceptor handler
-   * @param {AxiosResponse} response - axios response object
-   * @return {Promise<AxiosResponse>} - processed request
+   * Interceptors that handles the error of expired tokens
    */
-  async (response: AxiosResponse): Promise<AxiosResponse> => {
-    const errors = response.data.errors;
-    const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
+  axios.interceptors.response.use(
+    /**
+     * Interceptor handler
+     * @param {AxiosResponse} response - axios response object
+     * @return {Promise<AxiosResponse>} - processed request
+     */
+    async (response: AxiosResponse): Promise<AxiosResponse> => {
+      const errors = response.data.errors;
+      const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
 
-    if (!errors || !isTokenExpiredError) {
-      return response;
+      if (!errors || !isTokenExpiredError) {
+        return response;
+      }
+
+      const originalRequest = response.config;
+
+      try {
+        /**
+         * If there is a pending request for token refreshing then await it
+         * Else send new request
+         */
+        if (!tokenRefreshingRequest) {
+          tokenRefreshingRequest = eventsHandlers.onTokenExpired();
+        }
+
+        const newAccessToken = await tokenRefreshingRequest;
+
+        tokenRefreshingRequest = null;
+
+        originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+        return axios(originalRequest);
+      } catch (error) {
+        console.error(error);
+        eventsHandlers.onAuthError();
+        return response;
+      }
     }
-
-    const originalRequest = response.config;
-
-    try {
-      const newAccessToken = await eventsHandlers.onTokenExpired();
-
-      originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
-      return axios(originalRequest);
-    } catch {
-      eventsHandlers.onAuthError();
-      return response;
-    }
-  }
-);
+  );
+}
