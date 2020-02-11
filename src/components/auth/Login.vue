@@ -41,7 +41,7 @@ export default {
           type: 'password'
         }
       ],
-      altLink: '/reset',
+      altLink: '/recover',
       altText: this.$t('authPages.recoverPassword'),
       submitText: this.$t('authPages.loginSubmitText'),
       message: null
