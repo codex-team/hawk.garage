@@ -117,8 +117,8 @@ const router = new Router({
       beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next)
     },
     {
-      path: '/reset',
-      name: 'reset',
+      path: '/recover',
+      name: 'recover',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/RecoverPassword.vue')
     }
   ]
