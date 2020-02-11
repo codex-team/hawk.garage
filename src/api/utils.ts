@@ -3,15 +3,15 @@
  *
  * @param {String} request - request to send
  * @param {Object} [variables] - request variables
- * @param {Object} files - files to upload
+ * @param {Object} [files] - files to upload
  *
  * @returns {FormData}
  */
-export const prepareFormData = (
+export function prepareFormData(
   request: string,
   variables: any,
   files: {[name: string]: File | undefined}
-) => {
+) {
   Object
     .keys(files)
     .forEach(name => {
@@ -35,7 +35,7 @@ export const prepareFormData = (
 
   formData.append('operations', JSON.stringify(operation));
   formData.append('map', JSON.stringify(map));
-
+  console.log(files);
   Object
     .entries(files)
     .forEach(([name, file]) => {

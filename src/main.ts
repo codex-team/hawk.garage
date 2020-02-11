@@ -29,8 +29,15 @@ Vue.use(VueCookies);
  * Configure API
  */
 api.setAuthToken(store.state.user.accessToken);
-api.eventsHandlers.onTokenExpired = async () => (await store.dispatch(REFRESH_TOKENS)).accessToken;
-api.eventsHandlers.onAuthError = () => store.dispatch(RESET_STORE);
+api.setupApiModuleHandlers({
+  async onTokenExpired() {
+    return (await store.dispatch(REFRESH_TOKENS)).accessToken;
+  },
+
+  onAuthError() {
+    store.dispatch(RESET_STORE);
+  }
+});
 
 new Vue({
   router,
