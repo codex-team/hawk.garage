@@ -221,7 +221,7 @@ const module: Module<EventsModuleState, RootState> = {
         }
         return null;
       };
-    },
+    }
   },
   actions: {
     /**
@@ -411,7 +411,7 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Update
+     * Updates event payload
      *
      * @param state
      * @param {string} projectId

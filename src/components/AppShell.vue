@@ -85,7 +85,7 @@ export default {
      * @return {Array<Workspace>} - registered workspaces
      */
     workspaces() {
-      return this.$store.getters.workspaces;
+      return this.$store.state.workspaces.list;
     },
 
     /**
@@ -128,7 +128,7 @@ export default {
      * @return {Workspace}
      */
     currentWorkspace() {
-      return this.$store.getters.currentWorkspace;
+      return this.$store.state.workspaces.current;
     }
   },
   watch: {

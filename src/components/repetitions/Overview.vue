@@ -105,7 +105,6 @@ export default {
   },
   data: function () {
     return {
-      event: null,
       groupedRepetitions: new Map()
     };
   },
