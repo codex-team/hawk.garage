@@ -107,6 +107,7 @@ export default {
   },
   data: function () {
     return {
+      event: null,
       groupedRepetitions: new Map()
     };
   },
@@ -147,7 +148,7 @@ export default {
     /**
      * We use Map here to save the key's order,
      * `Object` does not guarantee the iteration order
-     * @type {Map<String, HawkEvent[]>}
+     * @type {Map<String, HawkEventRepetition[]>}
      */
     const groupedRepetitions = new Map();
 

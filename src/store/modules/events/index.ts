@@ -35,11 +35,6 @@ enum MutationTypes {
   SET_RECENT_EVENTS_LIST = 'SET_RECENT_EVENTS_LIST',
 
   /**
-   * Set new repetitions list
-   */
-  SET_REPETITIONS_LIST = 'SET_REPETITIONS_LIST',
-
-  /**
    * Add new data to recent event list
    */
   ADD_TO_RECENT_EVENTS_LIST = 'ADD_TO_RECENT_EVENTS_LIST',
@@ -55,7 +50,8 @@ enum MutationTypes {
   ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
 
   /**
-   * Update event payload when it is fully fetched
+   * Update event payload
+   * Used when the event fully fetched with payload to update the state object
    */
   UPDATE_EVENT_PAYLOAD = 'UPDATE_EVENT_PAYLOAD',
 
@@ -325,26 +321,12 @@ const module: Module<EventsModuleState, RootState> = {
         commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
       }
 
+      /**
+       * Updates or sets event's fetched payload in the state
+       */
       commit(MutationTypes.UPDATE_EVENT_PAYLOAD, { projectId, event });
 
       return event;
-    },
-
-    /**
-     * Send request to mark event as visited
-     *
-     * @param {function} commit
-     * @param {string} projectId - project event is related to
-     * @param {string} eventId - visited event
-     */
-    async [VISIT_EVENT]({ commit, rootState }, { projectId, eventId }): Promise<void> {
-      const result = await eventsApi.visitEvent(projectId, eventId);
-
-      const userId = (rootState as RootState).user.data.id;
-
-      if (result) {
-        commit(MutationTypes.MARK_AS_VISITED, { projectId, eventId, userId });
-      }
     },
 
     /**
@@ -465,9 +447,9 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Updates event payload
      *
-     * @param state
-     * @param {string} projectId
-     * @param {HawkEvent} event
+     * @param {EventsModuleState} state - Vuex state
+     * @param {string} projectId - project's identifier
+     * @param {HawkEvent} event - Event object
      */
     [MutationTypes.UPDATE_EVENT_PAYLOAD](state, { projectId, event }) {
       const key = getEventsListKey(projectId, event.id);
