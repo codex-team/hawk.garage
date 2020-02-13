@@ -78,6 +78,8 @@
           >
             <RepetitionsList
               :repetitions="groupedRepetitions.get(date)"
+              :event="event"
+              :projectId="projectId"
               :date="date"
             />
           </div>
