@@ -52,6 +52,7 @@ enum MutationTypes {
   /**
    * Update event payload
    * Used when the event fully fetched with payload to update the state object
+   * Because initial fetch request gets data without payload (title, timestamp, totalCount, visited etc.)
    */
   UPDATE_EVENT_PAYLOAD = 'UPDATE_EVENT_PAYLOAD',
 
