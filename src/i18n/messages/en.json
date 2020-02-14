@@ -37,6 +37,15 @@
       "workspaceSelectLabel": "SELECT WORKSPACE"
     },
     "settings": {
+      "project": {
+        "title": "Project settings",
+        "image": "Image",
+        "description": "Description",
+        "descriptionPlaceholder": "Awesome project",
+        "submit": "Save",
+        "created": "Created at Aug 25, 2019",
+        "updatedMessage": "Workspace was updated"
+      },
       "integrations": {
         "title": "Integrations",
         "projectTokenLabel": "Your Integration token for"

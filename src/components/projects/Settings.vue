@@ -16,6 +16,12 @@
       <div>
         <router-link
           class="settings-window__menu-item"
+          :to="{ name:'project-settings' }"
+        >
+          {{ $t('projects.settings.project.title') }}
+        </router-link>
+        <router-link
+          class="settings-window__menu-item"
           :to="{ name: 'project-integrations'}"
         >
           {{ $t('projects.settings.integrations.title') }}
