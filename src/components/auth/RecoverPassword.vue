@@ -14,7 +14,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Form from './Form.vue';
 import VueI18n from 'vue-i18n';
-import * as userApi from '../../api/user/index.js';
+import { RECOVER_PASSWORD } from '../../store/modules/user/actionTypes';
 
 @Component({
   name: 'RecoverPassword',
@@ -70,7 +70,7 @@ export default class RecoverPassword extends Vue {
     const email = this.fields[0].value;
 
     try {
-      await userApi.recoverPassword(email);
+      await this.$store.dispatch(RECOVER_PASSWORD, { email });
       this.$router.push('/login');
     } catch (e) {
       this.message = {

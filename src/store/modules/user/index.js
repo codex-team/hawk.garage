@@ -6,7 +6,7 @@ import {
   REFRESH_TOKENS,
   FETCH_CURRENT_USER,
   UPDATE_PROFILE,
-  CHANGE_PASSWORD
+  CHANGE_PASSWORD, RECOVER_PASSWORD
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as authApi from '../../../api/user';
@@ -85,6 +85,16 @@ const actions = {
     const tokens = await authApi.login(user.email, user.password);
 
     commit(mutationTypes.SET_TOKENS, tokens);
+  },
+
+  /**
+   * Send recover password request to the server
+   *
+   * @param {function} commit - standard Vuex commit function
+   * @param {User} user - user's params for recovering password
+   */
+  async [RECOVER_PASSWORD]({ commit }, user) {
+    return authApi.recoverPassword(user.email);
   },
 
   /**
