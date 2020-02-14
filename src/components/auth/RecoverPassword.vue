@@ -67,7 +67,8 @@ export default class RecoverPassword extends Vue {
    * Method recover user's password by email from form
    */
   private async recoverPassword(): Promise<void> {
-    const email = this.fields[0].value;
+    const emailField = this.fields.find(field => field.name === 'email');
+    const email = emailField ? emailField.value : '';
 
     try {
       await this.$store.dispatch(RECOVER_PASSWORD, { email });
