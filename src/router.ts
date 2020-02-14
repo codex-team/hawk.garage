@@ -77,10 +77,13 @@ const router = new Router({
             },
             {
               path: 'settings',
-              name: 'project-settings',
               component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Settings.vue'),
-              redirect: 'settings/integrations',
               children: [
+                {
+                  path: '/',
+                  name: 'project-settings',
+                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Project.vue')
+                },
                 {
                   path: 'integrations',
                   name: 'project-integrations',
