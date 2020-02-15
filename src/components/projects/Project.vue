@@ -5,32 +5,33 @@
     </div>
     <form
       v-if="project"
-      class="project-settings__form"
       @submit.prevent="save"
     >
-      <div class="project-settings__fieldset">
-        <FormTextFieldset
-          v-model="project.name"
-          class="project-settings__section project-settings__name-section"
-          :label="$t('settings.account.name')"
-          required
-          @input="showSubmitButton = true"
-        />
-        <FormTextFieldset
-          @input="showSubmitButton = true"
-          :label="$t('projects.settings.project.description')"
-          :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
-          class="project-settings__section"
-          v-model="project.description"
-        />
+      <div class="project-settings__form-fields">
+        <div class="project-settings__fieldset">
+          <FormTextFieldset
+            :label="$t('settings.account.name')"
+            @input="showSubmitButton = true"
+            class="project-settings__section project-settings__name-section"
+            required
+            v-model="name"
+          />
+          <FormTextFieldset
+            :label="$t('projects.settings.project.description')"
+            :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
+            @input="showSubmitButton = true"
+            class="project-settings__section"
+            v-model="description"
+          />
+        </div>
+        <section>
+          <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
+          <FormImageUploader
+            @input="showSubmitButton = true"
+            v-model="project.image"
+          />
+        </section>
       </div>
-      <section>
-        <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
-        <FormImageUploader
-          v-model="project.image"
-          @input="showSubmitButton = true"
-        />
-      </section>
       <button
         v-if="showSubmitButton"
         class="button button--submit project-settings__submit-button"
@@ -49,6 +50,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import FormTextFieldset from '../forms/TextFieldset.vue';
 import FormImageUploader from '../forms/ImageUploader.vue';
+import notifier from 'codex-notifier';
 
 @Component({
   components: {
@@ -61,6 +63,71 @@ import FormImageUploader from '../forms/ImageUploader.vue';
  */
 export default class ProjectSettings extends Vue {
   /**
+   * Show submit button only when you update some of fields
+   */
+  private showSubmitButton: boolean = false;
+
+  /**
+   * Name of project in form input
+   */
+  private _name!: string;
+
+  /**
+   * Getter for project name
+   */
+  get name() {
+    this._name = this.project.name;
+    return this._name;
+  }
+
+  /**
+   * Setter for _name variable
+   */
+  set name(value: string) {
+    this._name = value;
+  }
+
+  /**
+   * Description of project in form input
+   */
+  private _description!: string;
+
+  /**
+   * Getter for project description
+   */
+  get description(): string {
+    this._description = this.project.description;
+    return this._description;
+  }
+
+  /**
+   * Setter for _description variable
+   */
+  set description(value: string) {
+    this._description = value;
+  }
+
+  /**
+   * Image of project
+   */
+  private _image!: string;
+
+  /**
+   * Getter for project image
+   */
+  get image(): string {
+    this._image = this.project.image;
+    return this._image;
+  }
+
+  /**
+   * Setter for _image variable
+   */
+  set image(value: string) {
+    this._image = value;
+  }
+
+  /**
    * Current viewed project
    * @return {Project}
    */
@@ -71,9 +138,39 @@ export default class ProjectSettings extends Vue {
   }
 
   /**
-   * Show submit button only when you update some of fields
+   * Form submit event handler
    */
-  private showSubmitButton: boolean = false;
+  async save() {
+    try {
+      if (
+        this.project.name !== this._name ||
+              this.project.description !== this._description ||
+              this.project.image !== this._image
+      ) {
+        const payload = {
+          id: this.project.id,
+          name: this._name,
+          description: this._description
+        };
+
+        console.log(payload);
+      }
+
+      this.showSubmitButton = false;
+
+      notifier.show({
+        message: this.$t('projects.settings.project.updatedMessage') as string,
+        style: 'success',
+        time: 5000
+      });
+    } catch (e) {
+      notifier.show({
+        message: e.message,
+        style: 'error',
+        time: 5000
+      });
+    }
+  }
 }
 </script>
 
@@ -85,7 +182,7 @@ export default class ProjectSettings extends Vue {
   .project-settings {
     width: 100%;
 
-    &__form {
+    &__form-fields {
       @apply --clearfix;
     }
 
