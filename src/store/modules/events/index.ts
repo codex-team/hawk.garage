@@ -158,7 +158,10 @@ const module: Module<EventsModuleState, RootState> = {
           return eventsByGroupHash[uniqueId];
         }
 
-        const event = Object.values(state.list).find((_event) => _event.groupHash === groupHash);
+        const eventEntry = Object.entries(state.list).find(([key, _event]) =>
+          key.startsWith(projectId) && _event.groupHash === groupHash);
+
+        const event = eventEntry && eventEntry[1];
 
         if (!event) {
           return null;
