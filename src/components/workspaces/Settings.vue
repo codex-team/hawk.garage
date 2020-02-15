@@ -62,12 +62,23 @@ export default {
   name: 'WorkspaceSettings',
   components: { SettingsWindow, EntityImage, Icon },
   computed: {
+    /**
+     * Workspace id to show
+     */
     workspaceId() {
       return this.$route.params.workspaceId;
     },
+
+    /**
+     * Workspace to show
+     */
     workspace() {
       return this.$store.getters.getWorkspaceById(this.workspaceId);
     },
+
+    /**
+     * Is current user admin for this workspace
+     */
     isAdmin() {
       if (!this.workspace.users) {
         return false;
@@ -82,6 +93,9 @@ export default {
     this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
   },
   methods: {
+    /**
+     * Remove current workspace
+     */
     removeWorkspace() {
       this.$store.dispatch(REMOVE_WORKSPACE, this.workspaceId);
     }
