@@ -5,6 +5,7 @@ import {
   MUTATION_INVITE_TO_WORKSPACE,
   MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
   MUTATION_UPDATE_WORKSPACE,
+  MUTATION_LEAVE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   QUERY_WORKSPACES
 } from './queries';
@@ -90,6 +91,14 @@ export async function updateWorkspace(id: string, name: string, description: str
  */
 export async function grantAdminPermissions(workspaceId: string, userId: string, state = true): Promise<boolean> {
   return (await api.call(MUTATION_GRANT_ADMIN_PERMISSIONS, { workspaceId, userId, state })).grantAdmin;
+}
+
+/**
+ * Remove workspace from list
+ * @param {string} workspaceId - id of workspace to remove
+ */
+export async function removeWorkspace(workspaceId: string) {
+  return (await api.call(MUTATION_LEAVE_WORKSPACE, { workspaceId })).leaveWorkspace;
 }
 
 /**

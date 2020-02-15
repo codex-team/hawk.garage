@@ -36,6 +36,17 @@
         >
           {{ $t('workspaces.settings.billing.title') }}
         </router-link>
+        <hr class="delimiter">
+        <div
+          class="settings-window__menu-item settings-window__menu-item--attention"
+          @click="removeWorkspace"
+        >
+          {{ $t('workspaces.settings.remove') }}
+          <Icon
+            class="settings-window__menu-icon"
+            symbol="rubbish"
+          />
+        </div>
       </div>
     </template>
   </SettingsWindow>
@@ -43,17 +54,19 @@
 
 <script>
 import EntityImage from '../utils/EntityImage';
+import Icon from '../utils/Icon';
 import SettingsWindow from '../settings/Window';
-import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { FETCH_WORKSPACE, REMOVE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'WorkspaceSettings',
-  components: { SettingsWindow, EntityImage },
+  components: { SettingsWindow, EntityImage, Icon },
   computed: {
+    workspaceId() {
+      return this.$route.params.workspaceId;
+    },
     workspace() {
-      const workspaceId = this.$route.params.workspaceId;
-
-      return this.$store.getters.getWorkspaceById(workspaceId);
+      return this.$store.getters.getWorkspaceById(this.workspaceId);
     },
     isAdmin() {
       if (!this.workspace.users) {
@@ -66,9 +79,12 @@ export default {
     }
   },
   created() {
-    const workspaceId = this.$route.params.workspaceId;
-
-    this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+    this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
+  },
+  methods: {
+    removeWorkspace() {
+      this.$store.dispatch(REMOVE_WORKSPACE, this.workspaceId);
+    }
   }
 };
 </script>
@@ -92,11 +108,6 @@ export default {
       font-weight: 500;
       font-size: 15px;
       line-height: 26px;
-    }
-
-    &__menu-item {
-      width: 200px;
-      margin-left: 0;
     }
   }
 </style>

@@ -75,6 +75,7 @@
       "workspaceNameLabel": "workspace name"
     },
     "settings": {
+      "remove": "Remove workspace",
       "label": "Workspace settings",
       "workspace": {
         "title": "Workspace settings",

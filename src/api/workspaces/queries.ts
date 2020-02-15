@@ -157,3 +157,15 @@ export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
     removeMemberFromWorkspace(workspaceId: $workspaceId, userId: $userId, userEmail: $userEmail)
   }
 `;
+
+// language=GraphQL
+/**
+ * Mutation to remove user from workspace
+ */
+export const MUTATION_LEAVE_WORKSPACE = `
+  mutation leaveWorkspace(
+    $workspaceId: ID!
+  ) {
+    leaveWorkspace(workspaceId: $workspaceId)
+  }
+`;
