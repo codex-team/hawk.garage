@@ -9,7 +9,7 @@
     "recoverPassword": "Recover password",
     "signUp": "Sign up",
     "signUpSubmitText": "Register",
-    "recoverPasswordSuccessMessage": "New password was send to your email."
+    "recoverPasswordSuccessMessage": "New password was sent to your email."
   },
   "components": {
     "changePasswordFieldSet": {
