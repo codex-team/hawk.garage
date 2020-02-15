@@ -1,5 +1,5 @@
 <template>
-  <SettingsWindow>
+  <SettingsWindow on-close-route="../">
     <template v-slot:header>
       <div class="settings-window__header account-settings__header">
         <div class="project-settings__logo settings-window__logo" />
@@ -14,6 +14,12 @@
 
     <template v-slot:menu>
       <div>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name:'project-settings' }"
+        >
+          {{ $t('projects.settings.project.title') }}
+        </router-link>
         <router-link
           class="settings-window__menu-item"
           :to="{ name: 'project-integrations'}"
