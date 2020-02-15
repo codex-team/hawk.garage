@@ -82,7 +82,7 @@ const router = new Router({
                 {
                   path: '/',
                   name: 'project-settings',
-                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Project.vue')
+                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Project.vue'),
                 },
                 {
                   path: 'integrations',
