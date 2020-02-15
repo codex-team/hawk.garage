@@ -41,9 +41,10 @@ interface ApiCallSettings {
  */
 export async function call(
   request: string,
-  variables?: any,
+  variables?: object,
   files?: {[name: string]: File | undefined},
   { initial = false, force = false }: ApiCallSettings = {}
+  // eslint-disable-next-line
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
 
@@ -123,7 +124,7 @@ interface ApiModuleHandlers {
  * Setup handlers for API module, for example, functions for refreshing token
  * @param {ApiModuleHandlers} eventsHandlers - object with handlers
  */
-export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers) {
+export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void {
   /**
    * Interceptors that handles the error of expired tokens
    */

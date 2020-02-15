@@ -71,9 +71,9 @@ export async function fetchCurrentUser() {
 /**
  * Update user profile
  *
- * @param {string} name
- * @param {string} email
- * @param {File} image
+ * @param {string} name - user name
+ * @param {string} email - user email address
+ * @param {File} image - profile picture file uploading
  * @returns {Promise<Boolean>}
  */
 export async function updateProfile(name, email, image) {
@@ -86,8 +86,8 @@ export async function updateProfile(name, email, image) {
 /**
  * Change user password
  *
- * @param {string} oldPassword
- * @param {string} newPassword
+ * @param {string} oldPassword - current password
+ * @param {string} newPassword - password to change
  * @returns {Promise<Boolean>}
  */
 export async function changePassword(oldPassword, newPassword) {
