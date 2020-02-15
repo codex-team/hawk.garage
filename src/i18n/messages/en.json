@@ -8,7 +8,8 @@
     "password": "PASSWORD",
     "recoverPassword": "Recover password",
     "signUp": "Sign up",
-    "signUpSubmitText": "Register"
+    "signUpSubmitText": "Register",
+    "recoverPasswordSuccessMessage": "New password was send to your email."
   },
   "components": {
     "changePasswordFieldSet": {

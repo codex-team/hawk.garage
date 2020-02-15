@@ -8,7 +8,8 @@
     "password": "ПАРОЛЬ",
     "recoverPassword": "Восстановить пароль",
     "signUp": "Зарегистрироваться",
-    "signUpSubmitText": "Зарегистрироваться"
+    "signUpSubmitText": "Зарегистрироваться",
+    "recoverPasswordSuccessMessage": "Новый пароль был отправлен на Ваш E-mail."
   },
   "components": {
     "changePasswordFieldSet": {
