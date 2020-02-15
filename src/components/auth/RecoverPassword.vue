@@ -15,12 +15,16 @@ import { Component, Vue } from 'vue-property-decorator';
 import Form from './Form.vue';
 import VueI18n from 'vue-i18n';
 import { RECOVER_PASSWORD } from '../../store/modules/user/actionTypes';
+import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 @Component({
   name: 'RecoverPassword',
   components: {
     Form
-  }
+  },
+  mixins: [
+    offlineErrorMessage
+  ]
 })
 /**
  * Class implements reset password form component
