@@ -5,9 +5,10 @@
     </div>
     <form
       v-if="project"
+      class="project-settings__form"
       @submit.prevent="save"
     >
-      <div class="project-settings__inline-elements">
+      <div class="project-settings__fieldset">
         <FormTextFieldset
           v-model="project.name"
           class="project-settings__section project-settings__name-section"
@@ -15,21 +16,21 @@
           required
           @input="showSubmitButton = true"
         />
-        <section>
-          <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
-          <FormImageUploader
-            v-model="project.image"
-            @input="showSubmitButton = true"
-          />
-        </section>
+        <FormTextFieldset
+          :label="$t('projects.settings.project.description')"
+          :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
+          @input="showSubmitButton = true"
+          class="project-settings__section"
+          v-model="project.description"
+        />
       </div>
-      <FormTextFieldset
-        v-model="project.description"
-        class="project-settings__section"
-        :label="$t('projects.settings.project.description')"
-        :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
-        @input="showSubmitButton = true"
-      />
+      <section>
+        <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
+        <FormImageUploader
+          @input="showSubmitButton = true"
+          v-model="project.image"
+        />
+      </section>
       <button
         v-if="showSubmitButton"
         class="button button--submit project-settings__submit-button"
@@ -79,11 +80,17 @@ export default class ProjectSettings extends Vue {
 <style src="../../styles/settings-window-page.css"></style>
 
 <style>
+  @import "../../styles/custom-properties.css";
+
   .project-settings {
     width: 100%;
 
-    &__inline-elements {
-      display: flex;
+    &__form {
+      @apply --clearfix;
+    }
+
+    &__fieldset {
+      float: left;
     }
 
     &__label {
