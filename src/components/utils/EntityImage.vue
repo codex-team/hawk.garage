@@ -21,7 +21,7 @@ export default {
      */
     name: {
       type: String,
-      required: true
+      required: true,
     },
 
     /**
@@ -29,7 +29,7 @@ export default {
      */
     image: {
       type: String,
-      default: null
+      default: null,
     },
 
     /**
@@ -37,15 +37,15 @@ export default {
      */
     id: {
       type: [String, Number],
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       /**
        * Internal field for image URL
        */
-      imageSrc: null
+      imageSrc: null,
     };
   },
   computed: {
@@ -59,12 +59,14 @@ export default {
       if (this.id) {
         return getEntityColor(this.id);
       }
+
       return 'rgba(0,0,0, 0.3)';
-    }
+    },
   },
   mounted() {
     if (!this.image) {
       this.imageSrc = null;
+
       return;
     }
 
@@ -79,7 +81,7 @@ export default {
     img.onerror = (e) => {
       this.imageSrc = null;
     };
-  }
+  },
 };
 </script>
 

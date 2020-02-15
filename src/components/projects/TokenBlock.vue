@@ -14,14 +14,14 @@ import CodeBlock from '../utils/CodeBlock';
 export default {
   name: 'ProjectTokenBlock',
   components: {
-    CodeBlock
+    CodeBlock,
   },
   props: {
     token: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 

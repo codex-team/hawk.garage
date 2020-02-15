@@ -51,7 +51,7 @@ export default {
   name: 'WorkspaceSettings',
   components: {
     FormImageUploader,
-    FormTextFieldset
+    FormTextFieldset,
   },
   data() {
     const workspaceId = this.$route.params.workspaceId;
@@ -62,7 +62,7 @@ export default {
       name: this.workspace.name,
       description: this.workspace.description || '',
       showSubmitButton: false,
-      image: this.workspace.image
+      image: this.workspace.image,
     };
   },
   created() {
@@ -87,7 +87,7 @@ export default {
           const payload = {
             id: this.workspace.id,
             name: this.name,
-            description: this.description
+            description: this.description,
           };
 
           if (typeof this.image !== 'string') {
@@ -107,17 +107,17 @@ export default {
         notifier.show({
           message: this.$t('workspaces.settings.workspace.updatedMessage'),
           style: 'success',
-          time: 5000
+          time: 5000,
         });
       } catch (e) {
         notifier.show({
           message: e.message,
           style: 'error',
-          time: 5000
+          time: 5000,
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

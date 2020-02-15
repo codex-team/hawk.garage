@@ -11,13 +11,17 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   if (!store.getters.isAuthenticated) {
     Vue.$cookies.set('afterAuthRedirect', to.path, '1d');
     next('/login');
+
     return;
   }
 
   let isSuccessful = true;
 
   try {
-    await store.dispatch(CONFIRM_INVITE, { workspaceId, inviteHash });
+    await store.dispatch(CONFIRM_INVITE, {
+      workspaceId,
+      inviteHash,
+    });
   } catch (e) {
     isSuccessful = false;
   }
@@ -25,7 +29,7 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   notifier.show({
     message: (isSuccessful ? i18n.t('workspaces.settings.team.joinNotification') : i18n.t('workspaces.settings.team.brokenLinkNotification')).toString(),
     style: isSuccessful ? 'success' : 'error',
-    time: 10000
+    time: 10000,
   });
 
   next('/');

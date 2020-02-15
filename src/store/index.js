@@ -21,15 +21,15 @@ export default new Vuex.Store({
     workspaces,
     projects,
     modalDialog,
-    events
+    events,
   },
   plugins: [
     createPersistedState({
       paths: [
         'app',
-        'user'
-      ]
-    })
+        'user',
+      ],
+    }),
   ],
-  strict: debug
+  strict: debug,
 });

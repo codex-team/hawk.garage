@@ -87,7 +87,7 @@ export default {
     PopupDialog,
     DetailsCookie,
     DetailsBacktrace,
-    Badge
+    Badge,
   },
   data() {
     const projectId = this.$route.params.projectId;
@@ -117,7 +117,7 @@ export default {
        * Status of repetition-diff fetching
        * @type {boolean}
        */
-      loading: true
+      loading: true,
     };
   },
   computed: {
@@ -151,7 +151,7 @@ export default {
       }
 
       return unknownLocation;
-    }
+    },
   },
   /**
    * Vue created hook. Fetches error's data
@@ -164,7 +164,7 @@ export default {
     this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
       projectId: this.projectId,
       eventId,
-      repetitionId
+      repetitionId,
     });
     this.loading = false;
 
@@ -174,9 +174,12 @@ export default {
      * Dispatch VISIT_EVENT action on component create
      */
     if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
-      this.$store.dispatch(VISIT_EVENT, { projectId: this.projectId, eventId });
+      this.$store.dispatch(VISIT_EVENT, {
+        projectId: this.projectId,
+        eventId,
+      });
     }
-  }
+  },
 };
 </script>
 

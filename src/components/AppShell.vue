@@ -62,7 +62,7 @@ export default {
     ProjectsMenuItem,
     SearchField,
     WorkspaceInfo,
-    ProjectHeader
+    ProjectHeader,
   },
   data() {
     return {
@@ -70,7 +70,7 @@ export default {
        * Current opened modal window
        */
       modalComponent: null,
-      searchQuery: ''
+      searchQuery: '',
     };
   },
   computed: {
@@ -78,7 +78,7 @@ export default {
      * Current opened modal window
      */
     ...mapState({
-      modalDialogComponent: state => state.modalDialog.component
+      modalDialogComponent: state => state.modalDialog.component,
     }),
 
     /**
@@ -100,7 +100,7 @@ export default {
             id: project.id,
             name: project.name,
             workspaceId: project.workspaceId,
-            timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0) // timestamp of the last occurred event
+            timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0), // timestamp of the last occurred event
           };
         });
 
@@ -119,6 +119,7 @@ export default {
       if (!this.$store.state.workspaces.current) {
         return projectList;
       }
+
       return projectList
         .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);
     },
@@ -129,17 +130,18 @@ export default {
      */
     currentWorkspace() {
       return this.$store.state.workspaces.current;
-    }
+    },
   },
   watch: {
     modalDialogComponent(componentName) {
       if (!componentName) {
         this.modalComponent = null;
+
         return;
       }
 
       this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
-    }
+    },
   },
 
   /**
@@ -176,13 +178,19 @@ export default {
       const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(project.id);
 
       if (!recentProjectEvents) {
-        return this.$router.push({ name: 'add-catcher', params: { projectId: project.id } }, () => {
+        return this.$router.push({
+          name: 'add-catcher',
+          params: { projectId: project.id },
+        }, () => {
         });
       }
-      this.$router.push({ name: 'project-overview', params: { projectId: project.id } }, () => {
+      this.$router.push({
+        name: 'project-overview',
+        params: { projectId: project.id },
+      }, () => {
       });
-    }
-  }
+    },
+  },
 };
 
 </script>

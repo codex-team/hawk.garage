@@ -23,18 +23,19 @@ export default {
      */
     value: {
       type: [String, File],
-      default: null
-    }
+      default: null,
+    },
   },
   data: () => ({
     /**
      * Internal field for URL to uploaded image
      */
-    imageSrc: null
+    imageSrc: null,
   }),
   mounted() {
     if (!this.value) {
       this.imageSrc = null;
+
       return;
     }
 
@@ -60,8 +61,8 @@ export default {
     },
     useTempImage(file) {
       this.imageSrc = URL.createObjectURL(file);
-    }
-  }
+    },
+  },
 };
 </script>
 

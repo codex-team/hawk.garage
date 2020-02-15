@@ -15,7 +15,10 @@ import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'WorkspaceBilling',
-  components: { BillingHistory, BillingCard },
+  components: {
+    BillingHistory,
+    BillingCard,
+  },
   // Do not show billing page by direct link if user is not admin
   beforeRouteEnter(to, from, next) {
     next(async vm => {
@@ -29,6 +32,7 @@ export default {
 
       if (!isAdmin) {
         next({ name: 'workspace-settings' });
+
         return;
       }
 
@@ -40,8 +44,8 @@ export default {
       const workspaceId = this.$route.params.workspaceId;
 
       return this.$store.getters.getWorkspaceById(workspaceId);
-    }
-  }
+    },
+  },
 };
 </script>
 
