@@ -67,7 +67,7 @@ export default {
   name: 'AccountSettingsWindow',
   components: {
     SettingsWindow,
-    Icon
+    Icon,
   },
   methods: {
     /**
@@ -75,8 +75,8 @@ export default {
      */
     logout() {
       this.$store.dispatch(RESET_STORE);
-    }
-  }
+    },
+  },
 };
 </script>
 

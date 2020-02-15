@@ -43,12 +43,12 @@ api.setupApiModuleHandlers({
    */
   onAuthError() {
     store.dispatch(RESET_STORE);
-  }
+  },
 });
 
 new Vue({
   router,
   store,
   i18n,
-  render: (h) => h(App)
+  render: (h) => h(App),
 }).$mount('#app');

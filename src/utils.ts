@@ -14,7 +14,7 @@ export function getEntityColor(id: string): string {
     '#b142af',
     '#6632b8',
     '#3251b8',
-    '#505b74'
+    '#505b74',
   ];
 
   if (!id) {
@@ -164,7 +164,7 @@ export function misTranslit(string: string): string {
     'ь': 'm',
     'ю': '.',
     'б': ',',
-    ' ': ' '
+    ' ': ' ',
   };
 
   let newString = '';
@@ -208,7 +208,7 @@ export function escape(string: string, withCount = false): string | {value: stri
     [/"/g, '&quot;'],
     [/'/g, '&#39;'],
     [/</g, '&lt;'],
-    [/>/g, '&gt;']
+    [/>/g, '&gt;'],
   ];
 
   const replaced = dictionary.reduce((accumulator, pair) => {
@@ -225,7 +225,7 @@ export function escape(string: string, withCount = false): string | {value: stri
   return !withCount ? replaced : {
     value: replaced,
     count,
-    length
+    length,
   };
 }
 

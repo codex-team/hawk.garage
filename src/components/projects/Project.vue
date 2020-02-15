@@ -53,8 +53,8 @@ import FormImageUploader from '../forms/ImageUploader.vue';
 @Component({
   components: {
     FormTextFieldset,
-    FormImageUploader
-  }
+    FormImageUploader,
+  },
 })
 /**
  * Class implements project settings content component

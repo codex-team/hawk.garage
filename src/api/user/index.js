@@ -25,7 +25,7 @@ import * as api from '../index.ts';
 export async function login(email, password) {
   return (await api.call(MUTATION_LOGIN, {
     email,
-    password
+    password,
   })).login;
 }
 
@@ -79,7 +79,7 @@ export async function fetchCurrentUser() {
 export async function updateProfile(name, email, image) {
   return (await api.call(MUTATION_UPDATE_PROFILE, {
     name,
-    email
+    email,
   }, { image })).updateProfile;
 }
 
@@ -93,6 +93,6 @@ export async function updateProfile(name, email, image) {
 export async function changePassword(oldPassword, newPassword) {
   return (await api.call(MUTATION_CHANGE_PASSWORD, {
     oldPassword,
-    newPassword
+    newPassword,
   })).changePassword;
 }

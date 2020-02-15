@@ -110,7 +110,7 @@ function initialState(): EventsModuleState {
   return {
     list: {},
     recent: {},
-    repetitions: {}
+    repetitions: {},
   };
 }
 
@@ -242,7 +242,7 @@ const module: Module<EventsModuleState, RootState> = {
 
         return null;
       };
-    }
+    },
   },
   actions: {
     /**
@@ -277,11 +277,11 @@ const module: Module<EventsModuleState, RootState> = {
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
       commit(MutationTypes.ADD_TO_EVENTS_LIST, {
         projectId,
-        eventsList: recentEvents.events
+        eventsList: recentEvents.events,
       });
       commit(MutationTypes.ADD_TO_RECENT_EVENTS_LIST, {
         projectId,
-        recentEventsInfoByDate: dailyInfoByDate
+        recentEventsInfoByDate: dailyInfoByDate,
       });
 
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
@@ -332,7 +332,7 @@ const module: Module<EventsModuleState, RootState> = {
       commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
         projectId,
         eventId,
-        repetition
+        repetition,
       });
 
       if (repetition) {
@@ -366,7 +366,7 @@ const module: Module<EventsModuleState, RootState> = {
         commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
           projectId,
           eventId,
-          repetition
+          repetition,
         });
       }
 
@@ -388,7 +388,7 @@ const module: Module<EventsModuleState, RootState> = {
       if (!originalEvent) {
         return this.dispatch(FETCH_EVENT_REPETITION, {
           projectId,
-          eventId
+          eventId,
         });
       }
 
@@ -416,7 +416,7 @@ const module: Module<EventsModuleState, RootState> = {
         commit(MutationTypes.MARK_AS_VISITED, {
           projectId,
           eventId,
-          userId
+          userId,
         });
       }
     },
@@ -427,7 +427,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [RESET_STORE]({ commit }): void {
       commit(RESET_STORE);
-    }
+    },
   },
   mutations: {
     /**
@@ -539,8 +539,8 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [RESET_STORE](state: EventsModuleState) {
       Object.assign(state, initialState());
-    }
-  }
+    },
+  },
 };
 
 export default module;

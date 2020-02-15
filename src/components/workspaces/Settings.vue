@@ -60,7 +60,11 @@ import { FETCH_WORKSPACE, REMOVE_WORKSPACE } from '../../store/modules/workspace
 
 export default {
   name: 'WorkspaceSettings',
-  components: { SettingsWindow, EntityImage, Icon },
+  components: {
+    SettingsWindow,
+    EntityImage,
+    Icon,
+  },
   computed: {
     /**
      * Workspace id to show
@@ -87,7 +91,7 @@ export default {
       const user = this.$store.state.user.data;
 
       return this.workspace.users.find(u => u.id === user.id).isAdmin;
-    }
+    },
   },
   created() {
     this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
@@ -98,8 +102,8 @@ export default {
      */
     removeWorkspace() {
       this.$store.dispatch(REMOVE_WORKSPACE, this.workspaceId);
-    }
-  }
+    },
+  },
 };
 </script>
 
