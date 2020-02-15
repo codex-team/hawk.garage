@@ -17,9 +17,9 @@
           @input="showSubmitButton = true"
         />
         <FormTextFieldset
+          @input="showSubmitButton = true"
           :label="$t('projects.settings.project.description')"
           :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
-          @input="showSubmitButton = true"
           class="project-settings__section"
           v-model="project.description"
         />
@@ -27,8 +27,8 @@
       <section>
         <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
         <FormImageUploader
-          @input="showSubmitButton = true"
           v-model="project.image"
+          @input="showSubmitButton = true"
         />
       </section>
       <button
