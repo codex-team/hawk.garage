@@ -18,14 +18,14 @@ import PopupWindow from '../utils/PopupWindow';
 export default {
   name: 'SettingsWindow',
   components: {
-    PopupWindow,
+    PopupWindow
   },
   props: {
     onCloseRoute: {
       type: String,
-      default: undefined,
-    },
-  },
+      default: undefined
+    }
+  }
 };
 </script>
 

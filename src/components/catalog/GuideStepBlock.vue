@@ -26,13 +26,13 @@ export default {
   props: {
     stepNumber: {
       type: Number,
-      required: true,
+      required: true
     },
     last: {
       type: Boolean,
-      default: false,
-    },
-  },
+      default: false
+    }
+  }
 };
 </script>
 

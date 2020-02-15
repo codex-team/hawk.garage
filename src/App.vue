@@ -22,7 +22,7 @@ export default {
      */
     themeClass() {
       return `app--theme--${this.$store.state.app.theme}`;
-    },
+    }
   },
 
   /**
@@ -63,10 +63,10 @@ export default {
         okText: 'Refresh',
         cancelText: 'Close',
         okHandler: () => window.location.reload(),
-        time: 10000,
+        time: 10000
       });
     });
-  },
+  }
 };
 </script>
 

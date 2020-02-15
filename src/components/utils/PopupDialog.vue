@@ -27,11 +27,11 @@ import CloseButton from './CloseButton';
 export default {
   name: 'PopupDialog',
   components: {
-    CloseButton,
+    CloseButton
   },
   props: {
-    big: Boolean,
-  },
+    big: Boolean
+  }
 };
 </script>
 

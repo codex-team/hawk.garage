@@ -17,7 +17,7 @@ import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 
 export default {
   components: {
-    Form,
+    Form
   },
   mixins: [ offlineErrorMessage ],
   data() {
@@ -28,11 +28,11 @@ export default {
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
-          type: 'email',
-        },
+          type: 'email'
+        }
       ],
       submitText: this.$t('authPages.signUpSubmitText'),
-      message: null,
+      message: null
     };
   },
   methods: {
@@ -48,11 +48,11 @@ export default {
       } catch (e) {
         this.message = {
           text: e.message,
-          type: 'error',
+          type: 'error'
         };
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

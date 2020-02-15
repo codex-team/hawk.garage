@@ -25,12 +25,12 @@ export default {
   components: {
     BillingCards,
     BillingCard,
-    BillingHistory,
+    BillingHistory
   },
   computed: {
     workspaces() {
       return this.$store.state.workspaces.list.filter(workspace => this.isAdmin(workspace));
-    },
+    }
   },
   async created() {
     /**
@@ -51,8 +51,8 @@ export default {
       const user = this.$store.state.user.data;
 
       return workspace.users.find(u => u.id === user.id).isAdmin;
-    },
-  },
+    }
+  }
 };
 </script>
 

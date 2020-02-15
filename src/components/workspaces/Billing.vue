@@ -17,7 +17,7 @@ export default {
   name: 'WorkspaceBilling',
   components: {
     BillingHistory,
-    BillingCard,
+    BillingCard
   },
   // Do not show billing page by direct link if user is not admin
   beforeRouteEnter(to, from, next) {
@@ -44,8 +44,8 @@ export default {
       const workspaceId = this.$route.params.workspaceId;
 
       return this.$store.getters.getWorkspaceById(workspaceId);
-    },
-  },
+    }
+  }
 };
 </script>
 

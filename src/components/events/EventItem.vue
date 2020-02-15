@@ -33,7 +33,7 @@ export default {
   name: 'EventItem',
   components: {
     Badge,
-    Icon,
+    Icon
   },
   props: {
     /**
@@ -41,22 +41,22 @@ export default {
      */
     event: {
       type: Object,
-      required: true,
+      required: true
     },
     /**
      * @type {String} - timestamp of the last event
      */
     lastOccurrenceTimestamp: {
       type: String,
-      required: true,
+      required: true
     },
     /**
      * @type {Number} - number of events per day
      */
     count: {
       type: [String, Number],
-      default: '',
-    },
+      default: ''
+    }
   },
   computed: {
     /**
@@ -72,8 +72,8 @@ export default {
       }
 
       return visitedBy.includes(this.$store.state.user.data.id);
-    },
-  },
+    }
+  }
 };
 </script>
 

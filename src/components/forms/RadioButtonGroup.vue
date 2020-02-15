@@ -51,21 +51,21 @@ export default {
   props: {
     label: {
       type: String,
-      required: true,
+      required: true
     },
     name: {
       type: String,
-      required: true,
+      required: true
     },
     options: {
       type: Array,
-      required: true,
+      required: true
     },
     value: {
       type: String,
-      required: true,
-    },
-  },
+      required: true
+    }
+  }
 };
 </script>
 

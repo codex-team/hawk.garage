@@ -43,13 +43,13 @@ export default {
   props: {
     repetitions: {
       type: Array,
-      required: true,
+      required: true
     },
     date: {
       type: String,
-      required: true,
-    },
-  },
+      required: true
+    }
+  }
 };
 </script>
 

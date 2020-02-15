@@ -37,5 +37,5 @@ export default {
     // Remove Event Listeners
     document.removeEventListener('click', el.__vueClickOutside__);
     el.__vueClickOutside__ = null;
-  },
+  }
 };

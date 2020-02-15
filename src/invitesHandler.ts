@@ -20,7 +20,7 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   try {
     await store.dispatch(CONFIRM_INVITE, {
       workspaceId,
-      inviteHash,
+      inviteHash
     });
   } catch (e) {
     isSuccessful = false;
@@ -29,7 +29,7 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   notifier.show({
     message: (isSuccessful ? i18n.t('workspaces.settings.team.joinNotification') : i18n.t('workspaces.settings.team.brokenLinkNotification')).toString(),
     style: isSuccessful ? 'success' : 'error',
-    time: 10000,
+    time: 10000
   });
 
   next('/');

@@ -23,7 +23,7 @@ export function prepareFormData(
 
   const operation = {
     query: request,
-    variables,
+    variables
   };
 
   const map: {[name: string]: string[]} = {};

@@ -64,21 +64,21 @@ export default {
   props: {
     workspace: {
       type: Object,
-      default: undefined,
-    },
+      default: undefined
+    }
   },
   data() {
     return {
       FILTERS: {
         ALL: 0,
         INCOMINGS: 1,
-        CHARGES: 2,
+        CHARGES: 2
       },
       TYPES: {
         CHARGE: 'charge',
-        INCOME: 'income',
+        INCOME: 'income'
       },
-      filter: 0,
+      filter: 0
     };
   },
   computed: {
@@ -111,7 +111,7 @@ export default {
         default:
           return transactions;
       }
-    },
+    }
   },
   created() {
     const ids = [];
@@ -133,8 +133,8 @@ export default {
         case this.TYPES.CHARGE:
           return `Payment for ${transaction.workspace.name} current plan`;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

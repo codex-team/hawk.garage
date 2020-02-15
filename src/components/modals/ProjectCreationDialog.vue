@@ -51,13 +51,13 @@ export default {
     PopupDialog,
     TextFieldset,
     ImageUploader,
-    CustomSelect,
+    CustomSelect
   },
   data() {
     return {
       name: '', // project name
       workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0], // project's workspace
-      image: null,
+      image: null
     };
   },
   computed: {
@@ -66,7 +66,7 @@ export default {
      */
     workspaces() {
       return this.$store.state.workspaces.list;
-    },
+    }
   },
   methods: {
     /**
@@ -76,7 +76,7 @@ export default {
       try {
         const projectInfo = {
           name: this.name,
-          workspaceId: this.workspace.id,
+          workspaceId: this.workspace.id
         };
 
         if (this.image) {
@@ -89,8 +89,8 @@ export default {
       } catch (e) {
         console.log(e);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

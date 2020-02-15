@@ -14,7 +14,7 @@ import { groupByDate } from '../../../utils';
  */
 const mutationTypes = {
   SET_THEME: 'SET_THEME', // Set theme name,
-  SET_LANGUAGE: 'SET_LANGUAGE', // Set new language
+  SET_LANGUAGE: 'SET_LANGUAGE' // Set new language
 };
 
 /**
@@ -22,7 +22,7 @@ const mutationTypes = {
  */
 export const Themes = {
   DARK: 'dark',
-  LIGHT: 'light',
+  LIGHT: 'light'
 };
 
 /**
@@ -30,7 +30,7 @@ export const Themes = {
  */
 export const Languages = {
   en: 'en',
-  ru: 'ru',
+  ru: 'ru'
 };
 
 /**
@@ -41,7 +41,7 @@ export const Languages = {
  */
 const state = {
   theme: Themes.DARK,
-  language: Languages.en,
+  language: Languages.en
 };
 
 const actions = {
@@ -92,7 +92,7 @@ const actions = {
     dispatch(SET_PROJECTS_LIST, projects);
     dispatch(INIT_EVENTS_MODULE, {
       events,
-      recentEvents,
+      recentEvents
     });
   },
 
@@ -103,7 +103,7 @@ const actions = {
    */
   async [SET_LANGUAGE]({ commit }, language) {
     commit(mutationTypes.SET_LANGUAGE, language);
-  },
+  }
 };
 
 const mutations = {
@@ -123,11 +123,11 @@ const mutations = {
    */
   [mutationTypes.SET_LANGUAGE](state, language) {
     state.language = language;
-  },
+  }
 };
 
 export default {
   state,
   actions,
-  mutations,
+  mutations
 };
