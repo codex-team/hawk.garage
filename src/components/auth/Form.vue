@@ -102,12 +102,11 @@ export default {
     altLink: {
       type: String,
       default: null
+    },
+    isPasswordRecoverSuccess: {
+      type: Boolean,
+      default: false
     }
-  },
-  data() {
-    return {
-      isPasswordRecoverSuccess: true
-    };
   }
 };
 </script>

@@ -7,6 +7,7 @@
       :message="message"
       :alt-link="altLink"
       :alt-text="altText"
+      :is-password-recover-success="isPasswordRecoverSuccess"
       @submit="login"
     />
   </div>
@@ -23,6 +24,12 @@ export default {
     Form
   },
   mixins: [ offlineErrorMessage ],
+  props: {
+    isPasswordRecoverSuccess: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       fields: [
