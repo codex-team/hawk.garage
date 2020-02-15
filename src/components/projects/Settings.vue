@@ -1,5 +1,5 @@
 <template>
-  <SettingsWindow>
+  <SettingsWindow on-close-route="../">
     <template v-slot:header>
       <div class="settings-window__header account-settings__header">
         <div class="project-settings__logo settings-window__logo" />
