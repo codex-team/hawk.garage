@@ -25,6 +25,9 @@ export default {
   },
   mixins: [ offlineErrorMessage ],
   props: {
+    /**
+     * Prop for getting information about recovering password result from router
+     */
     isPasswordRecoverSuccess: {
       type: Boolean,
       default: false

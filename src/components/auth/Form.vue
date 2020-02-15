@@ -103,6 +103,10 @@ export default {
       type: String,
       default: null
     },
+    /**
+     * Show success message about sending message to email
+     * If recovering password was successful
+     */
     isPasswordRecoverSuccess: {
       type: Boolean,
       default: false
