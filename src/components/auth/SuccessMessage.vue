@@ -34,7 +34,7 @@ export default class SuccessMessage extends Vue {}
     text-align: center;
   }
 
-  &__icon{
+  &__icon {
     margin-right: 10px;
     font-size: 13px;
   }
