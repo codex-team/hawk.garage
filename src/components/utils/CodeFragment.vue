@@ -48,7 +48,7 @@ export default {
       type: Array,
       default() {
         return [];
-      }
+      },
     },
 
     /**
@@ -57,7 +57,7 @@ export default {
      */
     linesHighlighted: {
       type: Array,
-      default: null
+      default: null,
     },
 
     /**
@@ -65,7 +65,7 @@ export default {
      */
     lang: {
       type: String,
-      default: 'plaintext'
+      default: 'plaintext',
     },
 
     /**
@@ -73,7 +73,7 @@ export default {
      */
     columnPointer: {
       type: Number,
-      default: null
+      default: null,
     },
 
     /**
@@ -82,8 +82,8 @@ export default {
      */
     filename: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
@@ -91,7 +91,7 @@ export default {
        * Highlighting syntax.
        * Can be overridden in some cases, {@link mounted}
        */
-      syntax: null
+      syntax: null,
     };
   },
   computed: {
@@ -124,7 +124,7 @@ export default {
       }
 
       return _.escape(code);
-    }
+    },
   },
   /**
    * Vue mounted hook. Used to render highlighting
@@ -248,8 +248,8 @@ export default {
       }
 
       return code;
-    }
-  }
+    },
+  },
 };
 </script>
 

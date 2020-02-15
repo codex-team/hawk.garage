@@ -9,7 +9,7 @@ import {
  */
 const mutationTypes = {
   SET_MODAL_DIALOG: 'SET_MODAL_DIALOG_MUTATION', // Set modal dialog data,
-  RESET_MODAL_DIALOG: 'RESET_MODAL_DIALOG_MUTATION' // Reset modal dialog data
+  RESET_MODAL_DIALOG: 'RESET_MODAL_DIALOG_MUTATION', // Reset modal dialog data
 };
 
 /**
@@ -21,7 +21,7 @@ const mutationTypes = {
 function initialState() {
   return {
     component: null,
-    data: {}
+    data: {},
   };
 }
 
@@ -35,7 +35,10 @@ const actions = {
    * @return {Promise<void>}
    */
   async [SET_MODAL_DIALOG]({ commit }, { component, data = {} }) {
-    commit(mutationTypes.SET_MODAL_DIALOG, { component, data });
+    commit(mutationTypes.SET_MODAL_DIALOG, {
+      component,
+      data,
+    });
   },
 
   /**
@@ -46,7 +49,7 @@ const actions = {
    */
   async [RESET_MODAL_DIALOG]({ commit }) {
     commit(mutationTypes.RESET_MODAL_DIALOG);
-  }
+  },
 };
 
 const mutations = {
@@ -71,11 +74,11 @@ const mutations = {
   [mutationTypes.RESET_MODAL_DIALOG](state) {
     state.component = null;
     state.data = {};
-  }
+  },
 };
 
 export default {
   state: initialState(),
   actions,
-  mutations
+  mutations,
 };

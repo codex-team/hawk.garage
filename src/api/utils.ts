@@ -9,18 +9,21 @@
  */
 export function prepareFormData(
   request: string,
-  variables: any,
+  variables: object | undefined,
   files: {[name: string]: File | undefined}
-) {
+): FormData {
   Object
     .keys(files)
     .forEach(name => {
-      variables[name] = null;
+      if (variables) {
+        // eslint-disable-next-line
+        variables[name] = null;
+      }
     });
 
   const operation = {
     query: request,
-    variables
+    variables,
   };
 
   const map: {[name: string]: string[]} = {};

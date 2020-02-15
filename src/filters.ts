@@ -26,7 +26,9 @@ Vue.filter('spacedNumber', function (value: number): string {
  * @return {string}
  */
 Vue.filter('abbreviation', function (value: string): string {
-  if (!value) return '';
+  if (!value) {
+    return '';
+  }
 
   const words = value.split(' ');
 
@@ -43,7 +45,9 @@ Vue.filter('prettyTime', function (value: Date | string) {
 
   const ONE_MINUTE_IN_MS = 1000 * 60;
 
-  if ((currentDate.getTime() - date.getTime()) / (ONE_MINUTE_IN_MS) < 1) return 'now';
+  if ((currentDate.getTime() - date.getTime()) / (ONE_MINUTE_IN_MS) < 1) {
+    return 'now';
+  }
 
   const minutes = date.getMinutes();
   const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;

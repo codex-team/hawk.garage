@@ -22,7 +22,7 @@ export default {
      */
     themeClass() {
       return `app--theme--${this.$store.state.app.theme}`;
-    }
+    },
   },
 
   /**
@@ -35,7 +35,9 @@ export default {
     this.$store.watch(
       state => state.user.accessToken,
       accessToken => {
-        if (!accessToken) this.$router.push('/login');
+        if (!accessToken) {
+          this.$router.push('/login');
+        }
         api.setAuthToken(accessToken);
       }
     );
@@ -61,10 +63,10 @@ export default {
         okText: 'Refresh',
         cancelText: 'Close',
         okHandler: () => window.location.reload(),
-        time: 10000
+        time: 10000,
       });
     });
-  }
+  },
 };
 </script>
 

@@ -38,6 +38,15 @@
       "workspaceSelectLabel": "Выбрать воркспейс"
     },
     "settings": {
+      "project": {
+        "title": "Настройки проекта",
+        "image": "Изображение",
+        "description": "Описание",
+        "descriptionPlaceholder": "Лучший проект",
+        "submit": "Сохранить",
+        "created": "Создан 25 Авг, 2019",
+        "updatedMessage": "Настройки проекта успешно обновлены"
+      },
       "integrations": {
         "title": "Интеграции",
         "projectTokenLabel": "Интеграционный токен для проекта"

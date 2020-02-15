@@ -34,7 +34,7 @@ export default {
   name: 'WorkspaceInfo',
   components: {
     EntityImage,
-    Icon
+    Icon,
   },
   props: {
     /**
@@ -42,14 +42,14 @@ export default {
      */
     workspace: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     createProjectButtonClicked() {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
-    }
-  }
+    },
+  },
 };
 </script>
 

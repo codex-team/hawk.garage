@@ -61,7 +61,7 @@ export default {
   components: {
     EntityImage,
     WorkspacesMenuItem,
-    Icon
+    Icon,
   },
   data() {
     return {
@@ -73,7 +73,7 @@ export default {
       /**
        * If true, gradient in workspaces list will be applied
        */
-      isWorkspaceMenuScrolled: false
+      isWorkspaceMenuScrolled: false,
     };
   },
   computed: {
@@ -102,18 +102,20 @@ export default {
       } else {
         return {};
       }
-    }
+    },
   },
   watch: {
     currentWorkspace(newWorkspace) {
-      if (!newWorkspace) return;
+      if (!newWorkspace) {
+        return;
+      }
       const workspaceIndex = this.workspaces.findIndex(ws => ws.id === this.currentWorkspace.id);
       const highlightPadding = 9;
       const workspaceItemHeight = 56;
       const workspacesListPadding = 20;
 
       this.highlightPosition = workspaceItemHeight * workspaceIndex - highlightPadding + workspacesListPadding + 'px';
-    }
+    },
   },
   methods: {
     /**
@@ -142,8 +144,8 @@ export default {
       const minimumDistance = 5;
 
       this.isWorkspaceMenuScrolled = event.target.scrollTop > minimumDistance;
-    }
-  }
+    },
+  },
 };
 </script>
 

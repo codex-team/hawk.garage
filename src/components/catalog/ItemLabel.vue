@@ -12,9 +12,9 @@ export default {
   props: {
     itemType: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 
