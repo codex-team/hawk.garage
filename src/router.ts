@@ -110,7 +110,10 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue')
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue'),
+      props: route => ({
+        isPasswordRecoverSuccess: route.params.isPasswordRecoverSuccess === 'true'
+      })
     },
     {
       path: '/join/:workspaceId/:inviteHash?',

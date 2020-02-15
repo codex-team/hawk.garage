@@ -76,7 +76,10 @@ export default class RecoverPassword extends Vue {
 
     try {
       await this.$store.dispatch(RECOVER_PASSWORD, { email });
-      this.$router.push('/login');
+      this.$router.push({
+        name: 'login',
+        params: { isPasswordRecoverSuccess: 'true' }
+      });
     } catch (e) {
       this.message = {
         text: e.message,
