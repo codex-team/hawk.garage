@@ -9,6 +9,11 @@ export const LOGIN = 'LOGIN';
 export const SIGN_UP = 'SIGN_UP';
 
 /**
+ * Send recover password request to the server
+ */
+export const RECOVER_PASSWORD = 'RECOVER_PASSWORD';
+
+/**
  * Set tokens from query parameters
  */
 export const SET_TOKENS = 'SET_TOKENS';

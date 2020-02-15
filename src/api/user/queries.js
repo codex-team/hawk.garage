@@ -20,6 +20,15 @@ mutation signUp($email: String!) {
 `;
 
 /**
+ * Recover password mutation
+ */
+export const MUTATION_RECOVER_PASSWORD = `
+mutation recoverPassword($email: String!) {
+  resetPassword(email: $email)
+}
+`;
+
+/**
  * Mutation for refreshing tokens
  */
 export const MUTATION_REFRESH_TOKENS = `
