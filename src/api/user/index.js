@@ -3,6 +3,7 @@ import {
   MUTATION_LOGIN,
   MUTATION_REFRESH_TOKENS,
   MUTATION_SIGN_UP,
+  MUTATION_RECOVER_PASSWORD,
   MUTATION_UPDATE_PROFILE,
   QUERY_CURRENT_USER
 } from './queries';
@@ -33,6 +34,16 @@ export async function login(email, password) {
  */
 export async function signUp(email) {
   return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
+}
+
+/**
+ * Recover password by email
+ *
+ * @param {string} email - user Email
+ * @return {Promise<boolean>} Response status
+ */
+export async function recoverPassword(email) {
+  return (await api.call(MUTATION_RECOVER_PASSWORD, { email })).resetPassword;
 }
 
 /**
