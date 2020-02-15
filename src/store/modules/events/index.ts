@@ -110,7 +110,7 @@ function initialState(): EventsModuleState {
   return {
     list: {},
     recent: {},
-    repetitions: {}
+    repetitions: {},
   };
 }
 
@@ -165,6 +165,7 @@ const module: Module<EventsModuleState, RootState> = {
         }
 
         eventsByGroupHash[uniqueId] = event;
+
         return event;
       };
     },
@@ -213,6 +214,7 @@ const module: Module<EventsModuleState, RootState> = {
             return latestDailyInfo[0];
           }
         }
+
         return null;
       };
     },
@@ -234,9 +236,10 @@ const module: Module<EventsModuleState, RootState> = {
 
           return Object.values(state.list).find((event) => event.groupHash === lastEventGroupHash) || null;
         }
+
         return null;
       };
-    }
+    },
   },
   actions: {
     /**
@@ -246,7 +249,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEventsDailyInfoByProject} recentEvents - projects recent events
      */
     [INIT_EVENTS_MODULE](
-      { commit }, { events, recentEvents }: { events: EventsMap, recentEvents: HawkEventsDailyInfoByProject }
+      { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
     ): void {
       commit(MutationTypes.SET_EVENTS_LIST, events);
       commit(MutationTypes.SET_RECENT_EVENTS_LIST, recentEvents);
@@ -269,8 +272,15 @@ const module: Module<EventsModuleState, RootState> = {
       const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
-      commit(MutationTypes.ADD_TO_EVENTS_LIST, { projectId, eventsList: recentEvents.events });
-      commit(MutationTypes.ADD_TO_RECENT_EVENTS_LIST, { projectId, recentEventsInfoByDate: dailyInfoByDate });
+      commit(MutationTypes.ADD_TO_EVENTS_LIST, {
+        projectId,
+        eventsList: recentEvents.events,
+      });
+      commit(MutationTypes.ADD_TO_RECENT_EVENTS_LIST, {
+        projectId,
+        recentEventsInfoByDate: dailyInfoByDate,
+      });
+
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
 
@@ -286,7 +296,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_EVENT_REPETITIONS](
       { state },
-      { projectId, eventId, limit }: { projectId: string, eventId: string, limit: number }
+      { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number }
     ): Promise<HawkEvent[]> {
       const originalEvent = state.list[getEventsListKey(projectId, eventId)];
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
@@ -295,6 +305,7 @@ const module: Module<EventsModuleState, RootState> = {
         const newEvent = Object.assign({}, originalEvent);
 
         newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
+
         return newEvent;
       });
     },
@@ -315,7 +326,11 @@ const module: Module<EventsModuleState, RootState> = {
       const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
       const actualEvent = Object.assign({}, originalEvent);
 
-      commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
+      commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
+        projectId,
+        eventId,
+        repetition,
+      });
 
       if (repetition) {
         actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
@@ -345,7 +360,11 @@ const module: Module<EventsModuleState, RootState> = {
 
       if (repetition !== null) {
         event.payload = deepMerge(event.payload, repetition.payload);
-        commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
+        commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
+          projectId,
+          eventId,
+          repetition,
+        });
       }
 
       return event;
@@ -364,13 +383,17 @@ const module: Module<EventsModuleState, RootState> = {
       const originalEvent = state.list[key];
 
       if (!originalEvent) {
-        return this.dispatch(FETCH_EVENT_REPETITION, { projectId, eventId });
+        return this.dispatch(FETCH_EVENT_REPETITION, {
+          projectId,
+          eventId,
+        });
       }
 
       const repetition = state.repetitions[key];
       const actualEvent = Object.assign({}, originalEvent);
 
       actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
+
       return actualEvent;
     },
 
@@ -387,7 +410,11 @@ const module: Module<EventsModuleState, RootState> = {
       const userId = (rootState as RootState).user.data.id;
 
       if (result) {
-        commit(MutationTypes.MARK_AS_VISITED, { projectId, eventId, userId });
+        commit(MutationTypes.MARK_AS_VISITED, {
+          projectId,
+          eventId,
+          userId,
+        });
       }
     },
 
@@ -397,7 +424,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [RESET_STORE]({ commit }): void {
       commit(RESET_STORE);
-    }
+    },
   },
   mutations: {
     /**
@@ -417,7 +444,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.ADD_TO_RECENT_EVENTS_LIST](
       state,
-      { projectId, recentEventsInfoByDate }: { projectId: string, recentEventsInfoByDate: HawkEventsDailyInfoByDate }
+      { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }
     ) {
       /**
        * Algorithm for merging the list of recent events from vuex store and server response
@@ -428,6 +455,7 @@ const module: Module<EventsModuleState, RootState> = {
          */
         if (!state.recent[projectId][date]) {
           Vue.set(state.recent[projectId], date, recentEventsInfoByDate[date]);
+
           return;
         }
         const dailyEvents = recentEventsInfoByDate[date];
@@ -456,7 +484,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId - id of the project to add
      * @param {Array<HawkEvent>} eventsList - new list of events
      */
-    [MutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }: { projectId: string, eventsList: HawkEvent[] }) {
+    [MutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }) {
       eventsList.forEach((event) => {
         state.list[getEventsListKey(projectId, event.id)] = event;
       });
@@ -508,8 +536,8 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [RESET_STORE](state: EventsModuleState) {
       Object.assign(state, initialState());
-    }
-  }
+    },
+  },
 };
 
 export default module;

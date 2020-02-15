@@ -42,13 +42,16 @@ import FormTextFieldset from './TextFieldset';
 
 export default {
   name: 'ChangePasswordFieldset',
-  components: { FormTextFieldset, Icon },
+  components: {
+    FormTextFieldset,
+    Icon,
+  },
   props: {
     value: {
       type: Object,
-      required: true
+      required: true,
     },
-    showInputs: Boolean
+    showInputs: Boolean,
   },
   methods: {
     oldPasswordInput(value) {
@@ -59,8 +62,8 @@ export default {
     newPasswordInput(value) {
       this.value.new = value;
       this.$emit('input', this.value);
-    }
-  }
+    },
+  },
 };
 </script>
 

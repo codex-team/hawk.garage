@@ -21,14 +21,14 @@ import Icon from '../utils/Icon';
 export default {
   name: 'FormSearchField',
   components: {
-    Icon
+    Icon,
   },
   props: {
     value: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 

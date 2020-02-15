@@ -23,7 +23,10 @@ import * as api from '../index.ts';
  * @return {Promise<TokensPair>} - Auth token
  */
 export async function login(email, password) {
-  return (await api.call(MUTATION_LOGIN, { email, password })).login;
+  return (await api.call(MUTATION_LOGIN, {
+    email,
+    password,
+  })).login;
 }
 
 /**
@@ -74,7 +77,10 @@ export async function fetchCurrentUser() {
  * @returns {Promise<Boolean>}
  */
 export async function updateProfile(name, email, image) {
-  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email }, { image })).updateProfile;
+  return (await api.call(MUTATION_UPDATE_PROFILE, {
+    name,
+    email,
+  }, { image })).updateProfile;
 }
 
 /**
@@ -85,5 +91,8 @@ export async function updateProfile(name, email, image) {
  * @returns {Promise<Boolean>}
  */
 export async function changePassword(oldPassword, newPassword) {
-  return (await api.call(MUTATION_CHANGE_PASSWORD, { oldPassword, newPassword })).changePassword;
+  return (await api.call(MUTATION_CHANGE_PASSWORD, {
+    oldPassword,
+    newPassword,
+  })).changePassword;
 }

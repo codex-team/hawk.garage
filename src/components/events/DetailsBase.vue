@@ -26,7 +26,7 @@ import Icon from '../utils/Icon';
 export default {
   name: 'EventDetailsBase',
   components: {
-    Icon
+    Icon,
   },
   props: {
     /**
@@ -34,9 +34,9 @@ export default {
      */
     expandShowed: {
       type: [Boolean, Number],
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 };
 </script>
 

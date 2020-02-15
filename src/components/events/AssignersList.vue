@@ -31,7 +31,7 @@ export default {
   name: 'AssignersList',
   components: {
     EntityImage,
-    Icon
+    Icon,
   },
   data() {
     return {
@@ -40,21 +40,21 @@ export default {
           id: 1,
           email: 'specc.dev@gmail.com',
           image: 'https://capella.pics/8c91985d-1814-4f87-8835-9c9113c515da.jpg',
-          assigned: true
+          assigned: true,
         },
         {
           id: 2,
           email: 'nikmel2803@gmail.com',
-          image: 'https://capella.pics/33991d0e-cc53-4a7e-aa81-48a103cd7d09.jpg'
+          image: 'https://capella.pics/33991d0e-cc53-4a7e-aa81-48a103cd7d09.jpg',
         },
         {
           id: 3,
           email: 'khaydarov@gmail.com',
-          image: 'https://capella.pics/a7b08a96-9ac7-424f-b700-48dff2342987.jpg'
-        }
-      ]
+          image: 'https://capella.pics/a7b08a96-9ac7-424f-b700-48dff2342987.jpg',
+        },
+      ],
     };
-  }
+  },
 };
 </script>
 

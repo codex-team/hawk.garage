@@ -38,7 +38,7 @@ const uninterestedCookieKeys = ['_ym_id', '_ga'];
 export default {
   name: 'DetailsCookie',
   components: {
-    DetailsBase
+    DetailsBase,
   },
   props: {
     /**
@@ -46,15 +46,15 @@ export default {
      */
     cookies: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       /**
        * Is all cookies shown
        */
-      isUninterestedShown: false
+      isUninterestedShown: false,
     };
   },
   computed: {
@@ -76,7 +76,9 @@ export default {
      * Text for expand button
      */
     expandButtonText() {
-      if (this.isUninterestedShown) return 'Hide';
+      if (this.isUninterestedShown) {
+        return 'Hide';
+      }
       switch (this.uninterestedCookies.length) {
         case 0:
           return;
@@ -87,7 +89,7 @@ export default {
       }
 
       return `Show <b>${this.uninterestedCookies[0].key}</b>, <b>${this.uninterestedCookies[1].key}</b> and other uninterested cookies`;
-    }
-  }
+    },
+  },
 };
 </script>

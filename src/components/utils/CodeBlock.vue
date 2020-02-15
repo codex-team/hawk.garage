@@ -32,14 +32,14 @@ export default {
   props: {
     language: {
       type: String,
-      default: null
+      default: null,
     },
     copyable: Boolean,
-    oneLine: Boolean
+    oneLine: Boolean,
   },
   data() {
     return {
-      linesNumber: 0
+      linesNumber: 0,
     };
   },
   computed: {
@@ -49,7 +49,7 @@ export default {
      */
     isSingleLine() {
       return this.$slots.default[0].text.includes('\n') === false;
-    }
+    },
   },
   /**
    * Vue mounted hook. Used to render highlighting
@@ -65,10 +65,10 @@ export default {
       notifier.show({
         message: this.$t('common.copiedNotification'),
         style: 'success',
-        time: 2000
+        time: 2000,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
