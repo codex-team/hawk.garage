@@ -13,16 +13,16 @@ export default {
   props: {
     current: {
       type: Number,
-      required: true,
+      required: true
     },
     max: {
       type: Number,
-      required: true,
+      required: true
     },
     color: {
       type: String,
-      default: '#fff',
-    },
+      default: '#fff'
+    }
   },
   computed: {
     progressStyles() {
@@ -30,10 +30,10 @@ export default {
 
       return {
         'background-color': this.color,
-        width: `${progressWidth}%`,
+        width: `${progressWidth}%`
       };
-    },
-  },
+    }
+  }
 };
 </script>
 

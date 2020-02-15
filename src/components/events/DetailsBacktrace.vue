@@ -67,7 +67,7 @@ export default {
   components: {
     DetailsBase,
     CodeFragment,
-    Icon,
+    Icon
   },
   props: {
     /**
@@ -75,7 +75,7 @@ export default {
      */
     backtrace: {
       type: Array,
-      required: true,
+      required: true
     },
 
     /**
@@ -83,8 +83,8 @@ export default {
      */
     lang: {
       type: String,
-      default: undefined,
-    },
+      default: undefined
+    }
   },
   data() {
     return {
@@ -96,7 +96,7 @@ export default {
       /**
        * Indexes of opened frames
        */
-      openedFrames: [],
+      openedFrames: []
     };
   },
   computed: {
@@ -105,7 +105,7 @@ export default {
      */
     filteredBacktrace() {
       return this.backtrace.length === 4 || this.isMoreFilesShown ? this.backtrace : this.backtrace.slice(0, 3);
-    },
+    }
   },
   mounted() {
     /**
@@ -154,8 +154,8 @@ export default {
       }
 
       return str;
-    },
-  },
+    }
+  }
 };
 </script>
 

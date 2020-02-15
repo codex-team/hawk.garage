@@ -20,24 +20,24 @@ export default {
   props: {
     label: {
       type: String,
-      default: undefined,
+      default: undefined
     },
     checked: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   data() {
     return {
-      state: this.checked,
+      state: this.checked
     };
   },
   methods: {
     clicked() {
       this.state = !this.state;
       this.$emit('checked', this.state);
-    },
-  },
+    }
+  }
 };
 </script>
 

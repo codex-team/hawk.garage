@@ -32,7 +32,7 @@ export default {
   name: 'ProjectHeader',
   components: {
     EntityImage,
-    Icon,
+    Icon
   },
   computed: {
     /**
@@ -43,8 +43,8 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
-    },
-  },
+    }
+  }
 };
 </script>
 

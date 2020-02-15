@@ -36,8 +36,8 @@ import SettingsWindow from '../settings/Window';
 export default {
   name: 'ProjectSettingsWindow',
   components: {
-    SettingsWindow,
-  },
+    SettingsWindow
+  }
 };
 </script>
 

@@ -55,7 +55,7 @@ export async function call(
   } else {
     promise = axios.post(API_ENDPOINT, {
       query: request,
-      variables,
+      variables
     });
   }
 
@@ -101,7 +101,7 @@ export const errorCodes = {
   /**
    * Error throws when user send expired access token and tries to access private resources
    */
-  ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR',
+  ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR'
 };
 
 /**

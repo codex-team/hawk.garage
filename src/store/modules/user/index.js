@@ -16,7 +16,7 @@ import * as authApi from '../../../api/user';
  */
 const mutationTypes = {
   SET_TOKENS: 'SET_TOKENS', // Sets user's auth tokens (for example, after authentication or updating tokens)
-  SET_CURRENT_USER: 'SET_CURRENT_USER', // Sets user's field
+  SET_CURRENT_USER: 'SET_CURRENT_USER' // Sets user's field
 };
 
 /**
@@ -50,7 +50,7 @@ function initialState() {
   return {
     accessToken: '',
     refreshToken: '',
-    data: null,
+    data: null
   };
 }
 
@@ -60,7 +60,7 @@ const getters = {
    * @param {AuthModuleState} state - vuex state
    * @return {boolean}
    */
-  isAuthenticated: state => !!state.accessToken,
+  isAuthenticated: state => !!state.accessToken
 };
 
 const actions = {
@@ -160,7 +160,7 @@ const actions = {
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
-  },
+  }
 };
 
 const mutations = {
@@ -193,12 +193,12 @@ const mutations = {
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());
-  },
+  }
 };
 
 export default {
   state: initialState(),
   getters,
   actions,
-  mutations,
+  mutations
 };

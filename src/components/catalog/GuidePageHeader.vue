@@ -47,39 +47,39 @@ export default {
   name: 'GuideHeader',
   components: {
     CatalogItemLabel,
-    Icon,
+    Icon
   },
   props: {
     backgroundImage: {
       type: String,
-      required: true,
+      required: true
     },
     catcherName: {
       type: String,
-      required: true,
+      required: true
     },
     githubLink: {
       type: String,
-      required: true,
+      required: true
     },
     description: {
       type: String,
-      required: true,
+      required: true
     },
     readmeLink: {
       type: String,
-      required: true,
+      required: true
     },
     lastVersion: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
-      background: `radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url(${this.backgroundImage})`,
+      background: `radial-gradient(circle at 63% 0, rgba(28, 35, 54, 0.72), #15171f), no-repeat center/cover url(${this.backgroundImage})`
     };
-  },
+  }
 };
 </script>
 

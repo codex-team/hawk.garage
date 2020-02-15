@@ -20,11 +20,11 @@ import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 @Component({
   name: 'RecoverPassword',
   components: {
-    Form,
+    Form
   },
   mixins: [
-    offlineErrorMessage,
-  ],
+    offlineErrorMessage
+  ]
 })
 /**
  * Class implements reset password form component
@@ -61,8 +61,8 @@ export default class RecoverPassword extends Vue {
         name: 'email',
         value: '',
         placeholder: 'name@best-team.com',
-        type: 'email',
-      },
+        type: 'email'
+      }
     ];
     this.submitText = this.$t('authPages.recoverPassword');
   }
@@ -78,12 +78,12 @@ export default class RecoverPassword extends Vue {
       await this.$store.dispatch(RECOVER_PASSWORD, { email });
       this.$router.push({
         name: 'login',
-        params: { isPasswordRecoverSuccess: 'true' },
+        params: { isPasswordRecoverSuccess: 'true' }
       });
     } catch (e) {
       this.message = {
         text: e.message,
-        type: 'error',
+        type: 'error'
       };
     }
   }

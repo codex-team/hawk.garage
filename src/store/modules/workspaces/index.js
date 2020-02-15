@@ -31,7 +31,7 @@ const mutationTypes = {
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
-  SET_TRANSACTIONS: 'SET_TRANSACTIONS', // Set transactions info
+  SET_TRANSACTIONS: 'SET_TRANSACTIONS' // Set transactions info
 };
 
 /**
@@ -56,7 +56,7 @@ const mutationTypes = {
 function initialState() {
   return {
     list: [],
-    current: null,
+    current: null
   };
 }
 
@@ -71,7 +71,7 @@ const getters = {
    * @param {String} id project id to find
    * @return {Project}
    */
-    id => state.list.find(workspace => workspace.id === id),
+    id => state.list.find(workspace => workspace.id === id)
 };
 
 const actions = {
@@ -117,8 +117,8 @@ const actions = {
       workspaceId,
       data: {
         email: userEmail,
-        isPending: true,
-      },
+        isPending: true
+      }
     });
 
     return true;
@@ -205,13 +205,13 @@ const actions = {
     }
 
     const changes = {
-      isAdmin: state,
+      isAdmin: state
     };
 
     commit(mutationTypes.UPDATE_MEMBER, {
       workspaceId,
       userId,
-      changes,
+      changes
     });
   },
 
@@ -233,12 +233,12 @@ const actions = {
     if (userId) {
       commit(mutationTypes.REMOVE_MEMBER, {
         workspaceId,
-        userId,
+        userId
       });
     } else {
       commit(mutationTypes.REMOVE_PENDING_MEMBER, {
         workspaceId,
-        userEmail,
+        userEmail
       });
     }
   },
@@ -261,7 +261,7 @@ const actions = {
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
-  },
+  }
 };
 
 const mutations = {
@@ -282,9 +282,9 @@ const mutations = {
       ...state.list.slice(0, index),
       {
         ...state.list[index],
-        ...workspace,
+        ...workspace
       },
-      ...state.list.slice(index + 1),
+      ...state.list.slice(index + 1)
     ];
   },
 
@@ -428,7 +428,7 @@ const mutations = {
       state.list = [
         ...state.list.slice(0, index),
         workspace,
-        ...state.list.slice(index + 1),
+        ...state.list.slice(index + 1)
       ];
     });
   },
@@ -439,12 +439,12 @@ const mutations = {
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());
-  },
+  }
 };
 
 export default {
   state: initialState(),
   getters,
   actions,
-  mutations,
+  mutations
 };

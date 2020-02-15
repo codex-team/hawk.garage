@@ -50,6 +50,6 @@ export const uploadFile = {
 
         input.click();
       });
-    },
-  },
+    }
+  }
 };

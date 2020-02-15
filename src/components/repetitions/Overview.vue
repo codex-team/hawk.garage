@@ -99,7 +99,7 @@ export default {
     RepetitionsList,
     Icon,
     Badge,
-    PopupDialog,
+    PopupDialog
   },
   data() {
     const projectId = this.$route.params.projectId;
@@ -109,7 +109,7 @@ export default {
       projectId,
       eventId,
       actualEvent: {},
-      groupedRepetitions: [],
+      groupedRepetitions: []
     };
   },
   computed: {
@@ -126,7 +126,7 @@ export default {
       const differenceInDays = (now - firstOccurence) / (1000 * 3600 * 24);
 
       return `${Math.round(differenceInDays)} days`;
-    },
+    }
   },
   async created() {
     /**
@@ -137,7 +137,7 @@ export default {
      */
     this.actualEvent = await this.$store.dispatch(GET_LATEST_EVENT, {
       projectId: this.projectId,
-      eventId: this.eventId,
+      eventId: this.eventId
     });
 
     /**
@@ -146,7 +146,7 @@ export default {
      */
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
       projectId: this.projectId,
-      eventId: this.eventId,
+      eventId: this.eventId
     });
 
     console.log('repetitions', repetitions);
@@ -187,8 +187,8 @@ export default {
       const month = targetDate.getMonth();
 
       return `${day} ${i18n.t('common.months[' + month + ']')}`;
-    },
-  },
+    }
+  }
 };
 </script>
 

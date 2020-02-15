@@ -19,11 +19,11 @@ import Icon from './Icon';
 export default {
   name: 'CloseButton',
   components: {
-    Icon,
+    Icon
   },
   data() {
     return {
-      oldKeyup: undefined,
+      oldKeyup: undefined
     };
   },
   created() {
@@ -41,8 +41,8 @@ export default {
       if (event.which === ESCAPE_KEY) {
         this.$emit('close');
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

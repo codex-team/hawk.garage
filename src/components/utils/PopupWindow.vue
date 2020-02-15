@@ -23,8 +23,8 @@ import CloseButton from './CloseButton';
 export default {
   name: 'PopupWindow',
   components: {
-    CloseButton,
-  },
+    CloseButton
+  }
 };
 </script>
 

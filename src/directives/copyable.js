@@ -51,5 +51,5 @@ export default {
     // Remove Event Listeners
     el.removeEventListener('click', el.__vueCopyable__);
     el.__vueCopyable___ = null;
-  },
+  }
 };

@@ -101,13 +101,13 @@ export default {
     CustomSwitch,
     Icon,
     Progress,
-    EntityImage,
+    EntityImage
   },
   props: {
     workspace: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     plan() {
@@ -115,16 +115,16 @@ export default {
     },
     eventsCount() {
       return 6789;
-    },
+    }
   },
   methods: {
     processPayment(amount) {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ProcessPaymentDialog',
-        data: { amount },
+        data: { amount }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

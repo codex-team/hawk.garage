@@ -15,7 +15,7 @@ import EntityImage from '../utils/EntityImage';
 export default {
   name: 'WorkspacesMenuItem',
   components: {
-    EntityImage,
+    EntityImage
   },
   props: {
     /**
@@ -23,14 +23,14 @@ export default {
      */
     workspace: {
       type: Object,
-      required: true,
+      required: true
     },
 
     /**
      * @type {Boolean} is item selected
      */
-    active: Boolean,
-  },
+    active: Boolean
+  }
 };
 </script>
 

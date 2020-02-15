@@ -15,7 +15,7 @@ import RadioButtonGroup from './RadioButtonGroup';
 export default {
   name: 'LanguageSelect',
   components: {
-    RadioButtonGroup,
+    RadioButtonGroup
   },
   computed: {
     formData() {
@@ -26,24 +26,24 @@ export default {
           {
             name: this.$t('components.languageSelect.ru'),
             id: 'ru',
-            image: require('../../assets/ru.svg'),
+            image: require('../../assets/ru.svg')
           },
           {
             name: this.$t('components.languageSelect.en'),
             id: 'en',
-            image: require('../../assets/uk.svg'),
-          },
-        ],
+            image: require('../../assets/uk.svg')
+          }
+        ]
       };
     },
     ...mapState({
-      language: state => state.app.language,
-    }),
+      language: state => state.app.language
+    })
   },
   methods: {
     changeLanguage(e) {
       this.$store.dispatch(SET_LANGUAGE, e);
-    },
-  },
+    }
+  }
 };
 </script>

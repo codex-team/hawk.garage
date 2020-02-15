@@ -54,8 +54,8 @@ import { Workspace } from '@/types/workspaces';
   name: 'ProcessPaymentDialog',
   components: {
     PopupDialog,
-    CustomSelect,
-  },
+    CustomSelect
+  }
 })
 /**
  * Dialog for payment
@@ -96,7 +96,7 @@ export default class ProcessPaymentDialog extends Vue {
     const { paymentURL } = await billingApi.getPaymentLink({
       workspaceId: this.workspace.id,
       amount: +this.amount,
-      language,
+      language
     });
 
     window.location.replace(paymentURL);

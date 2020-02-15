@@ -38,9 +38,9 @@ export default {
   components: { Icon },
   data() {
     return {
-      cards,
+      cards
     };
-  },
+  }
 };
 </script>
 

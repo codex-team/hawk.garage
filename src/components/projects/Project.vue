@@ -17,11 +17,11 @@
             v-model="name"
           />
           <FormTextFieldset
+            v-model="description"
             :label="$t('projects.settings.project.description')"
             :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
             class="project-settings__section"
             @input="showSubmitButton = true"
-            v-model="description"
           />
         </div>
         <section>

@@ -50,7 +50,7 @@ export default {
   name: 'WorkspaceSettings',
   components: {
     SettingsWindow,
-    EntityImage,
+    EntityImage
   },
   computed: {
     workspace() {
@@ -66,13 +66,13 @@ export default {
       const user = this.$store.state.user.data;
 
       return this.workspace.users.find(u => u.id === user.id).isAdmin;
-    },
+    }
   },
   created() {
     const workspaceId = this.$route.params.workspaceId;
 
     this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-  },
+  }
 };
 </script>
 

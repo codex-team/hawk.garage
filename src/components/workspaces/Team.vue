@@ -71,7 +71,7 @@ export default {
     return {
       userEmail: '',
       baseUrl: window.location.origin,
-      user: this.$store.state.user.data,
+      user: this.$store.state.user.data
     };
   },
   computed: {
@@ -86,14 +86,14 @@ export default {
       const { users } = this.$store.getters.getWorkspaceById(workspaceId);
 
       return users ? users.find(u => u.id === this.user.id) : {};
-    },
+    }
   },
   methods: {
     onLinkCopied() {
       notifier.show({
         message: this.$t('common.copiedNotification'),
         style: 'success',
-        time: 2000,
+        time: 2000
       });
     },
     async onInvitationSent() {
@@ -106,14 +106,14 @@ export default {
           INVITE_TO_WORKSPACE,
           {
             userEmail: this.userEmail,
-            workspaceId: this.$route.params.workspaceId,
+            workspaceId: this.$route.params.workspaceId
           }
         );
 
         notifier.show({
           message: this.$t('workspaces.settings.team.sentNotification'),
           style: 'success',
-          time: 10000,
+          time: 10000
         });
 
         this.userEmail = '';
@@ -121,11 +121,11 @@ export default {
         notifier.show({
           message: e.message,
           style: 'error',
-          time: 10000,
+          time: 10000
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

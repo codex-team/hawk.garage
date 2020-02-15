@@ -80,28 +80,28 @@ export default {
   name: 'AuthForm',
   components: {
     TextFieldset,
-    SuccessMessage,
+    SuccessMessage
   },
   props: {
     fields: {
       type: Array,
-      required: true,
+      required: true
     },
     submitText: {
       type: String,
-      required: true,
+      required: true
     },
     message: {
       type: Object,
-      default: null,
+      default: null
     },
     altText: {
       type: String,
-      default: null,
+      default: null
     },
     altLink: {
       type: String,
-      default: null,
+      default: null
     },
     /**
      * Show success message about sending message to email
@@ -109,9 +109,9 @@ export default {
      */
     isPasswordRecoverSuccess: {
       type: Boolean,
-      default: false,
-    },
-  },
+      default: false
+    }
+  }
 };
 </script>
 
