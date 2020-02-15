@@ -52,7 +52,7 @@ export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
 export async function inviteToWorkspace(workspaceId: string, userEmail: string): Promise<boolean> {
   return (await api.call(MUTATION_INVITE_TO_WORKSPACE, {
     workspaceId,
-    userEmail
+    userEmail,
   })).inviteToWorkspace;
 }
 
@@ -66,7 +66,7 @@ export async function inviteToWorkspace(workspaceId: string, userEmail: string):
 export async function confirmInvite(workspaceId: string, inviteHash: string): Promise<boolean> {
   return (await api.call(MUTATION_CONFIRM_INVITE, {
     workspaceId,
-    inviteHash
+    inviteHash,
   })).confirmInvitation;
 }
 
@@ -87,7 +87,7 @@ export async function updateWorkspace(id: string, name: string, description: str
   return (await api.call(MUTATION_UPDATE_WORKSPACE, {
     id,
     name,
-    description
+    description,
   }, { image })).updateWorkspace;
 }
 
@@ -102,7 +102,7 @@ export async function grantAdminPermissions(workspaceId: string, userId: string,
   return (await api.call(MUTATION_GRANT_ADMIN_PERMISSIONS, {
     workspaceId,
     userId,
-    state
+    state,
   })).grantAdmin;
 }
 
@@ -121,6 +121,6 @@ export async function removeUserFromWorkspace(
   return (await api.call(MUTATION_REMOVE_MEMBER_FROM_WORKSPACE, {
     workspaceId,
     userId,
-    userEmail
+    userEmail,
   })).removeMemberFromWorkspace;
 }

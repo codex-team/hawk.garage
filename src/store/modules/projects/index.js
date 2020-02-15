@@ -17,7 +17,7 @@ const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
-  RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT' // Set project unread count
+  RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
 };
 
 /**
@@ -53,7 +53,7 @@ const mutationTypes = {
  */
 function initialState() {
   return {
-    list: []
+    list: [],
   };
 }
 
@@ -71,7 +71,7 @@ const getters = {
      * @param {String} id project id to find
      * @return {Project}
      */
-    id => state.list.find(project => project.id === id)
+    id => state.list.find(project => project.id === id),
 };
 
 const actions = {
@@ -101,7 +101,7 @@ const actions = {
 
     commit(mutationTypes.SET_EVENTS_LIST_BY_DATE, {
       projectId,
-      eventsListByDate
+      eventsListByDate,
     });
   },
 
@@ -132,7 +132,7 @@ const actions = {
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
-  }
+  },
 };
 
 const mutations = {
@@ -181,12 +181,12 @@ const mutations = {
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());
-  }
+  },
 };
 
 export default {
   state: initialState(),
   getters,
   actions,
-  mutations
+  mutations,
 };

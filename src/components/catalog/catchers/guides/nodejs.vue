@@ -41,7 +41,7 @@ export default {
   components: {
     GuideStepBlock,
     TokenBlock,
-    GuideHeader
+    GuideHeader,
   },
   computed: {
     /**
@@ -52,8 +52,8 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
-    }
-  }
+    },
+  },
 };
 </script>
 

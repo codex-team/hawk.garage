@@ -10,8 +10,8 @@ export default {
   props: {
     symbol: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>

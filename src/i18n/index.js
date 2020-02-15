@@ -41,8 +41,8 @@ const i18n = new VueI18n({
   locale: 'en',
   fallbackLocale: 'en',
   messages: {
-    en: messages
-  }
+    en: messages,
+  },
 });
 
 const loadedLanguages = [ 'en' ];

@@ -54,25 +54,25 @@ export default {
   components: {
     TooltipMenu,
     EntityImage,
-    Icon
+    Icon,
   },
   props: {
     workspaceId: {
       type: String,
-      required: true
+      required: true,
     },
     member: {
       type: Object,
-      required: true
+      required: true,
     },
     hasAdminPermissions: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      user: this.$store.state.user.data
+      user: this.$store.state.user.data,
     };
   },
   methods: {
@@ -82,13 +82,13 @@ export default {
       if (!member.isPending) {
         options.push({
           title: member.isAdmin ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin'),
-          onClick: this.grantAdmin(member.id, member.isAdmin)
+          onClick: this.grantAdmin(member.id, member.isAdmin),
         });
       }
 
       options.push({
         title: this.$t('workspaces.settings.team.removeMember'),
-        onClick: this.removeUser(member.id, member.email)
+        onClick: this.removeUser(member.id, member.email),
       });
 
       return options;
@@ -97,17 +97,17 @@ export default {
       return () => this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
         workspaceId: this.workspaceId,
         userId,
-        state: !previousState
+        state: !previousState,
       });
     },
     removeUser(userId, userEmail) {
       return () => this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
         workspaceId: this.workspaceId,
         userId,
-        userEmail
+        userEmail,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

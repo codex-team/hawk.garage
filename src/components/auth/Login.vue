@@ -21,7 +21,7 @@ import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 export default {
   name: 'Login',
   components: {
-    Form
+    Form,
   },
   mixins: [ offlineErrorMessage ],
   props: {
@@ -30,8 +30,8 @@ export default {
      */
     isPasswordRecoverSuccess: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -41,20 +41,20 @@ export default {
           name: 'email',
           value: '',
           placeholder: 'name@best-team.com',
-          type: 'email'
+          type: 'email',
         },
         {
           label: this.$t('authPages.password'),
           name: 'password',
           value: '',
           placeholder: '********',
-          type: 'password'
-        }
+          type: 'password',
+        },
       ],
       altLink: '/recover',
       altText: this.$t('authPages.recoverPassword'),
       submitText: this.$t('authPages.loginSubmitText'),
-      message: null
+      message: null,
     };
   },
 
@@ -66,7 +66,7 @@ export default {
       try {
         await this.$store.dispatch(SET_TOKENS, {
           accessToken: this.$route.query.access_token,
-          refreshToken: this.$route.query.refresh_token
+          refreshToken: this.$route.query.refresh_token,
         });
 
         const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
@@ -77,7 +77,7 @@ export default {
       } catch (e) {
         this.message = {
           text: e.message,
-          type: 'error'
+          type: 'error',
         };
       }
     }
@@ -93,7 +93,7 @@ export default {
       try {
         await this.$store.dispatch(LOGIN, {
           email,
-          password
+          password,
         });
 
         const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
@@ -104,11 +104,11 @@ export default {
       } catch (e) {
         this.message = {
           text: e.message,
-          type: 'error'
+          type: 'error',
         };
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

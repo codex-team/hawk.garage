@@ -55,8 +55,8 @@ import notifier from 'codex-notifier';
 @Component({
   components: {
     FormTextFieldset,
-    FormImageUploader
-  }
+    FormImageUploader,
+  },
 })
 /**
  * Class implements project settings content component
@@ -77,6 +77,7 @@ export default class ProjectSettings extends Vue {
    */
   get name() {
     this._name = this.project.name;
+
     return this._name;
   }
 
@@ -97,6 +98,7 @@ export default class ProjectSettings extends Vue {
    */
   get description(): string {
     this._description = this.project.description;
+
     return this._description;
   }
 
@@ -117,6 +119,7 @@ export default class ProjectSettings extends Vue {
    */
   get image(): string {
     this._image = this.project.image;
+
     return this._image;
   }
 
@@ -150,7 +153,7 @@ export default class ProjectSettings extends Vue {
         const payload = {
           id: this.project.id,
           name: this._name,
-          description: this._description
+          description: this._description,
         };
 
         console.log(payload);
@@ -161,13 +164,13 @@ export default class ProjectSettings extends Vue {
       notifier.show({
         message: this.$t('projects.settings.project.updatedMessage') as string,
         style: 'success',
-        time: 5000
+        time: 5000,
       });
     } catch (e) {
       notifier.show({
         message: e.message,
         style: 'error',
-        time: 5000
+        time: 5000,
       });
     }
   }
