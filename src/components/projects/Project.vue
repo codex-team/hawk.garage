@@ -17,11 +17,11 @@
           @input="showSubmitButton = true"
         />
         <FormTextFieldset
-          @input="showSubmitButton = true"
+          v-model="project.description"
           :label="$t('projects.settings.project.description')"
           :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
           class="project-settings__section"
-          v-model="project.description"
+          @input="showSubmitButton = true"
         />
       </div>
       <section>
@@ -53,8 +53,8 @@ import FormImageUploader from '../forms/ImageUploader.vue';
 @Component({
   components: {
     FormTextFieldset,
-    FormImageUploader
-  }
+    FormImageUploader,
+  },
 })
 /**
  * Class implements project settings content component

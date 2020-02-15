@@ -41,9 +41,10 @@ interface ApiCallSettings {
  */
 export async function call(
   request: string,
-  variables?: any,
+  variables?: object,
   files?: {[name: string]: File | undefined},
   { initial = false, force = false }: ApiCallSettings = {}
+  // eslint-disable-next-line
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
 
@@ -54,7 +55,7 @@ export async function call(
   } else {
     promise = axios.post(API_ENDPOINT, {
       query: request,
-      variables
+      variables,
     });
   }
 
@@ -73,6 +74,7 @@ export async function call(
   if (response.data.errors) {
     throw response.data.errors[0];
   }
+
   return response.data.data;
 }
 
@@ -99,7 +101,7 @@ export const errorCodes = {
   /**
    * Error throws when user send expired access token and tries to access private resources
    */
-  ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR'
+  ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR',
 };
 
 /**
@@ -122,7 +124,7 @@ interface ApiModuleHandlers {
  * Setup handlers for API module, for example, functions for refreshing token
  * @param {ApiModuleHandlers} eventsHandlers - object with handlers
  */
-export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers) {
+export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void {
   /**
    * Interceptors that handles the error of expired tokens
    */
@@ -156,10 +158,12 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers) {
         tokenRefreshingRequest = null;
 
         originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+
         return axios(originalRequest);
       } catch (error) {
         console.error(error);
         eventsHandlers.onAuthError();
+
         return response;
       }
     }

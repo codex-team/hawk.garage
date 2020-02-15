@@ -43,12 +43,12 @@ export default {
   components: {
     PopupDialog,
     TextFieldset,
-    ImageUploader
+    ImageUploader,
   },
   data() {
     return {
       name: '',
-      image: null
+      image: null,
     };
   },
   methods: {
@@ -58,7 +58,7 @@ export default {
     async createWorkspace() {
       try {
         const workspaceInfo = {
-          name: this.name
+          name: this.name,
         };
 
         if (this.image) {
@@ -70,8 +70,8 @@ export default {
       } catch (e) {
         console.log(e);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
