@@ -4,9 +4,7 @@
       <span class="success-message__icon">
         💌
       </span>
-      <span class="success-message__text">
-        {{ $t('authPages.recoverPasswordSuccessMessage') }}
-      </span>
+      {{ $t('authPages.recoverPasswordSuccessMessage') }}
     </div>
   </div>
 </template>
