@@ -47,7 +47,7 @@ export default {
      */
     repetitions: {
       type: Array,
-      required: true
+      required: true,
     },
 
     /**
@@ -55,7 +55,7 @@ export default {
      */
     event: {
       type: Object,
-      required: true
+      required: true,
     },
 
     /**
@@ -63,7 +63,7 @@ export default {
      */
     projectId: {
       type: String,
-      required: true
+      required: true,
     },
 
     /**
@@ -71,7 +71,7 @@ export default {
      */
     date: {
       type: String,
-      required: true
+      required: true,
     }
   },
   methods: {

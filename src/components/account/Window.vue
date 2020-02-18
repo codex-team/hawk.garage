@@ -58,7 +58,7 @@ import { RESET_STORE } from '../../store/methodsTypes';
 export default {
   name: 'AccountSettingsWindow',
   components: {
-    SettingsWindow
+    SettingsWindow,
   },
   methods: {
     /**
@@ -66,8 +66,8 @@ export default {
      */
     logout() {
       this.$store.dispatch(RESET_STORE);
-    }
-  }
+    },
+  },
 };
 </script>
 

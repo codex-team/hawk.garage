@@ -103,7 +103,7 @@ export default {
     RepetitionsList,
     Icon,
     Badge,
-    PopupDialog
+    PopupDialog,
   },
   data: function () {
     return {
@@ -124,7 +124,7 @@ export default {
       const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
       return `${Math.round(differenceInDays)} days`;
-    }
+    },
   },
   async created() {
     this.event = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
@@ -178,8 +178,8 @@ export default {
       const month = targetDate.getMonth();
 
       return `${day} ${i18n.t('common.months[' + month + ']')}`;
-    }
-  }
+    },
+  },
 };
 </script>
 

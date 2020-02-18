@@ -11,5 +11,5 @@ export default {
     component = (await import(/* webpackChunkName: 'catcher-instructions-[request]' */ './guides/' + to.params.page)).default;
     next();
   },
-  render: h => h(component)
+  render: h => h(component),
 };

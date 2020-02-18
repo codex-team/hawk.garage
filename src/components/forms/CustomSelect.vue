@@ -57,35 +57,35 @@ export default {
   name: 'CustomSelect',
   components: {
     EntityImage,
-    Icon
+    Icon,
   },
   props: {
     options: {
       type: Array,
-      required: true
+      required: true,
     },
     value: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     label: {
       type: String,
-      required: true
+      required: true,
     },
     needImage: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
-      isOpened: false
+      isOpened: false,
     };
   },
   computed: {
     filteredOption() {
       return this.options.filter(opt => opt !== this.value);
-    }
+    },
   },
   methods: {
     /**
@@ -93,8 +93,8 @@ export default {
      */
     close() {
       this.isOpened = false;
-    }
-  }
+    },
+  },
 }
 ;
 </script>

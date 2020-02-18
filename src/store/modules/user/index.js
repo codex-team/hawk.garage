@@ -6,7 +6,7 @@ import {
   REFRESH_TOKENS,
   FETCH_CURRENT_USER,
   UPDATE_PROFILE,
-  CHANGE_PASSWORD
+  CHANGE_PASSWORD, RECOVER_PASSWORD
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as authApi from '../../../api/user';
@@ -16,7 +16,7 @@ import * as authApi from '../../../api/user';
  */
 const mutationTypes = {
   SET_TOKENS: 'SET_TOKENS', // Sets user's auth tokens (for example, after authentication or updating tokens)
-  SET_CURRENT_USER: 'SET_CURRENT_USER' // Sets user's field
+  SET_CURRENT_USER: 'SET_CURRENT_USER', // Sets user's field
 };
 
 /**
@@ -50,7 +50,7 @@ function initialState() {
   return {
     accessToken: '',
     refreshToken: '',
-    data: null
+    data: null,
   };
 }
 
@@ -60,7 +60,7 @@ const getters = {
    * @param {AuthModuleState} state - vuex state
    * @return {boolean}
    */
-  isAuthenticated: state => !!state.accessToken
+  isAuthenticated: state => !!state.accessToken,
 };
 
 const actions = {
@@ -85,6 +85,16 @@ const actions = {
     const tokens = await authApi.login(user.email, user.password);
 
     commit(mutationTypes.SET_TOKENS, tokens);
+  },
+
+  /**
+   * Send recover password request to the server
+   *
+   * @param {function} commit - standard Vuex commit function
+   * @param {User} user - user's params for recovering password
+   */
+  async [RECOVER_PASSWORD]({ commit }, user) {
+    return authApi.recoverPassword(user.email);
   },
 
   /**
@@ -150,7 +160,7 @@ const actions = {
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
-  }
+  },
 };
 
 const mutations = {
@@ -183,12 +193,12 @@ const mutations = {
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());
-  }
+  },
 };
 
 export default {
   state: initialState(),
   getters,
   actions,
-  mutations
+  mutations,
 };

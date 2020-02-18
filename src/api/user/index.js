@@ -3,6 +3,7 @@ import {
   MUTATION_LOGIN,
   MUTATION_REFRESH_TOKENS,
   MUTATION_SIGN_UP,
+  MUTATION_RECOVER_PASSWORD,
   MUTATION_UPDATE_PROFILE,
   QUERY_CURRENT_USER
 } from './queries';
@@ -22,7 +23,10 @@ import * as api from '../index.ts';
  * @return {Promise<TokensPair>} - Auth token
  */
 export async function login(email, password) {
-  return (await api.call(MUTATION_LOGIN, { email, password })).login;
+  return (await api.call(MUTATION_LOGIN, {
+    email,
+    password,
+  })).login;
 }
 
 /**
@@ -33,6 +37,16 @@ export async function login(email, password) {
  */
 export async function signUp(email) {
   return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
+}
+
+/**
+ * Recover password by email
+ *
+ * @param {string} email - user Email
+ * @return {Promise<boolean>} Response status
+ */
+export async function recoverPassword(email) {
+  return (await api.call(MUTATION_RECOVER_PASSWORD, { email })).resetPassword;
 }
 
 /**
@@ -57,22 +71,28 @@ export async function fetchCurrentUser() {
 /**
  * Update user profile
  *
- * @param {string} name
- * @param {string} email
- * @param {File} image
+ * @param {string} name - user name
+ * @param {string} email - user email address
+ * @param {File} image - profile picture file uploading
  * @returns {Promise<Boolean>}
  */
 export async function updateProfile(name, email, image) {
-  return (await api.call(MUTATION_UPDATE_PROFILE, { name, email }, { image })).updateProfile;
+  return (await api.call(MUTATION_UPDATE_PROFILE, {
+    name,
+    email,
+  }, { image })).updateProfile;
 }
 
 /**
  * Change user password
  *
- * @param {string} oldPassword
- * @param {string} newPassword
+ * @param {string} oldPassword - current password
+ * @param {string} newPassword - password to change
  * @returns {Promise<Boolean>}
  */
 export async function changePassword(oldPassword, newPassword) {
-  return (await api.call(MUTATION_CHANGE_PASSWORD, { oldPassword, newPassword })).changePassword;
+  return (await api.call(MUTATION_CHANGE_PASSWORD, {
+    oldPassword,
+    newPassword,
+  })).changePassword;
 }

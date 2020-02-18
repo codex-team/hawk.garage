@@ -21,7 +21,7 @@ import Icon from './Icon';
 export default {
   name: 'Badge',
   components: {
-    Icon
+    Icon,
   },
   props: {
     /**
@@ -29,7 +29,7 @@ export default {
      */
     content: {
       type: [String, Number],
-      required: true
+      required: true,
     },
 
     /**
@@ -37,7 +37,7 @@ export default {
      */
     type: {
       type: String,
-      default: 'default'
+      default: 'default',
     },
 
     /**
@@ -45,9 +45,9 @@ export default {
      */
     withIcon: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 };
 </script>
 
