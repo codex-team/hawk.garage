@@ -1,9 +1,7 @@
 import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
-  FETCH_LATEST_EVENT,
   FETCH_RECENT_EVENTS,
-  GET_LATEST_EVENT,
   INIT_EVENTS_MODULE, VISIT_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -11,7 +9,7 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByDate } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo } from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
 
 /**
  * Root store state
@@ -37,11 +35,6 @@ enum MutationTypes {
   SET_RECENT_EVENTS_LIST = 'SET_RECENT_EVENTS_LIST',
 
   /**
-   * Set new repetitions list
-   */
-  SET_REPETITIONS_LIST = 'SET_REPETITIONS_LIST',
-
-  /**
    * Add new data to recent event list
    */
   ADD_TO_RECENT_EVENTS_LIST = 'ADD_TO_RECENT_EVENTS_LIST',
@@ -55,6 +48,13 @@ enum MutationTypes {
    * Save loaded event
    */
   ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
+
+  /**
+   * Update event payload
+   * Used when the event fully fetched with payload to update the state object
+   * Because initial fetch request gets data without payload (title, timestamp, totalCount, visited etc.)
+   */
+  UPDATE_EVENT_PAYLOAD = 'UPDATE_EVENT_PAYLOAD',
 
   /**
    * Mark event as visited
@@ -79,7 +79,7 @@ interface EventsModuleState {
   /**
    * Event's repetitions map
    */
-  repetitions: any;
+  repetitions: {[key: string]: HawkEventRepetition[]};
 }
 
 /**
@@ -295,51 +295,24 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} eventId
      * @param {number} limit
      *
-     * @return {Promise<HawkEvent[]>}
+     * @return {Promise<HawkEventRepetition[]>}
      */
     async [FETCH_EVENT_REPETITIONS](
-      { state },
+      { state, commit },
       { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number }
-    ): Promise<HawkEvent[]> {
-      const originalEvent = state.list[getEventsListKey(projectId, eventId)];
+    ): Promise<HawkEventRepetition[]> {
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
 
-      return repetitions.map((repetition) => {
-        const newEvent = Object.assign({}, originalEvent);
-
-        newEvent.payload = deepMerge(originalEvent.payload, repetition.payload);
-
-        return newEvent;
-      });
-    },
-
-    /**
-     * @deprecated
-     * Fetches original event's repetition
-     *
-     * @param {function} commit - standard Vuex commit function
-     * @param {string} projectId
-     * @param {string} eventId
-     * @param {string} repetitionId
-     *
-     * @return {HawkEvent}
-     */
-    async [FETCH_LATEST_EVENT]({ commit }, { projectId, eventId, repetitionId }): Promise<HawkEvent | null> {
-      const originalEvent = await eventsApi.getEvent(projectId, eventId, repetitionId);
-      const repetition = await eventsApi.getLatestRepetition(projectId, eventId);
-      const actualEvent = Object.assign({}, originalEvent);
-
-      commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
-        projectId,
-        eventId,
-        repetition,
+      repetitions.map(repetition => {
+        // save to the state
+        commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
+          projectId,
+          eventId,
+          repetition,
+        });
       });
 
-      if (repetition) {
-        actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
-      }
-
-      return actualEvent;
+      return repetitions;
     },
 
     /**
@@ -370,34 +343,15 @@ const module: Module<EventsModuleState, RootState> = {
         });
       }
 
+      /**
+       * Updates or sets event's fetched payload in the state
+       */
+      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
+        projectId,
+        event,
+      });
+
       return event;
-    },
-
-    /**
-     * Returns original event merged with latest repetition from store
-     * @param {EventsModuleState} state - module state
-     * @param {string} projectId
-     * @param {string} eventId
-     * @return {Promise<HawkEvent | null>}
-     */
-    async [GET_LATEST_EVENT]({ state }, { projectId, eventId }): Promise<HawkEvent | null> {
-      const key = getEventsListKey(projectId, eventId);
-
-      const originalEvent = state.list[key];
-
-      if (!originalEvent) {
-        return this.dispatch(FETCH_EVENT_REPETITION, {
-          projectId,
-          eventId,
-        });
-      }
-
-      const repetition = state.repetitions[key];
-      const actualEvent = Object.assign({}, originalEvent);
-
-      actualEvent.payload = deepMerge(actualEvent.payload, repetition.payload);
-
-      return actualEvent;
     },
 
     /**
@@ -503,7 +457,7 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Updates list state
+     * Updates repetitions for event id
      *
      * @param state
      * @param {string} projectId
@@ -513,7 +467,24 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.ADD_REPETITION_PAYLOAD](state, { projectId, eventId, repetition }) {
       const key = getEventsListKey(projectId, eventId);
 
-      state.repetitions[key] = repetition;
+      if (!state.repetitions[key]) {
+        state.repetitions[key] = [];
+      }
+
+      state.repetitions[key].push(repetition);
+    },
+
+    /**
+     * Updates event payload
+     *
+     * @param {EventsModuleState} state - Vuex state
+     * @param {string} projectId - project's identifier
+     * @param {HawkEvent} event - Event object
+     */
+    [MutationTypes.UPDATE_EVENT_PAYLOAD](state, { projectId, event }) {
+      const key = getEventsListKey(projectId, event.id);
+
+      state.list[key].payload = event.payload;
     },
 
     /**
