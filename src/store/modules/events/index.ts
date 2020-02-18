@@ -299,13 +299,17 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_EVENT_REPETITIONS](
       { state, commit },
-      { projectId, eventId, limit }: { projectId: string, eventId: string, limit: number }
+      { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number }
     ): Promise<HawkEventRepetition[]> {
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
 
       repetitions.map(repetition => {
         // save to the state
-        commit(MutationTypes.ADD_REPETITION_PAYLOAD, { projectId, eventId, repetition });
+        commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
+          projectId,
+          eventId,
+          repetition,
+        });
       });
 
       return repetitions;
@@ -342,7 +346,10 @@ const module: Module<EventsModuleState, RootState> = {
       /**
        * Updates or sets event's fetched payload in the state
        */
-      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, { projectId, event });
+      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
+        projectId,
+        event,
+      });
 
       return event;
     },

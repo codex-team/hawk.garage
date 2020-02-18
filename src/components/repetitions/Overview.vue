@@ -108,7 +108,7 @@ export default {
   data: function () {
     return {
       event: null,
-      groupedRepetitions: new Map()
+      groupedRepetitions: new Map(),
     };
   },
   computed: {
@@ -132,7 +132,7 @@ export default {
     if (!this.event || this.event.payload) {
       this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
         projectId: this.projectId,
-        eventId: this.eventId
+        eventId: this.eventId,
       });
     }
 
@@ -142,7 +142,7 @@ export default {
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
       projectId: this.projectId,
       eventId: this.eventId,
-      limit: 10
+      limit: 10,
     });
 
     /**

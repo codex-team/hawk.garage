@@ -72,7 +72,7 @@ export default {
     date: {
       type: String,
       required: true,
-    }
+    },
   },
   methods: {
     /**
@@ -85,11 +85,11 @@ export default {
         params: {
           projectId: this.projectId,
           eventId: this.event.id,
-          repetitionId: repetition.id
-        }
+          repetitionId: repetition.id,
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
