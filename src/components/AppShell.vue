@@ -116,12 +116,12 @@ export default {
         return secondProject.timestamp - firstProject.timestamp;
       });
 
-      if (!this.$store.state.workspaces.current) {
+      if (!this.currentWorkspace) {
         return projectList;
       }
 
       return projectList
-        .filter(project => project.workspaceId === this.$store.state.workspaces.current.id);
+        .filter(project => project.workspaceId === this.currentWorkspace.id);
     },
 
     /**
