@@ -27,17 +27,16 @@
         />
 
         <div
-          v-if="actualEvent.payload"
+          v-if="event && event.payload"
           class="repetitions-overview__header-title"
         >
-          {{ actualEvent.payload.title }}
+          {{ event.payload.title }}
         </div>
-
         <div
-          v-if="actualEvent.payload"
+          v-if="event && event.payload"
           class="repetitions-overview__header-time"
         >
-          {{ actualEvent.payload.timestamp | prettyDate }}, {{ actualEvent.payload.timestamp | prettyTime }}
+          {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
         </div>
       </div>
 
@@ -47,8 +46,11 @@
           <div class="repetitions-overview__label">
             Total
           </div>
-          <div class="repetitions-overview__repeats">
-            {{ actualEvent.totalCount }} times
+          <div
+            v-if="event"
+            class="repetitions-overview__repeats"
+          >
+            {{ event.totalCount }} times
           </div>
         </div>
 
@@ -76,6 +78,8 @@
           >
             <RepetitionsList
               :repetitions="groupedRepetitions.get(date)"
+              :event="event"
+              :project-id="projectId"
               :date="date"
             />
           </div>
@@ -89,7 +93,7 @@
 import PopupDialog from '../utils/PopupDialog';
 import Icon from '../utils/Icon';
 import Badge from '../utils/Badge';
-import { GET_LATEST_EVENT, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
+import { FETCH_EVENT_REPETITION, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList';
 
@@ -101,67 +105,54 @@ export default {
     Badge,
     PopupDialog,
   },
-  data() {
-    const projectId = this.$route.params.projectId;
-    const eventId = this.$route.params.eventId;
-
+  data: function () {
     return {
-      projectId,
-      eventId,
-      actualEvent: {},
-      groupedRepetitions: [],
+      event: null,
+      groupedRepetitions: new Map(),
     };
   },
   computed: {
-    /**
-     * @return {GroupedEvent}
-     */
-    event() {
-      return this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+    eventId() {
+      return this.$route.params.eventId;
     },
-
+    projectId() {
+      return this.$route.params.projectId;
+    },
     since() {
       const now = new Date();
-      const firstOccurence = new Date(this.event.payload.timestamp);
-      const differenceInDays = (now - firstOccurence) / (1000 * 3600 * 24);
+      const firstOccurrence = new Date(this.event.payload.timestamp);
+      const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
       return `${Math.round(differenceInDays)} days`;
     },
   },
   async created() {
-    /**
-     * actual event is original event merged with latest repetitions
-     *
-     * For that we use GET_LATEST_EVENT action that merges event from store with repetition
-     * @type {GroupedEvent}
-     */
-    this.actualEvent = await this.$store.dispatch(GET_LATEST_EVENT, {
-      projectId: this.projectId,
-      eventId: this.eventId,
-    });
+    this.event = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+
+    if (!this.event || this.event.payload) {
+      this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+        projectId: this.projectId,
+        eventId: this.eventId,
+      });
+    }
 
     /**
      * Dispatching action that fetches several latest repetitions
-     * @type {GroupedEvent[]}
      */
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
       projectId: this.projectId,
       eventId: this.eventId,
+      limit: 10,
     });
-
-    console.log('repetitions', repetitions);
 
     /**
      * We use Map here to save the key's order,
      * `Object` does not guarantee the iteration order
-     * @type {Map<String, GroupedEvent[]>}
+     * @type {Map<String, HawkEventRepetition[]>}
      */
     const groupedRepetitions = new Map();
 
-    /**
-     * Grouping repetitions by date
-     */
-    repetitions.map((repetition) => {
+    repetitions.map(repetition => {
       const date = this.getDate(repetition.payload.timestamp);
 
       if (!groupedRepetitions.get(date)) {

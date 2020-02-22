@@ -89,12 +89,24 @@ interface HawkEventPayload {
    * Event title
    */
   title: string;
+
+  /**
+   * Event timestamp
+   */
+  timestamp: number;
 }
 
 /**
  * Hawk repetition payload
  */
 export interface HawkEventRepetition {
+  /**
+   * Repetitions ID
+   */
   id: string;
+
+  /**
+   * Unique repetition payload
+   */
   payload: HawkEventPayload;
 }
