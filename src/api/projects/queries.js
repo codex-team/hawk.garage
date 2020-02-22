@@ -39,3 +39,33 @@ export const MUTATION_UPDATE_LAST_VISIT = `
         updateLastProjectVisit(projectId: $projectId)
     }
 `;
+
+// language=GraphQL
+/**
+ * Mutation for project updating
+ */
+export const MUTATION_UPDATE_PROJECT = `
+  mutation updateProject(
+    $id: ID!
+    $name: String!
+    $description: String
+    $image: Upload
+  ) {
+    updateProject(id: $id, name: $name, description: $description, image: $image)
+  }
+`;
+
+// language=GraphQL
+/**
+ * Query for fetching project with id
+ */
+export const QUERY_PROJECT = `
+  query fetchProject($id: ID!) {
+    project(id: $id) {
+      id
+      name
+      description
+      image
+    }
+  }
+`;

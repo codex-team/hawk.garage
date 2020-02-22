@@ -51,6 +51,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import FormTextFieldset from '../forms/TextFieldset.vue';
 import FormImageUploader from '../forms/ImageUploader.vue';
 import notifier from 'codex-notifier';
+import { FETCH_PROJECT, UPDATE_PROJECT } from '@/store/modules/projects/actionTypes';
 
 @Component({
   components: {
@@ -112,12 +113,12 @@ export default class ProjectSettings extends Vue {
   /**
    * Image of project
    */
-  private _image!: string;
+  private _image!: File;
 
   /**
    * Getter for project image
    */
-  get image(): string {
+  get image(): File {
     this._image = this.project.image;
 
     return this._image;
@@ -126,7 +127,7 @@ export default class ProjectSettings extends Vue {
   /**
    * Setter for _image variable
    */
-  set image(value: string) {
+  set image(value: File) {
     this._image = value;
   }
 
@@ -150,16 +151,30 @@ export default class ProjectSettings extends Vue {
               this.project.description !== this._description ||
               this.project.image !== this._image
       ) {
-        const payload = {
+        const payload: {
+            id: string,
+            name: string,
+            description: string,
+            image?: File
+        } = {
           id: this.project.id,
           name: this._name,
           description: this._description,
         };
 
-        console.log(payload);
+        if (typeof this._image !== 'string') {
+          payload.image = this._image;
+        }
+
+        await this.$store.dispatch(
+          UPDATE_PROJECT,
+          payload
+        );
       }
 
       this.showSubmitButton = false;
+
+      this.fetchProject();
 
       notifier.show({
         message: this.$t('projects.settings.project.updatedMessage') as string,
@@ -173,6 +188,15 @@ export default class ProjectSettings extends Vue {
         time: 5000,
       });
     }
+  }
+
+  /**
+   * Fetch information about project
+   */
+  async fetchProject() {
+    const projectId = this.$route.params.projectId;
+
+    await this.$store.dispatch(FETCH_PROJECT, projectId);
   }
 }
 </script>

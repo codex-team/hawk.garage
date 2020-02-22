@@ -1,4 +1,10 @@
-import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS, MUTATION_UPDATE_LAST_VISIT } from './queries';
+import {
+  MUTATION_CREATE_PROJECT,
+  QUERY_RECENT_ERRORS,
+  MUTATION_UPDATE_LAST_VISIT,
+  MUTATION_UPDATE_PROJECT,
+  QUERY_PROJECT
+} from './queries';
 import * as api from '../index.ts';
 
 /**
@@ -36,4 +42,31 @@ export async function fetchRecentErrors(projectId) {
  */
 export async function updateLastProjectVisit(projectId) {
   return (await api.call(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
+}
+
+/**
+ * Update project data
+ *
+ * @param {String} id - project ID
+ * @param {String} name - project name
+ * @param {String} description - project description
+ * @param {File} image - project image
+ * @returns {Promise<Boolean>}
+ */
+export async function updateProject(id, name, description, image) {
+  return (await api.call(MUTATION_UPDATE_PROJECT, {
+    id,
+    name,
+    description,
+  }, { image })).updateProject;
+}
+
+/**
+ * Fetch project data
+ *
+ * @param {String} id - project ID
+ * @returns {Promise<Project>}
+ */
+export async function fetchProject(id) {
+  return (await api.call(QUERY_PROJECT, { id })).project;
 }

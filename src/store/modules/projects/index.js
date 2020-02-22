@@ -2,8 +2,9 @@
 import {
   CREATE_PROJECT,
   FETCH_RECENT_ERRORS,
-  SET_PROJECTS_LIST,
-  UPDATE_PROJECT_LAST_VISIT
+  SET_PROJECTS_LIST, UPDATE_PROJECT,
+  UPDATE_PROJECT_LAST_VISIT,
+  FETCH_PROJECT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -18,6 +19,7 @@ const mutationTypes = {
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
+  SET_PROJECT: 'SET_PROJECT', // Set project to user projects list
 };
 
 /**
@@ -106,6 +108,30 @@ const actions = {
   },
 
   /**
+   * Update project data
+   * @param {function} commit - standard Vuex commit function
+   * @param {Project} project - project to update
+   * @returns {Promise<Boolean>}
+   */
+  async [UPDATE_PROJECT]({ commit }, project) {
+    return projectsApi.updateProject(project.id, project.name, project.description, project.image);
+  },
+
+  /**
+   * Get project by id
+   * @param {function} commit - standard Vuex commit function
+   * @param {String} id – project id to fetch
+   * @return {Promise<Project>}
+   */
+  async [FETCH_PROJECT]({ commit }, id) {
+    const project = (await projectsApi.fetchProject(id));
+
+    commit(mutationTypes.SET_PROJECT, project);
+
+    return project;
+  },
+
+  /**
    * @param {Function} commit - standard Vuex commit function
    * @param {Object} getters - standard Vuex getters
    * @param {String} projectId - project's identifier
@@ -136,6 +162,29 @@ const actions = {
 };
 
 const mutations = {
+  /**
+   * Set project data
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Project} project - project params for setting
+   */
+  [mutationTypes.SET_PROJECT](state, project) {
+    const index = state.list.findIndex(element => element.id === project.id);
+
+    if (state.current && project.id === state.current.id) {
+      state.current = project;
+    }
+
+    state.list = [
+      ...state.list.slice(0, index),
+      {
+        ...state.list[index],
+        ...project,
+      },
+      ...state.list.slice(index + 1),
+    ];
+  },
+
   /**
    * Mutation for replacing projects list
    * @param {ProjectsModuleState} state - Vuex state
