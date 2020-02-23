@@ -20,7 +20,7 @@ import TokenBlock from './TokenBlock';
 export default {
   name: 'ProjectIntegrationsSettings',
   components: {
-    TokenBlock
+    TokenBlock,
   },
   computed: {
   /**
@@ -31,8 +31,8 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
-    }
-  }
+    },
+  },
 };
 </script>
 

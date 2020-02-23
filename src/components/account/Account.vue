@@ -14,7 +14,10 @@
         />
         <section>
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
-          <FormImageUploader @change="showSubmitButton = true" />
+          <FormImageUploader
+            v-model="image"
+            @input="showSubmitButton = true"
+          />
         </section>
       </div>
       <FormTextFieldset
@@ -57,7 +60,7 @@ export default {
   components: {
     ChangePasswordFieldset,
     FormImageUploader,
-    FormTextFieldset
+    FormTextFieldset,
   },
   data() {
     const user = this.$store.state.user.data;
@@ -65,16 +68,20 @@ export default {
     return {
       name: user.name || '',
       email: user.email || '',
+      /**
+       * @param {string} image - URL to user image
+       */
+      image: user.image || '',
       passwords: {
         old: '',
-        new: ''
+        new: '',
       },
       showPasswordFieldset: false,
-      showSubmitButton: false
+      showSubmitButton: false,
     };
   },
   computed: mapState({
-    user: state => state.user.data
+    user: state => state.user.data,
   }),
   methods: {
     /**
@@ -82,13 +89,25 @@ export default {
      */
     async save() {
       try {
-        if (this.user.name !== this.name || this.user.email !== this.email) {
-          await this.$store.dispatch(UPDATE_PROFILE, { name: this.name, email: this.email });
+        if (this.user.name !== this.name || this.user.email !== this.email || this.user.image !== this.image) {
+          const payload = {
+            name: this.name,
+            email: this.email,
+          };
+
+          if (typeof this.image !== 'string') {
+            payload.image = this.image;
+          }
+
+          await this.$store.dispatch(UPDATE_PROFILE, payload);
           await this.$store.dispatch(FETCH_CURRENT_USER);
         }
 
         if (this.passwords.old && this.passwords.new) {
-          await this.$store.dispatch(CHANGE_PASSWORD, { old: this.passwords.old, new: this.passwords.new });
+          await this.$store.dispatch(CHANGE_PASSWORD, {
+            old: this.passwords.old,
+            new: this.passwords.new,
+          });
         }
 
         this.hideForm();
@@ -96,13 +115,13 @@ export default {
         notifier.show({
           message: this.$t('settings.account.profileUpdated'),
           style: 'success',
-          time: 5000
+          time: 5000,
         });
       } catch (e) {
         notifier.show({
           message: e.message,
           style: 'error',
-          time: 5000
+          time: 5000,
         });
       }
     },
@@ -121,8 +140,8 @@ export default {
     async hideForm() {
       this.showPasswordFieldset = false;
       this.showSubmitButton = false;
-    }
-  }
+    },
+  },
 };
 </script>
 

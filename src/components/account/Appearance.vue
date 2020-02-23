@@ -13,8 +13,8 @@ import LanguageSelect from '../forms/LanguageSelect';
 export default {
   name: 'AppearanceSettings',
   components: {
-    LanguageSelect
-  }
+    LanguageSelect,
+  },
 };
 </script>
 

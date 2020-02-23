@@ -1,4 +1,5 @@
 import {
+  MUTATION_VISIT_EVENT,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS
@@ -14,7 +15,11 @@ import { EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/eve
  * @return {Promise<HawkEvent>}
  */
 export async function getEvent(projectId: string, eventId: string, repetitionId: string): Promise<HawkEvent | null> {
-  return (await api.call(QUERY_EVENT, { projectId, eventId, repetitionId })).project.event;
+  return (await api.call(QUERY_EVENT, {
+    projectId,
+    eventId,
+    repetitionId,
+  })).project.event;
 }
 
 /**
@@ -24,7 +29,10 @@ export async function getEvent(projectId: string, eventId: string, repetitionId:
  * @return {Promise<EventsWithDailyInfo>}
  */
 export async function fetchRecentEvents(projectId: string, skip = 0): Promise<EventsWithDailyInfo | null> {
-  return (await api.call(QUERY_RECENT_PROJECT_EVENTS, { projectId, skip })).project.recentEvents;
+  return (await api.call(QUERY_RECENT_PROJECT_EVENTS, {
+    projectId,
+    skip,
+  })).project.recentEvents;
 }
 
 /**
@@ -39,7 +47,11 @@ export async function fetchRecentEvents(projectId: string, skip = 0): Promise<Ev
 export async function getLatestRepetitions(
   projectId: string, eventId: string, limit: number
 ): Promise<HawkEventRepetition[]> {
-  return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId, limit })).project.event.repetitions;
+  return (await api.call(QUERY_LATEST_REPETITIONS, {
+    projectId,
+    eventId,
+    limit,
+  })).project.event.repetitions;
 }
 
 /**
@@ -49,5 +61,22 @@ export async function getLatestRepetitions(
  * @return {Promise<HawkEventRepetition | null>}
  */
 export async function getLatestRepetition(projectId: string, eventId: string): Promise<HawkEventRepetition | null> {
-  return (await api.call(QUERY_LATEST_REPETITIONS, { projectId, eventId })).project.event.repetitions.shift() || null;
+  return (await api.call(QUERY_LATEST_REPETITIONS, {
+    projectId,
+    eventId,
+  })).project.event.repetitions.shift() || null;
+}
+
+/**
+ * Mark event as visited for current user
+ *
+ * @param {string} projectId - project event related to
+ * @param {string} eventId — visited event
+ * @return {Promise<boolean>}
+ */
+export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
+  return (await api.call(MUTATION_VISIT_EVENT, {
+    projectId,
+    eventId,
+  })).visitEvent;
 }

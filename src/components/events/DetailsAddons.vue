@@ -32,14 +32,14 @@ export default {
   name: 'DetailsAddons',
   components: {
     DetailsBase,
-    JsonViewer
+    JsonViewer,
   },
   props: {
     addons: {
       type: Object,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 

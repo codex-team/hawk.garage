@@ -20,6 +20,15 @@ mutation signUp($email: String!) {
 `;
 
 /**
+ * Recover password mutation
+ */
+export const MUTATION_RECOVER_PASSWORD = `
+mutation recoverPassword($email: String!) {
+  resetPassword(email: $email)
+}
+`;
+
+/**
  * Mutation for refreshing tokens
  */
 export const MUTATION_REFRESH_TOKENS = `
@@ -49,10 +58,11 @@ query getCurrentUser {
  * Mutation to update user profile
  */
 export const MUTATION_UPDATE_PROFILE = `
-mutation User($name: String!, $email: String!) {
+mutation User($name: String!, $email: String!, $image: Upload) {
   updateProfile (
     name: $name
     email: $email
+    image: $image
   )
 }
 `;

@@ -2,11 +2,11 @@
   <div
     class="entity-image"
     :style="{
-      backgroundImage: image ? `url('${image}')`: 'none',
+      backgroundImage: imageSrc ? `url('${imageSrc}')`: 'none',
       backgroundColor: bgColor
     }"
   >
-    {{ !image ? $options.filters.abbreviation(name) : '' }}
+    {{ !imageSrc ? $options.filters.abbreviation(name) : '' }}
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
      */
     name: {
       type: String,
-      required: true
+      required: true,
     },
 
     /**
@@ -29,7 +29,7 @@ export default {
      */
     image: {
       type: String,
-      default: null
+      default: null,
     },
 
     /**
@@ -37,23 +37,51 @@ export default {
      */
     id: {
       type: [String, Number],
-      default: null
-    }
+      default: null,
+    },
+  },
+  data() {
+    return {
+      /**
+       * Internal field for image URL
+       */
+      imageSrc: null,
+    };
   },
   computed: {
     /**
      * @returns {String} image background color (if image URL is not provided)
      */
     bgColor() {
-      if (this.image) {
+      if (this.imageSrc) {
         return 'none';
       }
       if (this.id) {
         return getEntityColor(this.id);
       }
+
       return 'rgba(0,0,0, 0.3)';
+    },
+  },
+  mounted() {
+    if (!this.image) {
+      this.imageSrc = null;
+
+      return;
     }
-  }
+
+    const img = new Image();
+
+    img.src = this.image;
+
+    img.onload = () => {
+      this.imageSrc = this.image;
+    };
+
+    img.onerror = (e) => {
+      this.imageSrc = null;
+    };
+  },
 };
 </script>
 

@@ -58,7 +58,7 @@ export default {
   name: 'ProjectOverview',
   components: {
     EventItem,
-    AssignersList
+    AssignersList,
   },
   data() {
     return {
@@ -67,8 +67,8 @@ export default {
       isAssignersShowed: false,
       assignersListPosition: {
         top: 0,
-        right: 0
-      }
+        right: 0,
+      },
     };
   },
   computed: {
@@ -100,7 +100,7 @@ export default {
       return this.$store.getters.getRecentEventsByProjectId(this.projectId);
     },
 
-    ...mapGetters([ 'getEventByProjectIdAndGroupHash' ])
+    ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),
   },
 
   /**
@@ -141,7 +141,7 @@ export default {
 
       this.assignersListPosition = {
         top: boundingClientRect.y + 'px',
-        left: boundingClientRect.x + 'px'
+        left: boundingClientRect.x + 'px',
       };
     },
 
@@ -157,15 +157,15 @@ export default {
         params: {
           projectId: projectId,
           eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
-          repetitionId: repetitionId
-        }
+          repetitionId: repetitionId,
+        },
       });
     },
 
     hideAssignersList() {
       this.isAssignersShowed = false;
-    }
-  }
+    },
+  },
 };
 </script>
 

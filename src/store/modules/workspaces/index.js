@@ -31,7 +31,7 @@ const mutationTypes = {
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
-  SET_TRANSACTIONS: 'SET_TRANSACTIONS' // Set transactions info
+  SET_TRANSACTIONS: 'SET_TRANSACTIONS', // Set transactions info
 };
 
 /**
@@ -56,7 +56,7 @@ const mutationTypes = {
 function initialState() {
   return {
     list: [],
-    current: null
+    current: null,
   };
 }
 
@@ -71,7 +71,7 @@ const getters = {
    * @param {String} id project id to find
    * @return {Project}
    */
-    id => state.list.find(workspace => workspace.id === id)
+    id => state.list.find(workspace => workspace.id === id),
 };
 
 const actions = {
@@ -85,6 +85,7 @@ const actions = {
     const createdWorkspace = await workspaceApi.createWorkspace(workspace);
 
     commit(mutationTypes.ADD_WORKSPACE, createdWorkspace);
+
     return createdWorkspace;
   },
 
@@ -112,7 +113,13 @@ const actions = {
       return false;
     }
 
-    commit(mutationTypes.ADD_PENDING_MEMBER, { workspaceId, data: { email: userEmail, isPending: true } });
+    commit(mutationTypes.ADD_PENDING_MEMBER, {
+      workspaceId,
+      data: {
+        email: userEmail,
+        isPending: true,
+      },
+    });
 
     return true;
   },
@@ -178,7 +185,7 @@ const actions = {
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
-    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description);
+    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
   },
 
   /**
@@ -198,10 +205,14 @@ const actions = {
     }
 
     const changes = {
-      isAdmin: state
+      isAdmin: state,
     };
 
-    commit(mutationTypes.UPDATE_MEMBER, { workspaceId, userId, changes });
+    commit(mutationTypes.UPDATE_MEMBER, {
+      workspaceId,
+      userId,
+      changes,
+    });
   },
 
   /**
@@ -220,9 +231,15 @@ const actions = {
     }
 
     if (userId) {
-      commit(mutationTypes.REMOVE_MEMBER, { workspaceId, userId });
+      commit(mutationTypes.REMOVE_MEMBER, {
+        workspaceId,
+        userId,
+      });
     } else {
-      commit(mutationTypes.REMOVE_PENDING_MEMBER, { workspaceId, userEmail });
+      commit(mutationTypes.REMOVE_PENDING_MEMBER, {
+        workspaceId,
+        userEmail,
+      });
     }
   },
 
@@ -244,7 +261,7 @@ const actions = {
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
-  }
+  },
 };
 
 const mutations = {
@@ -263,8 +280,11 @@ const mutations = {
 
     state.list = [
       ...state.list.slice(0, index),
-      { ...state.list[index], ...workspace },
-      ...state.list.slice(index + 1)
+      {
+        ...state.list[index],
+        ...workspace,
+      },
+      ...state.list.slice(index + 1),
     ];
   },
 
@@ -286,9 +306,13 @@ const mutations = {
     let index = null;
 
     state.list.find((element, i) => {
-      if (element.id === workspaceId) index = i;
+      if (element.id === workspaceId) {
+        index = i;
+      }
     });
-    if (index !== null) state.list.splice(index, 1);
+    if (index !== null) {
+      state.list.splice(index, 1);
+    }
   },
 
   /**
@@ -352,7 +376,9 @@ const mutations = {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
     const memberIndex = state.list[workspaceIndex].users.findIndex(m => m.id === userId);
 
-    if (memberIndex > -1) state.list[workspaceIndex].users.splice(memberIndex, 1);
+    if (memberIndex > -1) {
+      state.list[workspaceIndex].users.splice(memberIndex, 1);
+    }
   },
 
   /**
@@ -366,7 +392,9 @@ const mutations = {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
     const memberIndex = state.list[workspaceIndex].pendingUsers.findIndex(m => m.email === userEmail);
 
-    if (memberIndex > -1) state.list[workspaceIndex].pendingUsers.splice(memberIndex, 1);
+    if (memberIndex > -1) {
+      state.list[workspaceIndex].pendingUsers.splice(memberIndex, 1);
+    }
   },
 
   /**
@@ -400,7 +428,7 @@ const mutations = {
       state.list = [
         ...state.list.slice(0, index),
         workspace,
-        ...state.list.slice(index + 1)
+        ...state.list.slice(index + 1),
       ];
     });
   },
@@ -411,12 +439,12 @@ const mutations = {
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());
-  }
+  },
 };
 
 export default {
   state: initialState(),
   getters,
   actions,
-  mutations
+  mutations,
 };

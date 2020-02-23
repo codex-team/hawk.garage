@@ -20,7 +20,7 @@ interface CreateWorkspaceInput {
   /**
    * Workspace image
    */
-  image?: string;
+  image?: File;
 }
 
 /**
@@ -29,7 +29,9 @@ interface CreateWorkspaceInput {
  * @returns {Promise<Workspace>} created workspace
  */
 export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
-  return (await api.call(MUTATION_CREATE_WORKSPACE, workspaceInfo)).createWorkspace;
+  const { image, ...rest } = workspaceInfo;
+
+  return (await api.call(MUTATION_CREATE_WORKSPACE, rest, { image })).createWorkspace;
 }
 
 /**
@@ -37,7 +39,7 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
  * @return {Promise<[Workspace]>}
  */
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
-  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, { initial: true })).workspaces;
+  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, { initial: true })).workspaces;
 }
 
 /**
@@ -48,7 +50,10 @@ export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
  * @returns {Promise<boolean>} true if user invited successfully
  */
 export async function inviteToWorkspace(workspaceId: string, userEmail: string): Promise<boolean> {
-  return (await api.call(MUTATION_INVITE_TO_WORKSPACE, { workspaceId, userEmail })).inviteToWorkspace;
+  return (await api.call(MUTATION_INVITE_TO_WORKSPACE, {
+    workspaceId,
+    userEmail,
+  })).inviteToWorkspace;
 }
 
 /**
@@ -59,7 +64,10 @@ export async function inviteToWorkspace(workspaceId: string, userEmail: string):
  * @returns {Promise<boolean>}
  */
 export async function confirmInvite(workspaceId: string, inviteHash: string): Promise<boolean> {
-  return (await api.call(MUTATION_CONFIRM_INVITE, { workspaceId, inviteHash })).confirmInvitation;
+  return (await api.call(MUTATION_CONFIRM_INVITE, {
+    workspaceId,
+    inviteHash,
+  })).confirmInvitation;
 }
 
 /**
@@ -75,8 +83,12 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
  * Update workspace data
  * @returns {Promise<Boolean>}
  */
-export async function updateWorkspace(id: string, name: string, description: string): Promise<boolean> {
-  return (await api.call(MUTATION_UPDATE_WORKSPACE, { id, name, description })).updateWorkspace;
+export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<boolean> {
+  return (await api.call(MUTATION_UPDATE_WORKSPACE, {
+    id,
+    name,
+    description,
+  }, { image })).updateWorkspace;
 }
 
 /**
@@ -87,7 +99,11 @@ export async function updateWorkspace(id: string, name: string, description: str
  * @returns {Promise<Boolean>}
  */
 export async function grantAdminPermissions(workspaceId: string, userId: string, state = true): Promise<boolean> {
-  return (await api.call(MUTATION_GRANT_ADMIN_PERMISSIONS, { workspaceId, userId, state })).grantAdmin;
+  return (await api.call(MUTATION_GRANT_ADMIN_PERMISSIONS, {
+    workspaceId,
+    userId,
+    state,
+  })).grantAdmin;
 }
 
 /**
@@ -105,6 +121,6 @@ export async function removeUserFromWorkspace(
   return (await api.call(MUTATION_REMOVE_MEMBER_FROM_WORKSPACE, {
     workspaceId,
     userId,
-    userEmail
+    userEmail,
   })).removeMemberFromWorkspace;
 }

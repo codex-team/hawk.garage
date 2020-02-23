@@ -48,7 +48,10 @@ import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'WorkspaceSettings',
-  components: { SettingsWindow, EntityImage },
+  components: {
+    SettingsWindow,
+    EntityImage,
+  },
   computed: {
     workspace() {
       const workspaceId = this.$route.params.workspaceId;
@@ -63,13 +66,13 @@ export default {
       const user = this.$store.state.user.data;
 
       return this.workspace.users.find(u => u.id === user.id).isAdmin;
-    }
+    },
   },
   created() {
     const workspaceId = this.$route.params.workspaceId;
 
     this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-  }
+  },
 };
 </script>
 

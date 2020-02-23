@@ -14,7 +14,7 @@ export function getEntityColor(id: string): string {
     '#b142af',
     '#6632b8',
     '#3251b8',
-    '#505b74'
+    '#505b74',
   ];
 
   if (!id) {
@@ -57,6 +57,7 @@ export const groupBy =
         const value = obj[key];
 
         objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+
         return objectsByKeyValue;
       }, {});
 
@@ -163,7 +164,7 @@ export function misTranslit(string: string): string {
     'ь': 'm',
     'ю': '.',
     'б': ',',
-    ' ': ' '
+    ' ': ' ',
   };
 
   let newString = '';
@@ -189,7 +190,7 @@ export function escape(string: string): string;
  *                              replaced and total length of new chars added
  * @return object with escaped string, count and length
  */
-export function escape(string: string, withCount: boolean): {value: string, count: number, length: number};
+export function escape(string: string, withCount: boolean): {value: string; count: number; length: number};
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
@@ -198,7 +199,7 @@ export function escape(string: string, withCount: boolean): {value: string, coun
  *                              replaced and total length of new chars added
  * @return escaped string or object with escaped string, count and length
  */
-export function escape(string: string, withCount: boolean = false): string | {value: string, count: number, length: number} {
+export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
   let count = 0;
   let length = 0;
 
@@ -207,7 +208,7 @@ export function escape(string: string, withCount: boolean = false): string | {va
     [/"/g, '&quot;'],
     [/'/g, '&#39;'],
     [/</g, '&lt;'],
-    [/>/g, '&gt;']
+    [/>/g, '&gt;'],
   ];
 
   const replaced = dictionary.reduce((accumulator, pair) => {
@@ -221,7 +222,11 @@ export function escape(string: string, withCount: boolean = false): string | {va
     });
   }, string);
 
-  return !withCount ? replaced : { value: replaced, count, length };
+  return !withCount ? replaced : {
+    value: replaced,
+    count,
+    length,
+  };
 }
 
 /**

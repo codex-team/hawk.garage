@@ -9,6 +9,7 @@
         v-for="repetition in repetitions"
         :key="repetition.id"
         class="repetitions-list__row"
+        @click="goToRepetition(repetition)"
       >
         <td class="repetitions-list__col">
           <span class="repetitions-list__time">{{ repetition.payload.timestamp | prettyTime }}</span>
@@ -16,7 +17,7 @@
         <td class="repetitions-list__col">
           <img
             class="repetitions-list__user-photo"
-            src="https://as1.ftcdn.net/jpg/02/18/69/42/500_F_218694229_V1sjTE7s6ROXQYGPyUcZSIHatGT4nOK9.jpg"
+            src="https://i.ya-webdesign.com/images/avatar-png-1.png"
             alt=""
           >
         </td>
@@ -41,15 +42,54 @@
 export default {
   name: 'RepetitionsTable',
   props: {
+    /**
+     * List of repetitions
+     */
     repetitions: {
       type: Array,
-      required: true
+      required: true,
     },
+
+    /**
+     * Event that owns passed repetitions
+     */
+    event: {
+      type: Object,
+      required: true,
+    },
+
+    /**
+     * Project that owns the Event
+     */
+    projectId: {
+      type: String,
+      required: true,
+    },
+
+    /**
+     * Day in which repetitions happened
+     */
     date: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
+  methods: {
+    /**
+     * Provides navigation to the single repetition
+     * @param {Repetition} repetition - clicked repetition
+     */
+    goToRepetition(repetition) {
+      this.$router.push({
+        name: 'event-overview',
+        params: {
+          projectId: this.projectId,
+          eventId: this.event.id,
+          repetitionId: repetition.id,
+        },
+      });
+    },
+  },
 };
 </script>
 
@@ -69,6 +109,10 @@ export default {
 
     &__row {
       cursor: pointer;
+
+      &:hover {
+        background-color: var(--color-bg-sidebar) !important;
+      }
     }
 
     &__row:nth-child(even) {

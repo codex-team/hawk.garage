@@ -34,17 +34,17 @@ export default {
   name: 'ProjectsMenuItem',
   components: {
     Badge,
-    EntityImage
+    EntityImage,
   },
   props: {
     projectId: {
       type: String,
-      required: true
+      required: true,
     },
     searchQuery: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
   computed: {
     project() {
@@ -66,7 +66,7 @@ export default {
         this.searchQuery,
         escape(this.searchQuery),
         misTranslit(this.searchQuery),
-        escape(misTranslit(this.searchQuery))
+        escape(misTranslit(this.searchQuery)),
       ];
 
       if (this.searchQuery) {
@@ -76,8 +76,8 @@ export default {
       } else {
         return escapedName;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

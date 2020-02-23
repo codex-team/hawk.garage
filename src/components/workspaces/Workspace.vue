@@ -14,7 +14,10 @@
         />
         <section>
           <label class="label workspace-settings__label">{{ $t('workspaces.settings.workspace.image') }}</label>
-          <FormImageUploader @change="showSubmitButton = true" />
+          <FormImageUploader
+            v-model="image"
+            @input="showSubmitButton = true"
+          />
         </section>
       </div>
       <FormTextFieldset
@@ -48,7 +51,7 @@ export default {
   name: 'WorkspaceSettings',
   components: {
     FormImageUploader,
-    FormTextFieldset
+    FormTextFieldset,
   },
   data() {
     const workspaceId = this.$route.params.workspaceId;
@@ -58,7 +61,8 @@ export default {
     return {
       name: this.workspace.name,
       description: this.workspace.description || '',
-      showSubmitButton: false
+      showSubmitButton: false,
+      image: this.workspace.image,
     };
   },
   created() {
@@ -75,14 +79,24 @@ export default {
      */
     async save() {
       try {
-        if (this.workspace.name !== this.name || this.workspace.description !== this.description) {
+        if (
+          this.workspace.name !== this.name ||
+          this.workspace.description !== this.description ||
+          this.workspace.image !== this.image
+        ) {
+          const payload = {
+            id: this.workspace.id,
+            name: this.name,
+            description: this.description,
+          };
+
+          if (typeof this.image !== 'string') {
+            payload.image = this.image;
+          }
+
           await this.$store.dispatch(
             UPDATE_WORKSPACE,
-            {
-              id: this.workspace.id,
-              name: this.name,
-              description: this.description
-            }
+            payload
           );
         }
 
@@ -93,17 +107,17 @@ export default {
         notifier.show({
           message: this.$t('workspaces.settings.workspace.updatedMessage'),
           style: 'success',
-          time: 5000
+          time: 5000,
         });
       } catch (e) {
         notifier.show({
           message: e.message,
           style: 'error',
-          time: 5000
+          time: 5000,
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

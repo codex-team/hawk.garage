@@ -1,6 +1,7 @@
 <template>
   <div
     class="event-item"
+    :class="{'event-item--visited': isVisited}"
     @click="$emit('showEventOverview')"
   >
     <div class="event-item__time">
@@ -9,6 +10,7 @@
     <div class="event-item__badge-container">
       <Badge
         :content="count"
+        :type="isVisited ? 'visited' : 'default'"
         class="event-item__count"
       />
     </div>
@@ -31,7 +33,7 @@ export default {
   name: 'EventItem',
   components: {
     Badge,
-    Icon
+    Icon,
   },
   props: {
     /**
@@ -39,33 +41,39 @@ export default {
      */
     event: {
       type: Object,
-      required: true
+      required: true,
     },
     /**
      * @type {String} - timestamp of the last event
      */
     lastOccurrenceTimestamp: {
       type: String,
-      required: true
+      required: true,
     },
     /**
      * @type {Number} - number of events per day
      */
     count: {
       type: [String, Number],
-      default: ''
-    }
+      default: '',
+    },
   },
-  data() {
-    return {
-      showAssigners: false
-    };
+  computed: {
+    /**
+     * Return true if user visited current event
+     *
+     * @return {boolean}
+     */
+    isVisited() {
+      const { visitedBy } = this.event;
+
+      if (!visitedBy) {
+        return false;
+      }
+
+      return visitedBy.includes(this.$store.state.user.data.id);
+    },
   },
-  methods: {
-    closeAssignersList() {
-      this.showAssigners = false;
-    }
-  }
 };
 </script>
 
@@ -109,6 +117,12 @@ export default {
 
     &:hover {
       background-color: var(--color-bg-main);
+    }
+
+    &--visited {
+      ^&__info {
+        color: var(--color-text-second);
+      }
     }
   }
 </style>

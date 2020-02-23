@@ -25,26 +25,26 @@ export default {
   props: {
     name: {
       type: String,
-      default: null
+      default: null,
     },
     label: {
       type: String,
-      default: null
+      default: null,
     },
     placeholder: {
       type: String,
-      default: null
+      default: null,
     },
     type: {
       type: String,
-      default: 'text'
+      default: 'text',
     },
     value: {
       type: String,
-      default: null
+      default: null,
     },
-    required: Boolean
-  }
+    required: Boolean,
+  },
 };
 </script>
 

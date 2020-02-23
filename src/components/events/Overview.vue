@@ -86,17 +86,16 @@ import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import DetailsAddons from './DetailsAddons';
 import Badge from '../utils/Badge';
-import { FETCH_LATEST_EVENT } from '../../store/modules/events/actionTypes';
 import { HawkEvent, HawkEventBacktraceFrame } from '../../types/events';
+import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '../../store/modules/events/actionTypes';
 
 @Component({
   components: {
     PopupDialog,
     DetailsCookie,
     DetailsBacktrace,
-    DetailsAddons,
-    Badge
-  }
+    Badge,
+  },
 })
 
 /**
@@ -134,7 +133,13 @@ export default class EventOverview extends Vue {
        * Current event id
        * @type {string}
        */
-      eventId
+      eventId,
+
+      /**
+       * Status of repetition-diff fetching
+       * @type {boolean}
+       */
+      loading: true,
     };
   }
 
@@ -155,7 +160,7 @@ export default class EventOverview extends Vue {
       return firstWithFile.file;
     }
     return unknownLocation;
-  }
+  };
 
   /**
    * Get calling env language based on event.catcherType
@@ -172,10 +177,29 @@ export default class EventOverview extends Vue {
    * @return {Promise<void>}
    */
   async created() {
-    this.event = await this.$store.dispatch(FETCH_LATEST_EVENT, { projectId: this.projectId, eventId: this.eventId });
+    const eventId = this.$route.params.eventId;
+    const repetitionId = this.$route.params.repetitionId;
+
+    this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+      projectId: this.projectId,
+      eventId,
+      repetitionId,
+    });
     this.loading = false;
-  }
-}
+
+    const userId = this.$store.state.user.data.id;
+
+    /**
+     * Dispatch VISIT_EVENT action on component create
+     */
+    if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
+      this.$store.dispatch(VISIT_EVENT, {
+        projectId: this.projectId,
+        eventId,
+      });
+    }
+  },
+};
 </script>
 
 <style>

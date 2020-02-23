@@ -18,6 +18,9 @@
         :href="$API_AUTH_GOOGLE"
       >{{ $t('authPages.googleButton') }}</a>
     </div>
+    <SuccessMessage
+      v-if="isPasswordRecoverSuccess"
+    />
     <div class="auth-form__container">
       <div class="auth-form__picture" />
       <form
@@ -71,34 +74,44 @@
 
 <script>
 import TextFieldset from '../forms/TextFieldset';
+import SuccessMessage from './SuccessMessage';
 
 export default {
   name: 'AuthForm',
   components: {
-    TextFieldset
+    TextFieldset,
+    SuccessMessage,
   },
   props: {
     fields: {
       type: Array,
-      required: true
+      required: true,
     },
     submitText: {
       type: String,
-      required: true
+      required: true,
     },
     message: {
       type: Object,
-      default: null
+      default: null,
     },
     altText: {
       type: String,
-      default: null
+      default: null,
     },
     altLink: {
       type: String,
-      default: null
-    }
-  }
+      default: null,
+    },
+    /**
+     * Show success message about sending message to email
+     * If recovering password was successful
+     */
+    isPasswordRecoverSuccess: {
+      type: Boolean,
+      default: false,
+    },
+  },
 };
 </script>
 

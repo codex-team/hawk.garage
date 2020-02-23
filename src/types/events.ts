@@ -23,6 +23,11 @@ export interface HawkEvent {
   totalCount: string;
 
   /**
+   * Users who visited this event
+   */
+  visitedBy: string[];
+
+  /**
    * Event payload
    */
   payload: HawkEventPayload;
@@ -88,7 +93,7 @@ interface HawkEventPayload {
   /**
    *Event timestamp
    */
-  timestamp: string
+  timestamp: string;
 
   /**
    * Event stack array from the latest call to the earliest
@@ -135,7 +140,14 @@ interface HawkEventPayload {
  * Hawk repetition payload
  */
 export interface HawkEventRepetition {
+  /**
+   * Repetitions ID
+   */
   id: string;
+
+  /**
+   * Unique repetition payload
+   */
   payload: HawkEventPayload;
 }
 
