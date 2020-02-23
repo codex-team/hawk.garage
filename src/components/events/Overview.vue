@@ -81,19 +81,20 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import PopupDialog from '../utils/PopupDialog';
-import DetailsCookie from './DetailsCookie';
-import DetailsBacktrace from './DetailsBacktrace';
-import DetailsAddons from './DetailsAddons';
-import Badge from '../utils/Badge';
-import { HawkEvent, HawkEventBacktraceFrame } from '../../types/events';
-import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '../../store/modules/events/actionTypes';
+import PopupDialog from '../utils/PopupDialog.vue';
+import DetailsCookie from './DetailsCookie.vue';
+import DetailsBacktrace from './DetailsBacktrace.vue';
+import DetailsAddons from './DetailsAddons.vue';
+import Badge from '../utils/Badge.vue';
+import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
+import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 
 @Component({
   components: {
     PopupDialog,
     DetailsCookie,
     DetailsBacktrace,
+    DetailsAddons,
     Badge,
   },
 })
@@ -106,41 +107,44 @@ export default class EventOverview extends Vue {
    * Status of repetition-diff fetching
    * @type {boolean}
    */
-  loading: boolean = true;
+  private loading: boolean = true;
 
   /**
-   * Component data
+   * Original (first) event data
+   * @type {HawkEvent}
    */
-  data() {
-    const projectId: string = this.$route.params.projectId;
-    const eventId: string = this.$route.params.eventId;
-    const event: HawkEvent = this.$store.getters.getProjectEventById(projectId, eventId);
+  private event: HawkEvent | null = null;
 
-    return {
-      /**
-       * Original (first) event data
-       * @type {HawkEvent}
-       */
-      event,
+  /**
+   * Current project id
+   * @type {string}
+   */
+  private projectId!: string;
 
-      /**
-       * Current project id
-       * @type {string}
-       */
-      projectId,
+  /**
+   * Current event id
+   * @type {string}
+   */
+  private eventId!: string;
 
-      /**
-       * Current event id
-       * @type {string}
-       */
-      eventId,
+  /**
+   * Current repetition id
+   * @type {string}
+   */
+  private repetitionId!: string;
 
-      /**
-       * Status of repetition-diff fetching
-       * @type {boolean}
-       */
-      loading: true,
-    };
+  /**
+   * Current user id
+   * @type {string}
+   */
+  private readonly userId: string;
+
+  /**
+   * Component constructor for data initialization
+   */
+  constructor() {
+    super();
+    this.userId = this.$store.state.user.data.id;
   }
 
   /**
@@ -148,7 +152,7 @@ export default class EventOverview extends Vue {
    * @return {string}
    */
   get location(): string {
-    const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
+    const trace: HawkEventBacktraceFrame[] = this.event!.payload.backtrace;
     const unknownLocation = 'Unknown location';
 
     if (!trace) {
@@ -159,8 +163,9 @@ export default class EventOverview extends Vue {
     if (firstWithFile) {
       return firstWithFile.file;
     }
+
     return unknownLocation;
-  };
+  }
 
   /**
    * Get calling env language based on event.catcherType
@@ -169,7 +174,7 @@ export default class EventOverview extends Vue {
    * @return {string}
    */
   get lang(): string {
-    return this.event.catcherType.split('/').pop();
+    return this.event!.catcherType.split('/').pop()!;
   }
 
   /**
@@ -177,28 +182,28 @@ export default class EventOverview extends Vue {
    * @return {Promise<void>}
    */
   async created() {
-    const eventId = this.$route.params.eventId;
-    const repetitionId = this.$route.params.repetitionId;
+    this.projectId = this.$route.params.projectId;
+    this.eventId = this.$route.params.eventId;
+    this.event = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+    this.repetitionId = this.$route.params.repetitionId;
 
     this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
       projectId: this.projectId,
-      eventId,
-      repetitionId,
+      eventId: this.eventId,
+      repetitionId: this.repetitionId,
     });
     this.loading = false;
-
-    const userId = this.$store.state.user.data.id;
 
     /**
      * Dispatch VISIT_EVENT action on component create
      */
-    if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
-      this.$store.dispatch(VISIT_EVENT, {
+    if (this.event && (!this.event.visitedBy || !this.event.visitedBy.includes(this.userId))) {
+      await this.$store.dispatch(VISIT_EVENT, {
         projectId: this.projectId,
-        eventId,
+        eventId: this.eventId,
       });
     }
-  },
+  }
 };
 </script>
 

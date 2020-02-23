@@ -84,7 +84,6 @@ export default class ProcessPaymentDialog extends Vue {
     this.workspace = this.$store.state.workspaces.current || this.$store.state.workspaces.list[0];
     this.card = cards[0];
     this.amount = this.$store.state.modalDialog.data.amount;
-    console.log(this.workspaces);
   }
 
   /**
