@@ -27,7 +27,7 @@
         <section>
           <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
           <FormImageUploader
-            v-model="project.image"
+            v-model="image"
             @input="showSubmitButton = true"
           />
         </section>
@@ -113,12 +113,12 @@ export default class ProjectSettings extends Vue {
   /**
    * Image of project
    */
-  private _image!: File;
+  private _image!: File | string;
 
   /**
    * Getter for project image
    */
-  get image(): File {
+  get image(): File | string {
     this._image = this.project.image;
 
     return this._image;
@@ -127,7 +127,7 @@ export default class ProjectSettings extends Vue {
   /**
    * Setter for _image variable
    */
-  set image(value: File) {
+  set image(value: File | string) {
     this._image = value;
   }
 
