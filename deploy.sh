@@ -1,3 +1,4 @@
+#!/bin/bash
 ### FOR PRODUCTION USE ONLY ###
 
 # Pull latest changes
