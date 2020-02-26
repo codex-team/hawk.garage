@@ -95,13 +95,13 @@ export default {
     align-items: stretch;
     justify-content: flex-start;
     max-height: 62px;
-    padding: 8px 10px;
     margin:5px 10px;
+    padding: 8px 10px;
     color: var(--color-text-main);
-    cursor: pointer;
-    user-select: none;
     border-radius: var(--border-radius);
+    cursor: pointer;
     transition: background-color 110ms ease;
+    user-select: none;
 
     &:hover {
       background-color: var(--color-bg-second);
