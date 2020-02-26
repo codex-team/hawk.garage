@@ -1,6 +1,7 @@
 <template>
   <div
     class="project-menu-item"
+    :class="{'project-menu-item--current': project.id === currentProjectId}"
   >
     <EntityImage
       :id="project.id"
@@ -47,6 +48,13 @@ export default {
     },
   },
   computed: {
+    /**
+     * Returns project id from the route
+     * @return {string}
+     */
+    currentProjectId() {
+      return this.$route.params.projectId;
+    },
     project() {
       return this.$store.state.projects.list.find(_project => _project.id === this.projectId);
     },
@@ -87,10 +95,25 @@ export default {
     align-items: stretch;
     justify-content: flex-start;
     max-height: 62px;
-    padding: 6px 20px;
+    margin:5px 10px;
+    padding: 8px 10px;
     color: var(--color-text-main);
+    border-radius: var(--border-radius);
     cursor: pointer;
+    transition: background-color 110ms ease;
     user-select: none;
+
+    &:hover {
+      background-color: var(--color-bg-second);
+    }
+
+    &--current {
+      background: var(--color-bg-sidebar);
+
+      &:hover {
+        background: color-mod(var(--color-bg-sidebar) lightness(+1%));
+      }
+    }
 
     &__name {
       margin-bottom: 5px;
@@ -100,17 +123,18 @@ export default {
     }
 
     &__last-event {
-      display: -webkit-box;
       width: 206px;
-      height: 30px;
       overflow: hidden;
       color: var(--color-text-second);
       font-size: 12.6px;
       line-height: 1.27;
       letter-spacing: 0.1px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      /*display: -webkit-box;*/
+      /*-webkit-line-clamp: 2;*/
+      /*-webkit-box-orient: vertical;*/
     }
 
     &__picture {
@@ -125,8 +149,5 @@ export default {
       margin: auto 0 auto auto;
     }
 
-    &:hover {
-      background-color: var(--color-bg-second);
-    }
   }
 </style>
