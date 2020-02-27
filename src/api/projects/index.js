@@ -2,8 +2,7 @@ import {
   MUTATION_CREATE_PROJECT,
   QUERY_RECENT_ERRORS,
   MUTATION_UPDATE_LAST_VISIT,
-  MUTATION_UPDATE_PROJECT,
-  QUERY_PROJECT
+  MUTATION_UPDATE_PROJECT
 } from './queries';
 import * as api from '../index.ts';
 

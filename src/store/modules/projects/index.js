@@ -3,8 +3,7 @@ import {
   CREATE_PROJECT,
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST, UPDATE_PROJECT,
-  UPDATE_PROJECT_LAST_VISIT,
-  FETCH_PROJECT
+  UPDATE_PROJECT_LAST_VISIT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
