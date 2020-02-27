@@ -13,7 +13,7 @@
           {{ key }}
         </div>
         <div class="event-details__value">
-          {{ value }}
+          {{ renderAddonValue(key, value) }}
         </div>
       </div>
     </template>
@@ -36,6 +36,15 @@ export default Vue.extend({
     addons: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    renderAddonValue(key, value) {
+      if (key === 'window') {
+        return value.innerWidth + 'x' + value.innerHeight;
+      }
+
+      return value;
     },
   },
 });
