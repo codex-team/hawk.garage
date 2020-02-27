@@ -62,6 +62,10 @@
             class="event-overview__section"
             :cookies="event.payload.cookies"
           />
+          <UserAgent
+            v-if="event.payload.userAgent"
+            :value="event.payload.userAgent"
+          />
         </template>
         <div
           v-else
@@ -79,6 +83,7 @@ import PopupDialog from '../utils/PopupDialog';
 import DetailsCookie from './DetailsCookie';
 import DetailsBacktrace from './DetailsBacktrace';
 import Badge from '../utils/Badge';
+import UserAgent from './UserAgent';
 import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '../../store/modules/events/actionTypes';
 
 export default {
@@ -88,6 +93,7 @@ export default {
     DetailsCookie,
     DetailsBacktrace,
     Badge,
+    UserAgent,
   },
   data() {
     const projectId = this.$route.params.projectId;

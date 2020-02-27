@@ -24,6 +24,7 @@ export const QUERY_EVENT = `
           backtrace {
             ...eventBacktrace
           }
+          userAgent
         }
         repetition(id: $repetitionId) {
           id
@@ -40,6 +41,7 @@ export const QUERY_EVENT = `
             backtrace {
               ...eventBacktrace
             }
+            userAgent
           }
         }
       }
