@@ -13,11 +13,7 @@
           {{ key }}
         </div>
         <div class="event-details__value">
-          <JsonViewer
-            class="details-addons__json-viewer"
-            :value="value"
-            theme="json-viewer-theme"
-          />
+          {{ value }}
         </div>
       </div>
     </template>
@@ -25,33 +21,22 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import Vue from 'vue';
 import DetailsBase from './DetailsBase.vue';
-import JsonViewer from 'vue-json-viewer';
-
-@Component({
-  components: {
-    DetailsBase,
-    JsonViewer,
-  },
-})
 
 /**
  * Details addons component
  */
-export default class DetailsAddons extends Vue {
-  @Prop(Object) addons!: object;
-}
+export default Vue.extend({
+  name: 'DetailsAddons',
+  components: {
+    DetailsBase,
+  },
+  props: {
+    addons: {
+      type: Object,
+      required: true,
+    },
+  },
+});
 </script>
-
-<style>
-  .details-addons {
-    .event-details__value {
-      width: 100%;
-    }
-
-    &__json-viewer {
-      width: 100%;
-    }
-  }
-</style>

@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
+import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import DetailsCookie from './DetailsCookie.vue';
 import DetailsBacktrace from './DetailsBacktrace.vue';
@@ -89,7 +89,8 @@ import Badge from '../utils/Badge.vue';
 import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 
-@Component({
+export default Vue.extend({
+  name: 'EventOverview',
   components: {
     PopupDialog,
     DetailsCookie,
@@ -97,96 +98,78 @@ import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
     DetailsAddons,
     Badge,
   },
-})
+  data() {
+    const projectId: string = this.$route.params.projectId;
+    const eventId: string = this.$route.params.eventId;
+    const event: HawkEvent = this.$store.getters.getProjectEventById(projectId, eventId);
+    const repetitionId: string = this.$route.params.repetitionId;
+    const userId:string = this.$store.state.user.data.id;
 
-/**
- * Event overview component
- */
-export default class EventOverview extends Vue {
-  /**
-   * Status of repetition-diff fetching
-   * @type {boolean}
-   */
-  private loading: boolean = true;
+    return {
+      /**
+       * Original (first) event data
+       * @type {HawkEvent}
+       */
+      event,
+      /**
+       * Current project id
+       * @type {string}
+       */
+      projectId,
+      /**
+       * Current event id
+       * @type {string}
+       */
+      eventId,
+      /**
+       * Current repetition id
+       * @type {string}
+       */
+      repetitionId,
+      /**
+       * Current user id
+       * @type {string}
+       */
+      userId,
+      /**
+       * Status of repetition-diff fetching
+       * @type {boolean}
+       */
+      loading: true,
+    };
+  },
+  computed: {
+    /**
+     * Get calling env language based on event.catcherType
+     * errors/javascript -> javascript
+     *
+     * @return {string}
+     */
+    lang(): string {
+      return this.event.catcherType.split('/').pop()!;
+    },
+    /**
+     * Event location got from the first backtrace frame
+     *
+     * @return {string}
+     */
+    location(): string {
+      const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
+      const unknownLocation = 'Unknown location';
 
-  /**
-   * Original (first) event data
-   * @type {HawkEvent}
-   */
-  private event: HawkEvent | null = null;
+      if (!trace) {
+        return unknownLocation;
+      }
+      const firstWithFile = trace.find(frame => !!frame.file);
 
-  /**
-   * Current project id
-   * @type {string}
-   */
-  private projectId!: string;
+      if (firstWithFile) {
+        return firstWithFile.file;
+      }
 
-  /**
-   * Current event id
-   * @type {string}
-   */
-  private eventId!: string;
-
-  /**
-   * Current repetition id
-   * @type {string}
-   */
-  private repetitionId!: string;
-
-  /**
-   * Current user id
-   * @type {string}
-   */
-  private readonly userId: string;
-
-  /**
-   * Component constructor for data initialization
-   */
-  constructor() {
-    super();
-    this.userId = this.$store.state.user.data.id;
-  }
-
-  /**
-   * Event location got from the first backtrace frame
-   * @return {string}
-   */
-  get location(): string {
-    const trace: HawkEventBacktraceFrame[] = this.event!.payload.backtrace;
-    const unknownLocation = 'Unknown location';
-
-    if (!trace) {
       return unknownLocation;
-    }
-    const firstWithFile = trace.find((frame: HawkEventBacktraceFrame) => !!frame.file);
-
-    if (firstWithFile) {
-      return firstWithFile.file;
-    }
-
-    return unknownLocation;
-  }
-
-  /**
-   * Get calling env language based on event.catcherType
-   * errors/javascript -> javascript
-   *
-   * @return {string}
-   */
-  get lang(): string {
-    return this.event!.catcherType.split('/').pop()!;
-  }
-
-  /**
-   * Vue created hook. Fetches error's data
-   * @return {Promise<void>}
-   */
+    },
+  },
   async created() {
-    this.projectId = this.$route.params.projectId;
-    this.eventId = this.$route.params.eventId;
-    this.event = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
-    this.repetitionId = this.$route.params.repetitionId;
-
     this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
       projectId: this.projectId,
       eventId: this.eventId,
@@ -197,14 +180,14 @@ export default class EventOverview extends Vue {
     /**
      * Dispatch VISIT_EVENT action on component create
      */
-    if (this.event && (!this.event.visitedBy || !this.event.visitedBy.includes(this.userId))) {
+    if (!this.event.visitedBy || !this.event.visitedBy.includes(this.userId)) {
       await this.$store.dispatch(VISIT_EVENT, {
         projectId: this.projectId,
         eventId: this.eventId,
       });
     }
-  }
-};
+  },
+});
 </script>
 
 <style>
