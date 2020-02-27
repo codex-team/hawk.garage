@@ -91,7 +91,7 @@ interface HawkEventPayload {
   title: string;
 
   /**
-   *Event timestamp
+   * Event timestamp
    */
   timestamp: string;
 
