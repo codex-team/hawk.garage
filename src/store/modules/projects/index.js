@@ -114,21 +114,13 @@ const actions = {
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_PROJECT]({ commit }, project) {
-    return projectsApi.updateProject(project.id, project.name, project.description, project.image);
-  },
+    const result = projectsApi.updateProject(project.id, project.name, project.description, project.image);
 
-  /**
-   * Get project by id
-   * @param {function} commit - standard Vuex commit function
-   * @param {String} id – project id to fetch
-   * @return {Promise<Project>}
-   */
-  async [FETCH_PROJECT]({ commit }, id) {
-    const project = (await projectsApi.fetchProject(id));
+    if (result) {
+      commit(mutationTypes.SET_PROJECT, project);
+    }
 
-    commit(mutationTypes.SET_PROJECT, project);
-
-    return project;
+    return result;
   },
 
   /**

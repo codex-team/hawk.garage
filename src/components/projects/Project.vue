@@ -51,7 +51,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import FormTextFieldset from '../forms/TextFieldset.vue';
 import FormImageUploader from '../forms/ImageUploader.vue';
 import notifier from 'codex-notifier';
-import { FETCH_PROJECT, UPDATE_PROJECT } from '@/store/modules/projects/actionTypes';
+import { FETCH_PROJECT, UPDATE_PROJECT } from '../../store/modules/projects/actionTypes';
 
 @Component({
   components: {
@@ -171,11 +171,7 @@ export default class ProjectSettings extends Vue {
           payload
         );
       }
-
       this.showSubmitButton = false;
-
-      this.fetchProject();
-
       notifier.show({
         message: this.$t('projects.settings.project.updatedMessage') as string,
         style: 'success',
@@ -188,15 +184,6 @@ export default class ProjectSettings extends Vue {
         time: 5000,
       });
     }
-  }
-
-  /**
-   * Fetch information about project
-   */
-  async fetchProject() {
-    const projectId = this.$route.params.projectId;
-
-    await this.$store.dispatch(FETCH_PROJECT, projectId);
   }
 }
 </script>
