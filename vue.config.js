@@ -2,7 +2,7 @@ const HtmlWebpackInlineSVGPlugin = require('html-webpack-inline-svg-plugin');
 
 module.exports = {
   configureWebpack: {
-    devtool: 'source-map',
+    devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'eval',
     plugins: [
       new HtmlWebpackInlineSVGPlugin({
         runPreEmit: true
