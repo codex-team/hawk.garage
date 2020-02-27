@@ -8,16 +8,16 @@
         Time for quality
       </div>
     </div>
-    <div class="auth-form__social-block">
-      <a
-        class="auth-form__github-button"
-        :href="$API_AUTH_GITHUB"
-      >{{ $t('authPages.githubButton') }}</a>
-      <a
-        class="auth-form__google-button"
-        :href="$API_AUTH_GOOGLE"
-      >{{ $t('authPages.googleButton') }}</a>
-    </div>
+    <!--    <div class="auth-form__social-block">-->
+    <!--      <a-->
+    <!--        class="auth-form__github-button"-->
+    <!--        :href="$API_AUTH_GITHUB"-->
+    <!--      >{{ $t('authPages.githubButton') }}</a>-->
+    <!--      <a-->
+    <!--        class="auth-form__google-button"-->
+    <!--        :href="$API_AUTH_GOOGLE"-->
+    <!--      >{{ $t('authPages.googleButton') }}</a>-->
+    <!--    </div>-->
     <SuccessMessage
       v-if="isPasswordRecoverSuccess"
     />

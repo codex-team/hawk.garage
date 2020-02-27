@@ -12,6 +12,7 @@
         v-for="(frame, index) in filteredBacktrace"
         :key="index"
         class="event-details__content-block details-backtrace__content-block"
+        data-ripple
       >
         <div
           class="details-backtrace__header-row"

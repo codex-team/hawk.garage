@@ -5,6 +5,7 @@
       class="sidebar__user-picture"
       :name="user.email || 'H'"
       :image="user.image"
+      data-ripple
       @click.native="$router.push('/settings')"
     />
     <hr class="sidebar__delimiter">
@@ -41,6 +42,7 @@
           :workspace="workspace"
           :active="currentWorkspace ? currentWorkspace.id === workspace.id : false"
           class="sidebar__workspace-item"
+          data-ripple
           @click.native="onWorkspaceItemClick(workspace)"
         />
       </div>
