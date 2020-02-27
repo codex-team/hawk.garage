@@ -60,13 +60,3 @@ export async function updateProject(id, name, description, image) {
     description,
   }, { image })).updateProject;
 }
-
-/**
- * Fetch project data
- *
- * @param {String} id - project ID
- * @returns {Promise<Project>}
- */
-export async function fetchProject(id) {
-  return (await api.call(QUERY_PROJECT, { id })).project;
-}

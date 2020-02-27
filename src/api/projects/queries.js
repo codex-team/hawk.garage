@@ -54,18 +54,3 @@ export const MUTATION_UPDATE_PROJECT = `
     updateProject(id: $id, name: $name, description: $description, image: $image)
   }
 `;
-
-// language=GraphQL
-/**
- * Query for fetching project with id
- */
-export const QUERY_PROJECT = `
-  query fetchProject($id: ID!) {
-    project(id: $id) {
-      id
-      name
-      description
-      image
-    }
-  }
-`;
