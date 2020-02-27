@@ -4,23 +4,23 @@
  */
 .ripple {
   position: absolute;
-  top:0; left:0; bottom:0; right:0;
+  top:0; right:0; bottom:0; left:0;
   overflow: hidden;
+  border-radius: inherit; /* inherit from parent (rounded buttons etc) */
   -webkit-transform: translateZ(0); /* to contain zoomed ripple */
   transform: translateZ(0);
-  border-radius: inherit; /* inherit from parent (rounded buttons etc) */
   pointer-events: none; /* allow user interaction */
 
   &-wave{
+    position: absolute;
     width: 10px;
     height: 10px;
-    backface-visibility: hidden;
-    position: absolute;
-    border-radius: 50%;
-    transform: scale(0.7); -webkit-transform: scale(0.7);
     background: rgba(0,0,0,.25);
-    animation: ripple 600ms forwards;
+    border-radius: 50%; -webkit-transform: scale(0.7);
+    transform: scale(0.7);
+    backface-visibility: hidden;
     -webkit-animation: ripple 600ms forwards;
+    animation: ripple 600ms forwards;
   }
 
 }
