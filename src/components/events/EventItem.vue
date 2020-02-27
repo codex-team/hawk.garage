@@ -3,6 +3,7 @@
     class="event-item"
     :class="{'event-item--visited': isVisited}"
     @click="$emit('showEventOverview')"
+    data-ripple
   >
     <div class="event-item__time">
       {{ lastOccurrenceTimestamp | prettyTime }}

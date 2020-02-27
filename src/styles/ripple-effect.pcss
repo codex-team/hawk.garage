@@ -1,0 +1,33 @@
+/**
+ * Ripple is a click-effect with wave in clicked zone
+ * Activated by adding the "data-ripple" attribute to the any clickable element
+ */
+.ripple {
+  position: absolute;
+  top:0; left:0; bottom:0; right:0;
+  overflow: hidden;
+  -webkit-transform: translateZ(0); /* to contain zoomed ripple */
+  transform: translateZ(0);
+  border-radius: inherit; /* inherit from parent (rounded buttons etc) */
+  pointer-events: none; /* allow user interaction */
+
+  &-wave{
+    width: 10px;
+    height: 10px;
+    backface-visibility: hidden;
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0.7); -webkit-transform: scale(0.7);
+    background: rgba(0,0,0,.25);
+    animation: ripple 600ms forwards;
+    -webkit-animation: ripple 600ms forwards;
+  }
+
+}
+
+@keyframes ripple {
+  97% {
+    transform: scale(22);
+  }
+  to {transform: scale(24); opacity: 0; }
+}
