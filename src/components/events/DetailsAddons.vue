@@ -42,10 +42,10 @@ export default Vue.extend({
     /**
      * Render value in correct format
      * @param {string | object} key - addons key
-     * @param {string} value - addons value
+     * @param {*} value - addons value
      * @return {String}
      */
-    renderAddonValue(key: string | object, value: string): string {
+    renderAddonValue(key: string | object, value: any): string {
       if (key === 'window') {
         return value.innerWidth + 'x' + value.innerHeight;
       }
