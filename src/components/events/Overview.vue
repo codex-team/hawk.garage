@@ -102,8 +102,6 @@ export default Vue.extend({
     const projectId: string = this.$route.params.projectId;
     const eventId: string = this.$route.params.eventId;
     const event: HawkEvent = this.$store.getters.getProjectEventById(projectId, eventId);
-    const repetitionId: string = this.$route.params.repetitionId;
-    const userId:string = this.$store.state.user.data.id;
 
     return {
       /**
@@ -111,26 +109,19 @@ export default Vue.extend({
        * @type {HawkEvent}
        */
       event,
+
       /**
        * Current project id
        * @type {string}
        */
       projectId,
+
       /**
        * Current event id
        * @type {string}
        */
       eventId,
-      /**
-       * Current repetition id
-       * @type {string}
-       */
-      repetitionId,
-      /**
-       * Current user id
-       * @type {string}
-       */
-      userId,
+
       /**
        * Status of repetition-diff fetching
        * @type {boolean}
@@ -169,21 +160,30 @@ export default Vue.extend({
       return unknownLocation;
     },
   },
+  /**
+   * Vue created hook. Fetches error's data
+   * @return {Promise<void>}
+   */
   async created() {
+    const eventId = this.$route.params.eventId;
+    const repetitionId = this.$route.params.repetitionId;
+
     this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
       projectId: this.projectId,
-      eventId: this.eventId,
-      repetitionId: this.repetitionId,
+      eventId,
+      repetitionId,
     });
     this.loading = false;
+
+    const userId = this.$store.state.user.data.id;
 
     /**
      * Dispatch VISIT_EVENT action on component create
      */
-    if (!this.event.visitedBy || !this.event.visitedBy.includes(this.userId)) {
-      await this.$store.dispatch(VISIT_EVENT, {
+    if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
+      this.$store.dispatch(VISIT_EVENT, {
         projectId: this.projectId,
-        eventId: this.eventId,
+        eventId,
       });
     }
   },
