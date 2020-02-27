@@ -22,8 +22,3 @@ export const UPDATE_PROJECT_LAST_VISIT = 'UPDATE_PROJECT_LAST_VISIT';
  * Send request to update project
  */
 export const UPDATE_PROJECT = 'UPDATE_PROJECT';
-
-/**
- * Send request to get project
- */
-export const FETCH_PROJECT = 'FETCH_PROJECT';

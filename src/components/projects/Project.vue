@@ -51,7 +51,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import FormTextFieldset from '../forms/TextFieldset.vue';
 import FormImageUploader from '../forms/ImageUploader.vue';
 import notifier from 'codex-notifier';
-import { FETCH_PROJECT, UPDATE_PROJECT } from '../../store/modules/projects/actionTypes';
+import { UPDATE_PROJECT } from '../../store/modules/projects/actionTypes';
 
 @Component({
   components: {
