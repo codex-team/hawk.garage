@@ -96,6 +96,11 @@ export default {
      * @return {string} window size in correct format
      */
     showWindowSize({ innerWidth: width, innerHeight: height }) {
+      /**
+       * As repetition store diff with first-ever event
+       * and if window size hasn't changed
+       * need to show original proportions
+       */
       if (!width) {
         width = this.event.payload.addons.window.innerWidth;
       }
