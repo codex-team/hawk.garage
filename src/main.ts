@@ -10,10 +10,15 @@ import i18n from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-import HawkCatcher from 'hawk.javascript';
+import HawkCatcher from '@hawk.so/javascript';
+
+console.log('process.env.VUE_APP_HAWK_TOKEN', process.env.VUE_APP_HAWK_TOKEN);
+console.log('store.state.user', store.state.user);
 
 if (process.env.VUE_APP_HAWK_TOKEN) {
-  const hawk = new HawkCatcher(process.env.VUE_APP_HAWK_TOKEN);
+  const hawk = new HawkCatcher({
+    token: process.env.VUE_APP_HAWK_TOKEN,
+  });
 
   hawk.test();
 }
