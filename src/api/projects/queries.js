@@ -52,5 +52,11 @@ export const MUTATION_UPDATE_PROJECT = `
     $image: Upload
   ) {
     updateProject(id: $id, name: $name, description: $description, image: $image)
+    {
+      id
+      name
+      description
+      image
+    }
   }
 `;

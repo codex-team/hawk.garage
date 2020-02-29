@@ -113,10 +113,10 @@ const actions = {
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_PROJECT]({ commit }, project) {
-    const result = projectsApi.updateProject(project.id, project.name, project.description, project.image);
+    const result = await projectsApi.updateProject(project.id, project.name, project.description, project.image);
 
     if (result) {
-      commit(mutationTypes.SET_PROJECT, project);
+      commit(mutationTypes.SET_PROJECT, result);
     }
 
     return result;
