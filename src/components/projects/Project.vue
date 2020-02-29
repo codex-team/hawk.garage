@@ -52,140 +52,96 @@ import FormTextFieldset from '../forms/TextFieldset.vue';
 import FormImageUploader from '../forms/ImageUploader.vue';
 import notifier from 'codex-notifier';
 import { UPDATE_PROJECT } from '../../store/modules/projects/actionTypes';
+import { Project } from '../../types/projects';
 
-@Component({
+export default Vue.extend({
+  name: 'ProjectSettings' as string,
   components: {
-    FormTextFieldset,
     FormImageUploader,
+    FormTextFieldset,
   },
-})
-/**
- * Class implements project settings content component
- */
-export default class ProjectSettings extends Vue {
-  /**
-   * Show submit button only when you update some of fields
-   */
-  private showSubmitButton: boolean = false;
+  data() {
+    return {
+      /**
+       * Name of project
+       */
+      name: '' as string,
 
-  /**
-   * Name of project in form input
-   */
-  private _name!: string;
+      /**
+       * Description of project
+       */
+      description: '' as string,
 
-  /**
-   * Getter for project name
-   */
-  get name() {
-    this._name = this.project.name;
+      /**
+       * Image of project
+       */
+      image: '' as string | File,
 
-    return this._name;
-  }
+      /**
+       * Show submit button only when you update some of fields
+       */
+      showSubmitButton: false as boolean,
+    };
+  },
+  computed: {
+    project(): Project {
+      const projectId = this.$route.params.projectId;
 
-  /**
-   * Setter for _name variable
-   */
-  set name(value: string) {
-    this._name = value;
-  }
-
-  /**
-   * Description of project in form input
-   */
-  private _description!: string;
-
-  /**
-   * Getter for project description
-   */
-  get description(): string {
-    this._description = this.project.description;
-
-    return this._description;
-  }
-
-  /**
-   * Setter for _description variable
-   */
-  set description(value: string) {
-    this._description = value;
-  }
-
-  /**
-   * Image of project
-   */
-  private _image!: File | string;
-
-  /**
-   * Getter for project image
-   */
-  get image(): File | string {
-    this._image = this.project.image;
-
-    return this._image;
-  }
-
-  /**
-   * Setter for _image variable
-   */
-  set image(value: File | string) {
-    this._image = value;
-  }
-
-  /**
-   * Current viewed project
-   * @return {Project}
-   */
-  get project() {
-    const projectId = this.$route.params.projectId;
-
-    return this.$store.getters.getProjectById(projectId);
-  }
-
-  /**
-   * Form submit event handler
-   */
-  async save() {
-    try {
-      if (
-        this.project.name !== this._name ||
-              this.project.description !== this._description ||
-              this.project.image !== this._image
-      ) {
-        const payload: {
+      return this.$store.getters.getProjectById(projectId);
+    },
+  },
+  mounted() {
+    this.name = this.project.name;
+    this.description = this.project.description || '';
+    this.image = this.project.image || '';
+  },
+  methods: {
+    /**
+     * Form submit event handler
+     */
+    async save() {
+      try {
+        if (
+          this.project.name !== this.name ||
+                  this.project.description !== this.description ||
+                  this.project.image !== this.image
+        ) {
+          const payload: {
             id: string,
             name: string,
             description: string,
             image?: File
-        } = {
-          id: this.project.id,
-          name: this._name,
-          description: this._description,
-        };
+          } = {
+            id: this.project.id,
+            name: this.name,
+            description: this.description,
+          };
 
-        if (typeof this._image !== 'string') {
-          payload.image = this._image;
+          if (typeof this.image !== 'string') {
+            payload.image = this.image;
+          }
+
+          await this.$store.dispatch(
+            UPDATE_PROJECT,
+            payload
+          );
         }
-
-        await this.$store.dispatch(
-          UPDATE_PROJECT,
-          payload
-        );
+        this.showSubmitButton = false;
+        notifier.show({
+          message: this.$t('projects.settings.project.updatedMessage') as string,
+          style: 'success',
+          time: 5000,
+        });
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000,
+        });
       }
-      this.showSubmitButton = false;
-      notifier.show({
-        message: this.$t('projects.settings.project.updatedMessage') as string,
-        style: 'success',
-        time: 5000,
-      });
-    } catch (e) {
-      notifier.show({
-        message: e.message,
-        style: 'error',
-        time: 5000,
-      });
-    }
-  }
-}
+    },
+  },
+});
 </script>
 
 <style src="../../styles/settings-window-page.css"></style>
