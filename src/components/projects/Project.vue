@@ -84,6 +84,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    /**
+     * Computed object of project that show in settings page
+     */
     project(): Project {
       const projectId = this.$route.params.projectId;
 
@@ -99,12 +102,12 @@ export default Vue.extend({
     /**
      * Form submit event handler
      */
-    async save() {
+    async save(): Promise<void> {
       try {
         if (
           this.project.name !== this.name ||
-                  this.project.description !== this.description ||
-                  this.project.image !== this.image
+          this.project.description !== this.description ||
+          this.project.image !== this.image
         ) {
           const payload: {
             id: string,
