@@ -1,6 +1,7 @@
 <template>
   <div
     id="app"
+    ref="app"
     :class="[themeClass]"
   >
     <router-view />
@@ -66,6 +67,56 @@ export default {
         time: 10000,
       });
     });
+  },
+
+  /**
+   * Fired when all component nodes are ready
+   * @return {void}
+   */
+  mounted() {
+    /**
+     * Prepare "ripple" effect
+     */
+    this.enableRipple();
+  },
+
+  methods: {
+    /**
+     * Add "ripple" effects: wave anivation on clicked elements
+     * To active effect, add "data-ripple" attrubute to any clickable element
+     * @return {void}
+     */
+    enableRipple() {
+      this.$refs['app'].addEventListener('mousedown', (e) => {
+        const el = e.target.nodeType === Node.ELEMENT_NODE ? e.target : e.target.parentNode;
+        const rEl = el.closest('[data-ripple]');
+
+        if (!rEl) {
+          return;
+        }
+
+        if (window.getComputedStyle(rEl).position === 'static') {
+          rEl.style.position = 'relative';
+        }
+
+        const wrap = document.createElement('div');
+        const rip = document.createElement('div');
+        const offset = rEl.getBoundingClientRect();
+
+        wrap.classList.add('ripple');
+        rip.classList.add('ripple-wave');
+
+        rip.style.left = e.pageX - offset.left + 'px';
+        rip.style.top = e.pageY - offset.top + 'px';
+
+        rEl.appendChild(wrap);
+        wrap.appendChild(rip);
+
+        setTimeout(() => {
+          wrap.remove();
+        }, 550);
+      });
+    },
   },
 };
 </script>
