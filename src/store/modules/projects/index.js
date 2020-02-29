@@ -166,14 +166,7 @@ const mutations = {
       state.current = project;
     }
 
-    state.list = [
-      ...state.list.slice(0, index),
-      {
-        ...state.list[index],
-        ...project,
-      },
-      ...state.list.slice(index + 1),
-    ];
+    state.list[index] = project;
   },
 
   /**
