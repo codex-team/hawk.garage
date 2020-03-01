@@ -10,8 +10,7 @@ import i18n from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-import HawkCatcher from '@hawk.so/javascript';
-import { HawkInitialSettings, HawkUser } from '@hawk.so/javascript/types/hawk-initial-settings';
+import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
 
 /**
  * Current build revision

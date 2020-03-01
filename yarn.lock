@@ -715,9 +715,9 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hawk.so/javascript@^2.0.9":
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-2.0.9.tgz#4d6a12f69df16fcc0d7a0c4c86523e867bd1fac2"
+"@hawk.so/javascript@^2.0.10":
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-2.0.10.tgz#8b7bee4ac0a9de5e3ba1638cf83b0b4faf5cda9b"
   dependencies:
     error-stack-parser "^2.0.3"
 
