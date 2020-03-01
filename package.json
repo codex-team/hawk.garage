@@ -12,7 +12,7 @@
     "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },
   "dependencies": {
-    "@hawk.so/javascript": "^2.0.8",
+    "@hawk.so/javascript": "^2.0.9",
     "@hawk.so/webpack-plugin": "^0.0.10",
     "@vue/cli-plugin-babel": "^4.1.2",
     "@vue/cli-plugin-pwa": "^4.1.2",
@@ -61,9 +61,6 @@
     "stylelint-config-recommended": "^3.0.0",
     "svg-sprite-generator": "^0.0.7",
     "typescript": "^3.7.4"
-  },
-  "gitHooks": {
-    "pre-commit": "yarn lint"
   },
   "license": "UNLICENSED",
   "lint-staged": {

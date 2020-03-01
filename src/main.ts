@@ -11,16 +11,33 @@ import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import HawkCatcher from '@hawk.so/javascript';
+import { HawkInitialSettings, HawkUser } from '@hawk.so/javascript/types/hawk-initial-settings';
 
-console.log('process.env.VUE_APP_HAWK_TOKEN', process.env.VUE_APP_HAWK_TOKEN);
-console.log('store.state.user', store.state.user);
+/**
+ * Current build revision
+ * passed from Webpack Define Plugin
+ */
+declare const buildRevision: string;
 
+/**
+ * Enable frontend-errors tracking
+ */
 if (process.env.VUE_APP_HAWK_TOKEN) {
-  const hawk = new HawkCatcher({
+  const hawkOptions: HawkInitialSettings = {
     token: process.env.VUE_APP_HAWK_TOKEN,
-  });
+    release: buildRevision,
+  };
 
-  hawk.test();
+  if (store.state.user) {
+    hawkOptions.user = {
+      id: store.state.user.data.id,
+      name: store.state.user.data.name || store.state.user.data.email,
+      image: store.state.user.data.image,
+      url: '',
+    } as HawkUser;
+  }
+
+  new HawkCatcher(hawkOptions);
 }
 
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
