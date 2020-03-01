@@ -19,7 +19,13 @@ import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript'
 declare const buildRevision: string;
 
 /**
- * Enable frontend-errors tracking
+ * Frontend-errors tracking system
+ * @type {HawkCatcher}
+ */
+let hawk: HawkCatcher;
+
+/**
+ *
  */
 if (process.env.VUE_APP_HAWK_TOKEN) {
   const hawkOptions: HawkInitialSettings = {
@@ -36,7 +42,7 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
     } as HawkUser;
   }
 
-  new HawkCatcher(hawkOptions);
+  hawk = new HawkCatcher(hawkOptions);
 }
 
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
@@ -72,4 +78,15 @@ new Vue({
   store,
   i18n,
   render: (h) => h(App),
+  methods: {
+    /**
+     * Sends error to the Hawk
+     * @param {Error} error - error to send
+     */
+    sendToHawk(error: Error): void {
+      if (hawk){
+        hawk.catchError(error);
+      }
+    }
+  },
 }).$mount('#app');
