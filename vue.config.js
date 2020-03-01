@@ -30,7 +30,7 @@ const hawkToken = process.env.VUE_APP_HAWK_TOKEN;
 if (hawkToken) {
   plugins.push(new HawkWebpackPlugin({
     integrationToken: hawkToken,
-    release: buildRevision
+    release: buildRevision,
   }));
 }
 
@@ -42,16 +42,21 @@ module.exports = {
       progress: false,
     },
   },
+  /**
+   * Disable progress to boost bundling speed
+   */
   devServer: {
     progress: false,
   },
   chainWebpack: config => {
-    config
-      .plugins
-      .delete('progress');
-
+    /**
+     * Use DefinePlugin to pass some variables to the sources
+     */
     config.plugin('define').tap((definitions) => {
       definitions[0] = Object.assign(definitions[0], {
+        /**
+         * Current bundle version will be passed to the Hawk Catcher
+         */
         buildRevision,
       });
 
@@ -62,8 +67,8 @@ module.exports = {
     name: 'hawk.so',
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: 'public/service-worker.js'
-    }
+      swSrc: 'public/service-worker.js',
+    },
   },
-  assetsDir: 'static'
+  assetsDir: 'static',
 };
