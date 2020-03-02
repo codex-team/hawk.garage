@@ -2,24 +2,24 @@
   <div class="project-overview__chart">
     <div class="project-overview__chart-info">
       <span class="project-overview__chart-info__today"> today </span>
-      <span class="project-overview__chart-info__highlight"> {{ todayCount }} </span>
+      <span class="project-overview__chart-info__highlight"> {{ todayCount | spacedNumber }} </span>
       <span
         v-if="difference > 0"
         class="project-overview__chart-info-increase"
       >
-        {{ difference }}
+        {{ difference | spacedNumber }}
       </span>
       <span
         v-else-if="difference < 0"
         class="project-overview__chart-info-decrease"
       >
-        {{ -difference }}
+        {{ -difference | spacedNumber }}
       </span>
       <span
         v-else
         class="project-overview__chart-info-equal"
       >
-        {{ difference }}
+        {{ difference | spacedNumber }}
       </span>
     </div>
     <svg class="project-overview__chart-body">
@@ -102,23 +102,34 @@ export default Vue.extend({
     visibleDays(): any {
       return this.days.slice(1, -1);
     },
+
+    minCount(): number {
+      return Math.min(...this.days.map(day => day.totalCount));
+    },
+
+    maxCount(): number {
+      return Math.max(...this.days.map(day => day.totalCount));
+    },
   },
   mounted() {
-    const step = this.$el.clientWidth / (this.days.length - 1);
+    this.fillChart();
 
-    const points : string[] = [];
+    window.addEventListener('resize', this.fillChart);
+  },
+  methods: {
+    fillChart() {
+      const step = this.$el.clientWidth / (this.days.length - 1);
+      const points : string[] = [];
 
-    const minCount = Math.min(...this.days.map(day => day.totalCount));
-    const maxCount = Math.max(...this.days.map(day => day.totalCount));
+      this.days.forEach((day, index) => {
+        const pointX = index * step;
+        const pointY = 2 + (day.totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
 
-    this.days.forEach((day, index) => {
-      const pointX = index * step;
-      const pointY = 2 + (day.totalCount - minCount) / (maxCount - minCount) * 100;
+        points.push(pointX + ' ' + pointY);
+      });
 
-      points.push(pointX + ' ' + pointY);
-    });
-
-    this.pointsStr = points.join(', ');
+      this.pointsStr = points.join(', ');
+    },
   },
 });
 </script>
@@ -135,6 +146,7 @@ export default Vue.extend({
       float: right;
       color: var(--color-text-main);
       font-size: 13px;
+      white-space: nowrap;
 
       &__today {
         opacity: 0.6;
