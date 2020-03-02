@@ -43,7 +43,7 @@
         fill="none"
         stroke="url(#chart)"
         stroke-width="2.5"
-        :points="pointsStr"
+        :points="polylinePoints"
       />
     </svg>
     <div class="project-overview__chart-days">
@@ -52,7 +52,7 @@
         :key="index"
         class="project-overview__chart-day"
       >
-        {{ day.date }}
+        {{ day.timestamp }}
       </span>
     </div>
   </div>
@@ -60,64 +60,106 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { debounce } from '@/utils';
 
 export default Vue.extend({
   name: 'Chart',
   data() {
     return {
+      /**
+       * List of days with the number of errors per day
+       * @type {any[]}
+       */
       days: [
-        { date: '13 feb', totalCount: 500 },
-        { date: '14 feb', totalCount: 800 },
-        { date: '15 feb', totalCount: 100 },
-        { date: '16 feb', totalCount: 50 },
-        { date: '17 feb', totalCount: 25 },
-        { date: '18 feb', totalCount: 75 },
-        { date: '19 feb', totalCount: 25 },
-        { date: '20 feb', totalCount: 1000 },
-        { date: '21 feb', totalCount: 900 },
-        { date: '22 feb', totalCount: 850 },
-        { date: '23 feb', totalCount: 900 },
-        { date: '24 feb', totalCount: 150 },
-        { date: '25 feb', totalCount: 300 },
-        { date: '26 feb', totalCount: 400 },
-        { date: '27 feb', totalCount: 650 },
-        { date: '28 feb', totalCount: 750 },
-      ] as any,
-      pointsStr: '' as string,
+        { timestamp: '13 feb', totalCount: 500 },
+        { timestamp: '14 feb', totalCount: 800 },
+        { timestamp: '15 feb', totalCount: 100 },
+        { timestamp: '16 feb', totalCount: 50 },
+        { timestamp: '17 feb', totalCount: 25 },
+        { timestamp: '18 feb', totalCount: 75 },
+        { timestamp: '19 feb', totalCount: 25 },
+        { timestamp: '20 feb', totalCount: 1000 },
+        { timestamp: '21 feb', totalCount: 900 },
+        { timestamp: '22 feb', totalCount: 850 },
+        { timestamp: '23 feb', totalCount: 900 },
+        { timestamp: '24 feb', totalCount: 150 },
+        { timestamp: '25 feb', totalCount: 300 },
+        { timestamp: '26 feb', totalCount: 400 },
+        { timestamp: '27 feb', totalCount: 650 },
+        { timestamp: '28 feb', totalCount: 750 },
+      ] as any[],
+      /**
+       * points for svg polyline
+       * @type {string}
+       */
+      polylinePoints: '' as string,
     };
   },
   computed: {
+    /**
+     * Number of errors for the current day
+     *
+     * @return {number}
+     */
     todayCount(): number {
       return this.days.slice(-1)[0].totalCount;
     },
 
+    /**
+     * Number of errors for the previous day
+     *
+     * @return {number}
+     */
     yesterdayCount(): number {
       return this.days.slice(-2, -1)[0].totalCount;
     },
 
+    /**
+     * Difference between current and previous number of errors
+     *
+     * @return {number}
+     */
     difference(): number {
       return this.todayCount - this.yesterdayCount;
     },
 
-    visibleDays(): any {
+    /**
+     * Days used in chart
+     *
+     * @return {number}
+     */
+    visibleDays(): any[] {
       return this.days.slice(1, -1);
     },
 
+    /**
+     * Minimum number errors per day
+     *
+     * @return {number}
+     */
     minCount(): number {
       return Math.min(...this.days.map(day => day.totalCount));
     },
 
+    /**
+     * Maximum number errors per day
+     *
+     * @return {number}
+     */
     maxCount(): number {
       return Math.max(...this.days.map(day => day.totalCount));
     },
   },
   mounted() {
-    this.fillChart();
+    this.createPolyline();
 
-    window.addEventListener('resize', this.fillChart);
+    window.addEventListener('resize', debounce(this.createPolyline, 100));
   },
   methods: {
-    fillChart() {
+    /**
+     * Logic for create polyline for chart
+     */
+    createPolyline() {
       const step = this.$el.clientWidth / (this.days.length - 1);
       const points : string[] = [];
 
@@ -128,7 +170,7 @@ export default Vue.extend({
         points.push(pointX + ' ' + pointY);
       });
 
-      this.pointsStr = points.join(', ');
+      this.polylinePoints = points.join(', ');
     },
   },
 });

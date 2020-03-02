@@ -1,4 +1,4 @@
-const mergeWith = require('lodash.mergewith');
+import mergeWith from 'lodash.mergewith';
 
 /**
  * Returns entity color from predefined list
@@ -71,9 +71,10 @@ export const groupByDate = groupBy('date');
  * Merge to objects recursively
  * @param {object} target
  * @param {object[]} sources
+ *
  * @return {object}
  */
-export function deepMerge(target: object, ...sources: object[]) {
+export function deepMerge(target: object, ...sources: object[]): object {
   const isObject = (item: any) => item && typeOf(item) === 'object';
 
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {
@@ -249,6 +250,8 @@ export function strReplaceAt(string: string, index: number, replacement: string)
  * @param {string} string - where to find
  * @param {number} line - searching line number
  * @param {number} column - searching column number
+ *
+ * @return {number}
  */
 export function findOffsetByLineAndCol(string: string, line: number, column: number): number {
   let currentLine = 0;
@@ -270,4 +273,25 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
   }
 
   return offset;
+}
+
+/**
+ * Debounce function in order to
+ * time-consuming tasks don't run so often
+ * @param {() => void} callback - function for debounce
+ * @param {number} delay - debounce delay
+ *
+ * @return {() => void}
+ */
+export function debounce(callback: () => void, delay: number): () => void {
+  let debounceTimer;
+
+  return function (...args): void {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      callback.apply(this, args);
+    }, delay);
+  };
 }
