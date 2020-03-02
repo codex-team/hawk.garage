@@ -6,7 +6,7 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <div class="project-overview__chart" />
+      <Chart />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import Chart from '../events/Chart';
 import EventItem from '../events/EventItem';
 import AssignersList from '../events/AssignersList';
 import { mapGetters } from 'vuex';
@@ -57,6 +58,7 @@ import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTy
 export default {
   name: 'ProjectOverview',
   components: {
+    Chart,
     EventItem,
     AssignersList,
   },
@@ -182,12 +184,6 @@ export default {
       align-self: stretch;
       overflow-y: auto;
       @apply --hide-scrollbar;
-    }
-
-    &__chart {
-      height: 215px;
-      margin: 16px 15px 0;
-      background-color: var(--color-bg-main);
     }
 
     &__events {
