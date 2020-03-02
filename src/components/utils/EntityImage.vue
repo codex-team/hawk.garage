@@ -43,9 +43,14 @@ export default {
   data() {
     return {
       /**
-       * Internal field for image URL
+       * @type {string | null} Internal field for image URL
        */
       imageSrc: null,
+
+      /**
+       * @type {HTMLImageElement | null} image element for displaying icons
+       */
+      imageElement: null,
     };
   },
   computed: {
@@ -63,6 +68,15 @@ export default {
       return 'rgba(0,0,0, 0.3)';
     },
   },
+  watch: {
+    /**
+     * Change entity image after image prop changed
+     * @param {string} newValue - new value of the image property
+     */
+    image(newValue) {
+      this.imageElement.src = newValue;
+    },
+  },
   mounted() {
     if (!this.image) {
       this.imageSrc = null;
@@ -70,15 +84,15 @@ export default {
       return;
     }
 
-    const img = new Image();
+    this.imageElement = new Image();
 
-    img.src = this.image;
+    this.imageElement.src = this.image;
 
-    img.onload = () => {
+    this.imageElement.onload = () => {
       this.imageSrc = this.image;
     };
 
-    img.onerror = (e) => {
+    this.imageElement.onerror = (e) => {
       this.imageSrc = null;
     };
   },

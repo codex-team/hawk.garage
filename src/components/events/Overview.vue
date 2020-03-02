@@ -62,6 +62,11 @@
             class="event-overview__section"
             :cookies="event.payload.cookies"
           />
+          <DetailsAddons
+            v-if="event.payload.addons"
+            class="event-overview__section"
+            :addons="event.payload.addons"
+          />
         </template>
         <div
           v-else
@@ -74,25 +79,29 @@
   </PopupDialog>
 </template>
 
-<script>
-import PopupDialog from '../utils/PopupDialog';
-import DetailsCookie from './DetailsCookie';
-import DetailsBacktrace from './DetailsBacktrace';
-import Badge from '../utils/Badge';
-import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '../../store/modules/events/actionTypes';
+<script lang="ts">
+import Vue from 'vue';
+import PopupDialog from '../utils/PopupDialog.vue';
+import DetailsCookie from './DetailsCookie.vue';
+import DetailsBacktrace from './DetailsBacktrace.vue';
+import DetailsAddons from './DetailsAddons.vue';
+import Badge from '../utils/Badge.vue';
+import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
+import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 
-export default {
+export default Vue.extend({
   name: 'EventOverview',
   components: {
     PopupDialog,
     DetailsCookie,
     DetailsBacktrace,
+    DetailsAddons,
     Badge,
   },
   data() {
-    const projectId = this.$route.params.projectId;
-    const eventId = this.$route.params.eventId;
-    const event = this.$store.getters.getProjectEventById(projectId, eventId);
+    const projectId: string = this.$route.params.projectId;
+    const eventId: string = this.$route.params.eventId;
+    const event: HawkEvent = this.$store.getters.getProjectEventById(projectId, eventId);
 
     return {
       /**
@@ -127,23 +136,21 @@ export default {
      *
      * @return {string}
      */
-    lang() {
-      return this.event.catcherType.split('/').pop();
+    lang(): string {
+      return this.event.catcherType.split('/').pop()!;
     },
-
     /**
      * Event location got from the first backtrace frame
      *
      * @return {string}
      */
-    location() {
-      const trace = this.event.payload.backtrace;
+    location(): string {
+      const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
       const unknownLocation = 'Unknown location';
 
       if (!trace) {
         return unknownLocation;
       }
-
       const firstWithFile = trace.find(frame => !!frame.file);
 
       if (firstWithFile) {
@@ -180,7 +187,7 @@ export default {
       });
     }
   },
-};
+});
 </script>
 
 <style>

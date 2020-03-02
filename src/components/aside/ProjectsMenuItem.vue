@@ -2,6 +2,7 @@
   <div
     class="project-menu-item"
     :class="{'project-menu-item--current': project.id === currentProjectId}"
+    data-ripple
   >
     <EntityImage
       :id="project.id"

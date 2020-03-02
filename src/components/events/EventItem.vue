@@ -2,6 +2,7 @@
   <div
     class="event-item"
     :class="{'event-item--visited': isVisited}"
+    data-ripple
     @click="$emit('showEventOverview')"
   >
     <div class="event-item__time">
