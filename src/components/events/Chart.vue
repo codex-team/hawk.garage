@@ -82,7 +82,7 @@ export default Vue.extend({
         { date: '26 feb', totalCount: 400 },
         { date: '27 feb', totalCount: 650 },
         { date: '28 feb', totalCount: 750 },
-      ],
+      ] as any,
       pointsStr: '' as string,
     };
   },
@@ -99,12 +99,12 @@ export default Vue.extend({
       return this.todayCount - this.yesterdayCount;
     },
 
-    visibleDays() {
+    visibleDays(): any {
       return this.days.slice(1, -1);
     },
   },
   mounted() {
-    const step = this.$el.offsetWidth / (this.days.length - 1);
+    const step = this.$el.clientWidth / (this.days.length - 1);
 
     const points : string[] = [];
 
