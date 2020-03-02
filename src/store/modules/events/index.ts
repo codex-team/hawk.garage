@@ -9,7 +9,7 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByDate } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload } from '@/types/events';
 
 /**
  * Root store state
@@ -335,7 +335,7 @@ const module: Module<EventsModuleState, RootState> = {
       const repetition = event.repetition;
 
       if (repetition !== null) {
-        event.payload = deepMerge(event.payload, repetition.payload);
+        event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
         commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
           projectId,
           eventId,

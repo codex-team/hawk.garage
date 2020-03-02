@@ -84,7 +84,7 @@ export interface HawkEventDailyInfo {
 /**
  * Hawk Event payload format
  */
-interface HawkEventPayload {
+export interface HawkEventPayload {
   /**
    * Event title
    */
