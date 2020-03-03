@@ -52,7 +52,7 @@
         :key="index"
         class="project-overview__chart-day"
       >
-        {{ day.timestamp }}
+        {{ day.timestamp | prettyDateFromTimestamp }}
       </span>
     </div>
   </div>
@@ -70,23 +70,23 @@ export default Vue.extend({
        * List of days with the number of errors per day
        * @type {any[]}
        */
-      days: [
-        { timestamp: '13 feb', totalCount: 500 },
-        { timestamp: '14 feb', totalCount: 800 },
-        { timestamp: '15 feb', totalCount: 100 },
-        { timestamp: '16 feb', totalCount: 50 },
-        { timestamp: '17 feb', totalCount: 25 },
-        { timestamp: '18 feb', totalCount: 75 },
-        { timestamp: '19 feb', totalCount: 25 },
-        { timestamp: '20 feb', totalCount: 1000 },
-        { timestamp: '21 feb', totalCount: 900 },
-        { timestamp: '22 feb', totalCount: 850 },
-        { timestamp: '23 feb', totalCount: 900 },
-        { timestamp: '24 feb', totalCount: 150 },
-        { timestamp: '25 feb', totalCount: 300 },
-        { timestamp: '26 feb', totalCount: 400 },
-        { timestamp: '27 feb', totalCount: 650 },
-        { timestamp: '28 feb', totalCount: 750 },
+    days: [
+        { timestamp: 1581943395219, totalCount: 500 },
+        { timestamp: 1582029795219, totalCount: 800 },
+        { timestamp: 1582116195219, totalCount: 100 },
+        { timestamp: 1582202595219, totalCount: 50 },
+        { timestamp: 1582288995219, totalCount: 25 },
+        { timestamp: 1582375395219, totalCount: 75 },
+        { timestamp: 1582461795219, totalCount: 25 },
+        { timestamp: 1582548195219, totalCount: 1000 },
+        { timestamp: 1582634595219, totalCount: 900 },
+        { timestamp: 1582720995219, totalCount: 850 },
+        { timestamp: 1582807395219, totalCount: 900 },
+        { timestamp: 1582893795219, totalCount: 150 },
+        { timestamp: 1582980195219, totalCount: 300 },
+        { timestamp: 1583066595219, totalCount: 400 },
+        { timestamp: 1583152995219, totalCount: 650 },
+        { timestamp: 1583239395219, totalCount: 750 },
       ] as any[],
       /**
        * points for svg polyline
