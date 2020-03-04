@@ -33,6 +33,7 @@
     "postcss-nested-ancestors": "^2.0.0",
     "postcss-preset-env": "^6.6.0",
     "register-service-worker": "^1.6.2",
+    "short-number": "^1.0.7",
     "spa-http-server": "^0.9.0",
     "vue": "^2.6.11",
     "vue-class-component": "^7.0.2",

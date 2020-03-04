@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import i18n from './i18n';
+import shortNumber from 'short-number';
 
 /**
  * Filter that add space after first digit in 4-digits number
@@ -19,6 +20,20 @@ Vue.filter('spacedNumber', function (value: number): string {
   }
 
   return result.trim();
+});
+
+/**
+ * Filter that abbreviates numbers
+ * @param value - filter value
+ */
+Vue.filter('abbreviateNumber', function (value: number): string {
+  const maxNumberWithoutAbbreviation = 9999;
+
+  if (value < maxNumberWithoutAbbreviation) {
+    return value.toString();
+  }
+
+  return shortNumber(value);
 });
 
 /**

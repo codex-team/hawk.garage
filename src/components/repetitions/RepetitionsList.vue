@@ -28,7 +28,9 @@
           <span class="repetitions-list__user-browser">Firefox 61.0</span>
         </td>
         <td class="repetitions-list__col">
-          <span class="repetitions-list__user-screen">{{ showWindowSize(repetition.payload.addons.window) }}</span>
+          <span class="repetitions-list__user-screen" v-if="repetition.payload.addons && repetition.payload.addons.window">
+            {{ showWindowSize(repetition.payload.addons.window) }}
+          </span>
         </td>
         <td class="repetitions-list__col">
           <span class="repetitions-list__url">/startup/primeliber-com/blog/15598/8-instrumentov-dl…</span>
