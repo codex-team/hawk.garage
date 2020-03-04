@@ -11,7 +11,7 @@
       class="badge__icon"
       symbol="flash"
     />
-    {{ content | spacedNumber }}
+    {{ typeof content === "string" ? content : spacedNumber }}
   </span>
 </template>
 
@@ -48,6 +48,16 @@ export default {
       default: false,
     },
   },
+  computed: {
+    /**
+     * Applies on number content type
+     *
+     * @return {number}
+     */
+    spacedNumber() {
+      return this.$options.filters.spacedNumber(this.content);
+    },
+  },
 };
 </script>
 
@@ -81,7 +91,8 @@ export default {
       display: inline;
       width: 7px;
       height: 100%;
-      margin-right: 8px;
+      margin-top: 2px;
+      margin-right: 10px;
     }
   }
 </style>

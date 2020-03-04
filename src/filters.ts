@@ -108,3 +108,11 @@ Vue.filter('prettyFullDate', function (value: Date) {
 
   return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${`0${hours}`.substr(-2)}:${`0${minutes}`.substr(-2)}`;
 });
+
+/**
+ * Returns prettified path ('EditorJS / src / components / modules / tools.ts')
+ * @returns {string}
+ */
+Vue.filter('prettyPath', function (value: string) {
+  return value.replace(/(.*?)\/{2,3}/, '').replace(/\//g, ' / ');
+});
