@@ -6,12 +6,6 @@
   >
     <div class="event-overview__container">
       <div class="event-overview__header">
-        <Badge
-          class="event-overview__badge"
-          with-icon
-          type="critical"
-          content="FATAL ERROR"
-        />
         <h1 class="event-overview__title">
           {{ event.payload.title }}
         </h1>
@@ -21,19 +15,19 @@
             @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId }})"
           >
             <div class="event-overview__statistics-count">
-              {{ event.totalCount }}
+              {{ event.totalCount | spacedNumber }}
             </div>
             times
           </div>
-          <div class="event-overview__days-repeating">
+          <div class="event-overview__days-repeating" style="opacity: 0.2;">
             <div class="event-overview__statistics-count">
-              15
+              -
             </div>
             days repeating
           </div>
-          <div class="event-overview__users-affected">
+          <div class="event-overview__users-affected" style="opacity: 0.2;">
             <div class="event-overview__statistics-count">
-              3 504
+              -
             </div>
             users affected
           </div>
@@ -85,7 +79,6 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import DetailsCookie from './DetailsCookie.vue';
 import DetailsBacktrace from './DetailsBacktrace.vue';
 import DetailsAddons from './DetailsAddons.vue';
-import Badge from '../utils/Badge.vue';
 import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 
@@ -96,7 +89,6 @@ export default Vue.extend({
     DetailsCookie,
     DetailsBacktrace,
     DetailsAddons,
-    Badge,
   },
   data() {
     const projectId: string = this.$route.params.projectId;
