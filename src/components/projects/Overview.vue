@@ -1,9 +1,11 @@
 <template>
-  <div class="project-overview">
+  <div
+    class="project-overview"
+    v-infinite-scroll="loadMoreEvents"
+    infinite-scroll-distance="300"
+  >
     <div
       v-if="project"
-      v-infinite-scroll="loadMoreEvents"
-      infinite-scroll-distance="300"
       class="project-overview__content"
     >
       <div class="project-overview__chart" />
