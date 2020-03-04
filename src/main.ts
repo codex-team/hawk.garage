@@ -33,7 +33,7 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
     release: buildRevision,
   };
 
-  if (store.state.user) {
+  if (store.state.user && store.state.user.data && Object.keys(store.state.user.data).length) {
     hawkOptions.user = {
       id: store.state.user.data.id,
       name: store.state.user.data.name || store.state.user.data.email,
@@ -49,6 +49,17 @@ Vue.config.devtools = process.env.NODE_ENV !== 'production';
 
 Vue.prototype.$API_AUTH_GOOGLE = process.env.VUE_APP_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
 Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
+
+/**
+ * Sends error to the Hawk
+ * @param {Error} error - error to send
+ * @usage this.$sendToHawk(new Error('Some error'));
+ */
+Vue.prototype.sendToHawk = function sendToHawk (error: Error): void {
+  if (hawk){
+    hawk.catchError(error);
+  }
+};
 
 Vue.use(VueCookies);
 
@@ -78,15 +89,4 @@ new Vue({
   store,
   i18n,
   render: (h) => h(App),
-  methods: {
-    /**
-     * Sends error to the Hawk
-     * @param {Error} error - error to send
-     */
-    sendToHawk(error: Error): void {
-      if (hawk){
-        hawk.catchError(error);
-      }
-    }
-  },
 }).$mount('#app');
