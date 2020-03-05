@@ -46,11 +46,12 @@
 </template>
 
 <script>
-import { FETCH_EVENT_REPETITION, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
+import Vue from 'vue';
+import { FETCH_EVENT_REPETITION, FETCH_EVENT_REPETITIONS } from '@/store/modules/events/actionTypes';
 import i18n from './../../i18n';
-import RepetitionsList from './RepetitionsList';
+import RepetitionsList from './RepetitionsList.vue';
 
-export default {
+export default Vue.extend({
   name: 'RepetitionsOverview',
   components: {
     RepetitionsList,
@@ -130,7 +131,7 @@ export default {
       return `${day} ${i18n.t('common.months[' + month + ']')}`;
     },
   },
-};
+});
 </script>
 
 <style>
