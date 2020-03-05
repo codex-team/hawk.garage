@@ -10,31 +10,33 @@
           Uncaught TypeError
         </span>
       </div>
-      <h1 class="event-overview__title">
-        {{ event.payload.title }}
+      <h1
+        class="event-overview__title"
+      >
+        {{ (!loading) ? event.payload.title : 'Loading' }}
       </h1>
       <div class="event-overview__location">
         <span class="event-overview__path">{{ path | prettyPath }}</span>
         <span class="event-overview__filename"> {{ file }} </span>
       </div>
-      <div class="event-overview__github">
+      <div class="event-overview__buttons">
         <UIButton
-          class="event-overview__github-button"
+          class="event-overview__button"
           content="Resolve"
           icon="check-mark"
         />
         <UIButton
-          class="event-overview__github-button"
+          class="event-overview__button"
           content="Star"
           icon="star-inactive"
         />
         <UIButton
-          class="event-overview__github-button"
+          class="event-overview__button"
           content="Ignore"
           icon="hided"
         />
         <UIButton
-          class="event-overview__github-button"
+          class="event-overview__button"
           content="Create issue"
           icon="shape"
         />
@@ -89,8 +91,16 @@ export default Vue.extend({
   props: {
     event: {
       type: Object,
-      required: true,
+      default: null,
+      validator: prop => typeof prop === 'object' || prop === null,
     },
+  },
+  data() {
+    const loading = !this.event;
+
+    return {
+      loading,
+    };
   },
   computed: {
     /**
@@ -99,8 +109,13 @@ export default Vue.extend({
      * @return {string}
      */
     location(): string {
-      const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
       const unknownLocation = 'Unknown location';
+
+      if (!this.event) {
+        return unknownLocation;
+      }
+
+      const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
 
       if (!trace) {
         return unknownLocation;
@@ -133,6 +148,14 @@ export default Vue.extend({
     file(): string {
       return this.location !== 'Unknown location' ? this.location.split('/')
         .slice(-1)[0] : '';
+    },
+  },
+  watch: {
+    /**
+     * When event is changed
+     */
+    event() {
+      this.loading = false;
     },
   },
   methods: {
@@ -197,48 +220,14 @@ export default Vue.extend({
       color: var(--color-indicator-critical);
     }
 
-    &__github {
+    &__buttons {
       display: flex;
       margin-bottom: 13px;
+    }
 
-      &-button {
-        margin-right: 5px;
-        border: solid 1px var(--color-bg-main);
-      }
-
-      &-text {
-        font-size: 14px;
-        font-weight: 500;
-        opacity: 0.6;
-      }
-
-      &__icon-check-mark {
-        width: 14px;
-        height: 14px;
-        margin-right: 8px;
-        opacity: 0.6;
-      }
-
-      &__icon-star {
-        width: 14px;
-        height: 14px;
-        margin-right: 8px;
-        opacity: 0.6;
-      }
-
-      &__icon-hided {
-        width: 15px;
-        height: 12px;
-        margin: 2px 4px 0 1px;
-        opacity: 0.6;
-      }
-
-      &__icon-shape {
-        width: 14px;
-        height: 14px;
-        margin-right: 8px;
-        opacity: 0.6;
-      }
+    &__button {
+      margin-right: 5px;
+      border: solid 1px var(--color-bg-main);
     }
 
     &__information {

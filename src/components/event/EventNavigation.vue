@@ -17,7 +17,7 @@
     <Badge
       class="event-overview__navigation-count"
       type="visited"
-      :content="event.totalCount"
+      :content="!loading ? event.totalCount : '0'"
     />
     <span
       class="event-overview__navigation-text"
@@ -46,7 +46,8 @@ export default Vue.extend({
   props: {
     event: {
       type: Object,
-      required: true,
+      default: null,
+      validator: prop => typeof prop === 'object' || prop === null,
     },
   },
   data() {
@@ -57,13 +58,24 @@ export default Vue.extend({
       activeItem = path;
     }
 
+    const loading = !this.event;
+
     return {
       /**
        * Active menu item
        * @type {string}
        */
       activeItem,
+      loading,
     };
+  },
+  watch: {
+    /**
+     * When event is changed
+     */
+    event() {
+      this.loading = false;
+    },
   },
   created() {
     this.$emit('toggleItem', this.activeItem);

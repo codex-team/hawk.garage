@@ -45,8 +45,16 @@ export default Vue.extend({
   props: {
     event: {
       type: Object,
-      required: true,
+      default: null,
+      validator: prop => typeof prop === 'object' || prop === null,
     },
+  },
+  data() {
+    const loading = !this.event;
+
+    return {
+      loading,
+    };
   },
   computed: {
     /**
@@ -57,6 +65,14 @@ export default Vue.extend({
      */
     lang(): string {
       return this.event.catcherType.split('/').pop()!;
+    },
+  },
+  watch: {
+    /**
+     * When event is changed
+     */
+    event() {
+      this.loading = false;
     },
   },
 });
