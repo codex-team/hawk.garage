@@ -66,13 +66,18 @@ const router = new Router({
           component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/Overview.vue'),
           children: [
             {
-              path: 'event/:eventId/repetitions',
-              name: 'event-repetitions-overview',
-              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/Overview.vue'),
-            },
-            {
               path: 'event/:eventId/:repetitionId?',
               name: 'event-overview',
+              component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue'),
+            },
+            {
+              path: 'event/:eventId/repetitions',
+              name: 'event-overview-repetitions',
+              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/events/Overview.vue'),
+            },
+            {
+              path: 'event/:eventId/days-repeating',
+              name: 'event-overview-days-repeating',
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue'),
             },
             {

@@ -1,98 +1,51 @@
 <template>
-  <PopupDialog
-    class="repetitions-overview"
-    big
-    @close="$router.push({name: 'event-overview', params: { projectId: projectId, eventId: eventId }})"
-  >
-    <div class="repetitions-overview__container">
-      <!-- HEADER -->
-      <div class="repetitions-overview__header">
-        <!-- Header arrow icon -->
-        <div
-          class="repetitions-overview__header-arrow"
-          @click="$router.push({name: 'event-overview', params: { projectId: projectId, eventId: eventId }})"
-        >
-          <Icon
-            class="badge__icon repetitions-overview__header-arrow-icon"
-            symbol="arrow-left"
-          />
-        </div>
-
-        <!-- Header error type badge -->
-        <Badge
-          class="repetitions-overview__header-badge"
-          with-icon
-          type="critical"
-          content="FATAL ERROR"
-        />
-
-        <div
-          v-if="event && event.payload"
-          class="repetitions-overview__header-title"
-        >
-          {{ event.payload.title }}
-        </div>
-        <div
-          v-if="event && event.payload"
-          class="repetitions-overview__header-time"
-        >
-          {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
-        </div>
+  <div class="event-overview-repetitions">
+    <div class="event-overview-repetitions__section">
+      <div class="event-overview-repetitions__label">
+        Total
       </div>
-
-      <!-- Content -->
-      <div class="repetitions-overview__content">
-        <div class="repetitions-overview__section">
-          <div class="repetitions-overview__label">
-            Total
-          </div>
-          <div
-            v-if="event"
-            class="repetitions-overview__repeats"
-          >
-            {{ event.totalCount }} times
-          </div>
-        </div>
-
-        <div class="repetitions-overview__section">
-          <div class="repetitions-overview__label">
-            Since
-          </div>
-          <div
-            v-if="event"
-            class="repetitions-overview__since"
-          >
-            {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }} <span class="repetitions-overview__since-days">— {{ since }}</span>
-          </div>
-        </div>
-
-        <div class="repetitions-overview__section">
-          <div class="repetitions-overview__label">
-            Repetitions
-          </div>
-
-          <div
-            v-for="date in groupedRepetitions.keys()"
-            :key="date"
-            class="repetitions-overview__table"
-          >
-            <RepetitionsList
-              :repetitions="groupedRepetitions.get(date)"
-              :event="event"
-              :project-id="projectId"
-              :date="date"
-            />
-          </div>
-        </div>
+      <div
+        v-if="event"
+        class="event-overview-repetitions__repeats"
+      >
+        {{ event.totalCount }} times
       </div>
     </div>
-  </PopupDialog>
+
+    <div class="event-overview-repetitions__section">
+      <div class="event-overview-repetitions__label">
+        Since
+      </div>
+      <div
+        v-if="event"
+        class="event-overview-repetitions__since"
+      >
+        {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }} <span class="event-overview-repetitions__since-days">— {{ since }}</span>
+      </div>
+    </div>
+
+    <div class="event-overview-repetitions__section">
+      <div class="event-overview-repetitions__label">
+        Repetitions
+      </div>
+
+      <div
+        v-for="date in groupedRepetitions.keys()"
+        :key="date"
+        class="event-overview-repetitions__table"
+      >
+        <RepetitionsList
+          :repetitions="groupedRepetitions.get(date)"
+          :event="event"
+          :project-id="projectId"
+          :date="date"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import PopupDialog from '../utils/PopupDialog';
-import Icon from '../utils/Icon';
-import Badge from '../utils/Badge';
 import { FETCH_EVENT_REPETITION, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList';
@@ -101,9 +54,6 @@ export default {
   name: 'RepetitionsOverview',
   components: {
     RepetitionsList,
-    Icon,
-    Badge,
-    PopupDialog,
   },
   data: function () {
     return {
@@ -184,54 +134,9 @@ export default {
 </script>
 
 <style>
-  .repetitions-overview {
-    &__container {
-      flex-grow: 1;
-    }
-
-    &__header {
-      display: flex;
-      align-items: center;
-      padding: 18px 20px;
-      font-size: 16px;
-      background-color: #000;
-
-      &-arrow {
-        cursor: pointer;
-
-        &-icon {
-          width: 13px;
-          height: 13px;
-        }
-      }
-
-      &-badge {
-        margin-left: 15px;
-      }
-
-      &-title {
-        margin-left: 20px;
-        font-weight: bold;
-        line-height: 1.88em;
-        text-align: center;
-      }
-
-      &-time {
-        margin-left: auto;
-        font-weight: bold;
-        line-height: 1.88em;
-        text-align: center;
-        opacity: 0.6;
-      }
-    }
-
-    &__content {
-      width: 80%;
-      margin: auto;
-    }
-
+  .event-overview-repetitions {
     &__section {
-      margin-top: 30px;
+      margin-bottom: 30px;
     }
 
     &__label {
@@ -248,6 +153,7 @@ export default {
       font-weight: bold;
       font-size: 24px;
     }
+
     &__since {
       color: var(--color-text-main);
       font-weight: bold;

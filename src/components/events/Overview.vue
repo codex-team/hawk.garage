@@ -23,56 +23,57 @@
           <span class="event-overview__filename"> {{ file }} </span>
         </div>
         <div class="event-overview__github">
-          <div class="event-overview__github-link">
-            <Icon
-              class="event-overview__github__icon-check-mark"
-              symbol="check-mark"
-            />
-            <span class="event-overview__github-text">Resolve</span>
-          </div>
-          <div class="event-overview__github-link">
-            <Icon
-              class="event-overview__github__icon-star"
-              symbol="star-inactive"
-            />
-            <span class="event-overview__github-text">Star</span>
-          </div>
-          <div class="event-overview__github-link">
-            <Icon
-              class="event-overview__github__icon event-overview__github__icon-hided"
-              symbol="hided"
-            />
-            <span class="event-overview__github-text">Ignore</span>
-          </div>
-          <div class="event-overview__github-link">
-            <Icon
-              class="event-overview__github__icon-shape"
-              symbol="shape"
-            />
-            <span class="event-overview__github-text">Create issue</span>
-          </div>
+          <UIButton
+            class="event-overview__github-button"
+            content="Resolve"
+            icon="check-mark"
+          />
+          <UIButton
+            class="event-overview__github-button"
+            content="Star"
+            icon="star-inactive"
+          />
+          <UIButton
+            class="event-overview__github-button"
+            content="Ignore"
+            icon="hided"
+          />
+          <UIButton
+            class="event-overview__github-button"
+            content="Create issue"
+            icon="shape"
+          />
         </div>
         <div class="event-overview__information">
-          <div class="event-overview__statistics">
-            <span class="event-overview__overview-text">
+          <div class="event-overview__navigation">
+            <span
+              class="event-overview__navigation-text"
+              :class="setActiveClass('overview')"
+              @click="onNavigationItemClick('overview')"
+            >
               Overview
             </span>
             <span
-              class="event-overview__repetitions-text"
-              @click="$router.push({name: 'event-repetitions-overview', params: { projectId, eventId }})"
+              class="event-overview__navigation-text"
+              :class="setActiveClass('repetitions')"
+              @click="onNavigationItemClick('repetitions')"
             >
               Repetitions
             </span>
             <Badge
-              class="event-overview__statistics-count"
+              class="event-overview__navigation-count"
               type="visited"
               :content="event.totalCount"
             />
-            <span class="event-overview__days-repeating">
+            <span
+              class="event-overview__navigation-text"
+              :class="setActiveClass('days-repeating')"
+              @click="onNavigationItemClick('days-repeating')"
+            >
               Days repeating
             </span>
             <Badge
-              class="event-overview__statistics-count"
+              class="event-overview__navigation-count"
               type="visited"
               content="15"
             />
@@ -105,32 +106,39 @@
     </div>
     <div class="event-overview__info">
       <div class="event-overview__container">
-        <template
-          v-if="!loading"
-        >
-          <DetailsBacktrace
-            v-if="event.payload.backtrace && event.payload.backtrace.length"
-            class="event-overview__section"
-            :backtrace="event.payload.backtrace"
-            :lang="lang"
-          />
-          <DetailsCookie
-            v-if="event.payload.cookies && event.payload.cookies.length"
-            class="event-overview__section"
-            :cookies="event.payload.cookies"
-          />
-          <DetailsAddons
-            v-if="event.payload.addons"
-            class="event-overview__section"
-            :addons="event.payload.addons"
-          />
-        </template>
         <div
-          v-else
-          class="event-overview__loading"
+          v-if="activeItem === 'overview'"
         >
-          <span>Loading...</span>
+          <template
+            v-if="!loading"
+          >
+            <DetailsBacktrace
+              v-if="event.payload.backtrace && event.payload.backtrace.length"
+              class="event-overview__section"
+              :backtrace="event.payload.backtrace"
+              :lang="lang"
+            />
+            <DetailsCookie
+              v-if="event.payload.cookies && event.payload.cookies.length"
+              class="event-overview__section"
+              :cookies="event.payload.cookies"
+            />
+            <DetailsAddons
+              v-if="event.payload.addons"
+              class="event-overview__section"
+              :addons="event.payload.addons"
+            />
+          </template>
+          <div
+            v-else
+            class="event-overview__loading"
+          >
+            <span>Loading...</span>
+          </div>
         </div>
+        <RepetitionsOverview
+          v-else-if="activeItem === 'repetitions'"
+        />
       </div>
     </div>
   </PopupDialog>
@@ -139,10 +147,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
+import RepetitionsOverview from '../repetitions/Overview.vue';
 import DetailsCookie from './DetailsCookie.vue';
 import DetailsBacktrace from './DetailsBacktrace.vue';
 import DetailsAddons from './DetailsAddons.vue';
 import Badge from '../utils/Badge.vue';
+import UIButton from '../utils/UIButton.vue';
 import Icon from '../utils/Icon.vue';
 import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
@@ -151,9 +161,11 @@ export default Vue.extend({
   name: 'EventOverview',
   components: {
     PopupDialog,
+    RepetitionsOverview,
     DetailsCookie,
     DetailsBacktrace,
     DetailsAddons,
+    UIButton,
     Badge,
     Icon,
   },
@@ -186,6 +198,12 @@ export default Vue.extend({
        * @type {boolean}
        */
       loading: true,
+
+      /**
+       * Active menu item
+       * @type {string}
+       */
+      activeItem: 'overview',
     };
   },
   computed: {
@@ -244,6 +262,12 @@ export default Vue.extend({
    * @return {Promise<void>}
    */
   async created() {
+    const path = this.$route.path.split('/').pop();
+
+    if (path === 'repetitions' || path === 'days-repeating') {
+      this.activeItem = path;
+    }
+
     const eventId = this.$route.params.eventId;
     const repetitionId = this.$route.params.repetitionId;
 
@@ -265,6 +289,72 @@ export default Vue.extend({
         eventId,
       });
     }
+  },
+  methods: {
+    /**
+     * Check if navigation item is active
+     * @param {String} navigationItem - navigation item
+     *
+     * @return {boolean}
+     */
+    isActive(navigationItem: string): boolean {
+      return this.activeItem === navigationItem;
+    },
+
+    /**
+     * Set navigation item as active
+     * @param {String} navigationItem - navigation item
+     *
+     * @return {boolean}
+     */
+    setActive(navigationItem: string) {
+      this.activeItem = navigationItem;
+    },
+
+    /**
+     * Set class for active navigation item
+     * @param {String} navigationItem - navigation item
+     *
+     * @return {string}
+     */
+    setActiveClass(navigationItem: string): string {
+      return (this.isActive(navigationItem)) ? 'event-overview__navigation--active' : '';
+    },
+
+    /**
+     * Event for navigation item click
+     * @param {String} navigationItem - navigation item
+     *
+     * @return {boolean}
+     */
+    onNavigationItemClick(navigationItem: string) {
+      if (!this.isActive(navigationItem)) {
+        this.setActive(navigationItem);
+        this.$router.push({
+          name: this.routerName(navigationItem),
+          params: {
+            projectId: this.projectId,
+            eventId: this.eventId,
+          },
+        });
+      }
+    },
+
+    /**
+     * Correct router name for event navigation
+     * @param {String} navigationItem - navigation item
+     *
+     * @return {string}
+     */
+    routerName(navigationItem: string): string {
+      const name = 'event-overview';
+
+      if (navigationItem !== 'overview') {
+        return name + '-' + navigationItem;
+      }
+
+      return name;
+    },
   },
 });
 </script>
@@ -348,12 +438,8 @@ export default Vue.extend({
       display: flex;
       margin-bottom: 13px;
 
-      &-link {
+      &-button {
         margin-right: 5px;
-        display: flex;
-        padding: 6px 7px;
-        align-items: center;
-        border-radius: 4px;
         border: solid 1px var(--color-bg-main);
       }
 
@@ -367,6 +453,7 @@ export default Vue.extend({
         width: 14px;
         height: 14px;
         margin-right: 8px;
+        opacity: 0.6;
       }
 
       &__icon-star {
@@ -397,7 +484,7 @@ export default Vue.extend({
       height: 50px;
     }
 
-    &__statistics {
+    &__navigation {
       display: flex;
       align-items: center;
       font-size: 14.6px;
@@ -413,33 +500,32 @@ export default Vue.extend({
         opacity: 0.6;
         color: var(--color-text-main);
       }
-    }
 
-    &__overview-text {
-      position: relative;
-      opacity: 1;
-      margin-right: 30px;
-
-      &::before {
-        content: '';
-        position: absolute;
-        bottom: -17px;
-        width: 100%;
-        height: 3px;
-        border-radius: 1.5px;
-        background-color: var(--color-indicator-medium);
+      &-text {
+        cursor: pointer;
+        margin-right: 10px;
+        opacity: 0.6;
       }
-    }
 
-    &__repetitions-text {
-      cursor: pointer;
-      margin-right: 10px;
-      opacity: 0.6;
-    }
+      &-text:first-child {
+        margin-right: 30px;
+      }
 
-    &__days-repeating {
-      margin-right: 10px;
-      opacity: 0.6;
+      &--active {
+        position: relative;
+        opacity: 1;
+        transition: opacity 500ms;
+
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: -17px;
+          width: 100%;
+          height: 3px;
+          border-radius: 1.5px;
+          background-color: var(--color-indicator-medium);
+        }
+      }
     }
 
     &__users {
@@ -510,7 +596,7 @@ export default Vue.extend({
     }
 
     &__info {
-      padding: 30px 20px;
+      padding: 18px 30px 30px 30px;
     }
 
     &__section {
