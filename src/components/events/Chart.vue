@@ -70,7 +70,7 @@ export default Vue.extend({
        * List of days with the number of errors per day
        * @type {any[]}
        */
-    days: [
+      days: [
         { timestamp: 1581943395219, totalCount: 500 },
         { timestamp: 1582029795219, totalCount: 800 },
         { timestamp: 1582116195219, totalCount: 100 },
@@ -88,11 +88,19 @@ export default Vue.extend({
         { timestamp: 1583152995219, totalCount: 650 },
         { timestamp: 1583239395219, totalCount: 750 },
       ] as any[],
+
       /**
        * points for svg polyline
        * @type {string}
        */
       polylinePoints: '' as string,
+
+      /**
+       * Event on window resize
+       *
+       * @return {void}
+       */
+      onResize: () => {},
     };
   },
   computed: {
@@ -150,10 +158,15 @@ export default Vue.extend({
       return Math.max(...this.days.map(day => day.totalCount));
     },
   },
+  created() {
+    this.onResize = debounce(this.createPolyline, 100);
+  },
   mounted() {
     this.createPolyline();
-
-    window.addEventListener('resize', debounce(this.createPolyline, 100));
+    window.addEventListener('resize', this.onResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize);
   },
   methods: {
     /**
@@ -216,10 +229,6 @@ export default Vue.extend({
         color: #2ccf6c;
       }
 
-      &-equal {
-
-      }
-
       &-increase::before, &-decrease::before, &-equal::before {
         content: '';
         position: absolute;
@@ -232,14 +241,6 @@ export default Vue.extend({
       &-increase::before {
         border-top-color: #f15454;;
         transform: rotate(180deg) translateY(7px);
-      }
-
-      &-decrease::before {
-
-      }
-
-      &-equal::before {
-
       }
     }
 

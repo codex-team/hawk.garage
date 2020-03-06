@@ -111,6 +111,7 @@ Vue.filter('prettyFullDate', function (value: Date) {
 
 /**
  * Returns prettifying date from timestamp
+ * @param {number} timestamp - timestamp
  */
 Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
   const date = new Date(timestamp);
