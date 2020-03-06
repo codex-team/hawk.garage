@@ -65,7 +65,7 @@ import { INVITE_TO_WORKSPACE } from '../../store/modules/workspaces/actionTypes'
 import TeamMember from './TeamMember';
 
 export default {
-  name: 'WorkspaceTeam',
+  name: 'WorkspaceSettingsTeam',
   components: { TeamMember },
   data() {
     return {

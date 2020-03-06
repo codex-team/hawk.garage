@@ -6,7 +6,7 @@
     <form @submit.prevent="save">
       <div class="workspace-settings__inline-elements">
         <FormTextFieldset
-          v-model="name"
+          v-model="workspace.name"
           class="workspace-settings__section workspace-settings__name-section"
           :label="$t('settings.account.name')"
           required
@@ -15,13 +15,13 @@
         <section>
           <label class="label workspace-settings__label">{{ $t('workspaces.settings.workspace.image') }}</label>
           <FormImageUploader
-            v-model="image"
+            v-model="workspace.image"
             @input="showSubmitButton = true"
           />
         </section>
       </div>
       <FormTextFieldset
-        v-model="description"
+        v-model="workspace.description"
         class="workspace-settings__section"
         :label="$t('workspaces.settings.workspace.description')"
         :placeholder="$t('workspaces.settings.workspace.descriptionPlaceholder')"
@@ -48,57 +48,53 @@ import notifier from 'codex-notifier';
 import { FETCH_WORKSPACE, UPDATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
-  name: 'WorkspaceSettings',
-  components: {
-    FormImageUploader,
-    FormTextFieldset,
+  name: 'WorkspaceSettingsMain',
+  props: {
+    workspace: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
-    const workspaceId = this.$route.params.workspaceId;
+    // const workspaceId = this.$route.params.workspaceId;
 
-    this.workspace = this.$store.getters.getWorkspaceById(workspaceId);
+    // this.workspace = this.$store.getters.getWorkspaceById(workspaceId);
 
     return {
-      name: this.workspace.name,
-      description: this.workspace.description || '',
+      // name: this.workspace.name,
+      // description: this.workspace.description || '',
       showSubmitButton: false,
-      image: this.workspace.image,
+      // image: this.workspace.image,
     };
   },
   created() {
-    this.fetchWorkspace();
+    // this.fetchWorkspace();
   },
   methods: {
-    async fetchWorkspace() {
-      const workspaceId = this.$route.params.workspaceId;
-
-      await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-    },
+    // async fetchWorkspace() {
+    //   const workspaceId = this.$route.params.workspaceId;
+    //
+    //   await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+    // },
     /**
      * Form submit event handler
      */
     async save() {
       try {
-        if (
-          this.workspace.name !== this.name ||
-          this.workspace.description !== this.description ||
-          this.workspace.image !== this.image
-        ) {
-          const payload = {
-            id: this.workspace.id,
-            name: this.name,
-            description: this.description,
-          };
+        const payload = {
+          id: this.workspace.id,
+          name: this.workspace.name,
+          description: this.workspace.description,
+        };
 
-          if (typeof this.image !== 'string') {
-            payload.image = this.image;
-          }
-
-          await this.$store.dispatch(
-            UPDATE_WORKSPACE,
-            payload
-          );
+        if (typeof this.workspace.image !== 'string') {
+          payload.image = this.workspace.image;
         }
+
+        await this.$store.dispatch(
+          UPDATE_WORKSPACE,
+          payload
+        );
 
         this.showSubmitButton = false;
 
@@ -117,6 +113,10 @@ export default {
         });
       }
     },
+  },
+  components: {
+    FormImageUploader,
+    FormTextFieldset,
   },
 };
 </script>

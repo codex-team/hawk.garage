@@ -173,6 +173,7 @@ const actions = {
    * @return {Promise<Workspace>}
    */
   async [FETCH_WORKSPACES]({ commit }) {
+    console.trace('FETCH_WORKSPACES')
     const workspaces = (await workspaceApi.getWorkspaces([]));
 
     commit(mutationTypes.SET_WORKSPACES_LIST, workspaces);

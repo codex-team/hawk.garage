@@ -6,7 +6,7 @@
         <slot name="menu" />
       </div>
       <div class="settings-window__content">
-        <router-view />
+        <slot name="content" />
       </div>
     </div>
   </PopupWindow>

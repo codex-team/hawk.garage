@@ -38,25 +38,26 @@ const router = new Router({
           ],
         },
         {
-          path: 'workspaces/:workspaceId',
+          path: 'workspace/:workspaceId',
           name: 'workspace-settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Settings.vue'),
-          redirect: 'workspaces/:workspaceId/settings',
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/SettingsLayout.vue'),
+          redirect: 'workspace/:workspaceId/settings',
           children: [
             {
               path: 'settings',
-              name: 'workspace-settings-workspace',
-              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspaces/Workspace.vue'),
-            },
-            {
-              path: 'billing',
-              name: 'workspace-billing',
-              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspaces/Billing.vue'),
+              name: 'workspace-settings-main',
+              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/SettingsMain.vue'),
+              props: true,
             },
             {
               path: 'team',
-              name: 'workspace-team',
-              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspaces/Team.vue'),
+              name: 'workspace-settings-team',
+              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/SettingsTeam.vue'),
+            },
+            {
+              path: 'billing',
+              name: 'workspace-settings-billing',
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/SettingsBilling.vue'),
             },
           ],
         },

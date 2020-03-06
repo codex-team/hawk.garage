@@ -1,7 +1,7 @@
 <template>
   <SettingsWindow on-close-route="/">
     <template v-slot:header>
-      <div class="settings-window__header workspace-settings__header">
+      <div class="settings-window__header workspace-settings__header" v-if="workspace">
         <EntityImage
           :id="workspace.id"
           class="workspace-settings__logo settings-window__logo"
@@ -16,27 +16,31 @@
     </template>
 
     <template v-slot:menu>
-      <div>
+      <div v-if="workspace">
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id} }"
+          :to="{ name: 'workspace-settings-main', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.workspace.title') }}
         </router-link>
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-team', params: {workspaceId: workspace.id} }"
+          :to="{ name: 'workspace-settings-team', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
         <router-link
           v-if="isAdmin"
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-billing' }"
+          :to="{ name: 'workspace-settings-billing' }"
         >
           {{ $t('workspaces.settings.billing.title') }}
         </router-link>
       </div>
+    </template>
+
+    <template v-slot:content>
+      <router-view :workspace="workspace" v-if="workspace" />
     </template>
   </SettingsWindow>
 </template>
@@ -47,17 +51,17 @@ import SettingsWindow from '../settings/Window';
 import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
-  name: 'WorkspaceSettings',
+  name: 'WorkspaceSettingsLayout',
+  data() {
+    return {
+      workspace: null,
+    };
+  },
   components: {
     SettingsWindow,
     EntityImage,
   },
   computed: {
-    workspace() {
-      const workspaceId = this.$route.params.workspaceId;
-
-      return this.$store.getters.getWorkspaceById(workspaceId);
-    },
     isAdmin() {
       if (!this.workspace.users) {
         return false;
@@ -68,10 +72,15 @@ export default {
       return this.workspace.users.find(u => u.id === user.id).isAdmin;
     },
   },
-  created() {
+  async created() {
     const workspaceId = this.$route.params.workspaceId;
+    const workspaceLoaded = this.$store.getters.getWorkspaceById(workspaceId);
 
-    this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+    if (!workspaceLoaded){
+      this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+    } else {
+      this.workspace = workspaceLoaded;
+    }
   },
 };
 </script>
