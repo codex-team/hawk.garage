@@ -2,7 +2,7 @@
   <JsonViewer
     :value="value"
     theme="json-viewer-theme"
-    :expand-depth=2
+    expand-depth="2"
     copyable
   />
 </template>
