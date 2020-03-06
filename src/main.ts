@@ -31,6 +31,7 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
   const hawkOptions: HawkInitialSettings = {
     token: process.env.VUE_APP_HAWK_TOKEN,
     release: buildRevision,
+    // vue: Vue,
   };
 
   if (store.state.user && store.state.user.data && Object.keys(store.state.user.data).length) {
