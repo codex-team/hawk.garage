@@ -186,6 +186,9 @@ const actions = {
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
+    /**
+     * @todo update vuex after request
+     */
     return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
   },
 

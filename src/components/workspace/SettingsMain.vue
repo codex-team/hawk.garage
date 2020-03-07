@@ -49,33 +49,28 @@ import { FETCH_WORKSPACE, UPDATE_WORKSPACE } from '../../store/modules/workspace
 
 export default {
   name: 'WorkspaceSettingsMain',
+  components: {
+    FormImageUploader,
+    FormTextFieldset,
+  },
   props: {
+    /**
+     * Workspace which settings we are viewing
+     * Passed from <SettingsLayout>
+     */
     workspace: {
       type: Object,
       required: true,
     },
   },
   data() {
-    // const workspaceId = this.$route.params.workspaceId;
-
-    // this.workspace = this.$store.getters.getWorkspaceById(workspaceId);
-
     return {
-      // name: this.workspace.name,
-      // description: this.workspace.description || '',
       showSubmitButton: false,
-      // image: this.workspace.image,
     };
   },
   created() {
-    // this.fetchWorkspace();
   },
   methods: {
-    // async fetchWorkspace() {
-    //   const workspaceId = this.$route.params.workspaceId;
-    //
-    //   await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-    // },
     /**
      * Form submit event handler
      */
@@ -91,14 +86,9 @@ export default {
           payload.image = this.workspace.image;
         }
 
-        await this.$store.dispatch(
-          UPDATE_WORKSPACE,
-          payload
-        );
+        await this.$store.dispatch(UPDATE_WORKSPACE, payload);
 
         this.showSubmitButton = false;
-
-        this.fetchWorkspace();
 
         notifier.show({
           message: this.$t('workspaces.settings.workspace.updatedMessage'),
@@ -113,10 +103,6 @@ export default {
         });
       }
     },
-  },
-  components: {
-    FormImageUploader,
-    FormTextFieldset,
   },
 };
 </script>
