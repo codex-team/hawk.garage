@@ -11,7 +11,7 @@
       class="badge__icon"
       symbol="flash"
     />
-    {{ content | spacedNumber }}
+    {{ content | abbreviateNumber }}
   </span>
 </template>
 

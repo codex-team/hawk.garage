@@ -18,14 +18,6 @@
           />
         </div>
 
-        <!-- Header error type badge -->
-        <Badge
-          class="repetitions-overview__header-badge"
-          with-icon
-          type="critical"
-          content="FATAL ERROR"
-        />
-
         <div
           v-if="event && event.payload"
           class="repetitions-overview__header-title"
@@ -92,7 +84,6 @@
 <script>
 import PopupDialog from '../utils/PopupDialog';
 import Icon from '../utils/Icon';
-import Badge from '../utils/Badge';
 import { FETCH_EVENT_REPETITION, FETCH_EVENT_REPETITIONS } from '../../store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList';
@@ -102,7 +93,6 @@ export default {
   components: {
     RepetitionsList,
     Icon,
-    Badge,
     PopupDialog,
   },
   data: function () {

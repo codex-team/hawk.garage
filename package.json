@@ -1,6 +1,6 @@
 {
   "name": "hawk.so",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,6 +12,8 @@
     "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },
   "dependencies": {
+    "@hawk.so/javascript": "^2.0.10",
+    "@hawk.so/webpack-plugin": "^0.0.10",
     "@vue/cli-plugin-babel": "^4.1.2",
     "@vue/cli-plugin-pwa": "^4.1.2",
     "@vue/cli-plugin-typescript": "^4.1.2",
@@ -19,7 +21,7 @@
     "axios": "^0.19.0",
     "codex-notifier": "^1.1.2",
     "cssnano": "^4.1.10",
-    "hawk.javascript": "codex-team/hawk.javascript#hawk2.0",
+    "dotenv": "^8.2.0",
     "highlight.js": "^9.17.1",
     "html-webpack-inline-svg-plugin": "^1.2.4",
     "http-server": "^0.12.0",
@@ -31,6 +33,7 @@
     "postcss-nested-ancestors": "^2.0.0",
     "postcss-preset-env": "^6.6.0",
     "register-service-worker": "^1.6.2",
+    "short-number": "^1.0.7",
     "spa-http-server": "^0.9.0",
     "vue": "^2.6.11",
     "vue-class-component": "^7.0.2",
@@ -59,9 +62,6 @@
     "stylelint-config-recommended": "^3.0.0",
     "svg-sprite-generator": "^0.0.7",
     "typescript": "^3.7.4"
-  },
-  "gitHooks": {
-    "pre-commit": "yarn lint"
   },
   "license": "UNLICENSED",
   "lint-staged": {

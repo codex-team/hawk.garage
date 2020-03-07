@@ -28,7 +28,9 @@
           <span class="repetitions-list__user-browser">Firefox 61.0</span>
         </td>
         <td class="repetitions-list__col">
-          <span class="repetitions-list__user-screen">1920x946</span>
+          <span class="repetitions-list__user-screen" v-if="repetition.payload.addons && repetition.payload.addons.window">
+            {{ showWindowSize(repetition.payload.addons.window) }}
+          </span>
         </td>
         <td class="repetitions-list__col">
           <span class="repetitions-list__url">/startup/primeliber-com/blog/15598/8-instrumentov-dl…</span>
@@ -88,6 +90,28 @@ export default {
           repetitionId: repetition.id,
         },
       });
+    },
+    /**
+     * Show window size of repeated events
+     * @param {number | undefined} width - window inner width
+     * @param {number | undefined} height - window inner height
+     * @return {string} window size in correct format
+     */
+    showWindowSize({ innerWidth: width, innerHeight: height }) {
+      /**
+       * As repetition store diff with first-ever event
+       * and if window size hasn't changed
+       * need to show original proportions
+       */
+      if (!width) {
+        width = this.event.payload.addons.window.innerWidth;
+      }
+
+      if (!height) {
+        height = this.event.payload.addons.window.innerHeight;
+      }
+
+      return width + 'x' + height;
     },
   },
 };
