@@ -52,14 +52,17 @@ import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'WorkspaceSettingsLayout',
-  data() {
-    return {
-      workspace: null,
-    };
-  },
   components: {
     SettingsWindow,
     EntityImage,
+  },
+  data() {
+    return {
+      /**
+       * Workspace which settings we are viewing
+       */
+      workspace: null,
+    };
   },
   computed: {
     isAdmin() {
@@ -76,10 +79,10 @@ export default {
     const workspaceId = this.$route.params.workspaceId;
     const workspaceLoaded = this.$store.getters.getWorkspaceById(workspaceId);
 
-    if (!workspaceLoaded){
-      this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-    } else {
+    if (workspaceLoaded) {
       this.workspace = workspaceLoaded;
+    } else {
+      this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
     }
   },
 };
