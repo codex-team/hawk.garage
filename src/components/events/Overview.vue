@@ -183,7 +183,7 @@ export default Vue.extend({
   methods: {
     /**
      * Extract integration group from the addons
-     * For example, 'vue' or 'react
+     * For example, 'vue' or 'react'
      * @param integrationName - name of an integration
      * @return object with integration addons
      */
