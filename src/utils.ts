@@ -74,8 +74,6 @@ export const groupByDate = groupBy('date');
  * @return {object}
  */
 export function deepMerge(target: object, ...sources: object[]) {
-  const isObject = (item: any) => item && typeOf(item) === 'object';
-
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {
     if (Array.isArray(_subject) && Array.isArray(_target)) {
       const biggerArray = _subject.length > _target.length ? _subject : _target;
@@ -90,6 +88,14 @@ export function deepMerge(target: object, ...sources: object[]) {
       });
     }
   });
+}
+
+/**
+ * Check if passed variable is an object
+ * @param item - what to check
+ */
+export function isObject(item: any): boolean {
+  return item && typeOf(item) === 'object';
 }
 
 /**
