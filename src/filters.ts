@@ -75,11 +75,14 @@ Vue.filter('prettyTime', function (value: Date | string) {
  *
  * @return {string}
  */
-Vue.filter('prettyDate', function (value: Date | string) {
-  const date = new Date(value);
+Vue.filter('prettyDate', function (value: number) {
+  const date = new Date(value * 1000);
   const day = date.getDate();
   const month = date.getMonth();
   const currentDate = new Date().getDate();
+
+  console.log('day', day);
+  console.log('currentDate', currentDate);
 
   if (+day === currentDate) {
     return 'Today';
