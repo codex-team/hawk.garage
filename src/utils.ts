@@ -65,13 +65,13 @@ export const groupBy =
  * Group array of object by 'date' field
  * @type {function(Array[Object]): Object}
  */
-// export const groupByDate = groupBy('date');
+export const groupByDate = groupBy('date');
 
 /**
  * @param {Array[Object]} array
  * @param {string} key
  */
-export function groupByDate(array: any[], key: string) {
+export function _groupByDate(array: any[], key: string) {
   const groupedArray = new Map();
 
   array.map( (obj) => {

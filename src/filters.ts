@@ -76,23 +76,29 @@ Vue.filter('prettyTime', function (value: Date | string) {
  * @return {string}
  */
 Vue.filter('prettyDate', function (value: number) {
-  const date = new Date(value * 1000);
-  const day = date.getDate();
-  const month = date.getMonth();
-  const currentDate = new Date().getDate();
+  const argumentDate = new Date(value * 1000);
+  const argumentDay = argumentDate.getDate();
+  const argumentMonth = argumentDate.getMonth();
+  const argumentYear = argumentDate.getFullYear();
+  const currentDate = new Date();
 
-  console.log('day', day);
-  console.log('currentDate', currentDate);
-
-  if (+day === currentDate) {
+  if (
+    argumentDay === currentDate.getDate()
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
+  ) {
     return 'Today';
   }
 
-  if (+day === currentDate - 1) {
+  if (
+    argumentDay === currentDate.getDate() - 1
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
+  ) {
     return 'Yesterday';
   }
 
-  return `${day} ${i18n.t('common.months[' + month + ']')} ${date.getFullYear()}`;
+  return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
 });
 
 /**
