@@ -76,26 +76,6 @@ export const groupBy =
 export const groupByDate = groupBy('date');
 
 /**
- * @param {Array[Object]} array
- * @param {string} key
- */
-export function _groupByDate(array: any[], key: string) {
-  const groupedArray = new Map();
-
-  array.map( (obj) => {
-    const value = obj[key];
-
-    if (!groupedArray.get(value)) {
-      groupedArray.set(value, []);
-    }
-
-    groupedArray.get(value).push(obj);
-  });
-
-  return groupedArray;
-};
-
-/**
  * Merge to objects recursively
  * @param {object} target
  * @param {object[]} sources
