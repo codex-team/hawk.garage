@@ -53,8 +53,7 @@ export function getEntityColor(id: string): string {
 export const groupBy =
   (key: string) =>
     (array: any[]) => // array of objects to group
-    {
-      return array.reduce((objectsByKeyValue, obj, index) => {
+      array.reduce((objectsByKeyValue, obj) => {
         const value = obj[key];
 
         /**
@@ -69,7 +68,6 @@ export const groupBy =
 
         return objectsByKeyValue;
       }, {});
-    }
 
 /**
  * Group array of object by 'date' field
