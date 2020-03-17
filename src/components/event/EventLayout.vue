@@ -89,15 +89,17 @@ export default Vue.extend({
    * @return {Promise<void>}
    */
   async created() {
-
+    const projectId: string = this.$route.params.projectId;
     const eventId = this.$route.params.eventId;
     const repetitionId = this.$route.params.repetitionId;
 
-    this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+    await this.$store.dispatch(FETCH_EVENT_REPETITION, {
       projectId: this.projectId,
       eventId,
       repetitionId,
     });
+
+    this.event = this.$store.getters.getProjectEventById(projectId, eventId);
 
     this.loading = false;
 
@@ -121,7 +123,7 @@ export default Vue.extend({
     toggleItem(item: string) {
       this.activeItem! = item;
     },
-  },
+  }
 });
 </script>
 

@@ -2,7 +2,9 @@ import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
   FETCH_RECENT_EVENTS,
-  INIT_EVENTS_MODULE, VISIT_EVENT
+  INIT_EVENTS_MODULE,
+  VISIT_EVENT,
+  MARK_EVENT,
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -59,7 +61,12 @@ enum MutationTypes {
   /**
    * Mark event as visited
    */
-  MARK_AS_VISITED = 'MARK_AS_VISITED'
+  MARK_AS_VISITED = 'MARK_AS_VISITED',
+
+  /**
+   * Set label for event
+   */
+  SET_LABEL = 'SET_LABEL',
 }
 
 /**
@@ -120,11 +127,6 @@ function initialState(): EventsModuleState {
 const loadedEventsCount: { [key: string]: number } = {};
 
 /**
- * Cache for storing the connection between the code and the event
- */
-const eventsByGroupHash: { [key: string]: HawkEvent } = {};
-
-/**
  * Compose events list key
  *
  * @param {string} projectId
@@ -152,12 +154,6 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} groupHash - event group hash
        */
       return (projectId: string, groupHash: string): HawkEvent | null => {
-        const uniqueId = projectId + ':' + groupHash;
-
-        if (eventsByGroupHash[uniqueId]) {
-          return eventsByGroupHash[uniqueId];
-        }
-
         const eventEntry = Object.entries(state.list).find(([key, _event]) =>
           key.startsWith(projectId) && _event.groupHash === groupHash);
 
@@ -166,8 +162,6 @@ const module: Module<EventsModuleState, RootState> = {
         if (!event) {
           return null;
         }
-
-        eventsByGroupHash[uniqueId] = event;
 
         return event;
       };
@@ -357,7 +351,8 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Send request to mark event as visited
      *
-     * @param {function} commit
+     * @param {function} commit - VueX commit function
+     * @param {object} rootState - root VueX state
      * @param {string} projectId - project event is related to
      * @param {string} eventId - visited event
      */
@@ -371,6 +366,27 @@ const module: Module<EventsModuleState, RootState> = {
           projectId,
           eventId,
           userId,
+        });
+      }
+    },
+
+    /**
+     * Send request to set label to event
+     *
+     * @param {function} commit - VueX commit function
+     * @param {object} rootState - VueX root state
+     * @param {string} projectId - project event is related to
+     * @param {string} eventId - event to set label
+     * @param {EventLabel} label - label to set
+     */
+    async [MARK_EVENT]({ commit, rootState }, { projectId, eventId, label }): Promise<void> {
+      const result = await eventsApi.markEvent(projectId, eventId, label);
+
+      if (result) {
+        commit(MutationTypes.SET_LABEL, {
+          projectId,
+          eventId,
+          label,
         });
       }
     },
@@ -502,6 +518,20 @@ const module: Module<EventsModuleState, RootState> = {
       const visitedBy = new Set([...(event.visitedBy ? event.visitedBy : []), userId]);
 
       Vue.set(state.list[key], 'visitedBy', Array.from(visitedBy));
+    },
+
+    /**
+     * Set label to event for passed user
+     *
+     * @param {EventsModuleState} state
+     * @param {string} projectId - project event is related to
+     * @param {string} eventId - event label should be set to
+     * @param {EventLabel} label - label to set
+     */
+    [MutationTypes.SET_LABEL](state, { projectId, eventId, label }) {
+      const key = getEventsListKey(projectId, eventId);
+
+      state.list[key].label = label;
     },
 
     /**

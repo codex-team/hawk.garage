@@ -1,11 +1,12 @@
 import {
+  MUTATION_MARK_EVENT,
   MUTATION_VISIT_EVENT,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
-import { EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
+import {EventLabel, EventsWithDailyInfo, HawkEvent, HawkEventRepetition} from '@/types/events';
 
 /**
  * Get specific event
@@ -79,4 +80,15 @@ export async function visitEvent(projectId: string, eventId: string): Promise<bo
     projectId,
     eventId,
   })).visitEvent;
+}
+
+/**
+ * Set label to event for current user
+ */
+export async function markEvent(projectId: string, eventId: string, label: EventLabel = EventLabel.NONE) {
+  return (await api.call(MUTATION_MARK_EVENT, {
+    projectId,
+    eventId,
+    label
+  })).markEvent;
 }

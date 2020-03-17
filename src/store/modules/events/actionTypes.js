@@ -27,3 +27,8 @@ export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';
  * Action for marking event as visited
  */
 export const VISIT_EVENT = 'VISIT_EVENT';
+
+/**
+ * Action for settings label to event
+ */
+export const MARK_EVENT = 'MARK_EVENT';

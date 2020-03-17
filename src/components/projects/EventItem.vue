@@ -1,10 +1,11 @@
 <template>
   <div
     class="event-item"
-    :class="{'event-item--visited': isVisited}"
+    :class="{'event-item--visited': isVisited, [`event-item--${event.label.toLowerCase()}-label`]: true}"
     data-ripple
     @click="$emit('showEventOverview')"
   >
+    <EventLabel :label="event.label" />
     <div class="event-item__time">
       {{ lastOccurrenceTimestamp | prettyTime }}
     </div>
@@ -29,10 +30,12 @@
 <script>
 import Badge from '../utils/Badge';
 import Icon from '../utils/Icon';
+import EventLabel from "./EventLabel";
 
 export default {
   name: 'EventItem',
   components: {
+    EventLabel,
     Badge,
     Icon,
   },
@@ -88,6 +91,8 @@ export default {
 
     &__time {
       min-width: 30px;
+      margin-left: 10px;
+
       color: var(--color-text-second);
       font-size: 12px;
     }
@@ -124,6 +129,10 @@ export default {
       ^&__info {
         color: var(--color-text-second);
       }
+    }
+
+    &--ignored-label {
+      opacity: 0.2;
     }
   }
 </style>

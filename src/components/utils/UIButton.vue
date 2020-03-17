@@ -1,5 +1,8 @@
 <template>
-  <div class="ui-button">
+  <div
+    class="ui-button"
+    @click="$emit('click')"
+  >
     <Icon
       v-if="icon"
       class="ui-button-icon"

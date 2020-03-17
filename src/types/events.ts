@@ -1,4 +1,15 @@
 /**
+ * Event labels enum
+ */
+export enum EventLabel {
+  NONE = 'NONE',
+  STARRED = 'STARRED',
+  IGNORED = 'IGNORED',
+  RESOLVED = 'RESOLVED'
+}
+
+
+/**
  * Interface representing Hawk Event format
  */
 export interface HawkEvent {
@@ -26,6 +37,11 @@ export interface HawkEvent {
    * Users who visited this event
    */
   visitedBy: string[];
+
+  /**
+   * Event label for current user
+   */
+  label: EventLabel;
 
   /**
    * Event payload

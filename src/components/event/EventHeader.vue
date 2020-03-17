@@ -22,18 +22,24 @@
       <div class="event-overview__buttons">
         <UIButton
           class="event-overview__button"
+          :class="{'event-overview__button--selected': !loading && event.label === 'RESOLVED'}"
           content="Resolve"
           icon="check-mark"
+          @click="markEvent('RESOLVED')"
         />
         <UIButton
           class="event-overview__button"
+          :class="{'event-overview__button--selected': !loading && event.label === 'STARRED'}"
           content="Star"
-          icon="star-inactive"
+          icon="star"
+          @click="markEvent('STARRED')"
         />
         <UIButton
           class="event-overview__button"
+          :class="{'event-overview__button--selected': !loading && event.label === 'IGNORED'}"
           content="Ignore"
           icon="hided"
+          @click="markEvent('IGNORED')"
         />
         <UIButton
           class="event-overview__button"
@@ -80,6 +86,7 @@ import EventNavigation from './EventNavigation.vue';
 import UIButton from '../utils/UIButton.vue';
 import Icon from '../utils/Icon.vue';
 import { HawkEventBacktraceFrame } from '@/types/events';
+import { MARK_EVENT } from '@/store/modules/events/actionTypes';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -166,6 +173,25 @@ export default Vue.extend({
     toggleItem(item) {
       this.$emit('toggleItem', item);
     },
+
+    /**
+     * Set label for current event
+     *
+     * @param {string} label - label to set
+     */
+    markEvent(label) {
+      const { projectId, eventId } = this.$route.params;
+
+      if (label === this.event.label) {
+        label = 'NONE';
+      }
+
+      this.$store.dispatch(MARK_EVENT, {
+        projectId,
+        eventId,
+        label,
+      });
+    },
   },
 });
 </script>
@@ -228,6 +254,16 @@ export default Vue.extend({
     &__button {
       margin-right: 5px;
       border: solid 1px var(--color-bg-main);
+
+      &--selected {
+        color: #121419;
+        border-color: var(--color-text-main);
+        background-color: var(--color-text-main);
+
+        span, svg {
+          opacity: 1 !important;
+        }
+      }
     }
 
     &__information {
