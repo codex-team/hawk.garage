@@ -56,7 +56,15 @@ export const groupBy =
       array.reduce((objectsByKeyValue, obj) => {
         const value = obj[key];
 
-        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        /**
+         * Case when we need to group by field that stored numbers,
+         * for example, date(timestamp) - we add "key:" prefix to prevent sorting of object keys
+         */
+        if (typeof value === 'number'){
+          objectsByKeyValue[key + ':' + value] = (objectsByKeyValue[value] || []).concat(obj);
+        } else {
+          objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        }
 
         return objectsByKeyValue;
       }, {});

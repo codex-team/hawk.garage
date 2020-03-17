@@ -71,44 +71,34 @@ Vue.filter('prettyTime', function (value: Date | string) {
 });
 
 /**
- * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
- */
-Vue.filter('prettyDateStr', function (value: string): string {
-  const [day, month]: number[] = value.split('-').map(stringValue => +stringValue);
-
-  const currentDate = new Date().getDate();
-
-  if (+day === currentDate) {
-    return 'Today';
-  }
-
-  if (+day === currentDate - 1) {
-    return 'Yesterday';
-  }
-
-  return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
-});
-
-/**
  * Returns prettified date from string
  *
  * @return {string}
  */
-Vue.filter('prettyDate', function (value: Date | string) {
-  const date = new Date(value);
-  const day = date.getDate();
-  const month = date.getMonth();
-  const currentDate = new Date().getDate();
+Vue.filter('prettyDate', function (value: number) {
+  const argumentDate = new Date(value * 1000);
+  const argumentDay = argumentDate.getDate();
+  const argumentMonth = argumentDate.getMonth();
+  const argumentYear = argumentDate.getFullYear();
+  const currentDate = new Date();
 
-  if (+day === currentDate) {
+  if (
+    argumentDay === currentDate.getDate()
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
+  ) {
     return 'Today';
   }
 
-  if (+day === currentDate - 1) {
+  if (
+    argumentDay === currentDate.getDate() - 1
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
+  ) {
     return 'Yesterday';
   }
 
-  return `${day} ${i18n.t('common.months[' + month + ']')} ${date.getFullYear()}`;
+  return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
 });
 
 /**

@@ -14,7 +14,7 @@
           class="project-overview__events-by-date"
         >
           <div class="project-overview__date">
-            {{ date | prettyDateStr }}
+            {{ getDay(date) | prettyDate }}
           </div>
           <EventItem
             v-for="dailyEventInfo in eventsByDate"
@@ -119,6 +119,14 @@ export default {
     this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
   },
   methods: {
+    /**
+     * Return passed day midnight timestamp
+     * @param {string} date - grouped day key like 'date:1576011600'
+     * @return {number}
+     */
+    getDay(date) {
+      return parseInt(date.replace('date:', ''), 10);
+    },
     /**
      * Load older events to the list
      */
