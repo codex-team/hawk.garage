@@ -53,13 +53,23 @@ export function getEntityColor(id: string): string {
 export const groupBy =
   (key: string) =>
     (array: any[]) => // array of objects to group
-      array.reduce((objectsByKeyValue, obj) => {
+    {
+      return array.reduce((objectsByKeyValue, obj, index) => {
         const value = obj[key];
 
-        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        /**
+         * Case when we need to group by field that stored numbers,
+         * for example, date(timestamp) - we add "key:" prefix to prevent sorting of object keys
+         */
+        if (typeof value === 'number'){
+          objectsByKeyValue[key + ':' + value] = (objectsByKeyValue[value] || []).concat(obj);
+        } else {
+          objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        }
 
         return objectsByKeyValue;
       }, {});
+    }
 
 /**
  * Group array of object by 'date' field
