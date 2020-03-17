@@ -57,6 +57,7 @@ Vue.filter('prettyTime', function (value: Date | string) {
 
 /**
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
+ * @return {string}
  */
 Vue.filter('prettyDateStr', function (value: string): string {
   const [day, month]: number[] = value.split('-').map(stringValue => +stringValue);
@@ -98,7 +99,7 @@ Vue.filter('prettyDate', function (value: Date | string) {
 
 /**
  * Returns prettified date ('29 aug, 14:30')
- * @returns {string}
+ * @return {string}
  */
 Vue.filter('prettyFullDate', function (value: Date) {
   const day = value.getDate();
@@ -111,8 +112,11 @@ Vue.filter('prettyFullDate', function (value: Date) {
 
 /**
  * Returns prettified path ('EditorJS / src / components / modules / tools.ts')
- * @returns {string}
+ * @return {string}
  */
 Vue.filter('prettyPath', function (value: string) {
-  return value.replace(/(.*?)\/{2,3}/, '').replace(/\//g, ' / ');
+  return value
+    .replace(/^(.*?)\/{2,3}/, '')
+    .replace(/\//g, ' / ')
+    .replace(/\?.*/, '');
 });

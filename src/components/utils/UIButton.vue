@@ -6,7 +6,7 @@
       :class="'ui-button-icon-' + icon"
       :symbol="icon"
     />
-    <span class="ui-button-text">{{ content }}</span>
+    <span class="ui-button-text">{{ $t(`utils.buttons.${content}`) }}</span>
   </div>
 </template>
 
@@ -45,9 +45,11 @@ export default Vue.extend({
    padding: 6px 7px;
    align-items: center;
    border-radius: 4px;
+   border: solid 1px var(--color-bg-main);
+   cursor: pointer;
 
    &-icon {
-     width: 14px;
+     width: 15px;
      height: 14px;
      margin-right: 8px;
      opacity: 0.6;

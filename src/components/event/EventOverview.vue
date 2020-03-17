@@ -24,7 +24,7 @@
       v-else
       class="event-overview__loading"
     >
-      <span>Loading...</span>
+      <span>{{ $t('utils.loading') }}</span>
     </div>
   </div>
 </template>
@@ -64,7 +64,7 @@ export default Vue.extend({
      * @return {string}
      */
     lang(): string {
-      return this.event.catcherType.split('/').pop()!;
+      return this.event.catcherType ? this.event.catcherType.split('/').pop() : '';
     },
   },
   watch: {

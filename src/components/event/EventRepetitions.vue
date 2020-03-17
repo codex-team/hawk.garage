@@ -2,31 +2,37 @@
   <div class="event-overview-repetitions">
     <div class="event-overview-repetitions__section">
       <div class="event-overview-repetitions__label">
-        Total
+        {{ $t('events.repetitions.total') }}
       </div>
       <div
         v-if="event"
         class="event-overview-repetitions__repeats"
       >
-        {{ event.totalCount }} times
+        {{ $tc('events.repetitions.times', event.totalCount) }}
       </div>
     </div>
 
     <div class="event-overview-repetitions__section">
       <div class="event-overview-repetitions__label">
-        Since
+        {{ $t('events.repetitions.since') }}
       </div>
       <div
         v-if="event"
         class="event-overview-repetitions__since"
       >
-        {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }} <span class="event-overview-repetitions__since-days">— {{ since }}</span>
+        {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
+        <span
+          v-if="since > 1"
+          class="event-overview-repetitions__since-days"
+        >
+          — {{ $tc('events.repetitions.days', since) }}
+        </span>
       </div>
     </div>
 
     <div class="event-overview-repetitions__section">
       <div class="event-overview-repetitions__label">
-        Repetitions
+        {{ $t('events.repetitions.title') }}
       </div>
 
       <div
@@ -63,18 +69,32 @@ export default Vue.extend({
     };
   },
   computed: {
+    /**
+     * Return event id from the route
+     * @return {string}
+     */
     eventId() {
       return this.$route.params.eventId;
     },
+
+    /**
+     * Return project id from the route
+     * @return {string}
+     */
     projectId() {
       return this.$route.params.projectId;
     },
+
+    /**
+     * Return concrete date
+     * @return {number}
+     */
     since() {
       const now = new Date();
       const firstOccurrence = new Date(this.event.payload.timestamp);
       const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
-      return `${Math.round(differenceInDays)} days`;
+      return Math.round(differenceInDays);
     },
   },
   async created() {

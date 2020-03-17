@@ -142,6 +142,32 @@
       "submitButton": "Продолжить"
     }
   },
+  "events": {
+    "repetitions": {
+      "total": "Общее количество",
+      "since": "Последний раз",
+      "title": "Повторы",
+      "times": "Нет повторений | {n} раз | {n} раза | {n} раз",
+      "days": " | {n} день | {n} дня | {n} дней"
+    },
+    "navigation": {
+      "overview": "Обзор",
+      "repetitions": "Повторения",
+      "daily": "Повторяющиеся дни"
+    }
+  },
+  "utils": {
+    "buttons": {
+      "resolve": "Решить",
+      "star": "Звезда",
+      "ignore": "Отклонить",
+      "issue": "Создать вопрос"
+    },
+    "loading": "Загрузка...",
+    "viewedBy": {
+      "assignee": "Представитель"
+    }
+  },
   "common": {
     "copiedNotification": "Скопировано!",
     "months": [

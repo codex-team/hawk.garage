@@ -6,7 +6,7 @@
   >
     <EventHeader
       :event="event"
-      @toggleItem="toggleItem($event)"
+      @tabChanged="tabChanged($event)"
     />
     <div
       class="event-overview__info"
@@ -118,7 +118,7 @@ export default Vue.extend({
      * Emit for active item
      * @param {string} item - active item
      */
-    toggleItem(item: string) {
+    tabChanged(item: string) {
       this.activeItem! = item;
     },
   },

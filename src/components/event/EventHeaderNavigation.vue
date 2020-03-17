@@ -1,72 +1,73 @@
 <template>
   <div class="event-overview__navigation">
-    <span
-      class="event-overview__navigation-text"
+    <div
+      class="event-overview__navigation-item"
       :class="setActiveClass('overview')"
       @click="onNavigationItemClick('overview')"
     >
-      Overview
-    </span>
-    <span
-      class="event-overview__navigation-text"
+      {{ $t('events.navigation.overview') }}
+    </div>
+    <div
+      class="event-overview__navigation-item"
       :class="setActiveClass('repetitions')"
       @click="onNavigationItemClick('repetitions')"
     >
-      Repetitions
-    </span>
-    <Badge
-      class="event-overview__navigation-count"
-      type="visited"
-      :content="!loading ? event.totalCount : '0'"
-    />
-    <span
-      class="event-overview__navigation-text"
+      {{ $t('events.navigation.repetitions') }}
+      <Badge
+        class="event-overview__navigation-count"
+        type="visited"
+        :content="!loading ? event.totalCount : ' '"
+      />
+    </div>
+    <div
+      class="event-overview__navigation-item"
       :class="setActiveClass('daily')"
       @click="onNavigationItemClick('daily')"
     >
-      Days repeating
-    </span>
-    <Badge
-      class="event-overview__navigation-count"
-      type="visited"
-      content="15"
-    />
+      {{ $t('events.navigation.daily') }}
+      <Badge
+        class="event-overview__navigation-count"
+        type="visited"
+        content="0"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Badge from '../utils/Badge.vue';
+import { HawkEvent } from '@/types/events';
 
 export default Vue.extend({
-  name: 'EventNavigation',
+  name: 'EventHeaderNavigation',
   components: {
     Badge,
   },
   props: {
+    /**
+     * Original (first) event data
+     * @type {HawkEvent}
+     */
     event: {
-      type: Object,
+      type: Object as () => HawkEvent,
       default: null,
       validator: prop => typeof prop === 'object' || prop === null,
     },
   },
   data() {
-    const path = this.$route.path.split('/').pop();
-    let activeItem = 'overview';
-
-    if (path === 'repetitions' || path === 'daily') {
-      activeItem = path;
-    }
-
-    const loading = !this.event;
-
     return {
       /**
        * Active menu item
        * @type {string}
        */
-      activeItem,
-      loading,
+      activeItem: 'overview',
+
+      /**
+       * Status of repetition-diff fetching
+       * @type {boolean}
+       */
+      loading: !this.event,
     };
   },
   watch: {
@@ -78,7 +79,13 @@ export default Vue.extend({
     },
   },
   created() {
-    this.$emit('toggleItem', this.activeItem);
+    const path = this.$route.path.split('/').pop();
+
+    if (path === 'repetitions' || path === 'daily') {
+      this.activeItem = path;
+    }
+
+    this.$emit('tabChanged', this.activeItem);
   },
   methods: {
     /**
@@ -119,7 +126,7 @@ export default Vue.extend({
 
       if (!this.isActive(navigationItem)) {
         this.setActive(navigationItem);
-        this.$emit('toggleItem', navigationItem);
+        this.$emit('tabChanged', navigationItem);
         this.$router.push({
           name: this.routerName(navigationItem),
           params: {
@@ -131,7 +138,7 @@ export default Vue.extend({
     },
 
     /**
-     * Correct router name for event navigation
+     * Concrete router name for event navigation
      * @param {String} navigationItem - navigation item
      *
      * @return {string}
@@ -154,29 +161,29 @@ export default Vue.extend({
 
     &__navigation {
       display: flex;
-      align-items: center;
-      font-size: 14.6px;
       letter-spacing: 0.37px;
       font-weight: 500;
 
       &-count {
-        margin-right: 30px;
+        margin-left: 10px;
         padding: 4px 8px;
         font-size: 12.6px;
         font-weight: bold;
         letter-spacing: 0.32px;
-        opacity: 0.6;
         color: var(--color-text-main);
       }
 
-      &-text {
+      &-item {
+        display: flex;
+        align-items: center;
+        font-size: 14.6px;
         cursor: pointer;
-        margin-right: 10px;
+        margin-right: 25px;
         opacity: 0.6;
       }
 
-      &-text:first-child {
-        margin-right: 30px;
+      &-item:last-child {
+        margin-right: 0;
       }
 
       &--active {
@@ -187,10 +194,10 @@ export default Vue.extend({
         &::before {
           content: '';
           position: absolute;
-          bottom: -17px;
+          bottom: 0;
           width: 100%;
           height: 3px;
-          border-radius: 1.5px;
+          border-radius: 1.5px 1.5px 0 0;
           background-color: var(--color-indicator-medium);
         }
       }
