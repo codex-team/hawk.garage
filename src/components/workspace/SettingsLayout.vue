@@ -71,8 +71,9 @@ export default {
       }
 
       const user = this.$store.state.user.data;
+      const member = this.workspace.users.find(u => u.id === user.id);
 
-      return this.workspace.users.find(u => u.id === user.id).isAdmin;
+      return member ? member.isAdmin : false;
     },
   },
   async created() {

@@ -18,6 +18,7 @@
     />
 
     <div class="team-member__name">
+      {{ member }}
       {{ member.name || member.email }}
     </div>
     <div
@@ -150,6 +151,7 @@ export default {
       font-size: 11px;
       line-height: 17px;
       border-radius: 5px;
+      flex-shrink: 0;
     }
 
     &__name {
@@ -166,6 +168,7 @@ export default {
       margin-left: auto;
       color: var(--color-text-second);
       user-select: none;
+      white-space: nowrap;
 
       &--admin {
         color: #2ccf6c;
