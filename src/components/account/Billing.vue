@@ -27,6 +27,15 @@ export default {
     BillingCard,
     BillingHistory,
   },
+  props: {
+    /**
+     * Current user
+     */
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
   computed: {
     workspaces() {
       return this.$store.state.workspaces.list.filter(workspace => this.isAdmin(workspace));
@@ -48,9 +57,9 @@ export default {
         return false;
       }
 
-      const user = this.$store.state.user.data;
+      const member = workspace.users.find(u => u.userId === this.user.id);
 
-      return workspace.users.find(u => u.id === user.id).isAdmin;
+      return member ? member.isAdmin : false;
     },
   },
 };

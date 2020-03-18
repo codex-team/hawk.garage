@@ -20,22 +20,24 @@
         >
           {{ $t('settings.account.title') }}
         </router-link>
-        <router-link
-          class="settings-window__menu-item"
-          :to="{ name: 'home'}"
-        >
-          {{ $t('settings.notifications.title') }}
-        </router-link>
-        <router-link
-          class="settings-window__menu-item"
-          :to="{ name: 'billing-settings'}"
-        >
-          {{ $t('settings.billing.title') }}
-        </router-link>
+<!--        <router-link-->
+<!--          class="settings-window__menu-item"-->
+<!--          :to="{ name: 'home'}"-->
+<!--        >-->
+<!--          {{ $t('settings.notifications.title') }}-->
+<!--        </router-link>-->
+<!--        <router-link-->
+<!--          class="settings-window__menu-item"-->
+<!--          :to="{ name: 'billing-settings'}"-->
+<!--        >-->
+<!--          {{ $t('settings.billing.title') }}-->
+<!--        </router-link>-->
+
         <hr class="delimiter">
+
         <router-link
           class="settings-window__menu-item"
-          :to="{ name: 'appearance-settings'}"
+          :to="{ name: 'account-appearance'}"
         >
           {{ $t('settings.appearance.title') }}
         </router-link>
@@ -48,17 +50,34 @@
         </div>
       </div>
     </template>
+
+    <template v-slot:content>
+      <router-view
+        v-if="user"
+        :user="user"
+      />
+    </template>
   </SettingsWindow>
 </template>
 
-<script>
-import SettingsWindow from '../settings/Window';
-import { RESET_STORE } from '../../store/methodsTypes';
+<script lang="ts">
+import Vue from 'vue';
+import SettingsWindow from '../settings/Window.vue';
+import { RESET_STORE } from '@/store/methodsTypes';
+import { User } from '@/types/user';
 
-export default {
-  name: 'AccountSettingsWindow',
+export default Vue.extend({
+  name: 'AccountSettingsLayout',
   components: {
     SettingsWindow,
+  },
+  computed: {
+    /**
+     * Current authenticated user
+     */
+    user(): User {
+      return this.$store.state.user.data;
+    },
   },
   methods: {
     /**
@@ -68,7 +87,8 @@ export default {
       this.$store.dispatch(RESET_STORE);
     },
   },
-};
+});
+
 </script>
 
 <style>

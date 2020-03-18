@@ -17,7 +17,7 @@ const router = new Router({
         {
           path: 'settings',
           name: 'settings',
-          component: () => import(/* webpackChunkName: 'settings' */ './components/account/Window.vue'),
+          component: () => import(/* webpackChunkName: 'settings' */ './components/account/Layout.vue'),
           redirect: 'settings/account',
           children: [
             {
@@ -27,14 +27,14 @@ const router = new Router({
             },
             {
               path: 'appearance',
-              name: 'appearance-settings',
+              name: 'account-appearance',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance.vue'),
             },
-            {
-              path: 'billing',
-              name: 'billing-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing.vue'),
-            },
+            // {
+            //   path: 'billing',
+            //   name: 'billing-settings',
+            //   component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing.vue'),
+            // },
           ],
         },
         {
