@@ -61,6 +61,7 @@ export const groupBy =
          * for example, date(timestamp) - we add "key:" prefix to prevent sorting of object keys
          */
         let groupingKey = key;
+
         if (typeof value === 'number') {
           groupingKey = key + ':' + value;
         }
