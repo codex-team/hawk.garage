@@ -83,7 +83,7 @@ export default Vue.extend({
   props: {
     /**
      * Workspace which settings we are viewing
-     * Passed from <SettingsLayout>
+     * Passed from {@link ./Layout.vue}
      */
     workspace: {
       type: Object as () => Workspace,
