@@ -1,11 +1,14 @@
 <template>
   <div
     class="event-item"
-    :class="{'event-item--visited': isVisited, [`event-item--${event.label.toLowerCase()}-label`]: true}"
+    :class="{
+      'event-item--visited': isVisited,
+      [`event-item--${mark}-label`]: true,
+    }"
     data-ripple
     @click="$emit('showEventOverview')"
   >
-    <EventLabel :label="event.label" />
+    <EventMark :mark="mark" />
     <div class="event-item__time">
       {{ lastOccurrenceTimestamp | prettyTime }}
     </div>
@@ -30,12 +33,12 @@
 <script>
 import Badge from '../utils/Badge';
 import Icon from '../utils/Icon';
-import EventLabel from "./EventLabel";
+import EventMark from './EventLabel';
 
 export default {
   name: 'EventItem',
   components: {
-    EventLabel,
+    EventMark,
     Badge,
     Icon,
   },
@@ -76,6 +79,23 @@ export default {
       }
 
       return visitedBy.includes(this.$store.state.user.data.id);
+    },
+
+    /**
+     * Get mark with the highest priority
+     *
+     *  @return {string}
+     */
+    mark() {
+      const { marks } = this.event;
+
+      if (!marks.length) {
+        return 'none';
+      }
+
+      const priority = ['RESOLVED', 'STARRED', 'IGNORED'];
+
+      return priority.find(mark => marks.includes(mark)).toLowerCase();
     },
   },
 };

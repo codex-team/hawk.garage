@@ -6,7 +6,7 @@ import {
   QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
-import {EventLabel, EventsWithDailyInfo, HawkEvent, HawkEventRepetition} from '@/types/events';
+import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
 
 /**
  * Get specific event
@@ -83,12 +83,16 @@ export async function visitEvent(projectId: string, eventId: string): Promise<bo
 }
 
 /**
- * Set label to event for current user
+ * Set mark to event
+ *
+ * @param {string} projectId - project event is related to
+ * @param {string} eventId — event Id
+ * @param {string} mark — mark to set
  */
-export async function markEvent(projectId: string, eventId: string, label: EventLabel = EventLabel.NONE) {
+export async function markEvent(projectId: string, eventId: string, mark: EventMark): boolean {
   return (await api.call(MUTATION_MARK_EVENT, {
     projectId,
     eventId,
-    label
+    mark,
   })).markEvent;
 }

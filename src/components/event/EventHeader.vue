@@ -22,21 +22,21 @@
       <div class="event-overview__buttons">
         <UIButton
           class="event-overview__button"
-          :class="{'event-overview__button--selected': !loading && event.label === 'RESOLVED'}"
+          :class="{'event-overview__button--selected': !loading && event.marks.includes('RESOLVED')}"
           content="Resolve"
           icon="check-mark"
           @click="markEvent('RESOLVED')"
         />
         <UIButton
           class="event-overview__button"
-          :class="{'event-overview__button--selected': !loading && event.label === 'STARRED'}"
+          :class="{'event-overview__button--selected': !loading && event.marks.includes('STARRED')}"
           content="Star"
           icon="star"
           @click="markEvent('STARRED')"
         />
         <UIButton
           class="event-overview__button"
-          :class="{'event-overview__button--selected': !loading && event.label === 'IGNORED'}"
+          :class="{'event-overview__button--selected': !loading && event.marks.includes('IGNORED')}"
           content="Ignore"
           icon="hided"
           @click="markEvent('IGNORED')"
@@ -175,21 +175,17 @@ export default Vue.extend({
     },
 
     /**
-     * Set label for current event
+     * Set mark for current event
      *
-     * @param {string} label - label to set
+     * @param {string} mark - mark to set
      */
-    markEvent(label) {
+    markEvent(mark) {
       const { projectId, eventId } = this.$route.params;
-
-      if (label === this.event.label) {
-        label = 'NONE';
-      }
 
       this.$store.dispatch(MARK_EVENT, {
         projectId,
         eventId,
-        label,
+        mark,
       });
     },
   },

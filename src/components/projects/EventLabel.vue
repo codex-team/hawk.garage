@@ -1,13 +1,13 @@
 <template>
   <Icon
-    v-if="label !== 'NONE'"
-    class="event-label event-label--icon"
-    :class="`event-label--${label.toLowerCase()}`"
-    :symbol="icons[label]"
+    v-if="mark !== 'none'"
+    class="event-mark event-mark--icon"
+    :class="`event-mark--${mark}`"
+    :symbol="icons[mark]"
   />
   <div
     v-else
-    class="event-label event-label--none"
+    class="event-mark event-mark--none"
   />
 </template>
 
@@ -15,10 +15,10 @@
 import Icon from '../utils/Icon';
 
 export default {
-  name: 'EventLabel',
+  name: 'EventMark',
   components: { Icon },
   props: {
-    label: {
+    mark: {
       type: String,
       default: 'NONE',
     },
@@ -26,9 +26,9 @@ export default {
   data() {
     return {
       icons: {
-        RESOLVED: 'check-mark',
-        STARRED: 'star',
-        IGNORED: 'hided',
+        resolved: 'check-mark',
+        starred: 'star',
+        ignored: 'hided',
       },
     };
   },
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <style>
-  .event-label {
+  .event-mark {
     position: relative;
     width: 14px;
     height: 14px;

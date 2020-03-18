@@ -10,7 +10,7 @@ export const QUERY_EVENT = `
         catcherType
         totalCount
         groupHash
-        label
+        marks
         payload {
           title
           release
@@ -78,7 +78,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupHash
           totalCount
           visitedBy
-          label
+          marks
           catcherType
           payload {
             timestamp
@@ -151,10 +151,10 @@ export const MUTATION_VISIT_EVENT = `
 
 // language
 /**
- * GraphQL Mutation to set label to event for current user
+ * GraphQL Mutation to set mark to event for current user
  */
 export const MUTATION_MARK_EVENT = `
-  mutation markEvent($projectId: ID!, $eventId: ID!, $label: EventLabel!) {
-    markEvent(project: $projectId, id: $eventId, label: $label)
+  mutation markEvent($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
+    markEvent(project: $projectId, id: $eventId, mark: $mark)
   }
 `;

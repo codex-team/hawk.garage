@@ -4,7 +4,7 @@ import {
   FETCH_RECENT_EVENTS,
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
-  MARK_EVENT,
+  MARK_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -371,22 +371,22 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Send request to set label to event
+     * Send request to set mark to event
      *
      * @param {function} commit - VueX commit function
      * @param {object} rootState - VueX root state
      * @param {string} projectId - project event is related to
      * @param {string} eventId - event to set label
-     * @param {EventLabel} label - label to set
+     * @param {EventMark} label - label to set
      */
-    async [MARK_EVENT]({ commit, rootState }, { projectId, eventId, label }): Promise<void> {
-      const result = await eventsApi.markEvent(projectId, eventId, label);
+    async [MARK_EVENT]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
+      const result = await eventsApi.markEvent(projectId, eventId, mark);
 
       if (result) {
         commit(MutationTypes.SET_LABEL, {
           projectId,
           eventId,
-          label,
+          mark,
         });
       }
     },
@@ -523,15 +523,25 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Set label to event for passed user
      *
-     * @param {EventsModuleState} state
+     * @param {EventsModuleState} state - events module state
      * @param {string} projectId - project event is related to
      * @param {string} eventId - event label should be set to
-     * @param {EventLabel} label - label to set
+     * @param {EventMark} mark - label to set
      */
-    [MutationTypes.SET_LABEL](state, { projectId, eventId, label }) {
+    [MutationTypes.SET_LABEL](state, { projectId, eventId, mark }) {
       const key = getEventsListKey(projectId, eventId);
 
-      state.list[key].label = label;
+      const { marks } = state.list[key];
+
+      const index = marks.indexOf(mark);
+
+      if (index === -1) {
+        marks.push(mark);
+      } else {
+        marks.splice(index, 1);
+      }
+
+      Vue.set(state.list[key], 'marks', marks);
     },
 
     /**

@@ -123,7 +123,7 @@ export default Vue.extend({
     toggleItem(item: string) {
       this.activeItem! = item;
     },
-  }
+  },
 });
 </script>
 
