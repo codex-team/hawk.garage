@@ -29,28 +29,34 @@
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
-        <router-link
-          v-if="isAdmin"
-          class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-settings-billing' }"
-        >
-          {{ $t('workspaces.settings.billing.title') }}
-        </router-link>
+<!--        <router-link-->
+<!--          v-if="isAdmin"-->
+<!--          class="settings-window__menu-item workspace-settings__menu-item"-->
+<!--          :to="{ name: 'workspace-settings-billing' }"-->
+<!--        >-->
+<!--          {{ $t('workspaces.settings.billing.title') }}-->
+<!--        </router-link>-->
       </div>
     </template>
 
     <template v-slot:content>
-      <router-view :workspace="workspace" v-if="workspace" />
+      <router-view
+        v-if="workspace"
+        :workspace="workspace"
+        @workspaceUpdated="updateWorkspace"
+      />
     </template>
   </SettingsWindow>
 </template>
 
-<script>
-import EntityImage from '../utils/EntityImage';
-import SettingsWindow from '../settings/Window';
+<script lang="ts">
+import Vue from 'vue';
+import EntityImage from '../utils/EntityImage.vue';
+import SettingsWindow from '../settings/Window.vue';
 import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { Workspace } from '../../types/workspaces';
 
-export default {
+export default Vue.extend({
   name: 'WorkspaceSettingsLayout',
   components: {
     SettingsWindow,
@@ -61,12 +67,16 @@ export default {
       /**
        * Workspace which settings we are viewing
        */
-      workspace: null,
+      workspace: null as Workspace | null,
     };
   },
   computed: {
-    isAdmin() {
-      if (!this.workspace.users) {
+    /**
+     * Check if current user is admin of this workspace
+     * @return {boolean}
+     */
+    isAdmin(): boolean {
+      if (!this.workspace || !this.workspace.users) {
         return false;
       }
 
@@ -76,7 +86,16 @@ export default {
       return member ? member.isAdmin : false;
     },
   },
-  async created() {
+  methods: {
+    /**
+     * When general settings saved, we need to update workspace
+     * because this.workspace is not reactive
+     */
+    updateWorkspace() {
+      this.workspace = this.$store.getters.getWorkspaceById(this.$route.params.workspaceId);
+    },
+  },
+  async created(): Promise<void> {
     const workspaceId = this.$route.params.workspaceId;
     const workspaceLoaded = this.$store.getters.getWorkspaceById(workspaceId);
 
@@ -86,7 +105,7 @@ export default {
       this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
     }
   },
-};
+});
 </script>
 
 <style>

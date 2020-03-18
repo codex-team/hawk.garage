@@ -94,7 +94,7 @@ import GuideStepBlock from '../../GuideStepBlock';
 import GuideSection from '../../GuideSection';
 import CodeBlock from '../../../utils/CodeBlock';
 import GuideHeader from '../../GuidePageHeader';
-import TokenBlock from '../../../projects/TokenBlock';
+import TokenBlock from '../../../project/TokenBlock';
 
 export default {
   name: 'SetupPhpCatcher',

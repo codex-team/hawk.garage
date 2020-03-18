@@ -14,16 +14,20 @@ const router = new Router({
       name: 'home',
       component: AppShell,
       children: [
+        /**
+         * Account settings
+         * ----------------
+         */
         {
-          path: 'settings',
-          name: 'settings',
+          path: 'account',
+          name: 'account',
           component: () => import(/* webpackChunkName: 'settings' */ './components/account/Layout.vue'),
-          redirect: 'settings/account',
+          redirect: 'account/general',
           children: [
             {
-              path: 'account',
-              name: 'account-settings',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Account.vue'),
+              path: 'general',
+              name: 'account-general',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/General.vue'),
             },
             {
               path: 'appearance',
@@ -37,35 +41,47 @@ const router = new Router({
             // },
           ],
         },
+        /**
+         * Workspace settings
+         * ----------------
+         */
         {
           path: 'workspace/:workspaceId',
           name: 'workspace-settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/SettingsLayout.vue'),
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/Layout.vue'),
           redirect: 'workspace/:workspaceId/settings',
           children: [
             {
               path: 'settings',
               name: 'workspace-settings-main',
-              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/SettingsMain.vue'),
+              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/General.vue'),
               props: true,
             },
             {
               path: 'team',
               name: 'workspace-settings-team',
-              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/SettingsTeam.vue'),
+              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/Team.vue'),
             },
-            {
-              path: 'billing',
-              name: 'workspace-settings-billing',
-              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/SettingsBilling.vue'),
-            },
+            // {
+            //   path: 'billing',
+            //   name: 'workspace-settings-billing',
+            //   component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/Billing.vue'),
+            // },
           ],
         },
+        /**
+         * Project
+         * ----------------
+         */
         {
-          path: 'projects/:projectId',
+          path: 'project/:projectId',
           name: 'project-overview',
-          component: () => import(/* webpackChunkName: 'project-overview' */ './components/projects/Overview.vue'),
+          component: () => import(/* webpackChunkName: 'project-overview' */ './components/project/Overview.vue'),
           children: [
+            /**
+             * Project Event
+             * -------------
+             */
             {
               path: 'event/:eventId/repetitions',
               name: 'event-repetitions-overview',
@@ -76,31 +92,35 @@ const router = new Router({
               name: 'event-overview',
               component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue'),
             },
+            /**
+             * Project Settings
+             * -------------
+             */
             {
               path: 'settings',
-              component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Settings.vue'),
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Layout.vue'),
               children: [
                 {
-                  path: '/',
-                  name: 'project-settings',
-                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/projects/Project.vue'),
+                  path: 'general',
+                  name: 'project-settings-general',
+                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/General.vue'),
                 },
                 {
                   path: 'integrations',
-                  name: 'project-integrations',
-                  component: () => import(/* webpackChunkName: 'project-integrations' */ './components/projects/Integrations.vue'),
+                  name: 'project-settings-integrations',
+                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Integrations.vue'),
                 },
               ],
             },
           ],
         },
         {
-          path: 'projects/:projectId/add-catcher',
+          path: 'project/:projectId/add-catcher',
           name: 'add-catcher',
           component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue'),
         },
         {
-          path: 'projects/:projectId/setup-catcher/:page',
+          path: 'project/:projectId/setup-catcher/:page',
           name: 'setup-catcher',
           component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadGuidePages.js'),
         },

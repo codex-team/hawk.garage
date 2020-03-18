@@ -62,9 +62,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import notifier from 'codex-notifier';
-import { INVITE_TO_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { INVITE_TO_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import TeamMember from './TeamMember.vue';
-import { Workspace, Member } from '../../types/workspaces';
+import { Workspace, Member } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsTeam',

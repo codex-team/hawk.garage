@@ -6,7 +6,7 @@
     <form @submit.prevent="save">
       <div class="workspace-settings__inline-elements">
         <FormTextFieldset
-          v-model="workspace.name"
+          v-model="formName"
           class="workspace-settings__section workspace-settings__name-section"
           :label="$t('settings.account.name')"
           required
@@ -15,13 +15,13 @@
         <section>
           <label class="label workspace-settings__label">{{ $t('workspaces.settings.workspace.image') }}</label>
           <FormImageUploader
-            v-model="workspace.image"
+            v-model="formImage"
             @input="showSubmitButton = true"
           />
         </section>
       </div>
       <FormTextFieldset
-        v-model="workspace.description"
+        v-model="formDescription"
         class="workspace-settings__section"
         :label="$t('workspaces.settings.workspace.description')"
         :placeholder="$t('workspaces.settings.workspace.descriptionPlaceholder')"
@@ -41,13 +41,40 @@
   </div>
 </template>
 
-<script>
-import FormTextFieldset from '../forms/TextFieldset';
-import FormImageUploader from '../forms/ImageUploader';
+<script lang="ts">
+import Vue from 'vue';
+import FormTextFieldset from '../forms/TextFieldset.vue';
+import FormImageUploader from '../forms/ImageUploader.vue';
 import notifier from 'codex-notifier';
-import { FETCH_WORKSPACE, UPDATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { UPDATE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import { Workspace } from '@/types/workspaces';
 
-export default {
+/**
+ * This data will be send to update workspace
+ */
+interface UpdateWorkspacePayload {
+  /**
+   * If of a workspace to update
+   */
+  id: string;
+
+  /**
+   * New name
+   */
+  name: string;
+
+  /**
+   * New description
+   */
+  description: string;
+
+  /**
+   * Image file selected
+   */
+  image?: File;
+}
+
+export default Vue.extend({
   name: 'WorkspaceSettingsMain',
   components: {
     FormImageUploader,
@@ -59,31 +86,39 @@ export default {
      * Passed from <SettingsLayout>
      */
     workspace: {
-      type: Object,
+      type: Object as () => Workspace,
       required: true,
     },
   },
   data() {
     return {
+      /**
+       * Form data to send with save
+       */
+      formName: this.workspace.name,
+      formDescription: this.workspace.name,
+      formImage: this.workspace.image,
+
+      /**
+       * Button will be showed only when some fields is changed
+       */
       showSubmitButton: false,
     };
-  },
-  created() {
   },
   methods: {
     /**
      * Form submit event handler
      */
-    async save() {
+    async save(): Promise<void> {
       try {
         const payload = {
           id: this.workspace.id,
-          name: this.workspace.name,
-          description: this.workspace.description,
-        };
+          name: this.formName,
+          description: this.formDescription,
+        } as UpdateWorkspacePayload;
 
-        if (typeof this.workspace.image !== 'string') {
-          payload.image = this.workspace.image;
+        if (typeof this.formImage !== 'string') {
+          payload.image = this.formImage;
         }
 
         await this.$store.dispatch(UPDATE_WORKSPACE, payload);
@@ -91,10 +126,12 @@ export default {
         this.showSubmitButton = false;
 
         notifier.show({
-          message: this.$t('workspaces.settings.workspace.updatedMessage'),
+          message: this.$t('workspaces.settings.workspace.updatedMessage') as string,
           style: 'success',
           time: 5000,
         });
+
+        this.$emit('workspaceUpdated');
       } catch (e) {
         notifier.show({
           message: e.message,
@@ -104,7 +141,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style src="../../styles/settings-window-page.css"></style>

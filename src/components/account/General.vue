@@ -56,6 +56,31 @@ import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '@/store/mod
 import notifier from 'codex-notifier';
 import { User } from '@/types/user';
 
+/**
+ * This data will be send to update profile info
+ */
+interface UpdateAccountPayload {
+  /**
+   * If of a workspace to update
+   */
+  id: string;
+
+  /**
+   * New name
+   */
+  name: string;
+
+  /**
+   * New email
+   */
+  email: string;
+
+  /**
+   * Image file selected
+   */
+  image?: File;
+}
+
 export default Vue.extend({
   name: 'AccountSettings',
   components: {
@@ -100,11 +125,7 @@ export default Vue.extend({
           const payload = {
             name: this.name,
             email: this.email,
-          } as {
-            name: string,
-            email: string,
-            image?: File,
-          };
+          } as UpdateAccountPayload;
 
           if (typeof this.image !== 'string') {
             payload.image = this.image;

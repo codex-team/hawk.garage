@@ -18,6 +18,11 @@ export interface User {
   name?: string;
 
   /**
+   * User profile photo
+   */
+  image?: string;
+
+  /**
    * User password
    */
   password: string;

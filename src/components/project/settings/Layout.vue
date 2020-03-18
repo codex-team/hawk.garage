@@ -16,29 +16,33 @@
       <div>
         <router-link
           class="settings-window__menu-item"
-          :to="{ name:'project-settings' }"
+          :to="{ name:'project-settings-general' }"
         >
           {{ $t('projects.settings.project.title') }}
         </router-link>
         <router-link
           class="settings-window__menu-item"
-          :to="{ name: 'project-integrations'}"
+          :to="{ name: 'project-settings-integrations'}"
         >
           {{ $t('projects.settings.integrations.title') }}
         </router-link>
       </div>
     </template>
+
+    <template v-slot:content>
+      <router-view/>
+    </template>
   </SettingsWindow>
 </template>
 
 <script>
-import SettingsWindow from '../settings/Window';
-export default {
-  name: 'ProjectSettingsWindow',
-  components: {
-    SettingsWindow,
-  },
-};
+  import SettingsWindow from '../../settings/Window';
+  export default {
+    name: 'ProjectSettingsWindow',
+    components: {
+      SettingsWindow,
+    },
+  };
 </script>
 
 <style>
@@ -47,7 +51,7 @@ export default {
       margin-left: -62px;
     }
     &__logo {
-      background-image: url("../../assets/hawk-logo.png");
+      background-image: url("../../../assets/hawk-logo.png");
       background-position: center center;
       background-size: cover;
     }

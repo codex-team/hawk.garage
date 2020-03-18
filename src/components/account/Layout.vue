@@ -16,7 +16,7 @@
       <div>
         <router-link
           class="settings-window__menu-item"
-          :to="{ name: 'account-settings'}"
+          :to="{ name: 'account-general'}"
         >
           {{ $t('settings.account.title') }}
         </router-link>
