@@ -48,6 +48,15 @@ export default {
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.15px;
+      text-transform: uppercase;
+
+      .icon {
+        height: 13px;
+        width: 16px;
+        vertical-align: middle;
+        margin-left: 5px;
+        margin-top: -2px;
+      }
     }
 
     &__content-container {
@@ -107,6 +116,7 @@ export default {
 
     &__value {
       display: flex;
+      flex-grow: 2;
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
