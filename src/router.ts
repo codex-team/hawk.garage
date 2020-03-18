@@ -53,7 +53,7 @@ const router = new Router({
           children: [
             {
               path: 'settings',
-              name: 'workspace-settings-main',
+              name: 'workspace-settings-general',
               component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/General.vue'),
               props: true,
             },

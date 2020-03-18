@@ -19,7 +19,7 @@
       <div v-if="workspace">
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-settings-main', params: {workspaceId: workspace.id} }"
+          :to="{ name: 'workspace-settings-general', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.workspace.title') }}
         </router-link>

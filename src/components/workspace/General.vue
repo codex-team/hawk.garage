@@ -75,7 +75,7 @@ interface UpdateWorkspacePayload {
 }
 
 export default Vue.extend({
-  name: 'WorkspaceSettingsMain',
+  name: 'WorkspaceSettingsGeneral',
   components: {
     FormImageUploader,
     FormTextFieldset,
