@@ -182,19 +182,16 @@ const actions = {
    * Update workspace data
    * @param {function} commit - standard Vuex commit function
    * @param {Workspace} workspace - workspace to update
-   * @throws {Error} when something goes wrong
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
     const isSaved = await workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
 
-    if (!isSaved) {
-      throw new Error('Workspace was not saved');
+    if (isSaved) {
+      commit(mutationTypes.SET_WORKSPACE, workspace);
     }
 
-    commit(mutationTypes.SET_WORKSPACE, workspace);
-
-    return true;
+    return isSaved;
   },
 
   /**
