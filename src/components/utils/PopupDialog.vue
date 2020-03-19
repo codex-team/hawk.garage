@@ -75,12 +75,12 @@ export default {
     &__wrapper {
       position: relative;
       display: flex;
+      flex-direction: column;
       max-width: 1100px;
       margin: auto 0;
       background-color: var(--color-bg-second);
       border-radius: 3px;
       box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.15);
-      flex-direction: column;
 
       &--big {
         flex-grow: 1;

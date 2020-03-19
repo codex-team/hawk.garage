@@ -1,48 +1,48 @@
 <template>
-  <div class="event-overview__header">
-    <div class="event-overview__container">
-      <div class="event-overview__error">
+  <div class="event-header">
+    <div class="event-layout__container">
+      <div class="event-header__error">
         <Icon
-          class="event-overview__flash__icon"
+          class="event-header__flash-icon"
           symbol="flash"
         />
-        <span class="event-overview__error-text">
+        <span class="event-header__error-text">
           Uncaught TypeError
         </span>
       </div>
       <h1
-        class="event-overview__title"
+        class="event-header__title"
       >
         {{ (!loading) ? event.payload.title : $t('utils.loading') }}
       </h1>
       <Filepath
-        class="event-overview__location"
+        class="event-header__location"
         :location="location"
         :is-highlight="true"
       />
-      <div class="event-overview__buttons">
+      <div class="event-header__buttons">
         <UIButton
-          class="event-overview__button"
+          class="event-header__button"
           content="resolve"
-          icon="check-mark"
+          icon="checkmark"
         />
         <UIButton
-          class="event-overview__button"
+          class="event-header__button"
           content="star"
-          icon="star-inactive"
+          icon="star"
         />
         <UIButton
-          class="event-overview__button"
+          class="event-header__button"
           content="ignore"
           icon="hided"
         />
         <UIButton
-          class="event-overview__button"
+          class="event-header__button"
           content="issue"
-          icon="shape"
+          icon="github"
         />
       </div>
-      <div class="event-overview__information">
+      <div class="event-header__information">
         <EventHeaderNavigation
           :event="event"
           @tabChanged="tabChanged($event)"
@@ -58,7 +58,7 @@ import Vue from 'vue';
 import EventHeaderNavigation from './EventHeaderNavigation.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
 import UIButton from '../utils/UIButton.vue';
-import Filepath from "../utils/Filepath.vue";
+import Filepath from '../utils/Filepath.vue';
 import Icon from '../utils/Icon.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 
@@ -139,34 +139,31 @@ export default Vue.extend({
 </script>
 
 <style>
-  .event-overview {
-
-    &__header {
-      padding: 35px 20px 0 20px;
-      background-color: #121419;
-      color: var(--color-text-main);
-    }
+  .event-header {
+    padding: 35px 20px 0 20px;
+    color: var(--color-text-main);
+    background-color: #121419;
 
     &__error {
       display: inline-flex;
-      background-color: var(--color-bg-second);
       padding: 4px 10px;
+      background-color: var(--color-bg-second);
       border-radius: 4px;
+
+      &-text {
+        align-items: center;
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.05px;
+        opacity: 0.6;
+      }
     }
 
-    &__error-text {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.05px;
-      align-items: center;
-      opacity: 0.6;
-    }
-
-    &__flash__icon {
-      margin-right: 10px;
-      opacity: 0.6;
+    &__flash-icon {
       width: 7px;
       height: 12px;
+      margin-right: 10px;
+      opacity: 0.6;
     }
 
     &__title {

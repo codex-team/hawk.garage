@@ -46,9 +46,9 @@ export default Vue.extend({
       &-avatar {
         width: 14px;
         height: 14px;
-        border-radius: 5px;
-        background-color: var(--color-bg-second);
         margin-right: 6px;
+        background-color: var(--color-bg-second);
+        border-radius: 5px;
       }
 
       &-count {
@@ -71,24 +71,24 @@ export default Vue.extend({
         display: flex;
         align-items: center;
         padding: 4px 9px 4px 4px;
-        border-radius: 7px;
         background-color: var(--color-bg-main);
+        border-radius: 7px;
       }
 
       &-icon-bg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 16px;
         height: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 5px;
         margin-right: 5px;
         background-color: var(--color-bg-second);
+        border-radius: 5px;
       }
 
       &-text {
-        font-size: 14px;
         margin-right: 10px;
+        font-size: 14px;
         opacity: 0.6;
       }
 

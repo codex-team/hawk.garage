@@ -1,13 +1,13 @@
 <template>
-
+  <span>Daily Events</span>
 </template>
 
 <script>
-    export default {
-        name: "EventDaily"
-    }
+export default {
+  name: 'EventDaily',
+};
 </script>
 
-<style scoped>
+<style>
 
 </style>

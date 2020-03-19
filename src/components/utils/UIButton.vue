@@ -42,11 +42,12 @@ export default Vue.extend({
 <style>
  .ui-button {
    display: flex;
-   padding: 6px 7px;
    align-items: center;
-   border-radius: 4px;
+   padding: 6px 7px;
    border: solid 1px var(--color-bg-main);
+   border-radius: 4px;
    cursor: pointer;
+   user-select: none;
 
    &-icon {
      width: 15px;
@@ -62,8 +63,8 @@ export default Vue.extend({
    }
 
    &-text {
-     font-size: 14px;
      font-weight: 500;
+     font-size: 14px;
      opacity: 0.6;
    }
 

@@ -1,32 +1,32 @@
 <template>
-  <div class="event-overview__navigation">
+  <div class="event-header-navigation">
     <div
-      class="event-overview__navigation-item"
+      class="event-header-navigation__item"
       :class="setActiveClass('overview')"
       @click="onNavigationItemClick('overview')"
     >
       {{ $t('events.navigation.overview') }}
     </div>
     <div
-      class="event-overview__navigation-item"
+      class="event-header-navigation__item"
       :class="setActiveClass('repetitions')"
       @click="onNavigationItemClick('repetitions')"
     >
       {{ $t('events.navigation.repetitions') }}
       <Badge
-        class="event-overview__navigation-count"
+        class="event-header-navigation__item-count"
         type="visited"
         :content="!loading ? event.totalCount : ' '"
       />
     </div>
     <div
-      class="event-overview__navigation-item"
+      class="event-header-navigation__item"
       :class="setActiveClass('daily')"
       @click="onNavigationItemClick('daily')"
     >
       {{ $t('events.navigation.daily') }}
       <Badge
-        class="event-overview__navigation-count"
+        class="event-header-navigation__item-count"
         type="visited"
         content="0"
       />
@@ -113,7 +113,7 @@ export default Vue.extend({
      * @return {string}
      */
     setActiveClass(navigationItem: string): string {
-      return (this.isActive(navigationItem)) ? 'event-overview__navigation--active' : '';
+      return (this.isActive(navigationItem)) ? 'event-header-navigation__item--active' : '';
     },
 
     /**
@@ -157,50 +157,47 @@ export default Vue.extend({
 </script>
 
 <style>
-  .event-overview {
-
-    &__navigation {
+  .event-header-navigation {
       display: flex;
-      letter-spacing: 0.37px;
       font-weight: 500;
+      letter-spacing: 0.37px;
 
-      &-count {
-        margin-left: 10px;
-        padding: 4px 8px;
-        font-size: 12.6px;
-        font-weight: bold;
-        letter-spacing: 0.32px;
-        color: var(--color-text-main);
-      }
-
-      &-item {
+      &__item {
         display: flex;
         align-items: center;
+        margin-right: 25px;
         font-size: 14.6px;
         cursor: pointer;
-        margin-right: 25px;
         opacity: 0.6;
+
+        &-count {
+          margin-left: 10px;
+          padding: 4px 8px;
+          color: var(--color-text-main);
+          font-weight: bold;
+          font-size: 12.6px;
+          letter-spacing: 0.32px;
+        }
+
+        &--active {
+          position: relative;
+          opacity: 1;
+          transition: opacity 500ms;
+
+          &::before {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-indicator-medium);
+            border-radius: 1.5px 1.5px 0 0;
+            content: '';
+          }
+        }
       }
 
       &-item:last-child {
         margin-right: 0;
       }
-
-      &--active {
-        position: relative;
-        opacity: 1;
-        transition: opacity 500ms;
-
-        &::before {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 3px;
-          border-radius: 1.5px 1.5px 0 0;
-          background-color: var(--color-indicator-medium);
-        }
-      }
-    }
   }
 </style>

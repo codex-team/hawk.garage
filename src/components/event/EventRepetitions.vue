@@ -1,44 +1,44 @@
 <template>
-  <div class="event-overview-repetitions">
-    <div class="event-overview-repetitions__section">
-      <div class="event-overview-repetitions__label">
+  <div class="event-repetitions">
+    <div class="event-repetitions__section">
+      <div class="event-repetitions__label">
         {{ $t('events.repetitions.total') }}
       </div>
       <div
         v-if="event"
-        class="event-overview-repetitions__repeats"
+        class="event-repetitions__repeats"
       >
         {{ $tc('events.repetitions.times', event.totalCount) }}
       </div>
     </div>
 
-    <div class="event-overview-repetitions__section">
-      <div class="event-overview-repetitions__label">
+    <div class="event-repetitions__section">
+      <div class="event-repetitions__label">
         {{ $t('events.repetitions.since') }}
       </div>
       <div
         v-if="event"
-        class="event-overview-repetitions__since"
+        class="event-repetitions__since"
       >
         {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
         <span
           v-if="since > 1"
-          class="event-overview-repetitions__since-days"
+          class="event-repetitions__since-days"
         >
           — {{ $tc('events.repetitions.days', since) }}
         </span>
       </div>
     </div>
 
-    <div class="event-overview-repetitions__section">
-      <div class="event-overview-repetitions__label">
+    <div class="event-repetitions__section">
+      <div class="event-repetitions__label">
         {{ $t('events.repetitions.title') }}
       </div>
 
       <div
         v-for="date in groupedRepetitions.keys()"
         :key="date"
-        class="event-overview-repetitions__table"
+        class="event-repetitions__table"
       >
         <RepetitionsList
           :repetitions="groupedRepetitions.get(date)"
@@ -155,7 +155,7 @@ export default Vue.extend({
 </script>
 
 <style>
-  .event-overview-repetitions {
+  .event-repetitions {
     &__section {
       margin-bottom: 30px;
     }
