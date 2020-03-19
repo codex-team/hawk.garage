@@ -28,7 +28,10 @@
           <span class="repetitions-list__user-browser">Firefox 61.0</span>
         </td>
         <td class="repetitions-list__col">
-          <span class="repetitions-list__user-screen" v-if="repetition.payload.addons && repetition.payload.addons.window">
+          <span
+            v-if="repetition.payload.addons && repetition.payload.addons.window"
+            class="repetitions-list__user-screen"
+          >
             {{ showWindowSize(repetition.payload.addons.window) }}
           </span>
         </td>

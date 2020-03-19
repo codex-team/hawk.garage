@@ -6,7 +6,7 @@
     <form @submit.prevent="save">
       <div class="workspace-settings__inline-elements">
         <FormTextFieldset
-          v-model="name"
+          v-model="formName"
           class="workspace-settings__section workspace-settings__name-section"
           :label="$t('settings.account.name')"
           required
@@ -15,13 +15,13 @@
         <section>
           <label class="label workspace-settings__label">{{ $t('workspaces.settings.workspace.image') }}</label>
           <FormImageUploader
-            v-model="image"
+            v-model="formImage"
             @input="showSubmitButton = true"
           />
         </section>
       </div>
       <FormTextFieldset
-        v-model="description"
+        v-model="formDescription"
         class="workspace-settings__section"
         :label="$t('workspaces.settings.workspace.description')"
         :placeholder="$t('workspaces.settings.workspace.descriptionPlaceholder')"
@@ -41,74 +41,97 @@
   </div>
 </template>
 
-<script>
-import FormTextFieldset from '../forms/TextFieldset';
-import FormImageUploader from '../forms/ImageUploader';
+<script lang="ts">
+import Vue from 'vue';
+import FormTextFieldset from '../../forms/TextFieldset.vue';
+import FormImageUploader from '../../forms/ImageUploader.vue';
 import notifier from 'codex-notifier';
-import { FETCH_WORKSPACE, UPDATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { UPDATE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import { Workspace } from '@/types/workspaces';
 
-export default {
-  name: 'WorkspaceSettings',
+/**
+ * This data will be send to update workspace
+ */
+interface UpdateWorkspacePayload {
+  /**
+   * If of a workspace to update
+   */
+  id: string;
+
+  /**
+   * New name
+   */
+  name: string;
+
+  /**
+   * New description
+   */
+  description: string;
+
+  /**
+   * Image file selected
+   */
+  image?: File;
+}
+
+export default Vue.extend({
+  name: 'WorkspaceSettingsGeneral',
   components: {
     FormImageUploader,
     FormTextFieldset,
   },
+  props: {
+    /**
+     * Workspace which settings we are viewing
+     * Passed from {@link ./Layout.vue}
+     */
+    workspace: {
+      type: Object as () => Workspace,
+      required: true,
+    },
+  },
   data() {
-    const workspaceId = this.$route.params.workspaceId;
-
-    this.workspace = this.$store.getters.getWorkspaceById(workspaceId);
-
     return {
-      name: this.workspace.name,
-      description: this.workspace.description || '',
+      /**
+       * Form data to send with save
+       */
+      formName: this.workspace.name,
+      formDescription: this.workspace.description,
+      formImage: this.workspace.image,
+
+      /**
+       * Button will be showed only when some fields is changed
+       */
       showSubmitButton: false,
-      image: this.workspace.image,
     };
   },
-  created() {
-    this.fetchWorkspace();
-  },
   methods: {
-    async fetchWorkspace() {
-      const workspaceId = this.$route.params.workspaceId;
-
-      await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-    },
     /**
      * Form submit event handler
      */
-    async save() {
+    async save(): Promise<void> {
       try {
-        if (
-          this.workspace.name !== this.name ||
-          this.workspace.description !== this.description ||
-          this.workspace.image !== this.image
-        ) {
-          const payload = {
-            id: this.workspace.id,
-            name: this.name,
-            description: this.description,
-          };
+        const payload = {
+          id: this.workspace.id,
+          name: this.formName,
+          description: this.formDescription,
+        } as UpdateWorkspacePayload;
 
-          if (typeof this.image !== 'string') {
-            payload.image = this.image;
-          }
-
-          await this.$store.dispatch(
-            UPDATE_WORKSPACE,
-            payload
-          );
+        if (typeof this.formImage !== 'string') {
+          payload.image = this.formImage;
         }
+
+        await this.$store.dispatch(UPDATE_WORKSPACE, payload);
 
         this.showSubmitButton = false;
 
-        this.fetchWorkspace();
-
         notifier.show({
-          message: this.$t('workspaces.settings.workspace.updatedMessage'),
+          message: this.$t('workspaces.settings.workspace.updatedMessage') as string,
           style: 'success',
           time: 5000,
         });
+
+        this.$emit('workspaceUpdated');
       } catch (e) {
         notifier.show({
           message: e.message,
@@ -118,10 +141,10 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
 .workspace-settings {

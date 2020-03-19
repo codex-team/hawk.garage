@@ -61,17 +61,26 @@ export default {
     font-size: 14px;
     line-height: 16px;
 
+    &__wrapper {
+      max-width: 200px;
+    }
+
     &__image {
       width: 36px;
       height: 36px;
       margin-right: 15px;
+      flex-shrink: 0;
     }
 
     &__name {
       font-weight: 600;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     &__settings-link {
+      display: block;
       margin-top: 2px;
       color: var(--color-text-second);
       cursor: pointer;

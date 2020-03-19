@@ -19,13 +19,19 @@
             </div>
             times
           </div>
-          <div class="event-overview__days-repeating" style="opacity: 0.2;">
+          <div
+            class="event-overview__days-repeating"
+            style="opacity: 0.2;"
+          >
             <div class="event-overview__statistics-count">
               -
             </div>
             days repeating
           </div>
-          <div class="event-overview__users-affected" style="opacity: 0.2;">
+          <div
+            class="event-overview__users-affected"
+            style="opacity: 0.2;"
+          >
             <div class="event-overview__statistics-count">
               -
             </div>
@@ -180,25 +186,6 @@ export default Vue.extend({
       return filteredAddons;
     },
   },
-  methods: {
-    /**
-     * Extract integration group from the addons
-     * For example, 'vue' or 'react'
-     * @param integrationName - name of an integration
-     * @return object with integration addons
-     */
-    getIntegrationAddons(integrationName): object | null {
-      if (!this.event.payload.addons) {
-        return null;
-      }
-
-      if (!this.event.payload.addons[integrationName]) {
-        return null;
-      }
-
-      return this.event.payload.addons[integrationName];
-    },
-  },
   /**
    * Vue created hook. Fetches error's data
    * @return {Promise<void>}
@@ -225,6 +212,25 @@ export default Vue.extend({
         eventId,
       });
     }
+  },
+  methods: {
+    /**
+     * Extract integration group from the addons
+     * For example, 'vue' or 'react'
+     * @param integrationName - name of an integration
+     * @return object with integration addons
+     */
+    getIntegrationAddons(integrationName): object | null {
+      if (!this.event.payload.addons) {
+        return null;
+      }
+
+      if (!this.event.payload.addons[integrationName]) {
+        return null;
+      }
+
+      return this.event.payload.addons[integrationName];
+    },
   },
 });
 </script>

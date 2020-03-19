@@ -59,14 +59,26 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import notifier from 'codex-notifier';
-import { INVITE_TO_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
-import TeamMember from './TeamMember';
+import { INVITE_TO_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import TeamMember from './TeamMember.vue';
+import { Workspace, Member } from '@/types/workspaces';
 
-export default {
-  name: 'WorkspaceTeam',
+export default Vue.extend({
+  name: 'WorkspaceSettingsTeam',
   components: { TeamMember },
+  props: {
+    /**
+     * Workspace which settings we are viewing
+     * Passed from {@link ./Layout.vue}
+     */
+    workspace: {
+      type: Object as () => Workspace,
+      required: true,
+    },
+  },
   data() {
     return {
       userEmail: '',
@@ -75,23 +87,28 @@ export default {
     };
   },
   computed: {
-    workspace() {
-      const workspaceId = this.$route.params.workspaceId;
+    /**
+     * Current workspace team: users + pending users
+     */
+    team(): Member[] {
+      if (!this.workspace) {
+        return [];
+      }
 
-      return this.$store.getters.getWorkspaceById(workspaceId);
+      return [...this.workspace.users, ...this.workspace.pendingUsers];
     },
-    currentMembership() {
-      const workspaceId = this.$route.params.workspaceId;
 
-      const { users } = this.$store.getters.getWorkspaceById(workspaceId);
-
-      return users ? users.find(u => u.id === this.user.id) : {};
+    /**
+     * Current user in current workspace
+     */
+    currentMembership(): Member | undefined {
+      return this.team.find(u => u.userId === this.user.id);
     },
   },
   methods: {
     onLinkCopied() {
       notifier.show({
-        message: this.$t('common.copiedNotification'),
+        message: this.$t('common.copiedNotification') as string,
         style: 'success',
         time: 2000,
       });
@@ -111,7 +128,7 @@ export default {
         );
 
         notifier.show({
-          message: this.$t('workspaces.settings.team.sentNotification'),
+          message: this.$t('workspaces.settings.team.sentNotification') as string,
           style: 'success',
           time: 10000,
         });
@@ -126,10 +143,11 @@ export default {
       }
     },
   },
-};
+});
+
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
   .workspace-team {

@@ -47,7 +47,7 @@ Vue.filter('abbreviation', function (value: string): string {
 
   const words = value.split(' ');
 
-  return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
+  return (words.length === 1 || !words[1].length ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
 });
 
 /**
@@ -83,17 +83,17 @@ Vue.filter('prettyDate', function (value: number) {
   const currentDate = new Date();
 
   if (
-    argumentDay === currentDate.getDate()
-    && argumentMonth === currentDate.getMonth()
-    && argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate() &&
+    argumentMonth === currentDate.getMonth() &&
+    argumentYear === currentDate.getFullYear()
   ) {
     return 'Today';
   }
 
   if (
-    argumentDay === currentDate.getDate() - 1
-    && argumentMonth === currentDate.getMonth()
-    && argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate() - 1 &&
+    argumentMonth === currentDate.getMonth() &&
+    argumentYear === currentDate.getFullYear()
   ) {
     return 'Yesterday';
   }
