@@ -30,7 +30,7 @@
             </span>
           </div>
           <div class="details-backtrace__right">
-            {{ frame.file }}
+            <Filepath :location="frame.file" />
             <template v-if="frame.line">
               line {{ getLocation(frame) }}
             </template>
@@ -61,6 +61,7 @@
 <script>
 import DetailsBase from './DetailsBase';
 import CodeFragment from '../utils/CodeFragment';
+import Filepath from '../utils/Filepath';
 import Icon from '../utils/Icon';
 
 export default {
@@ -68,6 +69,7 @@ export default {
   components: {
     DetailsBase,
     CodeFragment,
+    Filepath,
     Icon,
   },
   props: {

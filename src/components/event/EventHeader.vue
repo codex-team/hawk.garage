@@ -1,30 +1,31 @@
 <template>
-  <div class="event-overview__header">
-    <div class="event-overview__container">
-      <div class="event-overview__error">
+  <div class="event-header">
+    <div class="event-layout__container">
+      <div class="event-header__error">
         <Icon
-          class="event-overview__flash__icon"
+          class="event-header__flash-icon"
           symbol="flash"
         />
-        <span class="event-overview__error-text">
+        <span class="event-header__error-text">
           Uncaught TypeError
         </span>
       </div>
       <h1
-        class="event-overview__title"
+        class="event-header__title"
       >
-        {{ (!loading) ? event.payload.title : 'Loading' }}
+        {{ (!loading) ? event.payload.title : $t('utils.loading') }}
       </h1>
-      <div class="event-overview__location">
-        <span class="event-overview__path">{{ path | prettyPath }}</span>
-        <span class="event-overview__filename"> {{ file }} </span>
-      </div>
-      <div class="event-overview__buttons">
+      <Filepath
+        class="event-header__location"
+        :location="location"
+        :is-highlight="true"
+      />
+      <div class="event-header__buttons">
         <UIButton
           class="event-overview__button"
           :class="{'event-overview__button--selected': !loading && event.marks.includes('RESOLVED')}"
           content="Resolve"
-          icon="check-mark"
+          icon="checkmark"
           @click="markEvent('RESOLVED')"
         />
         <UIButton
@@ -42,39 +43,17 @@
           @click="markEvent('IGNORED')"
         />
         <UIButton
-          class="event-overview__button"
-          content="Create issue"
-          icon="shape"
+          class="event-header__button"
+          content="issue"
+          icon="github"
         />
       </div>
-      <div class="event-overview__information">
-        <EventNavigation
-          :event="event"
-          @toggleItem="toggleItem($event)"
+      <div class="event-header__information">
+        <EventHeaderNavigation
+          :items="navigationItems"
+          @tabChanged="tabChanged($event)"
         />
-        <div class="event-overview__users">
-          <Icon
-            class="event-overview__eye-icon"
-            symbol="eye"
-          />
-          <div class="event-overview__users-avatar" />
-          <div class="event-overview__users-avatar" />
-          <div class="event-overview__users-avatar" />
-          <span class="event-overview__users-count">+17</span>
-          <span class="event-overview__assignee-text">Assignee</span>
-          <div class="event-overview__assignee-icons-bg">
-            <div class="event-overview__assignee-icon-bg">
-              <Icon
-                class="event-overview__assignee-icon"
-                symbol="assignee"
-              />
-            </div>
-            <Icon
-              class="event-overview__assignee-arrow-down"
-              symbol="arrow-down"
-            />
-          </div>
-        </div>
+        <ViewedBy />
       </div>
     </div>
   </div>
@@ -82,22 +61,30 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import EventNavigation from './EventNavigation.vue';
+import EventHeaderNavigation from './EventHeaderNavigation.vue';
+import ViewedBy from '../utils/ViewedBy.vue';
 import UIButton from '../utils/UIButton.vue';
+import Filepath from '../utils/Filepath.vue';
 import Icon from '../utils/Icon.vue';
-import { HawkEventBacktraceFrame } from '@/types/events';
+import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { MARK_EVENT } from '@/store/modules/events/actionTypes';
 
 export default Vue.extend({
   name: 'EventHeader',
   components: {
-    EventNavigation,
+    EventHeaderNavigation,
+    ViewedBy,
     UIButton,
+    Filepath,
     Icon,
   },
   props: {
+    /**
+     * Original (first) event data
+     * @type {HawkEvent}
+     */
     event: {
-      type: Object,
+      type: Object as () => HawkEvent,
       default: null,
       validator: prop => typeof prop === 'object' || prop === null,
     },
@@ -106,6 +93,10 @@ export default Vue.extend({
     const loading = !this.event;
 
     return {
+      /**
+       * Status of repetition-diff fetching
+       * @type {boolean}
+       */
       loading,
     };
   },
@@ -116,16 +107,14 @@ export default Vue.extend({
      * @return {string}
      */
     location(): string {
-      const unknownLocation = 'Unknown location';
-
       if (!this.event) {
-        return unknownLocation;
+        return '';
       }
 
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
 
       if (!trace) {
-        return unknownLocation;
+        return '';
       }
       const firstWithFile = trace.find(frame => !!frame.file);
 
@@ -133,28 +122,28 @@ export default Vue.extend({
         return firstWithFile.file;
       }
 
-      return unknownLocation;
+      return '';
     },
 
     /**
-     * Event path got from the first backtrace frame
+     * Navigation items
      *
-     * @return {string}
+     * @return {Object[]}
      */
-    path(): string {
-      return this.location !== 'Unknown location' ? this.location.split('/')
-        .slice(0, -1)
-        .join('/') + '/' : this.location;
-    },
-
-    /**
-     * Event file got from the first backtrace frame
-     *
-     * @return {string}
-     */
-    file(): string {
-      return this.location !== 'Unknown location' ? this.location.split('/')
-        .slice(-1)[0] : '';
+    navigationItems(): Object[] {
+      return [ {
+        title: 'overview',
+        link: 'event-overview',
+        badge: null,
+      }, {
+        title: 'repetitions',
+        link: 'event-overview-repetitions',
+        badge: !this.loading ? this.event.totalCount : ' ',
+      }, {
+        title: 'daily',
+        link: 'event-overview-daily',
+        badge: 0,
+      } ];
     },
   },
   watch: {
@@ -170,8 +159,8 @@ export default Vue.extend({
      * Emit for active item
      * @param {string} item - active item
      */
-    toggleItem(item) {
-      this.$emit('toggleItem', item);
+    tabChanged(item) {
+      this.$emit('tabChanged', item);
     },
 
     /**
@@ -193,34 +182,31 @@ export default Vue.extend({
 </script>
 
 <style>
-  .event-overview {
-
-    &__header {
-      padding: 35px 20px 0 20px;
-      background-color: #121419;
-      color: var(--color-text-main);
-    }
+  .event-header {
+    padding: 35px 20px 0 20px;
+    color: var(--color-text-main);
+    background-color: #121419;
 
     &__error {
       display: inline-flex;
-      background-color: var(--color-bg-second);
       padding: 4px 10px;
+      background-color: var(--color-bg-second);
       border-radius: 4px;
+
+      &-text {
+        align-items: center;
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.05px;
+        opacity: 0.6;
+      }
     }
 
-    &__error-text {
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.05px;
-      align-items: center;
-      opacity: 0.6;
-    }
-
-    &__flash__icon {
-      margin-right: 10px;
-      opacity: 0.6;
+    &__flash-icon {
       width: 7px;
       height: 12px;
+      margin-right: 10px;
+      opacity: 0.6;
     }
 
     &__title {
@@ -229,6 +215,7 @@ export default Vue.extend({
     }
 
     &__location {
+      display: block;
       margin-bottom: 30px;
       font-size: 14px;
       letter-spacing: 0.1px;
@@ -236,10 +223,6 @@ export default Vue.extend({
 
     &__path {
       opacity: 0.6;
-    }
-
-    &__filename {
-      color: var(--color-indicator-critical);
     }
 
     &__buttons {
@@ -266,73 +249,6 @@ export default Vue.extend({
       display: flex;
       justify-content: space-between;
       height: 50px;
-    }
-
-    &__users {
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-
-      &-avatar {
-        width: 14px;
-        height: 14px;
-        border-radius: 5px;
-        background-color: grey;
-        margin-right: 6px;
-      }
-
-      &-count {
-        margin-right: 30px;
-        font-size: 12px;
-        opacity: 0.6;
-      }
-    }
-
-    &__eye-icon {
-      width: 12px;
-      height: 8px;
-      margin-right: 6px;
-      opacity: 0.6;
-    }
-
-    &__assignee {
-
-      &-icons-bg {
-        display: flex;
-        align-items: center;
-        padding: 4px 9px 4px 4px;
-        border-radius: 7px;
-        background-color: var(--color-bg-main);
-      }
-
-      &-icon-bg {
-        width: 16px;
-        height: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 5px;
-        margin-right: 5px;
-        background-color: var(--color-bg-second);
-      }
-
-      &-text {
-        font-size: 14px;
-        margin-right: 10px;
-        opacity: 0.6;
-      }
-
-      &-icon {
-        width: 14px;
-        height: 14px;
-        opacity: 0.6;
-      }
-
-      &-arrow-down {
-        width: 12px;
-        height: 12px;
-        opacity: 0.6;
-      }
     }
   }
 </style>

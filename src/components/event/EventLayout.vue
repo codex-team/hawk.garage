@@ -1,17 +1,17 @@
 <template>
   <PopupDialog
-    class="event-overview"
+    class="event-layout"
     big
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
     <EventHeader
       :event="event"
-      @toggleItem="toggleItem($event)"
+      @tabChanged="tabChanged($event)"
     />
     <div
-      class="event-overview__info"
+      class="event-layout__info"
     >
-      <div class="event-overview__container">
+      <div class="event-layout__container">
         <EventOverview
           v-if="activeItem === 'overview'"
           :event="event"
@@ -89,7 +89,6 @@ export default Vue.extend({
    * @return {Promise<void>}
    */
   async created() {
-    const projectId: string = this.$route.params.projectId;
     const eventId = this.$route.params.eventId;
     const repetitionId = this.$route.params.repetitionId;
 
@@ -120,7 +119,7 @@ export default Vue.extend({
      * Emit for active item
      * @param {string} item - active item
      */
-    toggleItem(item: string) {
+    tabChanged(item: string) {
       this.activeItem! = item;
     },
   },
@@ -128,7 +127,7 @@ export default Vue.extend({
 </script>
 
 <style>
-  .event-overview {
+  .event-layout {
     /** Override Popup Dialog animation */
 
     &.popup-dialog-animation {

@@ -24,7 +24,7 @@
       v-else
       class="event-overview__loading"
     >
-      <span>Loading...</span>
+      <span>{{ $t('utils.loading') }}</span>
     </div>
   </div>
 </template>
@@ -43,6 +43,10 @@ export default Vue.extend({
     DetailsAddons,
   },
   props: {
+    /**
+     * Original (first) event data
+     * @type {HawkEvent}
+     */
     event: {
       type: Object,
       default: null,
@@ -53,6 +57,10 @@ export default Vue.extend({
     const loading = !this.event;
 
     return {
+      /**
+       * Status of repetition-diff fetching
+       * @type {boolean}
+       */
       loading,
     };
   },
@@ -64,7 +72,7 @@ export default Vue.extend({
      * @return {string}
      */
     lang(): string {
-      return this.event.catcherType.split('/').pop()!;
+      return this.event.catcherType ? this.event.catcherType.split('/').pop() : '';
     },
   },
   watch: {

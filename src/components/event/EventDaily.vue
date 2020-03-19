@@ -1,4 +1,6 @@
-<template />
+<template>
+  <span>Daily Events</span>
+</template>
 
 <script>
 export default {
@@ -6,6 +8,6 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 
 </style>

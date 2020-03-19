@@ -142,6 +142,32 @@
       "submitButton": "Continue"
     }
   },
+  "events": {
+    "repetitions": {
+      "total": "Total",
+      "since": "Since",
+      "title": "Repetitions",
+      "times": "{n} time | {n} times",
+      "days": "{n} day | {n} days"
+    },
+    "navigation": {
+      "overview": "Overview",
+      "repetitions": "Repetitions",
+      "daily": "Days repeating"
+    }
+  },
+  "utils": {
+    "buttons": {
+      "resolve": "Resolve",
+      "star": "Star",
+      "ignore": "Ignore",
+      "issue": "Create issue"
+    },
+    "loading": "Loading...",
+    "viewedBy": {
+      "assignee": "Assignee"
+    }
+  },
   "common": {
     "copiedNotification": "Copied!",
     "months": [
