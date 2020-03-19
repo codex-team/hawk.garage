@@ -96,7 +96,7 @@ export default Vue.extend({
        * Form data to send with save
        */
       formName: this.workspace.name,
-      formDescription: this.workspace.name,
+      formDescription: this.workspace.description,
       formImage: this.workspace.image,
 
       /**

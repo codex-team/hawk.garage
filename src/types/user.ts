@@ -21,9 +21,4 @@ export interface User {
    * User profile photo
    */
   image?: string;
-
-  /**
-   * User password
-   */
-  password: string;
 }
