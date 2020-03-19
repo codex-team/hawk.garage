@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import BillingCard from '../billing/Workspace';
-import BillingHistory from '../billing/History';
-import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import BillingCard from '../../billing/Workspace';
+import BillingHistory from '../../billing/History';
+import { FETCH_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'WorkspaceSettingsBilling',
@@ -49,4 +49,4 @@ export default {
 };
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>

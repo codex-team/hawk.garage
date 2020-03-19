@@ -147,7 +147,7 @@ export default Vue.extend({
 
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
   .workspace-team {

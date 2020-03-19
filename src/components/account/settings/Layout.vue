@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import SettingsWindow from '../settings/Window.vue';
+import SettingsWindow from '../../settings/Window.vue';
 import { RESET_STORE } from '@/store/methodsTypes';
 import { User } from '@/types/user';
 
@@ -98,7 +98,7 @@ export default Vue.extend({
     }
 
     &__logo {
-      background-image: url("../../assets/hawk-logo.png");
+      background-image: url("../../../assets/hawk-logo.png");
       background-position: center center;
       background-size: cover;
     }

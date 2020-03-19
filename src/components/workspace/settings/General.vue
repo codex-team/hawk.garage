@@ -43,8 +43,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import FormTextFieldset from '../forms/TextFieldset.vue';
-import FormImageUploader from '../forms/ImageUploader.vue';
+import FormTextFieldset from '../../forms/TextFieldset.vue';
+import FormImageUploader from '../../forms/ImageUploader.vue';
 import notifier from 'codex-notifier';
 import { UPDATE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import { Workspace } from '@/types/workspaces';
@@ -144,7 +144,7 @@ export default Vue.extend({
 });
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
 .workspace-settings {

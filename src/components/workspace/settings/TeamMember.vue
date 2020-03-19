@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import EntityImage from '../utils/EntityImage';
-import Icon from '../utils/Icon';
-import TooltipMenu from '../utils/TooltipMenu';
-import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import EntityImage from '../../utils/EntityImage';
+import Icon from '../../utils/Icon';
+import TooltipMenu from '../../utils/TooltipMenu';
+import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'TeamMember',

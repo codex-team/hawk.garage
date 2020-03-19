@@ -51,10 +51,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import EntityImage from '../utils/EntityImage.vue';
-import SettingsWindow from '../settings/Window.vue';
-import { FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
-import { Workspace } from '../../types/workspaces';
+import EntityImage from '../../utils/EntityImage.vue';
+import SettingsWindow from '../../settings/Window.vue';
+import { FETCH_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
+import { Workspace } from '../../../types/workspaces';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsLayout',

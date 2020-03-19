@@ -49,9 +49,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import FormTextFieldset from '../forms/TextFieldset.vue';
-import FormImageUploader from '../forms/ImageUploader.vue';
-import ChangePasswordFieldset from '../forms/ChangePasswordFieldset.vue';
+import FormTextFieldset from '../../forms/TextFieldset.vue';
+import FormImageUploader from '../../forms/ImageUploader.vue';
+import ChangePasswordFieldset from '../../forms/ChangePasswordFieldset.vue';
 import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '@/store/modules/user/actionTypes';
 import notifier from 'codex-notifier';
 import { User } from '@/types/user';
@@ -177,7 +177,7 @@ export default Vue.extend({
 });
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
 .account-settings {

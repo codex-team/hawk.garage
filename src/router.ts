@@ -21,18 +21,18 @@ const router = new Router({
         {
           path: 'account',
           name: 'account',
-          component: () => import(/* webpackChunkName: 'settings' */ './components/account/Layout.vue'),
+          component: () => import(/* webpackChunkName: 'settings' */ './components/account/settings/Layout.vue'),
           redirect: 'account/general',
           children: [
             {
               path: 'general',
               name: 'account-general',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/General.vue'),
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/General.vue'),
             },
             {
               path: 'appearance',
               name: 'account-appearance',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/Appearance.vue'),
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Appearance.vue'),
             },
             // {
             //   path: 'billing',
@@ -48,19 +48,19 @@ const router = new Router({
         {
           path: 'workspace/:workspaceId',
           name: 'workspace-settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/Layout.vue'),
+          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
           redirect: 'workspace/:workspaceId/settings',
           children: [
             {
               path: 'settings',
               name: 'workspace-settings-general',
-              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/General.vue'),
+              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/General.vue'),
               props: true,
             },
             {
               path: 'team',
               name: 'workspace-settings-team',
-              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/Team.vue'),
+              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/settings/Team.vue'),
             },
             // {
             //   path: 'billing',
