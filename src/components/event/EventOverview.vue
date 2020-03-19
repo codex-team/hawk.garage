@@ -76,9 +76,9 @@ export default Vue.extend({
      * Get calling env language based on event.catcherType
      * errors/javascript -> javascript
      *
-     * @return {string}
+     * @return {string | undefined}
      */
-    lang(): string {
+    lang(): string | undefined {
       return this.event.catcherType ? this.event.catcherType.split('/').pop() : '';
     },
 
