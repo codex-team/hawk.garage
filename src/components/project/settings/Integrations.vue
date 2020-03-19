@@ -15,7 +15,7 @@
 
 <script>
 
-import TokenBlock from './TokenBlock';
+import TokenBlock from '../TokenBlock';
 
 export default {
   name: 'ProjectIntegrationsSettings',
@@ -36,7 +36,7 @@ export default {
 };
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
   .projects-integrations-settings-page {

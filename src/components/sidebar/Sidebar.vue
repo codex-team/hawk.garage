@@ -6,7 +6,7 @@
       :name="user.email || 'H'"
       :image="user.image"
       data-ripple
-      @click.native="$router.push('/settings')"
+      @click.native="$router.push('/account/general')"
     />
     <hr class="sidebar__delimiter">
     <div class="sidebar__button-create-wrapper">

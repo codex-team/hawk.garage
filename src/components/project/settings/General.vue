@@ -4,20 +4,17 @@
       {{ $t('projects.settings.project.title') }}
     </div>
     <form
-      v-if="project"
       class="project-settings__form"
       @submit.prevent="save"
     >
       <div class="project-settings__fieldset">
         <FormTextFieldset
-          v-model="project.name"
           class="project-settings__section project-settings__name-section"
           :label="$t('settings.account.name')"
           required
           @input="showSubmitButton = true"
         />
         <FormTextFieldset
-          v-model="project.description"
           :label="$t('projects.settings.project.description')"
           :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
           class="project-settings__section"
@@ -27,7 +24,6 @@
       <section>
         <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
         <FormImageUploader
-          v-model="project.image"
           @input="showSubmitButton = true"
         />
       </section>
@@ -46,42 +42,33 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import FormTextFieldset from '../forms/TextFieldset.vue';
-import FormImageUploader from '../forms/ImageUploader.vue';
+import Vue from 'vue';
+import FormTextFieldset from '../../forms/TextFieldset.vue';
+import FormImageUploader from '../../forms/ImageUploader.vue';
 
-@Component({
+export default Vue.extend({
+  name: 'ProjectSettingsGeneral',
   components: {
     FormTextFieldset,
     FormImageUploader,
   },
-})
-/**
- * Class implements project settings content component
- */
-export default class ProjectSettings extends Vue {
-  /**
-   * Current viewed project
-   * @return {Project}
-   */
-  get project() {
-    const projectId = this.$route.params.projectId;
-
-    return this.$store.getters.getProjectById(projectId);
-  }
-
-  /**
-   * Show submit button only when you update some of fields
-   */
-  private showSubmitButton: boolean = false;
-}
+  props: {
+  },
+  data() {
+    return {
+      showSubmitButton: false,
+    };
+  },
+  computed: {
+  },
+  methods: {
+  },
+});
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
-  @import "../../styles/custom-properties.css";
-
   .project-settings {
     width: 100%;
 

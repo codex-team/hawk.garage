@@ -33,7 +33,7 @@
 import Vue from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import Icon from '../utils/Icon.vue';
-import { isObject } from "@/utils";
+import { isObject } from '@/utils';
 import Json from '../utils/Json.vue';
 
 /**
@@ -41,6 +41,11 @@ import Json from '../utils/Json.vue';
  */
 export default Vue.extend({
   name: 'DetailsAddons',
+  components: {
+    DetailsBase,
+    Icon,
+    Json,
+  },
   props: {
     /**
      * Details section title
@@ -89,11 +94,6 @@ export default Vue.extend({
     isObject(value: any): boolean {
       return isObject(value);
     },
-  },
-  components: {
-    DetailsBase,
-    Icon,
-    Json,
   },
 });
 </script>

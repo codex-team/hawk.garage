@@ -44,10 +44,10 @@
 </template>
 
 <script>
-import EntityImage from '../utils/EntityImage';
-import Icon from '../utils/Icon';
-import TooltipMenu from '../utils/TooltipMenu';
-import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import EntityImage from '../../utils/EntityImage';
+import Icon from '../../utils/Icon';
+import TooltipMenu from '../../utils/TooltipMenu';
+import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'TeamMember',
@@ -150,6 +150,7 @@ export default {
       font-size: 11px;
       line-height: 17px;
       border-radius: 5px;
+      flex-shrink: 0;
     }
 
     &__name {
@@ -166,6 +167,7 @@ export default {
       margin-left: auto;
       color: var(--color-text-second);
       user-select: none;
+      white-space: nowrap;
 
       &--admin {
         color: #2ccf6c;

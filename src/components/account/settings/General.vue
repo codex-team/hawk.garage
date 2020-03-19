@@ -47,20 +47,55 @@
   </div>
 </template>
 
-<script>
-import FormTextFieldset from '../forms/TextFieldset';
-import FormImageUploader from '../forms/ImageUploader';
-import ChangePasswordFieldset from '../forms/ChangePasswordFieldset';
-import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '../../store/modules/user/actionTypes';
+<script lang="ts">
+import Vue from 'vue';
+import FormTextFieldset from '../../forms/TextFieldset.vue';
+import FormImageUploader from '../../forms/ImageUploader.vue';
+import ChangePasswordFieldset from '../../forms/ChangePasswordFieldset.vue';
+import { CHANGE_PASSWORD, FETCH_CURRENT_USER, UPDATE_PROFILE } from '@/store/modules/user/actionTypes';
 import notifier from 'codex-notifier';
-import { mapState } from 'vuex';
+import { User } from '@/types/user';
 
-export default {
+/**
+ * This data will be send to update profile info
+ */
+interface UpdateAccountPayload {
+  /**
+   * If of a workspace to update
+   */
+  id: string;
+
+  /**
+   * New name
+   */
+  name: string;
+
+  /**
+   * New email
+   */
+  email: string;
+
+  /**
+   * Image file selected
+   */
+  image?: File;
+}
+
+export default Vue.extend({
   name: 'AccountSettings',
   components: {
     ChangePasswordFieldset,
     FormImageUploader,
     FormTextFieldset,
+  },
+  props: {
+    /**
+     * Current user
+     */
+    user: {
+      type: Object as () => User,
+      required: true,
+    },
   },
   data() {
     const user = this.$store.state.user.data;
@@ -80,9 +115,6 @@ export default {
       showSubmitButton: false,
     };
   },
-  computed: mapState({
-    user: state => state.user.data,
-  }),
   methods: {
     /**
      * Form submit event handler
@@ -93,7 +125,7 @@ export default {
           const payload = {
             name: this.name,
             email: this.email,
-          };
+          } as UpdateAccountPayload;
 
           if (typeof this.image !== 'string') {
             payload.image = this.image;
@@ -113,7 +145,7 @@ export default {
         this.hideForm();
 
         notifier.show({
-          message: this.$t('settings.account.profileUpdated'),
+          message: this.$t('settings.account.profileUpdated') as string,
           style: 'success',
           time: 5000,
         });
@@ -142,10 +174,10 @@ export default {
       this.showSubmitButton = false;
     },
   },
-};
+});
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
 .account-settings {
