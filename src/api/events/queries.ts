@@ -149,7 +149,7 @@ export const MUTATION_VISIT_EVENT = `
   }
 `;
 
-// language
+// language=GraphQL
 /**
  * GraphQL Mutation to set mark to event for current user
  */

@@ -1,6 +1,6 @@
 <template>
   <Icon
-    v-if="mark !== 'none'"
+    v-if="mark !== DEFAULT_MARK_VALUE"
     class="event-mark event-mark--icon"
     :class="`event-mark--${mark}`"
     :symbol="icons[mark]"
@@ -14,17 +14,20 @@
 <script>
 import Icon from '../utils/Icon';
 
+const DEFAULT_MARK_VALUE = 'none';
+
 export default {
   name: 'EventMark',
   components: { Icon },
   props: {
     mark: {
       type: String,
-      default: 'NONE',
+      default: DEFAULT_MARK_VALUE,
     },
   },
   data() {
     return {
+      DEFAULT_MARK_VALUE,
       icons: {
         resolved: 'check-mark',
         starred: 'star',

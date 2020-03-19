@@ -64,9 +64,9 @@ enum MutationTypes {
   MARK_AS_VISITED = 'MARK_AS_VISITED',
 
   /**
-   * Set label for event
+   * Set mark for event
    */
-  SET_LABEL = 'SET_LABEL',
+  SET_MARK = 'SET_MARK',
 }
 
 /**
@@ -376,14 +376,14 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {function} commit - VueX commit function
      * @param {object} rootState - VueX root state
      * @param {string} projectId - project event is related to
-     * @param {string} eventId - event to set label
-     * @param {EventMark} label - label to set
+     * @param {string} eventId - event to set mark
+     * @param {EventMark} mark - mark to set
      */
     async [MARK_EVENT]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
       const result = await eventsApi.markEvent(projectId, eventId, mark);
 
       if (result) {
-        commit(MutationTypes.SET_LABEL, {
+        commit(MutationTypes.SET_MARK, {
           projectId,
           eventId,
           mark,
@@ -521,14 +521,14 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Set label to event for passed user
+     * Set mark to event for passed event
      *
      * @param {EventsModuleState} state - events module state
      * @param {string} projectId - project event is related to
-     * @param {string} eventId - event label should be set to
-     * @param {EventMark} mark - label to set
+     * @param {string} eventId - event mark should be set to
+     * @param {EventMark} mark - mark to set
      */
-    [MutationTypes.SET_LABEL](state, { projectId, eventId, mark }) {
+    [MutationTypes.SET_MARK](state, { projectId, eventId, mark }) {
       const key = getEventsListKey(projectId, eventId);
 
       const { marks } = state.list[key];

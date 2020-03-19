@@ -33,7 +33,7 @@
 <script>
 import Badge from '../utils/Badge';
 import Icon from '../utils/Icon';
-import EventMark from './EventLabel';
+import EventMark from './EventMark';
 
 export default {
   name: 'EventItem',

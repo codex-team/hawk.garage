@@ -1,5 +1,5 @@
 /**
- * Event labels enum
+ * Event marks enum
  */
 export enum EventMark {
   STARRED = 'STARRED',
