@@ -29,6 +29,6 @@ export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';
 export const VISIT_EVENT = 'VISIT_EVENT';
 
 /**
- * Action for settings label to event
+ * Action to set or unset mark to event
  */
-export const MARK_EVENT = 'MARK_EVENT';
+export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';

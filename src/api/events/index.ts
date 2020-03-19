@@ -1,5 +1,5 @@
 import {
-  MUTATION_MARK_EVENT,
+  MUTATION_TOGGLE_EVENT_MARK,
   MUTATION_VISIT_EVENT,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
@@ -83,14 +83,14 @@ export async function visitEvent(projectId: string, eventId: string): Promise<bo
 }
 
 /**
- * Set mark to event
+ * Set or unset mark to event
  *
  * @param {string} projectId - project event is related to
  * @param {string} eventId — event Id
  * @param {string} mark — mark to set
  */
-export async function markEvent(projectId: string, eventId: string, mark: EventMark): boolean {
-  return (await api.call(MUTATION_MARK_EVENT, {
+export async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): boolean {
+  return (await api.call(MUTATION_TOGGLE_EVENT_MARK, {
     projectId,
     eventId,
     mark,

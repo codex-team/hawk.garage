@@ -4,7 +4,7 @@ import {
   FETCH_RECENT_EVENTS,
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
-  MARK_EVENT
+  TOGGLE_EVENT_MARK
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -379,8 +379,8 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} eventId - event to set mark
      * @param {EventMark} mark - mark to set
      */
-    async [MARK_EVENT]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
-      const result = await eventsApi.markEvent(projectId, eventId, mark);
+    async [TOGGLE_EVENT_MARK]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
+      const result = await eventsApi.toggleEventMark(projectId, eventId, mark);
 
       if (result) {
         commit(MutationTypes.SET_MARK, {

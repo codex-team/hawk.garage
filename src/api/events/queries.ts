@@ -153,8 +153,8 @@ export const MUTATION_VISIT_EVENT = `
 /**
  * GraphQL Mutation to set mark to event for current user
  */
-export const MUTATION_MARK_EVENT = `
-  mutation markEvent($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
-    markEvent(project: $projectId, id: $eventId, mark: $mark)
+export const MUTATION_TOGGLE_EVENT_MARK = `
+  mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
+    toggleEventMark(project: $projectId, id: $eventId, mark: $mark)
   }
 `;

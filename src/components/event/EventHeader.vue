@@ -67,7 +67,7 @@ import UIButton from '../utils/UIButton.vue';
 import Filepath from '../utils/Filepath.vue';
 import Icon from '../utils/Icon.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
-import { MARK_EVENT } from '@/store/modules/events/actionTypes';
+import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -171,7 +171,7 @@ export default Vue.extend({
     markEvent(mark) {
       const { projectId, eventId } = this.$route.params;
 
-      this.$store.dispatch(MARK_EVENT, {
+      this.$store.dispatch(TOGGLE_EVENT_MARK, {
         projectId,
         eventId,
         mark,
