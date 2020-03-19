@@ -60,11 +60,13 @@ export const groupBy =
          * Case when we need to group by field that stored numbers,
          * for example, date(timestamp) - we add "key:" prefix to prevent sorting of object keys
          */
+        let groupingKey = key;
+
         if (typeof value === 'number') {
-          objectsByKeyValue[key + ':' + value] = (objectsByKeyValue[value] || []).concat(obj);
-        } else {
-          objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+          groupingKey = key + ':' + value;
         }
+
+        objectsByKeyValue[groupingKey] = (objectsByKeyValue[groupingKey] || []).concat(obj);
 
         return objectsByKeyValue;
       }, {});
