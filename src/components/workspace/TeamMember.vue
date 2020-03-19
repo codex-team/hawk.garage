@@ -18,7 +18,6 @@
     />
 
     <div class="team-member__name">
-      {{ member }}
       {{ member.name || member.email }}
     </div>
     <div
