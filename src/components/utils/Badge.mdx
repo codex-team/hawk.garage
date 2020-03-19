@@ -1,0 +1,32 @@
+import { Anchor, Props, Story, Preview, Primary } from '@storybook/addon-docs/blocks';
+import Badge from './Badge.vue';
+import { withKnobs, number } from '@storybook/addon-knobs';
+import centered from '@/storybook/addon-centered';
+
+<Anchor storyId="utils-badge--types" />
+
+# Badge
+
+<Props of={Badge} />
+
+<Primary>
+  <Story id='utils-badge--types'></Story>
+</Primary>
+
+### Default
+
+<Preview>
+  <Story id='utils-badge--default' height={200}></Story>
+</Preview>
+
+### Medium
+
+<Preview>
+  <Story id='utils-badge--medium' height={200}></Story>
+</Preview>
+
+### Critical
+
+<Preview>
+  <Story id='utils-badge--critical' height={200}></Story>
+</Preview>

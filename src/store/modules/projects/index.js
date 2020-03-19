@@ -13,7 +13,7 @@ import { groupByDate } from '../../../utils';
 /**
  * Mutations enum for this module
  */
-const mutationTypes = {
+export const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project

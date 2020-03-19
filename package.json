@@ -9,6 +9,8 @@
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
     "lint:js": "eslint src/ --ext .js --ext .ts --ext .vue --fix",
     "serve:prod": "http-server ./dist --push-state -c-0",
+    "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
+    "storybook:build": "vue-cli-service storybook:build -c config/storybook",
     "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },
   "dependencies": {
@@ -23,7 +25,6 @@
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
     "highlight.js": "^9.17.1",
-    "html-webpack-inline-svg-plugin": "^1.2.4",
     "http-server": "^0.12.0",
     "lodash.mergewith": "^4.6.2",
     "normalize.css": "^8.0.1",
@@ -48,6 +49,12 @@
     "vuex-persistedstate": "^2.7.0"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "5.3.17",
+    "@storybook/addon-docs": "5.3.17",
+    "@storybook/addon-knobs": "5.3.17",
+    "@storybook/addon-links": "5.3.17",
+    "@storybook/addon-notes": "5.3.17",
+    "@storybook/vue": "5.3.17",
     "@typescript-eslint/eslint-plugin": "^2.14.0",
     "@typescript-eslint/parser": "^2.14.0",
     "@vue/eslint-config-typescript": "^5.0.1",
@@ -61,7 +68,11 @@
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^3.0.0",
     "svg-sprite-generator": "^0.0.7",
-    "typescript": "^3.7.4"
+    "svgo": "^1.1.0",
+    "svgo-loader": "^2.1.0",
+    "typescript": "^3.7.4",
+    "vue-cli-plugin-storybook": "^1.2.1",
+    "vue-cli-plugin-svg-sprite": "^1.0.0"
   },
   "license": "UNLICENSED",
   "lint-staged": {

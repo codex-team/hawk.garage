@@ -1,4 +1,3 @@
-const HtmlWebpackInlineSVGPlugin = require('html-webpack-inline-svg-plugin');
 const HawkWebpackPlugin = require('@hawk.so/webpack-plugin');
 
 /**
@@ -9,11 +8,7 @@ require('dotenv').config();
 /**
  * Extendable plugins list
  */
-const plugins = [
-  new HtmlWebpackInlineSVGPlugin({
-    runPreEmit: true,
-  }),
-];
+const plugins = [];
 
 /**
  * Current build revision id
@@ -62,6 +57,8 @@ module.exports = {
 
       return definitions;
     });
+
+    config.module.rule('svg-sprite').use('svgo-loader').loader('svgo-loader');
   },
   pwa: {
     name: 'hawk.so',
@@ -71,4 +68,19 @@ module.exports = {
     },
   },
   assetsDir: 'static',
+  pluginOptions: {
+    storybook: {
+      allowedPlugins: ['define', 'svg-sprite'],
+    },
+    svgSprite: {
+      dir: 'src/assets/sprite-icons',
+      test: /\.(svg)(\?.*)?$/,
+      loaderOptions: {
+        spriteFilename: 'img/icons.[hash:8].svg'
+      },
+      pluginOptions: {
+        plainSprite: true
+      },
+    },
+  },
 };
