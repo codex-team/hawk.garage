@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import i18n from './i18n';
+import shortNumber from 'short-number';
 
 /**
  * Filter that add space after first digit in 4-digits number
@@ -19,6 +20,20 @@ Vue.filter('spacedNumber', function (value: number): string {
   }
 
   return result.trim();
+});
+
+/**
+ * Filter that abbreviates numbers
+ * @param value - filter value
+ */
+Vue.filter('abbreviateNumber', function (value: number): string {
+  const maxNumberWithoutAbbreviation = 9999;
+
+  if (value < maxNumberWithoutAbbreviation) {
+    return value.toString();
+  }
+
+  return shortNumber(value);
 });
 
 /**
@@ -80,21 +95,30 @@ Vue.filter('prettyDateStr', function (value: string): string {
  *
  * @return {string}
  */
-Vue.filter('prettyDate', function (value: Date | string) {
-  const date = new Date(value);
-  const day = date.getDate();
-  const month = date.getMonth();
-  const currentDate = new Date().getDate();
+Vue.filter('prettyDate', function (value: number) {
+  const argumentDate = new Date(value * 1000);
+  const argumentDay = argumentDate.getDate();
+  const argumentMonth = argumentDate.getMonth();
+  const argumentYear = argumentDate.getFullYear();
+  const currentDate = new Date();
 
-  if (+day === currentDate) {
+  if (
+    argumentDay === currentDate.getDate() &&
+    argumentMonth === currentDate.getMonth() &&
+    argumentYear === currentDate.getFullYear()
+  ) {
     return 'Today';
   }
 
-  if (+day === currentDate - 1) {
+  if (
+    argumentDay === currentDate.getDate() - 1 &&
+    argumentMonth === currentDate.getMonth() &&
+    argumentYear === currentDate.getFullYear()
+  ) {
     return 'Yesterday';
   }
 
-  return `${day} ${i18n.t('common.months[' + month + ']')} ${date.getFullYear()}`;
+  return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
 });
 
 /**

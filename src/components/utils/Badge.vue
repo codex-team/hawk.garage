@@ -11,7 +11,7 @@
       class="badge__icon"
       symbol="flash"
     />
-    {{ typeof content === "string" ? content : spacedNumber }}
+    {{ content | abbreviateNumber }}
   </span>
 </template>
 
@@ -46,16 +46,6 @@ export default {
     withIcon: {
       type: Boolean,
       default: false,
-    },
-  },
-  computed: {
-    /**
-     * Applies on number content type
-     *
-     * @return {number}
-     */
-    spacedNumber() {
-      return this.$options.filters.spacedNumber(this.content);
     },
   },
 };

@@ -15,9 +15,15 @@
         :cookies="event.payload.cookies"
       />
       <DetailsAddons
-        v-if="event.payload.addons"
+        v-if="getIntegrationAddons('vue')"
         class="event-overview__section"
-        :addons="event.payload.addons"
+        :addons="getIntegrationAddons('vue')"
+        title="Vue"
+      />
+      <DetailsAddons
+        v-if="addonsFiltered"
+        class="event-overview__section"
+        :addons="addonsFiltered"
       />
     </template>
     <div
@@ -74,6 +80,28 @@ export default Vue.extend({
     lang(): string {
       return this.event.catcherType ? this.event.catcherType.split('/').pop() : '';
     },
+
+    /**
+     * Addons without integration
+     * that will be shown as separated components
+     * @return {object}
+     */
+    addonsFiltered(): object | null {
+      if (!this.event.payload.addons) {
+        return null;
+      }
+
+      const integrationToFilter = [ 'vue' ];
+      const filteredAddons = {};
+
+      Object.entries(this.event.payload.addons).forEach(([name, value]) => {
+        if (!integrationToFilter.includes(name)) {
+          filteredAddons[name] = value;
+        }
+      });
+
+      return filteredAddons;
+    },
   },
   watch: {
     /**
@@ -81,6 +109,25 @@ export default Vue.extend({
      */
     event() {
       this.loading = false;
+    },
+  },
+  methods: {
+    /**
+     * Extract integration group from the addons
+     * For example, 'vue' or 'react'
+     * @param {string} integrationName - name of an integration
+     * @return object with integration addons
+     */
+    getIntegrationAddons(integrationName: string): object | null {
+      if (!this.event.payload.addons) {
+        return null;
+      }
+
+      if (!this.event.payload.addons[integrationName]) {
+        return null;
+      }
+
+      return this.event.payload.addons[integrationName];
     },
   },
 });

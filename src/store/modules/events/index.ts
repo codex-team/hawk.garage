@@ -98,6 +98,10 @@ interface HawkEventsDailyInfoByProject {
 
 /**
  *  Map to store Event's daily info grouped by date
+ *  @example {
+ *    date:1583355600: [Object, Object],
+ *    ...
+ *  }
  */
 interface HawkEventsDailyInfoByDate {
   [key: string]: HawkEventDailyInfo[];
@@ -272,16 +276,17 @@ const module: Module<EventsModuleState, RootState> = {
         return true;
       }
 
-      const dailyInfoByDate = groupByDate(recentEvents.dailyInfo);
+      const eventsGroupedByDate = groupByDate(recentEvents.dailyInfo);
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
+
       commit(MutationTypes.ADD_TO_EVENTS_LIST, {
         projectId,
         eventsList: recentEvents.events,
       });
       commit(MutationTypes.ADD_TO_RECENT_EVENTS_LIST, {
         projectId,
-        recentEventsInfoByDate: dailyInfoByDate,
+        recentEventsInfoByDate: eventsGroupedByDate,
       });
 
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
