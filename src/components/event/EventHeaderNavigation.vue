@@ -4,10 +4,10 @@
       v-for="item in items"
       :key="item.title"
       class="event-header-navigation__item"
-      :class="setActiveClass(item.title)"
-      @click="onNavigationItemClick(item.title)"
+      :class="isActive(item.title) ? 'event-header-navigation__item--active' : ''"
+      @click="onNavigationItemClick(item)"
     >
-      {{ $t(`events.navigation.${item.title}`) }}
+      {{ $t(`event.navigation.${item.title}`) }}
       <Badge
         v-if="item.badge !== null"
         class="event-header-navigation__item-count"
@@ -40,20 +40,30 @@ export default Vue.extend({
   data() {
     return {
       /**
-       * Active menu item
+       * Active navigation item
        * @type {string}
        */
       activeItem: 'overview',
+
+      /**
+       * Active navigation item link
+       * @type {string}
+       */
+      activeItemLink: 'event-overview',
     };
   },
   created() {
     const path = this.$route.path.split('/').pop();
+    const item = this.items.find(item => item.title === path);
 
-    if (path === 'repetitions' || path === 'daily') {
-      this.activeItem = path;
+    if (item) {
+      this.activeItem = item.title;
+      this.activeItemLink = item.link;
+
+      this.$emit('tabChanged', {
+        title: this.activeItem,
+      });
     }
-
-    this.$emit('tabChanged', this.activeItem);
   },
   methods: {
     /**
@@ -68,51 +78,25 @@ export default Vue.extend({
 
     /**
      * Set navigation item as active
-     * @param {String} navigationItem - navigation item
+     * @param {Object} navigationItem - navigation item
      */
-    setActive(navigationItem: string) {
-      this.activeItem = navigationItem;
-    },
-
-    /**
-     * Set class for active navigation item
-     * @param {String} navigationItem - navigation item
-     *
-     * @return {string}
-     */
-    setActiveClass(navigationItem: string): string {
-      return (this.isActive(navigationItem)) ? 'event-header-navigation__item--active' : '';
+    setActive(navigationItem: any) {
+      this.activeItem = navigationItem.title;
+      this.activeItemLink = navigationItem.link;
     },
 
     /**
      * Event for navigation item click
-     * @param {String} navigationItem - navigation item
+     * @param {Object} navigationItem - navigation item
      */
-    onNavigationItemClick(navigationItem: string) {
-      const eventId = this.$route.params.eventId;
-      const projectId = this.$route.params.projectId;
-
-      if (!this.isActive(navigationItem)) {
+    onNavigationItemClick(navigationItem: any) {
+      if (!this.isActive(navigationItem.title)) {
         this.setActive(navigationItem);
-        this.$emit('tabChanged', navigationItem);
-        this.$router.push({
-          name: this.routerName(navigationItem),
-          params: {
-            projectId,
-            eventId,
-          },
+        this.$emit('tabChanged', {
+          title: this.activeItem,
+          link: this.activeItemLink,
         });
       }
-    },
-
-    /**
-     * Concrete router name for event navigation
-     * @param {String} navigationItem - navigation item
-     *
-     * @return {string}
-     */
-    routerName(navigationItem: string): string {
-      return this.items.find(item => item.title === navigationItem).link;
     },
   },
 });

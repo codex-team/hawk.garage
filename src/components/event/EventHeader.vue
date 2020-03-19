@@ -13,7 +13,7 @@
       <h1
         class="event-header__title"
       >
-        {{ (!loading) ? event.payload.title : $t('utils.loading') }}
+        {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
       <Filepath
         class="event-header__location"
@@ -23,22 +23,22 @@
       <div class="event-header__buttons">
         <UIButton
           class="event-header__button"
-          content="resolve"
+          :content="$t('event.resolve')"
           icon="checkmark"
         />
         <UIButton
           class="event-header__button"
-          content="star"
+          :content="$t('event.star')"
           icon="star"
         />
         <UIButton
           class="event-header__button"
-          content="ignore"
+          :content="$t('event.ignore')"
           icon="hided"
         />
         <UIButton
           class="event-header__button"
-          content="issue"
+          :content="$t('event.issue')"
           icon="github"
         />
       </div>
@@ -61,6 +61,7 @@ import UIButton from '../utils/UIButton.vue';
 import Filepath from '../utils/Filepath.vue';
 import Icon from '../utils/Icon.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
+import i18n from './../../i18n';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -83,14 +84,12 @@ export default Vue.extend({
     },
   },
   data() {
-    const loading = !this.event;
-
     return {
       /**
        * Status of repetition-diff fetching
        * @type {boolean}
        */
-      loading,
+      loading: !this.event,
     };
   },
   computed: {
@@ -123,7 +122,7 @@ export default Vue.extend({
      *
      * @return {Object[]}
      */
-    navigationItems(): Object[] {
+    navigationItems(): any[] {
       return [ {
         title: 'overview',
         link: 'event-overview',
@@ -131,7 +130,7 @@ export default Vue.extend({
       }, {
         title: 'repetitions',
         link: 'event-overview-repetitions',
-        badge: !this.loading ? this.event.totalCount : ' ',
+        badge: !this.loading ? this.event.totalCount : null,
       }, {
         title: 'daily',
         link: 'event-overview-daily',
@@ -150,9 +149,9 @@ export default Vue.extend({
   methods: {
     /**
      * Emit for active item
-     * @param {string} item - active item
+     * @param {Object} item - active item
      */
-    tabChanged(item) {
+    tabChanged(item: any) {
       this.$emit('tabChanged', item);
     },
   },

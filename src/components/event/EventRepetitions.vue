@@ -2,19 +2,19 @@
   <div class="event-repetitions">
     <div class="event-repetitions__section">
       <div class="event-repetitions__label">
-        {{ $t('events.repetitions.total') }}
+        {{ $t('event.repetitions.total') }}
       </div>
       <div
         v-if="event"
         class="event-repetitions__repeats"
       >
-        {{ $tc('events.repetitions.times', event.totalCount) }}
+        {{ $tc('event.repetitions.times', event.totalCount) }}
       </div>
     </div>
 
     <div class="event-repetitions__section">
       <div class="event-repetitions__label">
-        {{ $t('events.repetitions.since') }}
+        {{ $t('event.repetitions.since') }}
       </div>
       <div
         v-if="event"
@@ -25,14 +25,14 @@
           v-if="since > 1"
           class="event-repetitions__since-days"
         >
-          — {{ $tc('events.repetitions.days', since) }}
+          — {{ $tc('event.repetitions.days', since) }}
         </span>
       </div>
     </div>
 
     <div class="event-repetitions__section">
       <div class="event-repetitions__label">
-        {{ $t('events.repetitions.title') }}
+        {{ $t('event.repetitions.title') }}
       </div>
 
       <div

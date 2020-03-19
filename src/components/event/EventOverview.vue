@@ -30,7 +30,7 @@
       v-else
       class="event-overview__loading"
     >
-      <span>{{ $t('utils.loading') }}</span>
+      <span>{{ $t('event.loading') }}</span>
     </div>
   </div>
 </template>
@@ -40,6 +40,7 @@ import Vue from 'vue';
 import DetailsCookie from './DetailsCookie.vue';
 import DetailsBacktrace from './DetailsBacktrace.vue';
 import DetailsAddons from './DetailsAddons.vue';
+import { HawkEvent } from '@/types/events';
 
 export default Vue.extend({
   name: 'EventOverview',
@@ -54,7 +55,7 @@ export default Vue.extend({
      * @type {HawkEvent}
      */
     event: {
-      type: Object,
+      type: Object as () => HawkEvent,
       default: null,
       validator: prop => typeof prop === 'object' || prop === null,
     },

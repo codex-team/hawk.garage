@@ -142,7 +142,7 @@
       "submitButton": "Continue"
     }
   },
-  "events": {
+  "event": {
     "repetitions": {
       "total": "Total",
       "since": "Since",
@@ -154,15 +154,11 @@
       "overview": "Overview",
       "repetitions": "Repetitions",
       "daily": "Days repeating"
-    }
-  },
-  "utils": {
-    "buttons": {
-      "resolve": "Resolve",
-      "star": "Star",
-      "ignore": "Ignore",
-      "issue": "Create issue"
     },
+    "resolve": "Resolve",
+    "star": "Star",
+    "ignore": "Ignore",
+    "issue": "Create issue",
     "loading": "Loading...",
     "viewedBy": {
       "assignee": "Assignee"
