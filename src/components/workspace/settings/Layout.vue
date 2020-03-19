@@ -1,7 +1,10 @@
 <template>
   <SettingsWindow on-close-route="/">
     <template v-slot:header>
-      <div class="settings-window__header workspace-settings__header" v-if="workspace">
+      <div
+        v-if="workspace"
+        class="settings-window__header workspace-settings__header"
+      >
         <EntityImage
           :id="workspace.id"
           class="workspace-settings__logo settings-window__logo"
@@ -29,13 +32,13 @@
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
-<!--        <router-link-->
-<!--          v-if="isAdmin"-->
-<!--          class="settings-window__menu-item workspace-settings__menu-item"-->
-<!--          :to="{ name: 'workspace-settings-billing' }"-->
-<!--        >-->
-<!--          {{ $t('workspaces.settings.billing.title') }}-->
-<!--        </router-link>-->
+        <!--        <router-link-->
+        <!--          v-if="isAdmin"-->
+        <!--          class="settings-window__menu-item workspace-settings__menu-item"-->
+        <!--          :to="{ name: 'workspace-settings-billing' }"-->
+        <!--        >-->
+        <!--          {{ $t('workspaces.settings.billing.title') }}-->
+        <!--        </router-link>-->
       </div>
     </template>
 
@@ -86,15 +89,6 @@ export default Vue.extend({
       return member ? member.isAdmin : false;
     },
   },
-  methods: {
-    /**
-     * When general settings saved, we need to update workspace
-     * because this.workspace is not reactive
-     */
-    updateWorkspace() {
-      this.workspace = this.$store.getters.getWorkspaceById(this.$route.params.workspaceId);
-    },
-  },
   async created(): Promise<void> {
     const workspaceId = this.$route.params.workspaceId;
     const workspaceLoaded = this.$store.getters.getWorkspaceById(workspaceId);
@@ -104,6 +98,15 @@ export default Vue.extend({
     } else {
       this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
     }
+  },
+  methods: {
+    /**
+     * When general settings saved, we need to update workspace
+     * because this.workspace is not reactive
+     */
+    updateWorkspace() {
+      this.workspace = this.$store.getters.getWorkspaceById(this.$route.params.workspaceId);
+    },
   },
 });
 </script>

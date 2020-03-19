@@ -83,17 +83,17 @@ Vue.filter('prettyDate', function (value: number) {
   const currentDate = new Date();
 
   if (
-    argumentDay === currentDate.getDate()
-    && argumentMonth === currentDate.getMonth()
-    && argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate() &&
+    argumentMonth === currentDate.getMonth() &&
+    argumentYear === currentDate.getFullYear()
   ) {
     return 'Today';
   }
 
   if (
-    argumentDay === currentDate.getDate() - 1
-    && argumentMonth === currentDate.getMonth()
-    && argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate() - 1 &&
+    argumentMonth === currentDate.getMonth() &&
+    argumentYear === currentDate.getFullYear()
   ) {
     return 'Yesterday';
   }

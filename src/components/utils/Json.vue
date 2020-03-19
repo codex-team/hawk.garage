@@ -12,6 +12,9 @@ import JsonViewer from 'vue-json-viewer';
 
 export default {
   name: 'Json',
+  components: {
+    JsonViewer,
+  },
   props: {
     /**
      * JS object to display
@@ -20,9 +23,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  components: {
-    JsonViewer,
   },
 };
 </script>

@@ -13,7 +13,6 @@ const MEMBER_FRAGMENT = `
   }
 `;
 
-
 /**
  * Query for getting all user's workspaces and project.
  */

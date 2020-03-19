@@ -30,19 +30,19 @@
     </template>
 
     <template v-slot:content>
-      <router-view/>
+      <router-view />
     </template>
   </SettingsWindow>
 </template>
 
 <script>
-  import SettingsWindow from '../../settings/Window';
-  export default {
-    name: 'ProjectSettingsWindow',
-    components: {
-      SettingsWindow,
-    },
-  };
+import SettingsWindow from '../../settings/Window';
+export default {
+  name: 'ProjectSettingsWindow',
+  components: {
+    SettingsWindow,
+  },
+};
 </script>
 
 <style>

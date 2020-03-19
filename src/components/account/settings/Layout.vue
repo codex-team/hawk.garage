@@ -20,18 +20,18 @@
         >
           {{ $t('settings.account.title') }}
         </router-link>
-<!--        <router-link-->
-<!--          class="settings-window__menu-item"-->
-<!--          :to="{ name: 'home'}"-->
-<!--        >-->
-<!--          {{ $t('settings.notifications.title') }}-->
-<!--        </router-link>-->
-<!--        <router-link-->
-<!--          class="settings-window__menu-item"-->
-<!--          :to="{ name: 'billing-settings'}"-->
-<!--        >-->
-<!--          {{ $t('settings.billing.title') }}-->
-<!--        </router-link>-->
+        <!--        <router-link-->
+        <!--          class="settings-window__menu-item"-->
+        <!--          :to="{ name: 'home'}"-->
+        <!--        >-->
+        <!--          {{ $t('settings.notifications.title') }}-->
+        <!--        </router-link>-->
+        <!--        <router-link-->
+        <!--          class="settings-window__menu-item"-->
+        <!--          :to="{ name: 'billing-settings'}"-->
+        <!--        >-->
+        <!--          {{ $t('settings.billing.title') }}-->
+        <!--        </router-link>-->
 
         <hr class="delimiter">
 

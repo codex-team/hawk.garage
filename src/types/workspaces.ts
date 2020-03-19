@@ -50,25 +50,25 @@ export interface Member {
   /**
    * User's email
    */
-  email: string
+  email: string;
 
   /**
    * User's name
    */
-  name: string
+  name: string;
 
   /**
    * User's image
    */
-  image: string
+  image: string;
 
   /**
    * True is user has admin permissions
    */
-  isAdmin: boolean
+  isAdmin: boolean;
 
   /**
    * True if user invitation should be confirmed
    */
-  isPending: boolean
+  isPending: boolean;
 }
