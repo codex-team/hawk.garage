@@ -2,7 +2,7 @@
   <span
     class="badge"
     :class="[
-      { 'badge--empty': !content },
+      { 'badge--empty': content === '' },
       `badge--${type}`
     ]"
   >

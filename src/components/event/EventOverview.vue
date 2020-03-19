@@ -43,6 +43,10 @@ export default Vue.extend({
     DetailsAddons,
   },
   props: {
+    /**
+     * Original (first) event data
+     * @type {HawkEvent}
+     */
     event: {
       type: Object,
       default: null,
@@ -53,6 +57,10 @@ export default Vue.extend({
     const loading = !this.event;
 
     return {
+      /**
+       * Status of repetition-diff fetching
+       * @type {boolean}
+       */
       loading,
     };
   },

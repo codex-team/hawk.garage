@@ -1,34 +1,18 @@
 <template>
   <div class="event-header-navigation">
     <div
+      v-for="item in items"
+      :key="item.title"
       class="event-header-navigation__item"
-      :class="setActiveClass('overview')"
-      @click="onNavigationItemClick('overview')"
+      :class="setActiveClass(item.title)"
+      @click="onNavigationItemClick(item.title)"
     >
-      {{ $t('events.navigation.overview') }}
-    </div>
-    <div
-      class="event-header-navigation__item"
-      :class="setActiveClass('repetitions')"
-      @click="onNavigationItemClick('repetitions')"
-    >
-      {{ $t('events.navigation.repetitions') }}
+      {{ $t(`events.navigation.${item.title}`) }}
       <Badge
+        v-if="item.badge !== null"
         class="event-header-navigation__item-count"
         type="visited"
-        :content="!loading ? event.totalCount : ' '"
-      />
-    </div>
-    <div
-      class="event-header-navigation__item"
-      :class="setActiveClass('daily')"
-      @click="onNavigationItemClick('daily')"
-    >
-      {{ $t('events.navigation.daily') }}
-      <Badge
-        class="event-header-navigation__item-count"
-        type="visited"
-        content="0"
+        :content="item.badge"
       />
     </div>
   </div>
@@ -37,7 +21,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Badge from '../utils/Badge.vue';
-import { HawkEvent } from '@/types/events';
 
 export default Vue.extend({
   name: 'EventHeaderNavigation',
@@ -46,13 +29,12 @@ export default Vue.extend({
   },
   props: {
     /**
-     * Original (first) event data
-     * @type {HawkEvent}
+     * Navigation items
+     * @type {Array}
      */
-    event: {
-      type: Object as () => HawkEvent,
-      default: null,
-      validator: prop => typeof prop === 'object' || prop === null,
+    items: {
+      type: Array as () => any[],
+      default: () => [],
     },
   },
   data() {
@@ -62,21 +44,7 @@ export default Vue.extend({
        * @type {string}
        */
       activeItem: 'overview',
-
-      /**
-       * Status of repetition-diff fetching
-       * @type {boolean}
-       */
-      loading: !this.event,
     };
-  },
-  watch: {
-    /**
-     * When event is changed
-     */
-    event() {
-      this.loading = false;
-    },
   },
   created() {
     const path = this.$route.path.split('/').pop();
@@ -144,13 +112,7 @@ export default Vue.extend({
      * @return {string}
      */
     routerName(navigationItem: string): string {
-      const name = 'event-overview';
-
-      if (navigationItem !== 'overview') {
-        return name + '-' + navigationItem;
-      }
-
-      return name;
+      return this.items.find(item => item.title === navigationItem).link;
     },
   },
 });

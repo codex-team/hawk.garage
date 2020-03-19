@@ -144,11 +144,11 @@
   },
   "events": {
     "repetitions": {
-      "total": "",
-      "since": "",
+      "total": "Total",
+      "since": "Since",
       "title": "Repetitions",
       "times": "{n} time | {n} times",
-      "days": " | {n} день | {n} дня | {n} дней"
+      "days": "{n} day | {n} days"
     },
     "navigation": {
       "overview": "Overview",

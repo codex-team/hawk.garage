@@ -44,7 +44,7 @@
       </div>
       <div class="event-header__information">
         <EventHeaderNavigation
-          :event="event"
+          :items="navigationItems"
           @tabChanged="tabChanged($event)"
         />
         <ViewedBy />
@@ -116,6 +116,27 @@ export default Vue.extend({
       }
 
       return '';
+    },
+
+    /**
+     * Navigation items
+     *
+     * @return {Object[]}
+     */
+    navigationItems(): Object[] {
+      return [ {
+        title: 'overview',
+        link: 'event-overview',
+        badge: null,
+      }, {
+        title: 'repetitions',
+        link: 'event-overview-repetitions',
+        badge: !this.loading ? this.event.totalCount : ' ',
+      }, {
+        title: 'daily',
+        link: 'event-overview-daily',
+        badge: 0,
+      } ];
     },
   },
   watch: {

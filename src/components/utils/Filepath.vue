@@ -1,6 +1,6 @@
 <template>
   <span>
-    <span class="filepath__path">{{ path | prettyPath }}</span>
+    <span class="filepath__path">{{ prettyPath }}</span>
     <span
       v-if="isHighlight && location"
       class="filepath__filename"
@@ -16,10 +16,19 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'Filepath',
   props: {
+    /**
+     * Event location got from the first backtrace frame
+     * @type {string}
+     */
     location: {
       type: String,
       default: '',
     },
+
+    /**
+     * Highlight filename
+     * @type {boolean}
+     */
     isHighlight: {
       type: Boolean,
       default: false,
@@ -46,6 +55,18 @@ export default Vue.extend({
      */
     file(): string {
       return /[^/]+$/.exec(this.location)![0];
+    },
+
+    /**
+     * Pretty file path
+     *
+     * @return {string}
+     */
+    prettyPath(): string {
+      return this.path
+        .replace(/^(.*?)\/{2,3}/, '')
+        .replace(/\//g, ' / ')
+        .replace(/\?.*/, '');
     },
   },
 });
