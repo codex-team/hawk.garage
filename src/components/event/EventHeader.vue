@@ -121,17 +121,21 @@ export default Vue.extend({
      * @return {TabInfo[]}
      */
     navigationItems(): TabInfo[] {
-      return [ {
-        title: this.$i18n.t('event.navigation.overview') as string,
-        routeName: 'event-overview',
-      }, {
-        title: this.$i18n.t('event.navigation.repetitions') as string,
-        routeName: 'event-repetitions',
-        badge: !this.loading ? this.event.totalCount : 0,
-      }, {
-        title: this.$i18n.t('event.navigation.daily') as string,
-        routeName: 'event-daily',
-      } ];
+      return [
+        {
+          title: this.$i18n.t('event.navigation.overview') as string,
+          routeName: 'event-overview',
+        },
+        {
+          title: this.$i18n.t('event.navigation.repetitions') as string,
+          routeName: 'event-repetitions',
+          badge: !this.loading ? this.event.totalCount : 0,
+        },
+        {
+          title: this.$i18n.t('event.navigation.daily') as string,
+          routeName: 'event-daily',
+        },
+      ];
     },
 
     /**
