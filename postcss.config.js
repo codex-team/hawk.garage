@@ -43,6 +43,11 @@ module.exports = {
         'color-mod-function': {}
       }
     },
+    /**
+     * Simple template defined directly in CSS to prevent repeating yourself.
+     * https://github.com/postcss/postcss-mixins
+     */
+    'postcss-mixins': {},
 
     /**
      * PostCSS plugin to reference any parent/ancestor selector in nested CSS.

@@ -107,7 +107,13 @@ export default Vue.extend({
       margin-right: 25px;
       font-size: 14.6px;
       cursor: pointer;
-      opacity: 0.6;
+      color: var(--color-text-second);
+      transition: color 200ms;
+
+      &:hover,
+      &--active {
+        color: var(--color-text-main);
+      }
 
       &-count {
         margin-left: 10px;
@@ -121,7 +127,6 @@ export default Vue.extend({
       &--active {
         position: relative;
         opacity: 1;
-        transition: opacity 500ms;
 
         &::before {
           position: absolute;
@@ -129,7 +134,7 @@ export default Vue.extend({
           width: 100%;
           height: 3px;
           background-color: var(--color-indicator-medium);
-          border-radius: 1.5px 1.5px 0 0;
+          border-radius: 3px 3px 0 0;
           content: '';
         }
       }

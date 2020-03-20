@@ -111,6 +111,8 @@ export default Vue.extend({
 </script>
 
 <style>
+  @import "~styles/variables";
+
   .event-layout {
     /** Override Popup Dialog animation */
 
@@ -144,6 +146,8 @@ export default Vue.extend({
 
     &__loader {
       min-height: 200px;
+
+      @mixin loader red;
     }
   }
 </style>
