@@ -22,38 +22,22 @@
       />
       <div class="event-header__buttons">
         <UIButton
-<<<<<<< HEAD
-          class="event-overview__button"
-          :class="{'event-overview__button--selected': !loading && event.marks.includes('RESOLVED')}"
-          content="Resolve"
-=======
           class="event-header__button"
-          :content="$t('event.resolve')"
->>>>>>> d7f5776fba5e7715418236454adfbf18b52b09e0
+          :class="{'event-overview__button--selected': !loading && event.marks.includes('RESOLVED')}"
           icon="checkmark"
           @click="markEvent('RESOLVED')"
         />
         <UIButton
-<<<<<<< HEAD
-          class="event-overview__button"
-          :class="{'event-overview__button--selected': !loading && event.marks.includes('STARRED')}"
-          content="Star"
-=======
           class="event-header__button"
+          :class="{'event-overview__button--selected': !loading && event.marks.includes('STARRED')}"
           :content="$t('event.star')"
->>>>>>> d7f5776fba5e7715418236454adfbf18b52b09e0
           icon="star"
           @click="markEvent('STARRED')"
         />
         <UIButton
-<<<<<<< HEAD
-          class="event-overview__button"
-          :class="{'event-overview__button--selected': !loading && event.marks.includes('IGNORED')}"
-          content="Ignore"
-=======
           class="event-header__button"
+          :class="{'event-overview__button--selected': !loading && event.marks.includes('IGNORED')}"
           :content="$t('event.ignore')"
->>>>>>> d7f5776fba5e7715418236454adfbf18b52b09e0
           icon="hided"
           @click="markEvent('IGNORED')"
         />
@@ -83,7 +67,6 @@ import Filepath from '../utils/Filepath.vue';
 import Icon from '../utils/Icon.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
-import i18n from './../../i18n';
 
 export default Vue.extend({
   name: 'EventHeader',
