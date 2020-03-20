@@ -55,7 +55,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       }
     }
   }
-  
+
   ${MEMBER_FRAGMENT}
 `;
 
@@ -153,7 +153,7 @@ export const MUTATION_UPDATE_WORKSPACE = `
     $description: String
     $image: Upload
   ) {
-    updateWorkspace(id: $id, name: $name, description: $description, image: $image)
+    updateWorkspace(workspaceId: $id, name: $name, description: $description, image: $image)
   }
 `;
 
