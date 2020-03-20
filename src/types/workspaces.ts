@@ -33,7 +33,7 @@ export interface Workspace {
 /**
  * Represents confirmed member info in DB
  */
-interface ConfirmedMember {
+export interface ConfirmedMember {
   /**
    * Document id
    */
@@ -53,7 +53,7 @@ interface ConfirmedMember {
 /**
  * Represents pending member info in DB
  */
-interface PendingMember {
+export interface PendingMember {
   /**
    * Document id
    */
