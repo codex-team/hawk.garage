@@ -70,6 +70,10 @@ interface PendingMember {
  */
 export type Member = ConfirmedMember | PendingMember;
 
-export function isPendingMember(doc: Member): doc is PendingMember {
-  return !!(doc as PendingMember).email && !(doc as ConfirmedMember).user;
+/**
+ * Check is provided member is pending
+ * @param member - member to check
+ */
+export function isPendingMember(member: Member): member is PendingMember {
+  return !!(member as PendingMember).email && !(member as ConfirmedMember).user;
 }
