@@ -12,7 +12,7 @@
     "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },
   "dependencies": {
-    "@hawk.so/javascript": "^2.0.10",
+    "@hawk.so/javascript": "^2.1.0",
     "@hawk.so/webpack-plugin": "^0.0.10",
     "@vue/cli-plugin-babel": "^4.1.2",
     "@vue/cli-plugin-pwa": "^4.1.2",
