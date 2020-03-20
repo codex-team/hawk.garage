@@ -15,17 +15,16 @@
           <span class="repetitions-list__time">{{ repetition.payload.timestamp | prettyTime }}</span>
         </td>
         <td class="repetitions-list__col">
-          <img
-            class="repetitions-list__user-photo"
-            src="https://i.ya-webdesign.com/images/avatar-png-1.png"
-            alt=""
-          >
+          <span class="repetitions-list__user-name">
+            [PICTURE]
+            [USER]
+            {{ repetition.payload.user ? repetition.payload.user.name : '' }}
+          </span>
         </td>
         <td class="repetitions-list__col">
-          <span class="repetitions-list__user-name">{{ repetition.payload.user ? repetition.payload.user.name : '' }}</span>
-        </td>
-        <td class="repetitions-list__col">
-          <span class="repetitions-list__user-browser">Firefox 61.0</span>
+          <span class="repetitions-list__user-browser">
+            [BROWSER]
+          </span>
         </td>
         <td class="repetitions-list__col">
           <span
@@ -36,7 +35,9 @@
           </span>
         </td>
         <td class="repetitions-list__col">
-          <span class="repetitions-list__url">/startup/primeliber-com/blog/15598/8-instrumentov-dl…</span>
+          <span class="repetitions-list__url">
+            [URL]
+          </span>
         </td>
       </tr>
     </table>
@@ -136,6 +137,7 @@ export default {
 
     &__row {
       cursor: pointer;
+      height: 40px;
 
       &:hover {
         background-color: var(--color-bg-sidebar) !important;
