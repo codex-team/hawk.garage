@@ -1,10 +1,10 @@
 <template>
   <div
     class="team-member"
-    :class="{'team-member--pending': member.isPending, 'team-member--admin': isTooltipShowed}"
+    :class="{'team-member--pending': isPending, 'team-member--admin': isTooltipShowed}"
   >
     <Icon
-      v-if="member.isPending"
+      v-if="isPending"
       class="team-member__image"
       symbol="user-placeholder"
     />
@@ -18,10 +18,10 @@
     />
 
     <div class="team-member__name">
-      {{ member.user.name || member.user.email }}
+      {{ isPending? member.email : member.user.name || member.user.email }}
     </div>
     <div
-      v-if="user.id === member.user.id"
+      v-if="!isPending && user.id === member.user.id"
       class="team-member__you-label"
     >
       ({{ $t('workspaces.settings.team.youLabel') }})
@@ -36,7 +36,7 @@
     </div>
 
     <TooltipMenu
-      v-if="isTooltipShowed && user.id !== member.user.id"
+      v-if="isTooltipShowed && (isPending ? true : user.id !== member.user.id)"
       class="team-member__tooltip-menu"
       :options="getTooltipMenuOptions()"
     />
@@ -93,6 +93,8 @@ export default Vue.extend({
   },
   computed: {
     isPending(): boolean {
+      console.log('member', this.member);
+
       return isPendingMember(this.member);
     },
   },
@@ -138,14 +140,14 @@ export default Vue.extend({
       if (isPendingMember(this.member)) {
         await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
           workspaceId: this.workspaceId,
-          userId: null,
+          userId: '',
           userEmail: this.member.email,
         });
       } else {
         await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
           workspaceId: this.workspaceId,
           userId: this.member.user.id,
-          userEmail: null,
+          userEmail: '',
         });
       }
     },
