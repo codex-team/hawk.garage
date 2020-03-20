@@ -36,7 +36,7 @@
     </div>
 
     <TooltipMenu
-      v-if="hasAdminPermissions && user.id !== member.id"
+      v-if="isTooltipShowed && user.id !== member.user.id"
       class="team-member__tooltip-menu"
       :options="getTooltipMenuOptions(member)"
     />
@@ -51,6 +51,7 @@ import TooltipMenu from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { isPendingMember, Member } from '@/types/workspaces';
+// eslint-disable-next-line no-unused-vars
 import { TooltipMenuOptions } from '@/components/utils/tooltipMenu';
 
 export default Vue.extend({
@@ -61,15 +62,22 @@ export default Vue.extend({
     Icon,
   },
   props: {
+    /**
+     * Member's workspace id
+     */
     workspaceId: {
       type: String,
       required: true,
     },
+
+    /**
+     * Workspace member to display
+     */
     member: {
       type: Object as () => Member,
       required: true,
     },
-    hasAdminPermissions: {
+    isTooltipShowed: {
       type: Boolean,
       default: false,
     },

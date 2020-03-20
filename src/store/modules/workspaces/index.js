@@ -117,7 +117,6 @@ const actions = {
       workspaceId,
       data: {
         email: userEmail,
-        isPending: true,
       },
     });
 
@@ -227,6 +226,7 @@ const actions = {
    * @param {function} commit - standard Vuex dispatch methods
    * @param {string} workspaceId - id of workspace where user is participate
    * @param {string} userId - id of user to remove
+   * @param userEmail - user email to remove (instead of id)
    * @returns {Promise<*>}
    */
   async [REMOVE_USER_FROM_WORKSPACE]({ commit }, { workspaceId, userId, userEmail }) {
@@ -349,9 +349,10 @@ const mutations = {
    */
   [mutationTypes.UPDATE_MEMBER](state, { workspaceId, userId, changes }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].users.findIndex(u => u.id === userId);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(member => member.user.id === userId);
 
-    Object.assign(state.list[workspaceIndex].users[memberIndex], changes);
+    console.log('index', memberIndex);
+    Object.assign(state.list[workspaceIndex].team[memberIndex], changes);
   },
 
   /**
@@ -364,11 +365,7 @@ const mutations = {
   [mutationTypes.ADD_PENDING_MEMBER](state, { workspaceId, data }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
 
-    if (!state.list[workspaceIndex].pendingUsers) {
-      Vue.set(state.list[workspaceIndex], 'pendingUsers', []);
-    }
-
-    state.list[workspaceIndex].pendingUsers.push(data);
+    state.list[workspaceIndex].team.push(data);
   },
 
   /**
@@ -380,10 +377,10 @@ const mutations = {
    */
   [mutationTypes.REMOVE_MEMBER](state, { workspaceId, userId }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].users.findIndex(m => m.id === userId);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(m => m.id === userId);
 
     if (memberIndex > -1) {
-      state.list[workspaceIndex].users.splice(memberIndex, 1);
+      state.list[workspaceIndex].team.splice(memberIndex, 1);
     }
   },
 

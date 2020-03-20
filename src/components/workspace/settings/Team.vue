@@ -50,7 +50,7 @@
         <TeamMember
           v-for="member in workspace.team"
           :key="member.id"
-          :has-admin-permissions="currentMembership.isAdmin"
+          :is-tooltip-showed="currentMembership.isAdmin"
           :workspace-id="workspace.id"
           :member="member"
         />
