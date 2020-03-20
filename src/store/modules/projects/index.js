@@ -8,7 +8,7 @@ import {
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';
-import { groupByDate } from '../../../utils';
+import { groupByGroupingTimestamp } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -97,7 +97,7 @@ const actions = {
   async [FETCH_RECENT_ERRORS]({ commit }, projectId) {
     const recentEvents = await projectsApi.fetchRecentErrors(projectId);
 
-    const eventsListByDate = groupByDate(recentEvents);
+    const eventsListByDate = groupByGroupingTimestamp(recentEvents);
 
     commit(mutationTypes.SET_EVENTS_LIST_BY_DATE, {
       projectId,
