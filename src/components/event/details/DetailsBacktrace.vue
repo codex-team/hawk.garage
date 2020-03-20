@@ -30,10 +30,17 @@
             </span>
           </div>
           <div class="details-backtrace__right">
-            <Filepath :location="frame.file" />
-            <template v-if="frame.line">
+            <Filepath
+              :location="frame.file"
+              :title="frame.file"
+              class="details-backtrace__right-file"
+            />
+            <span
+              class="details-backtrace__right-line"
+              v-if="frame.line"
+            >
               line {{ getLocation(frame) }}
-            </template>
+            </span>
           </div>
           <Icon
             v-if="frame.sourceCode"
@@ -212,7 +219,19 @@ export default {
     }
 
     &__right {
+      display: flex;
       margin-left: auto;
+
+      &-file {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 600px;
+      }
+
+      &-line {
+        margin-left: 10px;
+      }
     }
   }
 </style>

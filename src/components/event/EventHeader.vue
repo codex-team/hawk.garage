@@ -12,6 +12,7 @@
         class="event-header__location"
         :location="location"
         :is-highlight="true"
+        :title="location"
       />
       <div class="event-header__buttons">
         <UIButton
@@ -182,6 +183,10 @@ export default Vue.extend({
       font-size: 14px;
       letter-spacing: 0.1px;
       color: var(--color-text-second);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 650px;
     }
 
     &__buttons {
