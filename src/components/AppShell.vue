@@ -49,7 +49,7 @@ import Sidebar from './sidebar/Sidebar';
 import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
-import ProjectHeader from './projects/ProjectHeader';
+import ProjectHeader from './project/ProjectHeader';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState } from 'vuex';

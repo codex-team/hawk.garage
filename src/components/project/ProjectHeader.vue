@@ -5,7 +5,7 @@
   >
     <div
       class="project-header__title-container"
-      @click="$router.push({name: 'project-settings', params: {projectId: project.id}})"
+      @click="$router.push({name: 'project-settings-general', params: {projectId: project.id}})"
     >
       <EntityImage
         :id="project.id"

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import LanguageSelect from '../forms/LanguageSelect';
+import LanguageSelect from '../../forms/LanguageSelect';
 
 export default {
   name: 'AppearanceSettings',
@@ -18,4 +18,4 @@ export default {
 };
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>

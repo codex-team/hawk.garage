@@ -142,7 +142,7 @@
       "submitButton": "Продолжить"
     }
   },
-  "events": {
+  "event": {
     "repetitions": {
       "total": "Всего",
       "since": "Начиная с",
@@ -154,15 +154,11 @@
       "overview": "Обзор",
       "repetitions": "Повторения",
       "daily": "По дням"
-    }
-  },
-  "utils": {
-    "buttons": {
-      "resolve": "Исправлено",
-      "star": "В избранное",
-      "ignore": "Игнорировать",
-      "issue": "Создать задачу"
     },
+    "resolve": "Исправлено",
+    "star": "В избранное",
+    "ignore": "Игнорировать",
+    "issue": "Создать задачу"
     "loading": "Загрузка...",
     "viewedBy": {
       "assignee": "Исполнитель"

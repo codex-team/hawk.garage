@@ -69,6 +69,7 @@ export default {
 <style>
   .form-image-uploader {
     display: flex;
+    position: relative;
     flex-direction: column;
     justify-content: center;
     width: 60px;
@@ -81,11 +82,15 @@ export default {
     border-radius: var(--border-radius);
     cursor: pointer;
     user-select: none;
-  }
 
-  .form-image-uploader--with-image {
-    background-position: 50%;
-    background-size: cover;
+    &--with-image {
+      background-position: 50%;
+      background-size: cover;
+
+      &:hover {
+        background-image: none !important;
+      }
+    }
   }
 
   .form-image-uploader--with-image:hover,

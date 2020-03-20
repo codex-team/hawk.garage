@@ -15,16 +15,22 @@
         :cookies="event.payload.cookies"
       />
       <DetailsAddons
-        v-if="event.payload.addons"
+        v-if="getIntegrationAddons('vue')"
         class="event-overview__section"
-        :addons="event.payload.addons"
+        :addons="getIntegrationAddons('vue')"
+        title="Vue"
+      />
+      <DetailsAddons
+        v-if="addonsFiltered"
+        class="event-overview__section"
+        :addons="addonsFiltered"
       />
     </template>
     <div
       v-else
       class="event-overview__loading"
     >
-      <span>{{ $t('utils.loading') }}</span>
+      <span>{{ $t('event.loading') }}</span>
     </div>
   </div>
 </template>
@@ -34,6 +40,7 @@ import Vue from 'vue';
 import DetailsCookie from './DetailsCookie.vue';
 import DetailsBacktrace from './DetailsBacktrace.vue';
 import DetailsAddons from './DetailsAddons.vue';
+import { HawkEvent } from '@/types/events';
 
 export default Vue.extend({
   name: 'EventOverview',
@@ -48,7 +55,7 @@ export default Vue.extend({
      * @type {HawkEvent}
      */
     event: {
-      type: Object,
+      type: Object as () => HawkEvent,
       default: null,
       validator: prop => typeof prop === 'object' || prop === null,
     },
@@ -69,10 +76,32 @@ export default Vue.extend({
      * Get calling env language based on event.catcherType
      * errors/javascript -> javascript
      *
-     * @return {string}
+     * @return {string | undefined}
      */
-    lang(): string {
+    lang(): string | undefined {
       return this.event.catcherType ? this.event.catcherType.split('/').pop() : '';
+    },
+
+    /**
+     * Addons without integration
+     * that will be shown as separated components
+     * @return {object}
+     */
+    addonsFiltered(): object | null {
+      if (!this.event.payload.addons) {
+        return null;
+      }
+
+      const integrationToFilter = [ 'vue' ];
+      const filteredAddons = {};
+
+      Object.entries(this.event.payload.addons).forEach(([name, value]) => {
+        if (!integrationToFilter.includes(name)) {
+          filteredAddons[name] = value;
+        }
+      });
+
+      return filteredAddons;
     },
   },
   watch: {
@@ -81,6 +110,25 @@ export default Vue.extend({
      */
     event() {
       this.loading = false;
+    },
+  },
+  methods: {
+    /**
+     * Extract integration group from the addons
+     * For example, 'vue' or 'react'
+     * @param {string} integrationName - name of an integration
+     * @return object with integration addons
+     */
+    getIntegrationAddons(integrationName: string): object | null {
+      if (!this.event.payload.addons) {
+        return null;
+      }
+
+      if (!this.event.payload.addons[integrationName]) {
+        return null;
+      }
+
+      return this.event.payload.addons[integrationName];
     },
   },
 });

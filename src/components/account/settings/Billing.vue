@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import BillingCard from '../billing/Workspace';
-import BillingHistory from '../billing/History';
-import BillingCards from '../billing/Cards';
-import { FETCH_WORKSPACES, GET_TRANSACTIONS } from '../../store/modules/workspaces/actionTypes';
+import BillingCard from '../../billing/Workspace';
+import BillingHistory from '../../billing/History';
+import BillingCards from '../../billing/Cards';
+import { FETCH_WORKSPACES, GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'AccountBilling',
@@ -26,6 +26,15 @@ export default {
     BillingCards,
     BillingCard,
     BillingHistory,
+  },
+  props: {
+    /**
+     * Current user
+     */
+    user: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     workspaces() {
@@ -48,15 +57,15 @@ export default {
         return false;
       }
 
-      const user = this.$store.state.user.data;
+      const member = workspace.users.find(u => u.userId === this.user.id);
 
-      return workspace.users.find(u => u.id === user.id).isAdmin;
+      return member ? member.isAdmin : false;
     },
   },
 };
 </script>
 
-<style src="../../styles/settings-window-page.css"></style>
+<style src="../../../styles/settings-window-page.css"></style>
 
 <style>
   .account-billing {

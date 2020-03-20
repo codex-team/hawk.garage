@@ -80,7 +80,7 @@ export default Vue.extend({
        * Active menu item
        * @type {string}
        */
-      activeItem: '',
+      activeItem: 'overview',
     };
   },
 
@@ -117,10 +117,19 @@ export default Vue.extend({
   methods: {
     /**
      * Emit for active item
-     * @param {string} item - active item
+     * @param {object} item - active item
      */
-    tabChanged(item: string) {
-      this.activeItem! = item;
+    tabChanged(item: any) {
+      if (item.link) {
+        this.$router.push({
+          name: item.link,
+          params: {
+            projectId: this.projectId,
+            eventId: this.eventId,
+          },
+        });
+      }
+      this.activeItem = item.title;
     },
   },
 });

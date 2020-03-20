@@ -10,18 +10,57 @@ import i18n from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-import HawkCatcher from 'hawk.javascript';
+import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
 
+/**
+ * Current build revision
+ * passed from Webpack Define Plugin
+ */
+declare const buildRevision: string;
+
+/**
+ * Frontend-errors tracking system
+ * @type {HawkCatcher}
+ */
+let hawk: HawkCatcher;
+
+/**
+ *
+ */
 if (process.env.VUE_APP_HAWK_TOKEN) {
-  const hawk = new HawkCatcher(process.env.VUE_APP_HAWK_TOKEN);
+  const hawkOptions: HawkInitialSettings = {
+    token: process.env.VUE_APP_HAWK_TOKEN,
+    release: buildRevision,
+    // vue: Vue,
+  };
 
-  hawk.test();
+  if (store.state.user && store.state.user.data && Object.keys(store.state.user.data).length) {
+    hawkOptions.user = {
+      id: store.state.user.data.id,
+      name: store.state.user.data.name || store.state.user.data.email,
+      image: store.state.user.data.image,
+      url: '',
+    } as HawkUser;
+  }
+
+  hawk = new HawkCatcher(hawkOptions);
 }
 
 Vue.config.devtools = process.env.NODE_ENV !== 'production';
 
 Vue.prototype.$API_AUTH_GOOGLE = process.env.VUE_APP_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
 Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
+
+/**
+ * Sends error to the Hawk
+ * @param {Error} error - error to send
+ * @usage this.$sendToHawk(new Error('Some error'));
+ */
+Vue.prototype.sendToHawk = function sendToHawk(error: Error): void {
+  if (hawk) {
+    hawk.catchError(error);
+  }
+};
 
 Vue.use(VueCookies);
 

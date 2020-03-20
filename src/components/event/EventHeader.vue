@@ -13,7 +13,7 @@
       <h1
         class="event-header__title"
       >
-        {{ (!loading) ? event.payload.title : $t('utils.loading') }}
+        {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
       <Filepath
         class="event-header__location"
@@ -22,29 +22,44 @@
       />
       <div class="event-header__buttons">
         <UIButton
+<<<<<<< HEAD
           class="event-overview__button"
           :class="{'event-overview__button--selected': !loading && event.marks.includes('RESOLVED')}"
           content="Resolve"
+=======
+          class="event-header__button"
+          :content="$t('event.resolve')"
+>>>>>>> d7f5776fba5e7715418236454adfbf18b52b09e0
           icon="checkmark"
           @click="markEvent('RESOLVED')"
         />
         <UIButton
+<<<<<<< HEAD
           class="event-overview__button"
           :class="{'event-overview__button--selected': !loading && event.marks.includes('STARRED')}"
           content="Star"
+=======
+          class="event-header__button"
+          :content="$t('event.star')"
+>>>>>>> d7f5776fba5e7715418236454adfbf18b52b09e0
           icon="star"
           @click="markEvent('STARRED')"
         />
         <UIButton
+<<<<<<< HEAD
           class="event-overview__button"
           :class="{'event-overview__button--selected': !loading && event.marks.includes('IGNORED')}"
           content="Ignore"
+=======
+          class="event-header__button"
+          :content="$t('event.ignore')"
+>>>>>>> d7f5776fba5e7715418236454adfbf18b52b09e0
           icon="hided"
           @click="markEvent('IGNORED')"
         />
         <UIButton
           class="event-header__button"
-          content="issue"
+          :content="$t('event.issue')"
           icon="github"
         />
       </div>
@@ -68,6 +83,7 @@ import Filepath from '../utils/Filepath.vue';
 import Icon from '../utils/Icon.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
+import i18n from './../../i18n';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -90,14 +106,12 @@ export default Vue.extend({
     },
   },
   data() {
-    const loading = !this.event;
-
     return {
       /**
        * Status of repetition-diff fetching
        * @type {boolean}
        */
-      loading,
+      loading: !this.event,
     };
   },
   computed: {
@@ -130,7 +144,7 @@ export default Vue.extend({
      *
      * @return {Object[]}
      */
-    navigationItems(): Object[] {
+    navigationItems(): any[] {
       return [ {
         title: 'overview',
         link: 'event-overview',
@@ -138,7 +152,7 @@ export default Vue.extend({
       }, {
         title: 'repetitions',
         link: 'event-overview-repetitions',
-        badge: !this.loading ? this.event.totalCount : ' ',
+        badge: !this.loading ? this.event.totalCount : null,
       }, {
         title: 'daily',
         link: 'event-overview-daily',
@@ -157,9 +171,9 @@ export default Vue.extend({
   methods: {
     /**
      * Emit for active item
-     * @param {string} item - active item
+     * @param {Object} item - active item
      */
-    tabChanged(item) {
+    tabChanged(item: any) {
       this.$emit('tabChanged', item);
     },
 

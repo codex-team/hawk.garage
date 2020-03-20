@@ -1,6 +1,6 @@
 <template>
-  <span>
-    <span class="filepath__path">{{ prettyPath }}</span>
+  <span class="filepath">
+    {{ prettyPath }}
     <span
       v-if="isHighlight && location"
       class="filepath__filename"
@@ -74,9 +74,7 @@ export default Vue.extend({
 
 <style>
  .filepath {
-   &__path {
-     opacity: 0.6;
-   }
+   color: var(--color-text-second);
 
    &__filename {
      color: var(--color-indicator-critical);

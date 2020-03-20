@@ -8,7 +8,7 @@
     <div class="viewed-by__users-avatar" />
     <div class="viewed-by__users-avatar" />
     <span class="viewed-by__users-count">+17</span>
-    <span class="viewed-by__assignee-text">{{ $t('utils.viewedBy.assignee') }}</span>
+    <span class="viewed-by__assignee-text">{{ $t('event.viewedBy.assignee') }}</span>
     <div class="viewed-by__assignee-icons-bg">
       <div class="viewed-by__assignee-icon-bg">
         <Icon

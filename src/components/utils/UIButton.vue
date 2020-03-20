@@ -9,7 +9,7 @@
       :class="'ui-button-icon-' + icon"
       :symbol="icon"
     />
-    <span class="ui-button-text">{{ $t(`utils.buttons.${content}`) }}</span>
+    <span class="ui-button-text">{{ content }}</span>
   </div>
 </template>
 
