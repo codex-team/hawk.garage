@@ -96,22 +96,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    /**
-     * Emit for active item
-     * @param {object} item - active item
-     */
-    tabChanged(item: any) {
-      if (item.link) {
-        this.$router.push({
-          name: item.link,
-          params: {
-            projectId: this.projectId,
-            eventId: this.eventId,
-          },
-        });
-      }
-      this.activeItem = item.title;
-    },
   },
 });
 </script>

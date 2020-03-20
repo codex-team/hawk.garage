@@ -40,7 +40,6 @@
         <TabBar
           :items="navigationItems"
           :activeItemIndex="currentNavigationItem"
-          @tabChanged="tabChanged($event)"
         />
 
         <ViewedBy
@@ -153,13 +152,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    /**
-     * Emit for active item
-     * @param {Object} item - active item
-     */
-    tabChanged(item: any) {
-      this.$emit('tabChanged', item);
-    },
   },
 });
 </script>
