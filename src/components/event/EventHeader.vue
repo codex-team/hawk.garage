@@ -36,7 +36,7 @@
         />
       </div>
       <div class="event-header__nav-bar">
-        <EventHeaderNavigation
+        <TabBar
           :items="navigationItems"
           :activeItemIndex="currentNavigationItem"
           @tabChanged="tabChanged($event)"
@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import EventHeaderNavigation from '../utils/TabBar.vue';
+import TabBar from '../utils/TabBar.vue';
 import  { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
 import UIButton from '../utils/UIButton.vue';
@@ -64,7 +64,7 @@ import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 export default Vue.extend({
   name: 'EventHeader',
   components: {
-    EventHeaderNavigation,
+    TabBar,
     ViewedBy,
     UIButton,
     UiLabel,
