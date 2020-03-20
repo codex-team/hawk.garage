@@ -20,7 +20,7 @@
         v-if="event"
         class="event-repetitions__since"
       >
-        {{ event.payload.timestamp | prettyDate }}, {{ event.payload.timestamp | prettyTime }}
+        {{ event.payload.timestamp | prettyFullDate }}
         <span
           v-if="since > 1"
           class="event-repetitions__since-days"

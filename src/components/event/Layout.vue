@@ -10,16 +10,7 @@
     />
     <div class="event-layout__info">
       <div class="event-layout__container">
-        <EventOverview
-          v-if="activeItem === 'overview'"
-          :event="event"
-        />
-        <EventRepetitions
-          v-else-if="activeItem === 'repetitions'"
-        />
-        <EventDaily
-          v-else-if="activeItem === 'daily'"
-        />
+        <router-view :event="event"/>
       </div>
     </div>
   </PopupDialog>
@@ -29,9 +20,6 @@
 import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
-import EventOverview from './EventOverview.vue';
-import EventRepetitions from './EventRepetitions.vue';
-import EventDaily from './EventDaily.vue';
 import { HawkEvent } from '@/types/events';
 import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 
@@ -40,9 +28,6 @@ export default Vue.extend({
   components: {
     PopupDialog,
     EventHeader,
-    EventOverview,
-    EventRepetitions,
-    EventDaily,
   },
   data() {
     const projectId: string = this.$route.params.projectId;

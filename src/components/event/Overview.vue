@@ -1,8 +1,6 @@
 <template>
-  <div class="event-overview">
-    <template
-      v-if="!loading"
-    >
+  <div>
+    <div class="event-overview" v-if="event">
       <DetailsBacktrace
         v-if="event.payload.backtrace && event.payload.backtrace.length"
         class="event-overview__section"
@@ -25,21 +23,21 @@
         class="event-overview__section"
         :addons="addonsFiltered"
       />
-    </template>
+    </div>
     <div
       v-else
       class="event-overview__loading"
     >
-      <span>{{ $t('event.loading') }}</span>
+      {{ $t('event.loading') }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import DetailsCookie from './DetailsCookie.vue';
-import DetailsBacktrace from './DetailsBacktrace.vue';
-import DetailsAddons from './DetailsAddons.vue';
+import DetailsCookie from './details/DetailsCookie.vue';
+import DetailsBacktrace from './details/DetailsBacktrace.vue';
+import DetailsAddons from './details/DetailsAddons.vue';
 import { HawkEvent } from '@/types/events';
 
 export default Vue.extend({
@@ -61,14 +59,7 @@ export default Vue.extend({
     },
   },
   data() {
-    const loading = !this.event;
-
     return {
-      /**
-       * Status of repetition-diff fetching
-       * @type {boolean}
-       */
-      loading,
     };
   },
   computed: {
@@ -102,14 +93,6 @@ export default Vue.extend({
       });
 
       return filteredAddons;
-    },
-  },
-  watch: {
-    /**
-     * When event is changed
-     */
-    event() {
-      this.loading = false;
     },
   },
   methods: {

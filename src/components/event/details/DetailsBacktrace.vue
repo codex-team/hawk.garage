@@ -60,9 +60,9 @@
 
 <script>
 import DetailsBase from './DetailsBase';
-import CodeFragment from '../utils/CodeFragment';
-import Filepath from '../utils/Filepath';
-import Icon from '../utils/Icon';
+import CodeFragment from '../../utils/CodeFragment';
+import Filepath from '../../utils/Filepath';
+import Icon from '../../utils/Icon';
 
 export default {
   name: 'DetailsBacktrace',

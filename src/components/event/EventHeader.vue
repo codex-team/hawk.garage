@@ -38,6 +38,7 @@
       <div class="event-header__nav-bar">
         <EventHeaderNavigation
           :items="navigationItems"
+          :activeItemIndex="currentNavigationItem"
           @tabChanged="tabChanged($event)"
         />
 
@@ -52,11 +53,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import EventHeaderNavigation from './EventHeaderNavigation.vue';
+import EventHeaderNavigation from '../utils/TabBar.vue';
+import  { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
 import UIButton from '../utils/UIButton.vue';
 import Filepath from '../utils/Filepath.vue';
-import Icon from '../utils/Icon.vue';
 import UiLabel from '../utils/UiLabel.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 
@@ -68,7 +69,6 @@ export default Vue.extend({
     UIButton,
     UiLabel,
     Filepath,
-    Icon,
   },
   props: {
     /**
@@ -118,22 +118,29 @@ export default Vue.extend({
     /**
      * Navigation items
      *
-     * @return {Object[]}
+     * @return {TabInfo[]}
      */
-    navigationItems(): any[] {
+    navigationItems(): TabInfo[] {
       return [ {
-        title: 'overview',
-        link: 'event-overview',
-        badge: null,
+        title: this.$i18n.t('event.navigation.overview') as string,
+        routeName: 'event-overview',
       }, {
-        title: 'repetitions',
-        link: 'event-overview-repetitions',
-        badge: !this.loading ? this.event.totalCount : null,
+        title: this.$i18n.t('event.navigation.repetitions') as string,
+        routeName: 'event-repetitions',
+        badge: !this.loading ? this.event.totalCount : 0,
       }, {
-        title: 'daily',
-        link: 'event-overview-daily',
-        badge: 0,
+        title: this.$i18n.t('event.navigation.daily') as string,
+        routeName: 'event-daily',
       } ];
+    },
+
+    /**
+     * Return index of current page from this.navigationItems
+     */
+    currentNavigationItem(): number {
+      return this.navigationItems.findIndex(({ routeName }) => {
+        return routeName === this.$route.name;
+      });
     },
   },
   watch: {
