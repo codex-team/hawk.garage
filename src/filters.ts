@@ -126,7 +126,7 @@ Vue.filter('prettyDate', function (value: number) {
  * @return {string}
  */
 Vue.filter('prettyFullDate', function (value: Date | string) {
-  if (typeof value === 'string'){
+  if (typeof value === 'string') {
     value = new Date(value);
   }
 

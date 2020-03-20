@@ -39,7 +39,7 @@
       <div class="event-header__nav-bar">
         <TabBar
           :items="navigationItems"
-          :activeItemIndex="currentNavigationItem"
+          :active-item-index="currentNavigationItem"
         />
 
         <ViewedBy
@@ -53,8 +53,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import TabBar from '../utils/TabBar.vue';
-import  { TabInfo } from '../utils/TabBar.vue';
+import { TabInfo } from TabBar from '../utils/TabBar.vue';
+
 import ViewedBy from '../utils/ViewedBy.vue';
 import UIButton from '../utils/UIButton.vue';
 import Filepath from '../utils/Filepath.vue';
@@ -159,7 +159,6 @@ export default Vue.extend({
   },
 });
 </script>
-
 
 <style>
   .event-header {

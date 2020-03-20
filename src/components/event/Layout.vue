@@ -10,7 +10,7 @@
     />
     <div class="event-layout__info">
       <div class="event-layout__container">
-        <router-view :event="event"/>
+        <router-view :event="event" />
       </div>
     </div>
   </PopupDialog>

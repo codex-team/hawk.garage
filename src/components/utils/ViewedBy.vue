@@ -2,11 +2,14 @@
   <div class="viewed-by">
     <Icon symbol="eye" />
     <div
-      class="viewed-by__user"
       v-for="user in shownUsers"
+      class="viewed-by__user"
       :title="user"
     />
-    <span class="viewed-by__count" v-if="hiddenUsers.length">
+    <span
+      v-if="hiddenUsers.length"
+      class="viewed-by__count"
+    >
       +{{ hiddenUsers.length }}
     </span>
   </div>

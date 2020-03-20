@@ -34,7 +34,7 @@ export default Vue.extend({
       default: null,
     },
   },
-})
+});
 </script>
 
 <style scoped>

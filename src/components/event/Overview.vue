@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="event-overview" v-if="event">
+    <div
+      v-if="event"
+      class="event-overview"
+    >
       <DetailsBacktrace
         v-if="event.payload.backtrace && event.payload.backtrace.length"
         class="event-overview__section"

@@ -36,8 +36,8 @@
               class="details-backtrace__right-file"
             />
             <span
-              class="details-backtrace__right-line"
               v-if="frame.line"
+              class="details-backtrace__right-line"
             >
               line {{ getLocation(frame) }}
             </span>
