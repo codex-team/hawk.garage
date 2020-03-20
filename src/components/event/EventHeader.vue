@@ -1,10 +1,10 @@
 <template>
   <div class="event-header">
     <div class="event-layout__container">
-      <div class="event-label">
-        <Icon symbol="flash" />
-          Uncaught TypeError
-      </div>
+      <UiLabel
+        text="Uncaught TypeError"
+        icon="flash"
+      />
       <h1 class="event-header__title">
         {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
@@ -35,7 +35,7 @@
           icon="github"
         />
       </div>
-      <div class="event-header__information">
+      <div class="event-header__nav-bar">
         <EventHeaderNavigation
           :items="navigationItems"
           @tabChanged="tabChanged($event)"
@@ -57,8 +57,8 @@ import ViewedBy from '../utils/ViewedBy.vue';
 import UIButton from '../utils/UIButton.vue';
 import Filepath from '../utils/Filepath.vue';
 import Icon from '../utils/Icon.vue';
+import UiLabel from '../utils/UiLabel.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
-import i18n from './../../i18n';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -66,6 +66,7 @@ export default Vue.extend({
     EventHeaderNavigation,
     ViewedBy,
     UIButton,
+    UiLabel,
     Filepath,
     Icon,
   },
@@ -176,10 +177,6 @@ export default Vue.extend({
       color: var(--color-text-second);
     }
 
-    &__path {
-      opacity: 0.6;
-    }
-
     &__buttons {
       display: flex;
       margin-bottom: 13px;
@@ -189,28 +186,10 @@ export default Vue.extend({
       margin-right: 5px;
     }
 
-    &__information {
+    &__nav-bar {
       display: flex;
       justify-content: space-between;
       height: 50px;
-    }
-  }
-
-  .event-label {
-    display: inline-flex;
-    padding: 5px 10px;
-    background-color: var(--color-bg-second);
-    border-radius: 4px;
-    font-size: 13px;
-    letter-spacing: 0.15px;
-    line-height: 1em;
-    color: var(--color-text-second);
-
-    .icon {
-      width: 7px;
-      height: 12px;
-      margin-right: 8px;
-      vertical-align: middle;
     }
   }
 </style>
