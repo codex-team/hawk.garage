@@ -43,13 +43,17 @@
   </div>
 </template>
 
-<script>
-import EntityImage from '../../utils/EntityImage';
-import Icon from '../../utils/Icon';
-import TooltipMenu from '../../utils/TooltipMenu';
-import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
+<script lang="ts">
+import Vue from 'vue';
+import EntityImage from '../../utils/EntityImage.vue';
+import Icon from '../../utils/Icon.vue';
+import TooltipMenu from '../../utils/TooltipMenu.vue';
+import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+// eslint-disable-next-line no-unused-vars
+import { isPendingMember, Member } from '@/types/workspaces';
+import { TooltipMenuOptions } from '@/components/utils/tooltipMenu';
 
-export default {
+export default Vue.extend({
   name: 'TeamMember',
   components: {
     TooltipMenu,
@@ -62,7 +66,7 @@ export default {
       required: true,
     },
     member: {
-      type: Object,
+      type: Object as () => Member,
       required: true,
     },
     hasAdminPermissions: {
@@ -76,23 +80,38 @@ export default {
     };
   },
   methods: {
-    getTooltipMenuOptions(member) {
-      const options = [];
+    /**
+     * Returns options for tooltip menu
+     */
+    getTooltipMenuOptions(member: Member): TooltipMenuOptions[] {
+      const options: TooltipMenuOptions[] = [];
 
-      if (!member.isPending) {
+      if (!isPendingMember(member)) {
         options.push({
-          title: member.isAdmin ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin'),
+          title: (member.isAdmin
+            ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin')) as string,
           onClick: this.grantAdmin(member.user.id, member.isAdmin),
+        });
+
+        options.push({
+          title: this.$t('workspaces.settings.team.removeMember') as string,
+          onClick: this.removeUser(member.user.id, null),
+        });
+      } else {
+        options.push({
+          title: this.$t('workspaces.settings.team.removeMember') as string,
+          onClick: this.removeUser(null, member.email),
         });
       }
 
-      options.push({
-        title: this.$t('workspaces.settings.team.removeMember'),
-        onClick: this.removeUser(member.user.id, member.email),
-      });
-
       return options;
     },
+
+    /**
+     * Grant or withdraw admin permissions
+     * @param userId - user id to grant permissions
+     * @param previousState - previous state of permission
+     */
     grantAdmin(userId, previousState) {
       return () => this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
         workspaceId: this.workspaceId,
@@ -100,6 +119,12 @@ export default {
         state: !previousState,
       });
     },
+
+    /**
+     * Removes user from workspace
+     * @param userId - user id to remove
+     * @param userEmail - user email to remove (instead of userId)
+     */
     removeUser(userId, userEmail) {
       return () => this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
         workspaceId: this.workspaceId,
@@ -108,7 +133,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style>

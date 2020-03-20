@@ -82,8 +82,19 @@ export default Vue.extend({
   },
   data() {
     return {
+      /**
+       * User email for invitation
+       */
       userEmail: '',
+
+      /**
+       * Base URL for invite link
+       */
       baseUrl: window.location.origin,
+
+      /**
+       * Current authenticated user
+       */
       user: this.$store.state.user.data,
     };
   },
@@ -107,6 +118,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    /**
+     * Show notification on link copied
+     */
     onLinkCopied() {
       notifier.show({
         message: this.$t('common.copiedNotification') as string,
@@ -115,6 +129,9 @@ export default Vue.extend({
       });
     },
 
+    /**
+     * Sends invitation to the user and updates store
+     */
     async onInvitationSent() {
       if (!this.userEmail) {
         return;

@@ -14,16 +14,20 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+// eslint-disable-next-line no-unused-vars
+import { TooltipMenuOptions } from '@/components/utils/tooltipMenu';
+
+export default Vue.extend({
   name: 'TooltipMenu',
   props: {
     options: {
-      type: Array,
+      type: Array as () => TooltipMenuOptions[],
       required: true,
     },
   },
-};
+});
 </script>
 
 <style>
