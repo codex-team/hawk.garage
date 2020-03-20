@@ -10,9 +10,7 @@
           Uncaught TypeError
         </span>
       </div>
-      <h1
-        class="event-header__title"
-      >
+      <h1 class="event-header__title">
         {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
       <Filepath
@@ -196,6 +194,7 @@ export default Vue.extend({
       margin-bottom: 30px;
       font-size: 14px;
       letter-spacing: 0.1px;
+      color: var(--color-text-second);
     }
 
     &__path {

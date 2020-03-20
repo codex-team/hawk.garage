@@ -44,33 +44,25 @@ export default Vue.extend({
    display: flex;
    align-items: center;
    padding: 6px 7px;
-   border: solid 1px var(--color-bg-main);
+   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
+   color: var(--color-text-second);
    border-radius: 4px;
    cursor: pointer;
    user-select: none;
 
+   &:hover {
+     color: var(--color-text-main);
+   }
+
    &-icon {
      width: 15px;
      height: 14px;
-     margin-right: 8px;
-     opacity: 0.6;
-   }
-
-   &-icon-hided {
-     width: 15px;
-     height: 12px;
-     margin: 2px 4px 0 1px;
+     margin-right: 5px;
    }
 
    &-text {
      font-weight: 500;
      font-size: 14px;
-     opacity: 0.6;
-   }
-
-   &:hover &-text, &:hover &-icon,
-   &:focus &-text, &:focus &-icon {
-    opacity: 1;
    }
  }
 </style>

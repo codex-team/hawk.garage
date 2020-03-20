@@ -85,17 +85,17 @@ const router = new Router({
             {
               path: 'event/:eventId/repetitions',
               name: 'event-overview-repetitions',
-              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/event/EventLayout.vue'),
+              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/event/Event.vue'),
             },
             {
               path: 'event/:eventId/daily',
               name: 'event-overview-daily',
-              component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/EventLayout.vue'),
+              component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Event.vue'),
             },
             {
               path: 'event/:eventId/:repetitionId?',
               name: 'event-overview',
-              component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/EventLayout.vue'),
+              component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Event.vue'),
             },
             /**
              * Project Settings
