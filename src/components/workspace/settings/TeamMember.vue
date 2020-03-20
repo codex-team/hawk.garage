@@ -1,7 +1,7 @@
 <template>
   <div
     class="team-member"
-    :class="{'team-member--pending': member.isPending, 'team-member--admin': hasAdminPermissions}"
+    :class="{'team-member--pending': member.isPending, 'team-member--admin': isTooltipShowed}"
   >
     <Icon
       v-if="member.isPending"
@@ -28,7 +28,7 @@
     </div>
 
     <div
-      v-if="member.isAdmin || member.isPending"
+      v-if="member.isAdmin || isPending"
       class="team-member__status-label"
       :class="{'team-member__status-label--admin': member.isAdmin}"
     >
@@ -38,7 +38,7 @@
     <TooltipMenu
       v-if="isTooltipShowed && user.id !== member.user.id"
       class="team-member__tooltip-menu"
-      :options="getTooltipMenuOptions(member)"
+      :options="getTooltipMenuOptions()"
     />
   </div>
 </template>
@@ -77,6 +77,10 @@ export default Vue.extend({
       type: Object as () => Member,
       required: true,
     },
+
+    /**
+     * If true tooltip menu will be visible
+     */
     isTooltipShowed: {
       type: Boolean,
       default: false,
@@ -87,58 +91,63 @@ export default Vue.extend({
       user: this.$store.state.user.data,
     };
   },
+  computed: {
+    isPending(): boolean {
+      return isPendingMember(this.member);
+    },
+  },
   methods: {
     /**
      * Returns options for tooltip menu
      */
-    getTooltipMenuOptions(member: Member): TooltipMenuOptions[] {
+    getTooltipMenuOptions(): TooltipMenuOptions[] {
       const options: TooltipMenuOptions[] = [];
 
-      if (!isPendingMember(member)) {
+      if (!isPendingMember(this.member)) {
         options.push({
-          title: (member.isAdmin
+          title: (this.member.isAdmin
             ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin')) as string,
-          onClick: this.grantAdmin(member.user.id, member.isAdmin),
-        });
-
-        options.push({
-          title: this.$t('workspaces.settings.team.removeMember') as string,
-          onClick: this.removeUser(member.user.id, null),
-        });
-      } else {
-        options.push({
-          title: this.$t('workspaces.settings.team.removeMember') as string,
-          onClick: this.removeUser(null, member.email),
+          onClick: this.grantAdmin,
         });
       }
+      options.push({
+        title: this.$t('workspaces.settings.team.removeMember') as string,
+        onClick: this.removeUser,
+      });
 
       return options;
     },
 
     /**
      * Grant or withdraw admin permissions
-     * @param userId - user id to grant permissions
-     * @param previousState - previous state of permission
      */
-    grantAdmin(userId, previousState) {
-      return () => this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
-        workspaceId: this.workspaceId,
-        userId,
-        state: !previousState,
-      });
+    async grantAdmin(): Promise<void> {
+      if (!isPendingMember(this.member)) {
+        await this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
+          workspaceId: this.workspaceId,
+          userId: this.member.user.id,
+          state: !this.member.isAdmin,
+        });
+      }
     },
 
     /**
      * Removes user from workspace
-     * @param userId - user id to remove
-     * @param userEmail - user email to remove (instead of userId)
      */
-    removeUser(userId, userEmail) {
-      return () => this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
-        workspaceId: this.workspaceId,
-        userId,
-        userEmail,
-      });
+    async removeUser(): Promise<void> {
+      if (isPendingMember(this.member)) {
+        await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
+          workspaceId: this.workspaceId,
+          userId: null,
+          userEmail: this.member.email,
+        });
+      } else {
+        await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
+          workspaceId: this.workspaceId,
+          userId: this.member.user.id,
+          userEmail: null,
+        });
+      }
     },
   },
 });
