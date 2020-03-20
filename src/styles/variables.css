@@ -46,6 +46,31 @@
 @custom-media --media-desktop all and (min-width: 1050px);
 @custom-media --media-mobile all and (max-width: 980px);
 
-@define-mixin loader $name {
-  background: $name;
+@define-mixin loader $size, $color1, $color2 {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $size;
+    height: $size;
+    margin: calc($size / 2 * -1) 0 0 calc($size / 2 * -1);
+    border: 2px solid $color1;
+    border-left-color: $color2;
+    border-radius: 50%;
+    animation: loaderRotation 500ms infinite linear;
+    content: '';
+    will-change: transform;
+  }
+}
+
+
+@keyframes loaderRotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

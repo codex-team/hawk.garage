@@ -43,11 +43,22 @@ module.exports = {
         'color-mod-function': {}
       }
     },
+
+
     /**
      * Simple template defined directly in CSS to prevent repeating yourself.
      * https://github.com/postcss/postcss-mixins
      */
     'postcss-mixins': {},
+
+    /**
+     * PostCSS plugin for Sass-like variables.
+     * You can use variables inside values, selectors and at-rule’s parameters.
+     * https://github.com/postcss/postcss-simple-vars
+     */
+    'postcss-simple-vars': {},
+
+
 
     /**
      * PostCSS plugin to reference any parent/ancestor selector in nested CSS.
@@ -68,6 +79,7 @@ module.exports = {
      * Compression tool
      * https://github.com/cssnano/cssnano
      */
-    cssnano: {}
+    cssnano: {},
+
   }
 };

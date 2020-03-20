@@ -17,7 +17,7 @@
         />
         <div
           v-else
-          class="event-layout__loader loader"
+          class="event-layout__loader"
         >
 
         </div>
@@ -111,7 +111,7 @@ export default Vue.extend({
 </script>
 
 <style>
-  @import "~styles/variables";
+  @import "./../../styles/variables";
 
   .event-layout {
     /** Override Popup Dialog animation */
@@ -146,8 +146,9 @@ export default Vue.extend({
 
     &__loader {
       min-height: 200px;
+      margin: -25px 0;
 
-      @mixin loader red;
+      @mixin loader 34px, var(--color-border), var(--color-text-second);
     }
   }
 </style>

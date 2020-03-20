@@ -42,15 +42,6 @@ module.exports = {
     devServer: {
       progress: false,
     },
-    // resolve: {
-    //   alias: {
-    //     "~": path.resolve(__dirname, 'src/'),
-    //     // variables: path.resolve(__dirname, 'src', 'styles', 'variables.css'),
-    //     // styles: path.resolve(__dirname, 'src', 'styles'),
-    //   },
-    //   // extensions that are used
-    //   extensions: ['.js', '.ts', '.vue', '.css'],
-    // },
   },
   /**
    * Disable progress to boost bundling speed
@@ -72,12 +63,6 @@ module.exports = {
 
       return definitions;
     });
-
-    config.resolve.alias.set('styles', path.resolve(__dirname, 'src/styles'));
-
-    // config.resolve.alias
-    //   .set('variables', path.resolve(__dirname, 'src', 'styles', 'variables.css'))
-    //   .set('styles', path.resolve(__dirname, 'src', 'styles'));
   },
   pwa: {
     name: 'hawk.so',
