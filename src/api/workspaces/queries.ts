@@ -1,19 +1,5 @@
 // language=GraphQL
 /**
- * Structure representes record in team:<projectId> collection
- */
-const MEMBER_FRAGMENT = `
-  fragment Member on Member {
-    id
-    userId
-    name
-    email
-    isAdmin
-    isPending
-  }
-`;
-
-/**
  * Query for getting all user's workspaces and project.
  */
 export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
@@ -23,11 +9,22 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       name
       description
       image
-      users {
-        ...Member
-      }
-      pendingUsers {
-        ...Member
+      team {
+        __typename
+        ...on ConfirmedMember {
+          id
+          user {
+            id
+            email
+            image
+          }
+          isAdmin
+        }
+
+        ...on PendingMember {
+          id
+          email
+        }
       }
       projects {
         id
@@ -55,8 +52,6 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       }
     }
   }
-  
-  ${MEMBER_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -73,16 +68,25 @@ export const MUTATION_CREATE_WORKSPACE = `
       name
       description
       image
-      users {
-        ...Member
-      }
-      pendingUsers {
-        ...Member
+      team {
+        __typename
+        ...on ConfirmedMember {
+          id
+          user {
+            id
+            email
+            image
+          }
+          isAdmin
+        }
+
+        ... on PendingMember {
+          id
+          email
+        }
       }
     }
   }
-
-  ${MEMBER_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -130,16 +134,25 @@ export const QUERY_WORKSPACES = `
        monthlyCharge
        eventsLimit
      }
-     users {
-       ...Member
-     }
-     pendingUsers {
-       ...Member
+     team {
+       __typename
+       ...on ConfirmedMember {
+         id
+         user {
+           id
+           email
+           image
+         }
+         isAdmin
+       }
+
+       ... on PendingMember {
+         id
+         email
+       }
      }
    }
  }
-
- ${MEMBER_FRAGMENT}
 `;
 
 // language=GraphQL

@@ -48,7 +48,7 @@
       >{{ $t('workspaces.settings.team.title') }}</label>
       <div>
         <TeamMember
-          v-for="member in (workspace.users ? workspace.users.concat(workspace.pendingUsers) : [])"
+          v-for="member in workspace.team"
           :key="member.id"
           :has-admin-permissions="currentMembership.isAdmin"
           :workspace-id="workspace.id"
@@ -64,7 +64,8 @@ import Vue from 'vue';
 import notifier from 'codex-notifier';
 import { INVITE_TO_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import TeamMember from './TeamMember.vue';
-import { Workspace, Member } from '@/types/workspaces';
+// eslint-disable-next-line no-unused-vars
+import { Workspace, Member, isPendingMember } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsTeam',
@@ -95,14 +96,14 @@ export default Vue.extend({
         return [];
       }
 
-      return [...this.workspace.users, ...this.workspace.pendingUsers];
+      return this.workspace.team;
     },
 
     /**
      * Current user in current workspace
      */
     currentMembership(): Member | undefined {
-      return this.team.find(u => u.userId === this.user.id);
+      return this.team.find(member => !isPendingMember(member) && member.user.id === this.user.id);
     },
   },
   methods: {
@@ -113,6 +114,7 @@ export default Vue.extend({
         time: 2000,
       });
     },
+
     async onInvitationSent() {
       if (!this.userEmail) {
         return;

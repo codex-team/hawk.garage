@@ -11,17 +11,17 @@
 
     <EntityImage
       v-else
-      :id="member.id"
-      :name="member.email || 'H'"
-      :image="member.image"
+      :id="member.user.id"
+      :name="member.user.email || 'H'"
+      :image="member.user.image"
       class="team-member__image"
     />
 
     <div class="team-member__name">
-      {{ member.name || member.email }}
+      {{ member.user.name || member.user.email }}
     </div>
     <div
-      v-if="user.id === member.id"
+      v-if="user.id === member.user.id"
       class="team-member__you-label"
     >
       ({{ $t('workspaces.settings.team.youLabel') }})
@@ -82,13 +82,13 @@ export default {
       if (!member.isPending) {
         options.push({
           title: member.isAdmin ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin'),
-          onClick: this.grantAdmin(member.id, member.isAdmin),
+          onClick: this.grantAdmin(member.user.id, member.isAdmin),
         });
       }
 
       options.push({
         title: this.$t('workspaces.settings.team.removeMember'),
-        onClick: this.removeUser(member.id, member.email),
+        onClick: this.removeUser(member.user.id, member.email),
       });
 
       return options;
