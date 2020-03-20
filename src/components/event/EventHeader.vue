@@ -53,8 +53,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { TabInfo } from TabBar from '../utils/TabBar.vue';
-
+import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
 import UIButton from '../utils/UIButton.vue';
 import Filepath from '../utils/Filepath.vue';

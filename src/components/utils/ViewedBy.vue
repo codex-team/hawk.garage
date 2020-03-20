@@ -2,7 +2,8 @@
   <div class="viewed-by">
     <Icon symbol="eye" />
     <div
-      v-for="user in shownUsers"
+      v-for="(user, index) in shownUsers"
+      :key="index"
       class="viewed-by__user"
       :title="user"
     />
