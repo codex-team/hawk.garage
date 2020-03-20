@@ -54,19 +54,47 @@ export default Vue.extend({
      * @return {string}
      */
     file(): string {
-      return /[^/]+$/.exec(this.location)![0];
+      const parts = this.location.split('/');
+      const lastPart = parts[parts.length - 1];
+
+      return this.removeGetParams(lastPart);
     },
 
     /**
-     * Pretty file path
+     * Removes unwanted parts of a path:
+     * - protocols
+     * - GET parameters
+     * Then, add spaces around slashes
      *
      * @return {string}
      */
     prettyPath(): string {
-      return this.path
-        .replace(/^(.*?)\/{2,3}/, '')
-        .replace(/\//g, ' / ')
-        .replace(/\?.*/, '');
+      let path = this.path;
+
+      path = this.removeProtocol(path);
+      path = this.removeGetParams(path);
+
+      /**
+       * Replace '/' with ' / '
+       */
+      return path.replace(/\//g, ' / ');
+    },
+  },
+  methods: {
+    /**
+     * Removes everything after "?"
+     * @param path - where to remove
+     */
+    removeGetParams(path: string): string {
+      return path.replace(/\?.*/, '');
+    },
+
+    /**
+     * Removes protocols like 'webpack://' or 'file://'
+     * @param path - where to remove
+     */
+    removeProtocol(path: string): string {
+      return path.replace(/^(.*?)\/{2,3}/, '');
     },
   },
 });
@@ -74,8 +102,6 @@ export default Vue.extend({
 
 <style>
  .filepath {
-   color: var(--color-text-second);
-
    &__filename {
      color: var(--color-indicator-critical);
    }

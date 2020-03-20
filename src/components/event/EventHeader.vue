@@ -1,58 +1,56 @@
 <template>
   <div class="event-header">
     <div class="event-layout__container">
-      <div class="event-header__error">
-        <Icon
-          class="event-header__flash-icon"
-          symbol="flash"
-        />
-        <span class="event-header__error-text">
-          Uncaught TypeError
-        </span>
-      </div>
-      <h1
-        class="event-header__title"
-      >
+      <UiLabel
+        text="Uncaught TypeError"
+        icon="flash"
+      />
+      <h1 class="event-header__title">
         {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
       <Filepath
         class="event-header__location"
         :location="location"
         :is-highlight="true"
+        :title="location"
       />
       <div class="event-header__buttons">
-        <UIButton
+        <UiButton
           class="event-header__button"
           :class="{'event-overview__button--selected': !loading && event.marks.includes('RESOLVED')}"
           icon="checkmark"
           @click="markEvent('RESOLVED')"
         />
-        <UIButton
+        <UiButton
           class="event-header__button"
           :class="{'event-overview__button--selected': !loading && event.marks.includes('STARRED')}"
           :content="$t('event.star')"
           icon="star"
           @click="markEvent('STARRED')"
         />
-        <UIButton
+        <UiButton
           class="event-header__button"
           :class="{'event-overview__button--selected': !loading && event.marks.includes('IGNORED')}"
           :content="$t('event.ignore')"
           icon="hided"
           @click="markEvent('IGNORED')"
         />
-        <UIButton
+        <UiButton
           class="event-header__button"
           :content="$t('event.issue')"
           icon="github"
         />
       </div>
-      <div class="event-header__information">
-        <EventHeaderNavigation
+      <div class="event-header__nav-bar">
+        <TabBar
           :items="navigationItems"
-          @tabChanged="tabChanged($event)"
+          :active-item-index="currentNavigationItem"
         />
-        <ViewedBy />
+
+        <ViewedBy
+          v-if="event && event.visitedBy && event.visitedBy.length"
+          :users="event.visitedBy"
+        />
       </div>
     </div>
   </div>
@@ -60,22 +58,22 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import EventHeaderNavigation from './EventHeaderNavigation.vue';
+import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
-import UIButton from '../utils/UIButton.vue';
+import UiButton from '../utils/UiButton.vue';
 import Filepath from '../utils/Filepath.vue';
-import Icon from '../utils/Icon.vue';
+import UiLabel from '../utils/UiLabel.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
 
 export default Vue.extend({
   name: 'EventHeader',
   components: {
-    EventHeaderNavigation,
+    TabBar,
     ViewedBy,
-    UIButton,
+    UiButton,
+    UiLabel,
     Filepath,
-    Icon,
   },
   props: {
     /**
@@ -125,22 +123,33 @@ export default Vue.extend({
     /**
      * Navigation items
      *
-     * @return {Object[]}
+     * @return {TabInfo[]}
      */
-    navigationItems(): any[] {
-      return [ {
-        title: 'overview',
-        link: 'event-overview',
-        badge: null,
-      }, {
-        title: 'repetitions',
-        link: 'event-overview-repetitions',
-        badge: !this.loading ? this.event.totalCount : null,
-      }, {
-        title: 'daily',
-        link: 'event-overview-daily',
-        badge: 0,
-      } ];
+    navigationItems(): TabInfo[] {
+      return [
+        {
+          title: this.$i18n.t('event.navigation.overview') as string,
+          routeName: 'event-overview',
+        },
+        {
+          title: this.$i18n.t('event.navigation.repetitions') as string,
+          routeName: 'event-repetitions',
+          badge: !this.loading ? this.event.totalCount : 0,
+        },
+        {
+          title: this.$i18n.t('event.navigation.daily') as string,
+          routeName: 'event-daily',
+        },
+      ];
+    },
+
+    /**
+     * Return index of current page from this.navigationItems
+     */
+    currentNavigationItem(): number {
+      return this.navigationItems.findIndex(({ routeName }) => {
+        return routeName === this.$route.name;
+      });
     },
   },
   watch: {
@@ -152,14 +161,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    /**
-     * Emit for active item
-     * @param {Object} item - active item
-     */
-    tabChanged(item: any) {
-      this.$emit('tabChanged', item);
-    },
-
     /**
      * Set mark for current event
      *
@@ -184,29 +185,8 @@ export default Vue.extend({
     color: var(--color-text-main);
     background-color: #121419;
 
-    &__error {
-      display: inline-flex;
-      padding: 4px 10px;
-      background-color: var(--color-bg-second);
-      border-radius: 4px;
-
-      &-text {
-        align-items: center;
-        font-weight: 500;
-        font-size: 13px;
-        letter-spacing: 0.05px;
-        opacity: 0.6;
-      }
-    }
-
-    &__flash-icon {
-      width: 7px;
-      height: 12px;
-      margin-right: 10px;
-      opacity: 0.6;
-    }
-
     &__title {
+      margin: 10px 0 15px;
       font-size: 18px;
       line-height: 1.67;
     }
@@ -216,10 +196,11 @@ export default Vue.extend({
       margin-bottom: 30px;
       font-size: 14px;
       letter-spacing: 0.1px;
-    }
-
-    &__path {
-      opacity: 0.6;
+      color: var(--color-text-second);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 650px;
     }
 
     &__buttons {
@@ -242,7 +223,7 @@ export default Vue.extend({
       }
     }
 
-    &__information {
+    &__nav-bar {
       display: flex;
       justify-content: space-between;
       height: 50px;

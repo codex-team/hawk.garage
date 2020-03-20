@@ -48,7 +48,7 @@ export default {
       background-color: var(--color-indicator-critical);
     }
 
-    &--visited {
+    &--silent {
       color: var(--color-text-second);
       background-color: var(--color-bg-main);
     }

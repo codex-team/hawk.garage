@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Icon from '../utils/Icon';
+import Icon from '../../utils/Icon';
 
 export default {
   name: 'EventDetailsBase',

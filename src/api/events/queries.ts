@@ -11,6 +11,7 @@ export const QUERY_EVENT = `
         totalCount
         groupHash
         marks
+        visitedBy
         payload {
           title
           release

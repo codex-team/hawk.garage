@@ -76,7 +76,7 @@ export default {
       position: relative;
       display: flex;
       flex-direction: column;
-      max-width: 1100px;
+      max-width: 1000px;
       margin: auto 0;
       background-color: var(--color-bg-second);
       border-radius: 3px;

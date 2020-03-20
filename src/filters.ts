@@ -125,7 +125,11 @@ Vue.filter('prettyDate', function (value: number) {
  * Returns prettified date ('29 aug, 14:30')
  * @return {string}
  */
-Vue.filter('prettyFullDate', function (value: Date) {
+Vue.filter('prettyFullDate', function (value: Date | string) {
+  if (typeof value === 'string') {
+    value = new Date(value);
+  }
+
   const day = value.getDate();
   const month = value.getMonth();
   const hours = value.getHours();

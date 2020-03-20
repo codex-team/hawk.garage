@@ -1,26 +1,18 @@
 <template>
-  <div class="viewed-by__users">
-    <Icon
-      class="viewed-by__eye-icon"
-      symbol="eye"
+  <div class="viewed-by">
+    <Icon symbol="eye" />
+    <div
+      v-for="(user, index) in shownUsers"
+      :key="index"
+      class="viewed-by__user"
+      :title="user"
     />
-    <div class="viewed-by__users-avatar" />
-    <div class="viewed-by__users-avatar" />
-    <div class="viewed-by__users-avatar" />
-    <span class="viewed-by__users-count">+17</span>
-    <span class="viewed-by__assignee-text">{{ $t('event.viewedBy.assignee') }}</span>
-    <div class="viewed-by__assignee-icons-bg">
-      <div class="viewed-by__assignee-icon-bg">
-        <Icon
-          class="viewed-by__assignee-icon"
-          symbol="assignee"
-        />
-      </div>
-      <Icon
-        class="viewed-by__assignee-arrow-down"
-        symbol="arrow-down"
-      />
-    </div>
+    <span
+      v-if="hiddenUsers.length"
+      class="viewed-by__count"
+    >
+      +{{ hiddenUsers.length }}
+    </span>
   </div>
 </template>
 
@@ -33,76 +25,55 @@ export default Vue.extend({
   components: {
     Icon,
   },
+  props: {
+    /**
+     * Users that have visited the object
+     */
+    users: {
+      type: Array as () => string[],
+      required: true,
+    },
+  },
+  computed: {
+    /**
+     * We can show only 3 last users
+     */
+    shownUsers(): string[] {
+      return this.users.slice(0, 3);
+    },
+
+    /**
+     * We can show only 3 last users, other will be hided.
+     * This method returns the hidded users.
+     */
+    hiddenUsers(): string[] {
+      return this.users.slice(3);
+    },
+  },
 });
 </script>
 
 <style>
   .viewed-by {
-    &__users {
-      display: flex;
-      align-items: center;
-      font-weight: 500;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-second);
 
-      &-avatar {
-        width: 14px;
-        height: 14px;
-        margin-right: 6px;
-        background-color: var(--color-bg-second);
-        border-radius: 5px;
-      }
-
-      &-count {
-        margin-right: 30px;
-        font-size: 12px;
-        opacity: 0.6;
-      }
+    &__user {
+      width: 14px;
+      height: 14px;
+      margin-right: 6px;
+      background-color: var(--color-bg-second);
+      border-radius: 5px;
     }
 
-    &__eye-icon {
+    &__count {
+      font-size: 12px;
+    }
+    .icon {
       width: 12px;
       height: 8px;
       margin-right: 6px;
-      opacity: 0.6;
-    }
-
-    &__assignee {
-
-      &-icons-bg {
-        display: flex;
-        align-items: center;
-        padding: 4px 9px 4px 4px;
-        background-color: var(--color-bg-main);
-        border-radius: 7px;
-      }
-
-      &-icon-bg {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 16px;
-        height: 16px;
-        margin-right: 5px;
-        background-color: var(--color-bg-second);
-        border-radius: 5px;
-      }
-
-      &-text {
-        margin-right: 10px;
-        font-size: 14px;
-        opacity: 0.6;
-      }
-
-      &-icon {
-        width: 14px;
-        height: 14px;
-        opacity: 0.6;
-      }
-
-      &-arrow-down {
-        width: 12px;
-        height: 12px;
-        opacity: 0.6;
-      }
     }
   }
 </style>

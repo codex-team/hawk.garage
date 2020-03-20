@@ -21,6 +21,7 @@
       </div>
     </div>
     <Badge
+      v-if="project.unreadCount > 0"
       :content="project.unreadCount"
       class="project-menu-item__events-number"
     />
