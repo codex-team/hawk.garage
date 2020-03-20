@@ -1,3 +1,5 @@
+import {User} from "@/types/user";
+
 /**
  * Workspace representation
  */
@@ -23,52 +25,51 @@ export interface Workspace {
   image?: string;
 
   /**
-   * Workspace users array
+   * Workspace members array
    */
-  users: Member[];
-
-  /**
-   * Workspace pending users array
-   */
-  pendingUsers: Member[];
+  team: Member[];
 }
 
 /**
- * Structure represents a member of a Workspace
+ * Represents confirmed member info in DB
  */
-export interface Member {
+interface ConfirmedMember {
   /**
-   * Id of record in team:<projectId> collection
+   * Document id
    */
   id: string;
 
   /**
-   * Registered user id
+   * Id of the member of workspace
    */
-  userId: string;
+  user: User;
 
   /**
-   * User's email
-   */
-  email: string;
-
-  /**
-   * User's name
-   */
-  name: string;
-
-  /**
-   * User's image
-   */
-  image: string;
-
-  /**
-   * True is user has admin permissions
+   * Is user admin in workspace
    */
   isAdmin: boolean;
+}
+
+/**
+ * Represents pending member info in DB
+ */
+interface PendingMember {
+  /**
+   * Document id
+   */
+  id: string;
 
   /**
-   * True if user invitation should be confirmed
+   * User email for invitation
    */
-  isPending: boolean;
+  email: string;
+}
+
+/**
+ * Represents both member types in workspace team
+ */
+export type Member = ConfirmedMember | PendingMember;
+
+export function isPendingMember(doc: Member): doc is PendingMember {
+  return !!(doc as PendingMember).email && !(doc as ConfirmedMember).user;
 }
