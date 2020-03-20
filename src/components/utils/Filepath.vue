@@ -60,14 +60,11 @@ export default Vue.extend({
       return this.removeGetParams(lastPart);
     },
 
-    parts(): string[] {
-      return this.prettyPath.split('/');
-    },
-
     /**
      * Removes unwanted parts of a path:
      * - protocols
      * - GET parameters
+     * Then, add spaces around slashes
      *
      * @return {string}
      */
