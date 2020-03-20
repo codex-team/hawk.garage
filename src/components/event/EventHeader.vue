@@ -1,14 +1,9 @@
 <template>
   <div class="event-header">
     <div class="event-layout__container">
-      <div class="event-header__error">
-        <Icon
-          class="event-header__flash-icon"
-          symbol="flash"
-        />
-        <span class="event-header__error-text">
+      <div class="event-label">
+        <Icon symbol="flash" />
           Uncaught TypeError
-        </span>
       </div>
       <h1 class="event-header__title">
         {{ (!loading) ? event.payload.title : $t('event.loading') }}
@@ -160,33 +155,12 @@ export default Vue.extend({
 });
 </script>
 
+
 <style>
   .event-header {
     padding: 35px 20px 0 20px;
     color: var(--color-text-main);
     background-color: #121419;
-
-    &__error {
-      display: inline-flex;
-      padding: 4px 10px;
-      background-color: var(--color-bg-second);
-      border-radius: 4px;
-
-      &-text {
-        align-items: center;
-        font-weight: 500;
-        font-size: 13px;
-        letter-spacing: 0.05px;
-        opacity: 0.6;
-      }
-    }
-
-    &__flash-icon {
-      width: 7px;
-      height: 12px;
-      margin-right: 10px;
-      opacity: 0.6;
-    }
 
     &__title {
       margin: 10px 0 15px;
@@ -219,6 +193,24 @@ export default Vue.extend({
       display: flex;
       justify-content: space-between;
       height: 50px;
+    }
+  }
+
+  .event-label {
+    display: inline-flex;
+    padding: 5px 10px;
+    background-color: var(--color-bg-second);
+    border-radius: 4px;
+    font-size: 13px;
+    letter-spacing: 0.15px;
+    line-height: 1em;
+    color: var(--color-text-second);
+
+    .icon {
+      width: 7px;
+      height: 12px;
+      margin-right: 8px;
+      vertical-align: middle;
     }
   }
 </style>
