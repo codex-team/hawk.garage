@@ -15,7 +15,7 @@ import Vue from 'vue';
 import Icon from './Icon.vue';
 
 export default Vue.extend({
-  name: 'UIButton',
+  name: 'UiButton',
   components: {
     Icon,
   },

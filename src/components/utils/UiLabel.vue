@@ -30,14 +30,13 @@ export default Vue.extend({
      */
     icon: {
       type: String,
-      required: false,
       default: null,
     },
   },
 });
 </script>
 
-<style scoped>
+<style>
   .ui-label {
     display: inline-flex;
     padding: 5px 10px;

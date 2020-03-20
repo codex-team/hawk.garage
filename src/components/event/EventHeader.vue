@@ -15,22 +15,22 @@
         :title="location"
       />
       <div class="event-header__buttons">
-        <UIButton
+        <UiButton
           class="event-header__button"
           :content="$t('event.resolve')"
           icon="checkmark"
         />
-        <UIButton
+        <UiButton
           class="event-header__button"
           :content="$t('event.star')"
           icon="star"
         />
-        <UIButton
+        <UiButton
           class="event-header__button"
           :content="$t('event.ignore')"
           icon="hided"
         />
-        <UIButton
+        <UiButton
           class="event-header__button"
           :content="$t('event.issue')"
           icon="github"
@@ -55,7 +55,7 @@
 import Vue from 'vue';
 import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
-import UIButton from '../utils/UIButton.vue';
+import UiButton from '../utils/UiButton.vue';
 import Filepath from '../utils/Filepath.vue';
 import UiLabel from '../utils/UiLabel.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
@@ -65,7 +65,7 @@ export default Vue.extend({
   components: {
     TabBar,
     ViewedBy,
-    UIButton,
+    UiButton,
     UiLabel,
     Filepath,
   },

@@ -10,7 +10,17 @@
     />
     <div class="event-layout__info">
       <div class="event-layout__container">
-        <router-view :event="event" />
+        <router-view
+          v-if="event"
+          :event="event"
+          :project-id="projectId"
+        />
+        <div
+          v-else
+          class="event-layout__loader loader"
+        >
+
+        </div>
       </div>
     </div>
   </PopupDialog>
@@ -130,6 +140,10 @@ export default Vue.extend({
 
     &__info {
       padding: 25px 30px;
+    }
+
+    &__loader {
+      min-height: 200px;
     }
   }
 </style>

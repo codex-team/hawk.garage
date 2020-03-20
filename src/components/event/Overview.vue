@@ -57,8 +57,7 @@ export default Vue.extend({
      */
     event: {
       type: Object as () => HawkEvent,
-      default: null,
-      validator: prop => typeof prop === 'object' || prop === null,
+      required: true,
     },
   },
   data() {
