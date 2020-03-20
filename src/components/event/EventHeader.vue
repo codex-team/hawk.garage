@@ -45,7 +45,11 @@
           :items="navigationItems"
           @tabChanged="tabChanged($event)"
         />
-        <ViewedBy />
+
+        <ViewedBy
+          v-if="event && event.visitedBy && event.visitedBy.length"
+          :users="event.visitedBy"
+        />
       </div>
     </div>
   </div>
@@ -185,6 +189,7 @@ export default Vue.extend({
     }
 
     &__title {
+      margin: 10px 0 15px;
       font-size: 18px;
       line-height: 1.67;
     }

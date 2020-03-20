@@ -174,15 +174,12 @@ export default {
     }
 
     &__arrow-down {
-      position: absolute;
-      top: 50%;
-      right: 12px;
-      width: 16px;
-      height: 16px;
-      transform: translateY(-50%);
+      margin: 0 4px 0 11px;
+      width: 12px;
+      height: 12px;
 
       &--opened {
-        transform: rotate(180deg) translateY(50%);
+        transform: rotate(180deg);
       }
     }
 
@@ -191,8 +188,8 @@ export default {
       display: flex;
       align-items: center;
       padding: 7px;
-      font-size: 12px;
-      font-family: var(--font-monospace);
+      font-size: 13px;
+      letter-spacing: 0.15px;
       cursor: pointer;
     }
 
@@ -209,15 +206,12 @@ export default {
     }
 
     &__left {
-      letter-spacing: -0.3px;
-
       &-anonymous-function{
         opacity: 0.3;
       }
     }
 
     &__right {
-      margin-right: 47px;
       margin-left: auto;
     }
   }

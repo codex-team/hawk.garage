@@ -8,9 +8,7 @@
       :event="event"
       @tabChanged="tabChanged($event)"
     />
-    <div
-      class="event-layout__info"
-    >
+    <div class="event-layout__info">
       <div class="event-layout__container">
         <EventOverview
           v-if="activeItem === 'overview'"
@@ -157,12 +155,12 @@ export default Vue.extend({
     }
 
     &__container {
-      max-width: 850px;
+      max-width: var(--width-event-center-container);
       margin: 0 auto;
     }
 
     &__info {
-      padding: 18px 30px 30px 30px;
+      padding: 25px 30px;
     }
   }
 </style>

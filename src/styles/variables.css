@@ -29,6 +29,11 @@
   --color-bg-code-fragment: #171920;
   --color-bg-code-fragment-line-highlighted: rgba(255, 7, 172, 0.12);
   --color-code-pointer: #fb005d;
+
+  /**
+   * Some custom width
+   */
+  --width-event-center-container: 850px;
 }
 
 .app--theme--light {
