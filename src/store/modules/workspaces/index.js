@@ -17,6 +17,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
 import Vue from 'vue';
+import { isPendingMember } from '../../../types/workspaces';
 
 /**
  * Mutations enum for this module
@@ -349,9 +350,8 @@ const mutations = {
    */
   [mutationTypes.UPDATE_MEMBER](state, { workspaceId, userId, changes }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].team.findIndex(member => member.user.id === userId);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(member => !isPendingMember(member) && member.user.id === userId);
 
-    console.log('index', memberIndex);
     Object.assign(state.list[workspaceIndex].team[memberIndex], changes);
   },
 
@@ -377,7 +377,7 @@ const mutations = {
    */
   [mutationTypes.REMOVE_MEMBER](state, { workspaceId, userId }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].team.findIndex(m => m.id === userId);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(member => member.user.id === userId);
 
     if (memberIndex > -1) {
       state.list[workspaceIndex].team.splice(memberIndex, 1);
@@ -393,10 +393,10 @@ const mutations = {
    */
   [mutationTypes.REMOVE_PENDING_MEMBER](state, { workspaceId, userEmail }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].pendingUsers.findIndex(m => m.email === userEmail);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(m => m.email === userEmail);
 
     if (memberIndex > -1) {
-      state.list[workspaceIndex].pendingUsers.splice(memberIndex, 1);
+      state.list[workspaceIndex].team.splice(memberIndex, 1);
     }
   },
 

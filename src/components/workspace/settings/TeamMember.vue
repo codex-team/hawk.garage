@@ -93,8 +93,6 @@ export default Vue.extend({
   },
   computed: {
     isPending(): boolean {
-      console.log('member', this.member);
-
       return isPendingMember(this.member);
     },
   },
