@@ -48,7 +48,9 @@
     "vue-router": "^3.0.7",
     "vue-template-compiler": "^2.6.11",
     "vuex": "^3.1.2",
-    "vuex-persistedstate": "^2.7.0"
+    "vuex-persistedstate": "^2.7.0",
+    "vue-cli-plugin-storybook": "^1.2.1",
+    "vue-cli-plugin-svg-sprite": "^1.0.0"
   },
   "devDependencies": {
     "@storybook/addon-actions": "5.3.17",
@@ -72,9 +74,7 @@
     "svg-sprite-generator": "^0.0.7",
     "svgo": "^1.1.0",
     "svgo-loader": "^2.1.0",
-    "typescript": "^3.7.4",
-    "vue-cli-plugin-storybook": "^1.2.1",
-    "vue-cli-plugin-svg-sprite": "^1.0.0"
+    "typescript": "^3.7.4"
   },
   "license": "UNLICENSED",
   "lint-staged": {
