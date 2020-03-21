@@ -260,6 +260,7 @@ export default {
     font-family: var(--font-monospace);
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
+    overflow: hidden;
 
     &__content {
       z-index: 2;
