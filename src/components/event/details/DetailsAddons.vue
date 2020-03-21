@@ -32,9 +32,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import DetailsBase from './DetailsBase.vue';
-import Icon from '../utils/Icon.vue';
+import Icon from '../../utils/Icon.vue';
 import { isObject } from '@/utils';
-import Json from '../utils/Json.vue';
+import Json from '../../utils/Json.vue';
 
 /**
  * Details addons component

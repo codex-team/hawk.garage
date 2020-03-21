@@ -1,5 +1,6 @@
 const HtmlWebpackInlineSVGPlugin = require('html-webpack-inline-svg-plugin');
 const HawkWebpackPlugin = require('@hawk.so/webpack-plugin');
+const path = require('path');
 
 /**
  * Parse .env

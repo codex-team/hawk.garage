@@ -8,20 +8,19 @@
       :event="event"
       @tabChanged="tabChanged($event)"
     />
-    <div
-      class="event-layout__info"
-    >
+    <div class="event-layout__info">
       <div class="event-layout__container">
-        <EventOverview
-          v-if="activeItem === 'overview'"
+        <router-view
+          v-if="event"
           :event="event"
+          :project-id="projectId"
         />
-        <EventRepetitions
-          v-else-if="activeItem === 'repetitions'"
-        />
-        <EventDaily
-          v-else-if="activeItem === 'daily'"
-        />
+        <div
+          v-else
+          class="event-layout__loader"
+        >
+
+        </div>
       </div>
     </div>
   </PopupDialog>
@@ -31,9 +30,6 @@
 import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
-import EventOverview from './EventOverview.vue';
-import EventRepetitions from './EventRepetitions.vue';
-import EventDaily from './EventDaily.vue';
 import { HawkEvent } from '@/types/events';
 import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 
@@ -42,9 +38,6 @@ export default Vue.extend({
   components: {
     PopupDialog,
     EventHeader,
-    EventOverview,
-    EventRepetitions,
-    EventDaily,
   },
   data() {
     const projectId: string = this.$route.params.projectId;
@@ -115,27 +108,13 @@ export default Vue.extend({
     }
   },
   methods: {
-    /**
-     * Emit for active item
-     * @param {object} item - active item
-     */
-    tabChanged(item: any) {
-      if (item.link) {
-        this.$router.push({
-          name: item.link,
-          params: {
-            projectId: this.projectId,
-            eventId: this.eventId,
-          },
-        });
-      }
-      this.activeItem = item.title;
-    },
   },
 });
 </script>
 
 <style>
+  @import "./../../styles/variables";
+
   .event-layout {
     /** Override Popup Dialog animation */
 
@@ -159,12 +138,19 @@ export default Vue.extend({
     }
 
     &__container {
-      max-width: 850px;
+      max-width: var(--width-event-center-container);
       margin: 0 auto;
     }
 
     &__info {
-      padding: 18px 30px 30px 30px;
+      padding: 25px 30px;
+    }
+
+    &__loader {
+      min-height: 200px;
+      margin: -25px 0;
+
+      @mixin loader 34px, var(--color-border), var(--color-text-second);
     }
   }
 </style>
