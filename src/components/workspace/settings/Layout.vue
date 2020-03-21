@@ -126,11 +126,11 @@ export default Vue.extend({
     }
 
     &__title {
+      overflow: hidden;
       color: var(--color-text-main);
       font-weight: 500;
       font-size: 15px;
       line-height: 26px;
-      overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }

@@ -112,7 +112,6 @@ export default {
     &__time {
       min-width: 30px;
       margin-left: 10px;
-
       color: var(--color-text-second);
       font-size: 12px;
     }

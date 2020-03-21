@@ -18,9 +18,7 @@
         <div
           v-else
           class="event-layout__loader"
-        >
-
-        </div>
+        />
       </div>
     </div>
   </PopupDialog>

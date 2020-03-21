@@ -194,14 +194,14 @@ export default Vue.extend({
 
     &__location {
       display: block;
+      max-width: 650px;
       margin-bottom: 30px;
+      overflow: hidden;
+      color: var(--color-text-second);
       font-size: 14px;
       letter-spacing: 0.1px;
-      color: var(--color-text-second);
       white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
-      max-width: 650px;
     }
 
     &__buttons {
@@ -215,8 +215,8 @@ export default Vue.extend({
 
       &--selected {
         color: #121419;
-        border-color: var(--color-text-main);
         background-color: var(--color-text-main);
+        border-color: var(--color-text-main);
 
         span, svg {
           opacity: 1 !important;

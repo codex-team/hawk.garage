@@ -145,12 +145,12 @@ export default {
     }
 
     &__image {
+      flex-shrink: 0;
       width: 16px;
       height: 16px;
       font-size: 11px;
       line-height: 17px;
       border-radius: 5px;
-      flex-shrink: 0;
     }
 
     &__name {
@@ -166,8 +166,8 @@ export default {
       margin-right: 0;
       margin-left: auto;
       color: var(--color-text-second);
-      user-select: none;
       white-space: nowrap;
+      user-select: none;
 
       &--admin {
         color: #2ccf6c;

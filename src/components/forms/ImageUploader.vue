@@ -68,8 +68,8 @@ export default {
 
 <style>
   .form-image-uploader {
-    display: flex;
     position: relative;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     width: 60px;

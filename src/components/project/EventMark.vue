@@ -43,7 +43,6 @@ export default {
     position: relative;
     width: 14px;
     height: 14px;
-
     border-radius: 50%;
 
     &--resolved {
@@ -57,7 +56,6 @@ export default {
 
     &--ignored {
       padding: 1px;
-
       color: var(--color-text-main);
       background-color: #2ccf6c;
     }
@@ -65,16 +63,14 @@ export default {
     &--none {
       &::before {
         position: absolute;
-        left: 50%;
         top: 50%;
+        left: 50%;
         width: 6px;
         height: 6px;
         margin: -3px 0 0 -3px;
-
         background-color: var(--color-text-second);
 
         border-radius: 50%;
-
         content: '';
       }
     }
