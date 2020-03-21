@@ -42,6 +42,7 @@ export default {
   .event-mark {
     position: relative;
     width: 14px;
+    min-width: 14px;
     height: 14px;
     border-radius: 50%;
 
