@@ -18,6 +18,7 @@
         <UiButton
           class="event-header__button"
           :class="{'event-header__button--selected': !loading && event.marks.includes('RESOLVED')}"
+          :content="$t('event.resolve')"
           icon="checkmark"
           @click="markEvent('RESOLVED')"
         />

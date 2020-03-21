@@ -29,7 +29,7 @@ export default {
     return {
       DEFAULT_MARK_VALUE,
       icons: {
-        resolved: 'check-mark',
+        resolved: 'checkmark',
         starred: 'star',
         ignored: 'hided',
       },
