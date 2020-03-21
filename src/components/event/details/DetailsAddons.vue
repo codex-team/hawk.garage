@@ -20,6 +20,13 @@
             v-if="isObject(value) && !isCustomRenderer(key)"
             :value="value"
           />
+          <CodeBlock
+            v-else-if="isHTML(key)"
+            language="html"
+            class="event-details__single-line-code"
+          >
+            {{ value }}
+          </CodeBlock>
           <template v-else>
             {{ renderAddonValue(key, value) }}
           </template>
@@ -35,6 +42,7 @@ import DetailsBase from './DetailsBase.vue';
 import Icon from '../../utils/Icon.vue';
 import { isObject } from '@/utils';
 import Json from '../../utils/Json.vue';
+import CodeBlock from '../../utils/CodeBlock.vue';
 
 /**
  * Details addons component
@@ -45,6 +53,7 @@ export default Vue.extend({
     DetailsBase,
     Icon,
     Json,
+    CodeBlock
   },
   props: {
     /**
@@ -94,6 +103,25 @@ export default Vue.extend({
     isObject(value: any): boolean {
       return isObject(value);
     },
+
+    /**
+     * Check is this addon field should be highlighted as HTML
+     * For example, this is a Vue or React component name
+     * @param key - addon key
+     */
+    isHTML(key: string): boolean {
+      return key === 'component' && this.title === 'Vue';
+    },
   },
 });
 </script>
+
+<style>
+  .event-details {
+    &__single-line-code {
+      line-height: 1em;
+      background: var(--color-bg-code-fragment);
+      border: 0
+    }
+  }
+</style>
