@@ -75,7 +75,7 @@ export const groupBy =
  * Group array of object by 'date' field
  * @type {function(Array[Object]): Object}
  */
-export const groupByDate = groupBy('date');
+export const groupByGroupingTimestamp = groupBy('groupingTimestamp');
 
 /**
  * Merge to objects recursively

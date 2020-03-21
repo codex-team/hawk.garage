@@ -82,7 +82,7 @@ export interface HawkEventDailyInfo {
   /**
    * Event occurrence date midnight (used for grouping)
    */
-  readonly date: number;
+  readonly groupingTimestamp: number;
 
   /**
    * Event's last repetition id
@@ -92,7 +92,7 @@ export interface HawkEventDailyInfo {
   /**
    * Last event occurrence timestamp
    */
-  readonly timestamp: Date;
+  readonly lastRepetitionTime: number;
 }
 
 /**

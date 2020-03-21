@@ -100,7 +100,7 @@ export default {
             id: project.id,
             name: project.name,
             workspaceId: project.workspaceId,
-            timestamp: new Date(latestEventInfo ? latestEventInfo.timestamp : 0), // timestamp of the last occurred event
+            timestamp: new Date(latestEventInfo ? latestEventInfo.lastRepetitionTime : 0), // timestamp of the last occurred event
           };
         });
 
