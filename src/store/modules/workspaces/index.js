@@ -185,7 +185,13 @@ const actions = {
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
-    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
+    const isSaved = await workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
+
+    if (isSaved) {
+      commit(mutationTypes.SET_WORKSPACE, workspace);
+    }
+
+    return isSaved;
   },
 
   /**

@@ -2,7 +2,7 @@
   <JsonViewer
     :value="value"
     theme="json-viewer-theme"
-    expand-depth="2"
+    :expand-depth="2"
     copyable
   />
 </template>
@@ -12,6 +12,9 @@ import JsonViewer from 'vue-json-viewer';
 
 export default {
   name: 'Json',
+  components: {
+    JsonViewer,
+  },
   props: {
     /**
      * JS object to display
@@ -20,9 +23,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  components: {
-    JsonViewer,
   },
 };
 </script>
@@ -35,9 +35,9 @@ export default {
     font-size: 12px;
     font-family: var(--font-monospace);
     white-space: nowrap;
-    background: var(--color-bg-sidebar);
+    background: var(--color-bg-code-fragment);
     padding: 10px 15px;
-    border-radius: 4px;
+    border-radius: 6px;
 
     .jv-toggle {
       display: none;

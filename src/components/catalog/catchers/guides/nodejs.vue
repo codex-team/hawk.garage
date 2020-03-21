@@ -34,7 +34,7 @@
 <script>
 import GuideHeader from '../../GuidePageHeader';
 import GuideStepBlock from '../../GuideStepBlock';
-import TokenBlock from '../../../projects/TokenBlock';
+import TokenBlock from '../../../project/TokenBlock';
 
 export default {
   name: 'SetupPhpCatcher',

@@ -10,6 +10,7 @@ export const QUERY_EVENT = `
         catcherType
         totalCount
         groupHash
+        visitedBy
         payload {
           title
           release

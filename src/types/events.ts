@@ -20,7 +20,7 @@ export interface HawkEvent {
   /**
    * Event occurrence count
    */
-  totalCount: string;
+  totalCount: number;
 
   /**
    * Users who visited this event

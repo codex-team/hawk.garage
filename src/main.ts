@@ -25,13 +25,13 @@ declare const buildRevision: string;
 let hawk: HawkCatcher;
 
 /**
- *
+ * Enable errors tracking
  */
 if (process.env.VUE_APP_HAWK_TOKEN) {
   const hawkOptions: HawkInitialSettings = {
     token: process.env.VUE_APP_HAWK_TOKEN,
     release: buildRevision,
-    // vue: Vue,
+    vue: Vue,
   };
 
   if (store.state.user && store.state.user.data && Object.keys(store.state.user.data).length) {
@@ -56,8 +56,8 @@ Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://
  * @param {Error} error - error to send
  * @usage this.$sendToHawk(new Error('Some error'));
  */
-Vue.prototype.sendToHawk = function sendToHawk (error: Error): void {
-  if (hawk){
+Vue.prototype.sendToHawk = function sendToHawk(error: Error): void {
+  if (hawk) {
     hawk.catchError(error);
   }
 };

@@ -142,6 +142,28 @@
       "submitButton": "Продолжить"
     }
   },
+  "event": {
+    "repetitions": {
+      "total": "Всего",
+      "since": "Начиная с",
+      "title": "Повторы",
+      "times": "Ни разу | {n} раз | {n} раза | {n} раз",
+      "days": " | {n} день | {n} дня | {n} дней"
+    },
+    "navigation": {
+      "overview": "Обзор",
+      "repetitions": "Повторения",
+      "daily": "По дням"
+    },
+    "resolve": "Исправлено",
+    "star": "В избранное",
+    "ignore": "Игнорировать",
+    "issue": "Создать задачу",
+    "loading": "Загрузка...",
+    "viewedBy": {
+      "assignee": "Исполнитель"
+    }
+  },
   "common": {
     "copiedNotification": "Скопировано!",
     "months": [
