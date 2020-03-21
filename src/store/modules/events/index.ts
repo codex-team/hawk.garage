@@ -489,7 +489,11 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.UPDATE_EVENT_PAYLOAD](state, { projectId, event }) {
       const key = getEventsListKey(projectId, event.id);
 
-      state.list[key].payload = event.payload;
+      if (state.list[key]) {
+        state.list[key].payload = event.payload;
+      } else {
+        state.list[key] = event;
+      }
     },
 
     /**

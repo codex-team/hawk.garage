@@ -83,15 +83,29 @@ const router = new Router({
              * -------------
              */
             {
-              path: 'event/:eventId/repetitions',
-              name: 'event-repetitions-overview',
-              component: () => import(/* webpackChunkName: 'event-repetitions-overview' */ './components/repetitions/Overview.vue'),
-            },
-            {
               path: 'event/:eventId/:repetitionId?',
-              name: 'event-overview',
-              component: () => import(/* webpackChunkName: 'event-overview' */ './components/events/Overview.vue'),
+              name: 'event',
+              component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue'),
+              redirect: 'event/:eventId/:repetitionId?/overview',
+              children: [
+                {
+                  path: 'overview',
+                  name: 'event-overview',
+                  component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Overview.vue'),
+                },
+                {
+                  path: 'repetitions',
+                  name: 'event-repetitions',
+                  component: () => import(/* webpackChunkName: 'event-repetitions' */ './components/event/Repetitions.vue'),
+                },
+                {
+                  path: 'daily',
+                  name: 'event-daily',
+                  component: () => import(/* webpackChunkName: 'event-daily' */ './components/event/Daily.vue'),
+                },
+              ],
             },
+
             /**
              * Project Settings
              * -------------

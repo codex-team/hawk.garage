@@ -48,8 +48,8 @@
 </template>
 
 <script>
-import EventItem from '../events/EventItem';
-import AssignersList from '../events/AssignersList';
+import EventItem from './EventItem';
+import AssignersList from '../event/AssignersList';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';

@@ -30,10 +30,17 @@
             </span>
           </div>
           <div class="details-backtrace__right">
-            {{ frame.file }}
-            <template v-if="frame.line">
+            <Filepath
+              :location="frame.file"
+              :title="frame.file"
+              class="details-backtrace__right-file"
+            />
+            <span
+              v-if="frame.line"
+              class="details-backtrace__right-line"
+            >
               line {{ getLocation(frame) }}
-            </template>
+            </span>
           </div>
           <Icon
             v-if="frame.sourceCode"
@@ -60,14 +67,16 @@
 
 <script>
 import DetailsBase from './DetailsBase';
-import CodeFragment from '../utils/CodeFragment';
-import Icon from '../utils/Icon';
+import CodeFragment from '../../utils/CodeFragment';
+import Filepath from '../../utils/Filepath';
+import Icon from '../../utils/Icon';
 
 export default {
   name: 'DetailsBacktrace',
   components: {
     DetailsBase,
     CodeFragment,
+    Filepath,
     Icon,
   },
   props: {
@@ -172,15 +181,12 @@ export default {
     }
 
     &__arrow-down {
-      position: absolute;
-      top: 50%;
-      right: 12px;
-      width: 16px;
-      height: 16px;
-      transform: translateY(-50%);
+      margin: 0 4px 0 11px;
+      width: 12px;
+      height: 12px;
 
       &--opened {
-        transform: rotate(180deg) translateY(50%);
+        transform: rotate(180deg);
       }
     }
 
@@ -189,8 +195,8 @@ export default {
       display: flex;
       align-items: center;
       padding: 7px;
-      font-size: 12px;
-      font-family: var(--font-monospace);
+      font-size: 13px;
+      letter-spacing: 0.15px;
       cursor: pointer;
     }
 
@@ -207,16 +213,25 @@ export default {
     }
 
     &__left {
-      letter-spacing: -0.3px;
-
       &-anonymous-function{
         opacity: 0.3;
       }
     }
 
     &__right {
-      margin-right: 47px;
+      display: flex;
       margin-left: auto;
+
+      &-file {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 600px;
+      }
+
+      &-line {
+        margin-left: 10px;
+      }
     }
   }
 </style>

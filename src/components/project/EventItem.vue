@@ -11,7 +11,7 @@
     <div class="event-item__badge-container">
       <Badge
         :content="count"
-        :type="isVisited ? 'visited' : 'default'"
+        :type="isVisited ? 'silent' : 'default'"
         class="event-item__count"
       />
     </div>

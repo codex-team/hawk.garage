@@ -1,34 +1,22 @@
 <template>
   <span
     class="badge"
-    :class="[
-      { 'badge--empty': !content },
-      `badge--${type}`
-    ]"
+    :class="'badge--' + type"
   >
-    <Icon
-      v-if="withIcon"
-      class="badge__icon"
-      symbol="flash"
-    />
     {{ content | abbreviateNumber }}
   </span>
 </template>
 
 <script>
-import Icon from './Icon';
 
 export default {
   name: 'Badge',
-  components: {
-    Icon,
-  },
   props: {
     /**
      * Badge content
      */
     content: {
-      type: [String, Number],
+      type: Number,
       required: true,
     },
 
@@ -38,14 +26,6 @@ export default {
     type: {
       type: String,
       default: 'default',
-    },
-
-    /**
-     * Will icon show or not
-     */
-    withIcon: {
-      type: Boolean,
-      default: false,
     },
   },
 };
@@ -64,24 +44,13 @@ export default {
     background-color: var(--color-indicator-medium);
     border-radius: 7px;
 
-    &--empty {
-      display: none;
-    }
-
     &--critical {
       background-color: var(--color-indicator-critical);
     }
 
-    &--visited {
+    &--silent {
       color: var(--color-text-second);
       background-color: var(--color-bg-main);
-    }
-
-    &__icon {
-      display: inline;
-      width: 7px;
-      height: 100%;
-      margin-right: 8px;
     }
   }
 </style>
