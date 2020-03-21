@@ -385,14 +385,24 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventMark} mark - mark to set
      */
     async [TOGGLE_EVENT_MARK]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
+      const commitAction = () => commit(MutationTypes.SET_MARK, {
+        projectId,
+        eventId,
+        mark,
+      });
+
+      /**
+       * Update state before API request
+       */
+      commitAction();
+
       const result = await eventsApi.toggleEventMark(projectId, eventId, mark);
 
-      if (result) {
-        commit(MutationTypes.SET_MARK, {
-          projectId,
-          eventId,
-          mark,
-        });
+      /**
+       * If API returns error, revert state
+       */
+      if (!result) {
+        commitAction();
       }
     },
 
