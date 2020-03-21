@@ -94,5 +94,5 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     projectId,
     eventId,
     mark,
-  })).markEvent;
+  })).toggleEventMark;
 }

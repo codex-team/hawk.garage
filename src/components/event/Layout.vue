@@ -89,23 +89,35 @@ export default Vue.extend({
       repetitionId,
     });
 
-    this.event = this.$store.getters.getProjectEventById(this.projectId, eventId);
+    /**
+     * If page opened directly, this.event is null, so we need to set observer from VueX
+     */
+    if (!this.event) {
+      this.event = this.$store.getters.getProjectEventById(this.projectId, eventId);
+    }
 
     this.loading = false;
 
-    const userId = this.$store.state.user.data.id;
-
-    /**
-     * Dispatch VISIT_EVENT action on component create
-     */
-    if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
-      this.$store.dispatch(VISIT_EVENT, {
-        projectId: this.projectId,
-        eventId,
-      });
-    }
+    this.markEventAsVisited();
   },
+
   methods: {
+    /**
+     * Set current event as visited for current user
+     */
+    markEventAsVisited() {
+      const userId = this.$store.state.user.data.id;
+
+      /**
+       * Dispatch VISIT_EVENT action on component create
+       */
+      if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
+        this.$store.dispatch(VISIT_EVENT, {
+          projectId: this.projectId,
+          eventId: this.event.id,
+        });
+      }
+    },
   },
 });
 </script>

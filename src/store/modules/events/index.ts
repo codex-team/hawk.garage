@@ -464,7 +464,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }) {
       eventsList.forEach((event) => {
-        state.list[getEventsListKey(projectId, event.id)] = event;
+        Vue.set(state.list, getEventsListKey(projectId, event.id), event);
       });
     },
 
@@ -506,9 +506,9 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, event.id);
 
       if (state.list[key]) {
-        state.list[key].payload = event.payload;
+        Vue.set(state.list[key], 'payload', event.payload);
       } else {
-        state.list[key] = event;
+        Vue.set(state.list, key, event);
       }
     },
 
@@ -540,7 +540,8 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.SET_MARK](state, { projectId, eventId, mark }) {
       const key = getEventsListKey(projectId, eventId);
 
-      const { marks } = state.list[key];
+      const event = state.list[key];
+      const { marks } = event;
 
       const index = marks.indexOf(mark);
 
