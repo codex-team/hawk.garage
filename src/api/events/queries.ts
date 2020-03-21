@@ -86,9 +86,9 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
         dailyInfo {
           groupHash
           count
-          date
+          groupingTimestamp
           lastRepetitionId
-          timestamp
+          lastRepetitionTime
         }
       }
     }
