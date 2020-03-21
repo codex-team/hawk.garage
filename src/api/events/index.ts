@@ -89,7 +89,7 @@ export async function visitEvent(projectId: string, eventId: string): Promise<bo
  * @param {string} eventId — event Id
  * @param {string} mark — mark to set
  */
-export async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): boolean {
+export async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
   return (await api.call(MUTATION_TOGGLE_EVENT_MARK, {
     projectId,
     eventId,

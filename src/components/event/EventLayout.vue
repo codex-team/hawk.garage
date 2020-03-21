@@ -98,7 +98,7 @@ export default Vue.extend({
       repetitionId,
     });
 
-    this.event = this.$store.getters.getProjectEventById(projectId, eventId);
+    this.event = this.$store.getters.getProjectEventById(this.projectId, eventId);
 
     this.loading = false;
 
