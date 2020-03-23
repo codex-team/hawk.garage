@@ -1,7 +1,7 @@
 <template>
   <div
     class="ui-button"
-    @click="emit('click')"
+    @click="$emit('click')"
   >
     <Icon
       v-if="icon"
@@ -47,8 +47,8 @@ export default Vue.extend({
    display: flex;
    align-items: center;
    padding: 6px 7px;
-   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
    color: var(--color-text-second);
+   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
    border-radius: 4px;
    cursor: pointer;
    user-select: none;

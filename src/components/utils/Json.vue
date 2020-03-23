@@ -30,13 +30,13 @@ export default {
 <style>
   .json-viewer-theme {
     width: 100%;
+    padding: 10px 15px;
     overflow: auto;
     color: #525252;
     font-size: 12px;
     font-family: var(--font-monospace);
     white-space: nowrap;
     background: var(--color-bg-code-fragment);
-    padding: 10px 15px;
     border-radius: 6px;
 
     .jv-toggle {
@@ -54,24 +54,24 @@ export default {
       width: 20px;
       height: 20px;
       margin: 0 3px;
-      background-color: var(--color-indicator-medium);
       font-size: 0;
+      vertical-align: top;
+      background-color: var(--color-indicator-medium);
       border-radius: 6px;
       cursor: pointer;
       user-select: none;
-      vertical-align: top;
 
       &::before,
       &::after {
-        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
         display: block;
         width: 10px;
         height: 2px;
         background: var(--color-text-main);
-        position: absolute;
-        left: 50%;
-        top: 50%;
         transform: translate(-50%, -50%);
+        content: '';
       }
 
       &::after {
@@ -84,18 +84,18 @@ export default {
      * Copy button
      */
     .jv-button {
+      box-sizing: content-box;
       height: 22px;
       padding: 0 13px;
       color: color-mod(var(--color-text-second) alpha(40%));
       font-size: 11px;
       line-height: 23px;
       letter-spacing: 0.14px;
+      text-transform: uppercase;
       background-color: transparent;
       border: 1px solid color-mod(var(--color-text-second) alpha(10%));
       border-radius: 11.5px;
-      box-sizing: content-box;
       outline: none;
-      text-transform: uppercase;
 
       &:hover {
         color: color-mod(var(--color-text-second) alpha(60%));
@@ -118,8 +118,8 @@ export default {
       word-break: break-word;
     }
     .jv-code {
-      overflow: visible;
-      padding: 0
+      padding: 0;
+      overflow: visible
     }
 
     .jv-object,

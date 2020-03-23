@@ -53,7 +53,7 @@ export default Vue.extend({
     DetailsBase,
     Icon,
     Json,
-    CodeBlock
+    CodeBlock,
   },
   props: {
     /**

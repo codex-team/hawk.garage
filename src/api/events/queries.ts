@@ -10,6 +10,11 @@ export const QUERY_EVENT = `
         catcherType
         totalCount
         groupHash
+        marks {
+          resolved
+          starred
+          ignored
+        }
         visitedBy
         payload {
           title
@@ -78,6 +83,12 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupHash
           totalCount
           visitedBy
+          marks {
+            resolved
+            starred
+            ignored
+          }
+          catcherType
           payload {
             timestamp
             title
@@ -144,5 +155,15 @@ export const QUERY_LATEST_REPETITIONS = `
 export const MUTATION_VISIT_EVENT = `
   mutation visitEvent($projectId: ID!, $eventId: ID!) {
     visitEvent(project: $projectId, id: $eventId)
+  }
+`;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to set mark to event for current user
+ */
+export const MUTATION_TOGGLE_EVENT_MARK = `
+  mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
+    toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
   }
 `;

@@ -37,6 +37,11 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
             id
             groupHash
             visitedBy
+            marks {
+              resolved
+              starred
+              ignored
+            }
             payload {
               timestamp
               title
