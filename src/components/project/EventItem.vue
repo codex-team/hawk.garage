@@ -88,14 +88,14 @@ export default {
      */
     mark() {
       const { marks } = this.event;
+      const priority = ['resolved', 'starred', 'ignored'];
+      const mark = priority.find(_mark => marks[_mark]);
 
-      if (!marks.length) {
+      if (!mark) {
         return 'none';
       }
 
-      const priority = ['RESOLVED', 'STARRED', 'IGNORED'];
-
-      return priority.find(mark => marks.includes(mark)).toLowerCase();
+      return mark;
     },
   },
 };

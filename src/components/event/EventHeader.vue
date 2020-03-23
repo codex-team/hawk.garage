@@ -17,24 +17,24 @@
       <div class="event-header__buttons">
         <UiButton
           class="event-header__button"
-          :class="{'event-header__button--selected': !loading && event.marks.includes('RESOLVED')}"
+          :class="{'event-header__button--selected': !loading && event.marks.resolved}"
           :content="$t('event.resolve')"
           icon="checkmark"
-          @click="markEvent('RESOLVED')"
+          @click="markEvent('resolved')"
         />
         <UiButton
           class="event-header__button"
-          :class="{'event-header__button--selected': !loading && event.marks.includes('STARRED')}"
+          :class="{'event-header__button--selected': !loading && event.marks.starred}"
           :content="$t('event.star')"
           icon="star"
-          @click="markEvent('STARRED')"
+          @click="markEvent('starred')"
         />
         <UiButton
           class="event-header__button"
-          :class="{'event-header__button--selected': !loading && event.marks.includes('IGNORED')}"
+          :class="{'event-header__button--selected': !loading && event.marks.ignored}"
           :content="$t('event.ignore')"
           icon="hided"
-          @click="markEvent('IGNORED')"
+          @click="markEvent('ignored')"
         />
         <UiButton
           class="event-header__button"

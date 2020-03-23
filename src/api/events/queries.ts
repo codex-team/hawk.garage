@@ -10,7 +10,11 @@ export const QUERY_EVENT = `
         catcherType
         totalCount
         groupHash
-        marks
+        marks {
+          resolved
+          starred
+          ignored
+        }
         visitedBy
         payload {
           title
@@ -79,7 +83,11 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupHash
           totalCount
           visitedBy
-          marks
+          marks {
+            resolved
+            starred
+            ignored
+          }
           catcherType
           payload {
             timestamp
@@ -156,6 +164,6 @@ export const MUTATION_VISIT_EVENT = `
  */
 export const MUTATION_TOGGLE_EVENT_MARK = `
   mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
-    toggleEventMark(project: $projectId, id: $eventId, mark: $mark)
+    toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
   }
 `;

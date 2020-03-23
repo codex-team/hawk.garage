@@ -64,9 +64,9 @@ enum MutationTypes {
   MARK_AS_VISITED = 'MARK_AS_VISITED',
 
   /**
-   * Set mark for event
+   * Toggle mark for event
    */
-  SET_MARK = 'SET_MARK',
+  TOGGLE_MARK = 'TOGGLE_MARK',
 }
 
 /**
@@ -381,7 +381,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventMark} mark - mark to set
      */
     async [TOGGLE_EVENT_MARK]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
-      const commitAction = () => commit(MutationTypes.SET_MARK, {
+      const commitAction = () => commit(MutationTypes.TOGGLE_MARK, {
         projectId,
         eventId,
         mark,
@@ -536,28 +536,20 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Set mark to event for passed event
+     * Toggle mark for passed event
      *
      * @param {EventsModuleState} state - events module state
      * @param {string} projectId - project event is related to
      * @param {string} eventId - event mark should be set to
      * @param {EventMark} mark - mark to set
      */
-    [MutationTypes.SET_MARK](state, { projectId, eventId, mark }) {
+    [MutationTypes.TOGGLE_MARK](state, { projectId, eventId, mark }) {
       const key = getEventsListKey(projectId, eventId);
 
       const event = state.list[key];
       const { marks } = event;
 
-      const index = marks.indexOf(mark);
-
-      if (index === -1) {
-        marks.push(mark);
-      } else {
-        marks.splice(index, 1);
-      }
-
-      Vue.set(state.list[key], 'marks', marks);
+      Vue.set(state.list[key].marks, mark, !marks[mark]);
     },
 
     /**
