@@ -218,6 +218,10 @@ export default Vue.extend({
         background-color: var(--color-text-main);
         border-color: var(--color-text-main);
 
+        &:hover {
+          color: #121419;
+        }
+
         span, svg {
           opacity: 1 !important;
         }

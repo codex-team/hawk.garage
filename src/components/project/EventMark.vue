@@ -41,9 +41,9 @@ export default {
 <style>
   .event-mark {
     position: relative;
-    width: 14px;
-    min-width: 14px;
-    height: 14px;
+    width: 16px;
+    min-width: 16px;
+    height: 16px;
     border-radius: 50%;
 
     &--resolved {
@@ -58,7 +58,6 @@ export default {
     &--ignored {
       padding: 1px;
       color: var(--color-text-main);
-      background-color: #2ccf6c;
     }
 
     &--none {

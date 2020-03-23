@@ -321,14 +321,12 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId
      * @param {string} eventId
      * @param {string} repetitionId
-     *
-     * @return {HawkEvent}
      */
-    async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<HawkEvent | null> {
+    async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<void> {
       const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
 
       if (!event) {
-        return null;
+        return;
       }
 
       const repetition = event.repetition;
@@ -349,8 +347,6 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         event,
       });
-
-      return event;
     },
 
     /**
