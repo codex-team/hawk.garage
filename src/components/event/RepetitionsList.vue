@@ -136,8 +136,8 @@ export default {
     }
 
     &__row {
-      cursor: pointer;
       height: 40px;
+      cursor: pointer;
 
       &:hover {
         background-color: var(--color-bg-sidebar) !important;

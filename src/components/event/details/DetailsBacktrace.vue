@@ -181,9 +181,9 @@ export default {
     }
 
     &__arrow-down {
-      margin: 0 4px 0 11px;
       width: 12px;
       height: 12px;
+      margin: 0 4px 0 11px;
 
       &--opened {
         transform: rotate(180deg);
@@ -223,10 +223,10 @@ export default {
       margin-left: auto;
 
       &-file {
+        max-width: 600px;
+        overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 600px;
       }
 
       &-line {

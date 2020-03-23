@@ -1,4 +1,13 @@
 /**
+ * Event marks enum
+ */
+export enum EventMark {
+  STARRED = 'STARRED',
+  IGNORED = 'IGNORED',
+  RESOLVED = 'RESOLVED'
+}
+
+/**
  * Interface representing Hawk Event format
  */
 export interface HawkEvent {
@@ -26,6 +35,15 @@ export interface HawkEvent {
    * Users who visited this event
    */
   visitedBy: string[];
+
+  /**
+   * Event marks for current user
+   */
+  marks: {
+    resolved: boolean,
+    starred: boolean,
+    ignored: boolean,
+  };
 
   /**
    * Event payload
