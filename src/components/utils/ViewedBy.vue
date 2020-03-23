@@ -2,9 +2,9 @@
   <div class="viewed-by">
     <Icon symbol="eye" />
     <EntityImage
-      v-for="(user, index) in shownUsers"
+      v-for="user in shownUsers"
       :id="user.id"
-      :key="index"
+      :key="user.id"
       class="viewed-by__user"
       :name="user.name || user.email"
       :image="user.image"

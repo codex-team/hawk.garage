@@ -105,9 +105,9 @@ export default Vue.extend({
       display: flex;
       align-items: center;
       margin-right: 25px;
+      color: var(--color-text-second);
       font-size: 14.6px;
       cursor: pointer;
-      color: var(--color-text-second);
       transition: color 200ms;
 
       &:hover,

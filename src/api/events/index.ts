@@ -1,11 +1,12 @@
 import {
+  MUTATION_TOGGLE_EVENT_MARK,
   MUTATION_VISIT_EVENT,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
-import { EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
+import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
 
 /**
  * Get specific event
@@ -79,4 +80,19 @@ export async function visitEvent(projectId: string, eventId: string): Promise<bo
     projectId,
     eventId,
   })).visitEvent;
+}
+
+/**
+ * Set or unset mark to event
+ *
+ * @param {string} projectId - project event is related to
+ * @param {string} eventId — event Id
+ * @param {string} mark — mark to set
+ */
+export async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
+  return (await api.call(MUTATION_TOGGLE_EVENT_MARK, {
+    projectId,
+    eventId,
+    mark,
+  })).toggleEventMark;
 }

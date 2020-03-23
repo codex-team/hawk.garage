@@ -18,9 +18,7 @@
         <div
           v-else
           class="event-layout__loader"
-        >
-
-        </div>
+        />
       </div>
     </div>
   </PopupDialog>
@@ -85,27 +83,41 @@ export default Vue.extend({
     const eventId = this.$route.params.eventId;
     const repetitionId = this.$route.params.repetitionId;
 
-    this.event = await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+    await this.$store.dispatch(FETCH_EVENT_REPETITION, {
       projectId: this.projectId,
       eventId,
       repetitionId,
     });
 
+    /**
+     * If page opened directly, this.event is null, so we need to set observer from VueX
+     */
+    if (!this.event) {
+      this.event = this.$store.getters.getProjectEventById(this.projectId, eventId);
+    }
+
     this.loading = false;
 
-    const userId = this.$store.state.user.data.id;
-
-    /**
-     * Dispatch VISIT_EVENT action on component create
-     */
-    if (!this.event.visitedBy || !this.event.visitedBy.map(user => user.id).includes(userId)) {
-      this.$store.dispatch(VISIT_EVENT, {
-        projectId: this.projectId,
-        eventId,
-      });
-    }
+    this.markEventAsVisited();
   },
+
   methods: {
+    /**
+     * Set current event as visited for current user
+     */
+    markEventAsVisited() {
+      const userId = this.$store.state.user.data.id;
+
+      /**
+       * Dispatch VISIT_EVENT action on component create
+       */
+      if (!this.event.visitedBy || !this.event.visitedBy.map(user => user.id).includes(userId)) {
+        this.$store.dispatch(VISIT_EVENT, {
+          projectId: this.projectId,
+          eventId: this.eventId,
+        });
+      }
+    },
   },
 });
 </script>

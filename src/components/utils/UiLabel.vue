@@ -40,12 +40,12 @@ export default Vue.extend({
   .ui-label {
     display: inline-flex;
     padding: 5px 10px;
+    color: var(--color-text-second);
+    font-size: 13px;
+    line-height: 1em;
+    letter-spacing: 0.15px;
     background-color: var(--color-bg-second);
     border-radius: 4px;
-    font-size: 13px;
-    letter-spacing: 0.15px;
-    line-height: 1em;
-    color: var(--color-text-second);
 
     .icon {
       width: 7px;

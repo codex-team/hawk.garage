@@ -1,6 +1,6 @@
 // language=GraphQL
 /**
- * Structure representes record in team:<projectId> collection
+ * Structure represents record in team:<projectId> collection
  */
 const MEMBER_FRAGMENT = `
   fragment Member on Member {
@@ -10,6 +10,18 @@ const MEMBER_FRAGMENT = `
     email
     isAdmin
     isPending
+  }
+`;
+
+/**
+ * Structure represents user
+ */
+const USER_FRAGMENT = `
+  fragment User on User {
+    id
+    email
+    name
+    image
   }
 `;
 
@@ -40,10 +52,12 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
             id
             groupHash
             visitedBy {
-              id
-              email
-              name
-              image
+              ...User
+            }
+            marks {
+              resolved
+              starred
+              ignored
             }
             payload {
               timestamp
@@ -62,6 +76,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   }
 
   ${MEMBER_FRAGMENT}
+
+  ${USER_FRAGMENT}
 `;
 
 // language=GraphQL
