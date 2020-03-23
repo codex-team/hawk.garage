@@ -214,12 +214,12 @@ export default Vue.extend({
       border: solid 1px var(--color-bg-main);
 
       &--selected {
-        color: #121419;
+        color: var(--color-bg-main);
         background-color: var(--color-text-main);
         border-color: var(--color-text-main);
 
         &:hover {
-          color: #121419;
+          color: var(--color-bg-main);
         }
 
         span, svg {
