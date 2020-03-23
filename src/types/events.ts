@@ -37,9 +37,13 @@ export interface HawkEvent {
   visitedBy: string[];
 
   /**
-   * Event label for current user
+   * Event marks for current user
    */
-  marks: EventMark[];
+  marks: {
+    resolved: boolean,
+    starred: boolean,
+    ignored: boolean,
+  };
 
   /**
    * Event payload
