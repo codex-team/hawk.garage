@@ -1,11 +1,13 @@
 <template>
   <div class="viewed-by">
     <Icon symbol="eye" />
-    <div
+    <EntityImage
       v-for="(user, index) in shownUsers"
+      :id="user.id"
       :key="index"
       class="viewed-by__user"
-      :title="user"
+      :name="user.name || user.email"
+      :image="user.image"
     />
     <span
       v-if="hiddenUsers.length"
@@ -18,11 +20,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import EntityImage from './EntityImage.vue';
 import Icon from './Icon.vue';
+import { User } from '@/types/user';
 
 export default Vue.extend({
   name: 'ViewedBy',
   components: {
+    EntityImage,
     Icon,
   },
   props: {
@@ -30,7 +35,7 @@ export default Vue.extend({
      * Users that have visited the object
      */
     users: {
-      type: Array as () => string[],
+      type: Array as () => User[],
       required: true,
     },
   },
@@ -38,15 +43,15 @@ export default Vue.extend({
     /**
      * We can show only 3 last users
      */
-    shownUsers(): string[] {
+    shownUsers(): User[] {
       return this.users.slice(0, 3);
     },
 
     /**
      * We can show only 3 last users, other will be hided.
-     * This method returns the hidded users.
+     * This method returns the hidden users.
      */
-    hiddenUsers(): string[] {
+    hiddenUsers(): User[] {
       return this.users.slice(3);
     },
   },
@@ -63,8 +68,9 @@ export default Vue.extend({
       width: 14px;
       height: 14px;
       margin-right: 6px;
-      background-color: var(--color-bg-second);
       border-radius: 5px;
+      line-height: 14px;
+      font-size: 8px;
     }
 
     &__count {

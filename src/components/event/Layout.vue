@@ -98,7 +98,7 @@ export default Vue.extend({
     /**
      * Dispatch VISIT_EVENT action on component create
      */
-    if (!this.event.visitedBy || !this.event.visitedBy.includes(userId)) {
+    if (!this.event.visitedBy || !this.event.visitedBy.map(user => user.id).includes(userId)) {
       this.$store.dispatch(VISIT_EVENT, {
         projectId: this.projectId,
         eventId,

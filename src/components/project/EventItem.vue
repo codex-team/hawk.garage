@@ -72,7 +72,7 @@ export default {
         return false;
       }
 
-      return visitedBy.includes(this.$store.state.user.data.id);
+      return visitedBy.map(user => user.id).includes(this.$store.state.user.data.id);
     },
   },
 };

@@ -10,7 +10,12 @@ export const QUERY_EVENT = `
         catcherType
         totalCount
         groupHash
-        visitedBy
+        visitedBy {
+          id
+          email
+          name
+          image
+        }
         payload {
           title
           release
@@ -77,7 +82,12 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           id
           groupHash
           totalCount
-          visitedBy
+          visitedBy {
+            id
+            email
+            name
+            image
+          }
           payload {
             timestamp
             title

@@ -1,3 +1,5 @@
+import { User } from "@/types/user";
+
 /**
  * Interface representing Hawk Event format
  */
@@ -25,7 +27,7 @@ export interface HawkEvent {
   /**
    * Users who visited this event
    */
-  visitedBy: string[];
+  visitedBy: User[];
 
   /**
    * Event payload
