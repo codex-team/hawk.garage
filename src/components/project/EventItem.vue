@@ -45,10 +45,10 @@ export default {
       required: true,
     },
     /**
-     * @type {String} - timestamp of the last event
+     * @type {Number} - timestamp of the last event
      */
     lastOccurrenceTimestamp: {
-      type: String,
+      type: Number,
       required: true,
     },
     /**

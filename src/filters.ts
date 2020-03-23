@@ -54,8 +54,8 @@ Vue.filter('abbreviation', function (value: string): string {
  * Returns prettifying time ('now' or time in hh:mm)
  * @return {string}
  */
-Vue.filter('prettyTime', function (value: Date | string) {
-  const date = new Date(value);
+Vue.filter('prettyTime', function (value: number) {
+  const date = new Date(value * 1000);
   const currentDate = new Date();
 
   const ONE_MINUTE_IN_MS = 1000 * 60;

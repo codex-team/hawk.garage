@@ -8,7 +8,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { deepMerge, groupByDate } from '@/utils';
+import { deepMerge, groupByGroupingTimestamp } from '@/utils';
 import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
 
 /**
@@ -276,7 +276,7 @@ const module: Module<EventsModuleState, RootState> = {
         return true;
       }
 
-      const eventsGroupedByDate = groupByDate(recentEvents.dailyInfo);
+      const eventsGroupedByDate = groupByGroupingTimestamp(recentEvents.dailyInfo);
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
 
