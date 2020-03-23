@@ -47,12 +47,11 @@
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Icon from '../../utils/Icon.vue';
-import TooltipMenu from '../../utils/TooltipMenu.vue';
+import TooltipMenu, { TooltipMenuOptions } from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { isPendingMember, Member } from '@/types/workspaces';
 // eslint-disable-next-line no-unused-vars
-import { TooltipMenuOptions } from '@/components/utils/tooltipMenu';
 
 export default Vue.extend({
   name: 'TeamMember',

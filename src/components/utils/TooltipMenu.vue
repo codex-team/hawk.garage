@@ -16,8 +16,21 @@
 
 <script lang="ts">
 import Vue from 'vue';
-// eslint-disable-next-line no-unused-vars
-import { TooltipMenuOptions } from '@/components/utils/tooltipMenu';
+
+/**
+ * Options for TooltipMenu component
+ */
+export interface TooltipMenuOptions {
+  /**
+   * Item title
+   */
+  title: string;
+
+  /**
+   * Action to perform on item click
+   */
+  onClick: Function
+}
 
 export default Vue.extend({
   name: 'TooltipMenu',
