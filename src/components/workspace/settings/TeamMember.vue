@@ -92,6 +92,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    /**
+     * Returns true if current member is pending
+     */
     isPending(): boolean {
       return isPendingMember(this.member);
     },
@@ -107,7 +110,7 @@ export default Vue.extend({
         options.push({
           title: (this.member.isAdmin
             ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin')) as string,
-          onClick: this.grantAdmin,
+          onClick: this.toggleAdminPermissions,
         });
       }
       options.push({
@@ -121,7 +124,7 @@ export default Vue.extend({
     /**
      * Grant or withdraw admin permissions
      */
-    async grantAdmin(): Promise<void> {
+    async toggleAdminPermissions(): Promise<void> {
       try {
         if (!isPendingMember(this.member)) {
           await this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {

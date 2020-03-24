@@ -233,7 +233,7 @@ const actions = {
    * @param {function} commit - standard Vuex dispatch methods
    * @param {string} workspaceId - id of workspace where user is participate
    * @param {string} userId - id of user to remove
-   * @param userEmail - user email to remove (instead of id)
+   * @param {string} userEmail - user email to remove (instead of id)
    * @returns {Promise<*>}
    */
   async [REMOVE_USER_FROM_WORKSPACE]({ commit }, { workspaceId, userId, userEmail }) {
