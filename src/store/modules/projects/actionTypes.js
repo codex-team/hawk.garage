@@ -9,6 +9,11 @@ export const SET_PROJECTS_LIST = 'SET_PROJECTS_LIST';
 export const CREATE_PROJECT = 'CREATE_PROJECT';
 
 /**
+ * Send request to update project settings
+ */
+export const UPDATE_PROJECT = 'UPDATE_PROJECT';
+
+/**
  * Fetch project recent errors
  */
 export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';

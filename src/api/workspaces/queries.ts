@@ -33,6 +33,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         id
         token
         name
+        description
         image
         unreadCount
         recentEvents(limit: 1) {

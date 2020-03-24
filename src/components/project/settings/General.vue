@@ -1,7 +1,7 @@
 <template>
-  <div class="projects-settings-page">
+  <div>
     <div class="settings-window-page__title">
-      {{ $t('projects.settings.project.title') }}
+      {{ $t('projects.settings.general.title') }}
     </div>
     <form
       class="project-settings__form"
@@ -9,34 +9,40 @@
     >
       <div class="project-settings__fieldset">
         <FormTextFieldset
+          v-model="formName"
           class="project-settings__section project-settings__name-section"
           :label="$t('settings.account.name')"
           required
           @input="showSubmitButton = true"
         />
         <FormTextFieldset
-          :label="$t('projects.settings.project.description')"
-          :placeholder="$t('projects.settings.project.descriptionPlaceholder')"
+          v-model="formDescription"
+          :label="$t('projects.settings.general.description')"
+          :placeholder="$t('projects.settings.general.descriptionPlaceholder')"
           class="project-settings__section"
           @input="showSubmitButton = true"
         />
       </div>
       <section>
-        <label class="label project-settings__label">{{ $t('projects.settings.project.image') }}</label>
+        <label class="label project-settings__label">{{ $t('projects.settings.general.image') }}</label>
         <FormImageUploader
+          v-model="formImage"
           @input="showSubmitButton = true"
         />
       </section>
-      <button
-        v-if="showSubmitButton"
-        class="button button--submit project-settings__submit-button"
-      >
-        {{ $t('projects.settings.project.submit') }}
-      </button>
+
+      <div class="project-settings__submit-area">
+        <button
+          v-if="showSubmitButton"
+          class="button button--submit project-settings__submit-button"
+        >
+          {{ $t('projects.settings.general.submit') }}
+        </button>
+      </div>
     </form>
     <hr class="delimiter">
     <div class="project-settings__registered-info">
-      {{ $t('projects.settings.project.created') }}
+      {{ $t('projects.settings.general.created') }}
     </div>
   </div>
 </template>
@@ -45,6 +51,35 @@
 import Vue from 'vue';
 import FormTextFieldset from '../../forms/TextFieldset.vue';
 import FormImageUploader from '../../forms/ImageUploader.vue';
+import { Project } from '../../../types/project';
+import { UPDATE_PROJECT } from '@/store/modules/projects/actionTypes';
+
+import notifier from 'codex-notifier';
+
+/**
+ * This data will be send to update a project
+ */
+interface UpdateProjectPayload {
+  /**
+   * If of a workspace to update
+   */
+  id: string;
+
+  /**
+   * New name
+   */
+  name: string;
+
+  /**
+   * New description
+   */
+  description: string;
+
+  /**
+   * Image file selected
+   */
+  image?: File;
+}
 
 export default Vue.extend({
   name: 'ProjectSettingsGeneral',
@@ -53,15 +88,59 @@ export default Vue.extend({
     FormImageUploader,
   },
   props: {
+    project: {
+      type: Object as () => Project,
+      required: true,
+    },
   },
   data() {
     return {
+      /**
+       * Form data to send with save
+       */
+      formName: this.project.name,
+      formDescription: this.project.description,
+      formImage: this.project.image,
+
+      /**
+       * Button will be showed only when some fields is changed
+       */
       showSubmitButton: false,
     };
   },
-  computed: {
-  },
   methods: {
+    /**
+     * Form submit event handler
+     */
+    async save(): Promise<void> {
+      try {
+        const payload = {
+          id: this.project.id,
+          name: this.formName,
+          description: this.formDescription,
+        } as UpdateProjectPayload;
+
+        if (typeof this.formImage !== 'string') {
+          payload.image = this.formImage;
+        }
+
+        await this.$store.dispatch(UPDATE_PROJECT, payload);
+
+        this.showSubmitButton = false;
+
+        notifier.show({
+          message: this.$t('projects.settings.general.updatedMessage') as string,
+          style: 'success',
+          time: 5000,
+        });
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000,
+        });
+      }
+    },
   },
 });
 </script>
@@ -75,11 +154,12 @@ export default Vue.extend({
     width: 100%;
 
     &__form {
-      @apply --clearfix;
+      display: flex;
+      flex-wrap: wrap;
     }
 
-    &__fieldset {
-      float: left;
+    &__submit-area {
+      flex-basis: 100%;
     }
 
     &__label {
