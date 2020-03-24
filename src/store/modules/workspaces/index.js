@@ -74,7 +74,19 @@ const getters = {
    */
     id => state.list.find(workspace => workspace.id === id),
 
-  getCurrentUserInWorkspace: (state, getters, rootState) => (workspace) => {
+  /**
+   * Returns current user in the provided workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {object} getters - getters of the this module
+   * @param {object} rootState - vuex root state
+   * @return {function(*): ConfirmedMember}
+   */
+  getCurrentUserInWorkspace: (state, getters, rootState) =>
+    /**
+     * @param workspace - workspace to get user
+     * @return {T}
+     */
+    (workspace) => {
     const user = rootState.user.data;
 
     return workspace.team.find(_member => !isPendingMember(_member) && _member.user.id === user.id);
