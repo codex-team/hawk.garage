@@ -50,7 +50,8 @@ import Icon from '../../utils/Icon.vue';
 import TooltipMenu, { TooltipMenuOptions } from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
-import { isPendingMember, Member } from '@/types/workspaces';
+import { Member } from '@/types/workspaces';
+import { isPendingMember } from '@/store/modules/workspaces/helpers';
 import notifier from 'codex-notifier';
 // eslint-disable-next-line no-unused-vars
 

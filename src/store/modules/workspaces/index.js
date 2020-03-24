@@ -17,7 +17,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
 import Vue from 'vue';
-import { isPendingMember } from '../../../types/workspaces';
+import { isPendingMember } from '@/store/modules/workspaces/helpers';
 
 /**
  * Mutations enum for this module
