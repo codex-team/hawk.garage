@@ -3,7 +3,8 @@ import {
   CREATE_PROJECT,
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
-  UPDATE_PROJECT_LAST_VISIT
+  UPDATE_PROJECT_LAST_VISIT,
+  UPDATE_PROJECT,
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -15,6 +16,7 @@ import { groupByGroupingTimestamp } from '../../../utils';
  */
 const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
+  UPDATE_PROJECT: 'UPDATE_PROJECT', // Set new info about a project
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
@@ -89,6 +91,20 @@ const actions = {
   },
 
   /**
+   * Send request to update project settings
+   * @param {function} commit - standard Vuex commit function
+   * @param {Project} projectData - project params for creation
+   * @return {Promise<void>}
+   */
+  async [UPDATE_PROJECT]({ commit }, projectData) {
+    const updatedProject = await projectsApi.updateProject(projectData);
+
+    if (updatedProject) {
+      commit(mutationTypes.UPDATE_PROJECT, updatedProject);
+    }
+  },
+
+  /**
    * Fetch latest project events
    * @param {function} commit - standard Vuex commit function
    * @param {String} projectId - id of the project to fetch
@@ -152,6 +168,17 @@ const mutations = {
    */
   [mutationTypes.ADD_PROJECT](state, project) {
     state.list.push(project);
+  },
+
+  /**
+   * Update info about a project
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Project} project - project to update
+   */
+  [mutationTypes.UPDATE_PROJECT](state, project) {
+    const index = state.list.findIndex(element => element.id === project.id);
+
+    state.list[index] = project;
   },
 
   /**

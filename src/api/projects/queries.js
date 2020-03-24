@@ -17,6 +17,27 @@ export const MUTATION_CREATE_PROJECT = `
 `;
 
 // language=GraphQL
+/**
+ * Mutation for project updating
+ */
+export const MUTATION_UPDATE_PROJECT = `
+    mutation updateProject(
+        $id: ID!
+        $name: String!
+        $description: String
+        $image: Upload
+    ) {
+        updateProject(id: $id, name: $name, description: $description, image: $image)
+        {
+            id
+            name
+            description
+            image
+        }
+    }
+`;
+
+// language=GraphQL
 export const QUERY_RECENT_ERRORS = `
   query RecentErrors($projectId: ID!) {
     recent(projectId: $projectId) {
