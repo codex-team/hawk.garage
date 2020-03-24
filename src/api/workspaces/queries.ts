@@ -3,25 +3,25 @@
  * Fragment for fetching workspace with full team
  */
 export const WORKSPACE_FRAGMENT_WITH_TEAM = `
-fragment WorkspaceWithTeam on Workspace {
-  team {
-    __typename
-    ...on ConfirmedMember {
-      id
-      user {
+  fragment WorkspaceWithTeam on Workspace {
+    team {
+      __typename
+      ...on ConfirmedMember {
+        id
+        user {
+          id
+          email
+          image
+        }
+        isAdmin
+      }
+
+      ...on PendingMember {
         id
         email
-        image
       }
-      isAdmin
-    }
-
-    ...on PendingMember {
-      id
-      email
     }
   }
-}
 `;
 
 // language=GraphQL
@@ -85,7 +85,7 @@ export const MUTATION_CREATE_WORKSPACE = `
       name
       description
       image
-      ...WorkspaeWithTeam
+      ...WorkspaceWithTeam
     }
   }
 
@@ -123,25 +123,24 @@ export const MUTATION_CONFIRM_INVITE = `
  * Query for fetching workspaces with id
  */
 export const QUERY_WORKSPACES = `
- query fetchWorkspaces($ids: [ID!]) {
-   workspaces(ids: $ids) {
-     id
-     name
-     description
-     image
-     balance
-     plan {
-       name
-       subscriptionDate
-       lastChargeDate
-       monthlyCharge
-       eventsLimit
-     }
-     ...WorkspaceWithTeam
-   }
-
-   ${WORKSPACE_FRAGMENT_WITH_TEAM}
- }
+  query fetchWorkspaces($ids: [ID!]) {
+    workspaces(ids: $ids) {
+      id
+      name
+      description
+      image
+      balance
+      plan {
+        name
+        subscriptionDate
+        lastChargeDate
+        monthlyCharge
+        eventsLimit
+      }
+      ...WorkspaceWithTeam
+    }
+  }
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -169,7 +168,7 @@ export const MUTATION_GRANT_ADMIN_PERMISSIONS = `
     $userId: ID!
     $state: Boolean = true
   ) {
-      grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
+    grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
   }
 `;
 
