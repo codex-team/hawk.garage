@@ -84,13 +84,13 @@ const getters = {
   getCurrentUserInWorkspace: (state, getters, rootState) =>
     /**
      * @param workspace - workspace to get user
-     * @return {T}
+     * @return {ConfirmedMember}
      */
     (workspace) => {
-    const user = rootState.user.data;
+      const user = rootState.user.data;
 
-    return workspace.team.find(_member => !isPendingMember(_member) && _member.user.id === user.id);
-  },
+      return workspace.team.find(_member => !isPendingMember(_member) && _member.user.id === user.id);
+    },
 };
 
 const actions = {
