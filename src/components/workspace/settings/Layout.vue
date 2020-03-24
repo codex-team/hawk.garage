@@ -58,7 +58,7 @@ import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
-import { ConfirmedMember, isPendingMember, Workspace } from '@/types/workspaces';
+import { Workspace } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsLayout',
