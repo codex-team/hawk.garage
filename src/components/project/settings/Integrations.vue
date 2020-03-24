@@ -13,27 +13,26 @@
   </div>
 </template>
 
-<script>
-
+<script lang="ts">
+import Vue from 'vue';
+import { Project } from '../../../types/project';
 import TokenBlock from '../TokenBlock';
 
-export default {
+export default Vue.extend({
   name: 'ProjectIntegrationsSettings',
   components: {
     TokenBlock,
   },
-  computed: {
-  /**
-   * Current viewed project
-   * @return {Project}
-   */
-    project() {
-      const projectId = this.$route.params.projectId;
-
-      return this.$store.getters.getProjectById(projectId);
+  props: {
+    /**
+     * The project we are working with
+     */
+    project: {
+      type: Object as () => Project,
+      required: true,
     },
   },
-};
+});
 </script>
 
 <style src="../../../styles/settings-window-page.css"></style>
