@@ -1,7 +1,7 @@
 <template>
   <div
     class="team-member"
-    :class="{'team-member--pending': isPending, 'team-member--admin': isTooltipShowed}"
+    :class="{'team-member--pending': isPending, 'team-member--admin': isCurrentUserAdmin}"
   >
     <Icon
       v-if="isPending"
@@ -36,7 +36,7 @@
     </div>
 
     <TooltipMenu
-      v-if="isTooltipShowed && (isPending ? true : user.id !== member.user.id)"
+      v-if="isCurrentUserAdmin && (isPending ? true : user.id !== member.user.id)"
       class="team-member__tooltip-menu"
       :options="getTooltipMenuOptions()"
     />
@@ -81,7 +81,7 @@ export default Vue.extend({
     /**
      * If true tooltip menu will be visible
      */
-    isTooltipShowed: {
+    isCurrentUserAdmin: {
       type: Boolean,
       default: false,
     },
