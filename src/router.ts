@@ -124,6 +124,11 @@ const router = new Router({
                   name: 'project-settings-integrations',
                   component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Integrations.vue'),
                 },
+                {
+                  path: 'notifications',
+                  name: 'project-settings-notifications',
+                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Notifications.vue'),
+                },
               ],
             },
           ],

@@ -26,6 +26,12 @@
         >
           {{ $t('projects.settings.integrations.title') }}
         </router-link>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'project-settings-notifications'}"
+        >
+          {{ $t('projects.settings.notifications.title') }}
+        </router-link>
       </div>
     </template>
 

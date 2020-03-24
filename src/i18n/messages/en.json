@@ -50,6 +50,9 @@
       "integrations": {
         "title": "Integrations",
         "projectTokenLabel": "Your Integration token for"
+      },
+      "notifications": {
+        "title": "Notifications"
       }
     }
   },

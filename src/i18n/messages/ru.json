@@ -50,6 +50,9 @@
       "integrations": {
         "title": "Интеграции",
         "projectTokenLabel": "Интеграционный токен для проекта"
+      },
+      "notifications": {
+        "title": "Уведомления"
       }
     }
   },
