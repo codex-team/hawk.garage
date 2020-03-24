@@ -51,6 +51,7 @@ import TooltipMenu, { TooltipMenuOptions } from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { isPendingMember, Member } from '@/types/workspaces';
+import notifier from 'codex-notifier';
 // eslint-disable-next-line no-unused-vars
 
 export default Vue.extend({
@@ -121,11 +122,19 @@ export default Vue.extend({
      * Grant or withdraw admin permissions
      */
     async grantAdmin(): Promise<void> {
-      if (!isPendingMember(this.member)) {
-        await this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
-          workspaceId: this.workspaceId,
-          userId: this.member.user.id,
-          state: !this.member.isAdmin,
+      try {
+        if (!isPendingMember(this.member)) {
+          await this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
+            workspaceId: this.workspaceId,
+            userId: this.member.user.id,
+            state: !this.member.isAdmin,
+          });
+        }
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000,
         });
       }
     },
@@ -134,17 +143,25 @@ export default Vue.extend({
      * Removes user from workspace
      */
     async removeUser(): Promise<void> {
-      if (isPendingMember(this.member)) {
-        await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
-          workspaceId: this.workspaceId,
-          userId: '',
-          userEmail: this.member.email,
-        });
-      } else {
-        await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
-          workspaceId: this.workspaceId,
-          userId: this.member.user.id,
-          userEmail: '',
+      try {
+        if (isPendingMember(this.member)) {
+          await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
+            workspaceId: this.workspaceId,
+            userId: '',
+            userEmail: this.member.email,
+          });
+        } else {
+          await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
+            workspaceId: this.workspaceId,
+            userId: this.member.user.id,
+            userEmail: '',
+          });
+        }
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000,
         });
       }
     },
