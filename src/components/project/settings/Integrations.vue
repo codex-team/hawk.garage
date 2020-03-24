@@ -16,7 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Project } from '../../../types/project';
-import TokenBlock from '../TokenBlock';
+import TokenBlock from '../TokenBlock.vue';
 
 export default Vue.extend({
   name: 'ProjectIntegrationsSettings',
