@@ -84,8 +84,7 @@ export default Vue.extend({
         return false;
       }
 
-      const user = this.$store.state.user.data;
-      const member = this.workspace.team.find(_member => !isPendingMember(_member) && _member.user.id === user.id) as ConfirmedMember;
+      const member = this.$store.getters.getCurrentUserInWorkspace(this.workspace);
 
       return member ? member.isAdmin : false;
     },

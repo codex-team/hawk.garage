@@ -114,7 +114,7 @@ export default Vue.extend({
      * Current user in current workspace
      */
     currentMembership(): Member | undefined {
-      return this.team.find(member => !isPendingMember(member) && member.user.id === this.user.id);
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
     },
   },
   methods: {

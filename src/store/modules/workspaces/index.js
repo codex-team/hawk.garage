@@ -73,6 +73,12 @@ const getters = {
    * @return {Project}
    */
     id => state.list.find(workspace => workspace.id === id),
+
+  getCurrentUserInWorkspace: (state, getters, rootState) => (workspace) => {
+    const user = rootState.user.data;
+
+    return workspace.team.find(_member => !isPendingMember(_member) && _member.user.id === user.id);
+  },
 };
 
 const actions = {
