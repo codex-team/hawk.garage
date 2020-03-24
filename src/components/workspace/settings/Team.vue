@@ -121,7 +121,7 @@ export default Vue.extend({
     /**
      * Show notification on link copied
      */
-    onLinkCopied() {
+    onLinkCopied(): void {
       notifier.show({
         message: this.$t('common.copiedNotification') as string,
         style: 'success',
@@ -132,7 +132,7 @@ export default Vue.extend({
     /**
      * Sends invitation to the user and updates store
      */
-    async onInvitationSent() {
+    async onInvitationSent(): Promise<void> {
       if (!this.userEmail) {
         return;
       }
