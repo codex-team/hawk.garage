@@ -1,5 +1,31 @@
 // language=GraphQL
 /**
+ * Fragment for fetching workspace with full team
+ */
+export const WORKSPACE_FRAGMENT_WITH_TEAM = `
+fragment WorkspaceWithTeam on Workspace {
+  team {
+    __typename
+    ...on ConfirmedMember {
+      id
+      user {
+        id
+        email
+        image
+      }
+      isAdmin
+    }
+
+    ...on PendingMember {
+      id
+      email
+    }
+  }
+}
+`;
+
+// language=GraphQL
+/**
  * Query for getting all user's workspaces and project.
  */
 export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
@@ -9,23 +35,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       name
       description
       image
-      team {
-        __typename
-        ...on ConfirmedMember {
-          id
-          user {
-            id
-            email
-            image
-          }
-          isAdmin
-        }
-
-        ...on PendingMember {
-          id
-          email
-        }
-      }
+      ...WorkspaceWithTeam
       projects {
         id
         token
@@ -57,6 +67,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       }
     }
   }
+
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -73,25 +85,11 @@ export const MUTATION_CREATE_WORKSPACE = `
       name
       description
       image
-      team {
-        __typename
-        ...on ConfirmedMember {
-          id
-          user {
-            id
-            email
-            image
-          }
-          isAdmin
-        }
-
-        ... on PendingMember {
-          id
-          email
-        }
-      }
+      ...WorkspaeWithTeam
     }
   }
+
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -139,24 +137,10 @@ export const QUERY_WORKSPACES = `
        monthlyCharge
        eventsLimit
      }
-     team {
-       __typename
-       ...on ConfirmedMember {
-         id
-         user {
-           id
-           email
-           image
-         }
-         isAdmin
-       }
-
-       ... on PendingMember {
-         id
-         email
-       }
-     }
+     ...WorkspaceWithTeam
    }
+
+   ${WORKSPACE_FRAGMENT_WITH_TEAM}
  }
 `;
 
