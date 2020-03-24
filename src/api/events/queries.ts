@@ -1,16 +1,6 @@
-// language=GraphQL
-/**
- * Structure represents user
- */
-const USER_FRAGMENT = `
-  fragment User on User {
-    id
-    email
-    name
-    image
-  }
-`;
+import { USER_FRAGMENT, EVENT_BACKTRACE } from "../fragments";
 
+// language=GraphQL
 /**
  * Get specific error
  */
@@ -68,19 +58,9 @@ export const QUERY_EVENT = `
     }
   }
 
-  fragment eventBacktrace on EventBacktraceFrame {
-    file
-    line
-    column
-    sourceCode {
-      line
-      content
-    }
-    function
-    arguments
-  }
-
   ${USER_FRAGMENT}
+
+  ${EVENT_BACKTRACE}
 `;
 
 // language=GraphQL

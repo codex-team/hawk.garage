@@ -1,30 +1,6 @@
+import { MEMBER_FRAGMENT,  USER_FRAGMENT} from "../fragments";
+
 // language=GraphQL
-/**
- * Structure represents record in team:<projectId> collection
- */
-const MEMBER_FRAGMENT = `
-  fragment Member on Member {
-    id
-    userId
-    name
-    email
-    isAdmin
-    isPending
-  }
-`;
-
-/**
- * Structure represents user
- */
-const USER_FRAGMENT = `
-  fragment User on User {
-    id
-    email
-    name
-    image
-  }
-`;
-
 /**
  * Query for getting all user's workspaces and project.
  */
