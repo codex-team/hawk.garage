@@ -18,7 +18,7 @@
     />
 
     <div class="team-member__name">
-      {{ isPending? member.email : member.user.name || member.user.email }}
+      {{ isPending ? member.email : member.user.name || member.user.email }}
     </div>
     <div
       v-if="!isPending && user.id === member.user.id"
