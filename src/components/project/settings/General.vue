@@ -88,6 +88,9 @@ export default Vue.extend({
     FormImageUploader,
   },
   props: {
+    /**
+     * The project we are working with
+     */
     project: {
       type: Object as () => Project,
       required: true,
