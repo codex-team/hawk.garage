@@ -13,26 +13,19 @@
           class="radio-button-group__option-image"
           :style="{backgroundImage: `url('${option.image}')`}"
         />
-        <input
-          :id="option.id"
-          :value="option.id"
-          :checked="option.id === value"
-          class="radio-button-group__option-input"
-          :name="name"
-          type="radio"
-          @input="$emit('input', option.id)"
-        >
         <label
           class="radio-button-group__option-label"
           :for="option.id"
         >
           {{ option.name }}
         </label>
-        <div
-          class="radio-button-group__option-tick"
-        >
-          <Icon symbol="tick" />
-        </div>
+        <UiRadio
+          :id="option.id"
+          :name="name"
+          :value="option.id"
+          :checked="option.id === value"
+          @input="$emit('input', option.id)"
+        />
       </div>
       <hr
         v-if="index !== options.length - 1"
@@ -44,10 +37,14 @@
 
 <script>
 import Icon from '../utils/Icon';
+import UiRadio from "./UiRadio";
 
 export default {
   name: 'RadioButtonGroup',
-  components: { Icon },
+  components: {
+    Icon,
+    UiRadio,
+  },
   props: {
     label: {
       type: String,

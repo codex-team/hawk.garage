@@ -52,7 +52,11 @@
         "projectTokenLabel": "Your Integration token for"
       },
       "notifications": {
-        "title": "Notifications"
+        "title": "Notifications",
+        "addRule": "Add rule",
+        "rulesList": "Rules",
+        "email": "Email",
+        "emailDescription": "Max frequency is 1 alert in 10 min"
       }
     }
   },
