@@ -1,34 +1,34 @@
 <template>
   <div
     class="team-member"
-    :class="{'team-member--pending': member.isPending, 'team-member--admin': hasAdminPermissions}"
+    :class="{'team-member--pending': isPending, 'team-member--admin': isCurrentUserAdmin}"
   >
     <Icon
-      v-if="member.isPending"
+      v-if="isPending"
       class="team-member__image"
       symbol="user-placeholder"
     />
 
     <EntityImage
       v-else
-      :id="member.id"
-      :name="member.email || 'H'"
-      :image="member.image"
+      :id="member.user.id"
+      :name="member.user.email || 'H'"
+      :image="member.user.image"
       class="team-member__image"
     />
 
     <div class="team-member__name">
-      {{ member.name || member.email }}
+      {{ isPending ? member.email : member.user.name || member.user.email }}
     </div>
     <div
-      v-if="user.id === member.id"
+      v-if="!isPending && user.id === member.user.id"
       class="team-member__you-label"
     >
       ({{ $t('workspaces.settings.team.youLabel') }})
     </div>
 
     <div
-      v-if="member.isAdmin || member.isPending"
+      v-if="member.isAdmin || isPending"
       class="team-member__status-label"
       :class="{'team-member__status-label--admin': member.isAdmin}"
     >
@@ -36,20 +36,26 @@
     </div>
 
     <TooltipMenu
-      v-if="hasAdminPermissions && user.id !== member.id"
+      v-if="isCurrentUserAdmin && (isPending ? true : user.id !== member.user.id)"
       class="team-member__tooltip-menu"
-      :options="getTooltipMenuOptions(member)"
+      :options="getTooltipMenuOptions()"
     />
   </div>
 </template>
 
-<script>
-import EntityImage from '../../utils/EntityImage';
-import Icon from '../../utils/Icon';
-import TooltipMenu from '../../utils/TooltipMenu';
-import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
+<script lang="ts">
+import Vue from 'vue';
+import EntityImage from '../../utils/EntityImage.vue';
+import Icon from '../../utils/Icon.vue';
+import TooltipMenu, { TooltipMenuOptions } from '../../utils/TooltipMenu.vue';
+import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+// eslint-disable-next-line no-unused-vars
+import { Member } from '@/types/workspaces';
+import { isPendingMember } from '@/store/modules/workspaces/helpers';
+import notifier from 'codex-notifier';
+// eslint-disable-next-line no-unused-vars
 
-export default {
+export default Vue.extend({
   name: 'TeamMember',
   components: {
     TooltipMenu,
@@ -57,15 +63,26 @@ export default {
     Icon,
   },
   props: {
+    /**
+     * Member's workspace id
+     */
     workspaceId: {
       type: String,
       required: true,
     },
+
+    /**
+     * Workspace member to display
+     */
     member: {
-      type: Object,
+      type: Object as () => Member,
       required: true,
     },
-    hasAdminPermissions: {
+
+    /**
+     * If true tooltip menu will be visible
+     */
+    isCurrentUserAdmin: {
       type: Boolean,
       default: false,
     },
@@ -75,40 +92,85 @@ export default {
       user: this.$store.state.user.data,
     };
   },
+  computed: {
+    /**
+     * Returns true if current member is pending
+     */
+    isPending(): boolean {
+      return isPendingMember(this.member);
+    },
+  },
   methods: {
-    getTooltipMenuOptions(member) {
-      const options = [];
+    /**
+     * Returns options for tooltip menu
+     */
+    getTooltipMenuOptions(): TooltipMenuOptions[] {
+      const options: TooltipMenuOptions[] = [];
 
-      if (!member.isPending) {
+      if (!isPendingMember(this.member)) {
         options.push({
-          title: member.isAdmin ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin'),
-          onClick: this.grantAdmin(member.id, member.isAdmin),
+          title: (this.member.isAdmin
+            ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin')) as string,
+          onClick: this.toggleAdminPermissions,
         });
       }
-
       options.push({
-        title: this.$t('workspaces.settings.team.removeMember'),
-        onClick: this.removeUser(member.id, member.email),
+        title: this.$t('workspaces.settings.team.removeMember') as string,
+        onClick: this.removeUser,
       });
 
       return options;
     },
-    grantAdmin(userId, previousState) {
-      return () => this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
-        workspaceId: this.workspaceId,
-        userId,
-        state: !previousState,
-      });
+
+    /**
+     * Grant or withdraw admin permissions
+     */
+    async toggleAdminPermissions(): Promise<void> {
+      try {
+        if (!isPendingMember(this.member)) {
+          await this.$store.dispatch(GRANT_ADMIN_PERMISSIONS, {
+            workspaceId: this.workspaceId,
+            userId: this.member.user.id,
+            state: !this.member.isAdmin,
+          });
+        }
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000,
+        });
+      }
     },
-    removeUser(userId, userEmail) {
-      return () => this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
-        workspaceId: this.workspaceId,
-        userId,
-        userEmail,
-      });
+
+    /**
+     * Removes user from workspace
+     */
+    async removeUser(): Promise<void> {
+      try {
+        if (isPendingMember(this.member)) {
+          await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
+            workspaceId: this.workspaceId,
+            userId: '',
+            userEmail: this.member.email,
+          });
+        } else {
+          await this.$store.dispatch(REMOVE_USER_FROM_WORKSPACE, {
+            workspaceId: this.workspaceId,
+            userId: this.member.user.id,
+            userEmail: '',
+          });
+        }
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 5000,
+        });
+      }
     },
   },
-};
+});
 </script>
 
 <style>

@@ -48,9 +48,9 @@
       >{{ $t('workspaces.settings.team.title') }}</label>
       <div>
         <TeamMember
-          v-for="member in (workspace.users ? workspace.users.concat(workspace.pendingUsers) : [])"
+          v-for="member in workspace.team"
           :key="member.id"
-          :has-admin-permissions="currentMembership.isAdmin"
+          :is-current-user-admin="currentMembership.isAdmin"
           :workspace-id="workspace.id"
           :member="member"
         />
@@ -64,6 +64,7 @@ import Vue from 'vue';
 import notifier from 'codex-notifier';
 import { INVITE_TO_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import TeamMember from './TeamMember.vue';
+// eslint-disable-next-line no-unused-vars
 import { Workspace, Member } from '@/types/workspaces';
 
 export default Vue.extend({
@@ -81,8 +82,19 @@ export default Vue.extend({
   },
   data() {
     return {
+      /**
+       * User email for invitation
+       */
       userEmail: '',
+
+      /**
+       * Base URL for invite link
+       */
       baseUrl: window.location.origin,
+
+      /**
+       * Current authenticated user
+       */
       user: this.$store.state.user.data,
     };
   },
@@ -95,25 +107,32 @@ export default Vue.extend({
         return [];
       }
 
-      return [...this.workspace.users, ...this.workspace.pendingUsers];
+      return this.workspace.team;
     },
 
     /**
      * Current user in current workspace
      */
     currentMembership(): Member | undefined {
-      return this.team.find(u => u.userId === this.user.id);
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
     },
   },
   methods: {
-    onLinkCopied() {
+    /**
+     * Show notification on link copied
+     */
+    onLinkCopied(): void {
       notifier.show({
         message: this.$t('common.copiedNotification') as string,
         style: 'success',
         time: 2000,
       });
     },
-    async onInvitationSent() {
+
+    /**
+     * Sends invitation to the user and updates store
+     */
+    async onInvitationSent(): Promise<void> {
       if (!this.userEmail) {
         return;
       }

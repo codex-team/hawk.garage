@@ -14,16 +14,33 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+/**
+ * Options for TooltipMenu component
+ */
+export interface TooltipMenuOptions {
+  /**
+   * Item title
+   */
+  title: string;
+
+  /**
+   * Action to perform on item click
+   */
+  onClick: Function
+}
+
+export default Vue.extend({
   name: 'TooltipMenu',
   props: {
     options: {
-      type: Array,
+      type: Array as () => TooltipMenuOptions[],
       required: true,
     },
   },
-};
+});
 </script>
 
 <style>
