@@ -38,14 +38,14 @@
       "workspaceSelectLabel": "Выбрать воркспейс"
     },
     "settings": {
-      "project": {
+      "general": {
         "title": "Настройки проекта",
         "image": "Изображение",
         "description": "Описание",
         "descriptionPlaceholder": "Лучший проект",
         "submit": "Сохранить",
         "created": "Создан 25 Авг, 2019",
-        "updatedMessage": "Настройки проекта успешно обновлены"
+        "updatedMessage": "Настройки проекта обновлены"
       },
       "integrations": {
         "title": "Интеграции",
