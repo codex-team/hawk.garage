@@ -1,3 +1,5 @@
+import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
+
 // language=GraphQL
 /**
  * Get specific error
@@ -10,12 +12,14 @@ export const QUERY_EVENT = `
         catcherType
         totalCount
         groupHash
+        visitedBy {
+          ...User
+        }
         marks {
           resolved
           starred
           ignored
         }
-        visitedBy
         payload {
           title
           release
@@ -54,17 +58,9 @@ export const QUERY_EVENT = `
     }
   }
 
-  fragment eventBacktrace on EventBacktraceFrame {
-    file
-    line
-    column
-    sourceCode {
-      line
-      content
-    }
-    function
-    arguments
-  }
+  ${USER_FRAGMENT}
+
+  ${EVENT_BACKTRACE}
 `;
 
 // language=GraphQL
@@ -82,7 +78,9 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           id
           groupHash
           totalCount
-          visitedBy
+          visitedBy {
+           ...User
+          }
           marks {
             resolved
             starred
@@ -105,6 +103,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
     }
   }
 
+  ${USER_FRAGMENT}
 `;
 
 // language=GraphQL

@@ -1,28 +1,4 @@
-// language=GraphQL
-/**
- * Fragment for fetching workspace with full team
- */
-export const WORKSPACE_FRAGMENT_WITH_TEAM = `
-  fragment WorkspaceWithTeam on Workspace {
-    team {
-      __typename
-      ...on ConfirmedMember {
-        id
-        user {
-          id
-          email
-          image
-        }
-        isAdmin
-      }
-
-      ...on PendingMember {
-        id
-        email
-      }
-    }
-  }
-`;
+import { WORKSPACE_FRAGMENT_WITH_TEAM, USER_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
@@ -47,7 +23,9 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           events {
             id
             groupHash
-            visitedBy
+            visitedBy {
+              ...User
+            }
             marks {
               resolved
               starred
@@ -68,6 +46,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       }
     }
   }
+
+  ${USER_FRAGMENT}
 
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
@@ -141,6 +121,7 @@ export const QUERY_WORKSPACES = `
       ...WorkspaceWithTeam
     }
   }
+
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 

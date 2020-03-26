@@ -78,7 +78,7 @@ export default {
         return false;
       }
 
-      return visitedBy.includes(this.$store.state.user.data.id);
+      return visitedBy.find(user => user.id === this.$store.state.user.data.id);
     },
 
     /**
