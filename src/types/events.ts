@@ -1,4 +1,4 @@
-import { User } from "@/types/user";
+import { User } from '@/types/user';
 
 /**
  * Event marks enum
@@ -42,9 +42,9 @@ export interface HawkEvent {
    * Event marks for current user
    */
   marks: {
-    resolved: boolean,
-    starred: boolean,
-    ignored: boolean,
+    resolved: boolean;
+    starred: boolean;
+    ignored: boolean;
   };
 
   /**

@@ -5,6 +5,7 @@
       v-for="user in shownUsers"
       :id="user.id"
       :key="user.id"
+      :title="user.name || user.email"
       class="viewed-by__user"
       :name="user.name || user.email"
       :image="user.image"
@@ -68,9 +69,9 @@ export default Vue.extend({
       width: 14px;
       height: 14px;
       margin-right: 6px;
-      border-radius: 5px;
-      line-height: 14px;
       font-size: 8px;
+      line-height: 14px;
+      border-radius: 5px;
     }
 
     &__count {

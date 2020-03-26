@@ -1,4 +1,4 @@
-import { USER_FRAGMENT, EVENT_BACKTRACE } from "../fragments";
+import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
 
 // language=GraphQL
 /**

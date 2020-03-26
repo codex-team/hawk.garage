@@ -1,4 +1,4 @@
-import { MEMBER_FRAGMENT,  USER_FRAGMENT} from "../fragments";
+import { MEMBER_FRAGMENT, USER_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
