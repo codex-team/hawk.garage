@@ -143,8 +143,9 @@ export default {
 
     &__delimiter {
       margin: 0;
-      border: 1px solid var(--color-text-second);
-      opacity: 0.1;
+      border: 0;
+      border-bottom: 1px solid var(--color-delimiter-line);
+      height: 0;
     }
   }
 </style>

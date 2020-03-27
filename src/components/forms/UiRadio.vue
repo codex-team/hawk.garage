@@ -71,6 +71,7 @@ export default Vue.extend({
     border: 1px solid var(--color-bg-sidebar);
     color: #fff;
     border-radius: 100%;
+    cursor: pointer;
 
     .icon {
       width: 18px;
