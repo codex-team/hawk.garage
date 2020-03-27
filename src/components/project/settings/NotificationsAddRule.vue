@@ -67,7 +67,7 @@
       <div class="grid-form__section-content">
         <section>
           <FormTextFieldset
-            v-model="form.channels.email.endpoint"
+            v-model="form.filters.including"
             :label="$t('projects.settings.notifications.includingWordsLabel')"
             :description="$t('projects.settings.notifications.includingWordsDescription')"
             placeholder="codex, editor"
@@ -76,7 +76,7 @@
         </section>
         <section>
           <FormTextFieldset
-            v-model="form.channels.slack.endpoint"
+            v-model="form.filters.excluding"
             :label="$t('projects.settings.notifications.excludingWordsLabel')"
             :description="$t('projects.settings.notifications.excludingWordsDescription')"
             placeholder="chunk. unknow"
@@ -103,6 +103,9 @@ export default Vue.extend({
   },
   data() {
     return {
+      /**
+       * Form filling state
+       */
       form: {
         channels: {
           email: {
@@ -119,7 +122,14 @@ export default Vue.extend({
           },
         },
         receiveType: 'all',
+        filters: {
+          including: null,
+          excluding: null,
+        },
       },
+      /**
+       * Available options of 'What to receive'
+       */
       receiveTypes: [
         {
           id: 'all',
