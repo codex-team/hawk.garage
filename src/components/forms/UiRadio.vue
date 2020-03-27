@@ -72,6 +72,7 @@ export default Vue.extend({
     color: #fff;
     border-radius: 100%;
     cursor: pointer;
+    user-select: none;
 
     .icon {
       width: 18px;
@@ -91,6 +92,7 @@ export default Vue.extend({
 
       &:checked ~ .icon {
         opacity: 1;
+        animation: jumpIn 150ms ease-in;
       }
     }
   }

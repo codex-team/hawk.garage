@@ -75,3 +75,13 @@
     transform: rotate(360deg);
   }
 }
+
+@keyframes jumpIn {
+  from {
+    transform: scale(0.85);
+  }
+
+  to {
+    transform: none;
+  }
+}

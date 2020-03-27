@@ -1,5 +1,8 @@
 <template>
-  <fieldset class="form-fieldset">
+  <fieldset
+    class="form-fieldset"
+    :class="{'form-fieldset--with-hidden-input': hidden}"
+  >
     <label
       class="label form-fieldset__label"
       :for="name"
@@ -20,6 +23,7 @@
       :value="value"
       :placeholder="placeholder"
       :required="required"
+      :hidden="hidden"
       @input="$emit('input', $event.target.value)"
     >
   </fieldset>
@@ -81,6 +85,15 @@ export default {
       type: String,
       default: null,
     },
+
+    /**
+     * Allows to hide input for some cases
+     * For example, if some checkbox is not enabled, like in NotificationsAddRule
+     */
+    hidden: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -100,6 +113,11 @@ export default {
       color: var(--color-text-second);
       font-size: 13px;
       letter-spacing: 0.16px;
+      line-height: 1.6em;
+    }
+
+    &--with-hidden-input &__description {
+      margin-bottom: 0;
     }
   }
 </style>

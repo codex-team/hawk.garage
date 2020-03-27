@@ -129,6 +129,7 @@ export default {
       &-description {
         font-size: 13px;
         letter-spacing: 0.16px;
+        line-height: 1.6em;
         color: var(--color-text-second);
       }
 

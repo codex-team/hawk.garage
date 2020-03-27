@@ -55,6 +55,9 @@
         "title": "Уведомления",
         "addRule": "Добавить сценарий",
         "rulesList": "Сценарии",
+        "sectionWhereToReceive": "Где получать",
+        "sectionWhatToReceive": "Что получать",
+        "sectionCustomFilters": "Фильтры",
         "email": "На почту",
         "emailDescription": "Не более одного письма в 10 минут",
         "slack": "Slack",
@@ -64,7 +67,12 @@
         "receiveNewLabel": "Только новые события",
         "receiveNewDescription": "При первом получении",
         "receiveAllLabel": "Все события",
-        "receiveAllDescription": "Все повторения. Максимальная частота — 1 событие в минуту"
+        "receiveAllDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
+        "includingWordsLabel": "Включающие слова",
+        "includingWordsDescription": "Только события, содержащие указанные слова",
+        "excludingWordsLabel": "Исключающие слова",
+        "excludingWordsDescription": "Пропустить события с такими словами"
+
       }
     }
   },

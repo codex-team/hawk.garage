@@ -55,6 +55,9 @@
         "title": "Notifications",
         "addRule": "Add rule",
         "rulesList": "Rules",
+        "sectionWhereToReceive": "Where to receive",
+        "sectionWhatToReceive": "What to receive",
+        "sectionCustomFilters": "Custom Filters",
         "email": "Email",
         "emailDescription": "Max frequency is 1 alert in 10 min",
         "slack": "Slack",
@@ -64,7 +67,11 @@
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveAllLabel": "All events",
-        "receiveAllDescription": "All event occurrences. Max frequency is 1 alert/min."
+        "receiveAllDescription": "All event occurrences. Max frequency is 1 alert/min.",
+        "includingWordsLabel": "Including words",
+        "includingWordsDescription": "Only events that includes passed words",
+        "excludingWordsLabel": "Excluding words",
+        "excludingWordsDescription": "Skip events with these words"
       }
     }
   },
