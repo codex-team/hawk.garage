@@ -56,7 +56,11 @@
         "addRule": "Add rule",
         "rulesList": "Rules",
         "email": "Email",
-        "emailDescription": "Max frequency is 1 alert in 10 min"
+        "emailDescription": "Max frequency is 1 alert in 10 min",
+        "receiveNewLabel": "Only new events",
+        "receiveNewDescription": "First occurrence of event",
+        "receiveAllLabel": "All events",
+        "receiveAllDescription": "All event occurrences. Max frequency is 1 alert/min."
       }
     }
   },

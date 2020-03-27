@@ -69,22 +69,27 @@ export default Vue.extend({
     margin-left: auto;
     background: var(--color-bg-main);
     border: 1px solid var(--color-bg-sidebar);
+    color: #fff;
     border-radius: 100%;
 
     .icon {
-      display: none;
       width: 18px;
       height: 18px;
       padding: 3px;
       background-color: #09cf5d;
       border-radius: 100%;
+      opacity: 0;
+    }
+
+    &:hover {
+      background: var(--color-bg-sidebar);
     }
 
     input {
       display: none;
 
       &:checked ~ .icon {
-        display: block;
+        opacity: 1;
       }
     }
   }

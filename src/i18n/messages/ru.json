@@ -56,7 +56,11 @@
         "addRule": "Добавить сценарий",
         "rulesList": "Сценарии",
         "email": "На почту",
-        "emailDescription": "Не более одного письма в 10 минут"
+        "emailDescription": "Не более одного письма в 10 минут",
+        "receiveNewLabel": "Только новые события",
+        "receiveNewDescription": "При первом получении",
+        "receiveAllLabel": "Все события",
+        "receiveAllDescription": "Все повторения. Максимальная частота — 1 событие в минуту"
       }
     }
   },
