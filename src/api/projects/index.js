@@ -1,4 +1,9 @@
-import { MUTATION_CREATE_PROJECT, QUERY_RECENT_ERRORS, MUTATION_UPDATE_LAST_VISIT } from './queries';
+import {
+  MUTATION_CREATE_PROJECT,
+  MUTATION_UPDATE_PROJECT,
+  QUERY_RECENT_ERRORS,
+  MUTATION_UPDATE_LAST_VISIT
+} from './queries';
 import * as api from '../index.ts';
 
 /**
@@ -10,6 +15,17 @@ export async function createProject(projectInfo) {
   const { image, ...rest } = projectInfo;
 
   return (await api.call(MUTATION_CREATE_PROJECT, rest, { image })).createProject;
+}
+
+/**
+ * Update project in db
+ * @param {Project} projectInfo - project to update
+ * @return {Promise<Project>}
+ */
+export async function updateProject(projectInfo) {
+  const { image, ...rest } = projectInfo;
+
+  return (await api.call(MUTATION_UPDATE_PROJECT, rest, { image })).updateProject;
 }
 
 /**

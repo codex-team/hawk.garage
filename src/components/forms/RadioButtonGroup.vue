@@ -1,6 +1,11 @@
 <template>
   <div class="radio-button-group">
-    <label class="label">{{ label }}</label>
+    <label
+      class="label"
+      v-if="label"
+    >
+      {{ label }}
+    </label>
     <div
       v-for="(option, index) in options"
       :key="option.id"
@@ -10,29 +15,44 @@
         @click="$emit('input', option.id)"
       >
         <div
+          v-if="option.image"
           class="radio-button-group__option-image"
           :style="{backgroundImage: `url('${option.image}')`}"
-        />
-        <input
-          :id="option.id"
-          :value="option.id"
-          :checked="option.id === value"
-          class="radio-button-group__option-input"
-          :name="name"
-          type="radio"
-          @input="$emit('input', option.id)"
-        >
+        ></div>
         <label
-          class="radio-button-group__option-label"
+          v-if="option.name"
+          class="radio-button-group__option-name"
           :for="option.id"
         >
           {{ option.name }}
         </label>
+
         <div
-          class="radio-button-group__option-tick"
+          v-if="option.label || option.description"
+          class="radio-button-group__option-content"
         >
-          <Icon symbol="tick" />
+          <div
+            v-if="option.label"
+            class="radio-button-group__option-label"
+          >
+            {{ option.label }}
+          </div>
+          <div
+            v-if="option.description"
+            class="radio-button-group__option-description"
+          >
+            {{ option.description }}
+          </div>
         </div>
+
+        <UiRadio
+          :id="option.id"
+          :name="name"
+          :value="option.id"
+          :checked="option.id === value"
+          @input="$emit('input', option.id)"
+          class="radio-button-group__option-radio"
+        />
       </div>
       <hr
         v-if="index !== options.length - 1"
@@ -44,14 +64,17 @@
 
 <script>
 import Icon from '../utils/Icon';
+import UiRadio from "./UiRadio";
 
 export default {
   name: 'RadioButtonGroup',
-  components: { Icon },
+  components: {
+    UiRadio,
+  },
   props: {
     label: {
       type: String,
-      required: true,
+      default: null,
     },
     name: {
       type: String,
@@ -70,72 +93,60 @@ export default {
 </script>
 
 <style>
+  @import url('./../../styles/custom-properties.css');
+
   .radio-button-group{
     &__option {
       display: flex;
       align-items: center;
       padding: 15px 0;
       cursor: pointer;
-    }
 
-    &__option-image {
-      width: 33px;
-      min-width: 33px;
-      height: 22px;
-      min-height: 22px;
-      background-size: cover;
-      border-radius: 3px;
-    }
-
-    &__option-label {
-      display: flex;
-      padding-left: 15px;
-      line-height: 28px;
-      background-repeat: no-repeat;
-      background-size: 33px 100%;
-    }
-
-    &__option-tick {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      min-width: 28px;
-      height: 28px;
-      min-height: 28px;
-      margin-left: auto;
-      background: var(--color-bg-main);
-      border: 1px solid var(--color-bg-sidebar);
-      border-radius: 100%;
-
-      .icon {
-        display: none;
-        width: 18px;
-        height: 18px;
-        padding: 3px;
-        background-color: #09cf5d;
-        border-radius: 100%;
-      }
-    }
-
-    &__option-input {
-      position: fixed;
-      width: 0;
-      opacity: 0;
-
-      &:focus ~ .radio-button-group__option-tick{
-        border-width: 2px;
+      &-image {
+        width: 33px;
+        min-width: 33px;
+        height: 22px;
+        min-height: 22px;
+        background-size: cover;
+        border-radius: 3px;
+        margin-right: 15px;
       }
 
-      &:checked ~ .radio-button-group__option-tick .icon {
-        display: block;
+      &-name {
+        display: flex;
+        line-height: 28px;
+      }
+
+      &-content {
+        padding-right: 30px;
+      }
+
+      &-label {
+        @apply --ui-label;
+        margin-bottom: 10px;
+      }
+
+      &-description {
+        font-size: 13px;
+        letter-spacing: 0.16px;
+        line-height: 1.6em;
+        color: var(--color-text-second);
+      }
+
+      &-radio {
+        margin-left: auto;
+      }
+
+      &:hover .ui-radio {
+        background: var(--color-bg-sidebar);
       }
     }
 
     &__delimiter {
       margin: 0;
-      border: 1px solid var(--color-text-second);
-      opacity: 0.1;
+      border: 0;
+      border-bottom: 1px solid var(--color-delimiter-line);
+      height: 0;
     }
   }
 </style>

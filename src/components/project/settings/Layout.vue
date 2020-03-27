@@ -18,7 +18,7 @@
           class="settings-window__menu-item"
           :to="{ name:'project-settings-general' }"
         >
-          {{ $t('projects.settings.project.title') }}
+          {{ $t('projects.settings.general.title') }}
         </router-link>
         <router-link
           class="settings-window__menu-item"
@@ -26,23 +26,44 @@
         >
           {{ $t('projects.settings.integrations.title') }}
         </router-link>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'project-settings-notifications'}"
+        >
+          {{ $t('projects.settings.notifications.title') }}
+        </router-link>
       </div>
     </template>
 
     <template v-slot:content>
-      <router-view />
+      <router-view
+        v-if="project"
+        :project="project"
+      />
     </template>
   </SettingsWindow>
 </template>
 
-<script>
-import SettingsWindow from '../../settings/Window';
-export default {
+<script lang="ts">
+import Vue from 'vue';
+import SettingsWindow from '../../settings/Window.vue';
+import { Project } from '../../../types/project';
+
+export default Vue.extend({
   name: 'ProjectSettingsWindow',
   components: {
     SettingsWindow,
   },
-};
+  computed: {
+    /**
+     * Current viewed project
+     * @return {Project}
+     */
+    project(): Project {
+      return this.$store.getters.getProjectById(this.$route.params.projectId);
+    },
+  },
+});
 </script>
 
 <style>

@@ -3,17 +3,17 @@
     <div class="settings-window-page__title">
       {{ $t('settings.appearance.title') }}
     </div>
-    <LanguageSelect />
+    <AppearanceLanguage />
   </div>
 </template>
 
 <script>
-import LanguageSelect from '../../forms/LanguageSelect';
+import AppearanceLanguage from './AppearanceLanguage';
 
 export default {
   name: 'AppearanceSettings',
   components: {
-    LanguageSelect,
+    AppearanceLanguage,
   },
 };
 </script>

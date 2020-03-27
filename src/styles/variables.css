@@ -20,6 +20,7 @@
 
   --color-border-input: #1f2230;
   --color-border: rgba(219, 230, 255, 0.2);
+  --color-delimiter-line: color-mod(var(--color-text-main) alpha(10%));
 
   --font-monospace: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
 
@@ -72,5 +73,15 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes jumpIn {
+  from {
+    transform: scale(0.85);
+  }
+
+  to {
+    transform: none;
   }
 }
