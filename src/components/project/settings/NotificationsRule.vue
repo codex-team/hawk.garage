@@ -1,6 +1,10 @@
 <template>
   <div class="n-rule">
     <div class="n-rule__actions">
+      <UiSwitch
+        :label="$t('projects.settings.notifications.ruleIsEnabled')"
+        v-model="rule.isEnabled"
+      />
       <TooltipMenu :options="menuOptions"/>
     </div>
     <section class="n-rule__type">
@@ -48,6 +52,7 @@ import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifica
 import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from "@/components/utils/TooltipMenu.vue";
+import UiSwitch from "@/components/forms/UiSwitch.vue";
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsRule',
@@ -55,6 +60,7 @@ export default Vue.extend({
     NotificationsRuleFilter,
     Icon,
     TooltipMenu,
+    UiSwitch,
   },
   props: {
     /**
@@ -110,6 +116,7 @@ export default Vue.extend({
 
   .n-rule {
     @apply --font-small;
+    max-width: var(--width-popup-form-container);
 
     padding: 20px 0;
 
@@ -150,6 +157,11 @@ export default Vue.extend({
 
     &__actions {
       float: right;
+      display: flex;
+
+      .ui-switch {
+        margin-right: 20px;
+      }
     }
   }
 </style>

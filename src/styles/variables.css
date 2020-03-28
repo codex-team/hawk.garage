@@ -37,6 +37,7 @@
    * Some custom width
    */
   --width-event-center-container: 850px;
+  --width-popup-form-container: 600px;
 }
 
 .app--theme--light {
