@@ -94,13 +94,13 @@ export default Vue.extend({
     menuOptions(): TooltipMenuItem[] {
       return [
         {
-          title: this.$t('projects.settings.notifications.editRule'),
+          title: this.$t('projects.settings.notifications.editRule') as string,
           onClick() {
             console.log('Edit rule clicked');
           },
         },
         {
-          title: this.$t('projects.settings.notifications.removeRule'),
+          title: this.$t('projects.settings.notifications.removeRule') as string,
           onClick() {
             console.log('Remove rule clicked');
           },

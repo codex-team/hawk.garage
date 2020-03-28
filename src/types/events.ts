@@ -1,3 +1,5 @@
+import { User } from '@/types/user';
+
 /**
  * Event marks enum
  */
@@ -34,15 +36,15 @@ export interface HawkEvent {
   /**
    * Users who visited this event
    */
-  visitedBy: string[];
+  visitedBy: User[];
 
   /**
    * Event marks for current user
    */
   marks: {
-    resolved: boolean,
-    starred: boolean,
-    ignored: boolean,
+    resolved: boolean;
+    starred: boolean;
+    ignored: boolean;
   };
 
   /**
