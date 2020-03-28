@@ -25,12 +25,12 @@ export interface ProjectNotificationsRule {
   /**
    * Only those which contains passed words
    */
-  including: string[];
+  including?: string[];
 
   /**
    * Skip those which contains passed words
    */
-  excluding: string[];
+  excluding?: string[];
 
   /**
    * Available channels to receive

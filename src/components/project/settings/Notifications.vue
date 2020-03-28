@@ -24,6 +24,11 @@
       <div class="modal-form__section-title">
         {{ $t('projects.settings.notifications.rulesList') }}
       </div>
+      <Rule
+        v-for="rule in rules"
+        :key="rule.id"
+        :rule="rule"
+      />
     </section>
   </div>
 </template>
@@ -31,6 +36,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import AddRule from './NotificationsAddRule.vue';
+import Rule from './NotificationsRule.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import UiButton from "@/components/utils/UiButton.vue";
 
@@ -39,6 +45,7 @@ export default Vue.extend({
   components: {
     AddRule,
     UiButton,
+    Rule,
   },
   data(): {
     rules: ProjectNotificationsRule[],
@@ -52,7 +59,7 @@ export default Vue.extend({
           uidAdded: 'adaad',
           whatToReceive: ReceiveTypes.ONLY_NEW,
           including: ['codex', 'editor'],
-          excluding: [ 'script error.' ],
+          excluding: [ 'script error.', 'ожидание приянтия запроса пользователем на вступления в команду,', 'adad', 'adaddadad', 'daddadad'],
           channels: {
             slack: {
               isEnabled: true,
@@ -61,6 +68,18 @@ export default Vue.extend({
             telegram: {
               isEnabled: true,
               endpoint: 'https://bot.codex.so/E2V87B3X3B44…',
+            },
+          },
+        },
+        {
+          id: '213141',
+          isEnabled: true,
+          uidAdded: 'adaad',
+          whatToReceive: ReceiveTypes.ONLY_NEW,
+          channels: {
+            email: {
+              isEnabled: true,
+              endpoint: 'alerts@codex.so',
             },
           },
         },
@@ -86,6 +105,10 @@ export default Vue.extend({
       &-title {
         @apply --ui-label;
         margin-bottom: 15px;
+
+        & + .n-rule {
+          padding-top: 0;
+        }
       }
     }
   }

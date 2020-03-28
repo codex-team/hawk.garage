@@ -74,7 +74,10 @@
         "includingWordsLabel": "Включающие слова",
         "includingWordsDescription": "Только события, содержащие указанные слова",
         "excludingWordsLabel": "Исключающие слова",
-        "excludingWordsDescription": "Пропустить события с такими словами"
+        "excludingWordsDescription": "Пропустить события с такими словами",
+        "ruleIncludingLabel": "Со словами",
+        "ruleExcludingLabel": "Исключая слова",
+        "ruleIsEnabled": "Активно"
       }
     }
   },

@@ -195,7 +195,6 @@ export default Vue.extend({
           &:not(:last-of-type) {
             margin-bottom: 18px;
             padding-bottom: 15px;
-            border-bottom: 1px solid ;
             border-bottom: 1px solid var(--color-delimiter-line);
           }
 

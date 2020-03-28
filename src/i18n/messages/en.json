@@ -74,7 +74,10 @@
         "includingWordsLabel": "Including words",
         "includingWordsDescription": "Only events that includes passed words",
         "excludingWordsLabel": "Excluding words",
-        "excludingWordsDescription": "Skip events with these words"
+        "excludingWordsDescription": "Skip events with these words",
+        "ruleIncludingLabel": "Including",
+        "ruleExcludingLabel": "Excluding",
+        "ruleIsEnabled": "Enabled"
       }
     }
   },

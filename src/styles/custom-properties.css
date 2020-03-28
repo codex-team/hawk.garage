@@ -25,4 +25,10 @@
     font-size: 12px;
     text-transform: uppercase;
   }
+
+  --font-small: {
+    font-size: 13px;
+    letter-spacing: 0.16px;
+    line-height: 20px;
+  }
 }
