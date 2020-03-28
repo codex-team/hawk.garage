@@ -41,8 +41,7 @@
       <div
         class="n-rule__channel"
         v-for="(channel, channelName) in rule.channels"
-        :key="channelName"
-      >
+        >
         <Icon :symbol="channelName" />
         {{ channel.endpoint }}
       </div>

@@ -29,7 +29,7 @@ export interface TooltipMenuItem {
   /**
    * Click callback function
    */
-  onClick: () => {};
+  onClick: () => void;
 }
 
 export default Vue.extend({
