@@ -114,6 +114,7 @@ export default {
       font-size: 13px;
       letter-spacing: 0.16px;
       line-height: 1.6em;
+      margin-top: -3px;
     }
 
     &--with-hidden-input &__description {

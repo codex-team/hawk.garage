@@ -1,4 +1,4 @@
-import { MEMBER_FRAGMENT, USER_FRAGMENT } from '../fragments';
+import { WORKSPACE_FRAGMENT_WITH_TEAM, USER_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
@@ -11,12 +11,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       name
       description
       image
-      users {
-        ...Member
-      }
-      pendingUsers {
-        ...Member
-      }
+      ...WorkspaceWithTeam
       projects {
         id
         token
@@ -52,9 +47,9 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
     }
   }
 
-  ${MEMBER_FRAGMENT}
-
   ${USER_FRAGMENT}
+
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -71,16 +66,11 @@ export const MUTATION_CREATE_WORKSPACE = `
       name
       description
       image
-      users {
-        ...Member
-      }
-      pendingUsers {
-        ...Member
-      }
+      ...WorkspaceWithTeam
     }
   }
 
-  ${MEMBER_FRAGMENT}
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -114,30 +104,25 @@ export const MUTATION_CONFIRM_INVITE = `
  * Query for fetching workspaces with id
  */
 export const QUERY_WORKSPACES = `
- query fetchWorkspaces($ids: [ID!]) {
-   workspaces(ids: $ids) {
-     id
-     name
-     description
-     image
-     balance
-     plan {
-       name
-       subscriptionDate
-       lastChargeDate
-       monthlyCharge
-       eventsLimit
-     }
-     users {
-       ...Member
-     }
-     pendingUsers {
-       ...Member
-     }
-   }
- }
+  query fetchWorkspaces($ids: [ID!]) {
+    workspaces(ids: $ids) {
+      id
+      name
+      description
+      image
+      balance
+      plan {
+        name
+        subscriptionDate
+        lastChargeDate
+        monthlyCharge
+        eventsLimit
+      }
+      ...WorkspaceWithTeam
+    }
+  }
 
- ${MEMBER_FRAGMENT}
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -165,7 +150,7 @@ export const MUTATION_GRANT_ADMIN_PERMISSIONS = `
     $userId: ID!
     $state: Boolean = true
   ) {
-      grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
+    grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
   }
 `;
 

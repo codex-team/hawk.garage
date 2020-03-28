@@ -21,6 +21,7 @@
           :content="$t('event.resolve')"
           icon="checkmark"
           @click="markEvent('resolved')"
+          small
         />
         <UiButton
           class="event-header__button"
@@ -28,6 +29,7 @@
           :content="$t('event.star')"
           icon="star"
           @click="markEvent('starred')"
+          small
         />
         <UiButton
           class="event-header__button"
@@ -35,11 +37,13 @@
           :content="$t('event.ignore')"
           icon="hided"
           @click="markEvent('ignored')"
+          small
         />
         <UiButton
           class="event-header__button"
           :content="$t('event.issue')"
           icon="github"
+          small
         />
       </div>
       <div class="event-header__nav-bar">

@@ -123,7 +123,7 @@ export default {
 
       &-label {
         @apply --ui-label;
-        margin-bottom: 10px;
+        margin-bottom: 7px;
       }
 
       &-description {

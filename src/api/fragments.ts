@@ -1,19 +1,5 @@
 /**
- * Structure represents record in team:<projectId> collection
- */
-export const MEMBER_FRAGMENT = `
-  fragment Member on Member {
-    id
-    userId
-    name
-    email
-    isAdmin
-    isPending
-  }
-`;
-
-/**
- * Structure represents user
+ * Fragment represents user
  */
 export const USER_FRAGMENT = `
   fragment User on User {
@@ -25,7 +11,7 @@ export const USER_FRAGMENT = `
 `;
 
 /**
- * Structure represents event backtrace
+ * Fragment represents event backtrace
  */
 export const EVENT_BACKTRACE = `
   fragment eventBacktrace on EventBacktraceFrame {
@@ -38,5 +24,30 @@ export const EVENT_BACKTRACE = `
     }
     function
     arguments
+  }
+`;
+
+/**
+ * Fragment for fetching workspace with full team
+ */
+export const WORKSPACE_FRAGMENT_WITH_TEAM = `
+  fragment WorkspaceWithTeam on Workspace {
+    team {
+      __typename
+      ...on ConfirmedMember {
+        id
+        user {
+          id
+          email
+          image
+        }
+        isAdmin
+      }
+
+      ...on PendingMember {
+        id
+        email
+      }
+    }
   }
 `;

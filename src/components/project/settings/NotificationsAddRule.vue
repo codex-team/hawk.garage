@@ -85,6 +85,14 @@
         </section>
       </div>
     </section>
+    <UiButton
+      :content="$t('projects.settings.notifications.addRuleSubmit')"
+      submit
+    />
+    <UiButton
+      :content="$t('projects.settings.notifications.addRuleCancel')"
+      @click="$emit('cancel')"
+    />
   </div>
 </template>
 
@@ -93,6 +101,7 @@ import Vue from 'vue';
 import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
+import UiButton from './../../utils/UiButton.vue';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -100,6 +109,7 @@ export default Vue.extend({
     FormTextFieldset,
     RadioButtonGroup,
     UiCheckbox,
+    UiButton,
   },
   data() {
     return {
@@ -170,6 +180,7 @@ export default Vue.extend({
 
           .radio-button-group {
             margin-top: -15px;
+            margin-bottom: -15px;
             flex-basis: 100%;
           }
 
@@ -184,7 +195,6 @@ export default Vue.extend({
           &:not(:last-of-type) {
             margin-bottom: 18px;
             padding-bottom: 15px;
-            border-bottom: 1px solid ;
             border-bottom: 1px solid var(--color-delimiter-line);
           }
 
@@ -193,6 +203,11 @@ export default Vue.extend({
           }
         }
       }
+    }
+
+    .ui-button {
+      margin-top: 30px;
+      margin-right: 20px;
     }
   }
 </style>

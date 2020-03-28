@@ -53,7 +53,10 @@
       },
       "notifications": {
         "title": "Notifications",
-        "addRule": "Add rule",
+        "addRule": "Adding a rule",
+        "addRuleToggler": "Add new rule",
+        "addRuleSubmit": "Start receiving",
+        "addRuleCancel": "Close form",
         "rulesList": "Rules",
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",
@@ -71,7 +74,12 @@
         "includingWordsLabel": "Including words",
         "includingWordsDescription": "Only events that includes passed words",
         "excludingWordsLabel": "Excluding words",
-        "excludingWordsDescription": "Skip events with these words"
+        "excludingWordsDescription": "Skip events with these words",
+        "ruleIncludingLabel": "Including",
+        "ruleExcludingLabel": "Excluding",
+        "ruleIsEnabled": "Enabled",
+        "editRule": "Edit rule",
+        "removeRule": "Remove rule"
       }
     }
   },
