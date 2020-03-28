@@ -77,7 +77,9 @@
         "excludingWordsDescription": "Skip events with these words",
         "ruleIncludingLabel": "Including",
         "ruleExcludingLabel": "Excluding",
-        "ruleIsEnabled": "Enabled"
+        "ruleIsEnabled": "Enabled",
+        "editRule": "Edit rule",
+        "removeRule": "Remove rule"
       }
     }
   },

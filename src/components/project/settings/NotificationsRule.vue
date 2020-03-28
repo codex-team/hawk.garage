@@ -1,5 +1,8 @@
 <template>
   <div class="n-rule">
+    <div class="n-rule__actions">
+      <TooltipMenu :options="menuOptions"/>
+    </div>
     <section class="n-rule__type">
       {{ receiveType }}
     </section>
@@ -44,12 +47,14 @@ import Vue from 'vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
+import TooltipMenu, { TooltipMenuItem } from "@/components/utils/TooltipMenu.vue";
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsRule',
   components: {
     NotificationsRuleFilter,
     Icon,
+    TooltipMenu,
   },
   props: {
     /**
@@ -70,6 +75,27 @@ export default Vue.extend({
       }
 
       return this.$t('projects.settings.notifications.receiveAllLabel') as string;
+    },
+
+    /**
+     * Items of rule manipulations menu
+     * formatted for TooltipMenu component
+     */
+    menuOptions(): TooltipMenuItem[] {
+      return [
+        {
+          title: this.$t('projects.settings.notifications.editRule'),
+          onClick() {
+            console.log('Edit rule clicked');
+          },
+        },
+        {
+          title: this.$t('projects.settings.notifications.removeRule'),
+          onClick() {
+            console.log('Remove rule clicked');
+          },
+        },
+      ];
     },
   },
   data() {
@@ -102,7 +128,7 @@ export default Vue.extend({
 
       &-name {
         display: inline-block;
-        min-width: 70px;
+        min-width: 110px;
         padding-top: 5px;
       }
     }
@@ -120,6 +146,10 @@ export default Vue.extend({
         height: 16px;
         margin-right: 10px;
       }
+    }
+
+    &__actions {
+      float: right;
     }
   }
 </style>

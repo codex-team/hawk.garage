@@ -14,16 +14,36 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+/**
+ * Represents single item of a menu
+ */
+export interface TooltipMenuItem {
+  /**
+   * Text on menu item
+   */
+  title: string;
+
+  /**
+   * Click callback function
+   */
+  onClick: () => {};
+}
+
+export default Vue.extend({
   name: 'TooltipMenu',
   props: {
+    /**
+     * Menu items
+     */
     options: {
-      type: Array,
+      type: Array as () => TooltipMenuItem[],
       required: true,
     },
   },
-};
+});
 </script>
 
 <style>
@@ -112,9 +132,9 @@ export default {
       }
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.06);
+        background-color: rgba(255, 255, 255, 0.4);
 
-        &::before, & + ^ &__option::before {
+        &::before, & + ^&__option::before {
           display: none;
         }
       }
