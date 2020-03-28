@@ -53,7 +53,10 @@
       },
       "notifications": {
         "title": "Notifications",
-        "addRule": "Add rule",
+        "addRule": "Adding a rule",
+        "addRuleToggler": "Add new rule",
+        "addRuleSubmit": "Start receiving",
+        "addRuleCancel": "Close form",
         "rulesList": "Rules",
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",

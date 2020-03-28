@@ -8,7 +8,16 @@
       <div class="modal-form__section-title">
         {{ $t('projects.settings.notifications.addRule') }}
       </div>
-      <AddRule />
+      <AddRule
+        v-if="addRuleOpened || (!rules || !rules.length)"
+        @cancel="addRuleOpened = false"
+      />
+      <UiButton
+        v-else
+        :content="$t('projects.settings.notifications.addRuleToggler')"
+        submit
+        @click="addRuleOpened = true"
+      />
     </section>
 
     <section class="modal-form__section">
@@ -22,12 +31,46 @@
 <script lang="ts">
 import Vue from 'vue';
 import AddRule from './NotificationsAddRule.vue';
+import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import UiButton from "@/components/utils/UiButton.vue";
 
 export default Vue.extend({
   name: 'ProjectSettingsNotifications',
   components: {
     AddRule,
-  }
+    UiButton,
+  },
+  data(): {
+    rules: ProjectNotificationsRule[],
+    addRuleOpened: boolean,
+  } {
+    return {
+      rules: [
+        {
+          id: '123456',
+          isEnabled: true,
+          uidAdded: 'adaad',
+          whatToReceive: ReceiveTypes.ONLY_NEW,
+          including: ['codex', 'editor'],
+          excluding: [ 'script error.' ],
+          channels: {
+            slack: {
+              isEnabled: true,
+              endpoint: 'https://hooks.slack.com/services/T038Y…',
+            },
+            telegram: {
+              isEnabled: true,
+              endpoint: 'https://bot.codex.so/E2V87B3X3B44…',
+            },
+          },
+        },
+      ],
+      /**
+       * Flag indicates Add Rule form opening state
+       */
+      addRuleOpened: false,
+    };
+  },
 });
 </script>
 
