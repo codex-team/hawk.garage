@@ -25,6 +25,9 @@ export default Vue.extend({
       required: true,
     },
 
+    /**
+     * Pass true if filter should be coloured with red
+     */
     excluding: {
       type: Boolean,
       default: false,
