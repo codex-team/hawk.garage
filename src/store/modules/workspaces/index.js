@@ -114,9 +114,9 @@ const actions = {
    * @param {string} workspaceId - id of workspace for deleting
    */
   async [REMOVE_WORKSPACE]({ commit }, workspaceId) {
-    await workspaceApi.deleteWorkspace(workspaceId);
-
-    commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
+    // await workspaceApi.deleteWorkspace(workspaceId);
+    //
+    // commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
   },
 
   /**

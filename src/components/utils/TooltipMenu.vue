@@ -18,25 +18,28 @@
 import Vue from 'vue';
 
 /**
- * Options for TooltipMenu component
+ * Represents single item of a menu
  */
-export interface TooltipMenuOptions {
+export interface TooltipMenuItem {
   /**
-   * Item title
+   * Text on menu item
    */
   title: string;
 
   /**
-   * Action to perform on item click
+   * Click callback function
    */
-  onClick: Function
+  onClick: () => void;
 }
 
 export default Vue.extend({
   name: 'TooltipMenu',
   props: {
+    /**
+     * Menu items
+     */
     options: {
-      type: Array as () => TooltipMenuOptions[],
+      type: Array as () => TooltipMenuItem[],
       required: true,
     },
   },
@@ -129,9 +132,9 @@ export default Vue.extend({
       }
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.06);
+        background-color: rgba(255, 255, 255, 0.4);
 
-        &::before, & + ^ &__option::before {
+        &::before, & + ^&__option::before {
           display: none;
         }
       }

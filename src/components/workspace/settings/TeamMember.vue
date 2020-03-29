@@ -47,7 +47,7 @@
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Icon from '../../utils/Icon.vue';
-import TooltipMenu, { TooltipMenuOptions } from '../../utils/TooltipMenu.vue';
+import TooltipMenu, { TooltipMenuItem } from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Member } from '@/types/workspaces';
@@ -104,8 +104,8 @@ export default Vue.extend({
     /**
      * Returns options for tooltip menu
      */
-    getTooltipMenuOptions(): TooltipMenuOptions[] {
-      const options: TooltipMenuOptions[] = [];
+    getTooltipMenuOptions(): TooltipMenuItem[] {
+      const options: TooltipMenuItem[] = [];
 
       if (!isPendingMember(this.member)) {
         options.push({

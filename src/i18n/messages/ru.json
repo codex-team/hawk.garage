@@ -50,6 +50,36 @@
       "integrations": {
         "title": "Интеграции",
         "projectTokenLabel": "Интеграционный токен для проекта"
+      },
+      "notifications": {
+        "title": "Уведомления",
+        "addRule": "Добавление сценария",
+        "addRuleToggler": "Добавить новый сценарий",
+        "addRuleSubmit": "Начать получение",
+        "addRuleCancel": "Закрыть форму",
+        "rulesList": "Сценарии",
+        "sectionWhereToReceive": "Где получать",
+        "sectionWhatToReceive": "Что получать",
+        "sectionCustomFilters": "Фильтры",
+        "email": "На почту",
+        "emailDescription": "Не более одного письма в 10 минут",
+        "slack": "Slack",
+        "slackDescription": "Уведомления через Webhook App",
+        "telegram": "Telegram",
+        "telegramDescription": "Уведомления через @codex_bot",
+        "receiveNewLabel": "Только новые события",
+        "receiveNewDescription": "При первом получении",
+        "receiveAllLabel": "Все события",
+        "receiveAllDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
+        "includingWordsLabel": "Включающие слова",
+        "includingWordsDescription": "Только события, содержащие указанные слова",
+        "excludingWordsLabel": "Исключающие слова",
+        "excludingWordsDescription": "Пропустить события с такими словами",
+        "ruleIncludingLabel": "Со словами",
+        "ruleExcludingLabel": "Исключая слова",
+        "ruleIsEnabled": "Активно",
+        "editRule": "Редактировать",
+        "removeRule": "Удалить"
       }
     }
   },
