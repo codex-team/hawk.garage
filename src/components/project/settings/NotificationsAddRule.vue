@@ -1,5 +1,8 @@
 <template>
-  <div class="grid-form">
+  <form
+    class="grid-form"
+    @submit.prevent="save"
+  >
     <section class="grid-form__section">
       <div class="grid-form__section-name">
         {{ $t('projects.settings.notifications.sectionWhereToReceive') }}
@@ -85,13 +88,12 @@
     <UiButton
       :content="$t('projects.settings.notifications.addRuleSubmit')"
       submit
-      @click="save"
     />
     <UiButton
       :content="$t('projects.settings.notifications.addRuleCancel')"
       @click="$emit('cancel')"
     />
-  </div>
+  </form>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     class="ui-button"
     :class="{
       'ui-button--submit': submit,
@@ -16,7 +16,7 @@
     <span class="ui-button-text">
       {{ content }}
     </span>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -74,6 +74,8 @@ export default Vue.extend({
    border-radius: 4px;
    cursor: pointer;
    user-select: none;
+   background: transparent;
+   outline: none;
 
    &--small {
      padding: 6px 7px;
