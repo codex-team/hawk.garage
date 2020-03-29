@@ -55,14 +55,14 @@ export default Vue.extend({
 
   .n-filter {
     display: inline-block;
+    margin: 3px;
     padding: 5px 8px;
-    line-height: 1em;
-    border-radius: 6px;
     color: var(--color-indicator-positive);
+    line-height: 1em;
+    white-space: nowrap;
     background: color-mod(var(--color-indicator-positive) alpha(20%));
     border: 1px solid color-mod(var(--color-indicator-positive) alpha(20%));
-    margin: 3px;
-    white-space: nowrap;
+    border-radius: 6px;
 
     &--e {
       color: var(--color-indicator-critical);

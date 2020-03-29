@@ -9,8 +9,9 @@
         {{ $t('projects.settings.notifications.addRule') }}
       </div>
       <AddRule
-        v-if="addRuleOpened || (!rules || !rules.length)"
-        @cancel="addRuleOpened = false"
+        v-if="addRuleOpened || ruleUnderEditing || (!rules || !rules.length)"
+        :rule="ruleUnderEditing"
+        @cancel="closeForm"
       />
       <UiButton
         v-else
@@ -28,6 +29,7 @@
         v-for="rule in rules"
         :key="rule.id"
         :rule="rule"
+        @editClicked="editRule"
       />
     </section>
   </div>
@@ -38,7 +40,7 @@ import Vue from 'vue';
 import AddRule from './NotificationsAddRule.vue';
 import Rule from './NotificationsRule.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
-import UiButton from "@/components/utils/UiButton.vue";
+import UiButton from '@/components/utils/UiButton.vue';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotifications',
@@ -50,7 +52,8 @@ export default Vue.extend({
   data(): {
     rules: ProjectNotificationsRule[],
     addRuleOpened: boolean,
-  } {
+    ruleUnderEditingId?: string,
+    } {
     return {
       rules: [
         {
@@ -59,7 +62,7 @@ export default Vue.extend({
           uidAdded: 'adaad',
           whatToReceive: ReceiveTypes.ONLY_NEW,
           including: ['codex', 'editor'],
-          excluding: [ 'script error.', 'ожидание приянтия запроса пользователем на вступления в команду,', 'adad', 'adaddadad', 'daddadad'],
+          excluding: ['script error.', 'ожидание приянтия запроса пользователем на вступления в команду,', 'adad', 'adaddadad', 'daddadad'],
           channels: {
             slack: {
               isEnabled: true,
@@ -88,7 +91,41 @@ export default Vue.extend({
        * Flag indicates Add Rule form opening state
        */
       addRuleOpened: false,
+
+      /**
+       * There will be stored id of a rule that user selected to edit
+       */
+      ruleUnderEditingId: undefined,
     };
+  },
+  computed: {
+    /**
+     * Return rule that is currently under editing
+     */
+    ruleUnderEditing(): ProjectNotificationsRule | undefined {
+      if (!this.ruleUnderEditingId) {
+        return undefined;
+      }
+
+      return this.rules.find((rule) => rule.id === this.ruleUnderEditingId);
+    },
+  },
+  methods: {
+    /**
+     * User clicks on 'Edit Rule button'
+     * @param {string} ruleId - id of rule to edit
+     */
+    editRule(ruleId: string): void {
+      this.ruleUnderEditingId = ruleId;
+    },
+
+    /**
+     * Close and clear add rule form
+     */
+    closeForm(): void {
+      this.addRuleOpened = false;
+      this.ruleUnderEditingId = undefined;
+    },
   },
 });
 </script>

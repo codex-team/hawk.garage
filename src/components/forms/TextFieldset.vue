@@ -109,12 +109,12 @@ export default {
     }
 
     &__description {
+      margin-top: -3px;
       margin-bottom: 10px;
       color: var(--color-text-second);
       font-size: 13px;
-      letter-spacing: 0.16px;
       line-height: 1.6em;
-      margin-top: -3px;
+      letter-spacing: 0.16px;
     }
 
     &--with-hidden-input &__description {

@@ -20,24 +20,24 @@
           :class="{'event-header__button--selected': !loading && event.marks.resolved}"
           :content="$t('event.resolve')"
           icon="checkmark"
-          @click="markEvent('resolved')"
           small
+          @click="markEvent('resolved')"
         />
         <UiButton
           class="event-header__button"
           :class="{'event-header__button--selected': !loading && event.marks.starred}"
           :content="$t('event.star')"
           icon="star"
-          @click="markEvent('starred')"
           small
+          @click="markEvent('starred')"
         />
         <UiButton
           class="event-header__button"
           :class="{'event-header__button--selected': !loading && event.marks.ignored}"
           :content="$t('event.ignore')"
           icon="hided"
-          @click="markEvent('ignored')"
           small
+          @click="markEvent('ignored')"
         />
         <UiButton
           class="event-header__button"
