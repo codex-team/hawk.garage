@@ -1,5 +1,8 @@
 <template>
-  <div class="ui-checkbox" @click="clicked">
+  <div
+    class="ui-checkbox"
+    @click="clicked"
+  >
     <input
       :id="id"
       :checked="value"
@@ -53,10 +56,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    clicked(){
+    clicked() {
       this.$emit('input', !this.value);
-    }
-  }
+    },
+  },
 });
 </script>
 
@@ -70,9 +73,9 @@ export default Vue.extend({
     height: 28px;
     min-height: 28px;
     margin-left: auto;
+    color: #fff;
     background: var(--color-bg-main);
     border: 1px solid var(--color-bg-sidebar);
-    color: #fff;
     border-radius: 4px;
     cursor: pointer;
     user-select: none;

@@ -12,11 +12,10 @@
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
             placeholder="alerts@yourteam.org"
-            name="email"
           />
           <UiCheckbox
             v-model="form.channels.email.isEnabled"
-            />
+          />
         </section>
         <section>
           <FormTextFieldset
@@ -25,7 +24,6 @@
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
             placeholder="Webhook App endpoint"
-            name="slack"
           />
           <UiCheckbox
             v-model="form.channels.slack.isEnabled"
@@ -38,7 +36,6 @@
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
             placeholder="@codex_bot endpoint"
-            name="telegram"
           />
           <UiCheckbox
             v-model="form.channels.telegram.isEnabled"
@@ -53,9 +50,9 @@
       <div class="grid-form__section-content">
         <section>
           <RadioButtonGroup
-            name="receiveType"
+            v-model="form.whatToReceive"
+            name="whatToReceive"
             :options="receiveTypes"
-            v-model="form.receiveType"
           />
         </section>
       </div>
@@ -67,20 +64,20 @@
       <div class="grid-form__section-content">
         <section>
           <FormTextFieldset
-            v-model="form.filters.including"
+            :value="form.including ? form.including.join(','): ''"
             :label="$t('projects.settings.notifications.includingWordsLabel')"
             :description="$t('projects.settings.notifications.includingWordsDescription')"
             placeholder="codex, editor"
-            name="email"
+            @input="splitIncludingFilters"
           />
         </section>
         <section>
           <FormTextFieldset
-            v-model="form.filters.excluding"
+            :value="form.excluding ? form.excluding.join(','): ''"
             :label="$t('projects.settings.notifications.excludingWordsLabel')"
             :description="$t('projects.settings.notifications.excludingWordsDescription')"
             placeholder="chunk. unknow"
-            name="slack"
+            @input="splitExcludingFilters"
           />
         </section>
       </div>
@@ -88,6 +85,7 @@
     <UiButton
       :content="$t('projects.settings.notifications.addRuleSubmit')"
       submit
+      @click="save"
     />
     <UiButton
       :content="$t('projects.settings.notifications.addRuleCancel')"
@@ -99,9 +97,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import FormTextFieldset from './../../forms/TextFieldset.vue';
-import RadioButtonGroup from './../../forms/RadioButtonGroup.vue';
+import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton from './../../utils/UiButton.vue';
+import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { deepMerge } from '@/utils';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -111,7 +111,19 @@ export default Vue.extend({
     UiCheckbox,
     UiButton,
   },
-  data() {
+  props: {
+    /**
+     * Rule under editing
+     */
+    rule: {
+      type: Object as () => ProjectNotificationsRule,
+      default: undefined,
+    },
+  },
+  data(): {
+    form: ProjectNotificationsRule,
+    receiveTypes: RadioButtonGroupItem[],
+    } {
     return {
       /**
        * Form filling state
@@ -119,40 +131,70 @@ export default Vue.extend({
       form: {
         channels: {
           email: {
-            endpoint: null,
+            endpoint: '',
             isEnabled: true,
           },
           slack: {
-            endpoint: null,
+            endpoint: '',
             isEnabled: false,
           },
           telegram: {
-            endpoint: null,
+            endpoint: '',
             isEnabled: false,
           },
         },
-        receiveType: 'all',
-        filters: {
-          including: null,
-          excluding: null,
-        },
+        whatToReceive: ReceiveTypes.ONLY_NEW,
+        including: [],
+        excluding: [],
       },
       /**
        * Available options of 'What to receive'
        */
       receiveTypes: [
         {
-          id: 'all',
-          label: this.$t('projects.settings.notifications.receiveNewLabel'),
-          description: this.$t('projects.settings.notifications.receiveNewDescription'),
+          id: ReceiveTypes.ONLY_NEW,
+          label: this.$t('projects.settings.notifications.receiveNewLabel') as string,
+          description: this.$t('projects.settings.notifications.receiveNewDescription') as string,
         },
         {
-          id: 'onlyNew',
-          label: this.$t('projects.settings.notifications.receiveAllLabel'),
-          description: this.$t('projects.settings.notifications.receiveAllDescription'),
+          id: ReceiveTypes.ALL,
+          label: this.$t('projects.settings.notifications.receiveAllLabel') as string,
+          description: this.$t('projects.settings.notifications.receiveAllDescription') as string,
         },
       ],
     };
+  },
+  created(): void {
+    /**
+     * We does not store unfilled channels in DB, so we need to fill it by default values
+     */
+    if (this.rule) {
+      this.form = deepMerge(this.form, this.rule);
+    }
+  },
+  methods: {
+    /**
+     * Fill 'including' property with array from splitted input string
+     * @param value - user input string with commas
+     */
+    splitIncludingFilters(value: string): void {
+      this.form.including = value.split(',');
+    },
+
+    /**
+     * Fill 'excluding' property with array from splitted input string
+     * @param value - user input string with commas
+     */
+    splitExcludingFilters(value: string): void {
+      this.form.excluding = value.split(',');
+    },
+
+    /**
+     * Saves form
+     */
+    save(): void {
+      console.log('save:', this.form);
+    },
   },
 });
 </script>
@@ -179,9 +221,9 @@ export default Vue.extend({
           width: 370px;
 
           .radio-button-group {
+            flex-basis: 100%;
             margin-top: -15px;
             margin-bottom: -15px;
-            flex-basis: 100%;
           }
 
           .form-fieldset {

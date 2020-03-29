@@ -2,16 +2,19 @@
   <div class="n-rule">
     <div class="n-rule__actions">
       <UiSwitch
-        :label="$t('projects.settings.notifications.ruleIsEnabled')"
         v-model="rule.isEnabled"
+        :label="$t('projects.settings.notifications.ruleIsEnabled')"
       />
-      <TooltipMenu :options="menuOptions"/>
+      <TooltipMenu :options="menuOptions" />
     </div>
     <section class="n-rule__type">
       {{ receiveType }}
     </section>
     <section>
-      <div class="n-rule__filter" v-if="rule.including">
+      <div
+        v-if="rule.including"
+        class="n-rule__filter"
+      >
         <span class="n-rule__filter-name">
           {{ $t('projects.settings.notifications.ruleIncludingLabel') }}
         </span>
@@ -23,7 +26,10 @@
           />
         </div>
       </div>
-      <div class="n-rule__filter" v-if="rule.excluding">
+      <div
+        v-if="rule.excluding"
+        class="n-rule__filter"
+      >
         <span class="n-rule__filter-name">
           {{ $t('projects.settings.notifications.ruleExcludingLabel') }}
         </span>
@@ -39,9 +45,9 @@
     </section>
     <section>
       <div
-        class="n-rule__channel"
         v-for="(channel, channelName) in rule.channels"
         :key="channelName"
+        class="n-rule__channel"
       >
         <Icon :symbol="channelName" />
         {{ channel.endpoint }}
@@ -55,8 +61,8 @@ import Vue from 'vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
-import TooltipMenu, { TooltipMenuItem } from "@/components/utils/TooltipMenu.vue";
-import UiSwitch from "@/components/forms/UiSwitch.vue";
+import TooltipMenu, { TooltipMenuItem } from '@/components/utils/TooltipMenu.vue';
+import UiSwitch from '@/components/forms/UiSwitch.vue';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsRule',
@@ -92,11 +98,13 @@ export default Vue.extend({
      * formatted for TooltipMenu component
      */
     menuOptions(): TooltipMenuItem[] {
+      const $this = this;
+
       return [
         {
           title: this.$t('projects.settings.notifications.editRule') as string,
           onClick() {
-            console.log('Edit rule clicked');
+            $this.$emit('editClicked', $this.rule.id);
           },
         },
         {
@@ -107,10 +115,6 @@ export default Vue.extend({
         },
       ];
     },
-  },
-  data() {
-    return {
-    };
   },
 });
 </script>
@@ -160,8 +164,8 @@ export default Vue.extend({
     }
 
     &__actions {
-      float: right;
       display: flex;
+      float: right;
 
       .ui-switch {
         margin-right: 20px;

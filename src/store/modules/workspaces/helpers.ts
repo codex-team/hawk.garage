@@ -1,4 +1,4 @@
-import {ConfirmedMember, Member, PendingMember} from "@/types/workspaces";
+import { ConfirmedMember, Member, PendingMember } from '@/types/workspaces';
 
 /**
  * Check is provided member is pending

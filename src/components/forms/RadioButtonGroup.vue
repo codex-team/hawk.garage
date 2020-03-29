@@ -1,8 +1,8 @@
 <template>
   <div class="radio-button-group">
     <label
-      class="label"
       v-if="label"
+      class="label"
     >
       {{ label }}
     </label>
@@ -18,7 +18,7 @@
           v-if="option.image"
           class="radio-button-group__option-image"
           :style="{backgroundImage: `url('${option.image}')`}"
-        ></div>
+        />
         <label
           v-if="option.name"
           class="radio-button-group__option-name"
@@ -50,8 +50,8 @@
           :name="name"
           :value="option.id"
           :checked="option.id === value"
-          @input="$emit('input', option.id)"
           class="radio-button-group__option-radio"
+          @input="$emit('input', option.id)"
         />
       </div>
       <hr
@@ -62,11 +62,41 @@
   </div>
 </template>
 
-<script>
-import Icon from '../utils/Icon';
-import UiRadio from "./UiRadio";
+<script lang="ts">
+import Vue from 'vue';
+import UiRadio from './UiRadio.vue';
 
-export default {
+/**
+ * Represents single item of radio button group
+ */
+export interface RadioButtonGroupItem {
+  /**
+   * Item value
+   */
+  id: string;
+
+  /**
+   * Image for showing with item, see Account/Appearance/Language
+   */
+  image?: string;
+
+  /**
+   * Text on item.
+   */
+  name?: string;
+
+  /**
+   * Label for item. Can be used instead of 'name', see Project/Settings/Notifications/AddRule
+   */
+  label?: string;
+
+  /**
+   * Description shown below the label
+   */
+  description?: string;
+}
+
+export default Vue.extend({
   name: 'RadioButtonGroup',
   components: {
     UiRadio,
@@ -81,7 +111,7 @@ export default {
       required: true,
     },
     options: {
-      type: Array,
+      type: Array as () => RadioButtonGroupItem[],
       required: true,
     },
     value: {
@@ -89,7 +119,7 @@ export default {
       required: true,
     },
   },
-};
+});
 </script>
 
 <style>
@@ -107,9 +137,9 @@ export default {
         min-width: 33px;
         height: 22px;
         min-height: 22px;
+        margin-right: 15px;
         background-size: cover;
         border-radius: 3px;
-        margin-right: 15px;
       }
 
       &-name {
@@ -127,10 +157,10 @@ export default {
       }
 
       &-description {
-        font-size: 13px;
-        letter-spacing: 0.16px;
-        line-height: 1.6em;
         color: var(--color-text-second);
+        font-size: 13px;
+        line-height: 1.6em;
+        letter-spacing: 0.16px;
       }
 
       &-radio {
@@ -143,10 +173,10 @@ export default {
     }
 
     &__delimiter {
+      height: 0;
       margin: 0;
       border: 0;
       border-bottom: 1px solid var(--color-delimiter-line);
-      height: 0;
     }
   }
 </style>

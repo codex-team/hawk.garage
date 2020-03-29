@@ -53,7 +53,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-  }
+  },
 });
 </script>
 
@@ -67,9 +67,9 @@ export default Vue.extend({
     height: 28px;
     min-height: 28px;
     margin-left: auto;
+    color: #fff;
     background: var(--color-bg-main);
     border: 1px solid var(--color-bg-sidebar);
-    color: #fff;
     border-radius: 100%;
     cursor: pointer;
     user-select: none;
