@@ -40,7 +40,8 @@ export default Vue.extend({
   data() {
     const projectId: string = this.$route.params.projectId;
     const eventId: string = this.$route.params.eventId;
-    const event: HawkEvent = this.$store.getters.getProjectEventById(projectId, eventId);
+    const repetitionId: string = this.$route.params.repetitionId;
+    const event: HawkEvent = this.$store.getters.getProjectEventRepetition(projectId, eventId, repetitionId);
 
     return {
       /**
@@ -93,7 +94,7 @@ export default Vue.extend({
      * If page opened directly, this.event is null, so we need to set observer from VueX
      */
     if (!this.event) {
-      this.event = this.$store.getters.getProjectEventById(this.projectId, eventId);
+      this.event = this.$store.getters.getProjectEventRepetition(this.projectId, eventId, repetitionId);
     }
 
     this.loading = false;

@@ -113,7 +113,7 @@ interface HawkEventPayload {
   /**
    * Event timestamp
    */
-  timestamp: string;
+  timestamp: number;
 
   /**
    * Event stack array from the latest call to the earliest

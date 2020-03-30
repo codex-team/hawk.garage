@@ -196,6 +196,36 @@ const module: Module<EventsModuleState, RootState> = {
         return state.list[key] || null;
       };
     },
+    /**
+     * Returns merged original event with passed repetition from stores
+     */
+    getProjectEventRepetition(state) {
+      /**
+       * @param {string} projectId - event's project id
+       * @param {string} eventId - event id
+       */
+      return (projectId: string, eventId: string, repetitionId: string): HawkEvent | null => {
+        const key = getEventsListKey(projectId, eventId);
+
+        if (!state.repetitions[key]) {
+          return state.list[key] || null;
+        }
+
+        let repetition;
+        if (!repetitionId) {
+          repetition = state.repetitions[key][state.repetitions[key].length - 1];
+        } else {
+          repetition = state.repetitions[key].find( repetition => {
+            return repetition.id === repetitionId
+          });
+        }
+
+        const event = Object.assign({}, state.list[key]);
+        event.payload = deepMerge(event.payload, repetition.payload);
+
+        return event;
+      };
+    },
 
     /**
      * Returns latest recent event of the project by its id
@@ -329,6 +359,14 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
+      /**
+       * Updates or sets event's fetched payload in the state
+       */
+      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
+        projectId,
+        event,
+      });
+
       const repetition = event.repetition;
 
       if (repetition !== null) {
@@ -339,14 +377,6 @@ const module: Module<EventsModuleState, RootState> = {
           repetition,
         });
       }
-
-      /**
-       * Updates or sets event's fetched payload in the state
-       */
-      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
-        projectId,
-        event,
-      });
     },
 
     /**
