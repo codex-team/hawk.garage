@@ -1,10 +1,10 @@
-import ProjectsMenuItem from './ProjectsMenuItem';
-import mdx from './ProjectsMenuItem.mdx';
-import store from './../../store';
-import { mutationTypes } from '../../store/modules/projects';
-import router from '../../router';
+import ProjectsMenuItem from '@/components/aside/ProjectsMenuItem.vue';
+import mdx from './docs.mdx';
+import store from '@/store';
+import { mutationTypes } from '@/store/modules/projects';
+import router from '@/router';
 import { text, withKnobs } from '@storybook/addon-knobs';
-import centered from '../../storybook/addon-centered';
+import centered from '@/storybook/addon-centered';
 
 const projectId1 = '5e3eef0679fa3700a0198a49';
 const projectId2 = '5e3eef0679fa3700a0198a50';

@@ -9,5 +9,5 @@ import { addParameters } from '@storybook/vue';
 addParameters({
   options: {
     showRoots: true,
-  }
+  },
 });

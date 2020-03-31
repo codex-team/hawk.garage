@@ -1,7 +1,7 @@
-import Badge from './Badge.vue';
+import Badge from '@/components/utils/Badge.vue';
 import { withKnobs, number } from '@storybook/addon-knobs';
-import centered from '../../storybook/addon-centered';
-import mdx from './Badge.mdx';
+import centered from '@/storybook/addon-centered';
+import mdx from './docs.mdx';
 
 export default {
   title: 'Utils/Badge',
@@ -21,7 +21,6 @@ export const Types = () => ({
       <Badge :content="content" />
       <Badge type="medium" :content="content" />
       <Badge type="critical" :content="content" />
-      <Badge with-icon :content="content" />
     </div>
   `,
   props: {
