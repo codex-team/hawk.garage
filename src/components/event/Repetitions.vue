@@ -20,7 +20,7 @@
         v-if="event"
         class="event-repetitions__since"
       >
-        {{ event.payload.timestamp | prettyFullDate }}
+        {{ originalEvent.payload.timestamp | prettyFullDate }}
         <span
           v-if="daysRepeating > 1"
           class="event-repetitions__since-days"
@@ -86,17 +86,22 @@ export default Vue.extend({
     };
   },
   computed: {
+    originalEvent(): HawkEvent {
+      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
+    },
+
     /**
      * Return concrete date
      * @return {number}
      */
     daysRepeating(): number {
-      if (!this.event) {
+      if (!this.originalEvent) {
         return 0;
       }
 
       const now = (new Date()).getTime();
-      const firstOccurrence = (new Date(this.event.payload.timestamp).getTime());
+      const eventTimestamp = this.originalEvent.payload.timestamp * 1000;
+      const firstOccurrence = (new Date(eventTimestamp).getTime());
       const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
       return Math.round(differenceInDays);
@@ -134,11 +139,11 @@ export default Vue.extend({
   methods: {
     /**
      * Returns prettified date from timestamp
-     * @param timestamp - what tot prettify
+     * @param {number} timestamp - unixtime in seconds
      * @return {string}
      */
-    getDate(timestamp: string): string {
-      const targetDate = new Date(timestamp);
+    getDate(timestamp: number): string {
+      const targetDate = new Date(timestamp * 1000);
       const day = targetDate.getDate();
       const month = targetDate.getMonth();
 
