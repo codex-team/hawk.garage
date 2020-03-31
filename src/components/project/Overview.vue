@@ -19,7 +19,7 @@
           <EventItem
             v-for="dailyEventInfo in eventsByDate"
             :key="dailyEventInfo.groupHash"
-            :last-occurrence-timestamp="dailyEventInfo.timestamp"
+            :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
             :count="dailyEventInfo.count"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
@@ -125,7 +125,7 @@ export default {
      * @return {number}
      */
     getDay(date) {
-      return parseInt(date.replace('date:', ''), 10);
+      return parseInt(date.replace('groupingTimestamp:', ''), 10);
     },
     /**
      * Load older events to the list

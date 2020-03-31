@@ -56,8 +56,9 @@
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
-import { FETCH_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
-import { Workspace } from '../../../types/workspaces';
+import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+// eslint-disable-next-line no-unused-vars
+import { Workspace } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsLayout',
@@ -79,12 +80,11 @@ export default Vue.extend({
      * @return {boolean}
      */
     isAdmin(): boolean {
-      if (!this.workspace || !this.workspace.users) {
+      if (!this.workspace || !this.workspace.team) {
         return false;
       }
 
-      const user = this.$store.state.user.data;
-      const member = this.workspace.users.find(u => u.id === user.id);
+      const member = this.$store.getters.getCurrentUserInWorkspace(this.workspace);
 
       return member ? member.isAdmin : false;
     },
@@ -126,11 +126,11 @@ export default Vue.extend({
     }
 
     &__title {
+      overflow: hidden;
       color: var(--color-text-main);
       font-weight: 500;
       font-size: 15px;
       line-height: 26px;
-      overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }

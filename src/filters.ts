@@ -54,8 +54,8 @@ Vue.filter('abbreviation', function (value: string): string {
  * Returns prettifying time ('now' or time in hh:mm)
  * @return {string}
  */
-Vue.filter('prettyTime', function (value: Date | string) {
-  const date = new Date(value);
+Vue.filter('prettyTime', function (value: number) {
+  const date = new Date(value * 1000);
   const currentDate = new Date();
 
   const ONE_MINUTE_IN_MS = 1000 * 60;
@@ -125,15 +125,13 @@ Vue.filter('prettyDate', function (value: number) {
  * Returns prettified date ('29 aug, 14:30')
  * @return {string}
  */
-Vue.filter('prettyFullDate', function (value: Date | string) {
-  if (typeof value === 'string') {
-    value = new Date(value);
-  }
+Vue.filter('prettyFullDate', function (value: number) {
+  const date = new Date(value * 1000);
 
-  const day = value.getDate();
-  const month = value.getMonth();
-  const hours = value.getHours();
-  const minutes = value.getMinutes();
+  const day = date.getDate();
+  const month = date.getMonth();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
 
   return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${`0${hours}`.substr(-2)}:${`0${minutes}`.substr(-2)}`;
 });

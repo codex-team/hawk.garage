@@ -1,48 +1,44 @@
 <template>
   <div
-    class="switch"
-    :class="{'switch--checked': state}"
+    class="ui-switch"
+    :class="{'ui-switch--checked': this.value}"
     @click="clicked"
   >
-    <div class="switch__slider" />
+    <div class="ui-switch__slider" />
     <div
       v-if="label"
-      class="switch__label"
+      class="ui-switch__label"
     >
       {{ label }}
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'CustomSwitch',
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
+  name: 'UiSwitch',
   props: {
     label: {
       type: String,
       default: undefined,
     },
-    checked: {
+    value: {
       type: Boolean,
       default: false,
     },
   },
-  data() {
-    return {
-      state: this.checked,
-    };
-  },
   methods: {
     clicked() {
-      this.state = !this.state;
-      this.$emit('checked', this.state);
+      this.$emit('input', !this.value);
     },
   },
-};
+});
 </script>
 
 <style>
-  .switch {
+  .ui-switch {
     display: flex;
     cursor: pointer;
     user-select: none;

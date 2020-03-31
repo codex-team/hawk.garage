@@ -1,6 +1,6 @@
 <template>
   <div class="billing-card">
-    <CustomSwitch
+    <UiSwitch
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
     />
@@ -92,13 +92,13 @@
 import EntityImage from '../utils/EntityImage';
 import Progress from '../utils/Progress';
 import Icon from '../utils/Icon';
-import CustomSwitch from '../forms/Switch';
+import UiSwitch from '../forms/UiSwitch';
 import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 
 export default {
   name: 'BillingCard',
   components: {
-    CustomSwitch,
+    UiSwitch,
     Icon,
     Progress,
     EntityImage,

@@ -1,3 +1,5 @@
+import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
+
 // language=GraphQL
 /**
  * Get specific error
@@ -10,7 +12,14 @@ export const QUERY_EVENT = `
         catcherType
         totalCount
         groupHash
-        visitedBy
+        visitedBy {
+          ...User
+        }
+        marks {
+          resolved
+          starred
+          ignored
+        }
         payload {
           title
           release
@@ -49,17 +58,9 @@ export const QUERY_EVENT = `
     }
   }
 
-  fragment eventBacktrace on EventBacktraceFrame {
-    file
-    line
-    column
-    sourceCode {
-      line
-      content
-    }
-    function
-    arguments
-  }
+  ${USER_FRAGMENT}
+
+  ${EVENT_BACKTRACE}
 `;
 
 // language=GraphQL
@@ -77,7 +78,15 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           id
           groupHash
           totalCount
-          visitedBy
+          visitedBy {
+           ...User
+          }
+          marks {
+            resolved
+            starred
+            ignored
+          }
+          catcherType
           payload {
             timestamp
             title
@@ -86,14 +95,15 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
         dailyInfo {
           groupHash
           count
-          date
+          groupingTimestamp
           lastRepetitionId
-          timestamp
+          lastRepetitionTime
         }
       }
     }
   }
 
+  ${USER_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -144,5 +154,15 @@ export const QUERY_LATEST_REPETITIONS = `
 export const MUTATION_VISIT_EVENT = `
   mutation visitEvent($projectId: ID!, $eventId: ID!) {
     visitEvent(project: $projectId, id: $eventId)
+  }
+`;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to set mark to event for current user
+ */
+export const MUTATION_TOGGLE_EVENT_MARK = `
+  mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
+    toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
   }
 `;

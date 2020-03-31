@@ -2,13 +2,15 @@ import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
   FETCH_RECENT_EVENTS,
-  INIT_EVENTS_MODULE, VISIT_EVENT
+  INIT_EVENTS_MODULE,
+  VISIT_EVENT,
+  TOGGLE_EVENT_MARK
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { deepMerge, groupByDate } from '@/utils';
+import { deepMerge, groupByGroupingTimestamp } from '@/utils';
 import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
 
 /**
@@ -59,7 +61,12 @@ enum MutationTypes {
   /**
    * Mark event as visited
    */
-  MARK_AS_VISITED = 'MARK_AS_VISITED'
+  MARK_AS_VISITED = 'MARK_AS_VISITED',
+
+  /**
+   * Toggle mark for event
+   */
+  TOGGLE_MARK = 'TOGGLE_MARK',
 }
 
 /**
@@ -124,11 +131,6 @@ function initialState(): EventsModuleState {
 const loadedEventsCount: { [key: string]: number } = {};
 
 /**
- * Cache for storing the connection between the code and the event
- */
-const eventsByGroupHash: { [key: string]: HawkEvent } = {};
-
-/**
  * Compose events list key
  *
  * @param {string} projectId
@@ -156,12 +158,6 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} groupHash - event group hash
        */
       return (projectId: string, groupHash: string): HawkEvent | null => {
-        const uniqueId = projectId + ':' + groupHash;
-
-        if (eventsByGroupHash[uniqueId]) {
-          return eventsByGroupHash[uniqueId];
-        }
-
         const eventEntry = Object.entries(state.list).find(([key, _event]) =>
           key.startsWith(projectId) && _event.groupHash === groupHash);
 
@@ -170,8 +166,6 @@ const module: Module<EventsModuleState, RootState> = {
         if (!event) {
           return null;
         }
-
-        eventsByGroupHash[uniqueId] = event;
 
         return event;
       };
@@ -200,6 +194,36 @@ const module: Module<EventsModuleState, RootState> = {
         const key = getEventsListKey(projectId, eventId);
 
         return state.list[key] || null;
+      };
+    },
+    /**
+     * Returns merged original event with passed repetition from stores
+     */
+    getProjectEventRepetition(state) {
+      /**
+       * @param {string} projectId - event's project id
+       * @param {string} eventId - event id
+       */
+      return (projectId: string, eventId: string, repetitionId: string): HawkEvent | null => {
+        const key = getEventsListKey(projectId, eventId);
+
+        if (!state.repetitions[key]) {
+          return state.list[key] || null;
+        }
+
+        let repetition;
+        if (!repetitionId) {
+          repetition = state.repetitions[key][state.repetitions[key].length - 1];
+        } else {
+          repetition = state.repetitions[key].find( repetition => {
+            return repetition.id === repetitionId
+          });
+        }
+
+        const event = Object.assign({}, state.list[key]);
+        event.payload = deepMerge(event.payload, repetition.payload);
+
+        return event;
       };
     },
 
@@ -276,7 +300,7 @@ const module: Module<EventsModuleState, RootState> = {
         return true;
       }
 
-      const eventsGroupedByDate = groupByDate(recentEvents.dailyInfo);
+      const eventsGroupedByDate = groupByGroupingTimestamp(recentEvents.dailyInfo);
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
 
@@ -327,15 +351,21 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId
      * @param {string} eventId
      * @param {string} repetitionId
-     *
-     * @return {HawkEvent}
      */
-    async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<HawkEvent | null> {
+    async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<void> {
       const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
 
       if (!event) {
-        return null;
+        return;
       }
+
+      /**
+       * Updates or sets event's fetched payload in the state
+       */
+      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
+        projectId,
+        event,
+      });
 
       const repetition = event.repetition;
 
@@ -347,22 +377,13 @@ const module: Module<EventsModuleState, RootState> = {
           repetition,
         });
       }
-
-      /**
-       * Updates or sets event's fetched payload in the state
-       */
-      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
-        projectId,
-        event,
-      });
-
-      return event;
     },
 
     /**
      * Send request to mark event as visited
      *
-     * @param {function} commit
+     * @param {function} commit - VueX commit function
+     * @param {object} rootState - root VueX state
      * @param {string} projectId - project event is related to
      * @param {string} eventId - visited event
      */
@@ -377,6 +398,37 @@ const module: Module<EventsModuleState, RootState> = {
           eventId,
           userId,
         });
+      }
+    },
+
+    /**
+     * Send request to set mark to event
+     *
+     * @param {function} commit - VueX commit function
+     * @param {object} rootState - VueX root state
+     * @param {string} projectId - project event is related to
+     * @param {string} eventId - event to set mark
+     * @param {EventMark} mark - mark to set
+     */
+    async [TOGGLE_EVENT_MARK]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
+      const commitAction = () => commit(MutationTypes.TOGGLE_MARK, {
+        projectId,
+        eventId,
+        mark,
+      });
+
+      /**
+       * Update state before API request
+       */
+      commitAction();
+
+      const result = await eventsApi.toggleEventMark(projectId, eventId, mark);
+
+      /**
+       * If API returns error, revert state
+       */
+      if (!result) {
+        commitAction();
       }
     },
 
@@ -448,7 +500,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }) {
       eventsList.forEach((event) => {
-        state.list[getEventsListKey(projectId, event.id)] = event;
+        Vue.set(state.list, getEventsListKey(projectId, event.id), event);
       });
     },
 
@@ -490,9 +542,9 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, event.id);
 
       if (state.list[key]) {
-        state.list[key].payload = event.payload;
+        Vue.set(state.list[key], 'payload', event.payload);
       } else {
-        state.list[key] = event;
+        Vue.set(state.list, key, event);
       }
     },
 
@@ -511,6 +563,23 @@ const module: Module<EventsModuleState, RootState> = {
       const visitedBy = new Set([...(event.visitedBy ? event.visitedBy : []), userId]);
 
       Vue.set(state.list[key], 'visitedBy', Array.from(visitedBy));
+    },
+
+    /**
+     * Toggle mark for passed event
+     *
+     * @param {EventsModuleState} state - events module state
+     * @param {string} projectId - project event is related to
+     * @param {string} eventId - event mark should be set to
+     * @param {EventMark} mark - mark to set
+     */
+    [MutationTypes.TOGGLE_MARK](state, { projectId, eventId, mark }) {
+      const key = getEventsListKey(projectId, eventId);
+
+      const event = state.list[key];
+      const { marks } = event;
+
+      Vue.set(state.list[key].marks, mark, !marks[mark]);
     },
 
     /**

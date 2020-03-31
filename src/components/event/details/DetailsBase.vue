@@ -51,11 +51,11 @@ export default {
       text-transform: uppercase;
 
       .icon {
-        height: 13px;
         width: 16px;
-        vertical-align: middle;
-        margin-left: 5px;
+        height: 13px;
         margin-top: -2px;
+        margin-left: 5px;
+        vertical-align: middle;
       }
     }
 
@@ -116,8 +116,8 @@ export default {
 
     &__value {
       display: flex;
-      flex-grow: 2;
       flex-direction: column;
+      flex-grow: 2;
       justify-content: center;
       overflow: hidden;
       font-size: 11px;

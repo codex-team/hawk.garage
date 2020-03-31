@@ -17,23 +17,33 @@
       <div class="event-header__buttons">
         <UiButton
           class="event-header__button"
+          :class="{'event-header__button--selected': !loading && event.marks.resolved}"
           :content="$t('event.resolve')"
           icon="checkmark"
+          small
+          @click="markEvent('resolved')"
         />
         <UiButton
           class="event-header__button"
+          :class="{'event-header__button--selected': !loading && event.marks.starred}"
           :content="$t('event.star')"
           icon="star"
+          small
+          @click="markEvent('starred')"
         />
         <UiButton
           class="event-header__button"
+          :class="{'event-header__button--selected': !loading && event.marks.ignored}"
           :content="$t('event.ignore')"
           icon="hided"
+          small
+          @click="markEvent('ignored')"
         />
         <UiButton
           class="event-header__button"
           :content="$t('event.issue')"
           icon="github"
+          small
         />
       </div>
       <div class="event-header__nav-bar">
@@ -59,6 +69,7 @@ import UiButton from '../utils/UiButton.vue';
 import Filepath from '../utils/Filepath.vue';
 import UiLabel from '../utils/UiLabel.vue';
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
+import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -155,6 +166,20 @@ export default Vue.extend({
     },
   },
   methods: {
+    /**
+     * Set mark for current event
+     *
+     * @param {string} mark - mark to set
+     */
+    markEvent(mark) {
+      const { projectId, eventId } = this.$route.params;
+
+      this.$store.dispatch(TOGGLE_EVENT_MARK, {
+        projectId,
+        eventId,
+        mark,
+      });
+    },
   },
 });
 </script>
@@ -173,14 +198,14 @@ export default Vue.extend({
 
     &__location {
       display: block;
+      max-width: 650px;
       margin-bottom: 30px;
+      overflow: hidden;
+      color: var(--color-text-second);
       font-size: 14px;
       letter-spacing: 0.1px;
-      color: var(--color-text-second);
       white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
-      max-width: 650px;
     }
 
     &__buttons {
@@ -190,6 +215,21 @@ export default Vue.extend({
 
     &__button {
       margin-right: 5px;
+      border: solid 1px var(--color-bg-main);
+
+      &--selected {
+        color: var(--color-bg-main);
+        background-color: var(--color-text-main);
+        border-color: var(--color-text-main);
+
+        &:hover {
+          color: var(--color-bg-main);
+        }
+
+        span, svg {
+          opacity: 1 !important;
+        }
+      }
     }
 
     &__nav-bar {

@@ -66,17 +66,17 @@ export default {
     }
 
     &__image {
+      flex-shrink: 0;
       width: 36px;
       height: 36px;
       margin-right: 15px;
-      flex-shrink: 0;
     }
 
     &__name {
+      overflow: hidden;
       font-weight: 600;
       white-space: nowrap;
       text-overflow: ellipsis;
-      overflow: hidden;
     }
 
     &__settings-link {

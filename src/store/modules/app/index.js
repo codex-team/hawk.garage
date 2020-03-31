@@ -7,7 +7,7 @@ import * as workspacesApi from '../../../api/workspaces/index.ts';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
 import { INIT_EVENTS_MODULE } from '../events/actionTypes';
-import { groupByDate } from '../../../utils';
+import { groupByGroupingTimestamp } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -80,7 +80,7 @@ const actions = {
         return;
       }
 
-      recentEvents[project.id] = groupByDate(project.recentEvents.dailyInfo);
+      recentEvents[project.id] = groupByGroupingTimestamp(project.recentEvents.dailyInfo);
 
       project.recentEvents.events.forEach(event => {
         events[project.id + ':' + event.id] = event;

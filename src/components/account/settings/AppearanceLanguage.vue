@@ -10,10 +10,10 @@
 
 <script>
 import { mapState } from 'vuex';
-import { SET_LANGUAGE } from '../../store/modules/app/actionTypes';
-import RadioButtonGroup from './RadioButtonGroup';
+import { SET_LANGUAGE } from '../../../store/modules/app/actionTypes';
+import RadioButtonGroup from '../../forms/RadioButtonGroup';
 export default {
-  name: 'LanguageSelect',
+  name: 'AppearanceLanguage',
   components: {
     RadioButtonGroup,
   },
@@ -26,12 +26,12 @@ export default {
           {
             name: this.$t('components.languageSelect.ru'),
             id: 'ru',
-            image: require('../../assets/ru.svg'),
+            image: require('../../../assets/ru.svg'),
           },
           {
             name: this.$t('components.languageSelect.en'),
             id: 'en',
-            image: require('../../assets/uk.svg'),
+            image: require('../../../assets/uk.svg'),
           },
         ],
       };

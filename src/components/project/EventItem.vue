@@ -1,10 +1,14 @@
 <template>
   <div
     class="event-item"
-    :class="{'event-item--visited': isVisited}"
+    :class="{
+      'event-item--visited': isVisited,
+      [`event-item--${mark}-label`]: true,
+    }"
     data-ripple
     @click="$emit('showEventOverview')"
   >
+    <EventMark :mark="mark" />
     <div class="event-item__time">
       {{ lastOccurrenceTimestamp | prettyTime }}
     </div>
@@ -29,10 +33,12 @@
 <script>
 import Badge from '../utils/Badge';
 import Icon from '../utils/Icon';
+import EventMark from './EventMark';
 
 export default {
   name: 'EventItem',
   components: {
+    EventMark,
     Badge,
     Icon,
   },
@@ -45,10 +51,10 @@ export default {
       required: true,
     },
     /**
-     * @type {String} - timestamp of the last event
+     * @type {Number} - timestamp of the last event
      */
     lastOccurrenceTimestamp: {
-      type: String,
+      type: Number,
       required: true,
     },
     /**
@@ -72,7 +78,24 @@ export default {
         return false;
       }
 
-      return visitedBy.includes(this.$store.state.user.data.id);
+      return visitedBy.find(user => user.id === this.$store.state.user.data.id);
+    },
+
+    /**
+     * Get mark with the highest priority
+     *
+     *  @return {string}
+     */
+    mark() {
+      const { marks } = this.event;
+      const priority = ['resolved', 'starred', 'ignored'];
+      const mark = priority.find(_mark => marks[_mark]);
+
+      if (!mark) {
+        return 'none';
+      }
+
+      return mark;
     },
   },
 };
@@ -88,6 +111,7 @@ export default {
 
     &__time {
       min-width: 30px;
+      margin-left: 10px;
       color: var(--color-text-second);
       font-size: 12px;
     }
@@ -124,6 +148,10 @@ export default {
       ^&__info {
         color: var(--color-text-second);
       }
+    }
+
+    &--ignored-label {
+      opacity: 0.2;
     }
   }
 </style>

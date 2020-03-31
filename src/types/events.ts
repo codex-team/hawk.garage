@@ -1,3 +1,14 @@
+import { User } from '@/types/user';
+
+/**
+ * Event marks enum
+ */
+export enum EventMark {
+  STARRED = 'STARRED',
+  IGNORED = 'IGNORED',
+  RESOLVED = 'RESOLVED'
+}
+
 /**
  * Interface representing Hawk Event format
  */
@@ -25,7 +36,16 @@ export interface HawkEvent {
   /**
    * Users who visited this event
    */
-  visitedBy: string[];
+  visitedBy: User[];
+
+  /**
+   * Event marks for current user
+   */
+  marks: {
+    resolved: boolean;
+    starred: boolean;
+    ignored: boolean;
+  };
 
   /**
    * Event payload
@@ -68,7 +88,7 @@ export interface HawkEventDailyInfo {
   /**
    * Event occurrence date midnight (used for grouping)
    */
-  readonly date: number;
+  readonly groupingTimestamp: number;
 
   /**
    * Event's last repetition id
@@ -78,7 +98,7 @@ export interface HawkEventDailyInfo {
   /**
    * Last event occurrence timestamp
    */
-  readonly timestamp: Date;
+  readonly lastRepetitionTime: number;
 }
 
 /**
@@ -93,7 +113,7 @@ interface HawkEventPayload {
   /**
    * Event timestamp
    */
-  timestamp: string;
+  timestamp: number;
 
   /**
    * Event stack array from the latest call to the earliest
