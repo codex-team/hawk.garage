@@ -59,7 +59,34 @@ module.exports = {
       return definitions;
     });
 
-    config.module.rule('svg-sprite').use('svgo-loader').loader('svgo-loader');
+    config.module.rule('svg-sprite').use('svgo-loader')
+      .loader('svgo-loader');
+
+    /**
+     * Get tsconfig based on NODE_ENV
+     */
+    const tsConfigFile = `tsconfig.${process.env.NODE_ENV }.json`;
+
+    config.module.rule('ts').use('ts-loader')
+      .loader('ts-loader')
+      .tap(options => {
+        options.configFile = tsConfigFile;
+
+        return options;
+      });
+    config.module.rule('tsx').use('ts-loader')
+      .loader('ts-loader')
+      .tap(options => {
+        options.configFile = tsConfigFile;
+
+        return options;
+      });
+
+    config.plugin('fork-ts-checker').tap(options => {
+      options[0].tsconfig = path.resolve(tsConfigFile);
+
+      return options;
+    });
   },
   pwa: {
     name: 'hawk.so',
@@ -77,10 +104,10 @@ module.exports = {
       dir: 'src/assets/sprite-icons',
       test: /\.(svg)(\?.*)?$/,
       loaderOptions: {
-        spriteFilename: 'img/icons.[hash:8].svg'
+        spriteFilename: 'img/icons.[hash:8].svg',
       },
       pluginOptions: {
-        plainSprite: true
+        plainSprite: true,
       },
     },
   },
