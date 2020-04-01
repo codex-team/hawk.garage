@@ -65,7 +65,7 @@ module.exports = {
     /**
      * Get tsconfig based on NODE_ENV
      */
-    const tsConfigFile = `tsconfig.${process.env.NODE_ENV }.json`;
+    const tsConfigFile = process.env.NODE_ENV === 'production' ? 'tsconfig.production.json' : 'tsconfig.json';
 
     config.module.rule('ts').use('ts-loader')
       .loader('ts-loader')
