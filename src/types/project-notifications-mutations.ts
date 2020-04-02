@@ -10,11 +10,6 @@ export interface ProjectNotificationsAddRulePayload {
   projectId: string;
 
   /**
-   * Allows to disable rule without removing
-   */
-  isEnabled?: true;
-
-  /**
    * Receive type: 'ALL'  or 'ONLY_NEW'
    */
   whatToReceive: ReceiveTypes;
@@ -22,12 +17,12 @@ export interface ProjectNotificationsAddRulePayload {
   /**
    * Only those which contains passed words
    */
-  including?: string[];
+  including: string[];
 
   /**
    * Skip those which contains passed words
    */
-  excluding?: string[];
+  excluding: string[];
 
   /**
    * Available channels to receive
