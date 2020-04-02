@@ -12,7 +12,7 @@
         {{ $t('projects.settings.notifications.addRule') }}
       </div>
       <AddRule
-        v-if="addRuleOpened || ruleUnderEditing || (!rules || !rules.length)"
+        v-if="addRuleOpened || ruleUnderEditing || (!project.notifications || !project.notifications.length)"
         :rule="ruleUnderEditing"
         :project-id="project.id"
         @cancel="closeForm"
@@ -30,7 +30,7 @@
         {{ $t('projects.settings.notifications.rulesList') }}
       </div>
       <Rule
-        v-for="rule in rules"
+        v-for="rule in project.notifications"
         :key="rule.id"
         :rule="rule"
         :enableEditing="userCanEdit"
@@ -66,43 +66,10 @@ export default Vue.extend({
     },
   },
   data(): {
-    rules: ProjectNotificationsRule[],
     addRuleOpened: boolean,
     ruleUnderEditingId?: string,
     } {
     return {
-      rules: [
-        {
-          id: '123456',
-          isEnabled: true,
-          uidAdded: 'adaad',
-          whatToReceive: ReceiveTypes.ONLY_NEW,
-          including: ['codex', 'editor'],
-          excluding: ['script error.', 'ожидание приянтия запроса пользователем на вступления в команду,', 'adad', 'adaddadad', 'daddadad'],
-          channels: {
-            slack: {
-              isEnabled: true,
-              endpoint: 'https://hooks.slack.com/services/T038Y…',
-            },
-            telegram: {
-              isEnabled: true,
-              endpoint: 'https://bot.codex.so/E2V87B3X3B44…',
-            },
-          },
-        },
-        {
-          id: '213141',
-          isEnabled: true,
-          uidAdded: 'adaad',
-          whatToReceive: ReceiveTypes.ONLY_NEW,
-          channels: {
-            email: {
-              isEnabled: true,
-              endpoint: 'alerts@codex.so',
-            },
-          },
-        },
-      ],
       /**
        * Flag indicates Add Rule form opening state
        */
