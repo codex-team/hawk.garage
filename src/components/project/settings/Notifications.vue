@@ -90,7 +90,11 @@ export default Vue.extend({
         return undefined;
       }
 
-      return this.rules.find((rule) => rule.id === this.ruleUnderEditingId);
+      if (!this.project.notifications){
+        return undefined;
+      }
+
+      return this.project.notifications.find((rule) => rule.id === this.ruleUnderEditingId);
     },
 
     /**

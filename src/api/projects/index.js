@@ -55,8 +55,13 @@ export async function updateLastProjectVisit(projectId) {
   return (await api.call(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
 }
 
+/**
+ * Send request for creation new project notifications rule
+ * @param {object} payload - { ProjectNotificationsRule + projectId } @todo declare payload-types
+ * @return {Promise<any>}
+ */
 export async function addProjectNotificationsRule(payload) {
   return api.call(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
-    input: payload
+    input: payload,
   });
 }
