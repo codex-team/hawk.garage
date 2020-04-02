@@ -4,13 +4,17 @@
       {{ $t('projects.settings.notifications.title') }}
     </div>
 
-    <section class="modal-form__section">
+    <section
+      v-if="userCanEdit"
+      class="modal-form__section"
+    >
       <div class="modal-form__section-title">
         {{ $t('projects.settings.notifications.addRule') }}
       </div>
       <AddRule
         v-if="addRuleOpened || ruleUnderEditing || (!rules || !rules.length)"
         :rule="ruleUnderEditing"
+        :project-id="project.id"
         @cancel="closeForm"
       />
       <UiButton
@@ -29,6 +33,7 @@
         v-for="rule in rules"
         :key="rule.id"
         :rule="rule"
+        :enableEditing="userCanEdit"
         @editClicked="editRule"
       />
     </section>
@@ -41,6 +46,8 @@ import AddRule from './NotificationsAddRule.vue';
 import Rule from './NotificationsRule.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import UiButton from '@/components/utils/UiButton.vue';
+import { Project } from '@/types/project';
+import { Member, Workspace, ConfirmedMember } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotifications',
@@ -48,6 +55,15 @@ export default Vue.extend({
     AddRule,
     UiButton,
     Rule,
+  },
+  props: {
+    /**
+     * The project we are working with
+     */
+    project: {
+      type: Object as () => Project,
+      required: true,
+    },
   },
   data(): {
     rules: ProjectNotificationsRule[],
@@ -108,6 +124,31 @@ export default Vue.extend({
       }
 
       return this.rules.find((rule) => rule.id === this.ruleUnderEditingId);
+    },
+
+    /**
+     * Return a workspace of a project
+     */
+    workspace(): Workspace {
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
+
+    /**
+     * Current user in current workspace
+     */
+    currentMembership(): Member | undefined {
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
+    },
+
+    /**
+     * Is current user can manipulate rules
+     */
+    userCanEdit(): boolean {
+      if (!this.currentMembership) {
+        return false;
+      }
+
+      return (this.currentMembership as ConfirmedMember).isAdmin;
     },
   },
   methods: {

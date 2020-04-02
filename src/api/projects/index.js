@@ -2,7 +2,8 @@ import {
   MUTATION_CREATE_PROJECT,
   MUTATION_UPDATE_PROJECT,
   QUERY_RECENT_ERRORS,
-  MUTATION_UPDATE_LAST_VISIT
+  MUTATION_UPDATE_LAST_VISIT,
+  MUTATION_CREATE_PROJECT_NOTIFY_RULE,
 } from './queries';
 import * as api from '../index.ts';
 
@@ -52,4 +53,10 @@ export async function fetchRecentErrors(projectId) {
  */
 export async function updateLastProjectVisit(projectId) {
   return (await api.call(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
+}
+
+export async function addProjectNotificationsRule(payload) {
+  return api.call(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
+    input: payload
+  });
 }

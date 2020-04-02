@@ -147,6 +147,11 @@ function getEventsListKey(projectId: string, eventId: string): string {
  */
 const module: Module<EventsModuleState, RootState> = {
   state: initialState(),
+
+  /**
+   * All Vuex getters will be stored under this namespace
+   * @namespace Getters
+   */
   getters: {
     /**
      * Returns event by it's group hash and project id

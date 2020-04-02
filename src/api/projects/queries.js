@@ -60,3 +60,14 @@ export const MUTATION_UPDATE_LAST_VISIT = `
         updateLastProjectVisit(projectId: $projectId)
     }
 `;
+
+// language=GraphQL
+export const MUTATION_CREATE_PROJECT_NOTIFY_RULE = `
+  mutation ( $input: CreateProjectNotificationsRuleInput! ){
+    createProjectNotificationsRule(
+      input: $input
+    ) {
+      id
+    }
+  }
+`;

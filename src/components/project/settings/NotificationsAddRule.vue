@@ -104,6 +104,7 @@ import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import { deepMerge } from '@/utils';
+import { ADD_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -114,6 +115,14 @@ export default Vue.extend({
     UiButton,
   },
   props: {
+    /**
+     * In which project rule is creating
+     */
+    projectId: {
+      type: String,
+      required: true
+    },
+
     /**
      * Rule under editing
      */
@@ -195,7 +204,9 @@ export default Vue.extend({
      * Saves form
      */
     save(): void {
-      console.log('save:', this.form);
+      this.$store.dispatch(ADD_NOTIFICATIONS_RULE, Object.assign({
+        projectId: this.projectId,
+      }, this.form));
     },
   },
 });

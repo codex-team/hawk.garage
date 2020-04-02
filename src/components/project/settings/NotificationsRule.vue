@@ -1,6 +1,6 @@
 <template>
   <div class="n-rule">
-    <div class="n-rule__actions">
+    <div class="n-rule__actions" v-if="enableEditing">
       <UiSwitch
         v-model="rule.isEnabled"
         :label="$t('projects.settings.notifications.ruleIsEnabled')"
@@ -79,6 +79,14 @@ export default Vue.extend({
     rule: {
       type: Object as () => ProjectNotificationsRule,
       required: true,
+    },
+
+    /**
+     * True if current user can edit the rule
+     */
+    enableEditing: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {

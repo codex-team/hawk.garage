@@ -61,6 +61,10 @@ function initialState() {
   };
 }
 
+/**
+ * All Vuex getters will be stored under this namespace
+ * @namespace Getters
+ */
 const getters = {
   /**
    * Returns workspace by id
