@@ -90,6 +90,7 @@
     </section>
     <UiButton
       :content="$t('projects.settings.notifications.addRuleSubmit')"
+      :isLoading="isWaitingForResponse"
       submit
     />
     <UiButton
@@ -138,6 +139,7 @@ export default Vue.extend({
     form: ProjectNotificationsRule,
     receiveTypes: RadioButtonGroupItem[],
     isFormInvalid: boolean,
+    isWaitingForResponse: boolean,
     } {
     return {
       /**
@@ -182,6 +184,11 @@ export default Vue.extend({
        * When true, invalid fields will be highlighted
        */
       isFormInvalid: false,
+
+      /**
+       * Used to show loader and block multiple sending
+       */
+      isWaitingForResponse: false,
     };
   },
   created(): void {
@@ -212,16 +219,25 @@ export default Vue.extend({
     /**
      * Saves form
      */
-    save(): void {
+    async save(): Promise<void> {
+      if (this.isWaitingForResponse) {
+        return;
+      }
+
       const isValid = this.validateForm();
 
       if (!isValid) {
         return;
       }
 
-      this.$store.dispatch(ADD_NOTIFICATIONS_RULE, Object.assign({
+      this.isWaitingForResponse = true;
+
+      await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, Object.assign({
         projectId: this.projectId,
       }, this.form));
+
+      this.isWaitingForResponse = false;
+      this.isFormInvalid = false;
     },
 
     /**

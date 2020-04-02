@@ -54,7 +54,7 @@
       "notifications": {
         "title": "Notifications",
         "addRule": "Adding a rule",
-        "addRuleToggler": "Add new rule",
+        "addRuleToggler": "Add a new rule",
         "addRuleSubmit": "Start receiving",
         "addRuleCancel": "Close form",
         "rulesList": "Rules",
