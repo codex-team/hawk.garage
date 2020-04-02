@@ -51,3 +51,30 @@ export const WORKSPACE_FRAGMENT_WITH_TEAM = `
     }
   }
 `;
+
+/**
+ * All properties of a single project notifications rule
+ */
+export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
+  fragment ProjectNotificationsRule on ProjectNotificationsRule {
+    id
+    isEnabled
+    whatToReceive
+    including
+    excluding
+    channels {
+      email {
+        endpoint
+        isEnabled
+      }
+      slack {
+        endpoint
+        isEnabled
+      }
+      telegram {
+        endpoint
+        isEnabled
+      }
+    }
+  }
+`

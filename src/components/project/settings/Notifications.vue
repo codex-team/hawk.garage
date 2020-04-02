@@ -12,10 +12,11 @@
         {{ $t('projects.settings.notifications.addRule') }}
       </div>
       <AddRule
-        v-if="addRuleOpened || ruleUnderEditing || (!project.notifications || !project.notifications.length)"
+        v-if="addRuleOpened || ruleUnderEditing || (!rules || !rules.length)"
         :rule="ruleUnderEditing"
         :project-id="project.id"
         @cancel="closeForm"
+        @success="closeForm"
       />
       <UiButton
         v-else
@@ -30,7 +31,7 @@
         {{ $t('projects.settings.notifications.rulesList') }}
       </div>
       <Rule
-        v-for="rule in project.notifications"
+        v-for="rule in rules"
         :key="rule.id"
         :rule="rule"
         :enableEditing="userCanEdit"
@@ -44,7 +45,7 @@
 import Vue from 'vue';
 import AddRule from './NotificationsAddRule.vue';
 import Rule from './NotificationsRule.vue';
-import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { ProjectNotificationsRule } from '@/types/project-notifications';
 import UiButton from '@/components/utils/UiButton.vue';
 import { Project } from '@/types/project';
 import { Member, Workspace, ConfirmedMember } from '@/types/workspaces';
@@ -83,6 +84,17 @@ export default Vue.extend({
   },
   computed: {
     /**
+     * Sorted list created rules
+     */
+    rules(): ProjectNotificationsRule[] {
+      if (!this.project || !this.project.notifications) {
+        return [];
+      }
+
+      return this.project.notifications.reverse();
+    },
+
+    /**
      * Return rule that is currently under editing
      */
     ruleUnderEditing(): ProjectNotificationsRule | undefined {
@@ -90,11 +102,11 @@ export default Vue.extend({
         return undefined;
       }
 
-      if (!this.project.notifications){
+      if (!this.rules) {
         return undefined;
       }
 
-      return this.project.notifications.find((rule) => rule.id === this.ruleUnderEditingId);
+      return this.rules.find((rule) => rule.id === this.ruleUnderEditingId);
     },
 
     /**

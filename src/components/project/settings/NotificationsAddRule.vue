@@ -107,8 +107,10 @@ import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButto
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { ProjectNotificationsAddRulePayload } from '@/types/project-notifications-mutations';
 import { deepMerge } from '@/utils';
 import { ADD_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -136,7 +138,7 @@ export default Vue.extend({
     },
   },
   data(): {
-    form: ProjectNotificationsRule,
+    form: ProjectNotificationsAddRulePayload,
     receiveTypes: RadioButtonGroupItem[],
     isFormInvalid: boolean,
     isWaitingForResponse: boolean,
@@ -146,6 +148,7 @@ export default Vue.extend({
        * Form filling state
        */
       form: {
+        projectId: this.projectId,
         channels: {
           email: {
             endpoint: '',
@@ -227,17 +230,25 @@ export default Vue.extend({
       const isValid = this.validateForm();
 
       if (!isValid) {
+        this.isFormInvalid = true;
+
         return;
       }
 
       this.isWaitingForResponse = true;
 
-      await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, Object.assign({
-        projectId: this.projectId,
-      }, this.form));
+      await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, this.form);
 
       this.isWaitingForResponse = false;
       this.isFormInvalid = false;
+
+      this.$emit('success');
+
+      notifier.show({
+        message: this.$t('projects.settings.notifications.addRuleSuccessMessage') as string,
+        style: 'success',
+        time: 2000,
+      });
     },
 
     /**
@@ -253,8 +264,6 @@ export default Vue.extend({
       const allChannelsEmpty = notEmptyChannels.length === 0;
 
       if (allChannelsEmpty) {
-        this.isFormInvalid = true;
-
         return false;
       }
 

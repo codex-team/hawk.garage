@@ -1,3 +1,7 @@
+import {
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
+} from '../fragments';
+
 /**
  * Mutation for creating new project
  */
@@ -67,7 +71,9 @@ export const MUTATION_CREATE_PROJECT_NOTIFY_RULE = `
     createProjectNotificationsRule(
       input: $input
     ) {
-      id
+      ...ProjectNotificationsRule
     }
   }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;

@@ -21,6 +21,7 @@ const mutationTypes = {
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
+  PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
 };
 
 /**
@@ -31,6 +32,7 @@ const mutationTypes = {
  * @property {String} [image] - project image
  * @property {Number} unreadCount - project's "unreadCount" badge
  * @property {EventsListByDate} eventsListByDate - last projects event
+ * @property {ProjectNotificationsRule[]} notifications - list of rules
  */
 
 /**
@@ -176,12 +178,20 @@ const actions = {
     commit(RESET_STORE);
   },
 
+  /**
+   * - Send request for creation new rule
+   * - Add created rule to the state
+   * @param {function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationsAddRulePayload} payload - rule form data
+   * @return {Promise<void>}
+   */
   async [ADD_NOTIFICATIONS_RULE]({ commit }, payload) {
-    console.log('adding a rule', payload);
+    const ruleCreated = await projectsApi.addProjectNotificationsRule(payload);
 
-    let response = await projectsApi.addProjectNotificationsRule(payload);
-
-    console.log('response', response);
+    commit(mutationTypes.PUSH_NOTIFICATIONS_RULE, {
+      projectId: payload.projectId,
+      rule: ruleCreated,
+    });
   },
 };
 
@@ -242,6 +252,19 @@ const mutations = {
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());
+  },
+
+  /**
+   * Append new notifications rule to specified project
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {string} projectId - where to append
+   * @param {ProjectNotificationsRule} rule - rule to append
+   * @return {void}
+   */
+  [mutationTypes.PUSH_NOTIFICATIONS_RULE](state, { projectId, rule }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    project.notifications.push(rule);
   },
 };
 
