@@ -4,7 +4,8 @@ import {
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
-  UPDATE_PROJECT
+  UPDATE_PROJECT,
+  ADD_NOTIFICATIONS_RULE,
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -61,6 +62,7 @@ function initialState() {
 
 /**
  * Module getters
+ * @namespace Getters
  */
 const getters = {
   /**
@@ -74,6 +76,30 @@ const getters = {
      * @return {Project}
      */
     id => state.list.find(project => project.id === id),
+
+  /**
+   * Returns workspace by id
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Getters} getters - Vuex state
+   * @return {function(String): Workspace|null}
+   */
+  getWorkspaceByProjectId(state, getters) {
+    /**
+     * Access state and getters and return the workspace
+     * @param {String} projectId  - id of project in workspace
+     * @return {Workspace|null}
+     */
+    return (projectId) => {
+      const project = getters.getProjectById(projectId);
+
+      if (!project) {
+        return null;
+      }
+
+      return getters.getWorkspaceById(project.workspaceId);
+    };
+  },
+
 };
 
 const actions = {
@@ -148,6 +174,14 @@ const actions = {
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
+  },
+
+  async [ADD_NOTIFICATIONS_RULE]({ commit }, payload) {
+    console.log('adding a rule', payload);
+
+    let response = await projectsApi.addProjectNotificationsRule(payload);
+
+    console.log('response', response);
   },
 };
 

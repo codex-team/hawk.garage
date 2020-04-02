@@ -1,5 +1,8 @@
 <template>
-  <div class="grid-form">
+  <form
+    class="grid-form"
+    @submit.prevent="save"
+  >
     <section class="grid-form__section">
       <div class="grid-form__section-name">
         {{ $t('projects.settings.notifications.sectionWhereToReceive') }}
@@ -11,6 +14,7 @@
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
+            :isInvalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -23,6 +27,7 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
+            :isInvalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
@@ -35,6 +40,7 @@
             :label="$t('projects.settings.notifications.telegram')"
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
+            :isInvalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
             placeholder="@codex_bot endpoint"
           />
           <UiCheckbox
@@ -84,14 +90,14 @@
     </section>
     <UiButton
       :content="$t('projects.settings.notifications.addRuleSubmit')"
+      :isLoading="isWaitingForResponse"
       submit
-      @click="save"
     />
     <UiButton
       :content="$t('projects.settings.notifications.addRuleCancel')"
       @click="$emit('cancel')"
     />
-  </div>
+  </form>
 </template>
 
 <script lang="ts">
@@ -102,6 +108,7 @@ import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import { deepMerge } from '@/utils';
+import { ADD_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -113,6 +120,14 @@ export default Vue.extend({
   },
   props: {
     /**
+     * In which project rule is creating
+     */
+    projectId: {
+      type: String,
+      required: true,
+    },
+
+    /**
      * Rule under editing
      */
     rule: {
@@ -123,6 +138,8 @@ export default Vue.extend({
   data(): {
     form: ProjectNotificationsRule,
     receiveTypes: RadioButtonGroupItem[],
+    isFormInvalid: boolean,
+    isWaitingForResponse: boolean,
     } {
     return {
       /**
@@ -162,6 +179,16 @@ export default Vue.extend({
           description: this.$t('projects.settings.notifications.receiveAllDescription') as string,
         },
       ],
+
+      /**
+       * When true, invalid fields will be highlighted
+       */
+      isFormInvalid: false,
+
+      /**
+       * Used to show loader and block multiple sending
+       */
+      isWaitingForResponse: false,
     };
   },
   created(): void {
@@ -192,8 +219,57 @@ export default Vue.extend({
     /**
      * Saves form
      */
-    save(): void {
-      console.log('save:', this.form);
+    async save(): Promise<void> {
+      if (this.isWaitingForResponse) {
+        return;
+      }
+
+      const isValid = this.validateForm();
+
+      if (!isValid) {
+        return;
+      }
+
+      this.isWaitingForResponse = true;
+
+      await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, Object.assign({
+        projectId: this.projectId,
+      }, this.form));
+
+      this.isWaitingForResponse = false;
+      this.isFormInvalid = false;
+    },
+
+    /**
+     * Validate saved form fields and return valid-status
+     */
+    validateForm(): boolean {
+      /**
+       * Check channels
+       */
+      const notEmptyChannels = Object.keys(this.form.channels).filter((channelName: string) => {
+        return !this.checkChannelEmptiness(channelName);
+      });
+      const allChannelsEmpty = notEmptyChannels.length === 0;
+
+      if (allChannelsEmpty) {
+        this.isFormInvalid = true;
+
+        return false;
+      }
+
+      return true;
+    },
+
+    /**
+     * Return true if channel is enabled and the endpoint is not filled
+     * @param channelName - key of this.form.channels object
+     */
+    checkChannelEmptiness(channelName: string): boolean {
+      const channel = this.form.channels[channelName];
+      const endpointEmpty = channel.endpoint.replace(/\s+/, '').trim().length === 0;
+
+      return endpointEmpty;
     },
   },
 });

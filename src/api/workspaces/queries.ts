@@ -19,6 +19,27 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         description
         image
         unreadCount
+        notifications {
+          id
+          isEnabled
+          whatToReceive
+          including
+          excluding
+          channels {
+            slack {
+              endpoint
+              isEnabled
+            }
+            email {
+              endpoint
+              isEnabled
+            }
+            telegram {
+              endpoint
+              isEnabled
+            }
+          }
+        }
         recentEvents(limit: 1) {
           events {
             id

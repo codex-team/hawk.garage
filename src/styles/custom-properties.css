@@ -19,7 +19,6 @@
   };
 
   --ui-label: {
-    display: block;
     color: var(--color-text-second);
     font-weight: bold;
     font-size: 12px;
