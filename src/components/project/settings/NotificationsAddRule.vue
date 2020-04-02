@@ -14,6 +14,7 @@
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
+            :isInvalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -26,6 +27,7 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
+            :isInvalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
@@ -38,6 +40,7 @@
             :label="$t('projects.settings.notifications.telegram')"
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
+            :isInvalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
             placeholder="@codex_bot endpoint"
           />
           <UiCheckbox
@@ -120,7 +123,7 @@ export default Vue.extend({
      */
     projectId: {
       type: String,
-      required: true
+      required: true,
     },
 
     /**
@@ -134,6 +137,7 @@ export default Vue.extend({
   data(): {
     form: ProjectNotificationsRule,
     receiveTypes: RadioButtonGroupItem[],
+    isFormInvalid: boolean,
     } {
     return {
       /**
@@ -173,6 +177,11 @@ export default Vue.extend({
           description: this.$t('projects.settings.notifications.receiveAllDescription') as string,
         },
       ],
+
+      /**
+       * When true, invalid fields will be highlighted
+       */
+      isFormInvalid: false,
     };
   },
   created(): void {
@@ -204,9 +213,47 @@ export default Vue.extend({
      * Saves form
      */
     save(): void {
+      const isValid = this.validateForm();
+
+      if (!isValid) {
+        return;
+      }
+
       this.$store.dispatch(ADD_NOTIFICATIONS_RULE, Object.assign({
         projectId: this.projectId,
       }, this.form));
+    },
+
+    /**
+     * Validate saved form fields and return valid-status
+     */
+    validateForm(): boolean {
+      /**
+       * Check channels
+       */
+      const notEmptyChannels = Object.keys(this.form.channels).filter((channelName: string) => {
+        return !this.checkChannelEmptiness(channelName);
+      });
+      const allChannelsEmpty = notEmptyChannels.length === 0;
+
+      if (allChannelsEmpty) {
+        this.isFormInvalid = true;
+
+        return false;
+      }
+
+      return true;
+    },
+
+    /**
+     * Return true if channel is enabled and the endpoint is not filled
+     * @param channelName - key of this.form.channels object
+     */
+    checkChannelEmptiness(channelName: string): boolean {
+      const channel = this.form.channels[channelName];
+      const endpointEmpty = channel.endpoint.replace(/\s+/, '').trim().length === 0;
+
+      return endpointEmpty;
     },
   },
 });
