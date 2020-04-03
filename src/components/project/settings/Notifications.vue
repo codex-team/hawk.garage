@@ -91,7 +91,7 @@ export default Vue.extend({
         return [];
       }
 
-      return this.project.notifications.reverse();
+      return this.project.notifications;
     },
 
     /**
