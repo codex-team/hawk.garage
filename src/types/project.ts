@@ -1,4 +1,5 @@
 import { User } from './user';
+import { ProjectNotificationsRule } from './project-notifications';
 
 /**
  * Structure represents a Project got from API
@@ -38,4 +39,9 @@ export interface Project {
    * URL of a project logo
    */
   image?: string;
+
+  /**
+   * List of notifications rules
+   */
+  notifications?: ProjectNotificationsRule[];
 }

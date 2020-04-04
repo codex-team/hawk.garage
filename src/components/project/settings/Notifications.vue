@@ -4,14 +4,19 @@
       {{ $t('projects.settings.notifications.title') }}
     </div>
 
-    <section class="modal-form__section">
+    <section
+      v-if="userCanEdit"
+      class="modal-form__section"
+    >
       <div class="modal-form__section-title">
         {{ $t('projects.settings.notifications.addRule') }}
       </div>
       <AddRule
         v-if="addRuleOpened || ruleUnderEditing || (!rules || !rules.length)"
         :rule="ruleUnderEditing"
+        :project-id="project.id"
         @cancel="closeForm"
+        @success="closeForm"
       />
       <UiButton
         v-else
@@ -29,6 +34,7 @@
         v-for="rule in rules"
         :key="rule.id"
         :rule="rule"
+        :enable-editing="userCanEdit"
         @editClicked="editRule"
       />
     </section>
@@ -39,8 +45,10 @@
 import Vue from 'vue';
 import AddRule from './NotificationsAddRule.vue';
 import Rule from './NotificationsRule.vue';
-import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { ProjectNotificationsRule } from '@/types/project-notifications';
 import UiButton from '@/components/utils/UiButton.vue';
+import { Project } from '@/types/project';
+import { Member, Workspace, ConfirmedMember } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotifications',
@@ -49,44 +57,20 @@ export default Vue.extend({
     UiButton,
     Rule,
   },
+  props: {
+    /**
+     * The project we are working with
+     */
+    project: {
+      type: Object as () => Project,
+      required: true,
+    },
+  },
   data(): {
-    rules: ProjectNotificationsRule[],
     addRuleOpened: boolean,
     ruleUnderEditingId?: string,
     } {
     return {
-      rules: [
-        {
-          id: '123456',
-          isEnabled: true,
-          uidAdded: 'adaad',
-          whatToReceive: ReceiveTypes.ONLY_NEW,
-          including: ['codex', 'editor'],
-          excluding: ['script error.', 'ожидание приянтия запроса пользователем на вступления в команду,', 'adad', 'adaddadad', 'daddadad'],
-          channels: {
-            slack: {
-              isEnabled: true,
-              endpoint: 'https://hooks.slack.com/services/T038Y…',
-            },
-            telegram: {
-              isEnabled: true,
-              endpoint: 'https://bot.codex.so/E2V87B3X3B44…',
-            },
-          },
-        },
-        {
-          id: '213141',
-          isEnabled: true,
-          uidAdded: 'adaad',
-          whatToReceive: ReceiveTypes.ONLY_NEW,
-          channels: {
-            email: {
-              isEnabled: true,
-              endpoint: 'alerts@codex.so',
-            },
-          },
-        },
-      ],
       /**
        * Flag indicates Add Rule form opening state
        */
@@ -100,6 +84,17 @@ export default Vue.extend({
   },
   computed: {
     /**
+     * Sorted list created rules
+     */
+    rules(): ProjectNotificationsRule[] {
+      if (!this.project || !this.project.notifications) {
+        return [];
+      }
+
+      return this.project.notifications;
+    },
+
+    /**
      * Return rule that is currently under editing
      */
     ruleUnderEditing(): ProjectNotificationsRule | undefined {
@@ -107,7 +102,36 @@ export default Vue.extend({
         return undefined;
       }
 
+      if (!this.rules) {
+        return undefined;
+      }
+
       return this.rules.find((rule) => rule.id === this.ruleUnderEditingId);
+    },
+
+    /**
+     * Return a workspace of a project
+     */
+    workspace(): Workspace {
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
+
+    /**
+     * Current user in current workspace
+     */
+    currentMembership(): Member | undefined {
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
+    },
+
+    /**
+     * Is current user can manipulate rules
+     */
+    userCanEdit(): boolean {
+      if (!this.currentMembership) {
+        return false;
+      }
+
+      return (this.currentMembership as ConfirmedMember).isAdmin;
     },
   },
   methods: {
