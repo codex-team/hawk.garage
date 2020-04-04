@@ -110,12 +110,12 @@ export default Vue.extend({
   align-items: center;
   padding: 12px 15px;
   color: var(--color-text-second);
+  background: transparent;
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
+  outline: none;
   cursor: pointer;
   user-select: none;
-  background: transparent;
-  outline: none;
 
   &--small {
     padding: 6px 7px;

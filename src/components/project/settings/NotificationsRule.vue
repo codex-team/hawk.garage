@@ -1,6 +1,9 @@
 <template>
   <div class="n-rule">
-    <div class="n-rule__actions" v-if="enableEditing">
+    <div
+      v-if="enableEditing"
+      class="n-rule__actions"
+    >
       <UiSwitch
         v-model="rule.isEnabled"
         :label="$t('projects.settings.notifications.ruleIsEnabled')"

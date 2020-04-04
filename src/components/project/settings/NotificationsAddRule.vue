@@ -14,7 +14,7 @@
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
-            :isInvalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
+            :is-invalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -27,7 +27,7 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
-            :isInvalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
+            :is-invalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
@@ -40,7 +40,7 @@
             :label="$t('projects.settings.notifications.telegram')"
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
-            :isInvalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
+            :is-invalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
             placeholder="@codex_bot endpoint"
           />
           <UiCheckbox
@@ -89,9 +89,9 @@
       </div>
     </section>
     <UiButton
-      :content="$t('projects.settings.notifications.addRuleSubmit')"
-      :isLoading="isWaitingForResponse"
       ref="submitButton"
+      :content="$t('projects.settings.notifications.addRuleSubmit')"
+      :is-loading="isWaitingForResponse"
       submit
     />
     <UiButton

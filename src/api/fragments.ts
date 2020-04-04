@@ -77,4 +77,4 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
       }
     }
   }
-`
+`;
