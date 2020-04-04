@@ -22,3 +22,8 @@ export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';
  * Sends request to set last project visit
  */
 export const UPDATE_PROJECT_LAST_VISIT = 'UPDATE_PROJECT_LAST_VISIT';
+
+/**
+ * Add new notifications rule
+ */
+export const ADD_NOTIFICATIONS_RULE = 'ADD_NOTIFICATIONS_RULE';

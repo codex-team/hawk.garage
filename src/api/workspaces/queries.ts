@@ -1,4 +1,8 @@
-import { WORKSPACE_FRAGMENT_WITH_TEAM, USER_FRAGMENT } from '../fragments';
+import {
+  WORKSPACE_FRAGMENT_WITH_TEAM,
+  USER_FRAGMENT,
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
+} from '../fragments';
 
 // language=GraphQL
 /**
@@ -19,6 +23,9 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         description
         image
         unreadCount
+        notifications {
+          ...ProjectNotificationsRule
+        }
         recentEvents(limit: 1) {
           events {
             id
@@ -48,8 +55,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   }
 
   ${USER_FRAGMENT}
-
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
 
 // language=GraphQL

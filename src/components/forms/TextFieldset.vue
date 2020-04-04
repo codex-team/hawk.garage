@@ -1,7 +1,10 @@
 <template>
   <fieldset
     class="form-fieldset"
-    :class="{'form-fieldset--with-hidden-input': hidden}"
+    :class="{
+      'form-fieldset--with-hidden-input': hidden,
+      'form-fieldset--invalid': isInvalid,
+    }"
   >
     <label
       class="label form-fieldset__label"
@@ -94,6 +97,14 @@ export default {
       type: Boolean,
       default: false,
     },
+
+    /**
+     * If true, field will be styled as invalid
+     */
+    isInvalid: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -119,6 +130,11 @@ export default {
 
     &--with-hidden-input &__description {
       margin-bottom: 0;
+    }
+
+    &--invalid &__input {
+      border-color: var(--color-indicator-critical);
+      box-shadow: 0 1px 10px color-mod(var(--color-indicator-critical) alpha(35%));
     }
   }
 </style>
