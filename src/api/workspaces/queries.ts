@@ -1,4 +1,8 @@
-import { WORKSPACE_FRAGMENT_WITH_TEAM, USER_FRAGMENT } from '../fragments';
+import {
+  WORKSPACE_FRAGMENT_WITH_TEAM,
+  USER_FRAGMENT,
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
+} from '../fragments';
 
 // language=GraphQL
 /**
@@ -20,25 +24,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         image
         unreadCount
         notifications {
-          id
-          isEnabled
-          whatToReceive
-          including
-          excluding
-          channels {
-            slack {
-              endpoint
-              isEnabled
-            }
-            email {
-              endpoint
-              isEnabled
-            }
-            telegram {
-              endpoint
-              isEnabled
-            }
-          }
+          ...ProjectNotificationsRule
         }
         recentEvents(limit: 1) {
           events {
@@ -69,8 +55,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   }
 
   ${USER_FRAGMENT}
-
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
 
 // language=GraphQL

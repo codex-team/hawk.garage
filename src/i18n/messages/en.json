@@ -57,6 +57,7 @@
         "addRuleToggler": "Add a new rule",
         "addRuleSubmit": "Start receiving",
         "addRuleCancel": "Close form",
+        "addRuleSuccessMessage": "New rule added",
         "rulesList": "Rules",
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",
