@@ -2,6 +2,9 @@ import NotificationsRule from '@/components/project/settings/NotificationsRule.v
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import store from '@/store';
 import router from '@/router';
+import {withKnobs} from '@storybook/addon-knobs';
+import centered from '@/storybook/decorators/centered';
+import i18n from '@/i18n';
 
 /**
  * Return random item of an array
@@ -17,36 +20,87 @@ function getRandomArrayItem(arr: any[]): any {
 function createRuleMock(): ProjectNotificationsRule {
   const rule = {
     channels: {}
-  };
+  } as ProjectNotificationsRule;
 
-  rule.channels[getRandomArrayItem(['slack', 'telegram', 'email'])] = {
-    endpoint: 'https://bot.codex.so/' + Math.random(),
-    isEnabled: getRandomArrayItem([true, false]),
-  };
 
-  rule.whatToReceive = getRandomArrayItem(ReceiveTypes.ONLY_NEW, ReceiveTypes.ALL])
+  if (getRandomArrayItem([1, 2]) === 1){
+    rule.channels.email = {
+      endpoint: 'alers@yourteam.com',
+      isEnabled: getRandomArrayItem([true, false]),
+    };
+  }
+
+  if (getRandomArrayItem([1, 2]) === 1){
+    rule.channels.slack = {
+      endpoint: 'https://hooks.slack.com/services/' + Math.random() * 100,
+      isEnabled: getRandomArrayItem([true, false]),
+    };
+  }
+
+  if (getRandomArrayItem([1, 2]) === 1){
+    rule.channels.telegram = {
+      endpoint: 'https://bot.codex.so/' + Math.random() * 100,
+      isEnabled: getRandomArrayItem([true, false]),
+    };
+  }
+
+
+
+  rule.whatToReceive = getRandomArrayItem([ReceiveTypes.ONLY_NEW, ReceiveTypes.ALL])
+
+  if (getRandomArrayItem([1, 2]) === 1){
+    rule.excluding = ['Script error', 'chunk'];
+  }
+
+  if (getRandomArrayItem([1, 2]) === 1){
+    rule.including = ['codex', 'editor'];
+  }
 
   return rule;
 }
 
 
+export default {
+  component: NotificationsRule,
+  title: 'Project/Settings/Notifications',
+  parameters: {
+  },
+  decorators: [
+    () => ({
+      template: '<div style="width: 600px; max-height: 100%; padding: 20px 0; overflow-y: auto;"><story /></div>',
+    }),
+    centered,
+    withKnobs,
+  ],
+};
+
 
 export const List = () => ({
   components: { NotificationsRule },
-  template: `<Rule
-    v-for="rule in rules"
-    :key="rule.id"
-    :rule="rule"
-    @editClicked="editRule"
-  />`,
+  template: `
+    <div>
+      <NotificationsRule
+      v-for="rule in rules"
+      :key="rule.id"
+      :rule="rule"
+      />
+    </div>
+  `,
   props: {
     rules: {
-      type: String,
+      type: Array,
       default: () => {
-        return
+        let rules: ProjectNotificationsRule[] = [];
+
+        for (let i = 0; i < 5 ; i++ ){
+          rules.push(createRuleMock());
+        }
+
+        return rules
       },
     },
   },
   store,
   router,
+  i18n
 });
