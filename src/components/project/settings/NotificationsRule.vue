@@ -45,7 +45,7 @@
     </section>
     <section>
       <div
-        v-for="(channel, channelName) in rule.channels"
+        v-for="(channel, channelName) in notEmptyChannels"
         :key="channelName"
         class="n-rule__channel"
       >
@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { ProjectNotificationsRule, ReceiveTypes, NotificationsChannels } from '@/types/project-notifications';
 import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from '@/components/utils/TooltipMenu.vue';
@@ -90,6 +90,21 @@ export default Vue.extend({
     },
   },
   computed: {
+    /**
+     * Return only filled channels
+     */
+    notEmptyChannels(): NotificationsChannels {
+      const result = {};
+
+      Object.entries(this.rule.channels)
+        .filter(([name, channel]) => channel.endpoint !== '')
+        .forEach(([name, channel]) => {
+          result[name] = channel;
+        });
+
+      return result;
+    },
+
     /**
      * Return human-readable receive type
      */

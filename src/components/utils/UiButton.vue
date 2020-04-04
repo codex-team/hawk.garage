@@ -5,6 +5,7 @@
       'ui-button--submit': submit,
       'ui-button--small': small,
       'ui-button--loading': isLoading,
+      'ui-button--shaking': shaking,
     }"
     @click="$emit('click')"
   >
@@ -23,6 +24,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import Icon from './Icon.vue';
+
+/**
+ * Allows to call methods of this component from parent
+ * @example (this.$refs.submitButton as unknown as UiButtonComponent).shake();
+ */
+export interface UiButtonComponent {
+  shake: () => void;
+}
 
 export default Vue.extend({
   name: 'UiButton',
@@ -70,10 +79,32 @@ export default Vue.extend({
       default: false,
     },
   },
+  data() {
+    return {
+      /**
+       * Used to add a class for the shaking animation
+       */
+      shaking: false,
+    };
+  },
+  methods: {
+    /**
+     * Shake button to react on some unsuccessful user action
+     */
+    shake() {
+      this.shaking = true;
+
+      setTimeout(() => {
+        this.shaking = false;
+      }, 300);
+    },
+  },
 });
 </script>
 
 <style>
+@import '../../styles/custom-properties.css';
+
 .ui-button {
   display: inline-flex;
   align-items: center;
@@ -90,6 +121,10 @@ export default Vue.extend({
     padding: 6px 7px;
   }
 
+  &--shaking {
+    @apply --shaking;
+  }
+
   &--submit {
     color: var(--color-text-main);
     background: var(--color-indicator-medium);
@@ -101,7 +136,7 @@ export default Vue.extend({
   }
 
   $loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
-  $sumitLoaderColor: color-mod(var(--color-indicator-medium) blend(black 12%));
+  $submitLoaderColor: color-mod(var(--color-indicator-medium) blend(black 12%));
   $loaderSize: 56px;
 
   &--loading,
@@ -115,7 +150,7 @@ export default Vue.extend({
   }
 
   &--submit&--loading {
-    background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, $sumitLoaderColor 4px, $sumitLoaderColor 8px);
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, $submitLoaderColor 4px, $submitLoaderColor 8px);
   }
 
   &:hover {
