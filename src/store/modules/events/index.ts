@@ -217,15 +217,17 @@ const module: Module<EventsModuleState, RootState> = {
         }
 
         let repetition;
+
         if (!repetitionId) {
           repetition = state.repetitions[key][state.repetitions[key].length - 1];
         } else {
-          repetition = state.repetitions[key].find( repetition => {
-            return repetition.id === repetitionId
+          repetition = state.repetitions[key].find(repetition => {
+            return repetition.id === repetitionId;
           });
         }
 
         const event = Object.assign({}, state.list[key]);
+
         event.payload = deepMerge(event.payload, repetition.payload);
 
         return event;

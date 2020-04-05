@@ -34,7 +34,7 @@
         v-for="rule in rules"
         :key="rule.id"
         :rule="rule"
-        :enableEditing="userCanEdit"
+        :enable-editing="userCanEdit"
         @editClicked="editRule"
       />
     </section>

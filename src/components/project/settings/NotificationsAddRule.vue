@@ -14,7 +14,7 @@
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
-            :isInvalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
+            :is-invalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -27,7 +27,7 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
-            :isInvalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
+            :is-invalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
@@ -40,7 +40,7 @@
             :label="$t('projects.settings.notifications.telegram')"
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
-            :isInvalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
+            :is-invalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
             placeholder="@codex_bot endpoint"
           />
           <UiCheckbox
@@ -89,8 +89,9 @@
       </div>
     </section>
     <UiButton
+      ref="submitButton"
       :content="$t('projects.settings.notifications.addRuleSubmit')"
-      :isLoading="isWaitingForResponse"
+      :is-loading="isWaitingForResponse"
       submit
     />
     <UiButton
@@ -105,7 +106,7 @@ import Vue from 'vue';
 import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
-import UiButton from './../../utils/UiButton.vue';
+import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import { ProjectNotificationsAddRulePayload } from '@/types/project-notifications-mutations';
 import { deepMerge } from '@/utils';
@@ -231,24 +232,36 @@ export default Vue.extend({
 
       if (!isValid) {
         this.isFormInvalid = true;
+        (this.$refs.submitButton as unknown as UiButtonComponent).shake();
 
         return;
       }
 
       this.isWaitingForResponse = true;
 
-      await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, this.form);
+      try {
+        await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, this.form);
 
-      this.isWaitingForResponse = false;
-      this.isFormInvalid = false;
+        this.isWaitingForResponse = false;
+        this.isFormInvalid = false;
 
-      this.$emit('success');
+        this.$emit('success');
 
-      notifier.show({
-        message: this.$t('projects.settings.notifications.addRuleSuccessMessage') as string,
-        style: 'success',
-        time: 2000,
-      });
+        notifier.show({
+          message: this.$t('projects.settings.notifications.addRuleSuccessMessage') as string,
+          style: 'success',
+          time: 2000,
+        });
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 2000,
+        });
+
+        this.isWaitingForResponse = false;
+        (this.$refs.submitButton as unknown as UiButtonComponent).shake();
+      }
     },
 
     /**
@@ -271,7 +284,7 @@ export default Vue.extend({
     },
 
     /**
-     * Return true if channel is enabled and the endpoint is not filled
+     * Return true if channel's endpoint is not filled
      * @param channelName - key of this.form.channels object
      */
     checkChannelEmptiness(channelName: string): boolean {

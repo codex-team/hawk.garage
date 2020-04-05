@@ -1,5 +1,5 @@
 import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
 } from '../fragments';
 
 /**

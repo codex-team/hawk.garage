@@ -5,7 +5,7 @@ import {
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
-  ADD_NOTIFICATIONS_RULE,
+  ADD_NOTIFICATIONS_RULE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
