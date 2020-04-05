@@ -112,9 +112,9 @@ export default Vue.extend({
       }
 
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
+      const addons: {url?: string} = this.event.payload.addons;
+      const url: string = (addons && addons.url) || '';
       
-      const url: string = this.event.payload.addons['url'] || '';
-
       if (!trace) {
         return url;
       }
