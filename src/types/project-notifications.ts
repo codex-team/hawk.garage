@@ -5,17 +5,17 @@ export interface ProjectNotificationsRule {
   /**
    * Id of Rule
    */
-  id?: string;
+  id: string;
 
   /**
    * Allows to disable rule without removing
    */
-  isEnabled?: true;
+  isEnabled: true;
 
   /**
    * Creator of the rule
    */
-  uidAdded?: string;
+  uidAdded: string;
 
   /**
    * Receive type: 'ALL'  or 'ONLY_NEW'

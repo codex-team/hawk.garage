@@ -4,7 +4,8 @@ import {
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
-  UPDATE_PROJECT
+  UPDATE_PROJECT,
+  ADD_NOTIFICATIONS_RULE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -20,6 +21,7 @@ export const mutationTypes = {
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
+  PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
 };
 
 /**
@@ -30,6 +32,7 @@ export const mutationTypes = {
  * @property {String} [image] - project image
  * @property {Number} unreadCount - project's "unreadCount" badge
  * @property {EventsListByDate} eventsListByDate - last projects event
+ * @property {ProjectNotificationsRule[]} notifications - list of rules
  */
 
 /**
@@ -61,6 +64,7 @@ function initialState() {
 
 /**
  * Module getters
+ * @namespace Getters
  */
 const getters = {
   /**
@@ -74,6 +78,30 @@ const getters = {
      * @return {Project}
      */
     id => state.list.find(project => project.id === id),
+
+  /**
+   * Returns workspace by id
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {Getters} getters - Vuex state
+   * @return {function(String): Workspace|null}
+   */
+  getWorkspaceByProjectId(state, getters) {
+    /**
+     * Access state and getters and return the workspace
+     * @param {String} projectId  - id of project in workspace
+     * @return {Workspace|null}
+     */
+    return (projectId) => {
+      const project = getters.getProjectById(projectId);
+
+      if (!project) {
+        return null;
+      }
+
+      return getters.getWorkspaceById(project.workspaceId);
+    };
+  },
+
 };
 
 const actions = {
@@ -149,6 +177,22 @@ const actions = {
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
   },
+
+  /**
+   * - Send request for creation new rule
+   * - Add created rule to the state
+   * @param {function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationsAddRulePayload} payload - rule form data
+   * @return {Promise<void>}
+   */
+  async [ADD_NOTIFICATIONS_RULE]({ commit }, payload) {
+    const ruleCreated = await projectsApi.addProjectNotificationsRule(payload);
+
+    commit(mutationTypes.PUSH_NOTIFICATIONS_RULE, {
+      projectId: payload.projectId,
+      rule: ruleCreated,
+    });
+  },
 };
 
 const mutations = {
@@ -208,6 +252,19 @@ const mutations = {
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());
+  },
+
+  /**
+   * Append new notifications rule to specified project
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {string} projectId - where to append
+   * @param {ProjectNotificationsRule} rule - rule to append
+   * @return {void}
+   */
+  [mutationTypes.PUSH_NOTIFICATIONS_RULE](state, { projectId, rule }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    project.notifications.push(rule);
   },
 };
 

@@ -14,6 +14,7 @@
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
+            :is-invalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -26,6 +27,7 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
+            :is-invalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
@@ -38,6 +40,7 @@
             :label="$t('projects.settings.notifications.telegram')"
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
+            :is-invalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
             placeholder="@codex_bot endpoint"
           />
           <UiCheckbox
@@ -86,7 +89,9 @@
       </div>
     </section>
     <UiButton
+      ref="submitButton"
       :content="$t('projects.settings.notifications.addRuleSubmit')"
+      :is-loading="isWaitingForResponse"
       submit
     />
     <UiButton
@@ -101,9 +106,12 @@ import Vue from 'vue';
 import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
-import UiButton from './../../utils/UiButton.vue';
+import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { ProjectNotificationsAddRulePayload } from '@/types/project-notifications-mutations';
 import { deepMerge } from '@/utils';
+import { ADD_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -115,6 +123,14 @@ export default Vue.extend({
   },
   props: {
     /**
+     * In which project rule is creating
+     */
+    projectId: {
+      type: String,
+      required: true,
+    },
+
+    /**
      * Rule under editing
      */
     rule: {
@@ -123,14 +139,17 @@ export default Vue.extend({
     },
   },
   data(): {
-    form: ProjectNotificationsRule,
+    form: ProjectNotificationsAddRulePayload,
     receiveTypes: RadioButtonGroupItem[],
+    isFormInvalid: boolean,
+    isWaitingForResponse: boolean,
     } {
     return {
       /**
        * Form filling state
        */
       form: {
+        projectId: this.projectId,
         channels: {
           email: {
             endpoint: '',
@@ -164,6 +183,16 @@ export default Vue.extend({
           description: this.$t('projects.settings.notifications.receiveAllDescription') as string,
         },
       ],
+
+      /**
+       * When true, invalid fields will be highlighted
+       */
+      isFormInvalid: false,
+
+      /**
+       * Used to show loader and block multiple sending
+       */
+      isWaitingForResponse: false,
     };
   },
   created(): void {
@@ -194,8 +223,75 @@ export default Vue.extend({
     /**
      * Saves form
      */
-    save(): void {
-      console.log('save:', this.form);
+    async save(): Promise<void> {
+      if (this.isWaitingForResponse) {
+        return;
+      }
+
+      const isValid = this.validateForm();
+
+      if (!isValid) {
+        this.isFormInvalid = true;
+        (this.$refs.submitButton as unknown as UiButtonComponent).shake();
+
+        return;
+      }
+
+      this.isWaitingForResponse = true;
+
+      try {
+        await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, this.form);
+
+        this.isWaitingForResponse = false;
+        this.isFormInvalid = false;
+
+        this.$emit('success');
+
+        notifier.show({
+          message: this.$t('projects.settings.notifications.addRuleSuccessMessage') as string,
+          style: 'success',
+          time: 2000,
+        });
+      } catch (e) {
+        notifier.show({
+          message: e.message,
+          style: 'error',
+          time: 2000,
+        });
+
+        this.isWaitingForResponse = false;
+        (this.$refs.submitButton as unknown as UiButtonComponent).shake();
+      }
+    },
+
+    /**
+     * Validate saved form fields and return valid-status
+     */
+    validateForm(): boolean {
+      /**
+       * Check channels
+       */
+      const notEmptyChannels = Object.keys(this.form.channels).filter((channelName: string) => {
+        return !this.checkChannelEmptiness(channelName);
+      });
+      const allChannelsEmpty = notEmptyChannels.length === 0;
+
+      if (allChannelsEmpty) {
+        return false;
+      }
+
+      return true;
+    },
+
+    /**
+     * Return true if channel's endpoint is not filled
+     * @param channelName - key of this.form.channels object
+     */
+    checkChannelEmptiness(channelName: string): boolean {
+      const channel = this.form.channels[channelName];
+      const endpointEmpty = channel.endpoint.replace(/\s+/, '').trim().length === 0;
+
+      return endpointEmpty;
     },
   },
 });

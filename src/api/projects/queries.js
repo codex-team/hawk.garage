@@ -1,3 +1,7 @@
+import {
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
+} from '../fragments';
+
 /**
  * Mutation for creating new project
  */
@@ -59,4 +63,17 @@ export const MUTATION_UPDATE_LAST_VISIT = `
     mutation lastProjectVisit($projectId: ID!) {
         updateLastProjectVisit(projectId: $projectId)
     }
+`;
+
+// language=GraphQL
+export const MUTATION_CREATE_PROJECT_NOTIFY_RULE = `
+  mutation ( $input: CreateProjectNotificationsRuleInput! ){
+    createProjectNotificationsRule(
+      input: $input
+    ) {
+      ...ProjectNotificationsRule
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
