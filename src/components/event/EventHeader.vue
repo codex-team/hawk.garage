@@ -103,7 +103,7 @@ export default Vue.extend({
   computed: {
     /**
      * Event location got from the first backtrace frame
-     *
+     * Or got from a url if the backtrace is empty
      * @return {string}
      */
     location(): string {
@@ -112,9 +112,11 @@ export default Vue.extend({
       }
 
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
-
+      const addons: {url?: string} = this.event.payload.addons;
+      const url: string = (addons && addons.url) || '';
+      
       if (!trace) {
-        return '';
+        return url;
       }
       const firstWithFile = trace.find(frame => !!frame.file);
 
@@ -122,7 +124,7 @@ export default Vue.extend({
         return firstWithFile.file;
       }
 
-      return '';
+      return url;
     },
 
     /**
