@@ -15,7 +15,7 @@ import { groupByGroupingTimestamp } from '../../../utils';
 /**
  * Mutations enum for this module
  */
-const mutationTypes = {
+export const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   UPDATE_PROJECT: 'UPDATE_PROJECT', // Set new info about a project
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
