@@ -56,7 +56,17 @@ export const groupBy =
       array.reduce((objectsByKeyValue, obj) => {
         const value = obj[key];
 
-        objectsByKeyValue[value] = (objectsByKeyValue[value] || []).concat(obj);
+        /**
+         * Case when we need to group by field that stored numbers,
+         * for example, date(timestamp) - we add "key:" prefix to prevent sorting of object keys
+         */
+        let groupingKey = key;
+
+        if (typeof value === 'number') {
+          groupingKey = key + ':' + value;
+        }
+
+        objectsByKeyValue[groupingKey] = (objectsByKeyValue[groupingKey] || []).concat(obj);
 
         return objectsByKeyValue;
       }, {});
@@ -65,7 +75,7 @@ export const groupBy =
  * Group array of object by 'date' field
  * @type {function(Array[Object]): Object}
  */
-export const groupByDate = groupBy('date');
+export const groupByGroupingTimestamp = groupBy('groupingTimestamp');
 
 /**
  * Merge to objects recursively
@@ -74,9 +84,7 @@ export const groupByDate = groupBy('date');
  *
  * @return {object}
  */
-export function deepMerge(target: object, ...sources: object[]): object {
-  const isObject = (item: any) => item && typeOf(item) === 'object';
-
+export function deepMerge(target: object, ...sources: object[]) {
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {
     if (Array.isArray(_subject) && Array.isArray(_target)) {
       const biggerArray = _subject.length > _target.length ? _subject : _target;
@@ -91,6 +99,14 @@ export function deepMerge(target: object, ...sources: object[]): object {
       });
     }
   });
+}
+
+/**
+ * Check if passed variable is an object
+ * @param item - what to check
+ */
+export function isObject(item: any): boolean {
+  return item && typeOf(item) === 'object';
 }
 
 /**

@@ -38,18 +38,49 @@
       "workspaceSelectLabel": "Выбрать воркспейс"
     },
     "settings": {
-      "project": {
+      "general": {
         "title": "Настройки проекта",
         "image": "Изображение",
         "description": "Описание",
         "descriptionPlaceholder": "Лучший проект",
         "submit": "Сохранить",
         "created": "Создан 25 Авг, 2019",
-        "updatedMessage": "Настройки проекта успешно обновлены"
+        "updatedMessage": "Настройки проекта обновлены"
       },
       "integrations": {
         "title": "Интеграции",
         "projectTokenLabel": "Интеграционный токен для проекта"
+      },
+      "notifications": {
+        "title": "Уведомления",
+        "addRule": "Добавление сценария",
+        "addRuleToggler": "Добавить новый сценарий",
+        "addRuleSubmit": "Начать получение",
+        "addRuleCancel": "Закрыть форму",
+        "addRuleSuccessMessage": "Добавлен новый сценарий",
+        "rulesList": "Сценарии",
+        "sectionWhereToReceive": "Где получать",
+        "sectionWhatToReceive": "Что получать",
+        "sectionCustomFilters": "Фильтры",
+        "email": "На почту",
+        "emailDescription": "Не более одного письма в 10 минут",
+        "slack": "Slack",
+        "slackDescription": "Уведомления через Webhook App",
+        "telegram": "Telegram",
+        "telegramDescription": "Уведомления через @codex_bot",
+        "receiveNewLabel": "Только новые события",
+        "receiveNewDescription": "При первом получении",
+        "receiveAllLabel": "Все события",
+        "receiveAllDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
+        "includingWordsLabel": "Включающие слова",
+        "includingWordsDescription": "Только события, содержащие указанные слова",
+        "excludingWordsLabel": "Исключающие слова",
+        "excludingWordsDescription": "Пропустить события с такими словами",
+        "ruleIncludingLabel": "Со словами",
+        "ruleExcludingLabel": "Исключая слова",
+        "ruleIsEnabled": "Активно",
+        "editRule": "Редактировать",
+        "removeRule": "Удалить"
       }
     }
   },
@@ -140,6 +171,28 @@
       "cardSelectLabel": "Карта",
       "amountLabel": "Сумма",
       "submitButton": "Продолжить"
+    }
+  },
+  "event": {
+    "repetitions": {
+      "total": "Всего",
+      "since": "Начиная с",
+      "title": "Повторы",
+      "times": "Ни разу | {n} раз | {n} раза | {n} раз",
+      "days": " | {n} день | {n} дня | {n} дней"
+    },
+    "navigation": {
+      "overview": "Обзор",
+      "repetitions": "Повторения",
+      "daily": "По дням"
+    },
+    "resolve": "Исправлено",
+    "star": "В избранное",
+    "ignore": "Игнорировать",
+    "issue": "Создать задачу",
+    "loading": "Загрузка...",
+    "viewedBy": {
+      "assignee": "Исполнитель"
     }
   },
   "common": {

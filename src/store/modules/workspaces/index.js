@@ -17,6 +17,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
 import Vue from 'vue';
+import { isPendingMember } from '@/store/modules/workspaces/helpers';
 
 /**
  * Mutations enum for this module
@@ -60,6 +61,10 @@ function initialState() {
   };
 }
 
+/**
+ * All Vuex getters will be stored under this namespace
+ * @namespace Getters
+ */
 const getters = {
   /**
    * Returns workspace by id
@@ -72,6 +77,24 @@ const getters = {
    * @return {Project}
    */
     id => state.list.find(workspace => workspace.id === id),
+
+  /**
+   * Returns current user in the provided workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {object} getters - getters of the this module
+   * @param {object} rootState - vuex root state
+   * @return {function(*): ConfirmedMember}
+   */
+  getCurrentUserInWorkspace: (state, getters, rootState) =>
+    /**
+     * @param workspace - workspace to get user
+     * @return {ConfirmedMember}
+     */
+    (workspace) => {
+      const user = rootState.user.data;
+
+      return workspace.team.find(_member => !isPendingMember(_member) && _member.user.id === user.id);
+    },
 };
 
 const actions = {
@@ -95,9 +118,9 @@ const actions = {
    * @param {string} workspaceId - id of workspace for deleting
    */
   async [REMOVE_WORKSPACE]({ commit }, workspaceId) {
-    await workspaceApi.deleteWorkspace(workspaceId);
-
-    commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
+    // await workspaceApi.deleteWorkspace(workspaceId);
+    //
+    // commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
   },
 
   /**
@@ -117,7 +140,6 @@ const actions = {
       workspaceId,
       data: {
         email: userEmail,
-        isPending: true,
       },
     });
 
@@ -185,7 +207,13 @@ const actions = {
    * @returns {Promise<Boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
-    return workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
+    const isSaved = await workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
+
+    if (isSaved) {
+      commit(mutationTypes.SET_WORKSPACE, workspace);
+    }
+
+    return isSaved;
   },
 
   /**
@@ -221,6 +249,7 @@ const actions = {
    * @param {function} commit - standard Vuex dispatch methods
    * @param {string} workspaceId - id of workspace where user is participate
    * @param {string} userId - id of user to remove
+   * @param {string} userEmail - user email to remove (instead of id)
    * @returns {Promise<*>}
    */
   async [REMOVE_USER_FROM_WORKSPACE]({ commit }, { workspaceId, userId, userEmail }) {
@@ -343,9 +372,9 @@ const mutations = {
    */
   [mutationTypes.UPDATE_MEMBER](state, { workspaceId, userId, changes }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].users.findIndex(u => u.id === userId);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(member => !isPendingMember(member) && member.user.id === userId);
 
-    Object.assign(state.list[workspaceIndex].users[memberIndex], changes);
+    Object.assign(state.list[workspaceIndex].team[memberIndex], changes);
   },
 
   /**
@@ -358,11 +387,7 @@ const mutations = {
   [mutationTypes.ADD_PENDING_MEMBER](state, { workspaceId, data }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
 
-    if (!state.list[workspaceIndex].pendingUsers) {
-      Vue.set(state.list[workspaceIndex], 'pendingUsers', []);
-    }
-
-    state.list[workspaceIndex].pendingUsers.push(data);
+    state.list[workspaceIndex].team.push(data);
   },
 
   /**
@@ -374,10 +399,10 @@ const mutations = {
    */
   [mutationTypes.REMOVE_MEMBER](state, { workspaceId, userId }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].users.findIndex(m => m.id === userId);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(member => member.user.id === userId);
 
     if (memberIndex > -1) {
-      state.list[workspaceIndex].users.splice(memberIndex, 1);
+      state.list[workspaceIndex].team.splice(memberIndex, 1);
     }
   },
 
@@ -390,10 +415,10 @@ const mutations = {
    */
   [mutationTypes.REMOVE_PENDING_MEMBER](state, { workspaceId, userEmail }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].pendingUsers.findIndex(m => m.email === userEmail);
+    const memberIndex = state.list[workspaceIndex].team.findIndex(m => m.email === userEmail);
 
     if (memberIndex > -1) {
-      state.list[workspaceIndex].pendingUsers.splice(memberIndex, 1);
+      state.list[workspaceIndex].team.splice(memberIndex, 1);
     }
   },
 

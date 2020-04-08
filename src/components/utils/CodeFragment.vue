@@ -257,6 +257,7 @@ export default {
   .code-preview {
     position: relative;
     display: flex;
+    overflow: hidden;
     font-family: var(--font-monospace);
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);

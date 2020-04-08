@@ -1,3 +1,9 @@
+import {
+  WORKSPACE_FRAGMENT_WITH_TEAM,
+  USER_FRAGMENT,
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
+} from '../fragments';
+
 // language=GraphQL
 /**
  * Query for getting all user's workspaces and project.
@@ -7,18 +13,31 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
     workspaces {
       id
       name
+      description
       image
+      ...WorkspaceWithTeam
       projects {
         id
         token
         name
+        description
         image
         unreadCount
+        notifications {
+          ...ProjectNotificationsRule
+        }
         recentEvents(limit: 1) {
           events {
             id
             groupHash
-            visitedBy
+            visitedBy {
+              ...User
+            }
+            marks {
+              resolved
+              starred
+              ignored
+            }
             payload {
               timestamp
               title
@@ -26,14 +45,18 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           }
           dailyInfo {
             groupHash
-            timestamp
             count
-            date
+            groupingTimestamp
+            lastRepetitionTime
           }
         }
       }
     }
   }
+
+  ${USER_FRAGMENT}
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -50,8 +73,11 @@ export const MUTATION_CREATE_WORKSPACE = `
       name
       description
       image
+      ...WorkspaceWithTeam
     }
   }
+
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -85,34 +111,25 @@ export const MUTATION_CONFIRM_INVITE = `
  * Query for fetching workspaces with id
  */
 export const QUERY_WORKSPACES = `
- query fetchWorkspaces($ids: [ID!]) {
-   workspaces(ids: $ids) {
-     id
-     name
-     description
-     image
-     balance
-     plan {
-       name
-       subscriptionDate
-       lastChargeDate
-       monthlyCharge
-       eventsLimit
-     }
-     users {
-       id
-       name
-       email
-       image
-       isAdmin
-       isPending
-     }
-     pendingUsers {
-       email
-       isPending
-     }
-   }
- }
+  query fetchWorkspaces($ids: [ID!]) {
+    workspaces(ids: $ids) {
+      id
+      name
+      description
+      image
+      balance
+      plan {
+        name
+        subscriptionDate
+        lastChargeDate
+        monthlyCharge
+        eventsLimit
+      }
+      ...WorkspaceWithTeam
+    }
+  }
+
+  ${WORKSPACE_FRAGMENT_WITH_TEAM}
 `;
 
 // language=GraphQL
@@ -126,7 +143,7 @@ export const MUTATION_UPDATE_WORKSPACE = `
     $description: String
     $image: Upload
   ) {
-    updateWorkspace(id: $id, name: $name, description: $description, image: $image)
+    updateWorkspace(workspaceId: $id, name: $name, description: $description, image: $image)
   }
 `;
 
@@ -140,7 +157,7 @@ export const MUTATION_GRANT_ADMIN_PERMISSIONS = `
     $userId: ID!
     $state: Boolean = true
   ) {
-      grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
+    grantAdmin(workspaceId: $workspaceId, userId: $userId, state: $state)
   }
 `;
 

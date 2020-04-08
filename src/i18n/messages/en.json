@@ -38,18 +38,49 @@
       "workspaceSelectLabel": "SELECT WORKSPACE"
     },
     "settings": {
-      "project": {
+      "general": {
         "title": "Project settings",
         "image": "Image",
         "description": "Description",
         "descriptionPlaceholder": "Awesome project",
         "submit": "Save",
         "created": "Created at Aug 25, 2019",
-        "updatedMessage": "Workspace was updated"
+        "updatedMessage": "The project was updated"
       },
       "integrations": {
         "title": "Integrations",
         "projectTokenLabel": "Your Integration token for"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "addRule": "Adding a rule",
+        "addRuleToggler": "Add a new rule",
+        "addRuleSubmit": "Start receiving",
+        "addRuleCancel": "Close form",
+        "addRuleSuccessMessage": "New rule added",
+        "rulesList": "Rules",
+        "sectionWhereToReceive": "Where to receive",
+        "sectionWhatToReceive": "What to receive",
+        "sectionCustomFilters": "Custom Filters",
+        "email": "Email",
+        "emailDescription": "Max frequency is 1 alert in 10 min",
+        "slack": "Slack",
+        "slackDescription": "Alerts through the Webhook App",
+        "telegram": "Telegram",
+        "telegramDescription": "Alerts through the @codex_bot",
+        "receiveNewLabel": "Only new events",
+        "receiveNewDescription": "First occurrence of event",
+        "receiveAllLabel": "All events",
+        "receiveAllDescription": "All event occurrences. Max frequency is 1 alert/min.",
+        "includingWordsLabel": "Including words",
+        "includingWordsDescription": "Only events that includes passed words",
+        "excludingWordsLabel": "Excluding words",
+        "excludingWordsDescription": "Skip events with these words",
+        "ruleIncludingLabel": "Including",
+        "ruleExcludingLabel": "Excluding",
+        "ruleIsEnabled": "Enabled",
+        "editRule": "Edit rule",
+        "removeRule": "Remove rule"
       }
     }
   },
@@ -140,6 +171,28 @@
       "cardSelectLabel": "Select card",
       "amountLabel": "Amount",
       "submitButton": "Continue"
+    }
+  },
+  "event": {
+    "repetitions": {
+      "total": "Total",
+      "since": "Since",
+      "title": "Repetitions",
+      "times": "{n} time | {n} times",
+      "days": "{n} day | {n} days"
+    },
+    "navigation": {
+      "overview": "Overview",
+      "repetitions": "Repetitions",
+      "daily": "Days repeating"
+    },
+    "resolve": "Resolve",
+    "star": "Star",
+    "ignore": "Ignore",
+    "issue": "Create issue",
+    "loading": "Loading...",
+    "viewedBy": {
+      "assignee": "Assignee"
     }
   },
   "common": {
