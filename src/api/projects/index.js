@@ -3,7 +3,8 @@ import {
   MUTATION_UPDATE_PROJECT,
   QUERY_RECENT_ERRORS,
   MUTATION_UPDATE_LAST_VISIT,
-  MUTATION_CREATE_PROJECT_NOTIFY_RULE
+  MUTATION_CREATE_PROJECT_NOTIFY_RULE,
+  MUTATION_UPDATE_PROJECT_NOTIFY_RULE
 } from './queries';
 import * as api from '../index.ts';
 
@@ -64,4 +65,15 @@ export async function addProjectNotificationsRule(payload) {
   return (await api.call(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).createProjectNotificationsRule;
+}
+
+/**
+ * Send request for updating specific project notifications rule
+ * @param {ProjectNotificationsUpdateRulePayload} payload - update rule payload
+ * @return {Promise<ProjectNotificationsRule>}
+ */
+export async function updateProjectNotificationsRule(payload) {
+  return (await api.call(MUTATION_UPDATE_PROJECT_NOTIFY_RULE, {
+    input: payload,
+  })).updateProjectNotificationsRule;
 }

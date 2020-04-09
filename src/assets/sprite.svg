@@ -32,6 +32,12 @@
     </g>
 
 </symbol>
+<symbol id="dots-vertical" viewBox="0 0 3 15">
+  <rect width="3" height="3" rx="1"/>
+  <rect y="6" width="3" height="3" rx="1"/>
+  <rect y="12" width="3" height="3" rx="1"/>
+
+</symbol>
 <symbol id="dots">
   <g fill-rule="evenodd">
     <rect width="3" height="3" rx="1"/>
