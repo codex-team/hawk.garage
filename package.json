@@ -38,6 +38,8 @@
     "postcss-simple-vars": "^5.0.2",
     "short-number": "^1.0.7",
     "spa-http-server": "^0.9.0",
+    "svgo": "^1.1.0",
+    "svgo-loader": "^2.1.0",
     "vue": "^2.6.11",
     "vue-class-component": "^7.0.2",
     "vue-cookies": "^1.6.1",
@@ -72,8 +74,6 @@
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^3.0.0",
     "svg-sprite-generator": "^0.0.7",
-    "svgo": "^1.1.0",
-    "svgo-loader": "^2.1.0",
     "typescript": "^3.7.4"
   },
   "license": "UNLICENSED",
