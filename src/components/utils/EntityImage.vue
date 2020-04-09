@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       /**
-       * @type {boolean} Internal field for image URL
+       * @type {boolean} If true image will be showed
        */
       isImageShowing: false,
 
