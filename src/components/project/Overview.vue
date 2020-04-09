@@ -6,7 +6,7 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <div class="project-overview__chart" />
+      <Chart />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -50,6 +50,7 @@
 <script>
 import EventItem from './EventItem';
 import AssignersList from '../event/AssignersList';
+import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
@@ -59,6 +60,7 @@ export default {
   components: {
     EventItem,
     AssignersList,
+    Chart
   },
   data() {
     return {

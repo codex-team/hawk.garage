@@ -64,13 +64,14 @@ import { debounce } from '@/utils';
 
 export default Vue.extend({
   name: 'Chart',
-  data() {
-    return {
-      /**
-       * List of days with the number of errors per day
-       * @type {any[]}
-       */
-      days: [
+  props: {
+    /**
+     * List of days with the number of errors per day
+     * @type {any[]}
+     */
+    days: {
+      type: Array,
+      default: () => [
         { timestamp: 1581943395219, totalCount: 500 },
         { timestamp: 1582029795219, totalCount: 800 },
         { timestamp: 1582116195219, totalCount: 100 },
@@ -86,9 +87,12 @@ export default Vue.extend({
         { timestamp: 1582980195219, totalCount: 300 },
         { timestamp: 1583066595219, totalCount: 400 },
         { timestamp: 1583152995219, totalCount: 650 },
-        { timestamp: 1583239395219, totalCount: 750 },
-      ] as any[],
-
+        { timestamp: 1583239395219, totalCount: 450 }
+      ] as any[]
+    }
+  },
+  data() {
+    return {
       /**
        * points for svg polyline
        * @type {string}
