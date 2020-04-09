@@ -2,11 +2,11 @@
   <div
     class="entity-image"
     :style="{
-      backgroundImage: imageSrc ? `url('${imageSrc}')`: 'none',
+      backgroundImage: isImageShowing ? `url('${image}')`: 'none',
       backgroundColor: bgColor
     }"
   >
-    {{ !imageSrc ? $options.filters.abbreviation(name) : '' }}
+    {{ !isImageShowing ? $options.filters.abbreviation(name) : '' }}
   </div>
 </template>
 
@@ -43,9 +43,9 @@ export default {
   data() {
     return {
       /**
-       * @type {string | null} Internal field for image URL
+       * @type {boolean} Internal field for image URL
        */
-      imageSrc: null,
+      isImageShowing: false,
 
       /**
        * @type {HTMLImageElement | null} image element for displaying icons
@@ -58,7 +58,7 @@ export default {
      * @returns {String} image background color (if image URL is not provided)
      */
     bgColor() {
-      if (this.imageSrc) {
+      if (this.isImageShowing) {
         return 'none';
       }
       if (this.id) {
@@ -74,12 +74,19 @@ export default {
      * @param {string} newValue - new value of the image property
      */
     image(newValue) {
+      if (!newValue) {
+        this.isImageShowing = false;
+        this.imageElement = null;
+
+        return;
+      }
+
       this.createImageElement(newValue);
     },
   },
   mounted() {
     if (!this.image) {
-      this.imageSrc = null;
+      this.isImageShowing = false;
 
       return;
     }
@@ -97,11 +104,11 @@ export default {
       this.imageElement.src = this.image;
 
       this.imageElement.onload = () => {
-        this.imageSrc = this.image;
+        this.isImageShowing = true;
       };
 
-      this.imageElement.onerror = (e) => {
-        this.imageSrc = null;
+      this.imageElement.onerror = () => {
+        this.isImageShowing = false;
       };
     },
   },
