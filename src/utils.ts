@@ -122,6 +122,10 @@ function typeOf(obj: any): string {
  * @return {String}
  */
 export function misTranslit(string: string): string {
+  if (!string) {
+    return '';
+  }
+
   string = string.toLowerCase();
 
   /* eslint-disable quote-props */
@@ -216,6 +220,10 @@ export function escape(string: string, withCount: boolean): {value: string; coun
  * @return escaped string or object with escaped string, count and length
  */
 export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
+  if (!string) {
+    return '';
+  }
+
   let count = 0;
   let length = 0;
 
