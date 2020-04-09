@@ -27,3 +27,8 @@ export const UPDATE_PROJECT_LAST_VISIT = 'UPDATE_PROJECT_LAST_VISIT';
  * Add new notifications rule
  */
 export const ADD_NOTIFICATIONS_RULE = 'ADD_NOTIFICATIONS_RULE';
+
+/**
+ * Update the notifications rule
+ */
+export const UPDATE_NOTIFICATIONS_RULE = 'UPDATE_NOTIFICATIONS_RULE';

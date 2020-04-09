@@ -58,6 +58,8 @@
         "addRuleSubmit": "Начать получение",
         "addRuleCancel": "Закрыть форму",
         "addRuleSuccessMessage": "Добавлен новый сценарий",
+        "updateRuleSubmit": "Сохранить изменения",
+        "updateRuleSuccessMessage": "Настройки обновлены",
         "rulesList": "Сценарии",
         "sectionWhereToReceive": "Где получать",
         "sectionWhatToReceive": "Что получать",

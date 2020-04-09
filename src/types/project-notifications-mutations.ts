@@ -29,3 +29,19 @@ export interface ProjectNotificationsAddRulePayload {
    */
   channels: NotificationsChannels;
 }
+
+
+/**
+ * What kind of data we send to update the specific notifications rule
+ */
+export interface ProjectNotificationsUpdateRulePayload extends ProjectNotificationsAddRulePayload {
+  /**
+   * Rule id to update
+   */
+  ruleId: string;
+
+  /**
+   * True if settings is enabled
+   */
+  isEnabled: boolean;
+}

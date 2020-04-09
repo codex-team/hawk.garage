@@ -90,13 +90,13 @@
     </section>
     <UiButton
       ref="submitButton"
-      :content="$t('projects.settings.notifications.addRuleSubmit')"
+      :content="submitButtonText"
       :is-loading="isWaitingForResponse"
       submit
     />
     <UiButton
       :content="$t('projects.settings.notifications.addRuleCancel')"
-      @click="$emit('cancel')"
+      @click.prevent="$emit('cancel')"
     />
   </form>
 </template>
@@ -108,9 +108,12 @@ import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButto
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
-import { ProjectNotificationsAddRulePayload } from '@/types/project-notifications-mutations';
+import {
+  ProjectNotificationsAddRulePayload,
+  ProjectNotificationsUpdateRulePayload,
+} from '@/types/project-notifications-mutations';
 import { deepMerge } from '@/utils';
-import { ADD_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
+import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
 
 export default Vue.extend({
@@ -195,12 +198,32 @@ export default Vue.extend({
       isWaitingForResponse: false,
     };
   },
+  computed: {
+    /**
+     * Text on submit button: Add or Update
+     */
+    submitButtonText(): string {
+      if (!this.rule) {
+        return this.$t('projects.settings.notifications.addRuleSubmit') as string;
+      }
+
+      return this.$t('projects.settings.notifications.updateRuleSubmit') as string;
+    },
+  },
   created(): void {
     /**
      * We does not store unfilled channels in DB, so we need to fill it by default values
      */
     if (this.rule) {
-      this.form = deepMerge(this.form, this.rule);
+      const mergedRule = deepMerge(this.form, this.rule);
+
+      /**
+       * The type of this.form (ProjectNotificationsAddRulePayload)
+       * does not contain rule id
+       */
+      delete mergedRule.id;
+
+      this.form = mergedRule;
     }
   },
   methods: {
@@ -240,7 +263,26 @@ export default Vue.extend({
       this.isWaitingForResponse = true;
 
       try {
-        await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, this.form);
+        let successMessage;
+
+        if (!this.rule) {
+          /**
+           * Adding new rule
+           */
+          await this.$store.dispatch(ADD_NOTIFICATIONS_RULE, this.form);
+
+          successMessage = this.$t('projects.settings.notifications.addRuleSuccessMessage');
+        } else {
+          /**
+           * Updating the rule
+           */
+          await this.$store.dispatch(UPDATE_NOTIFICATIONS_RULE, Object.assign({
+            ruleId: this.rule.id,
+          }, this.form) as ProjectNotificationsUpdateRulePayload);
+
+          successMessage = this.$t('projects.settings.notifications.updateRuleSuccessMessage');
+        }
+
 
         this.isWaitingForResponse = false;
         this.isFormInvalid = false;
@@ -248,16 +290,18 @@ export default Vue.extend({
         this.$emit('success');
 
         notifier.show({
-          message: this.$t('projects.settings.notifications.addRuleSuccessMessage') as string,
+          message: successMessage as string,
           style: 'success',
-          time: 2000,
+          time: 3000,
         });
       } catch (e) {
         notifier.show({
           message: e.message,
           style: 'error',
-          time: 2000,
+          time: 10000,
         });
+
+        console.error(e);
 
         this.isWaitingForResponse = false;
         (this.$refs.submitButton as unknown as UiButtonComponent).shake();
