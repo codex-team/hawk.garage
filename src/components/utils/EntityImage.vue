@@ -74,7 +74,7 @@ export default {
      * @param {string} newValue - new value of the image property
      */
     image(newValue) {
-      this.imageElement.src = newValue;
+      this.createImageElement(newValue);
     },
   },
   mounted() {
@@ -84,17 +84,26 @@ export default {
       return;
     }
 
-    this.imageElement = new Image();
+    this.createImageElement(this.image);
+  },
+  methods: {
+    /**
+     * Create new HTMLImageElement by image src
+     * @param {string} imageSrc - image source link
+     */
+    createImageElement(imageSrc) {
+      this.imageElement = new Image();
 
-    this.imageElement.src = this.image;
+      this.imageElement.src = this.image;
 
-    this.imageElement.onload = () => {
-      this.imageSrc = this.image;
-    };
+      this.imageElement.onload = () => {
+        this.imageSrc = this.image;
+      };
 
-    this.imageElement.onerror = (e) => {
-      this.imageSrc = null;
-    };
+      this.imageElement.onerror = (e) => {
+        this.imageSrc = null;
+      };
+    },
   },
 };
 </script>
