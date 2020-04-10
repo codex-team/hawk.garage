@@ -154,6 +154,11 @@ interface HawkEventPayload {
    * Custom data provided by project users
    */
   addons: object;
+
+  /**
+   * Event type: TypeError, ReferenceError etc.
+   */
+  type?: string;
 }
 
 /**
