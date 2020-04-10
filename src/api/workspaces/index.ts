@@ -39,7 +39,10 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
  * @return {Promise<[Workspace]>}
  */
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
-  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, { initial: true })).workspaces;
+  return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
+    initial: true,
+    allowErrors: true,
+  });
 }
 
 /**
