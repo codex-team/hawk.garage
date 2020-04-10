@@ -66,12 +66,6 @@ const actions = {
 
     dispatch(SET_WORKSPACES_LIST, workspaces);
 
-    if (!workspaces.projects) {
-      console.error('FETCH_INITIAL_DATA: projects does not returned');
-
-      return;
-    }
-
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
         workspace.projects.forEach(project => {
@@ -83,6 +77,8 @@ const actions = {
 
       return accumulator;
     }, []);
+
+    dispatch(SET_PROJECTS_LIST, projects);
 
     /**
      * @type {Object<string, GroupedEvent>} - all fetched events
@@ -107,7 +103,6 @@ const actions = {
       delete project.recentEvents;
     });
 
-    dispatch(SET_PROJECTS_LIST, projects);
     dispatch(INIT_EVENTS_MODULE, {
       events,
       recentEvents,
