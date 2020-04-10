@@ -17,6 +17,55 @@ let blockingRequest: Promise<AxiosResponse>;
 let tokenRefreshingRequest: Promise<string> | null;
 
 /**
+ * Describe format of the GraphQL API error item
+ */
+interface GraphQLError {
+  /**
+   * Error text message
+   */
+  message: string;
+
+  /**
+   * Where error occurred - path to file
+   */
+  path: string[],
+  /**
+   * Where error occurred - line and col
+   */
+  location: {line: number, column: number}[];
+
+  /**
+   * Error code and stacktrace
+   */
+  extensions: {code: string, exception: {stacktrace: string[]}}
+}
+
+
+/**
+ * Print API error to the console
+ * @param error - GraphQL error
+ * @param response - Response given
+ * @param request - GraphQL request that was sent
+ * @param variables - request variables
+ */
+function printApiError(error: GraphQLError, response: {data: object}, request: string, variables?: object): void {
+  console.log('\n');
+  console.group('❌ API error ---> ' + error.message);
+    console.groupCollapsed('┕ Error details');
+      console.error(error);
+    console.groupEnd();
+    console.groupCollapsed('┕ Original request');
+      console.log(request.trim());
+      console.log('Variables', variables);
+    console.groupEnd();
+    console.groupCollapsed('┕ Data returned');
+      console.log(response ? response.data : '—');
+    console.groupEnd();
+  console.groupEnd();
+  console.log('\n');
+}
+
+/**
  * Settings that can be passed in api.call() method (see below)
  */
 interface ApiCallSettings {
@@ -29,6 +78,11 @@ interface ApiCallSettings {
    * If true, this request will be performed despite of initial query state
    */
   force?: boolean;
+
+  /**
+   * If true, request can return both data and errors object to handle them manually
+   */
+  allowErrors?: boolean;
 }
 
 /**
@@ -43,7 +97,7 @@ export async function call(
   request: string,
   variables?: object,
   files?: {[name: string]: File | undefined},
-  { initial = false, force = false }: ApiCallSettings = {}
+  { initial = false, force = false, allowErrors = false }: ApiCallSettings = {}
   // eslint-disable-next-line
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
@@ -72,7 +126,18 @@ export async function call(
   }
 
   if (response.data.errors) {
-    throw response.data.errors[0];
+    response.data.errors.forEach(error => {
+      printApiError(error, response.data, request, variables);
+    });
+  }
+
+  /**
+   * For now (Apr 10, 2020) all previous code await to get only data
+   * so new request will pass allowErrors=true and get both errors and data
+   * @todo refactor old requests same way
+   */
+  if (allowErrors){
+    return response.data;
   }
 
   return response.data.data;
