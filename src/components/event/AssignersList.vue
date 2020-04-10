@@ -17,6 +17,7 @@
         class="event-assigners-list__image"
         :image="user.image"
         :name="user.email || user.name"
+        size="16"
       />
       {{ user.email }}
     </div>
@@ -104,8 +105,6 @@ export default {
     }
 
     &__image {
-      width: 16px;
-      height: 16px;
       margin-right: 7px;
     }
 

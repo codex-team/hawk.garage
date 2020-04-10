@@ -17,6 +17,7 @@
         class="custom-select__option-image"
         :image="value.image"
         :name="value.name"
+        size="28"
       />
       {{ value.name }}
       <Icon
@@ -41,6 +42,7 @@
             class="custom-select__option-image"
             :image="option.image"
             :name="option.name"
+            size="28"
           />
           {{ option.name }}
         </div>
@@ -190,12 +192,7 @@ export default {
     }
 
     &__option-image {
-      display: inline-block;
-      width: 28px;
-      height: 28px;
       margin-right: 6px;
-      font-size: 13px;
-      line-height: 28px;
     }
   }
 </style>

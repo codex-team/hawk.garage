@@ -42,6 +42,7 @@
           :name="transaction.user.name || transaction.user.email"
           :image="transaction.user.image"
           class="billing-history__user-image"
+          size="16"
         />
       </div>
       <div
@@ -196,12 +197,7 @@ export default {
     }
 
     &__user-image {
-      width: 16px;
-      height: 16px;
       margin-top: -1px;
-      font-size: 10px;
-      line-height: 16px;
-      border-radius: 5px;
     }
 
     &__amount {
