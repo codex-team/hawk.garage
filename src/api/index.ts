@@ -132,7 +132,7 @@ export async function call(
   }
 
   /**
-   * For now (Apr 10, 20202) all previous code await to get only data
+   * For now (Apr 10, 2020) all previous code await to get only data
    * so new request will pass allowErrors=true and get both errors and data
    * @todo refactor old requests same way
    */
