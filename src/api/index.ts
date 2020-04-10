@@ -17,6 +17,55 @@ let blockingRequest: Promise<AxiosResponse>;
 let tokenRefreshingRequest: Promise<string> | null;
 
 /**
+ * Describe format of the GraphQL API error item
+ */
+interface GraphQLError {
+  /**
+   * Error text message
+   */
+  message: string;
+
+  /**
+   * Where error occurred - path to file
+   */
+  path: string[],
+  /**
+   * Where error occurred - line and col
+   */
+  location: {line: number, column: number}[];
+
+  /**
+   * Error code and stacktrace
+   */
+  extensions: {code: string, exception: {stacktrace: string[]}}
+}
+
+
+/**
+ * Print API error to the console
+ * @param error - GraphQL error
+ * @param response - Response given
+ * @param request - GraphQL request that was sent
+ * @param variables - request variables
+ */
+function printApiError(error: GraphQLError, response: {data: object}, request: string, variables?: object): void {
+  console.log('\n');
+  console.group('❌ API error ---> ' + error.message);
+    console.groupCollapsed('┕ Error details');
+      console.error(error);
+    console.groupEnd();
+    console.groupCollapsed('┕ Original request');
+      console.log(request.trim());
+      console.log('Variables', variables);
+    console.groupEnd();
+    console.groupCollapsed('┕ Data returned');
+      console.log(response ? response.data : '—');
+    console.groupEnd();
+  console.groupEnd();
+  console.log('\n');
+}
+
+/**
  * Settings that can be passed in api.call() method (see below)
  */
 interface ApiCallSettings {
@@ -83,7 +132,7 @@ export async function call(
   }
 
   /**
-   * For now (Apr 10, 20202) all previous code await to get only data
+   * For now (Apr 10, 2020) all previous code await to get only data
    * so new request will pass allowErrors=true and get both errors and data
    * @todo refactor old requests same way
    */
@@ -92,55 +141,6 @@ export async function call(
   }
 
   return response.data.data;
-}
-
-/**
- * Describe format of the GraphQL API error item
- */
-interface GraphQLError {
-  /**
-   * Error text message
-   */
-  message: string;
-
-  /**
-   * Where error occurred - path to file
-   */
-  path: string[],
-  /**
-   * Where error occurred - line and col
-   */
-  location: {line: number, column: number}[];
-
-  /**
-   * Error code and stacktrace
-   */
-  extensions: {code: string, exception: {stacktrace: string[]}}
-}
-
-
-/**
- * Print API error to the console
- * @param error - GraphQL error
- * @param request - GraphQL request that was sent
- * @param variables - request variables
- * @param response - Response given
- */
-function printApiError(error: GraphQLError, response: {data: object}, request: string, variables?: object){
-  console.log('\n');
-  console.group('❌ API error ---> ' + error.message);
-    console.groupCollapsed('┕ Error details');
-      console.error(error);
-    console.groupEnd();
-    console.groupCollapsed('┕ Original request');
-      console.log(request.trim());
-      console.log('Variables', variables);
-    console.groupEnd();
-    console.groupCollapsed('┕ Data returned');
-      console.log(response ? response.data : '—');
-    console.groupEnd();
-  console.groupEnd();
-  console.log('\n');
 }
 
 /**
