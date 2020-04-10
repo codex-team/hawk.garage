@@ -51,7 +51,20 @@ const actions = {
    * @return {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
-    const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
+    const response = await workspacesApi.getAllWorkspacesWithProjects();
+
+    /**
+     * Response can contain errors, so we should handle only existed fields
+     */
+    if (!response.data || !response.data.workspaces) {
+      console.error('FETCH_INITIAL_DATA: wrong response');
+
+      return;
+    }
+
+    const workspaces = response.data.workspaces;
+
+    dispatch(SET_WORKSPACES_LIST, workspaces);
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
@@ -64,6 +77,8 @@ const actions = {
 
       return accumulator;
     }, []);
+
+    dispatch(SET_PROJECTS_LIST, projects);
 
     /**
      * @type {Object<string, GroupedEvent>} - all fetched events
@@ -88,8 +103,6 @@ const actions = {
       delete project.recentEvents;
     });
 
-    dispatch(SET_WORKSPACES_LIST, workspaces);
-    dispatch(SET_PROJECTS_LIST, projects);
     dispatch(INIT_EVENTS_MODULE, {
       events,
       recentEvents,
