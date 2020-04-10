@@ -1,5 +1,5 @@
 import EntityImage from '@/components/utils/EntityImage.vue';
-import { withKnobs, number, text } from '@storybook/addon-knobs';
+import { withKnobs, number, text, array } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 
 export default {
@@ -52,18 +52,7 @@ export const Sizes = () => ({
     sizes: {
       type: Array,
       default: () => {
-        return [
-          number('Size 100', 100),
-          number('Size 72', 72),
-          number('Size 50', 50),
-          number('Size 40', 40),
-          number('Size 36', 36),
-          number('Size 24', 24),
-          number('Size 18', 18),
-          number('Size 16', 16),
-          number('Size 12', 12),
-          number('Size 10', 10),
-        ];
+        return array('Size', ['100', '72', '50', '40', '36', '24', '18', '16', '12', '10'])
       },
     },
   },
