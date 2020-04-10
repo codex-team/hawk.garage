@@ -5,6 +5,7 @@
       class="sidebar__user-picture"
       :name="user.email || 'H'"
       :image="user.image"
+      size="36"
       data-ripple
       @click.native="$router.push('/account/general')"
     />
@@ -162,8 +163,6 @@ export default {
     background-color: var(--color-bg-sidebar);
 
     &__user-picture {
-      width: 36px;
-      height: 36px;
       margin-top: 20px;
       margin-bottom: 18px;
       cursor: pointer;

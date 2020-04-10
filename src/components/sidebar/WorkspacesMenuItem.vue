@@ -6,6 +6,7 @@
     :title="workspace.name"
     :name="workspace.name"
     :image="workspace.image"
+    size="36"
   />
 </template>
 
@@ -36,8 +37,6 @@ export default {
 
 <style>
   .workspaces-menu-item {
-    width: 36px;
-    height: 36px;
     cursor: pointer;
     user-select: none;
 

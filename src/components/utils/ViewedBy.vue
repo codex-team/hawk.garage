@@ -9,6 +9,7 @@
       class="viewed-by__user"
       :name="user.name || user.email"
       :image="user.image"
+      size="14"
     />
     <span
       v-if="hiddenUsers.length"
@@ -66,12 +67,7 @@ export default Vue.extend({
     color: var(--color-text-second);
 
     &__user {
-      width: 14px;
-      height: 14px;
       margin-right: 6px;
-      font-size: 8px;
-      line-height: 14px;
-      border-radius: 5px;
     }
 
     &__count {

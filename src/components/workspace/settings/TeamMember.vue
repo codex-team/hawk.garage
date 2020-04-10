@@ -5,7 +5,7 @@
   >
     <Icon
       v-if="isPending"
-      class="team-member__image"
+      class="team-member__icon"
       symbol="user-placeholder"
     />
 
@@ -14,7 +14,7 @@
       :id="member.user.id"
       :name="member.user.email || 'H'"
       :image="member.user.image"
-      class="team-member__image"
+      size="16"
     />
 
     <div class="team-member__name">
@@ -206,13 +206,9 @@ export default Vue.extend({
       }
     }
 
-    &__image {
-      flex-shrink: 0;
-      width: 16px;
-      height: 16px;
-      font-size: 11px;
-      line-height: 17px;
-      border-radius: 5px;
+    &__icon {
+      width: 13px;
+      height: 15px;
     }
 
     &__name {
