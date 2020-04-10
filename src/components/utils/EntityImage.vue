@@ -89,7 +89,7 @@ export default {
       css.lineHeight = this.size + 'px';
 
       /**
-       * Fallback border radius
+       * Fallback border radius for those browsers who does not support clip-path
        */
       css.borderRadius = this.radius + 'px';
 
@@ -108,6 +108,7 @@ export default {
 
     /**
      * Native border-radius for a fallback
+     * @return {number}
      */
     radius() {
       return this.size / 3.6;
