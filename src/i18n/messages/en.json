@@ -58,6 +58,8 @@
         "addRuleSubmit": "Start receiving",
         "addRuleCancel": "Close form",
         "addRuleSuccessMessage": "New rule added",
+        "updateRuleSubmit": "Update the rule",
+        "updateRuleSuccessMessage": "Rule updated",
         "rulesList": "Rules",
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",

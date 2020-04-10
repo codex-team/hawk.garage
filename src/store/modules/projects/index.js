@@ -5,7 +5,8 @@ import {
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
-  ADD_NOTIFICATIONS_RULE
+  ADD_NOTIFICATIONS_RULE,
+  UPDATE_NOTIFICATIONS_RULE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -22,6 +23,7 @@ export const mutationTypes = {
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
+  UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
 };
 
 /**
@@ -193,6 +195,22 @@ const actions = {
       rule: ruleCreated,
     });
   },
+
+  /**
+   * - Send request for updating specific rule
+   * - Update in the state
+   * @param {function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationsUpdateRulePayload} payload - rule form data
+   * @return {Promise<void>}
+   */
+  async [UPDATE_NOTIFICATIONS_RULE]({ commit }, payload) {
+    const ruleUpdated = await projectsApi.updateProjectNotificationsRule(payload);
+
+    commit(mutationTypes.UPDATE_NOTIFICATIONS_RULE, {
+      projectId: payload.projectId,
+      rule: ruleUpdated,
+    });
+  },
 };
 
 const mutations = {
@@ -264,7 +282,25 @@ const mutations = {
   [mutationTypes.PUSH_NOTIFICATIONS_RULE](state, { projectId, rule }) {
     const project = state.list.find(_project => _project.id === projectId);
 
+    if (!project.notifications) {
+      project.notifications = [];
+    }
+
     project.notifications.push(rule);
+  },
+
+  /**
+   * Reset updated notifications rule
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {string} projectId - project that contains rule
+   * @param {ProjectNotificationsRule} rule - updated rule
+   * @return {void}
+   */
+  [mutationTypes.UPDATE_NOTIFICATIONS_RULE](state, { projectId, rule }) {
+    const project = state.list.find(_project => _project.id === projectId);
+    const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
+
+    project.notifications[existedRuleIndex] = rule;
   },
 };
 

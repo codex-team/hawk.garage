@@ -8,14 +8,17 @@
         v-model="rule.isEnabled"
         :label="$t('projects.settings.notifications.ruleIsEnabled')"
       />
-      <TooltipMenu :options="menuOptions" />
+      <TooltipMenu
+        class="n-rule__dots"
+        :options="menuOptions"
+      />
     </div>
     <section class="n-rule__type">
       {{ receiveType }}
     </section>
     <section>
       <div
-        v-if="rule.including"
+        v-if="rule.including && rule.including.length"
         class="n-rule__filter"
       >
         <span class="n-rule__filter-name">
@@ -30,7 +33,7 @@
         </div>
       </div>
       <div
-        v-if="rule.excluding"
+        v-if="rule.excluding && rule.excluding.length"
         class="n-rule__filter"
       >
         <span class="n-rule__filter-name">
@@ -101,6 +104,7 @@ export default Vue.extend({
 
       Object.entries(this.rule.channels)
         .filter(([name, channel]) => channel.endpoint !== '')
+        .filter(([name, channel]) => channel.isEnabled === true)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });
@@ -156,6 +160,10 @@ export default Vue.extend({
 
     &:not(:last-of-type){
       border-bottom: 1px solid var(--color-delimiter-line);
+    }
+
+    &__dots {
+      margin-top: -11px;
     }
 
     section {

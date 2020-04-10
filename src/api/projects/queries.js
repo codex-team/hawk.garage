@@ -77,3 +77,16 @@ export const MUTATION_CREATE_PROJECT_NOTIFY_RULE = `
 
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
+
+// language=GraphQL
+export const MUTATION_UPDATE_PROJECT_NOTIFY_RULE = `
+  mutation ( $input: UpdateProjectNotificationsRuleInput! ){
+    updateProjectNotificationsRule(
+      input: $input
+    ) {
+      ...ProjectNotificationsRule
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+`;
