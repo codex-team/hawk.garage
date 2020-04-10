@@ -2,7 +2,7 @@
   <div class="event-header">
     <div class="event-layout__container">
       <UiLabel
-        text="Uncaught TypeError"
+        :text="event.payload.type || 'Application error'"
         icon="flash"
       />
       <h1 class="event-header__title">
@@ -114,7 +114,7 @@ export default Vue.extend({
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
       const addons: {url?: string} = this.event.payload.addons;
       const url: string = (addons && addons.url) || '';
-      
+
       if (!trace) {
         return url;
       }

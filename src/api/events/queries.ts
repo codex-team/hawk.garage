@@ -22,6 +22,7 @@ export const QUERY_EVENT = `
         }
         payload {
           title
+          type
           release
           timestamp
           context
