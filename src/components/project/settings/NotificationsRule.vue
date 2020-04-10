@@ -104,6 +104,7 @@ export default Vue.extend({
 
       Object.entries(this.rule.channels)
         .filter(([name, channel]) => channel.endpoint !== '')
+        .filter(([name, channel]) => channel.isEnabled === true)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });
