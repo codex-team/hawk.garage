@@ -11,6 +11,7 @@
         :title="workspace.name"
         :name="workspace.name"
         :image="workspace.image"
+        size="34"
       />
       <div class="billing-card__title">
         {{ workspace.name }}
@@ -143,12 +144,8 @@ export default {
 
     &__logo {
       float: left;
-      width: 34px;
-      height: 34px;
       margin-top: -1px;
       margin-right: 15px;
-      line-height: 34px;
-      border-radius: 3px;
     }
 
     &__title {

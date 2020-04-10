@@ -11,7 +11,7 @@
         :id="project.id"
         :name="project.name"
         :image="project.image"
-        class="project-header__icon"
+        size="26"
       />
       <div class="project-header__name">
         {{ project.name }}
@@ -61,15 +61,6 @@ export default {
     height: 100%;
     padding: 0 15px;
     cursor: pointer;
-  }
-
-  &__icon {
-    width: 26px;
-    height: 26px;
-    line-height: 26px;
-    background-position: center center;
-    background-size: cover;
-    border-radius: var(--border-radius);
   }
 
   &__name {

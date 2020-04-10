@@ -9,6 +9,7 @@
       class="project-menu-item__picture"
       :name="project.name"
       :image="project.image"
+      size="26"
     />
     <div class="project-menu-item__info">
       <!-- eslint-disable vue/no-v-html -->
@@ -140,11 +141,7 @@ export default {
     }
 
     &__picture {
-      width: 26px;
-      height: 26px;
       margin-right: 15px;
-      font-size: 12px;
-      line-height: 26px;
     }
 
     &__events-number {

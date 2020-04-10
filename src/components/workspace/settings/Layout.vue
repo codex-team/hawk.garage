@@ -11,6 +11,7 @@
           :title="workspace.name"
           :name="workspace.name"
           :image="workspace.image"
+          size="26"
         />
         <div class="workspace-settings__title">
           {{ workspace.name }}
@@ -118,11 +119,7 @@ export default Vue.extend({
     }
 
     &__logo {
-      width: 26px;
-      height: 26px;
       margin-right: 10px;
-      line-height: 26px;
-      border-radius: 4px;
     }
 
     &__title {

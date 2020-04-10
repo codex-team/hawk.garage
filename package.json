@@ -9,7 +9,7 @@
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
     "lint:js": "eslint src/ --ext .js --ext .ts --ext .vue --fix",
     "serve:prod": "http-server ./dist --push-state -c-0",
-    "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
+    "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
     "svg": "svg-sprite-generate -d src/assets/sprite-icons -o src/assets/sprite.svg"
   },

@@ -5,6 +5,7 @@
       class="workspace-info__image"
       :name="workspace.name"
       :image="workspace.image"
+      size="36"
     />
     <div class="workspace-info__wrapper">
       <div class="workspace-info__name">
@@ -66,9 +67,6 @@ export default {
     }
 
     &__image {
-      flex-shrink: 0;
-      width: 36px;
-      height: 36px;
       margin-right: 15px;
     }
 
