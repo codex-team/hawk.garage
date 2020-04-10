@@ -3,7 +3,8 @@ import {
   MUTATION_VISIT_EVENT,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
-  QUERY_RECENT_PROJECT_EVENTS
+  QUERY_RECENT_PROJECT_EVENTS,
+  QUERY_CHART_DATA
 } from './queries';
 import * as api from '@/api';
 import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
@@ -95,4 +96,18 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     eventId,
     mark,
   })).toggleEventMark;
+}
+
+
+
+/**
+ * Returns latest project events
+ * @param {string} projectId - id of the project to fetch recent errors
+ * @param {number} skip - certain number of documents to skip
+ * @return {Promise<EventsWithDailyInfo>}
+ */
+export async function fetchChartData(projectId: string): Promise<EventsWithDailyInfo | null> {
+  return (await api.call(QUERY_CHART_DATA, {
+    projectId
+  })).project.recentEvents;
 }

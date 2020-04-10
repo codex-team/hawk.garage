@@ -6,7 +6,7 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <Chart />
+      <Chart v-bind:days="chartData"/>
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -52,7 +52,7 @@ import EventItem from './EventItem';
 import AssignersList from '../event/AssignersList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_RECENT_EVENTS, FETCH_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
 
 export default {
@@ -67,6 +67,23 @@ export default {
       noMoreEvents: true,
       isLoadingEvents: false,
       isAssignersShowed: false,
+      chartData: [
+        { timestamp: 1581943395219, totalCount: 500 },
+        { timestamp: 1582029795219, totalCount: 800 },
+        { timestamp: 1582116195219, totalCount: 100 },
+        { timestamp: 1582202595219, totalCount: 50 },
+        { timestamp: 1582288995219, totalCount: 25 },
+        { timestamp: 1582375395219, totalCount: 75 },
+        { timestamp: 1582461795219, totalCount: 25 },
+        { timestamp: 1582548195219, totalCount: 1000 },
+        { timestamp: 1582634595219, totalCount: 900 },
+        { timestamp: 1582720995219, totalCount: 850 },
+        { timestamp: 1582807395219, totalCount: 900 },
+        { timestamp: 1582893795219, totalCount: 150 },
+        { timestamp: 1582980195219, totalCount: 300 },
+        { timestamp: 1583066595219, totalCount: 400 },
+        { timestamp: 1583152995219, totalCount: 650 },
+        { timestamp: 1583239395219, totalCount: 450 }],
       assignersListPosition: {
         top: 0,
         right: 0,
@@ -111,6 +128,7 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
+    this.chartData = await this.$store.dispatch(FETCH_CHART_DATA, {projectId: this.projectId});
   },
 
   /**

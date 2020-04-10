@@ -2,6 +2,7 @@ import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
   FETCH_RECENT_EVENTS,
+  FETCH_CHART_DATA,
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
   TOGGLE_EVENT_MARK
@@ -12,6 +13,7 @@ import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
 import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload } from '@/types/events';
+import { ReceiveTypes } from '@/types/project-notifications';
 
 /**
  * Root store state
@@ -121,7 +123,7 @@ function initialState(): EventsModuleState {
   return {
     list: {},
     recent: {},
-    repetitions: {},
+    repetitions: {}
   };
 }
 
@@ -321,6 +323,35 @@ const module: Module<EventsModuleState, RootState> = {
       });
 
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
+    },
+
+
+    /**
+     * Get latest project events
+     * @param {function} commit - standard Vuex commit function
+     * @param {string} projectId - id of the project to fetch data
+     * @return {Promise<{timestamp: number, totalCount: number}[]>} - 
+     */
+    async [FETCH_CHART_DATA]({ commit }, { projectId }): Promise<{timestamp: number, totalCount: number}[]> {
+      const chartData = await eventsApi.fetchChartData(projectId);
+
+      if (!chartData) {
+        return [];
+      }
+
+      let groupedData = Object.values(groupByGroupingTimestamp(chartData.dailyInfo))
+      .reduce((acc: {timestamp: number, totalCount: number}[], val:any, i) => {
+        acc.push({
+          timestamp: val[0].groupingTimestamp * 1000,
+          totalCount: val.reduce((sum, val) => sum + val.count, 0)
+        });
+
+        return acc;
+      }, [])
+      .sort((a, b) => a.totalCount - b.totalCount);
+
+
+      return groupedData;
     },
 
     /**

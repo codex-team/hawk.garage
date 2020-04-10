@@ -2,6 +2,25 @@ import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
 
 // language=GraphQL
 /**
+ * Get data for chart
+ */
+export const QUERY_CHART_DATA = `
+  query ProjectRecentEvents (
+    $projectId: ID!,
+  ) {
+    project(id: $projectId) {
+      recentEvents(limit: 20, skip: 0) {
+        dailyInfo {
+          count
+          groupingTimestamp
+        }
+      }
+    }
+  }
+`
+
+// language=GraphQL
+/**
  * Get specific error
  */
 export const QUERY_EVENT = `
