@@ -192,7 +192,6 @@ export default {
     }
 
     &__option-image {
-      display: inline-block;
       margin-right: 6px;
     }
   }
