@@ -11,13 +11,13 @@ jobs:
 
       - name: Cache node modules
         uses: actions/cache@v1
-          with:
-            path: node_modules
-            key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
-            restore-keys: |
-              ${{ runner.OS }}-build-${{ env.cache-name }}-
-              ${{ runner.OS }}-build-
-              ${{ runner.OS }}-
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
 
       - run: yarn install
 
