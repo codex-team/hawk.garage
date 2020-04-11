@@ -2,7 +2,7 @@
   <div class="project-overview__chart">
     <div class="project-overview__chart-info">
       <span class="project-overview__chart-info__today"> today </span>
-      <span class="project-overview__chart-info__highlight"> {{ todayCount | spacedNumber }} </span>
+      <span class="project-overview__chart-info__highlight"> {{ todayCount }} </span>
       <span
         v-if="difference > 0"
         class="project-overview__chart-info-increase"
@@ -10,7 +10,7 @@
         {{ difference | spacedNumber }}
       </span>
       <span
-        v-else-if="difference < 0"
+        v-else-if="difference <= 0"
         class="project-overview__chart-info-decrease"
       >
         {{ -difference | spacedNumber }}
@@ -71,24 +71,7 @@ export default Vue.extend({
      */
     days: {
       type: Array,
-      default: () => [
-        { timestamp: 1581943395219, totalCount: 500 },
-        { timestamp: 1582029795219, totalCount: 800 },
-        { timestamp: 1582116195219, totalCount: 100 },
-        { timestamp: 1582202595219, totalCount: 50 },
-        { timestamp: 1582288995219, totalCount: 25 },
-        { timestamp: 1582375395219, totalCount: 75 },
-        { timestamp: 1582461795219, totalCount: 25 },
-        { timestamp: 1582548195219, totalCount: 1000 },
-        { timestamp: 1582634595219, totalCount: 900 },
-        { timestamp: 1582720995219, totalCount: 850 },
-        { timestamp: 1582807395219, totalCount: 900 },
-        { timestamp: 1582893795219, totalCount: 150 },
-        { timestamp: 1582980195219, totalCount: 300 },
-        { timestamp: 1583066595219, totalCount: 400 },
-        { timestamp: 1583152995219, totalCount: 650 },
-        { timestamp: 1583239395219, totalCount: 450 }
-      ] as any[]
+      default: () => [] as any[]
     }
   },
   data() {
@@ -163,7 +146,7 @@ export default Vue.extend({
     },
   },
   created() {
-    this.onResize = debounce(this.createPolyline, 100);
+    this.onResize = debounce(this.createPolyline, 100);;
   },
   mounted() {
     this.createPolyline();
@@ -186,10 +169,40 @@ export default Vue.extend({
 
         points.push(pointX + ' ' + pointY);
       });
-
+      
       this.polylinePoints = points.join(', ');
     },
+    /*createPolyline() {
+      const msInDay = 86400000;
+      const lastDay = this.days.slice(-1)[0].timestamp;
+      const rangeOfDays = Math.min((this.days.slice(-1)[0].timestamp - this.days[0].timestamp) / msInDay + 1, 20);
+      const step = this.$el.clientWidth / rangeOfDays;
+      const points : string[] = [];
+
+      for (let day = lastDay - msInDay * rangeOfDays, daysIndex = 0, index = 0; day <= lastDay; day += msInDay, index++) {
+        const pointX = index * step;
+        let pointY;
+
+        if (this.days[daysIndex].timestamp > day) {
+          pointY = 2;
+        } else {
+          pointY = 2 + (this.days[daysIndex].totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
+          daysIndex++;
+        }
+
+        console.log(daysIndex, day, pointX, pointY);
+
+        points.push(pointX + ' ' + pointY);
+      }
+      
+      this.polylinePoints = points.join(', ');
+    }*/
   },
+  watch: {
+    days: function() {
+      this.createPolyline();
+    }
+  }
 });
 </script>
 <style>

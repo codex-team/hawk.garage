@@ -7,13 +7,12 @@ import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
 export const QUERY_CHART_DATA = `
   query ProjectRecentEvents (
     $projectId: ID!,
+    $minTimestamp: Int!
   ) {
     project(id: $projectId) {
-      recentEvents(limit: 20, skip: 0) {
-        dailyInfo {
-          count
-          groupingTimestamp
-        }
+      chartData(minTimestamp: $minTimestamp) {
+        count
+        groupingTimestamp
       }
     }
   }

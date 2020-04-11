@@ -83,7 +83,7 @@ export default {
         { timestamp: 1582980195219, totalCount: 300 },
         { timestamp: 1583066595219, totalCount: 400 },
         { timestamp: 1583152995219, totalCount: 650 },
-        { timestamp: 1583239395219, totalCount: 450 }],
+        { timestamp: 1583239395219, totalCount: 650 }],
       assignersListPosition: {
         top: 0,
         right: 0,
@@ -128,7 +128,7 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
-    this.chartData = await this.$store.dispatch(FETCH_CHART_DATA, {projectId: this.projectId});
+    this.chartData = await this.$store.dispatch(FETCH_CHART_DATA, {projectId: this.projectId, minTimestamp: ~~(Date.now() / 1000 - 86400 * 14) });
   },
 
   /**

@@ -332,14 +332,14 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId - id of the project to fetch data
      * @return {Promise<{timestamp: number, totalCount: number}[]>} - 
      */
-    async [FETCH_CHART_DATA]({ commit }, { projectId }): Promise<{timestamp: number, totalCount: number}[]> {
-      const chartData = await eventsApi.fetchChartData(projectId);
+    async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<{timestamp: number, totalCount: number}[]> {
+      const chartData = await eventsApi.fetchChartData(projectId, minTimestamp);
 
       if (!chartData) {
         return [];
       }
 
-      let groupedData = Object.values(groupByGroupingTimestamp(chartData.dailyInfo))
+      let groupedData = Object.values(groupByGroupingTimestamp(chartData))
       .reduce((acc: {timestamp: number, totalCount: number}[], val:any, i) => {
         acc.push({
           timestamp: val[0].groupingTimestamp * 1000,
@@ -348,7 +348,7 @@ const module: Module<EventsModuleState, RootState> = {
 
         return acc;
       }, [])
-      .sort((a, b) => a.totalCount - b.totalCount);
+      .sort((a, b) => a.timestamp - b.timestamp);
 
 
       return groupedData;
