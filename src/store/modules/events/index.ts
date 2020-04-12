@@ -327,13 +327,16 @@ const module: Module<EventsModuleState, RootState> = {
 
 
     /**
-     * Get latest project events
+     * Get data for displaying the number of errors for a specific day
      * @param {function} commit - standard Vuex commit function
      * @param {string} projectId - id of the project to fetch data
-     * @return {Promise<{timestamp: number, totalCount: number}[]>} - 
+     * @return {Promise<{timestamp: number, totalCount: number}[]>} - data for the chart
      */
     async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<{timestamp: number, totalCount: number}[]> {
       const chartData = await eventsApi.fetchChartData(projectId, minTimestamp);
+      const day = 86400000;
+      const now = Date.now();
+      const firstMidnight = new Date(minTimestamp * 1000).setHours(24, 0, 0, 0);
 
       if (!chartData) {
         return [];
@@ -350,6 +353,18 @@ const module: Module<EventsModuleState, RootState> = {
       }, [])
       .sort((a, b) => a.timestamp - b.timestamp);
 
+      for (let time = firstMidnight, index = 0; time < now - day; time += day) {
+        if (groupedData[index].timestamp > time) {
+          groupedData.push({
+            timestamp: time,
+            totalCount: 0
+          });
+        } else {
+          index++;
+        }
+      }
+
+      groupedData = groupedData.sort((a, b) => a.timestamp - b.timestamp);
 
       return groupedData;
     },
