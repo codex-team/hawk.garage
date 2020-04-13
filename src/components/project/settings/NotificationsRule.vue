@@ -95,7 +95,7 @@ export default Vue.extend({
     },
 
     /**
-     * If of a project that owns the rule
+     * Id of a project that owns the rule
      */
     projectId: {
       type: String,
