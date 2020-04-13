@@ -1,6 +1,6 @@
 <template>
   <div class="project-overview__chart">
-    <div class="project-overview__chart-info">
+    <div class="project-overview__chart-info" v-if="days.length > 1">
       <span class="project-overview__chart-info__today"> today </span>
       <span class="project-overview__chart-info__highlight"> {{ todayCount }} </span>
       <span

@@ -327,9 +327,10 @@ const module: Module<EventsModuleState, RootState> = {
 
 
     /**
-     * Get data for displaying the number of errors for a specific day
+     * Get data for displaying the number of errors for each day from a specific timestamp
      * @param {function} commit - standard Vuex commit function
      * @param {string} projectId - id of the project to fetch data
+     * @param {number} minTimestamp - timestamp from which we start taking errors
      * @return {Promise<{timestamp: number, totalCount: number}[]>} - data for the chart
      */
     async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<{timestamp: number, totalCount: number}[]> {
@@ -342,6 +343,9 @@ const module: Module<EventsModuleState, RootState> = {
         return [];
       }
 
+      /**
+       * Turning it into a chart format
+       */
       let groupedData = Object.values(groupByGroupingTimestamp(chartData))
       .reduce((acc: {timestamp: number, totalCount: number}[], val:any, i) => {
         acc.push({
@@ -353,20 +357,28 @@ const module: Module<EventsModuleState, RootState> = {
       }, [])
       .sort((a, b) => a.timestamp - b.timestamp);
 
-      for (let time = firstMidnight, index = 0; time < now - day; time += day) {
-        if (groupedData[index].timestamp > time) {
-          groupedData.push({
+      let result: {timestamp: number, totalCount: number}[] = [];
+
+      /**
+       * Inserts days that don't contain errors
+       */
+      for (let time = firstMidnight, index = 0; time < now; time += day) {
+        if (index < groupedData.length && groupedData[index].timestamp <= time) {
+          result.push({
+            timestamp: groupedData[index].timestamp,
+            totalCount: groupedData[index].totalCount
+          });
+
+          index++;
+        } else {
+          result.push({
             timestamp: time,
             totalCount: 0
           });
-        } else {
-          index++;
         }
       }
 
-      groupedData = groupedData.sort((a, b) => a.timestamp - b.timestamp);
-
-      return groupedData;
+      return result;
     },
 
     /**
