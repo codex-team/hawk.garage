@@ -41,7 +41,7 @@
       <polyline
         class="chart_body-polyline"
         fill="none"
-        stroke="url(#chart)"
+        :stroke="this.minCount != this.maxCount ? 'url(#chart)' : 'rgba(61, 133, 210, 0.22)'"
         stroke-width="2.5"
         :points="polylinePoints"
       />
@@ -165,7 +165,10 @@ export default Vue.extend({
 
       this.days.forEach((day, index) => {
         const pointX = index * step;
-        const pointY = 2 + (day.totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
+        let pointY = 2;
+        if (this.maxCount != this.minCount) {
+          pointY += (day.totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
+        }
 
         points.push(pointX + ' ' + pointY);
       });
