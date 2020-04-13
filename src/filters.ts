@@ -135,3 +135,15 @@ Vue.filter('prettyFullDate', function (value: number) {
 
   return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${`0${hours}`.substr(-2)}:${`0${minutes}`.substr(-2)}`;
 });
+
+/**
+ * Returns prettifying date from timestamp
+ * @param {number} timestamp - timestamp
+ */
+Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
+  const date = new Date(timestamp);
+  const day = date.getDate();
+  const month = date.getMonth();
+
+  return `${day} ${i18n.t('common.shortMonths[' + month + ']')}`;
+});

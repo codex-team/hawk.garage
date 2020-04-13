@@ -2,6 +2,7 @@ import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
   FETCH_RECENT_EVENTS,
+  FETCH_CHART_DATA,
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
   TOGGLE_EVENT_MARK
@@ -11,7 +12,8 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload } from '@/types/events';
+import { ReceiveTypes } from '@/types/project-notifications';
 
 /**
  * Root store state
@@ -121,7 +123,7 @@ function initialState(): EventsModuleState {
   return {
     list: {},
     recent: {},
-    repetitions: {},
+    repetitions: {}
   };
 }
 
@@ -323,6 +325,62 @@ const module: Module<EventsModuleState, RootState> = {
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
 
+
+    /**
+     * Get data for displaying the number of errors for each day from a specific timestamp
+     * @param {function} commit - standard Vuex commit function
+     * @param {string} projectId - id of the project to fetch data
+     * @param {number} minTimestamp - timestamp from which we start taking errors
+     * @return {Promise<{timestamp: number, totalCount: number}[]>} - data for the chart
+     */
+    async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<{timestamp: number, totalCount: number}[]> {
+      const chartData = await eventsApi.fetchChartData(projectId, minTimestamp);
+      const day = 86400000;
+      const now = Date.now();
+      const firstMidnight = new Date(minTimestamp * 1000).setHours(24, 0, 0, 0);
+
+      if (!chartData) {
+        return [];
+      }
+
+      /**
+       * Turning it into a chart format
+       */
+      let groupedData = Object.values(groupByGroupingTimestamp(chartData))
+      .reduce((acc: {timestamp: number, totalCount: number}[], val:any, i) => {
+        acc.push({
+          timestamp: val[0].groupingTimestamp * 1000,
+          totalCount: val.reduce((sum, val) => sum + val.count, 0)
+        });
+
+        return acc;
+      }, [])
+      .sort((a, b) => a.timestamp - b.timestamp);
+
+      let result: {timestamp: number, totalCount: number}[] = [];
+
+      /**
+       * Inserts days that don't contain errors
+       */
+      for (let time = firstMidnight, index = 0; time < now; time += day) {
+        if (index < groupedData.length && groupedData[index].timestamp <= time) {
+          result.push({
+            timestamp: groupedData[index].timestamp,
+            totalCount: groupedData[index].totalCount
+          });
+
+          index++;
+        } else {
+          result.push({
+            timestamp: time,
+            totalCount: 0
+          });
+        }
+      }
+
+      return result;
+    },
+
     /**
      * Fetches latest repetitions
      *
@@ -377,7 +435,7 @@ const module: Module<EventsModuleState, RootState> = {
       const repetition = event.repetition;
 
       if (repetition !== null) {
-        event.payload = deepMerge(event.payload, repetition.payload);
+        event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
         commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
           projectId,
           eventId,

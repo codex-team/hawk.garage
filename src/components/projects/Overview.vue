@@ -6,7 +6,7 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <Chart v-bind:days="chartData"/>
+      <Chart />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -14,12 +14,12 @@
           class="project-overview__events-by-date"
         >
           <div class="project-overview__date">
-            {{ getDay(date) | prettyDate }}
+            {{ date | prettyDateStr }}
           </div>
           <EventItem
             v-for="dailyEventInfo in eventsByDate"
             :key="dailyEventInfo.groupHash"
-            :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
+            :last-occurrence-timestamp="dailyEventInfo.timestamp"
             :count="dailyEventInfo.count"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
@@ -48,26 +48,25 @@
 </template>
 
 <script>
-import EventItem from './EventItem';
-import AssignersList from '../event/AssignersList';
 import Chart from '../events/Chart';
+import EventItem from '../events/EventItem';
+import AssignersList from '../events/AssignersList';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS, FETCH_CHART_DATA } from '../../store/modules/events/actionTypes';
+import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
 
 export default {
   name: 'ProjectOverview',
   components: {
+    Chart,
     EventItem,
     AssignersList,
-    Chart
   },
   data() {
     return {
       noMoreEvents: true,
       isLoadingEvents: false,
       isAssignersShowed: false,
-      chartData: [],
       assignersListPosition: {
         top: 0,
         right: 0,
@@ -112,7 +111,6 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
-    this.chartData = await this.$store.dispatch(FETCH_CHART_DATA, {projectId: this.projectId, minTimestamp: ~~(Date.now() / 1000 - 86400 * 16) });
   },
 
   /**
@@ -123,14 +121,6 @@ export default {
     this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
   },
   methods: {
-    /**
-     * Return passed day midnight timestamp
-     * @param {string} date - grouped day key like 'date:1576011600'
-     * @return {number}
-     */
-    getDay(date) {
-      return parseInt(date.replace('groupingTimestamp:', ''), 10);
-    },
     /**
      * Load older events to the list
      */
@@ -194,12 +184,6 @@ export default {
       align-self: stretch;
       overflow-y: auto;
       @apply --hide-scrollbar;
-    }
-
-    &__chart {
-      height: 215px;
-      margin: 16px 15px 0;
-      background-color: var(--color-bg-main);
     }
 
     &__events {
