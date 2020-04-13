@@ -34,6 +34,7 @@
         v-for="rule in rules"
         :key="rule.id"
         :rule="rule"
+        :project-id="project.id"
         :enable-editing="userCanEdit"
         @editClicked="editRule"
       />

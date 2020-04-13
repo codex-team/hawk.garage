@@ -5,8 +5,9 @@
       class="n-rule__actions"
     >
       <UiSwitch
-        v-model="rule.isEnabled"
+        :value="rule.isEnabled"
         :label="$t('projects.settings.notifications.ruleIsEnabled')"
+        @input="toggleEnabledState"
       />
       <TooltipMenu
         class="n-rule__dots"
@@ -64,11 +65,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ProjectNotificationsRule, ReceiveTypes, NotificationsChannels } from '@/types/project-notifications';
+import {
+  ProjectNotificationsRule,
+  ReceiveTypes,
+  NotificationsChannels,
+} from '@/types/project-notifications';
 import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from '@/components/utils/TooltipMenu.vue';
 import UiSwitch from '@/components/forms/UiSwitch.vue';
+import { ProjectNotificationsUpdateRulePayload, ProjectNotificationRulePointer } from '../../../types/project-notifications-mutations';
+import { TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE } from '../../../store/modules/projects/actionTypes';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsRule',
@@ -84,6 +91,14 @@ export default Vue.extend({
      */
     rule: {
       type: Object as () => ProjectNotificationsRule,
+      required: true,
+    },
+
+    /**
+     * If of a project that owns the rule
+     */
+    projectId: {
+      type: String,
       required: true,
     },
 
@@ -104,6 +119,7 @@ export default Vue.extend({
 
       Object.entries(this.rule.channels)
         .filter(([name, channel]) => channel.endpoint !== '')
+        .filter(([name, channel]) => channel.isEnabled === true)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });
@@ -143,6 +159,20 @@ export default Vue.extend({
           },
         },
       ];
+    },
+  },
+  methods: {
+    /**
+     * Send request for toggling isEnables state for current rule
+     */
+    async toggleEnabledState(): Promise<void> {
+      /**
+       * Updating the rule
+       */
+      await this.$store.dispatch(TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE, {
+        ruleId: this.rule.id,
+        projectId: this.projectId,
+      } as ProjectNotificationRulePointer);
     },
   },
 });

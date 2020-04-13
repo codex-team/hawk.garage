@@ -32,3 +32,8 @@ export const ADD_NOTIFICATIONS_RULE = 'ADD_NOTIFICATIONS_RULE';
  * Update the notifications rule
  */
 export const UPDATE_NOTIFICATIONS_RULE = 'UPDATE_NOTIFICATIONS_RULE';
+
+/**
+ * Toggle isEnabled state of the notifications rule
+ */
+export const TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE = 'TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE';
