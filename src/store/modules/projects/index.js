@@ -6,7 +6,8 @@ import {
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
   ADD_NOTIFICATIONS_RULE,
-  UPDATE_NOTIFICATIONS_RULE
+  UPDATE_NOTIFICATIONS_RULE,
+  TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -211,6 +212,23 @@ const actions = {
       rule: ruleUpdated,
     });
   },
+
+  /**
+   * - Send request for toggle isEnabled state of the notify rule
+   * - Update in the state
+   * @param {function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationRulePointer} payload - rule form data
+   * @return {Promise<void>}
+   */
+  async [TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE]({ commit }, payload) {
+    const ruleUpdated = await projectsApi.toggleEnabledStateOfProjectNotificationsRule(payload);
+
+    commit(mutationTypes.UPDATE_NOTIFICATIONS_RULE, {
+      projectId: payload.projectId,
+      rule: ruleUpdated,
+    });
+  },
+
 };
 
 const mutations = {
@@ -300,7 +318,7 @@ const mutations = {
     const project = state.list.find(_project => _project.id === projectId);
     const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
 
-    project.notifications[existedRuleIndex] = rule;
+    Vue.set(project.notifications, existedRuleIndex, rule);
   },
 };
 
