@@ -146,7 +146,7 @@ export default Vue.extend({
     },
   },
   created() {
-    this.onResize = debounce(this.createPolyline, 100);;
+    this.onResize = debounce(this.createPolyline, 100);
   },
   mounted() {
     this.createPolyline();
@@ -171,38 +171,13 @@ export default Vue.extend({
       });
       
       this.polylinePoints = points.join(', ');
-    },
-    /*createPolyline() {
-      const msInDay = 86400000;
-      const lastDay = this.days.slice(-1)[0].timestamp;
-      const rangeOfDays = Math.min((this.days.slice(-1)[0].timestamp - this.days[0].timestamp) / msInDay + 1, 20);
-      const step = this.$el.clientWidth / rangeOfDays;
-      const points : string[] = [];
-
-      for (let day = lastDay - msInDay * rangeOfDays, daysIndex = 0, index = 0; day <= lastDay; day += msInDay, index++) {
-        const pointX = index * step;
-        let pointY;
-
-        if (this.days[daysIndex].timestamp > day) {
-          pointY = 2;
-        } else {
-          pointY = 2 + (this.days[daysIndex].totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
-          daysIndex++;
-        }
-
-        console.log(daysIndex, day, pointX, pointY);
-
-        points.push(pointX + ' ' + pointY);
-      }
-      
-      this.polylinePoints = points.join(', ');
-    }*/
+    }
   },
   watch: {
     days: function() {
       this.createPolyline();
     }
-  }
+  },
 });
 </script>
 <style>
