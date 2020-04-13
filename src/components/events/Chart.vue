@@ -41,7 +41,7 @@
       <polyline
         class="chart_body-polyline"
         fill="none"
-        stroke="url(#chart)"
+        :stroke="this.minCount != this.maxCount ? 'url(#chart)' : 'rgba(61, 133, 210, 0.22)'"
         stroke-width="2.5"
         :points="polylinePoints"
       />
