@@ -133,7 +133,7 @@ export default Vue.extend({
           this.$router.push({ path: '/' });
         } catch (e) {
           notifier.show({
-            message: (this.$i18n.t('workspaces.settings.leaveError')).toString(),
+            message: this.$i18n.t('workspaces.settings.leaveError').toString(),
             style: 'error',
             time: 10000,
           });
