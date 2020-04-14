@@ -42,8 +42,8 @@
         <!--        </router-link>-->
         <hr class="delimiter">
         <div
-          @click="leaveWorkspace"
           class="settings-window__menu-item settings-window__menu-item--attention"
+          @click="leaveWorkspace"
         >
           {{ $t('workspaces.settings.leave') }}
           <Icon
@@ -69,7 +69,7 @@ import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
-import { FETCH_WORKSPACE, REMOVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import { FETCH_WORKSPACE, REMOVE_WORKSPACE, FETCH_WORKSPACES } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
 
@@ -128,6 +128,8 @@ export default Vue.extend({
     async leaveWorkspace() {
       if (this.workspace) {
         await this.$store.dispatch(REMOVE_WORKSPACE, this.workspace.id);
+
+        this.$router.push({ path: '/' });
       }
     },
   },
