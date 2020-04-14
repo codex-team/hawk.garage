@@ -40,6 +40,17 @@
         <!--        >-->
         <!--          {{ $t('workspaces.settings.billing.title') }}-->
         <!--        </router-link>-->
+        <hr class="delimiter">
+        <div
+          @click="leaveWorkspace"
+          class="settings-window__menu-item settings-window__menu-item--attention"
+        >
+          {{ $t('workspaces.settings.leave') }}
+          <Icon
+            class="settings-window__menu-icon"
+            symbol="logout"
+          />
+        </div>
       </div>
     </template>
 
@@ -57,7 +68,8 @@
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
-import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import Icon from '../../utils/Icon';
+import { FETCH_WORKSPACE, REMOVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
 
@@ -66,6 +78,7 @@ export default Vue.extend({
   components: {
     SettingsWindow,
     EntityImage,
+    Icon,
   },
   data() {
     return {
@@ -107,6 +120,13 @@ export default Vue.extend({
      */
     updateWorkspace() {
       this.workspace = this.$store.getters.getWorkspaceById(this.$route.params.workspaceId);
+    },
+
+    /**
+     * Leave current workspace
+     */
+    async leaveWorkspace() {
+      await this.$store.dispatch(REMOVE_WORKSPACE, this.workspace.id);
     },
   },
 });

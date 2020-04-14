@@ -118,6 +118,7 @@
     },
     "settings": {
       "label": "Workspace settings",
+      "leave": "Leave workspace",
       "workspace": {
         "title": "Workspace settings",
         "name": "Name",
