@@ -69,7 +69,7 @@ import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
-import { FETCH_WORKSPACE, REMOVE_WORKSPACE, FETCH_WORKSPACES } from '@/store/modules/workspaces/actionTypes';
+import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
@@ -127,17 +127,15 @@ export default Vue.extend({
      * Leave current workspace
      */
     async leaveWorkspace() {
-      if (this.workspace) {
-        try {
-          await this.$store.dispatch(REMOVE_WORKSPACE, this.workspace.id);
-          this.$router.push({ path: '/' });
-        } catch (e) {
-          notifier.show({
-            message: this.$i18n.t('workspaces.settings.leaveError').toString(),
-            style: 'error',
-            time: 10000,
-          });
-        }
+      try {
+        await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
+        this.$router.push({ path: '/' });
+      } catch (e) {
+        notifier.show({
+          message: this.$i18n.t('workspaces.settings.leaveError').toString(),
+          style: 'error',
+          time: 10000,
+        });
       }
     },
   },

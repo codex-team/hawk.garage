@@ -2,7 +2,7 @@
 import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
-  REMOVE_WORKSPACE,
+  LEAVE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
   INVITE_TO_WORKSPACE,
   CONFIRM_INVITE,
@@ -117,7 +117,7 @@ const actions = {
    * @param {function} commit - standard Vuex commit function
    * @param {string} workspaceId - id of workspace for deleting
    */
-  async [REMOVE_WORKSPACE]({ commit }, workspaceId) {
+  async [LEAVE_WORKSPACE]({ commit }, workspaceId) {
     await workspaceApi.leaveWorkspace(workspaceId);
 
     commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
