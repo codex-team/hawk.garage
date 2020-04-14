@@ -1,5 +1,5 @@
 <template>
-  <div class="viewed-by">
+  <div class="viewed-by" v-if="users.length > 0">
     <Icon symbol="eye" />
     <EntityImage
       v-for="user in shownUsers"
