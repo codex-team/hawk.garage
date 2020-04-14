@@ -126,7 +126,9 @@ export default Vue.extend({
      * Leave current workspace
      */
     async leaveWorkspace() {
-      await this.$store.dispatch(REMOVE_WORKSPACE, this.workspace.id);
+      if (this.workspace) {
+        await this.$store.dispatch(REMOVE_WORKSPACE, this.workspace.id);
+      }
     },
   },
 });
