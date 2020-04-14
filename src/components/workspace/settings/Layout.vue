@@ -68,7 +68,7 @@
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
-import Icon from '../../utils/Icon';
+import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, REMOVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
