@@ -95,6 +95,18 @@ export const MUTATION_INVITE_TO_WORKSPACE = `
 
 // language=GraphQL
 /**
+ * Mutation to leave workspace
+ */
+export const MUTATION_LEAVE_WORKSPACE = `
+  mutation leaveWorkspace(
+    $workspaceId: ID!
+  ) {
+    leaveWorkspace(workspaceId: $workspaceId)
+  }
+`;
+
+// language=GraphQL
+/**
  * Mutation to confirm user invitation
  */
 export const MUTATION_CONFIRM_INVITE = `
