@@ -72,6 +72,7 @@ import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, REMOVE_WORKSPACE, FETCH_WORKSPACES } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsLayout',
@@ -127,9 +128,16 @@ export default Vue.extend({
      */
     async leaveWorkspace() {
       if (this.workspace) {
-        await this.$store.dispatch(REMOVE_WORKSPACE, this.workspace.id);
-
-        this.$router.push({ path: '/' });
+        try {
+          await this.$store.dispatch(REMOVE_WORKSPACE, this.workspace.id);
+          this.$router.push({ path: '/' });
+        } catch (e) {
+          notifier.show({
+            message: (this.$i18n.t('workspaces.settings.leaveError')).toString(),
+            style: 'error',
+            time: 10000,
+          });
+        }
       }
     },
   },

@@ -119,6 +119,7 @@
     "settings": {
       "label": "Workspace settings",
       "leave": "Leave workspace",
+      "leaveError": "You can't leave this workspace because you are the last admin",
       "workspace": {
         "title": "Workspace settings",
         "name": "Name",
