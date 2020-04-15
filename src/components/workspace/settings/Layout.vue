@@ -40,9 +40,9 @@
         <!--        >-->
         <!--          {{ $t('workspaces.settings.billing.title') }}-->
         <!--        </router-link>-->
-        <hr class="delimiter">
+        <hr class="delimiter workspace-settings__delimiter">
         <div
-          class="settings-window__menu-item settings-window__menu-item--attention"
+          class="settings-window__menu-item workspace-settings__menu-item settings-window__menu-item--attention"
           @click="leaveWorkspace"
         >
           {{ $t('workspaces.settings.leave') }}
@@ -165,6 +165,10 @@ export default Vue.extend({
     &__menu-item {
       width: 200px;
       margin-left: 0;
+    }
+
+    &__delimiter {
+      margin-left: 10px;
     }
   }
 </style>
