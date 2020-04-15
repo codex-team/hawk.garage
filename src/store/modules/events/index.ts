@@ -363,7 +363,7 @@ const module: Module<EventsModuleState, RootState> = {
        * Inserts days that don't contain errors
        */
       for (let time = firstMidnight, index = 0; time < now; time += day) {
-        if (index < groupedData.length && groupedData[index].timestamp <= time) {
+        if (index < groupedData.length && new Date(groupedData[index].timestamp).getDate() == new Date(time).getDate()) {
           result.push({
             timestamp: groupedData[index].timestamp,
             totalCount: groupedData[index].totalCount
