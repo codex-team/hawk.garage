@@ -19,9 +19,9 @@
       </router-link>
     </div>
     <Icon
+      v-if="isAdmin"
       class="workspace-info__project-creation-button"
       symbol="plus"
-      v-if="isAdmin"
       @click.native="createProjectButtonClicked"
     />
   </div>
@@ -47,20 +47,21 @@ export default {
       required: true,
     },
   },
-  methods: {
-    createProjectButtonClicked() {
-      this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
-    },
-  },
   computed: {
     /**
      * @return {boolean} - is the user admin for this workspace
      */
     isAdmin() {
-      const userId =  this.$store.state.user.data.id;
+      const userId = this.$store.state.user.data.id;
+
       return this.workspace.team.some(team => team.user.id == userId && team.isAdmin);
-    }
-  }
+    },
+  },
+  methods: {
+    createProjectButtonClicked() {
+      this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
+    },
+  },
 };
 </script>
 
