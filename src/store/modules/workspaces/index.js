@@ -27,6 +27,7 @@ const mutationTypes = {
   REMOVE_WORKSPACE: 'REMOVE_WORKSPACE', // Remove workspace from the list
   SET_WORKSPACES_LIST: 'SET_WORKSPACES_LIST', // Set new workspaces list
   SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE', // Set current user workspace,
+  REMOVE_CURRENT_WORKSPACE: 'REMOVE_CURRENT_WORKSPACE', // Remove current user workspace
   ADD_PENDING_MEMBER: 'ADD_PENDING_MEMBER', // Add user to workspace
   REMOVE_MEMBER: 'REMOVE_MEMBER', // Remove user from workspace
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
@@ -120,6 +121,7 @@ const actions = {
   async [LEAVE_WORKSPACE]({ commit }, workspaceId) {
     await workspaceApi.leaveWorkspace(workspaceId);
 
+    commit(mutationTypes.REMOVE_CURRENT_WORKSPACE);
     commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
   },
 
@@ -360,6 +362,14 @@ const mutations = {
    */
   [mutationTypes.SET_CURRENT_WORKSPACE](state, workspace) {
     state.current = workspace;
+  },
+
+  /**
+   * Removes current user workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   */
+  [mutationTypes.REMOVE_CURRENT_WORKSPACE](state) {
+    state.current = null;
   },
 
   /**
