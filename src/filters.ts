@@ -45,9 +45,9 @@ Vue.filter('abbreviation', function (value: string): string {
     return '';
   }
 
-  const words = value.split(' ');
+  const words = value.split(' ').filter(word => word.length > 0);
 
-  return (words.length === 1 || !words[1].length ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
+  return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
 });
 
 /**
