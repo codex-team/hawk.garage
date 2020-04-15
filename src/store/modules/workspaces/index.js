@@ -13,6 +13,7 @@ import {
   GET_TRANSACTIONS,
   FETCH_WORKSPACES
 } from './actionTypes';
+import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
@@ -27,7 +28,6 @@ const mutationTypes = {
   REMOVE_WORKSPACE: 'REMOVE_WORKSPACE', // Remove workspace from the list
   SET_WORKSPACES_LIST: 'SET_WORKSPACES_LIST', // Set new workspaces list
   SET_CURRENT_WORKSPACE: 'SET_CURRENT_WORKSPACE', // Set current user workspace,
-  REMOVE_CURRENT_WORKSPACE: 'REMOVE_CURRENT_WORKSPACE', // Remove current user workspace
   ADD_PENDING_MEMBER: 'ADD_PENDING_MEMBER', // Add user to workspace
   REMOVE_MEMBER: 'REMOVE_MEMBER', // Remove user from workspace
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
@@ -116,12 +116,14 @@ const actions = {
   /**
    * Send request to delete workspace
    * @param {function} commit - standard Vuex commit function
+   * @param {function} dispatch - standard Vuex dispatch function
    * @param {string} workspaceId - id of workspace for deleting
    */
-  async [LEAVE_WORKSPACE]({ commit }, workspaceId) {
+  async [LEAVE_WORKSPACE]({ commit, dispatch }, workspaceId) {
     await workspaceApi.leaveWorkspace(workspaceId);
 
-    commit(mutationTypes.REMOVE_CURRENT_WORKSPACE);
+    dispatch(REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
+    commit(mutationTypes.SET_CURRENT_WORKSPACE, null);
     commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
   },
 
@@ -358,18 +360,10 @@ const mutations = {
   /**
    * Sets current user workspace
    * @param {WorkspacesModuleState} state - Vuex state
-   * @param {Workspace} workspace - new current user workspace
+   * @param {Workspace | null} workspace - new current user workspace
    */
   [mutationTypes.SET_CURRENT_WORKSPACE](state, workspace) {
     state.current = workspace;
-  },
-
-  /**
-   * Removes current user workspace
-   * @param {WorkspacesModuleState} state - Vuex state
-   */
-  [mutationTypes.REMOVE_CURRENT_WORKSPACE](state) {
-    state.current = null;
   },
 
   /**

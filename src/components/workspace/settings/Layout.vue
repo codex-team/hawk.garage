@@ -70,7 +70,6 @@ import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
-import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '@/store/modules/projects/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
@@ -130,7 +129,6 @@ export default Vue.extend({
     async leaveWorkspace() {
       try {
         await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
-        await this.$store.dispatch(REMOVE_PROJECTS_BY_WORKSPACE_ID, this.workspace!.id);
         this.$router.push({ name: 'home' });
       } catch (e) {
         notifier.show({
