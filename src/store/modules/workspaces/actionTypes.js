@@ -14,9 +14,9 @@ export const SET_CURRENT_WORKSPACE = 'SET_CURRENT_WORKSPACE';
 export const CREATE_WORKSPACE = 'CREATE_WORKSPACE';
 
 /**
- * Send request to remove workspace
+ * Leave current workspace
  */
-export const REMOVE_WORKSPACE = 'REMOVE_WORKSPACE';
+export const LEAVE_WORKSPACE = 'LEAVE_WORKSPACE';
 
 /**
  * Send request to invite user to workspace
