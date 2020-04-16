@@ -34,8 +34,8 @@
         </router-link>
         <hr class="delimiter">
         <div
-          @click="removeProject"
           class="settings-window__menu-item settings-window__menu-item--attention"
+          @click="removeProject"
         >
           {{ $t('projects.settings.remove') }}
           <Icon
@@ -60,6 +60,7 @@ import Vue from 'vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
+import { REMOVE_PROJECT } from '@/store/modules/projects/actionTypes';
 
 export default Vue.extend({
   name: 'ProjectSettingsWindow',
@@ -74,6 +75,15 @@ export default Vue.extend({
      */
     project(): Project {
       return this.$store.getters.getProjectById(this.$route.params.projectId);
+    },
+  },
+  methods: {
+    /**
+     * Remove current project
+     */
+    async removeProject() {
+      await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
+      this.$router.push({ name: 'home' });
     },
   },
 });

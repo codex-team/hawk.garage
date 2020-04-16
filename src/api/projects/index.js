@@ -36,7 +36,7 @@ export async function updateProject(projectInfo) {
  * @return {Promise<boolean>}
  */
 export async function removeProject(projectId) {
-  return (await api.call(MUTATION_REMOVE_PROJECT, projectId)).removeProject;
+  return (await api.call(MUTATION_REMOVE_PROJECT, { projectId })).removeProject;
 }
 
 /**
