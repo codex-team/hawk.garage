@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     /**
-     * @return {boolean} - is the user admin for this workspace
+     * @return {boolean} - shows whether the current user is an admin for this workspace
      */
     isAdmin() {
       const userId = this.$store.state.user.data.id;
