@@ -65,6 +65,7 @@ import SettingsWindow from '../../settings/Window.vue';
 import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
 import { REMOVE_PROJECT } from '@/store/modules/projects/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ProjectSettingsWindow',
@@ -95,8 +96,16 @@ export default Vue.extend({
      * Remove current project
      */
     async removeProject() {
-      await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
-      this.$router.push({ name: 'home' });
+      try {
+        await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
+        this.$router.push({ name: 'home' });
+      } catch {
+        notifier.show({
+          message: this.$i18n.t('projects.settings.removeError').toString(),
+          style: 'error',
+          time: 10000,
+        });
+      }
     },
   },
 });
