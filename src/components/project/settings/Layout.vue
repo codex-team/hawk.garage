@@ -33,8 +33,8 @@
           {{ $t('projects.settings.notifications.title') }}
         </router-link>
         <hr
-          class="delimiter"
           v-if="isAdmin"
+          class="delimiter"
         >
         <div
           v-if="isAdmin"
@@ -86,9 +86,8 @@ export default Vue.extend({
      */
     isAdmin(): boolean {
       const workspace = this.$store.getters.getWorkspaceByProjectId(this.$route.params.projectId);
-      const userId = this.$store.state.user.data.id;
 
-      return workspace.team.some(team => team.user.id == userId && team.isAdmin);
+      return this.$store.getters.isCurrentUserAdmin(workspace.id);
     },
   },
   methods: {
