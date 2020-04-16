@@ -40,6 +40,17 @@
         <!--        >-->
         <!--          {{ $t('workspaces.settings.billing.title') }}-->
         <!--        </router-link>-->
+        <hr class="delimiter workspace-settings__delimiter">
+        <div
+          class="settings-window__menu-item workspace-settings__menu-item settings-window__menu-item--attention"
+          @click="leaveWorkspace"
+        >
+          {{ $t('workspaces.settings.leave') }}
+          <Icon
+            class="settings-window__menu-icon"
+            symbol="logout"
+          />
+        </div>
       </div>
     </template>
 
@@ -57,15 +68,18 @@
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
-import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import Icon from '../../utils/Icon.vue';
+import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsLayout',
   components: {
     SettingsWindow,
     EntityImage,
+    Icon,
   },
   data() {
     return {
@@ -108,6 +122,22 @@ export default Vue.extend({
     updateWorkspace() {
       this.workspace = this.$store.getters.getWorkspaceById(this.$route.params.workspaceId);
     },
+
+    /**
+     * Leave current workspace
+     */
+    async leaveWorkspace() {
+      try {
+        await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
+        this.$router.push({ name: 'home' });
+      } catch (e) {
+        notifier.show({
+          message: this.$i18n.t('workspaces.settings.leaveError').toString(),
+          style: 'error',
+          time: 10000,
+        });
+      }
+    },
   },
 });
 </script>
@@ -135,6 +165,10 @@ export default Vue.extend({
     &__menu-item {
       width: 200px;
       margin-left: 0;
+    }
+
+    &__delimiter {
+      margin-left: 10px;
     }
   }
 </style>
