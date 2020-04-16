@@ -6,7 +6,7 @@
       class="project-placeholder__icon"
       symbol="plant"
     />
-    No project selected
+    {{ $t('projects.placeholder') }}
   </div>
 </template>
 
