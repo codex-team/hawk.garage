@@ -19,6 +19,7 @@
       </router-link>
     </div>
     <Icon
+      v-if="isAdmin"
       class="workspace-info__project-creation-button"
       symbol="plus"
       @click.native="createProjectButtonClicked"
@@ -44,6 +45,16 @@ export default {
     workspace: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    /**
+     * @return {boolean} - shows whether the current user is an admin for this workspace
+     */
+    isAdmin() {
+      const userId = this.$store.state.user.data.id;
+
+      return this.workspace.team.some(team => team.user.id == userId && team.isAdmin);
     },
   },
   methods: {
