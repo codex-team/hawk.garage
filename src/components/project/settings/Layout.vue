@@ -32,8 +32,12 @@
         >
           {{ $t('projects.settings.notifications.title') }}
         </router-link>
-        <hr class="delimiter">
+        <hr
+          class="delimiter"
+          v-if="isAdmin"
+        >
         <div
+          v-if="isAdmin"
           class="settings-window__menu-item settings-window__menu-item--attention"
           @click="removeProject"
         >
@@ -75,6 +79,16 @@ export default Vue.extend({
      */
     project(): Project {
       return this.$store.getters.getProjectById(this.$route.params.projectId);
+    },
+
+    /**
+     * Is user admin in workspace with this project
+     */
+    isAdmin(): boolean {
+      const workspace = this.$store.getters.getWorkspaceByProjectId(this.$route.params.projectId);
+      const userId = this.$store.state.user.data.id;
+
+      return workspace.team.some(team => team.user.id == userId && team.isAdmin);
     },
   },
   methods: {
