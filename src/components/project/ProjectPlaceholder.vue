@@ -30,6 +30,7 @@ export default Vue.extend({
     justify-content: center;
     align-items: center;
     font-size: 14px;
+    font-weight: bold;
     opacity: .6;
 
     &__icon {
