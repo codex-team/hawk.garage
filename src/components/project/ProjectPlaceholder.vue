@@ -31,7 +31,7 @@ export default Vue.extend({
     align-items: center;
     font-size: 14px;
     font-weight: bold;
-    opacity: .6;
+    color: var(--color-text-second);
 
     &__icon {
       display: block;
