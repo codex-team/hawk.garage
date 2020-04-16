@@ -32,6 +32,21 @@
         >
           {{ $t('projects.settings.notifications.title') }}
         </router-link>
+        <hr
+          class="delimiter"
+          v-if="isAdmin"
+        >
+        <div
+          v-if="isAdmin"
+          class="settings-window__menu-item settings-window__menu-item--attention"
+          @click="removeProject"
+        >
+          {{ $t('projects.settings.remove') }}
+          <Icon
+            class="settings-window__menu-icon"
+            symbol="rubbish"
+          />
+        </div>
       </div>
     </template>
 
@@ -47,12 +62,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import SettingsWindow from '../../settings/Window.vue';
+import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
+import { REMOVE_PROJECT } from '@/store/modules/projects/actionTypes';
 
 export default Vue.extend({
   name: 'ProjectSettingsWindow',
   components: {
     SettingsWindow,
+    Icon,
   },
   computed: {
     /**
@@ -61,6 +79,25 @@ export default Vue.extend({
      */
     project(): Project {
       return this.$store.getters.getProjectById(this.$route.params.projectId);
+    },
+
+    /**
+     * Is user admin in workspace with this project
+     */
+    isAdmin(): boolean {
+      const workspace = this.$store.getters.getWorkspaceByProjectId(this.$route.params.projectId);
+      const userId = this.$store.state.user.data.id;
+
+      return workspace.team.some(team => team.user.id == userId && team.isAdmin);
+    },
+  },
+  methods: {
+    /**
+     * Remove current project
+     */
+    async removeProject() {
+      await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
+      this.$router.push({ name: 'home' });
     },
   },
 });
