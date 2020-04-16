@@ -96,6 +96,25 @@ const getters = {
 
       return workspace.team.find(_member => !isPendingMember(_member) && _member.user.id === user.id);
     },
+
+  /**
+   * Is current user admin in workspace
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {object} getters - getters of the this module
+   * @param {object} rootState - vuex root state
+   * @return {function(*): Boolean}
+   */
+  isCurrentUserAdmin: (state, getters, rootState) =>
+    /**
+     * @param workspaceId - workspace id to check
+     * @return {boolean}
+     */
+    (workspaceId) => {
+      const workspace = getters.getWorkspaceById(workspaceId);
+      const userId = rootState.user.data.id;
+
+      return workspace.team.some(member => member.user.id === userId && member.isAdmin);
+    },
 };
 
 const actions = {
