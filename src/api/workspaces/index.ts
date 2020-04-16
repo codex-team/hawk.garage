@@ -1,6 +1,7 @@
 import {
   MUTATION_CONFIRM_INVITE,
   MUTATION_CREATE_WORKSPACE,
+  MUTATION_LEAVE_WORKSPACE,
   MUTATION_GRANT_ADMIN_PERMISSIONS,
   MUTATION_INVITE_TO_WORKSPACE,
   MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
@@ -32,6 +33,14 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
   const { image, ...rest } = workspaceInfo;
 
   return (await api.call(MUTATION_CREATE_WORKSPACE, rest, { image })).createWorkspace;
+}
+
+/**
+ * Leave workspace
+ * @param {string} workspaceId - id of workspace to leave
+ */
+export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
+  return (await api.call(MUTATION_LEAVE_WORKSPACE, { workspaceId })).leaveWorkspace;
 }
 
 /**
