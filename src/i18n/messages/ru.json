@@ -30,6 +30,7 @@
     "searchField": "Поиск"
   },
   "projects": {
+    "placeholder": "Выберите проект",
     "creationDialog": {
       "description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",
       "projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",
