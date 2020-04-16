@@ -39,6 +39,7 @@
       "workspaceSelectLabel": "SELECT WORKSPACE"
     },
     "settings": {
+      "remove": "Remove project",
       "general": {
         "title": "Project settings",
         "image": "Image",

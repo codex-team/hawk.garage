@@ -39,6 +39,7 @@
       "workspaceSelectLabel": "Выбрать воркспейс"
     },
     "settings": {
+      "remove": "Удалить проект",
       "general": {
         "title": "Настройки проекта",
         "image": "Изображение",

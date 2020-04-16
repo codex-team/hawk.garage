@@ -32,6 +32,17 @@
         >
           {{ $t('projects.settings.notifications.title') }}
         </router-link>
+        <hr class="delimiter">
+        <div
+          @click="removeProject"
+          class="settings-window__menu-item settings-window__menu-item--attention"
+        >
+          {{ $t('projects.settings.remove') }}
+          <Icon
+            class="settings-window__menu-icon"
+            symbol="rubbish"
+          />
+        </div>
       </div>
     </template>
 
@@ -47,12 +58,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import SettingsWindow from '../../settings/Window.vue';
+import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
 
 export default Vue.extend({
   name: 'ProjectSettingsWindow',
   components: {
     SettingsWindow,
+    Icon,
   },
   computed: {
     /**
