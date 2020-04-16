@@ -31,6 +31,7 @@
         v-if="$route.params.projectId"
         class="app-shell__project-header"
       />
+      <ProjectPlaceholder v-if="!$route.params.projectId" />
       <router-view :key="$route.params.projectId" />
     </div>
     <component
@@ -50,6 +51,7 @@ import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
 import ProjectHeader from './project/ProjectHeader';
+import ProjectPlaceholder from './project/ProjectPlaceholder';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState } from 'vuex';
@@ -63,6 +65,7 @@ export default {
     SearchField,
     WorkspaceInfo,
     ProjectHeader,
+    ProjectPlaceholder,
   },
   data() {
     return {
