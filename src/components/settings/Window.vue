@@ -65,8 +65,8 @@ export default {
       width: 220px;
       height: 34px;
       margin: 3px -10px;
-      padding-right: 10px;
       padding-left: 10px;
+      padding-right: 10px;
       font-weight: 500;
       line-height: 34px;
       border-radius: 3px;
