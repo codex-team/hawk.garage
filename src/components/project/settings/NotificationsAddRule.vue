@@ -110,7 +110,7 @@ import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import {
   ProjectNotificationsAddRulePayload,
-  ProjectNotificationsUpdateRulePayload,
+  ProjectNotificationsUpdateRulePayload
 } from '@/types/project-notifications-mutations';
 import { deepMerge } from '@/utils';
 import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
@@ -282,7 +282,6 @@ export default Vue.extend({
 
           successMessage = this.$t('projects.settings.notifications.updateRuleSuccessMessage');
         }
-
 
         this.isWaitingForResponse = false;
         this.isFormInvalid = false;
