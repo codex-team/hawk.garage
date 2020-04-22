@@ -22,6 +22,7 @@
           class="project-creation-dialog__text-field"
           name="projectName"
           type="text"
+          required
           :label="$t('projects.creationDialog.projectNameLabel')"
         />
         <ImageUploader
