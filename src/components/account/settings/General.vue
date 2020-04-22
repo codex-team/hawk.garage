@@ -25,6 +25,7 @@
         v-model="email"
         class="account-settings__section"
         :label="$t('settings.account.email')"
+        required
         placeholder="example@example.com"
         @input="showSubmitButton = true"
       />
