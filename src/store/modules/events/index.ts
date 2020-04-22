@@ -12,8 +12,8 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload } from '@/types/events';
-import { ReceiveTypes } from '@/types/project-notifications';
+import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
+import { User } from '@/types/user';
 
 /**
  * Root store state
@@ -455,13 +455,13 @@ const module: Module<EventsModuleState, RootState> = {
     async [VISIT_EVENT]({ commit, rootState }, { projectId, eventId }): Promise<void> {
       const result = await eventsApi.visitEvent(projectId, eventId);
 
-      const userId = (rootState as RootState).user.data.id;
+      const user = (rootState as RootState).user.data;
 
       if (result) {
         commit(MutationTypes.MARK_AS_VISITED, {
           projectId,
           eventId,
-          userId,
+          user,
         });
       }
     },
@@ -619,13 +619,13 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state
      * @param {string} projectId - project event is related to
      * @param {string} eventId - visited event
-     * @param {string} userId - user who visited event
+     * @param {User} user - user who visited event
      */
-    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId, userId }) {
+    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId, user }) {
       const key = getEventsListKey(projectId, eventId);
 
       const event = state.list[key];
-      const visitedBy = new Set([...(event.visitedBy ? event.visitedBy : []), userId]);
+      const visitedBy = new Set([...(event.visitedBy || []), user]);
 
       Vue.set(state.list[key], 'visitedBy', Array.from(visitedBy));
     },

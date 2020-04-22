@@ -1,6 +1,7 @@
 import {
   MUTATION_CONFIRM_INVITE,
   MUTATION_CREATE_WORKSPACE,
+  MUTATION_LEAVE_WORKSPACE,
   MUTATION_GRANT_ADMIN_PERMISSIONS,
   MUTATION_INVITE_TO_WORKSPACE,
   MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
@@ -35,11 +36,22 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
 }
 
 /**
+ * Leave workspace
+ * @param {string} workspaceId - id of workspace to leave
+ */
+export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
+  return (await api.call(MUTATION_LEAVE_WORKSPACE, { workspaceId })).leaveWorkspace;
+}
+
+/**
  * Returns all user's workspaces and project.
  * @return {Promise<[Workspace]>}
  */
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
-  return (await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, { initial: true })).workspaces;
+  return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
+    initial: true,
+    allowErrors: true,
+  });
 }
 
 /**

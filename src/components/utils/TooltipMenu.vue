@@ -1,6 +1,10 @@
 <template>
   <div class="tooltip-menu">
-    <div class="tooltip-menu__dots" />
+    <Icon
+      symbol="dots-vertical"
+      width="3"
+      height="15"
+    />
     <div class="tooltip-menu__popup">
       <div
         v-for="option in options"
@@ -16,6 +20,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import Icon from './Icon.vue';
 
 /**
  * Represents single item of a menu
@@ -34,6 +39,9 @@ export interface TooltipMenuItem {
 
 export default Vue.extend({
   name: 'TooltipMenu',
+  components: {
+    Icon,
+  },
   props: {
     /**
      * Menu items
@@ -50,12 +58,28 @@ export default Vue.extend({
   .tooltip-menu {
     position: relative;
     margin-right: -8px;
-    padding: 6px 15px 6px 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--border-radius);
     cursor: pointer;
+
+    .icon {
+      color: var(--color-text-second);
+    }
+
+    &:hover {
+      .icon {
+        color: var(--color-text-main)
+      }
+    }
 
     &__popup {
       position: absolute;
-      top: 6px;
+      top: 50%;
+      left: 100%;
       color: var(--color-bg-main);
       font-weight: 500;
       font-size: 14px;
@@ -65,7 +89,7 @@ export default Vue.extend({
       border: 2px solid var(--color-text-main);
       border-radius: 10px;
       box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
-      transform: translate3d(22px, -50%, 0);
+      transform: translate3d(0, -50%, 0);
       opacity: 0;
       transition: opacity .1s ease-in;
       pointer-events: none;
@@ -87,29 +111,6 @@ export default Vue.extend({
     &:hover &__popup {
       opacity: 1;
       pointer-events: auto;
-    }
-
-    &__dots {
-      position: relative;
-      width: 3px;
-      height: 3px;
-      background-color: var(--color-text-second);
-
-      &::before, &::after {
-        position: absolute;
-        width: 3px;
-        height: 3px;
-        background-color: var(--color-text-second);
-        content: '';
-      }
-
-      &::before {
-        top: -6px;
-      }
-
-      &::after {
-        top: 6px;
-      }
     }
 
     &__option {

@@ -30,6 +30,7 @@
     "searchField": "Search"
   },
   "projects": {
+    "placeholder": "No project selected",
     "creationDialog": {
       "description": "To start track events from your application, add it as a Project and get an Integration Token.",
       "projectNameLabel": "PROJECT NAME",
@@ -58,6 +59,8 @@
         "addRuleSubmit": "Start receiving",
         "addRuleCancel": "Close form",
         "addRuleSuccessMessage": "New rule added",
+        "updateRuleSubmit": "Update the rule",
+        "updateRuleSuccessMessage": "Rule updated",
         "rulesList": "Rules",
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",
@@ -116,6 +119,8 @@
     },
     "settings": {
       "label": "Workspace settings",
+      "leave": "Leave workspace",
+      "leaveError": "You can't leave this workspace because you are the last admin",
       "workspace": {
         "title": "Workspace settings",
         "name": "Name",

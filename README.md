@@ -17,6 +17,14 @@ Hawk 2.0 web client
 1. Build image from `Dockerfile`: `docker image build . -t hawk_garage`
 2. Run container: `docker run -it -p 8080:8080 --rm hawk_garage`
 
+## Storybook
+
+Storybook is a components explorer. It is used to explore components UI and behaviour and to develop them in isolation.
+
+To add story, create a folder for component in [src/storybook/stories](src/storybook/stories). In a folder create `.ts` [file for story](https://www.learnstorybook.com/intro-to-storybook/vue/en/simple-component/) and `.mdx` [file for story docs](https://github.com/storybookjs/storybook/tree/master/addons/docs).
+
+To run storybook, use `yarn storybook` command
+
 # Useful command
 1. `yarn lint:js` - runs eslint to check files with `.js` and `.vue` extensions.
 2. `yarn lint:css` - runs stylelint to check files with `.css` and `.vue` extensions.

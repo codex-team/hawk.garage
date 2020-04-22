@@ -47,6 +47,10 @@
           @click="logout"
         >
           {{ $t('settings.logout') }}
+          <Icon
+            class="settings-window__menu-icon"
+            symbol="logout"
+          />
         </div>
       </div>
     </template>
@@ -63,6 +67,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import SettingsWindow from '../../settings/Window.vue';
+import Icon from '@/components/utils/Icon.vue';
 import { RESET_STORE } from '@/store/methodsTypes';
 import { User } from '@/types/user';
 
@@ -70,6 +75,7 @@ export default Vue.extend({
   name: 'AccountSettingsLayout',
   components: {
     SettingsWindow,
+    Icon,
   },
   computed: {
     /**

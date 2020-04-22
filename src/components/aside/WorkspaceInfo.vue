@@ -5,6 +5,7 @@
       class="workspace-info__image"
       :name="workspace.name"
       :image="workspace.image"
+      size="36"
     />
     <div class="workspace-info__wrapper">
       <div class="workspace-info__name">
@@ -18,6 +19,7 @@
       </router-link>
     </div>
     <Icon
+      v-if="isAdmin"
       class="workspace-info__project-creation-button"
       symbol="plus"
       @click.native="createProjectButtonClicked"
@@ -45,6 +47,16 @@ export default {
       required: true,
     },
   },
+  computed: {
+    /**
+     * @return {boolean} - shows whether the current user is an admin for this workspace
+     */
+    isAdmin() {
+      const userId = this.$store.state.user.data.id;
+
+      return this.workspace.team.some(team => team.user.id == userId && team.isAdmin);
+    },
+  },
   methods: {
     createProjectButtonClicked() {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
@@ -66,9 +78,6 @@ export default {
     }
 
     &__image {
-      flex-shrink: 0;
-      width: 36px;
-      height: 36px;
       margin-right: 15px;
     }
 

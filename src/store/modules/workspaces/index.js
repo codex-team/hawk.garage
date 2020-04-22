@@ -2,7 +2,7 @@
 import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
-  REMOVE_WORKSPACE,
+  LEAVE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
   INVITE_TO_WORKSPACE,
   CONFIRM_INVITE,
@@ -13,6 +13,7 @@ import {
   GET_TRANSACTIONS,
   FETCH_WORKSPACES
 } from './actionTypes';
+import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
@@ -115,12 +116,15 @@ const actions = {
   /**
    * Send request to delete workspace
    * @param {function} commit - standard Vuex commit function
+   * @param {function} dispatch - standard Vuex dispatch function
    * @param {string} workspaceId - id of workspace for deleting
    */
-  async [REMOVE_WORKSPACE]({ commit }, workspaceId) {
-    // await workspaceApi.deleteWorkspace(workspaceId);
-    //
-    // commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
+  async [LEAVE_WORKSPACE]({ commit, dispatch }, workspaceId) {
+    await workspaceApi.leaveWorkspace(workspaceId);
+
+    dispatch(REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
+    commit(mutationTypes.SET_CURRENT_WORKSPACE, null);
+    commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
   },
 
   /**
@@ -356,7 +360,7 @@ const mutations = {
   /**
    * Sets current user workspace
    * @param {WorkspacesModuleState} state - Vuex state
-   * @param {Workspace} workspace - new current user workspace
+   * @param {Workspace | null} workspace - new current user workspace
    */
   [mutationTypes.SET_CURRENT_WORKSPACE](state, workspace) {
     state.current = workspace;

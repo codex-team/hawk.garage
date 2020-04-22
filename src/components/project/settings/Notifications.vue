@@ -12,7 +12,7 @@
         {{ $t('projects.settings.notifications.addRule') }}
       </div>
       <AddRule
-        v-if="addRuleOpened || ruleUnderEditing || (!rules || !rules.length)"
+        v-if="addRuleOpened"
         :rule="ruleUnderEditing"
         :project-id="project.id"
         @cancel="closeForm"
@@ -134,6 +134,14 @@ export default Vue.extend({
       return (this.currentMembership as ConfirmedMember).isAdmin;
     },
   },
+  mounted(): void {
+    /**
+     * If no one rules added, open add-rule form
+     */
+    if (!this.rules || this.rules.length === 0) {
+      this.addRuleOpened = true;
+    }
+  },
   methods: {
     /**
      * User clicks on 'Edit Rule button'
@@ -141,6 +149,7 @@ export default Vue.extend({
      */
     editRule(ruleId: string): void {
       this.ruleUnderEditingId = ruleId;
+      this.addRuleOpened = true;
     },
 
     /**

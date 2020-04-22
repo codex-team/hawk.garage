@@ -1,4 +1,3 @@
-const HtmlWebpackInlineSVGPlugin = require('html-webpack-inline-svg-plugin');
 const HawkWebpackPlugin = require('@hawk.so/webpack-plugin');
 const path = require('path');
 
@@ -10,11 +9,7 @@ require('dotenv').config();
 /**
  * Extendable plugins list
  */
-const plugins = [
-  new HtmlWebpackInlineSVGPlugin({
-    runPreEmit: true,
-  }),
-];
+const plugins = [];
 
 /**
  * Current build revision id
@@ -63,6 +58,35 @@ module.exports = {
 
       return definitions;
     });
+
+    config.module.rule('svg-sprite').use('svgo-loader')
+      .loader('svgo-loader');
+
+    /**
+     * Get tsconfig based on NODE_ENV
+     */
+    const tsConfigFile = process.env.NODE_ENV === 'production' ? 'tsconfig.production.json' : 'tsconfig.json';
+
+    config.module.rule('ts').use('ts-loader')
+      .loader('ts-loader')
+      .tap(options => {
+        options.configFile = tsConfigFile;
+
+        return options;
+      });
+    config.module.rule('tsx').use('ts-loader')
+      .loader('ts-loader')
+      .tap(options => {
+        options.configFile = tsConfigFile;
+
+        return options;
+      });
+
+    config.plugin('fork-ts-checker').tap(options => {
+      options[0].tsconfig = path.resolve(tsConfigFile);
+
+      return options;
+    });
   },
   pwa: {
     name: 'hawk.so',
@@ -72,4 +96,19 @@ module.exports = {
     },
   },
   assetsDir: 'static',
+  pluginOptions: {
+    storybook: {
+      allowedPlugins: ['define', 'svg-sprite'],
+    },
+    svgSprite: {
+      dir: 'src/assets/sprite-icons',
+      test: /\.(svg)(\?.*)?$/,
+      loaderOptions: {
+        spriteFilename: 'img/icons.[hash:8].svg',
+      },
+      pluginOptions: {
+        plainSprite: true,
+      },
+    },
+  },
 };

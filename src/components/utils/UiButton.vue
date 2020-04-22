@@ -7,7 +7,7 @@
       'ui-button--loading': isLoading,
       'ui-button--shaking': shaking,
     }"
-    @click="$emit('click')"
+    @click="$emit('click', $event)"
   >
     <Icon
       v-if="icon"
