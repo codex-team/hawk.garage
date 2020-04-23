@@ -98,8 +98,6 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
   })).toggleEventMark;
 }
 
-
-
 /**
  * Returns latest project events
  * @param {string} projectId - id of the project to fetch recent errors
@@ -109,6 +107,6 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
 export async function fetchChartData(projectId: string, minTimestamp: number): Promise<HawkEventDailyInfo[] | null> {
   return (await api.call(QUERY_CHART_DATA, {
     projectId,
-    minTimestamp
+    minTimestamp,
   })).project.chartData;
 }

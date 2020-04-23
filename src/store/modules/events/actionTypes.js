@@ -37,4 +37,3 @@ export const VISIT_EVENT = 'VISIT_EVENT';
  * Action to set or unset mark to event
  */
 export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';
-
