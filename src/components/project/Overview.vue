@@ -6,7 +6,7 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <Chart v-bind:days="chartData"/>
+      <Chart :days="chartData" />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -60,7 +60,7 @@ export default {
   components: {
     EventItem,
     AssignersList,
-    Chart
+    Chart,
   },
   data() {
     return {
@@ -112,7 +112,10 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
-    this.chartData = await this.$store.dispatch(FETCH_CHART_DATA, {projectId: this.projectId, minTimestamp: ~~(Date.now() / 1000 - 86400 * 16) });
+    this.chartData = await this.$store.dispatch(FETCH_CHART_DATA, {
+      projectId: this.projectId,
+      minTimestamp: ~~(Date.now() / 1000 - 86400 * 16),
+    });
   },
 
   /**

@@ -1,25 +1,20 @@
 <template>
   <div class="project-overview__chart">
-    <div class="project-overview__chart-info" v-if="days.length > 1">
+    <div
+      v-if="days.length > 1"
+      class="project-overview__chart-info"
+    >
       <span class="project-overview__chart-info__today"> today </span>
       <span class="project-overview__chart-info__highlight"> {{ todayCount }} </span>
+
       <span
-        v-if="difference > 0"
-        class="project-overview__chart-info-increase"
+        v-if="difference != 0"
+        :class="{
+          'project-overview__chart-info-increase': difference > 0,
+          'project-overview__chart-info-decrease': difference < 0
+        }"
       >
-        {{ difference | spacedNumber }}
-      </span>
-      <span
-        v-else-if="difference <= 0"
-        class="project-overview__chart-info-decrease"
-      >
-        {{ -difference | spacedNumber }}
-      </span>
-      <span
-        v-else
-        class="project-overview__chart-info-equal"
-      >
-        {{ difference | spacedNumber }}
+        {{ Math.abs(difference) | spacedNumber }}
       </span>
     </div>
     <svg class="project-overview__chart-body">
@@ -71,8 +66,8 @@ export default Vue.extend({
      */
     days: {
       type: Array,
-      default: () => [] as any[]
-    }
+      default: () => [] as any[],
+    },
   },
   data() {
     return {
@@ -97,7 +92,7 @@ export default Vue.extend({
      * @return {number}
      */
     todayCount(): number {
-      return this.days.slice(-1)[0].totalCount;
+      return this.days.slice(-1)[0].totalCount || 0;
     },
 
     /**
@@ -106,7 +101,7 @@ export default Vue.extend({
      * @return {number}
      */
     yesterdayCount(): number {
-      return this.days.slice(-2, -1)[0].totalCount;
+      return this.days.slice(-2, -1)[0].totalCount || 0;
     },
 
     /**
@@ -145,6 +140,11 @@ export default Vue.extend({
       return Math.max(...this.days.map(day => day.totalCount));
     },
   },
+  watch: {
+    days: function () {
+      this.createPolyline();
+    },
+  },
   created() {
     this.onResize = debounce(this.createPolyline, 100);
   },
@@ -166,20 +166,16 @@ export default Vue.extend({
       this.days.forEach((day, index) => {
         const pointX = index * step;
         let pointY = 2;
+
         if (this.maxCount != this.minCount) {
           pointY += (day.totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
         }
 
         points.push(pointX + ' ' + pointY);
       });
-      
+
       this.polylinePoints = points.join(', ');
-    }
-  },
-  watch: {
-    days: function() {
-      this.createPolyline();
-    }
+    },
   },
 });
 </script>
@@ -191,9 +187,8 @@ export default Vue.extend({
     position: relative;
 
     &-info {
-      padding: 15px 0 20px 0;
-      min-width: 100px;
       float: right;
+      padding: 15px 15px 20px 0;
       color: var(--color-text-main);
       font-size: 13px;
       white-space: nowrap;
@@ -207,13 +202,12 @@ export default Vue.extend({
         font-weight: bold;
       }
 
-      &-increase, &-decrease, &-equal {
+      &-increase, &-decrease {
         position: relative;
         font-size: 13px;
         font-weight: bold;
         color: #f15454;
         margin-left: 32px;
-        padding-right: 15px;
       }
 
       &-increase {
@@ -224,7 +218,7 @@ export default Vue.extend({
         color: #2ccf6c;
       }
 
-      &-increase::before, &-decrease::before, &-equal::before {
+      &-increase::before, &-decrease::before {
         content: '';
         position: absolute;
         left: -18px;
