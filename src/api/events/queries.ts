@@ -16,7 +16,7 @@ export const QUERY_CHART_DATA = `
       }
     }
   }
-`
+`;
 
 // language=GraphQL
 /**

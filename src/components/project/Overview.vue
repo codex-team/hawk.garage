@@ -112,10 +112,14 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
-    this.chartData = await this.$store.dispatch(FETCH_CHART_DATA, {
-      projectId: this.projectId,
-      minTimestamp: ~~(Date.now() / 1000 - 86400 * 16),
-    });
+    if (!this.$store.state.events.charts[this.projectId]) {
+      await this.$store.dispatch(FETCH_CHART_DATA, {
+        projectId: this.projectId,
+        minTimestamp: ~~(Date.now() / 1000 - 86400 * 16),
+      });
+    }
+
+    this.chartData = this.$store.state.events.charts[this.projectId];
   },
 
   /**

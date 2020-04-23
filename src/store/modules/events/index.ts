@@ -12,7 +12,7 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition } from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload } from '@/types/events';
 import { User } from '@/types/user';
 
 /**
@@ -54,6 +54,11 @@ enum MutationTypes {
   ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
 
   /**
+   * Save data to be used by chart
+   */
+  ADD_CHART_DATA = 'ADD_CHART_DATA',
+
+  /**
    * Update event payload
    * Used when the event fully fetched with payload to update the state object
    * Because initial fetch request gets data without payload (title, timestamp, totalCount, visited etc.)
@@ -89,6 +94,11 @@ interface EventsModuleState {
    * Event's repetitions map
    */
   repetitions: {[key: string]: HawkEventRepetition[]};
+
+  /**
+   * Chart data for every project
+   */
+  charts: {[key: string]: ChartData[]};
 }
 
 /**
@@ -116,6 +126,11 @@ interface HawkEventsDailyInfoByDate {
   [key: string]: HawkEventDailyInfo[];
 }
 
+interface ChartData {
+  timestamp: number;
+  totalCount: number;
+}
+
 /**
  * Creates and return module state
  */
@@ -123,7 +138,8 @@ function initialState(): EventsModuleState {
   return {
     list: {},
     recent: {},
-    repetitions: {}
+    repetitions: {},
+    charts: {},
   };
 }
 
@@ -203,6 +219,7 @@ const module: Module<EventsModuleState, RootState> = {
         return state.list[key] || null;
       };
     },
+
     /**
      * Returns merged original event with passed repetition from stores
      */
@@ -325,60 +342,62 @@ const module: Module<EventsModuleState, RootState> = {
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
 
-
     /**
      * Get data for displaying the number of errors for each day from a specific timestamp
      * @param {function} commit - standard Vuex commit function
      * @param {string} projectId - id of the project to fetch data
      * @param {number} minTimestamp - timestamp from which we start taking errors
-     * @return {Promise<{timestamp: number, totalCount: number}[]>} - data for the chart
+     * @return {Promise<void>}
      */
-    async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<{timestamp: number, totalCount: number}[]> {
+    async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<void> {
       const chartData = await eventsApi.fetchChartData(projectId, minTimestamp);
       const day = 86400000;
       const now = Date.now();
       const firstMidnight = new Date(minTimestamp * 1000).setHours(24, 0, 0, 0);
 
       if (!chartData) {
-        return [];
+        return;
       }
 
       /**
        * Turning it into a chart format
        */
-      let groupedData = Object.values(groupByGroupingTimestamp(chartData))
-      .reduce((acc: {timestamp: number, totalCount: number}[], val:any, i) => {
+      const values: Array<{groupingTimestamp: number; count: number}[]> = Object.values(groupByGroupingTimestamp(chartData));
+      const groupedData: ChartData[] = values.reduce((acc: ChartData[], val: Array<{groupingTimestamp: number; count: number}>) => {
         acc.push({
           timestamp: val[0].groupingTimestamp * 1000,
-          totalCount: val.reduce((sum, val) => sum + val.count, 0)
+          totalCount: val.reduce((sum, val) => sum + val.count, 0),
         });
 
         return acc;
       }, [])
-      .sort((a, b) => a.timestamp - b.timestamp);
+        .sort((a, b) => a.timestamp - b.timestamp);
 
-      let result: {timestamp: number, totalCount: number}[] = [];
+      const completedData: ChartData[] = [];
 
       /**
        * Inserts days that don't contain errors
        */
       for (let time = firstMidnight, index = 0; time < now; time += day) {
         if (index < groupedData.length && new Date(groupedData[index].timestamp).getDate() == new Date(time).getDate()) {
-          result.push({
+          completedData.push({
             timestamp: groupedData[index].timestamp,
-            totalCount: groupedData[index].totalCount
+            totalCount: groupedData[index].totalCount,
           });
 
           index++;
         } else {
-          result.push({
+          completedData.push({
             timestamp: time,
-            totalCount: 0
+            totalCount: 0,
           });
         }
       }
 
-      return result;
+      commit(MutationTypes.ADD_CHART_DATA, {
+        projectId,
+        data: completedData,
+      });
     },
 
     /**
@@ -594,6 +613,17 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       state.repetitions[key].push(repetition);
+    },
+
+    /**
+     * Add data to store
+     * 
+     * @param {EventsModuleState} state - Vuex state
+     * @param {string} projectId - project's identifier
+     * @param {chartData[]} data - data to add
+     */
+    [MutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
+      state.charts[projectId] = data;
     },
 
     /**
