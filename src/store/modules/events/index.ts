@@ -351,7 +351,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<void> {
       const chartData = await eventsApi.fetchChartData(projectId, minTimestamp);
-      const day = 86400000;
+      const day = 24 * 60 * 60 * 1000;
       const now = Date.now();
       const firstMidnight = new Date(minTimestamp * 1000).setHours(24, 0, 0, 0);
 
@@ -360,7 +360,7 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       /**
-       * Turning it into a chart format
+       * Turning it into a ChartData format
        */
       const values: Array<{groupingTimestamp: number; count: number}[]> = Object.values(groupByGroupingTimestamp(chartData));
       const groupedData: ChartData[] = values.reduce((acc: ChartData[], val: Array<{groupingTimestamp: number; count: number}>) => {
@@ -617,7 +617,7 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Add data to store
-     * 
+     *
      * @param {EventsModuleState} state - Vuex state
      * @param {string} projectId - project's identifier
      * @param {chartData[]} data - data to add
