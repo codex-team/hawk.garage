@@ -99,6 +99,11 @@ export default Vue.extend({
       try {
         await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
         this.$router.push({ name: 'home' });
+        notifier.show({
+          message: this.$i18n.t('projects.settings.removeSuccess').toString(),
+          style: 'success',
+          time: 10000,
+        });
       } catch {
         notifier.show({
           message: this.$i18n.t('projects.settings.removeError').toString(),

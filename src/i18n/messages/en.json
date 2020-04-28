@@ -40,6 +40,7 @@
     },
     "settings": {
       "remove": "Remove project",
+      "removeSuccess": "Project successfully deleted",
       "removeError": "You can't remove this project",
       "general": {
         "title": "Project settings",
