@@ -28,18 +28,17 @@ interface GraphQLError {
   /**
    * Where error occurred - path to file
    */
-  path: string[],
+  path: string[];
   /**
    * Where error occurred - line and col
    */
-  location: {line: number, column: number}[];
+  location: {line: number; column: number}[];
 
   /**
    * Error code and stacktrace
    */
-  extensions: {code: string, exception: {stacktrace: string[]}}
+  extensions: {code: string; exception: {stacktrace: string[]}};
 }
-
 
 /**
  * Print API error to the console
@@ -136,7 +135,7 @@ export async function call(
    * so new request will pass allowErrors=true and get both errors and data
    * @todo refactor old requests same way
    */
-  if (allowErrors){
+  if (allowErrors) {
     return response.data;
   }
 
