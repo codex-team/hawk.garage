@@ -18,11 +18,11 @@ jobs:
 
       - name: Get branch name
         uses: nelonoel/branch-name@v1
-        run: docker tag $DOCKER_IMAGE_NAME ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
 
       - name: Push to registry
         if: endsWith(github.ref, '/stage') || endsWith(github.ref, '/prod')
         run: |
+          docker tag $DOCKER_IMAGE_NAME ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
           docker login ${{ secrets.REGISTRY_ADDRESS }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker push ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
           docker logout
