@@ -21,10 +21,14 @@ jobs:
         run: docker tag $DOCKER_IMAGE_NAME ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
 
       - name: Push to registry
+        if: endsWith(github.ref, '/stage') || endsWith(github.ref, '/prod')
         run: |
           docker login ${{ secrets.REGISTRY_ADDRESS }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker push ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
           docker logout
 
       - name: Deploy
-        run: if ["$BRANCH_NAME" = "stage"]; then curl -X POST -H 'Content-Type: application/json' --data "{\"branch\":\"$BRANCH_NAME\",\"secret_token\":\"${{ secrets.DEPLOY_TOKEN }}\"}" https://stage.hawk.so/deploy ; fi
+        if: endsWith(github.ref, '/stage')
+        run: |
+          DEPLOY_TOKEN=${{ secrets.DEPLOY_TOKEN }}
+          curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"$BRANCH_NAME\",\"secret_token\":\"$DEPLOY_TOKEN\"}" https://stage.hawk.so/deploy
