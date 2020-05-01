@@ -162,9 +162,9 @@ export default Vue.extend({
   methods: {
     /**
      * Logic for create polyline for chart
-     * @return {string} - x y coordinates separated by a comma
+     * Set x y coordinates separated by a comma
      */
-    createPolyline() {
+    createPolyline(): void {
       const step = this.$el.clientWidth / (this.days.length - 1);
       const points : string[] = [];
 

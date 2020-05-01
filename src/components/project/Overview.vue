@@ -64,10 +64,29 @@ export default {
   },
   data() {
     return {
+      /**
+       * Shows if there are no more events or there are
+       */
       noMoreEvents: true,
+
+      /**
+       * Indicates whether items are loading or not.
+       */
       isLoadingEvents: false,
+
+      /**
+       * Indicates whether assigners list are loading or not.
+       */
       isAssignersShowed: false,
+
+      /**
+       * Data for a chart
+       */
       chartData: [],
+
+      /**
+       * Assigners list position in pixels
+       */
       assignersListPosition: {
         top: 0,
         right: 0,
@@ -112,10 +131,14 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
+    
+    // So many days will be displayed in the chart
+    const twoWeeks = Math.floor(Date.now() / 1000 - 86400 * (14 + 2));
+
     if (!this.$store.state.events.charts[this.projectId]) {
       await this.$store.dispatch(FETCH_CHART_DATA, {
         projectId: this.projectId,
-        since: ~~(Date.now() / 1000 - 86400 * 16),
+        since: twoWeeks,
       });
     }
 
