@@ -47,7 +47,7 @@
         :key="index"
         class="project-overview__chart-day"
       >
-        {{ day.timestamp | prettyDateFromTimestamp }}
+        {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
       </span>
     </div>
   </div>

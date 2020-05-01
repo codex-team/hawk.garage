@@ -354,55 +354,10 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_CHART_DATA]({ commit }, { projectId, since }): Promise<void> {
       const chartData = await eventsApi.fetchChartData(projectId, since);
-      const day = 24 * 60 * 60 * 1000;
-      const now = Date.now();
-      const firstMidnight = new Date(since * 1000).setHours(24, 0, 0, 0);
-
-      if (!chartData) {
-        return;
-      }
-
-      /**
-       * Turning it into a ChartData format
-       */
-      const values: Array<{groupingTimestamp: number; count: number}[]> = Object.values(groupByGroupingTimestamp(chartData));
-      const groupedData: ChartData[] = values.reduce((acc: ChartData[], val: Array<{groupingTimestamp: number; count: number}>) => {
-        acc.push({
-          timestamp: val[0].groupingTimestamp * 1000,
-          totalCount: val.reduce((sum, val) => sum + val.count, 0),
-        });
-
-        return acc;
-      }, [])
-        .sort((a, b) => a.timestamp - b.timestamp);
-
-      const completedData: ChartData[] = [];
-
-      /**
-       * Inserts days that don't contain errors
-       */
-      for (let time = firstMidnight, index = 0; time < now; time += day) {
-        // Checks whether there is a date. If not, it means that the event is not there either
-        const isThereDate = index < groupedData.length && new Date(groupedData[index].timestamp).getDate() == new Date(time).getDate();
-
-        if (isThereDate) {
-          completedData.push({
-            timestamp: groupedData[index].timestamp,
-            totalCount: groupedData[index].totalCount,
-          });
-
-          index++;
-        } else {
-          completedData.push({
-            timestamp: time,
-            totalCount: 0,
-          });
-        }
-      }
-
+      
       commit(MutationTypes.ADD_CHART_DATA, {
         projectId,
-        data: completedData,
+        data: chartData,
       });
     },
 

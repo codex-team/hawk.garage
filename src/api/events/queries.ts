@@ -11,8 +11,8 @@ export const QUERY_CHART_DATA = `
   ) {
     project(id: $projectId) {
       chartData(since: $since) {
-        count
-        groupingTimestamp
+        timestamp
+        totalCount
       }
     }
   }
