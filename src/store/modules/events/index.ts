@@ -129,7 +129,7 @@ interface HawkEventsDailyInfoByDate {
 /**
  * Data for displaying one day on the chart
  */
-interface ChartData {
+export interface ChartData {
   timestamp: number;
   totalCount: number;
 }

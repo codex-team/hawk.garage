@@ -56,17 +56,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import { debounce } from '@/utils';
+import { ChartData } from '../../store/modules/events/index';
 
 export default Vue.extend({
   name: 'Chart',
   props: {
     /**
      * List of days with the number of errors per day
-     * @type {any[]}
+     * @type {ChartData[]}
      */
     days: {
-      type: Array,
-      default: () => [] as any[],
+      type: Array as () => ChartData[],
+      default: () => [] as ChartData[],
     },
   },
   data() {
@@ -161,6 +162,7 @@ export default Vue.extend({
   methods: {
     /**
      * Logic for create polyline for chart
+     * @return {string} - x y coordinates separated by a comma
      */
     createPolyline() {
       const step = this.$el.clientWidth / (this.days.length - 1);

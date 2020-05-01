@@ -101,7 +101,7 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
 /**
  * Fetch data for chart
  * @param {string} projectId - id of the project to fetch recent errors
- * @param {number} skip - certain number of documents to skip
+ * @param {number} since - events will be collected no later than this time timestamp
  * @return {Promise<EventsWithDailyInfo>}
  */
 export async function fetchChartData(projectId: string, since: number): Promise<HawkEventDailyInfo[] | null> {
