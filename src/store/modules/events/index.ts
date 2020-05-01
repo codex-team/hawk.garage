@@ -382,7 +382,10 @@ const module: Module<EventsModuleState, RootState> = {
        * Inserts days that don't contain errors
        */
       for (let time = firstMidnight, index = 0; time < now; time += day) {
-        if (index < groupedData.length && new Date(groupedData[index].timestamp).getDate() == new Date(time).getDate()) {
+        // Checks whether there is a date. If not, it means that the event is not there either
+        const isThereDate = index < groupedData.length && new Date(groupedData[index].timestamp).getDate() == new Date(time).getDate();
+
+        if (isThereDate) {
           completedData.push({
             timestamp: groupedData[index].timestamp,
             totalCount: groupedData[index].totalCount,
