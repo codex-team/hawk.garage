@@ -141,6 +141,9 @@ export default Vue.extend({
     },
   },
   watch: {
+    /**
+     * Creates a polyline by day
+     */
     days: function () {
       this.createPolyline();
     },

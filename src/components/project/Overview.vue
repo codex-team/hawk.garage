@@ -115,7 +115,7 @@ export default {
     if (!this.$store.state.events.charts[this.projectId]) {
       await this.$store.dispatch(FETCH_CHART_DATA, {
         projectId: this.projectId,
-        minTimestamp: ~~(Date.now() / 1000 - 86400 * 16),
+        since: ~~(Date.now() / 1000 - 86400 * 16),
       });
     }
 

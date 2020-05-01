@@ -126,6 +126,9 @@ interface HawkEventsDailyInfoByDate {
   [key: string]: HawkEventDailyInfo[];
 }
 
+/**
+ * Data for displaying one day on the chart
+ */
 interface ChartData {
   timestamp: number;
   totalCount: number;
@@ -346,14 +349,14 @@ const module: Module<EventsModuleState, RootState> = {
      * Get data for displaying the number of errors for each day from a specific timestamp
      * @param {function} commit - standard Vuex commit function
      * @param {string} projectId - id of the project to fetch data
-     * @param {number} minTimestamp - timestamp from which we start taking errors
+     * @param {number} since - timestamp from which we start taking errors
      * @return {Promise<void>}
      */
-    async [FETCH_CHART_DATA]({ commit }, { projectId, minTimestamp }): Promise<void> {
-      const chartData = await eventsApi.fetchChartData(projectId, minTimestamp);
+    async [FETCH_CHART_DATA]({ commit }, { projectId, since }): Promise<void> {
+      const chartData = await eventsApi.fetchChartData(projectId, since);
       const day = 24 * 60 * 60 * 1000;
       const now = Date.now();
-      const firstMidnight = new Date(minTimestamp * 1000).setHours(24, 0, 0, 0);
+      const firstMidnight = new Date(since * 1000).setHours(24, 0, 0, 0);
 
       if (!chartData) {
         return;
