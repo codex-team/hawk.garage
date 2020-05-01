@@ -3,15 +3,14 @@ name: Build and deploy
 on: [push]
 
 env:
-  DOCKER_IMAGE_NAME: hawk_garage
-  ENV_FILE: ${{ secrets.ENV_FILE }}
+  DOCKER_IMAGE_NAME: hawk-garage
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Build docker image
         run: docker build --tag $DOCKER_IMAGE_NAME .
@@ -20,7 +19,7 @@ jobs:
         uses: nelonoel/branch-name@v1
 
       - name: Push to registry
-        if: endsWith(github.ref, '/stage') || endsWith(github.ref, '/prod')
+        if: endsWith(github.ref, '/stage')
         run: |
           docker tag $DOCKER_IMAGE_NAME ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
           docker login ${{ secrets.REGISTRY_ADDRESS }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -31,4 +30,4 @@ jobs:
         if: endsWith(github.ref, '/stage')
         run: |
           DEPLOY_TOKEN=${{ secrets.DEPLOY_TOKEN }}
-          curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"$BRANCH_NAME\",\"secret_token\":\"$DEPLOY_TOKEN\"}" https://stage.hawk.so/deploy
+          curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"stage\",\"secret_token\":\"$DEPLOY_TOKEN\"}" https://stage.hawk.so/deploy
