@@ -4,6 +4,7 @@ on: [push]
 
 env:
   DOCKER_IMAGE_NAME: hawk-garage
+  DOCKERHUB_USER: codexteamuser
 
 jobs:
   build_and_deploy:
@@ -18,7 +19,7 @@ jobs:
       - name: Get branch name
         uses: nelonoel/branch-name@v1
 
-      - name: Push to registry
+      - name: Push to private registry
         if: endsWith(github.ref, '/stage')
         run: |
           docker tag $DOCKER_IMAGE_NAME ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
@@ -26,8 +27,22 @@ jobs:
           docker push ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
           docker logout
 
-      - name: Deploy
+      - name: Push to Docker Hub
+        if: endsWith(github.ref, '/prod')
+        run: |
+          docker tag $DOCKERHUB_USER/$DOCKER_IMAGE_NAME:$BRANCH_NAME
+          docker login -u $DOCKERHUB_USER -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          docker push $DOCKERHUB_USER/$DOCKER_IMAGE_NAME:$BRANCH_NAME
+          docker logout
+
+      - name: Deploy on stage
         if: endsWith(github.ref, '/stage')
         run: |
           DEPLOY_TOKEN=${{ secrets.DEPLOY_TOKEN }}
           curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"stage\",\"secret_token\":\"$DEPLOY_TOKEN\"}" https://stage.hawk.so/deploy
+
+      - name: Deploy on prod
+        if: endsWith(github.ref, '/prod')
+        run: |
+          DEPLOY_TOKEN=${{ secrets.DEPLOY_TOKEN }}
+          curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"prod\",\"secret_token\":\"$DEPLOY_TOKEN\"}" https://beta.hawk.so/deploy
