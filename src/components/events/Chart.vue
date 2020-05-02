@@ -1,5 +1,5 @@
 <template>
-  <div class="project-overview__chart">
+  <div class="project-overview__chart" @mousemove="move">
     <div
       v-if="days.length > 1"
       class="project-overview__chart-info"
@@ -17,7 +17,7 @@
         {{ Math.abs(difference) | spacedNumber }}
       </span>
     </div>
-    <svg class="project-overview__chart-body">
+    <svg ref="chart" class="project-overview__chart-body">
       <defs>
         <linearGradient
           id="chart"
@@ -49,6 +49,20 @@
       >
         {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
       </span>
+    </div>
+    <div 
+      :style="`left: ${lineLeft}px`"
+      class="project-overview__chart-line">
+      <div
+        :style="`top: ${pointTop}px`" 
+        class="project-overview__chart-point">
+      </div>
+      <div 
+        v-if="day != 0 && day != days.length - 1"
+        class="project-overview__chart-events">
+        <div class="project-overview__chart-events__date">{{ days[day].timestamp * 1000 | prettyDateFromTimestamp }}</div>
+        <div class="project-overview__chart-events__number">{{ numberOfEvents }} events</div>
+      </div>
     </div>
   </div>
 </template>
@@ -84,6 +98,11 @@ export default Vue.extend({
        * @return {void}
        */
       onResize: () => {},
+      lineLeft: 100,
+      pointTop: 100,
+      pointsY: [],
+      numberOfEvents: 67,
+      day: 0,
     };
   },
   computed: {
@@ -139,7 +158,7 @@ export default Vue.extend({
      */
     maxCount(): number {
       return Math.max(...this.days.map(day => day.totalCount));
-    },
+    }
   },
   watch: {
     /**
@@ -167,6 +186,7 @@ export default Vue.extend({
     createPolyline(): void {
       const step = this.$el.clientWidth / (this.days.length - 1);
       const points : string[] = [];
+      this.pointsX = [];
 
       this.days.forEach((day, index) => {
         const pointX = index * step;
@@ -177,10 +197,23 @@ export default Vue.extend({
         }
 
         points.push(pointX + ' ' + pointY);
+        this.pointsY.push(pointY);
       });
 
       this.polylinePoints = points.join(', ');
     },
+    move (event) {
+      const step = this.$el.clientWidth / (this.days.length - 1);
+      const chartX = this.$el.getBoundingClientRect().left;
+      const chartY = this.$el.getBoundingClientRect().top;
+      const cursorX = event.clientX - chartX;
+      const day = Math.round(cursorX / step);
+
+      this.day = day;
+      this.pointTop = 152.5 - this.pointsY[day];
+      this.lineLeft = day * step - 1.5;
+      this.numberOfEvents = this.days[day].totalCount;
+    }
   },
 });
 </script>
@@ -190,6 +223,7 @@ export default Vue.extend({
     margin: 16px 15px 0;
     background-color: var(--color-bg-main);
     position: relative;
+    z-index: 0;
 
     &-info {
       float: right;
@@ -259,6 +293,48 @@ export default Vue.extend({
       font-size: 10px;
       flex: 1;
       color: var(--color-text-main);
+    }
+
+    &-line {
+      transition: 0.2s;
+      position: absolute;
+      width: 3px;
+      height: 100%;
+      top: 0;
+      background-color: #1e212b;
+      z-index: 0;
+    }
+
+    &-point {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: #d94848;
+      border-radius: 50%;
+      opacity: 1;
+      margin-left: -1px;
+      transition: 0.2s;
+    }
+
+    &-events {
+      position: absolute;
+      bottom: -10px;
+      white-space: nowrap;
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 0.2px;
+      left: -20px;
+      border-radius: 4px;
+      box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
+      padding: 6px 8px 6px 7px;
+      background: #191c25;
+      line-height: 1.4;
+      z-index: 500;
+
+      &__date {
+        font-size: 10px;
+        color: var(--color-text-second);
+      }
     }
   }
 </style>
