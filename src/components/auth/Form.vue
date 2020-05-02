@@ -47,6 +47,7 @@
           :key="index"
           v-model="field.value"
           class="auth-form__section"
+          required
           :name="field.name"
           :type="field.type"
           :label="field.label"

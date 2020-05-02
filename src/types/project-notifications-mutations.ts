@@ -30,7 +30,6 @@ export interface ProjectNotificationsAddRulePayload {
   channels: NotificationsChannels;
 }
 
-
 /**
  * What kind of data we send to update the specific notifications rule
  */
