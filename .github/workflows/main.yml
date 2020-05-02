@@ -13,7 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - run: echo "VUE_APP_API_ENDPOINT=http://api.stage.hawk.so/graphql" > ./.env
+      - run: echo "VUE_APP_API_ENDPOINT=https://api.stage.hawk.so/graphql" > ./.env
+
+      - run: echo "VUE_APP_API_ENDPOINT=https://api.beta.hawk.so/graphql" > ./.env
+        if: endsWith(github.ref, '/prod')
 
       - name: Build docker image
         run: docker build -t $DOCKER_IMAGE_NAME .
