@@ -88,7 +88,7 @@ export default Vue.extend({
     isAdmin(): boolean {
       const workspace = this.$store.getters.getWorkspaceByProjectId(this.$route.params.projectId);
 
-      return this.$store.getters.isCurrentUserAdmin(workspace.id);
+      return workspace ? this.$store.getters.isCurrentUserAdmin(workspace.id) : false;
     },
   },
   methods: {
