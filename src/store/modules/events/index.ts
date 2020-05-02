@@ -12,7 +12,7 @@ import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload } from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload, ChartData } from '@/types/events';
 import { User } from '@/types/user';
 
 /**
@@ -124,14 +124,6 @@ interface HawkEventsDailyInfoByProject {
  */
 interface HawkEventsDailyInfoByDate {
   [key: string]: HawkEventDailyInfo[];
-}
-
-/**
- * Data for displaying one day on the chart
- */
-export interface ChartData {
-  timestamp: number;
-  totalCount: number;
 }
 
 /**

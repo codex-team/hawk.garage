@@ -56,7 +56,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { debounce } from '@/utils';
-import { ChartData } from '../../store/modules/events/index';
+import { ChartData } from '../../types/events';
 
 export default Vue.extend({
   name: 'Chart',

@@ -241,3 +241,15 @@ export interface EventUser {
    */
   photo: string;
 }
+
+export interface ChartData {
+  /**
+   * Time of midnight
+   */
+  timestamp: number;
+
+  /**
+   * Number of errors for this midnight
+   */
+  totalCount: number;
+}

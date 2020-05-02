@@ -7,7 +7,7 @@ import {
   QUERY_CHART_DATA
 } from './queries';
 import * as api from '@/api';
-import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition, HawkEventDailyInfo } from '@/types/events';
+import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition, HawkEventDailyInfo, ChartData } from '@/types/events';
 
 /**
  * Get specific event
@@ -104,7 +104,7 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param {number} since - events will be collected no later than this time timestamp
  * @return {Promise<EventsWithDailyInfo>}
  */
-export async function fetchChartData(projectId: string, since: number): Promise<HawkEventDailyInfo[] | null> {
+export async function fetchChartData(projectId: string, since: number): Promise<ChartData[] | null> {
   return (await api.call(QUERY_CHART_DATA, {
     projectId,
     since,
