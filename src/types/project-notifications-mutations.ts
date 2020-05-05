@@ -44,3 +44,18 @@ export interface ProjectNotificationsUpdateRulePayload extends ProjectNotificati
    */
   isEnabled: boolean;
 }
+
+/**
+ * This payload used to determine specific rule for deletion or toggling isEnabled state
+ */
+export interface ProjectNotificationRulePointer {
+  /**
+   * In which project we adding a rule
+   */
+  projectId: string;
+
+  /**
+   * Rule id to update
+   */
+  ruleId: string;
+}
