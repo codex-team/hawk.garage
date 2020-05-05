@@ -34,6 +34,11 @@ const router = new Router({
               name: 'account-appearance',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Appearance.vue'),
             },
+            {
+              path: 'notifications',
+              name: 'account-notifications',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Notifications.vue'),
+            },
             // {
             //   path: 'billing',
             //   name: 'billing-settings',
