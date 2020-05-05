@@ -19,6 +19,11 @@ export const REMOVE_PROJECTS_BY_WORKSPACE_ID = 'REMOVE_PROJECTS_BY_WORKSPACE_ID'
 export const UPDATE_PROJECT = 'UPDATE_PROJECT';
 
 /**
+ * Send request to remove project
+ */
+export const REMOVE_PROJECT = 'REMOVE_PROJECT';
+
+/**
  * Fetch project recent errors
  */
 export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';

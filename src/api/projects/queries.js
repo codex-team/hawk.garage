@@ -93,6 +93,13 @@ export const MUTATION_UPDATE_PROJECT_NOTIFY_RULE = `
 `;
 
 // language=GraphQL
+export const MUTATION_REMOVE_PROJECT = `
+  mutation removeProject($projectId: ID!) {
+    removeProject(projectId: $projectId)
+  }
+`;
+
+// language=GraphQL
 export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
   mutation ( $input: ProjectNotificationRulePointer! ){
     toggleProjectNotificationsRuleEnabledState(

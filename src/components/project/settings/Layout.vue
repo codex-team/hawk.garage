@@ -32,6 +32,21 @@
         >
           {{ $t('projects.settings.notifications.title') }}
         </router-link>
+        <hr
+          v-if="isAdmin"
+          class="delimiter"
+        >
+        <div
+          v-if="isAdmin"
+          class="settings-window__menu-item settings-window__menu-item--attention"
+          @click="removeProject"
+        >
+          {{ $t('projects.settings.remove') }}
+          <Icon
+            class="settings-window__menu-icon"
+            symbol="rubbish"
+          />
+        </div>
       </div>
     </template>
 
@@ -47,12 +62,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import SettingsWindow from '../../settings/Window.vue';
+import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
+import { REMOVE_PROJECT } from '@/store/modules/projects/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ProjectSettingsWindow',
   components: {
     SettingsWindow,
+    Icon,
   },
   computed: {
     /**
@@ -61,6 +80,40 @@ export default Vue.extend({
      */
     project(): Project {
       return this.$store.getters.getProjectById(this.$route.params.projectId);
+    },
+
+    /**
+     * Is user admin in workspace with this project
+     */
+    isAdmin(): boolean {
+      const workspace = this.$store.getters.getWorkspaceByProjectId(this.$route.params.projectId);
+
+      return workspace ? this.$store.getters.isCurrentUserAdmin(workspace.id) : false;
+    },
+  },
+  methods: {
+    /**
+     * Remove current project
+     */
+    async removeProject() {
+      if (!window.confirm(this.$i18n.t('projects.settings.removeConfirmation').toString())) {
+        return;
+      }
+      try {
+        await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
+        this.$router.push({ name: 'home' });
+        notifier.show({
+          message: this.$i18n.t('projects.settings.removeSuccess').toString(),
+          style: 'success',
+          time: 10000,
+        });
+      } catch {
+        notifier.show({
+          message: this.$i18n.t('projects.settings.removeError').toString(),
+          style: 'error',
+          time: 10000,
+        });
+      }
     },
   },
 });
