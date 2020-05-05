@@ -9,6 +9,11 @@ export const SET_PROJECTS_LIST = 'SET_PROJECTS_LIST';
 export const CREATE_PROJECT = 'CREATE_PROJECT';
 
 /**
+ * Remove projects by workspace id from list
+ */
+export const REMOVE_PROJECTS_BY_WORKSPACE_ID = 'REMOVE_PROJECTS_BY_WORKSPACE_ID';
+
+/**
  * Send request to update project settings
  */
 export const UPDATE_PROJECT = 'UPDATE_PROJECT';

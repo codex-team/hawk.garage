@@ -103,6 +103,7 @@ export default {
       } else {
         css.fontSize = `${this.size / 2}px`;
       }
+
       return css;
     },
 

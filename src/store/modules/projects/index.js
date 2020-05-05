@@ -1,6 +1,7 @@
 /* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   CREATE_PROJECT,
+  REMOVE_PROJECTS_BY_WORKSPACE_ID,
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
@@ -19,6 +20,7 @@ import { groupByGroupingTimestamp } from '../../../utils';
  */
 export const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
+  REMOVE_PROJECTS_BY_WORKSPACE_ID: 'REMOVE_PROJECTS_BY_WORKSPACE_ID', // Remove projects by workspace id from list
   UPDATE_PROJECT: 'UPDATE_PROJECT', // Set new info about a project
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
@@ -119,6 +121,16 @@ const actions = {
 
     newProjectData.workspaceId = projectData.workspaceId;
     commit(mutationTypes.ADD_PROJECT, newProjectData);
+  },
+
+  /**
+   * Remove projects by workspace id from list
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} workspaceId - workspace id
+   * @return {Promise<void>}
+   */
+  [REMOVE_PROJECTS_BY_WORKSPACE_ID]({ commit }, workspaceId) {
+    commit(mutationTypes.REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
   },
 
   /**
@@ -248,6 +260,15 @@ const mutations = {
    */
   [mutationTypes.ADD_PROJECT](state, project) {
     state.list.push(project);
+  },
+
+  /**
+   * Remove projects from list by workspace id
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {string} workspaceId - workspace id
+   */
+  [mutationTypes.REMOVE_PROJECTS_BY_WORKSPACE_ID](state, workspaceId) {
+    state.list = state.list.filter((project) => project.workspaceId !== workspaceId);
   },
 
   /**

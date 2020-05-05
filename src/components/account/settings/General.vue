@@ -10,6 +10,7 @@
           class="account-settings__section account-settings__name-section"
           :label="$t('settings.account.name')"
           :placeholder="$t('settings.account.namePlaceholder')"
+          required
           @input="showSubmitButton = true"
         />
         <section>
@@ -24,6 +25,7 @@
         v-model="email"
         class="account-settings__section"
         :label="$t('settings.account.email')"
+        required
         placeholder="example@example.com"
         @input="showSubmitButton = true"
       />

@@ -16,6 +16,7 @@ export const MUTATION_CREATE_PROJECT = `
       id
       name
       image
+      token
     }
   }
 `;

@@ -22,6 +22,7 @@
           class="project-creation-dialog__text-field"
           name="projectName"
           type="text"
+          required
           :label="$t('projects.creationDialog.projectNameLabel')"
         />
         <ImageUploader
@@ -62,10 +63,15 @@ export default {
   },
   computed: {
     /**
-     * @return {Array<Workspace>} - registered workspaces
+     * @return {Array<Workspace>} - registered workspaces with permission check
      */
     workspaces() {
-      return this.$store.state.workspaces.list;
+      const userId = this.$store.state.user.data.id;
+      const workspaces = this.$store.state.workspaces.list.filter(workspace => {
+        return workspace.team.find(team => team.user.id == userId && team.isAdmin);
+      });
+
+      return workspaces;
     },
   },
   methods: {
