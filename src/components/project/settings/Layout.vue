@@ -96,6 +96,9 @@ export default Vue.extend({
      * Remove current project
      */
     async removeProject() {
+      if (!window.confirm(this.$i18n.t('projects.settings.removeConfirmation').toString())) {
+        return;
+      }
       try {
         await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
         this.$router.push({ name: 'home' });
