@@ -107,7 +107,29 @@
     },
     "logout": "Выйти",
     "notifications": {
-      "title": "Уведомления"
+      "title": "Уведомления",
+      "channelsHeading": "Каналы",
+      "actionTypesHeading": "Типы событий",
+      "channels": {
+        "email": "Email",
+        "webPush": "Браузерные пуши",
+        "desktopPush": "Пуши в приложении"
+      },
+      "channelDescriptions": {
+        "email": "Уведомления на почту",
+        "webPush": "Уведомления даже при закрытой вкладке",
+        "desktopPush": "Системные уведомления через Hawk Desktop"
+      },
+      "actions": {
+        "IssueAssigning": "Назначение на задачу",
+        "WeeklyDigest": "Еженедельная сводка",
+        "SystemMessages": "Системные сообщения"
+      },
+      "actionDescriptions": {
+        "IssueAssigning": "Когда кто-нибудь назначает вас на задачу",
+        "WeeklyDigest": "Наиболее важные события за прошедшую неделю",
+        "SystemMessages": "Только критические сообщения от команды Hawk"
+      }
     }
   },
   "workspaces": {

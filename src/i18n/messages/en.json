@@ -107,7 +107,29 @@
     },
     "logout": "Log out",
     "notifications": {
-      "title": "Notifications"
+      "title": "Notifications",
+      "channelsHeading": "Channels",
+      "actionTypesHeading": "Action types",
+      "channels": {
+        "email": "Email",
+        "webPush": "Web Push",
+        "desktopPush": "Desktop Push"
+      },
+      "channelDescriptions": {
+        "email": "Notifications on your email",
+        "webPush": "Alerts even with closed tab",
+        "desktopPush": "Native notifies through the Hawk Desktop"
+      },
+      "actions": {
+        "IssueAssigning": "Issue assigning",
+        "WeeklyDigest": "Weekly digest",
+        "SystemMessages": "System messages"
+      },
+      "actionDescriptions": {
+        "IssueAssigning": "When someone will assign you to the task",
+        "WeeklyDigest": "Most important events for passed week",
+        "SystemMessages": "Only important messages from Hawk team"
+      }
     }
   },
   "workspaces": {
