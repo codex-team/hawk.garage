@@ -1,3 +1,5 @@
+import { USER_NOTIFICATIONS_FRAGMENT } from '../fragments';
+
 /**
  * Login mutation
  */
@@ -82,21 +84,35 @@ mutation User($oldPassword: String!, $newPassword: String!) {
 /**
  * Mutation to update user notifications channel
  */
+// language=GraphQL
 export const MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL = `
-mutation changeUserNotificationsChannel($input: NotificationsChannelsInput!) {
-  changeUserNotificationsChannel (
-    input: $input
-  )
-}
+  mutation changeUserNotificationsChannel($input: NotificationsChannelsInput!) {
+    changeUserNotificationsChannel (
+      input: $input
+    ) {
+      notifications {
+        ...UserNotifications
+      }
+    }
+  }
+
+  ${USER_NOTIFICATIONS_FRAGMENT}
 `;
 
 /**
  * Mutation to update user notifications receive type
  */
+// language=GraphQL
 export const MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE = `
-mutation changeUserNotificationsReceiveType($input: ChangeUserNotificationsReceiveTypeInput!) {
-  changeUserNotificationsReceiveType (
-    input: $input
-  )
-}
+  mutation changeUserNotificationsReceiveType($input: ChangeUserNotificationsReceiveTypeInput!) {
+    changeUserNotificationsReceiveType (
+      input: $input
+    ) {
+      notifications {
+        ...UserNotifications
+      }
+    }
+  }
+
+  ${USER_NOTIFICATIONS_FRAGMENT}
 `;

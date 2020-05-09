@@ -106,9 +106,9 @@ export async function changePassword(oldPassword, newPassword) {
  * @returns {Promise<void>}
  */
 export async function updateNotificationsChannel(payload) {
-  return api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
+  return (await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
     input: payload,
-  });
+  })).changeUserNotificationsChannel;
 }
 
 /**
@@ -118,7 +118,7 @@ export async function updateNotificationsChannel(payload) {
  * @returns {Promise<void>}
  */
 export async function updateNotificationsReceiveType(payload) {
-  return api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
+  return (await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
     input: payload,
-  });
+  })).changeUserNotificationsReceiveType;
 }
