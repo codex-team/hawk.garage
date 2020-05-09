@@ -120,7 +120,9 @@
         "desktopPush": "Пуши в приложении"
       },
       "channelDescriptions": {
-        "email": "Уведомления на почту",
+        "email": "Уведомления на",
+        "emailEmptyPlaceholder": "вашу почту",
+        "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
         "webPush": "Уведомления даже при закрытой вкладке",
         "desktopPush": "Системные уведомления через Hawk Desktop"
       },

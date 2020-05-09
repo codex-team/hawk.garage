@@ -44,6 +44,11 @@ export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 export const CHANGE_NOTIFICATIONS_CHANNEL = 'CHANGE_NOTIFICATIONS_CHANNEL';
 
 /**
+ * Fetches uses notifications settings
+ */
+export const FETCH_NOTIFICATIONS_SETTINGS = 'FETCH_NOTIFICATIONS_SETTINGS';
+
+/**
  * Change notifications 'whatToReceive' settings
  */
 export const CHANGE_NOTIFICATIONS_RECEIVE_TYPE = 'CHANGE_NOTIFICATIONS_RECEIVE_TYPE';

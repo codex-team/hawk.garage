@@ -81,10 +81,26 @@ mutation User($oldPassword: String!, $newPassword: String!) {
 }
 `;
 
+// language=GraphQL
+/**
+ * Query to get current user
+ */
+export const QUERY_CURRENT_USER_WITH_NOTIFICATIONS = `
+${USER_NOTIFICATIONS_FRAGMENT}
+
+query getCurrentUser {
+  me {
+    notifications {
+      ...UserNotifications
+    }
+  }
+}
+`;
+
+// language=GraphQL
 /**
  * Mutation to update user notifications channel
  */
-// language=GraphQL
 export const MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL = `
   mutation changeUserNotificationsChannel($input: NotificationsChannelsInput!) {
     changeUserNotificationsChannel (
@@ -99,10 +115,10 @@ export const MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL = `
   ${USER_NOTIFICATIONS_FRAGMENT}
 `;
 
+// language=GraphQL
 /**
  * Mutation to update user notifications receive type
  */
-// language=GraphQL
 export const MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE = `
   mutation changeUserNotificationsReceiveType($input: ChangeUserNotificationsReceiveTypeInput!) {
     changeUserNotificationsReceiveType (

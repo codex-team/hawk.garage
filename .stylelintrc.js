@@ -7,6 +7,9 @@ module.exports = {
     'plugin/rational-order': [ true ],
     'selector-type-no-unknown': [true, {
       ignoreTypes: [ /\^/ ]
-    } ]
+    } ],
+    'at-rule-no-unknown': [true, {
+      ignoreAtRules: ['mixin', 'define-mixin']
+    }]
   }
 };

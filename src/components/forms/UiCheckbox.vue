@@ -1,6 +1,9 @@
 <template>
   <div
     class="ui-checkbox"
+    :class="{
+      'ui-checkbox--disabled': disabled
+    }"
     @click="clicked"
   >
     <input
@@ -8,6 +11,7 @@
       :checked="value"
       :name="name"
       type="checkbox"
+      :disabled="disabled"
     >
     <Icon symbol="tick" />
   </div>
@@ -54,9 +58,21 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Disabled state
+     */
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     clicked() {
+      if (this.disabled) {
+        return;
+      }
+
       this.$emit('input', !this.value);
     },
   },
@@ -79,6 +95,15 @@ export default Vue.extend({
     border-radius: 4px;
     cursor: pointer;
     user-select: none;
+
+    &--disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+
+      &:hover {
+        background: var(--color-bg-main) !important;
+      }
+    }
 
     .icon {
       width: 18px;

@@ -222,8 +222,8 @@ const module: Module<EventsModuleState, RootState> = {
         if (!repetitionId) {
           repetition = state.repetitions[key][state.repetitions[key].length - 1];
         } else {
-          repetition = state.repetitions[key].find(repetition => {
-            return repetition.id === repetitionId;
+          repetition = state.repetitions[key].find(item => {
+            return item.id === repetitionId;
           });
         }
 

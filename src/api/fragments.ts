@@ -104,4 +104,4 @@ export const USER_NOTIFICATIONS_FRAGMENT = `
       SystemMessages
     }
   }
-`
+`;

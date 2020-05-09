@@ -57,12 +57,12 @@ export default Vue.extend({
 <style>
   .tooltip-menu {
     position: relative;
-    margin-right: -8px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 36px;
     height: 36px;
+    margin-right: -8px;
     border-radius: var(--border-radius);
     cursor: pointer;
 

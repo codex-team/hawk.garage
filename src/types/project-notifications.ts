@@ -1,4 +1,4 @@
-import {NotificationsChannels} from './notifications';
+import { NotificationsChannels } from './notifications';
 
 /**
  * This structure represents a single rule of notifications settings

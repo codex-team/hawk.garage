@@ -1,23 +1,57 @@
 <template>
-  <div class="acc-notifies">
+  <div
+    v-if="user.notifications"
+    class="acc-notifies"
+  >
     <section>
       <h3>
         {{ $t('settings.notifications.channelsHeading') }}
       </h3>
       <div
-        class="settings-field"
-        v-for="channelName of Object.keys(form.channels)"
+        v-for="channelName of channelsAvailable"
         :key="channelName"
+        class="settings-field"
       >
         <div class="settings-field__name">
           {{ $t('settings.notifications.channels.' + channelName) }}
+
+          <span
+            v-if="isChannelUnavailable(channelName)"
+            class="settings-field__soon"
+          >
+            Soon
+          </span>
         </div>
         <div class="settings-field__description">
           {{ $t('settings.notifications.channelDescriptions.' + channelName) }}
+
+          <template v-if="channelName === 'email'">
+            <span
+              v-if="user.email"
+              class="settings-field__email"
+            >
+              {{ user.email }}
+            </span>
+            <template v-else>
+              {{ $t('settings.notifications.channelDescriptions.emailEmptyPlaceholder') }}
+
+              <div class="settings-field__warning">
+                <Icon
+                  symbol="warning"
+                />
+                <span
+                  v-html="$t('settings.notifications.channelDescriptions.emailEmptyWarning', {
+                    accountUrl: '/account/general'
+                  })"
+                />
+              </div>
+            </template>
+          </template>
         </div>
         <div class="settings-field__input">
           <UiCheckbox
-            v-model="form.channels[channelName].isEnabled"
+            :value="getChannelState(channelName)"
+            :disabled="isChannelUnavailable(channelName) || !user.email"
             @input="channelChanged(channelName, $event)"
           />
         </div>
@@ -28,9 +62,9 @@
         {{ $t('settings.notifications.actionTypesHeading') }}
       </h3>
       <div
-        class="settings-field"
-        v-for="action of Object.keys(form.whatToReceive)"
+        v-for="action of whatToReceive"
         :key="action"
+        class="settings-field"
       >
         <div class="settings-field__name">
           {{ $t('settings.notifications.actions.' + action) }}
@@ -40,7 +74,8 @@
         </div>
         <div class="settings-field__input">
           <UiCheckbox
-            v-model="form.whatToReceive[action]"
+            :value="user.notifications.whatToReceive[action]"
+            :disabled="action === 'SystemMessages'"
             @input="whatToReceiveChanged(action, $event)"
           />
         </div>
@@ -58,12 +93,19 @@ import {
   UserNotificationsChannels,
   UserNotificationsReceiveTypesConfig
 } from '../../../types/user-notifications';
-import { CHANGE_NOTIFICATIONS_CHANNEL, CHANGE_NOTIFICATIONS_RECEIVE_TYPE } from '../../../store/modules/user/actionTypes';
+import {
+  CHANGE_NOTIFICATIONS_CHANNEL,
+  CHANGE_NOTIFICATIONS_RECEIVE_TYPE,
+  FETCH_NOTIFICATIONS_SETTINGS
+} from '../../../store/modules/user/actionTypes';
 import { NotificationsChannelSettings } from '../../../types/notifications';
+import notifier from 'codex-notifier';
+import Icon from './../../utils/Icon.vue';
 
 export default Vue.extend({
   components: {
     UiCheckbox,
+    Icon,
   },
   props: {
     /**
@@ -76,29 +118,26 @@ export default Vue.extend({
   },
   data() {
     return {
-      form: {
-        userId: this.user.id,
-        channels: {
-          email: {
-            endpoint: '',
-            isEnabled: true,
-          },
-          webPush: {
-            endpoint: '',
-            isEnabled: false,
-          },
-          desktopPush: {
-            endpoint: '',
-            isEnabled: false,
-          },
-        },
-        whatToReceive: {
-          [UserNotificationType.IssueAssigning]: true,
-          [UserNotificationType.WeeklyDigest]: true,
-          [UserNotificationType.SystemMessages]: true,
-        },
-      },
+      /**
+       * Set of available channel names
+       */
+      channelsAvailable: ['email', 'webPush', 'desktopPush'] as Array<keyof UserNotificationsChannels>,
+
+      /**
+       * Set of available receive types
+       */
+      whatToReceive: [
+        UserNotificationType.IssueAssigning,
+        UserNotificationType.WeeklyDigest,
+        UserNotificationType.SystemMessages,
+      ],
     };
+  },
+  async created(): Promise<void> {
+    /**
+     * Load 'notifications' field on user
+     */
+    await this.$store.dispatch(FETCH_NOTIFICATIONS_SETTINGS);
   },
   methods: {
     /**
@@ -106,13 +145,22 @@ export default Vue.extend({
      * @param channelName - channel name (key of UserNotificationsChannels)
      * @param value - new value
      */
-    channelChanged(channelName: string, value: boolean): void {
-      this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
-        [channelName]: {
-          endpoint: '',
-          isEnabled: value === true,
-        } as NotificationsChannelSettings,
-      } as UserNotificationsChannels);
+    async channelChanged(channelName: string, value: boolean): Promise<void> {
+      try {
+        await this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
+          [channelName]: {
+            endpoint: '',
+            isEnabled: value === true,
+          } as NotificationsChannelSettings,
+        } as UserNotificationsChannels);
+      } catch (error) {
+        this.$sendToHawk(error);
+
+        notifier.show({
+          message: error.message,
+          style: 'error',
+        });
+      }
     },
 
     /**
@@ -120,10 +168,49 @@ export default Vue.extend({
      * @param type - whatToReceive type
      * @param value - new value
      */
-    whatToReceiveChanged(type: UserNotificationType, value: boolean): void {
-      this.$store.dispatch(CHANGE_NOTIFICATIONS_RECEIVE_TYPE, {
-        [type]: value,
-      } as UserNotificationsReceiveTypesConfig);
+    async whatToReceiveChanged(type: UserNotificationType, value: boolean): Promise<void> {
+      try {
+        await this.$store.dispatch(CHANGE_NOTIFICATIONS_RECEIVE_TYPE, {
+          [type]: value,
+        } as UserNotificationsReceiveTypesConfig);
+      } catch (error) {
+        this.$sendToHawk(error);
+
+        notifier.show({
+          message: error.message,
+          style: 'error',
+        });
+      }
+    },
+
+    /**
+     * Return active state of passed channel
+     *
+     * @param channelName - channel name to check
+     */
+    getChannelState(channelName: string): boolean {
+      if (!this.user.notifications) {
+        return false;
+      }
+
+      if (!this.user.notifications.channels[channelName]) {
+        return false;
+      }
+
+      if (channelName === 'email' && !this.user.email) {
+        return false;
+      }
+
+      return this.user.notifications.channels[channelName].isEnabled;
+    },
+
+    /**
+     * Some channels are temporary unavailable. This method check that.
+     *
+     * @param channelName - channel name to check
+     */
+    isChannelUnavailable(channelName: string): boolean {
+      return channelName !== 'email';
     },
   },
 });
@@ -146,29 +233,59 @@ export default Vue.extend({
 
   .settings-field {
     display: flex;
-    padding: 15px 0;
     align-items: center;
+    padding: 15px 0;
 
     &:not(:last-of-type){
       border-bottom: 1px solid var(--color-delimiter-line);
     }
 
     &__name {
-      font-size: 15px;
-      color: var(--color-text-main);
-      letter-spacing: 0.19px;
       min-width: 180px;
+      color: var(--color-text-main);
+      font-size: 15px;
+      letter-spacing: 0.19px;
+    }
+
+    &__soon {
+      display: inline-block;
+      margin-left: 4px;
+      padding: 2px 5px;
+      color: var(--color-text-second);
+      font-size: 12px;
+      background: var(--color-bg-main);
+      border-radius: 4px;
+      font-variant-caps: small-caps;
     }
 
     &__description {
       @apply --font-small;
-
-      color: var(--color-text-second);
       flex-grow: 2;
+      color: var(--color-text-second);
     }
 
-    &__input {
+    &__email {
+      font-weight: 500;
+      font-style: italic;
+    }
 
+    &__warning {
+      display: flex;
+      max-width: 330px;
+      margin-top: 10px;
+      color: var(--color-indicator-critical);
+
+      .icon {
+        width: 13px;
+        height: 12px;
+        margin-top: 4px;
+        margin-right: 10px;
+      }
+
+      a {
+        padding-bottom: 1px;
+        border-bottom: 1px solid color-mod(var(--color-indicator-critical) alpha(40%));
+      }
     }
   }
 </style>
