@@ -1,4 +1,3 @@
-/* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   CREATE_PROJECT,
   REMOVE_PROJECTS_BY_WORKSPACE_ID,

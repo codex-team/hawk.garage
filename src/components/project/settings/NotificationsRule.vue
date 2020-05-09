@@ -66,6 +66,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import {
+  ProjectNotificationsChannels,
   ProjectNotificationsRule,
   ReceiveTypes
 } from '@/types/project-notifications';
@@ -73,7 +74,6 @@ import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from '@/components/utils/TooltipMenu.vue';
 import UiSwitch from '@/components/forms/UiSwitch.vue';
-import { NotificationsChannels } from '../../../types/notifications';
 import { ProjectNotificationRulePointer } from '../../../types/project-notifications-mutations';
 import { TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE } from '../../../store/modules/projects/actionTypes';
 
@@ -114,12 +114,12 @@ export default Vue.extend({
     /**
      * Return only filled channels
      */
-    notEmptyChannels(): NotificationsChannels {
-      const result = {};
+    notEmptyChannels(): ProjectNotificationsChannels {
+      const result = {} as ProjectNotificationsChannels;
 
-      Object.entries(this.rule.channels)
-        .filter(([name, channel]) => channel.endpoint !== '')
-        .filter(([name, channel]) => channel.isEnabled === true)
+      Object.entries(this.rule.channels as ProjectNotificationsChannels)
+        .filter(([name, channel]) => channel ? channel.endpoint !== '' : false)
+        .filter(([name, channel]) => channel ? channel.isEnabled === true : false)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });

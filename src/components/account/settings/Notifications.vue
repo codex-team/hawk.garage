@@ -18,6 +18,7 @@
         <div class="settings-field__input">
           <UiCheckbox
             v-model="form.channels[channelName].isEnabled"
+            @input="channelChanged(channelName, $event)"
           />
         </div>
       </div>
@@ -40,6 +41,7 @@
         <div class="settings-field__input">
           <UiCheckbox
             v-model="form.whatToReceive[action]"
+            @input="whatToReceiveChanged(action, $event)"
           />
         </div>
       </div>
@@ -51,7 +53,13 @@
 import Vue from 'vue';
 import { User } from '../../../types/user';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
-import { AccountNotificationTypes } from '../../../types/account-notifications';
+import {
+  UserNotificationType,
+  UserNotificationsChannels,
+  UserNotificationsReceiveTypesConfig
+} from '../../../types/user-notifications';
+import { CHANGE_NOTIFICATIONS_CHANNEL, CHANGE_NOTIFICATIONS_RECEIVE_TYPE } from '../../../store/modules/user/actionTypes';
+import { NotificationsChannelSettings } from '../../../types/notifications';
 
 export default Vue.extend({
   components: {
@@ -67,7 +75,6 @@ export default Vue.extend({
     },
   },
   data() {
-
     return {
       form: {
         userId: this.user.id,
@@ -86,12 +93,38 @@ export default Vue.extend({
           },
         },
         whatToReceive: {
-          [AccountNotificationTypes.IssueAssigning]: true,
-          [AccountNotificationTypes.WeeklyDigest]: true,
-          [AccountNotificationTypes.SystemMessages]: true,
+          [UserNotificationType.IssueAssigning]: true,
+          [UserNotificationType.WeeklyDigest]: true,
+          [UserNotificationType.SystemMessages]: true,
         },
       },
     };
+  },
+  methods: {
+    /**
+     * Notifications channel changed. Need to save new value
+     * @param channelName - channel name (key of UserNotificationsChannels)
+     * @param value - new value
+     */
+    channelChanged(channelName: string, value: boolean): void {
+      this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
+        [channelName]: {
+          endpoint: '',
+          isEnabled: value === true,
+        } as NotificationsChannelSettings,
+      } as UserNotificationsChannels);
+    },
+
+    /**
+     * Notifications type changed. Need to save new value
+     * @param type - whatToReceive type
+     * @param value - new value
+     */
+    whatToReceiveChanged(type: UserNotificationType, value: boolean): void {
+      this.$store.dispatch(CHANGE_NOTIFICATIONS_RECEIVE_TYPE, {
+        [type]: value,
+      } as UserNotificationsReceiveTypesConfig);
+    },
   },
 });
 </script>

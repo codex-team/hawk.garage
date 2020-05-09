@@ -5,7 +5,9 @@ import {
   MUTATION_SIGN_UP,
   MUTATION_RECOVER_PASSWORD,
   MUTATION_UPDATE_PROFILE,
-  QUERY_CURRENT_USER
+  QUERY_CURRENT_USER,
+  MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL,
+  MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE
 } from './queries';
 import * as api from '../index.ts';
 
@@ -95,4 +97,28 @@ export async function changePassword(oldPassword, newPassword) {
     oldPassword,
     newPassword,
   })).changePassword;
+}
+
+/**
+ * Change notifications channel settings
+ *
+ * @param {UserNotificationsChannels} payload - new channel settings
+ * @returns {Promise<void>}
+ */
+export async function updateNotificationsChannel(payload) {
+  return api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
+    input: payload,
+  });
+}
+
+/**
+ * Change notifications receive type
+ *
+ * @param {UserNotificationsReceiveTypesConfig} payload - Receive Type with its is-enabled state
+ * @returns {Promise<void>}
+ */
+export async function updateNotificationsReceiveType(payload) {
+  return api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
+    input: payload,
+  });
 }

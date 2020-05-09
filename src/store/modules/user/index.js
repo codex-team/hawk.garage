@@ -1,4 +1,3 @@
-/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import {
   LOGIN,
   SIGN_UP,
@@ -6,10 +5,13 @@ import {
   REFRESH_TOKENS,
   FETCH_CURRENT_USER,
   UPDATE_PROFILE,
-  CHANGE_PASSWORD, RECOVER_PASSWORD
+  CHANGE_PASSWORD,
+  RECOVER_PASSWORD,
+  CHANGE_NOTIFICATIONS_CHANNEL,
+  CHANGE_NOTIFICATIONS_RECEIVE_TYPE,
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
-import * as authApi from '../../../api/user';
+import * as userApi from '../../../api/user';
 
 /**
  * Mutations enum for this module
@@ -76,7 +78,7 @@ const actions = {
    * @return {Promise<boolean>} - sign up status
    */
   async [SIGN_UP]({ commit }, user) {
-    return authApi.signUp(user.email);
+    return userApi.signUp(user.email);
   },
 
   /**
@@ -86,7 +88,7 @@ const actions = {
    * @param {User} user - user's params for auth
    */
   async [LOGIN]({ commit }, user) {
-    const tokens = await authApi.login(user.email, user.password);
+    const tokens = await userApi.login(user.email, user.password);
 
     commit(mutationTypes.SET_TOKENS, tokens);
   },
@@ -98,7 +100,7 @@ const actions = {
    * @param {User} user - user's params for recovering password
    */
   async [RECOVER_PASSWORD]({ commit }, user) {
-    return authApi.recoverPassword(user.email);
+    return userApi.recoverPassword(user.email);
   },
 
   /**
@@ -119,7 +121,7 @@ const actions = {
    * @return {Promise<TokensPair>}
    */
   async [REFRESH_TOKENS]({ commit, state }) {
-    const tokens = await authApi.refreshTokens(state.refreshToken);
+    const tokens = await userApi.refreshTokens(state.refreshToken);
 
     commit(mutationTypes.SET_TOKENS, tokens);
 
@@ -132,7 +134,7 @@ const actions = {
    * @param {function} commit - standard Vuex commit function
    */
   async [FETCH_CURRENT_USER]({ commit }) {
-    const me = await authApi.fetchCurrentUser();
+    const me = await userApi.fetchCurrentUser();
 
     commit(mutationTypes.SET_CURRENT_USER, me);
   },
@@ -144,7 +146,7 @@ const actions = {
    * @param {User} user - user's params to update
    */
   async [UPDATE_PROFILE]({ commit }, user) {
-    return authApi.updateProfile(user.name, user.email, user.image);
+    return userApi.updateProfile(user.name, user.email, user.image);
   },
 
   /**
@@ -154,7 +156,36 @@ const actions = {
    * @param {Passwords} passwords - user's pair of passwords
    */
   async [CHANGE_PASSWORD]({ commit }, passwords) {
-    return authApi.changePassword(passwords.old, passwords.new);
+    return userApi.changePassword(passwords.old, passwords.new);
+  },
+
+  /**
+   * Update account notifications channel settings
+   *
+   * @param {object} context - vuex action context
+   * @param {function} context.commit - allows to call mutation
+   * @param {UserNotificationsChannels} channel - new channel value
+   * @returns {Promise<void>}
+   */
+  async [CHANGE_NOTIFICATIONS_CHANNEL]({ commit }, channel) {
+    const response = await userApi.updateNotificationsChannel(channel);
+
+    console.log('CHANGE_NOTIFICATIONS_CHANNEL response', response);
+  },
+
+  /**
+   * Update account notifications receive type settings
+   *
+   * @param {object} context - vuex action context
+   * @param {function} context.commit - allows to call mutation
+   * @param {UserNotificationsReceiveTypesConfig} payload - Receive Type with its is-enabled state,
+   *                                                        for example, {IssueAssigning: true}
+   * @returns {Promise<void>}
+   */
+  async [CHANGE_NOTIFICATIONS_RECEIVE_TYPE]({ commit }, payload) {
+    const response = await userApi.updateNotificationsReceiveType(payload);
+
+    console.log('CHANGE_NOTIFICATIONS_RECEIVE_TYPE response', response);
   },
 
   /**

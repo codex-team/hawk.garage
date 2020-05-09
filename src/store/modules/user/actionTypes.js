@@ -37,3 +37,13 @@ export const UPDATE_PROFILE = 'UPDATE_PROFILE';
  * Change user password
  */
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+
+/**
+ * Change notifications channel settings
+ */
+export const CHANGE_NOTIFICATIONS_CHANNEL = 'CHANGE_NOTIFICATIONS_CHANNEL';
+
+/**
+ * Change notifications 'whatToReceive' settings
+ */
+export const CHANGE_NOTIFICATIONS_RECEIVE_TYPE = 'CHANGE_NOTIFICATIONS_RECEIVE_TYPE';

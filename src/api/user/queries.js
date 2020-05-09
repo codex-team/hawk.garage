@@ -78,3 +78,25 @@ mutation User($oldPassword: String!, $newPassword: String!) {
   )
 }
 `;
+
+/**
+ * Mutation to update user notifications channel
+ */
+export const MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL = `
+mutation changeUserNotificationsChannel($input: NotificationsChannelsInput!) {
+  changeUserNotificationsChannel (
+    input: $input
+  )
+}
+`;
+
+/**
+ * Mutation to update user notifications receive type
+ */
+export const MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE = `
+mutation changeUserNotificationsReceiveType($input: ChangeUserNotificationsReceiveTypeInput!) {
+  changeUserNotificationsReceiveType (
+    input: $input
+  )
+}
+`;

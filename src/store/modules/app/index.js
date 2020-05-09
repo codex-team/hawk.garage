@@ -1,4 +1,3 @@
-/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import {
   FETCH_INITIAL_DATA,
   SET_LANGUAGE

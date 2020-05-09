@@ -1,4 +1,3 @@
-/* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
