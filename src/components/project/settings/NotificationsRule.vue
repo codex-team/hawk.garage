@@ -64,11 +64,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ProjectNotificationsRule, ReceiveTypes, NotificationsChannels } from '@/types/project-notifications';
+import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from '@/components/utils/TooltipMenu.vue';
 import UiSwitch from '@/components/forms/UiSwitch.vue';
+import { NotificationsChannels } from '../../../types/notifications';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsRule',

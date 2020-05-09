@@ -1,4 +1,5 @@
-import { ReceiveTypes, NotificationsChannels } from './project-notifications';
+import { ReceiveTypes } from './project-notifications';
+import {NotificationsChannels} from './notifications';
 
 /**
  * What kind of data we send to create a new notifications rule in a project

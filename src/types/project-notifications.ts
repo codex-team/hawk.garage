@@ -1,3 +1,5 @@
+import {NotificationsChannels} from './notifications';
+
 /**
  * This structure represents a single rule of notifications settings
  */
@@ -51,44 +53,4 @@ export enum ReceiveTypes {
    * Only first occurrence
    */
   ONLY_NEW = 'ONLY_NEW',
-}
-
-/**
- * Available channels ("where to receive")
- */
-export interface NotificationsChannels {
-  /**
-   * Alerts on email
-   */
-  email?: NotificationsChannelSettings;
-
-  /**
-   * Alerts through the Slack
-   */
-  slack?: NotificationsChannelSettings;
-
-  /**
-   * Alerts through the Telegram
-   */
-  telegram?: NotificationsChannelSettings;
-}
-
-/**
- * Setting of a channel
- */
-export interface NotificationsChannelSettings {
-  /**
-   * Allows to disable channel without removing endpoint
-   */
-  isEnabled: boolean;
-
-  /**
-   * Endpoint: email, slack webhook, telegram bot webhook
-   */
-  endpoint: string;
-
-  /**
-   * Minimal pause between second notification, in seconds
-   */
-  minPeriod?: number;
 }
