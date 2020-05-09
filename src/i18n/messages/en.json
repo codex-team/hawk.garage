@@ -39,6 +39,10 @@
       "workspaceSelectLabel": "SELECT WORKSPACE"
     },
     "settings": {
+      "remove": "Remove project",
+      "removeConfirmation": "Are you sure you want to delete this project?",
+      "removeSuccess": "Project successfully deleted",
+      "removeError": "You can't remove this project",
       "general": {
         "title": "Project settings",
         "image": "Image",

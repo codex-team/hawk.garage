@@ -4,7 +4,9 @@ import {
   QUERY_RECENT_ERRORS,
   MUTATION_UPDATE_LAST_VISIT,
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
-  MUTATION_UPDATE_PROJECT_NOTIFY_RULE
+  MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
+  MUTATION_REMOVE_PROJECT,
+  MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE
 } from './queries';
 import * as api from '../index.ts';
 
@@ -28,6 +30,15 @@ export async function updateProject(projectInfo) {
   const { image, ...rest } = projectInfo;
 
   return (await api.call(MUTATION_UPDATE_PROJECT, rest, { image })).updateProject;
+}
+
+/**
+ * Remove project from db
+ * @param {string} projectId - project to remove
+ * @return {Promise<boolean>}
+ */
+export async function removeProject(projectId) {
+  return (await api.call(MUTATION_REMOVE_PROJECT, { projectId })).removeProject;
 }
 
 /**
@@ -76,4 +87,15 @@ export async function updateProjectNotificationsRule(payload) {
   return (await api.call(MUTATION_UPDATE_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).updateProjectNotificationsRule;
+}
+
+/**
+ * Send request for updating specific project notifications rule
+ * @param {ProjectNotificationRulePointer} payload - update rule payload
+ * @return {Promise<ProjectNotificationsRule>}
+ */
+export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
+  return (await api.call(MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE, {
+    input: payload,
+  })).toggleProjectNotificationsRuleEnabledState;
 }

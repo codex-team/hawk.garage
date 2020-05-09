@@ -2,12 +2,14 @@
 import {
   CREATE_PROJECT,
   REMOVE_PROJECTS_BY_WORKSPACE_ID,
+  REMOVE_PROJECT,
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
   ADD_NOTIFICATIONS_RULE,
-  UPDATE_NOTIFICATIONS_RULE
+  UPDATE_NOTIFICATIONS_RULE,
+  TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -21,6 +23,7 @@ export const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   REMOVE_PROJECTS_BY_WORKSPACE_ID: 'REMOVE_PROJECTS_BY_WORKSPACE_ID', // Remove projects by workspace id from list
   UPDATE_PROJECT: 'UPDATE_PROJECT', // Set new info about a project
+  REMOVE_PROJECT: 'REMOVE_PROJECT', // Remove project by id
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
@@ -133,6 +136,18 @@ const actions = {
   },
 
   /**
+   * Remove projects id from list
+   * @param {function} commit - standard Vuex commit function
+   * @param {string} projectId - project id
+   * @return {Promise<void>}
+   */
+  async [REMOVE_PROJECT]({ commit }, projectId) {
+    await projectsApi.removeProject(projectId);
+
+    commit(mutationTypes.REMOVE_PROJECT, projectId);
+  },
+
+  /**
    * Send request to update project settings
    * @param {function} commit - standard Vuex commit function
    * @param {Project} projectData - project params for creation
@@ -223,6 +238,23 @@ const actions = {
       rule: ruleUpdated,
     });
   },
+
+  /**
+   * - Send request for toggle isEnabled state of the notify rule
+   * - Update in the state
+   * @param {function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationRulePointer} payload - rule form data
+   * @return {Promise<void>}
+   */
+  async [TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE]({ commit }, payload) {
+    const ruleUpdated = await projectsApi.toggleEnabledStateOfProjectNotificationsRule(payload);
+
+    commit(mutationTypes.UPDATE_NOTIFICATIONS_RULE, {
+      projectId: payload.projectId,
+      rule: ruleUpdated,
+    });
+  },
+
 };
 
 const mutations = {
@@ -262,6 +294,15 @@ const mutations = {
     const index = state.list.findIndex(element => element.id === project.id);
 
     state.list[index] = project;
+  },
+
+  /**
+   * Remove project from list
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {string} projectId - project id
+   */
+  [mutationTypes.REMOVE_PROJECT](state, projectId) {
+    state.list = state.list.filter((project) => project.id !== projectId);
   },
 
   /**
@@ -321,7 +362,7 @@ const mutations = {
     const project = state.list.find(_project => _project.id === projectId);
     const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
 
-    project.notifications[existedRuleIndex] = rule;
+    Vue.set(project.notifications, existedRuleIndex, rule);
   },
 };
 
