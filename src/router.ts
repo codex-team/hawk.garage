@@ -6,6 +6,11 @@ import AppShell from './components/AppShell.vue';
 
 Vue.use(Router);
 
+/**
+ * Disable return-type rule to leave router 'component' imports with short syntax
+ */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 const router = new Router({
   mode: 'history',
   routes: [

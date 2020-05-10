@@ -13,7 +13,7 @@ export default {
 /**
  * Shows how different sizes looks like
  */
-export const Sizes = () => ({
+export const Sizes = (): unknown => ({
   components: { EntityImage },
   template: `
     <div style="display: flex; align-items: flex-end; flex-wrap: wrap; max-width: 700px; justify-content: space-between;">
@@ -51,7 +51,7 @@ export const Sizes = () => ({
     },
     sizes: {
       type: Array,
-      default: () => {
+      default: (): string[] => {
         return array('Size', ['100', '72', '50', '40', '36', '24', '18', '16', '12', '10']);
       },
     },
@@ -61,7 +61,7 @@ export const Sizes = () => ({
 /**
  * Shows how different colors looks like
  */
-export const Colors = () => ({
+export const Colors = (): unknown => ({
   components: { EntityImage },
   template: `
     <div style="display: flex; align-items: flex-end">
@@ -86,7 +86,7 @@ export const Colors = () => ({
     },
     ids: {
       type: Array,
-      default: () => {
+      default: (): string[] => {
         const arr = [] as string[];
 
         for (let i = 0; i < 16; i++) {
@@ -105,7 +105,7 @@ export const Colors = () => ({
 /**
  * Shows how different colors looks like
  */
-export const WithPhotos = () => ({
+export const WithPhotos = (): unknown => ({
   components: { EntityImage },
   template: `
     <div style="display: flex; align-items: flex-end">
@@ -131,7 +131,7 @@ export const WithPhotos = () => ({
     },
     users: {
       type: Array,
-      default: () => {
+      default: (): Array<{id; name; image}> => {
         return [
           {
             id: 'user1',

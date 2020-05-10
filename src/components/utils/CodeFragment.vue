@@ -17,6 +17,7 @@
         :class="{'current': isCurrentLine(row.line)}"
       />
     </div>
+    <!-- eslint-disable vue/no-v-html -->
     <pre
       class="code-preview__content"
       :class="{[syntax]: true }"
@@ -42,6 +43,7 @@ export default {
   props: {
     /**
      * Array of code fragment lines
+     *
      * @type {CodeRow[]}
      */
     lines: {
@@ -53,6 +55,7 @@ export default {
 
     /**
      * Array of line numbers that should be highlighted
+     *
      * @type {number[]}
      */
     linesHighlighted: {
@@ -97,7 +100,8 @@ export default {
   computed: {
     /**
      * Concatenated code lines
-     * @return {string}
+     *
+     * @returns {string}
      */
     code() {
       return this.lines.map(line => line.content).join('\n');
@@ -105,7 +109,8 @@ export default {
 
     /**
      * Prepare and return html-escaped code with the column pointer for highlighted line
-     * @return {string}
+     *
+     * @returns {string}
      */
     escapedCodeWithPointer() {
       const code = this.fixUnclosedComment(this.code);
@@ -132,6 +137,7 @@ export default {
   mounted() {
     /**
      * Set highlight.js syntax name based on catcher language
+     *
      * @see https://github.com/highlightjs/highlight.js/tree/master/src/languages
      */
     this.syntax = this.lang;
@@ -170,8 +176,9 @@ export default {
   methods: {
     /**
      * Check if passed line should be highlighted
+     *
      * @param {number} line - line to check
-     * @return {boolean}
+     * @returns {boolean}
      */
     isCurrentLine(line) {
       return this.linesHighlighted.includes(line);
@@ -181,7 +188,7 @@ export default {
      * Check if current code is an HTML scope
      * Used to highlight inline JavaScript errors with 'html' syntax
      *
-     * @return {boolean}
+     * @returns {boolean}
      */
     isHtmlScope() {
       const code = this.lines.map(frame => frame.content).join('\n');
@@ -194,7 +201,8 @@ export default {
 
     /**
      * Check if current code fragment is a TypeScript code
-     * @return {boolean}
+     *
+     * @returns {boolean}
      */
     isTypeScriptScope() {
       return this.filename.split('.').pop() === 'ts';
@@ -205,7 +213,7 @@ export default {
      *
      * @param {string} string - unescaped string
      * @param {number} position - original column number, before escape
-     * @return {string}
+     * @returns {string}
      */
     addColumnPointerToStringEscaped(string, position) {
       const contentEscaped = _.escape(string);
@@ -228,8 +236,8 @@ export default {
      * If the code fragment start with trimmed comment,
      * add opening comment chars to prevent breaking of highlighting.
      *
-     * @param {string} code
-     * @return {string}
+     * @param {string} code - code string to process
+     * @returns {string}
      */
     fixUnclosedComment(code) {
       const lines = code.split('\n').map(line => line.trim());

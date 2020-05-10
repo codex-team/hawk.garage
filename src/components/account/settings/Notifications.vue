@@ -39,6 +39,7 @@
                 <Icon
                   symbol="warning"
                 />
+                <!-- eslint-disable vue/no-v-html -->
                 <span
                   v-html="$t('settings.notifications.channelDescriptions.emailEmptyWarning', {
                     accountUrl: '/account/general'
@@ -142,6 +143,7 @@ export default Vue.extend({
   methods: {
     /**
      * Notifications channel changed. Need to save new value
+     *
      * @param channelName - channel name (key of UserNotificationsChannels)
      * @param value - new value
      */
@@ -165,6 +167,7 @@ export default Vue.extend({
 
     /**
      * Notifications type changed. Need to save new value
+     *
      * @param type - whatToReceive type
      * @param value - new value
      */
@@ -273,9 +276,9 @@ export default Vue.extend({
       color: var(--color-text-second);
       font-size: 9px;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
       background: var(--color-bg-main);
       border-radius: 4px;
-      text-transform: uppercase;
     }
 
     &__description {

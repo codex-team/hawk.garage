@@ -46,30 +46,35 @@ export default Vue.extend({
     return {
       /**
        * Original (first) event data
+       *
        * @type {HawkEvent}
        */
       event,
 
       /**
        * Current project id
+       *
        * @type {string}
        */
       projectId,
 
       /**
        * Current event id
+       *
        * @type {string}
        */
       eventId,
 
       /**
        * Status of repetition-diff fetching
+       *
        * @type {boolean}
        */
       loading: true,
 
       /**
        * Active menu item
+       *
        * @type {string}
        */
       activeItem: 'overview',
@@ -78,7 +83,8 @@ export default Vue.extend({
 
   /**
    * Vue created hook. Fetches error's data
-   * @return {Promise<void>}
+   *
+   * @returns {Promise<void>}
    */
   async created() {
     const eventId = this.$route.params.eventId;

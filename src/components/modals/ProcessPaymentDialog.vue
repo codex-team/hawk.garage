@@ -69,6 +69,7 @@ export default class ProcessPaymentDialog extends Vue {
   /**
    * Card to pay from
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   private card: object;
 
   /**

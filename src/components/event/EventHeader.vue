@@ -83,6 +83,7 @@ export default Vue.extend({
   props: {
     /**
      * Original (first) event data
+     *
      * @type {HawkEvent}
      */
     event: {
@@ -95,6 +96,7 @@ export default Vue.extend({
     return {
       /**
        * Status of repetition-diff fetching
+       *
        * @type {boolean}
        */
       loading: !this.event,
@@ -104,7 +106,8 @@ export default Vue.extend({
     /**
      * Event location got from the first backtrace frame
      * Or got from a url if the backtrace is empty
-     * @return {string}
+     *
+     * @returns {string}
      */
     location(): string {
       if (!this.event) {
@@ -130,7 +133,7 @@ export default Vue.extend({
     /**
      * Navigation items
      *
-     * @return {TabInfo[]}
+     * @returns {TabInfo[]}
      */
     navigationItems(): TabInfo[] {
       return [

@@ -13,9 +13,12 @@ const mutationTypes = {
 
 /**
  * Module state
+ *
  * @typedef {object} ModalDialogState
  * @property {string|null} component - name of current modal dialog component
  * @property {object} data - any data for modal dialog
+ *
+ * @returns {ModalDialogState}
  */
 function initialState() {
   return {
@@ -28,10 +31,10 @@ const actions = {
   /**
    * Set current modal window data
    *
-   * @param {function} dispatch - standard Vuex dispatch function
+   * @param {Function} dispatch - standard Vuex dispatch function
    * @property {string|null} component - name of current modal dialog component
    * @property {object} data - any data for modal dialog
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async [SET_MODAL_DIALOG]({ commit }, { component, data = {} }) {
     commit(mutationTypes.SET_MODAL_DIALOG, {
@@ -43,8 +46,8 @@ const actions = {
   /**
    * Reset modal window data
    *
-   * @param {function} dispatch - standard Vuex dispatch function
-   * @return {Promise<void>}
+   * @param {Function} dispatch - standard Vuex dispatch function
+   * @returns {Promise<void>}
    */
   async [RESET_MODAL_DIALOG]({ commit }) {
     commit(mutationTypes.RESET_MODAL_DIALOG);
@@ -56,9 +59,10 @@ const mutations = {
    * Set modal dialog data
    *
    * @param {ModalDialogState} state - app module state
-   * @property {string|null} component - name of current modal dialog component
-   * @property {object} data - any data for modal dialog
-   * @param data
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string|null} payload.component - name of current modal dialog component
+   * @param {object} payload.data - any data for modal dialog
    */
   [mutationTypes.SET_MODAL_DIALOG](state, { component, data }) {
     state.component = component;

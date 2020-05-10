@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     /**
-     * @return {Array<Workspace>} - registered workspaces
+     * @returns {Array<Workspace>} - registered workspaces
      */
     workspaces() {
       return this.$store.state.workspaces.list;
@@ -89,7 +89,8 @@ export default {
 
     /**
      * Getter for current user workspace
-     * @return {Workspace}
+     *
+     * @returns {Workspace}
      */
     currentWorkspace() {
       return this.$store.state.workspaces.current;
@@ -97,7 +98,8 @@ export default {
 
     /**
      * Getter for current user workspace
-     * @return {User}
+     *
+     * @returns {User}
      */
     user() {
       if (this.$store.state.user.data) {
@@ -123,6 +125,7 @@ export default {
   methods: {
     /**
      * Works when workspace item is clicked
+     *
      * @param {Workspace} workspace - clicked workspace
      */
     onWorkspaceItemClick(workspace) {
@@ -138,6 +141,7 @@ export default {
 
     /**
      * When user scroll down workspaces list show gradients on top and hide it if user scrolled up
+     *
      * @param {Event} event - scroll event
      */
     activateScrollableGradient(event) {

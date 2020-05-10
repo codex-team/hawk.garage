@@ -14,7 +14,7 @@ export default {
   },
 };
 
-export const Types = () => ({
+export const Types = (): unknown => ({
   components: { Badge },
   template: `
     <div>
@@ -31,7 +31,7 @@ export const Types = () => ({
   },
 });
 
-export const Default = () => ({
+export const Default = (): unknown => ({
   components: { Badge },
   template: `
     <Badge :content="content" />
@@ -44,7 +44,7 @@ export const Default = () => ({
   },
 });
 
-export const Medium = () => ({
+export const Medium = (): unknown => ({
   components: { Badge },
   template: `
     <Badge type="medium" :content="content" />
@@ -57,7 +57,7 @@ export const Medium = () => ({
   },
 });
 
-export const Critical = () => ({
+export const Critical = (): unknown => ({
   components: { Badge },
   template: `
     <Badge type="critical" :content="content" />

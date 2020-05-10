@@ -1,6 +1,6 @@
 import NotificationsRule from '@/components/project/settings/NotificationsRule.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
-import store from '@/store';
+import store from '../../../../../store';
 import router from '@/router';
 import { withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
@@ -8,8 +8,10 @@ import i18n from '@/i18n';
 
 /**
  * Return random item of an array
+ *
  * @param arr - list of available options
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getRandomArrayItem(arr: any[]): any {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -62,7 +64,7 @@ export default {
   parameters: {
   },
   decorators: [
-    () => ({
+    (): unknown => ({
       template: '<div style="width: 600px; max-height: 100%; padding: 20px 0; overflow-y: auto;"><story /></div>',
     }),
     centered,
@@ -70,7 +72,7 @@ export default {
   ],
 };
 
-export const List = () => ({
+export const List = (): unknown => ({
   components: { NotificationsRule },
   template: `
     <div>
@@ -84,7 +86,7 @@ export const List = () => ({
   props: {
     rules: {
       type: Array,
-      default: () => {
+      default(): ProjectNotificationsRule[] {
         const rules: ProjectNotificationsRule[] = [];
 
         for (let i = 0; i < 5; i++) {
