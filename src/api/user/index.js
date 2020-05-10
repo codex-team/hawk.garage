@@ -5,7 +5,10 @@ import {
   MUTATION_SIGN_UP,
   MUTATION_RECOVER_PASSWORD,
   MUTATION_UPDATE_PROFILE,
-  QUERY_CURRENT_USER
+  QUERY_CURRENT_USER,
+  MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL,
+  MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE,
+  QUERY_CURRENT_USER_WITH_NOTIFICATIONS
 } from './queries';
 import * as api from '../index.ts';
 
@@ -95,4 +98,37 @@ export async function changePassword(oldPassword, newPassword) {
     oldPassword,
     newPassword,
   })).changePassword;
+}
+
+/**
+ * Query user data with the only notifications property
+ *
+ * @returns {Promise<Pick<User, 'notifications'>>}
+ */
+export async function fetchNotificationsSettings() {
+  return (await api.call(QUERY_CURRENT_USER_WITH_NOTIFICATIONS)).me;
+}
+
+/**
+ * Change notifications channel settings
+ *
+ * @param {UserNotificationsChannels} payload - new channel settings
+ * @returns {Promise<{notifications: UserNotifications}>}
+ */
+export async function updateNotificationsChannel(payload) {
+  return (await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
+    input: payload,
+  })).changeUserNotificationsChannel;
+}
+
+/**
+ * Change notifications receive type
+ *
+ * @param {UserNotificationsReceiveTypesConfig} payload - Receive Type with its is-enabled state
+ * @returns {Promise<{notifications: UserNotifications}>}
+ */
+export async function updateNotificationsReceiveType(payload) {
+  return (await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
+    input: payload,
+  })).changeUserNotificationsReceiveType;
 }

@@ -1,5 +1,6 @@
 :root {
   --hide-scrollbar: {
+
     /* Chrome, Safari, newer versions of Opera */
     &::-webkit-scrollbar {
       display: none;

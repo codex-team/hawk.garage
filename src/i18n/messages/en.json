@@ -111,7 +111,32 @@
     },
     "logout": "Log out",
     "notifications": {
-      "title": "Notifications"
+      "title": "Notifications",
+      "channelsHeading": "Channels",
+      "actionTypesHeading": "Action types",
+      "soon": "Soon",
+      "channels": {
+        "email": "Email",
+        "webPush": "Web Push",
+        "desktopPush": "Desktop Push"
+      },
+      "channelDescriptions": {
+        "email": "Notifications on",
+        "emailEmptyPlaceholder": "your email",
+        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
+        "webPush": "Alerts even with closed tab",
+        "desktopPush": "Native notifies through the Hawk Desktop"
+      },
+      "actions": {
+        "IssueAssigning": "Issue assigning",
+        "WeeklyDigest": "Weekly digest",
+        "SystemMessages": "System messages"
+      },
+      "actionDescriptions": {
+        "IssueAssigning": "When someone will assign you to the task",
+        "WeeklyDigest": "Most important events for passed week",
+        "SystemMessages": "Only important messages from Hawk team"
+      }
     }
   },
   "workspaces": {

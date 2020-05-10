@@ -1,4 +1,4 @@
-import { ReceiveTypes, NotificationsChannels } from './project-notifications';
+import { ReceiveTypes, ProjectNotificationsChannels } from './project-notifications';
 
 /**
  * What kind of data we send to create a new notifications rule in a project
@@ -27,7 +27,7 @@ export interface ProjectNotificationsAddRulePayload {
   /**
    * Available channels to receive
    */
-  channels: NotificationsChannels;
+  channels: ProjectNotificationsChannels;
 }
 
 /**

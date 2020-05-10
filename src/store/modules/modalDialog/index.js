@@ -1,4 +1,3 @@
-/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import {
   SET_MODAL_DIALOG,
   RESET_MODAL_DIALOG
