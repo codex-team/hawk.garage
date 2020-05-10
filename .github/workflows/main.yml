@@ -50,4 +50,4 @@ jobs:
         if: endsWith(github.ref, '/prod')
         run: |
           DEPLOY_TOKEN_PROD=${{ secrets.DEPLOY_TOKEN_PROD }}
-          curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"prod\",\"secret_token\":\"$DEPLOY_TOKEN_PROD\"}" http://beta.hawk.so:7102/deploy
+          curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"prod\",\"secret_token\":\"$DEPLOY_TOKEN_PROD\"}" https://beta.hawk.so/deploy
