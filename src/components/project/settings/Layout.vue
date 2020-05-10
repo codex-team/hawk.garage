@@ -76,7 +76,8 @@ export default Vue.extend({
   computed: {
     /**
      * Current viewed project
-     * @return {Project}
+     *
+     * @returns {Project}
      */
     project(): Project {
       return this.$store.getters.getProjectById(this.$route.params.projectId);

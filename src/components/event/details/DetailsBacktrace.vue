@@ -126,8 +126,9 @@ export default {
   methods: {
     /**
      * Join array of source code lines into one string to display it
+     *
      * @param {Array} sourceCodeLinesArray - array o source code lines
-     * @return {String}
+     * @returns {string}
      */
     joinSourceCodeLines(sourceCodeLinesArray) {
       if (sourceCodeLinesArray) {
@@ -137,7 +138,8 @@ export default {
 
     /**
      * Switches the state of the spoiler to view the code
-     * @param {Number} index - backtrace info index
+     *
+     * @param {number} index - backtrace info index
      */
     toggleViewState(index) {
       if (this.openedFrames.includes(index)) {
@@ -154,7 +156,7 @@ export default {
      *
      * @param {number} line - calling line number
      * @param {number} [column] - calling column number
-     * @return {string}
+     * @returns {string}
      */
     getLocation({ line, column }) {
       let str = line;

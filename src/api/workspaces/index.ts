@@ -26,6 +26,7 @@ interface CreateWorkspaceInput {
 
 /**
  * Create workspace and return it
+ *
  * @param {Workspace} workspaceInfo - workspace to create
  * @returns {Promise<Workspace>} created workspace
  */
@@ -37,6 +38,7 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
 
 /**
  * Leave workspace
+ *
  * @param {string} workspaceId - id of workspace to leave
  */
 export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
@@ -45,7 +47,8 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
 
 /**
  * Returns all user's workspaces and project.
- * @return {Promise<[Workspace]>}
+ *
+ * @returns {Promise<[Workspace]>}
  */
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
   return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
@@ -84,8 +87,9 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
 
 /**
  * Get workspaces
- * @param {array} ids – id of fetching workspaces
- * @return {Promise<[Workspace]>}
+ *
+ * @param {Array} ids – id of fetching workspaces
+ * @returns {Promise<[Workspace]>}
  */
 export async function getWorkspaces(ids: string): Promise<Workspace> {
   return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
@@ -93,7 +97,12 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
 
 /**
  * Update workspace data
- * @returns {Promise<Boolean>}
+ *
+ * @returns {Promise<boolean>}
+ * @param id
+ * @param name
+ * @param description
+ * @param image
  */
 export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<boolean> {
   return (await api.call(MUTATION_UPDATE_WORKSPACE, {
@@ -105,10 +114,11 @@ export async function updateWorkspace(id: string, name: string, description: str
 
 /**
  * Grant admin permission for passed user
+ *
  * @param {string} workspaceId - id of workspace where user is participate
  * @param {string} userId - id of user to grant permissions
  * @param {boolean} state - if true, grant permissions, if false, withdraw them
- * @returns {Promise<Boolean>}
+ * @returns {Promise<boolean>}
  */
 export async function grantAdminPermissions(workspaceId: string, userId: string, state = true): Promise<boolean> {
   return (await api.call(MUTATION_GRANT_ADMIN_PERMISSIONS, {
@@ -120,6 +130,7 @@ export async function grantAdminPermissions(workspaceId: string, userId: string,
 
 /**
  * Remove user from workspace
+ *
  * @param {string} workspaceId - id of workspace where user is participate
  * @param {string} userId - id of user to remove
  * @param {string} userEmail - email of user to remove

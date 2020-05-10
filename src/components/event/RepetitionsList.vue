@@ -83,6 +83,7 @@ export default {
   methods: {
     /**
      * Provides navigation to the single repetition
+     *
      * @param {Repetition} repetition - clicked repetition
      */
     goToRepetition(repetition) {
@@ -97,9 +98,10 @@ export default {
     },
     /**
      * Show window size of repeated events
+     *
      * @param {number | undefined} width - window inner width
      * @param {number | undefined} height - window inner height
-     * @return {string} window size in correct format
+     * @returns {string} window size in correct format
      */
     showWindowSize({ innerWidth: width, innerHeight: height }) {
       /**

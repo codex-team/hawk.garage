@@ -74,7 +74,8 @@ export default {
   computed: {
     /**
      * Returns project id from the route
-     * @return {string}
+     *
+     * @returns {string}
      */
     projectId() {
       return this.$route.params.projectId;
@@ -82,7 +83,8 @@ export default {
 
     /**
      * Current viewed project
-     * @return {Project}
+     *
+     * @returns {Project}
      */
     project() {
       return this.$store.getters.getProjectById(this.projectId);
@@ -90,7 +92,8 @@ export default {
 
     /**
      * Project recent errors
-     * @return {RecentInfoByDate}
+     *
+     * @returns {RecentInfoByDate}
      */
     recentEvents() {
       if (!this.project) {
@@ -121,8 +124,9 @@ export default {
   methods: {
     /**
      * Return passed day midnight timestamp
+     *
      * @param {string} date - grouped day key like 'date:1576011600'
-     * @return {number}
+     * @returns {number}
      */
     getDay(date) {
       return parseInt(date.replace('groupingTimestamp:', ''), 10);
@@ -141,6 +145,7 @@ export default {
 
     /**
      * Shows assigners list for the specific event
+     *
      * @param {GroupedEvent} event - event to display assigners list
      */
     showAssigners(event) {
@@ -155,9 +160,10 @@ export default {
 
     /**
      * Opens event overview popup
-     * @param {String} projectId - id of the event's project
-     * @param {String} groupHash - event's group hash
-     * @param {String} repetitionId - event's repetition id
+     *
+     * @param {string} projectId - id of the event's project
+     * @param {string} groupHash - event's group hash
+     * @param {string} repetitionId - event's repetition id
      */
     showEventOverview(projectId, groupHash, repetitionId) {
       this.$router.push({

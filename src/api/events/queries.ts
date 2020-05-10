@@ -110,6 +110,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 // language=GraphQL
 /**
  * GraphQL query for latest repetitions
+ *
  * @type {string}
  */
 export const QUERY_LATEST_REPETITIONS = `

@@ -146,6 +146,7 @@ export default Vue.extend({
   methods: {
     /**
      * User clicks on 'Edit Rule button'
+     *
      * @param {string} ruleId - id of rule to edit
      */
     editRule(ruleId: string): void {

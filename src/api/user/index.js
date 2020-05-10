@@ -13,7 +13,7 @@ import {
 import * as api from '../index.ts';
 
 /**
- * @typedef {Object} TokensPair
+ * @typedef {object} TokensPair
  * @property {string} accessToken - user's access token
  * @property {string} refreshToken - user's refresh token for getting new tokens pair
  */
@@ -23,7 +23,7 @@ import * as api from '../index.ts';
  *
  * @param {string} email - Email
  * @param {string} password - Password
- * @return {Promise<TokensPair>} - Auth token
+ * @returns {Promise<TokensPair>} - Auth token
  */
 export async function login(email, password) {
   return (await api.call(MUTATION_LOGIN, {
@@ -36,7 +36,7 @@ export async function login(email, password) {
  * Sign up by email and return status (true or false)
  *
  * @param {string} email - Email
- * @return {Promise<Boolean>} Response status
+ * @returns {Promise<boolean>} Response status
  */
 export async function signUp(email) {
   return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
@@ -46,7 +46,7 @@ export async function signUp(email) {
  * Recover password by email
  *
  * @param {string} email - user Email
- * @return {Promise<boolean>} Response status
+ * @returns {Promise<boolean>} Response status
  */
 export async function recoverPassword(email) {
   return (await api.call(MUTATION_RECOVER_PASSWORD, { email })).resetPassword;
@@ -55,8 +55,8 @@ export async function recoverPassword(email) {
 /**
  * Get new tokens pair by refreshToken
  *
- * @param {String} refreshToken - user's refresh token
- * @return {Promise<TokensPair>}
+ * @param {string} refreshToken - user's refresh token
+ * @returns {Promise<TokensPair>}
  */
 export async function refreshTokens(refreshToken) {
   return (await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true })).refreshTokens;
@@ -65,7 +65,7 @@ export async function refreshTokens(refreshToken) {
 /**
  * Get current user
  *
- * @return {Promise<User>}
+ * @returns {Promise<User>}
  */
 export async function fetchCurrentUser() {
   return (await api.call(QUERY_CURRENT_USER)).me;
@@ -77,7 +77,7 @@ export async function fetchCurrentUser() {
  * @param {string} name - user name
  * @param {string} email - user email address
  * @param {File} image - profile picture file uploading
- * @returns {Promise<Boolean>}
+ * @returns {Promise<boolean>}
  */
 export async function updateProfile(name, email, image) {
   return (await api.call(MUTATION_UPDATE_PROFILE, {
@@ -91,7 +91,7 @@ export async function updateProfile(name, email, image) {
  *
  * @param {string} oldPassword - current password
  * @param {string} newPassword - password to change
- * @returns {Promise<Boolean>}
+ * @returns {Promise<boolean>}
  */
 export async function changePassword(oldPassword, newPassword) {
   return (await api.call(MUTATION_CHANGE_PASSWORD, {

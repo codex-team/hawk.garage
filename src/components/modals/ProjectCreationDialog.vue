@@ -63,7 +63,7 @@ export default {
   },
   computed: {
     /**
-     * @return {Array<Workspace>} - registered workspaces with permission check
+     * @returns {Array<Workspace>} - registered workspaces with permission check
      */
     workspaces() {
       const userId = this.$store.state.user.data.id;

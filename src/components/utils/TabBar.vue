@@ -52,6 +52,7 @@ export default Vue.extend({
   props: {
     /**
      * Navigation items
+     *
      * @type {Array}
      */
     items: {
@@ -74,9 +75,10 @@ export default Vue.extend({
   methods: {
     /**
      * Check if navigation item is active
+     *
      * @param item - navigation item info
      *
-     * @return {boolean}
+     * @returns {boolean}
      */
     isActive(item: TabInfo): boolean {
       return this.items.indexOf(item) === this.activeItemIndex;
@@ -84,6 +86,7 @@ export default Vue.extend({
 
     /**
      * Handle clicks on navigation item
+     *
      * @param item - clicked navigation item
      */
     onNavigationItemClick(item: TabInfo) {

@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     /**
-     * @returns {String} image background color (if image URL is not provided)
+     * @returns {string} image background color (if image URL is not provided)
      */
     bgColor() {
       if (this.isImageShowing) {
@@ -76,7 +76,8 @@ export default {
 
     /**
      * CSS style
-     * @return {object}
+     *
+     * @returns {object}
      */
     style() {
       const css = {};
@@ -109,7 +110,8 @@ export default {
 
     /**
      * Native border-radius for a fallback
-     * @return {number}
+     *
+     * @returns {number}
      */
     radius() {
       return this.size / 3.6;
@@ -118,6 +120,7 @@ export default {
   watch: {
     /**
      * Change entity image after image prop changed
+     *
      * @param {string} newValue - new value of the image property
      */
     image(newValue) {
@@ -143,6 +146,7 @@ export default {
   methods: {
     /**
      * Create new HTMLImageElement by image src
+     *
      * @param {string} imageSrc - image source link
      */
     createImageElement(imageSrc) {

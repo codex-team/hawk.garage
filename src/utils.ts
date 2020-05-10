@@ -2,8 +2,9 @@ const mergeWith = require('lodash.mergewith');
 
 /**
  * Returns entity color from predefined list
- * @param {String} [id] - for id-base picking colors (hex string)
- * @return {String} color
+ *
+ * @param {string} [id] - for id-base picking colors (hex string)
+ * @returns {string} color
  */
 export function getEntityColor(id: string): string {
   const colors = [
@@ -28,6 +29,7 @@ export function getEntityColor(id: string): string {
 
 /**
  * Group array of Objects by key
+ *
  * @usage
  *
  * const cars = [
@@ -48,7 +50,7 @@ export function getEntityColor(id: string): string {
  *   }, null, 2)
  * );
  *
- * @param {String} key - key for grouping
+ * @param {string} key - key for grouping
  */
 export const groupBy =
   (key: string) =>
@@ -73,15 +75,17 @@ export const groupBy =
 
 /**
  * Group array of object by 'date' field
+ *
  * @type {function(Array[Object]): Object}
  */
 export const groupByGroupingTimestamp = groupBy('groupingTimestamp');
 
 /**
  * Merge to objects recursively
+ *
  * @param {object} target
  * @param {object[]} sources
- * @return {object}
+ * @returns {object}
  */
 export function deepMerge(target: object, ...sources: object[]) {
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {
@@ -102,6 +106,7 @@ export function deepMerge(target: object, ...sources: object[]) {
 
 /**
  * Check if passed variable is an object
+ *
  * @param item - what to check
  */
 export function isObject(item: any): boolean {
@@ -110,6 +115,7 @@ export function isObject(item: any): boolean {
 
 /**
  * Returns real type of passed variable
+ *
  * @param obj
  */
 function typeOf(obj: any): string {
@@ -118,8 +124,9 @@ function typeOf(obj: any): string {
 
 /**
  * Converts string in wrong language to the translited equal
+ *
  * @param {string} string
- * @return {String}
+ * @returns {string}
  */
 export function misTranslit(string: string): string {
   if (!string) {
@@ -198,26 +205,29 @@ export function misTranslit(string: string): string {
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
+ *
  * @param {string} string - string to encode
- * @return escaped string
+ * @returns escaped string
  */
 export function escape(string: string): string;
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
+ *
  * @param {string} string - string to encode
  * @param {boolean} withCount - pass true if you need to know how many substitutions was
  *                              replaced and total length of new chars added
- * @return object with escaped string, count and length
+ * @returns object with escaped string, count and length
  */
 export function escape(string: string, withCount: boolean): {value: string; count: number; length: number};
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
+ *
  * @param {string} string - string to encode
  * @param {boolean} withCount - pass true if you need to know how many substitutions was
  *                              replaced and total length of new chars added
- * @return escaped string or object with escaped string, count and length
+ * @returns escaped string or object with escaped string, count and length
  */
 export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
   if (!string) {
@@ -255,11 +265,12 @@ export function escape(string: string, withCount = false): string | {value: stri
 
 /**
  * Replace char at passed index to the new chars
+ *
  * @param {string} string - source string
  * @param {number} index - char position
  * @param {string} replacement - charts to replace with
  *
- * @return {string}
+ * @returns {string}
  */
 export function strReplaceAt(string: string, index: number, replacement: string): string {
   const leftPart = string.substr(0, index);
@@ -270,6 +281,7 @@ export function strReplaceAt(string: string, index: number, replacement: string)
 
 /**
  * Return real offset by line number and column number of string
+ *
  * @param {string} string - where to find
  * @param {number} line - searching line number
  * @param {number} column - searching column number

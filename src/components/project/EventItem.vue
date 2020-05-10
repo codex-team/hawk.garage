@@ -51,14 +51,14 @@ export default {
       required: true,
     },
     /**
-     * @type {Number} - timestamp of the last event
+     * @type {number} - timestamp of the last event
      */
     lastOccurrenceTimestamp: {
       type: Number,
       required: true,
     },
     /**
-     * @type {Number} - number of events per day
+     * @type {number} - number of events per day
      */
     count: {
       type: [String, Number],
@@ -69,7 +69,7 @@ export default {
     /**
      * Return true if user visited current event
      *
-     * @return {boolean}
+     * @returns {boolean}
      */
     isVisited() {
       const { visitedBy } = this.event;
@@ -84,7 +84,7 @@ export default {
     /**
      * Get mark with the highest priority
      *
-     *  @return {string}
+     *  @returns {string}
      */
     mark() {
       const { marks } = this.event;

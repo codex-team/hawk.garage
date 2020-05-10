@@ -49,8 +49,9 @@ const loadedLanguages = [ 'en' ];
 
 /**
  * Sets new i18n plugin locale
- * @param {String} lang - short language name
- * @return {String} - new language
+ *
+ * @param {string} lang - short language name
+ * @returns {string} - new language
  */
 function setI18nLanguage(lang) {
   i18n.locale = lang;
@@ -60,8 +61,9 @@ function setI18nLanguage(lang) {
 
 /**
  * Download and set new locale
- * @param {String} lang - short language name
- * @return {Promise<*>}
+ *
+ * @param {string} lang - short language name
+ * @returns {Promise<*>}
  */
 export async function loadLanguageAsync(lang) {
   // If the same language

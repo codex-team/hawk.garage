@@ -27,6 +27,7 @@ import Icon from './Icon.vue';
 
 /**
  * Allows to call methods of this component from parent
+ *
  * @example (this.$refs.submitButton as unknown as UiButtonComponent).shake();
  */
 export interface UiButtonComponent {

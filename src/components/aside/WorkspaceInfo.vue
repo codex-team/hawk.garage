@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     /**
-     * @return {boolean} - shows whether the current user is an admin for this workspace
+     * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
     isAdmin() {
       return this.$store.getters.isCurrentUserAdmin(this.workspace.id);

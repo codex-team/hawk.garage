@@ -20,6 +20,7 @@ declare const buildRevision: string;
 
 /**
  * Frontend-errors tracking system
+ *
  * @type {HawkCatcher}
  */
 let hawk: HawkCatcher;
@@ -53,6 +54,7 @@ Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://
 
 /**
  * Sends error to the Hawk
+ *
  * @param {Error} error - error to send
  * @usage this.$sendToHawk(new Error('Some error'));
  */

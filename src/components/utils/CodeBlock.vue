@@ -45,7 +45,8 @@ export default {
   computed: {
     /**
      * Return true if there is a single line of a code
-     * @return {boolean}
+     *
+     * @returns {boolean}
      */
     isSingleLine() {
       return this.$slots.default[0].text.includes('\n') === false;

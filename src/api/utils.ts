@@ -1,9 +1,9 @@
 /**
  * Prepares FormData object for requests with files
  *
- * @param {String} request - request to send
- * @param {Object} [variables] - request variables
- * @param {Object} [files] - files to upload
+ * @param {string} request - request to send
+ * @param {object} [variables] - request variables
+ * @param {object} [files] - files to upload
  *
  * @returns {FormData}
  */

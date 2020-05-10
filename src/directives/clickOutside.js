@@ -1,5 +1,6 @@
 /**
  * Custom directive 'click-outside' for handling outside clicks from components
+ *
  * @usage 1) connect   -> Vue.directive('click-outside', DirectiveClickOutside);
  * @usage 2) enjoy     -> <component v-click-outside="SOME_METHOD" />
  *

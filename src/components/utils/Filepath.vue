@@ -18,6 +18,7 @@ export default Vue.extend({
   props: {
     /**
      * Event location got from the first backtrace frame
+     *
      * @type {string}
      */
     location: {
@@ -27,6 +28,7 @@ export default Vue.extend({
 
     /**
      * Highlight filename
+     *
      * @type {boolean}
      */
     isHighlight: {
@@ -38,7 +40,7 @@ export default Vue.extend({
     /**
      * Event file path
      *
-     * @return {string}
+     * @returns {string}
      */
     path(): string {
       if (!this.location) {
@@ -51,7 +53,7 @@ export default Vue.extend({
     /**
      * Event file name
      *
-     * @return {string}
+     * @returns {string}
      */
     file(): string {
       const parts = this.location.split('/');
@@ -66,7 +68,7 @@ export default Vue.extend({
      * - GET parameters
      * Then, add spaces around slashes
      *
-     * @return {string}
+     * @returns {string}
      */
     prettyPath(): string {
       let path = this.path;
@@ -83,6 +85,7 @@ export default Vue.extend({
   methods: {
     /**
      * Removes everything after "?"
+     *
      * @param path - where to remove
      */
     removeGetParams(path: string): string {
@@ -91,6 +94,7 @@ export default Vue.extend({
 
     /**
      * Removes protocols like 'webpack://' or 'file://'
+     *
      * @param path - where to remove
      */
     removeProtocol(path: string): string {

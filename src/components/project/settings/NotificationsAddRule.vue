@@ -229,6 +229,7 @@ export default Vue.extend({
   methods: {
     /**
      * Fill 'including' property with array from splitted input string
+     *
      * @param value - user input string with commas
      */
     splitIncludingFilters(value: string): void {
@@ -237,6 +238,7 @@ export default Vue.extend({
 
     /**
      * Fill 'excluding' property with array from splitted input string
+     *
      * @param value - user input string with commas
      */
     splitExcludingFilters(value: string): void {
@@ -328,6 +330,7 @@ export default Vue.extend({
 
     /**
      * Return true if channel's endpoint is not filled
+     *
      * @param channelName - key of this.form.channels object
      */
     checkChannelEmptiness(channelName: string): boolean {

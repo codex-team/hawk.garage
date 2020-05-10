@@ -85,14 +85,14 @@ export default {
     }),
 
     /**
-     * @return {Array<Workspace>} - registered workspaces
+     * @returns {Array<Workspace>} - registered workspaces
      */
     workspaces() {
       return this.$store.state.workspaces.list;
     },
 
     /**
-     * @return {Array<Project>} - list of current projects
+     * @returns {Array<Project>} - list of current projects
      */
     projects() {
       let projectList = this.$store.state.projects.list
@@ -129,7 +129,8 @@ export default {
 
     /**
      * Getter for current user workspace
-     * @return {Workspace}
+     *
+     * @returns {Workspace}
      */
     currentWorkspace() {
       return this.$store.state.workspaces.current;
@@ -175,6 +176,7 @@ export default {
 
     /**
      * Opens project overview page or catcher installation page if not already connected
+     *
      * @param {Project} project - clicked project
      */
     onProjectMenuItemClick(project) {

@@ -8,6 +8,7 @@ import i18n from '@/i18n';
 
 /**
  * Return random item of an array
+ *
  * @param arr - list of available options
  */
 function getRandomArrayItem(arr: any[]): any {
