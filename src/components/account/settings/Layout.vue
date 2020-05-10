@@ -20,12 +20,12 @@
         >
           {{ $t('settings.account.title') }}
         </router-link>
-        <!--        <router-link-->
-        <!--          class="settings-window__menu-item"-->
-        <!--          :to="{ name: 'home'}"-->
-        <!--        >-->
-        <!--          {{ $t('settings.notifications.title') }}-->
-        <!--        </router-link>-->
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'account-notifications'}"
+        >
+          {{ $t('settings.notifications.title') }}
+        </router-link>
         <!--        <router-link-->
         <!--          class="settings-window__menu-item"-->
         <!--          :to="{ name: 'billing-settings'}"-->

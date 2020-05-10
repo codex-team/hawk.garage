@@ -24,14 +24,14 @@ export default Vue.extend({
 
 <style>
   .project-placeholder {
-    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    font-size: 14px;
-    font-weight: bold;
+    justify-content: center;
+    height: 100%;
     color: var(--color-text-second);
+    font-weight: bold;
+    font-size: 14px;
 
     &__icon {
       display: block;

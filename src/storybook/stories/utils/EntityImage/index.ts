@@ -13,7 +13,7 @@ export default {
 /**
  * Shows how different sizes looks like
  */
-export const Sizes = () => ({
+export const Sizes = (): unknown => ({
   components: { EntityImage },
   template: `
     <div style="display: flex; align-items: flex-end; flex-wrap: wrap; max-width: 700px; justify-content: space-between;">
@@ -51,8 +51,8 @@ export const Sizes = () => ({
     },
     sizes: {
       type: Array,
-      default: () => {
-        return array('Size', ['100', '72', '50', '40', '36', '24', '18', '16', '12', '10'])
+      default: (): string[] => {
+        return array('Size', ['100', '72', '50', '40', '36', '24', '18', '16', '12', '10']);
       },
     },
   },
@@ -61,7 +61,7 @@ export const Sizes = () => ({
 /**
  * Shows how different colors looks like
  */
-export const Colors = () => ({
+export const Colors = (): unknown => ({
   components: { EntityImage },
   template: `
     <div style="display: flex; align-items: flex-end">
@@ -78,34 +78,34 @@ export const Colors = () => ({
   props: {
     title: {
       type: String,
-      default: 'Peter Savchenko'
+      default: 'Peter Savchenko',
     },
     size: {
       type: Number,
-      default: number('Size', 36)
+      default: number('Size', 36),
     },
     ids: {
       type: Array,
-      default: () => {
-        let arr = [] as string[];
+      default: (): string[] => {
+        const arr = [] as string[];
 
-        for (let i = 0; i < 16; i++){
-          if (i % 2 === 0){
+        for (let i = 0; i < 16; i++) {
+          if (i % 2 === 0) {
             continue;
           }
-          arr.push(text('id ' + i, (0xe000|i).toString(16)));
+          arr.push(text('id ' + i, (0xe000 | i).toString(16)));
         }
+
         return arr;
       },
     },
   },
 });
 
-
 /**
  * Shows how different colors looks like
  */
-export const WithPhotos = () => ({
+export const WithPhotos = (): unknown => ({
   components: { EntityImage },
   template: `
     <div style="display: flex; align-items: flex-end">
@@ -123,15 +123,15 @@ export const WithPhotos = () => ({
   props: {
     title: {
       type: String,
-      default: 'Peter Savchenko'
+      default: 'Peter Savchenko',
     },
     size: {
       type: Number,
-      default: number('Size', 36)
+      default: number('Size', 36),
     },
     users: {
       type: Array,
-      default: () => {
+      default: (): Array<{id; name; image}> => {
         return [
           {
             id: 'user1',
@@ -142,10 +142,9 @@ export const WithPhotos = () => ({
             id: 'user2',
             name: 'Taly Guryn',
             image: 'https://codex.so/upload/users/b_75c0f13d4b9aa382b7fe9acfdabe6c0f.jpg',
-          }
+          },
         ];
       },
     },
   },
 });
-

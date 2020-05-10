@@ -83,6 +83,7 @@ export default {
   methods: {
     /**
      * Provides navigation to the single repetition
+     *
      * @param {Repetition} repetition - clicked repetition
      */
     goToRepetition(repetition) {
@@ -97,11 +98,16 @@ export default {
     },
     /**
      * Show window size of repeated events
-     * @param {number | undefined} width - window inner width
-     * @param {number | undefined} height - window inner height
-     * @return {string} window size in correct format
+     *
+     * @param {object} params - addon data
+     * @param {number | undefined} params.innerWidth - window inner width
+     * @param {number | undefined} params.innerHeight - window inner height
+     * @returns {string} window size in correct format
      */
-    showWindowSize({ innerWidth: width, innerHeight: height }) {
+    showWindowSize({ innerWidth, innerHeight }) {
+      let width = innerWidth;
+      let height = innerHeight;
+
       /**
        * As repetition store diff with first-ever event
        * and if window size hasn't changed

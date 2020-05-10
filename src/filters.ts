@@ -4,6 +4,7 @@ import shortNumber from 'short-number';
 
 /**
  * Filter that add space after first digit in 4-digits number
+ *
  * @param value - filter value
  */
 Vue.filter('spacedNumber', function (value: number): string {
@@ -24,6 +25,7 @@ Vue.filter('spacedNumber', function (value: number): string {
 
 /**
  * Filter that abbreviates numbers
+ *
  * @param value - filter value
  */
 Vue.filter('abbreviateNumber', function (value: number): string {
@@ -38,21 +40,23 @@ Vue.filter('abbreviateNumber', function (value: number): string {
 
 /**
  * Return workspace name abbreviation (one or two symbols)
- * @return {string}
+ *
+ * @returns {string}
  */
 Vue.filter('abbreviation', function (value: string): string {
   if (!value) {
     return '';
   }
 
-  const words = value.split(' ');
+  const words = value.split(' ').filter(word => word.length > 0);
 
-  return (words.length === 1 || !words[1].length ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
+  return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
 });
 
 /**
  * Returns prettifying time ('now' or time in hh:mm)
- * @return {string}
+ *
+ * @returns {string}
  */
 Vue.filter('prettyTime', function (value: number) {
   const date = new Date(value * 1000);
@@ -72,7 +76,8 @@ Vue.filter('prettyTime', function (value: number) {
 
 /**
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
- * @return {string}
+ *
+ * @returns {string}
  */
 Vue.filter('prettyDateStr', function (value: string): string {
   const [day, month]: number[] = value.split('-').map(stringValue => +stringValue);
@@ -93,7 +98,7 @@ Vue.filter('prettyDateStr', function (value: string): string {
 /**
  * Returns prettified date from string
  *
- * @return {string}
+ * @returns {string}
  */
 Vue.filter('prettyDate', function (value: number) {
   const argumentDate = new Date(value * 1000);
@@ -123,7 +128,8 @@ Vue.filter('prettyDate', function (value: number) {
 
 /**
  * Returns prettified date ('29 aug, 14:30')
- * @return {string}
+ *
+ * @returns {string}
  */
 Vue.filter('prettyFullDate', function (value: number) {
   const date = new Date(value * 1000);

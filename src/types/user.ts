@@ -1,3 +1,5 @@
+import { UserNotifications } from './user-notifications';
+
 /**
  * Represents current authenticated user
  */
@@ -21,4 +23,9 @@ export interface User {
    * User profile photo
    */
   image?: string;
+
+  /**
+   * Notifications settings
+   */
+  notifications?: UserNotifications;
 }

@@ -78,3 +78,30 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
     }
   }
 `;
+
+/**
+ * This fields stored in users.notifications record
+ */
+export const USER_NOTIFICATIONS_FRAGMENT = `
+  fragment UserNotifications on UserNotificationsSettings {
+    channels {
+      email {
+        isEnabled
+        endpoint
+      }
+      webPush {
+        isEnabled
+        endpoint
+      }
+      desktopPush {
+        isEnabled
+        endpoint
+      }
+    }
+    whatToReceive {
+      IssueAssigning
+      WeeklyDigest
+      SystemMessages
+    }
+  }
+`;

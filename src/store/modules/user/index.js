@@ -1,4 +1,3 @@
-/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import {
   LOGIN,
   SIGN_UP,
@@ -6,10 +5,14 @@ import {
   REFRESH_TOKENS,
   FETCH_CURRENT_USER,
   UPDATE_PROFILE,
-  CHANGE_PASSWORD, RECOVER_PASSWORD
+  CHANGE_PASSWORD,
+  RECOVER_PASSWORD,
+  CHANGE_NOTIFICATIONS_CHANNEL,
+  CHANGE_NOTIFICATIONS_RECEIVE_TYPE,
+  FETCH_NOTIFICATIONS_SETTINGS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
-import * as authApi from '../../../api/user';
+import * as userApi from '../../../api/user';
 
 /**
  * Mutations enum for this module
@@ -17,6 +20,7 @@ import * as authApi from '../../../api/user';
 const mutationTypes = {
   SET_TOKENS: 'SET_TOKENS', // Sets user's auth tokens (for example, after authentication or updating tokens)
   SET_CURRENT_USER: 'SET_CURRENT_USER', // Sets user's field
+  SET_NOTIFICATIONS_SETTINGS: 'SET_NOTIFICATIONS_SETTINGS', // set the 'notifications' settings after mutations or fetch
 };
 
 /**
@@ -34,17 +38,9 @@ const mutationTypes = {
  */
 
 /**
- * Module state
- *
- * @typedef {object} AuthModuleState
- * @property {string} accessToken - user's access token
- * @property {string} refreshToken - user's refresh token for getting new tokens pair
- * @property {User} data - user's data
- */
-
-/**
  * Creates module state
- * @return {AuthModuleState}
+ *
+ * @returns {UserModuleState}
  */
 function initialState() {
   return {
@@ -56,13 +52,15 @@ function initialState() {
 
 /**
  * All Vuex getters will be stored under this namespace
+ *
  * @namespace Getters
  */
 const getters = {
   /**
    * Returns true if the user is authenticated else false
-   * @param {AuthModuleState} state - vuex state
-   * @return {boolean}
+   *
+   * @param {UserModuleState} state - vuex state
+   * @returns {boolean}
    */
   isAuthenticated: state => !!state.accessToken,
 };
@@ -71,22 +69,22 @@ const actions = {
   /**
    * Send sign up request to the server and performs user login
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {User} user - user's params for auth
-   * @return {Promise<boolean>} - sign up status
+   * @returns {Promise<boolean>} - sign up status
    */
-  async [SIGN_UP]({ commit }, user) {
-    return authApi.signUp(user.email);
+  async [SIGN_UP](context, user) {
+    return userApi.signUp(user.email);
   },
 
   /**
    * Send login request to the server and performs user login
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {Function} commit - standard Vuex commit function
    * @param {User} user - user's params for auth
    */
   async [LOGIN]({ commit }, user) {
-    const tokens = await authApi.login(user.email, user.password);
+    const tokens = await userApi.login(user.email, user.password);
 
     commit(mutationTypes.SET_TOKENS, tokens);
   },
@@ -94,17 +92,17 @@ const actions = {
   /**
    * Send recover password request to the server
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {User} user - user's params for recovering password
    */
-  async [RECOVER_PASSWORD]({ commit }, user) {
-    return authApi.recoverPassword(user.email);
+  async [RECOVER_PASSWORD](context, user) {
+    return userApi.recoverPassword(user.email);
   },
 
   /**
    * Set tokens after callback from OAuth
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {Function} commit - standard Vuex commit function
    * @param {TokensPair} tokens - user's auth tokens
    */
   async [SET_TOKENS]({ commit }, tokens) {
@@ -114,12 +112,14 @@ const actions = {
   /**
    * Send request for refreshing tokens pair
    *
-   * @param {function} commit - standard Vuex commit function
-   * @param {AuthModuleState} state - vuex state
-   * @return {Promise<TokensPair>}
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   * @param {UserModuleState} context.state - vuex state
+   *
+   * @returns {Promise<TokensPair>}
    */
   async [REFRESH_TOKENS]({ commit, state }) {
-    const tokens = await authApi.refreshTokens(state.refreshToken);
+    const tokens = await userApi.refreshTokens(state.refreshToken);
 
     commit(mutationTypes.SET_TOKENS, tokens);
 
@@ -129,10 +129,10 @@ const actions = {
   /**
    * Send request to fetch current user data
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {Function} commit - standard Vuex commit function
    */
   async [FETCH_CURRENT_USER]({ commit }) {
-    const me = await authApi.fetchCurrentUser();
+    const me = await userApi.fetchCurrentUser();
 
     commit(mutationTypes.SET_CURRENT_USER, me);
   },
@@ -140,27 +140,78 @@ const actions = {
   /**
    * Send request to update user profile data
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {User} user - user's params to update
    */
-  async [UPDATE_PROFILE]({ commit }, user) {
-    return authApi.updateProfile(user.name, user.email, user.image);
+  async [UPDATE_PROFILE](context, user) {
+    return userApi.updateProfile(user.name, user.email, user.image);
   },
 
   /**
    * Send request to change user password
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {Passwords} passwords - user's pair of passwords
    */
-  async [CHANGE_PASSWORD]({ commit }, passwords) {
-    return authApi.changePassword(passwords.old, passwords.new);
+  async [CHANGE_PASSWORD](context, passwords) {
+    return userApi.changePassword(passwords.old, passwords.new);
+  },
+
+  /**
+   * Fetches notifications settings and put it to the state
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - allows to call mutation
+   * @param {UserModuleState} context.state - module state
+   * @returns {Promise<void>}
+   */
+  async [FETCH_NOTIFICATIONS_SETTINGS]({ commit, state }) {
+    const { notifications } = await userApi.fetchNotificationsSettings();
+
+    commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
+      notifications,
+    }));
+  },
+
+  /**
+   * Update account notifications channel settings
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - allows to call mutation
+   * @param {UserModuleState} context.state - module state
+   * @param {UserNotificationsChannels} channel - new channel value
+   * @returns {Promise<void>}
+   */
+  async [CHANGE_NOTIFICATIONS_CHANNEL]({ commit, state }, channel) {
+    const { notifications } = await userApi.updateNotificationsChannel(channel);
+
+    commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
+      notifications,
+    }));
+  },
+
+  /**
+   * Update account notifications receive type settings
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - allows to call mutation
+   * @param {UserModuleState} context.state - module state
+   * @param {UserNotificationsReceiveTypesConfig} payload - Receive Type with its is-enabled state,
+   *                                                        for example, {IssueAssigning: true}
+   * @returns {Promise<void>}
+   */
+  async [CHANGE_NOTIFICATIONS_RECEIVE_TYPE]({ commit, state }, payload) {
+    const { notifications } = await userApi.updateNotificationsReceiveType(payload);
+
+    commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
+      notifications,
+    }));
   },
 
   /**
    * Resets module state
    *
-   * @param {function} commit - standard Vuex commit function
+   * @param {Function} commit - standard Vuex commit function
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
@@ -171,9 +222,11 @@ const mutations = {
   /**
    * Mutation caused by successful authentication
    *
-   * @param {AuthModuleState} state - Vuex state
-   * @param {string} accessToken - user's access token
-   * @param {string} refreshToken - user's refresh token for getting new tokens pair
+   * @param {UserModuleState} state - Vuex state
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.accessToken - user's access token
+   * @param {string} payload.refreshToken - user's refresh token for getting new tokens pair
    */
   [mutationTypes.SET_TOKENS](state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;
@@ -183,7 +236,7 @@ const mutations = {
   /**
    * Set users data to state
    *
-   * @param {AuthModuleState} state - Vuex state
+   * @param {UserModuleState} state - Vuex state
    * @param {User} user – user's object to set
    */
   [mutationTypes.SET_CURRENT_USER](state, user) {
@@ -193,7 +246,7 @@ const mutations = {
   /**
    * Resets module state
    *
-   * @param {AuthModuleState} state - Vuex state
+   * @param {UserModuleState} state - Vuex state
    */
   [RESET_STORE](state) {
     Object.assign(state, initialState());

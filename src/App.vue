@@ -19,7 +19,8 @@ export default {
   computed: {
     /**
      * Returns classname according to the theme name
-     * @return {string}
+     *
+     * @returns {string}
      */
     themeClass() {
       return `app--theme--${this.$store.state.app.theme}`;
@@ -71,7 +72,8 @@ export default {
 
   /**
    * Fired when all component nodes are ready
-   * @return {void}
+   *
+   * @returns {void}
    */
   mounted() {
     /**
@@ -84,7 +86,8 @@ export default {
     /**
      * Add "ripple" effects: wave anivation on clicked elements
      * To active effect, add "data-ripple" attrubute to any clickable element
-     * @return {void}
+     *
+     * @returns {void}
      */
     enableRipple() {
       this.$refs['app'].addEventListener('mousedown', (e) => {

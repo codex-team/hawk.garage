@@ -5,8 +5,9 @@
       class="n-rule__actions"
     >
       <UiSwitch
-        v-model="rule.isEnabled"
+        :value="rule.isEnabled"
         :label="$t('projects.settings.notifications.ruleIsEnabled')"
+        @input="toggleEnabledState"
       />
       <TooltipMenu
         class="n-rule__dots"
@@ -64,11 +65,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ProjectNotificationsRule, ReceiveTypes, NotificationsChannels } from '@/types/project-notifications';
+import {
+  ProjectNotificationsChannels,
+  ProjectNotificationsRule,
+  ReceiveTypes
+} from '@/types/project-notifications';
 import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
 import Icon from '@/components/utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from '@/components/utils/TooltipMenu.vue';
 import UiSwitch from '@/components/forms/UiSwitch.vue';
+import { ProjectNotificationRulePointer } from '../../../types/project-notifications-mutations';
+import { TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE } from '../../../store/modules/projects/actionTypes';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsRule',
@@ -88,6 +95,14 @@ export default Vue.extend({
     },
 
     /**
+     * Id of a project that owns the rule
+     */
+    projectId: {
+      type: String,
+      required: true,
+    },
+
+    /**
      * True if current user can edit the rule
      */
     enableEditing: {
@@ -99,12 +114,12 @@ export default Vue.extend({
     /**
      * Return only filled channels
      */
-    notEmptyChannels(): NotificationsChannels {
-      const result = {};
+    notEmptyChannels(): ProjectNotificationsChannels {
+      const result = {} as ProjectNotificationsChannels;
 
-      Object.entries(this.rule.channels)
-        .filter(([name, channel]) => channel.endpoint !== '')
-        .filter(([name, channel]) => channel.isEnabled === true)
+      Object.entries(this.rule.channels as ProjectNotificationsChannels)
+        .filter(([_name, channel]) => channel ? channel.endpoint !== '' : false)
+        .filter(([_name, channel]) => channel ? channel.isEnabled === true : false)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });
@@ -144,6 +159,20 @@ export default Vue.extend({
           },
         },
       ];
+    },
+  },
+  methods: {
+    /**
+     * Send request for toggling isEnables state for current rule
+     */
+    async toggleEnabledState(): Promise<void> {
+      /**
+       * Updating the rule
+       */
+      await this.$store.dispatch(TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE, {
+        ruleId: this.rule.id,
+        projectId: this.projectId,
+      } as ProjectNotificationRulePointer);
     },
   },
 });

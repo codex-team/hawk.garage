@@ -7,7 +7,3 @@ export default {
   name: 'EventDaily',
 };
 </script>
-
-<style>
-
-</style>

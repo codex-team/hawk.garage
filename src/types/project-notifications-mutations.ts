@@ -1,4 +1,4 @@
-import { ReceiveTypes, NotificationsChannels } from './project-notifications';
+import { ReceiveTypes, ProjectNotificationsChannels } from './project-notifications';
 
 /**
  * What kind of data we send to create a new notifications rule in a project
@@ -27,9 +27,8 @@ export interface ProjectNotificationsAddRulePayload {
   /**
    * Available channels to receive
    */
-  channels: NotificationsChannels;
+  channels: ProjectNotificationsChannels;
 }
-
 
 /**
  * What kind of data we send to update the specific notifications rule
@@ -44,4 +43,19 @@ export interface ProjectNotificationsUpdateRulePayload extends ProjectNotificati
    * True if settings is enabled
    */
   isEnabled: boolean;
+}
+
+/**
+ * This payload used to determine specific rule for deletion or toggling isEnabled state
+ */
+export interface ProjectNotificationRulePointer {
+  /**
+   * In which project we adding a rule
+   */
+  projectId: string;
+
+  /**
+   * Rule id to update
+   */
+  ruleId: string;
 }

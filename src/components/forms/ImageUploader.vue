@@ -47,7 +47,7 @@ export default {
       this.imageSrc = this.value;
     };
 
-    img.onerror = (e) => {
+    img.onerror = () => {
       this.imageSrc = null;
     };
   },

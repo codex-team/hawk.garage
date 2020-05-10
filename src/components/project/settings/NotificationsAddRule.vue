@@ -110,7 +110,7 @@ import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
 import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
 import {
   ProjectNotificationsAddRulePayload,
-  ProjectNotificationsUpdateRulePayload,
+  ProjectNotificationsUpdateRulePayload
 } from '@/types/project-notifications-mutations';
 import { deepMerge } from '@/utils';
 import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
@@ -212,14 +212,23 @@ export default Vue.extend({
   },
   created(): void {
     /**
+     * When we merge this.form and this.rule (on rule editing),
+     * we will get extra 'id' property, that will be removed immediately
+     * (see below)
+     */
+    interface FormFilledByRule extends ProjectNotificationsAddRulePayload {
+      id: string;
+    }
+
+    /**
      * We does not store unfilled channels in DB, so we need to fill it by default values
      */
     if (this.rule) {
-      const mergedRule = deepMerge(this.form, this.rule);
+      const mergedRule = deepMerge(this.form, this.rule) as FormFilledByRule;
 
       /**
        * The type of this.form (ProjectNotificationsAddRulePayload)
-       * does not contain rule id
+       * should not not contain rule id
        */
       delete mergedRule.id;
 
@@ -229,6 +238,7 @@ export default Vue.extend({
   methods: {
     /**
      * Fill 'including' property with array from splitted input string
+     *
      * @param value - user input string with commas
      */
     splitIncludingFilters(value: string): void {
@@ -237,6 +247,7 @@ export default Vue.extend({
 
     /**
      * Fill 'excluding' property with array from splitted input string
+     *
      * @param value - user input string with commas
      */
     splitExcludingFilters(value: string): void {
@@ -283,7 +294,6 @@ export default Vue.extend({
           successMessage = this.$t('projects.settings.notifications.updateRuleSuccessMessage');
         }
 
-
         this.isWaitingForResponse = false;
         this.isFormInvalid = false;
 
@@ -329,6 +339,7 @@ export default Vue.extend({
 
     /**
      * Return true if channel's endpoint is not filled
+     *
      * @param channelName - key of this.form.channels object
      */
     checkChannelEmptiness(channelName: string): boolean {

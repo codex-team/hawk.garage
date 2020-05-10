@@ -39,6 +39,10 @@
       "workspaceSelectLabel": "Выбрать воркспейс"
     },
     "settings": {
+      "remove": "Удалить проект",
+      "removeConfirmation": "Вы точно хотите удалить этот проект?",
+      "removeSuccess": "Проект успешно удалён",
+      "removeError": "Вы не можете удалить этот проект",
       "general": {
         "title": "Настройки проекта",
         "image": "Изображение",
@@ -107,7 +111,32 @@
     },
     "logout": "Выйти",
     "notifications": {
-      "title": "Уведомления"
+      "title": "Уведомления",
+      "channelsHeading": "Каналы",
+      "actionTypesHeading": "Типы событий",
+      "soon": "Скоро",
+      "channels": {
+        "email": "Email",
+        "webPush": "Браузерные пуши",
+        "desktopPush": "Пуши в приложении"
+      },
+      "channelDescriptions": {
+        "email": "Уведомления на",
+        "emailEmptyPlaceholder": "вашу почту",
+        "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
+        "webPush": "Уведомления даже при закрытой вкладке",
+        "desktopPush": "Системные уведомления через Hawk Desktop"
+      },
+      "actions": {
+        "IssueAssigning": "Назначение на задачу",
+        "WeeklyDigest": "Еженедельная сводка",
+        "SystemMessages": "Системные сообщения"
+      },
+      "actionDescriptions": {
+        "IssueAssigning": "Когда кто-нибудь назначает вас на задачу",
+        "WeeklyDigest": "Наиболее важные события за прошедшую неделю",
+        "SystemMessages": "Только критические сообщения от команды Hawk"
+      }
     }
   },
   "workspaces": {

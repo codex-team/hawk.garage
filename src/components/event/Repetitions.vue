@@ -92,7 +92,8 @@ export default Vue.extend({
 
     /**
      * Return concrete date
-     * @return {number}
+     *
+     * @returns {number}
      */
     daysRepeating(): number {
       if (!this.originalEvent) {
@@ -120,7 +121,8 @@ export default Vue.extend({
     /**
      * We use Map here to save the key's order,
      * `Object` does not guarantee the iteration order
-     * @type {Map<String, HawkEventRepetition[]>}
+     *
+     * @type {Map<string, HawkEventRepetition[]>}
      */
     const groupedRepetitions = new Map();
 
@@ -139,8 +141,9 @@ export default Vue.extend({
   methods: {
     /**
      * Returns prettified date from timestamp
+     *
      * @param {number} timestamp - unixtime in seconds
-     * @return {string}
+     * @returns {string}
      */
     getDate(timestamp: number): string {
       const targetDate = new Date(timestamp * 1000);

@@ -75,6 +75,7 @@ export default Vue.extend({
     /**
      * Check if this key has custom rendering method,
      * for example { window: {innerWidth: 1344, innerHeight: 763} } will be rendered as 1344x763
+     *
      * @param key - addons keys to check
      */
     isCustomRenderer(key: string): boolean {
@@ -83,9 +84,10 @@ export default Vue.extend({
 
     /**
      * Render value in correct format
+     *
      * @param {string | object} key - addons key
      * @param {*} value - addons value
-     * @return {String}
+     * @returns {string}
      */
     renderAddonValue(key: string | object, value: any): string {
       if (key === 'window') {
@@ -97,8 +99,9 @@ export default Vue.extend({
 
     /**
      * Check if passed variable is an Object
+     *
      * @param value - what to check
-     * @return true if it is an object
+     * @returns {boolean} true if it is an object
      */
     isObject(value: any): boolean {
       return isObject(value);
@@ -107,6 +110,7 @@ export default Vue.extend({
     /**
      * Check is this addon field should be highlighted as HTML
      * For example, this is a Vue or React component name
+     *
      * @param key - addon key
      */
     isHTML(key: string): boolean {

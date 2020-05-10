@@ -16,6 +16,7 @@
           class="workspace-creation-dialog__text-field"
           name="workspaceName"
           type="text"
+          required
           :label="$t('workspaces.creationDialog.workspaceNameLabel')"
         />
         <ImageUploader
