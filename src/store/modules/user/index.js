@@ -13,7 +13,6 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as userApi from '../../../api/user';
-import Vue from 'vue';
 
 /**
  * Mutations enum for this module
