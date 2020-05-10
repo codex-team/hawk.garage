@@ -4,7 +4,16 @@ module.exports = {
     'plugin:vue/recommended',
     '@vue/typescript',
   ],
+  parserOptions: {
+    project: `./tsconfig.json`,
+    parser: '@typescript-eslint/parser',
+  },
   rules: {
+    'no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars-experimental': [1, {
+      ignoreArgsIfArgsAfterAreUsed: true,
+    }],
+
     'no-shadow': ['error', {
       /**
        * Adjust for vuex
@@ -18,7 +27,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: [ '*.vue' ],
+      files: ['*.vue'],
       rules: {
         /**
          * Vue files should be written on ts so
@@ -26,8 +35,8 @@ module.exports = {
          *  - params type is not needed in jsdoc
          */
         'jsdoc/require-returns': 0,
-        'jsdoc/require-param-type': 0,
+        'jsdoc/require-param-type': 0
       },
-    },
-  ],
+    }
+  ]
 };
