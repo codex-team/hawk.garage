@@ -52,8 +52,8 @@ import EventItem from './EventItem';
 import AssignersList from '../event/AssignersList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS, FETCH_CHART_DATA } from '../../store/modules/events/actionTypes';
-import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
+import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -134,18 +134,18 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
-    
-    // So many days will be displayed in the chart
+
+    // How many days will be displayed in the chart
     const twoWeeks = Math.floor(Date.now() / 1000 - 86400 * (14 + 2));
 
-    if (!this.$store.state.events.charts[this.projectId]) {
+    if (!this.$store.state.projects.charts[this.projectId]) {
       await this.$store.dispatch(FETCH_CHART_DATA, {
         projectId: this.projectId,
         since: twoWeeks,
       });
     }
 
-    this.chartData = this.$store.state.events.charts[this.projectId];
+    this.chartData = this.$store.state.projects.charts[this.projectId];
   },
 
   /**

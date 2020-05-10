@@ -38,7 +38,7 @@ interface UserModuleState {
 }
 
 /**
- * Root store state with all modules
+ * Root state with all modules
  */
 export interface RootState {
   events: EventsModuleState;

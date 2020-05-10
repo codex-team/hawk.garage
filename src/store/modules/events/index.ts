@@ -2,7 +2,6 @@ import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
   FETCH_RECENT_EVENTS,
-  FETCH_CHART_DATA,
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
   TOGGLE_EVENT_MARK
@@ -12,7 +11,7 @@ import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition, ChartData } from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from '@/types/events';
 import { RootState } from '../../index';
 
 /**
@@ -43,11 +42,6 @@ enum MutationTypes {
    * Save loaded event
    */
   ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
-
-  /**
-   * Save data to be used by chart
-   */
-  ADD_CHART_DATA = 'ADD_CHART_DATA',
 
   /**
    * Update event payload
@@ -85,11 +79,6 @@ export interface EventsModuleState {
    * Event's repetitions map
    */
   repetitions: {[key: string]: HawkEventRepetition[]};
-
-  /**
-   * Chart data for every project
-   */
-  charts: {[key: string]: ChartData[]};
 }
 
 /**
@@ -126,7 +115,6 @@ function initialState(): EventsModuleState {
     list: {},
     recent: {},
     repetitions: {},
-    charts: {},
   };
 }
 
@@ -342,26 +330,6 @@ const module: Module<EventsModuleState, RootState> = {
       });
 
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
-    },
-
-    /**
-     * Get data for displaying the number of errors for each day from a specific timestamp
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - standard Vuex commit function
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - id of the project to fetch data
-     * @param {number} payload.since - timestamp from which we start taking errors
-     * @returns {Promise<void>}
-     */
-    async [FETCH_CHART_DATA]({ commit }, { projectId, since }): Promise<void> {
-      const chartData = await eventsApi.fetchChartData(projectId, since);
-
-      commit(MutationTypes.ADD_CHART_DATA, {
-        projectId,
-        data: chartData,
-      });
     },
 
     /**
@@ -602,17 +570,6 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       state.repetitions[key].push(repetition);
-    },
-
-    /**
-     * Add data to store
-     *
-     * @param {EventsModuleState} state - Vuex state
-     * @param {string} projectId - project's identifier
-     * @param {chartData[]} data - data to add
-     */
-    [MutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
-      state.charts[projectId] = data;
     },
 
     /**

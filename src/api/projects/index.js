@@ -6,9 +6,11 @@ import {
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
   MUTATION_REMOVE_PROJECT,
-  MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE
+  MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
+  QUERY_CHART_DATA
 } from './queries';
 import * as api from '../index.ts';
+import { ChartData } from '../../types/events';
 
 /**
  * Create project and returns its id
@@ -105,4 +107,18 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
   return (await api.call(MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).toggleProjectNotificationsRuleEnabledState;
+}
+
+/**
+ * Fetch data for chart
+ *
+ * @param {string} projectId - id of the project to fetch recent errors
+ * @param {number} since - events will be collected no later than this time timestamp
+ * @returns {Promise<ChartData[] | null>}
+ */
+export async function fetchChartData(projectId, since) {
+  return (await api.call(QUERY_CHART_DATA, {
+    projectId,
+    since,
+  })).project.chartData;
 }

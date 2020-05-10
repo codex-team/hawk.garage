@@ -8,7 +8,8 @@ import {
   UPDATE_PROJECT,
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
-  TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE
+  TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
+  FETCH_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -28,6 +29,11 @@ export const mutationTypes = {
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
   UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
+
+  /**
+   * Save data of events count for the last N days at the specific project
+   */
+  ADD_CHART_DATA: 'ADD_CHART_DATA',
 };
 
 /**
@@ -67,6 +73,13 @@ export const mutationTypes = {
 function initialState() {
   return {
     list: [],
+
+    /**
+     * Chart data for every project
+     *
+     * @type {object<string, ChartData[]>}
+     */
+    charts: {},
   };
 }
 
@@ -274,6 +287,27 @@ const actions = {
     });
   },
 
+  /**
+   * Get events counters for the last N days at the specific project
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.projectId - id of the project to fetch data
+   * @param {number} payload.since - timestamp from which we start taking errors
+   * @returns {Promise<void>}
+   */
+  async [FETCH_CHART_DATA]({ commit }, { projectId, since }) {
+    const chartData = await projectsApi.fetchChartData(projectId, since);
+
+    console.log('chartData', chartData);
+
+    commit(mutationTypes.ADD_CHART_DATA, {
+      projectId,
+      data: chartData,
+    });
+  },
 };
 
 const mutations = {
@@ -398,6 +432,18 @@ const mutations = {
     const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
 
     Vue.set(project.notifications, existedRuleIndex, rule);
+  },
+
+
+  /**
+   * Add data to store
+   *
+   * @param {EventsModuleState} state - Vuex state
+   * @param {string} projectId - project's identifier
+   * @param {chartData[]} data - data to add
+   */
+  [mutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
+    state.charts[projectId] = data;
   },
 };
 
