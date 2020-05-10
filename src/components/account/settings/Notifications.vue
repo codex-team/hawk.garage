@@ -196,6 +196,8 @@ export default Vue.extend({
         case 'desktopPush':
           return '';
       }
+
+      return '';
     },
 
     /**
