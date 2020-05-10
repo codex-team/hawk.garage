@@ -114,6 +114,7 @@
       "title": "Notifications",
       "channelsHeading": "Channels",
       "actionTypesHeading": "Action types",
+      "soon": "Soon",
       "channels": {
         "email": "Email",
         "webPush": "Web Push",

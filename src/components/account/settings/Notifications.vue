@@ -19,7 +19,7 @@
             v-if="isChannelUnavailable(channelName)"
             class="settings-field__soon"
           >
-            Soon
+            {{ $t('settings.notifications.soon') }}
           </span>
         </div>
         <div class="settings-field__description">
@@ -149,7 +149,7 @@ export default Vue.extend({
       try {
         await this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
           [channelName]: {
-            endpoint: '',
+            endpoint: this.getEndpoint(channelName),
             isEnabled: value === true,
           } as NotificationsChannelSettings,
         } as UserNotificationsChannels);
@@ -180,6 +180,21 @@ export default Vue.extend({
           message: error.message,
           style: 'error',
         });
+      }
+    },
+
+    /**
+     * Return endpoint for specific channel name
+     *
+     * @param channelName - channel name (key of UserNotificationsChannels)
+     */
+    getEndpoint(channelName: string): string {
+      switch (channelName) {
+        case 'email':
+          return this.user.email;
+        case 'webPush':
+        case 'desktopPush':
+          return '';
       }
     },
 
@@ -241,7 +256,9 @@ export default Vue.extend({
     }
 
     &__name {
-      min-width: 180px;
+      display: flex;
+      align-items: center;
+      min-width: 200px;
       color: var(--color-text-main);
       font-size: 15px;
       letter-spacing: 0.19px;
@@ -249,13 +266,14 @@ export default Vue.extend({
 
     &__soon {
       display: inline-block;
-      margin-left: 4px;
-      padding: 2px 5px;
+      margin-left: 7px;
+      padding: 3px 4px;
       color: var(--color-text-second);
-      font-size: 12px;
+      font-size: 9px;
+      letter-spacing: 0.5px;
       background: var(--color-bg-main);
       border-radius: 4px;
-      font-variant-caps: small-caps;
+      text-transform: uppercase;
     }
 
     &__description {

@@ -114,6 +114,7 @@
       "title": "Уведомления",
       "channelsHeading": "Каналы",
       "actionTypesHeading": "Типы событий",
+      "soon": "Скоро",
       "channels": {
         "email": "Email",
         "webPush": "Браузерные пуши",
