@@ -12,7 +12,7 @@ import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition, HawkEventPayload, ChartData } from '@/types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition, ChartData } from '@/types/events';
 import { RootState } from '../../index';
 
 /**
@@ -346,10 +346,14 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Get data for displaying the number of errors for each day from a specific timestamp
-     * @param {function} commit - standard Vuex commit function
-     * @param {string} projectId - id of the project to fetch data
-     * @param {number} since - timestamp from which we start taking errors
-     * @return {Promise<void>}
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - standard Vuex commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - id of the project to fetch data
+     * @param {number} payload.since - timestamp from which we start taking errors
+     * @returns {Promise<void>}
      */
     async [FETCH_CHART_DATA]({ commit }, { projectId, since }): Promise<void> {
       const chartData = await eventsApi.fetchChartData(projectId, since);
