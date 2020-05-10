@@ -17,6 +17,8 @@ const mutationTypes = {
  * @typedef {object} ModalDialogState
  * @property {string|null} component - name of current modal dialog component
  * @property {object} data - any data for modal dialog
+ *
+ * @returns {ModalDialogState}
  */
 function initialState() {
   return {
@@ -57,9 +59,10 @@ const mutations = {
    * Set modal dialog data
    *
    * @param {ModalDialogState} state - app module state
-   * @property {string|null} component - name of current modal dialog component
-   * @property {object} data - any data for modal dialog
-   * @param data
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string|null} payload.component - name of current modal dialog component
+   * @param {object} payload.data - any data for modal dialog
    */
   [mutationTypes.SET_MODAL_DIALOG](state, { component, data }) {
     state.component = component;

@@ -98,11 +98,10 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
 /**
  * Update workspace data
  *
- * @returns {Promise<boolean>}
- * @param id
- * @param name
- * @param description
- * @param image
+ * @param id - id of the workspace to update
+ * @param name - new name
+ * @param description - new description
+ * @param image - logo image file
  */
 export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<boolean> {
   return (await api.call(MUTATION_UPDATE_WORKSPACE, {

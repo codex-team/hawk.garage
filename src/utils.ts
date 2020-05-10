@@ -1,4 +1,4 @@
-const mergeWith = require('lodash.mergewith');
+import mergeWith from 'lodash.mergewith';
 
 /**
  * Returns entity color from predefined list
@@ -30,14 +30,14 @@ export function getEntityColor(id: string): string {
 /**
  * Group array of Objects by key
  *
- * @usage
+ * @example
  *
  * const cars = [
  * { brand: 'Audi', color: 'black' },
  * { brand: 'Audi', color: 'white' },
- * { brand: 'Ferarri', color: 'red' },
+ * { brand: 'Ferrari', color: 'red' },
  * { brand: 'Ford', color: 'white' },
- * { brand: 'Peugot', color: 'white' }
+ * { brand: 'Peugeot', color: 'white' }
  * ];
  *
  * const groupByBrand = groupBy('brand');
@@ -54,7 +54,8 @@ export function getEntityColor(id: string): string {
  */
 export const groupBy =
   (key: string) =>
-    (array: any[]) => // array of objects to group
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (array: any[]): object => // array of objects to group
       array.reduce((objectsByKeyValue, obj) => {
         const value = obj[key];
 
@@ -76,18 +77,40 @@ export const groupBy =
 /**
  * Group array of object by 'date' field
  *
- * @type {function(Array[Object]): Object}
+ * @type {(array: Array<object>) => object}
  */
 export const groupByGroupingTimestamp = groupBy('groupingTimestamp');
 
 /**
+ * Returns real type of passed variable
+ *
+ * @param obj - what to check
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function typeOf(obj: any): string {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)![1].toLowerCase();
+}
+
+/**
+ * Check if passed variable is an object
+ *
+ * @param item - what to check
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isObject(item: any): boolean {
+  return item && typeOf(item) === 'object';
+}
+
+/**
  * Merge to objects recursively
  *
- * @param {object} target
- * @param {object[]} sources
+ * @param {object} target - where to merge
+ * @param {object[]} sources - what to merge
  * @returns {object}
  */
-export function deepMerge(target: object, ...sources: object[]) {
+export function deepMerge(target: object, ...sources: object[]): object {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {
     if (Array.isArray(_subject) && Array.isArray(_target)) {
       const biggerArray = _subject.length > _target.length ? _subject : _target;
@@ -105,27 +128,9 @@ export function deepMerge(target: object, ...sources: object[]) {
 }
 
 /**
- * Check if passed variable is an object
- *
- * @param item - what to check
- */
-export function isObject(item: any): boolean {
-  return item && typeOf(item) === 'object';
-}
-
-/**
- * Returns real type of passed variable
- *
- * @param obj
- */
-function typeOf(obj: any): string {
-  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)![1].toLowerCase();
-}
-
-/**
  * Converts string in wrong language to the translited equal
  *
- * @param {string} string
+ * @param {string} string - string to transit
  * @returns {string}
  */
 export function misTranslit(string: string): string {
@@ -227,7 +232,7 @@ export function escape(string: string, withCount: boolean): {value: string; coun
  * @param {string} string - string to encode
  * @param {boolean} withCount - pass true if you need to know how many substitutions was
  *                              replaced and total length of new chars added
- * @returns escaped string or object with escaped string, count and length
+ * @returns {string | {value, count, length}} escaped string or object with escaped string, count and length
  */
 export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
   if (!string) {

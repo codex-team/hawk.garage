@@ -9,8 +9,8 @@ const defaultPluralization = VueI18n.prototype.getChoiceIndex;
 /**
  * Custom pluralization method for russian locale
  *
- * @param choice {number} a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
- * @param choicesLength {number} an overall amount of available choices
+ * @param {number} choice - a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
+ * @param {number} choicesLength - an overall amount of available choices
  * @returns {number} index -  a final choice index to select plural word by
  */
 VueI18n.prototype.getChoiceIndex = function (choice, choicesLength) {

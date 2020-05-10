@@ -52,8 +52,6 @@ export default Vue.extend({
   props: {
     /**
      * Navigation items
-     *
-     * @type {Array}
      */
     items: {
       type: Array as () => TabInfo[],

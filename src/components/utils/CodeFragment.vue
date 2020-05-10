@@ -17,6 +17,7 @@
         :class="{'current': isCurrentLine(row.line)}"
       />
     </div>
+    <!-- eslint-disable vue/no-v-html -->
     <pre
       class="code-preview__content"
       :class="{[syntax]: true }"
@@ -235,7 +236,7 @@ export default {
      * If the code fragment start with trimmed comment,
      * add opening comment chars to prevent breaking of highlighting.
      *
-     * @param {string} code
+     * @param {string} code - code string to process
      * @returns {string}
      */
     fixUnclosedComment(code) {

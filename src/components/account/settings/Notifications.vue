@@ -39,6 +39,7 @@
                 <Icon
                   symbol="warning"
                 />
+                <!-- eslint-disable vue/no-v-html -->
                 <span
                   v-html="$t('settings.notifications.channelDescriptions.emailEmptyWarning', {
                     accountUrl: '/account/general'
@@ -275,9 +276,9 @@ export default Vue.extend({
       color: var(--color-text-second);
       font-size: 9px;
       letter-spacing: 0.5px;
+      text-transform: uppercase;
       background: var(--color-bg-main);
       border-radius: 4px;
-      text-transform: uppercase;
     }
 
     &__description {

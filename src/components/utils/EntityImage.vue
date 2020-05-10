@@ -131,7 +131,7 @@ export default {
         return;
       }
 
-      this.createImageElement(newValue);
+      this.createImageElement();
     },
   },
   mounted() {
@@ -141,15 +141,13 @@ export default {
       return;
     }
 
-    this.createImageElement(this.image);
+    this.createImageElement();
   },
   methods: {
     /**
      * Create new HTMLImageElement by image src
-     *
-     * @param {string} imageSrc - image source link
      */
-    createImageElement(imageSrc) {
+    createImageElement() {
       this.imageElement = new Image();
 
       this.imageElement.src = this.image;

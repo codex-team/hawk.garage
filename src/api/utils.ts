@@ -42,8 +42,9 @@ export function prepareFormData(
   Object
     .entries(files)
     .forEach(([name, file]) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       formData.append(name, file!, file!.name);
     });
 
   return formData;
-};
+}

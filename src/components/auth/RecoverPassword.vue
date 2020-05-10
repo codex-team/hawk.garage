@@ -44,11 +44,13 @@ export default class RecoverPassword extends Vue {
   /**
    * Text for submit button in reset password form
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   private submitText!: VueI18n.TranslateResult;
 
   /**
    * Field for displaying errors
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   private message: {text: any, type: string} | null = null;
 
   /**
@@ -70,6 +72,7 @@ export default class RecoverPassword extends Vue {
   /**
    * Method recover user's password by email from form
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   private async recoverPassword(): Promise<void> {
     const emailField = this.fields.find(field => field.name === 'email');
     const email = emailField ? emailField.value : '';

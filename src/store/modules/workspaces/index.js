@@ -141,8 +141,9 @@ const actions = {
   /**
    * Send request to delete workspace
    *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {Function} dispatch - standard Vuex dispatch function
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   * @param {Function} context.dispatch - standard Vuex dispatch function
    * @param {string} workspaceId - id of workspace for deleting
    */
   async [LEAVE_WORKSPACE]({ commit, dispatch }, workspaceId) {
@@ -156,9 +157,12 @@ const actions = {
   /**
    * Sent request to invite user to workspace
    *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {string} workspaceId - id of workspace to which user is invited
-   * @param {string} userEmail - email of the invited user
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.workspaceId - id of workspace to which user is invited
+   * @param {string} payload.userEmail - email of the invited user
    */
   async [INVITE_TO_WORKSPACE]({ commit }, { workspaceId, userEmail }) {
     const success = await workspaceApi.inviteToWorkspace(workspaceId, userEmail);
@@ -180,11 +184,13 @@ const actions = {
   /**
    * Send request to confirm user invitation
    *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {string} workspaceId - id of workspace to which user is invited
-   * @param {string} inviteHash - hash passed to the invite link
+   * @param {object} context - vuex action context
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.workspaceId - id of workspace to which user is invited
+   * @param {string} payload.inviteHash - hash passed to the invite link
    */
-  async [CONFIRM_INVITE]({ commit }, { workspaceId, inviteHash }) {
+  async [CONFIRM_INVITE](context, { workspaceId, inviteHash }) {
     await workspaceApi.confirmInvite(workspaceId, inviteHash);
   },
 
@@ -255,10 +261,14 @@ const actions = {
   /**
    * Grant admin permissions
    *
-   * @param {Function} commit - standard Vuex commit method
-   * @param {string} workspaceId - id of workspace where user is participate
-   * @param {string} userId - id of user to grant permissions
-   * @param {boolean} state - if true, grant permissions, if false, withdraw them
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit method
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.workspaceId - id of workspace where user is participate
+   * @param {string} payload.userId - id of user to grant permissions
+   * @param {boolean} payload.state - if true, grant permissions, if false, withdraw them
+   *
    * @returns {Promise<boolean>}
    */
   async [GRANT_ADMIN_PERMISSIONS]({ commit }, { workspaceId, userId, state = true }) {
@@ -282,10 +292,14 @@ const actions = {
   /**
    * Remove user from workspace
    *
-   * @param {Function} commit - standard Vuex dispatch methods
-   * @param {string} workspaceId - id of workspace where user is participate
-   * @param {string} userId - id of user to remove
-   * @param {string} userEmail - user email to remove (instead of id)
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex dispatch methods
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.workspaceId - id of workspace where user is participate
+   * @param {string} payload.userId - id of user to remove
+   * @param {string} payload.userEmail - user email to remove (instead of id)
+   *
    * @returns {Promise<*>}
    */
   async [REMOVE_USER_FROM_WORKSPACE]({ commit }, { workspaceId, userId, userEmail }) {
@@ -408,9 +422,11 @@ const mutations = {
    * Update member in the user list
    *
    * @param {WorkspacesModuleState} state - current state
-   * @param {string} workspaceId - id of workspace where user should be updated
-   * @param {string} userId - id of user to update
-   * @param {object} changes - changes to update
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.workspaceId - id of workspace where user should be updated
+   * @param {string} payload.userId - id of user to update
+   * @param {object} payload.changes - changes to update
    */
   [mutationTypes.UPDATE_MEMBER](state, { workspaceId, userId, changes }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
@@ -423,8 +439,10 @@ const mutations = {
    * Add pending member to workspace
    *
    * @param {WorkspacesModuleState} state - current state
-   * @param {string} workspaceId - id of workspace to which user should be added
-   * @param {object} data - user data
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.workspaceId - id of workspace to which user should be added
+   * @param {object} payload.data - user data
    */
   [mutationTypes.ADD_PENDING_MEMBER](state, { workspaceId, data }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
@@ -436,8 +454,10 @@ const mutations = {
    * Remove member from workspace
    *
    * @param {WorkspacesModuleState} state - current state
-   * @param {string} workspaceId - id of workspace from which user should be removed
-   * @param {string} userId - id of user to remove
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.workspaceId - id of workspace from which user should be removed
+   * @param {string} payload.userId - id of user to remove
    */
   [mutationTypes.REMOVE_MEMBER](state, { workspaceId, userId }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
@@ -452,8 +472,10 @@ const mutations = {
    * Remove pending member from workspace
    *
    * @param {WorkspacesModuleState} state - current state
-   * @param {string} workspaceId - id of workspace from which user should be removed
-   * @param {string} userEmail - email of user to remove
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.workspaceId - id of workspace from which user should be removed
+   * @param {string} payload.userEmail - email of user to remove
    */
   [mutationTypes.REMOVE_PENDING_MEMBER](state, { workspaceId, userEmail }) {
     const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);

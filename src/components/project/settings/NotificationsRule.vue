@@ -118,8 +118,8 @@ export default Vue.extend({
       const result = {} as ProjectNotificationsChannels;
 
       Object.entries(this.rule.channels as ProjectNotificationsChannels)
-        .filter(([name, channel]) => channel ? channel.endpoint !== '' : false)
-        .filter(([name, channel]) => channel ? channel.isEnabled === true : false)
+        .filter(([_name, channel]) => channel ? channel.endpoint !== '' : false)
+        .filter(([_name, channel]) => channel ? channel.isEnabled === true : false)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });

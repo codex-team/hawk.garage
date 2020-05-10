@@ -53,8 +53,6 @@ export default Vue.extend({
   props: {
     /**
      * Original (first) event data
-     *
-     * @type {HawkEvent}
      */
     event: {
       type: Object as () => HawkEvent,
@@ -105,7 +103,7 @@ export default Vue.extend({
      * For example, 'vue' or 'react'
      *
      * @param {string} integrationName - name of an integration
-     * @returns object with integration addons
+     * @returns {object} object with integration addons
      */
     getIntegrationAddons(integrationName: string): object | null {
       if (!this.event.payload.addons) {

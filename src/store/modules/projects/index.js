@@ -62,7 +62,7 @@ export const mutationTypes = {
 /**
  * Creates module state
  *
- * @returns {WorkspacesModuleState}
+ * @returns {ProjectsModuleState}
  */
 function initialState() {
   return {
@@ -136,7 +136,7 @@ const actions = {
    *
    * @param {Function} commit - standard Vuex commit function
    * @param {string} workspaceId - workspace id
-   * @returns {Promise<void>}
+   * @returns {void}
    */
   [REMOVE_PROJECTS_BY_WORKSPACE_ID]({ commit }, workspaceId) {
     commit(mutationTypes.REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
@@ -189,12 +189,16 @@ const actions = {
   },
 
   /**
-   * @param {Function} commit - standard Vuex commit function
-   * @param {object} getters - standard Vuex getters
-   * @param {string} projectId - project's identifier
+   * Send last-visit for passed project
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.projectId - project's identifier
    * @returns {Promise<void>}
    */
-  async [UPDATE_PROJECT_LAST_VISIT]({ commit, getters }, { projectId }) {
+  async [UPDATE_PROJECT_LAST_VISIT]({ commit }, { projectId }) {
     await projectsApi.updateLastProjectVisit(projectId);
 
     commit(mutationTypes.RESET_PROJECT_UNREAD_COUNT, { projectId });
@@ -326,9 +330,13 @@ const mutations = {
   },
 
   /**
+   * Store grouped events by date
+   *
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {string} projectId - id of the project to set data
-   * @param {EventsListByDate} eventsListByDate - new event list
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - id of the project to set data
+   * @param {EventsListByDate} payload.eventsListByDate - new event list
    */
   [mutationTypes.SET_EVENTS_LIST_BY_DATE](state, { projectId, eventsListByDate }) {
     const project = state.list.find(_project => _project.id === projectId);
@@ -359,8 +367,10 @@ const mutations = {
    * Append new notifications rule to specified project
    *
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {string} projectId - where to append
-   * @param {ProjectNotificationsRule} rule - rule to append
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - where to append
+   * @param {ProjectNotificationsRule} payload.rule - rule to append
    * @returns {void}
    */
   [mutationTypes.PUSH_NOTIFICATIONS_RULE](state, { projectId, rule }) {
@@ -377,8 +387,10 @@ const mutations = {
    * Reset updated notifications rule
    *
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {string} projectId - project that contains rule
-   * @param {ProjectNotificationsRule} rule - updated rule
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - project that contains rule
+   * @param {ProjectNotificationsRule} payload.rule - updated rule
    * @returns {void}
    */
   [mutationTypes.UPDATE_NOTIFICATIONS_RULE](state, { projectId, rule }) {

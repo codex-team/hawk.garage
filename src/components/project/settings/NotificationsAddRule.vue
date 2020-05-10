@@ -212,14 +212,23 @@ export default Vue.extend({
   },
   created(): void {
     /**
+     * When we merge this.form and this.rule (on rule editing),
+     * we will get extra 'id' property, that will be removed immediately
+     * (see below)
+     */
+    interface FormFilledByRule extends ProjectNotificationsAddRulePayload {
+      id: string;
+    }
+
+    /**
      * We does not store unfilled channels in DB, so we need to fill it by default values
      */
     if (this.rule) {
-      const mergedRule = deepMerge(this.form, this.rule);
+      const mergedRule = deepMerge(this.form, this.rule) as FormFilledByRule;
 
       /**
        * The type of this.form (ProjectNotificationsAddRulePayload)
-       * does not contain rule id
+       * should not not contain rule id
        */
       delete mergedRule.id;
 

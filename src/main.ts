@@ -56,7 +56,7 @@ Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://
  * Sends error to the Hawk
  *
  * @param {Error} error - error to send
- * @usage this.$sendToHawk(new Error('Some error'));
+ * @example this.$sendToHawk(new Error('Some error'));
  */
 Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
   if (hawk) {
@@ -91,5 +91,6 @@ new Vue({
   router,
   store,
   i18n,
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   render: (h) => h(App),
 }).$mount('#app');

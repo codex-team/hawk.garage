@@ -38,15 +38,6 @@ const mutationTypes = {
  */
 
 /**
- * Module state
- *
- * @typedef {object} UserModuleState
- * @property {string} accessToken - user's access token
- * @property {string} refreshToken - user's refresh token for getting new tokens pair
- * @property {User} data - user's data
- */
-
-/**
  * Creates module state
  *
  * @returns {UserModuleState}
@@ -78,11 +69,11 @@ const actions = {
   /**
    * Send sign up request to the server and performs user login
    *
-   * @param {Function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {User} user - user's params for auth
    * @returns {Promise<boolean>} - sign up status
    */
-  async [SIGN_UP]({ commit }, user) {
+  async [SIGN_UP](context, user) {
     return userApi.signUp(user.email);
   },
 
@@ -101,10 +92,10 @@ const actions = {
   /**
    * Send recover password request to the server
    *
-   * @param {Function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {User} user - user's params for recovering password
    */
-  async [RECOVER_PASSWORD]({ commit }, user) {
+  async [RECOVER_PASSWORD](context, user) {
     return userApi.recoverPassword(user.email);
   },
 
@@ -121,8 +112,10 @@ const actions = {
   /**
    * Send request for refreshing tokens pair
    *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {UserModuleState} state - vuex state
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   * @param {UserModuleState} context.state - vuex state
+   *
    * @returns {Promise<TokensPair>}
    */
   async [REFRESH_TOKENS]({ commit, state }) {
@@ -147,20 +140,20 @@ const actions = {
   /**
    * Send request to update user profile data
    *
-   * @param {Function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {User} user - user's params to update
    */
-  async [UPDATE_PROFILE]({ commit }, user) {
+  async [UPDATE_PROFILE](context, user) {
     return userApi.updateProfile(user.name, user.email, user.image);
   },
 
   /**
    * Send request to change user password
    *
-   * @param {Function} commit - standard Vuex commit function
+   * @param {object} context - vuex action context
    * @param {Passwords} passwords - user's pair of passwords
    */
-  async [CHANGE_PASSWORD]({ commit }, passwords) {
+  async [CHANGE_PASSWORD](context, passwords) {
     return userApi.changePassword(passwords.old, passwords.new);
   },
 
@@ -230,8 +223,10 @@ const mutations = {
    * Mutation caused by successful authentication
    *
    * @param {UserModuleState} state - Vuex state
-   * @param {string} accessToken - user's access token
-   * @param {string} refreshToken - user's refresh token for getting new tokens pair
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.accessToken - user's access token
+   * @param {string} payload.refreshToken - user's refresh token for getting new tokens pair
    */
   [mutationTypes.SET_TOKENS](state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;

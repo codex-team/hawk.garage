@@ -154,8 +154,9 @@ export default {
     /**
      * Return concatenated "line:column" with the necessary checkups
      *
-     * @param {number} line - calling line number
-     * @param {number} [column] - calling column number
+     * @param {object} location - error location data
+     * @param {number} location.line - calling line number
+     * @param {number} [location.column] - calling column number
      * @returns {string}
      */
     getLocation({ line, column }) {
