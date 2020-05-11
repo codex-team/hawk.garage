@@ -118,7 +118,7 @@ export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
  * Get data for chart
  */
 export const QUERY_CHART_DATA = `
-  query ProjectRecentEvents (
+  query ProjectChartData (
     $projectId: ID!,
     $since: Int!
   ) {

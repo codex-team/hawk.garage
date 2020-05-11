@@ -136,7 +136,9 @@ export default {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
 
     // How many days will be displayed in the chart
-    const twoWeeks = Math.floor(Date.now() / 1000 - 86400 * (14 + 2));
+    const dayMilliSeconds = 86400;
+    const chartDays = 14 + 2; // 2 is bounding (the first and the last) days for chart
+    const twoWeeks = Math.floor(Date.now() / 1000 - dayMilliSeconds * chartDays);
 
     if (!this.$store.state.projects.charts[this.projectId]) {
       await this.$store.dispatch(FETCH_CHART_DATA, {
@@ -159,10 +161,16 @@ export default {
     /**
      * Return passed day midnight timestamp
      *
-     * @param {string} date - grouped day key like 'date:1576011600'
+     * @param {string} date - grouped day key like 'groupingTimestamp:1576011600'
      * @returns {number}
      */
     getDay(date) {
+      console.log('date', date);
+      if (date === 'groupingTimestamp:1589144400'){
+        console.log('op');
+        return 1589155200;
+      }
+
       return parseInt(date.replace('groupingTimestamp:', ''), 10);
     },
     /**

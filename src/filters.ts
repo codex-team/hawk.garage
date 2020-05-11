@@ -107,6 +107,8 @@ Vue.filter('prettyDate', function (value: number) {
   const argumentYear = argumentDate.getFullYear();
   const currentDate = new Date();
 
+  console.log('argumentDate', argumentDate);
+
   if (
     argumentDay === currentDate.getDate() &&
     argumentMonth === currentDate.getMonth() &&
