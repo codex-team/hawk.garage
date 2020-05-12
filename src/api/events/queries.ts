@@ -37,6 +37,7 @@ export const QUERY_EVENT = `
           }
           addons
         }
+        usersAffected
         repetition(id: $repetitionId) {
           id
           payload {

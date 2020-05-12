@@ -584,7 +584,9 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, event.id);
 
       if (state.list[key]) {
-        Vue.set(state.list[key], 'payload', event.payload);
+        const obj = Object.assign({}, state.list[key], event);
+
+        Vue.set(state.list, key, obj);
       } else {
         Vue.set(state.list, key, event);
       }

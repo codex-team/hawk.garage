@@ -61,6 +61,11 @@ export interface HawkEvent {
    * Event repetitions
    */
   repetitions: HawkEventRepetition[];
+
+  /**
+   * How many users catch this error
+   */
+  usersAffected: number;
 }
 
 /**
