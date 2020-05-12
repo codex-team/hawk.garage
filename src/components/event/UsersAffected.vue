@@ -6,7 +6,7 @@
       </div>
       <div
         v-if="event"
-        class="event-users-affected__repeats"
+        class="event-users-affected__affected"
       >
         {{ $tc('event.usersAffected.users', event.usersAffected) }}
       </div>
@@ -65,25 +65,10 @@ export default Vue.extend({
       text-transform: uppercase;
     }
 
-    &__repeats {
+    &__affected {
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 24px;
-    }
-
-    &__since {
-      color: var(--color-text-main);
-      font-weight: bold;
-      font-size: 15px;
-
-      &-days {
-        color: var(--color-text-second);
-      }
-    }
-
-    &__table {
-      margin-top: 20px;
-      margin-bottom: 20px;
     }
   }
 </style>
