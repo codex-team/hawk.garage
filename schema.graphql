@@ -1,0 +1,964 @@
+"""Access to the field only to authorized users"""
+directive @requireAuth on FIELD_DEFINITION
+
+"""Access to the field only for admins"""
+directive @requireAdmin on FIELD_DEFINITION
+
+"""Directive for field renaming"""
+directive @renameFrom(
+  """Parent's field name"""
+  name: String!
+) on FIELD_DEFINITION
+
+"""Directive for setting field default value"""
+directive @default(
+  """Default field value encoded in JSON"""
+  value: String!
+) on FIELD_DEFINITION
+
+"""Directive for automatically image uploading"""
+directive @uploadImage on ARGUMENT_DEFINITION
+
+directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
+
+"""Payment link structure"""
+type BillingSession {
+  """Total payment amount in kopecs"""
+  amount: Int!
+
+  """Payment status"""
+  status: String!
+
+  """If the payment is successfull"""
+  success: Boolean!
+
+  """URL to the payment page"""
+  paymentURL: String!
+}
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+type CardInfo {
+  """Card number (Pan)"""
+  pan: String!
+
+  """Card ID"""
+  cardId: String!
+
+  """Card expiration date"""
+  expDate: String!
+}
+
+"""
+This object will be returned to the changeUserNotificationsChannel mutation
+"""
+type changeUserNotificationsChannelResponse {
+  notifications: UserNotificationsSettings
+}
+
+"""The structure represents payload for toggling receive type"""
+input ChangeUserNotificationsReceiveTypeInput {
+  IssueAssigning: Boolean
+  WeeklyDigest: Boolean
+}
+
+"""
+This object will be returned to the changeUserNotificationsReceiveType mutation
+"""
+type changeUserNotificationsReceiveTypeResponse {
+  notifications: UserNotificationsSettings
+}
+
+"""Confirmed member data in workspace"""
+type ConfirmedMember {
+  """Member info id"""
+  id: ID!
+
+  """If member accepts an invitation, the user id will be stored there"""
+  user: User!
+
+  """True if user has admin permissions"""
+  isAdmin: Boolean!
+}
+
+"""Input type for creating new notification rule"""
+input CreateProjectNotificationsRuleInput {
+  """Project id to setup"""
+  projectId: ID!
+
+  """True if settings is enabled"""
+  isEnabled: Boolean! = true
+
+  """What events type to recieve"""
+  whatToReceive: ReceiveTypes! = ONLY_NEW
+
+  """Words to include in notification"""
+  including: [String!]! = []
+
+  """Words to exclude from notification"""
+  excluding: [String!]! = []
+
+  """Notification channels to recieve events"""
+  channels: NotificationsChannelsInput!
+}
+
+"""Information about event per day"""
+type DailyEventInfo {
+  """Event hash for grouping"""
+  groupHash: String!
+
+  """Event occurrence count"""
+  count: Int!
+
+  """Event occurrence datetime (in unixtime)"""
+  groupingTimestamp: Float!
+
+  """Event's last repetition ID"""
+  lastRepetitionId: ID
+
+  """Last event occurrence timestamp"""
+  lastRepetitionTime: Float!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
+`date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO
+8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+"""Type representing Hawk single Event"""
+type Event {
+  """Event id"""
+  id: ID!
+
+  """Catcher type"""
+  catcherType: String!
+
+  """Event group hash"""
+  groupHash: String!
+
+  """Event occurrence count"""
+  totalCount: Int!
+
+  """Event payload"""
+  payload: EventPayload!
+
+  """Event concrete repetition"""
+  repetition(id: ID): Repetition
+
+  """Event repetitions"""
+  repetitions(limit: Int = 10): [Repetition!]
+
+  """Array of users who visited event"""
+  visitedBy: [User!]
+
+  """Event label for current user"""
+  marks: EventMarks!
+
+  """How many users catch this error"""
+  usersAffected: Int!
+}
+
+"""Event backtrace representation"""
+type EventBacktraceFrame {
+  """Source filepath"""
+  file: String
+
+  """Called line"""
+  line: Int
+
+  """Called column"""
+  column: Int
+
+  """Part of source code file near the called line"""
+  sourceCode: [SourceCodeLine]
+
+  """Function name extracted from current stack frame"""
+  function: String
+
+  """Function arguments extracted from current stack frame"""
+  arguments: [String]
+}
+
+"""Possible event marks"""
+enum EventMark {
+  resolved
+  starred
+  ignored
+}
+
+"""Object returned in marks property of event object"""
+type EventMarks {
+  resolved: Boolean!
+  starred: Boolean!
+  ignored: Boolean!
+}
+
+"""Type representing Event payload"""
+type EventPayload {
+  """Event title"""
+  title: String!
+
+  """Event type: TypeError, ReferenceError etc."""
+  type: String
+
+  """Event timestamp"""
+  timestamp: Float!
+
+  """Event severity level"""
+  level: Int
+
+  """Event stack array from the latest call to the earliest"""
+  backtrace: [EventBacktraceFrame]
+
+  """Additional data about GET request"""
+  get: JSONObject
+
+  """Additional data about POST request"""
+  post: JSONObject
+
+  """HTTP headers"""
+  headers: JSONObject
+
+  """Source code version identifier"""
+  release: String
+
+  """Current authenticated user"""
+  user: EventUser
+
+  """Any additional data of Event"""
+  context: JSONObject
+
+  """Custom data provided by project users"""
+  addons: JSONObject
+}
+
+"""Event user representation"""
+type EventUser {
+  id: ID!
+  name: String!
+  url: String
+  photo: String
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+"""Supported languages for data"""
+enum Languages {
+  EN
+  RU
+}
+
+"""Represents two types of Members in workspace's team"""
+union Member = ConfirmedMember | PendingMember
+
+"""API mutations"""
+type Mutation {
+  """Unused field to let extend this type"""
+  _: Boolean
+
+  """Remove card"""
+  removeCard(cardNumber: String!): Boolean!
+
+  """Initialize recurrent payment"""
+  payWithCard(
+    """Total payment amount in kopecs"""
+    amount: Int!
+
+    """Workspace id for which the payment will be made"""
+    workspaceId: String!
+
+    """
+    Unique card identifier for recurrent payment. Omit this to pay with unattached card
+    """
+    cardId: Int!
+
+    """Payment form language"""
+    language: String
+  ): Boolean!
+
+  """Initialize single payment"""
+  payOnce(input: PayOnceInput!): BillingSession!
+
+  """Returns JSON data with payment link and initiate card attach procedure"""
+  attachCard(language: String): BillingSession!
+
+  """Mutation marks event as visited for current user"""
+  visitEvent(project: ID!, id: ID!): Boolean!
+
+  """Mutation sets or unsets passed mark to event"""
+  toggleEventMark(
+    """ID of project event is related to"""
+    project: ID!
+
+    """EvenID of the event to set the mark"""
+    eventId: ID!
+
+    """Mark to set"""
+    mark: EventMark!
+  ): Boolean!
+
+  """
+  Creates new notification rule and add it to start of the array of notifications rules
+  """
+  createProjectNotificationsRule(
+    """Data for creating"""
+    input: CreateProjectNotificationsRuleInput!
+  ): ProjectNotificationsRule
+
+  """Updates existing notifications rule"""
+  updateProjectNotificationsRule(
+    """Data for updating"""
+    input: UpdateProjectNotificationsRuleInput!
+  ): ProjectNotificationsRule
+
+  """Removes notifications rule from project"""
+  deleteProjectNotificationsRule(
+    """Data for deleting"""
+    input: ProjectNotificationRulePointer!
+  ): ProjectNotificationsRule
+
+  """Toggles isEnabled field in in project notifications rule"""
+  toggleProjectNotificationsRuleEnabledState(
+    """Data for toggling"""
+    input: ProjectNotificationRulePointer
+  ): ProjectNotificationsRule
+
+  """Create project in given workspace"""
+  createProject(
+    """Workspace ID"""
+    workspaceId: ID!
+
+    """Project name"""
+    name: String!
+
+    """Project image"""
+    image: Upload
+  ): Project!
+
+  """Update project settings"""
+  updateProject(
+    """What project to update"""
+    id: ID!
+
+    """Project name"""
+    name: String!
+
+    """Project description"""
+    description: String
+
+    """Project image"""
+    image: Upload
+  ): Project!
+
+  """Remove project"""
+  removeProject(
+    """What project to remove"""
+    projectId: ID!
+  ): Boolean!
+
+  """Updates user's visit time on project"""
+  updateLastProjectVisit(
+    """project ID"""
+    projectId: ID!
+  ): DateTime!
+
+  """Register user with provided email. Returns true if registred"""
+  signUp(
+    """Registration email"""
+    email: String!
+  ): Boolean!
+
+  """Login user with provided email and password"""
+  login(
+    """User email"""
+    email: String!
+
+    """User password"""
+    password: String!
+  ): Tokens!
+
+  """Update user's tokens pair"""
+  refreshTokens(
+    """Refresh token for getting new token pair"""
+    refreshToken: String!
+  ): Tokens!
+
+  """Reset user's password"""
+  resetPassword(
+    """User email"""
+    email: String!
+  ): Boolean!
+
+  """Update user's profile"""
+  updateProfile(
+    """User name"""
+    name: String!
+
+    """User email"""
+    email: String!
+
+    """User image file"""
+    image: Upload
+  ): Boolean!
+
+  """Change user password"""
+  changePassword(
+    """Current user password"""
+    oldPassword: String!
+
+    """New user password"""
+    newPassword: String!
+  ): Boolean!
+
+  """Change user notifications channel settings"""
+  changeUserNotificationsChannel(
+    """Channel data to update"""
+    input: NotificationsChannelsInput!
+  ): changeUserNotificationsChannelResponse!
+
+  """Toggle user notifications receive type active status"""
+  changeUserNotificationsReceiveType(
+    """Receive type with its new is-enabled value"""
+    input: ChangeUserNotificationsReceiveTypeInput!
+  ): changeUserNotificationsReceiveTypeResponse!
+
+  """Create new workspace"""
+  createWorkspace(
+    """New workspace name"""
+    name: String!
+
+    """New workspace description"""
+    description: String
+
+    """New workspace image"""
+    image: Upload
+  ): Workspace!
+
+  """
+  Invite user to workspace
+  Returns true if operation is successful
+  """
+  inviteToWorkspace(
+    """Email of the user to invite"""
+    userEmail: String!
+
+    """id of the workspace to which the user is invited"""
+    workspaceId: ID!
+  ): Boolean!
+
+  """Update workspace settings"""
+  updateWorkspace(
+    """What workspace to update"""
+    workspaceId: ID!
+
+    """Workspace name"""
+    name: String!
+
+    """Workspace description"""
+    description: String
+
+    """Workspace image"""
+    image: Upload
+  ): Boolean!
+
+  """
+  Confirm invitation to workspace
+  Returns true if operation is successful
+  """
+  confirmInvitation(
+    """Hash from invitation link"""
+    inviteHash: String
+
+    """Id of the workspace to which the user was invited"""
+    workspaceId: ID!
+  ): Boolean!
+
+  """
+  Grant admin permissions
+  Returns true if operation is successful
+  """
+  grantAdmin(
+    """Workspace ID"""
+    workspaceId: ID!
+
+    """ID of user to grant permissions"""
+    userId: ID!
+
+    """Permissions state (true to grant, false to withdraw)"""
+    state: Boolean = true
+  ): Boolean!
+
+  """
+  Remove member from workspace
+  Returns true if operation is successful
+  """
+  removeMemberFromWorkspace(
+    """Workspace ID"""
+    workspaceId: ID!
+
+    """ID of user to remove"""
+    userId: ID
+
+    """Email of user to remove"""
+    userEmail: String
+  ): Boolean!
+
+  """
+  Mutation in order to leave workspace
+  Returns true if operation is successful
+  """
+  leaveWorkspace(
+    """Workspace ID"""
+    workspaceId: ID!
+  ): Boolean!
+}
+
+"""All available notification channels"""
+type NotificationsChannels {
+  """Email channel"""
+  email: NotificationsChannelSettings
+
+  """Telegram channel"""
+  telegram: NotificationsChannelSettings
+
+  """Slack channel"""
+  slack: NotificationsChannelSettings
+
+  """Webpush"""
+  webPush: NotificationsChannelSettings
+
+  """Push from Hawk Desktop app"""
+  desktopPush: NotificationsChannelSettings
+}
+
+"""Settings for notification channels"""
+type NotificationsChannelSettings {
+  """True if channel is enabled"""
+  isEnabled: Boolean!
+
+  """Where to deliver messages"""
+  endpoint: String!
+
+  """How often to send event (one alert in 'minPeriod' secs)"""
+  minPeriod: Int!
+}
+
+"""Input type for updateting channel settings"""
+input NotificationsChannelSettingsInput {
+  """True if channel is enabled"""
+  isEnabled: Boolean! = true
+
+  """Where to deliver messages"""
+  endpoint: String!
+
+  """How often to send event (one alert in 'minPeriod' secs)"""
+  minPeriod: Int! = 60
+}
+
+"""Input type for creating and updating notification channels"""
+input NotificationsChannelsInput {
+  """Email channel"""
+  email: NotificationsChannelSettingsInput
+
+  """Telegram channel"""
+  telegram: NotificationsChannelSettingsInput
+
+  """Slack channel"""
+  slack: NotificationsChannelSettingsInput
+
+  """Web push"""
+  webPush: NotificationsChannelSettingsInput
+
+  """Desktop push"""
+  desktopPush: NotificationsChannelSettingsInput
+}
+
+"""Input for single payment"""
+input PayOnceInput {
+  """Total payment amount in kopecs"""
+  amount: Int!
+
+  """Workspace id for which the payment will be made"""
+  workspaceId: ID!
+
+  """Payment form language"""
+  language: SupportedBillingLanguages = RU
+}
+
+"""Pending member data in workspace"""
+type PendingMember {
+  """Member info id"""
+  id: ID!
+
+  """Email to which the invitation was sent"""
+  email: String!
+}
+
+"""Workspace tariff plan"""
+type Plan {
+  """Plan name"""
+  name: String
+
+  """Subscription date"""
+  subscriptionDate: DateTime
+
+  """Lsat charge date"""
+  lastChargeDate: DateTime
+
+  """Monthly charge for plan"""
+  monthlyCharge: Int
+
+  """Events limit for plan"""
+  eventsLimit: Int
+}
+
+"""Project representation"""
+type Project {
+  """Project ID"""
+  id: ID!
+
+  """Project token"""
+  token: String!
+
+  """Project name"""
+  name: String!
+
+  """Project description"""
+  description: String
+
+  """Project domain"""
+  domain: String
+
+  """Project URI"""
+  uri: String
+
+  """Project image"""
+  image: String
+
+  """User who created project"""
+  uidAdded: User!
+
+  """Project's Event"""
+  event(id: ID!): Event
+
+  """Project events"""
+  events(
+    """Maximum number of results"""
+    limit: Int = 50
+
+    """Certain number of documents to skip"""
+    skip: Int = 0
+  ): [Event!]
+
+  """Returns recent events grouped by day"""
+  recentEvents(
+    """Maximum number of results"""
+    limit: Int! = 50
+
+    """Certain number of documents to skip"""
+    skip: Int! = 0
+  ): RecentEvents
+
+  """Returns number of unread events"""
+  unreadCount: Int!
+
+  """Project notification settings"""
+  notifications: [ProjectNotificationsRule]
+}
+
+"""Input type for specifying project notifications rule"""
+input ProjectNotificationRulePointer {
+  """Project id which owns the rule"""
+  projectId: ID!
+
+  """Rule id to delete"""
+  ruleId: ID!
+}
+
+"""Project notify settings"""
+type ProjectNotificationsRule {
+  """Notification settings id"""
+  id: ID!
+
+  """True if settings is enabled"""
+  isEnabled: Boolean!
+
+  """What events type to recieve"""
+  whatToReceive: ReceiveTypes!
+
+  """Words to include in notification"""
+  including: [String!]!
+
+  """Words to exclude from notification"""
+  excluding: [String!]!
+
+  """Notification channels to recieve events"""
+  channels: NotificationsChannels
+}
+
+"""API queries"""
+type Query {
+  """Healthcheck endpoint"""
+  health: String!
+
+  """Get attached cards"""
+  cardList: [CardInfo!]!
+
+  """Get workspace transactions"""
+  transactions(
+    """Workspaces IDs"""
+    ids: [ID!] = []
+  ): [Transaction!]!
+
+  """Returns project info"""
+  project(
+    """Project id"""
+    id: ID!
+  ): Project
+
+  """Returns authenticated user data"""
+  me: User
+
+  """
+  Returns workspace(s) info
+  If ids = [] returns all user's workspaces
+  """
+  workspaces(
+    """Workspace(s) id(s)"""
+    ids: [ID] = []
+  ): [Workspace]
+}
+
+"""What events to receive"""
+enum ReceiveTypes {
+  """Receive only new events"""
+  ONLY_NEW
+
+  """Receive all events"""
+  ALL
+}
+
+"""Event information per day with these events"""
+type RecentEvents {
+  """Occured events list"""
+  events: [Event!]
+
+  """Information about occurred events per day"""
+  dailyInfo: [DailyEventInfo]
+}
+
+"""Event's repetitions. Make Event unique by repetition's payload"""
+type Repetition {
+  """Standalone repetition ID"""
+  id: ID!
+
+  """Event's hash"""
+  groupHash: String!
+
+  """Event's payload patch"""
+  payload: RepetitionPayload!
+}
+
+"""Type representing Event payload"""
+type RepetitionPayload {
+  """Event timestamp"""
+  timestamp: Float
+
+  """Event severity level"""
+  level: Int
+
+  """Event stack array from the latest call to the earliest"""
+  backtrace: [EventBacktraceFrame!]
+
+  """Additional data about GET request"""
+  get: JSONObject
+
+  """Additional data about POST request"""
+  post: JSONObject
+
+  """HTTP headers"""
+  headers: JSONObject
+
+  """Source code version identifier"""
+  release: String
+
+  """Current authenticated user"""
+  user: EventUser
+
+  """Any additional data of Event"""
+  context: JSONObject
+
+  """Custom data provided by project users"""
+  addons: JSONObject
+}
+
+"""Source code line representation"""
+type SourceCodeLine {
+  """Line number"""
+  line: Int
+
+  """Line's content"""
+  content: String
+}
+
+type Subscription {
+  """Sends new events from all user projects"""
+  eventOccurred: Event!
+}
+
+"""Languages supported by the Tinkoff"""
+enum SupportedBillingLanguages {
+  EN
+  RU
+}
+
+"""Authentication token"""
+type Tokens {
+  """User's access token"""
+  accessToken: String!
+
+  """User's refresh token for getting new token pair"""
+  refreshToken: String!
+}
+
+"""Transaction object"""
+type Transaction {
+  """Transaction type"""
+  type: String!
+
+  """Workspace for which transaction has been made"""
+  workspace: Workspace!
+
+  """Transaction amount"""
+  amount: Int!
+
+  """Transaction date"""
+  date: DateTime!
+
+  """User by whom transaction has been made (income transactions only)"""
+  user: User
+
+  """PAN of card by which transaction has been made"""
+  cardPan: Int!
+}
+
+"""Input type for updating exsiting notification rule"""
+input UpdateProjectNotificationsRuleInput {
+  """Rule id to update"""
+  ruleId: ID!
+
+  """Project id to setup"""
+  projectId: ID!
+
+  """True if settings is enabled"""
+  isEnabled: Boolean! = true
+
+  """What events type to recieve"""
+  whatToReceive: ReceiveTypes! = ONLY_NEW
+
+  """Words to include in notification"""
+  including: [String!]! = []
+
+  """Words to exclude from notification"""
+  excluding: [String!]! = []
+
+  """Notification channels to recieve events"""
+  channels: NotificationsChannelsInput!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+"""Represent User type"""
+type User {
+  """User's id"""
+  id: ID!
+
+  """User's email"""
+  email: String
+
+  """User's name"""
+  name: String
+
+  """User's image"""
+  image: String
+
+  """User notifications settings"""
+  notifications: UserNotificationsSettings
+}
+
+"""Available notify types with their active statuses"""
+type UserNotificationsReceiveTypesSet {
+  """When user is assigned to the issue (event)"""
+  IssueAssigning: Boolean
+
+  """Regular digest of what happened on the project for the week"""
+  WeeklyDigest: Boolean
+
+  """Only important messages from Hawk team"""
+  SystemMessages: Boolean
+}
+
+"""This object stored in user.notifications field"""
+type UserNotificationsSettings {
+  """Available notify types with their active statuses"""
+  whatToReceive: UserNotificationsReceiveTypesSet!
+
+  """Available channels with their data"""
+  channels: NotificationsChannels!
+}
+
+enum UserNotificationType {
+  """When user is assigned to the issue (event)"""
+  IssueAssigning
+
+  """Regular digest of what happened on the project for the week"""
+  WeeklyDigest
+
+  """Only important messages from Hawk team"""
+  SystemMessages
+}
+
+"""Represent Workspace info"""
+type Workspace {
+  """Workspace id"""
+  id: ID!
+
+  """Workspace name"""
+  name: String
+
+  """Workspace description"""
+  description: String
+
+  """Workspace logo image"""
+  image: String
+
+  """Workspace team info"""
+  team: [Member!]!
+
+  """Workspace balance"""
+  balance: Int
+
+  """Workspace tariff plan"""
+  plan: Plan
+
+  """Workspace projects array"""
+  projects(
+    """Project(s) id(s)"""
+    ids: [ID!] = []
+  ): [Project!]
+}
+

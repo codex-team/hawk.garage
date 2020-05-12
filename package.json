@@ -10,7 +10,10 @@
     "lint:js": "eslint src/ --ext .js --ext .ts --ext .vue --fix",
     "serve:prod": "http-server ./dist --push-state -c-0",
     "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
-    "storybook:build": "vue-cli-service storybook:build -c config/storybook"
+    "storybook:build": "vue-cli-service storybook:build -c config/storybook",
+    "get-schema": "get-graphql-schema https://api.beta.hawk.so/graphql > schema.graphql",
+    "get-schema:stage": "get-graphql-schema https://api.stage.hawk.so/graphql > schema.graphql",
+    "get-schema:local": "get-graphql-schema http://localhost:4000/graphql > schema.graphql"
   },
   "dependencies": {
     "@hawk.so/javascript": "^2.1.0",
@@ -68,6 +71,7 @@
     "eslint-config-codex": "1.3.6",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-vue": "^6.1.2",
+    "get-graphql-schema": "^2.1.2",
     "lint-staged": "^10.2.2",
     "stylelint": "^13.3.3",
     "stylelint-config-rational-order": "^0.1.2",

@@ -1,3 +1,4 @@
+// language=GraphQL
 /**
  * Fragment represents user
  */
@@ -10,6 +11,7 @@ export const USER_FRAGMENT = `
   }
 `;
 
+// language=GraphQL
 /**
  * Fragment represents event backtrace
  */
@@ -27,6 +29,7 @@ export const EVENT_BACKTRACE = `
   }
 `;
 
+// language=GraphQL
 /**
  * Fragment for fetching workspace with full team
  */
@@ -52,6 +55,7 @@ export const WORKSPACE_FRAGMENT_WITH_TEAM = `
   }
 `;
 
+// language=GraphQL
 /**
  * All properties of a single project notifications rule
  */
@@ -79,6 +83,7 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
   }
 `;
 
+// language=GraphQL
 /**
  * This fields stored in users.notifications record
  */

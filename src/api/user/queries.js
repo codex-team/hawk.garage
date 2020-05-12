@@ -1,5 +1,6 @@
 import { USER_NOTIFICATIONS_FRAGMENT } from '../fragments';
 
+// language=GraphQL
 /**
  * Login mutation
  */
@@ -12,6 +13,7 @@ mutation login($email: String!, $password: String!) {
 }
 `;
 
+// language=GraphQL
 /**
  * SignUp mutation
  */
@@ -21,6 +23,7 @@ mutation signUp($email: String!) {
 }
 `;
 
+// language=GraphQL
 /**
  * Recover password mutation
  */
@@ -30,6 +33,7 @@ mutation recoverPassword($email: String!) {
 }
 `;
 
+// language=GraphQL
 /**
  * Mutation for refreshing tokens
  */
@@ -42,6 +46,7 @@ mutation refreshTokens($refreshToken: String!) {
 }
 `;
 
+// language=GraphQL
 /**
  * Query to get current user
  */
@@ -56,6 +61,7 @@ query getCurrentUser {
 }
 `;
 
+// language=GraphQL
 /**
  * Mutation to update user profile
  */
@@ -69,6 +75,7 @@ mutation User($name: String!, $email: String!, $image: Upload) {
 }
 `;
 
+// language=GraphQL
 /**
  * Mutation to change user password
  */
