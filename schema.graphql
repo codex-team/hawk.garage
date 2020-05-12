@@ -160,7 +160,7 @@ type Event {
   marks: EventMarks!
 
   """How many users catch this error"""
-  usersAffected: Int!
+  usersAffected: Int
 }
 
 """Event backtrace representation"""
@@ -239,9 +239,16 @@ type EventPayload {
 
 """Event user representation"""
 type EventUser {
+  """Internal user's identifier inside an app"""
   id: ID!
-  name: String!
+
+  """User public name"""
+  name: String
+
+  """URL for user's details page"""
   url: String
+
+  """User's public picture"""
   photo: String
 }
 
