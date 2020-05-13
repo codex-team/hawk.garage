@@ -11,9 +11,7 @@
     "serve:prod": "http-server ./dist --push-state -c-0",
     "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
-    "get-schema": "get-graphql-schema https://api.beta.hawk.so/graphql > schema.graphql",
-    "get-schema:stage": "get-graphql-schema https://api.stage.hawk.so/graphql > schema.graphql",
-    "get-schema:local": "get-graphql-schema http://localhost:4000/graphql > schema.graphql"
+    "get-schema": "get-graphql-schema http://localhost:4000/graphql > schema.graphql"
   },
   "dependencies": {
     "@hawk.so/javascript": "^2.1.0",

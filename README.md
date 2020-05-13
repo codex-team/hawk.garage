@@ -35,9 +35,5 @@ To run storybook, use `yarn storybook` command
 
 After updating Hawk GraphQL API scheme you should pull
 its schema (see [file](./schema.graphql)) for code highlighting and typechecking in queries.
-There are set of scripts that can help you:
 
-1. `yarn get-schema` — loads schema from production server
-2. `yarn get-schema:stage` — loads schema from stage server
-3. `yarn get-schema:local` — loads schema from your local server (http://localhost:4000/graphql by default)
-4. `yarn get-graphql-schema server_url > schema.graphql`, where `server_url` is the path to GraphQL server whose schema ypu want to download
+Run `yarn get-schema` to load schema from local server
