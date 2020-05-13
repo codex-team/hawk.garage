@@ -5,7 +5,7 @@ import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID){
+  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID) {
     project(id: $projectId) {
       event(id: $eventId) {
         id
@@ -37,6 +37,7 @@ export const QUERY_EVENT = `
           }
           addons
         }
+        usersAffected
         repetition(id: $repetitionId) {
           id
           payload {

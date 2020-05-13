@@ -215,10 +215,15 @@
       "times": "{n} time | {n} times",
       "days": "{n} day | {n} days"
     },
+    "usersAffected": {
+      "total": "Total",
+      "users": "{n} user | {n} users"
+    },
     "navigation": {
       "overview": "Overview",
       "repetitions": "Repetitions",
-      "daily": "Days repeating"
+      "daily": "Days repeating",
+      "usersAffected": "Users affected"
     },
     "resolve": "Resolve",
     "star": "Star",

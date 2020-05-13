@@ -59,10 +59,6 @@ export default Vue.extend({
       required: true,
     },
   },
-  data() {
-    return {
-    };
-  },
   computed: {
     /**
      * Get calling env language based on event.catcherType
