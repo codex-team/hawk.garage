@@ -2,7 +2,7 @@
   <div class="event-header">
     <div class="event-layout__container">
       <UiLabel
-        :text="(!loading) ? event.payload.type || 'Application error': $t('event.loading')"
+        :text="!loading ? event.payload.type || 'Application error' : $t('event.loading')"
         icon="flash"
       />
       <h1 class="event-header__title">
