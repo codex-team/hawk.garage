@@ -77,7 +77,10 @@ export default Vue.extend({
   },
 
   computed: {
-    event() {
+    /**
+     * Current viewed event
+     */
+    event(): HawkEvent {
       return this.$store.getters.getProjectEventRepetition(this.projectId, this.eventId, this.repetitionId);
     },
   },
@@ -96,13 +99,6 @@ export default Vue.extend({
       eventId,
       repetitionId,
     });
-
-    /**
-     * If page opened directly, this.event is null, so we need to set observer from VueX
-     */
-    // if (!this.event) {
-    //   this.event = this.$store.getters.getProjectEventRepetition(this.projectId, eventId, repetitionId);
-    // }
 
     this.loading = false;
 
@@ -131,7 +127,7 @@ export default Vue.extend({
 </script>
 
 <style>
-  @import "./../../styles/variables";
+  @import "./../../styles/variables.css";
 
   .event-layout {
     /** Override Popup Dialog animation */
