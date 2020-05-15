@@ -227,7 +227,7 @@ export default {
 
     &__assigners-list {
       position: absolute;
-      transform: translateX(-100%) translate(-5px, -5px);
+      transform: translateX(-100%) translate(-15px, -5px);
     }
 
     &__load-more {
