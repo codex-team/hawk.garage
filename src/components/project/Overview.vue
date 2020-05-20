@@ -39,6 +39,7 @@
           v-if="isAssignersShowed"
           v-click-outside="hideAssignersList"
           :style="assignersListPosition"
+          :workspace-id="project.workspaceId"
           class="project-overview__assigners-list"
         />
       </div>

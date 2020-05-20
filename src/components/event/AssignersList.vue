@@ -16,9 +16,10 @@
       class="event-assigners-list__assigners assigners"
     >
       <div
-        v-for="user in users"
+        v-for="(user, userIndex) in users"
         :key="user.id"
         class="assigners__row"
+        @click="toggle(userIndex)"
       >
         <EntityImage
           :id="String(user.id)"
@@ -27,7 +28,7 @@
           :name="user.email || user.name"
           size="16"
         />
-        {{ user.email | strip }}
+        {{ user.email | trim }}
         <Icon
           v-if="user.assigned"
           class="assigners__checkmark"
@@ -49,46 +50,77 @@ export default {
     Icon,
   },
   filters: {
-    strip: function (name) {
-      if (name.length > 13) {
-        return `${name.slice(0, 13)}...`;
+    /**
+    * Trim a string to a specific length
+    *
+    * @param {string} name - string for trimming
+    */
+    trim: function (name) {
+      const maxLength = 13;
+
+      if (name.length > maxLength) {
+        return `${name.slice(0, maxLength)}...`;
       }
 
       return name;
     },
   },
+  props: {
+    /**
+     * Workspace id of the current project
+     */
+    workspaceId: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
-      users: [
-        {
-          id: 1,
-          email: 'specc.dev@gmail.com',
-          image: 'https://capella.pics/8f0dfd0a-e8e6-4010-a426-d2cdc5901f8a.jpg',
-          assigned: true,
-        },
-        {
-          id: 2,
-          email: 'nikmel2803@gmail.com',
-          image: 'https://capella.pics/8f0dfd0a-e8e6-4010-a426-d2cdc5901f8a.jpg',
-        },
-        {
-          id: 3,
-          email: 'Somebody once told me',
-          image: 'https://capella.pics/8f0dfd0a-e8e6-4010-a426-d2cdc5901f8a.jpg',
-        },
-        {
-          id: 4,
-          email: 'geekan@bk.ru',
-          image: 'https://capella.pics/8f0dfd0a-e8e6-4010-a426-d2cdc5901f8a.jpg',
-        },
-        {
-          id: 5,
-          email: 'geekan@bk.ru',
-          image: 'https://capella.pics/8f0dfd0a-e8e6-4010-a426-d2cdc5901f8a.jpg',
-        },
-      ],
       searchText: '',
+      users: [],
     };
+  },
+
+  /**
+   * Set users from current workspace
+   */
+  created() {
+    const workspaces = this.$store.state.workspaces.list;
+    let currentWorkspace = {};
+
+    for (const workspace of workspaces) {
+      if (workspace.id == this.workspaceId) {
+        currentWorkspace = workspace;
+
+        break;
+      }
+    }
+
+    const users = currentWorkspace.team.reduce((accumulator, user) => {
+      const userData = user.user;
+
+      userData.assigned = false;
+      accumulator.push(userData);
+
+      return accumulator;
+    }, []);
+
+    this.users = users;
+  },
+  methods: {
+    toggle: function (userIndex) {
+      let isAssigned = true;
+
+      if (this.users[userIndex].assigned) {
+        isAssigned = false;
+      }
+
+      const selectedUser = this.users[userIndex];
+
+      selectedUser.assigned = isAssigned;
+
+      this.$set(this.users, userIndex, selectedUser);
+    },
   },
 };
 </script>
