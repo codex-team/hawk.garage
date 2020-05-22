@@ -75,11 +75,38 @@ export const groupBy =
       }, {});
 
 /**
- * Group array of object by 'date' field
+ * Converts UTC midnight timestamp to local midnight timestamp
  *
- * @type {(array: Array<object>) => object}
+ * @param {number} utcMidnight - midnight in UTC
+ * @returns {number} midnight in local timezone
  */
-export const groupByGroupingTimestamp = groupBy('groupingTimestamp');
+function convertUtcMidnightToLocalMidnight(utcMidnight): number {
+  const milliseconds = 1000;
+  const hour = 60;
+  const date = new Date(utcMidnight * milliseconds);
+  const timezoneOffset = date.getTimezoneOffset() / hour * -1;
+
+  date.setHours(timezoneOffset, 0, 0, 0);
+
+  return date.getTime() / milliseconds;
+}
+
+/**
+ * Group array of object by 'groupingTimestamp' field
+ *
+ * /!\ The  'groupingTimestamp' field is stored in UTC so we need to convert it to the local zone first.
+ *
+ * @param {object[]} items - array of object with the  'groupingTimestamp' field
+ */
+export function groupByGroupingTimestamp(items): object {
+  items = items.map((item) => {
+    return Object.assign(item, {
+      groupingTimestamp: convertUtcMidnightToLocalMidnight(item.lastRepetitionTime),
+    });
+  });
+
+  return groupBy('groupingTimestamp')(items);
+}
 
 /**
  * Returns real type of passed variable
