@@ -100,7 +100,7 @@ function convertUtcMidnightToLocalMidnight(utcMidnight): number {
  */
 export function groupByGroupingTimestamp(items): object {
   items = items.map((item) => {
-    return Object.assign(item, {
+    return Object.assign({}, item, {
       groupingTimestamp: convertUtcMidnightToLocalMidnight(item.lastRepetitionTime),
     });
   });
