@@ -44,11 +44,12 @@ enum MutationTypes {
   ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
 
   /**
-   * Update event payload
+   * Update event
    * Used when the event fully fetched with payload to update the state object
    * Because initial fetch request gets data without payload (title, timestamp, totalCount, visited etc.)
+   * and some other data
    */
-  UPDATE_EVENT_PAYLOAD = 'UPDATE_EVENT_PAYLOAD',
+  UPDATE_EVENT = 'UPDATE_EVENT',
 
   /**
    * Mark event as visited
@@ -384,7 +385,7 @@ const module: Module<EventsModuleState, RootState> = {
       /**
        * Updates or sets event's fetched payload in the state
        */
-      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
+      commit(MutationTypes.UPDATE_EVENT, {
         projectId,
         event,
       });
@@ -573,19 +574,21 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Updates event payload
+     * Updates event
      *
      * @param {EventsModuleState} state - Vuex state
      *
-     * @param {object} payload - vuex mutation payload\
+     * @param {object} payload - vuex mutation payload
      * @param {string} payload.projectId - project's identifier
      * @param {HawkEvent} payload.event - Event object
      */
-    [MutationTypes.UPDATE_EVENT_PAYLOAD](state, { projectId, event }): void {
+    [MutationTypes.UPDATE_EVENT](state, { projectId, event }): void {
       const key = getEventsListKey(projectId, event.id);
 
       if (state.list[key]) {
-        Vue.set(state.list[key], 'payload', event.payload);
+        const obj = Object.assign({}, state.list[key], event);
+
+        Vue.set(state.list, key, obj);
       } else {
         Vue.set(state.list, key, event);
       }

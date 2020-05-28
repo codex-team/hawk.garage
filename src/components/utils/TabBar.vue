@@ -66,10 +66,6 @@ export default Vue.extend({
       default: 0,
     },
   },
-  data() {
-    return {
-    };
-  },
   methods: {
     /**
      * Check if navigation item is active

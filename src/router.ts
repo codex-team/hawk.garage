@@ -113,6 +113,11 @@ const router = new Router({
                   name: 'event-daily',
                   component: () => import(/* webpackChunkName: 'event-daily' */ './components/event/Daily.vue'),
                 },
+                {
+                  path: 'affected',
+                  name: 'event-affected',
+                  component: () => import(/* webpackChunkName: 'event-affected' */ './components/event/UsersAffected.vue'),
+                },
               ],
             },
 

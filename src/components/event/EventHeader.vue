@@ -2,7 +2,7 @@
   <div class="event-header">
     <div class="event-layout__container">
       <UiLabel
-        :text="event.payload.type || 'Application error'"
+        :text="!loading ? event.payload.type || 'Application error' : $t('event.loading')"
         icon="flash"
       />
       <h1 class="event-header__title">
@@ -83,8 +83,6 @@ export default Vue.extend({
   props: {
     /**
      * Original (first) event data
-     *
-     * @type {HawkEvent}
      */
     event: {
       type: Object as () => HawkEvent,
@@ -136,6 +134,8 @@ export default Vue.extend({
      * @returns {TabInfo[]}
      */
     navigationItems(): TabInfo[] {
+      const showAffectedUsers = !this.loading && this.event.usersAffected;
+
       return [
         {
           title: this.$i18n.t('event.navigation.overview') as string,
@@ -150,6 +150,11 @@ export default Vue.extend({
           title: this.$i18n.t('event.navigation.daily') as string,
           routeName: 'event-daily',
         },
+        ...(showAffectedUsers ? [ {
+          title: this.$i18n.t('event.navigation.usersAffected') as string,
+          routeName: 'event-affected',
+          badge: this.event.usersAffected,
+        } ] : []),
       ];
     },
 
