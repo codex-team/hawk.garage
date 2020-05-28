@@ -98,9 +98,9 @@ export default Vue.extend({
        * @return {void}
        */
       onResize: () => {},
-      lineLeft: 100,
-      pointTop: 100,
-      pointsY: [],
+      lineLeft: 0,
+      pointTop: 150.5,
+      pointsY: [] as number[],
       numberOfEvents: 67,
       day: 0,
     };
@@ -186,7 +186,6 @@ export default Vue.extend({
     createPolyline(): void {
       const step = this.$el.clientWidth / (this.days.length - 1);
       const points : string[] = [];
-      this.pointsX = [];
 
       this.days.forEach((day, index) => {
         const pointX = index * step;
