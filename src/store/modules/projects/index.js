@@ -295,13 +295,12 @@ const actions = {
    *
    * @param {object} payload - vuex action payload
    * @param {string} payload.projectId - id of the project to fetch data
-   * @param {number} payload.since - timestamp from which we start taking errors
+   * @param {number} payload.days - how many days we need to fetch for displaying in a chart
    * @returns {Promise<void>}
    */
-  async [FETCH_CHART_DATA]({ commit }, { projectId, since }) {
-    const chartData = await projectsApi.fetchChartData(projectId, since);
-
-    console.log('chartData', chartData);
+  async [FETCH_CHART_DATA]({ commit }, { projectId, days }) {
+    const timezoneOffset = (new Date()).getTimezoneOffset();
+    const chartData = await projectsApi.fetchChartData(projectId, days, timezoneOffset);
 
     commit(mutationTypes.ADD_CHART_DATA, {
       projectId,

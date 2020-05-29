@@ -120,12 +120,13 @@ export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
 export const QUERY_CHART_DATA = `
   query ProjectRecentEvents (
     $projectId: ID!,
-    $since: Int!
+    $days: Int!
+    $timezoneOffset: Int!
   ) {
     project(id: $projectId) {
-      chartData(since: $since) {
+      chartData(days: $days, timezoneOffset: $timezoneOffset) {
         timestamp
-        totalCount
+        count
       }
     }
   }

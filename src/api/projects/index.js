@@ -113,12 +113,14 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * Fetch data for chart
  *
  * @param {string} projectId - id of the project to fetch recent errors
- * @param {number} since - events will be collected no later than this time timestamp
+ * @param {number} timezoneOffset - user's local timezone offset
+ *
  * @returns {Promise<ChartData[] | null>}
  */
-export async function fetchChartData(projectId, since) {
+export async function fetchChartData(projectId, days, timezoneOffset) {
   return (await api.call(QUERY_CHART_DATA, {
     projectId,
-    since,
+    days,
+    timezoneOffset,
   })).project.chartData;
 }

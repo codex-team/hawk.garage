@@ -56,18 +56,17 @@
 <script lang="ts">
 import Vue from 'vue';
 import { debounce } from '@/utils';
-import { ChartData } from '../../types/events';
+import { ProjectChartItem } from '../../types/chart';
 
 export default Vue.extend({
   name: 'Chart',
   props: {
     /**
      * List of days with the number of errors per day
-     * @type {ChartData[]}
      */
     days: {
-      type: Array as () => ChartData[],
-      default: () => [] as ChartData[],
+      type: Array as () => ProjectChartItem[],
+      default: () => [] as ProjectChartItem[],
     },
   },
   data() {
@@ -93,7 +92,7 @@ export default Vue.extend({
      * @return {number}
      */
     todayCount(): number {
-      return this.days.slice(-1)[0].totalCount || 0;
+      return this.days.slice(-1)[0].count || 0;
     },
 
     /**
@@ -102,7 +101,7 @@ export default Vue.extend({
      * @return {number}
      */
     yesterdayCount(): number {
-      return this.days.slice(-2, -1)[0].totalCount || 0;
+      return this.days.slice(-2, -1)[0].count || 0;
     },
 
     /**
@@ -129,7 +128,7 @@ export default Vue.extend({
      * @return {number}
      */
     minCount(): number {
-      return Math.min(...this.days.map(day => day.totalCount));
+      return Math.min(...this.days.map(day => day.count));
     },
 
     /**
@@ -138,7 +137,7 @@ export default Vue.extend({
      * @return {number}
      */
     maxCount(): number {
-      return Math.max(...this.days.map(day => day.totalCount));
+      return Math.max(...this.days.map(day => day.count));
     },
   },
   watch: {
@@ -173,7 +172,7 @@ export default Vue.extend({
         let pointY = 2;
 
         if (this.maxCount != this.minCount) {
-          pointY += (day.totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
+          pointY += (day.count - this.minCount) / (this.maxCount - this.minCount) * 100;
         }
 
         points.push(pointX + ' ' + pointY);

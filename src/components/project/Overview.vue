@@ -136,12 +136,13 @@ export default {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
 
     // How many days will be displayed in the chart
-    const twoWeeks = Math.floor(Date.now() / 1000 - 86400 * (14 + 2));
+    const twoWeeks = 14;
+    const boundingDays = 2;
 
     if (!this.$store.state.projects.charts[this.projectId]) {
       await this.$store.dispatch(FETCH_CHART_DATA, {
         projectId: this.projectId,
-        since: twoWeeks,
+        days: twoWeeks + boundingDays,
       });
     }
 
