@@ -112,7 +112,6 @@ export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
 
-
 // language=GraphQL
 /**
  * Get data for chart

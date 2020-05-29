@@ -433,13 +433,13 @@ const mutations = {
     Vue.set(project.notifications, existedRuleIndex, rule);
   },
 
-
   /**
    * Add data to store
    *
    * @param {EventsModuleState} state - Vuex state
-   * @param {string} projectId - project's identifier
-   * @param {chartData[]} data - data to add
+   * @param {object} payload - mutation payload
+   * @param {string} payload.projectId - project's identifier
+   * @param {chartData[]} payload.data - data to add
    */
   [mutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
     state.charts[projectId] = data;

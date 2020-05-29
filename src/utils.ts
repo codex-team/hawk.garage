@@ -319,7 +319,7 @@ export function strReplaceAt(string: string, index: number, replacement: string)
  * @param {number} line - searching line number
  * @param {number} column - searching column number
  *
- * @return {number}
+ * @returns {number}
  */
 export function findOffsetByLineAndCol(string: string, line: number, column: number): number {
   let currentLine = 0;
@@ -346,10 +346,11 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
 /**
  * Debounce function in order to
  * time-consuming tasks don't run so often
+ *
  * @param {() => void} callback - function for debounce
  * @param {number} delay - debounce delay
  *
- * @return {() => void}
+ * @returns {() => void}
  */
 export function debounce(callback: () => void, delay: number): () => void {
   let debounceTimer;
