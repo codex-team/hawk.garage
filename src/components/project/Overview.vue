@@ -23,7 +23,7 @@
             :count="dailyEventInfo.count"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
-            @onAssigneeIconClick="showAssigners"
+            @onAssigneeIconClick="showAssigners(getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash), $event)"
             @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
           />
         </div>
@@ -40,6 +40,9 @@
           v-click-outside="hideAssignersList"
           :style="assignersListPosition"
           :workspace-id="project.workspaceId"
+          :event-id="assignersEventId"
+          :assigner="assigner"
+
           class="project-overview__assigners-list"
         />
       </div>
@@ -66,6 +69,11 @@ export default {
       noMoreEvents: true,
       isLoadingEvents: false,
       isAssignersShowed: false,
+      /**
+       * Event id for assigners
+       */
+      assignersEventId: '',
+      assigner: '',
       assignersListPosition: {
         top: 0,
         right: 0,
@@ -147,9 +155,12 @@ export default {
     /**
      * Shows assigners list for the specific event
      *
+     * @param {Event} selectedEvent - selected event for which we are going to assign a person
      * @param {GroupedEvent} event - event to display assigners list
      */
-    showAssigners(event) {
+    showAssigners(selectedEvent, event) {
+      this.assignersEventId = selectedEvent.id;
+      this.assigner = selectedEvent.assigner || '';
       this.isAssignersShowed = true;
       const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
 

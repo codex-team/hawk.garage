@@ -30,7 +30,7 @@
         />
         {{ user.email | trim }}
         <Icon
-          v-if="user.assigned"
+          v-if="user.id == assignerId"
           class="assigners__checkmark"
           symbol="checkmark"
         />
@@ -73,11 +73,28 @@ export default {
       type: String,
       default: '',
     },
+
+    /**
+     * id of the selected event
+     */
+    eventId: {
+      type: String,
+      default: '',
+    },
+
+    /**
+     * id of current assigner
+     */
+    assigner: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
       searchText: '',
       users: [],
+      assignerId: this.assigner,
     };
   },
 
@@ -109,17 +126,12 @@ export default {
   },
   methods: {
     toggle: function (userIndex) {
-      let isAssigned = true;
-
-      if (this.users[userIndex].assigned) {
-        isAssigned = false;
+      // todo: dispatch the assigner to the database or remove him
+      if (this.assignerId == this.users[userIndex].id) {
+        this.assignerId = '';
+      } else {
+        this.assignerId = this.users[userIndex].id;
       }
-
-      const selectedUser = this.users[userIndex];
-
-      selectedUser.assigned = isAssigned;
-
-      this.$set(this.users, userIndex, selectedUser);
     },
   },
 };
