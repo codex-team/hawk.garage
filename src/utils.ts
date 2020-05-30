@@ -134,6 +134,7 @@ export function isObject(item: any): boolean {
  *
  * @param {object} target - where to merge
  * @param {object[]} sources - what to merge
+ *
  * @returns {object}
  */
 export function deepMerge(target: object, ...sources: object[]): object {
@@ -317,6 +318,8 @@ export function strReplaceAt(string: string, index: number, replacement: string)
  * @param {string} string - where to find
  * @param {number} line - searching line number
  * @param {number} column - searching column number
+ *
+ * @returns {number}
  */
 export function findOffsetByLineAndCol(string: string, line: number, column: number): number {
   let currentLine = 0;
@@ -338,4 +341,26 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
   }
 
   return offset;
+}
+
+/**
+ * Debounce function in order to
+ * time-consuming tasks don't run so often
+ *
+ * @param {() => void} callback - function for debounce
+ * @param {number} delay - debounce delay
+ *
+ * @returns {() => void}
+ */
+export function debounce(callback: () => void, delay: number): () => void {
+  let debounceTimer;
+
+  return function (...args): void {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      callback.apply(this, args);
+    }, delay);
+  };
 }

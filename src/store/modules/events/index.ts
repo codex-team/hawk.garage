@@ -200,6 +200,7 @@ const module: Module<EventsModuleState, RootState> = {
         return state.list[key] || null;
       };
     },
+
     /**
      * Returns merged original event with passed repetition from stores
      *

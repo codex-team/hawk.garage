@@ -47,3 +47,8 @@ export const UPDATE_NOTIFICATIONS_RULE = 'UPDATE_NOTIFICATIONS_RULE';
  * Toggle isEnabled state of the notifications rule
  */
 export const TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE = 'TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE';
+
+/**
+ * Get events counters for the last N days at the specific project
+ */
+export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
