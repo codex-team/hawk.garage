@@ -6,7 +6,10 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <Chart :days="chartData" />
+      <Chart
+        :days="chartData"
+        class="project-overview__chart"
+      />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -136,14 +139,17 @@ export default {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
 
     // How many days will be displayed in the chart
-    const twoWeeks = 14;
+    const twoWeeks = 18;
     const boundingDays = 2;
 
     if (!this.$store.state.projects.charts[this.projectId]) {
+      console.log('START LOADING');
       await this.$store.dispatch(FETCH_CHART_DATA, {
         projectId: this.projectId,
         days: twoWeeks + boundingDays,
       });
+
+      console.log('LOADED');
     }
 
     this.chartData = this.$store.state.projects.charts[this.projectId];
@@ -234,9 +240,7 @@ export default {
     }
 
     &__chart {
-      height: 215px;
-      margin: 16px 15px 0;
-      background-color: var(--color-bg-main);
+      margin: 15px 15px 0;
     }
 
     &__events {

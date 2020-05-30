@@ -1,23 +1,29 @@
 <template>
-  <div class="project-overview__chart" @mousemove="move">
+  <div
+    class="chart"
+    @mousemove.passive="moveTooltip"
+  >
     <div
       v-if="days.length > 1"
-      class="project-overview__chart-info"
+      class="chart__info"
     >
-      <span class="project-overview__chart-info__today"> today </span>
-      <span class="project-overview__chart-info__highlight"> {{ todayCount }} </span>
+      <span class="chart__info-today"> today </span>
+      <span class="chart__info-highlight"> {{ todayCount }} </span>
 
       <span
         v-if="difference !== 0"
         :class="{
-          'project-overview__chart-info-increase': difference > 0,
-          'project-overview__chart-info-decrease': difference < 0
+          'chart__info-increase': difference > 0,
+          'chart__info-decrease': difference < 0
         }"
       >
         {{ Math.abs(difference) | spacedNumber }}
       </span>
     </div>
-    <svg ref="chart" class="project-overview__chart-body">
+    <svg
+      ref="chart"
+      class="chart__body"
+    >
       <defs>
         <linearGradient
           id="chart"
@@ -34,34 +40,40 @@
         </linearGradient>
       </defs>
       <polyline
-        class="chart_body-polyline"
+        class="chart__body-polyline"
         fill="none"
-        :stroke="minCount !== maxCount ? 'url(#chart)' : 'rgba(61, 133, 210, 0.22)'"
+        stroke="url(#chart)"
         stroke-width="2.5"
         :points="polylinePoints"
       />
     </svg>
-    <div class="project-overview__chart-days">
+    <div class="chart__oy">
       <span
-        v-for="(day, index) in visibleDays"
+        v-for="(day, index) in days"
         :key="index"
-        class="project-overview__chart-day"
+        class="chart__oy-item"
       >
         {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
       </span>
     </div>
     <div
-      :style="`left: ${lineLeft}px`"
-      class="project-overview__chart-line">
+      :style="`left: ${pointerLeft}px`"
+      class="chart__pointer"
+    >
       <div
-        :style="`top: ${pointTop}px`"
-        class="project-overview__chart-point">
-      </div>
+        :style="`top: ${pointerTop}px`"
+        class="chart__pointer-cursor"
+      />
       <div
-        v-if="day != 0 && day != days.length - 1"
-        class="project-overview__chart-events">
-        <div class="project-overview__chart-events__date">{{ days[day].timestamp * 1000 | prettyDateFromTimestamp }}</div>
-        <div class="project-overview__chart-events__number">{{ numberOfEvents }} events</div>
+        v-if="hoveredIndex !== 0 && hoveredIndex !== days.length - 1"
+        class="chart__pointer-tooltip"
+      >
+        <div class="chart__pointer-tooltip-date">
+          {{ days[hoveredIndex].timestamp * 1000 | prettyDateFromTimestamp }}
+        </div>
+        <div class="chart__pointer-tooltip-number">
+          {{ numberOfEvents }} events
+        </div>
       </div>
     </div>
   </div>
@@ -86,11 +98,15 @@ export default Vue.extend({
   data() {
     return {
       /**
-       * points for svg polyline
-       *
-       * @type {string}
+       * Chart SVG clientWidth
        */
-      polylinePoints: '' as string,
+      chartWidth: 0,
+
+      /**
+       * Chart SVG clientWidth
+       */
+      chartHeight: 0,
+
 
       /**
        * Event on window resize
@@ -98,14 +114,23 @@ export default Vue.extend({
        * @returns {void}
        */
       onResize: () => {},
-      lineLeft: 0,
-      pointTop: 150.5,
       pointsY: [] as number[],
       numberOfEvents: 67,
-      day: 0,
+
+      /**
+       * Hovered point index
+       */
+      hoveredIndex: 0,
     };
   },
   computed: {
+    /**
+     * Step for OX axis
+     */
+    stepX(): number {
+      return this.chartWidth / (this.days.length - 1);
+    },
+
     /**
      * Number of errors for the current day
      *
@@ -134,20 +159,11 @@ export default Vue.extend({
     },
 
     /**
-     * Days used in chart
-     *
-     * @returns {number}
-     */
-    visibleDays(): any[] {
-      return this.days.slice(1, -1);
-    },
-
-    /**
      * Minimum number errors per day
      *
      * @returns {number}
      */
-    minCount(): number {
+    minValue(): number {
       return Math.min(...this.days.map(day => day.count));
     },
 
@@ -156,23 +172,62 @@ export default Vue.extend({
      *
      * @returns {number}
      */
-    maxCount(): number {
+    maxValue(): number {
       return Math.max(...this.days.map(day => day.count));
-    }
-  },
-  watch: {
+    },
+
     /**
-     * Creates a polyline by day
+     * Left coordinate of hover pointer
      */
-    days: function () {
-      this.createPolyline();
+    pointerLeft(): number {
+      return this.hoveredIndex * this.stepX - 1.5;
+    },
+
+    /**
+     * Top coordinate of hover pointer cursor
+     */
+    pointerTop(): number {
+      return 152.5 - this.pointsY[this.hoveredIndex];
+    },
+
+    kY(): number {
+      return (this.chartHeight) / (this.maxValue - this.minValue);
+    },
+
+    /**
+     * Points for SVG <polyline>
+     *
+     * @type {string}
+     */
+    polylinePoints(): string {
+      if (!this.days || !this.days.length){
+        return '';
+      }
+
+      const points : string[] = [];
+
+      this.days.forEach((day, index) => {
+        const value = day.count;
+        const pointX = index * this.stepX;
+        const pointY = this.chartHeight - value * this.kY;
+
+        points.push(pointX + ' ' + pointY);
+
+        this.pointsY.push(pointY);
+      });
+
+      return points.join(', ');
     },
   },
   created() {
-    this.onResize = debounce(this.createPolyline, 100);
+    this.onResize = debounce(this.windowResized, 200);
   },
   mounted() {
-    this.createPolyline();
+    /**
+     * Cache wrapper width
+     */
+    this.computeWrapperSize();
+
     window.addEventListener('resize', this.onResize);
   },
   beforeDestroy() {
@@ -180,68 +235,68 @@ export default Vue.extend({
   },
   methods: {
     /**
-     * Logic for create polyline for chart
-     * Set x y coordinates separated by a comma
+     * Compute and save chart wrapper width
      */
-    createPolyline(): void {
-      const step = this.$el.clientWidth / (this.days.length - 1);
-      const points : string[] = [];
-
-      this.days.forEach((day, index) => {
-        const pointX = index * step;
-        let pointY = 2;
-
-        if (this.maxCount != this.minCount) {
-          pointY += (day.count - this.minCount) / (this.maxCount - this.minCount) * 100;
-        }
-
-        points.push(pointX + ' ' + pointY);
-        this.pointsY.push(pointY);
-      });
-
-      this.polylinePoints = points.join(', ');
+    computeWrapperSize(): void {
+      this.chartWidth = this.$refs['chart'].clientWidth;
+      this.chartHeight = this.$refs['chart'].clientHeight;
     },
-    move (event) {
-      const step = this.$el.clientWidth / (this.days.length - 1);
-      const chartX = this.$el.getBoundingClientRect().left;
-      const chartY = this.$el.getBoundingClientRect().top;
-      const cursorX = event.clientX - chartX;
-      const day = Math.round(cursorX / step);
 
-      this.day = day;
-      this.pointTop = 152.5 - this.pointsY[day];
-      this.lineLeft = day * step - 1.5;
-      this.numberOfEvents = this.days[day].totalCount;
-    }
+    /**
+     * Handler for window resize
+     */
+    windowResized(): void {
+      console.log('windowResized');
+      this.computeWrapperSize();
+    },
+
+    /**
+     * Moves tooltip to the hovered point
+     *
+     * @param {MouseEvent} event - mousemove
+     */
+    moveTooltip(event): void {
+      const chartX = this.$el.getBoundingClientRect().left;
+      const cursorX = event.clientX - chartX;
+
+      this.hoveredIndex = Math.round(cursorX / this.stepX);
+
+      this.numberOfEvents = this.days[this.hoveredIndex].count;
+    },
   },
 });
 </script>
 <style>
-  .project-overview__chart {
+  .chart {
     position: relative;
     height: 215px;
-    margin: 16px 15px 0;
     background-color: var(--color-bg-main);
-    position: relative;
     z-index: 0;
+    display: flex;
+    flex-direction: column;
 
-    &-info {
-      float: right;
-      padding: 15px 15px 20px 0;
+    &__info {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      background: rgba(36, 182, 255, 0.13);
+      padding: 5px 10px ;
+      border-radius: 5px;
       color: var(--color-text-main);
       font-size: 13px;
       white-space: nowrap;
 
-      &__today {
-        opacity: 0.6;
+      &-today {
+        color: var(--color-text-second);
       }
 
-      &__highlight {
+      &-highlight {
         margin-left: 6px;
         font-weight: bold;
       }
 
-      &-increase, &-decrease {
+      &-increase,
+      &-decrease {
         position: relative;
         margin-left: 32px;
         color: #f15454;
@@ -257,7 +312,8 @@ export default Vue.extend({
         color: #2ccf6c;
       }
 
-      &-increase::before, &-decrease::before {
+      &-increase::before,
+      &-decrease::before {
         position: absolute;
         top: 4px;
         left: -18px;
@@ -272,30 +328,27 @@ export default Vue.extend({
       }
     }
 
-    &-body {
-      width: 100%;
-      height: 105px;
-      transform: scale(1, -1);
+    &__body {
+      flex-grow: 2;
+      /*transform: scale(1, -1);*/
+
     }
 
-    &-days {
-      position: absolute;
-      bottom: 15px;
+    &__oy {
       display: flex;
       justify-content: space-between;
-      width: 93.75%;
-      margin-left: 3.125%;
+      padding: 15px 0;
+
+      &-item {
+        flex: 1;
+        color: var(--color-text-main);
+        font-size: 10px;
+        text-align: center;
+        opacity: 0.3;
+      }
     }
 
-    &-day {
-      flex: 1;
-      color: var(--color-text-main);
-      font-size: 10px;
-      text-align: center;
-      opacity: 0.3;
-    }
-
-    &-line {
+    &__pointer {
       transition: 0.2s;
       position: absolute;
       width: 3px;
@@ -303,37 +356,37 @@ export default Vue.extend({
       top: 0;
       background-color: #1e212b;
       z-index: 0;
-    }
 
-    &-point {
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      background: #d94848;
-      border-radius: 50%;
-      opacity: 1;
-      margin-left: -1px;
-      transition: 0.2s;
-    }
+      &-curor {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: #d94848;
+        border-radius: 50%;
+        opacity: 1;
+        margin-left: -1px;
+        transition: 0.2s;
+      }
 
-    &-events {
-      position: absolute;
-      bottom: -10px;
-      white-space: nowrap;
-      color: #fff;
-      font-size: 12px;
-      letter-spacing: 0.2px;
-      left: -20px;
-      border-radius: 4px;
-      box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
-      padding: 6px 8px 6px 7px;
-      background: #191c25;
-      line-height: 1.4;
-      z-index: 500;
+      &-tooltip {
+        position: absolute;
+        bottom: -10px;
+        white-space: nowrap;
+        color: #fff;
+        font-size: 12px;
+        letter-spacing: 0.2px;
+        left: -20px;
+        border-radius: 4px;
+        box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
+        padding: 6px 8px 6px 7px;
+        background: #191c25;
+        line-height: 1.4;
+        z-index: 500;
 
-      &__date {
-        font-size: 10px;
-        color: var(--color-text-second);
+        &-date {
+          font-size: 10px;
+          color: var(--color-text-second);
+        }
       }
     }
   }
