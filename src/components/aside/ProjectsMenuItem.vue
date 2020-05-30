@@ -53,7 +53,8 @@ export default {
   computed: {
     /**
      * Returns project id from the route
-     * @return {string}
+     *
+     * @returns {string}
      */
     currentProjectId() {
       return this.$route.params.projectId;

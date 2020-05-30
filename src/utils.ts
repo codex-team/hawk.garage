@@ -2,8 +2,9 @@ import mergeWith from 'lodash.mergewith';
 
 /**
  * Returns entity color from predefined list
- * @param {String} [id] - for id-base picking colors (hex string)
- * @return {String} color
+ *
+ * @param {string} [id] - for id-base picking colors (hex string)
+ * @returns {string} color
  */
 export function getEntityColor(id: string): string {
   const colors = [
@@ -28,14 +29,15 @@ export function getEntityColor(id: string): string {
 
 /**
  * Group array of Objects by key
- * @usage
+ *
+ * @example
  *
  * const cars = [
  * { brand: 'Audi', color: 'black' },
  * { brand: 'Audi', color: 'white' },
- * { brand: 'Ferarri', color: 'red' },
+ * { brand: 'Ferrari', color: 'red' },
  * { brand: 'Ford', color: 'white' },
- * { brand: 'Peugot', color: 'white' }
+ * { brand: 'Peugeot', color: 'white' }
  * ];
  *
  * const groupByBrand = groupBy('brand');
@@ -48,11 +50,12 @@ export function getEntityColor(id: string): string {
  *   }, null, 2)
  * );
  *
- * @param {String} key - key for grouping
+ * @param {string} key - key for grouping
  */
 export const groupBy =
   (key: string) =>
-    (array: any[]) => // array of objects to group
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (array: any[]): object => // array of objects to group
       array.reduce((objectsByKeyValue, obj) => {
         const value = obj[key];
 
@@ -72,19 +75,70 @@ export const groupBy =
       }, {});
 
 /**
- * Group array of object by 'date' field
- * @type {function(Array[Object]): Object}
+ * Converts UTC midnight timestamp to local midnight timestamp
+ *
+ * @param {number} utcMidnight - midnight in UTC
+ * @returns {number} midnight in local timezone
  */
-export const groupByGroupingTimestamp = groupBy('groupingTimestamp');
+function convertUtcMidnightToLocalMidnight(utcMidnight): number {
+  const milliseconds = 1000;
+  const hour = 60;
+  const date = new Date(utcMidnight * milliseconds);
+  const timezoneOffset = date.getTimezoneOffset() / hour * -1;
+
+  date.setHours(timezoneOffset, 0, 0, 0);
+
+  return date.getTime() / milliseconds;
+}
+
+/**
+ * Group array of object by 'groupingTimestamp' field
+ *
+ * /!\ The  'groupingTimestamp' field is stored in UTC so we need to convert it to the local zone first.
+ *
+ * @param {object[]} items - array of object with the  'groupingTimestamp' field
+ */
+export function groupByGroupingTimestamp(items): object {
+  items = items.map((item) => {
+    return Object.assign({}, item, {
+      groupingTimestamp: convertUtcMidnightToLocalMidnight(item.lastRepetitionTime),
+    });
+  });
+
+  return groupBy('groupingTimestamp')(items);
+}
+
+/**
+ * Returns real type of passed variable
+ *
+ * @param obj - what to check
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function typeOf(obj: any): string {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)![1].toLowerCase();
+}
+
+/**
+ * Check if passed variable is an object
+ *
+ * @param item - what to check
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isObject(item: any): boolean {
+  return item && typeOf(item) === 'object';
+}
 
 /**
  * Merge to objects recursively
- * @param {object} target
- * @param {object[]} sources
  *
- * @return {object}
+ * @param {object} target - where to merge
+ * @param {object[]} sources - what to merge
+ *
+ * @returns {object}
  */
-export function deepMerge(target: object, ...sources: object[]) {
+export function deepMerge(target: object, ...sources: object[]): object {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {
     if (Array.isArray(_subject) && Array.isArray(_target)) {
       const biggerArray = _subject.length > _target.length ? _subject : _target;
@@ -102,25 +156,10 @@ export function deepMerge(target: object, ...sources: object[]) {
 }
 
 /**
- * Check if passed variable is an object
- * @param item - what to check
- */
-export function isObject(item: any): boolean {
-  return item && typeOf(item) === 'object';
-}
-
-/**
- * Returns real type of passed variable
- * @param obj
- */
-function typeOf(obj: any): string {
-  return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)![1].toLowerCase();
-}
-
-/**
  * Converts string in wrong language to the translited equal
- * @param {string} string
- * @return {String}
+ *
+ * @param {string} string - string to transit
+ * @returns {string}
  */
 export function misTranslit(string: string): string {
   if (!string) {
@@ -199,26 +238,29 @@ export function misTranslit(string: string): string {
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
+ *
  * @param {string} string - string to encode
- * @return escaped string
+ * @returns escaped string
  */
 export function escape(string: string): string;
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
+ *
  * @param {string} string - string to encode
  * @param {boolean} withCount - pass true if you need to know how many substitutions was
  *                              replaced and total length of new chars added
- * @return object with escaped string, count and length
+ * @returns object with escaped string, count and length
  */
 export function escape(string: string, withCount: boolean): {value: string; count: number; length: number};
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
+ *
  * @param {string} string - string to encode
  * @param {boolean} withCount - pass true if you need to know how many substitutions was
  *                              replaced and total length of new chars added
- * @return escaped string or object with escaped string, count and length
+ * @returns {string | {value, count, length}} escaped string or object with escaped string, count and length
  */
 export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
   if (!string) {
@@ -256,11 +298,12 @@ export function escape(string: string, withCount = false): string | {value: stri
 
 /**
  * Replace char at passed index to the new chars
+ *
  * @param {string} string - source string
  * @param {number} index - char position
  * @param {string} replacement - charts to replace with
  *
- * @return {string}
+ * @returns {string}
  */
 export function strReplaceAt(string: string, index: number, replacement: string): string {
   const leftPart = string.substr(0, index);
@@ -271,11 +314,12 @@ export function strReplaceAt(string: string, index: number, replacement: string)
 
 /**
  * Return real offset by line number and column number of string
+ *
  * @param {string} string - where to find
  * @param {number} line - searching line number
  * @param {number} column - searching column number
  *
- * @return {number}
+ * @returns {number}
  */
 export function findOffsetByLineAndCol(string: string, line: number, column: number): number {
   let currentLine = 0;
@@ -302,10 +346,11 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
 /**
  * Debounce function in order to
  * time-consuming tasks don't run so often
+ *
  * @param {() => void} callback - function for debounce
  * @param {number} delay - debounce delay
  *
- * @return {() => void}
+ * @returns {() => void}
  */
 export function debounce(callback: () => void, delay: number): () => void {
   let debounceTimer;

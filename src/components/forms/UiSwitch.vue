@@ -1,7 +1,7 @@
 <template>
   <div
     class="ui-switch"
-    :class="{'ui-switch--checked': this.value}"
+    :class="{'ui-switch--checked': value}"
     @click="clicked"
   >
     <div class="ui-switch__slider" />

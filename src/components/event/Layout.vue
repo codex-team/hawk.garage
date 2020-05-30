@@ -38,47 +38,57 @@ export default Vue.extend({
     EventHeader,
   },
   data() {
-    const projectId: string = this.$route.params.projectId;
-    const eventId: string = this.$route.params.eventId;
-    const repetitionId: string = this.$route.params.repetitionId;
-    const event: HawkEvent = this.$store.getters.getProjectEventRepetition(projectId, eventId, repetitionId);
-
     return {
       /**
        * Original (first) event data
+       *
        * @type {HawkEvent}
        */
-      event,
+      repetitionId: this.$route.params.repetitionId,
 
       /**
        * Current project id
+       *
        * @type {string}
        */
-      projectId,
+      projectId: this.$route.params.projectId,
 
       /**
        * Current event id
+       *
        * @type {string}
        */
-      eventId,
+      eventId: this.$route.params.eventId,
 
       /**
        * Status of repetition-diff fetching
+       *
        * @type {boolean}
        */
       loading: true,
 
       /**
        * Active menu item
+       *
        * @type {string}
        */
       activeItem: 'overview',
     };
   },
 
+  computed: {
+    /**
+     * Current viewed event
+     */
+    event(): HawkEvent {
+      return this.$store.getters.getProjectEventRepetition(this.projectId, this.eventId, this.repetitionId);
+    },
+  },
+
   /**
    * Vue created hook. Fetches error's data
-   * @return {Promise<void>}
+   *
+   * @returns {Promise<void>}
    */
   async created() {
     const eventId = this.$route.params.eventId;
@@ -89,13 +99,6 @@ export default Vue.extend({
       eventId,
       repetitionId,
     });
-
-    /**
-     * If page opened directly, this.event is null, so we need to set observer from VueX
-     */
-    if (!this.event) {
-      this.event = this.$store.getters.getProjectEventRepetition(this.projectId, eventId, repetitionId);
-    }
 
     this.loading = false;
 
@@ -124,7 +127,7 @@ export default Vue.extend({
 </script>
 
 <style>
-  @import "./../../styles/variables";
+  @import "./../../styles/variables.css";
 
   .event-layout {
     /** Override Popup Dialog animation */

@@ -25,8 +25,14 @@ To add story, create a folder for component in [src/storybook/stories](src/story
 
 To run storybook, use `yarn storybook` command
 
-# Useful command
+## Useful commands
 1. `yarn lint:js` - runs eslint to check files with `.js` and `.vue` extensions.
 2. `yarn lint:css` - runs stylelint to check files with `.css` and `.vue` extensions.
 2. `yarn lint` - runs both eslint and stylelint.
-3. `yarn svg` - runs svg sprite generator.
+
+## Load GraphQL schema for development
+
+After updating Hawk GraphQL API scheme you should pull
+its schema (see [file](./schema.graphql)) for code highlighting and typechecking in queries.
+
+Run `yarn get-schema` to load schema from local server

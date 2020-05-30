@@ -2,27 +2,17 @@ import {
   FETCH_EVENT_REPETITIONS,
   FETCH_EVENT_REPETITION,
   FETCH_RECENT_EVENTS,
-  FETCH_CHART_DATA,
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
   TOGGLE_EVENT_MARK
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
-import { Module } from 'vuex';
+import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventRepetition, HawkEventPayload, ChartData } from '@/types/events';
-import { User } from '@/types/user';
-
-/**
- * Root store state
- * @todo move to @/store/index.js and create interfaces for other states
- */
-interface RootState {
-  events: EventsModuleState;
-  user: any;
-}
+import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from '@/types/events';
+import { RootState } from '../../index';
 
 /**
  * Mutations enum for this module
@@ -54,16 +44,12 @@ enum MutationTypes {
   ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
 
   /**
-   * Save data to be used by chart
-   */
-  ADD_CHART_DATA = 'ADD_CHART_DATA',
-
-  /**
-   * Update event payload
+   * Update event
    * Used when the event fully fetched with payload to update the state object
    * Because initial fetch request gets data without payload (title, timestamp, totalCount, visited etc.)
+   * and some other data
    */
-  UPDATE_EVENT_PAYLOAD = 'UPDATE_EVENT_PAYLOAD',
+  UPDATE_EVENT = 'UPDATE_EVENT',
 
   /**
    * Mark event as visited
@@ -79,7 +65,7 @@ enum MutationTypes {
 /**
  * State of the Events module
  */
-interface EventsModuleState {
+export interface EventsModuleState {
   /**
    * Map for storing HawkEvent by their unique key (projectId:eventId)
    */
@@ -94,11 +80,6 @@ interface EventsModuleState {
    * Event's repetitions map
    */
   repetitions: {[key: string]: HawkEventRepetition[]};
-
-  /**
-   * Chart data for every project
-   */
-  charts: {[key: string]: ChartData[]};
 }
 
 /**
@@ -117,6 +98,7 @@ interface HawkEventsDailyInfoByProject {
 
 /**
  *  Map to store Event's daily info grouped by date
+ *
  *  @example {
  *    date:1583355600: [Object, Object],
  *    ...
@@ -134,7 +116,6 @@ function initialState(): EventsModuleState {
     list: {},
     recent: {},
     repetitions: {},
-    charts: {},
   };
 }
 
@@ -146,10 +127,10 @@ const loadedEventsCount: { [key: string]: number } = {};
 /**
  * Compose events list key
  *
- * @param {string} projectId
- * @param {string} eventId
+ * @param {string} projectId - id of the project
+ * @param {string} eventId - id of event in that project
  *
- * @return {string} key
+ * @returns {string} key
  */
 function getEventsListKey(projectId: string, eventId: string): string {
   return `${projectId}:${eventId}`;
@@ -163,14 +144,16 @@ const module: Module<EventsModuleState, RootState> = {
 
   /**
    * All Vuex getters will be stored under this namespace
+   *
    * @namespace Getters
    */
   getters: {
     /**
      * Returns event by it's group hash and project id
-     * @param {EventsModuleState} state - Vuex state
+     *
+     * @param state - Vuex state
      */
-    getEventByProjectIdAndGroupHash(state) {
+    getEventByProjectIdAndGroupHash(state: EventsModuleState) {
       /**
        * @param {string} projectId - event's project id
        * @param {string} groupHash - event group hash
@@ -191,9 +174,10 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Returns recent event of the project by its id
-     * @param {EventsModuleState} state - Vuex state
+     *
+     * @param state - Vuex state
      */
-    getRecentEventsByProjectId(state) {
+    getRecentEventsByProjectId(state: EventsModuleState) {
       /**
        * @param {string} projectId - event's project id
        */
@@ -202,8 +186,10 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * List state keeps only original Event
+     *
+     * @param state - module state
      */
-    getProjectEventById(state) {
+    getProjectEventById(state: EventsModuleState) {
       /**
        * @param {string} projectId - event's project id
        * @param {string} eventId - event id
@@ -217,11 +203,14 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Returns merged original event with passed repetition from stores
+     *
+     * @param state - module state
      */
-    getProjectEventRepetition(state) {
+    getProjectEventRepetition(state: EventsModuleState) {
       /**
-       * @param {string} projectId - event's project id
-       * @param {string} eventId - event id
+       * @param projectId - event's project id
+       * @param eventId - event id
+       * @param repetitionId - id of specific repetition of the event
        */
       return (projectId: string, eventId: string, repetitionId: string): HawkEvent | null => {
         const key = getEventsListKey(projectId, eventId);
@@ -235,14 +224,14 @@ const module: Module<EventsModuleState, RootState> = {
         if (!repetitionId) {
           repetition = state.repetitions[key][state.repetitions[key].length - 1];
         } else {
-          repetition = state.repetitions[key].find(repetition => {
-            return repetition.id === repetitionId;
+          repetition = state.repetitions[key].find(item => {
+            return item.id === repetitionId;
           });
         }
 
         const event = Object.assign({}, state.list[key]);
 
-        event.payload = deepMerge(event.payload, repetition.payload);
+        event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
 
         return event;
       };
@@ -250,6 +239,7 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Returns latest recent event of the project by its id
+     *
      * @param {EventsModuleState} state - Vuex state
      */
     getLatestEventDailyInfo(state) {
@@ -273,8 +263,9 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Returns latest event for certain project
+     *
      * @param {EventsModuleState} state - Vuex state
-     * @param {Object} getters - module getters
+     * @param {object} getters - module getters
      */
     getLatestEvent(state, getters) {
       /**
@@ -296,9 +287,13 @@ const module: Module<EventsModuleState, RootState> = {
   actions: {
     /**
      * Initializes the module
-     * @param {function} commit - standard Vuex commit function
-     * @param {EventsMap} events - events map
-     * @param {HawkEventsDailyInfoByProject} recentEvents - projects recent events
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - standard Vuex commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {EventsMap} payload.events - events map
+     * @param {HawkEventsDailyInfoByProject} payload.recentEvents - projects recent events
      */
     [INIT_EVENTS_MODULE](
       { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
@@ -309,9 +304,10 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Get latest project events
-     * @param {function} commit - standard Vuex commit function
+     *
+     * @param {Function} commit - standard Vuex commit function
      * @param {string} projectId - id of the project to fetch data
-     * @return {Promise<boolean>} - true if there are no more events
+     * @returns {Promise<boolean>} - true if there are no more events
      */
     async [FETCH_RECENT_EVENTS]({ commit }, { projectId }): Promise<boolean> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
@@ -338,33 +334,20 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Get data for displaying the number of errors for each day from a specific timestamp
-     * @param {function} commit - standard Vuex commit function
-     * @param {string} projectId - id of the project to fetch data
-     * @param {number} since - timestamp from which we start taking errors
-     * @return {Promise<void>}
-     */
-    async [FETCH_CHART_DATA]({ commit }, { projectId, since }): Promise<void> {
-      const chartData = await eventsApi.fetchChartData(projectId, since);
-      
-      commit(MutationTypes.ADD_CHART_DATA, {
-        projectId,
-        data: chartData,
-      });
-    },
-
-    /**
      * Fetches latest repetitions
      *
-     * @param {EventsModuleState} state - module state
-     * @param {string} projectId
-     * @param {string} eventId
-     * @param {number} limit
+     * @param {object} context - vuex action context
+     * @param context.commit - to call mutations
      *
-     * @return {Promise<HawkEventRepetition[]>}
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - id of a project that owns events
+     * @param {string} payload.eventId - id of an event to fetch its repetitions
+     * @param {number} payload.limit - how many items to fetch
+     *
+     * @returns {Promise<HawkEventRepetition[]>}
      */
     async [FETCH_EVENT_REPETITIONS](
-      { state, commit },
+      { commit }: { commit: Commit },
       { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number }
     ): Promise<HawkEventRepetition[]> {
       const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
@@ -384,10 +367,13 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Fetches original event's repetition or last repetition if repetition id was not passed
      *
-     * @param {function} commit - standard Vuex commit function
-     * @param {string} projectId
-     * @param {string} eventId
-     * @param {string} repetitionId
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - standard Vuex commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - id of a project that owns the event
+     * @param {string} payload.eventId - id of an event to fetch its repetition
+     * @param {string} payload.repetitionId - id of specific repetition to fetch
      */
     async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<void> {
       const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
@@ -399,7 +385,7 @@ const module: Module<EventsModuleState, RootState> = {
       /**
        * Updates or sets event's fetched payload in the state
        */
-      commit(MutationTypes.UPDATE_EVENT_PAYLOAD, {
+      commit(MutationTypes.UPDATE_EVENT, {
         projectId,
         event,
       });
@@ -419,10 +405,13 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Send request to mark event as visited
      *
-     * @param {function} commit - VueX commit function
-     * @param {object} rootState - root VueX state
-     * @param {string} projectId - project event is related to
-     * @param {string} eventId - visited event
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit function
+     * @param {object} context.rootState - root VueX state
+     *
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - project event is related to
+     * @param {string} payload.eventId - visited event
      */
     async [VISIT_EVENT]({ commit, rootState }, { projectId, eventId }): Promise<void> {
       const result = await eventsApi.visitEvent(projectId, eventId);
@@ -441,14 +430,16 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Send request to set mark to event
      *
-     * @param {function} commit - VueX commit function
-     * @param {object} rootState - VueX root state
-     * @param {string} projectId - project event is related to
-     * @param {string} eventId - event to set mark
-     * @param {EventMark} mark - mark to set
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - vuex commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - project event is related to
+     * @param {string} payload.eventId - event to set mark
+     * @param {EventMark} payload.mark - mark to set
      */
-    async [TOGGLE_EVENT_MARK]({ commit, rootState }, { projectId, eventId, mark }): Promise<void> {
-      const commitAction = () => commit(MutationTypes.TOGGLE_MARK, {
+    async [TOGGLE_EVENT_MARK]({ commit }, { projectId, eventId, mark }): Promise<void> {
+      const commitAction = (): void => commit(MutationTypes.TOGGLE_MARK, {
         projectId,
         eventId,
         mark,
@@ -471,7 +462,8 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Resets module state
-     * @param {function} commit - standard Vuex commit function
+     *
+     * @param {Function} commit - standard Vuex commit function
      */
     [RESET_STORE]({ commit }): void {
       commit(RESET_STORE);
@@ -480,23 +472,27 @@ const module: Module<EventsModuleState, RootState> = {
   mutations: {
     /**
      * Mutation for replacing events list
+     *
      * @param {EventsModuleState} state - Vuex state
      * @param {EventsMap} eventsMap - new list of events
      */
-    [MutationTypes.SET_EVENTS_LIST](state, eventsMap: EventsMap) {
+    [MutationTypes.SET_EVENTS_LIST](state, eventsMap: EventsMap): void {
       Vue.set(state, 'list', eventsMap);
     },
 
     /**
      * Mutation for adding new recent events data to the store
+     *
      * @param {EventsModuleState} state - Vuex state
-     * @param {string} projectId
-     * @param {HawkEventsDailyInfoByDate} recentEventsInfoByDate
+     *
+     * @param {object} payload - vuex mutation payload
+     * @param payload.projectId - project that owns events
+     * @param payload.recentEventsInfoByDate - grouped events list
      */
     [MutationTypes.ADD_TO_RECENT_EVENTS_LIST](
       state,
       { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }
-    ) {
+    ): void {
       /**
        * Algorithm for merging the list of recent events from vuex store and server response
        */
@@ -531,11 +527,17 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Mutation for adding new events to the store
+     *
      * @param {EventsModuleState} state - Vuex state
-     * @param {string} projectId - id of the project to add
-     * @param {Array<HawkEvent>} eventsList - new list of events
+     *
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - id of the project to add
+     * @param {Array<HawkEvent>} payload.eventsList - new list of events
      */
-    [MutationTypes.ADD_TO_EVENTS_LIST](state, { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }) {
+    [MutationTypes.ADD_TO_EVENTS_LIST](
+      state,
+      { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }
+    ): void {
       eventsList.forEach((event) => {
         Vue.set(state.list, getEventsListKey(projectId, event.id), event);
       });
@@ -543,22 +545,25 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Mutation for replacing recent events list
+     *
      * @param {EventsModuleState} state - Vuex state
      * @param {HawkEventsDailyInfoByProject} newList - new list of recent events
      */
-    [MutationTypes.SET_RECENT_EVENTS_LIST](state, newList: HawkEventsDailyInfoByProject) {
+    [MutationTypes.SET_RECENT_EVENTS_LIST](state, newList: HawkEventsDailyInfoByProject): void {
       Vue.set(state, 'recent', newList);
     },
 
     /**
      * Updates repetitions for event id
      *
-     * @param state
-     * @param {string} projectId
-     * @param {string} eventId
-     * @param {HawkEvent} event
+     * @param state - event module state
+     *
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - id of a project that owns the event
+     * @param {string} payload.eventId - id of the event
+     * @param {HawkEvent} payload.repetition - repetition to save
      */
-    [MutationTypes.ADD_REPETITION_PAYLOAD](state, { projectId, eventId, repetition }) {
+    [MutationTypes.ADD_REPETITION_PAYLOAD](state: EventsModuleState, { projectId, eventId, repetition }): void {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
@@ -569,28 +574,21 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Add data to store
+     * Updates event
      *
      * @param {EventsModuleState} state - Vuex state
-     * @param {string} projectId - project's identifier
-     * @param {chartData[]} data - data to add
-     */
-    [MutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
-      state.charts[projectId] = data;
-    },
-
-    /**
-     * Updates event payload
      *
-     * @param {EventsModuleState} state - Vuex state
-     * @param {string} projectId - project's identifier
-     * @param {HawkEvent} event - Event object
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - project's identifier
+     * @param {HawkEvent} payload.event - Event object
      */
-    [MutationTypes.UPDATE_EVENT_PAYLOAD](state, { projectId, event }) {
+    [MutationTypes.UPDATE_EVENT](state, { projectId, event }): void {
       const key = getEventsListKey(projectId, event.id);
 
       if (state.list[key]) {
-        Vue.set(state.list[key], 'payload', event.payload);
+        const obj = Object.assign({}, state.list[key], event);
+
+        Vue.set(state.list, key, obj);
       } else {
         Vue.set(state.list, key, event);
       }
@@ -599,12 +597,14 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Mark event as visited in state
      *
-     * @param {EventsModuleState} state
-     * @param {string} projectId - project event is related to
-     * @param {string} eventId - visited event
-     * @param {User} user - user who visited event
+     * @param {EventsModuleState} state - events module state
+     *
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - project event is related to
+     * @param {string} payload.eventId - visited event
+     * @param {User} payload.user - user who visited event
      */
-    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId, user }) {
+    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId, user }): void {
       const key = getEventsListKey(projectId, eventId);
 
       const event = state.list[key];
@@ -617,11 +617,13 @@ const module: Module<EventsModuleState, RootState> = {
      * Toggle mark for passed event
      *
      * @param {EventsModuleState} state - events module state
-     * @param {string} projectId - project event is related to
-     * @param {string} eventId - event mark should be set to
-     * @param {EventMark} mark - mark to set
+     *
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - project event is related to
+     * @param {string} payload.eventId - event mark should be set to
+     * @param {EventMark} payload.mark - mark to set
      */
-    [MutationTypes.TOGGLE_MARK](state, { projectId, eventId, mark }) {
+    [MutationTypes.TOGGLE_MARK](state, { projectId, eventId, mark }): void {
       const key = getEventsListKey(projectId, eventId);
 
       const event = state.list[key];
@@ -632,9 +634,10 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Resets module state
+     *
      * @param {EventsModuleState} state - Vuex state
      */
-    [RESET_STORE](state: EventsModuleState) {
+    [RESET_STORE](state: EventsModuleState): void {
       Object.assign(state, initialState());
     },
   },

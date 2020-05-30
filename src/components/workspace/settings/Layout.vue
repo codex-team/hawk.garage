@@ -92,7 +92,8 @@ export default Vue.extend({
   computed: {
     /**
      * Check if current user is admin of this workspace
-     * @return {boolean}
+     *
+     * @returns {boolean}
      */
     isAdmin(): boolean {
       if (!this.workspace || !this.workspace.team) {

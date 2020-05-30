@@ -39,6 +39,10 @@
       "workspaceSelectLabel": "SELECT WORKSPACE"
     },
     "settings": {
+      "remove": "Remove project",
+      "removeConfirmation": "Are you sure you want to delete this project?",
+      "removeSuccess": "Project successfully deleted",
+      "removeError": "You can't remove this project",
       "general": {
         "title": "Project settings",
         "image": "Image",
@@ -107,7 +111,32 @@
     },
     "logout": "Log out",
     "notifications": {
-      "title": "Notifications"
+      "title": "Notifications",
+      "channelsHeading": "Channels",
+      "actionTypesHeading": "Action types",
+      "soon": "Soon",
+      "channels": {
+        "email": "Email",
+        "webPush": "Web Push",
+        "desktopPush": "Desktop Push"
+      },
+      "channelDescriptions": {
+        "email": "Notifications on",
+        "emailEmptyPlaceholder": "your email",
+        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
+        "webPush": "Alerts even with closed tab",
+        "desktopPush": "Native notifies through the Hawk Desktop"
+      },
+      "actions": {
+        "IssueAssigning": "Issue assigning",
+        "WeeklyDigest": "Weekly digest",
+        "SystemMessages": "System messages"
+      },
+      "actionDescriptions": {
+        "IssueAssigning": "When someone will assign you to the task",
+        "WeeklyDigest": "Most important events for passed week",
+        "SystemMessages": "Only important messages from Hawk team"
+      }
     }
   },
   "workspaces": {
@@ -186,10 +215,15 @@
       "times": "{n} time | {n} times",
       "days": "{n} day | {n} days"
     },
+    "usersAffected": {
+      "total": "Total",
+      "users": "{n} user | {n} users"
+    },
     "navigation": {
       "overview": "Overview",
       "repetitions": "Repetitions",
-      "daily": "Days repeating"
+      "daily": "Days repeating",
+      "usersAffected": "Users affected"
     },
     "resolve": "Resolve",
     "star": "Star",

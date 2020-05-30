@@ -25,7 +25,7 @@ export default {
     /**
      * Require sprite icon & return id selector string
      *
-     * @return {string}
+     * @returns {string}
      */
     iconId() {
       require(`../../assets/sprite-icons/${this.symbol}.svg`);
@@ -35,7 +35,8 @@ export default {
 
     /**
      * Returns icon classname
-     * @return {string}
+     *
+     * @returns {string}
      */
     className() {
       return `icon icon--${this.symbol}`;

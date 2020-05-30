@@ -49,12 +49,10 @@ export default {
   },
   computed: {
     /**
-     * @return {boolean} - shows whether the current user is an admin for this workspace
+     * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
     isAdmin() {
-      const userId = this.$store.state.user.data.id;
-
-      return this.workspace.team.some(team => team.user.id == userId && team.isAdmin);
+      return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
     },
   },
   methods: {

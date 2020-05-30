@@ -2,9 +2,12 @@
   <div class="event-header">
     <div class="event-layout__container">
       <UiLabel
-        :text="event.payload.type || 'Application error'"
+        :text="!loading ? event.payload.type || 'Application error' : $t('event.loading')"
         icon="flash"
       />
+      <span class="event-header__date">
+        {{ event.payload.timestamp | prettyFullDate }}
+      </span>
       <h1 class="event-header__title">
         {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
@@ -83,7 +86,6 @@ export default Vue.extend({
   props: {
     /**
      * Original (first) event data
-     * @type {HawkEvent}
      */
     event: {
       type: Object as () => HawkEvent,
@@ -95,6 +97,7 @@ export default Vue.extend({
     return {
       /**
        * Status of repetition-diff fetching
+       *
        * @type {boolean}
        */
       loading: !this.event,
@@ -104,7 +107,8 @@ export default Vue.extend({
     /**
      * Event location got from the first backtrace frame
      * Or got from a url if the backtrace is empty
-     * @return {string}
+     *
+     * @returns {string}
      */
     location(): string {
       if (!this.event) {
@@ -130,9 +134,11 @@ export default Vue.extend({
     /**
      * Navigation items
      *
-     * @return {TabInfo[]}
+     * @returns {TabInfo[]}
      */
     navigationItems(): TabInfo[] {
+      const showAffectedUsers = !this.loading && this.event.usersAffected;
+
       return [
         {
           title: this.$i18n.t('event.navigation.overview') as string,
@@ -147,6 +153,11 @@ export default Vue.extend({
           title: this.$i18n.t('event.navigation.daily') as string,
           routeName: 'event-daily',
         },
+        ...(showAffectedUsers ? [ {
+          title: this.$i18n.t('event.navigation.usersAffected') as string,
+          routeName: 'event-affected',
+          badge: this.event.usersAffected,
+        } ] : []),
       ];
     },
 
@@ -196,6 +207,13 @@ export default Vue.extend({
       margin: 10px 0 15px;
       font-size: 18px;
       line-height: 1.67;
+    }
+
+    &__date {
+      float: right;
+      color: var(--color-text-second);
+      font-size: 12px;
+      line-height: 23px;
     }
 
     &__location {

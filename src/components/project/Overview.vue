@@ -52,8 +52,8 @@ import EventItem from './EventItem';
 import AssignersList from '../event/AssignersList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS, FETCH_CHART_DATA } from '../../store/modules/events/actionTypes';
-import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
+import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 
 export default {
   name: 'ProjectOverview',
@@ -96,7 +96,8 @@ export default {
   computed: {
     /**
      * Returns project id from the route
-     * @return {string}
+     *
+     * @returns {string}
      */
     projectId() {
       return this.$route.params.projectId;
@@ -104,7 +105,8 @@ export default {
 
     /**
      * Current viewed project
-     * @return {Project}
+     *
+     * @returns {Project}
      */
     project() {
       return this.$store.getters.getProjectById(this.projectId);
@@ -112,7 +114,8 @@ export default {
 
     /**
      * Project recent errors
-     * @return {RecentInfoByDate}
+     *
+     * @returns {RecentInfoByDate}
      */
     recentEvents() {
       if (!this.project) {
@@ -131,18 +134,19 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
-    
-    // So many days will be displayed in the chart
-    const twoWeeks = Math.floor(Date.now() / 1000 - 86400 * (14 + 2));
 
-    if (!this.$store.state.events.charts[this.projectId]) {
+    // How many days will be displayed in the chart
+    const twoWeeks = 14;
+    const boundingDays = 2;
+
+    if (!this.$store.state.projects.charts[this.projectId]) {
       await this.$store.dispatch(FETCH_CHART_DATA, {
         projectId: this.projectId,
-        since: twoWeeks,
+        days: twoWeeks + boundingDays,
       });
     }
 
-    this.chartData = this.$store.state.events.charts[this.projectId];
+    this.chartData = this.$store.state.projects.charts[this.projectId];
   },
 
   /**
@@ -155,8 +159,9 @@ export default {
   methods: {
     /**
      * Return passed day midnight timestamp
+     *
      * @param {string} date - grouped day key like 'date:1576011600'
-     * @return {number}
+     * @returns {number}
      */
     getDay(date) {
       return parseInt(date.replace('groupingTimestamp:', ''), 10);
@@ -175,6 +180,7 @@ export default {
 
     /**
      * Shows assigners list for the specific event
+     *
      * @param {GroupedEvent} event - event to display assigners list
      */
     showAssigners(event) {
@@ -189,9 +195,10 @@ export default {
 
     /**
      * Opens event overview popup
-     * @param {String} projectId - id of the event's project
-     * @param {String} groupHash - event's group hash
-     * @param {String} repetitionId - event's repetition id
+     *
+     * @param {string} projectId - id of the event's project
+     * @param {string} groupHash - event's group hash
+     * @param {string} repetitionId - event's repetition id
      */
     showEventOverview(projectId, groupHash, repetitionId) {
       this.$router.push({

@@ -1,13 +1,15 @@
-/* eslint no-shadow: ["error", { "allow": ["state", "getters"] }] */
 import {
   CREATE_PROJECT,
   REMOVE_PROJECTS_BY_WORKSPACE_ID,
+  REMOVE_PROJECT,
   FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
   ADD_NOTIFICATIONS_RULE,
-  UPDATE_NOTIFICATIONS_RULE
+  UPDATE_NOTIFICATIONS_RULE,
+  TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
+  FETCH_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -21,79 +23,98 @@ export const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   REMOVE_PROJECTS_BY_WORKSPACE_ID: 'REMOVE_PROJECTS_BY_WORKSPACE_ID', // Remove projects by workspace id from list
   UPDATE_PROJECT: 'UPDATE_PROJECT', // Set new info about a project
+  REMOVE_PROJECT: 'REMOVE_PROJECT', // Remove project by id
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
   UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
+
+  /**
+   * Save data of events count for the last N days at the specific project
+   */
+  ADD_CHART_DATA: 'ADD_CHART_DATA',
 };
 
 /**
  * @typedef {object} Project - represent project in workspace
- * @property {String} id - project id
- * @property {String} name - project name
- * @property {String} workspaceId - ID of the workspace to which the project belongs
- * @property {String} [image] - project image
- * @property {Number} unreadCount - project's "unreadCount" badge
+ * @property {string} id - project id
+ * @property {string} name - project name
+ * @property {string} workspaceId - ID of the workspace to which the project belongs
+ * @property {string} [image] - project image
+ * @property {number} unreadCount - project's "unreadCount" badge
  * @property {EventsListByDate} eventsListByDate - last projects event
  * @property {ProjectNotificationsRule[]} notifications - list of rules
  */
 
 /**
- * @typedef {Object<string, [RecentError]>} EventsListByDate
+ * @typedef {object<string, [RecentError]>} EventsListByDate
  */
 
 /**
- * @typedef {Object} RecentError
- * @property {String} date - error date
- * @property {String} error - occurred error
- * @property {String} count - count of the errors of this type
+ * @typedef {object} RecentError
+ * @property {string} date - error date
+ * @property {string} error - occurred error
+ * @property {string} count - count of the errors of this type
  */
 
 /**
  * Module state
+ *
  * @typedef {object} ProjectsModuleState
- * @property {array<Project>} list - user's projects
+ * @property {Array<Project>} list - user's projects
  */
 
 /**
  * Creates module state
- * @return {WorkspacesModuleState}
+ *
+ * @returns {ProjectsModuleState}
  */
 function initialState() {
   return {
     list: [],
+
+    /**
+     * Chart data for every project
+     *
+     * @type {object<string, ChartData[]>}
+     */
+    charts: {},
   };
 }
 
 /**
  * Module getters
+ *
  * @namespace Getters
  */
 const getters = {
   /**
    * Returns project by id
+   *
    * @param {ProjectsModuleState} state - Vuex state
-   * @return {function(String): Project}
+   * @returns {function(string): Project}
    */
   getProjectById: state =>
     /**
-     * @param {String} id project id to find
-     * @return {Project}
+     * @param {string} id project id to find
+     * @returns {Project}
      */
     id => state.list.find(project => project.id === id),
 
   /**
    * Returns workspace by id
+   *
    * @param {ProjectsModuleState} state - Vuex state
    * @param {Getters} getters - Vuex state
-   * @return {function(String): Workspace|null}
+   * @returns {function(string): Workspace|null}
    */
   getWorkspaceByProjectId(state, getters) {
     /**
      * Access state and getters and return the workspace
-     * @param {String} projectId  - id of project in workspace
-     * @return {Workspace|null}
+     *
+     * @param {string} projectId  - id of project in workspace
+     * @returns {Workspace|null}
      */
     return (projectId) => {
       const project = getters.getProjectById(projectId);
@@ -111,9 +132,10 @@ const getters = {
 const actions = {
   /**
    * Send request to create new project
-   * @param {function} commit - standard Vuex commit function
+   *
+   * @param {Function} commit - standard Vuex commit function
    * @param {Project} projectData - project params for creation
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async [CREATE_PROJECT]({ commit }, projectData) {
     const newProjectData = await projectsApi.createProject(projectData);
@@ -124,19 +146,34 @@ const actions = {
 
   /**
    * Remove projects by workspace id from list
-   * @param {function} commit - standard Vuex commit function
+   *
+   * @param {Function} commit - standard Vuex commit function
    * @param {string} workspaceId - workspace id
-   * @return {Promise<void>}
+   * @returns {void}
    */
   [REMOVE_PROJECTS_BY_WORKSPACE_ID]({ commit }, workspaceId) {
     commit(mutationTypes.REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
   },
 
   /**
+   * Remove projects id from list
+   *
+   * @param {Function} commit - standard Vuex commit function
+   * @param {string} projectId - project id
+   * @returns {Promise<void>}
+   */
+  async [REMOVE_PROJECT]({ commit }, projectId) {
+    await projectsApi.removeProject(projectId);
+
+    commit(mutationTypes.REMOVE_PROJECT, projectId);
+  },
+
+  /**
    * Send request to update project settings
-   * @param {function} commit - standard Vuex commit function
+   *
+   * @param {Function} commit - standard Vuex commit function
    * @param {Project} projectData - project params for creation
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async [UPDATE_PROJECT]({ commit }, projectData) {
     const updatedProject = await projectsApi.updateProject(projectData);
@@ -148,9 +185,10 @@ const actions = {
 
   /**
    * Fetch latest project events
-   * @param {function} commit - standard Vuex commit function
-   * @param {String} projectId - id of the project to fetch
-   * @return {Promise<void>}
+   *
+   * @param {Function} commit - standard Vuex commit function
+   * @param {string} projectId - id of the project to fetch
+   * @returns {Promise<void>}
    */
   async [FETCH_RECENT_ERRORS]({ commit }, projectId) {
     const recentEvents = await projectsApi.fetchRecentErrors(projectId);
@@ -164,12 +202,16 @@ const actions = {
   },
 
   /**
-   * @param {Function} commit - standard Vuex commit function
-   * @param {Object} getters - standard Vuex getters
-   * @param {String} projectId - project's identifier
-   * @return {Promise<void>}
+   * Send last-visit for passed project
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.projectId - project's identifier
+   * @returns {Promise<void>}
    */
-  async [UPDATE_PROJECT_LAST_VISIT]({ commit, getters }, { projectId }) {
+  async [UPDATE_PROJECT_LAST_VISIT]({ commit }, { projectId }) {
     await projectsApi.updateLastProjectVisit(projectId);
 
     commit(mutationTypes.RESET_PROJECT_UNREAD_COUNT, { projectId });
@@ -177,7 +219,8 @@ const actions = {
 
   /**
    * Sets new projects list
-   * @param {function} commit - standard Vuex commit function
+   *
+   * @param {Function} commit - standard Vuex commit function
    * @param {[Project]} projects - new projects list
    */
   [SET_PROJECTS_LIST]({ commit }, projects) {
@@ -186,7 +229,8 @@ const actions = {
 
   /**
    * Resets module state
-   * @param {function} commit - standard Vuex commit function
+   *
+   * @param {Function} commit - standard Vuex commit function
    */
   [RESET_STORE]({ commit }) {
     commit(RESET_STORE);
@@ -195,9 +239,10 @@ const actions = {
   /**
    * - Send request for creation new rule
    * - Add created rule to the state
-   * @param {function} commit - Vuex commit for mutations
+   *
+   * @param {Function} commit - Vuex commit for mutations
    * @param {ProjectNotificationsAddRulePayload} payload - rule form data
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async [ADD_NOTIFICATIONS_RULE]({ commit }, payload) {
     const ruleCreated = await projectsApi.addProjectNotificationsRule(payload);
@@ -211,9 +256,10 @@ const actions = {
   /**
    * - Send request for updating specific rule
    * - Update in the state
-   * @param {function} commit - Vuex commit for mutations
+   *
+   * @param {Function} commit - Vuex commit for mutations
    * @param {ProjectNotificationsUpdateRulePayload} payload - rule form data
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async [UPDATE_NOTIFICATIONS_RULE]({ commit }, payload) {
     const ruleUpdated = await projectsApi.updateProjectNotificationsRule(payload);
@@ -223,11 +269,50 @@ const actions = {
       rule: ruleUpdated,
     });
   },
+
+  /**
+   * - Send request for toggle isEnabled state of the notify rule
+   * - Update in the state
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationRulePointer} payload - rule form data
+   * @returns {Promise<void>}
+   */
+  async [TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE]({ commit }, payload) {
+    const ruleUpdated = await projectsApi.toggleEnabledStateOfProjectNotificationsRule(payload);
+
+    commit(mutationTypes.UPDATE_NOTIFICATIONS_RULE, {
+      projectId: payload.projectId,
+      rule: ruleUpdated,
+    });
+  },
+
+  /**
+   * Get events counters for the last N days at the specific project
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   *
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.projectId - id of the project to fetch data
+   * @param {number} payload.days - how many days we need to fetch for displaying in a chart
+   * @returns {Promise<void>}
+   */
+  async [FETCH_CHART_DATA]({ commit }, { projectId, days }) {
+    const timezoneOffset = (new Date()).getTimezoneOffset();
+    const chartData = await projectsApi.fetchChartData(projectId, days, timezoneOffset);
+
+    commit(mutationTypes.ADD_CHART_DATA, {
+      projectId,
+      data: chartData,
+    });
+  },
 };
 
 const mutations = {
   /**
    * Mutation for replacing projects list
+   *
    * @param {ProjectsModuleState} state - Vuex state
    * @param {Array<Project>} newList - new list of projects
    */
@@ -237,6 +322,7 @@ const mutations = {
 
   /**
    * Add project to the list
+   *
    * @param {ProjectsModuleState} state - Vuex state
    * @param {Project} project - project to add
    */
@@ -246,6 +332,7 @@ const mutations = {
 
   /**
    * Remove projects from list by workspace id
+   *
    * @param {ProjectsModuleState} state - Vuex state
    * @param {string} workspaceId - workspace id
    */
@@ -255,6 +342,7 @@ const mutations = {
 
   /**
    * Update info about a project
+   *
    * @param {ProjectsModuleState} state - Vuex state
    * @param {Project} project - project to update
    */
@@ -265,9 +353,23 @@ const mutations = {
   },
 
   /**
+   * Remove project from list
+   *
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {String} projectId - id of the project to set data
-   * @param {EventsListByDate} eventsListByDate - new event list
+   * @param {string} projectId - project id
+   */
+  [mutationTypes.REMOVE_PROJECT](state, projectId) {
+    state.list = state.list.filter((project) => project.id !== projectId);
+  },
+
+  /**
+   * Store grouped events by date
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - id of the project to set data
+   * @param {EventsListByDate} payload.eventsListByDate - new event list
    */
   [mutationTypes.SET_EVENTS_LIST_BY_DATE](state, { projectId, eventsListByDate }) {
     const project = state.list.find(_project => _project.id === projectId);
@@ -277,7 +379,7 @@ const mutations = {
 
   /**
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {String} projectId - id of the project to set data
+   * @param {string} projectId - id of the project to set data
    */
   [mutationTypes.RESET_PROJECT_UNREAD_COUNT](state, { projectId }) {
     const project = state.list.find(_project => _project.id === projectId);
@@ -287,6 +389,7 @@ const mutations = {
 
   /**
    * Resets module state
+   *
    * @param {ProjectsModuleState} state - Vuex state
    */
   [RESET_STORE](state) {
@@ -295,10 +398,13 @@ const mutations = {
 
   /**
    * Append new notifications rule to specified project
+   *
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {string} projectId - where to append
-   * @param {ProjectNotificationsRule} rule - rule to append
-   * @return {void}
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - where to append
+   * @param {ProjectNotificationsRule} payload.rule - rule to append
+   * @returns {void}
    */
   [mutationTypes.PUSH_NOTIFICATIONS_RULE](state, { projectId, rule }) {
     const project = state.list.find(_project => _project.id === projectId);
@@ -312,16 +418,31 @@ const mutations = {
 
   /**
    * Reset updated notifications rule
+   *
    * @param {ProjectsModuleState} state - Vuex state
-   * @param {string} projectId - project that contains rule
-   * @param {ProjectNotificationsRule} rule - updated rule
-   * @return {void}
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - project that contains rule
+   * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @returns {void}
    */
   [mutationTypes.UPDATE_NOTIFICATIONS_RULE](state, { projectId, rule }) {
     const project = state.list.find(_project => _project.id === projectId);
     const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
 
-    project.notifications[existedRuleIndex] = rule;
+    Vue.set(project.notifications, existedRuleIndex, rule);
+  },
+
+  /**
+   * Add data to store
+   *
+   * @param {EventsModuleState} state - Vuex state
+   * @param {object} payload - mutation payload
+   * @param {string} payload.projectId - project's identifier
+   * @param {chartData[]} payload.data - data to add
+   */
+  [mutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
+    state.charts[projectId] = data;
   },
 };
 

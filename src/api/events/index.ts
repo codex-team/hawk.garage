@@ -3,18 +3,18 @@ import {
   MUTATION_VISIT_EVENT,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
-  QUERY_RECENT_PROJECT_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
-import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition, HawkEventDailyInfo, ChartData } from '@/types/events';
+import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
 
 /**
  * Get specific event
+ *
  * @param {string} projectId - event's project
  * @param {string} eventId - id of the event
  * @param {string} repetitionId - event's concrete repetition. This param is optional
- * @return {Promise<HawkEvent>}
+ * @returns {Promise<HawkEvent>}
  */
 export async function getEvent(projectId: string, eventId: string, repetitionId: string): Promise<HawkEvent | null> {
   return (await api.call(QUERY_EVENT, {
@@ -26,9 +26,10 @@ export async function getEvent(projectId: string, eventId: string, repetitionId:
 
 /**
  * Returns latest project events
+ *
  * @param {string} projectId - id of the project to fetch recent errors
  * @param {number} skip - certain number of documents to skip
- * @return {Promise<EventsWithDailyInfo>}
+ * @returns {Promise<EventsWithDailyInfo>}
  */
 export async function fetchRecentEvents(projectId: string, skip = 0): Promise<EventsWithDailyInfo | null> {
   return (await api.call(QUERY_RECENT_PROJECT_EVENTS, {
@@ -42,9 +43,9 @@ export async function fetchRecentEvents(projectId: string, skip = 0): Promise<Ev
  *
  * @param {string} projectId - project's identifier
  * @param {string} eventId - event's identifier
- * @param {Number} limit - the number of repetitions
+ * @param {number} limit - the number of repetitions
  *
- * @return {Promise<Event[]>}
+ * @returns {Promise<Event[]>}
  */
 export async function getLatestRepetitions(
   projectId: string, eventId: string, limit: number
@@ -58,9 +59,10 @@ export async function getLatestRepetitions(
 
 /**
  * Fetches event's repetition from project and returns last
+ *
  * @param {string} projectId - project's identifier
  * @param {string} eventId - event's identifier
- * @return {Promise<HawkEventRepetition | null>}
+ * @returns {Promise<HawkEventRepetition | null>}
  */
 export async function getLatestRepetition(projectId: string, eventId: string): Promise<HawkEventRepetition | null> {
   return (await api.call(QUERY_LATEST_REPETITIONS, {
@@ -74,7 +76,7 @@ export async function getLatestRepetition(projectId: string, eventId: string): P
  *
  * @param {string} projectId - project event related to
  * @param {string} eventId — visited event
- * @return {Promise<boolean>}
+ * @returns {Promise<boolean>}
  */
 export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
   return (await api.call(MUTATION_VISIT_EVENT, {
@@ -96,17 +98,4 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     eventId,
     mark,
   })).toggleEventMark;
-}
-
-/**
- * Fetch data for chart
- * @param {string} projectId - id of the project to fetch recent errors
- * @param {number} since - events will be collected no later than this time timestamp
- * @return {Promise<EventsWithDailyInfo>}
- */
-export async function fetchChartData(projectId: string, since: number): Promise<ChartData[] | null> {
-  return (await api.call(QUERY_CHART_DATA, {
-    projectId,
-    since,
-  })).project.chartData;
 }

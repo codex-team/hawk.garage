@@ -61,6 +61,11 @@ export interface HawkEvent {
    * Event repetitions
    */
   repetitions: HawkEventRepetition[];
+
+  /**
+   * How many users catch this error
+   */
+  usersAffected: number;
 }
 
 /**
@@ -240,16 +245,4 @@ export interface EventUser {
    * User photo
    */
   photo: string;
-}
-
-export interface ChartData {
-  /**
-   * Time of midnight
-   */
-  timestamp: number;
-
-  /**
-   * Number of errors for this midnight
-   */
-  totalCount: number;
 }

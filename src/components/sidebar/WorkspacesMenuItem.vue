@@ -28,7 +28,7 @@ export default {
     },
 
     /**
-     * @type {Boolean} is item selected
+     * @type {boolean} is item selected
      */
     active: Boolean,
   },

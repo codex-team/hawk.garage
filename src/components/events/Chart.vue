@@ -8,7 +8,7 @@
       <span class="project-overview__chart-info__highlight"> {{ todayCount }} </span>
 
       <span
-        v-if="difference != 0"
+        v-if="difference !== 0"
         :class="{
           'project-overview__chart-info-increase': difference > 0,
           'project-overview__chart-info-decrease': difference < 0
@@ -36,7 +36,7 @@
       <polyline
         class="chart_body-polyline"
         fill="none"
-        :stroke="this.minCount != this.maxCount ? 'url(#chart)' : 'rgba(61, 133, 210, 0.22)'"
+        :stroke="minCount !== maxCount ? 'url(#chart)' : 'rgba(61, 133, 210, 0.22)'"
         stroke-width="2.5"
         :points="polylinePoints"
       />
@@ -50,14 +50,14 @@
         {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
       </span>
     </div>
-    <div 
+    <div
       :style="`left: ${lineLeft}px`"
       class="project-overview__chart-line">
       <div
-        :style="`top: ${pointTop}px`" 
+        :style="`top: ${pointTop}px`"
         class="project-overview__chart-point">
       </div>
-      <div 
+      <div
         v-if="day != 0 && day != days.length - 1"
         class="project-overview__chart-events">
         <div class="project-overview__chart-events__date">{{ days[day].timestamp * 1000 | prettyDateFromTimestamp }}</div>
@@ -70,24 +70,24 @@
 <script lang="ts">
 import Vue from 'vue';
 import { debounce } from '@/utils';
-import { ChartData } from '../../types/events';
+import { ProjectChartItem } from '../../types/chart';
 
 export default Vue.extend({
   name: 'Chart',
   props: {
     /**
      * List of days with the number of errors per day
-     * @type {ChartData[]}
      */
     days: {
-      type: Array as () => ChartData[],
-      default: () => [] as ChartData[],
+      type: Array as () => ProjectChartItem[],
+      default: () => [] as ProjectChartItem[],
     },
   },
   data() {
     return {
       /**
        * points for svg polyline
+       *
        * @type {string}
        */
       polylinePoints: '' as string,
@@ -95,7 +95,7 @@ export default Vue.extend({
       /**
        * Event on window resize
        *
-       * @return {void}
+       * @returns {void}
        */
       onResize: () => {},
       lineLeft: 0,
@@ -109,25 +109,25 @@ export default Vue.extend({
     /**
      * Number of errors for the current day
      *
-     * @return {number}
+     * @returns {number}
      */
     todayCount(): number {
-      return this.days.slice(-1)[0].totalCount || 0;
+      return this.days.slice(-1)[0].count || 0;
     },
 
     /**
      * Number of errors for the previous day
      *
-     * @return {number}
+     * @returns {number}
      */
     yesterdayCount(): number {
-      return this.days.slice(-2, -1)[0].totalCount || 0;
+      return this.days.slice(-2, -1)[0].count || 0;
     },
 
     /**
      * Difference between current and previous number of errors
      *
-     * @return {number}
+     * @returns {number}
      */
     difference(): number {
       return this.todayCount - this.yesterdayCount;
@@ -136,7 +136,7 @@ export default Vue.extend({
     /**
      * Days used in chart
      *
-     * @return {number}
+     * @returns {number}
      */
     visibleDays(): any[] {
       return this.days.slice(1, -1);
@@ -145,19 +145,19 @@ export default Vue.extend({
     /**
      * Minimum number errors per day
      *
-     * @return {number}
+     * @returns {number}
      */
     minCount(): number {
-      return Math.min(...this.days.map(day => day.totalCount));
+      return Math.min(...this.days.map(day => day.count));
     },
 
     /**
      * Maximum number errors per day
      *
-     * @return {number}
+     * @returns {number}
      */
     maxCount(): number {
-      return Math.max(...this.days.map(day => day.totalCount));
+      return Math.max(...this.days.map(day => day.count));
     }
   },
   watch: {
@@ -192,7 +192,7 @@ export default Vue.extend({
         let pointY = 2;
 
         if (this.maxCount != this.minCount) {
-          pointY += (day.totalCount - this.minCount) / (this.maxCount - this.minCount) * 100;
+          pointY += (day.count - this.minCount) / (this.maxCount - this.minCount) * 100;
         }
 
         points.push(pointX + ' ' + pointY);
@@ -218,6 +218,7 @@ export default Vue.extend({
 </script>
 <style>
   .project-overview__chart {
+    position: relative;
     height: 215px;
     margin: 16px 15px 0;
     background-color: var(--color-bg-main);
@@ -242,10 +243,10 @@ export default Vue.extend({
 
       &-increase, &-decrease {
         position: relative;
-        font-size: 13px;
-        font-weight: bold;
-        color: #f15454;
         margin-left: 32px;
+        color: #f15454;
+        font-weight: bold;
+        font-size: 13px;
       }
 
       &-increase {
@@ -257,24 +258,24 @@ export default Vue.extend({
       }
 
       &-increase::before, &-decrease::before {
-        content: '';
         position: absolute;
-        left: -18px;
         top: 4px;
+        left: -18px;
         border: 5.5px solid transparent;
         border-top: 9px solid #2ccf6c;
+        content: '';
       }
 
       &-increase::before {
-        border-top-color: #f15454;;
+        border-top-color: #f15454;
         transform: rotate(180deg) translateY(7px);
       }
     }
 
     &-body {
-      transform: scale(1, -1);
       width: 100%;
       height: 105px;
+      transform: scale(1, -1);
     }
 
     &-days {
@@ -287,11 +288,11 @@ export default Vue.extend({
     }
 
     &-day {
-      text-align: center;
-      opacity: 0.3;
-      font-size: 10px;
       flex: 1;
       color: var(--color-text-main);
+      font-size: 10px;
+      text-align: center;
+      opacity: 0.3;
     }
 
     &-line {

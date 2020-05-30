@@ -4,14 +4,19 @@ import {
   QUERY_RECENT_ERRORS,
   MUTATION_UPDATE_LAST_VISIT,
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
-  MUTATION_UPDATE_PROJECT_NOTIFY_RULE
+  MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
+  MUTATION_REMOVE_PROJECT,
+  MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
+  QUERY_CHART_DATA
 } from './queries';
 import * as api from '../index.ts';
+import { ChartData } from '../../types/events';
 
 /**
  * Create project and returns its id
+ *
  * @param {Project} projectInfo - project to create
- * @return {Promise<Project.id>}
+ * @returns {Promise<Project.id>}
  */
 export async function createProject(projectInfo) {
   const { image, ...rest } = projectInfo;
@@ -21,8 +26,9 @@ export async function createProject(projectInfo) {
 
 /**
  * Update project in db
+ *
  * @param {Project} projectInfo - project to update
- * @return {Promise<Project>}
+ * @returns {Promise<Project>}
  */
 export async function updateProject(projectInfo) {
   const { image, ...rest } = projectInfo;
@@ -31,16 +37,27 @@ export async function updateProject(projectInfo) {
 }
 
 /**
+ * Remove project from db
+ *
+ * @param {string} projectId - project to remove
+ * @returns {Promise<boolean>}
+ */
+export async function removeProject(projectId) {
+  return (await api.call(MUTATION_REMOVE_PROJECT, { projectId })).removeProject;
+}
+
+/**
  * @typedef RecentEvent
  * @property {Event} event - occurred event
- * @property {Number} count - number of this error
+ * @property {number} count - number of this error
  * @property {Date} date - date when error occurred
  */
 
 /**
  * Fetch latest project events
- * @param {String} projectId - project to fetch errors
- * @return {Promise<RecentEvent[]>}
+ *
+ * @param {string} projectId - project to fetch errors
+ * @returns {Promise<RecentEvent[]>}
  */
 export async function fetchRecentErrors(projectId) {
   return (await api.call(QUERY_RECENT_ERRORS, { projectId })).recent;
@@ -49,8 +66,8 @@ export async function fetchRecentErrors(projectId) {
 /**
  * Updates project last visit time and returns it
  *
- * @param {String} projectId - project ID
- * @return {Promise<Number>}
+ * @param {string} projectId - project ID
+ * @returns {Promise<number>}
  */
 export async function updateLastProjectVisit(projectId) {
   return (await api.call(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
@@ -58,8 +75,9 @@ export async function updateLastProjectVisit(projectId) {
 
 /**
  * Send request for creation new project notifications rule
+ *
  * @param {ProjectNotificationsAddRulePayload} payload - add rule payload
- * @return {Promise<ProjectNotificationsRule>}
+ * @returns {Promise<ProjectNotificationsRule>}
  */
 export async function addProjectNotificationsRule(payload) {
   return (await api.call(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
@@ -69,11 +87,40 @@ export async function addProjectNotificationsRule(payload) {
 
 /**
  * Send request for updating specific project notifications rule
+ *
  * @param {ProjectNotificationsUpdateRulePayload} payload - update rule payload
- * @return {Promise<ProjectNotificationsRule>}
+ * @returns {Promise<ProjectNotificationsRule>}
  */
 export async function updateProjectNotificationsRule(payload) {
   return (await api.call(MUTATION_UPDATE_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).updateProjectNotificationsRule;
+}
+
+/**
+ * Send request for updating specific project notifications rule
+ *
+ * @param {ProjectNotificationRulePointer} payload - update rule payload
+ * @returns {Promise<ProjectNotificationsRule>}
+ */
+export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
+  return (await api.call(MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE, {
+    input: payload,
+  })).toggleProjectNotificationsRuleEnabledState;
+}
+
+/**
+ * Fetch data for chart
+ *
+ * @param {string} projectId - id of the project to fetch recent errors
+ * @param {number} days - fow how many days we need to get counters
+ * @param {number} timezoneOffset - user's local timezone offset
+ * @returns {Promise<ChartData[] | null>}
+ */
+export async function fetchChartData(projectId, days, timezoneOffset) {
+  return (await api.call(QUERY_CHART_DATA, {
+    projectId,
+    days,
+    timezoneOffset,
+  })).project.chartData;
 }

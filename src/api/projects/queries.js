@@ -91,3 +91,42 @@ export const MUTATION_UPDATE_PROJECT_NOTIFY_RULE = `
 
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
+
+// language=GraphQL
+export const MUTATION_REMOVE_PROJECT = `
+  mutation removeProject($projectId: ID!) {
+    removeProject(projectId: $projectId)
+  }
+`;
+
+// language=GraphQL
+export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
+  mutation ( $input: ProjectNotificationRulePointer! ){
+    toggleProjectNotificationsRuleEnabledState(
+      input: $input
+    ) {
+      ...ProjectNotificationsRule
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+`;
+
+// language=GraphQL
+/**
+ * Get data for chart
+ */
+export const QUERY_CHART_DATA = `
+  query ProjectRecentEvents (
+    $projectId: ID!,
+    $days: Int!
+    $timezoneOffset: Int!
+  ) {
+    project(id: $projectId) {
+      chartData(days: $days, timezoneOffset: $timezoneOffset) {
+        timestamp
+        count
+      }
+    }
+  }
+`;

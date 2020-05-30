@@ -53,23 +53,18 @@ export default Vue.extend({
   props: {
     /**
      * Original (first) event data
-     * @type {HawkEvent}
      */
     event: {
       type: Object as () => HawkEvent,
       required: true,
     },
   },
-  data() {
-    return {
-    };
-  },
   computed: {
     /**
      * Get calling env language based on event.catcherType
      * errors/javascript -> javascript
      *
-     * @return {string | undefined}
+     * @returns {string | undefined}
      */
     lang(): string | undefined {
       return this.event.catcherType ? this.event.catcherType.split('/').pop() : '';
@@ -78,7 +73,8 @@ export default Vue.extend({
     /**
      * Addons without integration
      * that will be shown as separated components
-     * @return {object}
+     *
+     * @returns {object}
      */
     addonsFiltered(): object | null {
       if (!this.event.payload.addons) {
@@ -101,8 +97,9 @@ export default Vue.extend({
     /**
      * Extract integration group from the addons
      * For example, 'vue' or 'react'
+     *
      * @param {string} integrationName - name of an integration
-     * @return object with integration addons
+     * @returns {object} object with integration addons
      */
     getIntegrationAddons(integrationName: string): object | null {
       if (!this.event.payload.addons) {

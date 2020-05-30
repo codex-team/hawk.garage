@@ -19,6 +19,11 @@ export const REMOVE_PROJECTS_BY_WORKSPACE_ID = 'REMOVE_PROJECTS_BY_WORKSPACE_ID'
 export const UPDATE_PROJECT = 'UPDATE_PROJECT';
 
 /**
+ * Send request to remove project
+ */
+export const REMOVE_PROJECT = 'REMOVE_PROJECT';
+
+/**
  * Fetch project recent errors
  */
 export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';
@@ -37,3 +42,13 @@ export const ADD_NOTIFICATIONS_RULE = 'ADD_NOTIFICATIONS_RULE';
  * Update the notifications rule
  */
 export const UPDATE_NOTIFICATIONS_RULE = 'UPDATE_NOTIFICATIONS_RULE';
+
+/**
+ * Toggle isEnabled state of the notifications rule
+ */
+export const TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE = 'TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE';
+
+/**
+ * Get events counters for the last N days at the specific project
+ */
+export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';

@@ -1,6 +1,6 @@
 import ProjectsMenuItem from '@/components/aside/ProjectsMenuItem.vue';
 import mdx from './docs.mdx';
-import store from '@/store';
+import store from '../../../../store';
 import { mutationTypes } from '@/store/modules/projects';
 import router from '@/router';
 import { text, withKnobs } from '@storybook/addon-knobs';
@@ -35,7 +35,7 @@ export default {
     },
   },
   decorators: [
-    () => ({
+    (): unknown => ({
       template: '<div style="width: 342px; max-height: 100%; padding: 20px 0; overflow-y: auto;"><story /></div>',
     }),
     centered,
@@ -43,7 +43,7 @@ export default {
   ],
 };
 
-export const Default = () => ({
+export const Default = (): unknown => ({
   components: { ProjectsMenuItem },
   template: `<ProjectsMenuItem :projectId="projectId" :search-query="null" />`,
   props: {
@@ -56,7 +56,7 @@ export const Default = () => ({
   router,
 });
 
-export const NoUnreadEvents = () => ({
+export const NoUnreadEvents = (): unknown => ({
   components: { ProjectsMenuItem },
   template: `<ProjectsMenuItem :projectId="projectId" :search-query="null" />`,
   props: {
@@ -69,7 +69,7 @@ export const NoUnreadEvents = () => ({
   router,
 });
 
-export const WithSearchQuery = () => ({
+export const WithSearchQuery = (): unknown => ({
   components: { ProjectsMenuItem },
   template: `<ProjectsMenuItem :projectId="projectId" :search-query="searchQuery" />`,
   props: {
@@ -86,7 +86,7 @@ export const WithSearchQuery = () => ({
   router,
 });
 
-export const List = () => ({
+export const List = (): unknown => ({
   components: { ProjectsMenuItem },
   template: `
     <div>
@@ -107,7 +107,7 @@ export const List = () => ({
   router,
 });
 
-export const ListWithSearchQuery = () => ({
+export const ListWithSearchQuery = (): unknown => ({
   components: { ProjectsMenuItem },
   template: `
     <div>

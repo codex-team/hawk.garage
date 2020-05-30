@@ -99,6 +99,7 @@ interface Transaction {
 
 /**
  * Request payment link
+ *
  * @param paymentInput - data for payment
  */
 export async function getPaymentLink(paymentInput: PayOnceInput): Promise<BillingSession> {
@@ -107,6 +108,7 @@ export async function getPaymentLink(paymentInput: PayOnceInput): Promise<Billin
 
 /**
  * Request transactions info for passed workspaces
+ *
  * @param ids - ids of workspaces
  */
 export async function getTransactions(ids: string[]): Promise<Transaction[]> {

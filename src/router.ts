@@ -6,6 +6,11 @@ import AppShell from './components/AppShell.vue';
 
 Vue.use(Router);
 
+/**
+ * Disable return-type rule to leave router 'component' imports with short syntax
+ */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 const router = new Router({
   mode: 'history',
   routes: [
@@ -33,6 +38,11 @@ const router = new Router({
               path: 'appearance',
               name: 'account-appearance',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Appearance.vue'),
+            },
+            {
+              path: 'notifications',
+              name: 'account-notifications',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Notifications.vue'),
             },
             // {
             //   path: 'billing',
@@ -102,6 +112,11 @@ const router = new Router({
                   path: 'daily',
                   name: 'event-daily',
                   component: () => import(/* webpackChunkName: 'event-daily' */ './components/event/Daily.vue'),
+                },
+                {
+                  path: 'affected',
+                  name: 'event-affected',
+                  component: () => import(/* webpackChunkName: 'event-affected' */ './components/event/UsersAffected.vue'),
                 },
               ],
             },

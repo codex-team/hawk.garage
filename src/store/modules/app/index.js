@@ -1,4 +1,3 @@
-/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import {
   FETCH_INITIAL_DATA,
   SET_LANGUAGE
@@ -35,6 +34,7 @@ export const Languages = {
 
 /**
  * Module state
+ *
  * @typedef {object} AppModuleState
  * @property {Themes} theme - name of the current theme
  * @property {Languages} language - app language
@@ -47,8 +47,9 @@ const state = {
 const actions = {
   /**
    * Send query request to get information about all workspaces, projects and latest project's event
-   * @param {function} dispatch - standard Vuex dispatch function
-   * @return {Promise<void>}
+   *
+   * @param {Function} dispatch - standard Vuex dispatch function
+   * @returns {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
     const response = await workspacesApi.getAllWorkspacesWithProjects();
@@ -81,7 +82,7 @@ const actions = {
     dispatch(SET_PROJECTS_LIST, projects);
 
     /**
-     * @type {Object<string, GroupedEvent>} - all fetched events
+     * @type {object<string, GroupedEvent>} - all fetched events
      */
     const events = {};
 
@@ -110,9 +111,9 @@ const actions = {
   },
 
   /**
-   * @param {function} commit - standard Vuex dispatch function
+   * @param {Function} commit - standard Vuex dispatch function
    * @param {Languages} language - new language
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async [SET_LANGUAGE]({ commit }, language) {
     commit(mutationTypes.SET_LANGUAGE, language);
@@ -122,6 +123,7 @@ const actions = {
 const mutations = {
   /**
    * Set theme name
+   *
    * @param {AppModuleState} state - app module state
    * @param {Themes} themeName - the name of the theme to be installed
    */
@@ -131,6 +133,7 @@ const mutations = {
 
   /**
    * Set app language
+   *
    * @param {AppModuleState} state - app module state
    * @param {Languages} language - new language
    */

@@ -2,28 +2,10 @@ import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
 
 // language=GraphQL
 /**
- * Get data for chart
- */
-export const QUERY_CHART_DATA = `
-  query ProjectRecentEvents (
-    $projectId: ID!,
-    $since: Int!
-  ) {
-    project(id: $projectId) {
-      chartData(since: $since) {
-        timestamp
-        totalCount
-      }
-    }
-  }
-`;
-
-// language=GraphQL
-/**
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID){
+  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID) {
     project(id: $projectId) {
       event(id: $eventId) {
         id
@@ -55,6 +37,7 @@ export const QUERY_EVENT = `
           }
           addons
         }
+        usersAffected
         repetition(id: $repetitionId) {
           id
           payload {
@@ -128,6 +111,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 // language=GraphQL
 /**
  * GraphQL query for latest repetitions
+ *
  * @type {string}
  */
 export const QUERY_LATEST_REPETITIONS = `
