@@ -52,21 +52,25 @@
     </svg>
     <div
       class="chart__oy"
-      :style="{
-        margin: `0 -${stepX / 2}px`
-      }"
     >
-      <span
-        v-for="(day, index) in points"
-        :key="index"
-        class="chart__oy-item"
+      <div
+        class="chart__oy-inner"
+        :style="{
+          margin: `0 -${stepX / 2}px`
+        }"
       >
-        {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
-      </span>
+        <span
+          v-for="(day, index) in points"
+          :key="index"
+          class="chart__oy-item"
+        >
+          {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
+        </span>
+      </div>
     </div>
     <div
       v-if="hoveredIndex > 0 && hoveredIndex < points.length - 1"
-      :style="`left: ${pointerLeft}px`"
+      :style="`left: ${pointerLeft}px;`"
       class="chart__pointer"
     >
       <div
@@ -75,6 +79,7 @@
       />
       <div
         class="chart__pointer-tooltip"
+        :style="`min-width: ${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px`"
       >
         <div class="chart__pointer-tooltip-date">
           {{ points[hoveredIndex].timestamp * 1000 | prettyDateFromTimestamp }}
@@ -355,10 +360,14 @@ export default Vue.extend({
     }
 
     &__oy {
-      display: flex;
-      justify-content: space-between;
       padding: 15px 0;
       height: 40px;
+      overflow-x: hidden;
+
+      &-inner {
+        display: flex;
+        justify-content: space-between;
+      }
 
       &-item {
         flex: 1;
@@ -414,6 +423,7 @@ export default Vue.extend({
         background: #191C25;
         line-height: 1.4;
         z-index: 500;
+        transition: min-width 150ms ease;
 
         &-date {
           font-size: 10px;
