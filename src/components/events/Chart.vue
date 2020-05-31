@@ -51,10 +51,10 @@
       />
     </svg>
     <div
-      class="chart__oy"
+      class="chart__ox"
     >
       <div
-        class="chart__oy-inner"
+        class="chart__ox-inner"
         :style="{
           margin: `0 -${stepX / 2}px`
         }"
@@ -62,7 +62,7 @@
         <span
           v-for="(day, index) in points"
           :key="index"
-          class="chart__oy-item"
+          class="chart__ox-item"
         >
           {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
         </span>
@@ -359,7 +359,7 @@ export default Vue.extend({
       }
     }
 
-    &__oy {
+    &__ox {
       padding: 15px 0;
       height: 40px;
       overflow-x: hidden;
