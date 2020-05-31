@@ -139,7 +139,7 @@ export default {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
 
     // How many days will be displayed in the chart
-    const twoWeeks = 18;
+    const twoWeeks = 14;
     const boundingDays = 2;
 
     if (!this.$store.state.projects.charts[this.projectId]) {
