@@ -31,11 +31,11 @@
         >
           <stop
             offset="0%"
-            style="stop-color:rgba(61, 133, 210, 0.22);"
+            style="stop-color:#ff4c4c;"
           />
           <stop
             offset="100%"
-            style="stop-color:#ff4c4c;"
+            style="stop-color:rgba(61, 133, 210, 0.22);"
           />
         </linearGradient>
       </defs>
@@ -47,7 +47,12 @@
         :points="polylinePoints"
       />
     </svg>
-    <div class="chart__oy">
+    <div
+      class="chart__oy"
+      :style="{
+        margin: `0 -${stepX / 2}px`
+      }"
+    >
       <span
         v-for="(day, index) in days"
         :key="index"
@@ -132,9 +137,14 @@ export default Vue.extend({
     },
 
     /**
+     * The ratio of the maximum value and the height of the graph
+     */
+    kY(): number {
+      return (this.chartHeight) / (this.maxValue - this.minValue);
+    },
+
+    /**
      * Number of errors for the current day
-     *
-     * @returns {number}
      */
     todayCount(): number {
       return this.days.slice(-1)[0].count || 0;
@@ -142,8 +152,6 @@ export default Vue.extend({
 
     /**
      * Number of errors for the previous day
-     *
-     * @returns {number}
      */
     yesterdayCount(): number {
       return this.days.slice(-2, -1)[0].count || 0;
@@ -151,8 +159,6 @@ export default Vue.extend({
 
     /**
      * Difference between current and previous number of errors
-     *
-     * @returns {number}
      */
     difference(): number {
       return this.todayCount - this.yesterdayCount;
@@ -160,8 +166,6 @@ export default Vue.extend({
 
     /**
      * Minimum number errors per day
-     *
-     * @returns {number}
      */
     minValue(): number {
       return Math.min(...this.days.map(day => day.count));
@@ -169,11 +173,14 @@ export default Vue.extend({
 
     /**
      * Maximum number errors per day
-     *
-     * @returns {number}
      */
     maxValue(): number {
-      return Math.max(...this.days.map(day => day.count));
+      /**
+       * We will increment max value for 20% for adding some offset from the top
+       */
+      const incrementForOffset = 1.2;
+
+      return Math.max(...this.days.map(day => day.count)) * incrementForOffset;
     },
 
     /**
@@ -190,14 +197,8 @@ export default Vue.extend({
       return 152.5 - this.pointsY[this.hoveredIndex];
     },
 
-    kY(): number {
-      return (this.chartHeight) / (this.maxValue - this.minValue);
-    },
-
     /**
      * Points for SVG <polyline>
-     *
-     * @type {string}
      */
     polylinePoints(): string {
       if (!this.days || !this.days.length){
@@ -238,15 +239,16 @@ export default Vue.extend({
      * Compute and save chart wrapper width
      */
     computeWrapperSize(): void {
+      const strokeWidth = 2;
+
       this.chartWidth = this.$refs['chart'].clientWidth;
-      this.chartHeight = this.$refs['chart'].clientHeight;
+      this.chartHeight = this.$refs['chart'].clientHeight - strokeWidth;
     },
 
     /**
      * Handler for window resize
      */
     windowResized(): void {
-      console.log('windowResized');
       this.computeWrapperSize();
     },
 
@@ -330,21 +332,31 @@ export default Vue.extend({
 
     &__body {
       flex-grow: 2;
-      /*transform: scale(1, -1);*/
 
+      polyline {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+      }
     }
 
     &__oy {
       display: flex;
       justify-content: space-between;
       padding: 15px 0;
+      height: 40px;
 
       &-item {
         flex: 1;
         color: var(--color-text-main);
         font-size: 10px;
-        text-align: center;
         opacity: 0.3;
+        text-align: center;
+
+        &:first-of-type,
+        &:last-of-type {
+          opacity: 0;
+        }
       }
     }
 
