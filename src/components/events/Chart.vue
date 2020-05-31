@@ -80,7 +80,7 @@
           {{ points[hoveredIndex].timestamp * 1000 | prettyDateFromTimestamp }}
         </div>
         <div class="chart__pointer-tooltip-number">
-          <AnimatedCounter :value="points[hoveredIndex].count" />
+          <AnimatedCounter :value="points[hoveredIndex].count | spacedNumber" />
           events
         </div>
       </div>

@@ -24,7 +24,7 @@ export default Vue.extend({
      * Passed value for animating
      */
     value: {
-      type: Number,
+      type: [String, Number],
       required: true,
     },
   },
@@ -33,12 +33,12 @@ export default Vue.extend({
       /**
        * Previous value to jump out
        */
-      prevValue: 0 as Number | null,
+      prevValue: 0 as String | Number | null,
 
       /**
        * Current value to jump in
        */
-      curValue: 0 as Number | null,
+      curValue: 0 as String | Number | null,
     };
   },
   watch: {
