@@ -7,7 +7,7 @@
       class="project-overview__content"
     >
       <Chart
-        :days="chartData"
+        :points="chartData"
         class="project-overview__chart"
       />
       <div class="project-overview__events">
@@ -143,13 +143,10 @@ export default {
     const boundingDays = 2;
 
     if (!this.$store.state.projects.charts[this.projectId]) {
-      console.log('START LOADING');
       await this.$store.dispatch(FETCH_CHART_DATA, {
         projectId: this.projectId,
         days: twoWeeks + boundingDays,
       });
-
-      console.log('LOADED');
     }
 
     this.chartData = this.$store.state.projects.charts[this.projectId];
