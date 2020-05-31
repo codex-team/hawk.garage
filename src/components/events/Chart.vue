@@ -285,6 +285,7 @@ export default Vue.extend({
     z-index: 0;
     display: flex;
     flex-direction: column;
+    border-radius: 3px;
 
     &__info {
       position: absolute;
