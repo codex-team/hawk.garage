@@ -251,9 +251,10 @@ export default Vue.extend({
      */
     computeWrapperSize(): void {
       const strokeWidth = 2;
+      const svg = this.$refs.chart as SVGElement;
 
-      this.chartWidth = this.$refs['chart'].clientWidth;
-      this.chartHeight = this.$refs['chart'].clientHeight - strokeWidth;
+      this.chartWidth = svg.clientWidth;
+      this.chartHeight = svg.clientHeight - strokeWidth;
     },
 
     /**

@@ -20,6 +20,9 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
+    /**
+     * Passed value for animating
+     */
     value: {
       type: Number,
       required: true,
@@ -27,8 +30,15 @@ export default Vue.extend({
   },
   data() {
     return {
-      prevValue: 0,
-      curValue: 0,
+      /**
+       * Previous value to jump out
+       */
+      prevValue: 0 as Number | null,
+
+      /**
+       * Current value to jump in
+       */
+      curValue: 0 as Number | null,
     };
   },
   watch: {
