@@ -43,11 +43,11 @@
       <polyline
         class="chart__body-polyline"
         fill="none"
-        stroke="url(#chart)"
+        :stroke="maxValue === minValue ? 'rgba(61, 133, 210, 0.22)' : 'url(#chart)'"
         stroke-width="2.5"
         :points="polylinePoints"
-        :stroke-dasharray="chartWidth * 1.5"
-        :stroke-dashoffset="chartWidth * 1.5"
+        :stroke-dasharray="chartWidth * 1.8"
+        :stroke-dashoffset="chartWidth * 1.8"
       />
     </svg>
     <div
@@ -143,6 +143,10 @@ export default Vue.extend({
      * The ratio of the maximum value and the height of the graph
      */
     kY(): number {
+      if (this.maxValue === this.minValue) {
+        return 1;
+      }
+
       return (this.chartHeight) / (this.maxValue - this.minValue);
     },
 
@@ -210,7 +214,7 @@ export default Vue.extend({
      * Points for SVG <polyline>
      */
     polylinePoints(): string {
-      if (!this.points || !this.points.length){
+      if (!this.points || !this.points.length) {
         return '';
       }
 
@@ -286,7 +290,7 @@ export default Vue.extend({
       position: absolute;
       right: 15px;
       top: 15px;
-      background: rgba(36, 182, 255, 0.13);
+      background: color-mod(var(--color-bg-main) alpha(50%));
       padding: 5px 10px ;
       border-radius: 5px;
       color: var(--color-text-main);
