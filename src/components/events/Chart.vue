@@ -46,8 +46,8 @@
         :stroke="maxValue === minValue ? 'rgba(61, 133, 210, 0.22)' : 'url(#chart)'"
         stroke-width="2.5"
         :points="polylinePoints"
-        :stroke-dasharray="chartWidth * 1.8"
-        :stroke-dashoffset="chartWidth * 1.8"
+        :stroke-dasharray="chartWidth * 1.8 + 'px'"
+        :stroke-dashoffset="chartWidth * 1.8 + 'px'"
       />
     </svg>
     <div
