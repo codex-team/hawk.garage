@@ -6,7 +6,10 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <Chart :days="chartData" />
+      <Chart
+        :points="chartData"
+        class="project-overview__chart"
+      />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -234,9 +237,7 @@ export default {
     }
 
     &__chart {
-      height: 215px;
-      margin: 16px 15px 0;
-      background-color: var(--color-bg-main);
+      margin: 15px 15px 0;
     }
 
     &__events {

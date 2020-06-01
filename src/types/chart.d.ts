@@ -5,7 +5,13 @@
 /**
  * Represents a single item of Project Daily Events chart
  */
-export interface ProjectChartItem {
+export interface ProjectChartItem extends ChartItem {
+}
+
+/**
+ * Chart element in common case
+ */
+export interface ChartItem {
   /**
    * Day midnight
    */
