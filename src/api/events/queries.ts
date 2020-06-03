@@ -170,3 +170,9 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
     toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
   }
 `;
+
+export const MUTATION_UPDATE_EVENT_ASSIGNEE = `
+  mutation setAssignee($projectId: ID!, $eventId: ID!, $assignee: String!) {
+    setAssignee(projectId: $projectId, eventId: $eventId, assignee: $assignee)
+  }
+`;

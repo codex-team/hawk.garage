@@ -46,6 +46,7 @@
           :workspace-id="project.workspaceId"
           :event-id="assigneesEventId"
           :assignee="assignee"
+          :project-id="projectId"
 
           class="project-overview__assignees-list"
         />
@@ -201,7 +202,6 @@ export default {
       this.assigneesEventId = selectedEvent.id;
       this.assignee = selectedEvent.assignee || '';
       this.isAssigneesShowed = true;
-      console.log(event.target.getBoundingClientRect());
       const boundingClientRect = event.target.closest('.event-item__assignee').getBoundingClientRect();
 
       this.assigneesListPosition = {

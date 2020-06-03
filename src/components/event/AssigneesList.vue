@@ -89,6 +89,14 @@ export default {
       type: String,
       default: '',
     },
+
+    /**
+     * id of current project
+     */
+    projectId: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -118,10 +126,21 @@ export default {
   },
   methods: {
     toggle: function (userIndex) {
-      // todo: dispatch the assignee to the database or remove him
       if (this.assigneeId == this.users[userIndex].id) {
+        this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
+          projectId: this.projectId,
+          eventId: this.eventId,
+          assignee: '',
+        });
+
         this.assigneeId = '';
       } else {
+        this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
+          projectId: this.projectId,
+          eventId: this.eventId,
+          assignee: this.users[userIndex].id,
+        });
+
         this.assigneeId = this.users[userIndex].id;
       }
     },
