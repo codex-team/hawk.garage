@@ -5,6 +5,9 @@
         :text="!loading ? event.payload.type || 'Application error' : $t('event.loading')"
         icon="flash"
       />
+      <span class="event-header__date">
+        {{ event.payload.timestamp | prettyFullDate }}
+      </span>
       <h1 class="event-header__title">
         {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
@@ -204,6 +207,13 @@ export default Vue.extend({
       margin: 10px 0 15px;
       font-size: 18px;
       line-height: 1.67;
+    }
+
+    &__date {
+      float: right;
+      color: var(--color-text-second);
+      font-size: 12px;
+      line-height: 23px;
     }
 
     &__location {

@@ -6,7 +6,10 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <div class="project-overview__chart" />
+      <Chart
+        :points="chartData"
+        class="project-overview__chart"
+      />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -54,26 +57,48 @@
 <script>
 import EventItem from './EventItem';
 import AssignersList from '../event/AssignersList';
+import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
-import { UPDATE_PROJECT_LAST_VISIT } from '../../store/modules/projects/actionTypes';
+import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 
 export default {
   name: 'ProjectOverview',
   components: {
     EventItem,
     AssignersList,
+    Chart,
   },
   data() {
     return {
+      /**
+       * Shows if there are no more events or there are
+       */
       noMoreEvents: true,
+
+      /**
+       * Indicates whether items are loading or not.
+       */
       isLoadingEvents: false,
+
+      /**
+       * Indicates whether assigners list are loading or not.
+       */
       isAssignersShowed: false,
       /**
        * Event id for assigners
        */
       assignersEventId: '',
       assigner: '',
+
+      /**
+       * Data for a chart
+       */
+      chartData: [],
+
+      /**
+       * Assigners list position in pixels
+       */
       assignersListPosition: {
         top: 0,
         right: 0,
@@ -121,6 +146,19 @@ export default {
    */
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
+
+    // How many days will be displayed in the chart
+    const twoWeeks = 14;
+    const boundingDays = 2;
+
+    if (!this.$store.state.projects.charts[this.projectId]) {
+      await this.$store.dispatch(FETCH_CHART_DATA, {
+        projectId: this.projectId,
+        days: twoWeeks + boundingDays,
+      });
+    }
+
+    this.chartData = this.$store.state.projects.charts[this.projectId];
   },
 
   /**
@@ -211,9 +249,7 @@ export default {
     }
 
     &__chart {
-      height: 215px;
-      margin: 16px 15px 0;
-      background-color: var(--color-bg-main);
+      margin: 15px 15px 0;
     }
 
     &__events {
