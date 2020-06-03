@@ -1,37 +1,37 @@
 <template>
-  <div class="event-assigners-list">
-    <div class="event-assigners-list__search">
+  <div class="event-assignees-list">
+    <div class="event-assignees-list__search">
       <Icon
-        class="event-assigners-list__search-icon"
+        class="event-assignees-list__search-icon"
         symbol="search"
       />
       <input
         v-model="searchText"
-        class="event-assigners-list__search-text"
+        class="event-assignees-list__search-text"
         :placeholder="'Search'"
         type="text"
       >
     </div>
     <div
-      class="event-assigners-list__assigners assigners"
+      class="event-assignees-list__assignees assignees"
     >
       <div
         v-for="(user, userIndex) in users"
         :key="user.id"
-        class="assigners__row"
+        class="assignees__row"
         @click="toggle(userIndex)"
       >
         <EntityImage
           :id="String(user.id)"
-          class="assigners__image"
+          class="assignees__image"
           :image="user.image"
           :name="user.email || user.name"
           size="16"
         />
         {{ user.email | trim }}
         <Icon
-          v-if="user.id == assignerId"
-          class="assigners__checkmark"
+          v-if="user.id == assigneeId"
+          class="assignees__checkmark"
           symbol="checkmark"
         />
       </div>
@@ -44,7 +44,7 @@ import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
 
 export default {
-  name: 'AssignersList',
+  name: 'AssigneesList',
   components: {
     EntityImage,
     Icon,
@@ -83,9 +83,9 @@ export default {
     },
 
     /**
-     * id of current assigner
+     * id of current assignee
      */
-    assigner: {
+    assignee: {
       type: String,
       default: '',
     },
@@ -94,7 +94,7 @@ export default {
     return {
       searchText: '',
       users: [],
-      assignerId: this.assigner,
+      assigneeId: this.assignee,
     };
   },
 
@@ -102,18 +102,10 @@ export default {
    * Set users from current workspace
    */
   created() {
-    const workspaces = this.$store.state.workspaces.list;
-    let currentWorkspace = {};
+    const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
 
-    for (const workspace of workspaces) {
-      if (workspace.id == this.workspaceId) {
-        currentWorkspace = workspace;
-
-        break;
-      }
-    }
-
-    const users = currentWorkspace.team.reduce((accumulator, user) => {
+    // Takes all users who are part of the project team
+    const users = workspace.team.reduce((accumulator, user) => {
       const userData = user.user;
 
       userData.assigned = false;
@@ -126,11 +118,11 @@ export default {
   },
   methods: {
     toggle: function (userIndex) {
-      // todo: dispatch the assigner to the database or remove him
-      if (this.assignerId == this.users[userIndex].id) {
-        this.assignerId = '';
+      // todo: dispatch the assignee to the database or remove him
+      if (this.assigneeId == this.users[userIndex].id) {
+        this.assigneeId = '';
       } else {
-        this.assignerId = this.users[userIndex].id;
+        this.assigneeId = this.users[userIndex].id;
       }
     },
   },
@@ -140,7 +132,7 @@ export default {
 <style>
   @import '../../styles/custom-properties.css';
 
-  .event-assigners-list {
+  .event-assignees-list {
     width: 210px;
     color: var(--color-bg-main);
     background-color: var(--color-text-main);
@@ -190,7 +182,7 @@ export default {
     }
   }
 
-  .assigners {
+  .assignees {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
     overflow: hidden;
