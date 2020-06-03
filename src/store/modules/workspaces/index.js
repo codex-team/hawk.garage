@@ -102,6 +102,21 @@ const getters = {
     },
 
   /**
+   * Returns user in workspace by id
+   *
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @returns {function(*): ConfirmedMember}
+   */
+  getUserInWorkspaceByUserId: (state) =>
+    /**
+     * @param workspace - workspace to get user
+     * @returns {ConfirmedMember}
+     */
+    (workspace, userId) => {
+      return workspace.team.find(member => !isPendingMember(member) && member.user.id === userId);
+    },
+
+  /**
    * Is current user admin in workspace
    *
    * @param {WorkspacesModuleState} state - Vuex state

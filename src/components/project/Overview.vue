@@ -24,9 +24,10 @@
             :key="dailyEventInfo.groupHash"
             :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
             :count="dailyEventInfo.count"
+            :workspace-id="project.workspaceId"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
-            @onAssigneeIconClick="showAssigners"
+            @onAssigneeIconClick="showAssignees(getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash), $event)"
             @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
           />
         </div>
@@ -38,11 +39,16 @@
         >
           <span v-if="!isLoadingEvents">Load more events</span>
         </div>
-        <AssignersList
-          v-if="isAssignersShowed"
-          v-click-outside="hideAssignersList"
-          :style="assignersListPosition"
-          class="project-overview__assigners-list"
+        <AssigneesList
+          v-if="isAssigneesShowed"
+          v-click-outside="hideAssigneesList"
+          :style="assigneesListPosition"
+          :workspace-id="project.workspaceId"
+          :event-id="assigneesEventId"
+          :assignee="assignee"
+          :project-id="projectId"
+
+          class="project-overview__assignees-list"
         />
       </div>
     </div>
@@ -52,7 +58,7 @@
 
 <script>
 import EventItem from './EventItem';
-import AssignersList from '../event/AssignersList';
+import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
@@ -62,7 +68,7 @@ export default {
   name: 'ProjectOverview',
   components: {
     EventItem,
-    AssignersList,
+    AssigneesList,
     Chart,
   },
   data() {
@@ -78,9 +84,14 @@ export default {
       isLoadingEvents: false,
 
       /**
-       * Indicates whether assigners list are loading or not.
+       * Indicates whether assignees list are loading or not.
        */
-      isAssignersShowed: false,
+      isAssigneesShowed: false,
+      /**
+       * Event id for assignees
+       */
+      assigneesEventId: '',
+      assignee: '',
 
       /**
        * Data for a chart
@@ -88,9 +99,9 @@ export default {
       chartData: [],
 
       /**
-       * Assigners list position in pixels
+       * Assignees list position in pixels
        */
-      assignersListPosition: {
+      assigneesListPosition: {
         top: 0,
         right: 0,
       },
@@ -182,17 +193,20 @@ export default {
     },
 
     /**
-     * Shows assigners list for the specific event
+     * Shows assignees list for the specific event
      *
-     * @param {GroupedEvent} event - event to display assigners list
+     * @param {Event} selectedEvent - selected event for which we are going to assign a person
+     * @param {GroupedEvent} event - event to display assignees list
      */
-    showAssigners(event) {
-      this.isAssignersShowed = true;
-      const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
+    showAssignees(selectedEvent, event) {
+      this.assigneesEventId = selectedEvent.id;
+      this.assignee = selectedEvent.assignee || '';
+      this.isAssigneesShowed = true;
+      const boundingClientRect = event.target.closest('.event-item__assignee').getBoundingClientRect();
 
-      this.assignersListPosition = {
-        top: boundingClientRect.y + 'px',
-        left: boundingClientRect.x + 'px',
+      this.assigneesListPosition = {
+        top: `${boundingClientRect.y - 3}px`,
+        left: `${boundingClientRect.x}px`,
       };
     },
 
@@ -214,8 +228,8 @@ export default {
       });
     },
 
-    hideAssignersList() {
-      this.isAssignersShowed = false;
+    hideAssigneesList() {
+      this.isAssigneesShowed = false;
     },
   },
 };
@@ -261,9 +275,9 @@ export default {
       cursor: pointer;
     }
 
-    &__assigners-list {
+    &__assignees-list {
       position: absolute;
-      transform: translateX(-100%) translate(-5px, -5px);
+      transform: translateX(-100%) translate(-15px, -5px);
     }
 
     &__load-more {

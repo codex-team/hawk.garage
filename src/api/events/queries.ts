@@ -80,6 +80,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           id
           groupHash
           totalCount
+          assignee
           visitedBy {
            ...User
           }
@@ -167,5 +168,11 @@ export const MUTATION_VISIT_EVENT = `
 export const MUTATION_TOGGLE_EVENT_MARK = `
   mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
     toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
+  }
+`;
+
+export const MUTATION_UPDATE_EVENT_ASSIGNEE = `
+  mutation setAssignee($projectId: ID!, $eventId: ID!, $assignee: String!) {
+    setAssignee(projectId: $projectId, eventId: $eventId, assignee: $assignee)
   }
 `;

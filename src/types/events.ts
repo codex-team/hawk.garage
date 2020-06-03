@@ -66,6 +66,11 @@ export interface HawkEvent {
    * How many users catch this error
    */
   usersAffected: number;
+
+  /**
+   * Event assignee
+   */
+  assignee: string;
 }
 
 /**

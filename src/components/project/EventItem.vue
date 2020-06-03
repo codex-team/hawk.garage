@@ -23,8 +23,17 @@
       {{ event.payload.title }}
     </div>
     <Icon
+      v-if="!this.event.assignee"
       symbol="assignee"
-      class="event-item__assignee-icon"
+      class="event-item__assignee event-item__assignee--icon"
+      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+    />
+    <EntityImage
+      v-else
+      class="event-item__assignee event-item__assignee--image"
+      :image="this.assigneeUser.image"
+      :name="this.assigneeUser.email || this.assigneeUser.name"
+      size="20"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
     />
   </div>
@@ -34,6 +43,7 @@
 import Badge from '../utils/Badge';
 import Icon from '../utils/Icon';
 import EventMark from './EventMark';
+import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'EventItem',
@@ -41,6 +51,7 @@ export default {
     EventMark,
     Badge,
     Icon,
+    EntityImage,
   },
   props: {
     /**
@@ -62,6 +73,13 @@ export default {
      */
     count: {
       type: [String, Number],
+      default: '',
+    },
+    /**
+     * @type {String} - id of current workspace
+     */
+    workspaceId: {
+      type: [String, null],
       default: '',
     },
   },
@@ -96,6 +114,21 @@ export default {
       }
 
       return mark;
+    },
+
+    /**
+     * Get user image
+     */
+    assigneeUser: function () {
+      const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
+
+      if (this.event.assignee) {
+        const user = this.$store.getters.getUserInWorkspaceByUserId(workspace, this.event.assignee);
+
+        return user.user;
+      }
+
+      return null;
     },
   },
 };
@@ -132,12 +165,19 @@ export default {
 
     }
 
-    &__assignee-icon {
-      width: 26px;
-      min-width: 26px;
-      height: 26px;
-      min-height: 26px;
+    &__assignee {
       margin-left: 10px;
+
+      &--icon {
+        width: 26px;
+        min-width: 26px;
+        height: 26px;
+        min-height: 26px;
+      }
+
+      &--image {
+        margin-right: 3px;
+      }
     }
 
     &:hover {

@@ -1,0 +1,8 @@
+version: "3.2"
+services:
+  hawk-garage:
+    image: codexteamuser/hawk-garage:prod
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${HAWK_GARAGE_PORT}:8080"
