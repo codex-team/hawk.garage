@@ -3,8 +3,6 @@ import { action } from '@storybook/addon-actions';
 import { boolean, text, withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 
-console.log(action);
-
 export default {
   title: 'Utils/UiButton',
   component: UiButton,
