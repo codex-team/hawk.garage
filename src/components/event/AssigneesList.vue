@@ -28,7 +28,11 @@
           :name="user.email || user.name"
           size="16"
         />
-        {{ user.email | trim }}
+        <div class="assignees__name-wrapper name-wrapper">
+          <p class="name-wrapper__name name-wrapper__name--scrollable">
+            {{ user.email }}
+          </p>
+        </div>
         <Icon
           v-if="user.id == assigneeId"
           class="assignees__checkmark"
@@ -48,22 +52,6 @@ export default {
   components: {
     EntityImage,
     Icon,
-  },
-  filters: {
-    /**
-    * Trim a string to a specific length
-    *
-    * @param {string} name - string for trimming
-    */
-    trim: function (name) {
-      const maxLength = 13;
-
-      if (name.length > maxLength) {
-        return `${name.slice(0, maxLength)}...`;
-      }
-
-      return name;
-    },
   },
   props: {
     /**
@@ -216,12 +204,15 @@ export default {
 
     &__checkmark {
       position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       right: 14px;
       width: 16px;
       height: 16px;
       color: #2ccf6c;
       background-color: #fff;
       border-radius: 50%;
+      user-select: none;
     }
 
     &__row {
@@ -255,10 +246,33 @@ export default {
         }
       }
 
+      &:hover .name-wrapper {
+        .name-wrapper__name--scrollable {
+          display: inline-block;
+          transform: translateX(calc(137px - 100%));
+          text-overflow: clip;
+        }
+      }
+
       &:hover + &:before {
         border-top: 1px solid #cbd7f2;
         width: 100%;
       }
+    }
+  }
+
+  .name-wrapper {
+    height: 1.2em;
+    margin-right: 30px;
+    white-space: nowrap;
+    overflow-x: hidden;
+
+    &__name--scrollable {
+      transition: 0.2s;
+      min-width: 137px;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 </style>
