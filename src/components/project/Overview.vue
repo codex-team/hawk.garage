@@ -27,7 +27,7 @@
             :workspace-id="project.workspaceId"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
-            @onAssigneeIconClick="showAssignees(getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash), $event)"
+            @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
             @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
           />
         </div>
@@ -46,6 +46,7 @@
           :workspace-id="project.workspaceId"
           :event-id="assigneesEventId"
           :assignee="assignee"
+          :event-group-hash="eventGroupHash"
           :project-id="projectId"
 
           class="project-overview__assignees-list"
@@ -87,11 +88,11 @@ export default {
        * Indicates whether assignees list are loading or not.
        */
       isAssigneesShowed: false,
+      
       /**
-       * Event id for assignees
+       * Event group hash for assignees
        */
-      assigneesEventId: '',
-      assignee: '',
+      eventGroupHash: '',
 
       /**
        * Data for a chart
@@ -195,13 +196,14 @@ export default {
     /**
      * Shows assignees list for the specific event
      *
-     * @param {Event} selectedEvent - selected event for which we are going to assign a person
+     * @param {String} projectId - id of the current project
+     * @param {String} groupHash - group hash of the event day
      * @param {GroupedEvent} event - event to display assignees list
      */
-    showAssignees(selectedEvent, event) {
-      this.assigneesEventId = selectedEvent.id;
-      this.assignee = selectedEvent.assignee || '';
+    showAssignees(projectId, groupHash, event) {
+      const selectedEvent = this.$store.getters.getEventByProjectIdAndGroupHash(projectId, groupHash);
       this.isAssigneesShowed = true;
+      this.eventGroupHash = groupHash;
       const boundingClientRect = event.target.closest('.event-item__assignee').getBoundingClientRect();
 
       this.assigneesListPosition = {

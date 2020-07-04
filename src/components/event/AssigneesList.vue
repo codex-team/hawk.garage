@@ -29,12 +29,12 @@
           size="16"
         />
         <div class="assignees__name-wrapper name-wrapper">
-          <p class="name-wrapper__name name-wrapper__name--scrollable">
+          <span class="name-wrapper__name name-wrapper__name--scrollable">
             {{ user.email }}
-          </p>
+          </span>
         </div>
         <Icon
-          v-if="user.id == assigneeId"
+          v-if="user.id == currentAssigneeId"
           class="assignees__checkmark"
           symbol="checkmark"
         />
@@ -61,7 +61,6 @@ export default {
       type: String,
       default: '',
     },
-
     /**
      * id of the selected event
      */
@@ -69,15 +68,6 @@ export default {
       type: String,
       default: '',
     },
-
-    /**
-     * id of current assignee
-     */
-    assignee: {
-      type: String,
-      default: '',
-    },
-
     /**
      * id of current project
      */
@@ -85,12 +75,15 @@ export default {
       type: String,
       default: '',
     },
+    eventGroupHash: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
       searchText: '',
       users: [],
-      assigneeId: this.assignee,
     };
   },
 
@@ -112,6 +105,17 @@ export default {
 
     this.users = users;
   },
+  computed: {
+    /**
+     * Return assignee id 
+     */
+    currentAssigneeId: function() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+      const assignee = currentEvent.assignee;
+
+      return assignee;
+    }
+  },
   methods: {
     toggle: function (userIndex) {
       if (this.assigneeId == this.users[userIndex].id) {
@@ -128,10 +132,8 @@ export default {
           eventId: this.eventId,
           assignee: this.users[userIndex].id,
         });
-
-        this.assigneeId = this.users[userIndex].id;
       }
-    },
+    }
   },
 };
 </script>
@@ -246,15 +248,7 @@ export default {
         }
       }
 
-      &:hover .name-wrapper {
-        .name-wrapper__name--scrollable {
-          display: inline-block;
-          transform: translateX(calc(137px - 100%));
-          text-overflow: clip;
-        }
-      }
-
-      &:hover + &:before {
+      &:hover &:before {
         border-top: 1px solid #cbd7f2;
         width: 100%;
       }
@@ -262,17 +256,14 @@ export default {
   }
 
   .name-wrapper {
-    height: 1.2em;
     margin-right: 30px;
     white-space: nowrap;
-    overflow-x: hidden;
+    overflow: hidden;
 
     &__name--scrollable {
-      transition: 0.2s;
-      min-width: 137px;
       display: block;
-      overflow: hidden;
       text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 </style>
