@@ -44,11 +44,8 @@
           v-click-outside="hideAssigneesList"
           :style="assigneesListPosition"
           :workspace-id="project.workspaceId"
-          :event-id="assigneesEventId"
-          :assignee="assignee"
           :event-group-hash="eventGroupHash"
           :project-id="projectId"
-
           class="project-overview__assignees-list"
         />
       </div>
@@ -88,7 +85,7 @@ export default {
        * Indicates whether assignees list are loading or not.
        */
       isAssigneesShowed: false,
-      
+
       /**
        * Event group hash for assignees
        */
@@ -201,11 +198,10 @@ export default {
      * @param {GroupedEvent} event - event to display assignees list
      */
     showAssignees(projectId, groupHash, event) {
-      const selectedEvent = this.$store.getters.getEventByProjectIdAndGroupHash(projectId, groupHash);
-      this.isAssigneesShowed = true;
-      this.eventGroupHash = groupHash;
       const boundingClientRect = event.target.closest('.event-item__assignee').getBoundingClientRect();
 
+      this.isAssigneesShowed = true;
+      this.eventGroupHash = groupHash;
       this.assigneesListPosition = {
         top: `${boundingClientRect.y - 3}px`,
         left: `${boundingClientRect.x}px`,
@@ -230,6 +226,9 @@ export default {
       });
     },
 
+    /**
+     * Hide assignees popup
+     */
     hideAssigneesList() {
       this.isAssigneesShowed = false;
     },

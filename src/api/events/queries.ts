@@ -172,7 +172,7 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
 `;
 
 export const MUTATION_UPDATE_EVENT_ASSIGNEE = `
-  mutation setAssignee($projectId: ID!, $eventId: ID!, $assignee: String!) {
-    setAssignee(projectId: $projectId, eventId: $eventId, assignee: $assignee)
+  mutation updateAssignee($projectId: ID!, $eventId: ID!, $assignee: String!) {
+    updateAssignee(projectId: $projectId, eventId: $eventId, assignee: $assignee)
   }
 `;

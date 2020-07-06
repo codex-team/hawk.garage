@@ -16,7 +16,7 @@
       class="event-assignees-list__assignees assignees"
     >
       <div
-        v-for="(user, userIndex) in users"
+        v-for="(user, userIndex) in filteredUsers"
         :key="user.id"
         class="assignees__row"
         @click="toggle(userIndex)"
@@ -61,13 +61,7 @@ export default {
       type: String,
       default: '',
     },
-    /**
-     * id of the selected event
-     */
-    eventId: {
-      type: String,
-      default: '',
-    },
+
     /**
      * id of current project
      */
@@ -75,6 +69,10 @@ export default {
       type: String,
       default: '',
     },
+
+    /**
+     * Current event group hash
+     */
     eventGroupHash: {
       type: String,
       default: ''
@@ -114,18 +112,32 @@ export default {
       const assignee = currentEvent.assignee;
 
       return assignee;
+    },
+
+    /**
+     * Event id
+     */
+    eventId: function() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+
+      return currentEvent.id;
+    },
+
+    /**
+     * Users are filtered by search string
+     */
+    filteredUsers: function() {
+      return this.users.filter(user => user.email.includes(this.searchText));
     }
   },
   methods: {
     toggle: function (userIndex) {
-      if (this.assigneeId == this.users[userIndex].id) {
+      if (this.currentAssigneeId == this.users[userIndex].id) {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId,
           assignee: '',
         });
-
-        this.assigneeId = '';
       } else {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
@@ -168,7 +180,6 @@ export default {
       font-weight: 500;
       color: #575b65;
       font-size: 14px;
-      border-bottom: 1px solid #cbd7f2;
     }
 
     &__search-icon {
@@ -225,6 +236,10 @@ export default {
       font-weight: 500;
       font-size: 14px;
       cursor: pointer;
+
+      &:first-child {
+        border-top: 1px solid #cbd7f2;
+      }
 
       &:not(:first-child):before {
         content: "";
