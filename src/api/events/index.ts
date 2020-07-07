@@ -113,5 +113,5 @@ export async function updateAssignee(projectId: string, eventId: string, assigne
     projectId,
     eventId,
     assignee,
-  })).setAssignee;
+  })).updateAssignee;
 }

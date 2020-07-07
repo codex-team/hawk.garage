@@ -16,7 +16,7 @@
       class="event-assignees-list__assignees assignees"
     >
       <div
-        v-for="(user, userIndex) in users"
+        v-for="(user, userIndex) in filteredUsers"
         :key="user.id"
         class="assignees__row"
         @click="toggle(userIndex)"
@@ -28,9 +28,13 @@
           :name="user.email || user.name"
           size="16"
         />
-        {{ user.email | trim }}
+        <div class="assignees__name-wrapper name-wrapper">
+          <span class="name-wrapper__name name-wrapper__name--scrollable">
+            {{ user.email }}
+          </span>
+        </div>
         <Icon
-          v-if="user.id == assigneeId"
+          v-if="user.id == currentAssigneeId"
           class="assignees__checkmark"
           symbol="checkmark"
         />
@@ -49,43 +53,11 @@ export default {
     EntityImage,
     Icon,
   },
-  filters: {
-    /**
-    * Trim a string to a specific length
-    *
-    * @param {string} name - string for trimming
-    */
-    trim: function (name) {
-      const maxLength = 13;
-
-      if (name.length > maxLength) {
-        return `${name.slice(0, maxLength)}...`;
-      }
-
-      return name;
-    },
-  },
   props: {
     /**
      * Workspace id of the current project
      */
     workspaceId: {
-      type: String,
-      default: '',
-    },
-
-    /**
-     * id of the selected event
-     */
-    eventId: {
-      type: String,
-      default: '',
-    },
-
-    /**
-     * id of current assignee
-     */
-    assignee: {
       type: String,
       default: '',
     },
@@ -97,12 +69,19 @@ export default {
       type: String,
       default: '',
     },
+
+    /**
+     * Current event group hash
+     */
+    eventGroupHash: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
       searchText: '',
       users: [],
-      assigneeId: this.assignee,
     };
   },
 
@@ -124,26 +103,49 @@ export default {
 
     this.users = users;
   },
+  computed: {
+    /**
+     * Return assignee id 
+     */
+    currentAssigneeId: function() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+      const assignee = currentEvent.assignee;
+
+      return assignee;
+    },
+
+    /**
+     * Event id
+     */
+    eventId: function() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+
+      return currentEvent.id;
+    },
+
+    /**
+     * Users are filtered by search string
+     */
+    filteredUsers: function() {
+      return this.users.filter(user => user.email.includes(this.searchText));
+    }
+  },
   methods: {
     toggle: function (userIndex) {
-      if (this.assigneeId == this.users[userIndex].id) {
+      if (this.currentAssigneeId == this.users[userIndex].id) {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId,
           assignee: '',
         });
-
-        this.assigneeId = '';
       } else {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId,
           assignee: this.users[userIndex].id,
         });
-
-        this.assigneeId = this.users[userIndex].id;
       }
-    },
+    }
   },
 };
 </script>
@@ -178,7 +180,6 @@ export default {
       font-weight: 500;
       color: #575b65;
       font-size: 14px;
-      border-bottom: 1px solid #cbd7f2;
     }
 
     &__search-icon {
@@ -216,12 +217,15 @@ export default {
 
     &__checkmark {
       position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       right: 14px;
       width: 16px;
       height: 16px;
       color: #2ccf6c;
       background-color: #fff;
       border-radius: 50%;
+      user-select: none;
     }
 
     &__row {
@@ -232,6 +236,10 @@ export default {
       font-weight: 500;
       font-size: 14px;
       cursor: pointer;
+
+      &:first-child {
+        border-top: 1px solid #cbd7f2;
+      }
 
       &:not(:first-child):before {
         content: "";
@@ -255,10 +263,22 @@ export default {
         }
       }
 
-      &:hover + &:before {
+      &:hover &:before {
         border-top: 1px solid #cbd7f2;
         width: 100%;
       }
+    }
+  }
+
+  .name-wrapper {
+    margin-right: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &__name--scrollable {
+      display: block;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 </style>
