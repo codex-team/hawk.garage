@@ -80,7 +80,9 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           id
           groupHash
           totalCount
-          assignee
+          assignee {
+            id
+          }
           visitedBy {
            ...User
           }

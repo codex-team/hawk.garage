@@ -16,10 +16,10 @@
       class="event-assignees-list__assignees assignees"
     >
       <div
-        v-for="(user, userIndex) in filteredUsers"
+        v-for="user in filteredUsers"
         :key="user.id"
         class="assignees__row"
-        @click="toggle(userIndex)"
+        @click="toggle(user)"
       >
         <EntityImage
           :id="String(user.id)"
@@ -95,7 +95,6 @@ export default {
     const users = workspace.team.reduce((accumulator, user) => {
       const userData = user.user;
 
-      userData.assigned = false;
       accumulator.push(userData);
 
       return accumulator;
@@ -105,13 +104,17 @@ export default {
   },
   computed: {
     /**
-     * Return assignee id 
+     * Return assignee
      */
     currentAssigneeId: function() {
       const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
       const assignee = currentEvent.assignee;
 
-      return assignee;
+      if (assignee && assignee.id) {
+        return assignee.id;
+      }
+
+      return '';
     },
 
     /**
@@ -131,18 +134,18 @@ export default {
     }
   },
   methods: {
-    toggle: function (userIndex) {
-      if (this.currentAssigneeId == this.users[userIndex].id) {
+    toggle: function (user) {
+      if (this.currentAssigneeId == user.id) {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId,
-          assignee: '',
+          assignee: null,
         });
       } else {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId,
-          assignee: this.users[userIndex].id,
+          assignee: user,
         });
       }
     }

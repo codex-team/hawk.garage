@@ -117,13 +117,13 @@ export default {
     },
 
     /**
-     * Get user image
+     * Get user data from the workspace
      */
     assigneeUser: function () {
       const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
 
       if (this.event.assignee) {
-        const user = this.$store.getters.getUserInWorkspaceByUserId(workspace, this.event.assignee);
+        const user = this.$store.getters.getUserInWorkspaceByUserId(workspace, this.event.assignee.id);
 
         return user.user;
       }

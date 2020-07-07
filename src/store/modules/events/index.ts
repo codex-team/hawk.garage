@@ -14,6 +14,7 @@ import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
 import { RootState } from '../../index';
 import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from '@/types/events';
+import { User } from '@/types/user';
 
 /**
  * Mutations enum for this module
@@ -484,10 +485,11 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - project id
      * @param {string} payload.eventId - event id
-     * @param {string} payload.assignee - user id to assign to this event
+     * @param {User | null} payload.assignee - user to assign to this event
      */
-    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }): Promise<void> {
-      const result = await eventsApi.updateAssignee(projectId, eventId, assignee);
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string, eventId: string, assignee: User | null}): Promise<void> {
+      const assigneeId = assignee ? assignee.id : '';
+      const result = await eventsApi.updateAssignee(projectId, eventId, assigneeId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
       if (result) {
@@ -517,7 +519,7 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} payload - vuex action payload
      * @param {HawkEvent} payload.event - event for which we install assignee
-     * @param {string} payload.assignee - user id to assign to this event
+     * @param {User | null} payload.assignee - user to assign to this event
      */
     [MutationTypes.SET_EVENT_ASSIGNEE](state, { event, assignee }): void {
       Vue.set(event, 'assignee', assignee);
