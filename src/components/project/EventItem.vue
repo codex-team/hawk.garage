@@ -33,6 +33,7 @@
       class="event-item__assignee event-item__assignee--image"
       :image="this.assigneeUser.image"
       :name="this.assigneeUser.email || this.assigneeUser.name"
+      :id="this.assigneeUser.id"
       size="20"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
     />
@@ -117,13 +118,13 @@ export default {
     },
 
     /**
-     * Get user image
+     * Get user data from the workspace
      */
     assigneeUser: function () {
       const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
 
       if (this.event.assignee) {
-        const user = this.$store.getters.getUserInWorkspaceByUserId(workspace, this.event.assignee);
+        const user = this.$store.getters.getUserInWorkspaceByUserId(workspace, this.event.assignee.id);
 
         return user.user;
       }
