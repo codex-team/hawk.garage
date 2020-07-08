@@ -19,7 +19,7 @@
         v-for="user in filteredUsers"
         :key="user.id"
         class="assignees__row"
-        @click="toggle(user)"
+        @click="updateAssignee(user)"
       >
         <EntityImage
           :id="String(user.id)"
@@ -46,6 +46,7 @@
 <script>
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
+import User from '../../types/user';
 
 export default {
   name: 'AssigneesList',
@@ -80,7 +81,14 @@ export default {
   },
   data() {
     return {
+      /**
+       * String for searching substrings in email
+       */
+
       searchText: '',
+      /**
+       * Array of users in this workspace
+       */
       users: [],
     };
   },
@@ -105,8 +113,10 @@ export default {
   computed: {
     /**
      * Return assignee
+     * 
+     * @returns {string} - assignee id or empty string
      */
-    currentAssigneeId: function() {
+    currentAssigneeId() {
       const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
       const assignee = currentEvent.assignee;
 
@@ -119,8 +129,10 @@ export default {
 
     /**
      * Event id
+     * 
+     * @returns {string}
      */
-    eventId: function() {
+    eventId() {
       const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
 
       return currentEvent.id;
@@ -128,13 +140,20 @@ export default {
 
     /**
      * Users are filtered by search string
+     * 
+     * @returns {User[]}
      */
-    filteredUsers: function() {
+    filteredUsers() {
       return this.users.filter(user => user.email.includes(this.searchText));
     }
   },
   methods: {
-    toggle: function (user) {
+    /**
+     * Update assignee to other or remove him
+     * 
+     * @returns {void}
+     */
+    updateAssignee(user) {
       if (this.currentAssigneeId == user.id) {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
@@ -197,6 +216,7 @@ export default {
       margin-left: 12px;
       font-weight: 500;
       color: #575b65;
+      outline: none;
 
       &::placeholder {
         color: var(--color-bg-main);
