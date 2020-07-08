@@ -23,7 +23,7 @@
       {{ event.payload.title }}
     </div>
     <Icon
-      v-if="!this.event.assignee"
+      v-if="!event.assignee"
       symbol="assignee"
       class="event-item__assignee event-item__assignee--icon"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
@@ -31,9 +31,9 @@
     <EntityImage
       v-else
       class="event-item__assignee event-item__assignee--image"
-      :image="this.assigneeUser.image"
-      :name="this.assigneeUser.email || this.assigneeUser.name"
-      :id="this.assigneeUser.id"
+      :image="event.assignee.image"
+      :name="event.assignee.email || event.assignee.name"
+      :id="event.assignee.id"
       size="20"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
     />
@@ -62,6 +62,7 @@ export default {
       type: Object,
       required: true,
     },
+    
     /**
      * @type {number} - timestamp of the last event
      */
@@ -69,20 +70,14 @@ export default {
       type: Number,
       required: true,
     },
+
     /**
      * @type {number} - number of events per day
      */
     count: {
       type: [String, Number],
       default: '',
-    },
-    /**
-     * @type {String} - id of current workspace
-     */
-    workspaceId: {
-      type: [String, null],
-      default: '',
-    },
+    }
   },
   computed: {
     /**
@@ -115,22 +110,7 @@ export default {
       }
 
       return mark;
-    },
-
-    /**
-     * Get user data from the workspace
-     */
-    assigneeUser: function () {
-      const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
-
-      if (this.event.assignee) {
-        const user = this.$store.getters.getUserInWorkspaceByUserId(workspace, this.event.assignee.id);
-
-        return user.user;
-      }
-
-      return null;
-    },
+    }
   },
 };
 </script>

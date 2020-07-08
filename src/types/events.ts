@@ -70,7 +70,7 @@ export interface HawkEvent {
   /**
    * Event assignee
    */
-  assignee: string;
+  assignee: User;
 }
 
 /**
