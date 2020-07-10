@@ -82,7 +82,6 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           totalCount
           assignee {
             id
-            name
             email
             image
           }

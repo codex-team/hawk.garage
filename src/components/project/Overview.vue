@@ -60,6 +60,7 @@ import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
+import { debounce } from '@/utils';
 
 export default {
   name: 'ProjectOverview',
@@ -102,6 +103,16 @@ export default {
         top: 0,
         right: 0,
       },
+
+      /**
+       * Handler of window resize
+       */
+      onResize: () => {},
+
+      /**
+       * Old window width
+       */
+      windowWidth: window.innerWidth
     };
   },
   computed: {
@@ -205,6 +216,35 @@ export default {
         top: `${boundingClientRect.y - 3}px`,
         left: `${boundingClientRect.x}px`,
       };
+      this.windowWidth = window.innerWidth;
+      this.onResize = debounce(this.setAssigneesPosition, 200);
+
+      window.addEventListener('resize', this.onResize);
+    },
+
+    /**
+     * Set a new position when resizing the window
+     *
+     * @param {GroupedEvent} event - event to move assignees list
+     */
+    setAssigneesPosition(event) {
+      const widthDifferent = this.windowWidth - window.innerWidth;
+
+      this.assigneesListPosition = {
+        top: this.assigneesListPosition.top,
+        left: `${Number(this.assigneesListPosition.left.slice(0, -2)) - widthDifferent}px`,
+      };
+
+      this.windowWidth = window.innerWidth;
+    },
+
+    /**
+     * Hide assignees popup
+     */
+    hideAssigneesList() {
+      this.isAssigneesShowed = false;
+
+      window.removeEventListener('resize', this.onResize);
     },
 
     /**
@@ -215,21 +255,18 @@ export default {
      * @param {string} repetitionId - event's repetition id
      */
     showEventOverview(projectId, groupHash, repetitionId) {
-      this.$router.push({
-        name: 'event-overview',
-        params: {
-          projectId: projectId,
-          eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
-          repetitionId: repetitionId,
-        },
-      });
-    },
-
-    /**
-     * Hide assignees popup
-     */
-    hideAssigneesList() {
-      this.isAssigneesShowed = false;
+      if (this.isAssigneesShowed) {
+        this.isAssigneesShowed = false;
+      } else {
+        this.$router.push({
+          name: 'event-overview',
+          params: {
+            projectId: projectId,
+            eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
+            repetitionId: repetitionId,
+          },
+        });
+      }
     },
   },
 };

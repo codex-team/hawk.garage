@@ -34,6 +34,7 @@
       :image="event.assignee.image"
       :name="event.assignee.email || event.assignee.name"
       :id="event.assignee.id"
+      :title="event.assignee.email"
       size="20"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
     />

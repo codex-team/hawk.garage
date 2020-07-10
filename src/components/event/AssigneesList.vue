@@ -8,7 +8,7 @@
       <input
         v-model="searchText"
         class="event-assignees-list__search-text"
-        :placeholder="'Search'"
+        :placeholder="$t('forms.searchField')"
         type="text"
       >
     </div>
@@ -89,7 +89,7 @@ export default {
       /**
        * Array of users in this workspace
        */
-      users: [],
+      users: []
     };
   },
 
