@@ -151,14 +151,10 @@ export default {
       margin-left: 10px;
 
       &--icon {
-        width: 26px;
-        min-width: 26px;
-        height: 26px;
-        min-height: 26px;
-      }
-
-      &--image {
-        margin-right: 3px;
+        width: 20px;
+        min-width: 20px;
+        height: 20px;
+        min-height: 20px;
       }
     }
 
