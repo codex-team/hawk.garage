@@ -26,12 +26,12 @@
         >
           {{ $t('settings.notifications.title') }}
         </router-link>
-        <!--        <router-link-->
-        <!--          class="settings-window__menu-item"-->
-        <!--          :to="{ name: 'billing-settings'}"-->
-        <!--        >-->
-        <!--          {{ $t('settings.billing.title') }}-->
-        <!--        </router-link>-->
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'account-billing'}"
+        >
+          {{ $t('settings.billing.title') }}
+        </router-link>
 
         <hr class="delimiter">
 

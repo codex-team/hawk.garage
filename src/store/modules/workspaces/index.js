@@ -9,8 +9,7 @@ import {
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
   REMOVE_USER_FROM_WORKSPACE,
-  GET_TRANSACTIONS,
-  FETCH_WORKSPACES
+  GET_TRANSACTIONS
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -227,18 +226,6 @@ const actions = {
     commit(mutationTypes.SET_WORKSPACE, workspace);
 
     return workspace;
-  },
-
-  /**
-   * Get workspaces by ids
-   *
-   * @param {Function} commit - standard Vuex commit function
-   * @returns {Promise<Workspace>}
-   */
-  async [FETCH_WORKSPACES]({ commit }) {
-    const workspaces = (await workspaceApi.getWorkspaces([]));
-
-    commit(mutationTypes.SET_WORKSPACES_LIST, workspaces);
   },
 
   /**

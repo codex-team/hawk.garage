@@ -193,6 +193,7 @@
     "payCustomAmount": "Другая сумма",
     "requestInvoice": "Запросить счет",
     "paymentHistory": "История платежей",
+    "paymentHistoryEmpty": "Тут пока пусто",
     "all": "Все",
     "incomings": "Пополнения",
     "charges": "Списания",
