@@ -364,3 +364,38 @@ export function debounce(callback: () => void, delay: number): () => void {
     }, delay);
   };
 }
+
+/**
+ * Return browser name and version by useragent
+ *
+ * @param ua - useragent
+ *
+ * @returns {string[]} - array like ["Chrome/81", "Chrome", "81"]
+ */
+export function getBrowserByUseragent(ua: string): string[] {
+  let tem;
+  const M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+
+  if (/trident/i.test(M[1])) {
+    tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+
+    return ['IE', tem[1] || ''];
+  }
+
+  if (M[1] === 'Chrome') {
+    tem = ua.match(/\bOPR\/(\d+)/);
+    if (tem != null) {
+      return ['Opera', tem[1]];
+    }
+  }
+
+  if (/EdgA/i.test(ua)) {
+    return ['IE', ''];
+  }
+
+  if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+    M.splice(1, 1, tem[1]);
+  }
+
+  return M;
+}

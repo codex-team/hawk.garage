@@ -61,9 +61,9 @@ export default Vue.extend({
 <style>
   .a-counter {
     position: relative;
-    height: 1em;
-    min-width: 7px;
     display: inline-block;
+    min-width: 7px;
+    height: 1em;
 
     &__prev,
     &__cur {

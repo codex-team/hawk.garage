@@ -231,7 +231,9 @@ const module: Module<EventsModuleState, RootState> = {
 
         const event = Object.assign({}, state.list[key]);
 
-        event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
+        if (repetition && repetition.payload){
+          event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
+        }
 
         return event;
       };
