@@ -32,9 +32,9 @@
       v-else
       class="event-item__assignee event-item__assignee--image"
       :image="event.assignee.image"
-      :name="event.assignee.email || event.assignee.name"
+      :name="event.assignee.name || event.assignee.email"
       :id="event.assignee.id"
-      :title="event.assignee.email"
+      :title="event.assignee.name || event.assignee.email"
       size="20"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
     />

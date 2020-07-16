@@ -492,10 +492,10 @@ const module: Module<EventsModuleState, RootState> = {
       const result = await eventsApi.updateAssignee(projectId, eventId, assigneeId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
-      if (result) {
+      if (result.success) {
         commit(MutationTypes.SET_EVENT_ASSIGNEE, {
           event,
-          assignee,
+          assignee: result.assignee,
         });
       }
     },
