@@ -11,19 +11,30 @@
         class="repetitions-list__row"
         @click="goToRepetition(repetition)"
       >
-        <td class="repetitions-list__col">
-          <span class="repetitions-list__time">{{ repetition.payload.timestamp | prettyTime }}</span>
-        </td>
-        <td class="repetitions-list__col">
-          <span class="repetitions-list__user-name">
-            [PICTURE]
-            [USER]
-            {{ repetition.payload.user ? repetition.payload.user.name : '' }}
+        <td class="repetitions-list__col repetitions-list__col--fixed-short">
+          <span class="repetitions-list__time">
+            {{ repetition.payload.timestamp | prettyTime }}
           </span>
         </td>
-        <td class="repetitions-list__col">
+        <td class="repetitions-list__col repetitions-list__col--fixed-medium">
+          <span class="repetitions-list__user">
+            <EntityImage
+              :id="repetition.payload.user ? repetition.payload.user.id : undefined"
+              :name="repetition.payload.user ? repetition.payload.user.email : undefined"
+              :image="repetition.payload.user ? repetition.payload.user.image : undefined"
+              size="22"
+            />
+            <span class="repetitions-list__user-name">
+              {{ repetition.payload.user ? repetition.payload.user.name || '—' : '' }}
+            </span>
+          </span>
+        </td>
+        <td
+          v-if="event.payload.addons && event.payload.addons.userAgent"
+          class="repetitions-list__col"
+        >
           <span class="repetitions-list__user-browser">
-            [BROWSER]
+            {{ getBrowser(event.payload.addons.userAgent) }}
           </span>
         </td>
         <td class="repetitions-list__col">
@@ -34,19 +45,42 @@
             {{ showWindowSize(repetition.payload.addons.window) }}
           </span>
         </td>
-        <td class="repetitions-list__col">
-          <span class="repetitions-list__url">
-            [URL]
+        <td class="repetitions-list__col repetitions-list__col--fixed-short">
+          <span
+            class="repetitions-list__url"
+            :title="repetition.payload.addons.url"
+          >
+            {{ repetition.payload.addons.url }}
           </span>
         </td>
+        <template v-if="repetition.payload.context">
+          <td
+            v-for="([name, value], index) of Object.entries(repetition.payload.context)"
+            :key="'context:' + repetition.id + ':' + index"
+            class="repetitions-list__col"
+          >
+            <div class="repetitions-list__context-field">
+              {{ name }}
+            </div>
+            <div class="repetitions-list__context-value">
+              {{ value }}
+            </div>
+          </td>
+        </template>
       </tr>
     </table>
   </div>
 </template>
 
 <script>
+import EntityImage from '../utils/EntityImage';
+import { getBrowserByUseragent } from '../../utils';
+
 export default {
   name: 'RepetitionsTable',
+  components: {
+    EntityImage,
+  },
   props: {
     /**
      * List of repetitions
@@ -123,6 +157,17 @@ export default {
 
       return width + 'x' + height;
     },
+
+    /**
+     * Return browser name and version by useragent
+     *
+     * @todo Do it on the worker side, see https://github.com/codex-team/hawk.workers/issues/131
+     * @param {string} useragent - event userAgent
+     * @returns {string}
+     */
+    getBrowser(useragent) {
+      return getBrowserByUseragent(useragent).shift();
+    },
   },
 };
 </script>
@@ -131,8 +176,8 @@ export default {
   .repetitions-list {
     &__date {
       margin-bottom: 10px;
-      font-size: 14px;
-      opacity: 0.6;
+      color: var(--color-text-second);
+      font-size: 14px
     }
 
     &__table {
@@ -157,28 +202,61 @@ export default {
     &__col {
       padding: 6px 10px;
       font-size: 13px;
-    }
 
-    &__user-photo {
-      width: 24px;
-      height: 24px;
-      border-radius: 3px;
+      &--fixed {
+        &-short {
+          width: 40px;
+        }
+        &-medium {
+          width: 120px;
+        }
+      }
     }
 
     &__time {
-      width: 40px;
       color: var(--color-text-second);
       letter-spacing: 0.16px;
     }
 
+    &__user {
+      display: inline-flex;
+      align-items: center;
+
+      &-name {
+        display: inline-block;
+        width: 100px;
+        margin-left: 10px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &__url {
+      display: inline-block;
+      max-width: 150px;
+      overflow: hidden;
+      color: var(--color-text-second);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     &__time,
-    &__user-name,
+    &__user,
     &__user-browser {
       font-weight: bold;
     }
 
-    &__url {
-      color: var(--color-text-second);
+    &__context {
+      &-field {
+        margin-bottom: 2px;
+        color: var(--color-text-second);
+        font-size: 10px;
+      }
+
+      &-value {
+        font-size: 12px;
+      }
     }
   }
 </style>
