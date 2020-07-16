@@ -30,11 +30,11 @@
           </span>
         </td>
         <td
-          v-if="event.payload.addons && event.payload.addons.userAgent"
+          v-if="repetition.payload.addons && repetition.payload.addons.userAgent"
           class="repetitions-list__col"
         >
           <span class="repetitions-list__user-browser">
-            {{ getBrowser(event.payload.addons.userAgent) }}
+            {{ getBrowser(repetition.payload.addons.userAgent) }}
           </span>
         </td>
         <td class="repetitions-list__col">
@@ -46,12 +46,14 @@
           </span>
         </td>
         <td class="repetitions-list__col repetitions-list__col--fixed-short">
-          <span
+          <a
             class="repetitions-list__url"
             :title="repetition.payload.addons.url"
+            :href="repetition.payload.addons.url"
+            @click.stop
           >
             {{ repetition.payload.addons.url }}
-          </span>
+          </a>
         </td>
         <template v-if="repetition.payload.context">
           <td
