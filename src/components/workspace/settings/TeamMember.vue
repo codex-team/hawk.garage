@@ -3,17 +3,10 @@
     class="team-member"
     :class="{'team-member--pending': isPending, 'team-member--admin': isCurrentUserAdmin}"
   >
-    <Icon
-      v-if="isPending"
-      class="team-member__icon"
-      symbol="user-placeholder"
-    />
-
     <EntityImage
-      v-else
-      :id="member.user.id"
-      :name="member.user.email || 'H'"
-      :image="member.user.image"
+      :id="member.user ? member.user.id : member.id"
+      :name="member.user ? member.user.email : undefined"
+      :image="member.user ? member.user.image : undefined"
       size="16"
     />
 
@@ -46,7 +39,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
-import Icon from '../../utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
@@ -60,7 +52,6 @@ export default Vue.extend({
   components: {
     TooltipMenu,
     EntityImage,
-    Icon,
   },
   props: {
     /**
