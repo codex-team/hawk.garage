@@ -8,6 +8,7 @@ import {
 } from './queries';
 import * as api from '@/api';
 import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
+import { User } from '@/types/user';
 
 /**
  * Get specific event
@@ -108,10 +109,12 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param {string} eventId - event id
  * @param {string} assignee - user id to assign
  */
-export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<boolean> {
+export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{success: boolean, assignee?: User}> {
   return (await api.call(MUTATION_UPDATE_EVENT_ASSIGNEE, {
-    projectId,
-    eventId,
-    assignee,
-  })).updateAssignee;
+    input: {
+      projectId,
+      eventId,
+      assignee,
+    }
+  })).events.updateAssignee;
 }

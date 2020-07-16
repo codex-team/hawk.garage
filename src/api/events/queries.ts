@@ -82,6 +82,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           totalCount
           assignee {
             id
+            name
             email
             image
           }
@@ -180,7 +181,17 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
  * GraphQL Mutation to update assignee. Update to other or remove
  */
 export const MUTATION_UPDATE_EVENT_ASSIGNEE = `
-  mutation updateAssignee($projectId: ID!, $eventId: ID!, $assignee: String!) {
-    updateAssignee(projectId: $projectId, eventId: $eventId, assignee: $assignee)
+  mutation updateAssignee($input: AssigneeInput!) {
+    events {
+      updateAssignee(input: $input) {
+        success
+        assignee {
+          id
+          name
+          email
+          image
+        }
+      }
+    }
   }
 `;

@@ -25,7 +25,7 @@
           :id="String(user.id)"
           class="assignees__image"
           :image="user.image"
-          :name="user.email || user.name"
+          :name="user.name || user.email"
           size="16"
         />
         <div class="assignees__name-wrapper name-wrapper">
