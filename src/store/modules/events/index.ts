@@ -495,7 +495,7 @@ const module: Module<EventsModuleState, RootState> = {
       if (result.success) {
         commit(MutationTypes.SET_EVENT_ASSIGNEE, {
           event,
-          assignee: result.assignee,
+          assignee: result.record,
         });
       }
     },

@@ -109,7 +109,7 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param {string} eventId - event id
  * @param {string} assignee - user id to assign
  */
-export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{success: boolean, assignee?: User}> {
+export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{success: boolean, record?: User}> {
   return (await api.call(MUTATION_UPDATE_EVENT_ASSIGNEE, {
     input: {
       projectId,
