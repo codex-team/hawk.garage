@@ -5,7 +5,8 @@ import {
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
   TOGGLE_EVENT_MARK,
-  UPDATE_EVENT_ASSIGNEE
+  UPDATE_EVENT_ASSIGNEE,
+  REMOVE_EVENT_ASSIGNEE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -485,17 +486,38 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - project id
      * @param {string} payload.eventId - event id
-     * @param {User | null} payload.assignee - user to assign to this event
+     * @param {User} payload.assignee - user to assign to this event
      */
-    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string, eventId: string, assignee: User | null}): Promise<void> {
-      const assigneeId = assignee ? assignee.id : '';
-      const result = await eventsApi.updateAssignee(projectId, eventId, assigneeId);
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string, eventId: string, assignee: User }): Promise<void> {
+      const result = await eventsApi.updateAssignee(projectId, eventId, assignee.id);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
       if (result.success) {
         commit(MutationTypes.SET_EVENT_ASSIGNEE, {
           event,
           assignee: result.record,
+        });
+      }
+    },
+
+    /**
+     * Remove event assignee
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - project id
+     * @param {string} payload.eventId - event id
+     */
+    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string, eventId: string }): Promise<void> {
+      const result = await eventsApi.removeAssignee(projectId, eventId);
+      const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+
+      if (result.success) {
+        commit(MutationTypes.SET_EVENT_ASSIGNEE, {
+          event,
+          assignee: null,
         });
       }
     },

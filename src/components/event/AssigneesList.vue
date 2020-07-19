@@ -155,10 +155,9 @@ export default {
      */
     updateAssignee(user) {
       if (this.currentAssigneeId == user.id) {
-        this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
+        this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
-          eventId: this.eventId,
-          assignee: null,
+          eventId: this.eventId
         });
       } else {
         this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
