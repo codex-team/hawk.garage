@@ -38,6 +38,16 @@ export const Sizes = (): unknown => ({
         :key="'1w:' + size"
         :size="size"
       />
+
+      <h4 style="flex-basis: 100%; color: var(--color-text-second); font-weight: bold; font-size: 12px; text-transform: uppercase; margin-top: 50px">
+        Without name
+      </h4>
+
+      <EntityImage
+        v-for="size in sizes"
+        :key="'1w:' + size"
+        :size="size"
+      />
     </div>
   `,
   props: {

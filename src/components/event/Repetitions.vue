@@ -115,7 +115,7 @@ export default Vue.extend({
     const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
       projectId: this.projectId,
       eventId: this.event.id,
-      limit: 10,
+      limit: 50,
     });
 
     /**

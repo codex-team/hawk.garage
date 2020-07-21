@@ -22,6 +22,12 @@
         title="Vue"
       />
       <DetailsAddons
+        v-if="event.payload.context && Object.keys(event.payload.context).length"
+        class="event-overview__section"
+        :addons="event.payload.context"
+        :title="$t('event.context')"
+      />
+      <DetailsAddons
         v-if="addonsFiltered"
         class="event-overview__section"
         :addons="addonsFiltered"

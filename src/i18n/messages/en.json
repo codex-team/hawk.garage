@@ -231,6 +231,7 @@
     "ignore": "Ignore",
     "issue": "Create issue",
     "loading": "Loading...",
+    "context": "Context",
     "viewedBy": {
       "assignee": "Assignee"
     }

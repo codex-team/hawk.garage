@@ -286,23 +286,23 @@ export default Vue.extend({
 <style>
   .chart {
     position: relative;
-    height: 215px;
-    background-color: var(--color-bg-main);
     z-index: 0;
     display: flex;
     flex-direction: column;
+    height: 215px;
+    background-color: var(--color-bg-main);
     border-radius: 3px;
 
     &__info {
       position: absolute;
-      right: 15px;
       top: 15px;
-      background: color-mod(var(--color-bg-main) alpha(50%));
+      right: 15px;
       padding: 5px 10px ;
-      border-radius: 5px;
       color: var(--color-text-main);
       font-size: 13px;
       white-space: nowrap;
+      background: color-mod(var(--color-bg-main) alpha(50%));
+      border-radius: 5px;
 
       &-today {
         color: var(--color-text-second);
@@ -350,18 +350,18 @@ export default Vue.extend({
       flex-grow: 2;
 
       polyline {
+
+        animation: line-in 1.5s ease-in forwards;
         stroke-linecap: round;
         stroke-linejoin: round;
         vector-effect: non-scaling-stroke;
         shape-rendering: geometricPrecision;
-
-        animation: line-in 1.5s ease-in forwards;
       }
     }
 
     &__ox {
-      padding: 15px 0;
       height: 40px;
+      padding: 15px 0;
       overflow-x: hidden;
 
       &-inner {
@@ -373,8 +373,8 @@ export default Vue.extend({
         flex: 1;
         color: var(--color-text-main);
         font-size: 10px;
-        opacity: 0.3;
         text-align: center;
+        opacity: 0.3;
 
         &:first-of-type,
         &:last-of-type {
@@ -384,14 +384,14 @@ export default Vue.extend({
     }
 
     &__pointer {
-      transition: left 0.2s cubic-bezier(.53,.04,.57,1.22);
       position: absolute;
-      width: 3px;
-      margin-left: -1.5px;
-      height: 100%;
       top: 0;
-      background-color: rgba(25, 28, 37, 0.5);
       z-index: 0;
+      width: 3px;
+      height: 100%;
+      margin-left: -1.5px;
+      background-color: rgba(25, 28, 37, 0.5);
+      transition: left 0.2s cubic-bezier(.53,.04,.57,1.22);
       animation: pointer-in 200ms ease;
       will-change: opacity, left;
 
@@ -399,11 +399,11 @@ export default Vue.extend({
         position: absolute;
         width: 5px;
         height: 5px;
+        margin-top: -2.5px;
+        margin-left: -1px;
         background: var(--color-indicator-critical);
         border-radius: 50%;
         opacity: 1;
-        margin-left: -1px;
-        margin-top: -2.5px;
         transition: 0.2s;
         will-change: top;
       }
@@ -411,23 +411,23 @@ export default Vue.extend({
       &-tooltip {
         position: absolute;
         bottom: -10px;
-        white-space: nowrap;
+        left: -20px;
+        z-index: 500;
+        margin-left: -2px;
+        padding: 6px 8px 6px 7px;
         color: var(--color-text-main);
         font-size: 12px;
-        letter-spacing: 0.2px;
-        left: -20px;
-        border-radius: 4px;
-        margin-left: -2px;
-        box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
-        padding: 6px 8px 6px 7px;
-        background: #191C25;
         line-height: 1.4;
-        z-index: 500;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+        background: #191C25;
+        border-radius: 4px;
+        box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
         transition: min-width 150ms ease;
 
         &-date {
-          font-size: 10px;
           color: var(--color-text-second);
+          font-size: 10px;
         }
 
         &-number {
