@@ -23,8 +23,19 @@
       {{ event.payload.title }}
     </div>
     <Icon
+      v-if="!event.assignee"
       symbol="assignee"
-      class="event-item__assignee-icon"
+      class="event-item__assignee event-item__assignee--icon"
+      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+    />
+    <EntityImage
+      v-else
+      class="event-item__assignee event-item__assignee--image"
+      :image="event.assignee.image"
+      :name="event.assignee.name || event.assignee.email"
+      :id="event.assignee.id"
+      :title="event.assignee.name || event.assignee.email"
+      size="20"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
     />
   </div>
@@ -34,6 +45,7 @@
 import Badge from '../utils/Badge';
 import Icon from '../utils/Icon';
 import EventMark from './EventMark';
+import EntityImage from '../utils/EntityImage';
 
 export default {
   name: 'EventItem',
@@ -41,6 +53,7 @@ export default {
     EventMark,
     Badge,
     Icon,
+    EntityImage,
   },
   props: {
     /**
@@ -50,6 +63,7 @@ export default {
       type: Object,
       required: true,
     },
+    
     /**
      * @type {number} - timestamp of the last event
      */
@@ -57,13 +71,14 @@ export default {
       type: Number,
       required: true,
     },
+
     /**
      * @type {number} - number of events per day
      */
     count: {
       type: [String, Number],
       default: '',
-    },
+    }
   },
   computed: {
     /**
@@ -96,7 +111,7 @@ export default {
       }
 
       return mark;
-    },
+    }
   },
 };
 </script>
@@ -132,12 +147,15 @@ export default {
 
     }
 
-    &__assignee-icon {
-      width: 26px;
-      min-width: 26px;
-      height: 26px;
-      min-height: 26px;
+    &__assignee {
       margin-left: 10px;
+
+      &--icon {
+        width: 20px;
+        min-width: 20px;
+        height: 20px;
+        min-height: 20px;
+      }
     }
 
     &:hover {

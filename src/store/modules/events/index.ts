@@ -4,15 +4,18 @@ import {
   FETCH_RECENT_EVENTS,
   INIT_EVENTS_MODULE,
   VISIT_EVENT,
-  TOGGLE_EVENT_MARK
+  TOGGLE_EVENT_MARK,
+  UPDATE_EVENT_ASSIGNEE,
+  REMOVE_EVENT_ASSIGNEE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { deepMerge, groupByGroupingTimestamp } from '@/utils';
-import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from '@/types/events';
 import { RootState } from '../../index';
+import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from '@/types/events';
+import { User } from '@/types/user';
 
 /**
  * Mutations enum for this module
@@ -27,6 +30,11 @@ enum MutationTypes {
    * Set new recent events list
    */
   SET_RECENT_EVENTS_LIST = 'SET_RECENT_EVENTS_LIST',
+
+  /**
+   * Set or update event assignee
+   */
+  SET_EVENT_ASSIGNEE = 'SET_EVENT_ASSIGNEE',
 
   /**
    * Add new data to recent event list
@@ -470,6 +478,51 @@ const module: Module<EventsModuleState, RootState> = {
     [RESET_STORE]({ commit }): void {
       commit(RESET_STORE);
     },
+
+    /**
+     * Update event assignee
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - project id
+     * @param {string} payload.eventId - event id
+     * @param {User} payload.assignee - user to assign to this event
+     */
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string, eventId: string, assignee: User }): Promise<void> {
+      const result = await eventsApi.updateAssignee(projectId, eventId, assignee.id);
+      const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+
+      if (result.success) {
+        commit(MutationTypes.SET_EVENT_ASSIGNEE, {
+          event,
+          assignee: result.record,
+        });
+      }
+    },
+
+    /**
+     * Remove event assignee
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {string} payload.projectId - project id
+     * @param {string} payload.eventId - event id
+     */
+    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string, eventId: string }): Promise<void> {
+      const result = await eventsApi.removeAssignee(projectId, eventId);
+      const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+
+      if (result.success) {
+        commit(MutationTypes.SET_EVENT_ASSIGNEE, {
+          event,
+          assignee: null,
+        });
+      }
+    },
   },
   mutations: {
     /**
@@ -480,6 +533,20 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.SET_EVENTS_LIST](state, eventsMap: EventsMap): void {
       Vue.set(state, 'list', eventsMap);
+    },
+
+    /**
+     * Mutation for update event assignee
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {HawkEvent} payload.event - event for which we install assignee
+     * @param {User | null} payload.assignee - user to assign to this event
+     */
+    [MutationTypes.SET_EVENT_ASSIGNEE](state, { event, assignee }): void {
+      Vue.set(event, 'assignee', assignee);
     },
 
     /**

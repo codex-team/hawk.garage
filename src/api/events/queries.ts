@@ -80,6 +80,12 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           id
           groupHash
           totalCount
+          assignee {
+            id
+            name
+            email
+            image
+          }
           visitedBy {
            ...User
           }
@@ -167,5 +173,39 @@ export const MUTATION_VISIT_EVENT = `
 export const MUTATION_TOGGLE_EVENT_MARK = `
   mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
     toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
+  }
+`;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to update an assignee to the event
+ */
+export const MUTATION_UPDATE_EVENT_ASSIGNEE = `
+  mutation updateAssignee($input: UpdateAssigneeInput!) {
+    events {
+      updateAssignee(input: $input) {
+        success
+        record {
+          id
+          name
+          email
+          image
+        }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to remove an assignee from the event
+ */
+export const MUTATION_REMOVE_EVENT_ASSIGNEE = `
+  mutation removeAssignee($input: RemoveAssigneeInput!) {
+    events {
+      removeAssignee(input: $input) {
+        success
+      }
+    }
   }
 `;

@@ -1,12 +1,15 @@
 import {
   MUTATION_TOGGLE_EVENT_MARK,
   MUTATION_VISIT_EVENT,
+  MUTATION_UPDATE_EVENT_ASSIGNEE,
+  MUTATION_REMOVE_EVENT_ASSIGNEE,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
 import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
+import { User } from '@/types/user';
 
 /**
  * Get specific event
@@ -98,4 +101,36 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     eventId,
     mark,
   })).toggleEventMark;
+}
+
+/**
+ * Update assignee
+ *
+ * @param {string} projectId - project id
+ * @param {string} eventId - event id
+ * @param {string} assignee - user id to assign
+ */
+export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean, record: User }> {
+  return (await api.call(MUTATION_UPDATE_EVENT_ASSIGNEE, {
+    input: {
+      projectId,
+      eventId,
+      assignee,
+    }
+  })).events.updateAssignee;
+}
+
+/**
+ * Remove assignee
+ *
+ * @param {string} projectId - project id
+ * @param {string} eventId - event id
+ */
+export async function removeAssignee(projectId: string, eventId: string): Promise<{ success: boolean }> {
+  return (await api.call(MUTATION_REMOVE_EVENT_ASSIGNEE, {
+    input: {
+      projectId,
+      eventId
+    }
+  })).events.removeAssignee;
 }

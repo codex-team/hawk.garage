@@ -26,7 +26,7 @@
             :count="dailyEventInfo.count"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
-            @onAssigneeIconClick="showAssigners"
+            @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
             @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
           />
         </div>
@@ -38,11 +38,14 @@
         >
           <span v-if="!isLoadingEvents">Load more events</span>
         </div>
-        <AssignersList
-          v-if="isAssignersShowed"
-          v-click-outside="hideAssignersList"
-          :style="assignersListPosition"
-          class="project-overview__assigners-list"
+        <AssigneesList
+          v-if="isAssigneesShowed"
+          v-click-outside="hideAssigneesList"
+          :style="assigneesListPosition"
+          :workspace-id="project.workspaceId"
+          :event-group-hash="eventGroupHash"
+          :project-id="projectId"
+          class="project-overview__assignees-list"
         />
       </div>
     </div>
@@ -52,17 +55,18 @@
 
 <script>
 import EventItem from './EventItem';
-import AssignersList from '../event/AssignersList';
+import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
+import { debounce } from '@/utils';
 
 export default {
   name: 'ProjectOverview',
   components: {
     EventItem,
-    AssignersList,
+    AssigneesList,
     Chart,
   },
   data() {
@@ -78,9 +82,14 @@ export default {
       isLoadingEvents: false,
 
       /**
-       * Indicates whether assigners list are loading or not.
+       * Indicates whether assignees list are loading or not.
        */
-      isAssignersShowed: false,
+      isAssigneesShowed: false,
+
+      /**
+       * Event group hash for assignees
+       */
+      eventGroupHash: '',
 
       /**
        * Data for a chart
@@ -88,12 +97,22 @@ export default {
       chartData: [],
 
       /**
-       * Assigners list position in pixels
+       * Assignees list position in pixels
        */
-      assignersListPosition: {
+      assigneesListPosition: {
         top: 0,
         right: 0,
       },
+
+      /**
+       * Handler of window resize
+       */
+      onResize: () => {},
+
+      /**
+       * Old window width
+       */
+      windowWidth: window.innerWidth
     };
   },
   computed: {
@@ -182,18 +201,50 @@ export default {
     },
 
     /**
-     * Shows assigners list for the specific event
+     * Shows assignees list for the specific event
      *
-     * @param {GroupedEvent} event - event to display assigners list
+     * @param {String} projectId - id of the current project
+     * @param {String} groupHash - group hash of the event day
+     * @param {GroupedEvent} event - event to display assignees list
      */
-    showAssigners(event) {
-      this.isAssignersShowed = true;
-      const boundingClientRect = event.target.closest('.event-item__assignee-icon').getBoundingClientRect();
+    showAssignees(projectId, groupHash, event) {
+      const boundingClientRect = event.target.closest('.event-item__assignee').getBoundingClientRect();
 
-      this.assignersListPosition = {
-        top: boundingClientRect.y + 'px',
-        left: boundingClientRect.x + 'px',
+      this.isAssigneesShowed = true;
+      this.eventGroupHash = groupHash;
+      this.assigneesListPosition = {
+        top: `${boundingClientRect.y - 3}px`,
+        left: `${boundingClientRect.x}px`,
       };
+      this.windowWidth = window.innerWidth;
+      this.onResize = debounce(this.setAssigneesPosition, 200);
+
+      window.addEventListener('resize', this.onResize);
+    },
+
+    /**
+     * Set a new position when resizing the window
+     *
+     * @param {GroupedEvent} event - event to move assignees list
+     */
+    setAssigneesPosition(event) {
+      const widthDifferent = this.windowWidth - window.innerWidth;
+
+      this.assigneesListPosition = {
+        top: this.assigneesListPosition.top,
+        left: `${Number(this.assigneesListPosition.left.slice(0, -2)) - widthDifferent}px`,
+      };
+
+      this.windowWidth = window.innerWidth;
+    },
+
+    /**
+     * Hide assignees popup
+     */
+    hideAssigneesList() {
+      this.isAssigneesShowed = false;
+
+      window.removeEventListener('resize', this.onResize);
     },
 
     /**
@@ -204,18 +255,18 @@ export default {
      * @param {string} repetitionId - event's repetition id
      */
     showEventOverview(projectId, groupHash, repetitionId) {
-      this.$router.push({
-        name: 'event-overview',
-        params: {
-          projectId: projectId,
-          eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
-          repetitionId: repetitionId,
-        },
-      });
-    },
-
-    hideAssignersList() {
-      this.isAssignersShowed = false;
+      if (this.isAssigneesShowed) {
+        this.isAssigneesShowed = false;
+      } else {
+        this.$router.push({
+          name: 'event-overview',
+          params: {
+            projectId: projectId,
+            eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
+            repetitionId: repetitionId,
+          },
+        });
+      }
     },
   },
 };
@@ -261,9 +312,9 @@ export default {
       cursor: pointer;
     }
 
-    &__assigners-list {
+    &__assignees-list {
       position: absolute;
-      transform: translateX(-100%) translate(-5px, -5px);
+      transform: translateX(-100%) translate(-15px, -5px);
     }
 
     &__load-more {
