@@ -10,7 +10,7 @@ export interface BankCard {
   /**
    * The last 4 chars of the card number
    */
-  number: string;
+  pan: string;
 
   /**
    * Card name

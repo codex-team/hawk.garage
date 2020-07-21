@@ -5,7 +5,7 @@
       symbol="credit-card"
     />
     <div class="bank-card__number">
-      {{ card.number }}
+      {{ card.name }}
     </div>
     <div class="bank-card__detach-button">
       {{ $t('billing.detachCard') }}

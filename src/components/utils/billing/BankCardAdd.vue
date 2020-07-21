@@ -32,7 +32,7 @@ export default Vue.extend({
 });
 </script>
 
-<style scoped>
+<style>
   .bank-card-add {
     display: inline-flex;
     align-items: center;

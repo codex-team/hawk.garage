@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import BillingWorkspace from '../../utils/billing/Workspace.vue';
+import BillingWorkspace from '../../workspace/settings/BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
 import AddCard from '../../utils/billing/BankCardAdd.vue';
@@ -78,17 +78,17 @@ export default Vue.extend({
       cards: [
         {
           id: '1',
-          number: '**** **** **** 3123',
+          pan: '3123',
           name: '**** **** **** 3123',
         },
         {
           id: '2',
-          number: '**** **** **** 3122',
+          pan: '3122',
           name: '**** **** **** 3122',
         },
         {
           id: '3',
-          number: '**** **** **** 3121',
+          pan: '3121',
           name: '**** **** **** 3121',
         },
       ],

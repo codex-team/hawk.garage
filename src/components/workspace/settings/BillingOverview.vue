@@ -90,14 +90,14 @@
 </template>
 
 <script>
-import EntityImage from '../EntityImage';
-import Progress from '../Progress';
-import Icon from '../Icon';
+import EntityImage from '../../utils/EntityImage';
+import Progress from '../../utils/Progress';
+import Icon from '../../utils/Icon';
 import UiSwitch from '../../forms/UiSwitch';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 
 export default {
-  name: 'BillingCard',
+  name: 'BillingOverview',
   components: {
     UiSwitch,
     Icon,
