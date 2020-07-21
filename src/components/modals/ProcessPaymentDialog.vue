@@ -45,10 +45,27 @@
 <script lang="ts">
 import PopupDialog from '../utils/PopupDialog.vue';
 import CustomSelect from '../forms/CustomSelect.vue';
-import cards from '../billing/testCards';
 import * as billingApi from '../../api/billing';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
+
+const cards = [
+  {
+    id: '1',
+    number: '**** **** **** 3123',
+    name: '**** **** **** 3123',
+  },
+  {
+    id: '2',
+    number: '**** **** **** 3122',
+    name: '**** **** **** 3122',
+  },
+  {
+    id: '3',
+    number: '**** **** **** 3121',
+    name: '**** **** **** 3121',
+  },
+];
 
 @Component({
   name: 'ProcessPaymentDialog',
