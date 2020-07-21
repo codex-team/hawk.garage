@@ -53,7 +53,10 @@
         </div>
       </div>
     </template>
-    <div v-else class="billing-history__empty">
+    <div
+      v-else
+      class="billing-history__empty"
+    >
       {{ $t('billing.paymentHistoryEmpty') }}
     </div>
   </div>
@@ -61,7 +64,7 @@
 
 <script>
 import EntityImage from '../EntityImage';
-import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
+// import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'BillingHistory',
@@ -93,34 +96,34 @@ export default {
        */
       return [];
 
-      const user = this.$store.state.user.data;
-
-      let transactions = [];
-
-      if (this.workspace) {
-        transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
-      } else {
-        transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
-          if (!workspace.users || !workspace.users.find(u => u.id === user.id).isAdmin) {
-            return acc;
-          }
-
-          return acc.concat(workspace.transactions || []);
-        }, []);
-
-        transactions.sort((a, b) => +new Date(b.date) - +new Date(a.date));
-      }
-
-      switch (this.filter) {
-        case this.FILTERS.INCOMINGS:
-          return transactions.filter(t => t.type === this.TYPES.INCOME);
-
-        case this.FILTERS.CHARGES:
-          return transactions.filter(t => t.type === this.TYPES.CHARGE);
-
-        default:
-          return transactions;
-      }
+      // const user = this.$store.state.user.data;
+      //
+      // let transactions = [];
+      //
+      // if (this.workspace) {
+      //   transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
+      // } else {
+      //   transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
+      //     if (!workspace.users || !workspace.users.find(u => u.id === user.id).isAdmin) {
+      //       return acc;
+      //     }
+      //
+      //     return acc.concat(workspace.transactions || []);
+      //   }, []);
+      //
+      //   transactions.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+      // }
+      //
+      // switch (this.filter) {
+      //   case this.FILTERS.INCOMINGS:
+      //     return transactions.filter(t => t.type === this.TYPES.INCOME);
+      //
+      //   case this.FILTERS.CHARGES:
+      //     return transactions.filter(t => t.type === this.TYPES.CHARGE);
+      //
+      //   default:
+      //     return transactions;
+      // }
     },
   },
   created() {
