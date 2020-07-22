@@ -44,11 +44,11 @@ const router = new Router({
               name: 'account-notifications',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Notifications.vue'),
             },
-            // {
-            //   path: 'billing',
-            //   name: 'billing-settings',
-            //   component: () => import(/* webpackChunkName: 'settings' */'./components/account/Billing.vue'),
-            // },
+            {
+              path: 'billing',
+              name: 'account-billing',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Billing.vue'),
+            },
           ],
         },
         /**

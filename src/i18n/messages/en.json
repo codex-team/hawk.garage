@@ -193,6 +193,7 @@
     "payCustomAmount": "Pay custom amount",
     "requestInvoice": "Request invoice",
     "paymentHistory": "Payment history",
+    "paymentHistoryEmpty": "Payment history is empty",
     "all": "All",
     "incomings": "Incomings",
     "charges": "Charges",

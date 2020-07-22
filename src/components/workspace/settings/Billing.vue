@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import BillingCard from '../../billing/Workspace';
-import BillingHistory from '../../billing/History';
+import BillingCard from './BillingOverview';
+import BillingHistory from '../../utils/billing/History';
 import { FETCH_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
 
 export default {

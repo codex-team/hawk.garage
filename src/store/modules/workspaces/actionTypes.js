@@ -39,11 +39,6 @@ export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
 export const FETCH_WORKSPACE = 'FETCH_WORKSPACE';
 
 /**
- * Fetch many workspaces by their ids
- */
-export const FETCH_WORKSPACES = 'FETCH_WORKSPACES';
-
-/**
  * Send request to grant admin permissions
  */
 export const GRANT_ADMIN_PERMISSIONS = 'GRANT_ADMIN_PERMISSIONS';

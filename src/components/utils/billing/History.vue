@@ -1,6 +1,5 @@
 <template>
   <div class="billing-history">
-    <label class="label">{{ $t('billing.paymentHistory') }}</label>
     <div class="billing-history__header">
       <div
         class="billing-history__tab"
@@ -24,40 +23,48 @@
         {{ $t('billing.charges') }}
       </div>
     </div>
-    <div
-      v-for="(transaction, i) in transactions"
-      :key="i"
-      class="billing-history__row"
-    >
-      <div class="billing-history__date">
-        {{ new Date(transaction.date) | prettyFullDate }}
-      </div>
-      <div class="billing-history__description">
-        {{ getDescription(transaction) }}
-      </div>
-      <div class="billing-history__user">
-        <EntityImage
-          v-if="transaction.type === TYPES.INCOME"
-          :id="transaction.user.id"
-          :name="transaction.user.name || transaction.user.email"
-          :image="transaction.user.image"
-          class="billing-history__user-image"
-          size="16"
-        />
-      </div>
+    <template v-if="transactions && transactions.length">
       <div
-        class="billing-history__amount"
-        :class="[`billing-history__amount--${transaction.type}`]"
+        v-for="(transaction, i) in transactions"
+        :key="i"
+        class="billing-history__row"
       >
-        {{ transaction.amount }}$
+        <div class="billing-history__date">
+          {{ new Date(transaction.date) | prettyFullDate }}
+        </div>
+        <div class="billing-history__description">
+          {{ getDescription(transaction) }}
+        </div>
+        <div class="billing-history__user">
+          <EntityImage
+            v-if="transaction.type === TYPES.INCOME"
+            :id="transaction.user.id"
+            :name="transaction.user.name || transaction.user.email"
+            :image="transaction.user.image"
+            class="billing-history__user-image"
+            size="16"
+          />
+        </div>
+        <div
+          class="billing-history__amount"
+          :class="[`billing-history__amount--${transaction.type}`]"
+        >
+          {{ transaction.amount }}$
+        </div>
       </div>
+    </template>
+    <div
+      v-else
+      class="billing-history__empty"
+    >
+      {{ $t('billing.paymentHistoryEmpty') }}
     </div>
   </div>
 </template>
 
 <script>
-import EntityImage from '../utils/EntityImage';
-import { GET_TRANSACTIONS } from '../../store/modules/workspaces/actionTypes';
+import EntityImage from '../EntityImage';
+// import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
 
 export default {
   name: 'BillingHistory',
@@ -84,44 +91,55 @@ export default {
   },
   computed: {
     transactions() {
-      const user = this.$store.state.user.data;
+      /**
+       * @todo remove and refactor the code below
+       */
+      return [];
 
-      let transactions = [];
-
-      if (this.workspace) {
-        transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
-      } else {
-        transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
-          if (!workspace.users || !workspace.users.find(u => u.id === user.id).isAdmin) {
-            return acc;
-          }
-
-          return acc.concat(workspace.transactions || []);
-        }, []);
-
-        transactions.sort((a, b) => +new Date(b.date) - +new Date(a.date));
-      }
-
-      switch (this.filter) {
-        case this.FILTERS.INCOMINGS:
-          return transactions.filter(t => t.type === this.TYPES.INCOME);
-
-        case this.FILTERS.CHARGES:
-          return transactions.filter(t => t.type === this.TYPES.CHARGE);
-
-        default:
-          return transactions;
-      }
+      // const user = this.$store.state.user.data;
+      //
+      // let transactions = [];
+      //
+      // if (this.workspace) {
+      //   transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
+      // } else {
+      //   transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
+      //     if (!workspace.users || !workspace.users.find(u => u.id === user.id).isAdmin) {
+      //       return acc;
+      //     }
+      //
+      //     return acc.concat(workspace.transactions || []);
+      //   }, []);
+      //
+      //   transactions.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+      // }
+      //
+      // switch (this.filter) {
+      //   case this.FILTERS.INCOMINGS:
+      //     return transactions.filter(t => t.type === this.TYPES.INCOME);
+      //
+      //   case this.FILTERS.CHARGES:
+      //     return transactions.filter(t => t.type === this.TYPES.CHARGE);
+      //
+      //   default:
+      //     return transactions;
+      // }
     },
   },
   created() {
-    const ids = [];
-
-    if (this.workspace) {
-      ids.push(this.workspace.id);
-    }
-
-    this.$store.dispatch(GET_TRANSACTIONS, { ids });
+    /**
+     * 2020 jul 15 - Commented to prevent errors
+     *
+     * @todo separate table to the abstract UITable component
+     * @todo pass transactions history from the parent component
+     */
+    // const ids = [];
+    //
+    // if (this.workspace) {
+    //   ids.push(this.workspace.id);
+    // }
+    //
+    // this.$store.dispatch(GET_TRANSACTIONS, { ids });
   },
   methods: {
     applyFilter(filter) {
@@ -140,10 +158,9 @@ export default {
 </script>
 
 <style>
-  .billing-history {
-    width: 600px;
-    margin-top: 50px;
+  @import url('./../../../styles/custom-properties.css');
 
+  .billing-history {
     &__header {
       display: flex;
       margin: 15px 0 0;
@@ -215,6 +232,12 @@ export default {
       &--charge::before {
         content: '-';
       }
+    }
+
+    &__empty {
+      @apply --font-small;
+
+      margin-top: 15px;
     }
   }
 </style>
