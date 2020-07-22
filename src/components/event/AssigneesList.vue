@@ -1,5 +1,10 @@
 <template>
-  <div class="event-assignees-list">
+  <div 
+    :class="[{
+      'event-assignees-list--right': triangle === 'right',
+      'event-assignees-list--top': triangle === 'top'
+    }, 'event-assignees-list']"
+  >
     <div class="event-assignees-list__search">
       <Icon
         class="event-assignees-list__search-icon"
@@ -56,14 +61,6 @@ export default {
   },
   props: {
     /**
-     * Workspace id of the current project
-     */
-    workspaceId: {
-      type: String,
-      default: '',
-    },
-
-    /**
      * id of current project
      */
     projectId: {
@@ -77,6 +74,14 @@ export default {
     eventGroupHash: {
       type: String,
       default: ''
+    },
+
+    /**
+     * Triangle position: right or top
+     */
+    triangle: {
+      type: String,
+      default: 'right'
     }
   },
   data() {
@@ -97,7 +102,7 @@ export default {
    * Set users from current workspace
    */
   created() {
-    const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
+    const workspace = this.$store.getters.getWorkspaceByProjectId(this.projectId);
 
     // Takes all users who are part of the project team
     const users = workspace.team.reduce((accumulator, user) => {
@@ -181,14 +186,12 @@ export default {
     border-radius: var(--border-radius);
     box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
 
-    &::after {
+    &:after {
       position: absolute;
-      top: 10px;
-      right: 0;
       width: 12px;
       height: 12px;
       background-color: var(--color-text-main);
-      transform: rotate(45deg) translateX(8.48px); /* 12 / sqrt(2) */
+      transform: rotate(45deg);
       content: '';
       pointer-events: none;
     }
@@ -221,6 +224,16 @@ export default {
         color: var(--color-bg-main);
         opacity: 0.6;
       }
+    }
+
+    &--right:after {
+      top: 15px;
+      right: -6px;
+    }
+
+    &--top:after {
+      top: -6px;
+      right: 35px;
     }
   }
 

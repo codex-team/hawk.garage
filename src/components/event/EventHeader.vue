@@ -54,11 +54,16 @@
           :items="navigationItems"
           :active-item-index="currentNavigationItem"
         />
-
-        <ViewedBy
-          v-if="event && event.visitedBy && event.visitedBy.length"
-          :users="event.visitedBy"
-        />
+        <div class="event-header__nav-bar">
+          <ViewedBy
+            v-if="event && event.visitedBy && event.visitedBy.length"
+            :users="event.visitedBy"
+          />
+          <AssigneeBar
+            :event="event"
+            :project-id="projectId"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -71,6 +76,8 @@ import ViewedBy from '../utils/ViewedBy.vue';
 import UiButton from '../utils/UiButton.vue';
 import Filepath from '../utils/Filepath.vue';
 import UiLabel from '../utils/UiLabel.vue';
+import AssigneeBar from '../utils/AssigneeBar.vue';
+
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
 
@@ -82,6 +89,7 @@ export default Vue.extend({
     UiButton,
     UiLabel,
     Filepath,
+    AssigneeBar
   },
   props: {
     /**
@@ -100,7 +108,7 @@ export default Vue.extend({
        *
        * @type {boolean}
        */
-      loading: !this.event,
+      loading: !this.event
     };
   },
   computed: {
@@ -168,6 +176,13 @@ export default Vue.extend({
       return this.navigationItems.findIndex(({ routeName }) => {
         return routeName === this.$route.name;
       });
+    },
+
+    /**
+     * Returns project id from the route
+     */
+    projectId(): string {
+      return this.$route.params.projectId;
     },
   },
   watch: {
