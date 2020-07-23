@@ -45,6 +45,7 @@
           :event-group-hash="eventGroupHash"
           :project-id="projectId"
           class="project-overview__assignees-list"
+          @hide="hideAssigneesList"
         />
       </div>
     </div>

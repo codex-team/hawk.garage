@@ -158,19 +158,21 @@ export default {
      * 
      * @returns {void}
      */
-    updateAssignee(user) {
+    async updateAssignee(user) {
       if (this.currentAssigneeId == user.id) {
-        this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
+        await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId
         });
       } else {
-        this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
+        await this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId,
           assignee: user,
         });
       }
+
+      this.$emit('hide');
     }
   },
 };
