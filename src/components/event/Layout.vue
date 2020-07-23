@@ -6,7 +6,7 @@
   >
     <EventHeader
       :event="event"
-      :projectId="projectId"
+      :project-id="projectId"
       @tabChanged="tabChanged($event)"
     />
     <div class="event-layout__info">

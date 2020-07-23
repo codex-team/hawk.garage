@@ -8,6 +8,7 @@
   /** Backgrounds */
   --color-bg-main: #242732;
   --color-bg-second: #2f3341;
+  --color-bg-third: color-mod(var(--color-text-main) alpha(8%));
   --color-bg-sidebar: #1a1d26;
   --color-bg-main-transparent: rgba(36, 39, 50, 0);
   --color-bg-placeholder: #505b74;

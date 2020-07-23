@@ -10,6 +10,24 @@ export enum EventMark {
 }
 
 /**
+ * Available events sort orders
+ */
+export enum EventsSortOrder {
+  ByDate = 'lastRepetitionTime',
+  ByCount = 'count'
+}
+
+/**
+ * Possible events filters by event mark
+ */
+export interface EventsFilters {
+  default: boolean;
+  resolved: boolean;
+  starred: boolean;
+  ignored: boolean;
+}
+
+/**
  * Interface representing Hawk Event format
  */
 export interface HawkEvent {
