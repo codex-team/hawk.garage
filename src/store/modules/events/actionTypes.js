@@ -42,3 +42,13 @@ export const UPDATE_EVENT_ASSIGNEE = 'UPDATE_EVENT_ASSIGNEE';
  * Remove event assignee
  */
 export const REMOVE_EVENT_ASSIGNEE = 'REMOVE_EVENT_ASSIGNEE';
+
+/**
+ * Set events order to use
+ */
+export const SET_EVENTS_ORDER = 'SET_EVENTS_ORDER';
+
+/**
+ * Set events filters to use
+ */
+export const SET_EVENTS_FILTERS = 'SET_EVENTS_FILTERS';
