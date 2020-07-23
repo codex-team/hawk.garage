@@ -6,6 +6,7 @@
   >
     <EventHeader
       :event="event"
+      :projectId="projectId"
       @tabChanged="tabChanged($event)"
     />
     <div class="event-layout__info">
@@ -13,7 +14,6 @@
         <router-view
           v-if="event"
           :event="event"
-          :project-id="projectId"
         />
         <div
           v-else
