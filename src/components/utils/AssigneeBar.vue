@@ -30,11 +30,12 @@
     </div>
     <AssigneesList
       v-if="isAssigneesShowed"
-      v-click-outside="changeAssigneeShowed"
+      v-click-outside="hideAssigneesList"
       :projectId="projectId"
       :event-group-hash="event.groupHash"
       triangle="top"
       class="assignee-bar__assignees-list"
+      @hide="hideAssigneesList"
     />
 
   </div>
@@ -87,6 +88,13 @@ export default Vue.extend({
     changeAssigneeShowed(): void {
       this.isAssigneesShowed = !this.isAssigneesShowed;
     },
+
+    /**
+     * Hide assignees list
+     */
+    hideAssigneesList(): void {
+      this.isAssigneesShowed = false;
+    }
   }
 });
 </script>
