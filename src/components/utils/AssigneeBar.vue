@@ -2,7 +2,7 @@
   <div 
     class="assignee-bar"
   >
-    <span>Assignee</span>
+    <span>{{ $t('event.viewedBy.assignee') }}</span>
     <div 
       @click.stop="changeAssigneeShowed"
       class="assignee-bar__button"
@@ -33,7 +33,7 @@
       v-click-outside="changeAssigneeShowed"
       :projectId="projectId"
       :event-group-hash="event.groupHash"
-      :triangle="'top'"
+      triangle="top"
       class="assignee-bar__assignees-list"
     />
 

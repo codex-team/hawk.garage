@@ -54,7 +54,7 @@
           :items="navigationItems"
           :active-item-index="currentNavigationItem"
         />
-        <div class="event-header__nav-bar">
+        <div class="event-header__viewed-by">
           <ViewedBy
             v-if="event && event.visitedBy && event.visitedBy.length"
             :users="event.visitedBy"
@@ -267,7 +267,7 @@ export default Vue.extend({
       }
     }
 
-    &__nav-bar {
+    &__nav-bar, &__viewed-by {
       display: flex;
       justify-content: space-between;
       height: 50px;
