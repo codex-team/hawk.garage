@@ -4,7 +4,7 @@
   >
     <span>Assignee</span>
     <div 
-      @click="changeAssigneeShowed"
+      @click.stop="changeAssigneeShowed"
       class="assignee-bar__button"
     >
       <Icon
@@ -30,6 +30,7 @@
     </div>
     <AssigneesList
       v-if="isAssigneesShowed"
+      v-click-outside="changeAssigneeShowed"
       :projectId="projectId"
       :event-group-hash="event.groupHash"
       :triangle="'top'"
@@ -105,6 +106,7 @@ export default Vue.extend({
     background: var(--color-bg-main);
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
 
   &__icon {

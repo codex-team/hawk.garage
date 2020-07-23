@@ -233,7 +233,7 @@ export default {
 
     &--top:after {
       top: -6px;
-      right: 35px;
+      right: 36px;
     }
   }
 
