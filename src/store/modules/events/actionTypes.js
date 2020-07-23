@@ -34,7 +34,11 @@ export const VISIT_EVENT = 'VISIT_EVENT';
 export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';
 
 /**
- * Update event assignee
- * The value can also be an empty string to delete assignee
+ * Update event assigneee
  */
 export const UPDATE_EVENT_ASSIGNEE = 'UPDATE_EVENT_ASSIGNEE';
+
+/**
+ * Remove event assignee
+ */
+export const REMOVE_EVENT_ASSIGNEE = 'REMOVE_EVENT_ASSIGNEE';

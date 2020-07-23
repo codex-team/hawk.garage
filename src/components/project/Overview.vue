@@ -42,7 +42,6 @@
           v-if="isAssigneesShowed"
           v-click-outside="hideAssigneesList"
           :style="assigneesListPosition"
-          :workspace-id="project.workspaceId"
           :event-group-hash="eventGroupHash"
           :project-id="projectId"
           class="project-overview__assignees-list"

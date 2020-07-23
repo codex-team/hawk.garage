@@ -178,19 +178,33 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
 
 // language=GraphQL
 /**
- * GraphQL Mutation to update assignee. Update to other or remove
+ * GraphQL Mutation to update an assignee to the event
  */
 export const MUTATION_UPDATE_EVENT_ASSIGNEE = `
-  mutation updateAssignee($input: AssigneeInput!) {
+  mutation updateAssignee($input: UpdateAssigneeInput!) {
     events {
       updateAssignee(input: $input) {
         success
-        assignee {
+        record {
           id
           name
           email
           image
         }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to remove an assignee from the event
+ */
+export const MUTATION_REMOVE_EVENT_ASSIGNEE = `
+  mutation removeAssignee($input: RemoveAssigneeInput!) {
+    events {
+      removeAssignee(input: $input) {
+        success
       }
     }
   }
