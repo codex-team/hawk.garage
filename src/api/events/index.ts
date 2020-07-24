@@ -48,7 +48,7 @@ export async function fetchRecentEvents(
   skip = 0,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {
-    default: true,
+    noMarks: true,
     ignored: true,
     resolved: true,
     starred: true,

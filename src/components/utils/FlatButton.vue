@@ -16,6 +16,9 @@ export default {
     UiButton,
   },
   props: {
+    /**
+     * If true, displays button in active mode
+     */
     active: {
       type: Boolean,
       default: false,

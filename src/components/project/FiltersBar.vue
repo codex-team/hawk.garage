@@ -6,12 +6,12 @@
           symbol="filter"
           class="filters-bar__filter-icon"
         />
-        Filter
+        {{ $t('projects.filters.filtersLabel') }}
       </div>
       <FlatButton
         v-for="(value, key) in filtersOptions"
         :key="key"
-        :content="value.label"
+        :content="$t(`projects.filters.filtersOptions.${key}`)"
         :active="key === selectedFilter"
         small
         class="filters-bar__button"
@@ -24,12 +24,12 @@
           symbol="sort"
           class="filters-bar__sort-icon"
         />
-        Sort
+        {{ $t('projects.filters.sortLabel') }}
       </div>
       <FlatButton
         v-for="(value, key) in sortOptions"
         :key="key"
-        :content="value"
+        :content="$t(`projects.filters.sortOptions.${value}`)"
         :active="key === order"
         class="filters-bar__button"
         small
@@ -40,83 +40,100 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import FlatButton from '../utils/FlatButton.vue';
 import Icon from '../utils/Icon.vue';
 import { EventsFilters, EventsSortOrder } from '../../types/events';
 import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER } from '../../store/modules/events/actionTypes';
 
-export default {
+interface FiltersBarData {
+  /**
+   * Each property contains events filters combination to fit the condition
+   */
+  filtersOptions: {
+    all: EventsFilters,
+    starred: EventsFilters,
+    resolved: EventsFilters,
+    unresolved: EventsFilters,
+    hidden: EventsFilters
+  },
+  sortOptions: {
+    [K in EventsSortOrder]: string
+  }
+}
+
+export default Vue.extend({
   name: 'FiltersBar',
   components: {
     Icon,
     FlatButton,
   },
-  data() {
+  data(): FiltersBarData {
     return {
+      /**
+       * Available filter options
+       */
       filtersOptions: {
         all: {
-          label: 'All',
-          filters: {
-            default: true,
-            starred: true,
-            ignored: true,
-            resolved: true,
-          },
+          noMarks: true,
+          starred: true,
+          ignored: true,
+          resolved: true,
         },
         starred: {
-          label: 'Starred',
-          filters: {
-            default: false,
-            starred: true,
-            ignored: false,
-            resolved: false,
-          },
+          noMarks: false,
+          starred: true,
+          ignored: false,
+          resolved: false,
         },
         resolved: {
-          label: 'Resolved',
-          filters: {
-            default: false,
-            starred: false,
-            ignored: false,
-            resolved: true,
-          },
+          noMarks: false,
+          starred: false,
+          ignored: false,
+          resolved: true,
         },
         unresolved: {
-          label: 'Unresolved',
-          filters: {
-            default: true,
-            starred: true,
-            ignored: true,
-            resolved: false,
-          },
+          noMarks: true,
+          starred: true,
+          ignored: true,
+          resolved: false,
         },
         hidden: {
-          label: 'Hidden',
-          filters: {
-            default: false,
-            starred: false,
-            resolved: false,
-            ignored: true,
-          },
+          noMarks: false,
+          starred: false,
+          resolved: false,
+          ignored: true,
         },
       },
+      /**
+       * Available sort options
+       */
       sortOptions: {
-        [EventsSortOrder.ByDate]: 'By date',
-        [EventsSortOrder.ByCount]: 'By count',
+        [EventsSortOrder.ByDate]: 'byDate',
+        [EventsSortOrder.ByCount]: 'byCount',
       },
     };
   },
   computed: {
+    /**
+     * Get events filters from VueX store
+     */
     filters(): EventsFilters {
       return this.$store.getters.getProjectFilters(this.projectId);
     },
+    /**
+     * Get events sorting order from VueX store
+     */
     order(): EventsSortOrder {
       return this.$store.getters.getProjectOrder(this.projectId);
     },
-    selectedFilter() {
+    /**
+     * Get key for selected filters
+     */
+    selectedFilter(): keyof FiltersBarData['filtersOptions'] {
       let filter = 'all';
 
-      Object.entries(this.filtersOptions).some(([key, { filters } ]) => {
+      Object.entries(this.filtersOptions).some(([key, filters]) => {
         const isEqual = Object
           .entries(filters)
           .reduce((acc, [mark, value]) => {
@@ -132,26 +149,39 @@ export default {
         return false;
       });
 
-      return filter;
+      return filter as keyof FiltersBarData['filtersOptions'];
     },
-    projectId() {
+    /**
+     * Get project id from URL parameters
+     */
+    projectId(): string {
       return this.$route.params.projectId;
     },
   },
   methods: {
-    selectFilter(key: string) {
+    /**
+     * Set new events filters
+     *
+     * @param {string} key - filters key
+     */
+    selectFilter(key: string): void {
       if (key === this.selectedFilter) {
         return;
       }
 
-      const filters = this.filtersOptions[key].filters;
+      const filters = this.filtersOptions[key];
 
       this.$store.dispatch(SET_EVENTS_FILTERS, {
         filters,
         projectId: this.projectId,
       });
     },
-    selectOrder(key: EventsSortOrder) {
+    /**
+     * Set new events sorting order
+     *
+     * @param {EventsSortOrder} key - sorting order key
+     */
+    selectOrder(key: EventsSortOrder): void {
       if (key === this.order) {
         return;
       }
@@ -162,7 +192,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style>
@@ -172,39 +202,43 @@ export default {
     width: 100%;
     margin-top: 25px;
     padding: 0 21px;
-  }
 
-  .filters-bar__section {
-    display: flex;
-    align-items: center;
-  }
 
-  .filters-bar__name {
-    display: flex;
-    align-items: center;
-    font-weight: 600;
+    &__section {
+      display: flex;
+      align-items: center;
+    }
 
-    font-size: 12px;
-    letter-spacing: 0.15px;
-    text-transform: uppercase;
-  }
+    &__name {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
 
-  .filters-bar__filter-icon {
-    width: 12px;
-    height: 10px;
-    margin-right: 6px;
-  }
-  .filters-bar__sort-icon {
-    width: 10px;
-    height: 10px;
-    margin-right: 7px;
-  }
+      font-size: 12px;
+      letter-spacing: 0.15px;
+      text-transform: uppercase;
+    }
 
-  .filters-bar__button {
-    margin-left: 3px;
+    &__filter-icon {
+      width: 12px;
+      height: 10px;
+      margin-right: 6px;
+      color: var(--color-text-second);
+    }
 
-    &:first-of-type {
-       margin-left: 10px;
+    &__sort-icon {
+      width: 10px;
+      height: 10px;
+      margin-right: 7px;
+      color: var(--color-text-second);
+    }
+
+    &__button {
+      margin-left: 3px;
+
+      &:first-of-type {
+        margin-left: 10px;
+      }
     }
   }
 </style>
