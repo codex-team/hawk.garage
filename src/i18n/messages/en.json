@@ -30,21 +30,6 @@
     "searchField": "Search"
   },
   "projects": {
-    "filters": {
-      "filtersLabel": "Filter",
-      "filtersOptions": {
-        "all": "All",
-        "starred": "Starred",
-        "resolved": "Resolved",
-        "unresolved": "Unresolved",
-        "hidden": "Hidden"
-      },
-      "sortLabel": "Sort",
-      "sortOptions": {
-        "byDate": "By date",
-        "byCount": "By count"
-      }
-    },
     "placeholder": "No project selected",
     "creationDialog": {
       "description": "To start track events from your application, add it as a Project and get an Integration Token.",

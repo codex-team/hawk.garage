@@ -13,14 +13,7 @@ export enum EventMark {
  * Available events sort orders
  */
 export enum EventsSortOrder {
-  /**
-   * Sort by timestamp of the last event repetition
-   */
   ByDate = 'lastRepetitionTime',
-
-  /**
-   * Sort by events count
-   */
   ByCount = 'count'
 }
 
@@ -28,24 +21,9 @@ export enum EventsSortOrder {
  * Possible events filters by event mark
  */
 export interface EventsFilters {
-  /**
-   * Should events withour marks be included
-   */
-  noMarks: boolean;
-
-  /**
-   * Should events with resolved mark be included
-   */
+  default: boolean;
   resolved: boolean;
-
-  /**
-   * Should events with starred mark be included
-   */
   starred: boolean;
-
-  /**
-   * Should events with ignored mark be included
-   */
   ignored: boolean;
 }
 

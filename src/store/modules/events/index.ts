@@ -330,7 +330,7 @@ const module: Module<EventsModuleState, RootState> = {
        */
       return (projectId: string): EventsFilters => {
         return state.filters[projectId]?.filters || {
-          noMarks: true,
+          default: true,
           starred: true,
           ignored: true,
           resolved: true,
