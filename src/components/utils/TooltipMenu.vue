@@ -1,6 +1,10 @@
 <template>
   <div class="tooltip-menu">
-    <div class="tooltip-menu__dots" />
+    <Icon
+      symbol="dots-vertical"
+      width="3"
+      height="15"
+    />
     <div class="tooltip-menu__popup">
       <div
         v-for="option in options"
@@ -14,56 +18,68 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+import Icon from './Icon.vue';
+
+/**
+ * Represents single item of a menu
+ */
+export interface TooltipMenuItem {
+  /**
+   * Text on menu item
+   */
+  title: string;
+
+  /**
+   * Click callback function
+   */
+  onClick: () => void;
+}
+
+export default Vue.extend({
   name: 'TooltipMenu',
+  components: {
+    Icon,
+  },
   props: {
+    /**
+     * Menu items
+     */
     options: {
-      type: Array,
-      required: true
-    }
-  }
-};
+      type: Array as () => TooltipMenuItem[],
+      required: true,
+    },
+  },
+});
 </script>
 
 <style>
   .tooltip-menu {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
     margin-right: -8px;
-    padding: 6px 15px 6px 3px;
+    border-radius: var(--border-radius);
     cursor: pointer;
 
-    &:hover &__popup {
-      opacity: 1;
-      pointer-events: auto;
+    .icon {
+      color: var(--color-text-second);
     }
 
-    &__dots {
-      position: relative;
-      width: 3px;
-      height: 3px;
-      background-color: var(--color-text-second);
-
-      &::before, &::after {
-        position: absolute;
-        width: 3px;
-        height: 3px;
-        background-color: var(--color-text-second);
-        content: '';
-      }
-
-      &::before {
-       top: -6px;
-      }
-
-      &::after {
-        top: 6px;
+    &:hover {
+      .icon {
+        color: var(--color-text-main)
       }
     }
 
     &__popup {
       position: absolute;
-      top: 6px;
+      top: 50%;
+      left: 100%;
       color: var(--color-bg-main);
       font-weight: 500;
       font-size: 14px;
@@ -73,7 +89,7 @@ export default {
       border: 2px solid var(--color-text-main);
       border-radius: 10px;
       box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
-      transform: translate3d(22px, -50%, 0);
+      transform: translate3d(0, -50%, 0);
       opacity: 0;
       transition: opacity .1s ease-in;
       pointer-events: none;
@@ -92,6 +108,11 @@ export default {
       }
     }
 
+    &:hover &__popup {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     &__option {
       position: relative;
       padding: 9px 17px;
@@ -100,8 +121,19 @@ export default {
       cursor: pointer;
       user-select: none;
 
+      &:not(:first-child)::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: calc(100% - 17px);
+        height: 1px;
+        background-color: var(--color-bg-main);
+        opacity: 0.14;
+        content: '';
+      }
+
       &:hover {
-        background-color: rgba(0, 0, 0, 0.06);
+        background-color: rgba(255, 255, 255, 0.4);
 
         &::before, & + ^&__option::before {
           display: none;
@@ -114,19 +146,8 @@ export default {
       }
 
       &:last-child {
-         border-bottom-right-radius: 8px;
-         border-bottom-left-radius: 8px;
-      }
-
-      &:not(:first-child)::before {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: calc(100% - 17px);
-        height: 1px;
-        background-color: var(--color-bg-main);
-        opacity: 0.14;
-        content: '';
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
       }
     }
   }

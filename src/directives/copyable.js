@@ -1,12 +1,18 @@
 /**
  * Custom directive 'copyable' to allow content copy-by-click on the element
- * @usage 1) connect   -> Vue.directive('copyable', DirectiveCopyable);
- * @usage 2) enjoy     -> <component v-copyable="{selector: CHILD_SELECTOR, callback: CALLBACK_FUNCTION" />
+ *
+ * @example
+ *  1) connect ->  Vue.directive('copyable', DirectiveCopyable);
+ *  2) enjoy   ->  <component v-copyable="{selector: CHILD_SELECTOR, callback: CALLBACK_FUNCTION" />
  *
  * Where selector is selector of child element whose content should be copied
  */
 export default {
   bind(el, binding, vNode) {
+    if (!binding.value.selector) {
+      return;
+    }
+
     if (typeof binding.value.selector !== 'string') {
       const compName = vNode.context.name;
 
@@ -47,5 +53,5 @@ export default {
     // Remove Event Listeners
     el.removeEventListener('click', el.__vueCopyable__);
     el.__vueCopyable___ = null;
-  }
+  },
 };

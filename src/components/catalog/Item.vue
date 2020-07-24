@@ -29,26 +29,26 @@ import CatalogItemLabel from './ItemLabel';
 export default {
   name: 'CatalogItem',
   components: {
-    CatalogItemLabel
+    CatalogItemLabel,
   },
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     image: {
       type: String,
-      required: true
+      required: true,
     },
     type: {
       type: String,
-      required: true
-    }
-  }
+      required: true,
+    },
+  },
 };
 </script>
 
@@ -62,11 +62,6 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   transition: all 120ms ease;
-
-  &:hover {
-    box-shadow: 0 2px 12px -5px rgba(0,0,0,0.65);
-    transform: translateY(-2px);
-  }
 
   &__header {
     height: 100px;

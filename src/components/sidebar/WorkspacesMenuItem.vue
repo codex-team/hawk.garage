@@ -6,6 +6,7 @@
     :title="workspace.name"
     :name="workspace.name"
     :image="workspace.image"
+    size="36"
   />
 </template>
 
@@ -15,7 +16,7 @@ import EntityImage from '../utils/EntityImage';
 export default {
   name: 'WorkspacesMenuItem',
   components: {
-    EntityImage
+    EntityImage,
   },
   props: {
     /**
@@ -23,21 +24,19 @@ export default {
      */
     workspace: {
       type: Object,
-      required: true
+      required: true,
     },
 
     /**
-     * @type {Boolean} is item selected
+     * @type {boolean} is item selected
      */
-    active: Boolean
-  }
+    active: Boolean,
+  },
 };
 </script>
 
 <style>
   .workspaces-menu-item {
-    width: 36px;
-    height: 36px;
     cursor: pointer;
     user-select: none;
 

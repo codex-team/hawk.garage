@@ -1,7 +1,9 @@
 /**
  * Custom directive 'click-outside' for handling outside clicks from components
- * @usage 1) connect   -> Vue.directive('click-outside', DirectiveClickOutside);
- * @usage 2) enjoy     -> <component v-click-outside="SOME_METHOD" />
+ *
+ * @example
+ *   1) connect ->  Vue.directive('click-outside', DirectiveClickOutside);
+ *   2) enjoy   ->  <component v-click-outside="SOME_METHOD" />
  *
  * where SOME_METHOD must be a function
  */
@@ -37,5 +39,5 @@ export default {
     // Remove Event Listeners
     document.removeEventListener('click', el.__vueClickOutside__);
     el.__vueClickOutside__ = null;
-  }
+  },
 };

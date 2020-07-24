@@ -1,20 +1,19 @@
-/* eslint no-shadow: ["error", { "allow": ["state"] }] */
 import {
   FETCH_INITIAL_DATA,
   SET_LANGUAGE
 } from './actionTypes';
-import * as workspacesApi from '../../../api/workspaces';
+import * as workspacesApi from '../../../api/workspaces/index.ts';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
 import { INIT_EVENTS_MODULE } from '../events/actionTypes';
-import { groupByDate } from '../../../utils';
+import { groupByGroupingTimestamp } from '../../../utils';
 
 /**
  * Mutations enum for this module
  */
 const mutationTypes = {
   SET_THEME: 'SET_THEME', // Set theme name,
-  SET_LANGUAGE: 'SET_LANGUAGE' // Set new language
+  SET_LANGUAGE: 'SET_LANGUAGE', // Set new language
 };
 
 /**
@@ -22,7 +21,7 @@ const mutationTypes = {
  */
 export const Themes = {
   DARK: 'dark',
-  LIGHT: 'light'
+  LIGHT: 'light',
 };
 
 /**
@@ -30,28 +29,43 @@ export const Themes = {
  */
 export const Languages = {
   en: 'en',
-  ru: 'ru'
+  ru: 'ru',
 };
 
 /**
  * Module state
+ *
  * @typedef {object} AppModuleState
  * @property {Themes} theme - name of the current theme
  * @property {Languages} language - app language
  */
 const state = {
   theme: Themes.DARK,
-  language: Languages.en
+  language: Languages.en,
 };
 
 const actions = {
   /**
    * Send query request to get information about all workspaces, projects and latest project's event
-   * @param {function} dispatch - standard Vuex dispatch function
-   * @return {Promise<void>}
+   *
+   * @param {Function} dispatch - standard Vuex dispatch function
+   * @returns {Promise<void>}
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
-    const workspaces = await workspacesApi.getAllWorkspacesWithProjects();
+    const response = await workspacesApi.getAllWorkspacesWithProjects();
+
+    /**
+     * Response can contain errors, so we should handle only existed fields
+     */
+    if (!response.data || !response.data.workspaces) {
+      console.error('FETCH_INITIAL_DATA: wrong response');
+
+      return;
+    }
+
+    const workspaces = response.data.workspaces;
+
+    dispatch(SET_WORKSPACES_LIST, workspaces);
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
@@ -61,11 +75,14 @@ const actions = {
         accumulator.push(...workspace.projects);
         delete workspace.projects;
       }
+
       return accumulator;
     }, []);
 
+    dispatch(SET_PROJECTS_LIST, projects);
+
     /**
-     * @type {Object<string, GroupedEvent>} - all fetched events
+     * @type {object<string, GroupedEvent>} - all fetched events
      */
     const events = {};
 
@@ -75,11 +92,11 @@ const actions = {
     const recentEvents = {};
 
     projects.forEach(project => {
-      if (!project.recentEvents) {
+      if (!project.recentEvents || !project.recentEvents.dailyInfo) {
         return;
       }
 
-      recentEvents[project.id] = groupByDate(project.recentEvents.dailyInfo);
+      recentEvents[project.id] = groupByGroupingTimestamp(project.recentEvents.dailyInfo);
 
       project.recentEvents.events.forEach(event => {
         events[project.id + ':' + event.id] = event;
@@ -87,24 +104,26 @@ const actions = {
       delete project.recentEvents;
     });
 
-    dispatch(SET_WORKSPACES_LIST, workspaces);
-    dispatch(SET_PROJECTS_LIST, projects);
-    dispatch(INIT_EVENTS_MODULE, { events, recentEvents });
+    dispatch(INIT_EVENTS_MODULE, {
+      events,
+      recentEvents,
+    });
   },
 
   /**
-   * @param {function} commit - standard Vuex dispatch function
+   * @param {Function} commit - standard Vuex dispatch function
    * @param {Languages} language - new language
-   * @return {Promise<void>}
+   * @returns {Promise<void>}
    */
   async [SET_LANGUAGE]({ commit }, language) {
     commit(mutationTypes.SET_LANGUAGE, language);
-  }
+  },
 };
 
 const mutations = {
   /**
    * Set theme name
+   *
    * @param {AppModuleState} state - app module state
    * @param {Themes} themeName - the name of the theme to be installed
    */
@@ -114,16 +133,17 @@ const mutations = {
 
   /**
    * Set app language
+   *
    * @param {AppModuleState} state - app module state
    * @param {Languages} language - new language
    */
   [mutationTypes.SET_LANGUAGE](state, language) {
     state.language = language;
-  }
+  },
 };
 
 export default {
   state,
   actions,
-  mutations
+  mutations,
 };

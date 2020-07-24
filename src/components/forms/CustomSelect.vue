@@ -17,6 +17,7 @@
         class="custom-select__option-image"
         :image="value.image"
         :name="value.name"
+        size="28"
       />
       {{ value.name }}
       <Icon
@@ -41,6 +42,7 @@
             class="custom-select__option-image"
             :image="option.image"
             :name="option.name"
+            size="28"
           />
           {{ option.name }}
         </div>
@@ -57,35 +59,35 @@ export default {
   name: 'CustomSelect',
   components: {
     EntityImage,
-    Icon
+    Icon,
   },
   props: {
     options: {
       type: Array,
-      required: true
+      required: true,
     },
     value: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     label: {
       type: String,
-      required: true
+      required: true,
     },
     needImage: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
-      isOpened: false
+      isOpened: false,
     };
   },
   computed: {
     filteredOption() {
       return this.options.filter(opt => opt !== this.value);
-    }
+    },
   },
   methods: {
     /**
@@ -93,8 +95,8 @@ export default {
      */
     close() {
       this.isOpened = false;
-    }
-  }
+    },
+  },
 }
 ;
 </script>
@@ -134,7 +136,7 @@ export default {
       top: 100%;
       right: 0;
       left: 0;
-      z-index: 1;
+      z-index: 2;
       margin-top: -5px;
       padding-top: 5px;
       background-color: var(--color-bg-main);
@@ -172,6 +174,7 @@ export default {
     }
 
     &--opened &__select {
+      z-index: 3;
       border-bottom: 1px solid transparent;
       border-bottom-right-radius: unset;
       border-bottom-left-radius: unset;
@@ -189,12 +192,7 @@ export default {
     }
 
     &__option-image {
-      display: inline-block;
-      width: 28px;
-      height: 28px;
       margin-right: 6px;
-      font-size: 13px;
-      line-height: 28px;
     }
   }
 </style>

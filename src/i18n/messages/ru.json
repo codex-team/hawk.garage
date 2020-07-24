@@ -8,7 +8,8 @@
     "password": "ПАРОЛЬ",
     "recoverPassword": "Восстановить пароль",
     "signUp": "Зарегистрироваться",
-    "signUpSubmitText": "Зарегистрироваться"
+    "signUpSubmitText": "Зарегистрироваться",
+    "recoverPasswordSuccessMessage": "Новый пароль отправлен на Ваш E-mail."
   },
   "components": {
     "changePasswordFieldSet": {
@@ -19,6 +20,9 @@
       "en": "Английский",
       "label": "Язык интерфейса",
       "ru": "Русский"
+    },
+    "codeBlock": {
+      "copy": "СКОПИРОВАТЬ"
     }
   },
   "forms": {
@@ -26,12 +30,65 @@
     "searchField": "Поиск"
   },
   "projects": {
+    "placeholder": "Выберите проект",
     "creationDialog": {
       "description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",
       "projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",
       "submitButton": "Создать проект",
       "title": "Добавить проект",
       "workspaceSelectLabel": "Выбрать воркспейс"
+    },
+    "settings": {
+      "remove": "Удалить проект",
+      "removeConfirmation": "Вы точно хотите удалить этот проект?",
+      "removeSuccess": "Проект успешно удалён",
+      "removeError": "Вы не можете удалить этот проект",
+      "general": {
+        "title": "Настройки проекта",
+        "image": "Изображение",
+        "description": "Описание",
+        "descriptionPlaceholder": "Лучший проект",
+        "submit": "Сохранить",
+        "created": "Создан 25 Авг, 2019",
+        "updatedMessage": "Настройки проекта обновлены"
+      },
+      "integrations": {
+        "title": "Интеграции",
+        "projectTokenLabel": "Интеграционный токен для проекта"
+      },
+      "notifications": {
+        "title": "Уведомления",
+        "addRule": "Добавление сценария",
+        "addRuleToggler": "Добавить новый сценарий",
+        "addRuleSubmit": "Начать получение",
+        "addRuleCancel": "Закрыть форму",
+        "addRuleSuccessMessage": "Добавлен новый сценарий",
+        "updateRuleSubmit": "Сохранить изменения",
+        "updateRuleSuccessMessage": "Настройки обновлены",
+        "rulesList": "Сценарии",
+        "sectionWhereToReceive": "Где получать",
+        "sectionWhatToReceive": "Что получать",
+        "sectionCustomFilters": "Фильтры",
+        "email": "На почту",
+        "emailDescription": "Не более одного письма в 10 минут",
+        "slack": "Slack",
+        "slackDescription": "Уведомления через Webhook App",
+        "telegram": "Telegram",
+        "telegramDescription": "Уведомления через @codex_bot",
+        "receiveNewLabel": "Только новые события",
+        "receiveNewDescription": "При первом получении",
+        "receiveAllLabel": "Все события",
+        "receiveAllDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
+        "includingWordsLabel": "Включающие слова",
+        "includingWordsDescription": "Только события, содержащие указанные слова",
+        "excludingWordsLabel": "Исключающие слова",
+        "excludingWordsDescription": "Пропустить события с такими словами",
+        "ruleIncludingLabel": "Со словами",
+        "ruleExcludingLabel": "Исключая слова",
+        "ruleIsEnabled": "Активно",
+        "editRule": "Редактировать",
+        "removeRule": "Удалить"
+      }
     }
   },
   "settings": {
@@ -54,7 +111,32 @@
     },
     "logout": "Выйти",
     "notifications": {
-      "title": "Уведомления"
+      "title": "Уведомления",
+      "channelsHeading": "Каналы",
+      "actionTypesHeading": "Типы событий",
+      "soon": "Скоро",
+      "channels": {
+        "email": "Email",
+        "webPush": "Браузерные пуши",
+        "desktopPush": "Пуши в приложении"
+      },
+      "channelDescriptions": {
+        "email": "Уведомления на",
+        "emailEmptyPlaceholder": "вашу почту",
+        "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
+        "webPush": "Уведомления даже при закрытой вкладке",
+        "desktopPush": "Системные уведомления через Hawk Desktop"
+      },
+      "actions": {
+        "IssueAssigning": "Назначение на задачу",
+        "WeeklyDigest": "Еженедельная сводка",
+        "SystemMessages": "Системные сообщения"
+      },
+      "actionDescriptions": {
+        "IssueAssigning": "Когда кто-нибудь назначает вас на задачу",
+        "WeeklyDigest": "Наиболее важные события за прошедшую неделю",
+        "SystemMessages": "Только критические сообщения от команды Hawk"
+      }
     }
   },
   "workspaces": {
@@ -66,6 +148,8 @@
     },
     "settings": {
       "label": "Настройка воркспейса",
+      "leave": "Покинуть воркспейс",
+      "leaveError": "Вы не можете покинуть воркспейс, так как вы последний администратор",
       "workspace": {
         "title": "Настройки воркспейса",
         "name": "Название",
@@ -81,11 +165,9 @@
         "inviteByEmailLabel": "Пригласить по email",
         "sendButton": "Отправить",
         "inviteByLinkLabel": "Пригласить по ссылке",
-        "copyButton": "Скопировать",
         "youLabel": "вы",
         "adminLabel": "Администратор",
         "invitationSentLabel": "приглашение отправлено",
-        "copiedNotification": "Скопировано!",
         "sentNotification": "Приглашение отправлено",
         "joinNotification": "Вы успешно присоединились к воркспейсу!",
         "brokenLinkNotification": "Ваша ссылка не действительна",
@@ -102,7 +184,7 @@
     "connectedCards": "Сохраненные карты",
     "detachCard": "Открепить карту",
     "addCardButton": "Добавить карту",
-    "members": "0 участников | 1 участник | {n} участника | {n} участников",
+    "members": "Нет участников | 1 участник | {n} участника | {n} участников",
     "currentBalance": "Баланс",
     "currentPlan": "План",
     "volume": "Емкость",
@@ -111,6 +193,7 @@
     "payCustomAmount": "Другая сумма",
     "requestInvoice": "Запросить счет",
     "paymentHistory": "История платежей",
+    "paymentHistoryEmpty": "Вы пока не совершили никаких операций",
     "all": "Все",
     "incomings": "Пополнения",
     "charges": "Списания",
@@ -118,14 +201,43 @@
     "payPeriod": "мес",
     "processPayment": {
       "header": "Пополнение баланса",
-      "description": "Чтобы получать события из вашего приложения, получите интеграционный токен, добавив проект.",
+      "description": "Здесь вы можете пополнить баланс воркспейса. После выбора суммы, вы будете переправлены на страницу платежной системы.",
       "workspaceSelectLabel": "Воркспейс",
       "cardSelectLabel": "Карта",
       "amountLabel": "Сумма",
       "submitButton": "Продолжить"
     }
   },
+  "event": {
+    "repetitions": {
+      "total": "Всего",
+      "since": "Начиная с",
+      "title": "Повторы",
+      "times": "Ни разу | {n} раз | {n} раза | {n} раз",
+      "days": " | {n} день | {n} дня | {n} дней"
+    },
+    "usersAffected": {
+      "total": "Всего",
+      "users": "{n} пользователь | {n} пользователей"
+    },
+    "navigation": {
+      "overview": "Обзор",
+      "repetitions": "Повторения",
+      "daily": "По дням",
+      "usersAffected": "Затронуло пользователей"
+    },
+    "resolve": "Исправлено",
+    "star": "В избранное",
+    "ignore": "Игнорировать",
+    "issue": "Создать задачу",
+    "loading": "Загрузка...",
+    "context": "Дополнительно",
+    "viewedBy": {
+      "assignee": "Исполнитель"
+    }
+  },
   "common": {
+    "copiedNotification": "Скопировано!",
     "months": [
       "января",
       "февраля",

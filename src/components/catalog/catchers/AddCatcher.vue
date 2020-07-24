@@ -48,7 +48,8 @@
           :name="item.name"
           :image="item.image"
           :description="item.description"
-          @click.native="$router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: item.page}})"
+          :class="{'project-add-catcher__catalog-item--not-implemented': !item.page}"
+          @click.native="item.page && $router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: item.page}})"
         />
       </div>
     </div>
@@ -64,47 +65,48 @@ const catalogItems = [
     name: 'NODE.JS',
     page: 'nodejs',
     description: 'Track errors from your backend application written on JavaScript',
-    image: require('../../../assets/catalog/nodejs.svg')
+    image: require('../../../assets/catalog/nodejs.svg'),
   },
   {
     name: 'PHP',
     page: 'php',
     description: 'Can be connected as standalone script or as monolog provider',
-    image: require('../../../assets/catalog/php.svg')
+    image: require('../../../assets/catalog/php.svg'),
+  },
+  {
+    name: 'JAVASCRIPT',
+    page: 'javascript',
+    description: 'Advanced client catcher with errors bunching',
+    image: require('../../../assets/catalog/javascript/js@3x.jpg'),
   },
   {
     name: 'PYTHON',
     description: 'Small, simple and full-featured catcher',
-    image: require('../../../assets/catalog/python.svg')
-  },
-  {
-    name: 'JAVASCRIPT',
-    description: 'Advanced client catcher with errors bunching',
-    image: require('../../../assets/catalog/javascript/js@3x.jpg')
+    image: require('../../../assets/catalog/python.svg'),
   },
   {
     name: 'GO',
     description: 'Deadly simple and fast errors tracking',
-    image: require('../../../assets/catalog/go/go@3x.jpg')
+    image: require('../../../assets/catalog/go/go@3x.jpg'),
   },
   {
     name: 'SCALA',
     description: 'Boost your scala application quality',
-    image: require('../../../assets/catalog/scala/scala@3x.jpg')
-  }
+    image: require('../../../assets/catalog/scala/scala@3x.jpg'),
+  },
 ];
 
 export default {
   name: 'ProjectAddCatcher',
   components: {
     Icon,
-    CatalogItem
+    CatalogItem,
   },
   data() {
     return {
-      items: catalogItems
+      items: catalogItems,
     };
-  }
+  },
 };
 </script>
 
@@ -245,6 +247,16 @@ export default {
 
     &__catalog-item {
       margin: 7.5px;
+
+      &--not-implemented {
+        opacity: 0.3;
+      }
+
+      &:not(&--not-implemented)&:hover {
+        box-shadow: 0 2px 12px -5px rgba(0,0,0,0.65);
+        transform: translateY(-2px);
+      }
+
     }
 
     &__catalog-container {

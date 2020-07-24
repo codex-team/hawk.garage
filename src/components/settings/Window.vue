@@ -6,7 +6,7 @@
         <slot name="menu" />
       </div>
       <div class="settings-window__content">
-        <router-view />
+        <slot name="content" />
       </div>
     </div>
   </PopupWindow>
@@ -18,14 +18,14 @@ import PopupWindow from '../utils/PopupWindow';
 export default {
   name: 'SettingsWindow',
   components: {
-    PopupWindow
+    PopupWindow,
   },
   props: {
     onCloseRoute: {
       type: String,
-      default: undefined
-    }
-  }
+      default: undefined,
+    },
+  },
 };
 </script>
 
@@ -59,10 +59,13 @@ export default {
     }
 
     &__menu-item {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 220px;
       height: 34px;
       margin: 3px -10px;
+      padding-right: 10px;
       padding-left: 10px;
       font-weight: 500;
       line-height: 34px;
@@ -77,6 +80,12 @@ export default {
       &--attention {
         color: var(--color-indicator-critical)
       }
+    }
+
+    &__menu-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--color-indicator-critical)
     }
 
     &__content {

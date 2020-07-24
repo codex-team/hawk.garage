@@ -4,6 +4,8 @@
       class="input form-search-field__input"
       type="search"
       :placeholder="$t('forms.searchField')"
+      :value="value"
+      @input="$emit('input', $event.target.value)"
     >
     <Icon
       class="form-search-field__search-icon"
@@ -19,8 +21,14 @@ import Icon from '../utils/Icon';
 export default {
   name: 'FormSearchField',
   components: {
-    Icon
-  }
+    Icon,
+  },
+  props: {
+    value: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 

@@ -42,44 +42,95 @@
   </PopupDialog>
 </template>
 
-<script>
-import PopupDialog from '../utils/PopupDialog';
-import CustomSelect from '../forms/CustomSelect';
-import { cards } from '../billing/Cards';
-import { mapState } from 'vuex';
+<script lang="ts">
+import PopupDialog from '../utils/PopupDialog.vue';
+import CustomSelect from '../forms/CustomSelect.vue';
 import * as billingApi from '../../api/billing';
+import { Vue, Component } from 'vue-property-decorator';
+import { Workspace } from '@/types/workspaces';
 
-export default {
+const cards = [
+  {
+    id: '1',
+    number: '**** **** **** 3123',
+    name: '**** **** **** 3123',
+  },
+  {
+    id: '2',
+    number: '**** **** **** 3122',
+    name: '**** **** **** 3122',
+  },
+  {
+    id: '3',
+    number: '**** **** **** 3121',
+    name: '**** **** **** 3121',
+  },
+];
+
+@Component({
   name: 'ProcessPaymentDialog',
-  components: { PopupDialog, CustomSelect },
-  data() {
-    return {
-      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0],
-      card: cards[0],
-      amount: this.$store.state.modalDialog.data.amount
-    };
+  components: {
+    PopupDialog,
+    CustomSelect,
   },
-  computed: {
-    ...mapState({
-      workspaces: state => state.workspaces.list
-    }),
-    cards() {
-      return cards;
-    }
-  },
-  methods: {
-    async processPayment() {
-      console.log(this.workspace, this.amount);
-      const language = this.$store.state.app.language;
+})
+/**
+ * Dialog for payment
+ */
+export default class ProcessPaymentDialog extends Vue {
+  /**
+   * Workspace to pay for
+   */
+  private workspace: Workspace;
 
-      const { PaymentURL } = await billingApi.getPaymentLink({
-        workspaceId: this.workspace.id,
-        amount: this.amount,
-        language
-      });
+  /**
+   * Card to pay from
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+  private card: object;
 
-      window.location.replace(PaymentURL);
-    }
+  /**
+   * Amount of money to pay
+   */
+  private amount: number;
+
+  /**
+   * Component constructor for data initialization
+   */
+  constructor() {
+    super();
+    this.workspace = this.$store.state.workspaces.current || this.$store.state.workspaces.list[0];
+    this.card = cards[0];
+    this.amount = this.$store.state.modalDialog.data.amount;
+  }
+
+  /**
+   * Method for payment processing
+   */
+  async processPayment(): Promise<void> {
+    const language = this.$store.state.app.language.toUpperCase();
+
+    const { paymentURL } = await billingApi.getPaymentLink({
+      workspaceId: this.workspace.id,
+      amount: +this.amount,
+      language,
+    });
+
+    window.location.replace(paymentURL);
+  }
+
+  /**
+   * Card list for testing
+   */
+  get cards() {
+    return cards;
+  }
+
+  /**
+   * Workspaces list
+   */
+  get workspaces(): Workspace[] {
+    return this.$store.state.workspaces.list;
   }
 };
 </script>

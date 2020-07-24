@@ -27,11 +27,11 @@ import CloseButton from './CloseButton';
 export default {
   name: 'PopupDialog',
   components: {
-    CloseButton
+    CloseButton,
   },
   props: {
-    big: Boolean
-  }
+    big: Boolean,
+  },
 };
 </script>
 
@@ -75,7 +75,8 @@ export default {
     &__wrapper {
       position: relative;
       display: flex;
-      max-width: 90%;
+      flex-direction: column;
+      max-width: 1000px;
       margin: auto 0;
       background-color: var(--color-bg-second);
       border-radius: 3px;
@@ -83,6 +84,7 @@ export default {
 
       &--big {
         flex-grow: 1;
+        margin: 0 0 auto;
       }
     }
 

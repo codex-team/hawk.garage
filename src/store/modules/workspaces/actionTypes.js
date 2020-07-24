@@ -14,9 +14,9 @@ export const SET_CURRENT_WORKSPACE = 'SET_CURRENT_WORKSPACE';
 export const CREATE_WORKSPACE = 'CREATE_WORKSPACE';
 
 /**
- * Send request to remove workspace
+ * Leave current workspace
  */
-export const REMOVE_WORKSPACE = 'REMOVE_WORKSPACE';
+export const LEAVE_WORKSPACE = 'LEAVE_WORKSPACE';
 
 /**
  * Send request to invite user to workspace
@@ -37,11 +37,6 @@ export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
  * Send request to get workspaces
  */
 export const FETCH_WORKSPACE = 'FETCH_WORKSPACE';
-
-/**
- * Fetch many workspaces by their ids
- */
-export const FETCH_WORKSPACES = 'FETCH_WORKSPACE';
 
 /**
  * Send request to grant admin permissions

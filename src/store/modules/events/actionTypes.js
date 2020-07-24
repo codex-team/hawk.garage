@@ -4,16 +4,41 @@
 export const INIT_EVENTS_MODULE = 'INIT_EVENTS_MODULE';
 
 /**
- * Fetch project recent events
+ * Action for fetching event concrete repetition
  */
-export const FETCH_PROJECT_RECENT_EVENTS = 'FETCH_PROJECT_RECENT_EVENTS';
+export const FETCH_EVENT_REPETITION = 'FETCH_EVENT_REPETITION';
 
 /**
- * @type {string}
+ * Fetch project recent events
+ */
+export const FETCH_RECENT_EVENTS = 'FETCH_RECENT_EVENTS';
+
+/**
+ * Action for fetching latest event's repetitions
  */
 export const FETCH_EVENT_REPETITIONS = 'FETCH_EVENT_REPETITIONS';
 
 /**
- * @type {string}
+ * Action that returns last event: original event merged with last repetition
  */
-export const SAVE_EVENT = 'FETCH_EVENT';
+export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';
+
+/**
+ * Action for marking event as visited
+ */
+export const VISIT_EVENT = 'VISIT_EVENT';
+
+/**
+ * Action to set or unset mark to event
+ */
+export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';
+
+/**
+ * Update event assigneee
+ */
+export const UPDATE_EVENT_ASSIGNEE = 'UPDATE_EVENT_ASSIGNEE';
+
+/**
+ * Remove event assignee
+ */
+export const REMOVE_EVENT_ASSIGNEE = 'REMOVE_EVENT_ASSIGNEE';

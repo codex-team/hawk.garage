@@ -1,3 +1,6 @@
+import { USER_NOTIFICATIONS_FRAGMENT } from '../fragments';
+
+// language=GraphQL
 /**
  * Login mutation
  */
@@ -10,6 +13,7 @@ mutation login($email: String!, $password: String!) {
 }
 `;
 
+// language=GraphQL
 /**
  * SignUp mutation
  */
@@ -19,6 +23,17 @@ mutation signUp($email: String!) {
 }
 `;
 
+// language=GraphQL
+/**
+ * Recover password mutation
+ */
+export const MUTATION_RECOVER_PASSWORD = `
+mutation recoverPassword($email: String!) {
+  resetPassword(email: $email)
+}
+`;
+
+// language=GraphQL
 /**
  * Mutation for refreshing tokens
  */
@@ -31,6 +46,7 @@ mutation refreshTokens($refreshToken: String!) {
 }
 `;
 
+// language=GraphQL
 /**
  * Query to get current user
  */
@@ -45,18 +61,21 @@ query getCurrentUser {
 }
 `;
 
+// language=GraphQL
 /**
  * Mutation to update user profile
  */
 export const MUTATION_UPDATE_PROFILE = `
-mutation User($name: String!, $email: String!) {
+mutation User($name: String!, $email: String!, $image: Upload) {
   updateProfile (
     name: $name
     email: $email
+    image: $image
   )
 }
 `;
 
+// language=GraphQL
 /**
  * Mutation to change user password
  */
@@ -67,4 +86,56 @@ mutation User($oldPassword: String!, $newPassword: String!) {
     newPassword: $newPassword
   )
 }
+`;
+
+// language=GraphQL
+/**
+ * Query to get current user
+ */
+export const QUERY_CURRENT_USER_WITH_NOTIFICATIONS = `
+${USER_NOTIFICATIONS_FRAGMENT}
+
+query getCurrentUser {
+  me {
+    notifications {
+      ...UserNotifications
+    }
+  }
+}
+`;
+
+// language=GraphQL
+/**
+ * Mutation to update user notifications channel
+ */
+export const MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL = `
+  mutation changeUserNotificationsChannel($input: NotificationsChannelsInput!) {
+    changeUserNotificationsChannel (
+      input: $input
+    ) {
+      notifications {
+        ...UserNotifications
+      }
+    }
+  }
+
+  ${USER_NOTIFICATIONS_FRAGMENT}
+`;
+
+// language=GraphQL
+/**
+ * Mutation to update user notifications receive type
+ */
+export const MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE = `
+  mutation changeUserNotificationsReceiveType($input: ChangeUserNotificationsReceiveTypeInput!) {
+    changeUserNotificationsReceiveType (
+      input: $input
+    ) {
+      notifications {
+        ...UserNotifications
+      }
+    }
+  }
+
+  ${USER_NOTIFICATIONS_FRAGMENT}
 `;

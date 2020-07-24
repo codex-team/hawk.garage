@@ -13,10 +13,10 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest);
 workbox.routing.registerNavigationRoute('/index.html');
 
 // Don't wait until old service worker stop
-workbox.skipWaiting();
+workbox.core.skipWaiting();
 
 // Claim any currently available clients once the service worker becomes active
-workbox.clientsClaim();
+workbox.core.clientsClaim();
 
 // Cache all images (such as favicons)
 workbox.routing.registerRoute(

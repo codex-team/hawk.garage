@@ -1,0 +1,91 @@
+.hljs {
+  display: block;
+  overflow-x: auto;
+}
+
+.hljs,
+.hljs-subst {
+  color: color-mod(var(--color-text-main) alpha(65%));
+}
+
+.hljs-comment {
+  color: color-mod(var(--color-text-main) alpha(35%));
+}
+
+.hljs-keyword,
+.hljs-attribute,
+.hljs-selector-tag,
+.hljs-meta-keyword,
+.hljs-doctag,
+.hljs-name {
+  color: #e961d0;
+}
+
+.hljs-attr {
+  color: #f5d50e;
+}
+
+.hljs-params {
+  color: #f08a1e;
+}
+
+/* User color: hue: 0 */
+
+.hljs-type,
+.hljs-string,
+.hljs-number,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-quote,
+.hljs-template-tag,
+.hljs-deletion {
+  color: #2ccf6c;
+}
+
+.hljs-title,
+.hljs-section {
+  color: #27a4ef;
+}
+
+.hljs-regexp,
+.hljs-symbol,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #BC6060;
+}
+
+/* Language color: hue: 90; */
+
+.hljs-literal {
+  color: #a86cde;
+}
+
+.hljs-built_in,
+.hljs-bullet,
+.hljs-code,
+.hljs-addition {
+  color: #ff9be8;
+}
+
+/* Meta color: hue: 200 */
+
+.hljs-meta {
+  color: #a16fd2;
+}
+
+.hljs-meta-string {
+  color: #4d99bf;
+}
+
+/* Misc effects */
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

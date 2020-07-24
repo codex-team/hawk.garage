@@ -5,6 +5,7 @@
       class="workspace-info__image"
       :name="workspace.name"
       :image="workspace.image"
+      size="36"
     />
     <div class="workspace-info__wrapper">
       <div class="workspace-info__name">
@@ -18,6 +19,7 @@
       </router-link>
     </div>
     <Icon
+      v-if="isAdmin"
       class="workspace-info__project-creation-button"
       symbol="plus"
       @click.native="createProjectButtonClicked"
@@ -28,14 +30,13 @@
 <script>
 import Icon from '../utils/Icon';
 import EntityImage from '../utils/EntityImage';
-import ProjectCreationDialog from '../modals/ProjectCreationDialog';
 import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 
 export default {
   name: 'WorkspaceInfo',
   components: {
     EntityImage,
-    Icon
+    Icon,
   },
   props: {
     /**
@@ -43,14 +44,22 @@ export default {
      */
     workspace: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
+  },
+  computed: {
+    /**
+     * @returns {boolean} - shows whether the current user is an admin for this workspace
+     */
+    isAdmin() {
+      return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
+    },
   },
   methods: {
     createProjectButtonClicked() {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -62,17 +71,23 @@ export default {
     font-size: 14px;
     line-height: 16px;
 
+    &__wrapper {
+      max-width: 200px;
+    }
+
     &__image {
-      width: 36px;
-      height: 36px;
       margin-right: 15px;
     }
 
     &__name {
+      overflow: hidden;
       font-weight: 600;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__settings-link {
+      display: block;
       margin-top: 2px;
       color: var(--color-text-second);
       cursor: pointer;
