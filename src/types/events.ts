@@ -29,24 +29,19 @@ export enum EventsSortOrder {
  */
 export interface EventsFilters {
   /**
-   * Should events withour marks be included
-   */
-  noMarks: boolean;
-
-  /**
    * Should events with resolved mark be included
    */
-  resolved: boolean;
+  resolved?: boolean;
 
   /**
    * Should events with starred mark be included
    */
-  starred: boolean;
+  starred?: boolean;
 
   /**
    * Should events with ignored mark be included
    */
-  ignored: boolean;
+  ignored?: boolean;
 }
 
 /**

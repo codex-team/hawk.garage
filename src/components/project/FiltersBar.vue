@@ -74,34 +74,17 @@ export default Vue.extend({
        * Available filter options
        */
       filtersOptions: {
-        all: {
-          noMarks: true,
-          starred: true,
-          ignored: true,
-          resolved: true,
-        },
+        all: {},
         starred: {
-          noMarks: false,
           starred: true,
-          ignored: false,
-          resolved: false,
         },
         resolved: {
-          noMarks: false,
-          starred: false,
-          ignored: false,
           resolved: true,
         },
         unresolved: {
-          noMarks: true,
-          starred: true,
-          ignored: true,
           resolved: false,
         },
         hidden: {
-          noMarks: false,
-          starred: false,
-          resolved: false,
           ignored: true,
         },
       },
@@ -134,7 +117,9 @@ export default Vue.extend({
       let filter = 'all';
 
       Object.entries(this.filtersOptions).some(([key, filters]) => {
-        const isEqual = Object
+        const isLengthsEqual = Object.values(filters).length === Object.values(this.filters).length;
+
+        const isEqual = isLengthsEqual && Object
           .entries(filters)
           .reduce((acc, [mark, value]) => {
             return acc && this.filters[mark] === value;

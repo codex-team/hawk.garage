@@ -329,12 +329,7 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} projectId - project to get filters for
        */
       return (projectId: string): EventsFilters => {
-        return state.filters[projectId]?.filters || {
-          noMarks: true,
-          starred: true,
-          ignored: true,
-          resolved: true,
-        };
+        return state.filters[projectId]?.filters || {};
       };
     },
 
