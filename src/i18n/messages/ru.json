@@ -30,6 +30,21 @@
     "searchField": "Поиск"
   },
   "projects": {
+    "filters": {
+      "filtersLabel": "Фильтр",
+      "filtersOptions": {
+        "all": "Все",
+        "starred": "Избранные",
+        "resolved": "Исправленные",
+        "unresolved": "Неисправленные",
+        "hidden": "Игнорируемые"
+      },
+      "sortLabel": "Соритровать",
+      "sortOptions": {
+        "byDate": "По дате",
+        "byCount": "По количеству"
+      }
+    },
     "placeholder": "Выберите проект",
     "creationDialog": {
       "description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",

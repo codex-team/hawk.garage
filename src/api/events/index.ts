@@ -8,7 +8,14 @@ import {
   QUERY_RECENT_PROJECT_EVENTS
 } from './queries';
 import * as api from '@/api';
-import { EventMark, EventsWithDailyInfo, HawkEvent, HawkEventRepetition } from '@/types/events';
+import {
+  EventMark,
+  EventsFilters,
+  EventsSortOrder,
+  EventsWithDailyInfo,
+  HawkEvent,
+  HawkEventRepetition
+} from '@/types/events';
 import { User } from '@/types/user';
 
 /**
@@ -32,12 +39,26 @@ export async function getEvent(projectId: string, eventId: string, repetitionId:
  *
  * @param {string} projectId - id of the project to fetch recent errors
  * @param {number} skip - certain number of documents to skip
+ * @param {EventsSortOrder} sort - events sort order to use
+ * @param {EventsFilters} filters - events filters to use
  * @returns {Promise<EventsWithDailyInfo>}
  */
-export async function fetchRecentEvents(projectId: string, skip = 0): Promise<EventsWithDailyInfo | null> {
+export async function fetchRecentEvents(
+  projectId: string,
+  skip = 0,
+  sort = EventsSortOrder.ByDate,
+  filters: EventsFilters = {
+    noMarks: true,
+    ignored: true,
+    resolved: true,
+    starred: true,
+  }
+): Promise<EventsWithDailyInfo | null> {
   return (await api.call(QUERY_RECENT_PROJECT_EVENTS, {
     projectId,
     skip,
+    sort,
+    filters,
   })).project.recentEvents;
 }
 
@@ -110,13 +131,13 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param {string} eventId - event id
  * @param {string} assignee - user id to assign
  */
-export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean, record: User }> {
+export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean; record: User }> {
   return (await api.call(MUTATION_UPDATE_EVENT_ASSIGNEE, {
     input: {
       projectId,
       eventId,
       assignee,
-    }
+    },
   })).events.updateAssignee;
 }
 
@@ -130,7 +151,7 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
   return (await api.call(MUTATION_REMOVE_EVENT_ASSIGNEE, {
     input: {
       projectId,
-      eventId
-    }
+      eventId,
+    },
   })).events.removeAssignee;
 }
