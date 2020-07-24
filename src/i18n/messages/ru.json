@@ -39,7 +39,7 @@
         "unresolved": "Неисправленные",
         "hidden": "Игнорируемые"
       },
-      "sortLabel": "Соритровать",
+      "sortLabel": "Сортировать",
       "sortOptions": {
         "byDate": "По дате",
         "byCount": "По количеству"

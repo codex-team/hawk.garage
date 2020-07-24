@@ -302,7 +302,7 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {EventsModuleState} state - Vuex state
      */
-    getLatestEvent(state) {
+    getLatestEvent(state: EventsModuleState): ((projectId: string) => HawkEvent | null) {
       /**
        * @param {string} projectId - event's project id
        */
@@ -324,7 +324,7 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {EventsModuleState} state - module state
      */
-    getProjectFilters(state) {
+    getProjectFilters(state: EventsModuleState): (projectId: string) => EventsFilters {
       /**
        * @param {string} projectId - project to get filters for
        */
@@ -338,7 +338,7 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {EventsModuleState} state - module state
      */
-    getProjectOrder(state) {
+    getProjectOrder(state: EventsModuleState): (projectId: string) => EventsSortOrder {
       /**
        * @param {string} projectId - project to get order for
        */
@@ -374,7 +374,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} projectId - id of the project to fetch data
      * @returns {Promise<boolean>} - true if there are no more events
      */
-    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId }): Promise<boolean> {
+    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId }: { projectId: string }): Promise<boolean> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
       const recentEvents = await eventsApi.fetchRecentEvents(
         projectId,
@@ -810,7 +810,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsSortOrder} order - order to set
      * @param {string} projectId - project to set order for
      */
-    [SET_EVENTS_ORDER](state, { order, projectId }): void {
+    [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder; projectId: string }): void {
       if (!state.filters[projectId]) {
         Vue.set(state.filters, projectId, {});
       }
@@ -825,7 +825,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsFilters} filters - filters object to set
      * @param {string} projectId - project to set filters for
      */
-    [SET_EVENTS_FILTERS](state, { filters, projectId }): void {
+    [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters; projectId: string }): void {
       if (!state.filters[projectId]) {
         Vue.set(state.filters, projectId, {});
       }
@@ -839,7 +839,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - module state
      * @param {string} projectId - project to clear
      */
-    [MutationTypes.CLEAR_RECENT_EVENTS_LIST](state, { projectId }): void {
+    [MutationTypes.CLEAR_RECENT_EVENTS_LIST](state: EventsModuleState, { projectId }: { projectId: string }): void {
       Vue.set(state.recent, projectId, {});
 
       loadedEventsCount[projectId] = 0;
@@ -851,7 +851,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - module state
      * @param {HawkEventsDailyInfoByProject} recentEvents - projects' recent events
      */
-    [MutationTypes.SET_LATEST_EVENTS](state, recentEvents: HawkEventsDailyInfoByProject): void {
+    [MutationTypes.SET_LATEST_EVENTS](state: EventsModuleState, recentEvents: HawkEventsDailyInfoByProject): void {
       Object
         .entries(recentEvents)
         .forEach(([projectId, eventsByTimestamp]) => {
