@@ -47,12 +47,7 @@ export async function fetchRecentEvents(
   projectId: string,
   skip = 0,
   sort = EventsSortOrder.ByDate,
-  filters: EventsFilters = {
-    noMarks: true,
-    ignored: true,
-    resolved: true,
-    starred: true,
-  }
+  filters: EventsFilters = {}
 ): Promise<EventsWithDailyInfo | null> {
   return (await api.call(QUERY_RECENT_PROJECT_EVENTS, {
     projectId,
