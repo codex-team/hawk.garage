@@ -37,15 +37,16 @@
         "starred": "Избранные",
         "resolved": "Исправленные",
         "unresolved": "Неисправленные",
-        "hidden": "Игнорируемые"
+        "ignored": "Игнорируемые"
       },
-      "sortLabel": "Соритровать",
+      "sortLabel": "Сортировать",
       "sortOptions": {
-        "byDate": "По дате",
+        "byDate": "По времени",
         "byCount": "По количеству"
       }
     },
     "placeholder": "Выберите проект",
+    "loadMoreEvents": "Загрузить больше событий",
     "creationDialog": {
       "description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",
       "projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",

@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import FlatButton from '../utils/FlatButton.vue';
+import FlatButton from '../utils/FilterButton.vue';
 import Icon from '../utils/Icon.vue';
 import { EventsFilters, EventsSortOrder } from '../../types/events';
 import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER } from '../../store/modules/events/actionTypes';
@@ -55,7 +55,7 @@ interface FiltersBarData {
     starred: EventsFilters,
     resolved: EventsFilters,
     unresolved: EventsFilters,
-    hidden: EventsFilters
+    ignored: EventsFilters
   },
   sortOptions: {
     [K in EventsSortOrder]: string
@@ -84,7 +84,7 @@ export default Vue.extend({
         unresolved: {
           resolved: false,
         },
-        hidden: {
+        ignored: {
           ignored: true,
         },
       },

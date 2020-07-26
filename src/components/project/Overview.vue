@@ -11,6 +11,7 @@
         class="project-overview__chart"
       />
       <FiltersBar />
+      <!-- TODO: Add placeholder if there is no filtered events -->
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -37,7 +38,7 @@
           :class="{'loader': isLoadingEvents}"
           @click="loadMoreEvents"
         >
-          <span v-if="!isLoadingEvents">Load more events</span>
+          <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
         </div>
         <AssigneesList
           v-if="isAssigneesShowed"
