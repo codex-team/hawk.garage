@@ -376,10 +376,11 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId }: { projectId: string }): Promise<boolean> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
+      const eventsSortOrder = getters.getProjectOrder(projectId);
       const recentEvents = await eventsApi.fetchRecentEvents(
         projectId,
         loadedEventsCount[projectId] || 0,
-        getters.getProjectOrder(projectId),
+        eventsSortOrder,
         getters.getProjectFilters(projectId)
       );
 
@@ -387,7 +388,10 @@ const module: Module<EventsModuleState, RootState> = {
         return true;
       }
 
-      const eventsGroupedByDate = groupByGroupingTimestamp(recentEvents.dailyInfo);
+      const eventsGroupedByDate = groupByGroupingTimestamp(
+        recentEvents.dailyInfo,
+        eventsSortOrder !== EventsSortOrder.ByCount
+      );
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
 

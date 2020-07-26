@@ -37,15 +37,16 @@
         "starred": "Starred",
         "resolved": "Resolved",
         "unresolved": "Unresolved",
-        "hidden": "Hidden"
+        "ignored": "Ignored"
       },
       "sortLabel": "Sort",
       "sortOptions": {
-        "byDate": "By date",
+        "byDate": "By time",
         "byCount": "By count"
       }
     },
     "placeholder": "No project selected",
+    "loadMoreEvents": "Load more events",
     "creationDialog": {
       "description": "To start track events from your application, add it as a Project and get an Integration Token.",
       "projectNameLabel": "PROJECT NAME",

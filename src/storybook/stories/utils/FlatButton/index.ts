@@ -1,11 +1,11 @@
-import FlatButton from '@/components/utils/FlatButton.vue';
+import FilterButton from '@components/utils/FilterButton.vue';
 import { action } from '@storybook/addon-actions';
 import { withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 
 export default {
-  title: 'Utils/FlatButton',
-  component: FlatButton,
+  title: 'Utils/FilterButton',
+  component: FilterButton,
   decorators: [withKnobs, centered],
 };
 
@@ -14,9 +14,9 @@ const methods = {
 };
 
 export const Default = (): unknown => ({
-  components: { FlatButton },
+  components: { FilterButton },
   template: `
-    <FlatButton :content="content" @click="click" />
+    <FilterButton :content="content" @click="click" />
   `,
   props: {
     content: {
@@ -28,9 +28,9 @@ export const Default = (): unknown => ({
 });
 
 export const Active = (): unknown => ({
-  components: { FlatButton },
+  components: { FilterButton },
   template: `
-    <FlatButton :content="content" @click="click" active />
+    <FilterButton :content="content" @click="click" active />
   `,
   props: {
     content: {
