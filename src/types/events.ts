@@ -16,12 +16,12 @@ export enum EventsSortOrder {
   /**
    * Sort by timestamp of the last event repetition
    */
-  ByDate = 'lastRepetitionTime',
+  ByDate = 'BY_DATE',
 
   /**
    * Sort by events count
    */
-  ByCount = 'count'
+  ByCount = 'BY_COUNT'
 }
 
 /**

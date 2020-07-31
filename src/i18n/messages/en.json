@@ -47,6 +47,7 @@
     },
     "placeholder": "No project selected",
     "loadMoreEvents": "Load more events",
+    "noEventsPlaceholder": "No events found with this filter",
     "creationDialog": {
       "description": "To start track events from your application, add it as a Project and get an Integration Token.",
       "projectNameLabel": "PROJECT NAME",
