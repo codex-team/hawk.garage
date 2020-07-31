@@ -47,6 +47,7 @@
     },
     "placeholder": "Выберите проект",
     "loadMoreEvents": "Загрузить больше событий",
+    "noEventsPlaceholder": "Нет событий для этого фильтра",
     "creationDialog": {
       "description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",
       "projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",

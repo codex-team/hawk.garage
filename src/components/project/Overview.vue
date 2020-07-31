@@ -33,12 +33,19 @@
           />
         </div>
         <div
-          v-if="!noMoreEvents"
+          v-if="Object.keys(recentEvents).length && !noMoreEvents"
           class="project-overview__load-more"
           :class="{'loader': isLoadingEvents}"
           @click="loadMoreEvents"
         >
           <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
+        </div>
+        <div
+          v-if="Object.keys(recentEvents).length === 0"
+          class="project-overview__no-events-placeholder"
+        >
+          <div class="project-overview__divider" />
+          {{ $t('projects.noEventsPlaceholder') }}
         </div>
         <AssigneesList
           v-if="isAssigneesShowed"
@@ -328,6 +335,20 @@ export default {
       background-color: var(--color-bg-main);
       border-radius: 9px;
       cursor: pointer;
+    }
+
+    &__no-events-placeholder {
+      font-size: 14px;
+      letter-spacing: 0;
+      color: var(--color-text-second);
+    }
+
+    &__divider {
+      width: 68px;
+      height: 3px;
+      margin: 40px 0 20px;
+      border-radius: 2px;
+      background: var(--color-text-second);
     }
   }
 </style>
