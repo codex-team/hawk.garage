@@ -140,6 +140,10 @@
     }
   },
   "workspaces": {
+    "chooseTariffPlanDialog": {
+      "title": "Choose a plan",
+      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you want a free unlimited access for non-profit products, contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>"
+    },
     "creationDialog": {
       "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
       "submitButton": "Create workspace",
@@ -238,6 +242,11 @@
   },
   "common": {
     "copiedNotification": "Copied!",
+    "free": "FREE",
+    "select": "Select",
+    "continue": "Continue",
+    "eventsPerMonth": "events / mo",
+    "dollarsPerMonth": "$ / mo",
     "months": [
       "january",
       "february",

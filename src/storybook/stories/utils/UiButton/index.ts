@@ -59,10 +59,18 @@ export const Loading = (): unknown => ({
   methods,
 });
 
+export const Rounded = (): unknown => ({
+  components: { UiButton },
+  template: `
+    <UiButton content="Click Me" rounded @click="click" />
+  `,
+  methods,
+});
+
 export const WithKnobs = (): unknown => ({
   components: { UiButton },
   template: `
-    <UiButton :content="content" :icon="icon" :submit="submit" :small="small" :is-loading="isLoading" @click="click" />
+    <UiButton :content="content" :rounded="rounded" :icon="icon" :submit="submit" :small="small" :is-loading="isLoading" @click="click" />
   `,
   props: {
     content: {
@@ -84,6 +92,10 @@ export const WithKnobs = (): unknown => ({
     isLoading: {
       type: Boolean,
       default: boolean('isLoading', false),
+    },
+    rounded: {
+      type: Boolean,
+      default: boolean('Rounded', false),
     },
   },
   methods,
