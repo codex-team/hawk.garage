@@ -23,7 +23,10 @@
         {{ $t('billing.charges') }}
       </div>
     </div>
-    <template v-if="transactions && transactions.length">
+    <div class="billing-history__loader" v-if="isLoading">
+      {{ $t('common.loading') }}
+    </div>
+    <template v-else-if="transactions && transactions.length">
       <div
         v-for="(transaction, i) in transactions"
         :key="i"
@@ -62,17 +65,30 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import EntityImage from '../EntityImage';
+import { PaymentOperation } from '@/types/payment-operation';
 // import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
 
-export default {
+export default Vue.extend({
   name: 'BillingHistory',
   components: { EntityImage },
   props: {
-    workspace: {
-      type: Object,
-      default: undefined,
+    /**
+     * List of payment operations
+     */
+    operations: {
+      type: Array as PaymentOperation[],
+      required: true,
+    },
+
+    /**
+     * Used to show preloader
+     */
+    isLoading: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -154,7 +170,7 @@ export default {
       }
     },
   },
-};
+});
 </script>
 
 <style>

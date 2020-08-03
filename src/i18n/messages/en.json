@@ -238,6 +238,7 @@
   },
   "common": {
     "copiedNotification": "Copied!",
+    "loading": "Loading...",
     "months": [
       "january",
       "february",

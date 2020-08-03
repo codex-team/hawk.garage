@@ -238,6 +238,7 @@
   },
   "common": {
     "copiedNotification": "Скопировано!",
+    "loading": "Загрузка...",
     "months": [
       "января",
       "февраля",

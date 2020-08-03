@@ -4,49 +4,79 @@
       {{ $t('workspaces.settings.billing.title') }}
     </div>
     <BillingCard :workspace="workspace" />
-    <BillingHistory :workspace="workspace" />
+    <BillingHistory
+      :operations="paymentsHistory"
+      :is-loading="isPaymentsHistoryLoading"
+    />
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import BillingCard from './BillingOverview';
-import BillingHistory from '../../utils/billing/History';
+import BillingHistory from '../../utils/billing/History.vue';
 import { FETCH_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
+import { PaymentOperation } from '@/types/payment-operation';
+import { Workspace } from '@/types/workspaces';
+import { GET_TRANSACTIONS } from '@/store/modules/workspaces/actionTypes';
 
-export default {
+
+export default Vue.extend({
   name: 'WorkspaceSettingsBilling',
   components: {
     BillingHistory,
     BillingCard,
   },
-  // Do not show billing page by direct link if user is not admin
-  beforeRouteEnter(to, from, next) {
-    next(async vm => {
-      const user = vm.$store.state.user.data;
+  data(): {
+    paymentsHistory: PaymentOperation[],
+    isPaymentsHistoryLoading: boolean,
+    } {
+    return {
+      /**
+       * List of payment operations
+       */
+      paymentsHistory: [] as PaymentOperation[],
 
-      if (!vm.workspace.users) {
-        await vm.$store.dispatch(FETCH_WORKSPACE, to.params.workspaceId);
-      }
-
-      const { isAdmin } = vm.workspace.users.find(u => u.id === user.id);
-
-      if (!isAdmin) {
-        next({ name: 'workspace-settings' });
-
-        return;
-      }
-
-      next();
-    });
+      /**
+       * Flag determines the loading of the history
+       */
+      isPaymentsHistoryLoading: false,
+    };
   },
+  // Do not show billing page by direct link if user is not admin
+  // beforeRouteEnter(to, from, next): void {
+  //   next(async vm => {
+  //     const user = vm.$store.state.user.data;
+  //
+  //     if (!vm.workspace.users) {
+  //       await vm.$store.dispatch(FETCH_WORKSPACE, to.params.workspaceId);
+  //     }
+  //
+  //     const { isAdmin } = vm.workspace.users.find(u => u.id === user.id);
+  //
+  //     if (!isAdmin) {
+  //       next({ name: 'workspace-settings' });
+  //
+  //       return;
+  //     }
+  //
+  //     next();
+  //   });
+  // },
   computed: {
-    workspace() {
+    workspace(): Workspace {
       const workspaceId = this.$route.params.workspaceId;
 
       return this.$store.getters.getWorkspaceById(workspaceId);
     },
   },
-};
+  mounted(): void {
+    this.isPaymentsHistoryLoading = true;
+
+    this.$store.dispatch(GET_TRANSACTIONS);
+
+  },
+});
 </script>
 
 <style src="../../../styles/settings-window-page.css"></style>
