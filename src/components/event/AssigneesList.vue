@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="[{
       'event-assignees-list--right': triangle === 'right',
       'event-assignees-list--top': triangle === 'top'
@@ -73,7 +73,7 @@ export default {
      */
     eventGroupHash: {
       type: String,
-      default: ''
+      default: '',
     },
 
     /**
@@ -81,8 +81,8 @@ export default {
      */
     triangle: {
       type: String,
-      default: 'right'
-    }
+      default: 'right',
+    },
   },
   data() {
     return {
@@ -94,8 +94,45 @@ export default {
       /**
        * Array of users in this workspace
        */
-      users: []
+      users: [],
     };
+  },
+  computed: {
+    /**
+     * Return assignee
+     *
+     * @returns {string} - assignee id or empty string
+     */
+    currentAssigneeId() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+      const assignee = currentEvent.assignee;
+
+      if (assignee && assignee.id) {
+        return assignee.id;
+      }
+
+      return '';
+    },
+
+    /**
+     * Event id
+     *
+     * @returns {string}
+     */
+    eventId() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+
+      return currentEvent.id;
+    },
+
+    /**
+     * Users are filtered by search string
+     *
+     * @returns {User[]}
+     */
+    filteredUsers() {
+      return this.users.filter(user => user.email.includes(this.searchText));
+    },
   },
 
   /**
@@ -115,54 +152,18 @@ export default {
 
     this.users = users;
   },
-  computed: {
-    /**
-     * Return assignee
-     * 
-     * @returns {string} - assignee id or empty string
-     */
-    currentAssigneeId() {
-      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
-      const assignee = currentEvent.assignee;
-
-      if (assignee && assignee.id) {
-        return assignee.id;
-      }
-
-      return '';
-    },
-
-    /**
-     * Event id
-     * 
-     * @returns {string}
-     */
-    eventId() {
-      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
-
-      return currentEvent.id;
-    },
-
-    /**
-     * Users are filtered by search string
-     * 
-     * @returns {User[]}
-     */
-    filteredUsers() {
-      return this.users.filter(user => user.email.includes(this.searchText));
-    }
-  },
   methods: {
     /**
      * Update assignee to other or remove him
-     * 
+     *
      * @returns {void}
+     * @param user
      */
     async updateAssignee(user) {
       if (this.currentAssigneeId == user.id) {
         await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
-          eventId: this.eventId
+          eventId: this.eventId,
         });
       } else {
         await this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
@@ -173,7 +174,7 @@ export default {
       }
 
       this.$emit('hide');
-    }
+    },
   },
 };
 </script>

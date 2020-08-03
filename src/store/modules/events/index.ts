@@ -490,7 +490,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - event id
      * @param {User} payload.assignee - user to assign to this event
      */
-    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string, eventId: string, assignee: User }): Promise<void> {
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string; eventId: string; assignee: User }): Promise<void> {
       const result = await eventsApi.updateAssignee(projectId, eventId, assignee.id);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
@@ -512,7 +512,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.projectId - project id
      * @param {string} payload.eventId - event id
      */
-    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string, eventId: string }): Promise<void> {
+    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string; eventId: string }): Promise<void> {
       const result = await eventsApi.removeAssignee(projectId, eventId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
@@ -540,9 +540,9 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} context - vuex action context
      * @param {Function} context.commit - VueX commit function
-     *
      * @param {object} payload - vuex action payload
      * @param {HawkEvent} payload.event - event for which we install assignee
+     * @param state
      * @param {User | null} payload.assignee - user to assign to this event
      */
     [MutationTypes.SET_EVENT_ASSIGNEE](state, { event, assignee }): void {

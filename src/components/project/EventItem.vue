@@ -30,10 +30,10 @@
     />
     <EntityImage
       v-else
+      :id="event.assignee.id"
       class="event-item__assignee event-item__assignee--image"
       :image="event.assignee.image"
       :name="event.assignee.name || event.assignee.email"
-      :id="event.assignee.id"
       :title="event.assignee.name || event.assignee.email"
       size="20"
       @click.native.stop="$emit('onAssigneeIconClick', $event)"
@@ -63,7 +63,7 @@ export default {
       type: Object,
       required: true,
     },
-    
+
     /**
      * @type {number} - timestamp of the last event
      */
@@ -78,7 +78,7 @@ export default {
     count: {
       type: [String, Number],
       default: '',
-    }
+    },
   },
   computed: {
     /**
@@ -111,7 +111,7 @@ export default {
       }
 
       return mark;
-    }
+    },
   },
 };
 </script>

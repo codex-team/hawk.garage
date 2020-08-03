@@ -112,7 +112,7 @@ export default {
       /**
        * Old window width
        */
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
     };
   },
   computed: {
@@ -203,8 +203,8 @@ export default {
     /**
      * Shows assignees list for the specific event
      *
-     * @param {String} projectId - id of the current project
-     * @param {String} groupHash - group hash of the event day
+     * @param {string} projectId - id of the current project
+     * @param {string} groupHash - group hash of the event day
      * @param {GroupedEvent} event - event to display assignees list
      */
     showAssignees(projectId, groupHash, event) {
