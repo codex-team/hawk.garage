@@ -33,13 +33,13 @@
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
-        <!--        <router-link-->
-        <!--          v-if="isAdmin"-->
-        <!--          class="settings-window__menu-item workspace-settings__menu-item"-->
-        <!--          :to="{ name: 'workspace-settings-billing' }"-->
-        <!--        >-->
-        <!--          {{ $t('workspaces.settings.billing.title') }}-->
-        <!--        </router-link>-->
+        <router-link
+          v-if="isAdmin"
+          class="settings-window__menu-item workspace-settings__menu-item"
+          :to="{ name: 'workspace-settings-billing' }"
+        >
+          {{ $t('workspaces.settings.billing.title') }}
+        </router-link>
         <hr class="delimiter workspace-settings__delimiter">
         <div
           class="settings-window__menu-item workspace-settings__menu-item settings-window__menu-item--attention"
