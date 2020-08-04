@@ -30,7 +30,24 @@
     "searchField": "Поиск"
   },
   "projects": {
+    "filters": {
+      "filtersLabel": "Фильтр",
+      "filtersOptions": {
+        "all": "Все",
+        "starred": "Избранные",
+        "resolved": "Исправленные",
+        "unresolved": "Неисправленные",
+        "ignored": "Игнорируемые"
+      },
+      "sortLabel": "Сортировать",
+      "sortOptions": {
+        "byDate": "По времени",
+        "byCount": "По количеству"
+      }
+    },
     "placeholder": "Выберите проект",
+    "loadMoreEvents": "Загрузить больше событий",
+    "noEventsPlaceholder": "Нет событий для этого фильтра",
     "creationDialog": {
       "description": "Чтобы отслеживать события, добавьте проект и получите Интеграционный Токен.",
       "projectNameLabel": "НАЗВАНИЕ ПРОЕКТА",
