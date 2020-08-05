@@ -42,7 +42,7 @@ import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
 
 export default Vue.extend({
-  name: 'ChoosePopupDialog',
+  name: 'ChooseTariffPlanPopup',
   components: {
     TariffPlan,
     PopupDialog,
