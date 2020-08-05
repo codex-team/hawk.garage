@@ -3,7 +3,7 @@
     <div class="choose-plan">
       <img
         class="choose-plan__hero"
-        src="../../assets/landscape.svg"
+        src="../../assets/landscape.png"
       >
       <div class="choose-plan__content">
         <h2 class="choose-plan__title">
@@ -85,7 +85,7 @@ export default Vue.extend({
      *
      * @param index - plan index
      */
-    selectPlan(index: number) {
+    selectPlan(index: number): void {
       if (index < 0 || index >= this.plans.length) {
         return;
       }
