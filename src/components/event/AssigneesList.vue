@@ -1,5 +1,5 @@
 <template>
-  <div
+  <div 
     :class="[{
       'event-assignees-list--right': triangle === 'right',
       'event-assignees-list--top': triangle === 'top'
@@ -73,7 +73,7 @@ export default {
      */
     eventGroupHash: {
       type: String,
-      default: '',
+      default: ''
     },
 
     /**
@@ -81,8 +81,8 @@ export default {
      */
     triangle: {
       type: String,
-      default: 'right',
-    },
+      default: 'right'
+    }
   },
   data() {
     return {
@@ -94,45 +94,8 @@ export default {
       /**
        * Array of users in this workspace
        */
-      users: [],
+      users: []
     };
-  },
-  computed: {
-    /**
-     * Return assignee
-     *
-     * @returns {string} - assignee id or empty string
-     */
-    currentAssigneeId() {
-      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
-      const assignee = currentEvent.assignee;
-
-      if (assignee && assignee.id) {
-        return assignee.id;
-      }
-
-      return '';
-    },
-
-    /**
-     * Event id
-     *
-     * @returns {string}
-     */
-    eventId() {
-      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
-
-      return currentEvent.id;
-    },
-
-    /**
-     * Users are filtered by search string
-     *
-     * @returns {User[]}
-     */
-    filteredUsers() {
-      return this.users.filter(user => user.email.includes(this.searchText));
-    },
   },
 
   /**
@@ -152,18 +115,54 @@ export default {
 
     this.users = users;
   },
+  computed: {
+    /**
+     * Return assignee
+     * 
+     * @returns {string} - assignee id or empty string
+     */
+    currentAssigneeId() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+      const assignee = currentEvent.assignee;
+
+      if (assignee && assignee.id) {
+        return assignee.id;
+      }
+
+      return '';
+    },
+
+    /**
+     * Event id
+     * 
+     * @returns {string}
+     */
+    eventId() {
+      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+
+      return currentEvent.id;
+    },
+
+    /**
+     * Users are filtered by search string
+     * 
+     * @returns {User[]}
+     */
+    filteredUsers() {
+      return this.users.filter(user => user.email.includes(this.searchText));
+    }
+  },
   methods: {
     /**
      * Update assignee to other or remove him
-     *
+     * 
      * @returns {void}
-     * @param user
      */
     async updateAssignee(user) {
       if (this.currentAssigneeId == user.id) {
         await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
-          eventId: this.eventId,
+          eventId: this.eventId
         });
       } else {
         await this.$store.dispatch('UPDATE_EVENT_ASSIGNEE', {
@@ -174,7 +173,7 @@ export default {
       }
 
       this.$emit('hide');
-    },
+    }
   },
 };
 </script>
@@ -204,8 +203,8 @@ export default {
       display: flex;
       align-items: center;
       padding: 10px;
-      color: #575b65;
       font-weight: 500;
+      color: #575b65;
       font-size: 14px;
     }
 
@@ -216,11 +215,11 @@ export default {
 
     &__search-text {
       width: calc(100% - 24px);
-      margin-left: 12px;
-      color: #575b65;
-      font-weight: 500;
-      background: var(--color-text-second);
       border: none;
+      background: var(--color-text-second);
+      margin-left: 12px;
+      font-weight: 500;
+      color: #575b65;
       outline: none;
 
       &::placeholder {
@@ -241,12 +240,12 @@ export default {
   }
 
   .assignees {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    overflow: hidden;
     position: relative;
     max-height: 160px;
-    overflow: hidden;
     overflow-y: scroll;
-    border-bottom-right-radius: inherit;
-    border-bottom-left-radius: inherit;
     @apply --hide-scrollbar;
 
     &__image {
@@ -256,13 +255,13 @@ export default {
     &__checkmark {
       position: absolute;
       top: 50%;
+      transform: translateY(-50%);
       right: 14px;
       width: 16px;
       height: 16px;
       color: #2ccf6c;
       background-color: #fff;
       border-radius: 50%;
-      transform: translateY(-50%);
       user-select: none;
     }
 
@@ -280,43 +279,43 @@ export default {
       }
 
       &:not(:first-child):before {
+        content: "";
         position: absolute;
-        top: 0;
         right: 0;
+        top: 0;
         width: 177px;
         height: 1px;
         border-top: 1px solid var(--color-bg-main);
         opacity: 0.1;
-        content: "";
       }
 
       &:hover {
-        overflow: hidden;
         background: #cbd7f2;
+        overflow: hidden;
 
         &::before {
-          width: 100%;
           border-color: #cbd7f2;
           opacity: 1;
+          width: 100%;
         }
       }
 
       &:hover &:before {
-        width: 100%;
         border-top: 1px solid #cbd7f2;
+        width: 100%;
       }
     }
   }
 
   .name-wrapper {
     margin-right: 30px;
-    overflow: hidden;
     white-space: nowrap;
+    overflow: hidden;
 
     &__name--scrollable {
       display: block;
-      overflow: hidden;
       text-overflow: ellipsis;
+      overflow: hidden;
     }
   }
 </style>

@@ -89,7 +89,7 @@ export default Vue.extend({
     UiButton,
     UiLabel,
     Filepath,
-    AssigneeBar,
+    AssigneeBar
   },
   props: {
     /**
@@ -108,7 +108,7 @@ export default Vue.extend({
        *
        * @type {boolean}
        */
-      loading: !this.event,
+      loading: !this.event
     };
   },
   computed: {

@@ -1,11 +1,11 @@
 <template>
-  <div
+  <div 
     class="assignee-bar"
   >
     <span>{{ $t('event.viewedBy.assignee') }}</span>
-    <div
-      class="assignee-bar__button"
+    <div 
       @click.stop="changeAssigneeShowed"
+      class="assignee-bar__button"
     >
       <Icon
         v-if="!event.assignee"
@@ -14,10 +14,10 @@
       />
       <EntityImage
         v-else
-        :id="event.assignee.id"
         class="assignee-bar__image"
         :image="event.assignee.image"
         :name="event.assignee.name || event.assignee.email"
+        :id="event.assignee.id"
         :title="event.assignee.name || event.assignee.email"
         size="14"
       />
@@ -31,17 +31,18 @@
     <AssigneesList
       v-if="isAssigneesShowed"
       v-click-outside="hideAssigneesList"
-      :project-id="projectId"
+      :projectId="projectId"
       :event-group-hash="event.groupHash"
       triangle="top"
       class="assignee-bar__assignees-list"
       @hide="hideAssigneesList"
     />
+
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 import EntityImage from './EntityImage.vue';
 import Icon from './Icon.vue';
 import AssigneesList from '../event/AssigneesList.vue';
@@ -53,7 +54,7 @@ export default Vue.extend({
   components: {
     EntityImage,
     Icon,
-    AssigneesList,
+    AssigneesList
   },
   props: {
     /**
@@ -68,17 +69,17 @@ export default Vue.extend({
      * Project id of the event
      */
     projectId: {
-      type: String,
-      default: '',
-    },
+      type: String, 
+      default: ''
+    }
   },
   data() {
     return {
       /**
        * Show assignees list
        */
-      isAssigneesShowed: false,
-    };
+      isAssigneesShowed: false
+    }
   },
   methods: {
     /**
@@ -93,26 +94,26 @@ export default Vue.extend({
      */
     hideAssigneesList(): void {
       this.isAssigneesShowed = false;
-    },
-  },
+    }
+  }
 });
 </script>
 
 <style>
 .assignee-bar {
-  position: relative;
   display: flex;
   align-items: center;
   margin-left: 30px;
   color: var(--color-text-second);
+  position: relative;
 
   &__button {
-    display: flex;
-    align-items: center;
     margin-left: 10px;
     padding: 4px 7px 4px 4px;
-    background: var(--color-bg-main);
     border-radius: 7px;
+    background: var(--color-bg-main);
+    display: flex;
+    align-items: center;
     cursor: pointer;
   }
 
@@ -126,11 +127,11 @@ export default Vue.extend({
   }
 
   &__arrow-down {
+    margin-left: 6px;
     width: 11px;
     min-width: 11px;
     height: 11px;
     min-height: 11px;
-    margin-left: 6px;
     transition: 0.1s;
 
     &--rotate {

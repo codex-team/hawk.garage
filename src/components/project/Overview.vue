@@ -10,7 +10,6 @@
         :points="chartData"
         class="project-overview__chart"
       />
-      <FiltersBar />
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -62,12 +61,10 @@ import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 import { debounce } from '@/utils';
-import FiltersBar from './FiltersBar';
 
 export default {
   name: 'ProjectOverview',
   components: {
-    FiltersBar,
     EventItem,
     AssigneesList,
     Chart,
@@ -115,7 +112,7 @@ export default {
       /**
        * Old window width
        */
-      windowWidth: window.innerWidth,
+      windowWidth: window.innerWidth
     };
   },
   computed: {
@@ -206,8 +203,8 @@ export default {
     /**
      * Shows assignees list for the specific event
      *
-     * @param {string} projectId - id of the current project
-     * @param {string} groupHash - group hash of the event day
+     * @param {String} projectId - id of the current project
+     * @param {String} groupHash - group hash of the event day
      * @param {GroupedEvent} event - event to display assignees list
      */
     showAssignees(projectId, groupHash, event) {
@@ -227,8 +224,10 @@ export default {
 
     /**
      * Set a new position when resizing the window
+     *
+     * @param {GroupedEvent} event - event to move assignees list
      */
-    setAssigneesPosition() {
+    setAssigneesPosition(event) {
       const widthDifferent = this.windowWidth - window.innerWidth;
 
       this.assigneesListPosition = {
@@ -299,7 +298,7 @@ export default {
     }
 
     &__events-by-date {
-      margin-top: 25px;
+      margin-top: 50px;
     }
 
     &__date {

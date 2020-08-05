@@ -17,7 +17,7 @@
         {{ workspace.name }}
       </div>
       <div class="billing-card__members-count">
-        {{ $tc('billing.members', workspace.users ? workspace.users.length : 0) }}
+        {{ $tc('billing.members', workspace.team ? workspace.team.length : 0) }}
       </div>
     </div>
     <div class="billing-card__info">
