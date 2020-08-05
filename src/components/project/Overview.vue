@@ -10,6 +10,8 @@
         :points="chartData"
         class="project-overview__chart"
       />
+      <FiltersBar />
+      <!-- TODO: Add placeholder if there is no filtered events -->
       <div class="project-overview__events">
         <div
           v-for="(eventsByDate, date) in recentEvents"
@@ -31,12 +33,19 @@
           />
         </div>
         <div
-          v-if="!noMoreEvents"
+          v-if="Object.keys(recentEvents).length && !noMoreEvents"
           class="project-overview__load-more"
           :class="{'loader': isLoadingEvents}"
           @click="loadMoreEvents"
         >
-          <span v-if="!isLoadingEvents">Load more events</span>
+          <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
+        </div>
+        <div
+          v-if="Object.keys(recentEvents).length === 0"
+          class="project-overview__no-events-placeholder"
+        >
+          <div class="project-overview__divider" />
+          {{ $t('projects.noEventsPlaceholder') }}
         </div>
         <AssigneesList
           v-if="isAssigneesShowed"
@@ -61,10 +70,12 @@ import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 import { debounce } from '@/utils';
+import FiltersBar from './FiltersBar';
 
 export default {
   name: 'ProjectOverview',
   components: {
+    FiltersBar,
     EventItem,
     AssigneesList,
     Chart,
@@ -112,7 +123,7 @@ export default {
       /**
        * Old window width
        */
-      windowWidth: window.innerWidth
+      windowWidth: window.innerWidth,
     };
   },
   computed: {
@@ -203,8 +214,8 @@ export default {
     /**
      * Shows assignees list for the specific event
      *
-     * @param {String} projectId - id of the current project
-     * @param {String} groupHash - group hash of the event day
+     * @param {string} projectId - id of the current project
+     * @param {string} groupHash - group hash of the event day
      * @param {GroupedEvent} event - event to display assignees list
      */
     showAssignees(projectId, groupHash, event) {
@@ -224,10 +235,8 @@ export default {
 
     /**
      * Set a new position when resizing the window
-     *
-     * @param {GroupedEvent} event - event to move assignees list
      */
-    setAssigneesPosition(event) {
+    setAssigneesPosition() {
       const widthDifferent = this.windowWidth - window.innerWidth;
 
       this.assigneesListPosition = {
@@ -298,7 +307,7 @@ export default {
     }
 
     &__events-by-date {
-      margin-top: 50px;
+      margin-top: 25px;
     }
 
     &__date {
@@ -326,6 +335,20 @@ export default {
       background-color: var(--color-bg-main);
       border-radius: 9px;
       cursor: pointer;
+    }
+
+    &__no-events-placeholder {
+      font-size: 14px;
+      letter-spacing: 0;
+      color: var(--color-text-second);
+    }
+
+    &__divider {
+      width: 68px;
+      height: 3px;
+      margin: 40px 0 20px;
+      border-radius: 2px;
+      background: var(--color-text-second);
     }
   }
 </style>
