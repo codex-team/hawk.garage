@@ -98,8 +98,15 @@ export default Vue.extend({
 
 <style>
   .choose-plan {
+    width: 800px;
     max-width: 800px;
     background: var(--color-bg-second);
+
+    &__hero {
+      width: 100%;
+      min-height: 225px;
+      background-image: linear-gradient(180deg, #081436 0%, #2E4681 100%);
+    }
 
     &__content {
       padding: 30px 50px 35px;
