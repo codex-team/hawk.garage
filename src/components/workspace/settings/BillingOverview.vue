@@ -128,6 +128,9 @@ export default {
         data: { amount },
       });
     },
+    /**
+     * Open ChooseTariffPlan popup on click on the current plan button
+     */
     onPlanClick() {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ChooseTariffPlanPopup',
