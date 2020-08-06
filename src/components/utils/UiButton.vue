@@ -6,6 +6,7 @@
       'ui-button--small': small,
       'ui-button--loading': isLoading,
       'ui-button--shaking': shaking,
+      'ui-button--rounded': rounded,
     }"
     @click="$emit('click', $event)"
   >
@@ -79,6 +80,14 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Adds border radius for button
+     */
+    rounded: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -134,6 +143,12 @@ export default Vue.extend({
     &:hover {
       background: var(--color-indicator-medium-dark);
     }
+  }
+
+  &--rounded {
+    padding: 5px 15px;
+    /* Will set border radius as half of height */
+    border-radius: 1000px;
   }
 
   $loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
