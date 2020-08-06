@@ -31,7 +31,7 @@ const mutationTypes = {
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
-  SET_TRANSACTIONS: 'SET_TRANSACTIONS', // Set transactions info
+  SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
 };
 
 /**
@@ -317,13 +317,9 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [GET_BUSINESS_OPERATIONS]({ commit }, { ids }) {
-    console.log('get operations', ids);
+    const operations = await billingApi.getBusinessOperations(ids);
 
-    const transactions = await billingApi.getBusinessOperations(ids);
-
-    console.log('API operations', transactions);
-
-    commit(mutationTypes.SET_TRANSACTIONS, transactions || []);
+    commit(mutationTypes.SET_BUSINESS_OPERATIONS, operations || []);
   },
 
   /**
@@ -483,10 +479,10 @@ const mutations = {
    * @param {WorkspacesModuleState} state - current state
    * @param {Transaction[]} transactions - transactions to set
    */
-  [mutationTypes.SET_TRANSACTIONS](state, transactions = []) {
+  [mutationTypes.SET_BUSINESS_OPERATIONS](state, transactions = []) {
     const groupedByWorkspaceId = transactions.reduce(
       (acc, transaction) => {
-        const { workspace } = transaction;
+        const { workspace } = transaction.payload;
 
         if (!acc[workspace.id]) {
           acc[workspace.id] = [];

@@ -112,5 +112,5 @@ export async function getPaymentLink(paymentInput: PayOnceInput): Promise<Billin
  * @param ids - ids of workspaces
  */
 export async function getBusinessOperations(ids: string[]): Promise<Transaction[]> {
-  return (await api.call(QUERY_BUSINESS_OPERATIONS, { ids })).operations;
+  return (await api.call(QUERY_BUSINESS_OPERATIONS, { ids })).businessOperations;
 }

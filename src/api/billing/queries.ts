@@ -24,11 +24,24 @@ export const QUERY_BUSINESS_OPERATIONS = `
       type
       status
       payload {
-        user {
-          id
-          name
-          picture
+        ...on PayloadOfDepositByUser {
+          user {
+            id
+            name
+            image
+          }
+          amount
+          cardPan
         }
+
+        ...on PayloadOfWorkspacePlanPurchase {
+          workspace {
+            id
+            name
+          }
+          amount
+        }
+
       }
     }
   }
