@@ -317,7 +317,11 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [GET_TRANSACTIONS]({ commit }, { ids }) {
+    console.log('get transactions', ids);
+
     const transactions = await billingApi.getTransactions(ids);
+
+    console.log('API transactions', transactions);
 
     commit(mutationTypes.SET_TRANSACTIONS, transactions || []);
   },

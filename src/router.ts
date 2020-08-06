@@ -72,11 +72,11 @@ const router = new Router({
               name: 'workspace-settings-team',
               component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/settings/Team.vue'),
             },
-            // {
-            //   path: 'billing',
-            //   name: 'workspace-settings-billing',
-            //   component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/Billing.vue'),
-            // },
+            {
+              path: 'billing',
+              name: 'workspace-settings-billing',
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/Billing.vue'),
+            },
           ],
         },
         /**

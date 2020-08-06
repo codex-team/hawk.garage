@@ -13,9 +13,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import BillingCard from './BillingOverview';
+import BillingCard from './BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
-import { FETCH_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
 import { PaymentOperation } from '@/types/payment-operation';
 import { Workspace } from '@/types/workspaces';
 import { GET_TRANSACTIONS } from '@/store/modules/workspaces/actionTypes';
@@ -35,7 +34,7 @@ export default Vue.extend({
       /**
        * List of payment operations
        */
-      paymentsHistory: [] as PaymentOperation[],
+      paymentsHistory: [],
 
       /**
        * Flag determines the loading of the history
@@ -73,7 +72,10 @@ export default Vue.extend({
   mounted(): void {
     this.isPaymentsHistoryLoading = true;
 
-    this.$store.dispatch(GET_TRANSACTIONS);
+    console.log('call gt', GET_TRANSACTIONS);
+    this.$store.dispatch(GET_TRANSACTIONS, {
+      ids: [ this.workspace.id ]
+    });
 
   },
 });

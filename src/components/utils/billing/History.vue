@@ -23,7 +23,10 @@
         {{ $t('billing.charges') }}
       </div>
     </div>
-    <div class="billing-history__loader" v-if="isLoading">
+    <div
+      v-if="isLoading"
+      class="billing-history__loader"
+    >
       {{ $t('common.loading') }}
     </div>
     <template v-else-if="transactions && transactions.length">
@@ -67,19 +70,21 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import EntityImage from '../EntityImage';
+import EntityImage from './../EntityImage.vue';
 import { PaymentOperation } from '@/types/payment-operation';
 // import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
 
 export default Vue.extend({
   name: 'BillingHistory',
-  components: { EntityImage },
+  components: {
+    EntityImage
+  },
   props: {
     /**
      * List of payment operations
      */
     operations: {
-      type: Array as PaymentOperation[],
+      type: Array as () => PaymentOperation[],
       required: true,
     },
 
@@ -162,12 +167,13 @@ export default Vue.extend({
       this.filter = filter;
     },
     getDescription(transaction) {
-      switch (transaction.type) {
-        case this.TYPES.INCOME:
-          return `Payment by card **** **** ***** ${transaction.cardPan} for ${transaction.workspace.name}`;
-        case this.TYPES.CHARGE:
-          return `Payment for ${transaction.workspace.name} current plan`;
-      }
+      return '';
+      // switch (transaction.type) {
+      //   case this.TYPES.INCOME:
+      //     return `Payment by card **** **** ***** ${transaction.cardPan} for ${transaction.workspace.name}`;
+      //   case this.TYPES.CHARGE:
+      //     return `Payment for ${transaction.workspace.name} current plan`;
+      // }
     },
   },
 });
@@ -195,6 +201,12 @@ export default Vue.extend({
       &:hover, &--selected {
         color: var(--color-text-main);
       }
+    }
+
+    &__loader {
+      color: var(--color-text-second);
+      margin-top: 10px;
+      font-size: 13px;
     }
 
     &__row {
