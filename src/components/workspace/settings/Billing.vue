@@ -17,7 +17,7 @@ import BillingCard from './BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import { PaymentOperation } from '@/types/payment-operation';
 import { Workspace } from '@/types/workspaces';
-import { GET_TRANSACTIONS } from '@/store/modules/workspaces/actionTypes';
+import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
 
 
 export default Vue.extend({
@@ -72,8 +72,8 @@ export default Vue.extend({
   mounted(): void {
     this.isPaymentsHistoryLoading = true;
 
-    console.log('call gt', GET_TRANSACTIONS);
-    this.$store.dispatch(GET_TRANSACTIONS, {
+    console.log('call gt', GET_BUSINESS_OPERATIONS);
+    this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
       ids: [ this.workspace.id ]
     });
 

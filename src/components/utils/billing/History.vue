@@ -72,7 +72,7 @@
 import Vue from 'vue';
 import EntityImage from './../EntityImage.vue';
 import { PaymentOperation } from '@/types/payment-operation';
-// import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
+// import { GET_BUSINESS_OPERATIONS } from '../../../store/modules/workspaces/actionTypes';
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -160,7 +160,7 @@ export default Vue.extend({
     //   ids.push(this.workspace.id);
     // }
     //
-    // this.$store.dispatch(GET_TRANSACTIONS, { ids });
+    // this.$store.dispatch(GET_BUSINESS_OPERATIONS, { ids });
   },
   methods: {
     applyFilter(filter) {

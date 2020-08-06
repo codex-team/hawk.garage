@@ -45,7 +45,7 @@ import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
 import AddCard from '../../utils/billing/BankCardAdd.vue';
 import { BankCard } from '@/types/bank-card';
-// import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
+// import { GET_BUSINESS_OPERATIONS } from '../../../store/modules/workspaces/actionTypes';
 import { User } from '@/types/user';
 import { Workspace } from '@/types/workspaces';
 
@@ -108,7 +108,7 @@ export default Vue.extend({
     /**
      * Fetch workspaces transactions
      */
-    // this.$store.dispatch(GET_TRANSACTIONS, { ids: [] });
+    // this.$store.dispatch(GET_BUSINESS_OPERATIONS, { ids: [] });
   },
   methods: {
   },

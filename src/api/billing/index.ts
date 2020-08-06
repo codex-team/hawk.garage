@@ -1,4 +1,4 @@
-import { QUERY_PAYMENT_LINK, QUERY_TRANSACTIONS } from './queries';
+import { QUERY_PAYMENT_LINK, QUERY_BUSINESS_OPERATIONS } from './queries';
 import * as api from '../';
 
 /**
@@ -107,10 +107,10 @@ export async function getPaymentLink(paymentInput: PayOnceInput): Promise<Billin
 }
 
 /**
- * Request transactions info for passed workspaces
+ * Request business operations list for passed workspaces
  *
  * @param ids - ids of workspaces
  */
-export async function getTransactions(ids: string[]): Promise<Transaction[]> {
-  return (await api.call(QUERY_TRANSACTIONS, { ids })).transactions;
+export async function getBusinessOperations(ids: string[]): Promise<Transaction[]> {
+  return (await api.call(QUERY_BUSINESS_OPERATIONS, { ids })).operations;
 }

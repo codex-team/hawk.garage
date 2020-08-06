@@ -9,7 +9,7 @@ import {
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
   REMOVE_USER_FROM_WORKSPACE,
-  GET_TRANSACTIONS
+  GET_BUSINESS_OPERATIONS
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -310,18 +310,18 @@ const actions = {
   },
 
   /**
-   * Fetch transactions and set them to store
+   * Fetch payment operations and save them to the store
    *
    * @param {Function} commit - standard Vuex commit method
    * @param {string[]} ids - workspaces ids
    * @returns {Promise<void>}
    */
-  async [GET_TRANSACTIONS]({ commit }, { ids }) {
-    console.log('get transactions', ids);
+  async [GET_BUSINESS_OPERATIONS]({ commit }, { ids }) {
+    console.log('get operations', ids);
 
-    const transactions = await billingApi.getTransactions(ids);
+    const transactions = await billingApi.getBusinessOperations(ids);
 
-    console.log('API transactions', transactions);
+    console.log('API operations', transactions);
 
     commit(mutationTypes.SET_TRANSACTIONS, transactions || []);
   },

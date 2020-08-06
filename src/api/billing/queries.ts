@@ -17,23 +17,19 @@ export const QUERY_PAYMENT_LINK = `
 /**
  * Query to fetch transactions info by workspaces ids
  */
-export const QUERY_TRANSACTIONS = `
-  query transactions($ids: [ID!] = []) {
-    transactions(ids: $ids) {
-        type
-        amount
-        date
-        workspace {
-            id
-            name
-        }
+export const QUERY_BUSINESS_OPERATIONS = `
+  query businessOperations($ids: [ID!] = []) {
+    businessOperations(ids: $ids) {
+      id
+      type
+      status
+      payload {
         user {
-            id
-            image
-            name
-            email
+          id
+          name
+          picture
         }
-        cardPan
+      }
     }
   }
 `;
