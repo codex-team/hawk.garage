@@ -42,11 +42,10 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
-import { mapState } from 'vuex';
-import { RootState } from '@/store';
 import { Workspace } from '@/types/workspaces';
 import { CHANGE_WORKSPACE_PLAN } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
+import { Plan } from '@/types/plan';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -77,14 +76,12 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...mapState({
-      /**
-       * Available plans list
-       *
-       * @param {RootState} state - Vuex state
-       */
-      plans: (state: RootState) => state.plans.list,
-    }),
+    /**
+     * Available plans list
+     */
+    plans(): Plan[] {
+      return this.$store.state.plans.list;
+    },
   },
   /**
    * Fetch available plans before component is created
@@ -153,19 +150,19 @@ export default Vue.extend({
 
     &__title {
       margin-bottom: 10px;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0;
       color: var(--color-text-main);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: 0;
     }
 
     &__description {
       max-width: 450px;
       margin: 0 0 20px;
+      color: var(--color-text-second);
       font-size: 14px;
       line-height: 20px;
       letter-spacing: 0;
-      color: var(--color-text-second);
 
       a:not([href*="mailto"]) {
         color: var(--color-indicator-medium);
@@ -174,8 +171,8 @@ export default Vue.extend({
 
     &__plans {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
     &__continue-button {

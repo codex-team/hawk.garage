@@ -338,17 +338,17 @@ export default {
     }
 
     &__no-events-placeholder {
+      color: var(--color-text-second);
       font-size: 14px;
       letter-spacing: 0;
-      color: var(--color-text-second);
     }
 
     &__divider {
       width: 68px;
       height: 3px;
       margin: 40px 0 20px;
-      border-radius: 2px;
       background: var(--color-text-second);
+      border-radius: 2px;
     }
   }
 </style>
