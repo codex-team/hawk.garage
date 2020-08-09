@@ -30,7 +30,7 @@ export interface Workspace {
    */
   team: Member[];
 
-  plan: WorkspacePlan;
+  plan: Plan;
 }
 
 /**
@@ -51,10 +51,6 @@ export interface ConfirmedMember {
    * Is user admin in workspace
    */
   isAdmin: boolean;
-}
-
-export interface WorkspacePlan extends Plan {
-
 }
 
 /**

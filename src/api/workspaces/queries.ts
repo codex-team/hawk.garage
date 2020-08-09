@@ -133,8 +133,6 @@ export const QUERY_WORKSPACES = `
       plan {
         id
         name
-        subscriptionDate
-        lastChargeDate
         monthlyCharge
         eventsLimit
       }
