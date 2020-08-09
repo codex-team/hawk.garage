@@ -1,4 +1,5 @@
 import { User } from '@/types/user';
+import { Plan } from './plan';
 
 /**
  * Workspace representation
@@ -28,6 +29,8 @@ export interface Workspace {
    * Workspace members array
    */
   team: Member[];
+
+  plan: WorkspacePlan;
 }
 
 /**
@@ -48,6 +51,10 @@ export interface ConfirmedMember {
    * Is user admin in workspace
    */
   isAdmin: boolean;
+}
+
+export interface WorkspacePlan extends Plan {
+
 }
 
 /**

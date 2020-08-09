@@ -70,8 +70,8 @@ export default {
     box-sizing: border-box;
     width: 220px;
     padding: 20px 25px;
-    border-radius: 7px;
     background: var(--color-bg-main);
+    border-radius: 7px;
     cursor: pointer;
 
     &--selected {
@@ -81,37 +81,37 @@ export default {
 
     &__name {
       margin: 0 0 10px;
+      color: var(--color-text-main);
+      font-weight: 600;
 
       font-size: 15px;
       letter-spacing: 0;
-      font-weight: 600;
-      color: var(--color-text-main);
     }
 
     &__limit {
+      color: var(--color-text-second);
+      font-weight: 600;
       font-size: 15px;
       letter-spacing: 0;
-      font-weight: 600;
-      color: var(--color-text-second);
     }
 
     &__footer {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin: 30px 0 0;
     }
 
     &__price {
-      font-size: 13px;
-      font-weight: 600;
       color: var(--color-text-second);
+      font-weight: 600;
+      font-size: 13px;
     }
 
     &__button {
       .ui-button-text {
-        font-size: 11px;
         font-weight: 600;
+        font-size: 11px;
         line-height: 13px;
         letter-spacing: 0.14px;
         text-transform: uppercase;

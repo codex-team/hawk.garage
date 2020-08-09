@@ -28,8 +28,8 @@ export default {
      */
     content: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
 };
 </script>
@@ -40,14 +40,14 @@ export default {
     align-items: center;
     padding: 6px 7px;
     color: var(--color-text-second);
+
+    letter-spacing: 0.1px;
     background: transparent;
+    border: none;
     border-radius: 4px;
     outline: none;
     cursor: pointer;
     user-select: none;
-
-    letter-spacing: 0.1px;
-    border: none;
 
     &:hover,
     &--active {

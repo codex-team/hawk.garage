@@ -131,6 +131,7 @@ export const QUERY_WORKSPACES = `
       image
       balance
       plan {
+        id
         name
         subscriptionDate
         lastChargeDate
@@ -180,9 +181,22 @@ export const MUTATION_GRANT_ADMIN_PERMISSIONS = `
 export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
   mutation removeMemberFromWorkspace(
     $workspaceId: ID!
-    $userId: ID,
+    $userId: ID
     $userEmail: String!
   ) {
     removeMemberFromWorkspace(workspaceId: $workspaceId, userId: $userId, userEmail: $userEmail)
   }
+`;
+
+/**
+ * Change workspace tariff plan
+ */
+// language=GraphQL
+export const MUTATION_CHANGE_WORKSPACE_PLAN = `
+    mutation changeWorkspacePlan(
+      $workspaceId: ID!
+      $planId: ID!
+    ) {
+      changeWorkspacePlan(workspaceId: $workspaceId, planId: $planId)
+    }
 `;
