@@ -5,7 +5,7 @@
     </div>
     <BillingCard :workspace="workspace" />
     <BillingHistory
-      :operations="paymentsHistory"
+      :operations="workspace.paymentsHistory"
       :is-loading="isPaymentsHistoryLoading"
     />
   </div>
@@ -15,7 +15,7 @@
 import Vue from 'vue';
 import BillingCard from './BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
-import { PaymentOperation } from '@/types/payment-operation';
+import { BusinessOperation } from '../../../types/business-operation';
 import { Workspace } from '@/types/workspaces';
 import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
 
@@ -27,7 +27,7 @@ export default Vue.extend({
     BillingCard,
   },
   data(): {
-    paymentsHistory: PaymentOperation[],
+    paymentsHistory: BusinessOperation[],
     isPaymentsHistoryLoading: boolean,
     } {
     return {
@@ -69,14 +69,14 @@ export default Vue.extend({
       return this.$store.getters.getWorkspaceById(workspaceId);
     },
   },
-  mounted(): void {
+  async mounted(): void {
     this.isPaymentsHistoryLoading = true;
 
-    console.log('call gt', GET_BUSINESS_OPERATIONS);
-    this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
-      ids: [ this.workspace.id ]
+    await this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
+      ids: [ this.workspace.id ],
     });
 
+    this.isPaymentsHistoryLoading = false;
   },
 });
 </script>

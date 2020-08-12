@@ -319,6 +319,8 @@ const actions = {
   async [GET_BUSINESS_OPERATIONS]({ commit }, { ids }) {
     const operations = await billingApi.getBusinessOperations(ids);
 
+    console.log('operations', operations);
+
     commit(mutationTypes.SET_BUSINESS_OPERATIONS, operations || []);
   },
 
@@ -477,37 +479,45 @@ const mutations = {
    * Set transactions info to workspaces by ids
    *
    * @param {WorkspacesModuleState} state - current state
-   * @param {Transaction[]} transactions - transactions to set
+   * @param {BusinessOperation[]} operations - operations to set
    */
-  [mutationTypes.SET_BUSINESS_OPERATIONS](state, transactions = []) {
-    const groupedByWorkspaceId = transactions.reduce(
-      (acc, transaction) => {
-        const { workspace } = transaction.payload;
+  [mutationTypes.SET_BUSINESS_OPERATIONS](state, operations = []) {
+    /**
+     * Group all operations by payload.workspace.id
+     * {
+     *   [workspace.id] => BusinessOperation,
+     *   ...
+     * }
+     */
+    const groupedByWorkspaceId = operations.reduce(
+      (acc, operation) => {
+        const { workspace } = operation.payload;
 
         if (!acc[workspace.id]) {
           acc[workspace.id] = [];
         }
 
-        acc[workspace.id].push(transaction);
+        acc[workspace.id].push(operation);
 
         return acc;
       },
       {}
     );
 
-    Object.entries(groupedByWorkspaceId).forEach(([workspaceId, data]) => {
-      const index = state.list.findIndex(w => w.id === workspaceId);
+    Object.entries(groupedByWorkspaceId)
+      .forEach(([workspaceId, operationsOfWorkspace]) => {
+        const index = state.list.findIndex(w => w.id === workspaceId);
+        const workspace = state.list[index];
 
-      const workspace = state.list[index];
+        Vue.set(workspace, 'paymentsHistory', operationsOfWorkspace);
 
-      Vue.set(workspace, 'transactions', data);
-
-      state.list = [
-        ...state.list.slice(0, index),
-        workspace,
-        ...state.list.slice(index + 1),
-      ];
-    });
+        state.list = [
+          ...state.list.slice(0, index),
+          workspace,
+          ...state.list.slice(index + 1),
+        ];
+      }
+    );
   },
 
   /**

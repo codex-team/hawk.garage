@@ -23,39 +23,40 @@
         {{ $t('billing.charges') }}
       </div>
     </div>
+    {{ isLoading}}
     <div
       v-if="isLoading"
       class="billing-history__loader"
     >
       {{ $t('common.loading') }}
     </div>
-    <template v-else-if="transactions && transactions.length">
+    <template v-else-if="operations && operations.length">
       <div
-        v-for="(transaction, i) in transactions"
+        v-for="(operation, i) in operations"
         :key="i"
         class="billing-history__row"
       >
         <div class="billing-history__date">
-          {{ new Date(transaction.date) | prettyFullDate }}
+          {{ new Date(operation.dtCreated) | prettyFullDate }}
         </div>
         <div class="billing-history__description">
           {{ getDescription(transaction) }}
         </div>
         <div class="billing-history__user">
           <EntityImage
-            v-if="transaction.type === TYPES.INCOME"
-            :id="transaction.user.id"
-            :name="transaction.user.name || transaction.user.email"
-            :image="transaction.user.image"
+            v-if="operation.type === BusinessOperationType.DepositByUser"
+            :id="operation.payload.user.id"
+            :name="operation.payload.user.name || operation.payload.user.email"
+            :image="operation.payload.user.image"
             class="billing-history__user-image"
             size="16"
           />
         </div>
         <div
           class="billing-history__amount"
-          :class="[`billing-history__amount--${transaction.type}`]"
+          :class="[`billing-history__amount--${operation.type}`]"
         >
-          {{ transaction.amount }}$
+          {{ operation.amount }}$
         </div>
       </div>
     </template>
@@ -71,21 +72,22 @@
 <script lang="ts">
 import Vue from 'vue';
 import EntityImage from './../EntityImage.vue';
-import { PaymentOperation } from '@/types/payment-operation';
-// import { GET_BUSINESS_OPERATIONS } from '../../../store/modules/workspaces/actionTypes';
+import {BusinessOperation, BusinessOperationType} from '../../../types/business-operation';
 
 export default Vue.extend({
   name: 'BillingHistory',
   components: {
-    EntityImage
+    EntityImage,
   },
   props: {
     /**
      * List of payment operations
      */
     operations: {
-      type: Array as () => PaymentOperation[],
-      required: true,
+      type: Array as () => BusinessOperation[],
+      default(){
+        return [];
+      },
     },
 
     /**
@@ -103,11 +105,14 @@ export default Vue.extend({
         INCOMINGS: 1,
         CHARGES: 2,
       },
-      TYPES: {
-        CHARGE: 'charge',
-        INCOME: 'income',
-      },
       filter: 0,
+      /**
+       * Save enum constants to allow access it from the <template>
+       */
+      BusinessOperationType: {
+        // WorkspacePlanPurchase: BusinessOperationType.WorkspacePlanPurchase,
+        // DepositByUser: BusinessOperationType.DepositByUser,
+      },
     };
   },
   computed: {
@@ -152,15 +157,7 @@ export default Vue.extend({
      * 2020 jul 15 - Commented to prevent errors
      *
      * @todo separate table to the abstract UITable component
-     * @todo pass transactions history from the parent component
      */
-    // const ids = [];
-    //
-    // if (this.workspace) {
-    //   ids.push(this.workspace.id);
-    // }
-    //
-    // this.$store.dispatch(GET_BUSINESS_OPERATIONS, { ids });
   },
   methods: {
     applyFilter(filter) {
