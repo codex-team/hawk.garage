@@ -77,10 +77,10 @@ const getters = {
    * @returns {function(string): Workspace}
    */
   getWorkspaceById: state =>
-  /**
-   * @param {string} id project id to find
-   * @returns {Project}
-   */
+    /**
+     * @param {string} id project id to find
+     * @returns {Project}
+     */
     id => state.list.find(workspace => workspace.id === id),
 
   /**
@@ -334,16 +334,16 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    const result = await workspaceApi.changePlan(workspaceId, planId);
+    try {
+      await workspaceApi.changePlan(workspaceId, planId);
 
-    if (!result) {
+      commit(mutationTypes.SET_PLAN, {
+        workspaceId,
+        plan: getters.getPlanById(planId),
+      });
+    } catch (_) {
       throw new Error('Unable to change workspace plan due to a server error, please try again later');
     }
-
-    commit(mutationTypes.SET_PLAN, {
-      workspaceId,
-      plan: getters.getPlanById(planId),
-    });
   },
 
   /**

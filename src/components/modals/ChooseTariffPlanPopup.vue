@@ -54,16 +54,19 @@ export default Vue.extend({
     PopupDialog,
     UiButton,
   },
+  props: {
+    /**
+     * Id of a workspace for which modal is open
+     */
+    workspaceId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
-    const { workspaceId } = this.$route.params;
-
-    const workspace = this.$store.getters.getWorkspaceById(workspaceId) as Workspace;
+    const workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
 
     return {
-      /**
-       * Current workspace id
-       */
-      workspaceId,
       /**
        * Id of selected plan
        */
