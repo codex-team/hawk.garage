@@ -11,6 +11,7 @@ import {
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
+import { APIResponse } from '@/types/api';
 
 interface CreateWorkspaceInput {
   /**
@@ -156,9 +157,11 @@ export async function removeUserFromWorkspace(
 export async function changePlan(
   workspaceId: string,
   planId: string
-): Promise<boolean> {
+): Promise<APIResponse<Workspace>> {
   return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN, {
-    workspaceId,
-    planId,
+    input: {
+      workspaceId,
+      planId,
+    },
   })).changeWorkspacePlan;
 }

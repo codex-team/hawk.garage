@@ -16,6 +16,12 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       description
       image
       ...WorkspaceWithTeam
+      plan {
+        id
+        name
+        monthlyCharge
+        eventsLimit
+      }
       projects {
         id
         token
@@ -192,9 +198,10 @@ export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
 // language=GraphQL
 export const MUTATION_CHANGE_WORKSPACE_PLAN = `
     mutation changeWorkspacePlan(
-      $workspaceId: ID!
-      $planId: ID!
+      $input: ChangeWorkspacePlanInput
     ) {
-      changeWorkspacePlan(workspaceId: $workspaceId, planId: $planId)
+      changeWorkspacePlan(input: $input) {
+        recordId
+      }
     }
 `;

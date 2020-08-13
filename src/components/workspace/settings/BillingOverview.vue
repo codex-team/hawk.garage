@@ -134,6 +134,9 @@ export default {
     onPlanClick() {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ChooseTariffPlanPopup',
+        data: {
+          workspaceId: this.workspace.id,
+        },
       });
     },
   },
