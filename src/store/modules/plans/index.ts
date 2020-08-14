@@ -37,7 +37,7 @@ const getters = {
 
 const actions = {
   /**
-   *  Fetch and set tariff plans
+   * Fetch and set tariff plans
    *
    * @param commit - VueX commit method
    */
