@@ -140,6 +140,10 @@ export default Vue.extend({
     cursor: pointer;
   }
 
+  &--disabled {
+    cursor: not-allowed;
+  }
+
   &--small {
     padding: 6px 7px;
   }
