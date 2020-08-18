@@ -15,20 +15,21 @@
         />
         <div class="choose-plan__plans">
           <TariffPlan
-            v-for="(plan, i) in plans"
-            :key="plan.name"
+            v-for="plan in plans"
+            :key="plan.id"
             :name="plan.name"
-            :limit="plan.limit"
-            :price="plan.price"
-            :selected="i === selectedPlan"
-            @click.native="selectPlan(i)"
+            :limit="plan.eventsLimit"
+            :price="plan.monthlyCharge"
+            :selected="plan.id === selectedPlan"
+            @click.native="selectPlan(plan.id)"
           />
         </div>
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
+          :disabled="selectedPlan === currentPlan"
           submit
-          @click="$emit('close')"
+          @click="onContinue"
         />
       </div>
     </div>
@@ -40,6 +41,11 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
+import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
+import { Workspace } from '@/types/workspaces';
+import { CHANGE_WORKSPACE_PLAN } from '@/store/modules/workspaces/actionTypes';
+import notifier from 'codex-notifier';
+import { Plan } from '@/types/plan';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -48,49 +54,82 @@ export default Vue.extend({
     PopupDialog,
     UiButton,
   },
+  props: {
+    /**
+     * Id of a workspace for which modal is open
+     */
+    workspaceId: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
+    const workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
+
     return {
       /**
-       * Available plan
-       *
-       * @todo Get plans from API
+       * Id of selected plan
        */
-      plans: [
-        {
-          name: 'Startup',
-          limit: 10000,
-          price: 0,
-        }, {
-          name: 'Basic',
-          limit: 100000,
-          price: 20,
-        },
-        {
-          name: 'Big',
-          limit: 1000000,
-          price: 200,
-        },
-      ],
+      selectedPlan: workspace.plan.id,
+
       /**
-       * Selected plan index
-       *
-       * @todo Get default value from API
+       * Current plan id
        */
-      selectedPlan: 0,
+      currentPlan: workspace.plan.id,
     };
+  },
+  computed: {
+    /**
+     * Available plans list
+     */
+    plans(): Plan[] {
+      return this.$store.state.plans.list;
+    },
+  },
+  /**
+   * Fetch available plans before component is created
+   */
+  beforeCreate() {
+    this.$store.dispatch(FETCH_PLANS);
   },
   methods: {
     /**
-     * Select plan card by index
+     * Select plan card by id
      *
-     * @param index - plan index
+     * @param id - plan id
      */
-    selectPlan(index: number): void {
-      if (index < 0 || index >= this.plans.length) {
+    selectPlan(id: string): void {
+      if (!this.plans.find(plan => plan.id === id)) {
         return;
       }
 
-      this.selectedPlan = index;
+      this.selectedPlan = id;
+    },
+
+    /**
+     * Attempt to change workspace plan
+     */
+    async onContinue(): Promise<void> {
+      try {
+        await this.$store.dispatch(CHANGE_WORKSPACE_PLAN, {
+          workspaceId: this.workspaceId,
+          planId: this.selectedPlan,
+        });
+
+        notifier.show({
+          message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
+          style: 'success',
+          time: 3000,
+        });
+
+        this.$emit('close');
+      } catch (_) {
+        notifier.show({
+          message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
+          style: 'error',
+          time: 3000,
+        });
+      }
     },
   },
 });
@@ -114,19 +153,19 @@ export default Vue.extend({
 
     &__title {
       margin-bottom: 10px;
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0;
       color: var(--color-text-main);
+      font-weight: 600;
+      font-size: 18px;
+      letter-spacing: 0;
     }
 
     &__description {
       max-width: 450px;
       margin: 0 0 20px;
+      color: var(--color-text-second);
       font-size: 14px;
       line-height: 20px;
       letter-spacing: 0;
-      color: var(--color-text-second);
 
       a:not([href*="mailto"]) {
         color: var(--color-indicator-medium);
@@ -135,8 +174,8 @@ export default Vue.extend({
 
     &__plans {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
     &__continue-button {

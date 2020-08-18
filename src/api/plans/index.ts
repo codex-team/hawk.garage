@@ -1,0 +1,11 @@
+import * as api from '@/api';
+import { QUERY_PLANS } from './queries';
+
+import { Plan } from '@/types/plan';
+
+/**
+ * Fetch all available plans
+ */
+export async function getPlans(): Promise<Plan[]> {
+  return (await api.call(QUERY_PLANS)).plans;
+}

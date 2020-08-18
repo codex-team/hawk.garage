@@ -188,7 +188,6 @@ export default Vue.extend({
     margin-top: 25px;
     padding: 0 21px;
 
-
     &__section {
       display: flex;
       align-items: center;
