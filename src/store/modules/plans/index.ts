@@ -4,7 +4,7 @@ import { FETCH_PLANS } from './actionTypes';
 import * as plansApi from '@/api/plans';
 
 enum MutationType {
-  SetPlans = 'SET_PLANs' // set plans to store
+  SetPlans = 'SET_PLANS' // set plans to store
 }
 
 /**
@@ -37,7 +37,7 @@ const getters = {
 
 const actions = {
   /**
-   *  Fetch and set tariff plans
+   * Fetch and set tariff plans
    *
    * @param commit - VueX commit method
    */

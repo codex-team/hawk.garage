@@ -1,7 +1,8 @@
 import {
   WORKSPACE_FRAGMENT_WITH_TEAM,
   USER_FRAGMENT,
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
+  WORKSPACE_PLAN
 } from '../fragments';
 
 // language=GraphQL
@@ -16,12 +17,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       description
       image
       ...WorkspaceWithTeam
-      plan {
-        id
-        name
-        monthlyCharge
-        eventsLimit
-      }
+      ...WorkspacePlan
       projects {
         id
         token
@@ -63,6 +59,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   ${USER_FRAGMENT}
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+  ${WORKSPACE_PLAN}
 `;
 
 // language=GraphQL
@@ -136,17 +133,13 @@ export const QUERY_WORKSPACES = `
       description
       image
       balance
-      plan {
-        id
-        name
-        monthlyCharge
-        eventsLimit
-      }
+      ...WorkspacePlan
       ...WorkspaceWithTeam
     }
   }
 
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
+  ${WORKSPACE_PLAN}
 `;
 
 // language=GraphQL

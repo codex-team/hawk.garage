@@ -67,6 +67,14 @@ export const Rounded = (): unknown => ({
   methods,
 });
 
+export const Disabled = (): unknown => ({
+  components: { UiButton },
+  template: `
+    <UiButton content="Click Me" disabled @click="click" />
+  `,
+  methods,
+});
+
 export const WithKnobs = (): unknown => ({
   components: { UiButton },
   template: `
@@ -96,6 +104,10 @@ export const WithKnobs = (): unknown => ({
     rounded: {
       type: Boolean,
       default: boolean('Rounded', false),
+    },
+    disabled: {
+      type: Boolean,
+      default: boolean('Disabled', false),
     },
   },
   methods,

@@ -334,16 +334,12 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    try {
-      await workspaceApi.changePlan(workspaceId, planId);
+    await workspaceApi.changePlan(workspaceId, planId);
 
-      commit(mutationTypes.SET_PLAN, {
-        workspaceId,
-        plan: getters.getPlanById(planId),
-      });
-    } catch (_) {
-      throw new Error('Unable to change workspace plan due to a server error, please try again later');
-    }
+    commit(mutationTypes.SET_PLAN, {
+      workspaceId,
+      plan: getters.getPlanById(planId),
+    });
   },
 
   /**

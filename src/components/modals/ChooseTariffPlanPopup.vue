@@ -109,7 +109,7 @@ export default Vue.extend({
     /**
      * Attempt to change workspace plan
      */
-    async onContinue() {
+    async onContinue(): void {
       try {
         await this.$store.dispatch(CHANGE_WORKSPACE_PLAN, {
           workspaceId: this.workspaceId,
