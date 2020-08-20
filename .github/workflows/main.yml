@@ -3,8 +3,8 @@ name: Build and deploy
 on: [push]
 
 env:
-  DOCKER_IMAGE_NAME: hawk-garage
-  DOCKERHUB_USER: codexteamuser
+  DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/hawk-garage
+
 
 jobs:
   build_and_deploy:
@@ -18,27 +18,14 @@ jobs:
       - run: echo "VUE_APP_API_ENDPOINT=https://api.beta.hawk.so/graphql" > ./.env
         if: endsWith(github.ref, '/prod')
 
-      - name: Build docker image
-        run: docker build -t $DOCKER_IMAGE_NAME .
-
-      - name: Get branch name
-        uses: nelonoel/branch-name@v1
-
-      - name: Push to private registry
-        if: endsWith(github.ref, '/stage')
-        run: |
-          docker tag $DOCKER_IMAGE_NAME ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
-          docker login ${{ secrets.REGISTRY_ADDRESS }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push ${{ secrets.REGISTRY_NAME }}/$DOCKER_IMAGE_NAME:$BRANCH_NAME
-          docker logout
-
-      - name: Push to Docker Hub
-        if: endsWith(github.ref, '/prod')
-        run: |
-          docker tag $DOCKER_IMAGE_NAME $DOCKERHUB_USER/$DOCKER_IMAGE_NAME:$BRANCH_NAME
-          docker login -u $DOCKERHUB_USER -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push $DOCKERHUB_USER/$DOCKER_IMAGE_NAME:$BRANCH_NAME
-          docker logout
+      - name: Build and push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: ${{ env.DOCKER_REPO }}
+          tag_with_ref: true
+          push: ${{ endsWith(github.ref, '/stage') || endsWith(github.ref, '/prod') }}
 
       - name: Deploy on stage
         if: endsWith(github.ref, '/stage')
