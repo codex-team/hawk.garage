@@ -3,8 +3,8 @@ name: Build and deploy
 on: [push]
 
 env:
-  DOCKER_IMAGE_NAME: hawk-garage
-  DOCKERHUB_USER: codexteamuser
+  DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/hawk-garage
+
 
 jobs:
   build_and_deploy:
