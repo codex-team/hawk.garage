@@ -19,6 +19,12 @@ directive @default(
 """Directive for automatically image uploading"""
 directive @uploadImage on ARGUMENT_DEFINITION
 
+"""Directive for checking a field for empty space"""
+directive @validate(notEmpty: Boolean, isEmail: Boolean) on ARGUMENT_DEFINITION
+
+"""Directive for checking user in workspace"""
+directive @requireUserInWorkspace on FIELD_DEFINITION
+
 directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
 
 """Payment link structure"""
@@ -70,6 +76,32 @@ This object will be returned to the changeUserNotificationsReceiveType mutation
 """
 type changeUserNotificationsReceiveTypeResponse {
   notifications: UserNotificationsSettings
+}
+
+"""Payload for changing workspace tariff plan"""
+input ChangeWorkspacePlanInput {
+  """Workspace ID"""
+  workspaceId: ID!
+
+  """Tariff plan ID"""
+  planId: ID!
+}
+
+"""Workspace tariff plan change mutation response"""
+type ChangeWorkspacePlanResponse {
+  """Modified workspace id"""
+  recordId: ID
+
+  """Modified workspace object"""
+  record: Workspace
+}
+
+type ChartDataItem {
+  """Events timestamp"""
+  timestamp: Int
+
+  """Amount of events"""
+  count: Int
 }
 
 """Confirmed member data in workspace"""
@@ -143,6 +175,9 @@ type Event {
 
   """Event occurrence count"""
   totalCount: Int!
+
+  """User assigneed to the event"""
+  assignee: User
 
   """Event payload"""
   payload: EventPayload!
@@ -237,6 +272,32 @@ type EventPayload {
   addons: JSONObject
 }
 
+"""Events filters input type"""
+input EventsFiltersInput {
+  """If True, includes events with resolved mark to the output"""
+  resolved: Boolean
+
+  """If True, includes events with starred mark to the output"""
+  starred: Boolean
+
+  """If True, includes events with ignored mark to the output"""
+  ignored: Boolean
+}
+
+type EventsMutations {
+  """Set an assignee for the selected event"""
+  updateAssignee(input: UpdateAssigneeInput!): UpdateAssigneeResponse!
+
+  """Remove an assignee from the selected event"""
+  removeAssignee(input: RemoveAssigneeInput!): RemoveAssigneeResponse!
+}
+
+"""Possible events order"""
+enum EventsSortOrder {
+  BY_DATE
+  BY_COUNT
+}
+
 """Event user representation"""
 type EventUser {
   """Internal user's identifier inside an app"""
@@ -316,6 +377,9 @@ type Mutation {
     """Mark to set"""
     mark: EventMark!
   ): Boolean!
+
+  """Namespace that contains only mutations related to the events"""
+  events: EventsMutations!
 
   """
   Creates new notification rule and add it to start of the array of notifications rules
@@ -531,6 +595,12 @@ type Mutation {
     """Workspace ID"""
     workspaceId: ID!
   ): Boolean!
+
+  """
+  Mutation in order to switch workspace tariff plan
+  Returns true if operation is successful
+  """
+  changeWorkspacePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
 }
 
 """All available notification channels"""
@@ -614,22 +684,22 @@ type PendingMember {
   email: String!
 }
 
-"""Workspace tariff plan"""
+"""Hawk tariff plan description"""
 type Plan {
+  """Plan id in MongoDB"""
+  id: ID!
+
   """Plan name"""
-  name: String
-
-  """Subscription date"""
-  subscriptionDate: DateTime
-
-  """Lsat charge date"""
-  lastChargeDate: DateTime
+  name: String!
 
   """Monthly charge for plan"""
-  monthlyCharge: Int
+  monthlyCharge: Int!
 
   """Events limit for plan"""
-  eventsLimit: Int
+  eventsLimit: Int!
+
+  """True if plan is default one"""
+  isDefault: Boolean!
 }
 
 """Project representation"""
@@ -677,7 +747,22 @@ type Project {
 
     """Certain number of documents to skip"""
     skip: Int! = 0
+
+    """Events sort order"""
+    sort: EventsSortOrder
+
+    """Event marks by which events should be sorted"""
+    filters: EventsFiltersInput
   ): RecentEvents
+
+  """Return events that occurred after a certain timestamp"""
+  chartData(
+    """How many days we need to fetch for displaying in a chart"""
+    days: Int! = 0
+
+    """User's local timezone offset in minutes"""
+    timezoneOffset: Int! = 0
+  ): [ChartDataItem]
 
   """Returns number of unread events"""
   unreadCount: Int!
@@ -747,6 +832,9 @@ type Query {
     """Workspace(s) id(s)"""
     ids: [ID] = []
   ): [Workspace]
+
+  """Gets available Hawk tariff plans"""
+  plans: [Plan!]!
 }
 
 """What events to receive"""
@@ -765,6 +853,19 @@ type RecentEvents {
 
   """Information about occurred events per day"""
   dailyInfo: [DailyEventInfo]
+}
+
+input RemoveAssigneeInput {
+  """ID of project event is related to"""
+  projectId: ID!
+
+  """ID of the selected event"""
+  eventId: ID!
+}
+
+type RemoveAssigneeResponse {
+  """Response status"""
+  success: Boolean!
 }
 
 """Event's repetitions. Make Event unique by repetition's payload"""
@@ -860,6 +961,25 @@ type Transaction {
 
   """PAN of card by which transaction has been made"""
   cardPan: Int!
+}
+
+input UpdateAssigneeInput {
+  """ID of project event is related to"""
+  projectId: ID!
+
+  """ID of the selected event"""
+  eventId: ID!
+
+  """Assignee id to set"""
+  assignee: ID!
+}
+
+type UpdateAssigneeResponse {
+  """Response status"""
+  success: Boolean!
+
+  """User assigned to the event"""
+  record: User!
 }
 
 """Input type for updating exsiting notification rule"""
@@ -969,3 +1089,4 @@ type Workspace {
   ): [Project!]
 }
 
+Done in 1.01s.
