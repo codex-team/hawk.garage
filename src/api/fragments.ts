@@ -117,9 +117,11 @@ export const USER_NOTIFICATIONS_FRAGMENT = `
 // language=GraphQL
 export const WORKSPACE_PLAN = `
   fragment WorkspacePlan on Workspace {
-    id
-    name
-    monthlyCharge
-    eventsLimit
+    plan {
+      id
+      name
+      monthlyCharge
+      eventsLimit
+    }
   }
 `;
