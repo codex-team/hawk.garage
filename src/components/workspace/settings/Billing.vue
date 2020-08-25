@@ -69,7 +69,7 @@ export default Vue.extend({
       return this.$store.getters.getWorkspaceById(workspaceId);
     },
   },
-  async mounted(): void {
+  async mounted(): Promise<void> {
     this.isPaymentsHistoryLoading = true;
 
     await this.$store.dispatch(GET_BUSINESS_OPERATIONS, {

@@ -4,41 +4,8 @@
  */
 import { Workspace } from './workspaces';
 import { User } from './user';
-
-/**
- * Business operations statuses
- */
-export enum BusinessOperationStatus {
-  /**
-   * Business operation is pending
-   */
-  Pending='PENDING',
-
-  /**
-   * Business operation is confirmed
-   */
-  Confirmed='CONFIRMED',
-
-  /**
-   * Business operation is rejected
-   */
-  Rejected='REJECTED'
-}
-
-/**
- * Types of business operations
- */
-export enum BusinessOperationType {
-  /**
-   * Workspace plan purchase by payment worker
-   */
-  WorkspacePlanPurchase='WORKSPACE_PLAN_PURCHASE',
-
-  /**
-   * Workspace deposit balance by user
-   */
-  DepositByUser='DEPOSIT_BY_USER'
-}
+import {BusinessOperationType} from './business-operation-type';
+import {BusinessOperationStatus} from './business-operation-status';
 
 /**
  * Business operation payload type for `DepositByUser` operation type

@@ -23,12 +23,17 @@ export const QUERY_BUSINESS_OPERATIONS = `
       id
       type
       status
+      dtCreated
       payload {
         ...on PayloadOfDepositByUser {
           user {
             id
             name
             image
+          }
+          workspace {
+            id
+            name
           }
           amount
           cardPan

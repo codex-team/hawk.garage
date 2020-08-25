@@ -399,3 +399,32 @@ export function getBrowserByUseragent(ua: string): string[] {
 
   return M;
 }
+
+
+/**
+ * Uppercase the first letter
+ *
+ * @param string - string to process
+ */
+export function ucFirst(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+/**
+ * Add 0 to digit to get string like '09' or '-09'
+ *
+ * @param number - digit to process
+ * @param length - how many chars should be (2 for '09', 3 for '009' etc)
+ */
+export function pad(number: number, length = 2): string {
+  const abs = Math.abs(number);
+  const numberLen = abs.toString().length;
+
+  if (numberLen >= length) {
+    return number.toString();
+  }
+
+  const sign = number < 0 ? '–' : '';
+
+  return sign + Array(length - numberLen + 1).join('0') + abs;
+}
