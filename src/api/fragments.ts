@@ -110,3 +110,18 @@ export const USER_NOTIFICATIONS_FRAGMENT = `
     }
   }
 `;
+
+/**
+ * Query fragment for workspace tariff plan
+ */
+// language=GraphQL
+export const WORKSPACE_PLAN = `
+  fragment WorkspacePlan on Workspace {
+    plan {
+      id
+      name
+      monthlyCharge
+      eventsLimit
+    }
+  }
+`;

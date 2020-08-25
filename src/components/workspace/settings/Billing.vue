@@ -51,7 +51,7 @@ export default Vue.extend({
   //       await vm.$store.dispatch(FETCH_WORKSPACE, to.params.workspaceId);
   //     }
   //
-  //     const { isAdmin } = vm.workspace.users.find(u => u.id === user.id);
+  //     const { isAdmin } = vm.workspace.team.find(u => u.user.id === user.id);
   //
   //     if (!isAdmin) {
   //       next({ name: 'workspace-settings' });

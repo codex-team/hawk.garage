@@ -6,7 +6,10 @@
       'ui-button--small': small,
       'ui-button--loading': isLoading,
       'ui-button--shaking': shaking,
+      'ui-button--rounded': rounded,
+      'ui-button--disabled': disabled,
     }"
+    :disabled="disabled"
     @click="$emit('click', $event)"
   >
     <Icon
@@ -79,6 +82,22 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Adds border radius for button
+     */
+    rounded: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Disables button
+     */
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -115,8 +134,15 @@ export default Vue.extend({
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
   outline: none;
-  cursor: pointer;
   user-select: none;
+
+  &:not(&--disabled) {
+    cursor: pointer;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+  }
 
   &--small {
     padding: 6px 7px;
@@ -131,9 +157,15 @@ export default Vue.extend({
     background: var(--color-indicator-medium);
     border: 0;
 
-    &:hover {
+    &:not(^&--disabled):hover {
       background: var(--color-indicator-medium-dark);
     }
+  }
+
+  &--rounded {
+    padding: 5px 15px;
+    /* Will set border radius as half of height */
+    border-radius: 1000px;
   }
 
   $loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
@@ -154,7 +186,11 @@ export default Vue.extend({
     background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, $submitLoaderColor 4px, $submitLoaderColor 8px);
   }
 
-  &:hover {
+  &--disabled {
+    opacity: 0.4;
+  }
+
+  &:not(&--disabled):hover {
     color: var(--color-text-main);
   }
 

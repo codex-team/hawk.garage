@@ -30,7 +30,24 @@
     "searchField": "Search"
   },
   "projects": {
+    "filters": {
+      "filtersLabel": "Filter",
+      "filtersOptions": {
+        "all": "All",
+        "starred": "Starred",
+        "resolved": "Resolved",
+        "unresolved": "Unresolved",
+        "ignored": "Ignored"
+      },
+      "sortLabel": "Sort",
+      "sortOptions": {
+        "byDate": "By time",
+        "byCount": "By count"
+      }
+    },
     "placeholder": "No project selected",
+    "loadMoreEvents": "Load more events",
+    "noEventsPlaceholder": "No events found with this filter",
     "creationDialog": {
       "description": "To start track events from your application, add it as a Project and get an Integration Token.",
       "projectNameLabel": "PROJECT NAME",
@@ -140,6 +157,12 @@
     }
   },
   "workspaces": {
+    "chooseTariffPlanDialog": {
+      "title": "Choose a plan",
+      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you want a free unlimited access for non-profit products, contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "onSuccess": "Workspace plan has been successfully changed",
+      "onError": "Unable to change workspace plan due to an error, please try again later"
+    },
     "creationDialog": {
       "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
       "submitButton": "Create workspace",
@@ -242,6 +265,11 @@
   },
   "common": {
     "copiedNotification": "Copied!",
+    "free": "FREE",
+    "select": "Select",
+    "continue": "Continue",
+    "eventsPerMonth": "events / mo",
+    "dollarsPerMonth": "$ / mo",
     "loading": "Loading...",
     "months": [
       "january",

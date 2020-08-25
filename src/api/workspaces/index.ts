@@ -7,10 +7,11 @@ import {
   MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
   MUTATION_UPDATE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
-  QUERY_WORKSPACES
+  QUERY_WORKSPACES, MUTATION_CHANGE_WORKSPACE_PLAN
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
+import { APIResponse } from '@/types/api';
 
 interface CreateWorkspaceInput {
   /**
@@ -145,4 +146,22 @@ export async function removeUserFromWorkspace(
     userId,
     userEmail,
   })).removeMemberFromWorkspace;
+}
+
+/**
+ * Changes workspace tariff plan
+ *
+ * @param {string} workspaceId - id of workspace to change plan
+ * @param {string} planId - id of plan to set
+ */
+export async function changePlan(
+  workspaceId: string,
+  planId: string
+): Promise<APIResponse<Workspace>> {
+  return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN, {
+    input: {
+      workspaceId,
+      planId,
+    },
+  })).changeWorkspacePlan;
 }

@@ -97,8 +97,13 @@ function convertUtcMidnightToLocalMidnight(utcMidnight): number {
  * /!\ The  'groupingTimestamp' field is stored in UTC so we need to convert it to the local zone first.
  *
  * @param {object[]} items - array of object with the  'groupingTimestamp' field
+ * @param {boolean} [convertMidnight] - need to convert utc midnight to local
  */
-export function groupByGroupingTimestamp(items): object {
+export function groupByGroupingTimestamp(items, convertMidnight = true): object {
+  if (!convertMidnight) {
+    return groupBy('groupingTimestamp')(items);
+  }
+
   items = items.map((item) => {
     return Object.assign({}, item, {
       groupingTimestamp: convertUtcMidnightToLocalMidnight(item.lastRepetitionTime),

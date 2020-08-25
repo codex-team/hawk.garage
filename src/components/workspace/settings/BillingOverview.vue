@@ -17,7 +17,7 @@
         {{ workspace.name }}
       </div>
       <div class="billing-card__members-count">
-        {{ $tc('billing.members', workspace.users ? workspace.users.length : 0) }}
+        {{ $tc('billing.members', workspace.team ? workspace.team.length : 0) }}
       </div>
     </div>
     <div class="billing-card__info">
@@ -29,7 +29,10 @@
           {{ workspace.balance || 0 }} $
         </div>
       </div>
-      <div class="billing-card__info-card">
+      <div
+        class="billing-card__info-card billing-card__current-plan"
+        @click="onPlanClick"
+      >
         <div class="billing-card__label">
           {{ $t('billing.currentPlan') }}
         </div>
@@ -125,6 +128,17 @@ export default {
         data: { amount },
       });
     },
+    /**
+     * Open ChooseTariffPlan popup on click on the current plan button
+     */
+    onPlanClick() {
+      this.$store.dispatch(SET_MODAL_DIALOG, {
+        component: 'ChooseTariffPlanPopup',
+        data: {
+          workspaceId: this.workspace.id,
+        },
+      });
+    },
   },
 };
 </script>
@@ -169,6 +183,10 @@ export default {
 
     &__info-card {
       margin-right: 40px;
+    }
+
+    &__current-plan {
+      cursor: pointer;
     }
 
     &__label {

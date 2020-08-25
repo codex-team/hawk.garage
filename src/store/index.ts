@@ -7,6 +7,7 @@ import workspaces from './modules/workspaces';
 import projects from './modules/projects';
 import modalDialog from './modules/modalDialog';
 import events, { EventsModuleState } from './modules/events/index';
+import plans, { PlansModuleState } from './modules/plans/index';
 
 import createPersistedState from 'vuex-persistedstate';
 import { User } from '../types/user';
@@ -43,6 +44,7 @@ interface UserModuleState {
 export interface RootState {
   events: EventsModuleState;
   user: UserModuleState;
+  plans: PlansModuleState;
 }
 
 /**
@@ -63,6 +65,8 @@ export default new Vuex.Store({
     modalDialog,
 
     events,
+
+    plans,
   },
   plugins: [
     createPersistedState({

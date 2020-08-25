@@ -72,10 +72,12 @@ export const QUERY_EVENT = `
 export const QUERY_RECENT_PROJECT_EVENTS = `
   query ProjectRecentEvents (
     $projectId: ID!,
-    $skip: Int!
+    $skip: Int!,
+    $sort: EventsSortOrder,
+    $filters: EventsFiltersInput
   ) {
     project(id: $projectId) {
-      recentEvents(limit: 15, skip: $skip) {
+      recentEvents(limit: 15, skip: $skip, sort: $sort, filters: $filters) {
         events {
           id
           groupHash

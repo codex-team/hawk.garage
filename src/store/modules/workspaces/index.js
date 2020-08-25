@@ -9,7 +9,8 @@ import {
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
   REMOVE_USER_FROM_WORKSPACE,
-  GET_BUSINESS_OPERATIONS
+  GET_BUSINESS_OPERATIONS,
+  CHANGE_WORKSPACE_PLAN
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -32,6 +33,7 @@ const mutationTypes = {
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
   SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
+  SET_PLAN: 'SET_PLAN', // Set workspace tariff plan
 };
 
 /**
@@ -75,10 +77,10 @@ const getters = {
    * @returns {function(string): Workspace}
    */
   getWorkspaceById: state =>
-  /**
-   * @param {string} id project id to find
-   * @returns {Project}
-   */
+    /**
+     * @param {string} id project id to find
+     * @returns {Project}
+     */
     id => state.list.find(workspace => workspace.id === id),
 
   /**
@@ -325,6 +327,24 @@ const actions = {
   },
 
   /**
+   * Call change plan mutation
+   *
+   * @param {Function} commit - VueX commit method
+   * @param {object} getters - Store getters
+   * @param {string} workspaceId - id of workspace to change plan
+   * @param {string} planId - id of plan to set
+   * @returns {Promise<void>}
+   */
+  async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
+    await workspaceApi.changePlan(workspaceId, planId);
+
+    commit(mutationTypes.SET_PLAN, {
+      workspaceId,
+      plan: getters.getPlanById(planId),
+    });
+  },
+
+  /**
    * Resets module state
    *
    * @param {Function} commit - standard Vuex commit function
@@ -518,6 +538,26 @@ const mutations = {
         ];
       }
     );
+  },
+
+  /**
+   * Set workspace plan
+   *
+   * @param {object} state - module state
+   * @param {string} workspaceId - id of workspace to set plan
+   * @param {Plan} plan - plan to set
+   */
+  [mutationTypes.SET_PLAN](state, { workspaceId, plan }) {
+    const index = state.list.findIndex(w => w.id === workspaceId);
+    const workspace = state.list[index];
+
+    Vue.set(workspace, 'plan', plan);
+
+    state.list = [
+      ...state.list.slice(0, index),
+      workspace,
+      ...state.list.slice(index + 1),
+    ];
   },
 
   /**
