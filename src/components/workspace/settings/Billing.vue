@@ -4,31 +4,60 @@
       {{ $t('workspaces.settings.billing.title') }}
     </div>
     <BillingCard :workspace="workspace" />
-    <BillingHistory :workspace="workspace" />
+    <BillingHistory
+      :operations="workspace.paymentsHistory"
+      :is-loading="isPaymentsHistoryLoading"
+    />
   </div>
 </template>
 
-<script>
-import BillingCard from './BillingOverview';
-import BillingHistory from '../../utils/billing/History';
-import { FETCH_WORKSPACE } from '../../../store/modules/workspaces/actionTypes';
+<script lang="ts">
+import Vue from 'vue';
+import BillingCard from './BillingOverview.vue';
+import BillingHistory from '../../utils/billing/History.vue';
+import { BusinessOperation } from '../../../types/business-operation';
+import { ConfirmedMember, Workspace } from '@/types/workspaces';
+import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
 
-export default {
+export default Vue.extend({
   name: 'WorkspaceSettingsBilling',
   components: {
     BillingHistory,
     BillingCard,
   },
-  // Do not show billing page by direct link if user is not admin
-  beforeRouteEnter(to, from, next) {
+  data(): {
+    paymentsHistory: BusinessOperation[],
+    isPaymentsHistoryLoading: boolean,
+    } {
+    return {
+      /**
+       * List of payment operations
+       */
+      paymentsHistory: [],
+
+      /**
+       * Flag determines the loading of the history
+       */
+      isPaymentsHistoryLoading: false,
+    };
+  },
+  /**
+   * Do not show billing page by direct link if user is not admin
+   *
+   * @param to
+   * @param from
+   * @param next
+   */
+  beforeRouteEnter(to, from, next): void {
     next(async vm => {
       const user = vm.$store.state.user.data;
 
-      if (!vm.workspace.users) {
-        await vm.$store.dispatch(FETCH_WORKSPACE, to.params.workspaceId);
-      }
+      const team = (vm as unknown as {workspace: Workspace}).workspace.team;
+      const userInTeam = (team.find(member => {
+        return 'user' in member && member.user.id === user.id;
+      }) as ConfirmedMember);
 
-      const { isAdmin } = vm.workspace.team.find(u => u.user.id === user.id);
+      const { isAdmin } = userInTeam;
 
       if (!isAdmin) {
         next({ name: 'workspace-settings' });
@@ -40,13 +69,28 @@ export default {
     });
   },
   computed: {
-    workspace() {
+    /**
+     * Current Workspace
+     */
+    workspace(): Workspace {
       const workspaceId = this.$route.params.workspaceId;
 
       return this.$store.getters.getWorkspaceById(workspaceId);
     },
   },
-};
+  async mounted(): Promise<void> {
+    this.isPaymentsHistoryLoading = true;
+
+    /**
+     * Load operations history
+     */
+    await this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
+      ids: [ this.workspace.id ],
+    });
+
+    this.isPaymentsHistoryLoading = false;
+  },
+});
 </script>
 
 <style src="../../../styles/settings-window-page.css"></style>

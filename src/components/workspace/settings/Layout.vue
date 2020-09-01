@@ -36,7 +36,7 @@
         <router-link
           v-if="isAdmin"
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-settings-billing' }"
+          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.billing.title') }}
         </router-link>
