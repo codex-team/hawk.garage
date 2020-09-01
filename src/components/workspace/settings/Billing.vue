@@ -16,9 +16,8 @@ import Vue from 'vue';
 import BillingCard from './BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import { BusinessOperation } from '../../../types/business-operation';
-import { Workspace } from '@/types/workspaces';
+import { ConfirmedMember, Workspace } from '@/types/workspaces';
 import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
-
 
 export default Vue.extend({
   name: 'WorkspaceSettingsBilling',
@@ -42,27 +41,37 @@ export default Vue.extend({
       isPaymentsHistoryLoading: false,
     };
   },
-  // Do not show billing page by direct link if user is not admin
-  // beforeRouteEnter(to, from, next): void {
-  //   next(async vm => {
-  //     const user = vm.$store.state.user.data;
-  //
-  //     if (!vm.workspace.users) {
-  //       await vm.$store.dispatch(FETCH_WORKSPACE, to.params.workspaceId);
-  //     }
-  //
-  //     const { isAdmin } = vm.workspace.team.find(u => u.user.id === user.id);
-  //
-  //     if (!isAdmin) {
-  //       next({ name: 'workspace-settings' });
-  //
-  //       return;
-  //     }
-  //
-  //     next();
-  //   });
-  // },
+  /**
+   * Do not show billing page by direct link if user is not admin
+   *
+   * @param to
+   * @param from
+   * @param next
+   */
+  beforeRouteEnter(to, from, next): void {
+    next(async vm => {
+      const user = vm.$store.state.user.data;
+
+      const team = (vm as unknown as {workspace: Workspace}).workspace.team;
+      const userInTeam = (team.find(member => {
+        return 'user' in member && member.user.id === user.id;
+      }) as ConfirmedMember);
+
+      const { isAdmin } = userInTeam;
+
+      if (!isAdmin) {
+        next({ name: 'workspace-settings' });
+
+        return;
+      }
+
+      next();
+    });
+  },
   computed: {
+    /**
+     * Current Workspace
+     */
     workspace(): Workspace {
       const workspaceId = this.$route.params.workspaceId;
 
@@ -72,6 +81,9 @@ export default Vue.extend({
   async mounted(): Promise<void> {
     this.isPaymentsHistoryLoading = true;
 
+    /**
+     * Load operations history
+     */
     await this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
       ids: [ this.workspace.id ],
     });

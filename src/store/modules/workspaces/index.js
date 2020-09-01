@@ -321,8 +321,6 @@ const actions = {
   async [GET_BUSINESS_OPERATIONS]({ commit }, { ids }) {
     const operations = await billingApi.getBusinessOperations(ids);
 
-    console.log('operations', operations);
-
     commit(mutationTypes.SET_BUSINESS_OPERATIONS, operations || []);
   },
 
