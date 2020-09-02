@@ -239,8 +239,8 @@ export default Vue.extend({
     }
 
     &__loader {
-      color: var(--color-text-second);
       margin-top: 10px;
+      color: var(--color-text-second);
       font-size: 13px;
     }
 
@@ -265,8 +265,8 @@ export default Vue.extend({
     }
 
     &__date {
-      width: 150px;
       flex-shrink: 0;
+      width: 150px;
     }
 
     &__description {

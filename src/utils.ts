@@ -405,7 +405,6 @@ export function getBrowserByUseragent(ua: string): string[] {
   return M;
 }
 
-
 /**
  * Uppercase the first letter
  *

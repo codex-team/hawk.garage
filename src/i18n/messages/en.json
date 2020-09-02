@@ -223,7 +223,7 @@
     "autoPay": "Auto-pay",
     "payPeriod": "mo",
     "operations": {
-      "paymentByCard": "Payment by card **** **** ***** {cardPan}",
+      "paymentByCard": "Payment by card **** **** **** {cardPan}",
       "chargeForPlan": "Charge for {workspaceName} tariff plan"
     },
     "processPayment": {
