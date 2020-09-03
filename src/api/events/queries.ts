@@ -160,6 +160,32 @@ export const QUERY_LATEST_REPETITIONS = `
 
 // language=GraphQL
 /**
+ * Fetch data for chart
+ * Display event occurs for few days
+ */
+export const QUERY_CHART_DATA = `
+  query EventChartData (
+    $projectId: ID!
+    $eventId: ID!
+    $days: Int!
+    $timezoneOffset: Int!
+  ) {
+    project(id: $projectId) {
+      event(id: $eventId) {
+        chartData(
+          days: $days,
+          timezoneOffset: $timezoneOffset
+        ) {
+          timestamp
+          count
+        }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `
