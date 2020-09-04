@@ -51,8 +51,6 @@ export default {
     const boundingDays = 2;
 
     if (!this.$store.getters.getProjectEventById(this.projectId, this.eventId).chartData) {
-      window.console.log('fetching event chart data');
-
       await this.$store.dispatch(SAVE_CHART_DATA, {
         projectId: this.projectId,
         eventId: this.eventId,
