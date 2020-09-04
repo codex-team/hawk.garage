@@ -8,22 +8,23 @@
 </template>
 
 <script>
-import Chart from "../events/Chart";
-import {SAVE_CHART_DATA} from "../../store/modules/events/actionTypes";
+import Chart from '../events/Chart';
+import { SAVE_CHART_DATA } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventDaily',
   components: {
-    Chart
+    Chart,
   },
   data() {
     return {
       /**
        * Data for a chart
+       *
        * @type {EventChartItem[]}
        */
-      chartData: []
-    }
+      chartData: [],
+    };
   },
   computed: {
     /**

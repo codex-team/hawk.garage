@@ -655,7 +655,7 @@ const module: Module<EventsModuleState, RootState> = {
         eventId,
         data: chartData,
       });
-    }
+    },
   },
   mutations: {
     /**
@@ -900,7 +900,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} eventId
      * @param {EventChartItem[]} data - array of dots
      */
-    [MutationTypes.SAVE_CHART_DATA](state: EventsModuleState, { projectId, eventId, data }: { projectId: string, eventId: string, data: EventChartItem[]}) {
+    [MutationTypes.SAVE_CHART_DATA](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
       const key = getEventsListKey(projectId, eventId);
       const event = state.list[key];
 
