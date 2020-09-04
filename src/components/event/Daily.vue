@@ -9,7 +9,7 @@
 
 <script>
 import Chart from '../events/Chart';
-import { SAVE_CHART_DATA } from '../../store/modules/events/actionTypes';
+import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 
 export default {
   name: 'EventDaily',
@@ -52,7 +52,7 @@ export default {
     const boundingDays = 2;
 
     if (!this.$store.getters.getProjectEventById(this.projectId, this.eventId).chartData) {
-      await this.$store.dispatch(SAVE_CHART_DATA, {
+      await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
         eventId: this.eventId,
         days: twoWeeks + boundingDays,
