@@ -48,7 +48,7 @@ export default {
    * Used to fetch events on component creation
    */
   async created() {
-    const twoWeeks = 14;
+    const twoWeeks = 34;
     const boundingDays = 2;
 
     if (!this.$store.getters.getProjectEventById(this.projectId, this.eventId).chartData) {
