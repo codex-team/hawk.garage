@@ -9,7 +9,7 @@ import {
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  SAVE_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -93,7 +93,7 @@ enum MutationTypes {
   /**
    * Get chart data for en event for a few days
    */
-  GET_CHART_DATA = 'GET_CHART_DATA'
+  SAVE_CHART_DATA = 'SAVE_CHART_DATA'
 }
 
 /**
@@ -646,11 +646,11 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} eventId - event's id
      * @param {number} days - number of a "few" days
      */
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string, eventId: string, days: number}): Promise<void> {
+    async [SAVE_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string, eventId: string, days: number}): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
 
-      commit(MutationTypes.GET_CHART_DATA, {
+      commit(MutationTypes.SAVE_CHART_DATA, {
         projectId,
         eventId,
         data: chartData,
@@ -900,7 +900,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} eventId
      * @param {EventChartItem[]} data - array of dots
      */
-    [MutationTypes.GET_CHART_DATA](state: EventsModuleState, { projectId, eventId, data }: { projectId: string, eventId: string, data: EventChartItem[]}) {
+    [MutationTypes.SAVE_CHART_DATA](state: EventsModuleState, { projectId, eventId, data }: { projectId: string, eventId: string, data: EventChartItem[]}) {
       const key = getEventsListKey(projectId, eventId);
       const event = state.list[key];
 
