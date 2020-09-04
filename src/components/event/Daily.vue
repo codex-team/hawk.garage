@@ -20,6 +20,7 @@ export default {
     return {
       /**
        * Data for a chart
+       * @type {EventChartItem[]}
        */
       chartData: []
     }
