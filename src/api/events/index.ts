@@ -5,7 +5,8 @@ import {
   MUTATION_REMOVE_EVENT_ASSIGNEE,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
-  QUERY_RECENT_PROJECT_EVENTS
+  QUERY_RECENT_PROJECT_EVENTS,
+  QUERY_CHART_DATA
 } from './queries';
 import * as api from '@/api';
 import {
@@ -17,6 +18,7 @@ import {
   HawkEventRepetition
 } from '@/types/events';
 import { User } from '@/types/user';
+import { EventChartItem } from '@/types/chart';
 
 /**
  * Get specific event
@@ -149,4 +151,21 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
       eventId,
     },
   })).events.removeAssignee;
+}
+
+/**
+ * Fetch data for chart
+ *
+ * @param {string} projectId - project id
+ * @param {string} eventId - event id
+ * @param {number} days - how many days we need to fetchfor displaying in chart
+ * @param {number} timezoneOffset - user's local timezone
+ */
+export async function fetchChartData(projectId, eventId, days, timezoneOffset): Promise<EventChartItem[]> {
+  return (await api.call(QUERY_CHART_DATA, {
+    projectId,
+    eventId,
+    days,
+    timezoneOffset,
+  })).project.event.chartData;
 }

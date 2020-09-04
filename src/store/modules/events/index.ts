@@ -8,7 +8,8 @@ import {
   SET_EVENTS_ORDER,
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
-  VISIT_EVENT
+  VISIT_EVENT,
+  GET_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -25,6 +26,7 @@ import {
   HawkEventRepetition
 } from '@/types/events';
 import { User } from '@/types/user';
+import { EventChartItem } from '@/types/chart';
 
 /**
  * Mutations enum for this module
@@ -86,7 +88,12 @@ enum MutationTypes {
   /**
    * Set latest events for projects to disply in projects menu
    */
-  SET_LATEST_EVENTS = 'SET_LATEST_EVENTS'
+  SET_LATEST_EVENTS = 'SET_LATEST_EVENTS',
+
+  /**
+   * Get chart data for en event for a few days
+   */
+  SAVE_CHART_DATA = 'SAVE_CHART_DATA'
 }
 
 /**
@@ -629,6 +636,26 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
       });
     },
+
+    /**
+     * Get chart data for an event for a few days
+     *
+     * @param {Function} commit - VueX commit method
+     * @param {Function} dispatch - Vuex dispatch method
+     * @param {string} projectId - project's id
+     * @param {string} eventId - event's id
+     * @param {number} days - number of a "few" days
+     */
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
+      const timezoneOffset = (new Date()).getTimezoneOffset();
+      const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
+
+      commit(MutationTypes.SAVE_CHART_DATA, {
+        projectId,
+        eventId,
+        data: chartData,
+      });
+    },
   },
   mutations: {
     /**
@@ -863,6 +890,21 @@ const module: Module<EventsModuleState, RootState> = {
 
           Vue.set(state.latest, projectId, eventInfo);
         });
+    },
+
+    /**
+     * Save event's chart data
+     *
+     * @param {EventsModuleState} state - module state
+     * @param {string} projectId
+     * @param {string} eventId
+     * @param {EventChartItem[]} data - array of dots
+     */
+    [MutationTypes.SAVE_CHART_DATA](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
+      const key = getEventsListKey(projectId, eventId);
+      const event = state.list[key];
+
+      Vue.set(state.list[key], 'chartData', data);
     },
 
     /**

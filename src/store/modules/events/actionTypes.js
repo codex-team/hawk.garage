@@ -52,3 +52,8 @@ export const SET_EVENTS_ORDER = 'SET_EVENTS_ORDER';
  * Set events filters to use
  */
 export const SET_EVENTS_FILTERS = 'SET_EVENTS_FILTERS';
+
+/**
+ * Get chart data for target event
+ */
+export const GET_CHART_DATA = 'GET_CHART_DATA';

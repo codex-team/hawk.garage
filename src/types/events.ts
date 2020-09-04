@@ -1,4 +1,5 @@
 import { User } from '@/types/user';
+import { EventChartItem } from '@/types/chart';
 
 /**
  * Event marks enum
@@ -106,6 +107,11 @@ export interface HawkEvent {
    * Event assignee
    */
   assignee: User;
+
+  /**
+   * Event chart data for a few days
+   */
+  chartData?: EventChartItem[];
 }
 
 /**
