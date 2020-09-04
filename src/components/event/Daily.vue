@@ -1,9 +1,6 @@
 <template>
   <div>
-    <Chart
-      :points="chartData"
-      class="project-overview__chart"
-    />
+    <Chart :points="chartData" />
   </div>
 </template>
 
