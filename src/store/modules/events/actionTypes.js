@@ -56,4 +56,4 @@ export const SET_EVENTS_FILTERS = 'SET_EVENTS_FILTERS';
 /**
  * Get chart data for target event
  */
-export const SAVE_CHART_DATA = 'SAVE_CHART_DATA';
+export const GET_CHART_DATA = 'GET_CHART_DATA';

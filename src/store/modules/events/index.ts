@@ -9,7 +9,7 @@ import {
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  SAVE_CHART_DATA
+  GET_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -646,7 +646,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} eventId - event's id
      * @param {number} days - number of a "few" days
      */
-    async [SAVE_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string, eventId: string, days: number}): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
 
