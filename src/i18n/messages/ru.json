@@ -223,7 +223,7 @@
     "autoPay": "Авто-платеж",
     "payPeriod": "мес",
     "operations": {
-      "paymentByCard": "Пополнение по карте **** **** ***** {cardPan}",
+      "paymentByCard": "Пополнение по карте **** **** **** {cardPan}",
       "chargeForPlan": "Списание за тарифный план {workspaceName}"
     },
     "processPayment": {

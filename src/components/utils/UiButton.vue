@@ -142,6 +142,7 @@ export default Vue.extend({
 
   &--disabled {
     cursor: not-allowed;
+    opacity: 0.4;
   }
 
   &--small {
@@ -184,10 +185,6 @@ export default Vue.extend({
 
   &--submit&--loading {
     background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, $submitLoaderColor 4px, $submitLoaderColor 8px);
-  }
-
-  &--disabled {
-    opacity: 0.4;
   }
 
   &:not(&--disabled):hover {

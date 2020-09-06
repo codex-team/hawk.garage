@@ -1,6 +1,6 @@
 import { QUERY_PAYMENT_LINK, QUERY_BUSINESS_OPERATIONS } from './queries';
 import * as api from '../';
-import {BusinessOperation} from '../../types/business-operation';
+import { BusinessOperation } from '../../types/business-operation';
 
 /**
  * Languages supported by the Tinkoff

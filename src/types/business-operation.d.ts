@@ -4,8 +4,8 @@
  */
 import { Workspace } from './workspaces';
 import { User } from './user';
-import {BusinessOperationType} from './business-operation-type';
-import {BusinessOperationStatus} from './business-operation-status';
+import { BusinessOperationType } from './business-operation-type';
+import { BusinessOperationStatus } from './business-operation-status';
 
 /**
  * Business operation payload type for `DepositByUser` operation type

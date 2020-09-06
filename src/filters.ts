@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import i18n from './i18n';
 import shortNumber from 'short-number';
-import { ucFirst, pad } from './utils';
+import { capitalize, pad } from './utils';
 
 /**
  * Filter that add space after first digit in 4-digits number
@@ -170,7 +170,7 @@ Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTim
   const month = date.getMonth();
   const year = date.getFullYear();
   const isSameYear = now.getFullYear() === year;
-  const monthStr = ucFirst(i18n.t('common.shortMonths[' + month + ']').toString());
+  const monthStr = capitalize(i18n.t('common.shortMonths[' + month + ']').toString());
 
   let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
 
@@ -179,4 +179,13 @@ Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTim
   }
 
   return result;
+});
+
+/**
+ * Convert US cents to dollars
+ *
+ * @returns {string}
+ */
+Vue.filter('centsToDollars', function (value: number) {
+  return value / 100;
 });

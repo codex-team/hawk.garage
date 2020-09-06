@@ -18,6 +18,22 @@ import BillingHistory from '../../utils/billing/History.vue';
 import { BusinessOperation } from '../../../types/business-operation';
 import { ConfirmedMember, Workspace } from '@/types/workspaces';
 import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
+import { Route } from 'vue-router';
+
+/**
+ * Component local data structure
+ */
+interface BillingComponentData {
+  /**
+   * List of payment operations
+   */
+  paymentsHistory: BusinessOperation[],
+
+  /**
+   * Flag determines the loading state of the history
+   */
+  isPaymentsHistoryLoading: boolean,
+}
 
 export default Vue.extend({
   name: 'WorkspaceSettingsBilling',
@@ -25,10 +41,7 @@ export default Vue.extend({
     BillingHistory,
     BillingCard,
   },
-  data(): {
-    paymentsHistory: BusinessOperation[],
-    isPaymentsHistoryLoading: boolean,
-    } {
+  data(): BillingComponentData {
     return {
       /**
        * List of payment operations
@@ -44,11 +57,13 @@ export default Vue.extend({
   /**
    * Do not show billing page by direct link if user is not admin
    *
-   * @param to
-   * @param from
-   * @param next
+   * See https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards
+   *
+   * @param to - the target Route Object being navigated to
+   * @param from - the current route being navigated away from
+   * @param next - this function must be called to resolve the hook.
    */
-  beforeRouteEnter(to, from, next): void {
+  beforeRouteEnter(to: Route, from: Route, next: Function): void {
     next(async vm => {
       const user = vm.$store.state.user.data;
 

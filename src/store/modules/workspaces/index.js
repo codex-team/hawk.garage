@@ -535,7 +535,7 @@ const mutations = {
           ...state.list.slice(index + 1),
         ];
       }
-    );
+      );
   },
 
   /**

@@ -3,22 +3,22 @@
     <div class="billing-history__header">
       <div
         class="billing-history__tab"
-        :class="{'billing-history__tab--selected': currentFilter === filter.All}"
-        @click="applyFilter(filter.All)"
+        :class="{'billing-history__tab--selected': currentFilter === Filter.All}"
+        @click="applyFilter(Filter.All)"
       >
         {{ $t('billing.all') }}
       </div>
       <div
         class="billing-history__tab"
-        :class="{'billing-history__tab--selected': currentFilter === filter.Incoming}"
-        @click="applyFilter(filter.Incoming)"
+        :class="{'billing-history__tab--selected': currentFilter === Filter.Incoming}"
+        @click="applyFilter(Filter.Incoming)"
       >
         {{ $t('billing.incomings') }}
       </div>
       <div
         class="billing-history__tab"
-        :class="{'billing-history__tab--selected': currentFilter === filter.Charges}"
-        @click="applyFilter(filter.Charges)"
+        :class="{'billing-history__tab--selected': currentFilter === Filter.Charges}"
+        @click="applyFilter(Filter.Charges)"
       >
         {{ $t('billing.charges') }}
       </div>
@@ -31,7 +31,7 @@
     </div>
     <template v-else-if="operations && operations.length">
       <div
-        v-for="(operation, i) in operationsFiltered"
+        v-for="(operation, i) in filteredOperations"
         :key="i"
         class="billing-history__row"
       >
@@ -56,7 +56,7 @@
           :class="[`billing-history__amount--${operation.type}`]"
         >
           {{ getAmountSign(operation) }}
-          {{ operation.payload.amount }}$
+          {{ operation.payload.amount | centsToDollars }}$
         </div>
       </div>
     </template>
@@ -79,6 +79,15 @@ import {
   PayloadOfDepositByUser,
   PayloadOfWorkspacePlanPurchase
 } from '@/types/business-operation';
+
+/**
+ * Operation filtering options
+ */
+enum Filter {
+  All,
+  Incoming,
+  Charges,
+}
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -105,22 +114,16 @@ export default Vue.extend({
     },
   },
   data() {
-    const filter = {
-      All: 0,
-      Incoming: 1,
-      Charges: 2,
-    };
-
     return {
       /**
        * Available filters enum
        */
-      filter: filter,
+      Filter,
 
       /**
        * Currently selected filter
        */
-      currentFilter: filter.All,
+      currentFilter: Filter.All,
 
       /**
        * Save enum constants to allow access it from the <template>
@@ -135,7 +138,7 @@ export default Vue.extend({
     /**
      * Operations filtered by currentFilter
      */
-    operationsFiltered(): BusinessOperation[] {
+    filteredOperations(): BusinessOperation[] {
       const incoming = [
         BusinessOperationType.DepositByUser,
       ];
@@ -144,10 +147,10 @@ export default Vue.extend({
       ];
 
       switch (this.currentFilter) {
-        case this.filter.Incoming:
+        case Filter.Incoming:
           return this.operations.filter(o => incoming.includes(o.type));
 
-        case this.filter.Charges:
+        case Filter.Charges:
           return this.operations.filter(o => charges.includes(o.type));
 
         default:
@@ -159,9 +162,9 @@ export default Vue.extend({
     /**
      * Save passed filter as current
      *
-     * @param filter - one of this.filter enum values
+     * @param filter - one of Filter enum values
      */
-    applyFilter(filter: number): void {
+    applyFilter(filter: Filter): void {
       this.currentFilter = filter;
     },
 
@@ -239,8 +242,8 @@ export default Vue.extend({
     }
 
     &__loader {
-      color: var(--color-text-second);
       margin-top: 10px;
+      color: var(--color-text-second);
       font-size: 13px;
     }
 
@@ -265,8 +268,8 @@ export default Vue.extend({
     }
 
     &__date {
-      width: 150px;
       flex-shrink: 0;
+      width: 150px;
     }
 
     &__description {
