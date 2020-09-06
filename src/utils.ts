@@ -410,7 +410,7 @@ export function getBrowserByUseragent(ua: string): string[] {
  *
  * @param string - string to process
  */
-export function ucFirst(string: string): string {
+export function capitalize(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 

@@ -20,16 +20,28 @@ import { ConfirmedMember, Workspace } from '@/types/workspaces';
 import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
 import { Route } from 'vue-router';
 
+/**
+ * Component local data structure
+ */
+interface BillingComponentData {
+  /**
+   * List of payment operations
+   */
+  paymentsHistory: BusinessOperation[],
+
+  /**
+   * Flag determines the loading state of the history
+   */
+  isPaymentsHistoryLoading: boolean,
+}
+
 export default Vue.extend({
   name: 'WorkspaceSettingsBilling',
   components: {
     BillingHistory,
     BillingCard,
   },
-  data(): {
-    paymentsHistory: BusinessOperation[],
-    isPaymentsHistoryLoading: boolean,
-    } {
+  data(): BillingComponentData {
     return {
       /**
        * List of payment operations
