@@ -56,7 +56,7 @@
           :class="[`billing-history__amount--${operation.type}`]"
         >
           {{ getAmountSign(operation) }}
-          {{ operation.payload.amount }}$
+          {{ operation.payload.amount | centsToDollars }}$
         </div>
       </div>
     </template>

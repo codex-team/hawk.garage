@@ -180,3 +180,12 @@ Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTim
 
   return result;
 });
+
+/**
+ * Convert US cents to dollars
+ *
+ * @returns {string}
+ */
+Vue.filter('centsToDollars', function (value: number) {
+  return value / 100;
+});
