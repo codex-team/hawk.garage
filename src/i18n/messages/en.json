@@ -239,6 +239,9 @@
       "times": "{n} time | {n} times",
       "days": "{n} day | {n} days"
     },
+    "daily": {
+      "lastTwoWeeks": "Last 2 weeks"
+    },
     "usersAffected": {
       "total": "Total",
       "users": "{n} user | {n} users"

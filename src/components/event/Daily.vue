@@ -1,17 +1,45 @@
 <template>
-  <div>
-    <Chart :points="chartData" />
+  <div class="event-daily">
+    <div class="event-daily__section">
+      <div class="event-daily__label">
+        {{ $t('event.repetitions.since') }}
+      </div>
+      <div class="event-daily__since">
+        13 juk, 15:50
+        <span
+          class="event-repetitions__since-days"
+        >
+          — {{ $tc('event.repetitions.days', 55) }}
+        </span>
+      </div>
+    </div>
+    <div class="event-daily__section">
+      <div class="event-daily__label">
+        {{ $t('event.daily.lastTwoWeeks') }}
+      </div>
+      <Chart :points="chartData" />
+    </div>
   </div>
 </template>
 
-<script>
-import Chart from '../events/Chart';
+<script lang="ts">
+import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
+import { HawkEvent } from '@/types/events';
 
 export default {
   name: 'EventDaily',
   components: {
     Chart,
+  },
+  props: {
+    /**
+     * Viewed event
+     */
+    event: {
+      type: Object as () => HawkEvent,
+      required: true,
+    },
   },
   data() {
     return {
@@ -48,7 +76,7 @@ export default {
     const twoWeeks = 14;
     const boundingDays = 2;
 
-    if (!this.$store.getters.getProjectEventById(this.projectId, this.eventId).chartData) {
+    if (this.event.chartData) {
       await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
         eventId: this.eventId,
@@ -56,7 +84,34 @@ export default {
       });
     }
 
-    this.chartData = this.$store.getters.getProjectEventById(this.projectId, this.eventId).chartData;
+    this.chartData = this.event.chartData;
   },
 };
 </script>
+
+<style>
+  .event-daily {
+    &__section {
+      margin-bottom: 30px;
+    }
+
+    &__label {
+      margin-bottom: 10px;
+      color: var(--color-text-second);
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.15px;
+      text-transform: uppercase;
+    }
+
+    &__since {
+      color: var(--color-text-main);
+      font-weight: bold;
+      font-size: 15px;
+
+      &-days {
+        color: var(--color-text-second);
+      }
+    }
+  }
+</style>
