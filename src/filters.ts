@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import i18n from './i18n';
 import shortNumber from 'short-number';
+import { capitalize, pad } from './utils';
 
 /**
  * Filter that add space after first digit in 4-digits number
@@ -69,7 +70,7 @@ Vue.filter('prettyTime', function (value: number) {
   }
 
   const minutes = date.getMinutes();
-  const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+  const formattedMinutes = pad(minutes);
 
   return `${date.getHours()}:${formattedMinutes}`;
 });
@@ -139,7 +140,7 @@ Vue.filter('prettyFullDate', function (value: number) {
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${`0${hours}`.substr(-2)}:${`0${minutes}`.substr(-2)}`;
+  return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${pad(hours)}:${pad(minutes)}`;
 });
 
 /**
@@ -153,4 +154,38 @@ Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
   const month = date.getMonth();
 
   return `${day} ${i18n.t('common.shortMonths[' + month + ']')}`;
+});
+
+/**
+ * Accepts GraphQL DateTime string like '1992-10-09T00:00:00Z'
+ * Return string like '2020, Oct 9 00:00'
+ *
+ * @param datrStr - string like '1992-10-09T00:00:00Z'
+ * @param includeTime - pass true to include time to the result
+ */
+Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTime = true): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const isSameYear = now.getFullYear() === year;
+  const monthStr = capitalize(i18n.t('common.shortMonths[' + month + ']').toString());
+
+  let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
+
+  if (includeTime) {
+    result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+
+  return result;
+});
+
+/**
+ * Convert US cents to dollars
+ *
+ * @returns {string}
+ */
+Vue.filter('centsToDollars', function (value: number) {
+  return value / 100;
 });

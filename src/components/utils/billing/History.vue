@@ -3,53 +3,60 @@
     <div class="billing-history__header">
       <div
         class="billing-history__tab"
-        :class="{'billing-history__tab--selected': filter === FILTERS.ALL}"
-        @click="applyFilter(FILTERS.ALL)"
+        :class="{'billing-history__tab--selected': currentFilter === Filter.All}"
+        @click="applyFilter(Filter.All)"
       >
         {{ $t('billing.all') }}
       </div>
       <div
         class="billing-history__tab"
-        :class="{'billing-history__tab--selected': filter === FILTERS.INCOMINGS}"
-        @click="applyFilter(FILTERS.INCOMINGS)"
+        :class="{'billing-history__tab--selected': currentFilter === Filter.Incoming}"
+        @click="applyFilter(Filter.Incoming)"
       >
         {{ $t('billing.incomings') }}
       </div>
       <div
         class="billing-history__tab"
-        :class="{'billing-history__tab--selected': filter === FILTERS.CHARGES}"
-        @click="applyFilter(FILTERS.CHARGES)"
+        :class="{'billing-history__tab--selected': currentFilter === Filter.Charges}"
+        @click="applyFilter(Filter.Charges)"
       >
         {{ $t('billing.charges') }}
       </div>
     </div>
-    <template v-if="transactions && transactions.length">
+    <div
+      v-if="isLoading"
+      class="billing-history__loader"
+    >
+      {{ $t('common.loading') }}
+    </div>
+    <template v-else-if="operations && operations.length">
       <div
-        v-for="(transaction, i) in transactions"
+        v-for="(operation, i) in filteredOperations"
         :key="i"
         class="billing-history__row"
       >
         <div class="billing-history__date">
-          {{ new Date(transaction.date) | prettyFullDate }}
+          {{ operation.dtCreated | prettyDateFromDateTimeString }}
         </div>
         <div class="billing-history__description">
-          {{ getDescription(transaction) }}
+          {{ getDescription(operation) }}
         </div>
         <div class="billing-history__user">
           <EntityImage
-            v-if="transaction.type === TYPES.INCOME"
-            :id="transaction.user.id"
-            :name="transaction.user.name || transaction.user.email"
-            :image="transaction.user.image"
+            v-if="operation.type === BusinessOperationType.DepositByUser"
+            :id="operation.payload.user.id"
+            :name="operation.payload.user.name || operation.payload.user.email"
+            :image="operation.payload.user.image"
             class="billing-history__user-image"
             size="16"
           />
         </div>
         <div
           class="billing-history__amount"
-          :class="[`billing-history__amount--${transaction.type}`]"
+          :class="[`billing-history__amount--${operation.type}`]"
         >
-          {{ transaction.amount }}$
+          {{ getAmountSign(operation) }}
+          {{ operation.payload.amount | centsToDollars }}$
         </div>
       </div>
     </template>
@@ -62,105 +69,158 @@
   </div>
 </template>
 
-<script>
-import EntityImage from '../EntityImage';
-// import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
+<script lang="ts">
+import Vue from 'vue';
+import EntityImage from './../EntityImage.vue';
+import { BusinessOperationType } from '@/types/business-operation-type';
+import i18n from './../../../i18n';
+import {
+  BusinessOperation,
+  PayloadOfDepositByUser,
+  PayloadOfWorkspacePlanPurchase
+} from '@/types/business-operation';
 
-export default {
+/**
+ * Operation filtering options
+ */
+enum Filter {
+  All,
+  Incoming,
+  Charges,
+}
+
+export default Vue.extend({
   name: 'BillingHistory',
-  components: { EntityImage },
+  components: {
+    EntityImage,
+  },
   props: {
-    workspace: {
-      type: Object,
-      default: undefined,
+    /**
+     * List of payment operations
+     */
+    operations: {
+      type: Array as () => BusinessOperation[],
+      default() {
+        return [];
+      },
+    },
+
+    /**
+     * Used to show preloader
+     */
+    isLoading: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
     return {
-      FILTERS: {
-        ALL: 0,
-        INCOMINGS: 1,
-        CHARGES: 2,
+      /**
+       * Available filters enum
+       */
+      Filter,
+
+      /**
+       * Currently selected filter
+       */
+      currentFilter: Filter.All,
+
+      /**
+       * Save enum constants to allow access it from the <template>
+       */
+      BusinessOperationType: {
+        WorkspacePlanPurchase: BusinessOperationType.WorkspacePlanPurchase,
+        DepositByUser: BusinessOperationType.DepositByUser,
       },
-      TYPES: {
-        CHARGE: 'charge',
-        INCOME: 'income',
-      },
-      filter: 0,
     };
   },
   computed: {
-    transactions() {
-      /**
-       * @todo remove and refactor the code below
-       */
-      return [];
-
-      // const user = this.$store.state.user.data;
-      //
-      // let transactions = [];
-      //
-      // if (this.workspace) {
-      //   transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
-      // } else {
-      //   transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
-      //     if (!workspace.users || !workspace.users.find(u => u.id === user.id).isAdmin) {
-      //       return acc;
-      //     }
-      //
-      //     return acc.concat(workspace.transactions || []);
-      //   }, []);
-      //
-      //   transactions.sort((a, b) => +new Date(b.date) - +new Date(a.date));
-      // }
-      //
-      // switch (this.filter) {
-      //   case this.FILTERS.INCOMINGS:
-      //     return transactions.filter(t => t.type === this.TYPES.INCOME);
-      //
-      //   case this.FILTERS.CHARGES:
-      //     return transactions.filter(t => t.type === this.TYPES.CHARGE);
-      //
-      //   default:
-      //     return transactions;
-      // }
-    },
-  },
-  created() {
     /**
-     * 2020 jul 15 - Commented to prevent errors
-     *
-     * @todo separate table to the abstract UITable component
-     * @todo pass transactions history from the parent component
+     * Operations filtered by currentFilter
      */
-    // const ids = [];
-    //
-    // if (this.workspace) {
-    //   ids.push(this.workspace.id);
-    // }
-    //
-    // this.$store.dispatch(GET_TRANSACTIONS, { ids });
-  },
-  methods: {
-    applyFilter(filter) {
-      this.filter = filter;
-    },
-    getDescription(transaction) {
-      switch (transaction.type) {
-        case this.TYPES.INCOME:
-          return `Payment by card **** **** ***** ${transaction.cardPan} for ${transaction.workspace.name}`;
-        case this.TYPES.CHARGE:
-          return `Payment for ${transaction.workspace.name} current plan`;
+    filteredOperations(): BusinessOperation[] {
+      const incoming = [
+        BusinessOperationType.DepositByUser,
+      ];
+      const charges = [
+        BusinessOperationType.WorkspacePlanPurchase,
+      ];
+
+      switch (this.currentFilter) {
+        case Filter.Incoming:
+          return this.operations.filter(o => incoming.includes(o.type));
+
+        case Filter.Charges:
+          return this.operations.filter(o => charges.includes(o.type));
+
+        default:
+          return this.operations;
       }
     },
   },
-};
+  methods: {
+    /**
+     * Save passed filter as current
+     *
+     * @param filter - one of Filter enum values
+     */
+    applyFilter(filter: Filter): void {
+      this.currentFilter = filter;
+    },
+
+    /**
+     * Return human readable description for passed business operation
+     *
+     * @param operation - business operation
+     */
+    getDescription(operation: BusinessOperation): string {
+      switch (operation.type) {
+        case BusinessOperationType.DepositByUser: {
+          const payload = operation.payload as PayloadOfDepositByUser;
+
+          return i18n.t('billing.operations.paymentByCard', {
+            cardPan: payload.cardPan,
+          }).toString();
+        }
+
+        case BusinessOperationType.WorkspacePlanPurchase: {
+          const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
+
+          return i18n.t('billing.operations.chargeForPlan', {
+            workspaceName: payload.workspace.name,
+          }).toString();
+        }
+
+        default:
+          return operation.type;
+      }
+    },
+
+    /**
+     * Return '+' or '-' depended on operation type
+     *
+     * @param operation - business operation
+     */
+    getAmountSign(operation: BusinessOperation): string {
+      switch (operation.type) {
+        case BusinessOperationType.DepositByUser:
+          return '+';
+        case BusinessOperationType.WorkspacePlanPurchase:
+          return '–';
+        default:
+          return '';
+      }
+    },
+  },
+});
 </script>
 
 <style>
   @import url('./../../../styles/custom-properties.css');
 
   .billing-history {
+    max-width: var(--width-popup-form-container);
+
     &__header {
       display: flex;
       margin: 15px 0 0;
@@ -181,13 +241,19 @@ export default {
       }
     }
 
+    &__loader {
+      margin-top: 10px;
+      color: var(--color-text-second);
+      font-size: 13px;
+    }
+
     &__row {
       position: relative;
       display: flex;
       padding: 20px 0;
       color: var(--color-text-main);
       font-size: 13px;
-      line-height: 15px;
+      line-height: 18px;
       letter-spacing: 0.16px;
 
       &::after {
@@ -202,7 +268,13 @@ export default {
     }
 
     &__date {
-      flex-basis: 145px;
+      flex-shrink: 0;
+      width: 150px;
+    }
+
+    &__description {
+      flex-grow: 2;
+      padding-right: 20px;
     }
 
     &__user {
@@ -213,24 +285,13 @@ export default {
       }
     }
 
-    &__user-image {
-      margin-top: -1px;
-    }
-
     &__amount {
       margin-left: auto;
       font-weight: 500;
+      white-space: nowrap;
 
-      &--income {
-        color: #2ccf6c;
-
-        &::before {
-          content: '+';
-        }
-      }
-
-      &--charge::before {
-        content: '-';
+      &--DEPOSIT_BY_USER {
+        color: var(--color-indicator-positive);
       }
     }
 

@@ -222,6 +222,10 @@
     "charges": "Charges",
     "autoPay": "Auto-pay",
     "payPeriod": "mo",
+    "operations": {
+      "paymentByCard": "Payment by card **** **** **** {cardPan}",
+      "chargeForPlan": "Charge for {workspaceName} tariff plan"
+    },
     "processPayment": {
       "header": "Process payment",
       "description": "This form allows you to fund the workspace’s balance. After selecting the amount you will be redirected to the payment service.",
@@ -266,6 +270,7 @@
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
     "dollarsPerMonth": "$ / mo",
+    "loading": "Loading...",
     "months": [
       "january",
       "february",

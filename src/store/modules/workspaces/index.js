@@ -9,7 +9,7 @@ import {
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
   REMOVE_USER_FROM_WORKSPACE,
-  GET_TRANSACTIONS,
+  GET_BUSINESS_OPERATIONS,
   CHANGE_WORKSPACE_PLAN
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
@@ -32,7 +32,7 @@ const mutationTypes = {
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
-  SET_TRANSACTIONS: 'SET_TRANSACTIONS', // Set transactions info
+  SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
   SET_PLAN: 'SET_PLAN', // Set workspace tariff plan
 };
 
@@ -312,16 +312,16 @@ const actions = {
   },
 
   /**
-   * Fetch transactions and set them to store
+   * Fetch payment operations and save them to the store
    *
    * @param {Function} commit - standard Vuex commit method
    * @param {string[]} ids - workspaces ids
    * @returns {Promise<void>}
    */
-  async [GET_TRANSACTIONS]({ commit }, { ids }) {
-    const transactions = await billingApi.getTransactions(ids);
+  async [GET_BUSINESS_OPERATIONS]({ commit }, { ids }) {
+    const operations = await billingApi.getBusinessOperations(ids);
 
-    commit(mutationTypes.SET_TRANSACTIONS, transactions || []);
+    commit(mutationTypes.SET_BUSINESS_OPERATIONS, operations || []);
   },
 
   /**
@@ -497,37 +497,45 @@ const mutations = {
    * Set transactions info to workspaces by ids
    *
    * @param {WorkspacesModuleState} state - current state
-   * @param {Transaction[]} transactions - transactions to set
+   * @param {BusinessOperation[]} operations - operations to set
    */
-  [mutationTypes.SET_TRANSACTIONS](state, transactions = []) {
-    const groupedByWorkspaceId = transactions.reduce(
-      (acc, transaction) => {
-        const { workspace } = transaction;
+  [mutationTypes.SET_BUSINESS_OPERATIONS](state, operations = []) {
+    /**
+     * Group all operations by payload.workspace.id
+     * {
+     *   [workspace.id] => BusinessOperation,
+     *   ...
+     * }
+     */
+    const groupedByWorkspaceId = operations.reduce(
+      (acc, operation) => {
+        const { workspace } = operation.payload;
 
         if (!acc[workspace.id]) {
           acc[workspace.id] = [];
         }
 
-        acc[workspace.id].push(transaction);
+        acc[workspace.id].push(operation);
 
         return acc;
       },
       {}
     );
 
-    Object.entries(groupedByWorkspaceId).forEach(([workspaceId, data]) => {
-      const index = state.list.findIndex(w => w.id === workspaceId);
+    Object.entries(groupedByWorkspaceId)
+      .forEach(([workspaceId, operationsOfWorkspace]) => {
+        const index = state.list.findIndex(w => w.id === workspaceId);
+        const workspace = state.list[index];
 
-      const workspace = state.list[index];
+        Vue.set(workspace, 'paymentsHistory', operationsOfWorkspace);
 
-      Vue.set(workspace, 'transactions', data);
-
-      state.list = [
-        ...state.list.slice(0, index),
-        workspace,
-        ...state.list.slice(index + 1),
-      ];
-    });
+        state.list = [
+          ...state.list.slice(0, index),
+          workspace,
+          ...state.list.slice(index + 1),
+        ];
+      }
+      );
   },
 
   /**
