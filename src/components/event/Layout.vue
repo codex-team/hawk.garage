@@ -14,6 +14,7 @@
         <router-view
           v-if="event"
           :event="event"
+          :project-id="projectId"
         />
         <div
           v-else
