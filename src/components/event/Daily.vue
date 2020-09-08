@@ -1,17 +1,54 @@
 <template>
-  <div>
-    <Chart :points="chartData" />
+  <div class="event-daily">
+    <div class="event-daily__section">
+      <div class="event-daily__label">
+        {{ $t('event.repetitions.since') }}
+      </div>
+      <div class="event-daily__since">
+        {{ originalEvent.payload.timestamp | prettyFullDate }}
+        <span
+          v-if="daysRepeating > 1"
+          class="event-daily__since-days"
+        >
+          — {{ $tc('event.repetitions.days', daysRepeating) }}
+        </span>
+      </div>
+    </div>
+    <div class="event-daily__section">
+      <div class="event-daily__label">
+        {{ $t('event.daily.lastTwoWeeks') }}
+      </div>
+      <Chart :points="chartData" />
+    </div>
   </div>
 </template>
 
 <script>
 import Chart from '../events/Chart';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
+import {HawkEvent} from "../../types/events";
 
 export default {
   name: 'EventDaily',
   components: {
     Chart,
+  },
+  props: {
+    /**
+     * Viewed event
+     */
+    event: {
+      type: Object,
+      required: true,
+    },
+
+    /**
+     * Event's project
+     */
+    projectId: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
@@ -25,19 +62,30 @@ export default {
   },
   computed: {
     /**
-     * Returns project id from the route
+     * Get original event
      *
-     * @returns {string}
+     * @returns {HawkEvent}
      */
-    projectId() {
-      return this.$route.params.projectId;
+    originalEvent() {
+      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
     },
 
     /**
-     * Return event id from the route
+     * Return concrete date
+     *
+     * @returns {number}
      */
-    eventId() {
-      return this.$route.params.eventId;
+    daysRepeating() {
+      if (!this.originalEvent) {
+        return 0;
+      }
+
+      const now = (new Date()).getTime();
+      const eventTimestamp = this.originalEvent.payload.timestamp * 1000;
+      const firstOccurrence = (new Date(eventTimestamp).getTime());
+      const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
+
+      return Math.round(differenceInDays);
     },
   },
   /**
@@ -48,15 +96,42 @@ export default {
     const twoWeeks = 34;
     const boundingDays = 2;
 
-    if (!this.$store.getters.getProjectEventById(this.projectId, this.eventId).chartData) {
+    if (!this.event.chartData) {
       await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
-        eventId: this.eventId,
+        eventId: this.event.id,
         days: twoWeeks + boundingDays,
       });
     }
 
-    this.chartData = this.$store.getters.getProjectEventById(this.projectId, this.eventId).chartData;
+    this.chartData = this.event.chartData;
   },
 };
 </script>
+
+<style>
+  .event-daily {
+    &__section {
+      margin-bottom: 30px;
+    }
+
+    &__label {
+      margin-bottom: 10px;
+      color: var(--color-text-second);
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.15px;
+      text-transform: uppercase;
+    }
+
+    &__since {
+      color: var(--color-text-main);
+      font-weight: bold;
+      font-size: 15px;
+
+      &-days {
+        color: var(--color-text-second);
+      }
+    }
+  }
+</style>
