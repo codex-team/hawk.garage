@@ -5,11 +5,12 @@
         {{ $t('event.repetitions.since') }}
       </div>
       <div class="event-daily__since">
-        13 juk, 15:50
+        {{ originalEvent.payload.timestamp | prettyFullDate }}
         <span
-          class="event-repetitions__since-days"
+          v-if="daysRepeating > 1"
+          class="event-daily__since-days"
         >
-          — {{ $tc('event.repetitions.days', 55) }}
+          — {{ $tc('event.repetitions.days', daysRepeating) }}
         </span>
       </div>
     </div>
@@ -22,10 +23,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import Chart from '../events/Chart.vue';
+<script>
+import Chart from '../events/Chart';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
-import { HawkEvent } from '@/types/events';
+import {HawkEvent} from "../../types/events";
 
 export default {
   name: 'EventDaily',
@@ -37,7 +38,15 @@ export default {
      * Viewed event
      */
     event: {
-      type: Object as () => HawkEvent,
+      type: Object,
+      required: true,
+    },
+
+    /**
+     * Event's project
+     */
+    projectId: {
+      type: Object,
       required: true,
     },
   },
@@ -53,19 +62,30 @@ export default {
   },
   computed: {
     /**
-     * Returns project id from the route
+     * Get original event
      *
-     * @returns {string}
+     * @returns {HawkEvent}
      */
-    projectId() {
-      return this.$route.params.projectId;
+    originalEvent() {
+      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
     },
 
     /**
-     * Return event id from the route
+     * Return concrete date
+     *
+     * @returns {number}
      */
-    eventId() {
-      return this.$route.params.eventId;
+    daysRepeating() {
+      if (!this.originalEvent) {
+        return 0;
+      }
+
+      const now = (new Date()).getTime();
+      const eventTimestamp = this.originalEvent.payload.timestamp * 1000;
+      const firstOccurrence = (new Date(eventTimestamp).getTime());
+      const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
+
+      return Math.round(differenceInDays);
     },
   },
   /**
@@ -76,10 +96,10 @@ export default {
     const twoWeeks = 14;
     const boundingDays = 2;
 
-    if (this.event.chartData) {
+    if (!this.event.chartData) {
       await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
-        eventId: this.eventId,
+        eventId: this.event.id,
         days: twoWeeks + boundingDays,
       });
     }
