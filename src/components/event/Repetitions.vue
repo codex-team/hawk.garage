@@ -14,6 +14,24 @@
 
     <div class="event-repetitions__section">
       <div class="event-repetitions__label">
+        {{ $t('event.repetitions.since') }}
+      </div>
+      <div
+        v-if="event"
+        class="event-repetitions__since"
+      >
+        {{ originalEvent.payload.timestamp | prettyFullDate }}
+        <span
+          v-if="daysRepeating > 1"
+          class="event-repetitions__since-days"
+        >
+          — {{ $tc('event.repetitions.days', daysRepeating) }}
+        </span>
+      </div>
+    </div>
+
+    <div class="event-repetitions__section">
+      <div class="event-repetitions__label">
         {{ $t('event.repetitions.title') }}
       </div>
 
@@ -70,6 +88,24 @@ export default Vue.extend({
   computed: {
     originalEvent(): HawkEvent {
       return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
+    },
+
+    /**
+     * Return concrete date
+     *
+     * @returns {number}
+     */
+    daysRepeating(): number {
+      if (!this.originalEvent) {
+        return 0;
+      }
+
+      const now = (new Date()).getTime();
+      const eventTimestamp = this.originalEvent.payload.timestamp * 1000;
+      const firstOccurrence = (new Date(eventTimestamp).getTime());
+      const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
+
+      return Math.round(differenceInDays);
     },
   },
   async created(): Promise<void> {
@@ -139,6 +175,16 @@ export default Vue.extend({
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 24px;
+    }
+
+    &__since {
+      color: var(--color-text-main);
+      font-weight: bold;
+      font-size: 15px;
+
+      &-days {
+        color: var(--color-text-second);
+      }
     }
 
     &__table {
