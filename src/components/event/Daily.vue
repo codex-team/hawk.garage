@@ -23,12 +23,14 @@
   </div>
 </template>
 
-<script>
-import Chart from '../events/Chart';
+<script lang="ts">
+import Vue from 'vue';
+import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
-import {HawkEvent} from "../../types/events";
+import { HawkEvent, HawkEventRepetition } from '../../types/events';
+import { EventChartItem } from '../../types/chart';
 
-export default {
+export default Vue.extend({
   name: 'EventDaily',
   components: {
     Chart,
@@ -38,7 +40,7 @@ export default {
      * Viewed event
      */
     event: {
-      type: Object,
+      type: Object as () => HawkEvent,
       required: true,
     },
 
@@ -46,36 +48,30 @@ export default {
      * Event's project
      */
     projectId: {
-      type: Object,
+      type: String,
       required: true,
     },
   },
-  data() {
+  data: function (): {chartData: EventChartItem[]} {
     return {
       /**
        * Data for a chart
-       *
-       * @type {EventChartItem[]}
        */
       chartData: [],
     };
   },
   computed: {
     /**
-     * Get original event
-     *
-     * @returns {HawkEvent}
+     * Get the the first event entity
      */
-    originalEvent() {
-      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
+    originalEvent(): HawkEventRepetition {
+      return this.event.repetition;
     },
 
     /**
      * Return concrete date
-     *
-     * @returns {number}
      */
-    daysRepeating() {
+    daysRepeating(): number {
       if (!this.originalEvent) {
         return 0;
       }
@@ -92,7 +88,7 @@ export default {
    * Vue created hook
    * Used to fetch events on component creation
    */
-  async created() {
+  async created(): Promise<void> {
     const twoWeeks = 34;
     const boundingDays = 2;
 
@@ -104,9 +100,9 @@ export default {
       });
     }
 
-    this.chartData = this.event.chartData;
+    this.chartData = this.event.chartData || [];
   },
-};
+});
 </script>
 
 <style>
