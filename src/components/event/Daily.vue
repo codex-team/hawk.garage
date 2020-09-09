@@ -65,7 +65,7 @@ export default Vue.extend({
      * Get the the first event entity
      */
     originalEvent(): HawkEventRepetition {
-      return this.event.repetition;
+      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
     },
 
     /**
