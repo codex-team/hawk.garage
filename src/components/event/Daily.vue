@@ -27,7 +27,7 @@
 import Vue from 'vue';
 import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
-import { HawkEvent } from '../../types/events';
+import { HawkEvent, HawkEventRepetition } from '../../types/events';
 import { EventChartItem } from '../../types/chart';
 
 export default Vue.extend({
@@ -62,10 +62,10 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Get original event
+     * Get the the first event entity
      */
-    originalEvent(): HawkEvent {
-      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
+    originalEvent(): HawkEventRepetition {
+      return this.event.repetition;
     },
 
     /**
