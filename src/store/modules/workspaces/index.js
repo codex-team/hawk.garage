@@ -32,6 +32,8 @@ const mutationTypes = {
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
+  UPDATE_BUSINESS_OPERATIONS: 'UPDATE_BUSINESS_OPERATIONS', // Add a new business operation to the operations history
+  UPDATE_BALANCE: 'UPDATE_BALANCE', // Update workspace balance
   SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
   SET_PLAN: 'SET_PLAN', // Set workspace tariff plan
 };
@@ -223,7 +225,7 @@ const actions = {
    * @returns {Promise<Workspace>}
    */
   async [FETCH_WORKSPACE]({ commit }, id) {
-    const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
+    const workspace = (await workspaceApi.getWorkspaces([id]))[0];
 
     commit(mutationTypes.SET_WORKSPACE, workspace);
 
@@ -334,8 +336,13 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    await workspaceApi.changePlan(workspaceId, planId);
+    const { record: businessOperation, balance} = await workspaceApi.changePlan(workspaceId, planId);
 
+    if (businessOperation !== null) {
+      commit(mutationTypes.UPDATE_BUSINESS_OPERATIONS, { workspaceId, businessOperation });
+    }
+
+    commit(mutationTypes.UPDATE_BALANCE, { workspaceId, balance })
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
       plan: getters.getPlanById(planId),
@@ -440,6 +447,39 @@ const mutations = {
     const memberIndex = state.list[workspaceIndex].team.findIndex(member => !isPendingMember(member) && member.user.id === userId);
 
     Object.assign(state.list[workspaceIndex].team[memberIndex], changes);
+  },
+
+  /**
+   * Add a new business operation to the workspace operations history
+   * 
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} payload.workspaceId - id of workspace where user should be updated
+   * @param {BusinessOperation} payload.businessOperation - business operation to add to operations history
+   */
+  [mutationTypes.UPDATE_BUSINESS_OPERATIONS](state, { workspaceId, businessOperation }) {
+    const index = state.list.findIndex(w => w.id === workspaceId);
+    const workspace = state.list[index];
+    let updatedPaymentsHistory = [businessOperation];
+
+    if (workspace.paymentsHistory) {
+      updatedPaymentsHistory = [businessOperation].concat(workspace.paymentsHistory);
+    }
+
+    Vue.set(workspace, 'paymentsHistory', updatedPaymentsHistory);
+  },
+
+  /**
+   * Update workspace balance
+   * 
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} payload.workspaceId - id of workspace where user should be updated
+   * @param {number} payload.amount - business operation to add to operations history
+   */
+  [mutationTypes.UPDATE_BALANCE](state, { workspaceId, balance }) {
+    const index = state.list.findIndex(w => w.id === workspaceId);
+    const workspace = state.list[index];
+
+    Vue.set(workspace, 'balance', balance);
   },
 
   /**
