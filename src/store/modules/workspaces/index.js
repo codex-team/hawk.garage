@@ -10,6 +10,7 @@ import {
   GRANT_ADMIN_PERMISSIONS,
   REMOVE_USER_FROM_WORKSPACE,
   GET_BUSINESS_OPERATIONS,
+  GET_BALANCE,
   CHANGE_WORKSPACE_PLAN
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
@@ -324,6 +325,22 @@ const actions = {
     const operations = await billingApi.getBusinessOperations(ids);
 
     commit(mutationTypes.SET_BUSINESS_OPERATIONS, operations || []);
+  },
+
+  /**
+   * Fetch balance of workspace or workspaces
+   * @param {Function} commit - standard Vuex commit method
+   * @param {string[]} ids - workspaces ids
+   */
+  async [GET_BALANCE]({ commit }, { ids }) {
+    const balances = (await workspaceApi.getBalance(ids)) || [];
+
+    balances.forEach(balanceWithId => {
+      commit(mutationTypes.UPDATE_BALANCE, {
+        workspaceId: balanceWithId.id,
+        balance: balanceWithId.balance
+      });
+    })
   },
 
   /**
