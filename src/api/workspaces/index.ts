@@ -8,6 +8,7 @@ import {
   MUTATION_UPDATE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   QUERY_WORKSPACES, 
+  QUERY_BALANCE,
   MUTATION_CHANGE_WORKSPACE_PLAN
 } from './queries';
 import * as api from '../index';
@@ -95,6 +96,16 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  */
 export async function getWorkspaces(ids: string): Promise<Workspace> {
   return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
+}
+
+/**
+ * Get workspace balance
+ * 
+ * @param {Array} ids – id of fetching workspaces balance
+ * @returns {Promise<[Workspace]>}
+ */
+export async function getBalance(ids: string): Promise<Workspace> {
+  return (await api.call(QUERY_BALANCE, { ids })).workspaces;
 }
 
 /**
