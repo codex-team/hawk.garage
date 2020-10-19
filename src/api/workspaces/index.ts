@@ -7,7 +7,7 @@ import {
   MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
   MUTATION_UPDATE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
-  QUERY_WORKSPACES, 
+  QUERY_WORKSPACES,
   QUERY_BALANCE,
   MUTATION_CHANGE_WORKSPACE_PLAN
 } from './queries';
@@ -100,7 +100,7 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
 
 /**
  * Get workspace balance
- * 
+ *
  * @param {Array} ids – id of fetching workspaces balance
  * @returns {Promise<[Workspace]>}
  */
