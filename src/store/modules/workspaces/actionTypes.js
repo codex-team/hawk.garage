@@ -57,7 +57,7 @@ export const GET_BUSINESS_OPERATIONS = 'GET_BUSINESS_OPERATIONS';
  * Fetch balance of workspace or workspaces
  */
 export const GET_BALANCE = 'GET_BALANCE';
- 
+
 /**
  * Change workspace tariff plan
  */

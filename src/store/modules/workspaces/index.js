@@ -226,7 +226,7 @@ const actions = {
    * @returns {Promise<Workspace>}
    */
   async [FETCH_WORKSPACE]({ commit }, id) {
-    const workspace = (await workspaceApi.getWorkspaces([id]))[0];
+    const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
 
     commit(mutationTypes.SET_WORKSPACE, workspace);
 
@@ -329,6 +329,7 @@ const actions = {
 
   /**
    * Fetch balance of workspace or workspaces
+   *
    * @param {Function} commit - standard Vuex commit method
    * @param {string[]} ids - workspaces ids
    */
@@ -338,9 +339,9 @@ const actions = {
     balances.forEach(balanceWithId => {
       commit(mutationTypes.UPDATE_BALANCE, {
         workspaceId: balanceWithId.id,
-        balance: balanceWithId.balance
+        balance: balanceWithId.balance,
       });
-    })
+    });
   },
 
   /**
@@ -353,13 +354,19 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    const { record: businessOperation, balance} = await workspaceApi.changePlan(workspaceId, planId);
+    const { record: businessOperation, balance } = await workspaceApi.changePlan(workspaceId, planId);
 
     if (businessOperation !== null) {
-      commit(mutationTypes.UPDATE_BUSINESS_OPERATIONS, { workspaceId, businessOperation });
+      commit(mutationTypes.UPDATE_BUSINESS_OPERATIONS, {
+        workspaceId,
+        businessOperation,
+      });
     }
 
-    commit(mutationTypes.UPDATE_BALANCE, { workspaceId, balance })
+    commit(mutationTypes.UPDATE_BALANCE, {
+      workspaceId,
+      balance,
+    });
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
       plan: getters.getPlanById(planId),
@@ -468,7 +475,7 @@ const mutations = {
 
   /**
    * Add a new business operation to the workspace operations history
-   * 
+   *
    * @param {WorkspacesModuleState} state - current state
    * @param {string} payload.workspaceId - id of workspace where user should be updated
    * @param {BusinessOperation} payload.businessOperation - business operation to add to operations history
@@ -476,10 +483,10 @@ const mutations = {
   [mutationTypes.UPDATE_BUSINESS_OPERATIONS](state, { workspaceId, businessOperation }) {
     const index = state.list.findIndex(w => w.id === workspaceId);
     const workspace = state.list[index];
-    let updatedPaymentsHistory = [businessOperation];
+    let updatedPaymentsHistory = [ businessOperation ];
 
     if (workspace.paymentsHistory) {
-      updatedPaymentsHistory = [businessOperation].concat(workspace.paymentsHistory);
+      updatedPaymentsHistory = [ businessOperation ].concat(workspace.paymentsHistory);
     }
 
     Vue.set(workspace, 'paymentsHistory', updatedPaymentsHistory);
@@ -487,7 +494,7 @@ const mutations = {
 
   /**
    * Update workspace balance
-   * 
+   *
    * @param {WorkspacesModuleState} state - current state
    * @param {string} payload.workspaceId - id of workspace where user should be updated
    * @param {number} payload.amount - business operation to add to operations history
