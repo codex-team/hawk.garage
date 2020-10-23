@@ -68,7 +68,7 @@ export default {
     workspaces() {
       const userId = this.$store.state.user.data.id;
       const workspaces = this.$store.state.workspaces.list.filter(workspace => {
-        return workspace.team.find(team => team.user.id == userId && team.isAdmin);
+        return this.$store.getters.isCurrentUserAdmin(workspace.id);
       });
 
       return workspaces;
