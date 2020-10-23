@@ -119,7 +119,7 @@ const getters = {
       const workspace = getters.getWorkspaceById(workspaceId);
       const userId = rootState.user.data.id;
 
-      return workspace.team.some(member => member.user.id === userId && member.isAdmin);
+      return workspace.team.some(member => member.user && member.user.id === userId && member.isAdmin);
     },
 };
 
