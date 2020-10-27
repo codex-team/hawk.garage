@@ -17,7 +17,7 @@ import BillingCard from './BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import { BusinessOperation } from '../../../types/business-operation';
 import { ConfirmedMember, Workspace } from '@/types/workspaces';
-import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
+import { GET_BUSINESS_OPERATIONS, GET_BALANCE } from '@/store/modules/workspaces/actionTypes';
 import { Route } from 'vue-router';
 
 /**
@@ -95,6 +95,13 @@ export default Vue.extend({
   },
   async mounted(): Promise<void> {
     this.isPaymentsHistoryLoading = true;
+
+    /**
+     * Load balance
+     */
+    await this.$store.dispatch(GET_BALANCE, {
+      ids: [ this.workspace.id ],
+    });
 
     /**
      * Load operations history

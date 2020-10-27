@@ -132,7 +132,6 @@ export const QUERY_WORKSPACES = `
       name
       description
       image
-      balance
       ...WorkspacePlan
       ...WorkspaceWithTeam
     }
@@ -140,6 +139,19 @@ export const QUERY_WORKSPACES = `
 
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
   ${WORKSPACE_PLAN}
+`;
+
+// language=GraphQL
+/**
+ * Query for fetching workspaces with id
+ */
+export const QUERY_BALANCE = `
+  query fetchWorkspaces($ids: [ID!]) {
+    workspaces(ids: $ids) {
+      id
+      balance
+    }
+  }
 `;
 
 // language=GraphQL
@@ -195,6 +207,21 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN = `
     ) {
       changeWorkspacePlan(input: $input) {
         recordId
+        balance
+        record {
+          id
+          type
+          status
+          dtCreated
+          payload {
+            ...on PayloadOfWorkspacePlanPurchase {
+              workspace {
+                id
+              }
+              amount
+            }
+          }
+        }
       }
     }
 `;

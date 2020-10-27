@@ -54,6 +54,11 @@ export const REMOVE_USER_FROM_WORKSPACE = 'REMOVE_USER_FROM_WORKSPACE';
 export const GET_BUSINESS_OPERATIONS = 'GET_BUSINESS_OPERATIONS';
 
 /**
+ * Fetch balance of workspace or workspaces
+ */
+export const GET_BALANCE = 'GET_BALANCE';
+
+/**
  * Change workspace tariff plan
  */
 export const CHANGE_WORKSPACE_PLAN = 'CHANGE_WORKSPACE_PLAN';
