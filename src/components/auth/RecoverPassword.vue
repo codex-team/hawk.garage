@@ -89,7 +89,7 @@ export default class RecoverPassword extends Vue {
       console.error(e);
 
       notifier.show({
-        message: this.$i18n.t(e.message),
+        message: this.$i18n.t(e.message) as string,
         style: 'error',
       });
     }
