@@ -17,6 +17,7 @@
 import Form from './Form';
 import { LOGIN, SET_TOKENS } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
+import notifier from 'codex-notifier';
 
 export default {
   name: 'Login',
@@ -75,10 +76,10 @@ export default {
 
         this.$cookies.remove('afterAuthRedirect');
       } catch (e) {
-        this.message = {
-          text: e.message,
-          type: 'error',
-        };
+        notifier.show({
+          message: this.$i18n.t(e.message),
+          style: 'error',
+        });
       }
     }
   },
@@ -102,10 +103,12 @@ export default {
 
         this.$cookies.remove('afterAuthRedirect');
       } catch (e) {
-        this.message = {
-          text: e.message,
-          type: 'error',
-        };
+        console.error(e);
+
+        notifier.show({
+          message: this.$i18n.t(`authPages.errors.${e.message}`),
+          style: 'error',
+        });
       }
     },
   },

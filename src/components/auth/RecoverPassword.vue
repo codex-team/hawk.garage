@@ -16,6 +16,7 @@ import Form from './Form.vue';
 import VueI18n from 'vue-i18n';
 import { RECOVER_PASSWORD } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
+import notifier from 'codex-notifier';
 
 @Component({
   name: 'RecoverPassword',
@@ -79,15 +80,18 @@ export default class RecoverPassword extends Vue {
 
     try {
       await this.$store.dispatch(RECOVER_PASSWORD, { email });
+
       this.$router.push({
         name: 'login',
         params: { isPasswordRecoverSuccess: 'true' },
       });
     } catch (e) {
-      this.message = {
-        text: e.message,
-        type: 'error',
-      };
+      console.error(e);
+
+      notifier.show({
+        message: this.$i18n.t(e.message),
+        style: 'error',
+      });
     }
   }
 };
