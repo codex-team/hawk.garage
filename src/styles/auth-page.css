@@ -1,10 +1,10 @@
 .auth-page {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   width: 100%;
   min-height: 100%;
   background: var(--color-bg-main);
-  flex-shrink: 0;
 
   @media (max-height: 500px) {
     align-items: flex-start;
