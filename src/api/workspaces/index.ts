@@ -101,10 +101,9 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
 /**
  * Get workspace balance
  *
- * @param {Array} ids – id of fetching workspaces balance
- * @returns {Promise<[Workspace]>}
+ * @param ids – id of fetching workspaces balance
  */
-export async function getBalance(ids: string): Promise<Workspace> {
+export async function getBalance(ids: string[]): Promise<Workspace> {
   return (await api.call(QUERY_BALANCE, { ids })).workspaces;
 }
 

@@ -23,33 +23,33 @@ import * as api from '../index.ts';
  *
  * @param {string} email - Email
  * @param {string} password - Password
- * @returns {Promise<TokensPair>} - Auth token
+ * @returns {Promise<{data: {login: TokensPair}, errors: object[]}>} - Auth token
  */
 export async function login(email, password) {
-  return (await api.call(MUTATION_LOGIN, {
+  return api.call(MUTATION_LOGIN, {
     email,
     password,
-  })).login;
+  }, undefined, { allowErrors: true });
 }
 
 /**
  * Sign up by email and return status (true or false)
  *
  * @param {string} email - Email
- * @returns {Promise<boolean>} Response status
+ * @returns {Promise<{data: {signUp: boolean}, errors: object[]}>} Response data
  */
 export async function signUp(email) {
-  return (await api.call(MUTATION_SIGN_UP, { email })).signUp;
+  return api.call(MUTATION_SIGN_UP, { email }, undefined, { allowErrors: true });
 }
 
 /**
  * Recover password by email
  *
  * @param {string} email - user Email
- * @returns {Promise<boolean>} Response status
+ * @returns {Promise<{data: {resetPassword: boolean}, errors: object[]}>} Response data
  */
 export async function recoverPassword(email) {
-  return (await api.call(MUTATION_RECOVER_PASSWORD, { email })).resetPassword;
+  return api.call(MUTATION_RECOVER_PASSWORD, { email }, undefined, { allowErrors: true });
 }
 
 /**

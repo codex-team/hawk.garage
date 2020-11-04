@@ -9,7 +9,12 @@
     "recoverPassword": "Восстановить пароль",
     "signUp": "Зарегистрироваться",
     "signUpSubmitText": "Зарегистрироваться",
-    "recoverPasswordSuccessMessage": "Новый пароль отправлен на Ваш E-mail."
+    "recoverPasswordSuccessMessage": "Новый пароль отправлен на вашу почту",
+    "errors": {
+      "Wrong email or password": "Неправильный email или пароль",
+      "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",
+      "Wrong email format": "Некорректный формат почты"
+    }
   },
   "components": {
     "changePasswordFieldSet": {

@@ -178,9 +178,10 @@ body .cdx-notifies {
 }
 
 body .cdx-notify {
-  font-size: 13px;
+  font-size: 15px;
   background-color: var(--color-bg-second) !important;
   box-shadow: 0 6px 17px -4px #0000009c;
+  padding: 10px 20px;
 
   &__btns-wrapper {
     margin-top: 8px;
