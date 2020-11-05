@@ -71,10 +71,20 @@ const actions = {
    *
    * @param {object} context - vuex action context
    * @param {User} user - user's params for auth
-   * @returns {Promise<boolean>} - sign up status
+   * @returns {Promise<void>} - sign up status
    */
   async [SIGN_UP](context, user) {
-    return userApi.signUp(user.email);
+    const response = await userApi.signUp(user.email);
+
+    /**
+     * Response can contain errors.
+     * Throw such errors to the Vue component to display them for user
+     */
+    if (response.errors && response.errors.length) {
+      response.errors.forEach(error => {
+        throw new Error(error.message);
+      });
+    }
   },
 
   /**
@@ -84,9 +94,21 @@ const actions = {
    * @param {User} user - user's params for auth
    */
   async [LOGIN]({ commit }, user) {
-    const tokens = await userApi.login(user.email, user.password);
+    const response = await userApi.login(user.email, user.password);
 
-    commit(mutationTypes.SET_TOKENS, tokens);
+    /**
+     * Response can contain errors.
+     * Throw such errors to the Vue component to display them for user
+     */
+    if (response.errors && response.errors.length) {
+      response.errors.forEach(error => {
+        throw new Error(error.message);
+      });
+
+      return;
+    }
+
+    commit(mutationTypes.SET_TOKENS, response.data.login);
   },
 
   /**
@@ -94,9 +116,20 @@ const actions = {
    *
    * @param {object} context - vuex action context
    * @param {User} user - user's params for recovering password
+   * @returns {Promise<void>}
    */
   async [RECOVER_PASSWORD](context, user) {
-    return userApi.recoverPassword(user.email);
+    const response = await userApi.recoverPassword(user.email);
+
+    /**
+     * Response can contain errors.
+     * Throw such errors to the Vue component to display them for user
+     */
+    if (response.errors && response.errors.length) {
+      response.errors.forEach(error => {
+        throw new Error(error.message);
+      });
+    }
   },
 
   /**
