@@ -124,7 +124,7 @@
       "title": "Account settings",
       "profileUpdated": "Profile was updated",
       "errors": {
-        "Cannot read property updateProfile of null": "Failed to save profile settings"
+        "Wrong email format": "Wrong email format"
       }
     },
     "appearance": {

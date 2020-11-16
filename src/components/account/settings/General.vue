@@ -155,10 +155,7 @@ export default Vue.extend({
         });
       } catch (e) {
         notifier.show({
-          /**
-           * Removes ' symbol from error message for working with i18n translation
-           */
-          message: this.$t('settings.account.errors.' + e.message.replace(/'/g, '')) as string,
+          message: this.$t('settings.account.errors.' + e.message) as string,
           style: 'error',
           time: 5000,
         });
