@@ -124,7 +124,7 @@
       "title": "Аккаунт",
       "profileUpdated": "Профиль обновлён",
       "errors": {
-        "Cannot read property updateProfile of null": "Не удалось сохранить настройки профиля"
+        "Wrong email format": "Некорректный формат почты"
       }
     },
     "appearance": {
