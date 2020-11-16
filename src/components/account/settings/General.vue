@@ -23,10 +23,12 @@
       </div>
       <FormTextFieldset
         v-model="email"
+        auto-complete="username"
         class="account-settings__section"
         :label="$t('settings.account.email')"
         required
         placeholder="example@example.com"
+        type="email"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
