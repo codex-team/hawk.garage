@@ -38,6 +38,7 @@ export default {
     return {
       fields: [
         {
+          autoComplete: 'username',
           label: this.$t('authPages.emailAddress'),
           name: 'email',
           value: '',
@@ -45,6 +46,7 @@ export default {
           type: 'email',
         },
         {
+          autoComplete: 'current-password',
           label: this.$t('authPages.password'),
           name: 'password',
           value: '',

@@ -35,6 +35,7 @@ export default class RecoverPassword extends Vue {
    * Fields for reset password form
    */
   private fields!: {
+      autoComplete: string,
       label: VueI18n.TranslateResult,
       name: string,
       value: string,
@@ -60,6 +61,7 @@ export default class RecoverPassword extends Vue {
   created() {
     this.fields = [
       {
+        autoComplete: 'username',
         label: this.$t('authPages.emailAddress'),
         name: 'email',
         value: '',

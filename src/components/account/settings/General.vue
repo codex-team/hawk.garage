@@ -23,10 +23,12 @@
       </div>
       <FormTextFieldset
         v-model="email"
+        auto-complete="username"
         class="account-settings__section"
         :label="$t('settings.account.email')"
         required
         placeholder="example@example.com"
+        type="email"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
@@ -153,7 +155,10 @@ export default Vue.extend({
         });
       } catch (e) {
         notifier.show({
-          message: e.message,
+          /**
+           * Removes ' symbol from error message for working with i18n translation
+           */
+          message: this.$t('settings.account.errors.' + e.message.replace(/'/g, '')) as string,
           style: 'error',
           time: 5000,
         });

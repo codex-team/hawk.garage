@@ -122,7 +122,10 @@
       "profileImage": "Фотография",
       "submit": "Сохранить",
       "title": "Аккаунт",
-      "profileUpdated": "Профиль обновлён"
+      "profileUpdated": "Профиль обновлён",
+      "errors": {
+        "Cannot read property updateProfile of null": "Не удалось сохранить настройки профиля"
+      }
     },
     "appearance": {
       "title": "Внешний вид"

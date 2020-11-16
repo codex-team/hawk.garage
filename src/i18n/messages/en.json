@@ -122,7 +122,10 @@
       "profileImage": "Profile picture",
       "submit": "Save",
       "title": "Account settings",
-      "profileUpdated": "Profile was updated"
+      "profileUpdated": "Profile was updated",
+      "errors": {
+        "Cannot read property updateProfile of null": "Failed to save profile settings"
+      }
     },
     "appearance": {
       "title": "Appearance"
