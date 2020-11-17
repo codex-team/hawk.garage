@@ -12,7 +12,7 @@ jobs:
       - name: Mono repository update
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.MONO_TOKEN }}
+          token: ${{ secrets.HAWK_MONO_TOKEN }}
           event-type: submodule-changed
           repository: codex-team/hawk.mono
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "path": "${{ env.REPOSITORY_MONO_PATH }}"}'
