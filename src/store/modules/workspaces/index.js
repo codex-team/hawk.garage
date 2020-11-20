@@ -228,6 +228,9 @@ const actions = {
   async [FETCH_WORKSPACE]({ commit }, id) {
     const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
 
+    if (!workspace) {
+      throw new Error('The user is not a member of this workspace');
+    }
     commit(mutationTypes.SET_WORKSPACE, workspace);
 
     return workspace;

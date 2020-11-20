@@ -206,6 +206,9 @@
       "billing": {
         "title": "Платежи"
       }
+    },
+    "errors": {
+      "The user is not a member of this workspace": "Вы не состоите в этом воркспейсе"
     }
   },
   "billing": {

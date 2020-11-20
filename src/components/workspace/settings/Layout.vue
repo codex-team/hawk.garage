@@ -71,8 +71,9 @@ import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
-import { Workspace } from '@/types/workspaces';
+import { ConfirmedMember, Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
+import { Route } from 'vue-router';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsLayout',
@@ -112,7 +113,16 @@ export default Vue.extend({
     if (workspaceLoaded) {
       this.workspace = workspaceLoaded;
     } else {
-      this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+      try {
+        this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+      } catch (e) {
+        notifier.show({
+          message: this.$i18n.t(e.message),
+          style: 'error',
+          time: 5000,
+        });
+        await this.$router.push({ name: 'home' });
+      }
     }
   },
   methods: {
