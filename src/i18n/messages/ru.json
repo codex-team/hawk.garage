@@ -212,6 +212,9 @@
       "errors": {
         "accessDenied": "У вас недостаточно прав для просмотра этой страницы"
       }
+    },
+    "errors": {
+      "The user is not a member of this workspace": "Вы не состоите в этом воркспейсе"
     }
   },
   "billing": {
