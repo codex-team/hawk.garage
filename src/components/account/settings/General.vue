@@ -23,7 +23,7 @@
       </div>
       <FormTextFieldset
         v-model="email"
-        auto-complete="username"
+        auto-complete="email"
         class="account-settings__section"
         :label="$t('settings.account.email')"
         required

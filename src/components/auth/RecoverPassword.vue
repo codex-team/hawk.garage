@@ -61,7 +61,7 @@ export default class RecoverPassword extends Vue {
   created() {
     this.fields = [
       {
-        autoComplete: 'username',
+        autoComplete: 'email',
         label: this.$t('authPages.emailAddress'),
         name: 'email',
         value: '',
