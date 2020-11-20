@@ -73,7 +73,6 @@ import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/act
 // eslint-disable-next-line no-unused-vars
 import { ConfirmedMember, Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
-import { Route } from 'vue-router';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsLayout',
