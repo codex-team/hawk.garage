@@ -208,6 +208,9 @@
       },
       "billing": {
         "title": "Billing information"
+      },
+      "errors": {
+        "accessDenied": "You don't have enough rights to view this page"
       }
     }
   },
