@@ -116,7 +116,7 @@ export default Vue.extend({
         this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
       } catch (e) {
         notifier.show({
-          message: this.$i18n.t(e.message),
+          message: this.$i18n.t('workspaces.errors.' + e.message),
           style: 'error',
           time: 5000,
         });
