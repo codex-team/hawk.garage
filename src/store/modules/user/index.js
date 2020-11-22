@@ -177,7 +177,17 @@ const actions = {
    * @param {User} user - user's params to update
    */
   async [UPDATE_PROFILE](context, user) {
-    return userApi.updateProfile(user.name, user.email, user.image);
+    const response = await userApi.updateProfile(user.name, user.email, user.image);
+
+    /**
+     * Response can contain errors.
+     * Throw such errors to the Vue component to display them for user
+     */
+    if (response.errors && response.errors.length) {
+      response.errors.forEach(error => {
+        throw new Error(error.message);
+      });
+    }
   },
 
   /**

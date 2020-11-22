@@ -20,6 +20,7 @@
     </div>
     <input
       :id="name"
+      :autocomplete="autoComplete"
       class="input form-fieldset__input"
       :type="type || 'text'"
       :name="name"
@@ -104,6 +105,14 @@ export default {
     isInvalid: {
       type: Boolean,
       default: false,
+    },
+
+    /**
+     * Enables autocomplete in input field
+     */
+    autoComplete: {
+      type: String,
+      default: 'on',
     },
   },
 };

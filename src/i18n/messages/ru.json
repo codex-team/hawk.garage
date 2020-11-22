@@ -122,7 +122,10 @@
       "profileImage": "Фотография",
       "submit": "Сохранить",
       "title": "Аккаунт",
-      "profileUpdated": "Профиль обновлён"
+      "profileUpdated": "Профиль обновлён",
+      "errors": {
+        "Wrong email format": "Некорректный формат почты"
+      }
     },
     "appearance": {
       "title": "Внешний вид"

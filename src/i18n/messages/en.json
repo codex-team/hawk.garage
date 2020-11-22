@@ -122,7 +122,10 @@
       "profileImage": "Profile picture",
       "submit": "Save",
       "title": "Account settings",
-      "profileUpdated": "Profile was updated"
+      "profileUpdated": "Profile was updated",
+      "errors": {
+        "Wrong email format": "Wrong email format"
+      }
     },
     "appearance": {
       "title": "Appearance"

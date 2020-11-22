@@ -20,12 +20,14 @@
     </section>
     <template v-if="showInputs">
       <FormTextFieldset
+        auto-complete="current-password"
         :value="value.old"
         :label="$t('components.changePasswordFieldSet.oldPassword')"
         type="password"
         @input="oldPasswordInput"
       />
       <FormTextFieldset
+        auto-complete="new-password"
         :value="value.new"
         class="change-password-fieldset__new-password"
         :label="$t('components.changePasswordFieldSet.newPassword')"
