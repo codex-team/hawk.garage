@@ -208,7 +208,7 @@
       }
     },
     "errors": {
-      "The user is not a member of this workspace": "You aren't a member of this workspace"
+      "The workspace was not found": "The workspace was not found"
     }
   },
   "billing": {
