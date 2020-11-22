@@ -214,7 +214,7 @@
       }
     },
     "errors": {
-      "The user is not a member of this workspace": "Вы не состоите в этом воркспейсе"
+      "The workspace was not found": "Вокспейс не найден"
     }
   },
   "billing": {

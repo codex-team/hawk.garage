@@ -229,7 +229,7 @@ const actions = {
     const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
 
     if (!workspace) {
-      throw new Error('The user is not a member of this workspace');
+      throw new Error('The workspace was not found');
     }
     commit(mutationTypes.SET_WORKSPACE, workspace);
 
