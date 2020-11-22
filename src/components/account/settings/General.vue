@@ -23,10 +23,12 @@
       </div>
       <FormTextFieldset
         v-model="email"
+        auto-complete="email"
         class="account-settings__section"
         :label="$t('settings.account.email')"
         required
         placeholder="example@example.com"
+        type="email"
         @input="showSubmitButton = true"
       />
       <ChangePasswordFieldset
@@ -153,7 +155,7 @@ export default Vue.extend({
         });
       } catch (e) {
         notifier.show({
-          message: e.message,
+          message: this.$t('settings.account.errors.' + e.message) as string,
           style: 'error',
           time: 5000,
         });

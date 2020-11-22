@@ -25,6 +25,7 @@ export default {
     return {
       fields: [
         {
+          autoComplete: 'email',
           label: this.$t('authPages.emailAddress'),
           name: 'email',
           value: '',

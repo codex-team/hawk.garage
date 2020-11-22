@@ -46,6 +46,7 @@
           v-for="(field, index) in fields"
           :key="index"
           v-model="field.value"
+          :auto-complete="field.autoComplete"
           class="auth-form__section"
           required
           :name="field.name"

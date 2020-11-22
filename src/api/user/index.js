@@ -80,10 +80,10 @@ export async function fetchCurrentUser() {
  * @returns {Promise<boolean>}
  */
 export async function updateProfile(name, email, image) {
-  return (await api.call(MUTATION_UPDATE_PROFILE, {
+  return api.call(MUTATION_UPDATE_PROFILE, {
     name,
     email,
-  }, { image })).updateProfile;
+  }, { image }, { allowErrors: true });
 }
 
 /**
