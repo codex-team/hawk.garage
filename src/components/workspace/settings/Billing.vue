@@ -19,6 +19,7 @@ import { BusinessOperation } from '../../../types/business-operation';
 import { ConfirmedMember, Workspace } from '@/types/workspaces';
 import { GET_BUSINESS_OPERATIONS, GET_BALANCE } from '@/store/modules/workspaces/actionTypes';
 import { Route } from 'vue-router';
+import notifier from 'codex-notifier';
 
 /**
  * Component local data structure
@@ -75,6 +76,11 @@ export default Vue.extend({
       const { isAdmin } = userInTeam;
 
       if (!isAdmin) {
+        notifier.show({
+          message: vm.$t('workspaces.settings.errors.accessDenied'),
+          time: 5000,
+          style: 'error',
+        });
         next({ name: 'workspace-settings' });
 
         return;
