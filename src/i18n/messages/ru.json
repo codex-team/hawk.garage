@@ -212,6 +212,9 @@
       "errors": {
         "accessDenied": "У вас недостаточно прав для просмотра этой страницы"
       }
+    },
+    "errors": {
+      "The workspace was not found": "Вокспейс не найден"
     }
   },
   "billing": {

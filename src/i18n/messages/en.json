@@ -212,6 +212,9 @@
       "errors": {
         "accessDenied": "You don't have enough rights to view this page"
       }
+    },
+    "errors": {
+      "The workspace was not found": "The workspace was not found"
     }
   },
   "billing": {

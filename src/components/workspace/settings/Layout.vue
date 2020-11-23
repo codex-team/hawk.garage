@@ -112,7 +112,16 @@ export default Vue.extend({
     if (workspaceLoaded) {
       this.workspace = workspaceLoaded;
     } else {
-      this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+      try {
+        this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+      } catch (e) {
+        notifier.show({
+          message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
+          style: 'error',
+          time: 5000,
+        });
+        await this.$router.push({ name: 'home' });
+      }
     }
   },
   methods: {
