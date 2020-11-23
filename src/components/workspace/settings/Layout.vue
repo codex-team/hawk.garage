@@ -71,7 +71,7 @@ import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 // eslint-disable-next-line no-unused-vars
-import { ConfirmedMember, Workspace } from '@/types/workspaces';
+import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
 
 export default Vue.extend({
