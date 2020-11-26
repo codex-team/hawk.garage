@@ -117,8 +117,11 @@ export default {
     plan() {
       return this.workspace.plan || {};
     },
+    /**
+     * Total number of errors since the last charge date
+     */
     eventsCount() {
-      return 6789;
+      return this.workspace.billingPeriodEventsCount;
     },
   },
   methods: {
