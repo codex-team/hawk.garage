@@ -25,7 +25,7 @@
               size="22"
             />
             <span class="repetitions-list__user-name">
-              {{ repetition.payload.user ? repetition.payload.user.name || '—' : '' }}
+              {{ repetition.payload.user ? repetition.payload.user.name || '—' : 'Unknown' }}
             </span>
           </span>
         </td>
@@ -45,7 +45,10 @@
             {{ showWindowSize(repetition.payload.addons.window) }}
           </span>
         </td>
-        <td class="repetitions-list__col repetitions-list__col--fixed-short">
+        <td
+          v-if="repetition.payload.addons && repetition.payload.addons.url"
+          class="repetitions-list__col repetitions-list__col--fixed-short"
+        >
           <a
             class="repetitions-list__url"
             :title="repetition.payload.addons.url"
