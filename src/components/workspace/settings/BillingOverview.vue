@@ -51,7 +51,7 @@
         </div>
         <div class="billing-card__volume">
           <div class="billing-card__events">
-            {{ eventsCount | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
+            {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
           </div>
           <Progress
             :max="plan.eventsLimit || 0"
