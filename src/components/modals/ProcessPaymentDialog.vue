@@ -73,6 +73,11 @@ const cards = [
     PopupDialog,
     CustomSelect,
   },
+  mounted() {
+    let recaptchaScript = document.createElement('script')
+    recaptchaScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments')
+    document.head.appendChild(recaptchaScript)
+  },
 })
 /**
  * Dialog for payment
@@ -110,13 +115,50 @@ export default class ProcessPaymentDialog extends Vue {
   async processPayment(): Promise<void> {
     const language = this.$store.state.app.language.toUpperCase();
 
-    const { paymentURL } = await billingApi.getPaymentLink({
-      workspaceId: this.workspace.id,
-      amount: +this.amount,
-      language,
+    const widget = new window.cp.CloudPayments({
+      language: "en-US"
     });
 
-    window.location.replace(paymentURL);
+    const workspaceId = this.workspace.id;
+    const amount = +this.amount;
+
+    widget.pay('auth', // или 'charge'
+      { //options
+        publicId: 'test_api_00000000000000000000001', //id из личного кабинета
+        description: 'Workspace', //назначение
+        amount: this.amount, //сумма
+        currency: 'USD', //валюта
+        invoiceId: '1234567', //номер заказа  (необязательно)
+        accountId: 'user@example.com', //идентификатор плательщика (необязательно)
+        skin: "mini", //дизайн виджета (необязательно)
+        data: {
+          workspaceId,
+        }
+      },
+      {
+        onSuccess: async function (options) {
+          console.info('onSuccess', options)
+
+          const { paymentURL } = await billingApi.getPaymentLink({
+            workspaceId: workspaceId,
+            amount: +amount,
+            language,
+          });
+
+          window.location.replace(window.location);
+        },
+        onFail: function (reason, options) {
+          console.info('onFail', reason, options)
+
+          window.location.replace(window.location);
+        },
+        onComplete: function (paymentResult, options) {
+          //Вызывается как только виджет получает от api.cloudpayments ответ с результатом транзакции.
+          //например вызов вашей аналитики Facebook Pixel
+          console.info('onComplete', paymentResult, options)
+        }
+      }
+    )
   }
 
   /**
