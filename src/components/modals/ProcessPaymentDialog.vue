@@ -74,9 +74,19 @@ const cards = [
     CustomSelect,
   },
   mounted() {
-    let recaptchaScript = document.createElement('script')
-    recaptchaScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments')
-    document.head.appendChild(recaptchaScript)
+    /**
+     * Check if script was loaded
+     */
+    if (window.cp && window.cp.CloudPayments) return;
+
+    /**
+     * Script is not loaded
+     * Then create a new script tag and it to the head
+     */
+    const widgetScript = document.createElement('script');
+
+    widgetScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments');
+    document.head.appendChild(widgetScript);
   },
 })
 /**
@@ -125,11 +135,10 @@ export default class ProcessPaymentDialog extends Vue {
     widget.pay('auth', // или 'charge'
       { //options
         publicId: 'test_api_00000000000000000000001', //id из личного кабинета
-        description: 'Workspace', //назначение
+        description: `Add funds for ${this.workspace.name.toString()} workspace`, //назначение
         amount: this.amount, //сумма
         currency: 'USD', //валюта
-        invoiceId: '1234567', //номер заказа  (необязательно)
-        accountId: 'user@example.com', //идентификатор плательщика (необязательно)
+        // invoiceId: '1234567', //номер заказа  (необязательно)
         skin: "mini", //дизайн виджета (необязательно)
         data: {
           workspaceId,
@@ -149,8 +158,6 @@ export default class ProcessPaymentDialog extends Vue {
         },
         onFail: function (reason, options) {
           console.info('onFail', reason, options)
-
-          window.location.replace(window.location);
         },
         onComplete: function (paymentResult, options) {
           //Вызывается как только виджет получает от api.cloudpayments ответ с результатом транзакции.
