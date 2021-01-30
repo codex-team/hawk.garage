@@ -77,7 +77,9 @@ const cards = [
     /**
      * Check if script was loaded
      */
-    if (window.cp && window.cp.CloudPayments) return;
+    if (window.cp && window.cp.CloudPayments) {
+      return;
+    }
 
     /**
      * Script is not loaded
