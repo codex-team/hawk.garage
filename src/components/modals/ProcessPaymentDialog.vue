@@ -129,14 +129,16 @@ export default class ProcessPaymentDialog extends Vue {
       language: "en-US"
     });
 
-    const workspaceId = this.workspace.id;
-    const amount = +this.amount;
+    /**
+     * @todo get tariff name
+     */
+    const tariff = 'base';
 
     widget.pay('charge',
       {
         publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-        description: `Add funds for ${this.workspace.name.toString()} workspace`,
-        amount: this.amount,
+        description: `Activate tariff "${tariff}" for ${this.workspace.name.toString()} workspace for a month`,
+        amount: +this.amount,
         currency: 'USD',
 
         /** Label for admin panel */
@@ -144,20 +146,12 @@ export default class ProcessPaymentDialog extends Vue {
 
         skin: "mini",
         data: {
-          workspaceId,
+          workspaceId: this.workspace.id,
         }
       },
       {
-        onSuccess: async function (options) {
+        onSuccess: function (options) {
           console.info('onSuccess', options)
-
-          const { paymentURL } = await billingApi.getPaymentLink({
-            workspaceId: workspaceId,
-            amount: +amount,
-            language,
-          });
-
-          window.location.replace(window.location);
         },
         onFail: function (reason, options) {
           console.info('onFail', reason, options)
