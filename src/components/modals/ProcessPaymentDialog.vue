@@ -132,14 +132,17 @@ export default class ProcessPaymentDialog extends Vue {
     const workspaceId = this.workspace.id;
     const amount = +this.amount;
 
-    widget.pay('auth', // или 'charge'
-      { //options
-        publicId: 'test_api_00000000000000000000001', //id из личного кабинета
-        description: `Add funds for ${this.workspace.name.toString()} workspace`, //назначение
-        amount: this.amount, //сумма
-        currency: 'USD', //валюта
-        // invoiceId: '1234567', //номер заказа  (необязательно)
-        skin: "mini", //дизайн виджета (необязательно)
+    widget.pay('charge',
+      {
+        publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
+        description: `Add funds for ${this.workspace.name.toString()} workspace`,
+        amount: this.amount,
+        currency: 'USD',
+
+        /** Label for admin panel */
+        invoiceId: `${this.workspace.name.toString()}`,
+
+        skin: "mini",
         data: {
           workspaceId,
         }
@@ -160,8 +163,6 @@ export default class ProcessPaymentDialog extends Vue {
           console.info('onFail', reason, options)
         },
         onComplete: function (paymentResult, options) {
-          //Вызывается как только виджет получает от api.cloudpayments ответ с результатом транзакции.
-          //например вызов вашей аналитики Facebook Pixel
           console.info('onComplete', paymentResult, options)
         }
       }
