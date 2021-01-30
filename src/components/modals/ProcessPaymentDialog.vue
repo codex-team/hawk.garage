@@ -45,7 +45,7 @@
 <script lang="ts">
 import PopupDialog from '../utils/PopupDialog.vue';
 import CustomSelect from '../forms/CustomSelect.vue';
-import * as billingApi from '../../api/billing';
+import notifier from 'codex-notifier';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
 
@@ -124,7 +124,7 @@ export default class ProcessPaymentDialog extends Vue {
   /**
    * Method for payment processing
    */
-  async processPayment(): Promise<void> {
+  processPayment() {
     const language = this.$store.state.app.language.toUpperCase();
 
     const widget = new window.cp.CloudPayments({
@@ -152,13 +152,23 @@ export default class ProcessPaymentDialog extends Vue {
         }
       },
       {
-        onSuccess: function (options) {
+        onSuccess: (options) => {
           console.info('onSuccess', options)
+
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.success') as string,
+            style: 'success',
+          });
         },
-        onFail: function (reason, options) {
+        onFail: (reason, options) => {
           console.info('onFail', reason, options)
+
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.error') as string,
+            style: 'error',
+          });
         },
-        onComplete: function (paymentResult, options) {
+        onComplete: (paymentResult, options) => {
           console.info('onComplete', paymentResult, options)
         }
       }

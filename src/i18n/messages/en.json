@@ -247,6 +247,12 @@
       "cardSelectLabel": "Select card",
       "amountLabel": "Amount",
       "submitButton": "Continue"
+    },
+    "widget": {
+      "notifications": {
+        "success": "Payment success",
+        "error": "There was an error while paying"
+      }
     }
   },
   "event": {
