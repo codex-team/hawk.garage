@@ -48,6 +48,7 @@ import CustomSelect from '../forms/CustomSelect.vue';
 import notifier from 'codex-notifier';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
+import { CloudpaymentsData } from '@/types/cloudpayments-data';
 
 const cards = [
   {
@@ -128,7 +129,7 @@ export default class ProcessPaymentDialog extends Vue {
     const language = this.$store.state.app.language.toUpperCase();
 
     const widget = new window.cp.CloudPayments({
-      language: "en-US"
+      language: 'en-US',
     });
 
     /**
@@ -146,14 +147,14 @@ export default class ProcessPaymentDialog extends Vue {
         /** Label for admin panel */
         invoiceId: `${this.workspace.name.toString()}`,
 
-        skin: "mini",
+        skin: 'mini',
         data: {
           workspaceId: this.workspace.id,
-        }
+        } as CloudpaymentsData,
       },
       {
         onSuccess: (options) => {
-          console.info('onSuccess', options)
+          console.info('onSuccess', options);
 
           notifier.show({
             message: this.$i18n.t('billing.widget.notifications.success') as string,
@@ -161,7 +162,7 @@ export default class ProcessPaymentDialog extends Vue {
           });
         },
         onFail: (reason, options) => {
-          console.info('onFail', reason, options)
+          console.info('onFail', reason, options);
 
           notifier.show({
             message: this.$i18n.t('billing.widget.notifications.error') as string,
@@ -169,10 +170,10 @@ export default class ProcessPaymentDialog extends Vue {
           });
         },
         onComplete: (paymentResult, options) => {
-          console.info('onComplete', paymentResult, options)
-        }
+          console.info('onComplete', paymentResult, options);
+        },
       }
-    )
+    );
   }
 
   /**
