@@ -48,7 +48,7 @@ import CustomSelect from '../forms/CustomSelect.vue';
 import notifier from 'codex-notifier';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
-import { CloudpaymentsData } from '@/types/cloudpayments-data';
+import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
 
 const cards = [
   {
@@ -92,6 +92,13 @@ const cards = [
     document.head.appendChild(widgetScript);
   },
 })
+
+declare global {
+  interface window {
+    cp: any;
+  }
+}
+
 /**
  * Dialog for payment
  */
@@ -150,7 +157,7 @@ export default class ProcessPaymentDialog extends Vue {
         skin: 'mini',
         data: {
           workspaceId: this.workspace.id,
-        } as CloudpaymentsData,
+        } as PlanProlongationPayload,
       },
       {
         onSuccess: (options) => {
