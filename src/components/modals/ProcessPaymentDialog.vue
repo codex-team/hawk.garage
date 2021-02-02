@@ -129,7 +129,9 @@ export default class ProcessPaymentDialog extends Vue {
     const language = this.$store.state.app.language.toUpperCase();
 
     const widget = new window.cp.CloudPayments({
-      // @todo set lang from user's Hawk setting
+      /**
+       * @todo set lang from user's Hawk setting
+       */
       language: 'en-US',
     });
 
