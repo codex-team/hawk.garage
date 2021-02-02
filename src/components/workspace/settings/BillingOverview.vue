@@ -4,33 +4,23 @@
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
     />
-    <div class="clearfix">
+    <div class="clearfix billing-card__workspace">
       <EntityImage
         :id="workspace.id"
-        class="billing-card__logo"
+        class="billing-card__workspace-logo"
         :title="workspace.name"
         :name="workspace.name"
         :image="workspace.image"
-        size="34"
+        size="27"
       />
-      <div class="billing-card__title">
-        {{ workspace.name }}
-      </div>
-      <div class="billing-card__members-count">
-        {{ $tc('billing.members', workspace.team ? workspace.team.length : 0) }}
-      </div>
+      {{ workspace.name }}
     </div>
+
     <div class="billing-card__info">
-      <div class="billing-card__info-card">
-        <div class="billing-card__label">
-          {{ $t('billing.currentBalance') }}
-        </div>
-        <div class="billing-card__balance">
-          {{ workspace.balance || 0 }} $
-        </div>
-      </div>
-      <div
-        class="billing-card__info-card billing-card__current-plan"
+
+      <!-- Plan -->
+      <section
+        class="billing-card__info-section billing-card__current-plan"
         @click="onPlanClick"
       >
         <div class="billing-card__label">
@@ -44,12 +34,14 @@
             {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
           </div>
         </div>
-      </div>
-      <div class="billing-card__info-card">
+      </section>
+
+      <!-- Valid till -->
+      <section class="billing-card__info-section">
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
         </div>
-        <div class="billing-card__volume">
+        <div class="billing-card__info-bar">
           <div class="billing-card__events">
             {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
           </div>
@@ -60,52 +52,43 @@
             class="billing-card__volume-progress"
           />
         </div>
-      </div>
+      </section>
+
+      <!-- Vaolume -->
+
+
+
+
     </div>
     <div class="billing-card__buttons">
-      <button
-        class="button button--submit billing-card__button"
-        @click="processPayment(100)"
-      >
-        {{ $t('billing.pay') }} 100$
-      </button>
-      <button
-        class="button button--submit billing-card__button"
-        @click="processPayment(1000)"
-      >
-        {{ $t('billing.pay') }} 1000$
-      </button>
-      <button
-        class="button button--submit billing-card__button"
-        @click="processPayment()"
-      >
-        {{ $t('billing.payCustomAmount') }}
-      </button>
-      <button class="button button--submit billing-card__button billing-card__button--invoice">
-        <Icon
-          class="billing-card__invoice-icon"
-          symbol="invoice"
-        />
-        {{ $t('billing.requestInvoice') }}
-      </button>
+      <UiButton
+        v-for="(button, index) in buttons"
+        :key="'button:' + index"
+        :submit="button.style === 'primary'"
+        @click="button.onClick"
+        :content="button.label"
+      />
     </div>
   </div>
 </template>
 
-<script>
-import EntityImage from '../../utils/EntityImage';
-import Progress from '../../utils/Progress';
-import Icon from '../../utils/Icon';
-import UiSwitch from '../../forms/UiSwitch';
+<script lang="ts">
+import Vue from 'vue';
+import EntityImage from '../../utils/EntityImage.vue';
+import Progress from '../../utils/Progress.vue';
+import Icon from '../../utils/Icon.vue';
+import UiSwitch from '../../forms/UiSwitch.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
+import UiButton from './../../utils/UiButton.vue';
 
-export default {
+export default Vue.extend({
   name: 'BillingOverview',
   components: {
     UiSwitch,
     Icon,
     Progress,
     EntityImage,
+    UiButton,
   },
   props: {
     workspace: {
@@ -121,7 +104,33 @@ export default {
      * Total number of errors since the last charge date
      */
     eventsCount() {
-      return this.workspace.billingPeriodEventsCount;
+      return this.workspace.billingPeriodEventsCount || 0;
+    },
+
+    buttons(){
+      return [
+        {
+          label: this.$i18n.t('Increment events limit'),
+          style: 'primary',
+          onClick: () => {
+            console.log('Increment events limit');
+          }
+        },
+        {
+          label: this.$i18n.t('Enable auto payment'),
+          style: 'primary',
+          onClick: () => {
+            console.log('Enable auto payment');
+          }
+        },
+        {
+          label: this.$i18n.t('Prolongate current plan'),
+          style: 'secondary',
+          onClick: () => {
+            console.log('Prolongate current plan');
+          }
+        },
+      ]
     },
   },
   methods: {
@@ -143,49 +152,52 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
-<style>
+<style lang="postcss">
+  @import url('./../../../styles/custom-properties.css');
+
+
+
   .billing-card {
-    width: 600px;
+    width: var(--width-popup-form-container);
     margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: 9px;
 
     &__switch {
       float: right;
     }
 
-    &__logo {
-      float: left;
-      margin-top: -1px;
-      margin-right: 15px;
+    &__workspace {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 0.2px;
+
+      &-logo {
+        margin-right: 11px;
+      }
     }
 
     &__title {
-      font-weight: bold;
-      font-size: 15px;
-      line-height: 20px;
-      letter-spacing: 0.19px;
-    }
-
-    &__members-count {
-      color: var(--color-text-second);
-      font-size: 12px;
-      line-height: 14px;
-      letter-spacing: 0.15px;
     }
 
     &__info {
       display: flex;
       margin-top: 20px;
-    }
 
-    &__info-card {
-      margin-right: 40px;
+      &-section {
+        margin-right: 30px;
+      }
+
+      &-bar {
+        padding-top: 3px;
+      }
     }
 
     &__current-plan {
@@ -193,20 +205,9 @@ export default {
     }
 
     &__label {
-      margin-bottom: 15px;
-      color: var(--color-text-second);
-      font-weight: bold;
-      font-size: 12px;
-      letter-spacing: 0.15px;
-      text-transform: uppercase;
-    }
+      @apply --ui-label;
 
-    &__balance {
-      color: var(--color-text-main);
-      font-weight: bold;
-      font-size: 34px;
-      line-height: 40px;
-      letter-spacing: 0.43px;
+      margin-bottom: 15px;
     }
 
     &__plan {
@@ -251,27 +252,10 @@ export default {
 
     &__buttons {
       margin-top: 25px;
-    }
 
-    &__button {
-      margin-right: 15px;
-      padding: 10px 12px;
-      line-height: 17px;
-    }
-
-    &__button--invoice {
-      background-color: var(--color-indicator-low);
-
-      &:hover {
-        background-color: #475980;
+      .ui-button {
+        margin-right: 20px;
       }
-  }
-
-    &__invoice-icon {
-      width: 12px;
-      height: 13px;
-      margin-right: 7px;
-      margin-bottom: -2px;
     }
   }
 </style>
