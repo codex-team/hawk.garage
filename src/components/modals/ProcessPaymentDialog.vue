@@ -92,13 +92,6 @@ const cards = [
     document.head.appendChild(widgetScript);
   },
 })
-
-declare global {
-  interface Window {
-    cp: any;
-  }
-}
-
 /**
  * Dialog for payment
  */
