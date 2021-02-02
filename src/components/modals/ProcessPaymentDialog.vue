@@ -141,7 +141,9 @@ export default class ProcessPaymentDialog extends Vue {
     widget.pay('charge',
       {
         publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-        // @todo add i18n message
+        /**
+         * @todo add i18n message
+         */
         description: `Payment for tariff "${tariff}" for ${this.workspace.name.toString()} workspace for a month`,
         amount: +this.amount,
         currency: 'USD',
