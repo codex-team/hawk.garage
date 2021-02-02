@@ -36,3 +36,4 @@ After updating Hawk GraphQL API scheme you should pull
 its schema (see [file](./schema.graphql)) for code highlighting and typechecking in queries.
 
 Run `yarn get-schema` to load schema from local server
+
