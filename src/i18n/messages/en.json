@@ -250,7 +250,7 @@
     },
     "widget": {
       "notifications": {
-        "success": "Payment success",
+        "success": "Payment sent to processing",
         "error": "There was an error while paying"
       }
     }
