@@ -92,13 +92,6 @@ const cards = [
     document.head.appendChild(widgetScript);
   },
 })
-
-declare global {
-  interface Window {
-    cp: any;
-  }
-}
-
 /**
  * Dialog for payment
  */
@@ -136,7 +129,9 @@ export default class ProcessPaymentDialog extends Vue {
     const language = this.$store.state.app.language.toUpperCase();
 
     const widget = new window.cp.CloudPayments({
-      // @todo set lang from user's Hawk setting
+      /**
+       * @todo set lang from user's Hawk setting
+       */
       language: 'en-US',
     });
 
@@ -148,7 +143,9 @@ export default class ProcessPaymentDialog extends Vue {
     widget.pay('charge',
       {
         publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-        // @todo add i18n message
+        /**
+         * @todo add i18n message
+         */
         description: `Payment for tariff "${tariff}" for ${this.workspace.name.toString()} workspace for a month`,
         amount: +this.amount,
         currency: 'USD',
