@@ -45,9 +45,10 @@
 <script lang="ts">
 import PopupDialog from '../utils/PopupDialog.vue';
 import CustomSelect from '../forms/CustomSelect.vue';
-import * as billingApi from '../../api/billing';
+import notifier from 'codex-notifier';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
+import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
 
 const cards = [
   {
@@ -72,6 +73,23 @@ const cards = [
   components: {
     PopupDialog,
     CustomSelect,
+  },
+  mounted() {
+    /**
+     * Check if script was loaded
+     */
+    if (window.cp && window.cp.CloudPayments) {
+      return;
+    }
+
+    /**
+     * Script is not loaded
+     * Then create a new script tag and it to the head
+     */
+    const widgetScript = document.createElement('script');
+
+    widgetScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments');
+    document.head.appendChild(widgetScript);
   },
 })
 /**
@@ -107,16 +125,61 @@ export default class ProcessPaymentDialog extends Vue {
   /**
    * Method for payment processing
    */
-  async processPayment(): Promise<void> {
+  processPayment() {
     const language = this.$store.state.app.language.toUpperCase();
 
-    const { paymentURL } = await billingApi.getPaymentLink({
-      workspaceId: this.workspace.id,
-      amount: +this.amount,
-      language,
+    const widget = new window.cp.CloudPayments({
+      /**
+       * @todo set lang from user's Hawk setting
+       */
+      language: 'en-US',
     });
 
-    window.location.replace(paymentURL);
+    /**
+     * @todo get tariff name
+     */
+    const tariff = 'base';
+
+    widget.pay('charge',
+      {
+        publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
+        /**
+         * @todo add i18n message
+         */
+        description: `Payment for tariff "${tariff}" for ${this.workspace.name.toString()} workspace for a month`,
+        amount: +this.amount,
+        currency: 'USD',
+
+        /** Label for admin panel */
+        invoiceId: `${this.workspace.name.toString()}`,
+
+        skin: 'mini',
+        data: {
+          workspaceId: this.workspace.id,
+        } as PlanProlongationPayload,
+      },
+      {
+        onSuccess: (options) => {
+          console.info('onSuccess', options);
+
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.success') as string,
+            style: 'success',
+          });
+        },
+        onFail: (reason, options) => {
+          console.info('onFail', reason, options);
+
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.error') as string,
+            style: 'error',
+          });
+        },
+        onComplete: (paymentResult, options) => {
+          console.info('onComplete', paymentResult, options);
+        },
+      }
+    );
   }
 
   /**

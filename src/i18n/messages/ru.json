@@ -247,6 +247,12 @@
       "cardSelectLabel": "Карта",
       "amountLabel": "Сумма",
       "submitButton": "Продолжить"
+    },
+    "widget": {
+      "notifications": {
+        "success": "Платеж передан в обработку",
+        "error": "Произошла ошибка во время выполнения платежа"
+      }
     }
   },
   "event": {
