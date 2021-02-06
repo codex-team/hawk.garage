@@ -49,7 +49,10 @@ import notifier from 'codex-notifier';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
 import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
+import axios from 'axios';
+import { BeforePaymentPayload } from '../../types/before-payment-payload';
 
+const API_ENDPOINT: string = 'http://localhost:4000';
 const cards = [
   {
     id: '1',
@@ -126,6 +129,16 @@ export default class ProcessPaymentDialog extends Vue {
    * Method for payment processing
    */
   processPayment() {
+    const promise = axios.get(`${API_ENDPOINT}/billing/beforePay?workspaceId=${this.workspace.id}`);
+
+    return promise.then(this.charge);
+  }
+
+  /**
+   * @param paymentPayload
+   */
+  async charge(paymentPayload) {
+    const data = paymentPayload.data as BeforePaymentPayload;
     const language = this.$store.state.app.language.toUpperCase();
 
     const widget = new window.cp.CloudPayments({
@@ -135,27 +148,23 @@ export default class ProcessPaymentDialog extends Vue {
       language: 'en-US',
     });
 
-    /**
-     * @todo get tariff name
-     */
-    const tariff = 'base';
-
     widget.pay('charge',
       {
         publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
         /**
          * @todo add i18n message
          */
-        description: `Payment for tariff "${tariff}" for ${this.workspace.name.toString()} workspace for a month`,
-        amount: +this.amount,
-        currency: 'USD',
+        description: `Payment for tariff "${data.tariff}" for ${this.workspace.name.toString()} workspace for a month`,
+        amount: data.amount,
+        currency: data.currency,
 
         /** Label for admin panel */
-        invoiceId: `${this.workspace.name.toString()}`,
+        invoiceId: data.invoiceId,
 
         skin: 'mini',
         data: {
           workspaceId: this.workspace.id,
+          checksum: data.checksum,
         } as PlanProlongationPayload,
       },
       {
