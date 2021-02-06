@@ -1,4 +1,4 @@
 /**
  * CloudPayments API global instance
  */
-declare var cp: any;
+declare let cp: any;

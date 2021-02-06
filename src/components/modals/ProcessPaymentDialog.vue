@@ -49,10 +49,13 @@ import notifier from 'codex-notifier';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
 import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 
-const API_ENDPOINT: string = 'http://localhost:4000';
+const METHOD_BEFOREPAY = 'beforePay';
+const METHOD_CHARGE = 'charge';
+const METHOD_SUCCESS = 'success';
+
 const cards = [
   {
     id: '1',
@@ -129,16 +132,18 @@ export default class ProcessPaymentDialog extends Vue {
    * Method for payment processing
    */
   processPayment() {
-    const promise = axios.get(`${API_ENDPOINT}/billing/beforePay?workspaceId=${this.workspace.id}`);
+    const promise = axios.get(`${BILLING_ENDPOINT}/${METHOD_BEFOREPAY}?workspaceId=${this.workspace.id}`);
 
     return promise.then(this.charge);
   }
 
   /**
-   * @param paymentPayload
+   * Method prepares widget and charges money from entered card
+   *
+   * @param {AxiosResponse} response — server response that sent after beforePay request
    */
-  async charge(paymentPayload) {
-    const data = paymentPayload.data as BeforePaymentPayload;
+  async charge(response) {
+    const data = response.data as BeforePaymentPayload;
     const language = this.$store.state.app.language.toUpperCase();
 
     const widget = new window.cp.CloudPayments({
