@@ -238,7 +238,12 @@
     "payPeriod": "mo",
     "operations": {
       "paymentByCard": "Payment by card **** **** **** {cardPan}",
-      "chargeForPlan": "Charge for {workspaceName} tariff plan"
+      "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "statuses": {
+        "PENDING": "Pending",
+        "CONFIRMED": "Processed",
+        "REJECTED": "Rejected"
+      }
     },
     "processPayment": {
       "header": "Process payment",
