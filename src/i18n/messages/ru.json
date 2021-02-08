@@ -238,7 +238,12 @@
     "payPeriod": "мес",
     "operations": {
       "paymentByCard": "Пополнение по карте **** **** **** {cardPan}",
-      "chargeForPlan": "Списание за тарифный план {workspaceName}"
+      "chargeForPlan": "Списание за тарифный план {workspaceName}",
+      "statuses": {
+        "PENDING": "В ожидании",
+        "CONFIRMED": "Подтверджен",
+        "REJECTED": "Отклонен"
+      }
     },
     "processPayment": {
       "header": "Пополнение баланса",

@@ -1,28 +1,5 @@
 <template>
   <div class="billing-history">
-    <div class="billing-history__header">
-      <div
-        class="billing-history__tab"
-        :class="{'billing-history__tab--selected': currentFilter === Filter.All}"
-        @click="applyFilter(Filter.All)"
-      >
-        {{ $t('billing.all') }}
-      </div>
-      <div
-        class="billing-history__tab"
-        :class="{'billing-history__tab--selected': currentFilter === Filter.Incoming}"
-        @click="applyFilter(Filter.Incoming)"
-      >
-        {{ $t('billing.incomings') }}
-      </div>
-      <div
-        class="billing-history__tab"
-        :class="{'billing-history__tab--selected': currentFilter === Filter.Charges}"
-        @click="applyFilter(Filter.Charges)"
-      >
-        {{ $t('billing.charges') }}
-      </div>
-    </div>
     <div
       v-if="isLoading"
       class="billing-history__loader"
@@ -30,20 +7,27 @@
       {{ $t('common.loading') }}
     </div>
     <template v-else-if="operations && operations.length">
+      <div class="billing-history__header">
+        <div class="billing-history__tab">
+          {{ $t('billing.paymentHistory').toUpperCase() }}
+        </div>
+      </div>
       <div
-        v-for="(operation, i) in filteredOperations"
+        v-for="(operation, i) in operations"
         :key="i"
         class="billing-history__row"
       >
         <div class="billing-history__date">
           {{ operation.dtCreated | prettyDateFromDateTimeString }}
         </div>
+        <div class="billing-history__amount">
+          {{ operation.payload.amount | centsToDollars }}$
+        </div>
         <div class="billing-history__description">
           {{ getDescription(operation) }}
         </div>
         <div class="billing-history__user">
           <EntityImage
-            v-if="operation.type === BusinessOperationType.DepositByUser"
             :id="operation.payload.user.id"
             :name="operation.payload.user.name || operation.payload.user.email"
             :image="operation.payload.user.image"
@@ -52,11 +36,10 @@
           />
         </div>
         <div
-          class="billing-history__amount"
-          :class="[`billing-history__amount--${operation.type}`]"
+          class="billing-history__status"
+          :class="[`billing-history__status--${operation.status.toLowerCase()}`]"
         >
-          {{ getAmountSign(operation) }}
-          {{ operation.payload.amount | centsToDollars }}$
+          {{ $t(`billing.operations.statuses.${operation.status}`) }}
         </div>
       </div>
     </template>
@@ -76,18 +59,8 @@ import { BusinessOperationType } from '@/types/business-operation-type';
 import i18n from './../../../i18n';
 import {
   BusinessOperation,
-  PayloadOfDepositByUser,
   PayloadOfWorkspacePlanPurchase
 } from '@/types/business-operation';
-
-/**
- * Operation filtering options
- */
-enum Filter {
-  All,
-  Incoming,
-  Charges,
-}
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -116,58 +89,14 @@ export default Vue.extend({
   data() {
     return {
       /**
-       * Available filters enum
-       */
-      Filter,
-
-      /**
-       * Currently selected filter
-       */
-      currentFilter: Filter.All,
-
-      /**
        * Save enum constants to allow access it from the <template>
        */
       BusinessOperationType: {
         WorkspacePlanPurchase: BusinessOperationType.WorkspacePlanPurchase,
-        DepositByUser: BusinessOperationType.DepositByUser,
       },
     };
   },
-  computed: {
-    /**
-     * Operations filtered by currentFilter
-     */
-    filteredOperations(): BusinessOperation[] {
-      const incoming = [
-        BusinessOperationType.DepositByUser,
-      ];
-      const charges = [
-        BusinessOperationType.WorkspacePlanPurchase,
-      ];
-
-      switch (this.currentFilter) {
-        case Filter.Incoming:
-          return this.operations.filter(o => incoming.includes(o.type));
-
-        case Filter.Charges:
-          return this.operations.filter(o => charges.includes(o.type));
-
-        default:
-          return this.operations;
-      }
-    },
-  },
   methods: {
-    /**
-     * Save passed filter as current
-     *
-     * @param filter - one of Filter enum values
-     */
-    applyFilter(filter: Filter): void {
-      this.currentFilter = filter;
-    },
-
     /**
      * Return human readable description for passed business operation
      *
@@ -175,14 +104,6 @@ export default Vue.extend({
      */
     getDescription(operation: BusinessOperation): string {
       switch (operation.type) {
-        case BusinessOperationType.DepositByUser: {
-          const payload = operation.payload as PayloadOfDepositByUser;
-
-          return i18n.t('billing.operations.paymentByCard', {
-            cardPan: payload.cardPan,
-          }).toString();
-        }
-
         case BusinessOperationType.WorkspacePlanPurchase: {
           const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
 
@@ -193,22 +114,6 @@ export default Vue.extend({
 
         default:
           return operation.type;
-      }
-    },
-
-    /**
-     * Return '+' or '-' depended on operation type
-     *
-     * @param operation - business operation
-     */
-    getAmountSign(operation: BusinessOperation): string {
-      switch (operation.type) {
-        case BusinessOperationType.DepositByUser:
-          return '+';
-        case BusinessOperationType.WorkspacePlanPurchase:
-          return '–';
-        default:
-          return '';
       }
     },
   },
@@ -269,29 +174,40 @@ export default Vue.extend({
 
     &__date {
       flex-shrink: 0;
-      width: 150px;
+      width: 100px;
     }
 
     &__description {
       flex-grow: 2;
+      text-align: center;
       padding-right: 20px;
     }
 
     &__user {
-      margin-left: auto;
-
-      & + ^&__amount {
-        margin-left: 15px;
-      }
+      margin-right: 15px;
     }
 
     &__amount {
-      margin-left: auto;
+      margin-right: 15px;
       font-weight: 500;
       white-space: nowrap;
+    }
 
-      &--DEPOSIT_BY_USER {
-        color: var(--color-indicator-positive);
+    &__status {
+       width: 90px;
+       font-weight: 500;
+       white-space: nowrap;
+
+      &--pending {
+         color: var(--color-text-second);
+      }
+
+      &--confirmed {
+         color: var(--color-indicator-positive);
+      }
+
+      &--rejected {
+         color: var(--color-indicator-critical);
       }
     }
 
