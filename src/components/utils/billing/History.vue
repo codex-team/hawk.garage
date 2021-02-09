@@ -40,7 +40,7 @@
           class="billing-history__status"
           :class="[`billing-history__status--${operation.status.toLowerCase()}`]"
         >
-          {{ $t(`billing.operations.statuses.${operation.status}`) }}
+          {{ $t(`billing.operations.statuses.${getKeyForStatus(operation.status)}`) }}
         </div>
       </div>
     </template>
@@ -103,6 +103,18 @@ export default Vue.extend({
     },
   },
   methods: {
+    /**
+     * Get a status key to show it on the page
+     *
+     * @param status - status
+     */
+    getKeyForStatus(status: string): string {
+      if (status === 'CONFIRMED') {
+        return 'processed';
+      }
+
+      return status.toLowerCase();
+    },
     /**
      * Return human readable description for passed business operation
      *
