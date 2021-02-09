@@ -13,27 +13,28 @@
         </div>
       </div>
       <div
-        v-for="(operation, i) in operations"
+        v-for="(operation, i) in filteredOperations"
         :key="i"
         class="billing-history__row"
       >
         <div class="billing-history__date">
           {{ operation.dtCreated | prettyDateFromDateTimeString }}
         </div>
-        <div class="billing-history__amount">
-          {{ operation.payload.amount | centsToDollars }}$
-        </div>
-        <div class="billing-history__description">
-          {{ getDescription(operation) }}
-        </div>
         <div class="billing-history__user">
           <EntityImage
+            v-if="operation.payload.user"
             :id="operation.payload.user.id"
             :name="operation.payload.user.name || operation.payload.user.email"
             :image="operation.payload.user.image"
             class="billing-history__user-image"
             size="16"
           />
+        </div>
+        <div class="billing-history__amount">
+          {{ operation.payload.amount | centsToDollars }}$
+        </div>
+        <div class="billing-history__description">
+          {{ getDescription(operation) }}
         </div>
         <div
           class="billing-history__status"
@@ -55,12 +56,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import EntityImage from './../EntityImage.vue';
-import { BusinessOperationType } from '@/types/business-operation-type';
+import {BusinessOperationType} from '@/types/business-operation-type';
 import i18n from './../../../i18n';
-import {
-  BusinessOperation,
-  PayloadOfWorkspacePlanPurchase
-} from '@/types/business-operation';
+import {BusinessOperation, PayloadOfWorkspacePlanPurchase} from '@/types/business-operation';
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -95,6 +93,14 @@ export default Vue.extend({
         WorkspacePlanPurchase: BusinessOperationType.WorkspacePlanPurchase,
       },
     };
+  },
+  computed: {
+    /**
+     * Get operations with type `WORKSPACE_PLAN_PURCHASE`
+     */
+    filteredOperations(): BusinessOperation[] {
+      return this.operations.filter(operation => operation.type === BusinessOperationType.WorkspacePlanPurchase);
+    },
   },
   methods: {
     /**
@@ -174,21 +180,23 @@ export default Vue.extend({
 
     &__date {
       flex-shrink: 0;
-      width: 100px;
+      width: 150px;
     }
 
     &__description {
       flex-grow: 2;
-      text-align: center;
       padding-right: 20px;
+      white-space: normal;
+      word-break: break-all;
     }
 
     &__user {
-      margin-right: 15px;
+      margin-right: 10px;
     }
 
     &__amount {
-      margin-right: 15px;
+      width: 60px;
+      margin-right: 20px;
       font-weight: 500;
       white-space: nowrap;
     }
@@ -196,7 +204,8 @@ export default Vue.extend({
     &__status {
        width: 90px;
        font-weight: 500;
-       white-space: nowrap;
+       white-space: normal;
+       text-align: right;
 
       &--pending {
          color: var(--color-text-second);
