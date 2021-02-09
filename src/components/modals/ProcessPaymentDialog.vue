@@ -130,7 +130,8 @@ export default class ProcessPaymentDialog extends Vue {
    */
   async processPayment() {
     const response = await axios.get(`${API_SERVER}/compose-payment?workspaceId=${this.workspace.id}`);
-    this.showPaymentWidget(response.data as BeforePaymentPayload)
+
+    return this.showPaymentWidget(response.data as BeforePaymentPayload)
   }
 
   /**
@@ -154,7 +155,7 @@ export default class ProcessPaymentDialog extends Vue {
         /**
          * @todo add i18n message
          */
-        description: `Payment for tariff "${data.tariff}" for ${this.workspace.name.toString()} workspace for a month`,
+        description: `Payment for tariff "${data.tariffId}" for ${this.workspace.name.toString()} workspace for a month`,
         amount: data.amount,
         currency: data.currency,
 
@@ -164,6 +165,7 @@ export default class ProcessPaymentDialog extends Vue {
         skin: 'mini',
         data: {
           workspaceId: this.workspace.id,
+          tariffId: data.tariffId,
           checksum: data.checksum,
         } as PlanProlongationPayload,
       },

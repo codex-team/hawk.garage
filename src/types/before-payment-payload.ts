@@ -10,7 +10,7 @@ export interface BeforePaymentPayload {
   /**
    * Tariff: service plan
    */
-  tariff: string;
+  tariffId: string;
 
   /**
    * Unique invoice identifier, format: `WorkspaceNameConsonants year-month-identifier Tariff`
