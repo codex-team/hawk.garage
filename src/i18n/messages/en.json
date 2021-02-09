@@ -237,8 +237,12 @@
     "autoPay": "Auto-pay",
     "payPeriod": "mo",
     "operations": {
-      "paymentByCard": "Payment by card **** **** **** {cardPan}",
-      "chargeForPlan": "Charge for {workspaceName} tariff plan"
+      "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "statuses": {
+        "pending": "Pending",
+        "processed": "Processed",
+        "rejected": "Rejected"
+      }
     },
     "processPayment": {
       "header": "Process payment",
