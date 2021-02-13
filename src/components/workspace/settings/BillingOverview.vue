@@ -7,17 +7,24 @@
     <div class="clearfix billing-card__workspace">
       <EntityImage
         :id="workspace.id"
-        class="billing-card__workspace-logo"
         :title="workspace.name"
         :name="workspace.name"
         :image="workspace.image"
         size="27"
+        class="billing-card__workspace-logo"
       />
       {{ workspace.name }}
+      <div
+        v-if="isVolumeSpent()"
+        class="billing-card__workspace-blocked"
+      >
+        <div class="billing-card__workspace-blocked__text">
+          {{ $t('workspaces.settings.workspace.blocked') }}
+        </div>
+      </div>
     </div>
 
     <div class="billing-card__info">
-
       <!-- Plan -->
       <section
         class="billing-card__info-section billing-card__current-plan"
@@ -37,6 +44,24 @@
       </section>
 
       <!-- Valid till -->
+      <section v-if="workspace.plan.name !== 'Free'" class="billing-card__info-section">
+        <div class="billing-card__label">
+          {{ $t('billing.validTill').toUpperCase() }}
+        </div>
+        <div class="billing-card__info-bar">
+          <div class="billing-card__events">
+            {{ workspace.validTill | prettyDateFromDateTimeString }}
+          </div>
+          <Progress
+            :max="workspace.validTill | prettyDateFromDateTimeString"
+            :current="Date.now() | prettyDateFromDateTimeString"
+            :color="Date.now() / (workspace.validTill ) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+            class="billing-card__volume-progress"
+          />
+        </div>
+      </section>
+
+      <!-- Volume -->
       <section class="billing-card__info-section">
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
@@ -53,20 +78,14 @@
           />
         </div>
       </section>
-
-      <!-- Vaolume -->
-
-
-
-
     </div>
     <div class="billing-card__buttons">
       <UiButton
         v-for="(button, index) in buttons"
         :key="'button:' + index"
         :submit="button.style === 'primary'"
-        @click="button.onClick"
         :content="button.label"
+        @click="button.onClick"
       />
     </div>
   </div>
@@ -76,7 +95,6 @@
 import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Progress from '../../utils/Progress.vue';
-import Icon from '../../utils/Icon.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
@@ -85,7 +103,6 @@ export default Vue.extend({
   name: 'BillingOverview',
   components: {
     UiSwitch,
-    Icon,
     Progress,
     EntityImage,
     UiButton,
@@ -96,7 +113,35 @@ export default Vue.extend({
       required: true,
     },
   },
+  data() {
+    return {
+      incrementEventsLimit: {
+        label: this.$i18n.t('Increment events limit'),
+        style: 'primary',
+        onClick: () => {
+          console.log('Increment events limit');
+        },
+      },
+      enableAutoPayment: {
+        label: this.$i18n.t('Enable auto payment'),
+        style: 'primary',
+        onClick: () => {
+          console.log('Enable auto payment');
+        },
+      },
+      prolongateCurrentPlan: {
+        label: this.$i18n.t('Prolongate current plan'),
+        style: 'secondary',
+        onClick: () => {
+          console.log('Prolongate current plan');
+        },
+      },
+    };
+  },
   computed: {
+    /**
+     * Return workspace plan
+     */
     plan() {
       return this.workspace.plan || {};
     },
@@ -106,35 +151,51 @@ export default Vue.extend({
     eventsCount() {
       return this.workspace.billingPeriodEventsCount || 0;
     },
+    /**
+     * Return a valid buttons
+     */
+    buttons() {
 
-    buttons(){
-      return [
-        {
-          label: this.$i18n.t('Increment events limit'),
-          style: 'primary',
-          onClick: () => {
-            console.log('Increment events limit');
-          }
-        },
-        {
-          label: this.$i18n.t('Enable auto payment'),
-          style: 'primary',
-          onClick: () => {
-            console.log('Enable auto payment');
-          }
-        },
-        {
-          label: this.$i18n.t('Prolongate current plan'),
-          style: 'secondary',
-          onClick: () => {
-            console.log('Prolongate current plan');
-          }
-        },
-      ]
+      if (this.workspace.plan.name === 'Free') {
+        return [ this.incrementEventsLimit ];
+      }
+
+      if (!this.workspace.autoPlan) {
+        if (this.isVolumeSpent) {
+          return [ this.incrementEventsLimit ];
+        }
+
+        if (this.isSubExpired) {
+          return [ this.prolongateCurrentPlan ];
+        }
+
+        return [ this.enableAutoPayment ];
+      }
+
+      return [];
+    },
+    isBlocked(): boolean {
+      if (this.workspace.plan === 'Free') {
+        return this.workspace.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
+      }
+
+      return false;
+    },
+    isVolumeSpent(): boolean {
+      return this.workspace.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
+    },
+    isSubExpired(): boolean {
+      const now = new Date(Date.now());
+      const validTill = new Date(this.workspace.validTill);
+
+      console.log('Now', now.toDateString());
+      console.log('Valid Till', validTill.toDateString());
+
+      return validTill < now;
     },
   },
   methods: {
-    processPayment(amount) {
+    processPayment(amount): void {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ProcessPaymentDialog',
         data: { amount },
@@ -143,7 +204,7 @@ export default Vue.extend({
     /**
      * Open ChooseTariffPlan popup on click on the current plan button
      */
-    onPlanClick() {
+    onPlanClick(): void {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ChooseTariffPlanPopup',
         data: {
@@ -157,8 +218,6 @@ export default Vue.extend({
 
 <style lang="postcss">
   @import url('./../../../styles/custom-properties.css');
-
-
 
   .billing-card {
     width: var(--width-popup-form-container);
@@ -257,5 +316,53 @@ export default Vue.extend({
         margin-right: 20px;
       }
     }
+
+    &__workspace-blocked {
+      width: 62px;
+      height: 23px;
+      margin-left: 15px;
+      padding: 5px 7px;
+      border-radius: 6px;
+      border: solid 1px rgba(217, 72, 72, 0.2);
+      background-color: rgba(217, 72, 72, 0.21);
+
+      &__text {
+        width: 48px;
+        height: 13px;
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1;
+        letter-spacing: 0.16px;
+        text-align: center;
+        color: var(--color-indicator-critical);
+      }
+    }
+
+    &__volume-boost {
+      width: 65px;
+      height: 23px;
+      margin: 0 39px 13px 10px;
+      margin-left: 13px;
+      padding: 4px 8px 4px 10px;
+      border-radius: 12.5px;
+      border: solid 1px #2ccf6c;
+
+      &__text {
+        width: 47px;
+        height: 15px;
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: 0.16px;
+        color: #2ccf6c;
+      }
+    }
   }
+
 </style>
