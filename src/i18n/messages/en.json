@@ -189,7 +189,9 @@
         "image": "Image",
         "submit": "Save",
         "created": "Created at Aug 25, 2019",
-        "updatedMessage": "Workspace was updated"
+        "updatedMessage": "Workspace was updated",
+        "blocked": "Blocked",
+        "boost": "Boost"
       },
       "team": {
         "title": "Team",
@@ -224,6 +226,7 @@
     "members": "{n} member | {n} members",
     "currentBalance": "Current balance",
     "currentPlan": "Current plan",
+    "validTill": "Valid Till",
     "volume": "Volume",
     "volumeEvents": "event | events",
     "pay": "Pay",
