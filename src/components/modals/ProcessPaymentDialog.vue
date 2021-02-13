@@ -51,7 +51,8 @@ import { Workspace } from '@/types/workspaces';
 import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
 import axios from 'axios';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
-import { API_SERVER } from '../../api';
+import { API_ENDPOINT } from '../../api';
+import { Plan } from '../../types/plan';
 
 const cards = [
   {
@@ -129,9 +130,11 @@ export default class ProcessPaymentDialog extends Vue {
    * Method for payment processing
    */
   async processPayment() {
-    const response = await axios.get(`${API_SERVER}/compose-payment?workspaceId=${this.workspace.id}`);
+    const response = await axios.get(
+      `${API_ENDPOINT}/compose-payment?workspaceId=${this.workspace.id}&tariffId=${this.workspace.plan.id}`
+    );
 
-    return this.showPaymentWidget(response.data as BeforePaymentPayload)
+    return this.showPaymentWidget(response.data as BeforePaymentPayload);
   }
 
   /**
@@ -155,7 +158,7 @@ export default class ProcessPaymentDialog extends Vue {
         /**
          * @todo add i18n message
          */
-        description: `Payment for tariff "${data.tariffId}" for ${this.workspace.name.toString()} workspace for a month`,
+        description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
         amount: data.amount,
         currency: data.currency,
 
@@ -165,7 +168,7 @@ export default class ProcessPaymentDialog extends Vue {
         skin: 'mini',
         data: {
           workspaceId: this.workspace.id,
-          tariffId: data.tariffId,
+          tariffId: data.plan.id,
           checksum: data.checksum,
         } as PlanProlongationPayload,
       },

@@ -1,6 +1,8 @@
 /**
  * Data declaration before card charge
  */
+import { Plan } from './plan';
+
 export interface BeforePaymentPayload {
   /**
    * Workspace identifier
@@ -8,9 +10,9 @@ export interface BeforePaymentPayload {
   workspaceId: string;
 
   /**
-   * Tariff: service plan
+   * Tariff plan
    */
-  tariffId: string;
+  plan: Plan;
 
   /**
    * Unique invoice identifier, format: `WorkspaceNameConsonants year-month-identifier Tariff`

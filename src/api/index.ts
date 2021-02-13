@@ -5,7 +5,6 @@ import { prepareFormData } from '@/api/utils';
  * Hawk API endpoint URL
  */
 const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT;
-const API_SERVER: string = process.env.VUE_APP_REST_SERVER;
 
 /**
  * A promise that will be resolved after the initialization request
@@ -107,9 +106,9 @@ export async function call(
   if (files && Object.values(files).filter(Boolean).length) {
     const formData = prepareFormData(request, variables, files);
 
-    promise = axios.post(API_ENDPOINT, formData);
+    promise = axios.post(API_ENDPOINT + '/graphql', formData);
   } else {
-    promise = axios.post(API_ENDPOINT, {
+    promise = axios.post(API_ENDPOINT + '/graphql', {
       query: request,
       variables,
     });
