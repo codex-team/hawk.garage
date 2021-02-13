@@ -44,7 +44,10 @@
       </section>
 
       <!-- Valid till -->
-      <section v-if="workspace.plan.name !== 'Free'" class="billing-card__info-section">
+      <section
+        v-if="workspace.plan.name !== 'Free'"
+        class="billing-card__info-section"
+      >
         <div class="billing-card__label">
           {{ $t('billing.validTill').toUpperCase() }}
         </div>
@@ -98,6 +101,13 @@ import Progress from '../../utils/Progress.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
+import { Plan } from '../../../types/plan';
+
+interface Buttons {
+  label: string;
+  style: string;
+  onClick: () => void
+}
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -116,21 +126,21 @@ export default Vue.extend({
   data() {
     return {
       incrementEventsLimit: {
-        label: this.$i18n.t('Increment events limit'),
+        label: this.$i18n.t('Increment events limit') as string,
         style: 'primary',
         onClick: () => {
           console.log('Increment events limit');
         },
       },
       enableAutoPayment: {
-        label: this.$i18n.t('Enable auto payment'),
+        label: this.$i18n.t('Enable auto payment') as string,
         style: 'primary',
         onClick: () => {
           console.log('Enable auto payment');
         },
       },
       prolongateCurrentPlan: {
-        label: this.$i18n.t('Prolongate current plan'),
+        label: this.$i18n.t('Prolongate current plan') as string,
         style: 'secondary',
         onClick: () => {
           console.log('Prolongate current plan');
@@ -142,20 +152,19 @@ export default Vue.extend({
     /**
      * Return workspace plan
      */
-    plan() {
-      return this.workspace.plan || {};
+    plan(): Plan {
+      return this.workspace.plan;
     },
     /**
      * Total number of errors since the last charge date
      */
-    eventsCount() {
+    eventsCount(): number {
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
      * Return a valid buttons
      */
-    buttons() {
-
+    buttons(): Buttons[] {
       if (this.workspace.plan.name === 'Free') {
         return [ this.incrementEventsLimit ];
       }
