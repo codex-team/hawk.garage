@@ -52,7 +52,6 @@ import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
 import axios from 'axios';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { API_ENDPOINT } from '../../api';
-import { Plan } from '../../types/plan';
 
 const cards = [
   {

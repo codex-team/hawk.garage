@@ -4,7 +4,7 @@ import { prepareFormData } from '@/api/utils';
 /**
  * Hawk API endpoint URL
  */
-const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT;
+export const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT;
 
 /**
  * A promise that will be resolved after the initialization request
