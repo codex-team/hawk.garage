@@ -1,4 +1,6 @@
 /**
  * CloudPayments API global instance
  */
-declare let cp: any;
+interface Window {
+  cp: any;
+}
