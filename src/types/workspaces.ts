@@ -30,7 +30,21 @@ export interface Workspace {
    */
   team: Member[];
 
+  /**
+   * Workspace tariff plan
+   */
   plan: Plan;
+
+  /**
+   * Auto-pay enable or not
+   */
+  autoPay: boolean;
+
+  /**
+   * Subscription expiration date.
+   * When plan is `Free` we don't need this field
+   */
+  subValidTill?: string;
 }
 
 /**
