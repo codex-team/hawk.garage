@@ -35,7 +35,9 @@
           v-if="isVolumeSpent"
           class="billing-card__attention"
         >
-          <div class="billing-card__attention__mark">!</div>
+          <div class="billing-card__attention__mark">
+            !
+          </div>
         </div>
         <div class="billing-card__plan">
           <div class="billing-card__plan-name">
@@ -58,7 +60,7 @@
         <div
           v-if="isVolumeSpent"
           class="billing-card__mock"
-        ></div>
+        />
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
             {{ isSubExpired ? $t('billing.expired') : '' }}{{ workspace.subValidTill | prettyDateFromDateTimeString }}
@@ -73,7 +75,8 @@
       </section>
 
       <!-- Volume -->
-      <section class="billing-card__info-section"
+      <section
+        class="billing-card__info-section"
       >
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
@@ -125,7 +128,6 @@ import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes
 import UiButton from './../../utils/UiButton.vue';
 import { Plan } from '../../../types/plan';
 import Button from '../../../types/button';
-import { Workspace } from '../../../types/workspaces';
 
 export default Vue.extend({
   name: 'BillingOverview',
