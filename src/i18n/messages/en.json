@@ -238,8 +238,12 @@
     "boost": "Boost",
     "blocked": "Blocked",
     "operations": {
-      "paymentByCard": "Payment by card **** **** **** {cardPan}",
-      "chargeForPlan": "Charge for {workspaceName} tariff plan"
+      "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "statuses": {
+        "pending": "Pending",
+        "processed": "Processed",
+        "rejected": "Rejected"
+      }
     },
     "processPayment": {
       "header": "Process payment",
@@ -248,6 +252,12 @@
       "cardSelectLabel": "Select card",
       "amountLabel": "Amount",
       "submitButton": "Continue"
+    },
+    "widget": {
+      "notifications": {
+        "success": "Payment sent to processing",
+        "error": "There was an error while paying"
+      }
     }
   },
   "event": {

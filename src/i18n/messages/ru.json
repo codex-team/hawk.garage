@@ -238,8 +238,12 @@
     "boost": "Увеличить",
     "blocked": "Заблокирован",
     "operations": {
-      "paymentByCard": "Пополнение по карте **** **** **** {cardPan}",
-      "chargeForPlan": "Списание за тарифный план {workspaceName}"
+      "chargeForPlan": "Оплата за тарифный план {workspaceName}",
+      "statuses": {
+        "pending": "В ожидании",
+        "processed": "Обработан",
+        "rejected": "Отклонен"
+      }
     },
     "processPayment": {
       "header": "Пополнение баланса",
@@ -248,6 +252,12 @@
       "cardSelectLabel": "Карта",
       "amountLabel": "Сумма",
       "submitButton": "Продолжить"
+    },
+    "widget": {
+      "notifications": {
+        "success": "Платеж передан в обработку",
+        "error": "Произошла ошибка во время выполнения платежа"
+      }
     }
   },
   "event": {
