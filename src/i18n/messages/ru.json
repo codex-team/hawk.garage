@@ -189,9 +189,7 @@
         "image": "Изображение",
         "submit": "Сохранить",
         "created": "Создан 25 Авг, 2019",
-        "updatedMessage": "Воркспейс успешно обновлён",
-        "blocked": "Заблокирован",
-        "boost": "Увеличить"
+        "updatedMessage": "Воркспейс успешно обновлён"
       },
       "team": {
         "title": "Команда",
@@ -224,8 +222,7 @@
     "detachCard": "Открепить карту",
     "addCardButton": "Добавить карту",
     "members": "Нет участников | 1 участник | {n} участника | {n} участников",
-    "currentBalance": "Баланс",
-    "currentPlan": "Плано",
+    "currentPlan": "Текущий план",
     "validTill": "Действителен до",
     "volume": "Емкость",
     "volumeEvents": "событий | событие | события | событий",
@@ -234,11 +231,12 @@
     "requestInvoice": "Запросить счет",
     "paymentHistory": "История платежей",
     "paymentHistoryEmpty": "Вы пока не совершили никаких операций",
-    "all": "Все",
-    "incomings": "Пополнения",
-    "charges": "Списания",
     "autoPay": "Авто-платеж",
     "payPeriod": "мес",
+    "autoPayIsOn": "Автоплатеж включен. Дата следующего списания: ",
+    "expired": "Истек",
+    "boost": "Увеличить",
+    "blocked": "Заблокирован",
     "operations": {
       "paymentByCard": "Пополнение по карте **** **** **** {cardPan}",
       "chargeForPlan": "Списание за тарифный план {workspaceName}"
