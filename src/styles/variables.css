@@ -36,6 +36,15 @@
   --color-code-pointer: #fb005d;
 
   /**
+   * Billing colors
+   */
+  --color-volume-progress-bg: rgba(219, 230, 255, 0.25);
+  --color-attention-mark: #ffffff;
+  --color-volume-boost-border: #2ccf6c;
+  --color-volume-boost-bac: #2ccf6c;
+  --color-autopay-is-on-text: rgba(219, 230, 255, 0.6);
+
+  /**
    * Some custom width
    */
   --width-event-center-container: 850px;
