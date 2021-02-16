@@ -132,7 +132,7 @@
     },
     "billing": {
       "title": "Billing information",
-      "ownedWorkspaces": "Owned workspaces"
+      "managedWorkspaces": "Managed workspaces"
     },
     "logout": "Log out",
     "notifications": {
@@ -222,8 +222,8 @@
     "detachCard": "Detach card",
     "addCardButton": "Add new card",
     "members": "{n} member | {n} members",
-    "currentBalance": "Current balance",
     "currentPlan": "Current plan",
+    "validTill": "Valid Till",
     "volume": "Volume",
     "volumeEvents": "event | events",
     "pay": "Pay",
@@ -231,11 +231,12 @@
     "requestInvoice": "Request invoice",
     "paymentHistory": "Payment history",
     "paymentHistoryEmpty": "Payment history is empty",
-    "all": "All",
-    "incomings": "Incomings",
-    "charges": "Charges",
     "autoPay": "Auto-pay",
     "payPeriod": "mo",
+    "autoPayIsOn": "Autopay is on. The next payment date:",
+    "expired": "Expired",
+    "boost": "Boost",
+    "blocked": "Blocked",
     "operations": {
       "chargeForPlan": "Charge for {workspaceName} tariff plan",
       "statuses": {
