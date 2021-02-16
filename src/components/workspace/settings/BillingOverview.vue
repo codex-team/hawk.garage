@@ -127,7 +127,7 @@ import UiSwitch from '../../forms/UiSwitch.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
 import { Plan } from '../../../types/plan';
-import Button from '../../../types/button';
+import { Button } from '../../../types/button';
 
 export default Vue.extend({
   name: 'BillingOverview',

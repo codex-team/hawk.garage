@@ -1,7 +1,7 @@
 /**
  * UI Button interface
  */
-export default interface Button {
+export interface Button {
   /**
    * Button label
    */
@@ -14,4 +14,4 @@ export default interface Button {
    * Function which execute when user click on button
    */
   onClick: () => void;
-};
+}
