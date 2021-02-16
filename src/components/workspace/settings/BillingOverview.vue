@@ -15,12 +15,10 @@
       />
       {{ workspace.name }}
       <div
-        v-if="isVolumeSpent()"
+        v-if="isVolumeSpent || isSubExpired"
         class="billing-card__workspace-blocked"
       >
-        <div class="billing-card__workspace-blocked__text">
-          {{ $t('workspaces.settings.workspace.blocked') }}
-        </div>
+        {{ $t('billing.blocked') }}
       </div>
     </div>
 
@@ -32,6 +30,12 @@
       >
         <div class="billing-card__label">
           {{ $t('billing.currentPlan') }}
+        </div>
+        <div
+          v-if="isVolumeSpent"
+          class="billing-card__attention"
+        >
+          <div class="billing-card__attention__mark">!</div>
         </div>
         <div class="billing-card__plan">
           <div class="billing-card__plan-name">
@@ -51,24 +55,36 @@
         <div class="billing-card__label">
           {{ $t('billing.validTill').toUpperCase() }}
         </div>
+        <div
+          v-if="isVolumeSpent"
+          class="billing-card__mock"
+        ></div>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
-            {{ workspace.validTill | prettyDateFromDateTimeString }}
+            {{ isSubExpired ? $t('billing.expired') : '' }}{{ workspace.subValidTill | prettyDateFromDateTimeString }}
           </div>
           <Progress
-            :max="workspace.validTill | prettyDateFromDateTimeString"
-            :current="Date.now() | prettyDateFromDateTimeString"
-            :color="Date.now() / (workspace.validTill ) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+            :max="progressMaxDate"
+            :current="progressCurrentDate"
+            :color="workspace.autoPay ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
             class="billing-card__volume-progress"
           />
         </div>
       </section>
 
       <!-- Volume -->
-      <section class="billing-card__info-section">
+      <section class="billing-card__info-section"
+      >
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
         </div>
+        <button
+          v-if="isVolumeSpent"
+          class="billing-card__volume-boost"
+          @click="onBoostClick()"
+        >
+          {{ $t('billing.boost') + '!' }}
+        </button>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
             {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
@@ -91,6 +107,12 @@
         @click="button.onClick"
       />
     </div>
+    <div
+      v-if="workspace.autoPay"
+      class="billing-card__autopay-is-on"
+    >
+      {{ 'Autopay is on.The next payment date:' }} {{ workspace.subValidTill | prettyDateFromDateTimeString }}
+    </div>
   </div>
 </template>
 
@@ -102,12 +124,8 @@ import UiSwitch from '../../forms/UiSwitch.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
 import { Plan } from '../../../types/plan';
-
-interface Buttons {
-  label: string;
-  style: string;
-  onClick: () => void
-}
+import Button from '../../../types/button';
+import { Workspace } from '../../../types/workspaces';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -146,6 +164,7 @@ export default Vue.extend({
           console.log('Prolongate current plan');
         },
       },
+      now: new Date(),
     };
   },
   computed: {
@@ -164,44 +183,61 @@ export default Vue.extend({
     /**
      * Return a valid buttons
      */
-    buttons(): Buttons[] {
+    buttons(): Button[] {
+      const validButtons: Button[] = [];
+
       if (this.workspace.plan.name === 'Free') {
         return [ this.incrementEventsLimit ];
       }
 
-      if (!this.workspace.autoPlan) {
+      if (!this.workspace.autoPay) {
+        validButtons.push(this.enableAutoPayment);
+
+        if (this.isSubExpired) {
+          validButtons.push(this.prolongateCurrentPlan);
+          console.log('Sub expired');
+
+          return validButtons;
+        }
+
         if (this.isVolumeSpent) {
           return [ this.incrementEventsLimit ];
         }
-
-        if (this.isSubExpired) {
-          return [ this.prolongateCurrentPlan ];
-        }
-
-        return [ this.enableAutoPayment ];
+      } else if (this.isVolumeSpent) {
+        return [ this.incrementEventsLimit ];
       }
 
-      return [];
+      return validButtons;
     },
-    isBlocked(): boolean {
-      if (this.workspace.plan === 'Free') {
-        return this.workspace.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
-      }
-
-      return false;
-    },
+    /**
+     * Checking the volume spent
+     */
     isVolumeSpent(): boolean {
       return this.workspace.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
     },
+    /**
+     * Checking the subscription expiration
+     */
     isSubExpired(): boolean {
-      const now = new Date(Date.now());
-      const validTill = new Date(this.workspace.validTill);
+      const validTill = new Date(this.workspace.subValidTill);
 
-      console.log('Now', now.toDateString());
-      console.log('Valid Till', validTill.toDateString());
-
-      return validTill < now;
+      return validTill < this.now;
     },
+    /**
+     * Return the date in ms from sub created date to sub last date
+     */
+    progressMaxDate(): number {
+      return this.diffDates(this.workspace.subValidTill, this.dateAMonthAgo(this.workspace.subValidTill).toDateString());
+    },
+    /**
+     * Return the date in ms from sub created date to current date
+     */
+    progressCurrentDate(): number {
+      return this.diffDates(this.now.toDateString(), this.dateAMonthAgo(this.workspace.subValidTill).toDateString());
+    },
+  },
+  mounted() {
+    this.now = new Date();
   },
   methods: {
     processPayment(amount): void {
@@ -220,6 +256,37 @@ export default Vue.extend({
           workspaceId: this.workspace.id,
         },
       });
+    },
+    /**
+     * Open the same popup like `onPlanClick`
+     */
+    onBoostClick(): void {
+      console.log('Boost click');
+    },
+    /**
+     * Return the date a month ago
+     *
+     * @param dateString - date string
+     */
+    dateAMonthAgo(dateString: string): Date {
+      const date = new Date(dateString);
+      const monthAgo = new Date(dateString);
+
+      monthAgo.setMonth(date.getMonth() - 1 < 0 ? 11 : date.getMonth() - 1);
+
+      return monthAgo;
+    },
+    /**
+     * Difference between dates
+     *
+     * @param dateString1 - first date
+     * @param dateString2 - second date
+     */
+    diffDates(dateString1: string, dateString2: string): number {
+      const date1 = new Date(dateString1);
+      const date2 = new Date(dateString2);
+
+      return Math.abs(date1.getTime() - date2.getTime());
     },
   },
 });
@@ -276,6 +343,8 @@ export default Vue.extend({
       @apply --ui-label;
 
       margin-bottom: 15px;
+      margin-right: 13px;
+      display: inline-block;
     }
 
     &__plan {
@@ -315,7 +384,7 @@ export default Vue.extend({
       width: 160px;
       height: 5px;
       margin-top: 7px;
-      background-color: rgba(219, 230, 255, 0.25);
+      background-color: var(--color-volume-progress-bg);
     }
 
     &__buttons {
@@ -334,43 +403,56 @@ export default Vue.extend({
       border-radius: 6px;
       border: solid 1px rgba(217, 72, 72, 0.2);
       background-color: rgba(217, 72, 72, 0.21);
+      font-family: Roboto;
+      font-size: 13px;
+      line-height: 1;
+      letter-spacing: 0.16px;
+      text-align: center;
+      color: var(--color-indicator-critical);
+    }
 
-      &__text {
-        width: 48px;
-        height: 13px;
-        font-family: Roboto;
-        font-size: 13px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1;
-        letter-spacing: 0.16px;
-        text-align: center;
-        color: var(--color-indicator-critical);
+    &__attention {
+      width: 18px;
+      height: 18px;
+      padding: 1px 7px;
+      background-color: var(--color-indicator-critical);
+      display: inline-block;
+      border-radius: 50%;
+
+      &__mark {
+        width: 2px;
+        height: 10px;
+        color: var(--color-attention-mark)
       }
     }
 
     &__volume-boost {
       width: 65px;
       height: 23px;
-      margin: 0 39px 13px 10px;
-      margin-left: 13px;
       padding: 4px 8px 4px 10px;
       border-radius: 12.5px;
-      border: solid 1px #2ccf6c;
+      border: solid 1px var(--color-volume-boost-border);
+      display: inline;
+      font-family: Roboto;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.16px;
+      color: var(--color-volume-boost-border);
+      background: var(--color-bg-main);
+    }
 
-      &__text {
-        width: 47px;
-        height: 15px;
-        font-family: Roboto;
-        font-size: 13px;
-        font-weight: 500;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: 0.16px;
-        color: #2ccf6c;
-      }
+    &__autopay-is-on {
+      width: 350px;
+      height: 14px;
+      margin: 20px 166px 0 0;
+      font-family: Roboto;
+      font-size: 12px;
+      letter-spacing: 0.15px;
+      color: var(--color-autopay-is-on-text)
+    }
+
+    &__mock {
+      margin-top: 3px;
     }
   }
 
