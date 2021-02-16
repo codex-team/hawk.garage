@@ -130,7 +130,7 @@ export default class ProcessPaymentDialog extends Vue {
    */
   async processPayment() {
     const response = await axios.get(
-      `${API_ENDPOINT}/compose-payment?workspaceId=${this.workspace.id}&tariffId=${this.workspace.plan.id}`
+      `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspace.id}&tariffId=${this.workspace.plan.id}`
     );
 
     return this.showPaymentWidget(response.data as BeforePaymentPayload);
