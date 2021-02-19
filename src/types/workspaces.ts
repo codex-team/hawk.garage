@@ -36,15 +36,15 @@ export interface Workspace {
   plan: Plan;
 
   /**
-   * Auto-pay enable or not
+   * Date when workspace was charged last time
    */
-  autoPay: boolean;
+  lastChargeDate: Date;
 
   /**
-   * Subscription expiration date.
-   * When plan is `Free` we don't need this field
+   * ID of subscription if it subscribed
+   * Returns from CloudPayments
    */
-  subValidTill?: string;
+  subscriptionId?: string;
 }
 
 /**
