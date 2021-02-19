@@ -15,7 +15,7 @@
       />
       {{ workspace.name }}
       <div
-        v-if="isVolumeSpent || isSubExpired"
+        v-if="isEventsLimitExceeded || isSubExpired"
         class="billing-card__workspace-blocked"
       >
         {{ $t('billing.blocked') }}
@@ -32,7 +32,7 @@
           {{ $t('billing.currentPlan') }}
         </div>
         <div
-          v-if="isVolumeSpent"
+          v-if="isEventsLimitExceeded"
           class="billing-card__attention"
         >
           <div class="billing-card__attention__mark">
@@ -58,7 +58,7 @@
           {{ $t('billing.validTill').toUpperCase() }}
         </div>
         <div
-          v-if="isVolumeSpent"
+          v-if="isEventsLimitExceeded"
           class="billing-card__mock"
         />
         <div class="billing-card__info-bar">
@@ -82,7 +82,7 @@
           {{ $t('billing.volume') }}
         </div>
         <button
-          v-if="isVolumeSpent"
+          v-if="isEventsLimitExceeded"
           class="billing-card__volume-boost"
           @click="onBoostClick()"
         >
@@ -202,10 +202,10 @@ export default Vue.extend({
           return validButtons;
         }
 
-        if (this.isVolumeSpent) {
+        if (this.isEventsLimitExceeded) {
           return [ this.incrementEventsLimit ];
         }
-      } else if (this.isVolumeSpent) {
+      } else if (this.isEventsLimitExceeded) {
         return [ this.incrementEventsLimit ];
       }
 
@@ -214,8 +214,8 @@ export default Vue.extend({
     /**
      * Checking the volume spent
      */
-    isVolumeSpent(): boolean {
-      return this.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
+    isEventsLimitExceeded(): boolean {
+      return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
     },
     /**
      * Checking the subscription expiration
