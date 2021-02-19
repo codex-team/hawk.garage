@@ -68,7 +68,7 @@
           <Progress
             :max="progressMaxDate"
             :current="progressCurrentDate"
-            :color="workspace.autoPay ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+            :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
             class="billing-card__volume-progress"
           />
         </div>
@@ -111,7 +111,7 @@
       />
     </div>
     <div
-      v-if="workspace.autoPay"
+      v-if="isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
       {{ 'Autopay is on.The next payment date:' }} {{ workspace.subValidTill | prettyDateFromDateTimeString }}
@@ -192,7 +192,7 @@ export default Vue.extend({
         return [ this.incrementEventsLimit ];
       }
 
-      if (!this.workspace.autoPay) {
+      if (!this.isAutoPayOn) {
         validButtons.push(this.enableAutoPayment);
 
         if (this.isSubExpired) {
@@ -236,6 +236,12 @@ export default Vue.extend({
      */
     progressCurrentDate(): number {
       return this.diffDates(this.now.toDateString(), this.dateAMonthAgo(this.workspace.subValidTill).toDateString());
+    },
+    /**
+     * Return true if workspace have subscription
+     */
+    isAutoPayOn(): boolean {
+      return !!this.workspace.subscriptionId;
     },
   },
   mounted() {
