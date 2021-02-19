@@ -51,7 +51,7 @@
 
       <!-- Valid till -->
       <section
-        v-if="workspace.plan.name !== 'Free'"
+        v-if="plan.name !== 'Free'"
         class="billing-card__info-section"
       >
         <div class="billing-card__label">
@@ -188,7 +188,7 @@ export default Vue.extend({
     buttons(): Button[] {
       const validButtons: Button[] = [];
 
-      if (this.workspace.plan.name === 'Free') {
+      if (this.plan.name === 'Free') {
         return [ this.incrementEventsLimit ];
       }
 
@@ -215,7 +215,7 @@ export default Vue.extend({
      * Checking the volume spent
      */
     isVolumeSpent(): boolean {
-      return this.workspace.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
+      return this.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
     },
     /**
      * Checking the subscription expiration
