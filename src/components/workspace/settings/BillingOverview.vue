@@ -183,33 +183,47 @@ export default Vue.extend({
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
-     * Return a valid buttons
+     * Return buttons list depended on workspace state
      */
     buttons(): Button[] {
-      const validButtons: Button[] = [];
+      const buttonsList: Button[] = [];
 
+      /**
+       * if plan is `Free` then return `Increment Events Limit` button
+       */
       if (this.plan.name === 'Free') {
         return [ this.incrementEventsLimit ];
       }
 
+      /**
+       * If autopay is off we necessary return `Enable Auto Payment` button
+       */
       if (!this.isAutoPayOn) {
-        validButtons.push(this.enableAutoPayment);
+        buttonsList.push(this.enableAutoPayment);
 
+        /**
+         * If subscription is expired then return `Prolongate Current Plan` button
+         */
         if (this.isSubExpired) {
-          validButtons.push(this.prolongateCurrentPlan);
-          console.log('Sub expired');
+          buttonsList.push(this.prolongateCurrentPlan);
 
-          return validButtons;
+          return buttonsList;
         }
 
+        /**
+         * if autopay is off and events limit is exceeded then return `Increment Events Limit`
+         */
         if (this.isEventsLimitExceeded) {
           return [ this.incrementEventsLimit ];
         }
       } else if (this.isEventsLimitExceeded) {
+        /**
+         * If autopay is on and events limit is exceeded then return `Increment Events Limit`
+         */
         return [ this.incrementEventsLimit ];
       }
 
-      return validButtons;
+      return buttonsList;
     },
     /**
      * Checking the volume spent
