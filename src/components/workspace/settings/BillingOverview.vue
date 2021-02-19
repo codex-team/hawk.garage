@@ -63,7 +63,7 @@
         />
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
-            {{ isSubExpired ? $t('billing.expired') : '' }}{{ workspace.subValidTill | prettyDateFromDateTimeString }}
+            {{ isSubExpired ? $t('billing.expired') : '' }}{{ subExpiredDate | prettyDateFromDateTimeString }}
           </div>
           <Progress
             :max="progressMaxDate"
@@ -114,7 +114,7 @@
       v-if="isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
-      {{ 'Autopay is on.The next payment date:' }} {{ workspace.subValidTill | prettyDateFromDateTimeString }}
+      {{ 'Autopay is on.The next payment date:' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
     </div>
   </div>
 </template>
@@ -221,21 +221,29 @@ export default Vue.extend({
      * Checking the subscription expiration
      */
     isSubExpired(): boolean {
-      const validTill = new Date(this.workspace.subValidTill);
+      return this.workspace.lastChargeDate < this.now;
+    },
+    /**
+     * Return subscription expiration date
+     */
+    subExpiredDate(): Date {
+      const expiredDate: Date = new Date(this.workspace.lastChargeDate);
 
-      return validTill < this.now;
+      expiredDate.setMonth(expiredDate.getMonth() + 1);
+
+      return expiredDate;
     },
     /**
      * Return the date in ms from sub created date to sub last date
      */
     progressMaxDate(): number {
-      return this.diffDates(this.workspace.subValidTill, this.dateAMonthAgo(this.workspace.subValidTill).toDateString());
+      return this.diffDates(this.subExpiredDate, this.workspace.lastChargeDate);
     },
     /**
      * Return the date in ms from sub created date to current date
      */
     progressCurrentDate(): number {
-      return this.diffDates(this.now.toDateString(), this.dateAMonthAgo(this.workspace.subValidTill).toDateString());
+      return this.diffDates(this.now, this.workspace.lastChargeDate);
     },
     /**
      * Return true if workspace have subscription
@@ -272,25 +280,12 @@ export default Vue.extend({
       console.log('Boost click');
     },
     /**
-     * Return the date a month ago
-     *
-     * @param dateString - date string
-     */
-    dateAMonthAgo(dateString: string): Date {
-      const date = new Date(dateString);
-      const monthAgo = new Date(dateString);
-
-      monthAgo.setMonth(date.getMonth() - 1 < 0 ? 11 : date.getMonth() - 1);
-
-      return monthAgo;
-    },
-    /**
      * Difference between dates
      *
      * @param dateString1 - first date
      * @param dateString2 - second date
      */
-    diffDates(dateString1: string, dateString2: string): number {
+    diffDates(dateString1: Date, dateString2: Date): number {
       const date1 = new Date(dateString1);
       const date2 = new Date(dateString2);
 
