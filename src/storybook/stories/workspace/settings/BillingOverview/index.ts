@@ -12,13 +12,13 @@ export const Default = (): unknown => ({
   components: { BillingOverview },
   template: `<BillingOverview
     :workspace="{
-        billingPeriodEventsCount: 1000,
+        billingPeriodEventsCount: 10000,
         description: null,
         id: '601d41b1c51c670023ab5cc7',
         image: null,
         name: 'Toolbox',
-        autoPay: true,
-        subValidTill: '2021-02-19T12:17:38.244+00:00',
+        subscriptionId: 'awesome-sub-id',
+        lastChargeDate: '2021-02-19T12:17:38.244+00:00',
         plan: {
           eventsLimit: 10000,
           id: '601d37621896b5004f1d0e3b',
