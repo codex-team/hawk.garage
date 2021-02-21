@@ -401,7 +401,7 @@ export default Vue.extend({
       width: 160px;
       height: 5px;
       margin-top: 7px;
-      background-color: var(--color-volume-progress-bg);
+      background-color: color-mod(var(--color-border) alpha(25%));
     }
 
     &__buttons {
@@ -439,7 +439,6 @@ export default Vue.extend({
       &__mark {
         width: 2px;
         height: 10px;
-        color: var(--color-attention-mark)
       }
     }
 
@@ -448,13 +447,13 @@ export default Vue.extend({
       height: 23px;
       padding: 4px 8px 4px 10px;
       border-radius: 12.5px;
-      border: solid 1px var(--color-volume-boost-border);
+      border: solid 1px var(--color-indicator-positive);
       display: inline;
       font-family: Roboto;
       font-size: 13px;
       font-weight: 500;
       letter-spacing: 0.16px;
-      color: var(--color-volume-boost-border);
+      color: var(--color-indicator-positive);
       background: var(--color-bg-main);
     }
 
@@ -465,7 +464,7 @@ export default Vue.extend({
       font-family: Roboto;
       font-size: 12px;
       letter-spacing: 0.15px;
-      color: var(--color-autopay-is-on-text)
+      color: color-mod(var(--color-border) alpha(60%));
     }
 
     &__mock {
