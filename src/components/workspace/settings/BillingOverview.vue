@@ -13,13 +13,14 @@
         size="27"
         class="billing-card__workspace-logo"
       />
-      {{ workspace.name }}
-      <div
-        v-if="isEventsLimitExceeded || isSubExpired"
-        class="billing-card__workspace-blocked"
-      >
-        {{ $t('billing.blocked') }}
+      <div class="billing-card__workspace-name">
+        {{ workspace.name }}
       </div>
+      <NotificationsRuleFilter
+        v-if="isEventsLimitExceeded || isSubExpired"
+        :content="$t('billing.blocked')"
+        :excluding="true"
+      />
     </div>
 
     <div class="billing-card__info">
@@ -31,14 +32,9 @@
         <div class="billing-card__label">
           {{ $t('billing.currentPlan') }}
         </div>
-        <div
+        <AttentionSign
           v-if="isEventsLimitExceeded"
-          class="billing-card__attention"
-        >
-          <div class="billing-card__attention__mark">
-            !
-          </div>
-        </div>
+        />
         <div class="billing-card__plan">
           <div class="billing-card__plan-name">
             {{ plan.name || 'Free' }}
@@ -81,13 +77,12 @@
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
         </div>
-        <button
+        <UiButton
           v-if="isEventsLimitExceeded"
           class="billing-card__volume-boost"
+          :content="$t('billing.boost') + '!'"
           @click="onBoostClick()"
-        >
-          {{ $t('billing.boost') + '!' }}
-        </button>
+        />
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
             {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
@@ -124,8 +119,10 @@ import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Progress from '../../utils/Progress.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
+import NotificationsRuleFilter from '../../project/settings/NotificationsRuleFilter.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
+import AttentionSign from './AttentionSign.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
 
@@ -136,6 +133,8 @@ export default Vue.extend({
     Progress,
     EntityImage,
     UiButton,
+    NotificationsRuleFilter,
+    AttentionSign,
   },
   props: {
     workspace: {
@@ -397,6 +396,8 @@ export default Vue.extend({
       letter-spacing: 0.18px;
     }
 
+
+
     &__volume-progress {
       width: 160px;
       height: 5px;
@@ -412,40 +413,14 @@ export default Vue.extend({
       }
     }
 
-    &__workspace-blocked {
-      width: 62px;
-      height: 23px;
-      margin-left: 15px;
-      padding: 5px 7px;
-      border-radius: 6px;
-      border: solid 1px rgba(217, 72, 72, 0.2);
-      background-color: rgba(217, 72, 72, 0.21);
-      font-family: Roboto;
-      font-size: 13px;
-      line-height: 1;
-      letter-spacing: 0.16px;
-      text-align: center;
-      color: var(--color-indicator-critical);
-    }
-
-    &__attention {
-      width: 18px;
-      height: 18px;
-      padding: 1px 7px;
-      background-color: var(--color-indicator-critical);
-      display: inline-block;
-      border-radius: 50%;
-
-      &__mark {
-        width: 2px;
-        height: 10px;
-      }
+    &__workspace-name {
+      margin-right: 15px;
     }
 
     &__volume-boost {
       width: 65px;
       height: 23px;
-      padding: 4px 8px 4px 10px;
+      padding: 2px 8px 8px 10px;
       border-radius: 12.5px;
       border: solid 1px var(--color-indicator-positive);
       display: inline;
