@@ -13,13 +13,14 @@
         size="27"
         class="billing-card__workspace-logo"
       />
-      {{ workspace.name }}
-      <div
-        v-if="isVolumeSpent || isSubExpired"
-        class="billing-card__workspace-blocked"
-      >
-        {{ $t('billing.blocked') }}
+      <div class="billing-card__workspace-name">
+        {{ workspace.name }}
       </div>
+      <NotificationsRuleFilter
+        v-if="isEventsLimitExceeded || isSubExpired"
+        :content="$t('billing.blocked')"
+        :excluding="true"
+      />
     </div>
 
     <div class="billing-card__info">
@@ -31,14 +32,9 @@
         <div class="billing-card__label">
           {{ $t('billing.currentPlan') }}
         </div>
-        <div
-          v-if="isVolumeSpent"
-          class="billing-card__attention"
-        >
-          <div class="billing-card__attention__mark">
-            !
-          </div>
-        </div>
+        <AttentionSign
+          v-if="isEventsLimitExceeded"
+        />
         <div class="billing-card__plan">
           <div class="billing-card__plan-name">
             {{ plan.name || 'Free' }}
@@ -51,24 +47,24 @@
 
       <!-- Valid till -->
       <section
-        v-if="workspace.plan.name !== 'Free'"
+        v-if="plan.name !== 'Free'"
         class="billing-card__info-section"
       >
         <div class="billing-card__label">
           {{ $t('billing.validTill').toUpperCase() }}
         </div>
         <div
-          v-if="isVolumeSpent"
+          v-if="isEventsLimitExceeded"
           class="billing-card__mock"
         />
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
-            {{ isSubExpired ? $t('billing.expired') : '' }}{{ workspace.subValidTill | prettyDateFromDateTimeString }}
+            {{ isSubExpired ? $t('billing.expired') : '' }}{{ subExpiredDate | prettyDateFromDateTimeString }}
           </div>
           <Progress
             :max="progressMaxDate"
             :current="progressCurrentDate"
-            :color="workspace.autoPay ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+            :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
             class="billing-card__volume-progress"
           />
         </div>
@@ -81,13 +77,12 @@
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
         </div>
-        <button
-          v-if="isVolumeSpent"
+        <UiButton
+          v-if="isEventsLimitExceeded"
           class="billing-card__volume-boost"
+          :content="$t('billing.boost') + '!'"
           @click="onBoostClick()"
-        >
-          {{ $t('billing.boost') + '!' }}
-        </button>
+        />
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
             {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
@@ -111,10 +106,10 @@
       />
     </div>
     <div
-      v-if="workspace.autoPay"
+      v-if="isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
-      {{ 'Autopay is on.The next payment date:' }} {{ workspace.subValidTill | prettyDateFromDateTimeString }}
+      {{ 'Autopay is on.The next payment date:' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
     </div>
   </div>
 </template>
@@ -124,8 +119,10 @@ import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Progress from '../../utils/Progress.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
+import NotificationsRuleFilter from '../../project/settings/NotificationsRuleFilter.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
+import AttentionSign from './AttentionSign.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
 
@@ -136,6 +133,8 @@ export default Vue.extend({
     Progress,
     EntityImage,
     UiButton,
+    NotificationsRuleFilter,
+    AttentionSign,
   },
   props: {
     workspace: {
@@ -183,59 +182,87 @@ export default Vue.extend({
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
-     * Return a valid buttons
+     * Return buttons list depended on workspace state
      */
     buttons(): Button[] {
-      const validButtons: Button[] = [];
+      const buttonsList: Button[] = [];
 
-      if (this.workspace.plan.name === 'Free') {
+      /**
+       * if plan is `Free` then return `Increment Events Limit` button
+       */
+      if (this.plan.name === 'Free') {
         return [ this.incrementEventsLimit ];
       }
 
-      if (!this.workspace.autoPay) {
-        validButtons.push(this.enableAutoPayment);
+      /**
+       * If autopay is off we necessary return `Enable Auto Payment` button
+       */
+      if (!this.isAutoPayOn) {
+        buttonsList.push(this.enableAutoPayment);
 
+        /**
+         * If subscription is expired then return `Prolongate Current Plan` button
+         */
         if (this.isSubExpired) {
-          validButtons.push(this.prolongateCurrentPlan);
-          console.log('Sub expired');
+          buttonsList.push(this.prolongateCurrentPlan);
 
-          return validButtons;
+          return buttonsList;
         }
 
-        if (this.isVolumeSpent) {
+        /**
+         * if autopay is off and events limit is exceeded then return `Increment Events Limit`
+         */
+        if (this.isEventsLimitExceeded) {
           return [ this.incrementEventsLimit ];
         }
-      } else if (this.isVolumeSpent) {
+      } else if (this.isEventsLimitExceeded) {
+        /**
+         * If autopay is on and events limit is exceeded then return `Increment Events Limit`
+         */
         return [ this.incrementEventsLimit ];
       }
 
-      return validButtons;
+      return buttonsList;
     },
     /**
      * Checking the volume spent
      */
-    isVolumeSpent(): boolean {
-      return this.workspace.plan.eventsLimit === this.workspace.billingPeriodEventsCount;
+    isEventsLimitExceeded(): boolean {
+      return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
     },
     /**
      * Checking the subscription expiration
      */
     isSubExpired(): boolean {
-      const validTill = new Date(this.workspace.subValidTill);
+      return this.workspace.lastChargeDate < this.now;
+    },
+    /**
+     * Return subscription expiration date
+     */
+    subExpiredDate(): Date {
+      const expiredDate: Date = new Date(this.workspace.lastChargeDate);
 
-      return validTill < this.now;
+      expiredDate.setMonth(expiredDate.getMonth() + 1);
+
+      return expiredDate;
     },
     /**
      * Return the date in ms from sub created date to sub last date
      */
     progressMaxDate(): number {
-      return this.diffDates(this.workspace.subValidTill, this.dateAMonthAgo(this.workspace.subValidTill).toDateString());
+      return this.diffDates(this.subExpiredDate, this.workspace.lastChargeDate);
     },
     /**
      * Return the date in ms from sub created date to current date
      */
     progressCurrentDate(): number {
-      return this.diffDates(this.now.toDateString(), this.dateAMonthAgo(this.workspace.subValidTill).toDateString());
+      return this.diffDates(this.now, this.workspace.lastChargeDate);
+    },
+    /**
+     * Return true if workspace have subscription
+     */
+    isAutoPayOn(): boolean {
+      return !!this.workspace.subscriptionId;
     },
   },
   mounted() {
@@ -266,25 +293,12 @@ export default Vue.extend({
       console.log('Boost click');
     },
     /**
-     * Return the date a month ago
-     *
-     * @param dateString - date string
-     */
-    dateAMonthAgo(dateString: string): Date {
-      const date = new Date(dateString);
-      const monthAgo = new Date(dateString);
-
-      monthAgo.setMonth(date.getMonth() - 1 < 0 ? 11 : date.getMonth() - 1);
-
-      return monthAgo;
-    },
-    /**
      * Difference between dates
      *
      * @param dateString1 - first date
      * @param dateString2 - second date
      */
-    diffDates(dateString1: string, dateString2: string): number {
+    diffDates(dateString1: Date, dateString2: Date): number {
       const date1 = new Date(dateString1);
       const date2 = new Date(dateString2);
 
@@ -382,11 +396,13 @@ export default Vue.extend({
       letter-spacing: 0.18px;
     }
 
+
+
     &__volume-progress {
       width: 160px;
       height: 5px;
       margin-top: 7px;
-      background-color: var(--color-volume-progress-bg);
+      background-color: color-mod(var(--color-border) alpha(25%));
     }
 
     &__buttons {
@@ -397,49 +413,22 @@ export default Vue.extend({
       }
     }
 
-    &__workspace-blocked {
-      width: 62px;
-      height: 23px;
-      margin-left: 15px;
-      padding: 5px 7px;
-      border-radius: 6px;
-      border: solid 1px rgba(217, 72, 72, 0.2);
-      background-color: rgba(217, 72, 72, 0.21);
-      font-family: Roboto;
-      font-size: 13px;
-      line-height: 1;
-      letter-spacing: 0.16px;
-      text-align: center;
-      color: var(--color-indicator-critical);
-    }
-
-    &__attention {
-      width: 18px;
-      height: 18px;
-      padding: 1px 7px;
-      background-color: var(--color-indicator-critical);
-      display: inline-block;
-      border-radius: 50%;
-
-      &__mark {
-        width: 2px;
-        height: 10px;
-        color: var(--color-attention-mark)
-      }
+    &__workspace-name {
+      margin-right: 15px;
     }
 
     &__volume-boost {
       width: 65px;
       height: 23px;
-      padding: 4px 8px 4px 10px;
+      padding: 2px 8px 8px 10px;
       border-radius: 12.5px;
-      border: solid 1px var(--color-volume-boost-border);
+      border: solid 1px var(--color-indicator-positive);
       display: inline;
       font-family: Roboto;
       font-size: 13px;
       font-weight: 500;
       letter-spacing: 0.16px;
-      color: var(--color-volume-boost-border);
+      color: var(--color-indicator-positive);
       background: var(--color-bg-main);
     }
 
@@ -450,7 +439,7 @@ export default Vue.extend({
       font-family: Roboto;
       font-size: 12px;
       letter-spacing: 0.15px;
-      color: var(--color-autopay-is-on-text)
+      color: color-mod(var(--color-border) alpha(60%));
     }
 
     &__mock {

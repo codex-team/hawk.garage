@@ -58,6 +58,7 @@ export default Vue.extend({
 
   .n-filter {
     display: inline-block;
+    height: 23px;
     margin: 3px;
     padding: 5px 8px;
     color: var(--color-indicator-positive);
@@ -66,6 +67,8 @@ export default Vue.extend({
     background: color-mod(var(--color-indicator-positive) alpha(20%));
     border: 1px solid color-mod(var(--color-indicator-positive) alpha(20%));
     border-radius: 6px;
+    font-size: 13px;
+    letter-spacing: 0.16px;
 
     &--e {
       color: var(--color-indicator-critical);
