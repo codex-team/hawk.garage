@@ -15,7 +15,7 @@ export default Vue.extend({
 
 </script>
 
-<style lang="postcss">
+<style>
   @import url('./../../../styles/custom-properties.css');
 
   .attention {
