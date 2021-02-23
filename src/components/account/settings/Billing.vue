@@ -20,7 +20,7 @@
 
     <div class="account-billing__section">
       <label class="account-billing__label">
-        {{ $t('settings.billing.ownedWorkspaces') }}
+        {{ $t('settings.billing.managedWorkspaces') }}
       </label>
       <BillingWorkspace
         v-for="workspace in workspaces"

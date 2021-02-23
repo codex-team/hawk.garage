@@ -109,7 +109,7 @@
       v-if="isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
-      {{ 'Autopay is on.The next payment date:' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+      {{ $t('billing.autoPayIsOn') }} {{ subExpiredDate | prettyDateFromDateTimeString }}
     </div>
   </div>
 </template>
@@ -144,6 +144,9 @@ export default Vue.extend({
   },
   data() {
     return {
+      /**
+       * `Increment Event Limit` button
+       */
       incrementEventsLimit: {
         label: this.$i18n.t('Increment events limit') as string,
         style: 'primary',
@@ -151,6 +154,9 @@ export default Vue.extend({
           console.log('Increment events limit');
         },
       },
+      /**
+       * `Enable Auto Payment` button
+       */
       enableAutoPayment: {
         label: this.$i18n.t('Enable auto payment') as string,
         style: 'primary',
@@ -158,6 +164,9 @@ export default Vue.extend({
           console.log('Enable auto payment');
         },
       },
+      /**
+       * `Prolongate Current Plan` button
+       */
       prolongateCurrentPlan: {
         label: this.$i18n.t('Prolongate current plan') as string,
         style: 'secondary',
@@ -165,6 +174,9 @@ export default Vue.extend({
           console.log('Prolongate current plan');
         },
       },
+      /**
+       * The current date
+       */
       now: new Date(),
     };
   },
