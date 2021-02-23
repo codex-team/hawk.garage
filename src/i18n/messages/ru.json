@@ -132,8 +132,7 @@
     },
     "billing": {
       "title": "Платежи",
-      "managedWorkspaces": "Воркспейсы",
-      "ownedWorkspaces": "Собственные воркспейсы"
+      "managedWorkspaces": "Воркспейсы"
     },
     "logout": "Выйти",
     "notifications": {
