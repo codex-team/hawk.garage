@@ -16,10 +16,10 @@
       <div class="billing-card__workspace-name">
         {{ workspace.name }}
       </div>
-      <NotificationsRuleFilter
+      <StatusBlock
         v-if="isEventsLimitExceeded || isSubExpired"
         :content="$t('billing.blocked')"
-        :excluding="true"
+        bad
       />
     </div>
 
@@ -119,7 +119,7 @@ import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Progress from '../../utils/Progress.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
-import NotificationsRuleFilter from '../../project/settings/NotificationsRuleFilter.vue';
+import StatusBlock from '../../utils/StatusBlock.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
 import AttentionSign from './AttentionSign.vue';
@@ -133,7 +133,7 @@ export default Vue.extend({
     Progress,
     EntityImage,
     UiButton,
-    NotificationsRuleFilter,
+    StatusBlock,
     AttentionSign,
   },
   props: {
