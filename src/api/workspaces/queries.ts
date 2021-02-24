@@ -133,6 +133,8 @@ export const QUERY_WORKSPACES = `
       name
       description
       image
+      subscriptionId
+      lastChargeDate
       ...WorkspacePlan
       ...WorkspaceWithTeam
     }

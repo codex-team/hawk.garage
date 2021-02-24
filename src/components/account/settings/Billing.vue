@@ -48,6 +48,8 @@ import { BankCard } from '@/types/bank-card';
 // import { GET_BUSINESS_OPERATIONS } from '../../../store/modules/workspaces/actionTypes';
 import { User } from '@/types/user';
 import { Workspace } from '@/types/workspaces';
+import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'AccountBilling',
@@ -104,11 +106,27 @@ export default Vue.extend({
       });
     },
   },
-  created() {
-    /**
-     * Fetch workspaces transactions
-     */
-    // this.$store.dispatch(GET_BUSINESS_OPERATIONS, { ids: [] });
+  async created() {
+    const managedWorkspaces = this.$store.state.workspaces.list.filter(workspace => {
+      return this.$store.getters.isCurrentUserAdmin(workspace.id);
+    });
+
+    const updatedWorkspaces: Workspace[] = [];
+
+    for (const managedWorkspace of managedWorkspaces) {
+      try {
+        const w = await this.$store.dispatch(FETCH_WORKSPACE, managedWorkspace.id);
+
+        updatedWorkspaces.push(w);
+      } catch (e) {
+        notifier.show({
+          message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
+          style: 'error',
+          time: 5000,
+        });
+        await this.$router.push({ name: 'home' });
+      }
+    }
   },
   methods: {
   },
