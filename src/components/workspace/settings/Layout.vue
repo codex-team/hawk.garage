@@ -107,21 +107,16 @@ export default Vue.extend({
   },
   async created(): Promise<void> {
     const workspaceId = this.$route.params.workspaceId;
-    const workspaceLoaded = this.$store.getters.getWorkspaceById(workspaceId);
 
-    if (workspaceLoaded) {
-      this.workspace = workspaceLoaded;
-    } else {
-      try {
-        this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-      } catch (e) {
-        notifier.show({
-          message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
-          style: 'error',
-          time: 5000,
-        });
-        await this.$router.push({ name: 'home' });
-      }
+    try {
+      this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+    } catch (e) {
+      notifier.show({
+        message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
+        style: 'error',
+        time: 5000,
+      });
+      await this.$router.push({ name: 'home' });
     }
   },
   methods: {
