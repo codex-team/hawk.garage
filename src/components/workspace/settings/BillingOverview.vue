@@ -246,7 +246,7 @@ export default Vue.extend({
      * Checking the subscription expiration
      */
     isSubExpired(): boolean {
-      return this.workspace.lastChargeDate < this.now;
+      return this.subExpiredDate < this.now;
     },
     /**
      * Return subscription expiration date
@@ -369,10 +369,10 @@ export default Vue.extend({
 
     &__label {
       @apply --ui-label;
+      display: inline-block;
+      margin-right: 13px;
 
       margin-bottom: 15px;
-      margin-right: 13px;
-      display: inline-block;
     }
 
     &__plan {
@@ -408,8 +408,6 @@ export default Vue.extend({
       letter-spacing: 0.18px;
     }
 
-
-
     &__volume-progress {
       width: 160px;
       height: 5px;
@@ -430,28 +428,28 @@ export default Vue.extend({
     }
 
     &__volume-boost {
+      display: inline;
       width: 65px;
       height: 23px;
       padding: 2px 8px 8px 10px;
-      border-radius: 12.5px;
-      border: solid 1px var(--color-indicator-positive);
-      display: inline;
-      font-family: Roboto;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.16px;
       color: var(--color-indicator-positive);
+      font-weight: 500;
+      font-size: 13px;
+      font-family: Roboto;
+      letter-spacing: 0.16px;
       background: var(--color-bg-main);
+      border: solid 1px var(--color-indicator-positive);
+      border-radius: 12.5px;
     }
 
     &__autopay-is-on {
       width: 350px;
       height: 14px;
       margin: 20px 166px 0 0;
-      font-family: Roboto;
-      font-size: 12px;
-      letter-spacing: 0.15px;
       color: color-mod(var(--color-border) alpha(60%));
+      font-size: 12px;
+      font-family: Roboto;
+      letter-spacing: 0.15px;
     }
 
     &__mock {
