@@ -51,6 +51,18 @@ import { Workspace } from '@/types/workspaces';
 import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
 
+interface BilingComponentData {
+  /**
+   * Bank Cards
+   */
+  cards: BankCard[],
+
+  /**
+   * User managed workspaces
+   */
+  workspaces: Workspace[],
+}
+
 export default Vue.extend({
   name: 'AccountBilling',
   components: {
@@ -68,9 +80,7 @@ export default Vue.extend({
       required: true,
     },
   },
-  data(): {
-    cards: BankCard[]
-    } {
+  data(): BilingComponentData {
     return {
       /**
        * Temporary cards for testing
@@ -94,17 +104,17 @@ export default Vue.extend({
           name: '**** **** **** 3121',
         },
       ],
+
+      /**
+       * User managed workspaces
+       */
+      workspaces: [],
     };
   },
   computed: {
     /**
      * Workspaces in which current user is admin
      */
-    workspaces(): Workspace[] {
-      return this.$store.state.workspaces.list.filter(workspace => {
-        return this.$store.getters.isCurrentUserAdmin(workspace.id);
-      });
-    },
   },
   async created() {
     const managedWorkspaces = this.$store.state.workspaces.list.filter(workspace => {
@@ -127,6 +137,8 @@ export default Vue.extend({
         await this.$router.push({ name: 'home' });
       }
     }
+
+    this.workspaces = updatedWorkspaces;
   },
   methods: {
   },

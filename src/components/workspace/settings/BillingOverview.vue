@@ -47,7 +47,7 @@
 
       <!-- Valid till -->
       <section
-        v-if="plan.name !== 'Startup'"
+        v-if="!this.isFreePlan"
         class="billing-card__info-section"
       >
         <div class="billing-card__label">
@@ -106,7 +106,7 @@
       />
     </div>
     <div
-      v-if="plan.name !== 'Startup' && isAutoPayOn"
+      v-if="!isFreePlan && isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
       {{ $t('billing.autoPayIsOn') }} {{ subExpiredDate | prettyDateFromDateTimeString }}
@@ -202,7 +202,7 @@ export default Vue.extend({
       /**
        * if plan is `Startup` then return `Increment Events Limit` button
        */
-      if (this.plan.name === 'Startup') {
+      if (this.isFreePlan) {
         return [ this.incrementEventsLimit ];
       }
 
@@ -275,6 +275,13 @@ export default Vue.extend({
      */
     isAutoPayOn(): boolean {
       return !!this.workspace.subscriptionId;
+    },
+
+    /**
+     * Return true if workspace plan is `Startup`
+     */
+    isFreePlan(): boolean {
+      return this.plan.name === 'Startup';
     },
   },
   mounted() {
