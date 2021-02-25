@@ -47,7 +47,7 @@
 
       <!-- Valid till -->
       <section
-        v-if="plan.name !== 'Free'"
+        v-if="plan.name !== 'Startup'"
         class="billing-card__info-section"
       >
         <div class="billing-card__label">
