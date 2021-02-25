@@ -17,13 +17,14 @@ export const Default = (): unknown => ({
         id: '601d41b1c51c670023ab5cc7',
         image: null,
         name: 'Toolbox',
-        subscriptionId: 'awesome-subscription-id',
-        lastChargeDate: '2021-01-20T17:17:38.244+00:00',
+        // subscriptionId: 'awesome-subscription-id',
+        subscriptionId: null,
+        lastChargeDate: '2021-01-27T17:17:38.244+00:00',
         plan: {
           eventsLimit: 10000,
           id: '601d37621896b5004f1d0e3b',
           monthlyCharge: '100',
-          name: 'Startup',
+          name: 'Basic',
         },
         team: [{
           id: '601d41b1c51c670023ab5cc8',

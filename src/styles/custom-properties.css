@@ -23,8 +23,8 @@
     color: var(--color-text-second);
     font-weight: bold;
     font-size: 12px;
-    text-transform: uppercase;
     letter-spacing: 0.15px;
+    text-transform: uppercase;
   }
 
   --font-small: {
