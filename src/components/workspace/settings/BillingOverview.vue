@@ -106,7 +106,7 @@
       />
     </div>
     <div
-      v-if="!this.isFreePlan && isAutoPayOn"
+      v-if="!isFreePlan && isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
       {{ $t('billing.autoPayIsOn') }} {{ subExpiredDate | prettyDateFromDateTimeString }}
