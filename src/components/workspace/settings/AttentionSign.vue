@@ -19,11 +19,11 @@ export default Vue.extend({
   @import url('./../../../styles/custom-properties.css');
 
   .attention {
+    display: inline-block;
     width: 18px;
     height: 18px;
     padding: 1px 7px;
     background-color: var(--color-indicator-critical);
-    display: inline-block;
     border-radius: 50%;
 
     &__sign {
