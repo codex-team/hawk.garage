@@ -12,7 +12,7 @@ export const Default = (): unknown => ({
   components: { BillingOverview },
   template: `<BillingOverview
     :workspace="{
-        billingPeriodEventsCount: 10000,
+        billingPeriodEventsCount: 1000,
         description: null,
         id: '601d41b1c51c670023ab5cc7',
         image: null,
@@ -23,7 +23,7 @@ export const Default = (): unknown => ({
           eventsLimit: 10000,
           id: '601d37621896b5004f1d0e3b',
           monthlyCharge: '100',
-          name: 'Basic',
+          name: 'Startup',
         },
         team: [{
           id: '601d41b1c51c670023ab5cc8',

@@ -106,7 +106,7 @@
       />
     </div>
     <div
-      v-if="isAutoPayOn"
+      v-if="plan.name !== 'Startup' && isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
       {{ $t('billing.autoPayIsOn') }} {{ subExpiredDate | prettyDateFromDateTimeString }}
@@ -200,9 +200,9 @@ export default Vue.extend({
       const buttonsList: Button[] = [];
 
       /**
-       * if plan is `Free` then return `Increment Events Limit` button
+       * if plan is `Startup` then return `Increment Events Limit` button
        */
-      if (this.plan.name === 'Free') {
+      if (this.plan.name === 'Startup') {
         return [ this.incrementEventsLimit ];
       }
 
