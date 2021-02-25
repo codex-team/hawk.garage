@@ -51,8 +51,15 @@ import { Workspace } from '@/types/workspaces';
 import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
 
-interface DataReturnType {
+interface BilingComponentData {
+  /**
+   * Bank Cards
+   */
   cards: BankCard[],
+
+  /**
+   * User managed workspaces
+   */
   workspaces: Workspace[],
 }
 
@@ -73,7 +80,7 @@ export default Vue.extend({
       required: true,
     },
   },
-  data(): DataReturnType {
+  data(): BilingComponentData {
     return {
       /**
        * Temporary cards for testing
