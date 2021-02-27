@@ -245,6 +245,11 @@
         "rejected": "Rejected"
       }
     },
+    "buttons": {
+      "incrementEventsLimit": "Increment events limit",
+      "enableAutoPayment": "Enable auto payment",
+      "prolongateCurrentPlan": "Prolongate current plan"
+    },
     "processPayment": {
       "header": "Process payment",
       "description": "This form allows you to fund the workspace’s balance. After selecting the amount you will be redirected to the payment service.",
