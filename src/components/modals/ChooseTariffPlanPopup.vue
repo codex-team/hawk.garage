@@ -43,9 +43,8 @@ import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
-import { CHANGE_WORKSPACE_PLAN } from '@/store/modules/workspaces/actionTypes';
-import notifier from 'codex-notifier';
 import { Plan } from '@/types/plan';
+import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -110,26 +109,9 @@ export default Vue.extend({
      * Attempt to change workspace plan
      */
     async onContinue(): Promise<void> {
-      try {
-        await this.$store.dispatch(CHANGE_WORKSPACE_PLAN, {
-          workspaceId: this.workspaceId,
-          planId: this.selectedPlan,
-        });
-
-        notifier.show({
-          message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
-          style: 'success',
-          time: 3000,
-        });
-
-        this.$emit('close');
-      } catch (_) {
-        notifier.show({
-          message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
-          style: 'error',
-          time: 3000,
-        });
-      }
+      this.$store.dispatch(SET_MODAL_DIALOG, {
+        component: 'ProcessPaymentDialog',
+      });
     },
   },
 });
