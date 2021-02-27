@@ -140,12 +140,7 @@ export default Vue.extend({
     async showPaymentWidget(data: BeforePaymentPayload) {
       const language = this.$store.state.app.language.toUpperCase();
 
-      const widget = new window.cp.CloudPayments({
-        /**
-         * @todo set lang from user's Hawk setting
-         */
-        language: 'en-US',
-      });
+      const widget = new window.cp.CloudPayments();
 
       const paymentData: PlanProlongationPayload = {
         workspaceId: this.workspace.id,
