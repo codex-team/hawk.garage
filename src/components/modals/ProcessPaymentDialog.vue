@@ -165,7 +165,7 @@ export default Vue.extend({
            */
           description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
           amount: +data.plan.monthlyCharge,
-          currency: data.currency,
+          currency: 'RUB',
 
           /** Label for admin panel */
           invoiceId: data.invoiceId,
