@@ -111,6 +111,9 @@ export default Vue.extend({
     async onContinue(): Promise<void> {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ProcessPaymentDialog',
+        data: {
+          tariffPlanId: this.selectedPlan,
+        },
       });
     },
   },
