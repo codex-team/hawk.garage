@@ -15,14 +15,14 @@ export interface BeforePaymentPayload {
   plan: Plan;
 
   /**
+   * Id of the user who makes payment
+   */
+  userId: string;
+
+  /**
    * Unique invoice identifier, format: `WorkspaceNameConsonants year-month-identifier Tariff`
    */
   invoiceId: string;
-
-  /**
-   * Substraction amount according to the tariff
-   */
-  amount: number;
 
   /**
    * Payment currency
