@@ -32,8 +32,10 @@
         <div class="billing-card__label">
           {{ $t('billing.currentPlan') }}
         </div>
-        <AttentionSign
+        <Icon
           v-if="isEventsLimitExceeded"
+          class="billing-card__attention"
+          symbol="attention-sign"
         />
         <div class="billing-card__plan">
           <div class="billing-card__plan-name">
@@ -122,7 +124,7 @@ import UiSwitch from '../../forms/UiSwitch.vue';
 import StatusBlock from '../../utils/StatusBlock.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
 import UiButton from './../../utils/UiButton.vue';
-import AttentionSign from './AttentionSign.vue';
+import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
 
@@ -134,7 +136,7 @@ export default Vue.extend({
     EntityImage,
     UiButton,
     StatusBlock,
-    AttentionSign,
+    Icon,
   },
   props: {
     workspace: {
@@ -432,6 +434,12 @@ export default Vue.extend({
 
     &__workspace-name {
       margin-right: 15px;
+    }
+
+    &__attention {
+      width: 18px;
+      height: 18px;
+      margin-bottom: -5px;
     }
 
     &__volume-boost {
