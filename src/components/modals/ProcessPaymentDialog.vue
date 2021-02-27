@@ -46,7 +46,7 @@
 import PopupDialog from '../utils/PopupDialog.vue';
 import CustomSelect from '../forms/CustomSelect.vue';
 import notifier from 'codex-notifier';
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
 import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
 import axios from 'axios';
@@ -78,10 +78,16 @@ export default Vue.extend({
     CustomSelect,
   },
   props: {
+    /**
+     * Tariff plan id to pay for
+     */
     tariffPlanId: {
       type: String,
       required: true,
     },
+    /**
+     * Workspace id to pay for
+     */
     workspaceId: {
       type: String,
       required: true,
@@ -136,6 +142,7 @@ export default Vue.extend({
 
       return this.showPaymentWidget(response.data as BeforePaymentPayload);
     },
+
     /**
      * Method prepares widget and charges money from entered card
      *
