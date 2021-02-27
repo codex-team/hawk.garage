@@ -10,7 +10,7 @@ export interface PlanProlongationPayload {
   /**
    * Tariff plan which user pays for
    */
-  tariffId: string;
+  tariffPlanId: string;
 
   /**
    * Id of the user who makes payment
