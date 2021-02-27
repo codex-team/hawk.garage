@@ -144,9 +144,6 @@ export default Vue.extend({
 
     &__header {
       @apply --ui-label;
-
-      display: flex;
-      margin: 15px 0 0;
     }
 
     &__tab {
