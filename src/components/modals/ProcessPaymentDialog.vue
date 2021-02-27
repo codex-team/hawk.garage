@@ -147,16 +147,8 @@ export default Vue.extend({
       const widget = new window.cp.CloudPayments();
 
       const paymentData: PlanProlongationPayload = {
-        workspaceId: this.workspace.id,
-        tariffPlanId: data.plan.id,
         checksum: data.checksum,
-        userId: data.userId,
       };
-
-      console.log(paymentData)
-
-      console.log(data.plan);
-      console.log(+data.plan.monthlyCharge);
 
       widget.pay('charge',
         {
@@ -166,7 +158,7 @@ export default Vue.extend({
            */
           description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
           amount: +data.plan.monthlyCharge,
-          currency: 'RUB',
+          currency: data.currency,
 
           /** Label for admin panel */
           invoiceId: data.invoiceId,
