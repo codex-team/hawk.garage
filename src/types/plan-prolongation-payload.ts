@@ -13,6 +13,11 @@ export interface PlanProlongationPayload {
   tariffId: string;
 
   /**
+   * Id of the user who makes payment
+   */
+  userId: string;
+
+  /**
    * Hash to check data
    */
   checksum: string;
