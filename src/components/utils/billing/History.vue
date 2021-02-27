@@ -56,9 +56,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import EntityImage from './../EntityImage.vue';
-import { BusinessOperationType } from '@/types/business-operation-type';
+import {BusinessOperationType} from '@/types/business-operation-type';
 import i18n from './../../../i18n';
-import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
+import {BusinessOperation, PayloadOfWorkspacePlanPurchase} from '@/types/business-operation';
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -154,7 +154,7 @@ export default Vue.extend({
       padding: 10px 0;
       color: var(--color-text-second);
       font-weight: bold;
-      font-size: 12px;
+      font-size: 14px;
       line-height: 16px;
       letter-spacing: 0.18px;
       cursor: pointer;
