@@ -17,6 +17,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       description
       image
       billingPeriodEventsCount
+      subscriptionId
+      lastChargeDate
       ...WorkspaceWithTeam
       ...WorkspacePlan
       projects {

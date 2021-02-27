@@ -45,22 +45,15 @@ import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
 import AddCard from '../../utils/billing/BankCardAdd.vue';
 import { BankCard } from '@/types/bank-card';
-// import { GET_BUSINESS_OPERATIONS } from '../../../store/modules/workspaces/actionTypes';
+
 import { User } from '@/types/user';
 import { Workspace } from '@/types/workspaces';
-import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
-import notifier from 'codex-notifier';
 
 interface BilingComponentData {
   /**
    * Bank Cards
    */
   cards: BankCard[],
-
-  /**
-   * User managed workspaces
-   */
-  workspaces: Workspace[],
 }
 
 export default Vue.extend({
@@ -104,41 +97,17 @@ export default Vue.extend({
           name: '**** **** **** 3121',
         },
       ],
-
-      /**
-       * User managed workspaces
-       */
-      workspaces: [],
     };
   },
   computed: {
     /**
      * Workspaces in which current user is admin
      */
-  },
-  async created() {
-    const managedWorkspaces = this.$store.state.workspaces.list.filter(workspace => {
-      return this.$store.getters.isCurrentUserAdmin(workspace.id);
-    });
-
-    const updatedWorkspaces: Workspace[] = [];
-
-    for (const managedWorkspace of managedWorkspaces) {
-      try {
-        const w = await this.$store.dispatch(FETCH_WORKSPACE, managedWorkspace.id);
-
-        updatedWorkspaces.push(w);
-      } catch (e) {
-        notifier.show({
-          message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
-          style: 'error',
-          time: 5000,
-        });
-        await this.$router.push({ name: 'home' });
-      }
-    }
-
-    this.workspaces = updatedWorkspaces;
+    workspaces(): Workspace[] {
+      return this.$store.state.workspaces.list.filter(workspace => {
+        return this.$store.getters.isCurrentUserAdmin(workspace.id);
+      });
+    },
   },
   methods: {
   },

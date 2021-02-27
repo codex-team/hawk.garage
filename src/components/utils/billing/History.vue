@@ -8,9 +8,7 @@
     </div>
     <template v-else-if="operations && operations.length">
       <div class="billing-history__header">
-        <div class="billing-history__tab">
-          {{ $t('billing.paymentHistory').toUpperCase() }}
-        </div>
+        {{ $t('billing.paymentHistory').toUpperCase() }}
       </div>
       <div
         v-for="(operation, i) in filteredOperations"
@@ -145,6 +143,8 @@ export default Vue.extend({
     max-width: var(--width-popup-form-container);
 
     &__header {
+      @apply --ui-label;
+
       display: flex;
       margin: 15px 0 0;
     }
@@ -154,7 +154,7 @@ export default Vue.extend({
       padding: 10px 0;
       color: var(--color-text-second);
       font-weight: bold;
-      font-size: 12px;
+      font-size: 14px;
       line-height: 16px;
       letter-spacing: 0.18px;
       cursor: pointer;
