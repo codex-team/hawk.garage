@@ -1,5 +1,5 @@
 /**
- * Data required for payment
+ * Data to be sent with pay event to and back from payments server
  */
 export interface PlanProlongationPayload {
   /**
@@ -8,12 +8,12 @@ export interface PlanProlongationPayload {
   workspaceId: string;
 
   /**
-   * Id of the user making the payment
+   * Tariff plan which user pays for
    */
-  userId: string;
+  tariffId: string;
 
   /**
-   * Workspace current plan id or plan id to change
+   * Hash to check data
    */
-  tariffPlanId: string;
+  checksum: string;
 }

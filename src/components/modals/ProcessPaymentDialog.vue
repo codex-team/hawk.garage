@@ -49,6 +49,9 @@ import notifier from 'codex-notifier';
 import { Vue, Component } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
 import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
+import axios from 'axios';
+import { BeforePaymentPayload } from '../../types/before-payment-payload';
+import { API_ENDPOINT } from '../../api';
 
 const cards = [
   {
@@ -125,7 +128,20 @@ export default class ProcessPaymentDialog extends Vue {
   /**
    * Method for payment processing
    */
-  processPayment() {
+  async processPayment() {
+    const response = await axios.get(
+      `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspace.id}&tariffId=${this.workspace.plan.id}`
+    );
+
+    return this.showPaymentWidget(response.data as BeforePaymentPayload);
+  }
+
+  /**
+   * Method prepares widget and charges money from entered card
+   *
+   * @param {BeforePaymentPayload} data — server response that sent after beforePay request
+   */
+  async showPaymentWidget(data: BeforePaymentPayload) {
     const language = this.$store.state.app.language.toUpperCase();
 
     const widget = new window.cp.CloudPayments({
@@ -135,27 +151,24 @@ export default class ProcessPaymentDialog extends Vue {
       language: 'en-US',
     });
 
-    /**
-     * @todo get tariff name
-     */
-    const tariff = 'base';
-
     widget.pay('charge',
       {
         publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
         /**
          * @todo add i18n message
          */
-        description: `Payment for tariff "${tariff}" for ${this.workspace.name.toString()} workspace for a month`,
-        amount: +this.amount,
-        currency: 'USD',
+        description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
+        amount: data.amount,
+        currency: data.currency,
 
         /** Label for admin panel */
-        invoiceId: `${this.workspace.name.toString()}`,
+        invoiceId: data.invoiceId,
 
         skin: 'mini',
         data: {
           workspaceId: this.workspace.id,
+          tariffId: data.plan.id,
+          checksum: data.checksum,
         } as PlanProlongationPayload,
       },
       {
