@@ -150,7 +150,7 @@ export default Vue.extend({
        * `Increment Event Limit` button
        */
       incrementEventsLimit: {
-        label: this.$i18n.t('Increment events limit') as string,
+        label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
         style: 'primary',
         onClick: () => {
           console.log('Increment events limit');
@@ -160,7 +160,7 @@ export default Vue.extend({
        * `Enable Auto Payment` button
        */
       enableAutoPayment: {
-        label: this.$i18n.t('Enable auto payment') as string,
+        label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
         style: 'primary',
         onClick: () => {
           console.log('Enable auto payment');
@@ -170,7 +170,7 @@ export default Vue.extend({
        * `Prolongate Current Plan` button
        */
       prolongateCurrentPlan: {
-        label: this.$i18n.t('Prolongate current plan') as string,
+        label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
         style: 'secondary',
         onClick: () => {
           console.log('Prolongate current plan');
