@@ -82,10 +82,14 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    workspaceId: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
-      workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0],
+      workspace: this.$store.getters.getWorkspaceById(this.workspaceId),
       card: cards[0],
     };
   },
@@ -144,10 +148,12 @@ export default Vue.extend({
 
       const paymentData: PlanProlongationPayload = {
         workspaceId: this.workspace.id,
-        tariffId: data.plan.id,
+        tariffPlanId: data.plan.id,
         checksum: data.checksum,
         userId: data.userId,
       };
+
+      console.log(paymentData)
 
       console.log(data.plan);
       console.log(+data.plan.monthlyCharge);

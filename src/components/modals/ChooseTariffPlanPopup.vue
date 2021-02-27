@@ -113,6 +113,7 @@ export default Vue.extend({
         component: 'ProcessPaymentDialog',
         data: {
           tariffPlanId: this.selectedPlan,
+          workspaceId: this.workspaceId,
         },
       });
     },
