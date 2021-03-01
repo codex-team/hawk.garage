@@ -60,9 +60,10 @@ export default Vue.extend({
     display: inline-block;
     height: 23px;
     margin: 3px;
-    padding: 5px 8px;
+    padding: 4px 8px;
     color: var(--color-indicator-positive);
     font-size: 13px;
+    font-weight: normal;
     line-height: 1em;
     letter-spacing: 0.16px;
     white-space: nowrap;
