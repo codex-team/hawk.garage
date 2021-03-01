@@ -138,6 +138,7 @@ export default Vue.extend({
 
   &:not(&--disabled) {
     cursor: pointer;
+    border: 0;
   }
 
   &--disabled {
