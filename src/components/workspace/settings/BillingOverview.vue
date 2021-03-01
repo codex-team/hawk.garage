@@ -3,6 +3,7 @@
     <UiSwitch
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
+      :value="isAutoPayOn"
     />
     <div class="clearfix billing-card__workspace">
       <EntityImage
@@ -17,86 +18,81 @@
         {{ workspace.name }}
       </div>
       <StatusBlock
-        v-if="isEventsLimitExceeded || isSubExpired"
+        v-if="isBLocked"
         :content="$t('billing.blocked')"
         bad
       />
     </div>
 
-    <div class="billing-card__info">
+    <div
+      class="billing-card__info"
+      :class="{
+        'billing-card__info__2-columns': isFreePlan,
+      }"
+    >
       <!-- Plan -->
-      <section
-        class="billing-card__info-section billing-card__current-plan"
-        @click="onPlanClick"
-      >
-        <div class="billing-card__label">
-          {{ $t('billing.currentPlan') }}
-        </div>
+      <div class="billing-card__label">
+        {{ $t('billing.currentPlan') }}
         <Icon
           v-if="isEventsLimitExceeded"
           class="billing-card__attention"
           symbol="attention-sign"
         />
-        <div class="billing-card__plan">
-          <div class="billing-card__plan-name">
-            {{ plan.name || 'Free' }}
-          </div>
-          <div class="billing-card__plan-coast">
-            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
-          </div>
-        </div>
-      </section>
+      </div>
 
       <!-- Valid till -->
-      <section
-        v-if="!this.isFreePlan"
-        class="billing-card__info-section"
+      <div
+        v-if="!isFreePlan"
+        class="billing-card__label"
       >
-        <div class="billing-card__label">
-          {{ $t('billing.validTill').toUpperCase() }}
-        </div>
-        <div
-          v-if="isEventsLimitExceeded"
-          class="billing-card__mock"
-        />
-        <div class="billing-card__info-bar">
-          <div class="billing-card__events">
-            {{ isSubExpired ? $t('billing.expired') : '' }}{{ subExpiredDate | prettyDateFromDateTimeString }}
-          </div>
-          <Progress
-            :max="progressMaxDate"
-            :current="progressCurrentDate"
-            :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
-            class="billing-card__volume-progress"
-          />
-        </div>
-      </section>
+        {{ $t('billing.validTill').toUpperCase() }}
+      </div>
 
       <!-- Volume -->
-      <section
-        class="billing-card__info-section"
-      >
-        <div class="billing-card__label">
-          {{ $t('billing.volume') }}
-        </div>
-        <UiButton
+      <div class="billing-card__label">
+        {{ $t('billing.volume') }}
+        <PositiveButton
           v-if="isEventsLimitExceeded"
-          class="billing-card__volume-boost"
           :content="$t('billing.boost') + '!'"
-          @click="onBoostClick()"
+          @click="onBoostClick"
         />
-        <div class="billing-card__info-bar">
-          <div class="billing-card__events">
-            {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
-          </div>
-          <Progress
-            :max="plan.eventsLimit || 0"
-            :current="eventsCount"
-            :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
-            class="billing-card__volume-progress"
-          />
+      </div>
+
+      <div class="billing-card__plan">
+        <div class="billing-card__plan-name">
+          {{ plan.name || 'Free' }}
         </div>
-      </section>
+        <div class="billing-card__plan-coast">
+          {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
+        </div>
+      </div>
+
+      <div
+        v-if="!isFreePlan"
+        class="billing-card__info-bar"
+      >
+        <div class="billing-card__events">
+          {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }}{{ subExpiredDate | prettyDateFromDateTimeString }}
+        </div>
+        <Progress
+          :max="progressMaxDate"
+          :current="progressCurrentDate"
+          :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+          class="billing-card__volume-progress"
+        />
+      </div>
+
+      <div class="billing-card__info-bar">
+        <div class="billing-card__events">
+          {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
+        </div>
+        <Progress
+          :max="plan.eventsLimit || 0"
+          :current="eventsCount"
+          :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+          class="billing-card__volume-progress"
+        />
+      </div>
     </div>
     <div class="billing-card__buttons">
       <UiButton
@@ -127,6 +123,7 @@ import UiButton from './../../utils/UiButton.vue';
 import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
+import PositiveButton from '../../utils/PostivieButton.vue';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -137,6 +134,7 @@ export default Vue.extend({
     UiButton,
     StatusBlock,
     Icon,
+    PositiveButton,
   },
   props: {
     workspace: {
@@ -285,6 +283,21 @@ export default Vue.extend({
     isFreePlan(): boolean {
       return this.plan.name === 'Startup';
     },
+
+    /**
+     * Return true if workspaces is blocked
+     */
+    isBLocked(): boolean {
+      if (this.isAutoPayOn) {
+        return this.isEventsLimitExceeded;
+      }
+
+      if (this.isFreePlan) {
+        return this.isEventsLimitExceeded;
+      } else {
+        return this.isEventsLimitExceeded || this.isSubExpired;
+      }
+    },
   },
   mounted() {
     this.now = new Date();
@@ -360,9 +373,14 @@ export default Vue.extend({
     }
 
     &__info {
-      display: flex;
+      display: grid;
+      grid-template-columns: 200px 200px 200px;
+      grid-auto-rows: 29px;
       margin-top: 20px;
 
+      &__2-columns {
+        grid-template-columns: 200px 200px;
+      }
       &-section {
         margin-right: 30px;
       }
@@ -380,11 +398,12 @@ export default Vue.extend({
       @apply --ui-label;
       display: inline-block;
       margin-right: 13px;
-
       margin-bottom: 15px;
     }
 
     &__plan {
+      width: 142px;
+      height: 36px;
       display: flex;
       align-items: center;
       padding: 9px 15px;
@@ -439,6 +458,8 @@ export default Vue.extend({
     &__attention {
       width: 18px;
       height: 18px;
+      margin-left: 5px;
+      margin-top: -12px;
       margin-bottom: -5px;
     }
 
