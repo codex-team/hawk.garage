@@ -22,7 +22,7 @@ export const NormalState = (): unknown => ({
         plan: {
           eventsLimit: 10000,
           id: '601d37621896b5004f1d0e3b',
-          monthlyCharge: '100',
+          monthlyCharge: '0',
           name: 'Startup',
         },
         team: [{
@@ -55,7 +55,7 @@ export const VolumeExpiredState = (): unknown => ({
         plan: {
           eventsLimit: 10000,
           id: '601d37621896b5004f1d0e3b',
-          monthlyCharge: '100',
+          monthlyCharge: '0',
           name: 'Startup',
         },
         team: [{
