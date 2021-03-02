@@ -3,16 +3,6 @@
  */
 export interface PlanProlongationPayload {
   /**
-   * Workspace Identifier
-   */
-  workspaceId: string;
-
-  /**
-   * Tariff plan which user pays for
-   */
-  tariffId: string;
-
-  /**
    * Hash to check data
    */
   checksum: string;

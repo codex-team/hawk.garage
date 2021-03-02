@@ -27,7 +27,7 @@
         <label class="label payment-popup__amount">
           {{ $t('billing.processPayment.amountLabel') }}
           <input
-            v-model="amount"
+            disabled
             class="input payment-popup__amount-input"
           >
           <span class="payment-popup__dollar-sign">$</span>
@@ -46,7 +46,7 @@
 import PopupDialog from '../utils/PopupDialog.vue';
 import CustomSelect from '../forms/CustomSelect.vue';
 import notifier from 'codex-notifier';
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue } from 'vue-property-decorator';
 import { Workspace } from '@/types/workspaces';
 import { PlanProlongationPayload } from '@/types/plan-prolongation-payload';
 import axios from 'axios';
@@ -71,11 +71,48 @@ const cards = [
   },
 ];
 
-@Component({
+export default Vue.extend({
   name: 'ProcessPaymentDialog',
   components: {
     PopupDialog,
     CustomSelect,
+  },
+  props: {
+    /**
+     * Tariff plan id to pay for
+     */
+    tariffPlanId: {
+      type: String,
+      required: true,
+    },
+    /**
+     * Workspace id to pay for
+     */
+    workspaceId: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      workspace: this.$store.getters.getWorkspaceById(this.workspaceId),
+      card: cards[0],
+    };
+  },
+  computed: {
+    /**
+     * Card list for testing
+     */
+    cards() {
+      return cards;
+    },
+
+    /**
+     * Workspaces list
+     */
+    workspaces(): Workspace[] {
+      return this.$store.state.workspaces.list;
+    },
   },
   mounted() {
     /**
@@ -94,121 +131,74 @@ const cards = [
     widgetScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments');
     document.head.appendChild(widgetScript);
   },
-})
-/**
- * Dialog for payment
- */
-export default class ProcessPaymentDialog extends Vue {
-  /**
-   * Workspace to pay for
-   */
-  private workspace: Workspace;
+  methods: {
+    /**
+     * Method for payment processing
+     */
+    async processPayment() {
+      const response = await axios.get(
+        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspace.id}&tariffPlanId=${this.tariffPlanId}`
+      );
 
-  /**
-   * Card to pay from
-   */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-  private card: object;
+      return this.showPaymentWidget(response.data as BeforePaymentPayload);
+    },
 
-  /**
-   * Amount of money to pay
-   */
-  private amount: number;
+    /**
+     * Method prepares widget and charges money from entered card
+     *
+     * @param {BeforePaymentPayload} data — server response that sent after beforePay request
+     */
+    async showPaymentWidget(data: BeforePaymentPayload) {
+      const language = this.$store.state.app.language.toUpperCase();
 
-  /**
-   * Component constructor for data initialization
-   */
-  constructor() {
-    super();
-    this.workspace = this.$store.state.workspaces.current || this.$store.state.workspaces.list[0];
-    this.card = cards[0];
-    this.amount = this.$store.state.modalDialog.data.amount;
-  }
+      const widget = new window.cp.CloudPayments();
 
-  /**
-   * Method for payment processing
-   */
-  async processPayment() {
-    const response = await axios.get(
-      `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspace.id}&tariffId=${this.workspace.plan.id}`
-    );
+      const paymentData: PlanProlongationPayload = {
+        checksum: data.checksum,
+      };
 
-    return this.showPaymentWidget(response.data as BeforePaymentPayload);
-  }
+      widget.pay('charge',
+        {
+          publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
+          /**
+           * @todo add i18n message
+           */
+          description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
+          amount: +data.plan.monthlyCharge,
+          currency: data.currency,
 
-  /**
-   * Method prepares widget and charges money from entered card
-   *
-   * @param {BeforePaymentPayload} data — server response that sent after beforePay request
-   */
-  async showPaymentWidget(data: BeforePaymentPayload) {
-    const language = this.$store.state.app.language.toUpperCase();
+          /** Label for admin panel */
+          invoiceId: data.invoiceId,
 
-    const widget = new window.cp.CloudPayments({
-      /**
-       * @todo set lang from user's Hawk setting
-       */
-      language: 'en-US',
-    });
-
-    widget.pay('charge',
-      {
-        publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-        /**
-         * @todo add i18n message
-         */
-        description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
-        amount: data.amount,
-        currency: data.currency,
-
-        /** Label for admin panel */
-        invoiceId: data.invoiceId,
-
-        skin: 'mini',
-        data: {
-          workspaceId: this.workspace.id,
-          tariffId: data.plan.id,
-          checksum: data.checksum,
-        } as PlanProlongationPayload,
-      },
-      {
-        onSuccess: (options) => {
-          console.info('onSuccess', options);
-
-          notifier.show({
-            message: this.$i18n.t('billing.widget.notifications.success') as string,
-            style: 'success',
-          });
+          skin: 'mini',
+          data: paymentData,
         },
-        onFail: (reason, options) => {
-          console.info('onFail', reason, options);
+        {
+          onSuccess: (options) => {
+            console.info('onSuccess', options);
 
-          notifier.show({
-            message: this.$i18n.t('billing.widget.notifications.error') as string,
-            style: 'error',
-          });
-        },
-        onComplete: (paymentResult, options) => {
-          console.info('onComplete', paymentResult, options);
-        },
-      }
-    );
-  }
+            notifier.show({
+              message: this.$i18n.t('billing.widget.notifications.success') as string,
+              style: 'success',
+            });
+          },
+          onFail: (reason, options) => {
+            console.info('onFail', reason, options);
 
-  /**
-   * Card list for testing
-   */
-  get cards() {
-    return cards;
-  }
+            notifier.show({
+              message: this.$i18n.t('billing.widget.notifications.error') as string,
+              style: 'error',
+            });
+          },
+          onComplete: (paymentResult, options) => {
+            console.info('onComplete', paymentResult, options);
+          },
+        }
+      );
+    },
+  },
+});
 
-  /**
-   * Workspaces list
-   */
-  get workspaces(): Workspace[] {
-    return this.$store.state.workspaces.list;
-  }
-};
 </script>
 
 <style>
