@@ -129,8 +129,8 @@ export default Vue.extend({
   display: inline-flex;
   align-items: center;
   padding: 12px 15px;
-  color: var(--color-text-second);
-  background: transparent;
+  color: var(--color-text-main);
+  background: var(--color-indicator-low);
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
   outline: none;
@@ -138,6 +138,7 @@ export default Vue.extend({
 
   &:not(&--disabled) {
     cursor: pointer;
+    border: 0;
   }
 
   &--disabled {
@@ -154,7 +155,6 @@ export default Vue.extend({
   }
 
   &--submit {
-    color: var(--color-text-main);
     background: var(--color-indicator-medium);
     border: 0;
 

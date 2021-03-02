@@ -3,109 +3,138 @@
     <UiSwitch
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
+      :value="isAutoPayOn"
     />
-    <div class="clearfix">
+    <div class="clearfix billing-card__workspace">
       <EntityImage
         :id="workspace.id"
-        class="billing-card__logo"
         :title="workspace.name"
         :name="workspace.name"
         :image="workspace.image"
-        size="34"
+        size="27"
+        class="billing-card__workspace-logo"
       />
-      <div class="billing-card__title">
+      <div class="billing-card__workspace-name">
         {{ workspace.name }}
       </div>
-      <div class="billing-card__members-count">
-        {{ $tc('billing.members', workspace.team ? workspace.team.length : 0) }}
-      </div>
+      <StatusBlock
+        v-if="isBLocked"
+        :content="$t('billing.blocked')"
+        bad
+      />
     </div>
-    <div class="billing-card__info">
-      <div class="billing-card__info-card">
-        <div class="billing-card__label">
-          {{ $t('billing.currentBalance') }}
-        </div>
-        <div class="billing-card__balance">
-          {{ workspace.balance || 0 }} $
-        </div>
+
+    <div
+      class="billing-card__info"
+      :class="{
+        'billing-card__info__2-columns': isFreePlan,
+      }"
+    >
+      <!-- Plan -->
+      <div class="billing-card__label">
+        {{ $t('billing.currentPlan') }}
+        <Icon
+          v-if="isEventsLimitExceeded"
+          class="billing-card__attention"
+          symbol="attention-sign"
+        />
       </div>
+
+      <!-- Valid till -->
       <div
-        class="billing-card__info-card billing-card__current-plan"
-        @click="onPlanClick"
+        v-if="!isFreePlan"
+        class="billing-card__label"
       >
-        <div class="billing-card__label">
-          {{ $t('billing.currentPlan') }}
+        {{ $t('billing.validTill').toUpperCase() }}
+      </div>
+
+      <!-- Volume -->
+      <div class="billing-card__label">
+        {{ $t('billing.volume') }}
+        <PositiveButton
+          v-if="isEventsLimitExceeded"
+          :content="$t('billing.boost') + '!'"
+          @click="onBoostClick"
+        />
+      </div>
+
+      <div class="billing-card__plan">
+        <div class="billing-card__plan-name">
+          {{ plan.name || 'Free' }}
         </div>
-        <div class="billing-card__plan">
-          <div class="billing-card__plan-name">
-            {{ plan.name || 'Free' }}
-          </div>
-          <div class="billing-card__plan-coast">
-            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
-          </div>
+        <div class="billing-card__plan-coast">
+          {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
         </div>
       </div>
-      <div class="billing-card__info-card">
-        <div class="billing-card__label">
-          {{ $t('billing.volume') }}
+
+      <div
+        v-if="!isFreePlan"
+        class="billing-card__info-bar"
+      >
+        <div class="billing-card__events">
+          {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }}{{ subExpiredDate | prettyDateFromDateTimeString }}
         </div>
-        <div class="billing-card__volume">
-          <div class="billing-card__events">
-            {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
-          </div>
-          <Progress
-            :max="plan.eventsLimit || 0"
-            :current="eventsCount"
-            :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
-            class="billing-card__volume-progress"
-          />
+        <Progress
+          :max="progressMaxDate"
+          :current="progressCurrentDate"
+          :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+          class="billing-card__volume-progress"
+        />
+      </div>
+
+      <div class="billing-card__info-bar">
+        <div class="billing-card__events">
+          {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
         </div>
+        <Progress
+          :max="plan.eventsLimit || 0"
+          :current="eventsCount"
+          :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+          class="billing-card__volume-progress"
+        />
       </div>
     </div>
     <div class="billing-card__buttons">
-      <button
-        class="button button--submit billing-card__button"
-        @click="processPayment(100)"
-      >
-        {{ $t('billing.pay') }} 100$
-      </button>
-      <button
-        class="button button--submit billing-card__button"
-        @click="processPayment(1000)"
-      >
-        {{ $t('billing.pay') }} 1000$
-      </button>
-      <button
-        class="button button--submit billing-card__button"
-        @click="processPayment()"
-      >
-        {{ $t('billing.payCustomAmount') }}
-      </button>
-      <button class="button button--submit billing-card__button billing-card__button--invoice">
-        <Icon
-          class="billing-card__invoice-icon"
-          symbol="invoice"
-        />
-        {{ $t('billing.requestInvoice') }}
-      </button>
+      <UiButton
+        v-for="(button, index) in buttons"
+        :key="'button:' + index"
+        :submit="button.style === 'primary'"
+        :content="button.label"
+        @click="button.onClick"
+      />
+    </div>
+    <div
+      v-if="!isFreePlan && isAutoPayOn"
+      class="billing-card__autopay-is-on"
+    >
+      {{ $t('billing.autoPayIsOn') }} {{ subExpiredDate | prettyDateFromDateTimeString }}
     </div>
   </div>
 </template>
 
-<script>
-import EntityImage from '../../utils/EntityImage';
-import Progress from '../../utils/Progress';
-import Icon from '../../utils/Icon';
-import UiSwitch from '../../forms/UiSwitch';
+<script lang="ts">
+import Vue from 'vue';
+import EntityImage from '../../utils/EntityImage.vue';
+import Progress from '../../utils/Progress.vue';
+import UiSwitch from '../../forms/UiSwitch.vue';
+import StatusBlock from '../../utils/StatusBlock.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
+import UiButton from './../../utils/UiButton.vue';
+import Icon from '../../utils/Icon.vue';
+import { Plan } from '../../../types/plan';
+import { Button } from '../../../types/button';
+import PositiveButton from '../../utils/PostivieButton.vue';
 
-export default {
+export default Vue.extend({
   name: 'BillingOverview',
   components: {
     UiSwitch,
-    Icon,
     Progress,
     EntityImage,
+    UiButton,
+    StatusBlock,
+    Icon,
+    PositiveButton,
   },
   props: {
     workspace: {
@@ -113,19 +142,168 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      /**
+       * `Increment Event Limit` button
+       */
+      incrementEventsLimit: {
+        label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
+        style: 'primary',
+        onClick: () => {
+          console.log('Increment events limit');
+        },
+      },
+      /**
+       * `Enable Auto Payment` button
+       */
+      enableAutoPayment: {
+        label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
+        style: 'primary',
+        onClick: () => {
+          console.log('Enable auto payment');
+        },
+      },
+      /**
+       * `Prolongate Current Plan` button
+       */
+      prolongateCurrentPlan: {
+        label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
+        style: 'secondary',
+        onClick: () => {
+          console.log('Prolongate current plan');
+        },
+      },
+      /**
+       * The current date
+       */
+      now: new Date(),
+    };
+  },
   computed: {
-    plan() {
-      return this.workspace.plan || {};
+    /**
+     * Return workspace plan
+     */
+    plan(): Plan {
+      return this.workspace.plan;
     },
     /**
      * Total number of errors since the last charge date
      */
-    eventsCount() {
-      return this.workspace.billingPeriodEventsCount;
+    eventsCount(): number {
+      return this.workspace.billingPeriodEventsCount || 0;
+    },
+    /**
+     * Return buttons list depended on workspace state
+     */
+    buttons(): Button[] {
+      const buttonsList: Button[] = [];
+
+      /**
+       * if plan is `Startup` then return `Increment Events Limit` button
+       */
+      if (this.isFreePlan) {
+        return [ this.incrementEventsLimit ];
+      }
+
+      /**
+       * If autopay is off we necessary return `Enable Auto Payment` button
+       */
+      if (!this.isAutoPayOn) {
+        buttonsList.push(this.enableAutoPayment);
+
+        /**
+         * If subscription is expired then return `Prolongate Current Plan` button
+         */
+        if (this.isSubExpired) {
+          buttonsList.push(this.prolongateCurrentPlan);
+
+          return buttonsList;
+        }
+
+        /**
+         * if autopay is off and events limit is exceeded then return `Increment Events Limit`
+         */
+        if (this.isEventsLimitExceeded) {
+          return [ this.incrementEventsLimit ];
+        }
+      } else if (this.isEventsLimitExceeded) {
+        /**
+         * If autopay is on and events limit is exceeded then return `Increment Events Limit`
+         */
+        return [ this.incrementEventsLimit ];
+      }
+
+      return buttonsList;
+    },
+    /**
+     * Checking the volume spent
+     */
+    isEventsLimitExceeded(): boolean {
+      return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
+    },
+    /**
+     * Checking the subscription expiration
+     */
+    isSubExpired(): boolean {
+      return this.subExpiredDate < this.now;
+    },
+    /**
+     * Return subscription expiration date
+     */
+    subExpiredDate(): Date {
+      const expiredDate: Date = new Date(this.workspace.lastChargeDate);
+
+      expiredDate.setMonth(expiredDate.getMonth() + 1);
+
+      return expiredDate;
+    },
+    /**
+     * Return the date in ms from sub created date to sub last date
+     */
+    progressMaxDate(): number {
+      return this.diffDates(this.subExpiredDate, this.workspace.lastChargeDate);
+    },
+    /**
+     * Return the date in ms from sub created date to current date
+     */
+    progressCurrentDate(): number {
+      return this.diffDates(this.now, this.workspace.lastChargeDate);
+    },
+    /**
+     * Return true if workspace have subscription
+     */
+    isAutoPayOn(): boolean {
+      return !!this.workspace.subscriptionId;
+    },
+
+    /**
+     * Return true if workspace plan is `Startup`
+     */
+    isFreePlan(): boolean {
+      return this.plan.name === 'Startup';
+    },
+
+    /**
+     * Return true if workspaces is blocked
+     */
+    isBLocked(): boolean {
+      if (this.isAutoPayOn) {
+        return this.isEventsLimitExceeded;
+      }
+
+      if (this.isFreePlan) {
+        return this.isEventsLimitExceeded;
+      } else {
+        return this.isEventsLimitExceeded || this.isSubExpired;
+      }
     },
   },
+  mounted() {
+    this.now = new Date();
+  },
   methods: {
-    processPayment(amount) {
+    processPayment(amount): void {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ProcessPaymentDialog',
         data: { amount },
@@ -134,7 +312,7 @@ export default {
     /**
      * Open ChooseTariffPlan popup on click on the current plan button
      */
-    onPlanClick() {
+    onPlanClick(): void {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ChooseTariffPlanPopup',
         data: {
@@ -142,50 +320,74 @@ export default {
         },
       });
     },
+    /**
+     * Open the same popup like `onPlanClick`
+     */
+    onBoostClick(): void {
+      console.log('Boost click');
+    },
+    /**
+     * Difference between dates
+     *
+     * @param dateString1 - first date
+     * @param dateString2 - second date
+     */
+    diffDates(dateString1: Date, dateString2: Date): number {
+      const date1 = new Date(dateString1);
+      const date2 = new Date(dateString2);
+
+      return Math.abs(date1.getTime() - date2.getTime());
+    },
   },
-};
+});
 </script>
 
-<style>
+<style lang="postcss">
+  @import url('./../../../styles/custom-properties.css');
+
   .billing-card {
-    width: 600px;
+    width: var(--width-popup-form-container);
     margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: 9px;
 
     &__switch {
       float: right;
     }
 
-    &__logo {
-      float: left;
-      margin-top: -1px;
-      margin-right: 15px;
+    &__workspace {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 16px;
+      letter-spacing: 0.2px;
+
+      &-logo {
+        margin-right: 11px;
+      }
     }
 
     &__title {
-      font-weight: bold;
-      font-size: 15px;
-      line-height: 20px;
-      letter-spacing: 0.19px;
-    }
-
-    &__members-count {
-      color: var(--color-text-second);
-      font-size: 12px;
-      line-height: 14px;
-      letter-spacing: 0.15px;
     }
 
     &__info {
-      display: flex;
+      display: grid;
+      grid-template-columns: 200px 200px 200px;
+      grid-auto-rows: 29px;
       margin-top: 20px;
-    }
 
-    &__info-card {
-      margin-right: 40px;
+      &__2-columns {
+        grid-template-columns: 200px 200px;
+      }
+      &-section {
+        margin-right: 30px;
+      }
+
+      &-bar {
+        padding-top: 3px;
+      }
     }
 
     &__current-plan {
@@ -193,23 +395,15 @@ export default {
     }
 
     &__label {
+      @apply --ui-label;
+      display: inline-block;
+      margin-right: 13px;
       margin-bottom: 15px;
-      color: var(--color-text-second);
-      font-weight: bold;
-      font-size: 12px;
-      letter-spacing: 0.15px;
-      text-transform: uppercase;
-    }
-
-    &__balance {
-      color: var(--color-text-main);
-      font-weight: bold;
-      font-size: 34px;
-      line-height: 40px;
-      letter-spacing: 0.43px;
     }
 
     &__plan {
+      width: 142px;
+      height: 36px;
       display: flex;
       align-items: center;
       padding: 9px 15px;
@@ -246,32 +440,57 @@ export default {
       width: 160px;
       height: 5px;
       margin-top: 7px;
-      background-color: rgba(219, 230, 255, 0.25);
+      background-color: color-mod(var(--color-border) alpha(25%));
     }
 
     &__buttons {
       margin-top: 25px;
-    }
 
-    &__button {
-      margin-right: 15px;
-      padding: 10px 12px;
-      line-height: 17px;
-    }
-
-    &__button--invoice {
-      background-color: var(--color-indicator-low);
-
-      &:hover {
-        background-color: #475980;
+      .ui-button {
+        margin-right: 20px;
       }
-  }
+    }
 
-    &__invoice-icon {
-      width: 12px;
-      height: 13px;
-      margin-right: 7px;
-      margin-bottom: -2px;
+    &__workspace-name {
+      margin-right: 15px;
+    }
+
+    &__attention {
+      width: 18px;
+      height: 18px;
+      margin-left: 5px;
+      margin-top: -12px;
+      margin-bottom: -5px;
+    }
+
+    &__volume-boost {
+      display: inline;
+      width: 65px;
+      height: 23px;
+      padding: 2px 8px 8px 10px;
+      color: var(--color-indicator-positive);
+      font-weight: 500;
+      font-size: 13px;
+      font-family: Roboto;
+      letter-spacing: 0.16px;
+      background: var(--color-bg-main);
+      border: solid 1px var(--color-indicator-positive);
+      border-radius: 12.5px;
+    }
+
+    &__autopay-is-on {
+      width: 350px;
+      height: 14px;
+      margin: 20px 166px 0 0;
+      color: color-mod(var(--color-border) alpha(60%));
+      font-size: 12px;
+      font-family: Roboto;
+      letter-spacing: 0.15px;
+    }
+
+    &__mock {
+      margin-top: 3px;
     }
   }
+
 </style>

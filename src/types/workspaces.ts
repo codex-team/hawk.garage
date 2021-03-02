@@ -30,7 +30,21 @@ export interface Workspace {
    */
   team: Member[];
 
+  /**
+   * Workspace tariff plan
+   */
   plan: Plan;
+
+  /**
+   * Date when workspace was charged last time
+   */
+  lastChargeDate: Date;
+
+  /**
+   * ID of subscription if it subscribed
+   * Returns from CloudPayments
+   */
+  subscriptionId?: string;
 }
 
 /**

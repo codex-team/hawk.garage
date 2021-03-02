@@ -132,7 +132,7 @@
     },
     "billing": {
       "title": "Платежи",
-      "ownedWorkspaces": "Воркспейсы"
+      "managedWorkspaces": "Воркспейсы"
     },
     "logout": "Выйти",
     "notifications": {
@@ -222,8 +222,8 @@
     "detachCard": "Открепить карту",
     "addCardButton": "Добавить карту",
     "members": "Нет участников | 1 участник | {n} участника | {n} участников",
-    "currentBalance": "Баланс",
-    "currentPlan": "План",
+    "currentPlan": "Текущий план",
+    "validTill": "Действителен до",
     "volume": "Емкость",
     "volumeEvents": "событий | событие | события | событий",
     "pay": "+",
@@ -231,11 +231,12 @@
     "requestInvoice": "Запросить счет",
     "paymentHistory": "История платежей",
     "paymentHistoryEmpty": "Вы пока не совершили никаких операций",
-    "all": "Все",
-    "incomings": "Пополнения",
-    "charges": "Списания",
     "autoPay": "Авто-платеж",
     "payPeriod": "мес",
+    "autoPayIsOn": "Автоплатеж включен. Дата следующего списания: ",
+    "expired": "Истек",
+    "boost": "Увеличить",
+    "blocked": "Заблокирован",
     "operations": {
       "chargeForPlan": "Оплата за тарифный план {workspaceName}",
       "statuses": {
@@ -243,6 +244,11 @@
         "processed": "Обработан",
         "rejected": "Отклонен"
       }
+    },
+    "buttons": {
+      "incrementEventsLimit": "Увеличить лимит событий",
+      "enableAutoPayment": "Включить автоплатеж",
+      "prolongateCurrentPlan": "Продлить текущий план"
     },
     "processPayment": {
       "header": "Пополнение баланса",

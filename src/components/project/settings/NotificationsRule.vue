@@ -26,7 +26,7 @@
           {{ $t('projects.settings.notifications.ruleIncludingLabel') }}
         </span>
         <div class="n-rule__filter-rules">
-          <NotificationsRuleFilter
+          <StatusBlock
             v-for="(filter, index) in rule.including"
             :key="index"
             :content="filter"
@@ -41,11 +41,11 @@
           {{ $t('projects.settings.notifications.ruleExcludingLabel') }}
         </span>
         <div class="n-rule__filter-rules">
-          <NotificationsRuleFilter
+          <StatusBlock
             v-for="(filter, index) in rule.excluding"
             :key="index"
             :content="filter"
-            excluding
+            bad
           />
         </div>
       </div>
@@ -70,7 +70,7 @@ import {
   ProjectNotificationsRule,
   ReceiveTypes
 } from '@/types/project-notifications';
-import NotificationsRuleFilter from './NotificationsRuleFilter.vue';
+import StatusBlock from '../../utils/StatusBlock.vue';
 import Icon from '@/components/utils/Icon.vue';
 import TooltipMenu, { TooltipMenuItem } from '@/components/utils/TooltipMenu.vue';
 import UiSwitch from '@/components/forms/UiSwitch.vue';
@@ -80,7 +80,7 @@ import { TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE } from '../../../store/modules/
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsRule',
   components: {
-    NotificationsRuleFilter,
+    StatusBlock,
     Icon,
     TooltipMenu,
     UiSwitch,

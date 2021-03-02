@@ -8,9 +8,7 @@
     </div>
     <template v-else-if="operations && operations.length">
       <div class="billing-history__header">
-        <div class="billing-history__tab">
-          {{ $t('billing.paymentHistory').toUpperCase() }}
-        </div>
+        {{ $t('billing.paymentHistory').toUpperCase() }}
       </div>
       <div
         v-for="(operation, i) in filteredOperations"
@@ -56,9 +54,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import EntityImage from './../EntityImage.vue';
-import {BusinessOperationType} from '@/types/business-operation-type';
+import { BusinessOperationType } from '@/types/business-operation-type';
 import i18n from './../../../i18n';
-import {BusinessOperation, PayloadOfWorkspacePlanPurchase} from '@/types/business-operation';
+import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -145,8 +143,7 @@ export default Vue.extend({
     max-width: var(--width-popup-form-container);
 
     &__header {
-      display: flex;
-      margin: 15px 0 0;
+      @apply --ui-label;
     }
 
     &__tab {

@@ -103,13 +103,6 @@ export default Vue.extend({
     this.isPaymentsHistoryLoading = true;
 
     /**
-     * Load balance
-     */
-    await this.$store.dispatch(GET_BALANCE, {
-      ids: [ this.workspace.id ],
-    });
-
-    /**
      * Load operations history
      */
     await this.$store.dispatch(GET_BUSINESS_OPERATIONS, {

@@ -1,8 +1,8 @@
 <template>
   <span
-    class="n-filter"
+    class="status"
     :class="{
-      'n-filter--e': excluding
+      'status--bad': bad
     }"
   >
     {{ contentTrimmed }}
@@ -13,7 +13,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'ProjectSettingsNotificationsRuleFilter',
+  name: 'StatusBlock',
   components: {
   },
   props: {
@@ -26,9 +26,9 @@ export default Vue.extend({
     },
 
     /**
-     * Pass true if filter should be coloured with red
+     * Pass true if you want to show content in bad status
      */
-    excluding: {
+    bad: {
       type: Boolean,
       default: false,
     },
@@ -54,20 +54,24 @@ export default Vue.extend({
 </script>
 
 <style>
-  @import url('../../../styles/custom-properties.css');
+  @import url('../../styles/custom-properties.css');
 
-  .n-filter {
+  .status {
     display: inline-block;
+    height: 23px;
     margin: 3px;
-    padding: 5px 8px;
+    padding: 4px 8px;
     color: var(--color-indicator-positive);
+    font-size: 13px;
+    font-weight: normal;
     line-height: 1em;
+    letter-spacing: 0.16px;
     white-space: nowrap;
     background: color-mod(var(--color-indicator-positive) alpha(20%));
     border: 1px solid color-mod(var(--color-indicator-positive) alpha(20%));
     border-radius: 6px;
 
-    &--e {
+    &--bad {
       color: var(--color-indicator-critical);
       background: color-mod(var(--color-indicator-critical) alpha(20%));
       border-color: color-mod(var(--color-indicator-critical) alpha(20%));

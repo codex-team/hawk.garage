@@ -20,7 +20,7 @@
 
     <div class="account-billing__section">
       <label class="account-billing__label">
-        {{ $t('settings.billing.ownedWorkspaces') }}
+        {{ $t('settings.billing.managedWorkspaces') }}
       </label>
       <BillingWorkspace
         v-for="workspace in workspaces"
@@ -45,9 +45,16 @@ import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
 import AddCard from '../../utils/billing/BankCardAdd.vue';
 import { BankCard } from '@/types/bank-card';
-// import { GET_BUSINESS_OPERATIONS } from '../../../store/modules/workspaces/actionTypes';
+
 import { User } from '@/types/user';
 import { Workspace } from '@/types/workspaces';
+
+interface BilingComponentData {
+  /**
+   * Bank Cards
+   */
+  cards: BankCard[],
+}
 
 export default Vue.extend({
   name: 'AccountBilling',
@@ -66,9 +73,7 @@ export default Vue.extend({
       required: true,
     },
   },
-  data(): {
-    cards: BankCard[]
-    } {
+  data(): BilingComponentData {
     return {
       /**
        * Temporary cards for testing
@@ -103,12 +108,6 @@ export default Vue.extend({
         return this.$store.getters.isCurrentUserAdmin(workspace.id);
       });
     },
-  },
-  created() {
-    /**
-     * Fetch workspaces transactions
-     */
-    // this.$store.dispatch(GET_BUSINESS_OPERATIONS, { ids: [] });
   },
   methods: {
   },

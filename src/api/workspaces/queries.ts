@@ -17,6 +17,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       description
       image
       billingPeriodEventsCount
+      subscriptionId
+      lastChargeDate
       ...WorkspaceWithTeam
       ...WorkspacePlan
       projects {
@@ -133,6 +135,8 @@ export const QUERY_WORKSPACES = `
       name
       description
       image
+      subscriptionId
+      lastChargeDate
       ...WorkspacePlan
       ...WorkspaceWithTeam
     }
