@@ -58,7 +58,10 @@
         />
       </div>
 
-      <div class="billing-card__plan">
+      <div
+        class="billing-card__plan"
+        @click="onPlanClick"
+      >
         <div class="billing-card__plan-name">
           {{ plan.name || 'Free' }}
         </div>
@@ -409,6 +412,7 @@ export default Vue.extend({
       padding: 9px 15px;
       border: 1px solid var(--color-text-main);
       border-radius: 3px;
+      cursor: pointer;
     }
 
     &__plan-name {
