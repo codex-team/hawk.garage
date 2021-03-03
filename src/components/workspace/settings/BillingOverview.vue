@@ -58,7 +58,10 @@
         />
       </div>
 
-      <div class="billing-card__plan">
+      <div
+        class="billing-card__plan"
+        @click="onPlanClick"
+      >
         <div class="billing-card__plan-name">
           {{ plan.name || 'Free' }}
         </div>
