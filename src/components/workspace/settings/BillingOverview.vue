@@ -412,6 +412,7 @@ export default Vue.extend({
       padding: 9px 15px;
       border: 1px solid var(--color-text-main);
       border-radius: 3px;
+      cursor: pointer;
     }
 
     &__plan-name {
