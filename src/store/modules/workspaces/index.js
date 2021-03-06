@@ -357,19 +357,8 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    const { record: businessOperation, balance } = await workspaceApi.changePlan(workspaceId, planId);
+    await workspaceApi.changePlan(workspaceId, planId);
 
-    if (businessOperation !== null) {
-      commit(mutationTypes.UPDATE_BUSINESS_OPERATIONS, {
-        workspaceId,
-        businessOperation,
-      });
-    }
-
-    commit(mutationTypes.UPDATE_BALANCE, {
-      workspaceId,
-      balance,
-    });
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
       plan: getters.getPlanById(planId),

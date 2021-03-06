@@ -211,22 +211,7 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN = `
       $input: ChangeWorkspacePlanInput
     ) {
       changeWorkspacePlan(input: $input) {
-        recordId
-        balance
-        record {
-          id
-          type
-          status
-          dtCreated
-          payload {
-            ...on PayloadOfWorkspacePlanPurchase {
-              workspace {
-                id
-              }
-              amount
-            }
-          }
-        }
+        success
       }
     }
 `;

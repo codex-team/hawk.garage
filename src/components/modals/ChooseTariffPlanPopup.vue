@@ -109,6 +109,17 @@ export default Vue.extend({
      * Attempt to change workspace plan
      */
     async onContinue(): Promise<void> {
+      if (this.plans.find(plan => plan.id === this.selectedPlan)?.monthlyCharge === 0) {
+        await this.$store.dispatch('CHANGE_WORKSPACE_PLAN', {
+          workspaceId: this.workspaceId,
+          planId: this.selectedPlan,
+        });
+
+        this.currentPlan = this.selectedPlan;
+
+        return;
+      }
+
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ProcessPaymentDialog',
         data: {
