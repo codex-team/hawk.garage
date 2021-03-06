@@ -168,11 +168,11 @@ export async function removeUserFromWorkspace(
 export async function changePlan(
   workspaceId: string,
   planId: string
-): Promise<APIResponse<Workspace>> {
-  return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN, {
+): Promise<void> {
+  await api.call(MUTATION_CHANGE_WORKSPACE_PLAN, {
     input: {
       workspaceId,
       planId,
     },
-  })).changeWorkspacePlan;
+  });
 }
