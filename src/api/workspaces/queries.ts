@@ -211,7 +211,58 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN = `
       $input: ChangeWorkspacePlanInput
     ) {
       changeWorkspacePlan(input: $input) {
-        success
+        recordId
+        record {
+          id
+          name
+          description
+          image
+          billingPeriodEventsCount
+          subscriptionId
+          lastChargeDate
+          ...WorkspaceWithTeam
+          ...WorkspacePlan
+          projects {
+            id
+            token
+            name
+            description
+            image
+            unreadCount
+            notifications {
+              ...ProjectNotificationsRule
+            }
+            recentEvents(limit: 1) {
+              events {
+                id
+                groupHash
+                visitedBy {
+                  ...User
+                }
+                marks {
+                  resolved
+                  starred
+                  ignored
+                }
+                payload {
+                  timestamp
+                  title
+                }
+              }
+              dailyInfo {
+                groupHash
+                count
+                groupingTimestamp
+                lastRepetitionTime
+              }
+            }
+          }
+        }
       }
     }
+
+    ${USER_FRAGMENT}
+    ${WORKSPACE_FRAGMENT_WITH_TEAM}
+    ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+    ${WORKSPACE_PLAN}
 `;
