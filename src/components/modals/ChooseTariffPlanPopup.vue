@@ -72,7 +72,7 @@ export default Vue.extend({
       selectedPlan: workspace.plan,
 
       /**
-       * Current plan id
+       * Current plan object
        */
       currentPlan: workspace.plan,
     };
