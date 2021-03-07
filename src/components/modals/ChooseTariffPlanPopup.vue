@@ -67,7 +67,7 @@ export default Vue.extend({
 
     return {
       /**
-       * Id of selected plan
+       * Selected plan object
        */
       selectedPlan: workspace.plan,
 
