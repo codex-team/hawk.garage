@@ -212,21 +212,57 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN = `
     ) {
       changeWorkspacePlan(input: $input) {
         recordId
-        balance
         record {
           id
-          type
-          status
-          dtCreated
-          payload {
-            ...on PayloadOfWorkspacePlanPurchase {
-              workspace {
+          name
+          description
+          image
+          billingPeriodEventsCount
+          subscriptionId
+          lastChargeDate
+          ...WorkspaceWithTeam
+          ...WorkspacePlan
+          projects {
+            id
+            token
+            name
+            description
+            image
+            unreadCount
+            notifications {
+              ...ProjectNotificationsRule
+            }
+            recentEvents(limit: 1) {
+              events {
                 id
+                groupHash
+                visitedBy {
+                  ...User
+                }
+                marks {
+                  resolved
+                  starred
+                  ignored
+                }
+                payload {
+                  timestamp
+                  title
+                }
               }
-              amount
+              dailyInfo {
+                groupHash
+                count
+                groupingTimestamp
+                lastRepetitionTime
+              }
             }
           }
         }
       }
     }
+
+    ${USER_FRAGMENT}
+    ${WORKSPACE_FRAGMENT_WITH_TEAM}
+    ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+    ${WORKSPACE_PLAN}
 `;

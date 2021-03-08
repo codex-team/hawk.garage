@@ -20,14 +20,14 @@
             :name="plan.name"
             :limit="plan.eventsLimit"
             :price="plan.monthlyCharge"
-            :selected="plan.id === selectedPlan"
+            :selected="plan.id === selectedPlan.id"
             @click.native="selectPlan(plan.id)"
           />
         </div>
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
-          :disabled="selectedPlan === currentPlan"
+          :disabled="selectedPlan.id === currentPlan.id"
           submit
           @click="onContinue"
         />
@@ -67,14 +67,14 @@ export default Vue.extend({
 
     return {
       /**
-       * Id of selected plan
+       * Selected plan object
        */
-      selectedPlan: workspace.plan.id,
+      selectedPlan: workspace.plan,
 
       /**
-       * Current plan id
+       * Current plan object
        */
-      currentPlan: workspace.plan.id,
+      currentPlan: workspace.plan,
     };
   },
   computed: {
@@ -98,21 +98,34 @@ export default Vue.extend({
      * @param id - plan id
      */
     selectPlan(id: string): void {
-      if (!this.plans.find(plan => plan.id === id)) {
+      const plan = this.plans.find(p => p.id === id);
+
+      if (!plan) {
         return;
       }
 
-      this.selectedPlan = id;
+      this.selectedPlan = plan;
     },
 
     /**
      * Attempt to change workspace plan
      */
     async onContinue(): Promise<void> {
+      if (this.selectedPlan.monthlyCharge === 0) {
+        await this.$store.dispatch('CHANGE_WORKSPACE_PLAN', {
+          workspaceId: this.workspaceId,
+          planId: this.selectedPlan.id,
+        });
+
+        this.currentPlan = this.selectedPlan;
+
+        return;
+      }
+
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ProcessPaymentDialog',
         data: {
-          tariffPlanId: this.selectedPlan,
+          tariffPlanId: this.selectedPlan.id,
           workspaceId: this.workspaceId,
         },
       });
