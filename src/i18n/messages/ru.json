@@ -14,7 +14,7 @@
       "Wrong email or password": "Неправильный email или пароль",
       "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",
       "Wrong email format": "Некорректный формат почты",
-      "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету"
+      "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету."
     }
   },
   "components": {
