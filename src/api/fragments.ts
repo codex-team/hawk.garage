@@ -125,3 +125,47 @@ export const WORKSPACE_PLAN = `
     }
   }
 `;
+
+// language=GraphQL
+export const WORKSPACE_PROJECTS = `
+  fragment WorkspaceProjects on Workspace {
+    projects {
+      id
+      token
+      name
+      description
+      image
+      unreadCount
+      notifications {
+        ...ProjectNotificationsRule
+      }
+      recentEvents(limit: 1) {
+        events {
+          id
+          groupHash
+          visitedBy {
+            ...User
+          }
+          marks {
+            resolved
+            starred
+            ignored
+          }
+          payload {
+            timestamp
+            title
+          }
+        }
+        dailyInfo {
+          groupHash
+          count
+          groupingTimestamp
+          lastRepetitionTime
+        }
+      }
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+  ${USER_FRAGMENT}
+`;
