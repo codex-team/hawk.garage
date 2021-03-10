@@ -7,5 +7,5 @@ export interface PlanProlongationPayload {
    */
   checksum: string;
 
-  СloudPayments?: any
+  cloudPayments?: any;
 }
