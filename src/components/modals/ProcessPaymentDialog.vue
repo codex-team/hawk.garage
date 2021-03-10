@@ -92,6 +92,10 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    isRecurrent: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -157,6 +161,17 @@ export default Vue.extend({
         checksum: data.checksum,
       };
 
+      if (this.isRecurrent) {
+        paymentData.СloudPayments = {
+          recurrent: {
+            interval: 'Day',
+            period: 1,
+          },
+        };
+      }
+
+      console.log(this.$store.state.user.data.id)
+
       widget.pay('charge',
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
@@ -169,6 +184,7 @@ export default Vue.extend({
 
           /** Label for admin panel */
           invoiceId: data.invoiceId,
+          accountId: this.$store.state.user.data.id,
 
           skin: 'mini',
           data: paymentData,
