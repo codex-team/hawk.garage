@@ -213,21 +213,10 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = `
       changeWorkspacePlanForFreePlan(input: $input) {
         recordId
         record {
-          id
-          name
-          description
-          image
-          billingPeriodEventsCount
-          subscriptionId
-          lastChargeDate
-          ...WorkspaceWithTeam
           ...WorkspacePlan
-          ...WorkspaceProjects
         }
       }
     }
 
-    ${WORKSPACE_FRAGMENT_WITH_TEAM}
     ${WORKSPACE_PLAN}
-    ${WORKSPACE_PROJECTS}
 `;
