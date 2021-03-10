@@ -6,4 +6,6 @@ export interface PlanProlongationPayload {
    * Hash to check data
    */
   checksum: string;
+
+  СloudPayments?: any
 }
