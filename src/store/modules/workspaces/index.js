@@ -357,12 +357,14 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    await workspaceApi.changePlan(workspaceId, planId);
+    const result = await workspaceApi.changePlan(workspaceId, planId);
 
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
       plan: getters.getPlanById(planId),
     });
+
+    return result;
   },
 
   /**
