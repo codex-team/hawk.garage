@@ -2,7 +2,7 @@ import {
   WORKSPACE_FRAGMENT_WITH_TEAM,
   USER_FRAGMENT,
   PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
-  WORKSPACE_PLAN, WORKSPACE_PROJECTS
+  WORKSPACE_PLAN
 } from '../fragments';
 
 // language=GraphQL
@@ -212,11 +212,6 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = `
     ) {
       changeWorkspacePlanForFreePlan(input: $input) {
         recordId
-        record {
-          ...WorkspacePlan
-        }
       }
     }
-
-    ${WORKSPACE_PLAN}
 `;
