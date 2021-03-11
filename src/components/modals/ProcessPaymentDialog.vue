@@ -92,6 +92,10 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+
+    /**
+     * Make a monthly subscription or one-time payment
+     */
     isRecurrent: {
       type: Boolean,
       default: false,

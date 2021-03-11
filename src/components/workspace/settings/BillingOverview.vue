@@ -340,6 +340,12 @@ export default Vue.extend({
       return Math.abs(date1.getTime() - date2.getTime());
     },
 
+    /**
+     * Handler for auto-pay input
+     * Initiates payment dialog for subscribing
+     *
+     * @param value - new value
+     */
     onAutoPayInput(value): void {
       if (!value) {
         notifier.show({
