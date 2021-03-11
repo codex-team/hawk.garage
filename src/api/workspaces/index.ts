@@ -9,7 +9,7 @@ import {
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   QUERY_WORKSPACES,
   QUERY_BALANCE,
-  MUTATION_CHANGE_WORKSPACE_PLAN
+  MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
@@ -169,7 +169,7 @@ export async function changePlan(
   workspaceId: string,
   planId: string
 ): Promise<APIResponse<Workspace>> {
-  return api.call(MUTATION_CHANGE_WORKSPACE_PLAN, {
+  return api.call(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
     input: {
       workspaceId,
       planId,

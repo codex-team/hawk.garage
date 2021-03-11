@@ -44,7 +44,7 @@ import UiButton from '../utils/UiButton.vue';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
-import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -118,6 +118,8 @@ export default Vue.extend({
         });
 
         this.currentPlan = this.selectedPlan;
+
+        this.$store.dispatch(RESET_MODAL_DIALOG);
 
         return;
       }
