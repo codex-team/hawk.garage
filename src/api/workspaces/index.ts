@@ -165,7 +165,7 @@ export async function removeUserFromWorkspace(
  * @param {string} workspaceId - id of workspace to change plan
  * @param {string} planId - id of plan to set
  */
-export async function changePlan(
+export async function changePlanForFreePLan(
   workspaceId: string,
   planId: string
 ): Promise<APIResponse<Workspace>> {
