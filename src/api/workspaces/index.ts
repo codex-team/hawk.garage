@@ -169,10 +169,10 @@ export async function changePlanForFreePLan(
   workspaceId: string,
   planId: string
 ): Promise<APIResponse<Workspace>> {
-  return api.call(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
+  return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
     input: {
       workspaceId,
       planId,
     },
-  });
+  })).changeWorkspacePlanForFreePlan;
 }

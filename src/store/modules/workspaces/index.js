@@ -11,7 +11,7 @@ import {
   REMOVE_USER_FROM_WORKSPACE,
   GET_BUSINESS_OPERATIONS,
   GET_BALANCE,
-  CHANGE_WORKSPACE_PLAN
+  CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -348,7 +348,7 @@ const actions = {
   },
 
   /**
-   * Call change plan mutation
+   * Call change plan for free plan mutation
    *
    * @param {Function} commit - VueX commit method
    * @param {object} getters - Store getters
@@ -356,12 +356,12 @@ const actions = {
    * @param {string} planId - id of plan to set
    * @returns {Promise<void>}
    */
-  async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    const result = await workspaceApi.changePlanForFreePLan(workspaceId, planId);
+  async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
+    const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
-      plan: getters.getPlanById(planId),
+      plan: getters.getPlanById(result.record.plan.id),
     });
 
     return result;
