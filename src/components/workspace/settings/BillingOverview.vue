@@ -129,6 +129,7 @@ import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
 import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
+import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -341,18 +342,37 @@ export default Vue.extend({
     },
 
     /**
+     * Performs subscription cancelling for current workspace
+     */
+    async cancelSubscription(): Promise<void> {
+      try {
+        await this.$store.dispatch(CANCEL_SUBSCRIPTION, {
+          workspaceId: this.workspace.id,
+        });
+
+        notifier.show({
+          message: 'Subscription successfully canceled',
+          style: 'success',
+          time: 5000,
+        });
+      } catch {
+        notifier.show({
+          message: 'Error during subscription cancelling',
+          style: 'error',
+          time: 5000,
+        });
+      }
+    },
+
+    /**
      * Handler for auto-pay input
      * Initiates payment dialog for subscribing
      *
      * @param value - new value
      */
-    onAutoPayInput(value): void {
+    async onAutoPayInput(value): Promise<void> {
       if (!value) {
-        notifier.show({
-          message: 'Subscription cancel not implemented yet',
-          style: 'success',
-          time: 5000,
-        });
+        await this.cancelSubscription();
 
         return;
       }
