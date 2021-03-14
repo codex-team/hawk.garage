@@ -215,3 +215,20 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = `
       }
     }
 `;
+
+/**
+ * Cancel subscription on tariff plan
+ */
+// language=GraphQL
+export const MUTATION_CANCEL_SUBSCRIPTION = `
+  mutation cancelSubscription($input: CancelSubscriptionInput!) {
+    workspace {
+      cancelSubscription(input: $input) {
+        record {
+          id
+          subscriptionId
+        }
+      }
+    }
+  }
+`;

@@ -9,7 +9,8 @@ import {
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   QUERY_WORKSPACES,
   QUERY_BALANCE,
-  MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN
+  MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
+  MUTATION_CANCEL_SUBSCRIPTION
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
@@ -175,4 +176,17 @@ export async function changePlanForFreePLan(
       planId,
     },
   });
+}
+
+/**
+ * Cancel subscription on tariff plan
+ *
+ * @param workspaceId - workspace id to cancel subscription for
+ */
+export async function cancelSubscription(workspaceId: string): Promise<Pick<Workspace, 'id' | 'subscriptionId'>> {
+  return (await api.call(MUTATION_CANCEL_SUBSCRIPTION, {
+    input: {
+      workspaceId,
+    },
+  })).workspace.cancelSubscription.record;
 }
