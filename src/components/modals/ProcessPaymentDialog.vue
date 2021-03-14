@@ -92,6 +92,14 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+
+    /**
+     * Make a monthly subscription or one-time payment
+     */
+    isRecurrent: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -149,13 +157,20 @@ export default Vue.extend({
      * @param {BeforePaymentPayload} data — server response that sent after beforePay request
      */
     async showPaymentWidget(data: BeforePaymentPayload) {
-      const language = this.$store.state.app.language.toUpperCase();
-
       const widget = new window.cp.CloudPayments();
 
       const paymentData: PlanProlongationPayload = {
         checksum: data.checksum,
       };
+
+      if (this.isRecurrent) {
+        paymentData.cloudPayments = {
+          recurrent: {
+            interval: 'Month',
+            period: 1,
+          },
+        };
+      }
 
       widget.pay('charge',
         {
@@ -169,6 +184,7 @@ export default Vue.extend({
 
           /** Label for admin panel */
           invoiceId: data.invoiceId,
+          accountId: this.$store.state.user.data.id,
 
           skin: 'mini',
           data: paymentData,

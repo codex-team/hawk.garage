@@ -4,6 +4,7 @@
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
       :value="isAutoPayOn"
+      @input="onAutoPayInput"
     />
     <div class="clearfix billing-card__workspace">
       <EntityImage
@@ -127,6 +128,7 @@ import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
 import PositiveButton from '../../utils/PostivieButton.vue';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -306,12 +308,6 @@ export default Vue.extend({
     this.now = new Date();
   },
   methods: {
-    processPayment(amount): void {
-      this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'ProcessPaymentDialog',
-        data: { amount },
-      });
-    },
     /**
      * Open ChooseTariffPlan popup on click on the current plan button
      */
@@ -323,12 +319,14 @@ export default Vue.extend({
         },
       });
     },
+
     /**
      * Open the same popup like `onPlanClick`
      */
     onBoostClick(): void {
       console.log('Boost click');
     },
+
     /**
      * Difference between dates
      *
@@ -340,6 +338,33 @@ export default Vue.extend({
       const date2 = new Date(dateString2);
 
       return Math.abs(date1.getTime() - date2.getTime());
+    },
+
+    /**
+     * Handler for auto-pay input
+     * Initiates payment dialog for subscribing
+     *
+     * @param value - new value
+     */
+    onAutoPayInput(value): void {
+      if (!value) {
+        notifier.show({
+          message: 'Subscription cancel not implemented yet',
+          style: 'success',
+          time: 5000,
+        });
+
+        return;
+      }
+
+      this.$store.dispatch(SET_MODAL_DIALOG, {
+        component: 'ProcessPaymentDialog',
+        data: {
+          tariffPlanId: this.workspace.plan.id,
+          workspaceId: this.workspace.id,
+          isRecurrent: true,
+        },
+      });
     },
   },
 });
