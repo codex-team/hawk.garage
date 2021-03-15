@@ -4,6 +4,7 @@
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
       :value="isAutoPayOn"
+      @input="onAutoPayInput"
     />
     <div class="clearfix billing-card__workspace">
       <EntityImage
@@ -127,6 +128,8 @@ import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
 import PositiveButton from '../../utils/PostivieButton.vue';
+import notifier from 'codex-notifier';
+import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -306,12 +309,6 @@ export default Vue.extend({
     this.now = new Date();
   },
   methods: {
-    processPayment(amount): void {
-      this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'ProcessPaymentDialog',
-        data: { amount },
-      });
-    },
     /**
      * Open ChooseTariffPlan popup on click on the current plan button
      */
@@ -323,12 +320,14 @@ export default Vue.extend({
         },
       });
     },
+
     /**
      * Open the same popup like `onPlanClick`
      */
     onBoostClick(): void {
       console.log('Boost click');
     },
+
     /**
      * Difference between dates
      *
@@ -340,6 +339,52 @@ export default Vue.extend({
       const date2 = new Date(dateString2);
 
       return Math.abs(date1.getTime() - date2.getTime());
+    },
+
+    /**
+     * Performs subscription cancelling for current workspace
+     */
+    async cancelSubscription(): Promise<void> {
+      try {
+        await this.$store.dispatch(CANCEL_SUBSCRIPTION, {
+          workspaceId: this.workspace.id,
+        });
+
+        notifier.show({
+          message: 'Subscription successfully canceled',
+          style: 'success',
+          time: 5000,
+        });
+      } catch {
+        notifier.show({
+          message: 'Error during subscription cancelling',
+          style: 'error',
+          time: 5000,
+        });
+      }
+    },
+
+    /**
+     * Handler for auto-pay input
+     * Initiates payment dialog for subscribing
+     *
+     * @param value - new value
+     */
+    async onAutoPayInput(value): Promise<void> {
+      if (!value) {
+        await this.cancelSubscription();
+
+        return;
+      }
+
+      this.$store.dispatch(SET_MODAL_DIALOG, {
+        component: 'ProcessPaymentDialog',
+        data: {
+          tariffPlanId: this.workspace.plan.id,
+          workspaceId: this.workspace.id,
+          isRecurrent: true,
+        },
+      });
     },
   },
 });
