@@ -361,7 +361,7 @@ const actions = {
 
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
-      plan: getters.getPlanById(result.record.plan.id),
+      plan: result.record.plan,
     });
 
     return result;
