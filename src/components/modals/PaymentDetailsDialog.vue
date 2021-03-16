@@ -430,9 +430,4 @@ export default Vue.extend({
       }
     }
   }
-
-  body .cdx-notifies {
-    position: fixed;
-    z-index: 9995;
-  }
 </style>
