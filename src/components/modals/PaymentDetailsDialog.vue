@@ -263,8 +263,6 @@ export default Vue.extend({
         `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}`
       );
 
-      console.log('Res', response);
-
       return this.showPaymentWidget(response.data as BeforePaymentPayload);
     },
 
