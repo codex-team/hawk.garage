@@ -283,10 +283,10 @@ export default Vue.extend({
       widget.pay('charge',
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-          /**
-           * @todo add i18n message
-           */
-          description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
+          description: this.$t('billing.cloudPaymentsWidget.description', {
+            tariffPlanName: this.plan.name,
+            workspaceName: this.workspace.name,
+          }) as string,
           amount: +data.plan.monthlyCharge,
           currency: data.currency,
 
