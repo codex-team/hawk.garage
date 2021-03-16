@@ -171,7 +171,7 @@ export default Vue.extend({
      */
     isRecurrent: {
       type: Boolean,
-      required: true,
+      default: false,
     },
   },
   data() {
