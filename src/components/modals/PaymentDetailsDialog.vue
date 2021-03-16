@@ -343,7 +343,7 @@ export default Vue.extend({
     }
 
     &__details {
-      margin-bottom: 30px;
+      margin-bottom: 28px;
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.15px;
@@ -376,17 +376,18 @@ export default Vue.extend({
 
     &__card {
       width: 280px;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
     }
 
     &__email {
       width: 280px;
+      margin-bottom: 28px;
     }
 
     &__adoption {
       display: flex;
       margin-top: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
 
       &--checkbox {
         margin-right: 12px;
@@ -400,6 +401,7 @@ export default Vue.extend({
 
     &__bottom {
       display: flex;
+      padding-bottom: 10px;
 
       &--button {
         margin-right: 136px;
