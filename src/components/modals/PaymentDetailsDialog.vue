@@ -165,6 +165,14 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+
+    /**
+     * True if payment is recurrent
+     */
+    isRecurrent: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
@@ -277,6 +285,15 @@ export default Vue.extend({
       const paymentData: PlanProlongationPayload = {
         checksum: data.checksum,
       };
+
+      if (this.isRecurrent) {
+        paymentData.cloudPayments = {
+          recurrent: {
+            interval: 'Month',
+            period: 1,
+          },
+        };
+      }
 
       widget.pay('charge',
         {
