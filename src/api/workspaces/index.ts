@@ -9,7 +9,8 @@ import {
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   QUERY_WORKSPACES,
   QUERY_BALANCE,
-  MUTATION_CHANGE_WORKSPACE_PLAN, MUTATION_CANCEL_SUBSCRIPTION
+  MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
+  MUTATION_CANCEL_SUBSCRIPTION
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
@@ -165,16 +166,16 @@ export async function removeUserFromWorkspace(
  * @param {string} workspaceId - id of workspace to change plan
  * @param {string} planId - id of plan to set
  */
-export async function changePlan(
+export async function changePlanForFreePLan(
   workspaceId: string,
   planId: string
 ): Promise<APIResponse<Workspace>> {
-  return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN, {
+  return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
     input: {
       workspaceId,
       planId,
     },
-  })).changeWorkspacePlan;
+  })).changeWorkspacePlanForFreePlan;
 }
 
 /**

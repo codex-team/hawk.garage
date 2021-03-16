@@ -674,7 +674,7 @@ type Mutation {
   Mutation in order to switch workspace tariff plan
   Returns true if operation is successful
   """
-  changeWorkspacePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
+  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
 
   """Namespace for workspaces mutations"""
   workspace: WorkspaceMutations!

@@ -203,32 +203,22 @@ export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
 `;
 
 /**
- * Change workspace tariff plan
+ * Change workspace tariff plan for free plan
  */
 // language=GraphQL
-export const MUTATION_CHANGE_WORKSPACE_PLAN = `
-    mutation changeWorkspacePlan(
-      $input: ChangeWorkspacePlanInput
+export const MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = `
+    mutation changeWorkspacePlanForFreePlan(
+      $input: ChangeWorkspacePlanForFreePlanInput
     ) {
-      changeWorkspacePlan(input: $input) {
+      changeWorkspacePlanForFreePlan(input: $input) {
         recordId
-        balance
         record {
-          id
-          type
-          status
-          dtCreated
-          payload {
-            ...on PayloadOfWorkspacePlanPurchase {
-              workspace {
-                id
-              }
-              amount
-            }
-          }
+          ...WorkspacePlan
         }
       }
     }
+
+    ${WORKSPACE_PLAN}
 `;
 
 /**

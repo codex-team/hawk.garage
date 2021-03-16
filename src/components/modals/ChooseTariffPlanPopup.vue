@@ -20,14 +20,14 @@
             :name="plan.name"
             :limit="plan.eventsLimit"
             :price="plan.monthlyCharge"
-            :selected="plan.id === selectedPlan"
+            :selected="plan.id === selectedPlan.id"
             @click.native="selectPlan(plan.id)"
           />
         </div>
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
-          :disabled="selectedPlan === currentPlan"
+          :disabled="selectedPlan.id === currentPlan.id"
           submit
           @click="onContinue"
         />
@@ -44,7 +44,8 @@ import UiButton from '../utils/UiButton.vue';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
-import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -67,14 +68,14 @@ export default Vue.extend({
 
     return {
       /**
-       * Id of selected plan
+       * Selected plan object
        */
-      selectedPlan: workspace.plan.id,
+      selectedPlan: workspace.plan,
 
       /**
-       * Current plan id
+       * Current plan object
        */
-      currentPlan: workspace.plan.id,
+      currentPlan: workspace.plan,
     };
   },
   computed: {
@@ -98,21 +99,52 @@ export default Vue.extend({
      * @param id - plan id
      */
     selectPlan(id: string): void {
-      if (!this.plans.find(plan => plan.id === id)) {
+      const plan = this.plans.find(p => p.id === id);
+
+      if (!plan) {
         return;
       }
 
-      this.selectedPlan = id;
+      this.selectedPlan = plan;
     },
 
     /**
      * Attempt to change workspace plan
      */
     async onContinue(): Promise<void> {
+      if (this.selectedPlan.monthlyCharge === 0) {
+        const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
+          workspaceId: this.workspaceId,
+          planId: this.selectedPlan.id,
+        });
+
+        if (!result) {
+          notifier.show({
+            message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
+            style: 'error',
+            time: 5000,
+          });
+
+          return;
+        }
+
+        this.currentPlan = this.selectedPlan;
+
+        notifier.show({
+          message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
+          style: 'success',
+          time: 5000,
+        });
+
+        this.$store.dispatch(RESET_MODAL_DIALOG);
+
+        return;
+      }
+
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ProcessPaymentDialog',
         data: {
-          tariffPlanId: this.selectedPlan,
+          tariffPlanId: this.selectedPlan.id,
           workspaceId: this.workspaceId,
         },
       });
