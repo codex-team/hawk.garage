@@ -264,6 +264,17 @@
         "success": "Payment sent to processing",
         "error": "There was an error while paying"
       }
+    },
+    "paymentDetails": {
+      "title": "Payment details",
+      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won’t access and store your wire transfer data. You will get an invoice on your email. Read more about pricing and payments.",
+      "details": {
+        "title": "Details",
+        "newCard": "New card",
+        "emailForTheInvoice": "Email for the invoice"
+      },
+      "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
+      "didNotAccept": "To pay you need to accept the payment agreement"
     }
   },
   "event": {
@@ -298,6 +309,10 @@
     }
   },
   "common": {
+    "workspace": "Workspace",
+    "plan": "Plan",
+    "price": "Price",
+    "card": "Card",
     "copiedNotification": "Copied!",
     "free": "FREE",
     "select": "Select",
