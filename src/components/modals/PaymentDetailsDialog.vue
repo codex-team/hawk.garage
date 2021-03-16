@@ -68,6 +68,7 @@
       <!--Email for the invoice-->
       <TextFieldSet
         v-model="email"
+        class="payment-details__email"
         :label="$t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()"
         :placeholder="email"
       />
@@ -75,8 +76,8 @@
       <!--Adoption-->
       <div class="payment-details__adoption">
         <UiCheckbox
-          class="payment-details__adoption--checkbox"
           v-model="isAcceptedPaymentAgreement"
+          class="payment-details__adoption--checkbox"
         />
 
         <div class="payment-details__adoption--description">
@@ -90,7 +91,7 @@
           content="Go to payment service"
           class="payment-details__bottom--button"
           :submit="isAcceptedPaymentAgreement"
-          @click="onGoToServicePayment"
+          @click.prevent="onGoToServicePayment"
         />
 
         <Icon
@@ -115,6 +116,10 @@ import UiButton from '../utils/UiButton.vue';
 import UiCheckbox from '../forms/UiCheckbox.vue';
 import Icon from '../utils/Icon.vue';
 import notifier from 'codex-notifier';
+import axios from 'axios';
+import { API_ENDPOINT } from '../../api';
+import { BeforePaymentPayload } from '../../types/before-payment-payload';
+import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 
 const cards = [
   {
@@ -217,22 +222,103 @@ export default Vue.extend({
       return `${this.plan.monthlyCharge}$`;
     },
   },
+  mounted() {
+    /**
+     * Check if script was loaded
+     */
+    if (window.cp && window.cp.CloudPayments) {
+      return;
+    }
+
+    /**
+     * Script is not loaded
+     * Then create a new script tag and it to the head
+     */
+    const widgetScript = document.createElement('script');
+
+    widgetScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments');
+    document.head.appendChild(widgetScript);
+  },
   methods: {
     /**
      * Open service payment
      */
-    onGoToServicePayment() {
-      if (!this.isAcceptedPaymentAgreement) {
+    async onGoToServicePayment() {
+      if (this.isAcceptedPaymentAgreement) {
+        await this.processPayment();
+      } else {
         notifier.show({
           message: this.$t('billing.paymentDetails.didNotAccept') as string,
           style: 'error',
           time: 5000,
         });
-
-        return;
       }
+    },
 
-      console.log('On Go to service payment');
+    /**
+     * Method for payment processing
+     */
+    async processPayment() {
+      const response = await axios.get(
+        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}`
+      );
+
+      console.log('Res', response);
+
+      return this.showPaymentWidget(response.data as BeforePaymentPayload);
+    },
+
+    /**
+     * Method prepares widget and charges money from entered card
+     *
+     * @param {BeforePaymentPayload} data — server response that sent after beforePay request
+     */
+    async showPaymentWidget(data: BeforePaymentPayload) {
+      const widget = new window.cp.CloudPayments();
+
+      const paymentData: PlanProlongationPayload = {
+        checksum: data.checksum,
+      };
+
+      widget.pay('charge',
+        {
+          publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
+          /**
+           * @todo add i18n message
+           */
+          description: `Payment for tariff "${data.plan.name}" for ${this.workspace.name.toString()} workspace for a month`,
+          amount: +data.plan.monthlyCharge,
+          currency: data.currency,
+
+          /** Label for admin panel */
+          invoiceId: data.invoiceId,
+          accountId: this.$store.state.user.data.id,
+
+          skin: 'mini',
+          data: paymentData,
+        },
+        {
+          onSuccess: (options) => {
+            console.info('onSuccess', options);
+
+            notifier.show({
+              message: this.$i18n.t('billing.widget.notifications.success') as string,
+              style: 'success',
+            });
+          },
+          onFail: (reason, options) => {
+            console.info('onFail', reason, options);
+
+            notifier.show({
+              message: this.$i18n.t('billing.widget.notifications.error') as string,
+              style: 'error',
+            });
+          },
+          onComplete: (paymentResult, options) => {
+            console.info('onComplete', paymentResult, options);
+          },
+        }
+      );
     },
   },
 });
@@ -257,7 +343,7 @@ export default Vue.extend({
     }
 
     &__details {
-      margin-bottom: 30px;
+      margin-bottom: 28px;
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.15px;
@@ -274,7 +360,7 @@ export default Vue.extend({
         font-size: 14px;
 
         &--workspace--image {
-          margin: -1px 5px 0 0;
+          margin: -2px 5px 0 0;
         }
 
         &--field {
@@ -289,13 +375,19 @@ export default Vue.extend({
     }
 
     &__card {
-      margin-bottom: 20px;
+      width: 280px;
+      margin-bottom: 28px;
+    }
+
+    &__email {
+      width: 280px;
+      margin-bottom: 28px;
     }
 
     &__adoption {
       display: flex;
       margin-top: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
 
       &--checkbox {
         margin-right: 12px;
@@ -309,6 +401,7 @@ export default Vue.extend({
 
     &__bottom {
       display: flex;
+      padding-bottom: 10px;
 
       &--button {
         margin-right: 136px;
