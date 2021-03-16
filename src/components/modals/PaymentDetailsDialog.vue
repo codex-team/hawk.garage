@@ -165,6 +165,14 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+
+    /**
+     * True if payment is recurrent
+     */
+    isRecurrent: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
@@ -263,8 +271,6 @@ export default Vue.extend({
         `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}`
       );
 
-      console.log('Res', response);
-
       return this.showPaymentWidget(response.data as BeforePaymentPayload);
     },
 
@@ -280,6 +286,15 @@ export default Vue.extend({
         checksum: data.checksum,
       };
 
+      if (this.isRecurrent) {
+        paymentData.cloudPayments = {
+          recurrent: {
+            interval: 'Month',
+            period: 1,
+          },
+        };
+      }
+
       widget.pay('charge',
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
@@ -289,6 +304,7 @@ export default Vue.extend({
           }) as string,
           amount: +data.plan.monthlyCharge,
           currency: data.currency,
+          email: this.email,
 
           /** Label for admin panel */
           invoiceId: data.invoiceId,
@@ -413,10 +429,5 @@ export default Vue.extend({
         margin-top: 12px;
       }
     }
-  }
-
-  body .cdx-notifies {
-    position: fixed;
-    z-index: 9995;
   }
 </style>
