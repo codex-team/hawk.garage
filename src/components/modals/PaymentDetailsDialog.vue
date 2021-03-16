@@ -287,6 +287,7 @@ export default Vue.extend({
           }) as string,
           amount: +data.plan.monthlyCharge,
           currency: data.currency,
+          email: this.email,
 
           /** Label for admin panel */
           invoiceId: data.invoiceId,
