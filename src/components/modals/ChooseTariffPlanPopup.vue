@@ -113,7 +113,7 @@ export default Vue.extend({
      */
     async onContinue(): Promise<void> {
       if (this.selectedPlan.monthlyCharge === 0) {
-        const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN', {
+        const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
           workspaceId: this.workspaceId,
           planId: this.selectedPlan.id,
         });

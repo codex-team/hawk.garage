@@ -610,6 +610,9 @@ type Mutation {
   Returns true if operation is successful
   """
   changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
+
+  """Namespace for workspaces mutations"""
+  workspace: WorkspaceMutations!
 }
 
 """All available notification channels"""
