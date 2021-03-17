@@ -276,6 +276,13 @@
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
       "didNotAccept": "To pay you need to accept the payment agreement"
     },
+    "autoProlongation": {
+      "title": "Auto prolongation",
+      "description": "You are about to subscribe for auto prolongation of the current plan of the workspace. That means that when the next payment date has come, the plan price will be automatically charged from your card. Read more in docs.",
+      "theNextPaymentDateTitle": "The next payment date",
+      "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
+      "allowingChargesEveryMonth": "I allow charges from my bank card every month"
+    },
     "cloudPaymentsWidget": {
       "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month"
     }

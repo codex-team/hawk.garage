@@ -2,12 +2,12 @@
   <PopupDialog @close="$emit('close')">
     <div class="payment-details">
       <div class="payment-details__header">
-        {{ $t('billing.paymentDetails.title') }}
+        {{ isRecurrent ? $t('billing.autoProlongation.title') : $t('billing.paymentDetails.title') }}
       </div>
 
       <!--Description-->
       <div class="payment-details__description">
-        {{ $t('billing.paymentDetails.description') }}
+        {{ isRecurrent ? $t('billing.autoProlongation.description') : $t('billing.paymentDetails.description') }}
       </div>
 
       <!--Details-->
@@ -54,6 +54,18 @@
           </div>
         </div>
 
+        <!--The next payment date -->
+        <div
+          v-if="isRecurrent"
+          class="payment-details__details--item"
+        >
+          <div class="payment-details__details--item--field">
+            {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
+          </div>
+          <div class="payment-details__details--item--value">
+            {{ nextPaymentDateString | prettyDateFromDateTimeString }}
+          </div>
+        </div>
       </div>
 
       <!--Card-->
@@ -73,8 +85,41 @@
         :placeholder="email"
       />
 
-      <!--Adoption-->
-      <div class="payment-details__adoption">
+      <!--Recurrent payment agreements-->
+      <section
+        v-if="isRecurrent"
+        class="payment-details__adoption--autoProlongation"
+      >
+        <div
+          class="payment-details__adoption--autoProlongation-item"
+        >
+          <UiCheckbox
+            v-model="isAcceptedRecurrentPaymentAgreement"
+            class="payment-details__adoption--checkbox"
+          />
+
+          <div class="payment-details__adoption--description">
+            {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
+          </div>
+        </div>
+
+        <div class="payment-details__adoption--autoProlongation-item">
+          <UiCheckbox
+            v-model="isAcceptedChargingEveryMonth"
+            class="payment-details__adoption--checkbox"
+          />
+
+          <div class="payment-details__adoption--description">
+            {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
+          </div>
+        </div>
+      </section>
+
+      <!--Basic payment agreement-->
+      <section
+        v-else
+        class="payment-details__adoption"
+      >
         <UiCheckbox
           v-model="isAcceptedPaymentAgreement"
           class="payment-details__adoption--checkbox"
@@ -83,14 +128,14 @@
         <div class="payment-details__adoption--description">
           {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
         </div>
-      </div>
+      </section>
 
       <!--Button and cloudpayments logo-->
       <div class="payment-details__bottom">
         <UiButton
           content="Go to payment service"
           class="payment-details__bottom--button"
-          :submit="isAcceptedPaymentAgreement"
+          :submit="isAcceptedAllAgreements"
           @click.prevent="onGoToServicePayment"
         />
 
@@ -120,6 +165,7 @@ import axios from 'axios';
 import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
+import { FETCH_PLANS } from '../../store/modules/plans/actionTypes';
 
 const cards = [
   {
@@ -178,6 +224,9 @@ export default Vue.extend({
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
 
+    console.log('User', user);
+    console.log('Workspace', workspace);
+
     return {
       /**
        * User email
@@ -199,6 +248,10 @@ export default Vue.extend({
        */
       isAcceptedPaymentAgreement: false,
 
+      isAcceptedRecurrentPaymentAgreement: false,
+
+      isAcceptedChargingEveryMonth: false,
+
       /**
        * Workspace id for which the payment is made
        */
@@ -218,6 +271,8 @@ export default Vue.extend({
      * example: Basic. 100000 events/mo
      */
     readablePlanString(): string {
+      console.log('Plan', this.plan);
+
       return `${this.plan.name}. ${this.plan.eventsLimit} ${this.$t('common.eventsPerMonth')}`;
     },
 
@@ -228,6 +283,20 @@ export default Vue.extend({
      */
     priceWithDollar(): string {
       return `${this.plan.monthlyCharge}$`;
+    },
+    nextPaymentDateString(): string {
+      const date = new Date();
+
+      date.setMonth(date.getMonth() + 1);
+
+      return date.toDateString();
+    },
+    isAcceptedAllAgreements(): boolean {
+      if (this.isRecurrent) {
+        return this.isAcceptedRecurrentPaymentAgreement && this.isAcceptedChargingEveryMonth;
+      }
+
+      return this.isAcceptedPaymentAgreement;
     },
   },
   mounted() {
@@ -252,7 +321,7 @@ export default Vue.extend({
      * Open service payment
      */
     async onGoToServicePayment() {
-      if (this.isAcceptedPaymentAgreement) {
+      if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
         notifier.show({
@@ -280,7 +349,7 @@ export default Vue.extend({
      * @param {BeforePaymentPayload} data — server response that sent after beforePay request
      */
     async showPaymentWidget(data: BeforePaymentPayload) {
-      const widget = new window.cp.CloudPayments();
+      const widget = new window.cp.CloudPayments({ language: this.$i18n.locale });
 
       const paymentData: PlanProlongationPayload = {
         checksum: data.checksum,
@@ -343,7 +412,6 @@ export default Vue.extend({
 <style>
   .payment-details {
     width: 558px;
-    height: 603px;
     padding: 29px 21px 30px 30px;
     color: var(--color-text-main);
 
@@ -413,11 +481,19 @@ export default Vue.extend({
       &--description {
         margin-top: 6px;
       }
+
+      &--autoProlongation {
+        margin-bottom: 28px;
+
+        &-item {
+          display: flex;
+          margin-bottom: 9px;
+        }
+      }
     }
 
     &__bottom {
       display: flex;
-      padding-bottom: 10px;
 
       &--button {
         margin-right: 136px;

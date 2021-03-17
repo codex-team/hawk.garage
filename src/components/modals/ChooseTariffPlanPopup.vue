@@ -86,12 +86,6 @@ export default Vue.extend({
       return this.$store.state.plans.list;
     },
   },
-  /**
-   * Fetch available plans before component is created
-   */
-  beforeCreate() {
-    this.$store.dispatch(FETCH_PLANS);
-  },
   methods: {
     /**
      * Select plan card by id
