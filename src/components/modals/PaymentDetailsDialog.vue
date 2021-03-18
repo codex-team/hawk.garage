@@ -83,6 +83,7 @@
         class="payment-details__email"
         :label="$t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()"
         :placeholder="email"
+        disabled
       />
 
       <!--Recurrent payment agreements-->
@@ -165,9 +166,13 @@ import axios from 'axios';
 import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
-import { FETCH_PLANS } from '../../store/modules/plans/actionTypes';
 
 const cards = [
+  {
+    id: '4',
+    number: '',
+    name: 'New card',
+  },
   {
     id: '1',
     number: '**** **** **** 3123',
@@ -224,9 +229,6 @@ export default Vue.extend({
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
 
-    console.log('User', user);
-    console.log('Workspace', workspace);
-
     return {
       /**
        * User email
@@ -271,8 +273,6 @@ export default Vue.extend({
      * example: Basic. 100000 events/mo
      */
     readablePlanString(): string {
-      console.log('Plan', this.plan);
-
       return `${this.plan.name}. ${this.plan.eventsLimit} ${this.$t('common.eventsPerMonth')}`;
     },
 
@@ -414,6 +414,7 @@ export default Vue.extend({
     width: 558px;
     padding: 29px 21px 30px 30px;
     color: var(--color-text-main);
+    font-size: 14px;
 
     &__header {
       margin: 0 159px 20px 0;
@@ -424,6 +425,7 @@ export default Vue.extend({
     &__description {
       margin-bottom: 30px;
       color: var(--color-text-second);
+      line-height: 1.43;
     }
 
     &__details {
@@ -496,7 +498,7 @@ export default Vue.extend({
       display: flex;
 
       &--button {
-        margin-right: 136px;
+        margin-right: 118px;
       }
 
       &--cp-logo {
