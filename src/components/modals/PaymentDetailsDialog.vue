@@ -22,6 +22,7 @@
             {{ $t('common.workspace') }}
           </div>
           <EntityImage
+            :id="workspace.id"
             :name="workspace.name"
             :title="workspace.name"
             :image="workspace.image"
@@ -143,7 +144,9 @@
         <Icon
           symbol="cloud-payments-logo"
           class="payment-details__bottom--cp-logo"
+          @click.native="openCloudPaymentPage"
         />
+
       </div>
     </div>
   </PopupDialog>
@@ -258,6 +261,11 @@ export default Vue.extend({
        * Workspace id for which the payment is made
        */
       workspace,
+
+      /**
+       * CloudPayments web page
+       */
+      cpUrl: 'https://cloudpayments.ru',
     };
   },
   computed: {
@@ -317,6 +325,13 @@ export default Vue.extend({
     document.head.appendChild(widgetScript);
   },
   methods: {
+    /**
+     * Open CloudPayments page in new tab
+     */
+    openCloudPaymentPage() {
+      window.open(this.cpUrl, '_blank');
+    },
+
     /**
      * Open service payment
      */
@@ -463,6 +478,7 @@ export default Vue.extend({
     &__card {
       width: 280px;
       margin-bottom: 28px;
+      margin-left: 0;
     }
 
     &__email {
@@ -505,6 +521,7 @@ export default Vue.extend({
         width: 201px;
         height: 17px;
         margin-top: 12px;
+        cursor: pointer;
       }
     }
   }
