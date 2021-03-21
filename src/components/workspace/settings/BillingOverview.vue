@@ -404,7 +404,7 @@ export default Vue.extend({
       }
 
       this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'ProcessPaymentDialog',
+        component: 'PaymentDetailsDialog',
         data: {
           tariffPlanId: this.workspace.plan.id,
           workspaceId: this.workspace.id,
