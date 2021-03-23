@@ -104,6 +104,10 @@
         :key="'button:' + index"
         :submit="button.style === 'primary'"
         :content="button.label"
+        :class="{
+          'billing-card__buttons-secondary': button.style !== 'primary',
+        }"
+        class="billing-card__buttons-default"
         @click="button.onClick"
       />
     </div>
@@ -521,8 +525,14 @@ export default Vue.extend({
     &__buttons {
       margin-top: 25px;
 
-      .ui-button {
+      &-default {
         margin-right: 20px;
+      }
+
+      &-secondary {
+        color: var(--color-text-main);
+        background: var(--color-indicator-low);
+        border: 0;
       }
     }
 
