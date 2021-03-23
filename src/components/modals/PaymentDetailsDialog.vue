@@ -285,6 +285,7 @@ export default Vue.extend({
     plan(): Plan {
       return this.$store.getters.getPlanById(this.tariffPlanId);
     },
+
     /**
      * More readable plan string
      *
@@ -302,6 +303,10 @@ export default Vue.extend({
     priceWithDollar(): string {
       return `${this.plan.monthlyCharge}$`;
     },
+
+    /**
+     * Next payment date (current date + 1 month)
+     */
     nextPaymentDateString(): string {
       const date = new Date();
 
@@ -309,6 +314,10 @@ export default Vue.extend({
 
       return date.toDateString();
     },
+
+    /**
+     * Accepted or not all agreements
+     */
     isAcceptedAllAgreements(): boolean {
       if (this.isRecurrent) {
         return this.isAcceptedRecurrentPaymentAgreement && this.isAcceptedChargingEveryMonth;
