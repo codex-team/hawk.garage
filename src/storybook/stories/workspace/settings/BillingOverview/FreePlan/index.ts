@@ -18,7 +18,40 @@ export const NormalState = (): unknown => ({
         image: null,
         name: 'Toolbox',
         subscriptionId: null,
-        lastChargeDate: '2021-01-27T17:17:38.244+00:00',
+        lastChargeDate: '2021-03-27T17:17:38.244+00:00',
+        plan: {
+          eventsLimit: 10000,
+          id: '601d37621896b5004f1d0e3b',
+          monthlyCharge: '0',
+          name: 'Startup',
+        },
+        team: [{
+          id: '601d41b1c51c670023ab5cc8',
+          isAdmin: true,
+          user: {
+            email: '284491@niuitmo.ru',
+            id: '601d3eb1c51c670023ab5cc6',
+            image: 'http://127.0.0.1:4000/uploads/4b936143-6856-4127-834d-79b72224a221.jpeg',
+          },
+          __typename: 'ConfirmedMember',
+        }]}"
+  />`,
+  store,
+  router,
+  i18n,
+});
+
+export const SubExpiredState = (): unknown => ({
+  components: { BillingOverview },
+  template: `<BillingOverview
+    :workspace="{
+        billingPeriodEventsCount: 1000,
+        description: null,
+        id: '601d41b1c51c670023ab5cc7',
+        image: null,
+        name: 'Toolbox',
+        subscriptionId: null,
+        lastChargeDate: '2021-02-22T17:17:38.244+00:00',
         plan: {
           eventsLimit: 10000,
           id: '601d37621896b5004f1d0e3b',
@@ -51,7 +84,7 @@ export const VolumeExpiredState = (): unknown => ({
         image: null,
         name: 'Toolbox',
         subscriptionId: null,
-        lastChargeDate: '2021-01-27T17:17:38.244+00:00',
+        lastChargeDate: '2021-03-27T17:17:38.244+00:00',
         plan: {
           eventsLimit: 10000,
           id: '601d37621896b5004f1d0e3b',
