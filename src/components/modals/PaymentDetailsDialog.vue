@@ -138,6 +138,9 @@
           content="Go to payment service"
           class="payment-details__bottom--button"
           :submit="isAcceptedAllAgreements"
+          :class="{
+            'payment-details__bottom--button-disabled': !isAcceptedAllAgreements,
+          }"
           @click.prevent="onGoToServicePayment"
         />
 
@@ -527,6 +530,12 @@ export default Vue.extend({
 
       &--button {
         margin-right: 118px;
+
+        &-disabled {
+          color: var(--color-text-main);
+          background: var(--color-indicator-low);
+          border: 0;
+        }
       }
 
       &--cp-logo {
