@@ -1,6 +1,7 @@
 <template>
   <div class="billing-card">
     <UiSwitch
+      v-if="!isFreePlan"
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
       :value="isAutoPayOn"
@@ -27,9 +28,6 @@
 
     <div
       class="billing-card__info"
-      :class="{
-        'billing-card__info__2-columns': isFreePlan,
-      }"
     >
       <!-- Plan -->
       <div class="billing-card__label">
@@ -43,7 +41,6 @@
 
       <!-- Valid till -->
       <div
-        v-if="!isFreePlan"
         class="billing-card__label"
       >
         {{ $t('billing.validTill').toUpperCase() }}
@@ -72,7 +69,6 @@
       </div>
 
       <div
-        v-if="!isFreePlan"
         class="billing-card__info-bar"
       >
         <div class="billing-card__events">
@@ -426,9 +422,6 @@ export default Vue.extend({
       grid-auto-rows: 29px;
       margin-top: 20px;
 
-      &__2-columns {
-        grid-template-columns: 200px 200px;
-      }
       &-section {
         margin-right: 30px;
       }
