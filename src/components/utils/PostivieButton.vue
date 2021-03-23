@@ -29,22 +29,22 @@ export default Vue.extend({
 <style>
 
 .boostButton {
+  display: flex;
   width: 65px;
   height: 23px;
   margin-top: -19px;
+  margin-left: 60px;
   background: var(--color-bg-main);
   border: solid 1px var(--color-indicator-positive);
   border-radius: 12.5px;
-  user-select: none;
   outline: none;
-  display: flex;
-  margin-left: 60px;
+  user-select: none;
 
   &__text {
+    padding: 2px 6px 2px 6px;
     color: var(--color-indicator-positive);
     font-size: 13px;
     letter-spacing: 0.16px;
-    padding: 3px 6px 3px 6px;
   }
 }
 </style>
