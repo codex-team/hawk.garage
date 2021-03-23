@@ -141,11 +141,15 @@
           @click.prevent="onGoToServicePayment"
         />
 
-        <Icon
-          symbol="cloud-payments-logo"
-          class="payment-details__bottom--cp-logo"
-          @click.native="openCloudPaymentPage"
-        />
+        <a
+          :href="cpUrl"
+          target="_blank"
+        >
+          <Icon
+            symbol="cloud-payments-logo"
+            class="payment-details__bottom--cp-logo"
+          />
+        </a>
 
       </div>
     </div>
@@ -253,8 +257,14 @@ export default Vue.extend({
        */
       isAcceptedPaymentAgreement: false,
 
+      /**
+       * Accepted or not recurrent payment agreement
+       */
       isAcceptedRecurrentPaymentAgreement: false,
 
+      /**
+       * Accepted or not charging every month
+       */
       isAcceptedChargingEveryMonth: false,
 
       /**
@@ -325,13 +335,6 @@ export default Vue.extend({
     document.head.appendChild(widgetScript);
   },
   methods: {
-    /**
-     * Open CloudPayments page in new tab
-     */
-    openCloudPaymentPage() {
-      window.open(this.cpUrl, '_blank');
-    },
-
     /**
      * Open service payment
      */
