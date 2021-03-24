@@ -12,13 +12,13 @@
 
       <!--Details-->
       <div class="payment-details__details">
-        <div class="payment-details__details--header">
+        <div class="payment-details__details-header">
           {{ $t('billing.paymentDetails.details.title').toUpperCase() }}
         </div>
 
         <!--Workspace-->
-        <div class="payment-details__details--item">
-          <div class="payment-details__details--item--field">
+        <div class="payment-details__details-item">
+          <div class="payment-details__details-item-field">
             {{ $t('common.workspace') }}
           </div>
           <EntityImage
@@ -27,30 +27,30 @@
             :title="workspace.name"
             :image="workspace.image"
             size="18"
-            class="payment-details__details--item--workspace--image"
+            class="payment-details__details-item-workspace-image"
           />
 
-          <div class="payment-details__details--item--value">
+          <div class="payment-details__details-item-value">
             {{ workspace.name }}
           </div>
         </div>
 
         <!--Plan-->
-        <div class="payment-details__details--item">
-          <div class="payment-details__details--item--field">
+        <div class="payment-details__details-item">
+          <div class="payment-details__details-item-field">
             {{ $t('common.plan') }}
           </div>
-          <div class="payment-details__details--item--value">
+          <div class="payment-details__details-item-value">
             {{ readablePlanString }}
           </div>
         </div>
 
         <!--Price-->
-        <div class="payment-details__details--item">
-          <div class="payment-details__details--item--field">
+        <div class="payment-details__details-item">
+          <div class="payment-details__details-item-field">
             {{ $t('common.price') }}
           </div>
-          <div class="payment-details__details--item--value">
+          <div class="payment-details__details-item-value">
             {{ priceWithDollar }}
           </div>
         </div>
@@ -58,12 +58,12 @@
         <!--The next payment date -->
         <div
           v-if="isRecurrent"
-          class="payment-details__details--item"
+          class="payment-details__details-item"
         >
-          <div class="payment-details__details--item--field">
+          <div class="payment-details__details-item-field">
             {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
           </div>
-          <div class="payment-details__details--item--value">
+          <div class="payment-details__details-item-value">
             {{ nextPaymentDateString | prettyDateFromDateTimeString }}
           </div>
         </div>
@@ -90,28 +90,28 @@
       <!--Recurrent payment agreements-->
       <section
         v-if="isRecurrent"
-        class="payment-details__adoption--autoProlongation"
+        class="payment-details__adoption-autoProlongation"
       >
         <div
-          class="payment-details__adoption--autoProlongation-item"
+          class="payment-details__adoption-autoProlongation-item"
         >
           <UiCheckbox
             v-model="isAcceptedRecurrentPaymentAgreement"
-            class="payment-details__adoption--checkbox"
+            class="payment-details__adoption-checkbox"
           />
 
-          <div class="payment-details__adoption--description">
+          <div class="payment-details__adoption-description">
             {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
           </div>
         </div>
 
-        <div class="payment-details__adoption--autoProlongation-item">
+        <div class="payment-details__adoption-autoProlongation-item">
           <UiCheckbox
             v-model="isAcceptedChargingEveryMonth"
-            class="payment-details__adoption--checkbox"
+            class="payment-details__adoption-checkbox"
           />
 
-          <div class="payment-details__adoption--description">
+          <div class="payment-details__adoption-description">
             {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
           </div>
         </div>
@@ -124,10 +124,10 @@
       >
         <UiCheckbox
           v-model="isAcceptedPaymentAgreement"
-          class="payment-details__adoption--checkbox"
+          class="payment-details__adoption-checkbox"
         />
 
-        <div class="payment-details__adoption--description">
+        <div class="payment-details__adoption-description">
           {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
         </div>
       </section>
@@ -136,10 +136,10 @@
       <div class="payment-details__bottom">
         <UiButton
           content="Go to payment service"
-          class="payment-details__bottom--button"
+          class="payment-details__bottom-button"
           :submit="isAcceptedAllAgreements"
           :class="{
-            'payment-details__bottom--button-disabled': !isAcceptedAllAgreements,
+            'payment-details__bottom-button__disabled': !isAcceptedAllAgreements,
           }"
           @click.prevent="onGoToServicePayment"
         />
@@ -150,7 +150,7 @@
         >
           <Icon
             symbol="cloud-payments-logo"
-            class="payment-details__bottom--cp-logo"
+            class="payment-details__bottom-cp-logo"
           />
         </a>
 
@@ -464,26 +464,26 @@ export default Vue.extend({
       font-size: 12px;
       letter-spacing: 0.15px;
 
-      &--header {
+      &-header {
         margin: 0 0 16px;
         color: var(--color-text-second);
       }
 
-      &--item {
+      &-item {
         display: flex;
         margin: 19px 20px 15px 0;
         font-weight: normal;
         font-size: 14px;
 
-        &--workspace--image {
+        &-workspace-image {
           margin: -2px 5px 0 0;
         }
 
-        &--field {
+        &-field {
           margin-right: 19px;
         }
 
-        &--value {
+        &-value {
           font-weight: bold;
         }
 
@@ -506,16 +506,16 @@ export default Vue.extend({
       margin-top: 20px;
       margin-bottom: 28px;
 
-      &--checkbox {
+      &-checkbox {
         margin-right: 12px;
         margin-left: 0;
       }
 
-      &--description {
+      &-description {
         margin-top: 6px;
       }
 
-      &--autoProlongation {
+      &-autoProlongation {
         margin-bottom: 28px;
 
         &-item {
@@ -528,17 +528,17 @@ export default Vue.extend({
     &__bottom {
       display: flex;
 
-      &--button {
+      &-button {
         margin-right: 118px;
 
-        &-disabled {
+        &__disabled {
           color: var(--color-text-main);
           background: var(--color-indicator-low);
           border: 0;
         }
       }
 
-      &--cp-logo {
+      &-cp-logo {
         width: 201px;
         height: 17px;
         margin-top: 12px;
