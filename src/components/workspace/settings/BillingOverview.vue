@@ -525,11 +525,11 @@ export default Vue.extend({
     &__buttons {
       margin-top: 25px;
 
-      &-default {
+      &--default {
         margin-right: 20px;
       }
 
-      &-secondary {
+      &--secondary {
         color: var(--color-text-main);
         background: var(--color-indicator-low);
         border: 0;

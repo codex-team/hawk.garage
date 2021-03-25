@@ -531,7 +531,7 @@ export default Vue.extend({
       &-button {
         margin-right: 118px;
 
-        &__disabled {
+        &--disabled {
           color: var(--color-text-main);
           background: var(--color-indicator-low);
           border: 0;
