@@ -173,7 +173,7 @@ svg {
 body .cdx-notifies {
   right: 20px;
   left: auto;
-  z-index: 100;
+  z-index: 9995;
   box-sizing: content-box;
 }
 
