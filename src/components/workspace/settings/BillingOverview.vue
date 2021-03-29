@@ -103,10 +103,8 @@
         v-for="(button, index) in buttons"
         :key="'button:' + index"
         :submit="button.style === 'primary'"
+        :secondary="button.style === 'secondary'"
         :content="button.label"
-        :class="{
-          'billing-card__buttons--secondary': button.style !== 'primary',
-        }"
         class="billing-card__buttons--default"
         @click="button.onClick"
       />
@@ -501,12 +499,6 @@ export default Vue.extend({
 
       &--default {
         margin-right: 20px;
-      }
-
-      &--secondary {
-        color: var(--color-text-main);
-        background: var(--color-indicator-low);
-        border: 0;
       }
     }
 
