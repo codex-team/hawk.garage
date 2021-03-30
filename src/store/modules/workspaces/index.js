@@ -11,7 +11,8 @@ import {
   REMOVE_USER_FROM_WORKSPACE,
   GET_BUSINESS_OPERATIONS,
   GET_BALANCE,
-  CHANGE_WORKSPACE_PLAN
+  CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
+  CANCEL_SUBSCRIPTION
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -348,7 +349,7 @@ const actions = {
   },
 
   /**
-   * Call change plan mutation
+   * Call change plan for free plan mutation
    *
    * @param {Function} commit - VueX commit method
    * @param {object} getters - Store getters
@@ -356,13 +357,28 @@ const actions = {
    * @param {string} planId - id of plan to set
    * @returns {Promise<void>}
    */
-  async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    await workspaceApi.changePlan(workspaceId, planId);
+  async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
+    const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
-      plan: getters.getPlanById(planId),
+      plan: result.record.plan,
     });
+
+    return result;
+  },
+
+  /**
+   * Call API to cancel subscription on workspace
+   *
+   * @param {Function} commit - VueX commit method
+   * @param {string} workspaceId - id of workspace to change plan
+   * @returns {Promise<void>}
+   */
+  async [CANCEL_SUBSCRIPTION]({ commit }, { workspaceId }) {
+    const data = await workspaceApi.cancelSubscription(workspaceId);
+
+    commit(mutationTypes.SET_WORKSPACE, data);
   },
 
   /**

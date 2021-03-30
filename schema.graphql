@@ -30,7 +30,7 @@ directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITI
 """Payment link structure"""
 type BillingSession {
   """Total payment amount in kopecs"""
-  amount: Int!
+  amount: Long!
 
   """Payment status"""
   status: String!
@@ -42,9 +42,66 @@ type BillingSession {
   paymentURL: String!
 }
 
+"""Business operation object"""
+type BusinessOperation {
+  """Id of operation"""
+  id: String!
+
+  """Business operation type"""
+  type: BusinessOperationType!
+
+  """Indicates current state of the operation"""
+  status: BusinessOperationStatus!
+
+  """Metadata related to the operation type"""
+  payload: BusinessOperationPayload!
+
+  """When the operation was registered"""
+  dtCreated: DateTime!
+}
+
+"""All available payload types for different types of operations"""
+union BusinessOperationPayload = PayloadOfDepositByUser | PayloadOfWorkspacePlanPurchase
+
+"""Business operations statuses"""
+enum BusinessOperationStatus {
+  """Business operation is pending"""
+  PENDING
+
+  """Business operation is confirmed"""
+  CONFIRMED
+
+  """Business operation is rejected"""
+  REJECTED
+}
+
+"""Types of business operations"""
+enum BusinessOperationType {
+  """Workspace plan purchase by payment worker"""
+  WORKSPACE_PLAN_PURCHASE
+
+  """Workspace deposit balance by user"""
+  DEPOSIT_BY_USER
+}
+
 enum CacheControlScope {
   PUBLIC
   PRIVATE
+}
+
+"""Input data for cancelSubscription mutation"""
+input CancelSubscriptionInput {
+  """Workspace id to cancel subscription for"""
+  workspaceId: ID!
+}
+
+"""Respose of the cancelSubscription mutation"""
+type CancelSubscriptionResponse {
+  """Workspace id"""
+  recordId: ID!
+
+  """Modified workspace"""
+  record: Workspace!
 }
 
 type CardInfo {
@@ -89,11 +146,14 @@ input ChangeWorkspacePlanInput {
 
 """Workspace tariff plan change mutation response"""
 type ChangeWorkspacePlanResponse {
-  """Modified workspace id"""
+  """Business operation id"""
   recordId: ID
 
   """Modified workspace object"""
-  record: Workspace
+  record: BusinessOperation
+
+  """Workspace balance"""
+  balance: Long!
 }
 
 type ChartDataItem {
@@ -161,6 +221,9 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar DateTime
+
+"""Represents JSON objects encoded (or not) in string format"""
+scalar EncodedJSON
 
 """Type representing Hawk single Event"""
 type Event {
@@ -275,10 +338,10 @@ type EventPayload {
   user: EventUser
 
   """Any additional data of Event"""
-  context: JSONObject
+  context: EncodedJSON
 
   """Custom data provided by project users"""
-  addons: JSONObject
+  addons: EncodedJSON
 }
 
 """Events filters input type"""
@@ -338,6 +401,11 @@ enum Languages {
   RU
 }
 
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar Long
+
 """Represents two types of Members in workspace's team"""
 union Member = ConfirmedMember | PendingMember
 
@@ -352,7 +420,7 @@ type Mutation {
   """Initialize recurrent payment"""
   payWithCard(
     """Total payment amount in kopecs"""
-    amount: Int!
+    amount: Long!
 
     """Workspace id for which the payment will be made"""
     workspaceId: String!
@@ -365,9 +433,6 @@ type Mutation {
     """Payment form language"""
     language: String
   ): Boolean!
-
-  """Initialize single payment"""
-  payOnce(input: PayOnceInput!): BillingSession!
 
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
@@ -609,7 +674,10 @@ type Mutation {
   Mutation in order to switch workspace tariff plan
   Returns true if operation is successful
   """
-  changeWorkspacePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
+  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
+
+  """Namespace for workspaces mutations"""
+  workspace: WorkspaceMutations!
 }
 
 """All available notification channels"""
@@ -672,10 +740,36 @@ input NotificationsChannelsInput {
   desktopPush: NotificationsChannelSettingsInput
 }
 
+"""Business operation payload type for 'DepositByUser' operation type"""
+type PayloadOfDepositByUser {
+  """Workspace to which the payment is credited"""
+  workspace: Workspace!
+
+  """Amount of payment in US cents"""
+  amount: Long!
+
+  """User who made the payment"""
+  user: User!
+
+  """PAN of card which user made the payment"""
+  cardPan: String
+}
+
+"""
+Business operation payload type for 'WorkspacePlanPurchase' operation type
+"""
+type PayloadOfWorkspacePlanPurchase {
+  """Workspace to which the payment is debited"""
+  workspace: Workspace!
+
+  """Amount of payment in US cents"""
+  amount: Long!
+}
+
 """Input for single payment"""
 input PayOnceInput {
   """Total payment amount in kopecs"""
-  amount: Int!
+  amount: Long!
 
   """Workspace id for which the payment will be made"""
   workspaceId: ID!
@@ -710,6 +804,9 @@ type Plan {
   """True if plan is default one"""
   isDefault: Boolean!
 }
+
+"""Integers that will have a value greater than 0."""
+scalar PositiveInt
 
 """Project representation"""
 type Project {
@@ -818,11 +915,11 @@ type Query {
   """Get attached cards"""
   cardList: [CardInfo!]!
 
-  """Get workspace transactions"""
-  transactions(
+  """Get workspace billing history"""
+  businessOperations(
     """Workspaces IDs"""
     ids: [ID!] = []
-  ): [Transaction!]!
+  ): [BusinessOperation!]!
 
   """Returns project info"""
   project(
@@ -916,10 +1013,10 @@ type RepetitionPayload {
   user: EventUser
 
   """Any additional data of Event"""
-  context: JSONObject
+  context: EncodedJSON
 
   """Custom data provided by project users"""
-  addons: JSONObject
+  addons: EncodedJSON
 }
 
 """Source code line representation"""
@@ -949,27 +1046,6 @@ type Tokens {
 
   """User's refresh token for getting new token pair"""
   refreshToken: String!
-}
-
-"""Transaction object"""
-type Transaction {
-  """Transaction type"""
-  type: String!
-
-  """Workspace for which transaction has been made"""
-  workspace: Workspace!
-
-  """Transaction amount"""
-  amount: Int!
-
-  """Transaction date"""
-  date: DateTime!
-
-  """User by whom transaction has been made (income transactions only)"""
-  user: User
-
-  """PAN of card by which transaction has been made"""
-  cardPan: Int!
 }
 
 input UpdateAssigneeInput {
@@ -1085,16 +1161,30 @@ type Workspace {
   """Workspace team info"""
   team: [Member!]!
 
-  """Workspace balance"""
-  balance: Int
+  """Total number of errors since the last charge date"""
+  billingPeriodEventsCount: Int
 
   """Workspace tariff plan"""
   plan: Plan
+
+  """Date when workspace was charged last time"""
+  lastChargeDate: DateTime
+
+  """
+  ID of subscription if it subscribed
+  Returns from CloudPayments
+  """
+  subscriptionId: String
 
   """Workspace projects array"""
   projects(
     """Project(s) id(s)"""
     ids: [ID!] = []
   ): [Project!]
+}
+
+"""Mutations for workspace"""
+type WorkspaceMutations {
+  cancelSubscription(input: CancelSubscriptionInput!): CancelSubscriptionResponse!
 }
 

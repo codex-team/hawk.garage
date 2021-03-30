@@ -8,6 +8,7 @@
       'ui-button--shaking': shaking,
       'ui-button--rounded': rounded,
       'ui-button--disabled': disabled,
+      'ui-button--secondary': secondary,
     }"
     :disabled="disabled"
     @click="$emit('click', $event)"
@@ -63,6 +64,14 @@ export default Vue.extend({
      * Pass true to make button blue
      */
     submit: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Pass true to make button grey
+     */
+    secondary: {
       type: Boolean,
       default: false,
     },
@@ -129,8 +138,8 @@ export default Vue.extend({
   display: inline-flex;
   align-items: center;
   padding: 12px 15px;
-  color: var(--color-text-main);
-  background: var(--color-indicator-low);
+  color: var(--color-text-second);
+  background: transparent;
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
   outline: none;
@@ -138,7 +147,6 @@ export default Vue.extend({
 
   &:not(&--disabled) {
     cursor: pointer;
-    border: 0;
   }
 
   &--disabled {
@@ -155,12 +163,19 @@ export default Vue.extend({
   }
 
   &--submit {
+    color: var(--color-text-main);
     background: var(--color-indicator-medium);
     border: 0;
 
     &:not(^&--disabled):hover {
       background: var(--color-indicator-medium-dark);
     }
+  }
+
+  &--secondary {
+    color: var(--color-text-main);
+    background: var(--color-indicator-low);
+    border: 0;
   }
 
   &--rounded {

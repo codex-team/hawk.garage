@@ -1,9 +1,11 @@
 <template>
   <div class="billing-card">
     <UiSwitch
+      v-if="!isFreePlan"
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
       :value="isAutoPayOn"
+      @input="onAutoPayInput"
     />
     <div class="clearfix billing-card__workspace">
       <EntityImage
@@ -26,9 +28,6 @@
 
     <div
       class="billing-card__info"
-      :class="{
-        'billing-card__info__2-columns': isFreePlan,
-      }"
     >
       <!-- Plan -->
       <div class="billing-card__label">
@@ -42,7 +41,6 @@
 
       <!-- Valid till -->
       <div
-        v-if="!isFreePlan"
         class="billing-card__label"
       >
         {{ $t('billing.validTill').toUpperCase() }}
@@ -71,7 +69,6 @@
       </div>
 
       <div
-        v-if="!isFreePlan"
         class="billing-card__info-bar"
       >
         <div class="billing-card__events">
@@ -102,7 +99,9 @@
         v-for="(button, index) in buttons"
         :key="'button:' + index"
         :submit="button.style === 'primary'"
+        :secondary="button.style === 'secondary'"
         :content="button.label"
+        class="billing-card__buttons--default"
         @click="button.onClick"
       />
     </div>
@@ -127,6 +126,9 @@ import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
 import PositiveButton from '../../utils/PostivieButton.vue';
+import notifier from 'codex-notifier';
+import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
+import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -154,7 +156,12 @@ export default Vue.extend({
         label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
         style: 'primary',
         onClick: () => {
-          console.log('Increment events limit');
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'ChooseTariffPlanPopup',
+            data: {
+              workspaceId: this.workspace.id,
+            },
+          });
         },
       },
       /**
@@ -164,7 +171,14 @@ export default Vue.extend({
         label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
         style: 'primary',
         onClick: () => {
-          console.log('Enable auto payment');
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspace.id,
+              tariffPlanId: this.workspace.plan.id,
+              isRecurrent: true,
+            },
+          });
         },
       },
       /**
@@ -174,7 +188,14 @@ export default Vue.extend({
         label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
         style: 'secondary',
         onClick: () => {
-          console.log('Prolongate current plan');
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspace.id,
+              tariffPlanId: this.workspace.plan.id,
+              isRecurrent: true,
+            },
+          });
         },
       },
       /**
@@ -302,16 +323,16 @@ export default Vue.extend({
       }
     },
   },
+  /**
+   * Fetch available plans before component is created
+   */
+  beforeCreate() {
+    this.$store.dispatch(FETCH_PLANS);
+  },
   mounted() {
     this.now = new Date();
   },
   methods: {
-    processPayment(amount): void {
-      this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'ProcessPaymentDialog',
-        data: { amount },
-      });
-    },
     /**
      * Open ChooseTariffPlan popup on click on the current plan button
      */
@@ -323,12 +344,14 @@ export default Vue.extend({
         },
       });
     },
+
     /**
      * Open the same popup like `onPlanClick`
      */
     onBoostClick(): void {
       console.log('Boost click');
     },
+
     /**
      * Difference between dates
      *
@@ -340,6 +363,52 @@ export default Vue.extend({
       const date2 = new Date(dateString2);
 
       return Math.abs(date1.getTime() - date2.getTime());
+    },
+
+    /**
+     * Performs subscription cancelling for current workspace
+     */
+    async cancelSubscription(): Promise<void> {
+      try {
+        await this.$store.dispatch(CANCEL_SUBSCRIPTION, {
+          workspaceId: this.workspace.id,
+        });
+
+        notifier.show({
+          message: 'Subscription successfully canceled',
+          style: 'success',
+          time: 5000,
+        });
+      } catch {
+        notifier.show({
+          message: 'Error during subscription cancelling',
+          style: 'error',
+          time: 5000,
+        });
+      }
+    },
+
+    /**
+     * Handler for auto-pay input
+     * Initiates payment dialog for subscribing
+     *
+     * @param value - new value
+     */
+    async onAutoPayInput(value): Promise<void> {
+      if (!value) {
+        await this.cancelSubscription();
+
+        return;
+      }
+
+      this.$store.dispatch(SET_MODAL_DIALOG, {
+        component: 'PaymentDetailsDialog',
+        data: {
+          tariffPlanId: this.workspace.plan.id,
+          workspaceId: this.workspace.id,
+          isRecurrent: true,
+        },
+      });
     },
   },
 });
@@ -381,9 +450,6 @@ export default Vue.extend({
       grid-auto-rows: 29px;
       margin-top: 20px;
 
-      &__2-columns {
-        grid-template-columns: 200px 200px;
-      }
       &-section {
         margin-right: 30px;
       }
@@ -450,7 +516,7 @@ export default Vue.extend({
     &__buttons {
       margin-top: 25px;
 
-      .ui-button {
+      &--default {
         margin-right: 20px;
       }
     }

@@ -44,7 +44,8 @@ import UiButton from '../utils/UiButton.vue';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
-import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -85,12 +86,6 @@ export default Vue.extend({
       return this.$store.state.plans.list;
     },
   },
-  /**
-   * Fetch available plans before component is created
-   */
-  beforeCreate() {
-    this.$store.dispatch(FETCH_PLANS);
-  },
   methods: {
     /**
      * Select plan card by id
@@ -112,21 +107,39 @@ export default Vue.extend({
      */
     async onContinue(): Promise<void> {
       if (this.selectedPlan.monthlyCharge === 0) {
-        await this.$store.dispatch('CHANGE_WORKSPACE_PLAN', {
+        const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
           workspaceId: this.workspaceId,
           planId: this.selectedPlan.id,
         });
 
+        if (!result) {
+          notifier.show({
+            message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
+            style: 'error',
+            time: 5000,
+          });
+
+          return;
+        }
+
         this.currentPlan = this.selectedPlan;
+
+        notifier.show({
+          message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
+          style: 'success',
+          time: 5000,
+        });
+
+        this.$store.dispatch(RESET_MODAL_DIALOG);
 
         return;
       }
 
       this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'ProcessPaymentDialog',
+        component: 'PaymentDetailsDialog',
         data: {
-          tariffPlanId: this.selectedPlan.id,
           workspaceId: this.workspaceId,
+          tariffPlanId: this.selectedPlan.id,
         },
       });
     },
