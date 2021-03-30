@@ -28,6 +28,7 @@
       :placeholder="placeholder"
       :required="required"
       :hidden="hidden"
+      :disabled="disabled"
       @input="$emit('input', $event.target.value)"
     >
   </fieldset>
@@ -113,6 +114,14 @@ export default {
     autoComplete: {
       type: String,
       default: 'on',
+    },
+
+    /**
+     * Disable input field
+     */
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
 };

@@ -1,6 +1,7 @@
 <template>
   <div class="billing-card">
     <UiSwitch
+      v-if="!isFreePlan"
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
       :value="isAutoPayOn"
@@ -27,9 +28,6 @@
 
     <div
       class="billing-card__info"
-      :class="{
-        'billing-card__info__2-columns': isFreePlan,
-      }"
     >
       <!-- Plan -->
       <div class="billing-card__label">
@@ -43,7 +41,6 @@
 
       <!-- Valid till -->
       <div
-        v-if="!isFreePlan"
         class="billing-card__label"
       >
         {{ $t('billing.validTill').toUpperCase() }}
@@ -72,7 +69,6 @@
       </div>
 
       <div
-        v-if="!isFreePlan"
         class="billing-card__info-bar"
       >
         <div class="billing-card__events">
@@ -132,6 +128,7 @@ import { Button } from '../../../types/button';
 import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
+import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -159,7 +156,12 @@ export default Vue.extend({
         label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
         style: 'primary',
         onClick: () => {
-          console.log('Increment events limit');
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'ChooseTariffPlanPopup',
+            data: {
+              workspaceId: this.workspace.id,
+            },
+          });
         },
       },
       /**
@@ -169,7 +171,14 @@ export default Vue.extend({
         label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
         style: 'primary',
         onClick: () => {
-          console.log('Enable auto payment');
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspace.id,
+              tariffPlanId: this.workspace.plan.id,
+              isRecurrent: true,
+            },
+          });
         },
       },
       /**
@@ -179,7 +188,14 @@ export default Vue.extend({
         label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
         style: 'secondary',
         onClick: () => {
-          console.log('Prolongate current plan');
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspace.id,
+              tariffPlanId: this.workspace.plan.id,
+              isRecurrent: true,
+            },
+          });
         },
       },
       /**
@@ -307,6 +323,12 @@ export default Vue.extend({
       }
     },
   },
+  /**
+   * Fetch available plans before component is created
+   */
+  beforeCreate() {
+    this.$store.dispatch(FETCH_PLANS);
+  },
   mounted() {
     this.now = new Date();
   },
@@ -380,7 +402,7 @@ export default Vue.extend({
       }
 
       this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'ProcessPaymentDialog',
+        component: 'PaymentDetailsDialog',
         data: {
           tariffPlanId: this.workspace.plan.id,
           workspaceId: this.workspace.id,
@@ -428,9 +450,6 @@ export default Vue.extend({
       grid-auto-rows: 29px;
       margin-top: 20px;
 
-      &__2-columns {
-        grid-template-columns: 200px 200px;
-      }
       &-section {
         margin-right: 30px;
       }
