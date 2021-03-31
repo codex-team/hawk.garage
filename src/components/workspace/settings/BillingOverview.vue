@@ -52,13 +52,12 @@
         <PositiveButton
           v-if="isEventsLimitExceeded"
           :content="$t('billing.boost') + '!'"
-          @click="onBoostClick"
         />
       </div>
 
       <div
         class="billing-card__plan"
-        @click="onPlanClick"
+        @click="openChooseTariffPlan"
       >
         <div class="billing-card__plan-name">
           {{ plan.name || 'Free' }}
@@ -155,14 +154,7 @@ export default Vue.extend({
       incrementEventsLimit: {
         label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
         style: 'primary',
-        onClick: () => {
-          this.$store.dispatch(SET_MODAL_DIALOG, {
-            component: 'ChooseTariffPlanPopup',
-            data: {
-              workspaceId: this.workspace.id,
-            },
-          });
-        },
+        onClick: this.openChooseTariffPlan
       },
       /**
        * `Enable Auto Payment` button
@@ -336,20 +328,13 @@ export default Vue.extend({
     /**
      * Open ChooseTariffPlan popup on click on the current plan button
      */
-    onPlanClick(): void {
+    openChooseTariffPlan(): void {
       this.$store.dispatch(SET_MODAL_DIALOG, {
         component: 'ChooseTariffPlanPopup',
         data: {
           workspaceId: this.workspace.id,
         },
       });
-    },
-
-    /**
-     * Open the same popup like `onPlanClick`
-     */
-    onBoostClick(): void {
-      console.log('Boost click');
     },
 
     /**
