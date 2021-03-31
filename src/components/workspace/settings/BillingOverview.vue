@@ -154,7 +154,14 @@ export default Vue.extend({
       incrementEventsLimit: {
         label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
         style: 'primary',
-        onClick: this.openChooseTariffPlan
+        onClick: () => {
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'ChooseTariffPlanPopup',
+            data: {
+              workspaceId: this.workspace.id,
+            },
+          });
+        },
       },
       /**
        * `Enable Auto Payment` button
