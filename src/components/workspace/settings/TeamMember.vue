@@ -186,7 +186,7 @@ export default Vue.extend({
         margin-right: 15px;
 
         &:last-child {
-          margin-right: 28px;
+          margin-right: 43px;
         }
       }
 
