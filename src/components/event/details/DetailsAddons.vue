@@ -92,9 +92,14 @@ export default Vue.extend({
     renderAddonValue(key: string | object, value: any): string {
       if (key === 'window') {
         return value.innerWidth + 'x' + value.innerHeight;
-      } else if (key === 'userAgent') {
-        // Ternary operator for backward compatibility when userAgent was a string
-        return typeof value === 'string' ? value : `${value.browser} ${value.browserVersion} / ${value.os} ${value.osVersion}`;
+      } else if (key === 'userAgent' && typeof value != 'string') {
+        let formattedUserAgent = `${value.browser} ${value.browserVersion} / ${value.os} ${value.osVersion}`;
+
+        if (!value.browser) {
+          formattedUserAgent = value.original;
+        }
+
+        return formattedUserAgent;
       }
 
       return value;
