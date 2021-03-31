@@ -72,10 +72,12 @@ export const QUERY_EVENT = `
 export const QUERY_RECENT_PROJECT_EVENTS = `
   query ProjectRecentEvents (
     $projectId: ID!,
-    $skip: Int!
+    $skip: Int!,
+    $sort: EventsSortOrder,
+    $filters: EventsFiltersInput
   ) {
     project(id: $projectId) {
-      recentEvents(limit: 15, skip: $skip) {
+      recentEvents(limit: 15, skip: $skip, sort: $sort, filters: $filters) {
         events {
           id
           groupHash
@@ -150,6 +152,32 @@ export const QUERY_LATEST_REPETITIONS = `
             }
             addons
           }
+        }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Fetch data for chart
+ * Display event occurs for few days
+ */
+export const QUERY_CHART_DATA = `
+  query EventChartData (
+    $projectId: ID!
+    $eventId: ID!
+    $days: Int!
+    $timezoneOffset: Int!
+  ) {
+    project(id: $projectId) {
+      event(id: $eventId) {
+        chartData(
+          days: $days,
+          timezoneOffset: $timezoneOffset
+        ) {
+          timestamp
+          count
         }
       }
     }

@@ -6,7 +6,11 @@
       'ui-button--small': small,
       'ui-button--loading': isLoading,
       'ui-button--shaking': shaking,
+      'ui-button--rounded': rounded,
+      'ui-button--disabled': disabled,
+      'ui-button--secondary': secondary,
     }"
+    :disabled="disabled"
     @click="$emit('click', $event)"
   >
     <Icon
@@ -65,6 +69,14 @@ export default Vue.extend({
     },
 
     /**
+     * Pass true to make button grey
+     */
+    secondary: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
      * Pass true to make button small size
      */
     small: {
@@ -76,6 +88,22 @@ export default Vue.extend({
      * Indicates loading state
      */
     isLoading: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Adds border radius for button
+     */
+    rounded: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Disables button
+     */
+    disabled: {
       type: Boolean,
       default: false,
     },
@@ -115,8 +143,16 @@ export default Vue.extend({
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
   outline: none;
-  cursor: pointer;
   user-select: none;
+
+  &:not(&--disabled) {
+    cursor: pointer;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
 
   &--small {
     padding: 6px 7px;
@@ -131,9 +167,21 @@ export default Vue.extend({
     background: var(--color-indicator-medium);
     border: 0;
 
-    &:hover {
+    &:not(^&--disabled):hover {
       background: var(--color-indicator-medium-dark);
     }
+  }
+
+  &--secondary {
+    color: var(--color-text-main);
+    background: var(--color-indicator-low);
+    border: 0;
+  }
+
+  &--rounded {
+    padding: 5px 15px;
+    /* Will set border radius as half of height */
+    border-radius: 1000px;
   }
 
   $loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
@@ -154,7 +202,7 @@ export default Vue.extend({
     background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, $submitLoaderColor 4px, $submitLoaderColor 8px);
   }
 
-  &:hover {
+  &:not(&--disabled):hover {
     color: var(--color-text-main);
   }
 

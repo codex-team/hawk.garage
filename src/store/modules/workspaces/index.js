@@ -9,7 +9,10 @@ import {
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
   REMOVE_USER_FROM_WORKSPACE,
-  GET_TRANSACTIONS
+  GET_BUSINESS_OPERATIONS,
+  GET_BALANCE,
+  CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
+  CANCEL_SUBSCRIPTION
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -31,7 +34,10 @@ const mutationTypes = {
   REMOVE_PENDING_MEMBER: 'REMOVE_PENDING_MEMBER', // Remove pending user from workspace
   SET_WORKSPACE: 'SET_WORKSPACE', // Set workspace to user workspaces list
   UPDATE_MEMBER: 'UPDATE_MEMBER', // Update member in the workspace,
-  SET_TRANSACTIONS: 'SET_TRANSACTIONS', // Set transactions info
+  UPDATE_BUSINESS_OPERATIONS: 'UPDATE_BUSINESS_OPERATIONS', // Add a new business operation to the operations history
+  UPDATE_BALANCE: 'UPDATE_BALANCE', // Update workspace balance
+  SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
+  SET_PLAN: 'SET_PLAN', // Set workspace tariff plan
 };
 
 /**
@@ -75,10 +81,10 @@ const getters = {
    * @returns {function(string): Workspace}
    */
   getWorkspaceById: state =>
-  /**
-   * @param {string} id project id to find
-   * @returns {Project}
-   */
+    /**
+     * @param {string} id project id to find
+     * @returns {Project}
+     */
     id => state.list.find(workspace => workspace.id === id),
 
   /**
@@ -117,7 +123,7 @@ const getters = {
       const workspace = getters.getWorkspaceById(workspaceId);
       const userId = rootState.user.data.id;
 
-      return workspace.team.some(member => member.user.id === userId && member.isAdmin);
+      return workspace.team.some(member => member.user && member.user.id === userId && member.isAdmin);
     },
 };
 
@@ -223,6 +229,9 @@ const actions = {
   async [FETCH_WORKSPACE]({ commit }, id) {
     const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
 
+    if (!workspace) {
+      throw new Error('The workspace was not found');
+    }
     commit(mutationTypes.SET_WORKSPACE, workspace);
 
     return workspace;
@@ -310,16 +319,66 @@ const actions = {
   },
 
   /**
-   * Fetch transactions and set them to store
+   * Fetch payment operations and save them to the store
    *
    * @param {Function} commit - standard Vuex commit method
    * @param {string[]} ids - workspaces ids
    * @returns {Promise<void>}
    */
-  async [GET_TRANSACTIONS]({ commit }, { ids }) {
-    const transactions = await billingApi.getTransactions(ids);
+  async [GET_BUSINESS_OPERATIONS]({ commit }, { ids }) {
+    const operations = await billingApi.getBusinessOperations(ids);
 
-    commit(mutationTypes.SET_TRANSACTIONS, transactions || []);
+    commit(mutationTypes.SET_BUSINESS_OPERATIONS, operations || []);
+  },
+
+  /**
+   * Fetch balance of workspace or workspaces
+   *
+   * @param {Function} commit - standard Vuex commit method
+   * @param {string[]} ids - workspaces ids
+   */
+  async [GET_BALANCE]({ commit }, { ids }) {
+    const balances = (await workspaceApi.getBalance(ids)) || [];
+
+    balances.forEach(balanceWithId => {
+      commit(mutationTypes.UPDATE_BALANCE, {
+        workspaceId: balanceWithId.id,
+        balance: balanceWithId.balance,
+      });
+    });
+  },
+
+  /**
+   * Call change plan for free plan mutation
+   *
+   * @param {Function} commit - VueX commit method
+   * @param {object} getters - Store getters
+   * @param {string} workspaceId - id of workspace to change plan
+   * @param {string} planId - id of plan to set
+   * @returns {Promise<void>}
+   */
+  async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
+    const result = await workspaceApi.changePlanForFreePLan(workspaceId);
+
+    commit(mutationTypes.SET_PLAN, {
+      workspaceId,
+      plan: result.record.plan,
+    });
+
+    return result;
+  },
+
+  /**
+   * Call API to cancel subscription on workspace
+   *
+   * @param {Function} commit - VueX commit method
+   * @param {string} workspaceId - id of workspace to change plan
+   * @returns {Promise<void>}
+   */
+  async [CANCEL_SUBSCRIPTION]({ commit }, { workspaceId }) {
+    const data = await workspaceApi.cancelSubscription(workspaceId);
+
+    commit(mutationTypes.SET_WORKSPACE, data);
   },
 
   /**
@@ -423,6 +482,39 @@ const mutations = {
   },
 
   /**
+   * Add a new business operation to the workspace operations history
+   *
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} payload.workspaceId - id of workspace where user should be updated
+   * @param {BusinessOperation} payload.businessOperation - business operation to add to operations history
+   */
+  [mutationTypes.UPDATE_BUSINESS_OPERATIONS](state, { workspaceId, businessOperation }) {
+    const index = state.list.findIndex(w => w.id === workspaceId);
+    const workspace = state.list[index];
+    let updatedPaymentsHistory = [ businessOperation ];
+
+    if (workspace.paymentsHistory) {
+      updatedPaymentsHistory = [ businessOperation ].concat(workspace.paymentsHistory);
+    }
+
+    Vue.set(workspace, 'paymentsHistory', updatedPaymentsHistory);
+  },
+
+  /**
+   * Update workspace balance
+   *
+   * @param {WorkspacesModuleState} state - current state
+   * @param {string} payload.workspaceId - id of workspace where user should be updated
+   * @param {number} payload.amount - business operation to add to operations history
+   */
+  [mutationTypes.UPDATE_BALANCE](state, { workspaceId, balance }) {
+    const index = state.list.findIndex(w => w.id === workspaceId);
+    const workspace = state.list[index];
+
+    Vue.set(workspace, 'balance', balance);
+  },
+
+  /**
    * Add pending member to workspace
    *
    * @param {WorkspacesModuleState} state - current state
@@ -477,37 +569,65 @@ const mutations = {
    * Set transactions info to workspaces by ids
    *
    * @param {WorkspacesModuleState} state - current state
-   * @param {Transaction[]} transactions - transactions to set
+   * @param {BusinessOperation[]} operations - operations to set
    */
-  [mutationTypes.SET_TRANSACTIONS](state, transactions = []) {
-    const groupedByWorkspaceId = transactions.reduce(
-      (acc, transaction) => {
-        const { workspace } = transaction;
+  [mutationTypes.SET_BUSINESS_OPERATIONS](state, operations = []) {
+    /**
+     * Group all operations by payload.workspace.id
+     * {
+     *   [workspace.id] => BusinessOperation,
+     *   ...
+     * }
+     */
+    const groupedByWorkspaceId = operations.reduce(
+      (acc, operation) => {
+        const { workspace } = operation.payload;
 
         if (!acc[workspace.id]) {
           acc[workspace.id] = [];
         }
 
-        acc[workspace.id].push(transaction);
+        acc[workspace.id].push(operation);
 
         return acc;
       },
       {}
     );
 
-    Object.entries(groupedByWorkspaceId).forEach(([workspaceId, data]) => {
-      const index = state.list.findIndex(w => w.id === workspaceId);
+    Object.entries(groupedByWorkspaceId)
+      .forEach(([workspaceId, operationsOfWorkspace]) => {
+        const index = state.list.findIndex(w => w.id === workspaceId);
+        const workspace = state.list[index];
 
-      const workspace = state.list[index];
+        Vue.set(workspace, 'paymentsHistory', operationsOfWorkspace);
 
-      Vue.set(workspace, 'transactions', data);
+        state.list = [
+          ...state.list.slice(0, index),
+          workspace,
+          ...state.list.slice(index + 1),
+        ];
+      }
+      );
+  },
 
-      state.list = [
-        ...state.list.slice(0, index),
-        workspace,
-        ...state.list.slice(index + 1),
-      ];
-    });
+  /**
+   * Set workspace plan
+   *
+   * @param {object} state - module state
+   * @param {string} workspaceId - id of workspace to set plan
+   * @param {Plan} plan - plan to set
+   */
+  [mutationTypes.SET_PLAN](state, { workspaceId, plan }) {
+    const index = state.list.findIndex(w => w.id === workspaceId);
+    const workspace = state.list[index];
+
+    Vue.set(workspace, 'plan', plan);
+
+    state.list = [
+      ...state.list.slice(0, index),
+      workspace,
+      ...state.list.slice(index + 1),
+    ];
   },
 
   /**

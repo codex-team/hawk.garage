@@ -7,10 +7,14 @@ import {
   MUTATION_REMOVE_MEMBER_FROM_WORKSPACE,
   MUTATION_UPDATE_WORKSPACE,
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
-  QUERY_WORKSPACES
+  QUERY_WORKSPACES,
+  QUERY_BALANCE,
+  MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
+  MUTATION_CANCEL_SUBSCRIPTION
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
+import { APIResponse } from '@/types/api';
 
 interface CreateWorkspaceInput {
   /**
@@ -96,6 +100,15 @@ export async function getWorkspaces(ids: string): Promise<Workspace> {
 }
 
 /**
+ * Get workspace balance
+ *
+ * @param ids – id of fetching workspaces balance
+ */
+export async function getBalance(ids: string[]): Promise<Workspace> {
+  return (await api.call(QUERY_BALANCE, { ids })).workspaces;
+}
+
+/**
  * Update workspace data
  *
  * @param id - id of the workspace to update
@@ -145,4 +158,35 @@ export async function removeUserFromWorkspace(
     userId,
     userEmail,
   })).removeMemberFromWorkspace;
+}
+
+/**
+ * Changes workspace tariff plan
+ *
+ * @param {string} workspaceId - id of workspace to change plan
+ * @param {string} planId - id of plan to set
+ */
+export async function changePlanForFreePLan(
+  workspaceId: string,
+  planId: string
+): Promise<APIResponse<Workspace>> {
+  return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
+    input: {
+      workspaceId,
+      planId,
+    },
+  })).changeWorkspacePlanForFreePlan;
+}
+
+/**
+ * Cancel subscription on tariff plan
+ *
+ * @param workspaceId - workspace id to cancel subscription for
+ */
+export async function cancelSubscription(workspaceId: string): Promise<Pick<Workspace, 'id' | 'subscriptionId'>> {
+  return (await api.call(MUTATION_CANCEL_SUBSCRIPTION, {
+    input: {
+      workspaceId,
+    },
+  })).workspace.cancelSubscription.record;
 }

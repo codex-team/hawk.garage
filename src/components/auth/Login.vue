@@ -17,6 +17,7 @@
 import Form from './Form';
 import { LOGIN, SET_TOKENS } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
+import notifier from 'codex-notifier';
 
 export default {
   name: 'Login',
@@ -37,6 +38,7 @@ export default {
     return {
       fields: [
         {
+          autoComplete: 'email',
           label: this.$t('authPages.emailAddress'),
           name: 'email',
           value: '',
@@ -44,6 +46,7 @@ export default {
           type: 'email',
         },
         {
+          autoComplete: 'current-password',
           label: this.$t('authPages.password'),
           name: 'password',
           value: '',
@@ -75,10 +78,10 @@ export default {
 
         this.$cookies.remove('afterAuthRedirect');
       } catch (e) {
-        this.message = {
-          text: e.message,
-          type: 'error',
-        };
+        notifier.show({
+          message: this.$i18n.t(e.message),
+          style: 'error',
+        });
       }
     }
   },
@@ -102,10 +105,12 @@ export default {
 
         this.$cookies.remove('afterAuthRedirect');
       } catch (e) {
-        this.message = {
-          text: e.message,
-          type: 'error',
-        };
+        console.error(e);
+
+        notifier.show({
+          message: this.$i18n.t(`authPages.errors.${e.message}`),
+          style: 'error',
+        });
       }
     },
   },

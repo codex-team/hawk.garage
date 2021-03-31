@@ -51,4 +51,19 @@ export const REMOVE_USER_FROM_WORKSPACE = 'REMOVE_USER_FROM_WORKSPACE';
 /**
  * Fetch transactions
  */
-export const GET_TRANSACTIONS = 'GET_TRANSACTIONS';
+export const GET_BUSINESS_OPERATIONS = 'GET_BUSINESS_OPERATIONS';
+
+/**
+ * Fetch balance of workspace or workspaces
+ */
+export const GET_BALANCE = 'GET_BALANCE';
+
+/**
+ * Change workspace tariff plan for free plan
+ */
+export const CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = 'CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN';
+
+/**
+ * Cancel subscription on tariff plan
+ */
+export const CANCEL_SUBSCRIPTION = 'CANCEL_SUBSCRIPTION';

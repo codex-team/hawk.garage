@@ -61,7 +61,7 @@ export default {
       right: 0;
       bottom: 0;
       left: 0;
-      z-index: 9998;
+      z-index: 9995;
       display: flex;
       justify-content: center;
       width: 100%;

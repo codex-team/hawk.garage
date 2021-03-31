@@ -89,7 +89,7 @@ export default Vue.extend({
     UiButton,
     UiLabel,
     Filepath,
-    AssigneeBar
+    AssigneeBar,
   },
   props: {
     /**
@@ -108,7 +108,7 @@ export default Vue.extend({
        *
        * @type {boolean}
        */
-      loading: !this.event
+      loading: !this.event,
     };
   },
   computed: {
@@ -257,13 +257,18 @@ export default Vue.extend({
         background-color: var(--color-text-main);
         border-color: var(--color-text-main);
 
-        &:hover {
+        &:not(&--disabled):hover {
           color: var(--color-bg-main);
+          background-color: var(--color-bg-button-hover);
         }
 
         span, svg {
           opacity: 1 !important;
         }
+      }
+
+      &:hover {
+        color: var(--color-text-main)
       }
     }
 

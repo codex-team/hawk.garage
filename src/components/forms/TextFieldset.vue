@@ -20,6 +20,7 @@
     </div>
     <input
       :id="name"
+      :autocomplete="autoComplete"
       class="input form-fieldset__input"
       :type="type || 'text'"
       :name="name"
@@ -27,6 +28,7 @@
       :placeholder="placeholder"
       :required="required"
       :hidden="hidden"
+      :disabled="disabled"
       @input="$emit('input', $event.target.value)"
     >
   </fieldset>
@@ -102,6 +104,22 @@ export default {
      * If true, field will be styled as invalid
      */
     isInvalid: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Enables autocomplete in input field
+     */
+    autoComplete: {
+      type: String,
+      default: 'on',
+    },
+
+    /**
+     * Disable input field
+     */
+    disabled: {
       type: Boolean,
       default: false,
     },

@@ -33,13 +33,13 @@
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
-        <!--        <router-link-->
-        <!--          v-if="isAdmin"-->
-        <!--          class="settings-window__menu-item workspace-settings__menu-item"-->
-        <!--          :to="{ name: 'workspace-settings-billing' }"-->
-        <!--        >-->
-        <!--          {{ $t('workspaces.settings.billing.title') }}-->
-        <!--        </router-link>-->
+        <router-link
+          v-if="isAdmin"
+          class="settings-window__menu-item workspace-settings__menu-item"
+          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"
+        >
+          {{ $t('workspaces.settings.billing.title') }}
+        </router-link>
         <hr class="delimiter workspace-settings__delimiter">
         <div
           class="settings-window__menu-item workspace-settings__menu-item settings-window__menu-item--attention"
@@ -112,7 +112,16 @@ export default Vue.extend({
     if (workspaceLoaded) {
       this.workspace = workspaceLoaded;
     } else {
-      this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+      try {
+        this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
+      } catch (e) {
+        notifier.show({
+          message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
+          style: 'error',
+          time: 5000,
+        });
+        await this.$router.push({ name: 'home' });
+      }
     }
   },
   methods: {

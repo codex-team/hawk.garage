@@ -1,55 +1,44 @@
 <template>
   <div class="billing-history">
-    <div class="billing-history__header">
-      <div
-        class="billing-history__tab"
-        :class="{'billing-history__tab--selected': filter === FILTERS.ALL}"
-        @click="applyFilter(FILTERS.ALL)"
-      >
-        {{ $t('billing.all') }}
-      </div>
-      <div
-        class="billing-history__tab"
-        :class="{'billing-history__tab--selected': filter === FILTERS.INCOMINGS}"
-        @click="applyFilter(FILTERS.INCOMINGS)"
-      >
-        {{ $t('billing.incomings') }}
-      </div>
-      <div
-        class="billing-history__tab"
-        :class="{'billing-history__tab--selected': filter === FILTERS.CHARGES}"
-        @click="applyFilter(FILTERS.CHARGES)"
-      >
-        {{ $t('billing.charges') }}
-      </div>
+    <div
+      v-if="isLoading"
+      class="billing-history__loader"
+    >
+      {{ $t('common.loading') }}
     </div>
-    <template v-if="transactions && transactions.length">
+    <template v-else-if="operations && operations.length">
+      <div class="billing-history__header">
+        {{ $t('billing.paymentHistory').toUpperCase() }}
+      </div>
       <div
-        v-for="(transaction, i) in transactions"
+        v-for="(operation, i) in filteredOperations"
         :key="i"
         class="billing-history__row"
       >
         <div class="billing-history__date">
-          {{ new Date(transaction.date) | prettyFullDate }}
-        </div>
-        <div class="billing-history__description">
-          {{ getDescription(transaction) }}
+          {{ operation.dtCreated | prettyDateFromDateTimeString }}
         </div>
         <div class="billing-history__user">
           <EntityImage
-            v-if="transaction.type === TYPES.INCOME"
-            :id="transaction.user.id"
-            :name="transaction.user.name || transaction.user.email"
-            :image="transaction.user.image"
+            v-if="operation.payload.user"
+            :id="operation.payload.user.id"
+            :name="operation.payload.user.name || operation.payload.user.email"
+            :image="operation.payload.user.image"
             class="billing-history__user-image"
             size="16"
           />
         </div>
+        <div class="billing-history__amount">
+          {{ operation.payload.amount | centsToDollars }}$
+        </div>
+        <div class="billing-history__description">
+          {{ getDescription(operation) }}
+        </div>
         <div
-          class="billing-history__amount"
-          :class="[`billing-history__amount--${transaction.type}`]"
+          class="billing-history__status"
+          :class="[`billing-history__status--${operation.status.toLowerCase()}`]"
         >
-          {{ transaction.amount }}$
+          {{ $t(`billing.operations.statuses.${getKeyForStatus(operation.status)}`) }}
         </div>
       </div>
     </template>
@@ -62,108 +51,99 @@
   </div>
 </template>
 
-<script>
-import EntityImage from '../EntityImage';
-// import { GET_TRANSACTIONS } from '../../../store/modules/workspaces/actionTypes';
+<script lang="ts">
+import Vue from 'vue';
+import EntityImage from './../EntityImage.vue';
+import { BusinessOperationType } from '@/types/business-operation-type';
+import i18n from './../../../i18n';
+import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
 
-export default {
+export default Vue.extend({
   name: 'BillingHistory',
-  components: { EntityImage },
+  components: {
+    EntityImage,
+  },
   props: {
-    workspace: {
-      type: Object,
-      default: undefined,
+    /**
+     * List of payment operations
+     */
+    operations: {
+      type: Array as () => BusinessOperation[],
+      default() {
+        return [];
+      },
+    },
+
+    /**
+     * Used to show preloader
+     */
+    isLoading: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
     return {
-      FILTERS: {
-        ALL: 0,
-        INCOMINGS: 1,
-        CHARGES: 2,
+      /**
+       * Save enum constants to allow access it from the <template>
+       */
+      BusinessOperationType: {
+        WorkspacePlanPurchase: BusinessOperationType.WorkspacePlanPurchase,
       },
-      TYPES: {
-        CHARGE: 'charge',
-        INCOME: 'income',
-      },
-      filter: 0,
     };
   },
   computed: {
-    transactions() {
-      /**
-       * @todo remove and refactor the code below
-       */
-      return [];
-
-      // const user = this.$store.state.user.data;
-      //
-      // let transactions = [];
-      //
-      // if (this.workspace) {
-      //   transactions = this.$store.getters.getWorkspaceById(this.workspace.id).transactions || [];
-      // } else {
-      //   transactions = this.$store.state.workspaces.list.reduce((acc, workspace) => {
-      //     if (!workspace.users || !workspace.users.find(u => u.id === user.id).isAdmin) {
-      //       return acc;
-      //     }
-      //
-      //     return acc.concat(workspace.transactions || []);
-      //   }, []);
-      //
-      //   transactions.sort((a, b) => +new Date(b.date) - +new Date(a.date));
-      // }
-      //
-      // switch (this.filter) {
-      //   case this.FILTERS.INCOMINGS:
-      //     return transactions.filter(t => t.type === this.TYPES.INCOME);
-      //
-      //   case this.FILTERS.CHARGES:
-      //     return transactions.filter(t => t.type === this.TYPES.CHARGE);
-      //
-      //   default:
-      //     return transactions;
-      // }
-    },
-  },
-  created() {
     /**
-     * 2020 jul 15 - Commented to prevent errors
-     *
-     * @todo separate table to the abstract UITable component
-     * @todo pass transactions history from the parent component
+     * Get operations with type `WORKSPACE_PLAN_PURCHASE`
      */
-    // const ids = [];
-    //
-    // if (this.workspace) {
-    //   ids.push(this.workspace.id);
-    // }
-    //
-    // this.$store.dispatch(GET_TRANSACTIONS, { ids });
+    filteredOperations(): BusinessOperation[] {
+      return this.operations.filter(operation => operation.type === BusinessOperationType.WorkspacePlanPurchase);
+    },
   },
   methods: {
-    applyFilter(filter) {
-      this.filter = filter;
+    /**
+     * Get a status key to show it on the page
+     *
+     * @param status - status
+     */
+    getKeyForStatus(status: string): string {
+      if (status === 'CONFIRMED') {
+        return 'processed';
+      }
+
+      return status.toLowerCase();
     },
-    getDescription(transaction) {
-      switch (transaction.type) {
-        case this.TYPES.INCOME:
-          return `Payment by card **** **** ***** ${transaction.cardPan} for ${transaction.workspace.name}`;
-        case this.TYPES.CHARGE:
-          return `Payment for ${transaction.workspace.name} current plan`;
+    /**
+     * Return human readable description for passed business operation
+     *
+     * @param operation - business operation
+     */
+    getDescription(operation: BusinessOperation): string {
+      switch (operation.type) {
+        case BusinessOperationType.WorkspacePlanPurchase: {
+          const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
+
+          return i18n.t('billing.operations.chargeForPlan', {
+            workspaceName: payload.workspace.name,
+          }).toString();
+        }
+
+        default:
+          return operation.type;
       }
     },
   },
-};
+});
 </script>
 
 <style>
   @import url('./../../../styles/custom-properties.css');
 
   .billing-history {
+    max-width: var(--width-popup-form-container);
+
     &__header {
-      display: flex;
-      margin: 15px 0 0;
+      @apply --ui-label;
     }
 
     &__tab {
@@ -181,13 +161,19 @@ export default {
       }
     }
 
+    &__loader {
+      margin-top: 10px;
+      color: var(--color-text-second);
+      font-size: 13px;
+    }
+
     &__row {
       position: relative;
       display: flex;
       padding: 20px 0;
       color: var(--color-text-main);
       font-size: 13px;
-      line-height: 15px;
+      line-height: 18px;
       letter-spacing: 0.16px;
 
       &::after {
@@ -202,35 +188,44 @@ export default {
     }
 
     &__date {
-      flex-basis: 145px;
+      flex-shrink: 0;
+      width: 150px;
+    }
+
+    &__description {
+      flex-grow: 2;
+      padding-right: 20px;
+      white-space: normal;
+      word-break: break-all;
     }
 
     &__user {
-      margin-left: auto;
-
-      & + ^&__amount {
-        margin-left: 15px;
-      }
-    }
-
-    &__user-image {
-      margin-top: -1px;
+      margin-right: 10px;
     }
 
     &__amount {
-      margin-left: auto;
+      width: 60px;
+      margin-right: 20px;
       font-weight: 500;
+      white-space: nowrap;
+    }
 
-      &--income {
-        color: #2ccf6c;
+    &__status {
+       width: 90px;
+       font-weight: 500;
+       white-space: normal;
+       text-align: right;
 
-        &::before {
-          content: '+';
-        }
+      &--pending {
+         color: var(--color-text-second);
       }
 
-      &--charge::before {
-        content: '-';
+      &--confirmed {
+         color: var(--color-indicator-positive);
+      }
+
+      &--rejected {
+         color: var(--color-indicator-critical);
       }
     }
 

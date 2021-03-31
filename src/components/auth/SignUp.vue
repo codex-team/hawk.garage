@@ -14,6 +14,7 @@
 import Form from './Form';
 import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
+import notifier from 'codex-notifier';
 
 export default {
   components: {
@@ -24,6 +25,7 @@ export default {
     return {
       fields: [
         {
+          autoComplete: 'email',
           label: this.$t('authPages.emailAddress'),
           name: 'email',
           value: '',
@@ -44,12 +46,15 @@ export default {
 
       try {
         await this.$store.dispatch(SIGN_UP, { email });
+
         this.$router.push('/login');
       } catch (e) {
-        this.message = {
-          text: e.message,
-          type: 'error',
-        };
+        console.error(e);
+
+        notifier.show({
+          message: this.$i18n.t(e.message),
+          style: 'error',
+        });
       }
     },
   },

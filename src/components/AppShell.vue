@@ -36,6 +36,7 @@
     </div>
     <component
       :is="modalComponent"
+      v-bind="modalDialogData"
       @close="onModalClose"
     />
   </div>
@@ -82,6 +83,7 @@ export default {
      */
     ...mapState({
       modalDialogComponent: state => state.modalDialog.component,
+      modalDialogData: state => state.modalDialog.data,
     }),
 
     /**

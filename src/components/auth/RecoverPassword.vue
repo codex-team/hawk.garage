@@ -16,6 +16,7 @@ import Form from './Form.vue';
 import VueI18n from 'vue-i18n';
 import { RECOVER_PASSWORD } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
+import notifier from 'codex-notifier';
 
 @Component({
   name: 'RecoverPassword',
@@ -34,6 +35,7 @@ export default class RecoverPassword extends Vue {
    * Fields for reset password form
    */
   private fields!: {
+      autoComplete: string,
       label: VueI18n.TranslateResult,
       name: string,
       value: string,
@@ -59,6 +61,7 @@ export default class RecoverPassword extends Vue {
   created() {
     this.fields = [
       {
+        autoComplete: 'email',
         label: this.$t('authPages.emailAddress'),
         name: 'email',
         value: '',
@@ -79,15 +82,18 @@ export default class RecoverPassword extends Vue {
 
     try {
       await this.$store.dispatch(RECOVER_PASSWORD, { email });
+
       this.$router.push({
         name: 'login',
         params: { isPasswordRecoverSuccess: 'true' },
       });
     } catch (e) {
-      this.message = {
-        text: e.message,
-        type: 'error',
-      };
+      console.error(e);
+
+      notifier.show({
+        message: this.$i18n.t(e.message) as string,
+        style: 'error',
+      });
     }
   }
 };

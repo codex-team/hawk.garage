@@ -1,7 +1,8 @@
 import {
   WORKSPACE_FRAGMENT_WITH_TEAM,
   USER_FRAGMENT,
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
+  WORKSPACE_PLAN
 } from '../fragments';
 
 // language=GraphQL
@@ -15,7 +16,11 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       name
       description
       image
+      billingPeriodEventsCount
+      subscriptionId
+      lastChargeDate
       ...WorkspaceWithTeam
+      ...WorkspacePlan
       projects {
         id
         token
@@ -57,6 +62,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   ${USER_FRAGMENT}
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+  ${WORKSPACE_PLAN}
 `;
 
 // language=GraphQL
@@ -129,19 +135,28 @@ export const QUERY_WORKSPACES = `
       name
       description
       image
-      balance
-      plan {
-        name
-        subscriptionDate
-        lastChargeDate
-        monthlyCharge
-        eventsLimit
-      }
+      subscriptionId
+      lastChargeDate
+      ...WorkspacePlan
       ...WorkspaceWithTeam
     }
   }
 
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
+  ${WORKSPACE_PLAN}
+`;
+
+// language=GraphQL
+/**
+ * Query for fetching workspaces with id
+ */
+export const QUERY_BALANCE = `
+  query fetchWorkspaces($ids: [ID!]) {
+    workspaces(ids: $ids) {
+      id
+      balance
+    }
+  }
 `;
 
 // language=GraphQL
@@ -180,9 +195,45 @@ export const MUTATION_GRANT_ADMIN_PERMISSIONS = `
 export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
   mutation removeMemberFromWorkspace(
     $workspaceId: ID!
-    $userId: ID,
+    $userId: ID
     $userEmail: String!
   ) {
     removeMemberFromWorkspace(workspaceId: $workspaceId, userId: $userId, userEmail: $userEmail)
+  }
+`;
+
+/**
+ * Change workspace tariff plan for free plan
+ */
+// language=GraphQL
+export const MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = `
+    mutation changeWorkspacePlanForFreePlan(
+      $input: ChangeWorkspacePlanForFreePlanInput
+    ) {
+      changeWorkspacePlanForFreePlan(input: $input) {
+        recordId
+        record {
+          ...WorkspacePlan
+        }
+      }
+    }
+
+    ${WORKSPACE_PLAN}
+`;
+
+/**
+ * Cancel subscription on tariff plan
+ */
+// language=GraphQL
+export const MUTATION_CANCEL_SUBSCRIPTION = `
+  mutation cancelSubscription($input: CancelSubscriptionInput!) {
+    workspace {
+      cancelSubscription(input: $input) {
+        record {
+          id
+          subscriptionId
+        }
+      }
+    }
   }
 `;

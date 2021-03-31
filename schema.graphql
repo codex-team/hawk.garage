@@ -19,12 +19,18 @@ directive @default(
 """Directive for automatically image uploading"""
 directive @uploadImage on ARGUMENT_DEFINITION
 
+"""Directive for checking a field for empty space"""
+directive @validate(notEmpty: Boolean, isEmail: Boolean) on ARGUMENT_DEFINITION
+
+"""Directive for checking user in workspace"""
+directive @requireUserInWorkspace on FIELD_DEFINITION
+
 directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
 
 """Payment link structure"""
 type BillingSession {
   """Total payment amount in kopecs"""
-  amount: Int!
+  amount: Long!
 
   """Payment status"""
   status: String!
@@ -36,9 +42,66 @@ type BillingSession {
   paymentURL: String!
 }
 
+"""Business operation object"""
+type BusinessOperation {
+  """Id of operation"""
+  id: String!
+
+  """Business operation type"""
+  type: BusinessOperationType!
+
+  """Indicates current state of the operation"""
+  status: BusinessOperationStatus!
+
+  """Metadata related to the operation type"""
+  payload: BusinessOperationPayload!
+
+  """When the operation was registered"""
+  dtCreated: DateTime!
+}
+
+"""All available payload types for different types of operations"""
+union BusinessOperationPayload = PayloadOfDepositByUser | PayloadOfWorkspacePlanPurchase
+
+"""Business operations statuses"""
+enum BusinessOperationStatus {
+  """Business operation is pending"""
+  PENDING
+
+  """Business operation is confirmed"""
+  CONFIRMED
+
+  """Business operation is rejected"""
+  REJECTED
+}
+
+"""Types of business operations"""
+enum BusinessOperationType {
+  """Workspace plan purchase by payment worker"""
+  WORKSPACE_PLAN_PURCHASE
+
+  """Workspace deposit balance by user"""
+  DEPOSIT_BY_USER
+}
+
 enum CacheControlScope {
   PUBLIC
   PRIVATE
+}
+
+"""Input data for cancelSubscription mutation"""
+input CancelSubscriptionInput {
+  """Workspace id to cancel subscription for"""
+  workspaceId: ID!
+}
+
+"""Respose of the cancelSubscription mutation"""
+type CancelSubscriptionResponse {
+  """Workspace id"""
+  recordId: ID!
+
+  """Modified workspace"""
+  record: Workspace!
 }
 
 type CardInfo {
@@ -70,6 +133,35 @@ This object will be returned to the changeUserNotificationsReceiveType mutation
 """
 type changeUserNotificationsReceiveTypeResponse {
   notifications: UserNotificationsSettings
+}
+
+"""Payload for changing workspace tariff plan"""
+input ChangeWorkspacePlanInput {
+  """Workspace ID"""
+  workspaceId: ID!
+
+  """Tariff plan ID"""
+  planId: ID!
+}
+
+"""Workspace tariff plan change mutation response"""
+type ChangeWorkspacePlanResponse {
+  """Business operation id"""
+  recordId: ID
+
+  """Modified workspace object"""
+  record: BusinessOperation
+
+  """Workspace balance"""
+  balance: Long!
+}
+
+type ChartDataItem {
+  """Events timestamp"""
+  timestamp: Int
+
+  """Amount of events"""
+  count: Int
 }
 
 """Confirmed member data in workspace"""
@@ -130,6 +222,9 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the
 """
 scalar DateTime
 
+"""Represents JSON objects encoded (or not) in string format"""
+scalar EncodedJSON
+
 """Type representing Hawk single Event"""
 type Event {
   """Event id"""
@@ -143,6 +238,9 @@ type Event {
 
   """Event occurrence count"""
   totalCount: Int!
+
+  """User assigneed to the event"""
+  assignee: User
 
   """Event payload"""
   payload: EventPayload!
@@ -161,6 +259,15 @@ type Event {
 
   """How many users catch this error"""
   usersAffected: Int
+
+  """Return graph of the error rate for the last few days"""
+  chartData(
+    """How many days we need to fetch for displaying in a chart"""
+    days: Int! = 0
+
+    """User's local timezone offset in minutes"""
+    timezoneOffset: Int! = 0
+  ): [ChartDataItem!]!
 }
 
 """Event backtrace representation"""
@@ -231,10 +338,36 @@ type EventPayload {
   user: EventUser
 
   """Any additional data of Event"""
-  context: JSONObject
+  context: EncodedJSON
 
   """Custom data provided by project users"""
-  addons: JSONObject
+  addons: EncodedJSON
+}
+
+"""Events filters input type"""
+input EventsFiltersInput {
+  """If True, includes events with resolved mark to the output"""
+  resolved: Boolean
+
+  """If True, includes events with starred mark to the output"""
+  starred: Boolean
+
+  """If True, includes events with ignored mark to the output"""
+  ignored: Boolean
+}
+
+type EventsMutations {
+  """Set an assignee for the selected event"""
+  updateAssignee(input: UpdateAssigneeInput!): UpdateAssigneeResponse!
+
+  """Remove an assignee from the selected event"""
+  removeAssignee(input: RemoveAssigneeInput!): RemoveAssigneeResponse!
+}
+
+"""Possible events order"""
+enum EventsSortOrder {
+  BY_DATE
+  BY_COUNT
 }
 
 """Event user representation"""
@@ -268,6 +401,11 @@ enum Languages {
   RU
 }
 
+"""
+The `BigInt` scalar type represents non-fractional signed whole numeric values.
+"""
+scalar Long
+
 """Represents two types of Members in workspace's team"""
 union Member = ConfirmedMember | PendingMember
 
@@ -282,7 +420,7 @@ type Mutation {
   """Initialize recurrent payment"""
   payWithCard(
     """Total payment amount in kopecs"""
-    amount: Int!
+    amount: Long!
 
     """Workspace id for which the payment will be made"""
     workspaceId: String!
@@ -295,9 +433,6 @@ type Mutation {
     """Payment form language"""
     language: String
   ): Boolean!
-
-  """Initialize single payment"""
-  payOnce(input: PayOnceInput!): BillingSession!
 
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
@@ -316,6 +451,9 @@ type Mutation {
     """Mark to set"""
     mark: EventMark!
   ): Boolean!
+
+  """Namespace that contains only mutations related to the events"""
+  events: EventsMutations!
 
   """
   Creates new notification rule and add it to start of the array of notifications rules
@@ -531,6 +669,15 @@ type Mutation {
     """Workspace ID"""
     workspaceId: ID!
   ): Boolean!
+
+  """
+  Mutation in order to switch workspace tariff plan
+  Returns true if operation is successful
+  """
+  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
+
+  """Namespace for workspaces mutations"""
+  workspace: WorkspaceMutations!
 }
 
 """All available notification channels"""
@@ -593,10 +740,36 @@ input NotificationsChannelsInput {
   desktopPush: NotificationsChannelSettingsInput
 }
 
+"""Business operation payload type for 'DepositByUser' operation type"""
+type PayloadOfDepositByUser {
+  """Workspace to which the payment is credited"""
+  workspace: Workspace!
+
+  """Amount of payment in US cents"""
+  amount: Long!
+
+  """User who made the payment"""
+  user: User!
+
+  """PAN of card which user made the payment"""
+  cardPan: String
+}
+
+"""
+Business operation payload type for 'WorkspacePlanPurchase' operation type
+"""
+type PayloadOfWorkspacePlanPurchase {
+  """Workspace to which the payment is debited"""
+  workspace: Workspace!
+
+  """Amount of payment in US cents"""
+  amount: Long!
+}
+
 """Input for single payment"""
 input PayOnceInput {
   """Total payment amount in kopecs"""
-  amount: Int!
+  amount: Long!
 
   """Workspace id for which the payment will be made"""
   workspaceId: ID!
@@ -614,23 +787,26 @@ type PendingMember {
   email: String!
 }
 
-"""Workspace tariff plan"""
+"""Hawk tariff plan description"""
 type Plan {
+  """Plan id in MongoDB"""
+  id: ID!
+
   """Plan name"""
-  name: String
-
-  """Subscription date"""
-  subscriptionDate: DateTime
-
-  """Lsat charge date"""
-  lastChargeDate: DateTime
+  name: String!
 
   """Monthly charge for plan"""
-  monthlyCharge: Int
+  monthlyCharge: Int!
 
   """Events limit for plan"""
-  eventsLimit: Int
+  eventsLimit: Int!
+
+  """True if plan is default one"""
+  isDefault: Boolean!
 }
+
+"""Integers that will have a value greater than 0."""
+scalar PositiveInt
 
 """Project representation"""
 type Project {
@@ -677,7 +853,22 @@ type Project {
 
     """Certain number of documents to skip"""
     skip: Int! = 0
+
+    """Events sort order"""
+    sort: EventsSortOrder
+
+    """Event marks by which events should be sorted"""
+    filters: EventsFiltersInput
   ): RecentEvents
+
+  """Return events that occurred after a certain timestamp"""
+  chartData(
+    """How many days we need to fetch for displaying in a chart"""
+    days: Int! = 0
+
+    """User's local timezone offset in minutes"""
+    timezoneOffset: Int! = 0
+  ): [ChartDataItem]
 
   """Returns number of unread events"""
   unreadCount: Int!
@@ -724,11 +915,11 @@ type Query {
   """Get attached cards"""
   cardList: [CardInfo!]!
 
-  """Get workspace transactions"""
-  transactions(
+  """Get workspace billing history"""
+  businessOperations(
     """Workspaces IDs"""
     ids: [ID!] = []
-  ): [Transaction!]!
+  ): [BusinessOperation!]!
 
   """Returns project info"""
   project(
@@ -747,6 +938,9 @@ type Query {
     """Workspace(s) id(s)"""
     ids: [ID] = []
   ): [Workspace]
+
+  """Gets available Hawk tariff plans"""
+  plans: [Plan!]!
 }
 
 """What events to receive"""
@@ -765,6 +959,19 @@ type RecentEvents {
 
   """Information about occurred events per day"""
   dailyInfo: [DailyEventInfo]
+}
+
+input RemoveAssigneeInput {
+  """ID of project event is related to"""
+  projectId: ID!
+
+  """ID of the selected event"""
+  eventId: ID!
+}
+
+type RemoveAssigneeResponse {
+  """Response status"""
+  success: Boolean!
 }
 
 """Event's repetitions. Make Event unique by repetition's payload"""
@@ -806,10 +1013,10 @@ type RepetitionPayload {
   user: EventUser
 
   """Any additional data of Event"""
-  context: JSONObject
+  context: EncodedJSON
 
   """Custom data provided by project users"""
-  addons: JSONObject
+  addons: EncodedJSON
 }
 
 """Source code line representation"""
@@ -841,25 +1048,23 @@ type Tokens {
   refreshToken: String!
 }
 
-"""Transaction object"""
-type Transaction {
-  """Transaction type"""
-  type: String!
+input UpdateAssigneeInput {
+  """ID of project event is related to"""
+  projectId: ID!
 
-  """Workspace for which transaction has been made"""
-  workspace: Workspace!
+  """ID of the selected event"""
+  eventId: ID!
 
-  """Transaction amount"""
-  amount: Int!
+  """Assignee id to set"""
+  assignee: ID!
+}
 
-  """Transaction date"""
-  date: DateTime!
+type UpdateAssigneeResponse {
+  """Response status"""
+  success: Boolean!
 
-  """User by whom transaction has been made (income transactions only)"""
-  user: User
-
-  """PAN of card by which transaction has been made"""
-  cardPan: Int!
+  """User assigned to the event"""
+  record: User!
 }
 
 """Input type for updating exsiting notification rule"""
@@ -956,16 +1161,30 @@ type Workspace {
   """Workspace team info"""
   team: [Member!]!
 
-  """Workspace balance"""
-  balance: Int
+  """Total number of errors since the last charge date"""
+  billingPeriodEventsCount: Int
 
   """Workspace tariff plan"""
   plan: Plan
+
+  """Date when workspace was charged last time"""
+  lastChargeDate: DateTime
+
+  """
+  ID of subscription if it subscribed
+  Returns from CloudPayments
+  """
+  subscriptionId: String
 
   """Workspace projects array"""
   projects(
     """Project(s) id(s)"""
     ids: [ID!] = []
   ): [Project!]
+}
+
+"""Mutations for workspace"""
+type WorkspaceMutations {
+  cancelSubscription(input: CancelSubscriptionInput!): CancelSubscriptionResponse!
 }
 

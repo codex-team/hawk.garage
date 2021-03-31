@@ -55,9 +55,9 @@
 
 import Icon from '../utils/Icon';
 import WorkspacesMenuItem from './WorkspacesMenuItem';
-import { SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { SET_CURRENT_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import EntityImage from '../utils/EntityImage';
-import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 
 export default {
   name: 'Sidebar',

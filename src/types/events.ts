@@ -1,4 +1,5 @@
 import { User } from '@/types/user';
+import { EventChartItem } from '@/types/chart';
 
 /**
  * Event marks enum
@@ -7,6 +8,41 @@ export enum EventMark {
   STARRED = 'STARRED',
   IGNORED = 'IGNORED',
   RESOLVED = 'RESOLVED'
+}
+
+/**
+ * Available events sort orders
+ */
+export enum EventsSortOrder {
+  /**
+   * Sort by timestamp of the last event repetition
+   */
+  ByDate = 'BY_DATE',
+
+  /**
+   * Sort by events count
+   */
+  ByCount = 'BY_COUNT'
+}
+
+/**
+ * Possible events filters by event mark
+ */
+export interface EventsFilters {
+  /**
+   * Should events with resolved mark be included
+   */
+  resolved?: boolean;
+
+  /**
+   * Should events with starred mark be included
+   */
+  starred?: boolean;
+
+  /**
+   * Should events with ignored mark be included
+   */
+  ignored?: boolean;
 }
 
 /**
@@ -71,6 +107,11 @@ export interface HawkEvent {
    * Event assignee
    */
   assignee: User;
+
+  /**
+   * Event chart data for a few days
+   */
+  chartData?: EventChartItem[];
 }
 
 /**
