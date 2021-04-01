@@ -32,7 +32,7 @@ export default Vue.extend({
   width: 65px;
   height: 23px;
   margin-top: -19px;
-  background: var(--color-bg-main);
+  background: var(--color-bg-second);
   border: solid 1px var(--color-indicator-positive);
   border-radius: 12.5px;
   user-select: none;
@@ -44,7 +44,7 @@ export default Vue.extend({
     color: var(--color-indicator-positive);
     font-size: 13px;
     letter-spacing: 0.16px;
-    padding: 3px 6px 3px 6px;
+    padding: 2px 6px;
   }
 }
 </style>
