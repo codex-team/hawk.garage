@@ -93,10 +93,10 @@ export default Vue.extend({
       if (key === 'window') {
         return value.innerWidth + 'x' + value.innerHeight;
       } else if (key === 'userAgent' && typeof value != 'string') {
-        let formattedUserAgent = `${value.browser} ${value.browserVersion} / ${value.os} ${value.osVersion}`;
+        let formattedUserAgent = value.original;
 
-        if (!value.browser) {
-          formattedUserAgent = value.original;
+        if (value.browser) {
+          formattedUserAgent = `${value.browser} ${value.browserVersion} / ${value.os} ${value.osVersion}`;
         }
 
         return formattedUserAgent;
