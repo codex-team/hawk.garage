@@ -362,7 +362,6 @@ export default Vue.extend({
     &__ox {
       height: 40px;
       padding: 15px 0;
-      overflow-x: hidden;
 
       &-inner {
         display: flex;
