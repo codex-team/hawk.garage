@@ -12,7 +12,10 @@
       />
       <FiltersBar />
       <!-- TODO: Add placeholder if there is no filtered events -->
-      <div class="project-overview__events">
+      <div
+        v-if="recentEvents"
+        class="project-overview__events"
+      >
         <div
           v-for="(eventsByDate, date) in recentEvents"
           :key="date"
@@ -187,6 +190,16 @@ export default {
    * Used to update user's last project visit time
    */
   mounted() {
+    /**
+     * Push to add-catcher page if there aren't events
+     */
+    if (!this.recentEvents) {
+      return this.$router.push({
+        name: 'add-catcher',
+        params: { projectId: this.projectId },
+      }, () => {});
+    }
+
     this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
   },
   methods: {
