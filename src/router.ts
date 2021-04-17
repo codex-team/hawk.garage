@@ -18,6 +18,9 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: AppShell,
+      props: (route) => ({
+        workspaceId: route.params.workspaceId,
+      }),
       children: [
         /**
          * Account settings
@@ -52,17 +55,25 @@ const router = new Router({
           ],
         },
         /**
-         * Workspace settings
+         * Workspace
          * ----------------
          */
         {
           path: 'workspace/:workspaceId',
+          name: 'workspace',
+        },
+        /**
+         * Workspace settings
+         * ----------------
+         */
+        {
+          path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
-          redirect: 'workspace/:workspaceId/settings',
+          redirect: 'workspace/:workspaceId/settings/general',
           children: [
             {
-              path: 'settings',
+              path: 'general',
               name: 'workspace-settings-general',
               component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/General.vue'),
               props: true,
