@@ -6,7 +6,7 @@
         <WorkspaceInfo
           v-if="currentWorkspace"
           class="aside__workspace-info"
-          :workspace="currentWorkspace"
+          :workspace-id="currentWorkspace.id"
         />
         <SearchField
           v-model="searchQuery"
@@ -67,6 +67,15 @@ export default {
     WorkspaceInfo,
     ProjectHeader,
     ProjectPlaceholder,
+  },
+  props: {
+    /**
+     * @type {string} - current workspace id
+     */
+    workspaceId: {
+      type: String,
+      default: null,
+    },
   },
   data() {
     return {
@@ -135,6 +144,12 @@ export default {
      * @returns {Workspace}
      */
     currentWorkspace() {
+      if (this.workspaceId) {
+        const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
+
+        this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
+      }
+
       return this.$store.state.workspaces.current;
     },
   },
