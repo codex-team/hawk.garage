@@ -13,7 +13,7 @@
       </div>
       <router-link
         class="workspace-info__settings-link"
-        :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id}}"
+        :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id} }"
       >
         {{ $t('workspaces.settings.label') }}
       </router-link>
@@ -40,14 +40,20 @@ export default {
   },
   props: {
     /**
-     * @type {Workspace} workspace whose information should be displayed
+     * @type {string} - workspace id whose information should be displayed
      */
-    workspace: {
-      type: Object,
+    workspaceId: {
+      type: String,
       required: true,
     },
   },
   computed: {
+    /**
+     * @return {Workspace} - workspace whose information should be displayed
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceById(this.workspaceId);
+    },
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
