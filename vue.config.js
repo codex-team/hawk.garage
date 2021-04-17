@@ -93,6 +93,7 @@ module.exports = {
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
       swSrc: 'public/service-worker.js',
+      skipWaiting: true,
     },
   },
   assetsDir: 'static',

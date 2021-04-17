@@ -34,38 +34,6 @@ workbox.routing.registerRoute(
   })
 );
 
-/**
- * Cache js files with StaleWhileRevalidate strategy
- */
-workbox.routing.registerRoute(
-  /\.js$/,
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'js-cache',
-    plugins: [
-      new workbox.expiration.Plugin({
-        // Cache for a maximum of a week.
-        maxAgeSeconds: 7 * 24 * 60 * 60
-      })
-    ]
-  })
-);
-
-/**
- * Cache css files with StaleWhileRevalidate strategy
- */
-workbox.routing.registerRoute(
-  /\.css$/,
-  new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'css-cache',
-    plugins: [
-      new workbox.expiration.Plugin({
-        // Cache for a maximum of a week.
-        maxAgeSeconds: 7 * 24 * 60 * 60
-      })
-    ]
-  })
-);
-
 if (workbox) {
   console.log('Yay! Workbox is loaded');
 } else {
