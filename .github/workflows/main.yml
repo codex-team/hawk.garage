@@ -20,7 +20,6 @@ jobs:
           envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_STAGE }}
           envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
           envkey_VUE_APP_API_ENDPOINT: "https://api.stage.hawk.so"
-          file_name: .env
 
       - name: Make prod envfile
         if: endsWith(github.ref, '/prod')
@@ -29,7 +28,6 @@ jobs:
           envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
           envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
           envkey_VUE_APP_API_ENDPOINT: "https://api.beta.hawk.so"
-          file_name: .env
 
       - name: Build and push docker image
         uses: docker/build-push-action@v1
