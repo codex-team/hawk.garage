@@ -40,20 +40,14 @@ export default {
   },
   props: {
     /**
-     * @type {string} - workspace id whose information should be displayed
+     * @type {Workspace} - workspace id whose information should be displayed
      */
-    workspaceId: {
-      type: String,
+    workspace: {
+      type: Object,
       required: true,
     },
   },
   computed: {
-    /**
-     * @return {Workspace} - workspace whose information should be displayed
-     */
-    workspace() {
-      return this.$store.getters.getWorkspaceById(this.workspaceId);
-    },
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
