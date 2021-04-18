@@ -70,7 +70,7 @@ import EventItem from './EventItem';
 import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS, GET_LATEST_EVENT } from '../../store/modules/events/actionTypes';
+import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 import { debounce } from '@/utils';
 import FiltersBar from './FiltersBar';
