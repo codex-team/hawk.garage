@@ -79,8 +79,50 @@ const router = new Router({
             },
           ],
         },
+
         /**
-         * Project
+         * Project Settings
+         * -------------
+         */
+        {
+          path: 'project/:projectId/settings',
+          component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Layout.vue'),
+          children: [
+            {
+              path: 'general',
+              name: 'project-settings-general',
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/General.vue'),
+            },
+            {
+              path: 'integrations',
+              name: 'project-settings-integrations',
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Integrations.vue'),
+            },
+            {
+              path: 'notifications',
+              name: 'project-settings-notifications',
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Notifications.vue'),
+            },
+          ],
+        },
+
+        /**
+         * Connect catcher to project
+         * -------------
+         */
+        {
+          path: 'project/:projectId/add-catcher',
+          name: 'add-catcher',
+          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue'),
+        },
+        {
+          path: 'project/:projectId/setup-catcher/:page',
+          name: 'setup-catcher',
+          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadGuidePages.js'),
+        },
+
+        /**
+         * Project overview
          * ----------------
          */
         {
@@ -120,43 +162,7 @@ const router = new Router({
                 },
               ],
             },
-
-            /**
-             * Project Settings
-             * -------------
-             */
-            {
-              path: 'settings',
-              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Layout.vue'),
-              children: [
-                {
-                  path: 'general',
-                  name: 'project-settings-general',
-                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/General.vue'),
-                },
-                {
-                  path: 'integrations',
-                  name: 'project-settings-integrations',
-                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Integrations.vue'),
-                },
-                {
-                  path: 'notifications',
-                  name: 'project-settings-notifications',
-                  component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Notifications.vue'),
-                },
-              ],
-            },
           ],
-        },
-        {
-          path: 'project/:projectId/add-catcher',
-          name: 'add-catcher',
-          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue'),
-        },
-        {
-          path: 'project/:projectId/setup-catcher/:page',
-          name: 'setup-catcher',
-          component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadGuidePages.js'),
         },
       ],
     },
