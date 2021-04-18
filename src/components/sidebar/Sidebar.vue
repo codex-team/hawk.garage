@@ -130,19 +130,10 @@ export default {
      */
     onWorkspaceItemClick(workspace) {
       if (this.currentWorkspace && this.currentWorkspace.id === workspace.id) {
-        this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
-
-        return this.$router.push('/');
+        return this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
       }
 
       this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
-
-      this.$router.push({
-        name: 'workspace',
-        params: {
-          workspaceId: workspace.id,
-        },
-      });
     },
 
     createWorkspaceButtonClicked() {
