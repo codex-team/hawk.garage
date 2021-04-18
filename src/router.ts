@@ -18,9 +18,7 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: AppShell,
-      props: (route) => ({
-        workspaceId: route.params.workspaceId,
-      }),
+      props: true,
       children: [
         /**
          * Account settings
@@ -62,6 +60,7 @@ const router = new Router({
           path: 'workspace/:workspaceId',
           name: 'workspace',
         },
+        
         /**
          * Workspace settings
          * ----------------
