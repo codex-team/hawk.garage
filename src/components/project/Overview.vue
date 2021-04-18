@@ -70,7 +70,7 @@ import EventItem from './EventItem';
 import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_RECENT_EVENTS, GET_LATEST_EVENT } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 import { debounce } from '@/utils';
 import FiltersBar from './FiltersBar';
@@ -171,6 +171,18 @@ export default {
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
 
+    const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
+
+    /**
+     * Redirect to add catcher if there isn't a lat event
+     */
+    if (!latestEvent) {
+      await this.$router.push({
+        name: 'add-catcher',
+        params: { projectId: this.projectId },
+      });
+    }
+
     // How many days will be displayed in the chart
     const twoWeeks = 14;
     const boundingDays = 2;
@@ -191,31 +203,6 @@ export default {
    */
   mounted() {
     this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
-  },
-
-  /**
-   * Before route enter hook
-   * Redirects to add-catcher page if there aren't any events
-   *
-   * @param to - next route
-   * @param from - previous route
-   * @param next - this function must be called to resolve the hook
-   */
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      const recentEvents = vm.$store.getters.getRecentEventsByProjectId(vm.projectId);
-
-      /**
-       * Push to add-catcher page if there aren't events
-       */
-      if (!recentEvents) {
-        next({
-          name: 'add-catcher',
-          params: { projectId: vm.projectId },
-        });
-      }
-      next();
-    });
   },
 
   methods: {
