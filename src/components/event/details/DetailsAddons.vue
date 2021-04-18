@@ -79,7 +79,7 @@ export default Vue.extend({
      * @param key - addons keys to check
      */
     isCustomRenderer(key: string): boolean {
-      return [ 'window' ].includes(key);
+      return [ 'window', 'userAgent' ].includes(key);
     },
 
     /**
@@ -92,6 +92,16 @@ export default Vue.extend({
     renderAddonValue(key: string | object, value: any): string {
       if (key === 'window') {
         return value.innerWidth + 'x' + value.innerHeight;
+      } else if (key === 'userAgent') {
+        let formattedUserAgent = value;
+
+        if (this.addons?.beautifiedUserAgent?.browser) {
+          let beautifiedAgent = this.addons.beautifiedUserAgent;
+
+          formattedUserAgent = `${beautifiedAgent.browser} ${beautifiedAgent.browserVersion} / ${beautifiedAgent.os} ${beautifiedAgent.osVersion}`;
+        }
+
+        return formattedUserAgent;
       }
 
       return value;
