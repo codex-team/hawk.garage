@@ -174,7 +174,7 @@ export default {
     const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
 
     /**
-     * Redirect to add catcher if there isn't a lat event
+     * Redirect to the "add catcher" page if there are no events
      */
     if (!latestEvent) {
       await this.$router.push({
