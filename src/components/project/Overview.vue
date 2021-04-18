@@ -190,18 +190,34 @@ export default {
    * Used to update user's last project visit time
    */
   mounted() {
-    /**
-     * Push to add-catcher page if there aren't events
-     */
-    if (!this.recentEvents) {
-      return this.$router.push({
-        name: 'add-catcher',
-        params: { projectId: this.projectId },
-      }, () => {});
-    }
-
     this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
   },
+
+  /**
+   * Before route enter hook
+   * Redirects to add-catcher page if there aren't any events
+   *
+   * @param to - next route
+   * @param from - previous route
+   * @param next - this function must be called to resolve the hook
+   */
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      const recentEvents = vm.$store.getters.getRecentEventsByProjectId(vm.projectId);
+
+      /**
+       * Push to add-catcher page if there aren't events
+       */
+      if (!recentEvents) {
+        next({
+          name: 'add-catcher',
+          params: { projectId: vm.projectId },
+        });
+      }
+      next();
+    });
+  },
+
   methods: {
     /**
      * Return passed day midnight timestamp
