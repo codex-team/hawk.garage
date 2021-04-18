@@ -6,7 +6,7 @@
         <WorkspaceInfo
           v-if="currentWorkspace"
           class="aside__workspace-info"
-          :workspace-id="currentWorkspace.id"
+          :workspace="currentWorkspace"
         />
         <SearchField
           v-model="searchQuery"
@@ -70,11 +70,11 @@ export default {
   },
   props: {
     /**
-     * @type {string} - current workspace id
+     * Current workspace id
      */
     workspaceId: {
       type: String,
-      default: null,
+      default: '',
     },
   },
   data() {
@@ -144,12 +144,6 @@ export default {
      * @returns {Workspace}
      */
     currentWorkspace() {
-      if (this.workspaceId) {
-        const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
-
-        this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
-      }
-
       return this.$store.state.workspaces.current;
     },
   },
@@ -163,21 +157,39 @@ export default {
 
       this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
     },
-  },
+    currentWorkspace(workspace) {
+      if (!workspace && this.workspaceId) {
+        return this.$router.push('/');
+      }
 
+      if (workspace && this.workspaceId !== workspace.id) {
+        this.$router.push({
+          name: 'workspace',
+          params: {
+            workspaceId: workspace.id,
+          },
+        });
+      }
+    },
+  },
   /**
    * Vue hook. Called synchronously after the instance is created
    */
-  created() {
-    /**
-     * Reset current workspace
-     */
-    this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
-
+  async created() {
     /**
      * Fetch user data
      */
-    this.$store.dispatch(FETCH_INITIAL_DATA);
+    await this.$store.dispatch(FETCH_INITIAL_DATA);
+
+    /**
+     * Get current workspace
+     */
+    const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
+
+    /**
+     * Set current workspace
+     */
+    this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
 
     /**
      * Fetch current user data
