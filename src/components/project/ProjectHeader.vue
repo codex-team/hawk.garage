@@ -14,7 +14,14 @@
         size="26"
       />
       <div class="project-header__name">
-        {{ project.name }}
+        {{ projectName }}
+        <span
+          v-for="(badge, index) in projectBadges"
+          :key="index"
+          class="project-header__badge"
+        >
+          {{ badge }}
+        </span>
       </div>
     </div>
     <Icon
@@ -45,6 +52,33 @@ export default {
 
       return this.$store.getters.getProjectById(projectId);
     },
+
+    /**
+     * Returns parsed badges from project name
+     *
+     * @returns {string[]}
+     */
+    projectBadges() {
+      const name = this.project.name;
+
+      const badgeRegex = /\[(.*?)]/gm;
+
+      return name.match(badgeRegex)
+        .map(badge => badge.slice(1, -1));
+    },
+
+    /**
+     * Returns project name without badges
+     *
+     * @returns {string}
+     */
+    projectName() {
+      const name = this.project.name;
+
+      const badgeRegex = / ?\[(.*?)]/gm;
+
+      return name.replaceAll(badgeRegex, '');
+    },
   },
 };
 </script>
@@ -62,13 +96,31 @@ export default {
     height: 100%;
     padding: 0 15px;
     cursor: pointer;
+    overflow: hidden;
   }
 
   &__name {
+    display: flex;
+    align-items: center;
     margin-left: 10px;
     color: var(--color-text-main);
     font-weight: bold;
     font-size: 15px;
+    overflow: hidden;
+  }
+
+  &__badge {
+    border-radius: 3px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-second);
+    font-weight: normal;
+    font-size: 9px;
+    padding: 1px 2px;
+    margin-left: 7px;
+
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &__notifications {
@@ -77,6 +129,7 @@ export default {
     margin-right: 19px;
     margin-left: auto;
     cursor: pointer;
+    flex-shrink: 0;
   }
 }
 </style>

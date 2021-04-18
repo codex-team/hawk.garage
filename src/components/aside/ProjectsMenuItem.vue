@@ -12,11 +12,20 @@
       size="26"
     />
     <div class="project-menu-item__info">
-      <!-- eslint-disable vue/no-v-html -->
-      <div
-        class="project-menu-item__name"
-        v-html="name"
-      />
+      <div class="project-menu-item__name-wrapper">
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          class="project-menu-item__name"
+          v-html="name"
+        />
+        <div
+          v-for="(badge, index) in projectBadges"
+          :key="index"
+          class="project-menu-item__badge"
+        >
+          {{ badge }}
+        </div>
+      </div>
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
       </div>
@@ -62,6 +71,22 @@ export default {
     project() {
       return this.$store.state.projects.list.find(_project => _project.id === this.projectId);
     },
+
+    /**
+     * Returns parsed badges from project name
+     *
+     * @returns {string[]}
+     */
+    projectBadges() {
+      const name = this.project.name;
+
+      const badgeRegex = /\[(.*?)]/gm;
+
+      const badges = name.match(badgeRegex);
+
+      return badges ? badges.map(badge => badge.slice(1, -1)) : null;
+    },
+
     lastEventTitle() {
       const latestEvents = this.$store.getters.getLatestEvent(this.projectId);
 
@@ -72,7 +97,11 @@ export default {
       return 'No one catcher connected';
     },
     name() {
-      const escapedName = escape(this.project.name);
+      /**
+       * Removes badges from project name
+       */
+      const badgeRegex = / ?\[(.*?)]/gm;
+      const escapedName = escape(this.project.name.replaceAll(badgeRegex, ''));
 
       const searchConditions = [
         this.searchQuery,
@@ -119,11 +148,34 @@ export default {
       }
     }
 
-    &__name {
+    &__info {
+      overflow-x: hidden;
+    }
+
+    &__name-wrapper {
+      display: flex;
+      align-items: center;
       margin-bottom: 5px;
+    }
+
+    &__name {
       color: var(--color-text-main);
       font-weight: 500;
       font-size: 14px;
+    }
+
+    &__badge {
+      border-radius: 3px;
+      border: 1px solid var(--color-border);
+      color: var(--color-text-second);
+      font-weight: normal;
+      font-size: 9px;
+      padding: 1px 2px;
+      margin-left: 7px;
+
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__last-event {
