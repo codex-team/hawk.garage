@@ -170,7 +170,8 @@ export default {
       color: var(--color-text-second);
       font-weight: normal;
       font-size: 9px;
-      padding: 1px 2px;
+      padding: 2px 4px;
+      margin-bottom: -2px;
       margin-left: 7px;
 
       overflow-x: hidden;
