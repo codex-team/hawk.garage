@@ -165,7 +165,7 @@ export default {
     }
 
     &__badge {
-      border-radius: 3px;
+      border-radius: 5px;
       border: 1px solid var(--color-border);
       color: var(--color-text-second);
       font-weight: normal;
