@@ -158,17 +158,21 @@ export default {
       this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
     },
     currentWorkspace(workspace) {
-      if (!workspace && this.workspaceId) {
-        return this.$router.push('/');
-      }
+      if (this.$route.path === '/' || this.$route.path.includes('workspace')) {
+        console.log(this.$route.path);
 
-      if (workspace && this.workspaceId !== workspace.id) {
-        this.$router.push({
-          name: 'workspace',
-          params: {
-            workspaceId: workspace.id,
-          },
-        });
+        if (!workspace && this.workspaceId) {
+          return this.$router.push('/');
+        }
+
+        if (workspace && this.workspaceId !== workspace.id) {
+          this.$router.push({
+            name: 'workspace',
+            params: {
+              workspaceId: workspace.id,
+            },
+          });
+        }
       }
     },
   },
