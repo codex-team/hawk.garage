@@ -13,18 +13,41 @@
       <div class="guide-page__instructions-header">
         INSTALLATION
       </div>
-      <GuideStepBlock
-        :step-number="1"
-        last
-      >
+      <GuideStepBlock :step-number="1">
         <template #header>
           GET AN INTEGRATION TOKEN
         </template>
         <template #content>
-          Your Integration token for <b>{{ project.name }}</b>:
-          <TokenBlock
-            :token="project.token"
-          />
+          Your Integration token for <b>{{ project.name }}</b
+          >:
+          <TokenBlock :token="project.token" />
+        </template>
+      </GuideStepBlock>
+      <GuideStepBlock :step-number="2" last>
+        <template #header>
+          FOLLOW THE INSTALLATION GUIDE
+        </template>
+        <template #content>
+          Install package:
+          <CodeBlock language="js" copyable>
+            $ npm install @hawk.so/nodejs --save
+          </CodeBlock>
+          <CodeBlock language="js" copyable>
+            $ yarn add @hawk.so/nodejs
+          </CodeBlock>
+          Initialize HawkCatcher:
+          <CodeBlock language="js" copyable>
+            const HawkCatcher = require('@hawk.so/nodejs').default;
+          </CodeBlock>
+          Or
+          <CodeBlock language="js" copyable>
+            import HawkCatcher from '@hawk.so/nodejs';
+          </CodeBlock>
+          Initialize HawkCatcher in the entry file of your project by passing a
+          project token:
+          <CodeBlock language="js" copyable>
+            HawkCatcher.init('{{ project.token }}');
+          </CodeBlock>
         </template>
       </GuideStepBlock>
     </div>
@@ -32,16 +55,18 @@
 </template>
 
 <script>
-import GuideHeader from '../../GuidePageHeader';
-import GuideStepBlock from '../../GuideStepBlock';
-import TokenBlock from '../../../project/TokenBlock';
+import GuideHeader from "../../GuidePageHeader";
+import GuideStepBlock from "../../GuideStepBlock";
+import TokenBlock from "../../../project/TokenBlock";
+import CodeBlock from "../../../utils/CodeBlock";
 
 export default {
-  name: 'SetupPhpCatcher',
+  name: "SetupPhpCatcher",
   components: {
     GuideStepBlock,
     TokenBlock,
     GuideHeader,
+    CodeBlock
   },
   computed: {
     /**
@@ -53,8 +78,8 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
-    },
-  },
+    }
+  }
 };
 </script>
 
