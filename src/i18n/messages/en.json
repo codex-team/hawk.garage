@@ -274,7 +274,8 @@
         "emailForTheInvoice": "Email for the invoice"
       },
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
-      "didNotAccept": "You need to accept the payment agreement to proceed with payment"
+      "didNotAccept": "You need to accept the payment agreement to proceed with payment",
+      "allowCardSaving": "Save my card"
     },
     "autoProlongation": {
       "title": "Auto prolongation",
