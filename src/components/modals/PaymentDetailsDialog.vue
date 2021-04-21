@@ -206,17 +206,12 @@ import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { BankCard } from '../../types/bankCard';
+import CustomSelectOption from '../../types/customSelectOption';
 
 /**
  * Id for the 'New card' option in select
  */
 const NEW_CARD_ID = 'NEW_CARD';
-
-interface BankCardOption {
-  id: string;
-  value: string;
-  name: string;
-}
 
 export default Vue.extend({
   name: 'PaymentDetailsDialog',
@@ -319,10 +314,10 @@ export default Vue.extend({
     /**
      * User's bank cards
      */
-    cards(): BankCardOption[] {
+    cards(): CustomSelectOption[] {
       const cards: BankCard[] = this.$store.state.user.data?.bankCards;
 
-      const newCardOption: BankCardOption = {
+      const newCardOption: CustomSelectOption = {
         id: NEW_CARD_ID,
         value: NEW_CARD_ID,
         name: 'New card',
