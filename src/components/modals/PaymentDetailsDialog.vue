@@ -296,7 +296,7 @@ export default Vue.extend({
       /**
        * Selected bank card for this payment
        */
-      selectedCard: undefined,
+      selectedCard: undefined as BankCard | undefined,
     };
   },
   computed: {
