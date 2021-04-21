@@ -71,7 +71,7 @@
 
       <!--Card-->
       <CustomSelect
-        v-if="cards.length"
+        v-if="cards.length > 1"
         v-model="selectedCard"
         :options="cards"
         :label="$t('common.card').toUpperCase()"
