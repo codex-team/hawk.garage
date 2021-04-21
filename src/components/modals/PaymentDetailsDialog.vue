@@ -94,7 +94,7 @@
         class="payment-details__adoption-autoProlongation"
       >
         <div
-          v-if="selectedCard.id === NEW_CARD_ID"
+          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
           class="payment-details__adoption-autoProlongation-item"
         >
           <UiCheckbox
@@ -138,7 +138,7 @@
         class="payment-details__adoption"
       >
         <div
-          v-if="selectedCard.id === NEW_CARD_ID"
+          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
           class="payment-details__adoption-autoProlongation-item"
         >
           <UiCheckbox
@@ -296,11 +296,7 @@ export default Vue.extend({
       /**
        * Selected bank card for this payment
        */
-      selectedCard: {
-        id: NEW_CARD_ID,
-        value: NEW_CARD_ID,
-        name: 'New card',
-      },
+      selectedCard: undefined,
     };
   },
   computed: {
@@ -372,6 +368,20 @@ export default Vue.extend({
       }
 
       return this.isAcceptedPaymentAgreement;
+    },
+  },
+  watch: {
+    /**
+     * Watcher on cards array
+     *
+     * @param newCards - updated cards array
+     */
+    cards(newCards: BankCard[]) {
+      if (this.selectedCard) {
+        return;
+      }
+
+      this.selectedCard = newCards[1] || newCards[0];
     },
   },
   mounted() {
