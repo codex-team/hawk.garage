@@ -9,6 +9,7 @@
         <h2 class="choose-plan__title">
           {{ $t('workspaces.chooseTariffPlanDialog.title') }}
         </h2>
+        <!-- eslint-disable vue/no-v-html -->
         <p
           class="choose-plan__description"
           v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
@@ -41,7 +42,6 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
-import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
 import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';

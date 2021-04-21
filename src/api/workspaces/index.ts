@@ -93,9 +93,9 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * Get workspaces
  *
  * @param {Array} ids – id of fetching workspaces
- * @returns {Promise<[Workspace]>}
+ * @returns {Promise<Workspace[]>}
  */
-export async function getWorkspaces(ids: string): Promise<Workspace> {
+export async function getWorkspaces(ids: string): Promise<Workspace[]> {
   return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
 }
 

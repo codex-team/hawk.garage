@@ -9,7 +9,7 @@
  */
 export function prepareFormData(
   request: string,
-  variables: object | undefined,
+  variables: Record<string, unknown> | undefined,
   files: {[name: string]: File | undefined}
 ): FormData {
   Object

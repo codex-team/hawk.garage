@@ -9,6 +9,7 @@ module.exports = {
     parser: '@typescript-eslint/parser',
   },
   rules: {
+    "@typescript-eslint/no-magic-numbers": "off",
     'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars-experimental': [1, {
       ignoreArgsIfArgsAfterAreUsed: true,
