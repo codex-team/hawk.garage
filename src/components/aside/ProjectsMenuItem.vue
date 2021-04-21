@@ -174,7 +174,7 @@ export default {
       padding: 2px 4px;
       margin-bottom: -2px;
       margin-left: 7px;
-    letter-spacing: 0.1px;
+      letter-spacing: 0.1px;
       overflow-x: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

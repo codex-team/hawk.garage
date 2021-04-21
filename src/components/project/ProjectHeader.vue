@@ -63,8 +63,9 @@ export default {
 
       const badgeRegex = /\[(.*?)]/gm;
 
-      return name.match(badgeRegex)
-        .map(badge => badge.slice(1, -1));
+      const badges = name.match(badgeRegex);
+
+      return badges ? badges.map(badge => badge.slice(1, -1)) : null;
     },
 
     /**
