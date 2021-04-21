@@ -71,7 +71,8 @@
 
       <!--Card-->
       <CustomSelect
-        v-model="card"
+        v-if="cards.length"
+        v-model="selectedCard"
         :options="cards"
         :label="$t('common.card').toUpperCase()"
         :need-image="false"
@@ -92,6 +93,20 @@
         v-if="isRecurrent"
         class="payment-details__adoption-autoProlongation"
       >
+        <div
+          v-if="selectedCard.id === NEW_CARD_ID"
+          class="payment-details__adoption-autoProlongation-item"
+        >
+          <UiCheckbox
+            v-model="shouldSaveCard"
+            class="payment-details__adoption-checkbox"
+          />
+
+          <div class="payment-details__adoption-description">
+            {{ $t('billing.paymentDetails.allowCardSaving') }}
+          </div>
+        </div>
+
         <div
           class="payment-details__adoption-autoProlongation-item"
         >
@@ -122,13 +137,29 @@
         v-else
         class="payment-details__adoption"
       >
-        <UiCheckbox
-          v-model="isAcceptedPaymentAgreement"
-          class="payment-details__adoption-checkbox"
-        />
+        <div
+          v-if="selectedCard.id === NEW_CARD_ID"
+          class="payment-details__adoption-autoProlongation-item"
+        >
+          <UiCheckbox
+            v-model="shouldSaveCard"
+            class="payment-details__adoption-checkbox"
+          />
 
-        <div class="payment-details__adoption-description">
-          {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
+          <div class="payment-details__adoption-description">
+            {{ $t('billing.paymentDetails.allowCardSaving') }}
+          </div>
+        </div>
+
+        <div class="payment-details__adoption-autoProlongation-item">
+          <UiCheckbox
+            v-model="isAcceptedPaymentAgreement"
+            class="payment-details__adoption-checkbox"
+          />
+
+          <div class="payment-details__adoption-description">
+            {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
+          </div>
         </div>
       </section>
 
@@ -151,7 +182,6 @@
             class="payment-details__bottom-cp-logo"
           />
         </a>
-
       </div>
     </div>
   </PopupDialog>
@@ -174,29 +204,19 @@ import axios from 'axios';
 import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
+import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
+import { BankCard } from '../../types/bankCard';
 
-const cards = [
-  {
-    id: '4',
-    number: '',
-    name: 'New card',
-  },
-  {
-    id: '1',
-    number: '**** **** **** 3123',
-    name: '**** **** **** 3123',
-  },
-  {
-    id: '2',
-    number: '**** **** **** 3122',
-    name: '**** **** **** 3122',
-  },
-  {
-    id: '3',
-    number: '**** **** **** 3121',
-    name: '**** **** **** 3121',
-  },
-];
+/**
+ * Id for the 'New card' option in select
+ */
+const NEW_CARD_ID = 'NEW_CARD';
+
+interface BankCardOption {
+  id: string;
+  value: string;
+  name: string;
+}
 
 export default Vue.extend({
   name: 'PaymentDetailsDialog',
@@ -239,19 +259,14 @@ export default Vue.extend({
 
     return {
       /**
+       * New card id to use it in template
+       */
+      NEW_CARD_ID,
+
+      /**
        * User email
        */
       email: user.email,
-
-      /**
-       * User card
-       */
-      card: cards[0],
-
-      /**
-       * All user cards
-       */
-      cards,
 
       /**
        * Accepted or not payment agreement
@@ -277,6 +292,20 @@ export default Vue.extend({
        * CloudPayments web page
        */
       cpUrl: 'https://cloudpayments.ru',
+
+      /**
+       * Should API save user's bank card or no
+       */
+      shouldSaveCard: false,
+
+      /**
+       * Selected bank card for this payment
+       */
+      selectedCard: {
+        id: NEW_CARD_ID,
+        value: NEW_CARD_ID,
+        name: 'New card',
+      },
     };
   },
   computed: {
@@ -285,6 +314,29 @@ export default Vue.extend({
      */
     plan(): Plan {
       return this.$store.getters.getPlanById(this.tariffPlanId);
+    },
+
+    /**
+     * User's bank cards
+     */
+    cards(): BankCardOption[] {
+      const cards: BankCard[] = this.$store.state.user.data?.bankCards;
+
+      const newCardOption: BankCardOption = {
+        id: NEW_CARD_ID,
+        value: NEW_CARD_ID,
+        name: 'New card',
+      };
+
+      if (!cards) {
+        return [ newCardOption ];
+      }
+
+      return [newCardOption, ...cards.map(card => ({
+        id: card.id,
+        value: card.id,
+        name: `**** **** **** ${card.lastFour}`,
+      }))];
     },
 
     /**
@@ -343,6 +395,8 @@ export default Vue.extend({
 
     widgetScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments');
     document.head.appendChild(widgetScript);
+
+    this.$store.dispatch(FETCH_BANK_CARDS);
   },
   methods: {
     /**
@@ -363,12 +417,12 @@ export default Vue.extend({
     /**
      * Method for payment processing
      */
-    async processPayment() {
+    async processPayment(): Promise<void> {
       const response = await axios.get(
-        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}`
+        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
       );
 
-      return this.showPaymentWidget(response.data as BeforePaymentPayload);
+      this.showPaymentWidget(response.data as BeforePaymentPayload);
     },
 
     /**
@@ -376,7 +430,7 @@ export default Vue.extend({
      *
      * @param {BeforePaymentPayload} data — server response that sent after beforePay request
      */
-    async showPaymentWidget(data: BeforePaymentPayload) {
+    showPaymentWidget(data: BeforePaymentPayload): void {
       const widget = new window.cp.CloudPayments({ language: this.$i18n.locale });
 
       const paymentData: PlanProlongationPayload = {
@@ -501,6 +555,7 @@ export default Vue.extend({
 
     &__adoption {
       display: flex;
+      flex-direction: column;
       margin-top: 20px;
       margin-bottom: 28px;
 
