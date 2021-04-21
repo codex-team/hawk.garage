@@ -1,6 +1,6 @@
 <template>
   <SettingsWindow on-close-route="../">
-    <template v-slot:header>
+    <template #header>
       <div class="settings-window__header account-settings__header">
         <div class="project-settings__logo settings-window__logo" />
         <div class="project-settings__title">
@@ -12,7 +12,7 @@
       </div>
     </template>
 
-    <template v-slot:menu>
+    <template #menu>
       <div>
         <router-link
           class="settings-window__menu-item"
@@ -50,7 +50,7 @@
       </div>
     </template>
 
-    <template v-slot:content>
+    <template #content>
       <router-view
         v-if="project"
         :project="project"
