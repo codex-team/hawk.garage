@@ -111,14 +111,16 @@ export default {
   }
 
   &__badge {
-    border-radius: 3px;
+    border-radius: 5px;
     border: 1px solid var(--color-border);
     color: var(--color-text-second);
     font-weight: normal;
-    font-size: 9px;
-    padding: 1px 2px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 2px 4px;
+    margin-bottom: -2px;
     margin-left: 7px;
-
+    letter-spacing: 0.1px;
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
