@@ -291,7 +291,7 @@ export default Vue.extend({
       /**
        * Should API save user's bank card or no
        */
-      shouldSaveCard: false,
+      shouldSaveCard: true,
 
       /**
        * Selected bank card for this payment
