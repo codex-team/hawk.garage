@@ -363,7 +363,7 @@ export function debounce(callback: () => void, delay: number): () => void {
   return function (...args): void {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore,@typescript-eslint/ban-ts-comment
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       callback.apply(this, args);
     }, delay);
