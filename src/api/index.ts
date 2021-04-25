@@ -96,10 +96,11 @@ interface ApiCallSettings {
  */
 export async function call(
   request: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables?: Record<string, any>,
   files?: {[name: string]: File | undefined},
   { initial = false, force = false, allowErrors = false }: ApiCallSettings = {}
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
 
