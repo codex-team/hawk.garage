@@ -18,6 +18,12 @@
         {{ $t('workspaces.settings.label') }}
       </router-link>
     </div>
+    <CircleProgress
+      class="workspace-info__events-limit-circle-progress"
+      :current="eventsCount"
+      :max="plan.eventsLimit || 0"
+      :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+    />
     <Icon
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
@@ -30,13 +36,15 @@
 <script>
 import Icon from '../utils/Icon';
 import EntityImage from '../utils/EntityImage';
-import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import CircleProgress from '../utils/CircleProgress';
+import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 
 export default {
   name: 'WorkspaceInfo',
   components: {
     EntityImage,
     Icon,
+    CircleProgress,
   },
   props: {
     /**
@@ -48,6 +56,20 @@ export default {
     },
   },
   computed: {
+    /**
+     * Workspace plan
+     */
+    plan() {
+      return this.workspace.plan;
+    },
+
+    /**
+     * Total number of errors since the last charge date
+     */
+    eventsCount() {
+      return this.workspace.billingPeriodEventsCount || 0;
+    },
+
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
@@ -95,6 +117,10 @@ export default {
       &:hover {
         text-decoration: underline;
       }
+    }
+
+    &__events-limit-circle-progress {
+      margin-left: 63px;
     }
 
     &__project-creation-button {
