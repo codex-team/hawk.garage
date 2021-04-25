@@ -174,17 +174,17 @@ export interface HawkEventPayload {
   /**
    * Additional data about GET request
    */
-  get: object;
+  get: Record<string, unknown>;
 
   /**
    * Additional data about POST request
    */
-  post: object;
+  post: Record<string, unknown>;
 
   /**
    * HTTP headers
    */
-  headers: object;
+  headers: Record<string, unknown>;
 
   /**
    * Source code version identifier
@@ -199,12 +199,12 @@ export interface HawkEventPayload {
   /**
    * Any additional data of Event
    */
-  context: object;
+  context: Record<string, unknown>;
 
   /**
    * Custom data provided by project users
    */
-  addons: object;
+  addons: Record<string, unknown>;
 
   /**
    * Event type: TypeError, ReferenceError etc.

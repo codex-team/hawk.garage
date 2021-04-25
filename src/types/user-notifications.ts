@@ -25,7 +25,7 @@ export interface UserNotifications {
  */
 export type UserNotificationsReceiveTypesConfig = {
    [key in UserNotificationType]: boolean
-}
+};
 
 /**
  * Available channels of the account notifications

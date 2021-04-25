@@ -55,7 +55,7 @@ export function getEntityColor(id: string): string {
 export const groupBy =
   (key: string) =>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (array: any[]): object => // array of objects to group
+    (array: any[]): Record<string, unknown> => // array of objects to group
       array.reduce((objectsByKeyValue, obj) => {
         const value = obj[key];
 
@@ -99,7 +99,7 @@ function convertUtcMidnightToLocalMidnight(utcMidnight): number {
  * @param {object[]} items - array of object with the  'groupingTimestamp' field
  * @param {boolean} [convertMidnight] - need to convert utc midnight to local
  */
-export function groupByGroupingTimestamp(items, convertMidnight = true): object {
+export function groupByGroupingTimestamp(items, convertMidnight = true): Record<string, unknown> {
   if (!convertMidnight) {
     return groupBy('groupingTimestamp')(items);
   }
@@ -129,7 +129,7 @@ function typeOf(obj: any): string {
  *
  * @param item - what to check
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
 export function isObject(item: any): boolean {
   return item && typeOf(item) === 'object';
 }
@@ -352,10 +352,10 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
  * Debounce function in order to
  * time-consuming tasks don't run so often
  *
- * @param {() => void} callback - function for debounce
+ * @param {Function} callback - function for debounce
  * @param {number} delay - debounce delay
  *
- * @returns {() => void}
+ * @returns {Function}
  */
 export function debounce(callback: () => void, delay: number): () => void {
   let debounceTimer;
@@ -363,7 +363,7 @@ export function debounce(callback: () => void, delay: number): () => void {
   return function (...args): void {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       callback.apply(this, args);
     }, delay);

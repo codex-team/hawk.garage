@@ -35,32 +35,32 @@ enum MutationTypes {
   /**
    * Set new events list
    */
-  SET_EVENTS_LIST = 'SET_EVENTS_LIST',
+  SetEventsList = 'SET_EVENTS_LIST',
 
   /**
    * Set new recent events list
    */
-  SET_RECENT_EVENTS_LIST = 'SET_RECENT_EVENTS_LIST',
+  SetRecentEventsList = 'SET_RECENT_EVENTS_LIST',
 
   /**
    * Set or update event assignee
    */
-  SET_EVENT_ASSIGNEE = 'SET_EVENT_ASSIGNEE',
+  SetEventAssignee = 'SET_EVENT_ASSIGNEE',
 
   /**
    * Add new data to recent event list
    */
-  ADD_TO_RECENT_EVENTS_LIST = 'ADD_TO_RECENT_EVENTS_LIST',
+  AddToRecentEventsList = 'ADD_TO_RECENT_EVENTS_LIST',
 
   /**
    * Add new data to event list
    */
-  ADD_TO_EVENTS_LIST = 'ADD_TO_EVENTS_LIST',
+  AddToEventsList = 'ADD_TO_EVENTS_LIST',
 
   /**
    * Save loaded event
    */
-  ADD_REPETITION_PAYLOAD = 'ADD_REPETITION_PAYLOAD',
+  AddRepetitionPayload = 'ADD_REPETITION_PAYLOAD',
 
   /**
    * Update event
@@ -68,32 +68,32 @@ enum MutationTypes {
    * Because initial fetch request gets data without payload (title, timestamp, totalCount, visited etc.)
    * and some other data
    */
-  UPDATE_EVENT = 'UPDATE_EVENT',
+  UpdateEvent = 'UPDATE_EVENT',
 
   /**
    * Mark event as visited
    */
-  MARK_AS_VISITED = 'MARK_AS_VISITED',
+  MarkAsVisited = 'MARK_AS_VISITED',
 
   /**
    * Toggle mark for event
    */
-  TOGGLE_MARK = 'TOGGLE_MARK',
+  ToggleMark = 'TOGGLE_MARK',
 
   /**
    * Clear project's recent events list
    */
-  CLEAR_RECENT_EVENTS_LIST = 'CLEAR_RECENT_EVENTS_LIST',
+  ClearRecentEventsList = 'CLEAR_RECENT_EVENTS_LIST',
 
   /**
    * Set latest events for projects to disply in projects menu
    */
-  SET_LATEST_EVENTS = 'SET_LATEST_EVENTS',
+  SetLatestEvents = 'SET_LATEST_EVENTS',
 
   /**
    * Get chart data for en event for a few days
    */
-  SAVE_CHART_DATA = 'SAVE_CHART_DATA'
+  SaveChartData = 'SAVE_CHART_DATA'
 }
 
 /**
@@ -147,11 +147,6 @@ interface HawkEventsDailyInfoByProject {
 
 /**
  *  Map to store Event's daily info grouped by date
- *
- *  @example {
- *    date:1583355600: [Object, Object],
- *    ...
- *  }
  */
 interface HawkEventsDailyInfoByDate {
   [key: string]: HawkEventDailyInfo[];
@@ -368,17 +363,21 @@ const module: Module<EventsModuleState, RootState> = {
     [INIT_EVENTS_MODULE](
       { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
     ): void {
-      commit(MutationTypes.SET_EVENTS_LIST, events);
-      commit(MutationTypes.SET_RECENT_EVENTS_LIST, recentEvents);
-      commit(MutationTypes.SET_LATEST_EVENTS, recentEvents);
+      commit(MutationTypes.SetEventsList, events);
+      commit(MutationTypes.SetRecentEventsList, recentEvents);
+      commit(MutationTypes.SetLatestEvents, recentEvents);
     },
 
     /**
      * Get latest project events
      *
-     * @param {Function} commit - standard Vuex commit function
-     * @param {object} getters - module getters
-     * @param {string} projectId - id of the project to fetch data
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - standard Vuex commit function
+     * @param {object} context.getters - module getters
+     *
+     * @param {object} project - object of project data
+     * @param {string} project.projectId - id of the project to fetch data
      * @returns {Promise<boolean>} - true if there are no more events
      */
     async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId }: { projectId: string }): Promise<boolean> {
@@ -402,11 +401,11 @@ const module: Module<EventsModuleState, RootState> = {
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
 
-      commit(MutationTypes.ADD_TO_EVENTS_LIST, {
+      commit(MutationTypes.AddToEventsList, {
         projectId,
         eventsList: recentEvents.events,
       });
-      commit(MutationTypes.ADD_TO_RECENT_EVENTS_LIST, {
+      commit(MutationTypes.AddToRecentEventsList, {
         projectId,
         recentEventsInfoByDate: eventsGroupedByDate,
       });
@@ -435,7 +434,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       repetitions.map(repetition => {
         // save to the state
-        commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
+        commit(MutationTypes.AddRepetitionPayload, {
           projectId,
           eventId,
           repetition,
@@ -466,7 +465,7 @@ const module: Module<EventsModuleState, RootState> = {
       /**
        * Updates or sets event's fetched payload in the state
        */
-      commit(MutationTypes.UPDATE_EVENT, {
+      commit(MutationTypes.UpdateEvent, {
         projectId,
         event,
       });
@@ -475,7 +474,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       if (repetition !== null) {
         event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
-        commit(MutationTypes.ADD_REPETITION_PAYLOAD, {
+        commit(MutationTypes.AddRepetitionPayload, {
           projectId,
           eventId,
           repetition,
@@ -500,7 +499,7 @@ const module: Module<EventsModuleState, RootState> = {
       const user = (rootState as RootState).user.data;
 
       if (result) {
-        commit(MutationTypes.MARK_AS_VISITED, {
+        commit(MutationTypes.MarkAsVisited, {
           projectId,
           eventId,
           user,
@@ -520,7 +519,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventMark} payload.mark - mark to set
      */
     async [TOGGLE_EVENT_MARK]({ commit }, { projectId, eventId, mark }): Promise<void> {
-      const commitAction = (): void => commit(MutationTypes.TOGGLE_MARK, {
+      const commitAction = (): void => commit(MutationTypes.ToggleMark, {
         projectId,
         eventId,
         mark,
@@ -566,7 +565,7 @@ const module: Module<EventsModuleState, RootState> = {
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
       if (result.success) {
-        commit(MutationTypes.SET_EVENT_ASSIGNEE, {
+        commit(MutationTypes.SetEventAssignee, {
           event,
           assignee: result.record,
         });
@@ -588,7 +587,7 @@ const module: Module<EventsModuleState, RootState> = {
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
       if (result.success) {
-        commit(MutationTypes.SET_EVENT_ASSIGNEE, {
+        commit(MutationTypes.SetEventAssignee, {
           event,
           assignee: null,
         });
@@ -598,10 +597,13 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Set sorting order for project
      *
-     * @param {Function} commit - VueX commit method
-     * @param {Function} dispatch - Vuex dispatch method
-     * @param {EventsSortOrder} order - order to set
-     * @param {string} projectId - project to set order for
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {EventsSortOrder} project.order - order to set
+     * @param {string} project.projectId - project to set order for
      */
     async [SET_EVENTS_ORDER]({ commit, dispatch }, { order, projectId }: { order: EventsSortOrder; projectId: string }): Promise<void> {
       commit(SET_EVENTS_ORDER, {
@@ -609,7 +611,7 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
       });
 
-      commit(MutationTypes.CLEAR_RECENT_EVENTS_LIST, { projectId });
+      commit(MutationTypes.ClearRecentEventsList, { projectId });
 
       dispatch(FETCH_RECENT_EVENTS, {
         projectId,
@@ -619,10 +621,13 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Set filters for project
      *
-     * @param {Function} commit - VueX commit method
-     * @param {Function} dispatch - Vuex dispatch method
-     * @param {EventsFilters} filters - filters object to set
-     * @param {string} projectId - projoect to set filters for
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {EventsFilters} project.filters - filters object to set
+     * @param {string} project.projectId - projoect to set filters for
      */
     async [SET_EVENTS_FILTERS]({ commit, dispatch }, { filters, projectId }: { filters: EventsFilters; projectId: string }): Promise<void> {
       commit(SET_EVENTS_FILTERS, {
@@ -630,7 +635,7 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
       });
 
-      commit(MutationTypes.CLEAR_RECENT_EVENTS_LIST, { projectId });
+      commit(MutationTypes.ClearRecentEventsList, { projectId });
 
       dispatch(FETCH_RECENT_EVENTS, {
         projectId,
@@ -640,17 +645,21 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Get chart data for an event for a few days
      *
-     * @param {Function} commit - VueX commit method
-     * @param {Function} dispatch - Vuex dispatch method
-     * @param {string} projectId - project's id
-     * @param {string} eventId - event's id
-     * @param {number} days - number of a "few" days
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {string} project.projectId - project's id
+     * @param {string} project.eventId - event's id
+     * @param {number} project.days - number of a "few" days
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
     async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
 
-      commit(MutationTypes.SAVE_CHART_DATA, {
+      commit(MutationTypes.SaveChartData, {
         projectId,
         eventId,
         data: chartData,
@@ -664,21 +673,19 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - Vuex state
      * @param {EventsMap} eventsMap - new list of events
      */
-    [MutationTypes.SET_EVENTS_LIST](state, eventsMap: EventsMap): void {
+    [MutationTypes.SetEventsList](state, eventsMap: EventsMap): void {
       Vue.set(state, 'list', eventsMap);
     },
 
     /**
      * Mutation for update event assignee
      *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit function
+     * @param state - state for update event assignee.
      * @param {object} payload - vuex action payload
      * @param {HawkEvent} payload.event - event for which we install assignee
-     * @param state
      * @param {User | null} payload.assignee - user to assign to this event
      */
-    [MutationTypes.SET_EVENT_ASSIGNEE](state, { event, assignee }): void {
+    [MutationTypes.SetEventAssignee](state, { event, assignee }): void {
       Vue.set(event, 'assignee', assignee);
     },
 
@@ -691,7 +698,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - project that owns events
      * @param payload.recentEventsInfoByDate - grouped events list
      */
-    [MutationTypes.ADD_TO_RECENT_EVENTS_LIST](
+    [MutationTypes.AddToRecentEventsList](
       state,
       { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }
     ): void {
@@ -736,7 +743,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.projectId - id of the project to add
      * @param {Array<HawkEvent>} payload.eventsList - new list of events
      */
-    [MutationTypes.ADD_TO_EVENTS_LIST](
+    [MutationTypes.AddToEventsList](
       state,
       { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }
     ): void {
@@ -751,7 +758,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - Vuex state
      * @param {HawkEventsDailyInfoByProject} newList - new list of recent events
      */
-    [MutationTypes.SET_RECENT_EVENTS_LIST](state, newList: HawkEventsDailyInfoByProject): void {
+    [MutationTypes.SetRecentEventsList](state, newList: HawkEventsDailyInfoByProject): void {
       Vue.set(state, 'recent', newList);
     },
 
@@ -765,7 +772,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - id of the event
      * @param {HawkEvent} payload.repetition - repetition to save
      */
-    [MutationTypes.ADD_REPETITION_PAYLOAD](state: EventsModuleState, { projectId, eventId, repetition }): void {
+    [MutationTypes.AddRepetitionPayload](state: EventsModuleState, { projectId, eventId, repetition }): void {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
@@ -784,7 +791,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.projectId - project's identifier
      * @param {HawkEvent} payload.event - Event object
      */
-    [MutationTypes.UPDATE_EVENT](state, { projectId, event }): void {
+    [MutationTypes.UpdateEvent](state, { projectId, event }): void {
       const key = getEventsListKey(projectId, event.id);
 
       if (state.list[key]) {
@@ -806,7 +813,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - visited event
      * @param {User} payload.user - user who visited event
      */
-    [MutationTypes.MARK_AS_VISITED](state, { projectId, eventId, user }): void {
+    [MutationTypes.MarkAsVisited](state, { projectId, eventId, user }): void {
       const key = getEventsListKey(projectId, eventId);
 
       const event = state.list[key];
@@ -825,7 +832,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - event mark should be set to
      * @param {EventMark} payload.mark - mark to set
      */
-    [MutationTypes.TOGGLE_MARK](state, { projectId, eventId, mark }): void {
+    [MutationTypes.ToggleMark](state, { projectId, eventId, mark }): void {
       const key = getEventsListKey(projectId, eventId);
 
       const event = state.list[key];
@@ -838,8 +845,10 @@ const module: Module<EventsModuleState, RootState> = {
      * Set sorting order for project
      *
      * @param {EventsModuleState} state - module state
-     * @param {EventsSortOrder} order - order to set
-     * @param {string} projectId - project to set order for
+     *
+     * @param {object} project - object for project data
+     * @param {EventsSortOrder} project.order - order to set
+     * @param {string} project.projectId - project to set order for
      */
     [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder; projectId: string }): void {
       if (!state.filters[projectId]) {
@@ -853,8 +862,10 @@ const module: Module<EventsModuleState, RootState> = {
      * Set filters for project
      *
      * @param {EventsModuleState} state - module state
-     * @param {EventsFilters} filters - filters object to set
-     * @param {string} projectId - project to set filters for
+     *
+     * @param {object} project - object for project data
+     * @param {EventsFilters} project.filters - filters object to set
+     * @param {string} project.projectId - project to set filters for
      */
     [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters; projectId: string }): void {
       if (!state.filters[projectId]) {
@@ -870,7 +881,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - module state
      * @param {string} projectId - project to clear
      */
-    [MutationTypes.CLEAR_RECENT_EVENTS_LIST](state: EventsModuleState, { projectId }: { projectId: string }): void {
+    [MutationTypes.ClearRecentEventsList](state: EventsModuleState, { projectId }: { projectId: string }): void {
       Vue.set(state.recent, projectId, {});
 
       loadedEventsCount[projectId] = 0;
@@ -882,7 +893,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsModuleState} state - module state
      * @param {HawkEventsDailyInfoByProject} recentEvents - projects' recent events
      */
-    [MutationTypes.SET_LATEST_EVENTS](state: EventsModuleState, recentEvents: HawkEventsDailyInfoByProject): void {
+    [MutationTypes.SetLatestEvents](state: EventsModuleState, recentEvents: HawkEventsDailyInfoByProject): void {
       Object
         .entries(recentEvents)
         .forEach(([projectId, eventsByTimestamp]) => {
@@ -896,13 +907,15 @@ const module: Module<EventsModuleState, RootState> = {
      * Save event's chart data
      *
      * @param {EventsModuleState} state - module state
-     * @param {string} projectId
-     * @param {string} eventId
-     * @param {EventChartItem[]} data - array of dots
+     *
+     * @param {object} project - object for project data
+     * @param {string} project.projectId - project ID
+     * @param {string} project.eventId - event ID
+     * @param {EventChartItem[]} project.data - array of dots
      */
-    [MutationTypes.SAVE_CHART_DATA](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
+    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
       const key = getEventsListKey(projectId, eventId);
-      const event = state.list[key];
+      // const event = state.list[key];
 
       Vue.set(state.list[key], 'chartData', data);
     },
