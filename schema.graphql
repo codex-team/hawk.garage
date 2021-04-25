@@ -27,6 +27,15 @@ directive @requireUserInWorkspace on FIELD_DEFINITION
 
 directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
 
+"""User bank card"""
+type BankCard {
+  """Bank card id"""
+  id: ID!
+
+  """Last for numbers of card PAN"""
+  lastFour: Int!
+}
+
 """Payment link structure"""
 type BillingSession {
   """Total payment amount in kopecs"""
@@ -104,17 +113,6 @@ type CancelSubscriptionResponse {
   record: Workspace!
 }
 
-type CardInfo {
-  """Card number (Pan)"""
-  pan: String!
-
-  """Card ID"""
-  cardId: String!
-
-  """Card expiration date"""
-  expDate: String!
-}
-
 """
 This object will be returned to the changeUserNotificationsChannel mutation
 """
@@ -136,24 +134,18 @@ type changeUserNotificationsReceiveTypeResponse {
 }
 
 """Payload for changing workspace tariff plan"""
-input ChangeWorkspacePlanInput {
+input ChangeWorkspacePlanForFreePlanInput {
   """Workspace ID"""
   workspaceId: ID!
-
-  """Tariff plan ID"""
-  planId: ID!
 }
 
 """Workspace tariff plan change mutation response"""
-type ChangeWorkspacePlanResponse {
-  """Business operation id"""
+type ChangeWorkspacePlanForFreePlanResponse {
+  """Workspace id which plan changed"""
   recordId: ID
 
-  """Modified workspace object"""
-  record: BusinessOperation
-
-  """Workspace balance"""
-  balance: Long!
+  """Workspace which plan changed"""
+  record: Workspace!
 }
 
 type ChartDataItem {
@@ -373,7 +365,7 @@ enum EventsSortOrder {
 """Event user representation"""
 type EventUser {
   """Internal user's identifier inside an app"""
-  id: ID!
+  id: ID
 
   """User public name"""
   name: String
@@ -671,10 +663,10 @@ type Mutation {
   ): Boolean!
 
   """
-  Mutation in order to switch workspace tariff plan
-  Returns true if operation is successful
+  Mutation in order to switch workspace tariff plan to Free
+  Returns updated workspace
   """
-  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
+  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanForFreePlanInput): ChangeWorkspacePlanForFreePlanResponse!
 
   """Namespace for workspaces mutations"""
   workspace: WorkspaceMutations!
@@ -912,9 +904,6 @@ type Query {
   """Healthcheck endpoint"""
   health: String!
 
-  """Get attached cards"""
-  cardList: [CardInfo!]!
-
   """Get workspace billing history"""
   businessOperations(
     """Workspaces IDs"""
@@ -1110,6 +1099,9 @@ type User {
 
   """User notifications settings"""
   notifications: UserNotificationsSettings
+
+  """Saved bank cards for one-click payments"""
+  bankCards: [BankCard!]!
 }
 
 """Available notify types with their active statuses"""
@@ -1187,4 +1179,3 @@ type Workspace {
 type WorkspaceMutations {
   cancelSubscription(input: CancelSubscriptionInput!): CancelSubscriptionResponse!
 }
-

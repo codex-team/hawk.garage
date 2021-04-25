@@ -13,7 +13,7 @@
       </div>
       <router-link
         class="workspace-info__settings-link"
-        :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id}}"
+        :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id} }"
       >
         {{ $t('workspaces.settings.label') }}
       </router-link>
@@ -48,7 +48,7 @@ export default {
   },
   props: {
     /**
-     * @type {Workspace} workspace whose information should be displayed
+     * @type {Workspace} - workspace id whose information should be displayed
      */
     workspace: {
       type: Object,

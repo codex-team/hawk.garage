@@ -132,6 +132,7 @@ export default {
       if (this.currentWorkspace && this.currentWorkspace.id === workspace.id) {
         return this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
       }
+
       this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
     },
 
