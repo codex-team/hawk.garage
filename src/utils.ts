@@ -352,10 +352,10 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
  * Debounce function in order to
  * time-consuming tasks don't run so often
  *
- * @param {() => void} callback - function for debounce
+ * @param {Function} callback - function for debounce
  * @param {number} delay - debounce delay
  *
- * @returns {() => void}
+ * @returns {Function}
  */
 export function debounce(callback: () => void, delay: number): () => void {
   let debounceTimer;

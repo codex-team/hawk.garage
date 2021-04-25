@@ -1,7 +1,6 @@
 /**
  * Augment Vue type with custom $sendToHawk method specified in {@link ./../main}
  */
-import Vue from 'vue';
 
 declare module 'vue/types/vue' {
   interface Vue {

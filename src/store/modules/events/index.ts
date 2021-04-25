@@ -147,11 +147,6 @@ interface HawkEventsDailyInfoByProject {
 
 /**
  *  Map to store Event's daily info grouped by date
- *
- *  @example {
- *    date:1583355600: [Object, Object],
- *    ...
- *  }
  */
 interface HawkEventsDailyInfoByDate {
   [key: string]: HawkEventDailyInfo[];
@@ -376,9 +371,13 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Get latest project events
      *
-     * @param {Function} commit - standard Vuex commit function
-     * @param {object} getters - module getters
-     * @param {string} projectId - id of the project to fetch data
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - standard Vuex commit function
+     * @param {object} context.getters - module getters
+     *
+     * @param {object} project - object of project data
+     * @param {string} project.projectId - id of the project to fetch data
      * @returns {Promise<boolean>} - true if there are no more events
      */
     async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId }: { projectId: string }): Promise<boolean> {
@@ -598,10 +597,13 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Set sorting order for project
      *
-     * @param {Function} commit - VueX commit method
-     * @param {Function} dispatch - Vuex dispatch method
-     * @param {EventsSortOrder} order - order to set
-     * @param {string} projectId - project to set order for
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {EventsSortOrder} project.order - order to set
+     * @param {string} project.projectId - project to set order for
      */
     async [SET_EVENTS_ORDER]({ commit, dispatch }, { order, projectId }: { order: EventsSortOrder; projectId: string }): Promise<void> {
       commit(SET_EVENTS_ORDER, {
@@ -619,10 +621,13 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Set filters for project
      *
-     * @param {Function} commit - VueX commit method
-     * @param {Function} dispatch - Vuex dispatch method
-     * @param {EventsFilters} filters - filters object to set
-     * @param {string} projectId - projoect to set filters for
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {EventsFilters} project.filters - filters object to set
+     * @param {string} project.projectId - projoect to set filters for
      */
     async [SET_EVENTS_FILTERS]({ commit, dispatch }, { filters, projectId }: { filters: EventsFilters; projectId: string }): Promise<void> {
       commit(SET_EVENTS_FILTERS, {
@@ -640,12 +645,16 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Get chart data for an event for a few days
      *
-     * @param {Function} commit - VueX commit method
-     * @param {Function} dispatch - Vuex dispatch method
-     * @param {string} projectId - project's id
-     * @param {string} eventId - event's id
-     * @param {number} days - number of a "few" days
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {string} project.projectId - project's id
+     * @param {string} project.eventId - event's id
+     * @param {number} project.days - number of a "few" days
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
     async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
@@ -671,11 +680,9 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Mutation for update event assignee
      *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit function
+     * @param state - state for update event assignee.
      * @param {object} payload - vuex action payload
      * @param {HawkEvent} payload.event - event for which we install assignee
-     * @param state
      * @param {User | null} payload.assignee - user to assign to this event
      */
     [MutationTypes.SetEventAssignee](state, { event, assignee }): void {
@@ -838,8 +845,10 @@ const module: Module<EventsModuleState, RootState> = {
      * Set sorting order for project
      *
      * @param {EventsModuleState} state - module state
-     * @param {EventsSortOrder} order - order to set
-     * @param {string} projectId - project to set order for
+     *
+     * @param {object} project - object for project data
+     * @param {EventsSortOrder} project.order - order to set
+     * @param {string} project.projectId - project to set order for
      */
     [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder; projectId: string }): void {
       if (!state.filters[projectId]) {
@@ -853,8 +862,10 @@ const module: Module<EventsModuleState, RootState> = {
      * Set filters for project
      *
      * @param {EventsModuleState} state - module state
-     * @param {EventsFilters} filters - filters object to set
-     * @param {string} projectId - project to set filters for
+     *
+     * @param {object} project - object for project data
+     * @param {EventsFilters} project.filters - filters object to set
+     * @param {string} project.projectId - project to set filters for
      */
     [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters; projectId: string }): void {
       if (!state.filters[projectId]) {
@@ -896,13 +907,15 @@ const module: Module<EventsModuleState, RootState> = {
      * Save event's chart data
      *
      * @param {EventsModuleState} state - module state
-     * @param {string} projectId
-     * @param {string} eventId
-     * @param {EventChartItem[]} data - array of dots
+     *
+     * @param {object} project - object for project data
+     * @param {string} project.projectId - project ID
+     * @param {string} project.eventId - event ID
+     * @param {EventChartItem[]} project.data - array of dots
      */
     [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
       const key = getEventsListKey(projectId, eventId);
-      const event = state.list[key];
+      // const event = state.list[key];
 
       Vue.set(state.list[key], 'chartData', data);
     },
