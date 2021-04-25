@@ -2,7 +2,7 @@ import CircleProgress from '@/components/utils/CircleProgress.vue';
 
 export default {
   title: 'Utils/CircleProgress',
-  component: CircleProgress
+  component: CircleProgress,
 };
 
 export const Progress = (): unknown => ({

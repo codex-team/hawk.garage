@@ -151,7 +151,6 @@
             class="payment-details__bottom-cp-logo"
           />
         </a>
-
       </div>
     </div>
   </PopupDialog>
