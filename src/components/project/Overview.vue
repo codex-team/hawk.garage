@@ -12,7 +12,10 @@
       />
       <FiltersBar />
       <!-- TODO: Add placeholder if there is no filtered events -->
-      <div class="project-overview__events">
+      <div
+        v-if="recentEvents"
+        class="project-overview__events"
+      >
         <div
           v-for="(eventsByDate, date) in recentEvents"
           :key="date"
@@ -168,6 +171,18 @@ export default {
   async created() {
     this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
 
+    const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
+
+    /**
+     * Redirect to the "add catcher" page if there are no events
+     */
+    if (!latestEvent) {
+      await this.$router.push({
+        name: 'add-catcher',
+        params: { projectId: this.projectId },
+      });
+    }
+
     // How many days will be displayed in the chart
     const twoWeeks = 14;
     const boundingDays = 2;
@@ -189,6 +204,7 @@ export default {
   mounted() {
     this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
   },
+
   methods: {
     /**
      * Return passed day midnight timestamp
