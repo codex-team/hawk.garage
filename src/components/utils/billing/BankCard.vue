@@ -5,7 +5,7 @@
       symbol="credit-card"
     />
     <div class="bank-card__number">
-      {{ card.name }}
+      {{ `**** **** **** ${card.lastFour}` }}
     </div>
     <div class="bank-card__detach-button">
       {{ $t('billing.detachCard') }}
@@ -16,7 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Icon from '../Icon.vue';
-import { BankCard } from '@/types/bank-card';
+import { BankCard } from '../../../types/bankCard';
 
 export default Vue.extend({
   name: 'BankCard',
