@@ -15,13 +15,12 @@
       />
       <div class="project-header__name">
         {{ projectName }}
-        <span
+        <ProjectBadge
           v-for="(badge, index) in projectBadges"
           :key="index"
-          class="project-header__badge"
         >
           {{ badge }}
-        </span>
+        </ProjectBadge>
       </div>
     </div>
     <Icon
@@ -34,10 +33,12 @@
 <script>
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
+import ProjectBadge from '@/components/project/ProjectBadge';
 
 export default {
   name: 'ProjectHeader',
   components: {
+    ProjectBadge,
     EntityImage,
     Icon,
   },
@@ -107,23 +108,6 @@ export default {
     color: var(--color-text-main);
     font-weight: bold;
     font-size: 15px;
-    overflow: hidden;
-  }
-
-  &__badge {
-    border-radius: 5px;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-second);
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 12px;
-    padding: 2px 4px;
-    margin-bottom: -2px;
-    margin-left: 7px;
-    letter-spacing: 0.1px;
-    overflow-x: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
   }
 
   &__notifications {

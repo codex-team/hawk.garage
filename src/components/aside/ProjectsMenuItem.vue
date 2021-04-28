@@ -18,13 +18,12 @@
           class="project-menu-item__name"
           v-html="name"
         />
-        <div
+        <ProjectBadge
           v-for="(badge, index) in projectBadges"
           :key="index"
-          class="project-menu-item__badge"
         >
           {{ badge }}
-        </div>
+        </ProjectBadge>
       </div>
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
@@ -42,10 +41,12 @@
 import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
 import { misTranslit, escape } from '../../utils';
+import ProjectBadge from '@/components/project/ProjectBadge';
 
 export default {
   name: 'ProjectsMenuItem',
   components: {
+    ProjectBadge,
     Badge,
     EntityImage,
   },
@@ -162,22 +163,6 @@ export default {
       color: var(--color-text-main);
       font-weight: 500;
       font-size: 14px;
-    }
-
-    &__badge {
-      border-radius: 5px;
-      border: 1px solid var(--color-border);
-      color: var(--color-text-second);
-      font-weight: normal;
-      font-size: 12px;
-      line-height: 12px;
-      padding: 2px 4px;
-      margin-bottom: -2px;
-      margin-left: 7px;
-      letter-spacing: 0.1px;
-      overflow-x: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
 
     &__last-event {
