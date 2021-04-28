@@ -4,7 +4,7 @@
     :class="{
       'filter-button--active': active,
     }"
-    @click=" 'click', $event)"
+    @click="$emit('click', $event)"
   >
     <span class="filter-button__text">
       {{ content }}
