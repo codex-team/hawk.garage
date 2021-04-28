@@ -8,7 +8,7 @@
     </template>
     <template #content>
       <div
-        v-for="(value, key) in addons"
+        v-for="([key, value]) of renderedAddons"
         :key="key"
         class="event-details__content-block"
       >
@@ -70,6 +70,16 @@ export default Vue.extend({
       type: Object,
       required: true,
     },
+  },
+  computed: {
+    /**
+     * Addons that we need to render
+     */
+    renderedAddons(): [string, unknown][] {
+      const doNotRender = ['beautifiedUserAgent'];
+
+      return Object.entries(this.addons).filter(([key]) => !doNotRender.includes(key));
+    }
   },
   methods: {
     /**
