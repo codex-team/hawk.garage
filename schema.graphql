@@ -32,7 +32,7 @@ type BankCard {
   """Bank card id"""
   id: ID!
 
-  """Last for numbers of card PAN"""
+  """Last four numbers of card PAN"""
   lastFour: Int!
 }
 
@@ -410,21 +410,7 @@ type Mutation {
   removeCard(cardNumber: String!): Boolean!
 
   """Initialize recurrent payment"""
-  payWithCard(
-    """Total payment amount in kopecs"""
-    amount: Long!
-
-    """Workspace id for which the payment will be made"""
-    workspaceId: String!
-
-    """
-    Unique card identifier for recurrent payment. Omit this to pay with unattached card
-    """
-    cardId: Int!
-
-    """Payment form language"""
-    language: String
-  ): Boolean!
+  payWithCard(input: PayWithCardInput!): PayWithCardResponse!
 
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
@@ -770,6 +756,16 @@ input PayOnceInput {
   language: SupportedBillingLanguages = RU
 }
 
+input PayWithCardInput {
+  checksum: String!
+  cardId: String!
+}
+
+type PayWithCardResponse {
+  recordId: ID!
+  record: BusinessOperation!
+}
+
 """Pending member data in workspace"""
 type PendingMember {
   """Member info id"""
@@ -1101,7 +1097,7 @@ type User {
   notifications: UserNotificationsSettings
 
   """Saved bank cards for one-click payments"""
-  bankCards: [BankCard!]!
+  bankCards: [BankCard!]
 }
 
 """Available notify types with their active statuses"""
@@ -1179,3 +1175,4 @@ type Workspace {
 type WorkspaceMutations {
   cancelSubscription(input: CancelSubscriptionInput!): CancelSubscriptionResponse!
 }
+

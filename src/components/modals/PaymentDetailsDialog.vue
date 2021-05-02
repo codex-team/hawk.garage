@@ -205,8 +205,13 @@ import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
+import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
+import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
+import { PayWithCardInput } from '../../api/billing';
+import { BusinessOperation } from '../../types/business-operation';
+import { BusinessOperationStatus } from '../../types/business-operation-status';
 
 /**
  * Id for the 'New card' option in select
@@ -427,7 +432,37 @@ export default Vue.extend({
         `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
       );
 
-      this.showPaymentWidget(response.data as BeforePaymentPayload);
+      if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
+        this.showPaymentWidget(response.data as BeforePaymentPayload);
+      } else {
+        await this.payWithCard({
+          checksum: response.data.checksum,
+          cardId: this.selectedCard.id,
+        });
+      }
+    },
+
+    /**
+     * Process payment via saved card
+     *
+     * @param input - data for processing payment
+     */
+    async payWithCard(input: PayWithCardInput): Promise<void> {
+      const operation: BusinessOperation = await this.$store.dispatch(PAY_WITH_CARD, input);
+
+      if (operation.status === BusinessOperationStatus.Rejected) {
+        notifier.show({
+          message: this.$i18n.t('billing.widget.notifications.error') as string,
+          style: 'error',
+        });
+      } else {
+        notifier.show({
+          message: this.$i18n.t('billing.widget.notifications.success') as string,
+          style: 'success',
+        });
+      }
+
+      await this.$store.dispatch(RESET_MODAL_DIALOG);
     },
 
     /**
@@ -470,24 +505,26 @@ export default Vue.extend({
           data: paymentData,
         },
         {
-          onSuccess: (options) => {
-            console.info('onSuccess', options);
-
+          onSuccess: () => {
             notifier.show({
               message: this.$i18n.t('billing.widget.notifications.success') as string,
               style: 'success',
             });
           },
-          onFail: (reason, options) => {
-            console.info('onFail', reason, options);
-
+          onFail: () => {
             notifier.show({
               message: this.$i18n.t('billing.widget.notifications.error') as string,
               style: 'error',
             });
           },
-          onComplete: (paymentResult, options) => {
-            console.info('onComplete', paymentResult, options);
+          onComplete: () => {
+            /**
+             * Refresh operations history
+             */
+            this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
+              ids: [ this.workspace.id ],
+            });
+            this.$store.dispatch(RESET_MODAL_DIALOG);
           },
         }
       );
