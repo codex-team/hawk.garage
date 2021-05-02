@@ -212,6 +212,7 @@ import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
+import HawkCatcher from '@hawk.so/javascript';
 
 /**
  * Id for the 'New card' option in select
@@ -448,21 +449,28 @@ export default Vue.extend({
      * @param input - data for processing payment
      */
     async payWithCard(input: PayWithCardInput): Promise<void> {
-      const operation: BusinessOperation = await this.$store.dispatch(PAY_WITH_CARD, input);
+      try {
+        const operation: BusinessOperation = await this.$store.dispatch(PAY_WITH_CARD, input);
 
-      if (operation.status === BusinessOperationStatus.Rejected) {
+        if (operation.status === BusinessOperationStatus.Rejected) {
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.error') as string,
+            style: 'error',
+          });
+        } else {
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.success') as string,
+            style: 'success',
+          });
+        }
+        await this.$store.dispatch(RESET_MODAL_DIALOG);
+      } catch (e) {
+        this.$sendToHawk(e);
         notifier.show({
           message: this.$i18n.t('billing.widget.notifications.error') as string,
-          style: 'error',
-        });
-      } else {
-        notifier.show({
-          message: this.$i18n.t('billing.widget.notifications.success') as string,
           style: 'success',
         });
       }
-
-      await this.$store.dispatch(RESET_MODAL_DIALOG);
     },
 
     /**
