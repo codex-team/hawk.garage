@@ -166,7 +166,7 @@
       <!--Button and cloudpayments logo-->
       <div class="payment-details__bottom">
         <UiButton
-          content="Go to payment service"
+          :content="payButtonText"
           class="payment-details__bottom-button"
           :submit="isAcceptedAllAgreements"
           :secondary="!isAcceptedAllAgreements"
@@ -212,7 +212,6 @@ import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
-import HawkCatcher from '@hawk.so/javascript';
 
 /**
  * Id for the 'New card' option in select
@@ -257,6 +256,8 @@ export default Vue.extend({
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
+    const cards: BankCard[] = this.$store.state.user.data?.bankCards;
+    const selectedCard = (cards && this.cardToSelectOption(cards[0])) || undefined;
 
     return {
       /**
@@ -302,7 +303,7 @@ export default Vue.extend({
       /**
        * Selected bank card for this payment
        */
-      selectedCard: undefined as BankCard | undefined,
+      selectedCard,
     };
   },
   computed: {
@@ -329,11 +330,7 @@ export default Vue.extend({
         return [ newCardOption ];
       }
 
-      return [newCardOption, ...cards.map(card => ({
-        id: card.id,
-        value: card.id,
-        name: `**** **** **** ${card.lastFour}`,
-      }))];
+      return [newCardOption, ...cards.map(this.cardToSelectOption)];
     },
 
     /**
@@ -352,6 +349,17 @@ export default Vue.extend({
      */
     priceWithDollar(): string {
       return `${this.plan.monthlyCharge}$`;
+    },
+
+    /**
+     * Dynamic text for payment button
+     */
+    payButtonText() {
+      if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
+        return this.$t('billing.paymentDetails.goToPaymentService');
+      }
+
+      return this.$t('billing.paymentDetails.payWithSelectedCard');
     },
 
     /**
@@ -382,7 +390,7 @@ export default Vue.extend({
      *
      * @param newCards - updated cards array
      */
-    cards(newCards: BankCard[]) {
+    cards(newCards: BankCard[]): void {
       if (this.selectedCard) {
         return;
       }
@@ -441,6 +449,19 @@ export default Vue.extend({
           cardId: this.selectedCard.id,
         });
       }
+    },
+
+    /**
+     * Transforms card data to CustomSelect option
+     *
+     * @param card - card data to transform
+     */
+    cardToSelectOption(card: BankCard): CustomSelectOption {
+      return {
+        id: card.id,
+        value: card.id,
+        name: `**** **** **** ${card.lastFour}`,
+      };
     },
 
     /**
@@ -530,7 +551,7 @@ export default Vue.extend({
              * Refresh operations history
              */
             this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
-              ids: [ this.workspace.id ],
+              ids: [ this.workspaceId ],
             });
             this.$store.dispatch(RESET_MODAL_DIALOG);
           },
