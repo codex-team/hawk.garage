@@ -218,6 +218,19 @@ import { BusinessOperationStatus } from '../../types/business-operation-status';
  */
 const NEW_CARD_ID = 'NEW_CARD';
 
+/**
+ * Transforms card data to CustomSelect option
+ *
+ * @param card - card data to transform
+ */
+function cardToSelectOption(card: BankCard): CustomSelectOption {
+  return {
+    id: card.id,
+    value: card.id,
+    name: `**** **** **** ${card.lastFour}`,
+  };
+};
+
 export default Vue.extend({
   name: 'PaymentDetailsDialog',
   components: {
@@ -257,7 +270,7 @@ export default Vue.extend({
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
     const cards: BankCard[] = this.$store.state.user.data?.bankCards;
-    const selectedCard = (cards && this.cardToSelectOption(cards[0])) || undefined;
+    const selectedCard = (cards && cardToSelectOption(cards[0])) || undefined;
 
     return {
       /**
@@ -330,7 +343,7 @@ export default Vue.extend({
         return [ newCardOption ];
       }
 
-      return [newCardOption, ...cards.map(this.cardToSelectOption)];
+      return [newCardOption, ...cards.map(cardToSelectOption)];
     },
 
     /**
@@ -356,10 +369,10 @@ export default Vue.extend({
      */
     payButtonText(): string {
       if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
-        return this.$t('billing.paymentDetails.goToPaymentService');
+        return this.$t('billing.paymentDetails.goToPaymentService').toString();
       }
 
-      return this.$t('billing.paymentDetails.payWithSelectedCard');
+      return this.$t('billing.paymentDetails.payWithSelectedCard').toString();
     },
 
     /**
@@ -390,7 +403,7 @@ export default Vue.extend({
      *
      * @param newCards - updated cards array
      */
-    cards(newCards: BankCard[]): void {
+    cards(newCards: CustomSelectOption[]): void {
       if (this.selectedCard) {
         return;
       }
@@ -421,7 +434,7 @@ export default Vue.extend({
     /**
      * Open service payment
      */
-    async onGoToServicePayment() {
+    async onGoToServicePayment(): Promise<void> {
       if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
@@ -449,19 +462,6 @@ export default Vue.extend({
           cardId: this.selectedCard.id,
         });
       }
-    },
-
-    /**
-     * Transforms card data to CustomSelect option
-     *
-     * @param card - card data to transform
-     */
-    cardToSelectOption(card: BankCard): CustomSelectOption {
-      return {
-        id: card.id,
-        value: card.id,
-        name: `**** **** **** ${card.lastFour}`,
-      };
     },
 
     /**
