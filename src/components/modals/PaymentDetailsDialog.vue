@@ -354,7 +354,7 @@ export default Vue.extend({
     /**
      * Dynamic text for payment button
      */
-    payButtonText() {
+    payButtonText(): string {
       if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
         return this.$t('billing.paymentDetails.goToPaymentService');
       }
