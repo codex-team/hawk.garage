@@ -1,9 +1,12 @@
 <template>
   <div>
-    <div
-      v-if="event"
-      class="event-overview"
-    >
+    <div v-if="event" class="event-overview">
+      <DetailsSuspectedCommits
+        v-if="event.payload.backtrace && event.payload.backtrace.length"
+        class="event-overview__section"
+        :backtrace="event.payload.backtrace"
+        :lang="lang"
+      />
       <DetailsBacktrace
         v-if="event.payload.backtrace && event.payload.backtrace.length"
         class="event-overview__section"
@@ -22,7 +25,9 @@
         title="Vue"
       />
       <DetailsAddons
-        v-if="event.payload.context && Object.keys(event.payload.context).length"
+        v-if="
+          event.payload.context && Object.keys(event.payload.context).length
+        "
         class="event-overview__section"
         :addons="event.payload.context"
         :title="$t('event.context')"
@@ -33,28 +38,27 @@
         :addons="addonsFiltered"
       />
     </div>
-    <div
-      v-else
-      class="event-overview__loading"
-    >
-      {{ $t('event.loading') }}
+    <div v-else class="event-overview__loading">
+      {{ $t("event.loading") }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import DetailsCookie from './details/DetailsCookie.vue';
-import DetailsBacktrace from './details/DetailsBacktrace.vue';
-import DetailsAddons from './details/DetailsAddons.vue';
-import { HawkEvent } from '@/types/events';
+import Vue from "vue";
+import DetailsCookie from "./details/DetailsCookie.vue";
+import DetailsBacktrace from "./details/DetailsBacktrace.vue";
+import DetailsSuspectedCommits from "./details/DetailsSuspectedCommits.vue";
+import DetailsAddons from "./details/DetailsAddons.vue";
+import { HawkEvent } from "@/types/events";
 
 export default Vue.extend({
-  name: 'EventOverview',
+  name: "EventOverview",
   components: {
     DetailsCookie,
     DetailsBacktrace,
     DetailsAddons,
+    DetailsSuspectedCommits
   },
   props: {
     /**
@@ -62,8 +66,8 @@ export default Vue.extend({
      */
     event: {
       type: Object as () => HawkEvent,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     /**
@@ -73,7 +77,9 @@ export default Vue.extend({
      * @returns {string | undefined}
      */
     lang(): string | undefined {
-      return this.event.catcherType ? this.event.catcherType.split('/').pop() : '';
+      return this.event.catcherType
+        ? this.event.catcherType.split("/").pop()
+        : "";
     },
 
     /**
@@ -87,7 +93,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = [ 'vue' ];
+      const integrationToFilter = ["vue"];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {
@@ -97,7 +103,7 @@ export default Vue.extend({
       });
 
       return filteredAddons;
-    },
+    }
   },
   methods: {
     /**
@@ -117,26 +123,26 @@ export default Vue.extend({
       }
 
       return this.event.payload.addons[integrationName];
-    },
-  },
+    }
+  }
 });
 </script>
 
 <style>
-  .event-overview {
-    &__section {
-      margin-bottom: 30px;
-    }
-
-    &__loading {
-      height: 46px;
-      margin-top: 50px;
-      padding: 13px 11px 13px 15px;
-      font-weight: 500;
-      line-height: 20px;
-      background-color: var(--color-bg-main);
-      border-radius: 9px;
-      cursor: pointer;
-    }
+.event-overview {
+  &__section {
+    margin-bottom: 30px;
   }
+
+  &__loading {
+    height: 46px;
+    margin-top: 50px;
+    padding: 13px 11px 13px 15px;
+    font-weight: 500;
+    line-height: 20px;
+    background-color: var(--color-bg-main);
+    border-radius: 9px;
+    cursor: pointer;
+  }
+}
 </style>
