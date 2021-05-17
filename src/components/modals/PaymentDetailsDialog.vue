@@ -460,6 +460,7 @@ export default Vue.extend({
         await this.payWithCard({
           checksum: response.data.checksum,
           cardId: this.selectedCard.id,
+          isRecurrent: this.isRecurrent,
         });
       }
     },

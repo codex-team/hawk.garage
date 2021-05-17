@@ -409,7 +409,7 @@ type Mutation {
   """Remove card"""
   removeCard(cardNumber: String!): Boolean!
 
-  """Initialize recurrent payment"""
+  """Mutation for processing payment with saved card"""
   payWithCard(input: PayWithCardInput!): PayWithCardResponse!
 
   """Returns JSON data with payment link and initiate card attach procedure"""
@@ -756,13 +756,26 @@ input PayOnceInput {
   language: SupportedBillingLanguages = RU
 }
 
+"""Data for processing payment with saved card"""
 input PayWithCardInput {
+  """Checksum for data validation"""
   checksum: String!
+
+  """Card id for payment"""
   cardId: String!
+
+  """
+  Is payment recurrent or not. If payment is recurrent, then the money will be debited every month
+  """
+  isRecurrent: Boolean
 }
 
+"""Response of mutation for processing payment with saved card"""
 type PayWithCardResponse {
+  """Id of the created business operation"""
   recordId: ID!
+
+  """Created business operation"""
   record: BusinessOperation!
 }
 

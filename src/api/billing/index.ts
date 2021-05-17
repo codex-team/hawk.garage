@@ -24,6 +24,11 @@ export interface PayWithCardInput {
    * Saved card id for payment
    */
   cardId: string;
+
+  /**
+   * Is payment recurrent or not. If payment is recurrent, then the money will be debited every month
+   */
+  isRecurrent?: boolean;
 }
 
 /**
