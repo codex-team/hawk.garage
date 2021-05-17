@@ -67,3 +67,8 @@ export const CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = 'CHANGE_WORKSPACE_PLAN_FOR_FR
  * Cancel subscription on tariff plan
  */
 export const CANCEL_SUBSCRIPTION = 'CANCEL_SUBSCRIPTION';
+
+/**
+ * Process payment via saved card
+ */
+export const PAY_WITH_CARD = 'PAY_WITH_CARD';
