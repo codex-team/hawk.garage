@@ -276,7 +276,7 @@
       "acceptPaymentAgreement": "Я понимаю и принимаю условия платежа (обязательно)",
       "didNotAccept": "Для оплаты нужно принять платежное соглашение",
       "allowCardSaving": "Сохранить карту для будущих платежей",
-      "goToPaymentService": "Перейти в сервис для платежей",
+      "goToPaymentService": "Перейти к оплате",
       "payWithSelectedCard": "Оплатить с выбранной карты"
     },
     "autoProlongation": {
