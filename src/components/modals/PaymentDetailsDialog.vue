@@ -219,6 +219,12 @@ import { BusinessOperationStatus } from '../../types/business-operation-status';
 const NEW_CARD_ID = 'NEW_CARD';
 
 /**
+ * The amount we will debit to confirm the subscription.
+ * After confirmation, we will refund the user money.
+ */
+const AMOUNT_FOR_CARD_VALIDATION = 1;
+
+/**
  * Transforms card data to CustomSelect option
  *
  * @param card - card data to transform
@@ -386,7 +392,7 @@ export default Vue.extend({
     /**
      * Is workspace blocked or not
      */
-    isBlocked(): boolean {
+    isTariffPlanExpired(): boolean {
       const date = new Date();
 
       return date > this.planDueDate;
@@ -398,7 +404,7 @@ export default Vue.extend({
     nextPaymentDateString(): string {
       const date = new Date();
 
-      if (this.isBlocked) {
+      if (this.isTariffPlanExpired) {
         date.setMonth(date.getMonth() + 1);
 
         return date.toDateString();
@@ -536,7 +542,7 @@ export default Vue.extend({
           },
         };
 
-        if (!this.isBlocked) {
+        if (!this.isTariffPlanExpired) {
           paymentData.cloudPayments.recurrent.startDate = this.nextPaymentDateString;
           paymentData.cloudPayments.recurrent.amount = data.plan.monthlyCharge;
         }
@@ -549,7 +555,7 @@ export default Vue.extend({
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
-          amount: this.isBlocked ? +data.plan.monthlyCharge : 1,
+          amount: this.isTariffPlanExpired ? +data.plan.monthlyCharge : AMOUNT_FOR_CARD_VALIDATION,
           currency: data.currency,
           email: this.email,
 
