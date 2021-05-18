@@ -1,6 +1,6 @@
 <template>
   <span class="project__badge">
-    <slot/>
+    <slot />
   </span>
 </template>
 
@@ -12,6 +12,7 @@ export default {
 
 <style>
 .project__badge {
+  display: inline-block;
   border-radius: 5px;
   border: 1px solid var(--color-border);
   color: var(--color-text-second);

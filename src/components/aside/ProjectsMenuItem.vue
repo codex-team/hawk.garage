@@ -12,12 +12,11 @@
       size="26"
     />
     <div class="project-menu-item__info">
-      <div class="project-menu-item__name-wrapper">
+      <div
+        class="project-menu-item__name"
+      >
         <!-- eslint-disable vue/no-v-html -->
-        <div
-          class="project-menu-item__name"
-          v-html="name"
-        />
+        <span v-html="name" />
         <ProjectBadge
           v-for="(badge, index) in projectBadges"
           :key="index"
@@ -153,13 +152,10 @@ export default {
       overflow-x: hidden;
     }
 
-    &__name-wrapper {
+    &__name {
       display: flex;
       align-items: center;
       margin-bottom: 5px;
-    }
-
-    &__name {
       color: var(--color-text-main);
       font-weight: 500;
       font-size: 14px;
@@ -187,6 +183,5 @@ export default {
     &__events-number {
       margin: auto 0 auto auto;
     }
-
   }
 </style>
