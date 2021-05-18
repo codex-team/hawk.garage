@@ -16,4 +16,4 @@ export default interface CustomSelectOption {
    * Option name to display
    */
   name: string;
-}
+};
