@@ -229,7 +229,7 @@ function cardToSelectOption(card: BankCard): CustomSelectOption {
     value: card.id,
     name: `**** **** **** ${card.lastFour}`,
   };
-};
+}
 
 export default Vue.extend({
   name: 'PaymentDetailsDialog',
@@ -376,14 +376,35 @@ export default Vue.extend({
     },
 
     /**
-     * Next payment date (current date + 1 month)
+     * Due date of the current workspace tarrif plan
+     */
+    planDueDate() {
+      const lastChargeDate = new Date(this.workspace.lastChargeDate);
+      return new Date(lastChargeDate.setMonth(lastChargeDate.getMonth() + 1));
+    },
+
+    /**
+     * Is workspace blocked or not
+     */
+    isBlocked() {
+      const date = new Date();
+
+      return date > this.planDueDate;
+    },
+
+    /**
+     * Next payment date
      */
     nextPaymentDateString(): string {
       const date = new Date();
 
-      date.setMonth(date.getMonth() + 1);
+      if (this.isBlocked) {
+        date.setMonth(date.getMonth() + 1);
 
-      return date.toDateString();
+        return date.toDateString();
+      }
+
+      return this.planDueDate.toDateString()
     },
 
     /**
@@ -514,6 +535,11 @@ export default Vue.extend({
             period: 1,
           },
         };
+
+        if (!this.isBlocked) {
+          paymentData.cloudPayments.recurrent.startDate = this.nextPaymentDateString;
+          paymentData.cloudPayments.recurrent.amount = data.plan.monthlyCharge;
+        }
       }
 
       widget.pay('charge',
@@ -523,7 +549,7 @@ export default Vue.extend({
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
-          amount: +data.plan.monthlyCharge,
+          amount: this.isBlocked ? +data.plan.monthlyCharge : 1,
           currency: data.currency,
           email: this.email,
 
