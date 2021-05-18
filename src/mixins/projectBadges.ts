@@ -24,7 +24,7 @@ export const projectBadges = {
     nameWithoutBadges(name: string): string {
       const badgeRegex = / ?\[(.*?)]/gm;
 
-      return name.replaceAll(badgeRegex, '');
+      return name.replace(badgeRegex, '');
     },
   },
 };
