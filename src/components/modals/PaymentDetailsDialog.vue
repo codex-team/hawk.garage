@@ -378,7 +378,7 @@ export default Vue.extend({
     /**
      * Due date of the current workspace tariff plan
      */
-    planDueDate() {
+    planDueDate(): Date {
       const lastChargeDate = new Date(this.workspace.lastChargeDate);
       return new Date(lastChargeDate.setMonth(lastChargeDate.getMonth() + 1));
     },
@@ -386,7 +386,7 @@ export default Vue.extend({
     /**
      * Is workspace blocked or not
      */
-    isBlocked() {
+    isBlocked(): boolean {
       const date = new Date();
 
       return date > this.planDueDate;
