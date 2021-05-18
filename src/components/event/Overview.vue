@@ -169,6 +169,8 @@ export default Vue.extend({
 </script>
 
 <style>
+  @import "./../../styles/custom-properties.css";
+  
   .event-overview {
     &__section {
       margin-bottom: 30px;
@@ -187,8 +189,6 @@ export default Vue.extend({
   }
 
   .empty-event-label {
-    color: var(--color-text-second);
-    padding: 80px 0;
-    text-align: center;
+    @apply --empty-placeholder;
   }
 </style>
