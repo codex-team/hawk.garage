@@ -56,7 +56,7 @@ import ProjectPlaceholder from './project/ProjectPlaceholder';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState } from 'vuex';
-import { escape, misTranslit } from '../utils';
+import { misTranslit } from '../utils';
 
 export default {
   name: 'AppShell',
