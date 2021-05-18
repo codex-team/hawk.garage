@@ -319,7 +319,8 @@
     "context": "Context",
     "viewedBy": {
       "assignee": "Assignee"
-    }
+    },
+    "emptyData": "This event has no context"
   },
   "common": {
     "workspace": "Workspace",
