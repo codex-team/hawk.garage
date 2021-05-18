@@ -88,9 +88,7 @@ export default {
 
       const searchConditions = [
         this.searchQuery,
-        escape(this.searchQuery),
         misTranslit(this.searchQuery),
-        escape(misTranslit(this.searchQuery)),
       ];
 
       if (this.searchQuery) {
