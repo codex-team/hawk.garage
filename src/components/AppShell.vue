@@ -121,9 +121,7 @@ export default {
       if (this.searchQuery) {
         const searchConditions = [
           this.searchQuery,
-          escape(this.searchQuery),
           misTranslit(this.searchQuery),
-          escape(misTranslit(this.searchQuery)),
         ];
 
         const searchRegexp = new RegExp(`${searchConditions.join('|')}`, 'gi');
