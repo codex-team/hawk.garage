@@ -376,7 +376,7 @@ export default Vue.extend({
     },
 
     /**
-     * Due date of the current workspace tarrif plan
+     * Due date of the current workspace tariff plan
      */
     planDueDate() {
       const lastChargeDate = new Date(this.workspace.lastChargeDate);
