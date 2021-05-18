@@ -84,7 +84,7 @@ export default {
       return 'No one catcher connected';
     },
     name() {
-      const escapedName = this.nameWithoutBadges(this.project.name);
+      const escapedName = escape(this.nameWithoutBadges(this.project.name));
 
       const searchConditions = [
         this.searchQuery,
