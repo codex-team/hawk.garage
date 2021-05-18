@@ -404,6 +404,10 @@ export default Vue.extend({
     nextPaymentDateString(): string {
       const date = new Date();
 
+      /**
+       * If the tariff plan is expired, we need to debit money now
+       * Otherwise, we will debit money when the tariff plan expires
+       */
       if (this.isTariffPlanExpired) {
         date.setMonth(date.getMonth() + 1);
 
