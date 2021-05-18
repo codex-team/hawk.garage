@@ -40,7 +40,7 @@
       </div>
     </div>
     <div
-      v-else-if="loading"
+      v-else
       class="event-overview__loading"
     >
       {{ $t('event.loading') }}
