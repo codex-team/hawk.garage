@@ -68,7 +68,7 @@ export default {
     },
     value: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
     },
     label: {
       type: String,

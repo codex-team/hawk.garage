@@ -160,7 +160,7 @@ export default {
      * @param user
      */
     async updateAssignee(user) {
-      if (this.currentAssigneeId == user.id) {
+      if (this.currentAssigneeId === user.id) {
         await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
           eventId: this.eventId,

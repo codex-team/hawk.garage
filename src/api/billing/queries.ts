@@ -1,14 +1,34 @@
 // language=GraphQL
 /**
- * Query to retrieve payment link
+ * Fragment with information about business operations
  */
-export const QUERY_PAYMENT_LINK = `
-  mutation PayOnce($paymentInput: PayOnceInput!) {
-    payOnce(input: $paymentInput) {
-      amount
-      status
-      success
-      paymentURL
+export const FRAGMENT_BUSINESS_OPERATION = `
+  fragment BusinessOperation on BusinessOperation {
+    id
+    type
+    status
+    dtCreated
+    payload {
+      ...on PayloadOfDepositByUser {
+        user {
+          id
+          name
+          image
+        }
+        workspace {
+          id
+          name
+        }
+        amount
+        cardPan
+      }
+      ...on PayloadOfWorkspacePlanPurchase {
+        workspace {
+          id
+          name
+        }
+        amount
+      }
     }
   }
 `;
@@ -20,34 +40,25 @@ export const QUERY_PAYMENT_LINK = `
 export const QUERY_BUSINESS_OPERATIONS = `
   query businessOperations($ids: [ID!] = []) {
     businessOperations(ids: $ids) {
-      id
-      type
-      status
-      dtCreated
-      payload {
-        ...on PayloadOfDepositByUser {
-          user {
-            id
-            name
-            image
-          }
-          workspace {
-            id
-            name
-          }
-          amount
-          cardPan
-        }
+        ...BusinessOperation
+    }
+  }
 
-        ...on PayloadOfWorkspacePlanPurchase {
-          workspace {
-            id
-            name
-          }
-          amount
-        }
+  ${FRAGMENT_BUSINESS_OPERATION}
+`;
 
+// language=GraphQL
+/**
+ * Mutation for processing payment with savedcard
+ */
+export const MUTATION_PAY_WITH_CARD = `
+  mutation PayWithCard($input: PayWithCardInput!) {
+    payWithCard(input: $input) {
+      record {
+        ...BusinessOperation
       }
     }
   }
+
+  ${FRAGMENT_BUSINESS_OPERATION}
 `;

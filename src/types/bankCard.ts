@@ -8,12 +8,7 @@ export interface BankCard {
   id: string;
 
   /**
-   * The last 4 chars of the card number
+   * Last four numbers of card PAN
    */
-  pan: string;
-
-  /**
-   * Card name
-   */
-  name: string;
+  lastFour: number;
 }

@@ -9,7 +9,8 @@ import {
   RECOVER_PASSWORD,
   CHANGE_NOTIFICATIONS_CHANNEL,
   CHANGE_NOTIFICATIONS_RECEIVE_TYPE,
-  FETCH_NOTIFICATIONS_SETTINGS
+  FETCH_NOTIFICATIONS_SETTINGS,
+  FETCH_BANK_CARDS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as userApi from '../../../api/user';
@@ -29,6 +30,7 @@ const mutationTypes = {
  * @property {string} email - user's email
  * @property {string} name - user's name
  * @property {string} password - user's password
+ * @property {Array<BankCard>} bankCards - user's bank cards for one-click payments
  */
 
 /**
@@ -213,6 +215,22 @@ const actions = {
 
     commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
       notifications,
+    }));
+  },
+
+  /**
+   * Fetches notifications settings and put it to the state
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - allows to call mutation
+   * @param {UserModuleState} context.state - module state
+   * @returns {Promise<void>}
+   */
+  async [FETCH_BANK_CARDS]({ commit, state }) {
+    const bankCards = await userApi.fetchBankCards();
+
+    commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
+      bankCards,
     }));
   },
 

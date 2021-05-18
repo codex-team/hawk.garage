@@ -1,5 +1,5 @@
 <template>
-  <SettingsWindow on-close-route="/">
+  <SettingsWindow :on-close-route="`/workspace/${$route.params.workspaceId}`">
     <template v-slot:header>
       <div
         v-if="workspace"

@@ -1,6 +1,6 @@
 module.exports = {
   extends: [
-    'codex',
+    'codex/ts',
     'plugin:vue/recommended',
     '@vue/typescript',
   ],

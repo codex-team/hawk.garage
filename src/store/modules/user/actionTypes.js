@@ -52,3 +52,8 @@ export const FETCH_NOTIFICATIONS_SETTINGS = 'FETCH_NOTIFICATIONS_SETTINGS';
  * Change notifications 'whatToReceive' settings
  */
 export const CHANGE_NOTIFICATIONS_RECEIVE_TYPE = 'CHANGE_NOTIFICATIONS_RECEIVE_TYPE';
+
+/**
+ * Fetches user's bank cards for one-click payments
+ */
+export const FETCH_BANK_CARDS = 'FETCH_BANK_CARDS';

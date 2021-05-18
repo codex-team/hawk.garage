@@ -5,7 +5,10 @@
         :text="!loading ? event.payload.type || 'Application error' : $t('event.loading')"
         icon="flash"
       />
-      <span class="event-header__date">
+      <span
+        v-if="!loading"
+        class="event-header__date"
+      >
         {{ event.payload.timestamp | prettyFullDate }}
       </span>
       <h1 class="event-header__title">
@@ -60,6 +63,7 @@
             :users="event.visitedBy"
           />
           <AssigneeBar
+            v-if="!loading"
             :event="event"
             :project-id="projectId"
           />

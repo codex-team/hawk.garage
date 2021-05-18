@@ -8,7 +8,7 @@ import {
   QUERY_CURRENT_USER,
   MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL,
   MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE,
-  QUERY_CURRENT_USER_WITH_NOTIFICATIONS
+  QUERY_CURRENT_USER_WITH_NOTIFICATIONS, QUERY_BANK_CARDS
 } from './queries';
 import * as api from '../index.ts';
 
@@ -131,4 +131,13 @@ export async function updateNotificationsReceiveType(payload) {
   return (await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
     input: payload,
   })).changeUserNotificationsReceiveType;
+}
+
+/**
+ * Fetches user's bank cards for one-click payments
+ *
+ * @returns {Promise<Array<BankCard>>}
+ */
+export async function fetchBankCards() {
+  return (await api.call(QUERY_BANK_CARDS)).me.bankCards || [];
 }

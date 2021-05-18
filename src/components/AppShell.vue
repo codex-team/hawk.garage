@@ -68,6 +68,15 @@ export default {
     ProjectHeader,
     ProjectPlaceholder,
   },
+  props: {
+    /**
+     * Current workspace id
+     */
+    workspaceId: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       /**
@@ -148,21 +157,57 @@ export default {
 
       this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
     },
-  },
+    /**
+     * When the workspace changes user goes to the '/' or 'workspace/:workspaceId' routes
+     *
+     * @param workspace - new workspace
+     */
+    currentWorkspace(workspace) {
+      /**
+       * User goes to workspace page only from '/' and 'workspace/:workspaceId' routes
+       */
+      if (this.$route.path === '/' || this.$route.path.includes('workspace')) {
+        /**
+         * If workspace is null and user on the 'workspace/:workspaceId' route (else user goes to
+         * the same route and will get error in console) then user goes to the '/' route.
+         */
+        if (!workspace && this.workspaceId) {
+          return this.$router.push('/');
+        }
 
+        /**
+         * If workspace is not null and user is not on the same workspace (else user goes to
+         * the same route and will get error in console) then user goes to the '/workspace/:workspaceId'
+         */
+        if (workspace && this.workspaceId !== workspace.id) {
+          this.$router.push({
+            name: 'workspace',
+            params: {
+              workspaceId: workspace.id,
+            },
+          });
+        }
+      }
+    },
+  },
   /**
    * Vue hook. Called synchronously after the instance is created
    */
-  created() {
-    /**
-     * Reset current workspace
-     */
-    this.$store.dispatch(SET_CURRENT_WORKSPACE, null);
-
+  async created() {
     /**
      * Fetch user data
      */
-    this.$store.dispatch(FETCH_INITIAL_DATA);
+    await this.$store.dispatch(FETCH_INITIAL_DATA);
+
+    /**
+     * Get current workspace
+     */
+    const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
+
+    /**
+     * Set current workspace
+     */
+    this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
 
     /**
      * Fetch current user data
