@@ -18,7 +18,7 @@
         <!-- eslint-disable vue/no-v-html -->
         <span v-html="name" />
         <ProjectBadge
-          v-for="(badge, index) in projectBadges"
+          v-for="(badge, index) in projectBadges(project.name)"
           :key="index"
         >
           {{ badge }}
@@ -41,6 +41,7 @@ import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
 import { misTranslit, escape } from '../../utils';
 import ProjectBadge from '@/components/project/ProjectBadge';
+import { projectBadges } from '@/mixins/projectBadges';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -49,6 +50,7 @@ export default {
     Badge,
     EntityImage,
   },
+  mixins: [projectBadges],
   props: {
     projectId: {
       type: String,
@@ -72,21 +74,6 @@ export default {
       return this.$store.state.projects.list.find(_project => _project.id === this.projectId);
     },
 
-    /**
-     * Returns parsed badges from project name
-     *
-     * @returns {string[]}
-     */
-    projectBadges() {
-      const name = this.project.name;
-
-      const badgeRegex = /\[(.*?)]/gm;
-
-      const badges = name.match(badgeRegex);
-
-      return badges ? badges.map(badge => badge.slice(1, -1)) : null;
-    },
-
     lastEventTitle() {
       const latestEvents = this.$store.getters.getLatestEvent(this.projectId);
 
@@ -97,11 +84,7 @@ export default {
       return 'No one catcher connected';
     },
     name() {
-      /**
-       * Removes badges from project name
-       */
-      const badgeRegex = / ?\[(.*?)]/gm;
-      const escapedName = escape(this.project.name.replaceAll(badgeRegex, ''));
+      const escapedName = this.nameWithoutBadges(this.project.name);
 
       const searchConditions = [
         this.searchQuery,

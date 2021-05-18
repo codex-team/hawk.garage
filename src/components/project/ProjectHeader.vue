@@ -14,9 +14,9 @@
         size="26"
       />
       <div class="project-header__name">
-        {{ projectName }}
+        {{ nameWithoutBadges(project.name) }}
         <ProjectBadge
-          v-for="(badge, index) in projectBadges"
+          v-for="(badge, index) in projectBadges(project.name)"
           :key="index"
         >
           {{ badge }}
@@ -34,6 +34,7 @@
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
 import ProjectBadge from '@/components/project/ProjectBadge';
+import { projectBadges } from '@/mixins/projectBadges';
 
 export default {
   name: 'ProjectHeader',
@@ -42,6 +43,7 @@ export default {
     EntityImage,
     Icon,
   },
+  mixins: [projectBadges],
   computed: {
     /**
      * Current viewed project
@@ -52,34 +54,6 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
-    },
-
-    /**
-     * Returns parsed badges from project name
-     *
-     * @returns {string[]}
-     */
-    projectBadges() {
-      const name = this.project.name;
-
-      const badgeRegex = /\[(.*?)]/gm;
-
-      const badges = name.match(badgeRegex);
-
-      return badges ? badges.map(badge => badge.slice(1, -1)) : null;
-    },
-
-    /**
-     * Returns project name without badges
-     *
-     * @returns {string}
-     */
-    projectName() {
-      const name = this.project.name;
-
-      const badgeRegex = / ?\[(.*?)]/gm;
-
-      return name.replaceAll(badgeRegex, '');
     },
   },
 };

@@ -60,7 +60,7 @@ const router = new Router({
           path: 'workspace/:workspaceId',
           name: 'workspace',
         },
-        
+
         /**
          * Workspace settings
          * ----------------
