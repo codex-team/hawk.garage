@@ -112,7 +112,8 @@
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
       }
-    }
+    },
+    "notFound": "Project not found"
   },
   "settings": {
     "account": {
