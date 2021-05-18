@@ -170,7 +170,7 @@ export default Vue.extend({
 
 <style>
   @import "./../../styles/custom-properties.css";
-  
+
   .event-overview {
     &__section {
       margin-bottom: 30px;

@@ -112,7 +112,8 @@
         "editRule": "Редактировать",
         "removeRule": "Удалить"
       }
-    }
+    },
+    "notFound": "Проект не найден"
   },
   "settings": {
     "account": {

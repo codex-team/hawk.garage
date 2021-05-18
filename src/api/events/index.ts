@@ -19,6 +19,7 @@ import {
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
+import NotFoundError from '../../errors/404';
 
 /**
  * Get specific event
@@ -26,14 +27,20 @@ import { EventChartItem } from '@/types/chart';
  * @param {string} projectId - event's project
  * @param {string} eventId - id of the event
  * @param {string} repetitionId - event's concrete repetition. This param is optional
- * @returns {Promise<HawkEvent>}
+ * @returns {Promise<HawkEvent|null>}
  */
 export async function getEvent(projectId: string, eventId: string, repetitionId: string): Promise<HawkEvent | null> {
-  return (await api.call(QUERY_EVENT, {
+  const project = await (await api.call(QUERY_EVENT, {
     projectId,
     eventId,
     repetitionId,
-  })).project.event;
+  })).project;
+
+  if (!project){
+    return null;
+  }
+
+  return project.event;
 }
 
 /**
@@ -43,7 +50,10 @@ export async function getEvent(projectId: string, eventId: string, repetitionId:
  * @param {number} skip - certain number of documents to skip
  * @param {EventsSortOrder} sort - events sort order to use
  * @param {EventsFilters} filters - events filters to use
- * @returns {Promise<EventsWithDailyInfo>}
+ *
+ * @throws Error - 404 when project id is incorrect
+ *
+ * @returns {Promise<EventsWithDailyInfo|null>}
  */
 export async function fetchRecentEvents(
   projectId: string,
@@ -51,12 +61,18 @@ export async function fetchRecentEvents(
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {}
 ): Promise<EventsWithDailyInfo | null> {
-  return (await api.call(QUERY_RECENT_PROJECT_EVENTS, {
+  const project = (await api.call(QUERY_RECENT_PROJECT_EVENTS, {
     projectId,
     skip,
     sort,
     filters,
-  })).project.recentEvents;
+  })).project;
+
+  if (!project){
+    throw new NotFoundError();
+  }
+
+  return project.recentEvents;
 }
 
 /**
