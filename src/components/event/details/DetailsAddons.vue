@@ -79,7 +79,7 @@ export default Vue.extend({
      * @param key - addons keys to check
      */
     isCustomRenderer(key: string): boolean {
-      return [ 'window', 'userAgent' ].includes(key);
+      return ['window', 'userAgent'].includes(key);
     },
 
     /**
