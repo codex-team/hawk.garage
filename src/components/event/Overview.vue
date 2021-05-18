@@ -40,7 +40,7 @@
       </div>
     </div>
     <div
-      v-else
+      v-else-if="loading"
       class="event-overview__loading"
     >
       {{ $t('event.loading') }}
@@ -187,8 +187,6 @@ export default Vue.extend({
   }
 
   .empty-event-label {
-    color: var(--color-text-second);
-    padding: 80px 0;
-    text-align: center;
+    @apply --empty-placeholder;
   }
 </style>

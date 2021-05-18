@@ -320,7 +320,8 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
-    "emptyData": "This event has no context"
+    "emptyData": "This event has no context",
+    "notFound": "Event not found. Probably it was archived."
   },
   "common": {
     "workspace": "Workspace",
