@@ -54,7 +54,7 @@
       <div
         class="chart__ox-inner"
         :style="{
-          margin: `0 -${stepX / 2}px`
+          margin: `0 ${stepX / 2}px`
         }"
       >
         <span
@@ -376,7 +376,7 @@ export default Vue.extend({
 
         &:first-of-type,
         &:last-of-type {
-          opacity: 0;
+          display: none;
         }
       }
     }
