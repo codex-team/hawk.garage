@@ -275,7 +275,9 @@
       },
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
       "didNotAccept": "You need to accept the payment agreement to proceed with payment",
-      "allowCardSaving": "Save card for future payments"
+      "allowCardSaving": "Save card for future payments",
+      "goToPaymentService": "Go to payment service",
+      "payWithSelectedCard": "Pay with selected card"
     },
     "autoProlongation": {
       "title": "Auto prolongation",

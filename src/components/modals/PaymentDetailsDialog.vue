@@ -166,7 +166,7 @@
       <!--Button and cloudpayments logo-->
       <div class="payment-details__bottom">
         <UiButton
-          content="Go to payment service"
+          :content="payButtonText"
           class="payment-details__bottom-button"
           :submit="isAcceptedAllAgreements"
           :secondary="!isAcceptedAllAgreements"
@@ -205,13 +205,31 @@ import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
+import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
+import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
+import { PayWithCardInput } from '../../api/billing';
+import { BusinessOperation } from '../../types/business-operation';
+import { BusinessOperationStatus } from '../../types/business-operation-status';
 
 /**
  * Id for the 'New card' option in select
  */
 const NEW_CARD_ID = 'NEW_CARD';
+
+/**
+ * Transforms card data to CustomSelect option
+ *
+ * @param card - card data to transform
+ */
+function cardToSelectOption(card: BankCard): CustomSelectOption {
+  return {
+    id: card.id,
+    value: card.id,
+    name: `**** **** **** ${card.lastFour}`,
+  };
+};
 
 export default Vue.extend({
   name: 'PaymentDetailsDialog',
@@ -251,6 +269,8 @@ export default Vue.extend({
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
+    const cards: BankCard[] = this.$store.state.user.data?.bankCards;
+    const selectedCard = (cards && cardToSelectOption(cards[0])) || undefined;
 
     return {
       /**
@@ -296,7 +316,7 @@ export default Vue.extend({
       /**
        * Selected bank card for this payment
        */
-      selectedCard: undefined as BankCard | undefined,
+      selectedCard,
     };
   },
   computed: {
@@ -323,11 +343,7 @@ export default Vue.extend({
         return [ newCardOption ];
       }
 
-      return [newCardOption, ...cards.map(card => ({
-        id: card.id,
-        value: card.id,
-        name: `**** **** **** ${card.lastFour}`,
-      }))];
+      return [newCardOption, ...cards.map(cardToSelectOption)];
     },
 
     /**
@@ -346,6 +362,17 @@ export default Vue.extend({
      */
     priceWithDollar(): string {
       return `${this.plan.monthlyCharge}$`;
+    },
+
+    /**
+     * Dynamic text for payment button
+     */
+    payButtonText(): string {
+      if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
+        return this.$t('billing.paymentDetails.goToPaymentService').toString();
+      }
+
+      return this.$t('billing.paymentDetails.payWithSelectedCard').toString();
     },
 
     /**
@@ -376,7 +403,7 @@ export default Vue.extend({
      *
      * @param newCards - updated cards array
      */
-    cards(newCards: BankCard[]) {
+    cards(newCards: CustomSelectOption[]): void {
       if (this.selectedCard) {
         return;
       }
@@ -407,7 +434,7 @@ export default Vue.extend({
     /**
      * Open service payment
      */
-    async onGoToServicePayment() {
+    async onGoToServicePayment(): Promise<void> {
       if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
@@ -427,7 +454,45 @@ export default Vue.extend({
         `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
       );
 
-      this.showPaymentWidget(response.data as BeforePaymentPayload);
+      if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
+        this.showPaymentWidget(response.data as BeforePaymentPayload);
+      } else {
+        await this.payWithCard({
+          checksum: response.data.checksum,
+          cardId: this.selectedCard.id,
+          isRecurrent: this.isRecurrent,
+        });
+      }
+    },
+
+    /**
+     * Process payment via saved card
+     *
+     * @param input - data for processing payment
+     */
+    async payWithCard(input: PayWithCardInput): Promise<void> {
+      try {
+        const operation: BusinessOperation = await this.$store.dispatch(PAY_WITH_CARD, input);
+
+        if (operation.status === BusinessOperationStatus.Rejected) {
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.error') as string,
+            style: 'error',
+          });
+        } else {
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.success') as string,
+            style: 'success',
+          });
+        }
+        await this.$store.dispatch(RESET_MODAL_DIALOG);
+      } catch (e) {
+        this.$sendToHawk(e);
+        notifier.show({
+          message: this.$i18n.t('billing.widget.notifications.error') as string,
+          style: 'success',
+        });
+      }
     },
 
     /**
@@ -470,24 +535,26 @@ export default Vue.extend({
           data: paymentData,
         },
         {
-          onSuccess: (options) => {
-            console.info('onSuccess', options);
-
+          onSuccess: () => {
             notifier.show({
               message: this.$i18n.t('billing.widget.notifications.success') as string,
               style: 'success',
             });
           },
-          onFail: (reason, options) => {
-            console.info('onFail', reason, options);
-
+          onFail: () => {
             notifier.show({
               message: this.$i18n.t('billing.widget.notifications.error') as string,
               style: 'error',
             });
           },
-          onComplete: (paymentResult, options) => {
-            console.info('onComplete', paymentResult, options);
+          onComplete: () => {
+            /**
+             * Refresh operations history
+             */
+            this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
+              ids: [ this.workspaceId ],
+            });
+            this.$store.dispatch(RESET_MODAL_DIALOG);
           },
         }
       );
