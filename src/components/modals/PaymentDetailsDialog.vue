@@ -93,7 +93,7 @@
         v-if="isRecurrent"
         class="payment-details__adoption-autoProlongation"
       >
-        <div
+        <label
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
           class="payment-details__adoption-autoProlongation-item"
         >
@@ -101,35 +101,26 @@
             v-model="shouldSaveCard"
             class="payment-details__adoption-checkbox"
           />
+          {{ $t('billing.paymentDetails.allowCardSaving') }}
+        </label>
 
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
-          </div>
-        </div>
-
-        <div
+        <label
           class="payment-details__adoption-autoProlongation-item"
         >
           <UiCheckbox
             v-model="isAcceptedRecurrentPaymentAgreement"
             class="payment-details__adoption-checkbox"
           />
+          {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
+        </label>
 
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
-          </div>
-        </div>
-
-        <div class="payment-details__adoption-autoProlongation-item">
+        <label class="payment-details__adoption-autoProlongation-item">
           <UiCheckbox
             v-model="isAcceptedChargingEveryMonth"
             class="payment-details__adoption-checkbox"
           />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
-          </div>
-        </div>
+          {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
+        </label>
       </section>
 
       <!--Basic payment agreement-->
@@ -137,7 +128,7 @@
         v-else
         class="payment-details__adoption"
       >
-        <div
+        <label
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
           class="payment-details__adoption-autoProlongation-item"
         >
@@ -145,22 +136,16 @@
             v-model="shouldSaveCard"
             class="payment-details__adoption-checkbox"
           />
+          {{ $t('billing.paymentDetails.allowCardSaving') }}
+        </label>
 
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
-          </div>
-        </div>
-
-        <div class="payment-details__adoption-autoProlongation-item">
+        <label class="payment-details__adoption-autoProlongation-item">
           <UiCheckbox
             v-model="isAcceptedPaymentAgreement"
             class="payment-details__adoption-checkbox"
           />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
-          </div>
-        </div>
+          {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
+        </label>
       </section>
 
       <!--Button and cloudpayments logo-->
@@ -636,15 +621,13 @@ export default Vue.extend({
         margin-left: 0;
       }
 
-      &-description {
-        margin-top: 6px;
-      }
-
       &-autoProlongation {
         margin-bottom: 28px;
 
         &-item {
           display: flex;
+          align-items: center;
+          cursor: pointer;
           margin-bottom: 9px;
         }
       }
