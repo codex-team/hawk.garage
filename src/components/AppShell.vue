@@ -56,7 +56,7 @@ import ProjectPlaceholder from './project/ProjectPlaceholder';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState } from 'vuex';
-import { misTranslit } from '../utils';
+import { escape, misTranslit } from '../utils';
 
 export default {
   name: 'AppShell',
@@ -119,10 +119,17 @@ export default {
         });
 
       if (this.searchQuery) {
-        projectList = projectList.filter(project => {
-          const searchQueryLowerCased = this.searchQuery.toLowerCase();
+        const searchConditions = [
+          this.searchQuery,
+          escape(this.searchQuery),
+          misTranslit(this.searchQuery),
+          escape(misTranslit(this.searchQuery)),
+        ];
 
-          return project.name.includes(searchQueryLowerCased) || project.name.includes(misTranslit(searchQueryLowerCased));
+        const searchRegexp = new RegExp(`${searchConditions.join('|')}`, 'gi');
+
+        projectList = projectList.filter(project => {
+          return searchRegexp.test(project.name);
         });
       }
 
