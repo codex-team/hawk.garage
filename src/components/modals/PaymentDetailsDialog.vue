@@ -390,7 +390,7 @@ export default Vue.extend({
     },
 
     /**
-     * Is workspace blocked or not
+     * Has workspace actual tariff plan or it's expired
      */
     isTariffPlanExpired(): boolean {
       const date = new Date();
