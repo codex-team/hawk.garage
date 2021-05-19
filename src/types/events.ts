@@ -112,6 +112,11 @@ export interface HawkEvent {
    * Event chart data for a few days
    */
   chartData?: EventChartItem[];
+
+  /**
+   * 
+   */
+  release?:HawkEventRelease;
 }
 
 /**
@@ -291,4 +296,45 @@ export interface EventUser {
    * User photo
    */
   photo: string;
+}
+
+/**
+ * Hawk Event release format
+ */
+ export interface HawkEventRelease {
+  /**
+   * Release ID
+   */
+  id: string;
+
+  /**
+   * Release Commits
+   */
+  commits: HawkEventCommit[];
+}
+
+
+/**
+ * Hawk Event Commit format
+ */
+ export interface HawkEventCommit {
+  /**
+   * Commit Hash
+   */
+  commitHash: string;
+
+  /**
+   * Commit Author
+   */
+  author: string;
+
+  /**
+   * Commit Title
+   */
+   title: string;
+
+   /**
+    * Commit date
+    */
+   date: string;
 }
