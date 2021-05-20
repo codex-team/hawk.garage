@@ -6,6 +6,7 @@
         class="event-overview__section"
         :backtrace="event.payload.backtrace"
         :lang="lang"
+        :release="event.release"
       />
       <DetailsBacktrace
         v-if="event.payload.backtrace && event.payload.backtrace.length"

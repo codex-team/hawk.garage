@@ -58,7 +58,12 @@ export const QUERY_EVENT = `
         }
         release {
           id
-          commits
+          commits{
+            commitHash
+            author
+            title
+            date
+          }
         }
       }
     }

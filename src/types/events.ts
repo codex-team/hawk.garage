@@ -114,7 +114,7 @@ export interface HawkEvent {
   chartData?: EventChartItem[];
 
   /**
-   * 
+   * Event release
    */
   release?:HawkEventRelease;
 }

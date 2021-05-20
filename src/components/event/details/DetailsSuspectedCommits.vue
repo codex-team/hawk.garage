@@ -55,6 +55,9 @@
           :lang="lang"
         />
       </div>
+      <div>
+        {{ release }}
+      </div>
     </template>
     <template #expandButton>
       {{ isMoreFilesShown ? "Hide" : `${backtrace.length - 3} more files` }}
@@ -83,6 +86,10 @@ export default {
     backtrace: {
       type: Array,
       required: true
+    },
+    release: {
+      id: String,
+      commits: Array
     },
 
     /**
