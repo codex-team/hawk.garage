@@ -14,49 +14,22 @@
         class="event-details__content-block details-backtrace__content-block"
         data-ripple
       >
-        <div
-          class="details-backtrace__header-row"
-          @click="toggleViewState(index)"
-        >
+        <div class="details-backtrace__header-row">
           <div class="details-backtrace__left">
             <span v-if="frame.function">
-              {{ frame.function }}
+              Merge
             </span>
             <span v-else class="details-backtrace__left-anonymous-function">
               (anonymous function)
             </span>
           </div>
           <div class="details-backtrace__right">
-            <Filepath
-              :location="frame.file"
-              :title="frame.file"
-              class="details-backtrace__right-file"
-            />
-            <span v-if="frame.line" class="details-backtrace__right-line">
-              line {{ getLocation(frame) }}
-            </span>
+            {{ commits[0].commitHash }}
           </div>
-          <Icon
-            v-if="frame.sourceCode"
-            :class="{
-              'details-backtrace__arrow-down--opened':
-                openedFrames.includes(index) && frame.sourceCode
-            }"
-            symbol="arrow-down"
-            class="details-backtrace__arrow-down"
-          />
         </div>
-        <CodeFragment
-          v-if="openedFrames.includes(index) && frame.sourceCode"
-          :lines="frame.sourceCode"
-          :lines-highlighted="[frame.line]"
-          :column-pointer="frame.column"
-          :filename="frame.file"
-          :lang="lang"
-        />
-      </div>
-      <div>
-        {{ release }}
+        <div>
+          Hi
+        </div>
       </div>
     </template>
     <template #expandButton>
@@ -67,17 +40,13 @@
 
 <script>
 import DetailsBase from "./DetailsBase";
-import CodeFragment from "../../utils/CodeFragment";
 import Filepath from "../../utils/Filepath";
-import Icon from "../../utils/Icon";
 
 export default {
   name: "DetailsSuspectedCommits",
   components: {
     DetailsBase,
-    CodeFragment,
-    Filepath,
-    Icon
+    Filepath
   },
   props: {
     /**
@@ -87,9 +56,9 @@ export default {
       type: Array,
       required: true
     },
-    release: {
-      id: String,
-      commits: Array
+    commits: {
+      type: Array,
+      required: true
     },
 
     /**
@@ -131,54 +100,7 @@ export default {
       this.backtrace.findIndex(frame => !!frame.sourceCode)
     );
   },
-  methods: {
-    /**
-     * Join array of source code lines into one string to display it
-     *
-     * @param {Array} sourceCodeLinesArray - array o source code lines
-     * @returns {string}
-     */
-    joinSourceCodeLines(sourceCodeLinesArray) {
-      if (sourceCodeLinesArray) {
-        return sourceCodeLinesArray
-          .map(sourceCode => sourceCode.content)
-          .join("\n");
-      }
-    },
-
-    /**
-     * Switches the state of the spoiler to view the code
-     *
-     * @param {number} index - backtrace info index
-     */
-    toggleViewState(index) {
-      if (this.openedFrames.includes(index)) {
-        const itemIndex = this.openedFrames.indexOf(index);
-
-        this.openedFrames.splice(itemIndex, 1);
-      } else {
-        this.openedFrames.push(index);
-      }
-    },
-
-    /**
-     * Return concatenated "line:column" with the necessary checkups
-     *
-     * @param {object} location - error location data
-     * @param {number} location.line - calling line number
-     * @param {number} [location.column] - calling column number
-     * @returns {string}
-     */
-    getLocation({ line, column }) {
-      let str = line;
-
-      if (!isNaN(parseInt(column))) {
-        str += ":" + column;
-      }
-
-      return str;
-    }
-  }
+  methods: {}
 };
 </script>
 
