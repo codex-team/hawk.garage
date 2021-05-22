@@ -277,6 +277,11 @@ export default {
       line-height: 21px;
     }
 
+    .php {
+      padding: 6px 0;
+      line-height: 11px;
+    }
+
     &__line-numbers {
       display: flex;
       flex-direction: column;
