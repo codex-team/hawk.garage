@@ -282,7 +282,7 @@ export default {
     }
 
       ::-webkit-scrollbar {
-        height: 10px;
+        height: 4px;
       }
 
       ::-webkit-scrollbar-track {
@@ -298,7 +298,7 @@ export default {
       display: flex;
       flex-direction: column;
       width: 35px;
-      padding-bottom: 10px;
+      padding-bottom: 8px;
 
       span {
         display: flex;
@@ -326,7 +326,7 @@ export default {
       z-index: 1;
       display: flex;
       flex-direction: column;
-      padding-bottom: 10px;
+      padding-bottom: 5px;
 
       div {
         flex-grow: 1;
