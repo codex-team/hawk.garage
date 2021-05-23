@@ -275,12 +275,15 @@ export default {
       flex-grow: 2;
       font-size: 12px;
       line-height: 21px;
+      overflow-y: hidden;
+      overflow-x: scroll;
     }
 
     &__line-numbers {
       display: flex;
       flex-direction: column;
       width: 35px;
+      padding-bottom: 15px;
 
       span {
         display: flex;
@@ -308,6 +311,7 @@ export default {
       z-index: 1;
       display: flex;
       flex-direction: column;
+      padding-bottom: 15px;
 
       div {
         flex-grow: 1;
