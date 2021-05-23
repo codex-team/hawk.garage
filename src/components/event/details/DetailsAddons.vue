@@ -96,7 +96,7 @@ export default Vue.extend({
         let formattedUserAgent = value;
 
         if (this.addons?.beautifiedUserAgent?.browser) {
-          let beautifiedAgent = this.addons.beautifiedUserAgent;
+          const beautifiedAgent = this.addons.beautifiedUserAgent;
 
           formattedUserAgent = `${beautifiedAgent.browser} ${beautifiedAgent.browserVersion} / ${beautifiedAgent.os} ${beautifiedAgent.osVersion}`;
         }
