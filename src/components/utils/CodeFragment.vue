@@ -277,6 +277,8 @@ export default {
       line-height: 21px;
       overflow-y: hidden;
       overflow-x: scroll;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-bg-second) var(--color-bg-code-fragment);
     }
 
       ::-webkit-scrollbar {
