@@ -279,6 +279,19 @@ export default {
       overflow-x: scroll;
     }
 
+      ::-webkit-scrollbar {
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--color-bg-code-fragment);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--color-bg-second);
+        border-radius: var(--border-radius);
+      }
+
     &__line-numbers {
       display: flex;
       flex-direction: column;
