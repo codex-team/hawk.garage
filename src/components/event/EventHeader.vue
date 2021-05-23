@@ -226,6 +226,8 @@ export default Vue.extend({
       margin: 10px 0 15px;
       font-size: 18px;
       line-height: 1.67;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &__date {
