@@ -283,7 +283,7 @@ export default {
       display: flex;
       flex-direction: column;
       width: 35px;
-      padding-bottom: 15px;
+      padding-bottom: 10px;
 
       span {
         display: flex;
@@ -311,7 +311,7 @@ export default {
       z-index: 1;
       display: flex;
       flex-direction: column;
-      padding-bottom: 15px;
+      padding-bottom: 10px;
 
       div {
         flex-grow: 1;
