@@ -1,61 +1,65 @@
 <template>
   <DetailsBase
-    class="details-backtrace"
-    :expand-showed="backtrace.length !== 4 && backtrace.length > 3"
-    @expandClicked="isMoreFilesShown = !isMoreFilesShown"
+    class="details-suspected-commit"
+    :expandShowed="commits.length > 3"
+    @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
     <template #header>
       SUSPECTED COMMITS
     </template>
     <template #content>
       <div
-        v-for="(frame, index) in filteredBacktrace"
+        v-for="(commit, index) in filteredCommits"
         :key="index"
-        class="event-details__content-block details-backtrace__content-block"
+        class="event-details__content-block details-suspected-commit__content-block"
         data-ripple
       >
-        <div class="details-backtrace__header-row">
-          <div class="details-backtrace__left">
-            <span v-if="frame.function">
-              Merge
-            </span>
-            <span v-else class="details-backtrace__left-anonymous-function">
-              (anonymous function)
-            </span>
+        <div class="details-suspected-commit__header-row">
+          <div class="details-suspected-commit__left">
+            <div class="details-suspected-commit__left-title">
+              {{ commit.title }}
+            </div>
           </div>
-          <div class="details-backtrace__right">
-            {{ commits[0].commitHash }}
+          <div class="details-suspected-commit__right">
+            <div class="details-suspected-commit__right_block">
+              <span class="details-suspected-commit__right_block-commitHash">
+                {{ commit.commitHash.substr(0, 7) }}
+              </span>
+            </div>
           </div>
         </div>
-        <div>
-          Hi
+        <div class="details-suspected-commit__author-details">
+          <span>
+            {{ commit.author }}
+          </span>
+          <span class="details-suspected-commit__author-details_relative-time">
+            {{ getRelativeTime(commit.date) }}
+          </span>
         </div>
       </div>
     </template>
     <template #expandButton>
-      {{ isMoreFilesShown ? "Hide" : `${backtrace.length - 3} more files` }}
+      {{
+        isMoreCommitsShown
+          ? "Hide"
+          : `${commits.length - 3} more commits in this release`
+      }}
     </template>
   </DetailsBase>
 </template>
 
 <script>
 import DetailsBase from "./DetailsBase";
-import Filepath from "../../utils/Filepath";
 
 export default {
   name: "DetailsSuspectedCommits",
   components: {
-    DetailsBase,
-    Filepath
+    DetailsBase
   },
   props: {
     /**
-     * Event backtrace to show
+     * Event commits to show
      */
-    backtrace: {
-      type: Array,
-      required: true
-    },
     commits: {
       type: Array,
       required: true
@@ -74,62 +78,79 @@ export default {
       /**
        * Is block expanded.
        */
-      isMoreFilesShown: false,
-
-      /**
-       * Indexes of opened frames
-       */
-      openedFrames: []
+      isMoreCommitsShown: false
     };
   },
   computed: {
     /**
-     * Displayed backtrace items
+     * Displayed commits items
      */
-    filteredBacktrace() {
-      return this.backtrace.length === 4 || this.isMoreFilesShown
-        ? this.backtrace
-        : this.backtrace.slice(0, 3);
+    filteredCommits() {
+      return this.commits.length < 4 || this.isMoreCommitsShown
+        ? this.commits
+        : this.commits.slice(0, 3);
     }
   },
-  mounted() {
+  methods: {
     /**
-     * By default, open first frame that has a source code
+     * Return string represent the relative time string.
+     *
+     * @param {string} date - commit date
+     * @returns {string} relative time from today
      */
-    this.openedFrames.push(
-      this.backtrace.findIndex(frame => !!frame.sourceCode)
-    );
-  },
-  methods: {}
+    getRelativeTime(date) {
+      let currentTime = new Date();
+      let commitTime = new Date(date);
+      let diffInSeconds = Math.abs(currentTime - commitTime) / 1000;
+
+      let numberOfYears = Math.floor(diffInSeconds / (60 * 60 * 24 * 365));
+      if (numberOfYears) {
+        return `committed ${
+          numberOfYears === 1 ? "a" : ""
+        } ${numberOfYears} years ago`;
+      }
+
+      let numberOfMonths = Math.floor(diffInSeconds / (60 * 60 * 24 * 30));
+      if (numberOfMonths) {
+        return `committed ${
+          numberOfMonths === 1 ? "a" : ""
+        } ${numberOfMonths} months ago`;
+      }
+
+      let numberOfDays = Math.floor(diffInSeconds / (60 * 60 * 24));
+      if (numberOfDays) {
+        return `committed ${
+          numberOfDays === 1 ? "a" : ""
+        } ${numberOfDays} days ago`;
+      }
+
+      let numberOfHours = Math.floor(diffInSeconds / (60 * 60));
+      if (numberOfHours) {
+        return `committed ${
+          numberOfHours === 1 ? "a" : ""
+        } ${numberOfHours} hours ago`;
+      }
+
+      let numberOfMinutes = Math.floor(diffInSeconds / 60);
+      if (numberOfMinutes) {
+        return `committed ${
+          numberOfMinutes === 1 ? "a" : ""
+        } ${numberOfMinutes} minutes ago`;
+      }
+
+      return `committed few seconds ago`;
+    }
+  }
 };
 </script>
 
 <style>
-.details-backtrace {
-  &__source-code {
-    padding: 3px 9px;
-    font-size: 12px;
-    line-height: 21px;
-    background-color: #171920;
-    border: none;
-    border-radius: var(--border-radius);
-  }
-
-  &__arrow-down {
-    width: 12px;
-    height: 12px;
-    margin: 0 4px 0 11px;
-
-    &--opened {
-      transform: rotate(180deg);
-    }
-  }
-
+.details-suspected-commit {
   &__header-row {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 7px;
+    padding: 6px;
     font-size: 13px;
     letter-spacing: 0.15px;
     cursor: pointer;
@@ -141,32 +162,55 @@ export default {
     padding: 5px;
   }
 
-  &__filename,
-  &__line {
-    color: var(--color-text-second);
-    font-size: 12px;
-    font-family: var(--font-monospace);
-  }
-
   &__left {
-    &-anonymous-function {
-      opacity: 0.3;
+    &-title {
+      font-family: Roboto;
+      font-size: 14px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #dbe6ff;
+      max-width: 600px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 
   &__right {
     display: flex;
     margin-left: auto;
-
-    &-file {
-      max-width: 600px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    &_block {
+      padding: 0px 10px;
+      border-radius: 5px;
+      background-color: #171920;
+      &-commitHash {
+        font-family: JetBrainsMono;
+        font-size: 11px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: rgba(219, 230, 255, 0.6);
+      }
     }
-
-    &-line {
-      margin-left: 10px;
+  }
+  &__author-details {
+    padding: 0px 0px 6px 6px;
+    letter-spacing: 0.15px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: rgba(219, 230, 255, 0.6);
+    &_relative-time {
+      font-weight: normal;
     }
   }
 }

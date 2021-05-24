@@ -2,11 +2,12 @@
   <div>
     <div v-if="event" class="event-overview">
       <DetailsSuspectedCommits
-        v-if="event.payload.backtrace && event.payload.backtrace.length"
+        v-if="
+          event.release && event.release.commits && event.release.commits.length
+        "
         class="event-overview__section"
-        :backtrace="event.payload.backtrace"
         :lang="lang"
-        :release="event.release"
+        :commits="event.release.commits"
       />
       <DetailsBacktrace
         v-if="event.payload.backtrace && event.payload.backtrace.length"
