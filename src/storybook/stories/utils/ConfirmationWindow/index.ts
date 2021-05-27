@@ -1,4 +1,5 @@
-import ConfirmationWindow from '@/components/utils/ConfirmationWindow.vue';
+import ConfirmationWindow from '@/components/utils/ConfirmationWindow/ConfirmationWindow.vue';
+import UiButton from '@/components/utils/UiButton.vue';
 import { withKnobs, text } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 import mdx from './docs.mdx';
@@ -15,11 +16,15 @@ export default {
 };
 
 export const Continue = (): unknown => ({
-  components: { ConfirmationWindow },
+  components: { UiButton },
   template: `
-    <ConfirmationWindow
-      :title="title"
-      :description="description"
+    <UiButton
+      content="Click me"
+      submit
+      @click="$confirm.open({
+        title,
+        description
+      })"
     />
   `,
   props: {
@@ -35,13 +40,17 @@ export const Continue = (): unknown => ({
 });
 
 export const Deletion = (): unknown => ({
-  components: { ConfirmationWindow },
+  components: { UiButton },
   template: `
-    <ConfirmationWindow
-      :title="title"
-      :description="description"
-      :continue-button-text="continueButtonText"
-      :deletion="deletion"
+    <UiButton
+      content="Click me"
+      submit
+      @click="$confirm.open({
+        title,
+        description,
+        continueButtonText,
+        deletion
+      })"
     />
   `,
   props: {
@@ -65,8 +74,12 @@ export const Deletion = (): unknown => ({
 });
 
 export const Default = (): unknown => ({
-  components: { ConfirmationWindow },
+  components: { UiButton },
   template: `
-    <ConfirmationWindow/>
+    <UiButton
+      content="Click me"
+      submit
+      @click="$confirm.open()"
+    />
   `,
 });

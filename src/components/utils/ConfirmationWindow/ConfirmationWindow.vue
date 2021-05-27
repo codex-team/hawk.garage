@@ -1,5 +1,8 @@
 <template>
-  <PopupDialog>
+  <PopupDialog
+    v-if="isOpened"
+    @close="close()"
+  >
     <div class="confirmation-window__wrapper">
       <div class="confirmation-window__title">
         {{ title }}
@@ -15,13 +18,13 @@
           class="confirmation-window__continue-button"
           @click="() => {
             onConfirm();
-            $emit('close');
+            close();
           }"
         />
         <UiButton
           secondary
           content="Cancel"
-          @click="$emit('close')"
+          @click="close()"
         />
       </div>
     </div>
@@ -30,8 +33,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import PopupDialog from '@/components/utils/PopupDialog.vue';
-import UiButton from '@/components/utils/UiButton.vue';
+import PopupDialog from '../PopupDialog.vue';
+import UiButton from '../UiButton.vue';
+import ConfirmationWindowOptions from './ConfirmationWindowsOptions';
 
 export default Vue.extend({
   name: 'ConfirmationWindow',
@@ -49,7 +53,7 @@ export default Vue.extend({
     },
 
     /**
-     * Description of confirmating action
+     * Description of confirming action
      */
     description: {
       type: String,
@@ -87,6 +91,34 @@ export default Vue.extend({
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      isOpened: false
+    }
+  },
+  methods: {
+    /**
+     * Show confirmation window
+     *
+     * @param options - options for displaying
+     */
+    open(options?: ConfirmationWindowOptions) {
+      if (options && options.title) this.title = options.title;
+      if (options && options.description) this.description = options.description;
+      if (options && options.continueButtonText) this.continueButtonText = options.continueButtonText;
+      if (options && options.onConfirm) this.onConfirm = options.onConfirm;
+      if (options && options.submit) this.submit = options.submit;
+      if (options && options.deletion) this.deletion = options.deletion;
+      this.isOpened = true;
+    },
+
+    /**
+     * Hide confirmation window
+     */
+    close() {
+      this.isOpened = false;
+    }
   }
 });
 </script>
@@ -94,7 +126,7 @@ export default Vue.extend({
 <style>
 .confirmation-window {
   &__wrapper {
-    max-width: 340px;
+    width: 400px;
     padding: 30px;
   }
 
@@ -109,8 +141,11 @@ export default Vue.extend({
     color: var(--color-text-second);
     line-height: 1.43;
     font-size: 14px;
+    min-height: 1em;
+  }
 
-    margin-bottom: 20px;
+  &__buttons-wrapper {
+    margin-top: 20px;
   }
 
   &__continue-button {
