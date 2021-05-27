@@ -193,7 +193,7 @@ export default Vue.extend({
     border: 0;
 
     &:not(^&--disabled):hover {
-      background: var(--color-indicator-critical);
+      background: var(--color-indicator-critical-dark);
     }
   }
 
