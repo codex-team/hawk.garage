@@ -8,27 +8,39 @@
     </template>
     <template #content>
       <div
-        v-for="(value, key) in addons"
+        v-for="([key, value]) in addonsDisplayed"
         :key="key"
         class="event-details__content-block"
       >
         <div class="event-details__key">
-          {{ key }}
+          {{ getAddonName(key) }}
         </div>
         <div class="event-details__value">
-          <Json
-            v-if="isObject(value) && !isCustomRenderer(key)"
+          <component
+            :is="customRendererNamePrefix + key"
+            v-if="isCustomRenderer(key)"
             :value="value"
           />
-          <CodeBlock
-            v-else-if="isHTML(key)"
-            language="html"
-            class="event-details__single-line-code"
-          >
-            {{ value }}
-          </CodeBlock>
           <template v-else>
-            {{ renderAddonValue(key, value) }}
+            <!-- JSON value -->
+            <Json
+              v-if="isObject(value)"
+              :value="value"
+            />
+
+            <!-- HTML value -->
+            <CodeBlock
+              v-else-if="isHTML(key)"
+              language="html"
+              class="event-details__single-line-code"
+            >
+              {{ value }}
+            </CodeBlock>
+
+            <!-- String value -->
+            <template v-else>
+              {{ value }}
+            </template>
           </template>
         </div>
       </div>
@@ -37,12 +49,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import Icon from '../../utils/Icon.vue';
 import { isObject } from '@/utils';
 import Json from '../../utils/Json.vue';
 import CodeBlock from '../../utils/CodeBlock.vue';
+import CustomRenderer_beautifiedUserAgent from './custom-renderers/beautifiedUserAgent.vue';
+import CustomRenderer_window from './custom-renderers/window.vue';
+import { EventAddons } from 'hawk.types';
 
 /**
  * Details addons component
@@ -54,6 +69,8 @@ export default Vue.extend({
     Icon,
     Json,
     CodeBlock,
+    CustomRenderer_beautifiedUserAgent,
+    CustomRenderer_window,
   },
   props: {
     /**
@@ -67,9 +84,37 @@ export default Vue.extend({
      * Object with key-values to display
      */
     addons: {
-      type: Object,
+      type: Object as PropType<EventAddons>,
       required: true,
     },
+  },
+  data(): {
+    customRendererNamePrefix: string
+  } {
+    return {
+      /**
+       * Custom render components should have the "CustomRenderer_" prefix
+       */
+      customRendererNamePrefix: 'CustomRenderer_',
+    }
+  },
+  computed: {
+    /**
+     * Returns addons list to display
+     * Some addons have their beautified versions added on backend processing
+     *   — if so, show them instead of originals
+     *
+     * @see https://github.com/codex-team/hawk.garage/issues/436
+     */
+    addonsDisplayed(): EventAddons {
+      const addonsBeautified = {
+        userAgent: 'beautifiedUserAgent',
+      };
+
+      return Object.entries(this.addons).filter(([name, _value]) => {
+        return addonsBeautified[name] === undefined;
+      });
+    }
   },
   methods: {
     /**
@@ -79,32 +124,29 @@ export default Vue.extend({
      * @param key - addons keys to check
      */
     isCustomRenderer(key: string): boolean {
-      return ['window', 'userAgent'].includes(key);
+      const customRenderers = Object.keys(this.$options.components as any)
+        .filter(name => name.startsWith(this.customRendererNamePrefix))
+        .map(name => name.replace(this.customRendererNamePrefix, ''));
+
+      return key.match(new RegExp(customRenderers.join('|'), 'i')) !== null;
     },
 
     /**
-     * Render value in correct format
+     * Return addon name in human-readable form
      *
-     * @param {string | object} key - addons key
-     * @param {*} value - addons value
-     * @returns {string}
+     * @param name - addon original key
      */
-    renderAddonValue(key: string | object, value: any): string {
-      if (key === 'window') {
-        return value.innerWidth + 'x' + value.innerHeight;
-      } else if (key === 'userAgent') {
-        let formattedUserAgent = value;
+    getAddonName(name): string {
+      const dictKey = `event.addons.${name}`;
 
-        if (this.addons?.beautifiedUserAgent?.browser) {
-          let beautifiedAgent = this.addons.beautifiedUserAgent;
-
-          formattedUserAgent = `${beautifiedAgent.browser} ${beautifiedAgent.browserVersion} / ${beautifiedAgent.os} ${beautifiedAgent.osVersion}`;
-        }
-
-        return formattedUserAgent;
+      /**
+       * Check for translation existence
+       */
+      if (this.$i18n.te(dictKey)){
+        return this.$i18n.t(dictKey) as string;
       }
 
-      return value;
+      return name;
     },
 
     /**
