@@ -13,10 +13,15 @@
           :warning="deletion"
           :content="continueButtonText"
           class="confirmation-window__continue-button"
+          @click="() => {
+            onConfirm();
+            $emit('close');
+          }"
         />
         <UiButton
           secondary
           content="Cancel"
+          @click="$emit('close')"
         />
       </div>
     </div>
@@ -57,6 +62,11 @@ export default Vue.extend({
     continueButtonText: {
       type: String,
       default: 'Continue'
+    },
+
+    onConfirm: {
+      type: Function,
+      default: () => {}
     },
 
     /**
