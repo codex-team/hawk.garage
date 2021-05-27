@@ -64,6 +64,9 @@ export default Vue.extend({
       default: 'Continue'
     },
 
+    /**
+     * onConfirm callback when user clicks continue button
+     */
     onConfirm: {
       type: Function,
       default: () => {}
