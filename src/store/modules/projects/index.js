@@ -384,6 +384,13 @@ const mutations = {
   [mutationTypes.RESET_PROJECT_UNREAD_COUNT](state, { projectId }) {
     const project = state.list.find(_project => _project.id === projectId);
 
+    /**
+     * Project Id got from URL here. It can be incorrect
+     */
+    if (!project) {
+      return;
+    }
+
     Vue.set(project, 'unreadCount', 0);
   },
 

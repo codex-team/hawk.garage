@@ -74,6 +74,8 @@ import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
 import { debounce } from '@/utils';
 import FiltersBar from './FiltersBar';
+import notifier from 'codex-notifier';
+import NotFoundError from '@/errors/404';
 
 export default {
   name: 'ProjectOverview',
@@ -169,32 +171,54 @@ export default {
    * Used to fetch events on component creation
    */
   async created() {
-    this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
+    try {
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
 
-    const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
+      const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
 
-    /**
-     * Redirect to the "add catcher" page if there are no events
-     */
-    if (!latestEvent) {
-      await this.$router.push({
-        name: 'add-catcher',
-        params: { projectId: this.projectId },
-      });
+      /**
+       * Redirect to the "add catcher" page if there are no events
+       */
+      if (!latestEvent) {
+        await this.$router.push({
+          name: 'add-catcher',
+          params: { projectId: this.projectId },
+        });
+      }
+
+      // How many days will be displayed in the chart
+      const twoWeeks = 14;
+      const boundingDays = 2;
+
+      if (!this.$store.state.projects.charts[this.projectId]) {
+        await this.$store.dispatch(FETCH_CHART_DATA, {
+          projectId: this.projectId,
+          days: twoWeeks + boundingDays,
+        });
+      }
+
+      this.chartData = this.$store.state.projects.charts[this.projectId];
+    } catch (error){
+      if (error instanceof NotFoundError){
+        notifier.show({
+          message: this.$t('projects.notFound'),
+          style: 'error',
+          time: 5000,
+        });
+
+        /**
+         * @todo Make 404 page and Redirect to it
+         */
+        this.$router.push('/');
+
+        return;
+      }
+
+      /**
+       * In case of not-404 error, throw it down
+       */
+      throw error;
     }
-
-    // How many days will be displayed in the chart
-    const twoWeeks = 14;
-    const boundingDays = 2;
-
-    if (!this.$store.state.projects.charts[this.projectId]) {
-      await this.$store.dispatch(FETCH_CHART_DATA, {
-        projectId: this.projectId,
-        days: twoWeeks + boundingDays,
-      });
-    }
-
-    this.chartData = this.$store.state.projects.charts[this.projectId];
   },
 
   /**
