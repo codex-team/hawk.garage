@@ -322,7 +322,12 @@
       "assignee": "Assignee"
     },
     "emptyData": "This event has no context",
-    "notFound": "Event not found. Probably it was archived."
+    "notFound": "Event not found. Probably it was archived.",
+    "addons": {
+      "url": "URL",
+      "window": "Browser Window",
+      "beautifiedUserAgent": "User Agent"
+    }
   },
   "common": {
     "workspace": "Workspace",
