@@ -58,6 +58,7 @@ import CodeBlock from '../../utils/CodeBlock.vue';
 import CustomRenderer_beautifiedUserAgent from './custom-renderers/beautifiedUserAgent.vue';
 import CustomRenderer_window from './custom-renderers/window.vue';
 import { EventAddons } from 'hawk.types';
+import { Entries } from '../../../types/utils';
 
 /**
  * Details addons component
@@ -106,20 +107,26 @@ export default Vue.extend({
      *
      * @see https://github.com/codex-team/hawk.garage/issues/436
      */
-    addonsDisplayed(): EventAddons {
+    addonsDisplayed(): Entries<EventAddons> {
       const addonsBeautified = {
         userAgent: 'beautifiedUserAgent',
       };
 
       return Object.entries(this.addons).filter(([name, _value]) => {
         return addonsBeautified[name] === undefined;
-      });
+      }) as Entries<EventAddons>;
     }
   },
   methods: {
     /**
-     * Check if this key has custom rendering method,
-     * for example { window: {innerWidth: 1344, innerHeight: 763} } will be rendered as 1344x763
+     * Some addons can have custom renderer moved to separate component.
+     *
+     * How to add a custom renderer:
+     *  1. Create a Component in './custom-renderers/' dir. Name it as addon named.
+     *  2. Import this component to this file. Give it a name with the 'CustomRenderer_' prefix.
+     *     @example import CustomRenderer_window from './custom-renderers/window.vue';
+     *  3. Connect it to the 'components' section
+     *
      *
      * @param key - addons keys to check
      */
@@ -136,7 +143,7 @@ export default Vue.extend({
      *
      * @param name - addon original key
      */
-    getAddonName(name): string {
+    getAddonName(name: string): string {
       const dictKey = `event.addons.${name}`;
 
       /**

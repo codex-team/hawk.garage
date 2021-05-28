@@ -50,7 +50,7 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Icons of OS
+     * Icon of OS
      */
     osIcon(): string | undefined {
       /**
