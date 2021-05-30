@@ -4,9 +4,7 @@
     :expandShowed="commits.length > 3"
     @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
-    <template #header>
-      SUSPECTED COMMITS
-    </template>
+    <template #header> SUSPECTED COMMITS </template>
     <template #content>
       <div
         v-for="(commit, index) in filteredCommits"
@@ -49,10 +47,10 @@
 </template>
 
 <script>
-import DetailsBase from "./DetailsBase";
+import DetailsBase from './DetailsBase';
 
 export default {
-  name: "DetailsSuspectedCommits",
+  name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase
   },
@@ -106,35 +104,35 @@ export default {
       let numberOfYears = Math.floor(diffInSeconds / (60 * 60 * 24 * 365));
       if (numberOfYears) {
         return `committed ${
-          numberOfYears === 1 ? "a" : ""
+          numberOfYears === 1 ? 'a' : ''
         } ${numberOfYears} years ago`;
       }
 
       let numberOfMonths = Math.floor(diffInSeconds / (60 * 60 * 24 * 30));
       if (numberOfMonths) {
         return `committed ${
-          numberOfMonths === 1 ? "a" : ""
+          numberOfMonths === 1 ? 'a' : ''
         } ${numberOfMonths} months ago`;
       }
 
       let numberOfDays = Math.floor(diffInSeconds / (60 * 60 * 24));
       if (numberOfDays) {
         return `committed ${
-          numberOfDays === 1 ? "a" : ""
+          numberOfDays === 1 ? 'a' : ''
         } ${numberOfDays} days ago`;
       }
 
       let numberOfHours = Math.floor(diffInSeconds / (60 * 60));
       if (numberOfHours) {
         return `committed ${
-          numberOfHours === 1 ? "a" : ""
+          numberOfHours === 1 ? 'a' : ''
         } ${numberOfHours} hours ago`;
       }
 
       let numberOfMinutes = Math.floor(diffInSeconds / 60);
       if (numberOfMinutes) {
         return `committed ${
-          numberOfMinutes === 1 ? "a" : ""
+          numberOfMinutes === 1 ? 'a' : ''
         } ${numberOfMinutes} minutes ago`;
       }
 

@@ -47,15 +47,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import DetailsCookie from "./details/DetailsCookie.vue";
-import DetailsBacktrace from "./details/DetailsBacktrace.vue";
-import DetailsSuspectedCommits from "./details/DetailsSuspectedCommits.vue";
-import DetailsAddons from "./details/DetailsAddons.vue";
-import { HawkEvent } from "@/types/events";
+import Vue from 'vue';
+import DetailsCookie from './details/DetailsCookie.vue';
+import DetailsBacktrace from './details/DetailsBacktrace.vue';
+import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
+import DetailsAddons from './details/DetailsAddons.vue';
+import { HawkEvent } from '@/types/events';
 
 export default Vue.extend({
-  name: "EventOverview",
+  name: 'EventOverview',
   components: {
     DetailsCookie,
     DetailsBacktrace,
@@ -80,8 +80,8 @@ export default Vue.extend({
      */
     lang(): string | undefined {
       return this.event.catcherType
-        ? this.event.catcherType.split("/").pop()
-        : "";
+        ? this.event.catcherType.split('/').pop()
+        : '';
     },
 
     /**
@@ -95,7 +95,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = ["vue"];
+      const integrationToFilter = ['vue'];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {
