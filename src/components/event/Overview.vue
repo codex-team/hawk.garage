@@ -73,18 +73,6 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Get calling env language based on event.catcherType
-     * errors/javascript -> javascript
-     *
-     * @returns {string | undefined}
-     */
-    lang(): string | undefined {
-      return this.event.catcherType
-        ? this.event.catcherType.split('/').pop()
-        : '';
-    },
-
-    /**
      * Addons without integration
      * that will be shown as separated components
      *
