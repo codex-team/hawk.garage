@@ -319,7 +319,8 @@
     "context": "Context",
     "viewedBy": {
       "assignee": "Assignee"
-    }
+    },
+    "suspectedCommits":"suspected commits"
   },
   "common": {
     "workspace": "Workspace",

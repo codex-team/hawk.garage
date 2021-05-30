@@ -4,7 +4,7 @@
     :expandShowed="commits.length > 3"
     @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
-    <template #header> SUSPECTED COMMITS </template>
+    <template #header> {{ $t("event.suspectedCommits") }} </template>
     <template #content>
       <div
         v-for="(commit, index) in filteredCommits"
