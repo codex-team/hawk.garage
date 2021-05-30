@@ -336,5 +336,5 @@ export interface EventUser {
    /**
     * Commit date
     */
-   date: string;
+   date: Date;
 }

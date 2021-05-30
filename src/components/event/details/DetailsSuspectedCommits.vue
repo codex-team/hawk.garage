@@ -1,7 +1,7 @@
 <template>
   <DetailsBase
     class="details-suspected-commit"
-    :expandShowed="commits.length > 3"
+    :expandShowed="commits.length > numberOfVisibleCommits"
     @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
     <template #header> {{ $t("event.suspectedCommits") }} </template>
@@ -41,7 +41,7 @@
         isMoreCommitsShown
           ? "Hide"
           : `${
-              commits.length - this.numberOfVisibleCommits
+              commits.length - numberOfVisibleCommits
             } more commits in this release`
       }}
     </template>
@@ -64,6 +64,7 @@ export default {
       type: Array,
       required: true,
     },
+    
   },
   data() {
     return {
@@ -71,6 +72,11 @@ export default {
        * Is block expanded.
        */
       isMoreCommitsShown: false,
+      /**
+       * Number of Visible Commits
+       */
+      numberOfVisibleCommits : 1,
+    
     };
   },
   computed: {
@@ -81,10 +87,7 @@ export default {
       return this.commits.length <= this.numberOfVisibleCommits ||
         this.isMoreCommitsShown
         ? this.commits
-        : this.commits.slice(0, 3);
-    },
-    created() {
-      this.numberOfVisibleCommits = 1;
+        : this.commits.slice(0, this.numberOfVisibleCommits);
     },
   },
   methods: {
