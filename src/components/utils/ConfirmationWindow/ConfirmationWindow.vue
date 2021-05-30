@@ -43,58 +43,42 @@ export default Vue.extend({
     PopupDialog,
     UiButton
   },
-  props: {
-    /**
-     * Confirmation window title
-     */
-    title: {
-      type: String,
-      default: 'Confirm action'
-    },
-
-    /**
-     * Description of confirming action
-     */
-    description: {
-      type: String,
-      default: ''
-    },
-
-    /**
-     * Text in continue button
-     */
-    continueButtonText: {
-      type: String,
-      default: 'Continue'
-    },
-
-    /**
-     * onConfirm callback when user clicks continue button
-     */
-    onConfirm: {
-      type: Function,
-      default: () => {}
-    },
-
-    /**
-     * Is window submit action
-     */
-    submit: {
-      type: Boolean,
-      default: true
-    },
-
-    /**
-     * Is window delete action
-     */
-    deletion: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
-      isOpened: false
+      /**
+       * Is confirmation window open
+       */
+      isOpened: false,
+
+      /**
+       * Confirmation window title
+       */
+      title: 'Confirm action',
+
+      /**
+       * Description of confirming action
+       */
+      description: '',
+
+      /**
+       * Text in continue button
+       */
+      continueButtonText: 'Continue',
+
+      /**
+       * onConfirm callback when user clicks continue button
+       */
+      onConfirm: () => {},
+
+      /**
+       * Is window submit action
+       */
+      submit: true,
+
+      /**
+       * Is window delete action
+       */
+      deletion: false
     }
   },
   methods: {
@@ -104,12 +88,12 @@ export default Vue.extend({
      * @param options - options for displaying
      */
     open(options?: ConfirmationWindowOptions) {
-      if (options && options.title) this.title = options.title;
-      if (options && options.description) this.description = options.description;
-      if (options && options.continueButtonText) this.continueButtonText = options.continueButtonText;
-      if (options && options.onConfirm) this.onConfirm = options.onConfirm;
-      if (options && options.submit) this.submit = options.submit;
-      if (options && options.deletion) this.deletion = options.deletion;
+      this.title = options && options.title || 'Confirm action';
+      this.description = options && options.description || '';
+      this.continueButtonText = options && options.continueButtonText || 'Continue';
+      this.onConfirm = options && options.onConfirm || (() => {});
+      this.submit = options && options.submit || true;
+      this.deletion = options && options.deletion || false;
       this.isOpened = true;
     },
 
