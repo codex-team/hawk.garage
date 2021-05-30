@@ -40,7 +40,9 @@
       {{
         isMoreCommitsShown
           ? "Hide"
-          : `${commits.length - 3} more commits in this release`
+          : `${
+              commits.length - this.numberOfVisibleCommits
+            } more commits in this release`
       }}
     </template>
   </DetailsBase>
@@ -52,7 +54,7 @@ import DetailsBase from './DetailsBase';
 export default {
   name: 'DetailsSuspectedCommits',
   components: {
-    DetailsBase
+    DetailsBase,
   },
   props: {
     /**
@@ -60,7 +62,7 @@ export default {
      */
     commits: {
       type: Array,
-      required: true
+      required: true,
     },
   },
   data() {
@@ -68,7 +70,7 @@ export default {
       /**
        * Is block expanded.
        */
-      isMoreCommitsShown: false
+      isMoreCommitsShown: false,
     };
   },
   computed: {
@@ -76,10 +78,14 @@ export default {
      * Displayed commits items
      */
     filteredCommits() {
-      return this.commits.length < 4 || this.isMoreCommitsShown
+      return this.commits.length <= this.numberOfVisibleCommits ||
+        this.isMoreCommitsShown
         ? this.commits
         : this.commits.slice(0, 3);
-    }
+    },
+    created() {
+      this.numberOfVisibleCommits = 1;
+    },
   },
   methods: {
     /**
@@ -129,8 +135,8 @@ export default {
       }
 
       return `committed few seconds ago`;
-    }
-  }
+    },
+  },
 };
 </script>
 
