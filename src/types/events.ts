@@ -116,7 +116,7 @@ export interface HawkEvent {
   /**
    * Event release
    */
-  release?:HawkEventRelease;
+  release?: HawkEventRelease;
 }
 
 /**
@@ -321,7 +321,7 @@ export interface EventUser {
   /**
    * Commit Hash
    */
-  commitHash: string;
+  hash: string;
 
   /**
    * Commit Author

@@ -21,7 +21,7 @@
           <div class="details-suspected-commit__right">
             <div class="details-suspected-commit__right_block">
               <span class="details-suspected-commit__right_block-commitHash">
-                {{ commit.commitHash.substr(0, 7) }}
+                {{ commit.hash.substr(0, 7) }}
               </span>
             </div>
           </div>

@@ -59,7 +59,7 @@ export const QUERY_EVENT = `
         release {
           id
           commits{
-            commitHash
+            hash
             author
             title
             date
