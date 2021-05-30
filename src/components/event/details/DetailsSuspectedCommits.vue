@@ -12,27 +12,25 @@
         class="event-details__content-block details-suspected-commit__content-block"
         data-ripple
       >
-        <div class="details-suspected-commit__header-row">
-          <div class="details-suspected-commit__left">
-            <div class="details-suspected-commit__left-title">
-              {{ commit.title }}
-            </div>
+        <div class="details-suspected-commit__left">
+          <div class="details-suspected-commit__left-title">
+            {{ commit.title }}
           </div>
-          <div class="details-suspected-commit__right">
-            <div class="details-suspected-commit__right_block">
-              <span class="details-suspected-commit__right_block-commitHash">
-                {{ commit.hash.substr(0, 7) }}
-              </span>
-            </div>
+          <div>
+            <span class="details-suspected-commit__left-author">
+              {{ commit.author }}
+            </span>
+            <span class="details-suspected-commit__left-relative-time">
+              {{ getRelativeTime(commit.date) }}
+            </span>
           </div>
         </div>
-        <div class="details-suspected-commit__author-details">
-          <span>
-            {{ commit.author }}
-          </span>
-          <span class="details-suspected-commit__author-details_relative-time">
-            {{ getRelativeTime(commit.date) }}
-          </span>
+        <div class="details-suspected-commit__right">
+          <div class="details-suspected-commit__right-hash-block">
+            <span class="details-suspected-commit__right-hash">
+              {{ commit.hash.substr(0, 7) }}
+            </span>
+          </div>
         </div>
       </div>
     </template>
@@ -145,71 +143,58 @@ export default {
 
 <style>
 .details-suspected-commit {
-  &__header-row {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: 6px;
-    font-size: 13px;
-    letter-spacing: 0.15px;
-    cursor: pointer;
-  }
-
   &__content-block {
+    padding: 15px;
     display: flex;
-    flex-direction: column;
-    padding: 5px;
+    flex-direction: row;
   }
 
   &__left {
-    &-title {
-      font-family: Roboto;
-      font-size: 14px;
-      font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      color: #dbe6ff;
-      max-width: 600px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-  }
-
-  &__right {
     display: flex;
-    margin-left: auto;
-    &_block {
-      padding: 0px 10px;
-      border-radius: 5px;
-      background-color: #171920;
-      &-commitHash {
-        font-family: JetBrainsMono;
-        font-size: 11px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: normal;
-        color: rgba(219, 230, 255, 0.6);
-      }
-    }
-  }
-  &__author-details {
-    padding: 0px 0px 6px 6px;
-    letter-spacing: 0.15px;
-    font-family: Roboto;
+    flex-direction: column;
+    padding: 5px;
     font-size: 14px;
     font-weight: bold;
     font-stretch: normal;
     font-style: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: rgba(219, 230, 255, 0.6);
-    &_relative-time {
+    &-title {
+      margin-bottom: 6px;
+      color: #dbe6ff;
+      max-width: 600px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    &-author {
+      color: rgba(219, 230, 255, 0.6);
+    }
+    &-relative-time {
+      color: rgba(219, 230, 255, 0.6);
       font-weight: normal;
+    }
+  }
+
+  &__right {
+    display: flex;
+    margin-left: auto;
+    flex-direction: column;
+    justify-content: space-around;
+    &-hash-block {
+      padding: 0px 15px;
+      border-radius: 5px;
+      background-color: #171920;
+    }
+    &-hash {
+      font-family: Consolas;
+      font-size: 11px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: rgba(219, 230, 255, 0.6);
     }
   }
 }
