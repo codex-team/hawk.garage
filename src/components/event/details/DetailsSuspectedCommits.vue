@@ -62,14 +62,6 @@ export default {
       type: Array,
       required: true
     },
-
-    /**
-     * Error environment language
-     */
-    lang: {
-      type: String,
-      default: undefined
-    }
   },
   data() {
     return {
