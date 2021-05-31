@@ -552,6 +552,12 @@ export default Vue.extend({
         }
       }
 
+      let amount = data.plan.monthlyCharge;
+
+      if (this.isRecurrent && !this.isTariffPlanExpired) {
+        amount = AMOUNT_FOR_CARD_VALIDATION;
+      }
+
       widget.pay('charge',
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
@@ -559,7 +565,7 @@ export default Vue.extend({
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
-          amount: this.isTariffPlanExpired ? +data.plan.monthlyCharge : AMOUNT_FOR_CARD_VALIDATION,
+          amount,
           currency: data.currency,
           email: this.email,
 
