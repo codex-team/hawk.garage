@@ -119,10 +119,15 @@ export default {
         });
 
       if (this.searchQuery) {
-        projectList = projectList.filter(project => {
-          const searchQueryLowerCased = this.searchQuery.toLowerCase();
+        const searchConditions = [
+          this.searchQuery,
+          misTranslit(this.searchQuery),
+        ];
 
-          return project.name.includes(searchQueryLowerCased) || project.name.includes(misTranslit(searchQueryLowerCased));
+        const searchRegexp = new RegExp(`${searchConditions.join('|')}`, 'gi');
+
+        projectList = projectList.filter(project => {
+          return searchRegexp.test(project.name);
         });
       }
 

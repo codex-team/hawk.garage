@@ -5,7 +5,10 @@
         :text="!loading ? event.payload.type || 'Application error' : $t('event.loading')"
         icon="flash"
       />
-      <span class="event-header__date">
+      <span
+        v-if="!loading"
+        class="event-header__date"
+      >
         {{ event.payload.timestamp | prettyFullDate }}
       </span>
       <h1 class="event-header__title">
@@ -60,6 +63,7 @@
             :users="event.visitedBy"
           />
           <AssigneeBar
+            v-if="!loading"
             :event="event"
             :project-id="projectId"
           />
@@ -222,6 +226,8 @@ export default Vue.extend({
       margin: 10px 0 15px;
       font-size: 18px;
       line-height: 1.67;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &__date {

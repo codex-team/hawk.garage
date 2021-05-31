@@ -112,7 +112,8 @@
         "editRule": "Редактировать",
         "removeRule": "Удалить"
       }
-    }
+    },
+    "notFound": "Проект не найден"
   },
   "settings": {
     "account": {
@@ -320,7 +321,14 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
-    "suspectedCommits":"подозреваемые коммиты"
+    "suspectedCommits":"подозреваемые коммиты",
+    "emptyData": "Это событие не имеет дополнительных данных",
+    "notFound": "Событие не найдено. Возможно, оно было заархивировано.",
+    "addons": {
+      "url": "Адрес",
+      "window": "Окно браузера",
+      "beautifiedUserAgent": "Клиент"
+    }
   },
   "common": {
     "workspace": "Воркспейc",

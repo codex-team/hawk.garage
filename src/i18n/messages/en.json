@@ -112,7 +112,8 @@
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
       }
-    }
+    },
+    "notFound": "Project not found"
   },
   "settings": {
     "account": {
@@ -320,7 +321,14 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
-    "suspectedCommits":"suspected commits"
+    "suspectedCommits":"suspected commits",
+    "emptyData": "This event has no context",
+    "notFound": "Event not found. Probably it was archived.",
+    "addons": {
+      "url": "URL",
+      "window": "Browser Window",
+      "beautifiedUserAgent": "User Agent"
+    }
   },
   "common": {
     "workspace": "Workspace",
