@@ -51,7 +51,9 @@ Vue.filter('abbreviation', function (value: string): string {
 
   const words = value.split(' ').filter(word => word.length > 0);
 
-  return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
+  return (
+    words.length === 1 ? words[0][0] : words[0][0] + words[1][0]
+  ).toUpperCase();
 });
 
 /**
@@ -65,7 +67,7 @@ Vue.filter('prettyTime', function (value: number) {
 
   const ONE_MINUTE_IN_MS = 1000 * 60;
 
-  if ((currentDate.getTime() - date.getTime()) / (ONE_MINUTE_IN_MS) < 1) {
+  if ((currentDate.getTime() - date.getTime()) / ONE_MINUTE_IN_MS < 1) {
     return 'now';
   }
 
@@ -81,7 +83,9 @@ Vue.filter('prettyTime', function (value: number) {
  * @returns {string}
  */
 Vue.filter('prettyDateStr', function (value: string): string {
-  const [day, month]: number[] = value.split('-').map(stringValue => +stringValue);
+  const [day, month]: number[] = value
+    .split('-')
+    .map((stringValue) => +stringValue);
 
   const currentDate = new Date().getDate();
 
@@ -163,23 +167,28 @@ Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
  * @param datrStr - string like '1992-10-09T00:00:00Z'
  * @param includeTime - pass true to include time to the result
  */
-Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTime = true): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const isSameYear = now.getFullYear() === year;
-  const monthStr = capitalize(i18n.t('common.shortMonths[' + month + ']').toString());
+Vue.filter(
+  'prettyDateFromDateTimeString',
+  function (dateStr: string, includeTime = true): string {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const isSameYear = now.getFullYear() === year;
+    const monthStr = capitalize(
+      i18n.t('common.shortMonths[' + month + ']').toString()
+    );
 
-  let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
+    let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
 
-  if (includeTime) {
-    result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    if (includeTime) {
+      result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    return result;
   }
-
-  return result;
-});
+);
 
 /**
  * Convert US cents to dollars
@@ -191,47 +200,42 @@ Vue.filter('centsToDollars', function (value: number) {
 });
 
 /**
- * Return string represent the relative time string.
+ * Converts relative time into pretty string like '2021-05-20T15:40:51.000+00:00'.
+ * Returns string like 'hours ago'.
  *
- * @param {string} date - commit date
+ * @param {string} date - date in string formate
  * @returns {string} relative time from today
  */
-Vue.filter('getRelativeTime', function (date: string): string {
-
+Vue.filter('prettyRelativeTimeStr', function (date: string): string {
   let currentTime = new Date();
   let commitTime = new Date(date);
-  let diffInSeconds = Math.abs(currentTime.valueOf() - commitTime.valueOf()) / 1000;
+  let diffInSeconds =
+    Math.abs(currentTime.valueOf() - commitTime.valueOf()) / 1000;
 
   let numberOfYears = Math.floor(diffInSeconds / (60 * 60 * 24 * 365));
   if (numberOfYears) {
-    return `committed ${numberOfYears === 1 ? 'a' : ''
-      } ${numberOfYears} years ago`;
+    return `${numberOfYears === 1 ? 'a year' : numberOfYears + ' years'} ago`;
   }
 
   let numberOfMonths = Math.floor(diffInSeconds / (60 * 60 * 24 * 30));
   if (numberOfMonths) {
-    return `committed ${numberOfMonths === 1 ? 'a' : ''
-      } ${numberOfMonths} months ago`;
+    return `${numberOfMonths === 1 ? 'a month' : numberOfMonths + ' months'} ago`;
   }
 
   let numberOfDays = Math.floor(diffInSeconds / (60 * 60 * 24));
   if (numberOfDays) {
-    return `committed ${numberOfDays === 1 ? 'a' : ''
-      } ${numberOfDays} days ago`;
+    return `${numberOfDays === 1 ? 'yesterday' : numberOfDays + ' days ago'}`;
   }
 
   let numberOfHours = Math.floor(diffInSeconds / (60 * 60));
   if (numberOfHours) {
-    return `committed ${numberOfHours === 1 ? 'a' : ''
-      } ${numberOfHours} hours ago`;
+    return `${numberOfHours === 1 ? 'a hour' : numberOfHours + ' hours'} ago`;
   }
 
   let numberOfMinutes = Math.floor(diffInSeconds / 60);
   if (numberOfMinutes) {
-    return `committed ${numberOfMinutes === 1 ? 'a' : ''
-      } ${numberOfMinutes} minutes ago`;
+    return `${numberOfMinutes === 1 ? 'a minute' : numberOfMinutes + ' minutes'} ago`;
   }
 
-  return `committed few seconds ago`;
+  return `few seconds ago`;
 });
-

@@ -21,7 +21,7 @@
               {{ commit.author }}
             </span>
             <span class="details-suspected-commit__left-relative-time">
-              {{ commit.date | getRelativeTime }}
+              commited {{ commit.date | prettyRelativeTimeStr }}
             </span>
           </div>
         </div>
