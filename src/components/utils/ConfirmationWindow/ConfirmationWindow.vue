@@ -37,6 +37,9 @@ import PopupDialog from '../PopupDialog.vue';
 import UiButton from '../UiButton.vue';
 import ConfirmationWindowOptions from './ConfirmationWindowsOptions';
 
+/**
+ * @link './README.md'
+ */
 export default Vue.extend({
   name: 'ConfirmationWindow',
   components: {
