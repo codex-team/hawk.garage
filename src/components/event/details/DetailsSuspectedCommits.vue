@@ -94,7 +94,7 @@ export default {
 <style>
 .details-suspected-commit {
   &__content-block {
-    padding: 15px;
+    padding: 13px;
     display: flex;
     flex-direction: row;
   }
@@ -102,7 +102,6 @@ export default {
   &__left {
     display: flex;
     flex-direction: column;
-    padding: 5px;
     font-size: 14px;
     font-weight: bold;
     font-stretch: normal;
@@ -132,7 +131,8 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     &-hash-block {
-      padding: 0px 15px;
+      padding: 5px 10px;
+      line-height: normal;
       border-radius: 5px;
       background-color: #171920;
     }
