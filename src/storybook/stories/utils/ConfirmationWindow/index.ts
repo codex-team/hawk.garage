@@ -1,8 +1,10 @@
 import ConfirmationWindow from '@/components/utils/ConfirmationWindow/ConfirmationWindow.vue';
 import UiButton from '@/components/utils/UiButton.vue';
-import { withKnobs, text, radios } from '@storybook/addon-knobs';
+import { radios, text, withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 import mdx from './docs.mdx';
+import { ActionType } from '../../../../components/utils/ConfirmationWindow/types';
+import { PropType } from 'vue';
 
 export default {
   title: 'Utils/ConfirmationWindow',
@@ -67,11 +69,11 @@ export const Deletion = (): unknown => ({
       default: text('Continue button text', 'Delete project'),
     },
     actionType: {
-      type: String,
+      type: String as PropType<ActionType>,
       default: radios('Action type', {
-        Submit: 'submit',
-        Deletion: 'deletion',
-      }, 'deletion'),
+        Submit: ActionType.SUBMIT,
+        Deletion: ActionType.DELETION,
+      }, ActionType.DELETION),
     },
   },
 });

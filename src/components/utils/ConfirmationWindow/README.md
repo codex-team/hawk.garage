@@ -28,4 +28,4 @@ this.$confirm.close();
 | description | **String** | `''` | Description of confirmation action |
 | continueButtonText | **String** | `'Continue'` | Displays in continue button |
 | onConfirm | **Function** | `() => {}` | Callback that calls on action confirm |
-| actionType | `'submit' \| 'deletion'` | `'submit'` | Type of confirmation action |
+| actionType | **enum ActionType** | `ActionType.SUBMIT` | Type of confirmation action |

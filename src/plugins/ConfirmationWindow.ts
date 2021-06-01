@@ -1,6 +1,6 @@
 import { VueConstructor } from 'vue';
 import ConfirmationWindow from '@/components/utils/ConfirmationWindow/ConfirmationWindow.vue';
-import ConfirmationWindowOptions from '@/components/utils/ConfirmationWindow/ConfirmationWindowsOptions';
+import { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
 
 /**
  * Type of confirmation window component

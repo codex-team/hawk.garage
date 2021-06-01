@@ -1,7 +1,22 @@
 /**
+ * Type of confirmation action
+ */
+export enum ActionType {
+  /**
+   * Submit action
+   */
+  SUBMIT='SUBMIT',
+
+  /**
+   * Deletion action
+   */
+  DELETION='DELETION'
+}
+
+/**
  * Options for creating confirmation window
  */
-export default interface ConfirmationWindowOptions {
+export interface ConfirmationWindowOptions {
   /**
    * Confirmation window title
    */
@@ -25,5 +40,5 @@ export default interface ConfirmationWindowOptions {
   /**
    * Type of confirmation action
    */
-  actionType: 'submit' | 'deletion';
+  actionType: ActionType;
 }
