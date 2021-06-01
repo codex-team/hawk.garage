@@ -12,8 +12,8 @@
       </div>
       <div class="confirmation-window__buttons-wrapper">
         <UiButton
-          :submit="submit"
-          :warning="deletion"
+          :submit="actionType === 'submit'"
+          :warning="actionType === 'deletion'"
           :content="continueButtonText"
           class="confirmation-window__continue-button"
           @click="() => {
@@ -71,14 +71,9 @@ export default Vue.extend({
       onConfirm: () => {},
 
       /**
-       * Is window submit action
+       * Type of confirmation action
        */
-      submit: true,
-
-      /**
-       * Is window delete action
-       */
-      deletion: false
+      actionType: 'submit',
     }
   },
   methods: {
@@ -92,8 +87,7 @@ export default Vue.extend({
       this.description = options && options.description || '';
       this.continueButtonText = options && options.continueButtonText || 'Continue';
       this.onConfirm = options && options.onConfirm || (() => {});
-      this.submit = options && options.submit || true;
-      this.deletion = options && options.deletion || false;
+      this.actionType = options && options.actionType || 'submit';
       this.isOpened = true;
     },
 

@@ -23,12 +23,7 @@ export default interface ConfirmationWindowOptions {
   onConfirm?: () => {};
 
   /**
-   * Is window submit action
+   * Type of confirmation action
    */
-  submit?: boolean;
-
-  /**
-   * Is window delete action
-   */
-  deletion?: boolean;
+  actionType: 'submit' | 'deletion';
 }

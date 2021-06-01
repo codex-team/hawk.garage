@@ -1,6 +1,6 @@
 import ConfirmationWindow from '@/components/utils/ConfirmationWindow/ConfirmationWindow.vue';
 import UiButton from '@/components/utils/UiButton.vue';
-import { withKnobs, text } from '@storybook/addon-knobs';
+import { withKnobs, text, radios } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 import mdx from './docs.mdx';
 
@@ -49,7 +49,7 @@ export const Deletion = (): unknown => ({
         title,
         description,
         continueButtonText,
-        deletion
+        actionType
       })"
     />
   `,
@@ -66,9 +66,12 @@ export const Deletion = (): unknown => ({
       type: String,
       default: text('Continue button text', 'Delete project'),
     },
-    deletion: {
-      type: Boolean,
-      default: true,
+    actionType: {
+      type: String,
+      default: radios('Action type', {
+        Submit: 'submit',
+        Deletion: 'deletion',
+      }, 'deletion'),
     },
   },
 });
