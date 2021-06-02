@@ -12,8 +12,8 @@
       </div>
       <div class="confirmation-window__buttons-wrapper">
         <UiButton
-          :submit="actionType === 'SUBMIT'"
-          :warning="actionType === 'DELETION'"
+          :submit="actionType === submitAction"
+          :warning="actionType === deletionAction"
           :content="continueButtonText"
           class="confirmation-window__continue-button"
           @click="() => {
@@ -77,6 +77,16 @@ export default Vue.extend({
        * Type of confirmation action
        */
       actionType: ActionType.SUBMIT,
+
+      /**
+       * Action type submit const
+       */
+      submitAction: ActionType.SUBMIT,
+
+      /**
+       * Action type deletion const
+       */
+      deletionAction: ActionType.DELETION,
     }
   },
   methods: {
