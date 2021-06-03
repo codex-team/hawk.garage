@@ -305,7 +305,7 @@ export default Vue.extend({
       isAcceptedChargingEveryMonth: false,
 
       /**
-       * Workspace id for which the payment is made
+       * Workspace for which the payment is made
        */
       workspace,
 
