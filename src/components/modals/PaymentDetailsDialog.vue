@@ -432,7 +432,7 @@ export default Vue.extend({
      * True if user pays for the current tariff plan (no plan-changing)
      */
     isPaymentForCurrentTariffPlan(): boolean {
-      return false;
+      return this.workspace.plan.id === this.plan.id;
     },
 
     /**
