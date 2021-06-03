@@ -27,7 +27,7 @@
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
-          :disabled="selectedPlan.id === currentPlan.id"
+          :disabled="selectedPlan.id === workspace.plan.id"
           submit
           @click="onContinue"
         />
@@ -41,7 +41,6 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
-import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
 import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
@@ -68,14 +67,14 @@ export default Vue.extend({
 
     return {
       /**
+       * Workspace for which the tariff plan is selected
+       */
+      workspace,
+
+      /**
        * Selected plan object
        */
       selectedPlan: workspace.plan,
-
-      /**
-       * Current plan object
-       */
-      currentPlan: workspace.plan,
     };
   },
   computed: {
@@ -122,8 +121,6 @@ export default Vue.extend({
           return;
         }
 
-        this.currentPlan = this.selectedPlan;
-
         notifier.show({
           message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
           style: 'success',
@@ -140,6 +137,7 @@ export default Vue.extend({
         data: {
           workspaceId: this.workspaceId,
           tariffPlanId: this.selectedPlan.id,
+          isRecurrent: !!this.workspace.subscriptionId,
         },
       });
     },
