@@ -301,11 +301,11 @@ export interface EventUser {
 /**
  * Hawk Event release format
  */
- export interface HawkEventRelease {
+export interface HawkEventRelease {
   /**
-   * Release ID
+   * Release Name
    */
-  id: string;
+  releaseName: string;
 
   /**
    * Release Commits
@@ -317,7 +317,7 @@ export interface EventUser {
 /**
  * Hawk Event Commit format
  */
- export interface HawkEventCommit {
+export interface HawkEventCommit {
   /**
    * Commit Hash
    */
@@ -331,10 +331,10 @@ export interface EventUser {
   /**
    * Commit Title
    */
-   title: string;
+  title: string;
 
-   /**
-    * Commit date
-    */
-   date: Date;
+  /**
+   * Commit date
+   */
+  date: Date;
 }

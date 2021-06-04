@@ -57,7 +57,7 @@ export const QUERY_EVENT = `
           }
         }
         release {
-          id
+          releaseName
           commits{
             hash
             author
