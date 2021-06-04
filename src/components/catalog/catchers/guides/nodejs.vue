@@ -10,13 +10,9 @@
       last-version="2.0"
     />
     <div class="guide-page__instructions">
-      <div class="guide-page__instructions-header">
-        INSTALLATION
-      </div>
+      <div class="guide-page__instructions-header">INSTALLATION</div>
       <GuideStepBlock :step-number="1">
-        <template #header>
-          GET AN INTEGRATION TOKEN
-        </template>
+        <template #header> GET AN INTEGRATION TOKEN </template>
         <template #content>
           Your Integration token for <b>{{ project.name }}</b
           >:
@@ -24,49 +20,58 @@
         </template>
       </GuideStepBlock>
       <GuideStepBlock :step-number="2" last>
-        <template #header>
-          FOLLOW THE INSTALLATION GUIDE
-        </template>
+        <template #header> FOLLOW THE INSTALLATION GUIDE </template>
         <template #content>
           Install package:
-          <CodeBlock language="js" copyable>
+          <CodeBlock language="javascript" copyable>
             $ npm install @hawk.so/nodejs --save
           </CodeBlock>
-          <CodeBlock language="js" copyable>
-            $ yarn add @hawk.so/nodejs
-          </CodeBlock>
-          Initialize HawkCatcher:
-          <CodeBlock language="js" copyable>
-            const HawkCatcher = require('@hawk.so/nodejs').default;
-          </CodeBlock>
           Or
-          <CodeBlock language="js" copyable>
-            import HawkCatcher from '@hawk.so/nodejs';
-          </CodeBlock>
-          Initialize HawkCatcher in the entry file of your project by passing a
-          project token:
-          <CodeBlock language="js" copyable>
-            HawkCatcher.init('{{ project.token }}');
+          <CodeBlock language="javascript" copyable>
+            $ yarn add @hawk.so/nodejs
           </CodeBlock>
         </template>
       </GuideStepBlock>
+      <GuideSection>
+        <template #header> Initialize HawkCatcher </template>
+        <template #content>
+          <p>Add HawkCatcher module as follow:</p>
+          <CodeBlock language="javascript" copyable>
+            const HawkCatcher = require('@hawk.so/nodejs').default;
+          </CodeBlock>
+          or
+          <CodeBlock language="javascript" copyable>
+            import HawkCatcher from '@hawk.so/nodejs';
+          </CodeBlock>
+          <p>
+            Now initialize HawkCatcher in the entry file of your project by
+            passing a project token:
+          </p>
+          <CodeBlock language="javascript" copyable>
+            const HAWK_TOKEN = '{{ project.token }}';\n
+            HawkCatcher.init(HAWK_TOKEN);
+          </CodeBlock>
+        </template>
+      </GuideSection>
     </div>
   </div>
 </template>
 
 <script>
-import GuideHeader from "../../GuidePageHeader";
-import GuideStepBlock from "../../GuideStepBlock";
-import TokenBlock from "../../../project/TokenBlock";
-import CodeBlock from "../../../utils/CodeBlock";
+import GuideSection from "../../GuideSection";
+import GuideHeader from '../../GuidePageHeader';
+import GuideStepBlock from '../../GuideStepBlock';
+import TokenBlock from '../../../project/TokenBlock';
+import CodeBlock from '../../../utils/CodeBlock';
 
 export default {
-  name: "SetupPhpCatcher",
+  name: 'SetupPhpCatcher',
   components: {
     GuideStepBlock,
     TokenBlock,
     GuideHeader,
-    CodeBlock
+    CodeBlock,
+    GuideSection
   },
   computed: {
     /**
