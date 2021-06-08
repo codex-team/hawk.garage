@@ -25,7 +25,7 @@
           v-else
           class="empty-event"
         >
-          {{ $t('event.notFound' )}}
+          {{ $t('event.notFound' ) }}
         </div>
       </div>
     </div>

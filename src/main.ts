@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
+import ConfirmationWindow from './plugins/ConfirmationWindow';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -65,6 +66,7 @@ Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
 };
 
 Vue.use(VueCookies);
+Vue.use(ConfirmationWindow);
 
 /**
  * Configure API

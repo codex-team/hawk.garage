@@ -6,6 +6,11 @@ import '../../src/directives';
 
 import i18n from '../../src/storybook/decorators/i18n';
 
+import Vue from 'vue';
+import confirmationWindow from '@/plugins/ConfirmationWindow';
+
+Vue.use(confirmationWindow);
+
 export const globalTypes = {
   locale: {
     name: 'Locale',

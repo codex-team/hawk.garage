@@ -36,7 +36,7 @@ export async function getEvent(projectId: string, eventId: string, repetitionId:
     repetitionId,
   })).project;
 
-  if (!project){
+  if (!project) {
     return null;
   }
 
@@ -68,7 +68,7 @@ export async function fetchRecentEvents(
     filters,
   })).project;
 
-  if (!project){
+  if (!project) {
     throw new NotFoundError();
   }
 
