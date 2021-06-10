@@ -48,9 +48,13 @@
             passing a project token:
           </p>
           <CodeBlock language="javascript" copyable>
-            const HAWK_TOKEN = '{{ project.token }}';\n
+            const HAWK_TOKEN = '{{ project.token }}';<br />
             HawkCatcher.init(HAWK_TOKEN);
           </CodeBlock>
+          <p>
+            Now, Just write your code and HawkCatcher adds listeners for
+            uncaughtException and unhandledRejection itself.
+          </p>
         </template>
       </GuideSection>
     </div>
