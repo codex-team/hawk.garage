@@ -66,6 +66,7 @@ import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
 import { REMOVE_PROJECT } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
+import { ActionType } from '../../utils/ConfirmationWindow/types';
 
 export default Vue.extend({
   name: 'ProjectSettingsWindow',
@@ -97,24 +98,28 @@ export default Vue.extend({
      * Remove current project
      */
     async removeProject() {
-      if (!window.confirm(this.$i18n.t('projects.settings.removeConfirmation').toString())) {
-        return;
-      }
-      try {
-        await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
-        this.$router.push({ name: 'home' });
-        notifier.show({
-          message: this.$i18n.t('projects.settings.removeSuccess').toString(),
-          style: 'success',
-          time: 10000,
-        });
-      } catch {
-        notifier.show({
-          message: this.$i18n.t('projects.settings.removeError').toString(),
-          style: 'error',
-          time: 10000,
-        });
-      }
+      this.$confirm.open({
+        description: this.$i18n.t('projects.settings.removeConfirmation'),
+        actionType: ActionType.DELETION,
+        continueButtonText: this.$i18n.t('projects.settings.remove'),
+        onConfirm: async () => {
+          try {
+            await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
+            await this.$router.push({ name: 'home' });
+            notifier.show({
+              message: this.$i18n.t('projects.settings.removeSuccess').toString(),
+              style: 'success',
+              time: 10000,
+            });
+          } catch {
+            notifier.show({
+              message: this.$i18n.t('projects.settings.removeError').toString(),
+              style: 'error',
+              time: 10000,
+            });
+          }
+        }
+      });
     },
   },
 });
