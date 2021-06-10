@@ -49,9 +49,10 @@
   </DetailsBase>
 </template>
 
-<script>
-import DetailsBase from './DetailsBase';
-import EntityImage from '../../utils/EntityImage';
+<script lang="ts">
+import DetailsBase from './DetailsBase.vue';
+import EntityImage from '../../utils/EntityImage.vue';
+import { HawkEventCommit} from '@/types/events';
 
 export default {
   name: 'DetailsSuspectedCommits',
@@ -64,7 +65,7 @@ export default {
      * Event commits to show
      */
     commits: {
-      type: Array,
+      type: Array as () => HawkEventCommit[],
       required: true,
     },
     
