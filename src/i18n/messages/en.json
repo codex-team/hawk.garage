@@ -321,7 +321,7 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
-    "suspectedCommits":"suspected commits",
+    "suspectedCommits":"Suspected commits",
     "emptyData": "This event has no context",
     "notFound": "Event not found. Probably it was archived.",
     "addons": {

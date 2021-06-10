@@ -9,7 +9,10 @@
       <div
         v-for="(commit, index) in filteredCommits"
         :key="index"
-        class="event-details__content-block details-suspected-commit__content-block"
+        class="
+          event-details__content-block
+          details-suspected-commit__content-block
+        "
         data-ripple
       >
         <div class="details-suspected-commit__left">
@@ -21,7 +24,7 @@
               {{ commit.author }}
             </span>
             <span class="details-suspected-commit__left-relative-time">
-              commited {{ commit.date | prettyRelativeTimeStr }}
+              committed {{ commit.date | prettyRelativeTimeStr }}
             </span>
           </div>
         </div>
@@ -48,11 +51,13 @@
 
 <script>
 import DetailsBase from './DetailsBase';
+import EntityImage from '../../utils/EntityImage';
 
 export default {
   name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase,
+    EntityImage
   },
   props: {
     /**
@@ -94,7 +99,7 @@ export default {
 <style>
 .details-suspected-commit {
   &__content-block {
-    padding: 13px;
+    padding: 13px 15px;
     display: flex;
     flex-direction: row;
   }
@@ -104,23 +109,23 @@ export default {
     flex-direction: column;
     font-size: 14px;
     font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
     line-height: normal;
-    letter-spacing: normal;
+
     &-title {
       margin-bottom: 6px;
-      color: #dbe6ff;
+      color: var(--color-text-main);
       max-width: 600px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+
     &-author {
-      color: rgba(219, 230, 255, 0.6);
+      color: var(--color-text-second);
     }
+
     &-relative-time {
-      color: rgba(219, 230, 255, 0.6);
+      color: var(--color-text-second);
       font-weight: normal;
     }
   }
@@ -130,21 +135,19 @@ export default {
     margin-left: auto;
     flex-direction: column;
     justify-content: space-around;
+
     &-hash-block {
       padding: 5px 10px;
       line-height: normal;
       border-radius: 5px;
-      background-color: #171920;
+      background-color: var(--color-bg-code-fragment);
     }
+
     &-hash {
-      font-family: Consolas;
+      font-family: var(--font-monospace);
       font-size: 11px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
       line-height: normal;
-      letter-spacing: normal;
-      color: rgba(219, 230, 255, 0.6);
+      color: var(--color-text-second);
     }
   }
 }
