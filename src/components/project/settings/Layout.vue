@@ -99,9 +99,9 @@ export default Vue.extend({
      */
     async removeProject() {
       this.$confirm.open({
-        description: this.$i18n.t('projects.settings.removeConfirmation'),
+        description: this.$i18n.t('projects.settings.removeConfirmation').toString(),
         actionType: ActionType.DELETION,
-        continueButtonText: this.$i18n.t('projects.settings.remove'),
+        continueButtonText: this.$i18n.t('projects.settings.remove').toString(),
         onConfirm: async () => {
           try {
             await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
