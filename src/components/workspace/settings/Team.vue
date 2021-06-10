@@ -32,7 +32,7 @@
         v-copyable="{selector: 'span', callback: onLinkCopied}"
         class="input workspace-team__invite-link-container clearfix"
       >
-        <span>{{ `${baseUrl}/join/${workspace.id}` }}</span>
+        <span>{{ `${baseUrl}/join/${workspace.inviteHash}` }}</span>
         <input
           type="button"
           class="workspace-team__copy-button"

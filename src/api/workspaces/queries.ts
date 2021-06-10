@@ -79,6 +79,7 @@ export const MUTATION_CREATE_WORKSPACE = `
       name
       description
       image
+      inviteHash
       ...WorkspaceWithTeam
     }
   }
@@ -137,6 +138,7 @@ export const QUERY_WORKSPACES = `
       image
       subscriptionId
       lastChargeDate
+      inviteHash
       ...WorkspacePlan
       ...WorkspaceWithTeam
     }
