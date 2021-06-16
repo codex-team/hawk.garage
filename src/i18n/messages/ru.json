@@ -13,7 +13,8 @@
     "errors": {
       "Wrong email or password": "Неправильный email или пароль",
       "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",
-      "Wrong email format": "Некорректный формат почты"
+      "Wrong email format": "Некорректный формат почты",
+      "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету."
     }
   },
   "components": {
@@ -111,7 +112,8 @@
         "editRule": "Редактировать",
         "removeRule": "Удалить"
       }
-    }
+    },
+    "notFound": "Проект не найден"
   },
   "settings": {
     "account": {
@@ -132,7 +134,7 @@
     },
     "billing": {
       "title": "Платежи",
-      "ownedWorkspaces": "Воркспейсы"
+      "managedWorkspaces": "Воркспейсы"
     },
     "logout": "Выйти",
     "notifications": {
@@ -222,8 +224,8 @@
     "detachCard": "Открепить карту",
     "addCardButton": "Добавить карту",
     "members": "Нет участников | 1 участник | {n} участника | {n} участников",
-    "currentBalance": "Баланс",
-    "currentPlan": "План",
+    "currentPlan": "Текущий план",
+    "validTill": "Действителен до",
     "volume": "Емкость",
     "volumeEvents": "событий | событие | события | событий",
     "pay": "+",
@@ -231,14 +233,24 @@
     "requestInvoice": "Запросить счет",
     "paymentHistory": "История платежей",
     "paymentHistoryEmpty": "Вы пока не совершили никаких операций",
-    "all": "Все",
-    "incomings": "Пополнения",
-    "charges": "Списания",
     "autoPay": "Авто-платеж",
     "payPeriod": "мес",
+    "autoPayIsOn": "Автоплатеж включен. Дата следующего списания: ",
+    "expired": "Истек",
+    "boost": "Увеличить",
+    "blocked": "Заблокирован",
     "operations": {
-      "paymentByCard": "Пополнение по карте **** **** **** {cardPan}",
-      "chargeForPlan": "Списание за тарифный план {workspaceName}"
+      "chargeForPlan": "Оплата за тарифный план {workspaceName}",
+      "statuses": {
+        "pending": "В ожидании",
+        "processed": "Обработан",
+        "rejected": "Отклонен"
+      }
+    },
+    "buttons": {
+      "incrementEventsLimit": "Увеличить лимит событий",
+      "enableAutoPayment": "Включить автоплатеж",
+      "prolongateCurrentPlan": "Продлить текущий план"
     },
     "processPayment": {
       "header": "Пополнение баланса",
@@ -247,6 +259,36 @@
       "cardSelectLabel": "Карта",
       "amountLabel": "Сумма",
       "submitButton": "Продолжить"
+    },
+    "widget": {
+      "notifications": {
+        "success": "Платеж передан в обработку",
+        "error": "Произошла ошибка во время выполнения платежа"
+      }
+    },
+    "paymentDetails": {
+      "title": "Детали оплаты",
+      "description": "Вы собираетесь оплатить тарифный план воркспейса. Ваш платеж будет защищен. Мы не не храним данные вашей банковской карты и не имеем к ним доступа. Вы получите чек на электронную почту. Больше информации об оплате — в документе.",
+      "details": {
+        "title": "Детали",
+        "newCard": "Новая карта",
+        "emailForTheInvoice": "Почта для отправки чека"
+      },
+      "acceptPaymentAgreement": "Я понимаю и принимаю условия платежа (обязательно)",
+      "didNotAccept": "Для оплаты нужно принять платежное соглашение",
+      "allowCardSaving": "Сохранить карту для будущих платежей",
+      "goToPaymentService": "Перейти к оплате",
+      "payWithSelectedCard": "Оплатить с выбранной карты"
+    },
+    "autoProlongation": {
+      "title": "Автоматическое продление",
+      "description": "Вы собираетесь подписаться на автоматическое продление текущего плана воркспейса. Это означает, что при наступлении следующей даты платежа стоимость плана будет автоматически списана с вашей карты. Подробнее читайте в документации.",
+      "theNextPaymentDateTitle": "Дата следующего списания",
+      "acceptRecurrentPaymentAgreement": "Я понимаю и принимаю соглашение об автоматических платежах",
+      "allowingChargesEveryMonth": "Я разрешаю ежемесячные списания с моей банковской карты"
+    },
+    "cloudPaymentsWidget": {
+      "description": "Оплата тарифа \"{tariffPlanName}\" для воркспейса {workspaceName} на месяц."
     }
   },
   "event": {
@@ -278,9 +320,20 @@
     "context": "Дополнительно",
     "viewedBy": {
       "assignee": "Исполнитель"
+    },
+    "emptyData": "Это событие не имеет дополнительных данных",
+    "notFound": "Событие не найдено. Возможно, оно было заархивировано.",
+    "addons": {
+      "url": "Адрес",
+      "window": "Окно браузера",
+      "beautifiedUserAgent": "Клиент"
     }
   },
   "common": {
+    "workspace": "Воркспейc",
+    "plan": "План",
+    "price": "Цена",
+    "card": "Карта",
     "copiedNotification": "Скопировано!",
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
@@ -303,7 +356,7 @@
       "декабря"
     ],
     "shortMonths": [
-      "дек",
+      "янв",
       "фев",
       "мар",
       "апр",

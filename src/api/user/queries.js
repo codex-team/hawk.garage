@@ -139,3 +139,18 @@ export const MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE = `
 
   ${USER_NOTIFICATIONS_FRAGMENT}
 `;
+
+// language=GraphQL
+/**
+ * Query for fetching user's bank cards
+ */
+export const QUERY_BANK_CARDS = `
+  query BankCards {
+    me {
+      bankCards {
+        id
+        lastFour
+      }
+    }
+  }
+`;

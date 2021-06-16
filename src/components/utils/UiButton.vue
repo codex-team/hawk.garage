@@ -3,11 +3,13 @@
     class="ui-button"
     :class="{
       'ui-button--submit': submit,
+      'ui-button--warning': warning,
       'ui-button--small': small,
       'ui-button--loading': isLoading,
       'ui-button--shaking': shaking,
       'ui-button--rounded': rounded,
       'ui-button--disabled': disabled,
+      'ui-button--secondary': secondary,
     }"
     :disabled="disabled"
     @click="$emit('click', $event)"
@@ -63,6 +65,22 @@ export default Vue.extend({
      * Pass true to make button blue
      */
     submit: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Pass true to make button grey
+     */
+    secondary: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Pass true to make button red
+     */
+    warning: {
       type: Boolean,
       default: false,
     },
@@ -160,6 +178,22 @@ export default Vue.extend({
 
     &:not(^&--disabled):hover {
       background: var(--color-indicator-medium-dark);
+    }
+  }
+
+  &--secondary {
+    color: var(--color-text-main);
+    background: var(--color-indicator-low);
+    border: 0;
+  }
+
+  &--warning {
+    color: var(--color-text-main);
+    background: var(--color-indicator-critical);
+    border: 0;
+
+    &:not(^&--disabled):hover {
+      background: var(--color-indicator-critical-dark);
     }
   }
 

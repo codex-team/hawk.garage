@@ -20,14 +20,14 @@
             :name="plan.name"
             :limit="plan.eventsLimit"
             :price="plan.monthlyCharge"
-            :selected="plan.id === selectedPlan"
+            :selected="plan.id === selectedPlan.id"
             @click.native="selectPlan(plan.id)"
           />
         </div>
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
-          :disabled="selectedPlan === currentPlan"
+          :disabled="selectedPlan.id === workspace.plan.id"
           submit
           @click="onContinue"
         />
@@ -41,11 +41,10 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
-import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
-import { CHANGE_WORKSPACE_PLAN } from '@/store/modules/workspaces/actionTypes';
-import notifier from 'codex-notifier';
 import { Plan } from '@/types/plan';
+import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -68,14 +67,14 @@ export default Vue.extend({
 
     return {
       /**
-       * Id of selected plan
+       * Workspace for which the tariff plan is selected
        */
-      selectedPlan: workspace.plan.id,
+      workspace,
 
       /**
-       * Current plan id
+       * Selected plan object
        */
-      currentPlan: workspace.plan.id,
+      selectedPlan: workspace.plan,
     };
   },
   computed: {
@@ -86,12 +85,6 @@ export default Vue.extend({
       return this.$store.state.plans.list;
     },
   },
-  /**
-   * Fetch available plans before component is created
-   */
-  beforeCreate() {
-    this.$store.dispatch(FETCH_PLANS);
-  },
   methods: {
     /**
      * Select plan card by id
@@ -99,37 +92,54 @@ export default Vue.extend({
      * @param id - plan id
      */
     selectPlan(id: string): void {
-      if (!this.plans.find(plan => plan.id === id)) {
+      const plan = this.plans.find(p => p.id === id);
+
+      if (!plan) {
         return;
       }
 
-      this.selectedPlan = id;
+      this.selectedPlan = plan;
     },
 
     /**
      * Attempt to change workspace plan
      */
     async onContinue(): Promise<void> {
-      try {
-        await this.$store.dispatch(CHANGE_WORKSPACE_PLAN, {
+      if (this.selectedPlan.monthlyCharge === 0) {
+        const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
           workspaceId: this.workspaceId,
-          planId: this.selectedPlan,
+          planId: this.selectedPlan.id,
         });
+
+        if (!result) {
+          notifier.show({
+            message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
+            style: 'error',
+            time: 5000,
+          });
+
+          return;
+        }
 
         notifier.show({
           message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
           style: 'success',
-          time: 3000,
+          time: 5000,
         });
 
-        this.$emit('close');
-      } catch (_) {
-        notifier.show({
-          message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
-          style: 'error',
-          time: 3000,
-        });
+        this.$store.dispatch(RESET_MODAL_DIALOG);
+
+        return;
       }
+
+      this.$store.dispatch(SET_MODAL_DIALOG, {
+        component: 'PaymentDetailsDialog',
+        data: {
+          workspaceId: this.workspaceId,
+          tariffPlanId: this.selectedPlan.id,
+          isRecurrent: !!this.workspace.subscriptionId,
+        },
+      });
     },
   },
 });

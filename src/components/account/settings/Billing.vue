@@ -20,7 +20,7 @@
 
     <div class="account-billing__section">
       <label class="account-billing__label">
-        {{ $t('settings.billing.ownedWorkspaces') }}
+        {{ $t('settings.billing.managedWorkspaces') }}
       </label>
       <BillingWorkspace
         v-for="workspace in workspaces"
@@ -44,8 +44,9 @@ import BillingWorkspace from '../../workspace/settings/BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
 import AddCard from '../../utils/billing/BankCardAdd.vue';
-import { BankCard } from '@/types/bank-card';
-// import { GET_BUSINESS_OPERATIONS } from '../../../store/modules/workspaces/actionTypes';
+import { BankCard } from '../../../types/bankCard';
+import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
+
 import { User } from '@/types/user';
 import { Workspace } from '@/types/workspaces';
 
@@ -66,34 +67,6 @@ export default Vue.extend({
       required: true,
     },
   },
-  data(): {
-    cards: BankCard[]
-    } {
-    return {
-      /**
-       * Temporary cards for testing
-       *
-       * @todo replace with the real fetched cards
-       */
-      cards: [
-        {
-          id: '1',
-          pan: '3123',
-          name: '**** **** **** 3123',
-        },
-        {
-          id: '2',
-          pan: '3122',
-          name: '**** **** **** 3122',
-        },
-        {
-          id: '3',
-          pan: '3121',
-          name: '**** **** **** 3121',
-        },
-      ],
-    };
-  },
   computed: {
     /**
      * Workspaces in which current user is admin
@@ -103,14 +76,22 @@ export default Vue.extend({
         return this.$store.getters.isCurrentUserAdmin(workspace.id);
       });
     },
-  },
-  created() {
+
     /**
-     * Fetch workspaces transactions
+     * User's bank cards
      */
-    // this.$store.dispatch(GET_BUSINESS_OPERATIONS, { ids: [] });
+    cards(): BankCard[] {
+      const cards: BankCard[] = this.$store.state.user.data?.bankCards;
+
+      if (!cards) {
+        return [];
+      }
+
+      return cards;
+    },
   },
-  methods: {
+  mounted() {
+    this.$store.dispatch(FETCH_BANK_CARDS);
   },
 });
 </script>

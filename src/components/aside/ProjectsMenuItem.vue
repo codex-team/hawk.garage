@@ -12,11 +12,18 @@
       size="26"
     />
     <div class="project-menu-item__info">
-      <!-- eslint-disable vue/no-v-html -->
       <div
         class="project-menu-item__name"
-        v-html="name"
-      />
+      >
+        <!-- eslint-disable vue/no-v-html -->
+        <span v-html="name" />
+        <ProjectBadge
+          v-for="(badge, index) in projectBadges(project.name)"
+          :key="index"
+        >
+          {{ badge }}
+        </ProjectBadge>
+      </div>
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
       </div>
@@ -33,13 +40,17 @@
 import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
 import { misTranslit, escape } from '../../utils';
+import ProjectBadge from '@/components/project/ProjectBadge';
+import { projectBadges } from '@/mixins/projectBadges';
 
 export default {
   name: 'ProjectsMenuItem',
   components: {
+    ProjectBadge,
     Badge,
     EntityImage,
   },
+  mixins: [projectBadges],
   props: {
     projectId: {
       type: String,
@@ -62,6 +73,7 @@ export default {
     project() {
       return this.$store.state.projects.list.find(_project => _project.id === this.projectId);
     },
+
     lastEventTitle() {
       const latestEvents = this.$store.getters.getLatestEvent(this.projectId);
 
@@ -72,7 +84,7 @@ export default {
       return 'No one catcher connected';
     },
     name() {
-      const escapedName = escape(this.project.name);
+      const escapedName = escape(this.nameWithoutBadges(this.project.name));
 
       const searchConditions = [
         this.searchQuery,
@@ -119,7 +131,13 @@ export default {
       }
     }
 
+    &__info {
+      overflow-x: hidden;
+    }
+
     &__name {
+      display: flex;
+      align-items: center;
       margin-bottom: 5px;
       color: var(--color-text-main);
       font-weight: 500;
@@ -148,6 +166,5 @@ export default {
     &__events-number {
       margin: auto 0 auto auto;
     }
-
   }
 </style>

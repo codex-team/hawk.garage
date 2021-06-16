@@ -12,8 +12,10 @@
   --color-bg-sidebar: #1a1d26;
   --color-bg-main-transparent: rgba(36, 39, 50, 0);
   --color-bg-placeholder: #505b74;
+  --color-bg-button-hover: #ecf2ff;
 
   --color-indicator-critical: #d94848;
+  --color-indicator-critical-dark: #C33A3A;
   /** Blue badges, submit buttons */
   --color-indicator-medium: #4979e4;
   --color-indicator-medium-dark: #3a61b9;

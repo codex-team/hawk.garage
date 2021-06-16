@@ -46,8 +46,6 @@
         :stroke="maxValue === minValue ? 'rgba(61, 133, 210, 0.22)' : 'url(#chart)'"
         stroke-width="2.5"
         :points="polylinePoints"
-        stroke-dasharray="170%"
-        stroke-dashoffset="170%"
       />
     </svg>
     <div
@@ -56,7 +54,7 @@
       <div
         class="chart__ox-inner"
         :style="{
-          margin: `0 -${stepX / 2}px`
+          margin: `0 ${stepX / 2}px`
         }"
       >
         <span
@@ -350,19 +348,19 @@ export default Vue.extend({
       flex-grow: 2;
 
       polyline {
-
         animation: line-in 1.5s ease-in forwards;
         stroke-linecap: round;
         stroke-linejoin: round;
         vector-effect: non-scaling-stroke;
         shape-rendering: geometricPrecision;
+        stroke-dashoffset: 200%;
+        stroke-dasharray: 200%;
       }
     }
 
     &__ox {
       height: 40px;
       padding: 15px 0;
-      overflow-x: hidden;
 
       &-inner {
         display: flex;
@@ -378,7 +376,7 @@ export default Vue.extend({
 
         &:first-of-type,
         &:last-of-type {
-          opacity: 0;
+          display: none;
         }
       }
     }

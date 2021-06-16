@@ -45,6 +45,11 @@ export interface PayloadOfWorkspacePlanPurchase {
    * Amount of payment
    */
   amount: number;
+
+  /**
+   * User who made the payment
+   */
+  user: User;
 }
 
 /**

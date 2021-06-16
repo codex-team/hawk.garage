@@ -1,4 +1,4 @@
-import FilterButton from '@components/utils/FilterButton.vue';
+import FilterButton from '@/components/utils/FilterButton.vue';
 import { action } from '@storybook/addon-actions';
 import { withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';

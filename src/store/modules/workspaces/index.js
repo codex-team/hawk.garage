@@ -11,7 +11,9 @@ import {
   REMOVE_USER_FROM_WORKSPACE,
   GET_BUSINESS_OPERATIONS,
   GET_BALANCE,
-  CHANGE_WORKSPACE_PLAN
+  CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
+  CANCEL_SUBSCRIPTION,
+  PAY_WITH_CARD
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -37,6 +39,7 @@ const mutationTypes = {
   UPDATE_BALANCE: 'UPDATE_BALANCE', // Update workspace balance
   SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
   SET_PLAN: 'SET_PLAN', // Set workspace tariff plan
+  PUSH_BUSINESS_OPERATION: 'PUSH_BUSINESS_OPERATION', // push new business operation to workspace payments history
 };
 
 /**
@@ -331,6 +334,21 @@ const actions = {
   },
 
   /**
+   * Process payment via saved card
+   *
+   * @param {Function} commit - standard Vuex commit method
+   * @param {PayWithCardInput} args - data for payments
+   * @returns {Promise<void>}
+   */
+  async [PAY_WITH_CARD]({ commit }, args) {
+    const operation = await billingApi.payWithCard(args);
+
+    commit(mutationTypes.PUSH_BUSINESS_OPERATION, operation);
+
+    return operation;
+  },
+
+  /**
    * Fetch balance of workspace or workspaces
    *
    * @param {Function} commit - standard Vuex commit method
@@ -348,7 +366,7 @@ const actions = {
   },
 
   /**
-   * Call change plan mutation
+   * Call change plan for free plan mutation
    *
    * @param {Function} commit - VueX commit method
    * @param {object} getters - Store getters
@@ -356,24 +374,28 @@ const actions = {
    * @param {string} planId - id of plan to set
    * @returns {Promise<void>}
    */
-  async [CHANGE_WORKSPACE_PLAN]({ commit, getters }, { workspaceId, planId }) {
-    const { record: businessOperation, balance } = await workspaceApi.changePlan(workspaceId, planId);
+  async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
+    const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 
-    if (businessOperation !== null) {
-      commit(mutationTypes.UPDATE_BUSINESS_OPERATIONS, {
-        workspaceId,
-        businessOperation,
-      });
-    }
-
-    commit(mutationTypes.UPDATE_BALANCE, {
-      workspaceId,
-      balance,
-    });
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
-      plan: getters.getPlanById(planId),
+      plan: result.record.plan,
     });
+
+    return result;
+  },
+
+  /**
+   * Call API to cancel subscription on workspace
+   *
+   * @param {Function} commit - VueX commit method
+   * @param {string} workspaceId - id of workspace to change plan
+   * @returns {Promise<void>}
+   */
+  async [CANCEL_SUBSCRIPTION]({ commit }, { workspaceId }) {
+    const data = await workspaceApi.cancelSubscription(workspaceId);
+
+    commit(mutationTypes.SET_WORKSPACE, data);
   },
 
   /**
@@ -603,6 +625,18 @@ const mutations = {
         ];
       }
       );
+  },
+
+  /**
+   * Push new business operation to workspace payments history
+   *
+   * @param {object} state - module state
+   * @param {BusinessOperation} operation - operation to push
+   */
+  [mutationTypes.PUSH_BUSINESS_OPERATION](state, operation) {
+    const workspace = state.list.find(w => w.id === operation.payload.workspace.id);
+
+    Vue.set(workspace, 'paymentsHistory', [operation, ...workspace.paymentsHistory]);
   },
 
   /**

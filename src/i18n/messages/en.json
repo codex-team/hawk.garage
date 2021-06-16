@@ -13,7 +13,8 @@
     "errors": {
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",
-      "Wrong email format": "Wrong email format"
+      "Wrong email format": "Wrong email format",
+      "Network Error": "Server is not available. Check your internet connection."
     }
   },
   "components": {
@@ -111,7 +112,8 @@
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
       }
-    }
+    },
+    "notFound": "Project not found"
   },
   "settings": {
     "account": {
@@ -132,7 +134,7 @@
     },
     "billing": {
       "title": "Billing information",
-      "ownedWorkspaces": "Owned workspaces"
+      "managedWorkspaces": "Managed workspaces"
     },
     "logout": "Log out",
     "notifications": {
@@ -222,8 +224,8 @@
     "detachCard": "Detach card",
     "addCardButton": "Add new card",
     "members": "{n} member | {n} members",
-    "currentBalance": "Current balance",
     "currentPlan": "Current plan",
+    "validTill": "Valid Till",
     "volume": "Volume",
     "volumeEvents": "event | events",
     "pay": "Pay",
@@ -231,14 +233,24 @@
     "requestInvoice": "Request invoice",
     "paymentHistory": "Payment history",
     "paymentHistoryEmpty": "Payment history is empty",
-    "all": "All",
-    "incomings": "Incomings",
-    "charges": "Charges",
     "autoPay": "Auto-pay",
     "payPeriod": "mo",
+    "autoPayIsOn": "Autopay is on. The next payment date:",
+    "expired": "Expired",
+    "boost": "Boost",
+    "blocked": "Blocked",
     "operations": {
-      "paymentByCard": "Payment by card **** **** **** {cardPan}",
-      "chargeForPlan": "Charge for {workspaceName} tariff plan"
+      "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "statuses": {
+        "pending": "Pending",
+        "processed": "Processed",
+        "rejected": "Rejected"
+      }
+    },
+    "buttons": {
+      "incrementEventsLimit": "Increment events limit",
+      "enableAutoPayment": "Enable auto payment",
+      "prolongateCurrentPlan": "Prolongate current plan"
     },
     "processPayment": {
       "header": "Process payment",
@@ -247,6 +259,36 @@
       "cardSelectLabel": "Select card",
       "amountLabel": "Amount",
       "submitButton": "Continue"
+    },
+    "widget": {
+      "notifications": {
+        "success": "Payment sent to processing",
+        "error": "There was an error while paying"
+      }
+    },
+    "paymentDetails": {
+      "title": "Payment details",
+      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won’t access and store your wire transfer data. You will get an invoice on your email. Read more about pricing and payments.",
+      "details": {
+        "title": "Details",
+        "newCard": "New card",
+        "emailForTheInvoice": "Email for the invoice"
+      },
+      "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
+      "didNotAccept": "You need to accept the payment agreement to proceed with payment",
+      "allowCardSaving": "Save card for future payments",
+      "goToPaymentService": "Go to payment service",
+      "payWithSelectedCard": "Pay with selected card"
+    },
+    "autoProlongation": {
+      "title": "Auto prolongation",
+      "description": "You are about to subscribe for auto prolongation of the current plan of the workspace. That means that when the next payment date has come, the plan price will be automatically charged from your card. Read more in docs.",
+      "theNextPaymentDateTitle": "The next payment date",
+      "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
+      "allowingChargesEveryMonth": "I allow charges from my bank card every month"
+    },
+    "cloudPaymentsWidget": {
+      "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month"
     }
   },
   "event": {
@@ -278,9 +320,20 @@
     "context": "Context",
     "viewedBy": {
       "assignee": "Assignee"
+    },
+    "emptyData": "This event has no context",
+    "notFound": "Event not found. Probably it was archived.",
+    "addons": {
+      "url": "URL",
+      "window": "Browser Window",
+      "beautifiedUserAgent": "User Agent"
     }
   },
   "common": {
+    "workspace": "Workspace",
+    "plan": "Plan",
+    "price": "Price",
+    "card": "Card",
     "copiedNotification": "Copied!",
     "free": "FREE",
     "select": "Select",

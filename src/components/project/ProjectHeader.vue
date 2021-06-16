@@ -14,7 +14,13 @@
         size="26"
       />
       <div class="project-header__name">
-        {{ project.name }}
+        {{ nameWithoutBadges(project.name) }}
+        <ProjectBadge
+          v-for="(badge, index) in projectBadges(project.name)"
+          :key="index"
+        >
+          {{ badge }}
+        </ProjectBadge>
       </div>
     </div>
     <Icon
@@ -27,13 +33,17 @@
 <script>
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
+import ProjectBadge from '@/components/project/ProjectBadge';
+import { projectBadges } from '@/mixins/projectBadges';
 
 export default {
   name: 'ProjectHeader',
   components: {
+    ProjectBadge,
     EntityImage,
     Icon,
   },
+  mixins: [projectBadges],
   computed: {
     /**
      * Current viewed project
@@ -62,9 +72,12 @@ export default {
     height: 100%;
     padding: 0 15px;
     cursor: pointer;
+    overflow: hidden;
   }
 
   &__name {
+    display: flex;
+    align-items: center;
     margin-left: 10px;
     color: var(--color-text-main);
     font-weight: bold;
@@ -77,6 +90,7 @@ export default {
     margin-right: 19px;
     margin-left: auto;
     cursor: pointer;
+    flex-shrink: 0;
   }
 }
 </style>
