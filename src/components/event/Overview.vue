@@ -6,14 +6,12 @@
           event.release && event.release.commits && event.release.commits.length
         "
         class="event-overview__section"
-        :lang="lang"
         :commits="event.release.commits"
       />
       <DetailsBacktrace
         v-if="hasBacktrace"
         class="event-overview__section"
         :backtrace="event.payload.backtrace"
-        :lang="lang"
       />
       <DetailsCookie
         v-if="event.payload.cookies && event.payload.cookies.length"
@@ -37,11 +35,8 @@
         class="event-overview__section"
         :addons="addonsFiltered"
       />
-      <div
-        v-if="isNoAdditionalInformation"
-        class="empty-event-label"
-      >
-        {{ $t('event.emptyData') }}
+      <div v-if="isNoAdditionalInformation" class="empty-event-label">
+        {{ $t("event.emptyData") }}
       </div>
     </div>
     <div v-else class="event-overview__loading">
