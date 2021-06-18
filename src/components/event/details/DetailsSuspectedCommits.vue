@@ -20,6 +20,11 @@
             {{ commit.title }}
           </div>
           <div>
+            <EntityImage
+              class="details-suspected-commit__left-image"
+              :name="commit.author"
+              size="16"
+            />
             <span class="details-suspected-commit__left-author">
               {{ commit.author }}
             </span>
@@ -86,8 +91,9 @@ export default {
   computed: {
     /**
      * Displayed commits items
+     * @returns {HawkEventCommit[]}
      */
-    filteredCommits() {
+    filteredCommits():HawkEventCommit[] {
       return this.commits.length <= this.numberOfVisibleCommits ||
         this.isMoreCommitsShown
         ? this.commits
@@ -122,13 +128,19 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
+    &-image {
+      display: inline-flex;
+      margin-right: 5px;
+    }
 
     &-author {
       color: var(--color-text-second);
+      vertical-align: middle;
     }
 
     &-relative-time {
       color: var(--color-text-second);
+      vertical-align: middle;
       font-weight: normal;
     }
   }
