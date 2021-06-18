@@ -104,7 +104,9 @@ export default {
     display: flex;
     flex-direction: row;
   }
-
+  &__left > div {
+    height: 16px;
+  }
   &__left {
     display: flex;
     flex-direction: column;
@@ -145,6 +147,9 @@ export default {
     }
 
     &-hash {
+      display: block;
+      height: 14px;
+      width: 42px;
       font-family: var(--font-monospace);
       font-size: 11px;
       line-height: normal;
