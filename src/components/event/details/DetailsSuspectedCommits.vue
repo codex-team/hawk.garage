@@ -4,7 +4,7 @@
     :expandShowed="commits.length > numberOfVisibleCommits"
     @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
-    <template #header> {{ $t("event.suspectedCommits") }} </template>
+    <template #header> {{ $t("event.suspectedCommits.header") }} </template>
     <template #content>
       <div
         v-for="(commit, index) in filteredCommits"
@@ -29,7 +29,8 @@
               {{ commit.author }}
             </span>
             <span class="details-suspected-commit__left-relative-time">
-              committed {{ commit.date | prettyRelativeTimeStr }}
+              {{ $t("event.suspectedCommits.committed") }}
+              {{ commit.date | prettyRelativeTimeStr }}
             </span>
           </div>
         </div>
@@ -45,7 +46,7 @@
     <template #expandButton>
       {{
         isMoreCommitsShown
-          ? "Hide"
+          ? $t("event.suspectedCommits.hide")
           : `${
               commits.length - numberOfVisibleCommits
             } more commits in this release`
