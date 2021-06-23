@@ -275,12 +275,30 @@ export default {
       flex-grow: 2;
       font-size: 12px;
       line-height: 21px;
+      overflow-y: hidden;
+      overflow-x: scroll;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-bg-second) var(--color-bg-code-fragment);
     }
+
+      ::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--color-bg-code-fragment);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--color-bg-second);
+        border-radius: var(--border-radius);
+      }
 
     &__line-numbers {
       display: flex;
       flex-direction: column;
       width: 35px;
+      padding-bottom: 8px;
 
       span {
         display: flex;
@@ -308,6 +326,7 @@ export default {
       z-index: 1;
       display: flex;
       flex-direction: column;
+      padding-bottom: 5px;
 
       div {
         flex-grow: 1;
