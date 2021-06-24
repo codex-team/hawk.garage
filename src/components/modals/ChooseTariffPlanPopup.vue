@@ -137,6 +137,22 @@ export default Vue.extend({
             return;
           }
         });
+        return;
+      }
+
+      /**
+       * Don't show confirmation window if user changes free plan to paid
+       */
+      if (this.workspace.plan.monthlyCharge === 0) {
+        await this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'PaymentDetailsDialog',
+          data: {
+            workspaceId: this.workspaceId,
+            tariffPlanId: this.selectedPlan.id,
+            isRecurrent: !!this.workspace.subscriptionId,
+          },
+        });
+        return;
       }
 
       this.$confirm.open({
