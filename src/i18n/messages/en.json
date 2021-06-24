@@ -29,6 +29,11 @@
     },
     "codeBlock": {
       "copy": "COPY"
+    },
+    "confirmationWindow": {
+      "title": "Confirm action",
+      "continue": "Continue",
+      "cancel": "Cancel"
     }
   },
   "forms": {
