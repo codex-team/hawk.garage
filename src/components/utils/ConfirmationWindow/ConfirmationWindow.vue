@@ -23,7 +23,7 @@
         />
         <UiButton
           secondary
-          content="Cancel"
+          :content="$t('components.confirmationWindow.cancel')"
           @click="close()"
         />
       </div>
@@ -96,9 +96,9 @@ export default Vue.extend({
      * @param options - options for displaying
      */
     open(options?: ConfirmationWindowOptions) {
-      this.title = options && options.title || 'Confirm action';
+      this.title = options && options.title || this.$i18n.t('components.confirmationWindow.title').toString();
       this.description = options && options.description || '';
-      this.continueButtonText = options && options.continueButtonText || 'Continue';
+      this.continueButtonText = options && options.continueButtonText || this.$i18n.t('components.confirmationWindow.continue').toString();
       this.onConfirm = options && options.onConfirm || (() => {});
       this.actionType = options && options.actionType || ActionType.SUBMIT;
       this.isOpened = true;
