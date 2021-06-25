@@ -28,6 +28,7 @@
           <CodeBlock language="js" copyable>
             $ npm install @hawk.so/javascript --save
           </CodeBlock>
+          Or
           <CodeBlock language="js" copyable>
             $ yarn add @hawk.so/javascript
           </CodeBlock>

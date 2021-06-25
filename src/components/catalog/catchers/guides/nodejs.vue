@@ -57,6 +57,22 @@
           </p>
         </template>
       </GuideSection>
+      <GuideSection>
+        <template #header> Send Exceptions Manually </template>
+        <template #content>
+          <p>
+            After initializing you can catch exceptions manually in try-catch
+            with .send() method follows:
+          </p>
+          <CodeBlock language="javascript" copyable>
+            try { <br />
+            throw new Error('My First Hawk Error');<br />
+            } catch (e) { <br />
+            HawkCatcher.send(e);<br />
+            }
+          </CodeBlock>
+        </template>
+      </GuideSection>
     </div>
   </div>
 </template>
