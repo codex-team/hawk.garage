@@ -39,7 +39,7 @@
           <CodeBlock language="javascript" copyable>
             const HawkCatcher = require('@hawk.so/nodejs').default;
           </CodeBlock>
-          or
+          Or
           <CodeBlock language="javascript" copyable>
             import HawkCatcher from '@hawk.so/nodejs';
           </CodeBlock>
