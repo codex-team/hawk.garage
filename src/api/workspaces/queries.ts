@@ -115,6 +115,18 @@ export const MUTATION_LEAVE_WORKSPACE = `
 
 // language=GraphQL
 /**
+ * Mutation to join to workspace by invite link
+ */
+export const MUTATION_JOIN_BY_INVITE_LINK = `
+  mutation joinByInviteLink(
+    $inviteHash: String!
+  ) {
+    joinByInviteLink(inviteHash: $inviteHash)
+  }
+`;
+
+// language=GraphQL
+/**
  * Mutation to confirm user invitation
  */
 export const MUTATION_CONFIRM_INVITE = `
