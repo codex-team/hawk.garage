@@ -1,6 +1,7 @@
 import { VueConstructor } from 'vue';
 import ConfirmationWindow from '@/components/utils/ConfirmationWindow/ConfirmationWindow.vue';
 import { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
+import i18n from '../i18n';
 
 /**
  * Type of confirmation window component
@@ -21,6 +22,7 @@ export default {
   install: (Vue: VueConstructor) => {
     const vueContainer = document.createElement('div');
     const confirmationContainer = new Vue<ConfirmationWindowComponentType>({
+      i18n,
       render: h => h(ConfirmationWindow),
     });
 

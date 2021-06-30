@@ -29,6 +29,11 @@
     },
     "codeBlock": {
       "copy": "СКОПИРОВАТЬ"
+    },
+    "confirmationWindow": {
+      "title": "Подтвердите действие",
+      "continue": "Продолжить",
+      "cancel": "Отменить"
     }
   },
   "forms": {
