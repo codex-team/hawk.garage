@@ -25,7 +25,7 @@
               size="22"
             />
             <span class="repetitions-list__user-name">
-              {{ repetition.payload.user ? repetition.payload.user.name || '—' : 'Unknown' }}
+              {{ repetition.payload.user ? repetition.payload.user.name || $t('event.user.noname') : $t('event.user.unknown') }}
             </span>
           </span>
         </td>
