@@ -132,7 +132,7 @@ export const MUTATION_JOIN_BY_INVITE_LINK = `
 export const MUTATION_CONFIRM_INVITE = `
   mutation confirmInvitation(
     $workspaceId: ID!,
-    $inviteHash: String
+    $inviteHash: String!
   ) {
     confirmInvitation(workspaceId: $workspaceId, inviteHash: $inviteHash)
   }
