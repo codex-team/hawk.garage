@@ -29,9 +29,7 @@
             </span>
           </span>
         </td>
-        <td
-          class="repetitions-list__col"
-        >
+        <td class="repetitions-list__col">
           <span
             v-if="repetition.payload.addons && repetition.payload.addons.userAgent"
             class="repetitions-list__user-browser"
@@ -47,12 +45,8 @@
             {{ showWindowSize(repetition.payload.addons.window) }}
           </span>
         </td>
-        <td
-          class="repetitions-list__col repetitions-list__col--fixed-short"
-        >
-          <span
-            v-if="repetition.payload.addons && repetition.payload.addons.url"
-          >
+        <td class="repetitions-list__col repetitions-list__col--fixed-short">
+          <span v-if="repetition.payload.addons && repetition.payload.addons.url">
             <a
               class="repetitions-list__url"
               :title="repetition.payload.addons.url"
