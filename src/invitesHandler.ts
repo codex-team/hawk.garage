@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import notifier from 'codex-notifier';
 import store from './store';
-import { CONFIRM_INVITE } from './store/modules/workspaces/actionTypes';
+import { CONFIRM_INVITE, JOIN_BY_INVITE_LINK } from './store/modules/workspaces/actionTypes';
 import i18n from './i18n';
 import { NavigationGuard } from 'vue-router';
 
@@ -18,10 +18,16 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   let isSuccessful = true;
 
   try {
-    await store.dispatch(CONFIRM_INVITE, {
-      workspaceId,
-      inviteHash,
-    });
+    if (!!workspaceId) {
+      await store.dispatch(CONFIRM_INVITE, {
+        workspaceId,
+        inviteHash,
+      });
+    } else {
+      await store.dispatch(JOIN_BY_INVITE_LINK, {
+        inviteHash,
+      });
+    }
   } catch (e) {
     isSuccessful = false;
   }
