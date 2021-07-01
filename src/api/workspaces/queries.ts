@@ -121,7 +121,9 @@ export const MUTATION_JOIN_BY_INVITE_LINK = `
   mutation joinByInviteLink(
     $inviteHash: String!
   ) {
-    joinByInviteLink(inviteHash: $inviteHash)
+    joinByInviteLink(inviteHash: $inviteHash) {
+      recordId
+    }
   }
 `;
 
@@ -134,7 +136,9 @@ export const MUTATION_CONFIRM_INVITE = `
     $workspaceId: ID!,
     $inviteHash: String!
   ) {
-    confirmInvitation(workspaceId: $workspaceId, inviteHash: $inviteHash)
+    confirmInvitation(workspaceId: $workspaceId, inviteHash: $inviteHash) {
+      recordId
+    }
   }
 `;
 
