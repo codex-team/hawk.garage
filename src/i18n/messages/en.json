@@ -323,8 +323,9 @@
     },
     "suspectedCommits":{
       "header": "Suspected commits",
-      "hide": "Hide",
-      "committed": "committed"
+      "hide": "hide",
+      "committed": "committed",
+      "moreRelease":"{numberOfCommits} more commit in this release | {numberOfCommits} more commits in this release"
     },
     "emptyData": "This event has no context",
     "notFound": "Event not found. Probably it was archived.",

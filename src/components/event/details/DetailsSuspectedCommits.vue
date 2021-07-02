@@ -47,9 +47,13 @@
       {{
         isMoreCommitsShown
           ? $t("event.suspectedCommits.hide")
-          : `${
-              commits.length - numberOfVisibleCommits
-            } more commits in this release`
+          : $tc(
+              "event.suspectedCommits.moreRelease",
+              commits.length - numberOfVisibleCommits,
+              {
+                numberOfCommits: commits.length - numberOfVisibleCommits,
+              }
+            )
       }}
     </template>
   </DetailsBase>
