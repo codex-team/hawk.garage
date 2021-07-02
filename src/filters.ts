@@ -214,28 +214,28 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
 
   let numberOfYears = Math.floor(diffInSeconds / (60 * 60 * 24 * 365));
   if (numberOfYears) {
-    return `${numberOfYears === 1 ? 'a year' : numberOfYears + ' years'} ago`;
+    return i18n.tc('common.relativeTime.yearsAgo', numberOfYears, { numberOfYears: numberOfYears });
   }
 
   let numberOfMonths = Math.floor(diffInSeconds / (60 * 60 * 24 * 30));
   if (numberOfMonths) {
-    return `${numberOfMonths === 1 ? 'a month' : numberOfMonths + ' months'} ago`;
+    return i18n.tc('common.relativeTime.monthsAgo', numberOfMonths, { numberOfMonths: numberOfMonths });
   }
 
   let numberOfDays = Math.floor(diffInSeconds / (60 * 60 * 24));
   if (numberOfDays) {
-    return `${numberOfDays === 1 ? 'yesterday' : numberOfDays + ' days ago'}`;
+    return i18n.tc('common.relativeTime.daysAgo', numberOfDays, { numberOfDays: numberOfDays });
   }
 
   let numberOfHours = Math.floor(diffInSeconds / (60 * 60));
   if (numberOfHours) {
-    return `${numberOfHours === 1 ? 'a hour' : numberOfHours + ' hours'} ago`;
+    return i18n.tc('common.relativeTime.hoursAgo', numberOfHours, { numberOfHours: numberOfHours });
   }
 
   let numberOfMinutes = Math.floor(diffInSeconds / 60);
   if (numberOfMinutes) {
-    return `${numberOfMinutes === 1 ? 'a minute' : numberOfMinutes + ' minutes'} ago`;
+    return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });;
   }
 
-  return `few seconds ago`;
+  return i18n.t('common.relativeTime.secondsAgo');
 });
