@@ -51,7 +51,9 @@ Vue.filter('abbreviation', function (value: string): string {
 
   const words = value.split(' ').filter(word => word.length > 0);
 
-  return (words.length === 1 ? words[0][0] : words[0][0] + words[1][0]).toUpperCase();
+  return (
+    words.length === 1 ? words[0][0] : words[0][0] + words[1][0]
+  ).toUpperCase();
 });
 
 /**
@@ -65,7 +67,7 @@ Vue.filter('prettyTime', function (value: number) {
 
   const ONE_MINUTE_IN_MS = 1000 * 60;
 
-  if ((currentDate.getTime() - date.getTime()) / (ONE_MINUTE_IN_MS) < 1) {
+  if ((currentDate.getTime() - date.getTime()) / ONE_MINUTE_IN_MS < 1) {
     return 'now';
   }
 
@@ -81,7 +83,9 @@ Vue.filter('prettyTime', function (value: number) {
  * @returns {string}
  */
 Vue.filter('prettyDateStr', function (value: string): string {
-  const [day, month]: number[] = value.split('-').map(stringValue => +stringValue);
+  const [day, month]: number[] = value
+    .split('-')
+    .map((stringValue) => +stringValue);
 
   const currentDate = new Date().getDate();
 
@@ -163,23 +167,28 @@ Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
  * @param datrStr - string like '1992-10-09T00:00:00Z'
  * @param includeTime - pass true to include time to the result
  */
-Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTime = true): string {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  const isSameYear = now.getFullYear() === year;
-  const monthStr = capitalize(i18n.t('common.shortMonths[' + month + ']').toString());
+Vue.filter(
+  'prettyDateFromDateTimeString',
+  function (dateStr: string, includeTime = true): string {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const isSameYear = now.getFullYear() === year;
+    const monthStr = capitalize(
+      i18n.t('common.shortMonths[' + month + ']').toString()
+    );
 
-  let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
+    let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
 
-  if (includeTime) {
-    result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    if (includeTime) {
+      result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    return result;
   }
-
-  return result;
-});
+);
 
 /**
  * Convert US cents to dollars
@@ -188,4 +197,45 @@ Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTim
  */
 Vue.filter('centsToDollars', function (value: number) {
   return value / 100;
+});
+
+/**
+ * Converts relative time into pretty string like '2021-05-20T15:40:51.000+00:00'.
+ * Returns string like 'hours ago'.
+ *
+ * @param {string} date - date in string formate
+ * @returns {string} relative time from today
+ */
+Vue.filter('prettyRelativeTimeStr', function (date: string): string {
+  let currentTime = new Date();
+  let commitTime = new Date(date);
+  let diffInSeconds =
+    Math.abs(currentTime.valueOf() - commitTime.valueOf()) / 1000;
+
+  let numberOfYears = Math.floor(diffInSeconds / (60 * 60 * 24 * 365));
+  if (numberOfYears) {
+    return i18n.tc('common.relativeTime.yearsAgo', numberOfYears, { numberOfYears: numberOfYears });
+  }
+
+  let numberOfMonths = Math.floor(diffInSeconds / (60 * 60 * 24 * 30));
+  if (numberOfMonths) {
+    return i18n.tc('common.relativeTime.monthsAgo', numberOfMonths, { numberOfMonths: numberOfMonths });
+  }
+
+  let numberOfDays = Math.floor(diffInSeconds / (60 * 60 * 24));
+  if (numberOfDays) {
+    return i18n.tc('common.relativeTime.daysAgo', numberOfDays, { numberOfDays: numberOfDays });
+  }
+
+  let numberOfHours = Math.floor(diffInSeconds / (60 * 60));
+  if (numberOfHours) {
+    return i18n.tc('common.relativeTime.hoursAgo', numberOfHours, { numberOfHours: numberOfHours });
+  }
+
+  let numberOfMinutes = Math.floor(diffInSeconds / 60);
+  if (numberOfMinutes) {
+    return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });;
+  }
+
+  return i18n.t('common.relativeTime.secondsAgo');
 });
