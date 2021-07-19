@@ -18,28 +18,22 @@
           GET AN INTEGRATION TOKEN
         </template>
         <template #content>
-          Your Integration token for <b>{{ project.name }}</b>:
-          <TokenBlock
-            :token="project.token"
-          />
+          Your Integration token for <b>{{ project.name }}</b
+          >:
+          <TokenBlock :token="project.token" />
         </template>
       </GuideStepBlock>
-      <GuideStepBlock
-        :step-number="2"
-        last
-      >
+      <GuideStepBlock :step-number="2" last>
         <template #header>
           FOLLOW THE INSTALLATION GUIDE
         </template>
         <template #content>
           Install module with Composer:
-          <CodeBlock
-            class="php"
-            copyable
-          >
+          <CodeBlock language="php" copyable>
             $ composer require codex-team/hawk.php
           </CodeBlock>
-          Next you can use module as standalone class or connect it with Monolog.
+          Next you can use module as standalone class or connect it with
+          Monolog.
           <ul class="guide-page__link-list">
             <li><a href="#standalone-class">Use as standalone class</a></li>
             <li><a href="#monolog-handler">Use as Monolog handler</a></li>
@@ -55,30 +49,27 @@
             Create an instance with Token at the entry point of your project.
           </p>
           <CodeBlock copyable>
-            \Hawk\HawkCatcher::instance('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjMyNjQ1NTd9.GTP');
+            \Hawk\HawkCatcher::instance('{{ project.token }}');
           </CodeBlock>
           <h3>Enable handlers</h3>
           <p>
-            By default Hawk will catch everything. You can run function with no params.
+            By default Hawk will catch everything. You can run function with no
+            params.
           </p>
-          <CodeBlock
-            language="php"
-            copyable
-          >
+          <CodeBlock language="php" copyable>
             <code>\Hawk\HawkCatcher::enableHandlers();</code>
           </CodeBlock>
           <p>
             It is similar to
           </p>
-          <CodeBlock
-            language="php"
-            copyable
-          >
-            <pre>\Hawk\HawkCatcher::enableHandlers(
+          <CodeBlock language="php" copyable>
+            <pre>
+\Hawk\HawkCatcher::enableHandlers(
   true, // exceptions
   true, // errors
   true // shitdown
-);</pre>
+);</pre
+            >
           </CodeBlock>
           <p>
             You can pass types of …
@@ -90,20 +81,20 @@
 </template>
 
 <script>
-import GuideStepBlock from '../../GuideStepBlock';
-import GuideSection from '../../GuideSection';
-import CodeBlock from '../../../utils/CodeBlock';
-import GuideHeader from '../../GuidePageHeader';
-import TokenBlock from '../../../project/TokenBlock';
+import GuideStepBlock from "../../GuideStepBlock";
+import GuideSection from "../../GuideSection";
+import CodeBlock from "../../../utils/CodeBlock";
+import GuideHeader from "../../GuidePageHeader";
+import TokenBlock from "../../../project/TokenBlock";
 
 export default {
-  name: 'SetupPhpCatcher',
+  name: "SetupPhpCatcher",
   components: {
     GuideStepBlock,
     CodeBlock,
     GuideSection,
     TokenBlock,
-    GuideHeader,
+    GuideHeader
   },
   computed: {
     /**
@@ -115,8 +106,8 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
-    },
-  },
+    }
+  }
 };
 </script>
 

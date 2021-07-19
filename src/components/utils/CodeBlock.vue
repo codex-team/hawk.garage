@@ -1,13 +1,19 @@
 <template>
   <div
-    v-copyable="{selector: copyable? '.code-block__content' : null, callback: onLinkCopied}"
+    v-copyable="{
+      selector: copyable ? '.code-block__content' : null,
+      callback: onLinkCopied,
+    }"
     class="code-block"
-    :class="{'code-block--one-line': isSingleLine, 'code-block--copyable': copyable}"
+    :class="{
+      'code-block--one-line': isSingleLine,
+      'code-block--copyable': copyable,
+    }"
   >
     <div
       ref="content"
       class="code-block__content"
-      :class="{[language]: true}"
+      :class="{ [language]: true }"
     >
       <slot />
     </div>
@@ -17,7 +23,7 @@
         class="button button--copy code-block__copy-button"
         type="button"
       >
-        {{ $t('components.codeBlock.copy') }}
+        {{ $t("components.codeBlock.copy") }}
       </button>
     </div>
   </div>
@@ -74,46 +80,49 @@ export default {
 </script>
 
 <style>
-  @import "../../styles/custom-properties.css";
+@import "../../styles/custom-properties.css";
 
-  .code-block {
+.code-block {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 14.2px 15px;
+  font-family: var(--font-monospace);
+  background: var(--color-bg-main);
+  border: solid 1px rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+
+  &__content {
     position: relative;
-    display: flex;
-    align-items: center;
-    padding: 14.2px 15px;
-    font-family: var(--font-monospace);
-    background: var(--color-bg-main);
-    border: solid 1px rgba(0, 0, 0, 0.18);
-    border-radius: 6px;
+    width: 100%;
 
-    &__content {
-      position: relative;
-      width: 100%;
+    @apply --hide-scrollbar;
+  }
 
+  &--one-line {
+    ^&__content {
       @apply --hide-scrollbar;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
-    &--one-line {
-      ^&__content {
-        @apply --hide-scrollbar;
-        height: 1em;
-        overflow: hidden;
-        white-space: nowrap;
-      }
-
-      ^&__button-wrapper {
-        top: 50%;
-        transform: translateY(-50%);
-      }
-    }
-
-    &__button-wrapper {
-      position: absolute;
-      top: 10px;
-      right: 0;
-      padding-right: 15px;
-      padding-left: 30px;
-      background-image: linear-gradient(to right, var(--color-bg-main-transparent), var(--color-bg-main) 20%);
+    ^&__button-wrapper {
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
+
+  &__button-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    padding-right: 15px;
+    padding-left: 30px;
+    background-image: linear-gradient(
+      to right,
+      var(--color-bg-main-transparent),
+      var(--color-bg-main) 20%
+    );
+  }
+}
 </style>
