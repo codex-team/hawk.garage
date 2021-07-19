@@ -176,7 +176,9 @@
       "title": "Choose a plan",
       "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you want a free unlimited access for non-profit products, contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
       "onSuccess": "Workspace plan has been successfully changed",
-      "onError": "Unable to change workspace plan due to an error, please try again later"
+      "onError": "Unable to change workspace plan due to an error, please try again later",
+      "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
+      "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan."
     },
     "creationDialog": {
       "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",

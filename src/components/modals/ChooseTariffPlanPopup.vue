@@ -43,8 +43,9 @@ import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
-import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
+import { ActionType } from '../utils/ConfirmationWindow/types';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -106,39 +107,67 @@ export default Vue.extend({
      */
     async onContinue(): Promise<void> {
       if (this.selectedPlan.monthlyCharge === 0) {
-        const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
-          workspaceId: this.workspaceId,
-          planId: this.selectedPlan.id,
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToFreePlanDescription').toString(),
+          onConfirm: async () => {
+            const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
+              workspaceId: this.workspaceId,
+              planId: this.selectedPlan.id,
+            });
+
+            if (!result) {
+              notifier.show({
+                message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
+                style: 'error',
+                time: 5000,
+              });
+
+              return;
+            }
+
+            notifier.show({
+              message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
+              style: 'success',
+              time: 5000,
+            });
+
+            await this.$store.dispatch(RESET_MODAL_DIALOG);
+
+            return;
+          }
         });
-
-        if (!result) {
-          notifier.show({
-            message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
-            style: 'error',
-            time: 5000,
-          });
-
-          return;
-        }
-
-        notifier.show({
-          message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
-          style: 'success',
-          time: 5000,
-        });
-
-        this.$store.dispatch(RESET_MODAL_DIALOG);
-
         return;
       }
 
-      this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'PaymentDetailsDialog',
-        data: {
-          workspaceId: this.workspaceId,
-          tariffPlanId: this.selectedPlan.id,
-          isRecurrent: !!this.workspace.subscriptionId,
-        },
+      /**
+       * Don't show confirmation window if user changes free plan to paid
+       */
+      if (this.workspace.plan.monthlyCharge === 0) {
+        await this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'PaymentDetailsDialog',
+          data: {
+            workspaceId: this.workspaceId,
+            tariffPlanId: this.selectedPlan.id,
+            isRecurrent: !!this.workspace.subscriptionId,
+          },
+        });
+        return;
+      }
+
+      this.$confirm.open({
+        actionType: ActionType.SUBMIT,
+        description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+        onConfirm: async () => {
+          await this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspaceId,
+              tariffPlanId: this.selectedPlan.id,
+              isRecurrent: !!this.workspace.subscriptionId,
+            },
+          });
+        }
       });
     },
   },
