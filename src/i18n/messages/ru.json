@@ -223,7 +223,7 @@
       }
     },
     "errors": {
-      "The workspace was not found": "Вокспейс не найден"
+      "The workspace was not found": "Воркспейс не найден"
     }
   },
   "billing": {
@@ -334,6 +334,10 @@
       "url": "Адрес",
       "window": "Окно браузера",
       "beautifiedUserAgent": "Клиент"
+    },
+    "user": {
+      "unknown": "Неизвестный",
+      "noname": "Безымянный"
     }
   },
   "common": {

@@ -334,6 +334,10 @@
       "url": "URL",
       "window": "Browser Window",
       "beautifiedUserAgent": "User Agent"
+    },
+    "user": {
+      "unknown": "Unknown",
+      "noname": "No name"
     }
   },
   "common": {
