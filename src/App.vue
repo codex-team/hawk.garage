@@ -1,9 +1,5 @@
 <template>
-  <div
-    id="app"
-    ref="app"
-    :class="[themeClass]"
-  >
+  <div id="app" ref="app" :class="[themeClass]">
     <router-view />
   </div>
 </template>
@@ -58,16 +54,21 @@ export default {
     /**
      * Connect to the event bus
      */
-    eventBus.$on('serviceWorkerUpdated', () => {
-      notifier.show({
-        message: 'New version is available',
-        type: 'confirm',
-        okText: 'Refresh',
-        cancelText: 'Close',
-        okHandler: () => window.location.reload(),
-        time: 10000,
-      });
+    // eventBus.$on('serviceWorkerUpdated', () => {
+      // notifier.show({
+      //   message: 'New version is available',
+      //   type: 'confirm',
+      //   okText: 'Refresh',
+      //   cancelText: 'Close',
+      //   okHandler: () => window.location.reload(),
+      //   time: 10000,
+      // });
+      
+    this.$confirm.open({
+      description:'New version is available',
+      onConfirm: () => window.location.reload(),
     });
+    // });
   },
 
   /**
@@ -127,9 +128,9 @@ export default {
 <style src="./styles/base.css"></style>
 
 <style>
-  #app {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 </style>
