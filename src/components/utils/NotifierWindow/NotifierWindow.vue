@@ -1,19 +1,19 @@
 <template>
   <transition
-    name="popup-dialog-animation"
+    name="notify-dialog-animation"
     v-if="isOpened"
     @close="close()"
     appear
   >
-    <div class="popup-dialog__wrapper">
-      <div class="confirmation-window__wrapper">
-        <div class="confirmation-window__title">
+    <div class="notify-dialog__wrapper">
+      <div class="notify-window__wrapper">
+        <div class="notify-window__title">
           {{ title }}
           <UiButton
             :submit="actionType === submitAction"
             :warning="actionType === deletionAction"
             :content="continueButtonText"
-            class="confirmation-window__continue-button"
+            class="notify-window__continue-button"
             @click="
               () => {
                 onConfirm();
@@ -133,7 +133,7 @@ export default Vue.extend({
     transform: scale(1);
   }
 }
-.popup-dialog {
+.notify-dialog {
   &-animation {
     &-enter-active {
       animation: bounceIn 600ms ease;
@@ -151,32 +151,15 @@ export default Vue.extend({
     box-shadow: 0 6px 17px -4px rgb(0 0 0 / 61%);
   }
 }
-.confirmation-window {
+.notify-window {
   &__wrapper {
-    width: 400px;
-    padding: 30px;
+    width: 483px;
+    padding: 8px 15px;
   }
 
   &__title {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-
-    margin-bottom: 15px;
-  }
-
-  &__description {
-    color: var(--color-text-second);
-    line-height: 1.43;
-    font-size: 14px;
-    min-height: 1em;
-  }
-
-  &__buttons-wrapper {
-    margin-top: 20px;
-  }
-
-  &__continue-button {
-    margin-right: 20px;
   }
 }
 </style>
