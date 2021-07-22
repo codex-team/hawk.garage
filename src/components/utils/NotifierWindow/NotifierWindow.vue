@@ -1,33 +1,39 @@
 <template>
-  <NotifierDialog v-if="isOpened" @close="close()">
-    <div class="confirmation-window__wrapper">
-      <div class="confirmation-window__title">
-        {{ title }}
-        <UiButton
-          :submit="actionType === submitAction"
-          :warning="actionType === deletionAction"
-          :content="continueButtonText"
-          class="confirmation-window__continue-button"
-          @click="
-            () => {
-              onConfirm();
-              close();
-            }
-          "
-        />
-        <UiButton
-          secondary
-          :content="$t('components.confirmationWindow.cancel')"
-          @click="close()"
-        />
+  <transition
+    name="popup-dialog-animation"
+    v-if="isOpened"
+    @close="close()"
+    appear
+  >
+    <div class="popup-dialog__wrapper">
+      <div class="confirmation-window__wrapper">
+        <div class="confirmation-window__title">
+          {{ title }}
+          <UiButton
+            :submit="actionType === submitAction"
+            :warning="actionType === deletionAction"
+            :content="continueButtonText"
+            class="confirmation-window__continue-button"
+            @click="
+              () => {
+                onConfirm();
+                close();
+              }
+            "
+          />
+          <UiButton
+            secondary
+            :content="$t('components.confirmationWindow.cancel')"
+            @click="close()"
+          />
+        </div>
       </div>
     </div>
-  </NotifierDialog>
+  </transition>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import NotifierDialog from '../NotifierDialog.vue';
 import UiButton from '../UiButton.vue';
 import { NotifierActionType, NotifierWindowOptions } from './types';
 
@@ -37,7 +43,6 @@ import { NotifierActionType, NotifierWindowOptions } from './types';
 export default Vue.extend({
   name: 'NotifierWindow',
   components: {
-    NotifierDialog,
     UiButton
   },
   data() {
@@ -109,6 +114,43 @@ export default Vue.extend({
 </script>
 
 <style>
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+.popup-dialog {
+  &-animation {
+    &-enter-active {
+      animation: bounceIn 600ms ease;
+    }
+  }
+
+  &__wrapper {
+    @apply --hide-scrollbar;
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    z-index: 9995;
+    border-radius: 12px;
+    background-color: var(--color-bg-second);
+    box-shadow: 0 6px 17px -4px rgb(0 0 0 / 61%);
+  }
+}
 .confirmation-window {
   &__wrapper {
     width: 400px;
