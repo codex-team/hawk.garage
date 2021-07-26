@@ -54,18 +54,9 @@ export default {
     /**
      * Connect to the event bus
      */
-    // eventBus.$on('serviceWorkerUpdated', () => {
-      // notifier.show({
-      //   message: 'New version is available',
-      //   type: 'confirm',
-      //   okText: 'Refresh',
-      //   cancelText: 'Close',
-      //   okHandler: () => window.location.reload(),
-      //   time: 10000,
-      // });
-      
-    this.$notifyNewVersion.open();
-    // });
+    eventBus.$on('serviceWorkerUpdated', () => {      
+      this.$notifyNewVersion.open();
+    });
   },
 
   /**

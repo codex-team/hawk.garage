@@ -52,9 +52,7 @@
 import Vue from 'vue';
 import UiButton from './UiButton.vue';
 import Icon from './Icon.vue';
-/**
- * @link './README.md'
- */
+
 export default Vue.extend({
   name: 'NewVersionWindow',
   components: {
@@ -64,34 +62,32 @@ export default Vue.extend({
   data() {
     return {
       /**
-       * Is confirmation window open
+       * Is new version window open
        */
       isOpened: false,
     }
   },
   methods: {
     /**
-     * Show confirmation window
-     *
-     * @param options - options for displaying
+     * Show new version window
      */
     open() {
       this.isOpened = true;
     },
     /**
-   * onRefresh callback when user clicks continue button
-   */
+     * onRefresh callback when user clicks refresh button
+     */
     onRefresh: () => {
        window.location.reload();
     },
     /**
-     * onWhatsNew callback when user clicks continue button
+     * onWhatsNew callback when user clicks what's new button
      */
     onWhatsNew: () => {
       window.open('docs', '_blank'); // add docs link
     },
     /**
-     * Hide confirmation window
+     * Hide new version window
      */
     close() {
       this.isOpened = false;

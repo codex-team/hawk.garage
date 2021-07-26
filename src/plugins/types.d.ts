@@ -21,14 +21,12 @@ declare module 'vue/types/vue' {
     };
     $notifyNewVersion: {
       /**
-       * Open confirmation window
-       *
-       * @param options - confirmation window options
+       * Open new version window
        */
       open: () => void;
 
       /**
-       * Close confirmation window
+       * Close new version window
        */
       close: () => void;
     };

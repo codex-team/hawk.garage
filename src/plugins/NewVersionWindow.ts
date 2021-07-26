@@ -3,14 +3,14 @@ import NewVersionWindow from '@/components/utils/NewVersionWindow.vue';
 import i18n from '../i18n';
 
 /**
- * Type of confirmation window component
+ * Type of new version window component
  */
 type NewVersionWindowComponentType = InstanceType<typeof NewVersionWindow>;
 
 /**
- * Plugin for using confirmation window in components
+ * Plugin for using new version window in components
  *
- * @example this.$confirm.open({ title: 'Confirmation window title' });
+ * @example this.$notifyNewVersion.open();
  */
 export default {
   /**
@@ -30,16 +30,16 @@ export default {
 
     Vue.prototype.$notifyNewVersion = {
       /**
-       * Open confirmation window
+       * Open new version window
        *
-       * @param options - confirmation window options
+       * @param options - new version window options
        */
       open() {
         (confirmationContainer.$children[0] as NewVersionWindowComponentType).open();
       },
 
       /**
-       * Close confirmation window
+       * Close new version window
        */
       close() {
         (confirmationContainer.$children[0] as NewVersionWindowComponentType).close();
