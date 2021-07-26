@@ -48,8 +48,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiButton from '../UiButton.vue';
-import Icon from '../Icon.vue';
+import UiButton from './UiButton.vue';
+import Icon from './Icon.vue';
 /**
  * @link './README.md'
  */
@@ -120,52 +120,54 @@ export default Vue.extend({
     transform: scale(1);
   }
 }
-.new-version-dialog {
-  &-animation {
-    &-enter-active {
-      animation: bounceIn 600ms ease;
+
+.new-version {
+  &-dialog {
+    &-animation {
+      &-enter-active {
+        animation: bounceIn 600ms ease;
+      }
+    }
+
+    &__wrapper {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      z-index: 9995;
+      border-radius: 12px;
+      background-color: var(--color-bg-second);
+      box-shadow: 0 6px 17px -4px rgb(0 0 0 / 61%);
     }
   }
+  &-window {
+    &__wrapper {
+      width: 483px;
+      padding: 8px 15px;
+    }
 
-  &__wrapper {
-    @apply --hide-scrollbar;
-    position: fixed;
-    right: 30px;
-    bottom: 30px;
-    z-index: 9995;
-    border-radius: 12px;
-    background-color: var(--color-bg-second);
-    box-shadow: 0 6px 17px -4px rgb(0 0 0 / 61%);
-  }
-}
-.new-version-window {
-  &__wrapper {
-    width: 483px;
-    padding: 8px 15px;
-  }
+    &__title {
+      font-size: 16px;
+      font-weight: normal;
+      display: inline;
+      margin: 2px 14px 2px 0;
+    }
 
-  &__title {
-    font-size: 16px;
-    font-weight: normal;
-    display: inline;
-    margin: 2px 14px 2px 0;
-  }
-
-  &__refresh-button {
-    padding: 5px 11px;
-    margin-right: 10px;
-    border-radius: 13px;
-  }
-  &__whatsnew-button {
-    padding: 5px 11px;
-    border-radius: 13px;
-    margin-right: 15px;
-  }
-  &__close-button {
-    width: 14px;
-    height: 14px;
-    vertical-align: middle;
-    cursor: pointer;
+    &__refresh-button {
+      padding: 5px 11px;
+      margin-right: 10px;
+      border-radius: 13px;
+    }
+    &__whatsnew-button {
+      padding: 5px 11px;
+      border-radius: 13px;
+      margin-right: 15px;
+    }
+    &__close-button {
+      width: 14px;
+      height: 14px;
+      vertical-align: middle;
+      cursor: pointer;
+    }
   }
 }
 </style>

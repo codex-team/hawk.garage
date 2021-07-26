@@ -1,5 +1,5 @@
 import { VueConstructor } from 'vue';
-import NewVersionWindow from '@/components/utils/NewVersionWindow/NewVersionWindow.vue';
+import NewVersionWindow from '@/components/utils/NewVersionWindow.vue';
 import i18n from '../i18n';
 
 /**
