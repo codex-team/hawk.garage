@@ -32,14 +32,16 @@
             }
           "
         />
-        <span
-          @click="
-            () => {
-              close();
-            }
-          "
-        >
-          <Icon symbol="close" class="new-version-window__close-button" />
+        <span>
+          <Icon
+            symbol="close"
+            class="new-version-window__close-button"
+            @click="
+              () => {
+                close();
+              }
+            "
+          />
         </span>
       </div>
     </div>
