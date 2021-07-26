@@ -7,9 +7,9 @@
   >
     <div class="new-version-dialog__wrapper">
       <div class="new-version-window__wrapper">
-        <div class="new-version-window__title">
+        <span class="new-version-window__title">
           The new version is available
-        </div>
+        </span>
         <UiButton
           :submit="true"
           content="Refresh"
@@ -32,15 +32,15 @@
             }
           "
         />
-        <Icon
-          symbol="close"
-          class="new-version-window__close-button"
+        <span
           @click="
             () => {
               close();
             }
           "
-        />
+        >
+          <Icon symbol="close" class="new-version-window__close-button" />
+        </span>
       </div>
     </div>
   </transition>
@@ -148,7 +148,7 @@ export default Vue.extend({
     &__title {
       font-size: 16px;
       font-weight: normal;
-      display: inline;
+      vertical-align: middle;
       margin: 2px 14px 2px 0;
     }
 
