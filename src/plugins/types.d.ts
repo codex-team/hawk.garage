@@ -1,5 +1,4 @@
 import { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
-import { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -20,13 +19,13 @@ declare module 'vue/types/vue' {
        */
       close: () => void;
     };
-    $notify: {
+    $notifyNewVersion: {
       /**
        * Open confirmation window
        *
        * @param options - confirmation window options
        */
-      open: (options?: NotifierWindowOptions) => void;
+      open: () => void;
 
       /**
        * Close confirmation window

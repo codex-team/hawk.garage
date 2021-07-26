@@ -1,12 +1,11 @@
 import { VueConstructor } from 'vue';
-import NotifierWindow from '@/components/utils/NotifierWindow/NotifierWindow.vue';
-import { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
+import NewVersionWindow from '@/components/utils/NewVersionWindow/NewVersionWindow.vue';
 import i18n from '../i18n';
 
 /**
  * Type of confirmation window component
  */
-type NotifierWindowComponentType = InstanceType<typeof NotifierWindow>;
+type NewVersionWindowComponentType = InstanceType<typeof NewVersionWindow>;
 
 /**
  * Plugin for using confirmation window in components
@@ -21,29 +20,29 @@ export default {
    */
   install: (Vue: VueConstructor) => {
     const vueContainer = document.createElement('div');
-    const confirmationContainer = new Vue<NotifierWindowComponentType>({
+    const confirmationContainer = new Vue<NewVersionWindowComponentType>({
       i18n,
-      render: h => h(NotifierWindow),
+      render: h => h(NewVersionWindow),
     });
 
     document.body.appendChild(vueContainer);
     confirmationContainer.$mount(vueContainer);
 
-    Vue.prototype.$notify = {
+    Vue.prototype.$notifyNewVersion = {
       /**
        * Open confirmation window
        *
        * @param options - confirmation window options
        */
-      open(options?: NotifierWindowOptions) {
-        (confirmationContainer.$children[0] as NotifierWindowComponentType).open(options);
+      open() {
+        (confirmationContainer.$children[0] as NewVersionWindowComponentType).open();
       },
 
       /**
        * Close confirmation window
        */
       close() {
-        (confirmationContainer.$children[0] as NotifierWindowComponentType).close();
+        (confirmationContainer.$children[0] as NewVersionWindowComponentType).close();
       },
     };
   },

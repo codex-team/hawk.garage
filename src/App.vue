@@ -64,10 +64,7 @@ export default {
       //   time: 10000,
       // });
       
-    this.$notify.open({
-      description:'New version is available',
-      onConfirm: () => window.location.reload(),
-    });
+    this.$notifyNewVersion.open();
     // });
   },
 

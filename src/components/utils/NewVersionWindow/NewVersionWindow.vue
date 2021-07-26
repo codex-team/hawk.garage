@@ -1,19 +1,18 @@
 <template>
   <transition
-    name="notify-dialog-animation"
     v-if="isOpened"
-    @close="close()"
+    name="new-version-dialog-animation"
     appear
+    @close="close()"
   >
-    <div class="notify-dialog__wrapper">
-      <div class="notify-window__wrapper">
-        <div class="notify-window__title">
-          {{ title }}
+    <div class="new-version-dialog__wrapper">
+      <div class="new-version-window__wrapper">
+        <div class="new-version-window__title">
+          {{ description }}
           <UiButton
-            :submit="actionType === submitAction"
-            :warning="actionType === deletionAction"
-            :content="continueButtonText"
-            class="notify-window__continue-button"
+            :submit="true"
+            content="Refresh"
+            class="new-version-window__continue-button"
             @click="
               () => {
                 onConfirm();
@@ -35,13 +34,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import UiButton from '../UiButton.vue';
-import { NotifierActionType, NotifierWindowOptions } from './types';
 
 /**
  * @link './README.md'
  */
 export default Vue.extend({
-  name: 'NotifierWindow',
+  name: 'NewVersionWindow',
   components: {
     UiButton
   },
@@ -53,39 +51,17 @@ export default Vue.extend({
       isOpened: false,
 
       /**
-       * Confirmation window title
-       */
-      title: 'Confirm action',
-
-      /**
        * Description of confirming action
        */
-      description: '',
-
-      /**
-       * Text in continue button
-       */
-      continueButtonText: 'Continue',
+      description: 'The new version is available',
 
       /**
        * onConfirm callback when user clicks continue button
        */
-      onConfirm: () => {},
+      onConfirm: () => {
+        window.location.reload();
+      },
 
-      /**
-       * Type of confirmation action
-       */
-      actionType: NotifierActionType.SUBMIT,
-
-      /**
-       * Action type submit const
-       */
-      submitAction: NotifierActionType.SUBMIT,
-
-      /**
-       * Action type deletion const
-       */
-      deletionAction: NotifierActionType.DELETION,
     }
   },
   methods: {
@@ -94,12 +70,7 @@ export default Vue.extend({
      *
      * @param options - options for displaying
      */
-    open(options?: NotifierWindowOptions) {
-      this.title = options && options.title || this.$i18n.t('components.confirmationWindow.title').toString();
-      this.description = options && options.description || '';
-      this.continueButtonText = options && options.continueButtonText || this.$i18n.t('components.confirmationWindow.continue').toString();
-      this.onConfirm = options && options.onConfirm || (() => {});
-      this.actionType = options && options.actionType || NotifierActionType.SUBMIT;
+    open() {
       this.isOpened = true;
     },
 
@@ -133,7 +104,7 @@ export default Vue.extend({
     transform: scale(1);
   }
 }
-.notify-dialog {
+.new-version-dialog {
   &-animation {
     &-enter-active {
       animation: bounceIn 600ms ease;
@@ -151,7 +122,7 @@ export default Vue.extend({
     box-shadow: 0 6px 17px -4px rgb(0 0 0 / 61%);
   }
 }
-.notify-window {
+.new-version-window {
   &__wrapper {
     width: 483px;
     padding: 8px 15px;
