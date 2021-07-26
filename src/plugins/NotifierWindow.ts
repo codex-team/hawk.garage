@@ -29,7 +29,7 @@ export default {
     document.body.appendChild(vueContainer);
     confirmationContainer.$mount(vueContainer);
 
-    Vue.prototype.$confirm = {
+    Vue.prototype.$notify = {
       /**
        * Open confirmation window
        *
