@@ -14,8 +14,8 @@
           :href="'/workspace/' + workspace.id"
         >
           <EntityImage
-            :image="workspace.image"
             :id="workspace.id"
+            :image="workspace.image"
             :name="workspace.name"
             size="16"
           />
@@ -26,12 +26,19 @@
           :href="'/project/' + project.id"
         >
           <EntityImage
-            :image="project.image"
             :id="project.id"
+            :image="project.image"
             :name="project.name"
             size="16"
           />
-          {{ project.name }}
+          {{ nameWithoutBadges(project.name) }}
+
+          <ProjectBadge
+            v-for="(badge, index) in projectBadges(project.name)"
+            :key="index"
+          >
+            {{ badge }}
+          </ProjectBadge>
         </a>
       </div>
 
@@ -115,6 +122,8 @@ import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
 import { Project } from '@/types/project';
 import { Workspace } from '@/types/workspaces';
+import { projectBadges } from '../../mixins/projectBadges';
+import ProjectBadge from '../project/ProjectBadge.vue';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -124,8 +133,10 @@ export default Vue.extend({
     UiButton,
     Filepath,
     AssigneeBar,
-    EntityImage
+    EntityImage,
+    ProjectBadge,
   },
+  mixins: [projectBadges],
   props: {
     /**
      * Original (first) event data

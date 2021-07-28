@@ -93,12 +93,15 @@ export default {
         escape(misTranslit(this.searchQuery)),
       ];
 
+      const nameMaxLen = 20;
+      const name = this.$options.filters.trim(escapedName, nameMaxLen);
+
       if (this.searchQuery) {
-        return escapedName.replace(new RegExp(`${searchConditions.join('|')}`, 'gi'), (match) => {
+        return name.replace(new RegExp(`${searchConditions.join('|')}`, 'gi'), (match) => {
           return `<span class="searched">${match}</span>`;
         });
       } else {
-        return escapedName;
+        return name;
       }
     },
   },
@@ -132,7 +135,6 @@ export default {
     }
 
     &__info {
-      overflow-x: hidden;
     }
 
     &__name {
@@ -142,6 +144,11 @@ export default {
       color: var(--color-text-main);
       font-weight: 500;
       font-size: 14px;
+      white-space: nowrap;
+
+      .project__badge {
+        margin: -2px 0 -2px 8px;
+      }
     }
 
     &__last-event {
