@@ -9,9 +9,9 @@
       </span>
 
       <div class="event-header__breadcrumbs">
-        <a
+        <router-link
           class="event-header__breadcrumbs-item"
-          :href="'/workspace/' + workspace.id"
+          :to="'/workspace/' + workspace.id"
         >
           <EntityImage
             :id="workspace.id"
@@ -20,10 +20,10 @@
             size="16"
           />
           {{ workspace.name }}
-        </a>
-        <a
+        </router-link>
+        <router-link
           class="event-header__breadcrumbs-item"
-          :href="'/project/' + project.id"
+          :to="'/project/' + project.id"
         >
           <EntityImage
             :id="project.id"
@@ -39,7 +39,7 @@
           >
             {{ badge }}
           </ProjectBadge>
-        </a>
+        </router-link>
       </div>
 
 
