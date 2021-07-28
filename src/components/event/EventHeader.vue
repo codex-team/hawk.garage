@@ -1,16 +1,45 @@
 <template>
   <div class="event-header">
     <div class="event-layout__container">
-      <UiLabel
-        :text="!loading ? event.payload.type || 'Application error' : $t('event.loading')"
-        icon="flash"
-      />
       <span
         v-if="!loading"
         class="event-header__date"
       >
         {{ event.payload.timestamp | prettyFullDate }}
       </span>
+
+      <div class="event-header__breadcrumbs">
+        <a
+          class="event-header__breadcrumbs-item"
+          :href="'/workspace/' + workspace.id"
+        >
+          <EntityImage
+            :image="workspace.image"
+            :id="workspace.id"
+            :name="workspace.name"
+            size="16"
+          />
+          {{ workspace.name }}
+        </a>
+        <a
+          class="event-header__breadcrumbs-item"
+          :href="'/project/' + project.id"
+        >
+          <EntityImage
+            :image="project.image"
+            :id="project.id"
+            :name="project.name"
+            size="16"
+          />
+          {{ project.name }}
+        </a>
+      </div>
+
+
+      <div class="event-header__type">
+        {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
+      </div>
+
       <h1 class="event-header__title">
         {{ (!loading) ? event.payload.title : $t('event.loading') }}
       </h1>
@@ -79,11 +108,13 @@ import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
 import UiButton from '../utils/UiButton.vue';
 import Filepath from '../utils/Filepath.vue';
-import UiLabel from '../utils/UiLabel.vue';
 import AssigneeBar from '../utils/AssigneeBar.vue';
+import EntityImage from '../utils/EntityImage.vue';
 
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
+import { Project } from '@/types/project';
+import { Workspace } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -91,9 +122,9 @@ export default Vue.extend({
     TabBar,
     ViewedBy,
     UiButton,
-    UiLabel,
     Filepath,
     AssigneeBar,
+    EntityImage
   },
   props: {
     /**
@@ -188,6 +219,21 @@ export default Vue.extend({
     projectId(): string {
       return this.$route.params.projectId;
     },
+
+    /**
+     * The project that owns the event
+     */
+    project(): Project {
+      return this.$store.getters.getProjectById(this.projectId);
+    },
+
+    /**
+     * The workspace that owns the event
+     */
+    workspace(): Workspace {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    }
+
   },
   watch: {
     /**
@@ -219,8 +265,39 @@ export default Vue.extend({
 <style>
   .event-header {
     padding: 35px 20px 0 20px;
-    color: var(--color-text-main);
+    color: var(--color-text-second);
     background-color: #121419;
+    font-size: 14px;
+
+    &__breadcrumbs {
+      display: flex;
+      font-weight: 500;
+      margin-bottom: 22px;
+
+      &-item {
+        display: flex;
+        align-items: center;
+
+        &:not(:last-of-type){
+
+          &::after {
+            content: '/';
+            margin: 0 10px;
+          }
+        }
+
+        .entity-image {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    &__type {
+      font-family: var(--font-monospace);
+      font-size: 12.2px;
+      letter-spacing: 0.21px;
+      font-weight: 500;
+    }
 
     &__title {
       margin: 10px 0 15px;
@@ -228,11 +305,11 @@ export default Vue.extend({
       line-height: 1.67;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: var(--color-text-main);
     }
 
     &__date {
       float: right;
-      color: var(--color-text-second);
       font-size: 12px;
       line-height: 23px;
     }
@@ -242,8 +319,6 @@ export default Vue.extend({
       max-width: 650px;
       margin-bottom: 30px;
       overflow: hidden;
-      color: var(--color-text-second);
-      font-size: 14px;
       letter-spacing: 0.1px;
       white-space: nowrap;
       text-overflow: ellipsis;
