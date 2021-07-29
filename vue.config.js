@@ -1,5 +1,6 @@
 const HawkWebpackPlugin = require('@hawk.so/webpack-plugin');
 const path = require('path');
+const fs = require('fs');
 
 /**
  * Parse .env
@@ -49,11 +50,25 @@ module.exports = {
      * Use DefinePlugin to pass some variables to the sources
      */
     config.plugin('define').tap((definitions) => {
+
+      const iconsAvailable = fs
+        .readdirSync(path.resolve('src', 'assets', 'sprite-icons'), { withFileTypes: true })
+        .filter(item => !item.isDirectory())
+        .filter(item => item.name.includes('.svg'))
+        .map(item => item.name.replace('.svg', ''));
+
+
       definitions[0] = Object.assign(definitions[0], {
         /**
          * Current bundle version will be passed to the Hawk Catcher
          */
         buildRevision,
+
+        /**
+         * Available icons list
+         * @type {string[]}
+         */
+        iconsAvailable: JSON.stringify(iconsAvailable)
       });
 
       return definitions;

@@ -190,7 +190,11 @@ const router = new Router({
       }),
     },
     {
-      path: '/join/:workspaceId/:inviteHash?',
+      path: '/join/:inviteHash',
+      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next),
+    },
+    {
+      path: '/join/:workspaceId/:inviteHash',
       beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next),
     },
     {

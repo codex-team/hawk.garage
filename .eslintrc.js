@@ -16,8 +16,8 @@ module.exports = {
     /**
      * False positive of no-shadow rule with ENUMs in eslint
      * https://github.com/typescript-eslint/typescript-eslint/issues/2483
-     *  
-     */ 
+     *
+     */
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error", { allow: ["state", "getters"] }],
     /**

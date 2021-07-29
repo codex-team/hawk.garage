@@ -29,6 +29,11 @@ export const INVITE_TO_WORKSPACE = 'INVITE_TO_WORKSPACE';
 export const CONFIRM_INVITE = 'CONFIRM_INVITE';
 
 /**
+ * Send request to confirm user invitation
+ */
+export const JOIN_BY_INVITE_LINK = 'JOIN_BY_INVITE_LINK';
+
+/**
  * Send request to update workspace
  */
 export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
@@ -67,3 +72,8 @@ export const CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = 'CHANGE_WORKSPACE_PLAN_FOR_FR
  * Cancel subscription on tariff plan
  */
 export const CANCEL_SUBSCRIPTION = 'CANCEL_SUBSCRIPTION';
+
+/**
+ * Process payment via saved card
+ */
+export const PAY_WITH_CARD = 'PAY_WITH_CARD';

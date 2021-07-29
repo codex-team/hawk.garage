@@ -189,3 +189,13 @@ Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTim
 Vue.filter('centsToDollars', function (value: number) {
   return value / 100;
 });
+
+
+/**
+ * Trims the string to max length and add ellipsis
+ *
+ * @returns {string}
+ */
+Vue.filter('trim', function (value: string, maxLen: number) {
+  return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
+});

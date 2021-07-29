@@ -10,7 +10,7 @@ import {
   QUERY_WORKSPACES,
   QUERY_BALANCE,
   MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
-  MUTATION_CANCEL_SUBSCRIPTION
+  MUTATION_CANCEL_SUBSCRIPTION, MUTATION_JOIN_BY_INVITE_LINK
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
@@ -73,6 +73,17 @@ export async function inviteToWorkspace(workspaceId: string, userEmail: string):
     workspaceId,
     userEmail,
   })).inviteToWorkspace;
+}
+
+/**
+ * Join to workspace by invite link
+ *
+ * @param inviteHash - workspace invite link
+ */
+export async function joinByInviteLink(inviteHash: string): Promise<boolean> {
+  return (await api.call(MUTATION_JOIN_BY_INVITE_LINK, {
+    inviteHash,
+  })).joinByInviteLink;
 }
 
 /**
