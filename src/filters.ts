@@ -237,5 +237,5 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
     return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });;
   }
 
-  return i18n.t('common.relativeTime.secondsAgo');
+  return i18n.t('common.relativeTime.secondsAgo').toString();
 });

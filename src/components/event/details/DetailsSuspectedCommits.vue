@@ -62,7 +62,7 @@
 <script lang="ts">
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
-import { HawkEventCommit} from '@/types/events';
+import { HawkEventCommit } from '@/types/events';
 
 export default {
   name: 'DetailsSuspectedCommits',
