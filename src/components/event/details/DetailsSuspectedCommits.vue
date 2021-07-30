@@ -60,11 +60,12 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import { HawkEventCommit } from '@/types/events';
 
-export default {
+export default Vue.extend({
   name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase,
@@ -96,7 +97,7 @@ export default {
   computed: {
     /**
      * Displayed commits items
-     * @returns {HawkEventCommit[]}
+     * @returns { HawkEventCommit[] }
      */
     filteredCommits():HawkEventCommit[] {
       return this.commits.length <= this.numberOfVisibleCommits ||
@@ -105,7 +106,7 @@ export default {
         : this.commits.slice(0, this.numberOfVisibleCommits);
     },
   },
-};
+});
 </script>
 
 <style>
