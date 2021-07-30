@@ -239,3 +239,12 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
 
   return i18n.t('common.relativeTime.secondsAgo').toString();
 });
+
+/**
+ * Trims the string to max length and add ellipsis
+ *
+ * @returns {string}
+ */
+Vue.filter('trim', function (value: string, maxLen: number) {
+  return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
+});

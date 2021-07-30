@@ -5,6 +5,7 @@ import {
   SET_CURRENT_WORKSPACE,
   INVITE_TO_WORKSPACE,
   CONFIRM_INVITE,
+  JOIN_BY_INVITE_LINK,
   UPDATE_WORKSPACE,
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
@@ -199,6 +200,17 @@ const actions = {
    */
   async [CONFIRM_INVITE](context, { workspaceId, inviteHash }) {
     await workspaceApi.confirmInvite(workspaceId, inviteHash);
+  },
+
+  /**
+   * Send request to confirm user invitation
+   *
+   * @param {object} context - vuex action context
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.inviteHash - hash passed to the invite link
+   */
+  async [JOIN_BY_INVITE_LINK](context, { inviteHash }) {
+    await workspaceApi.joinByInviteLink(inviteHash);
   },
 
   /**

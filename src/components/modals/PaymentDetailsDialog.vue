@@ -305,7 +305,7 @@ export default Vue.extend({
       isAcceptedChargingEveryMonth: false,
 
       /**
-       * Workspace id for which the payment is made
+       * Workspace for which the payment is made
        */
       workspace,
 
@@ -427,6 +427,34 @@ export default Vue.extend({
 
       return this.isAcceptedPaymentAgreement;
     },
+
+    /**
+     * True if user pays for the current tariff plan (no plan-changing)
+     */
+    isPaymentForCurrentTariffPlan(): boolean {
+      return this.workspace.plan.id === this.plan.id;
+    },
+
+    /**
+     * True when we need to withdraw the amount only to validate the subscription
+     */
+    isOnlyCardValidationNeeded(): boolean {
+      /**
+       * In case of not recurrent payment we need to withdraw full amount
+       */
+      if (!this.isRecurrent) {
+        return false;
+      }
+
+      /**
+       * In case when user pays for another tariff plan we need to withdraw full amount
+       */
+      if (!this.isPaymentForCurrentTariffPlan) {
+        return false;
+      }
+
+      return !this.isTariffPlanExpired;
+    }
   },
   watch: {
     /**
@@ -554,7 +582,7 @@ export default Vue.extend({
 
       let amount = data.plan.monthlyCharge;
 
-      if (this.isRecurrent && !this.isTariffPlanExpired) {
+      if (this.isOnlyCardValidationNeeded) {
         amount = AMOUNT_FOR_CARD_VALIDATION;
       }
 

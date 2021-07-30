@@ -21,9 +21,8 @@ export default Vue.extend({
   font-weight: normal;
   font-size: 12px;
   line-height: 12px;
-  padding: 2px 4px;
-  margin-bottom: -2px;
-  margin-left: 7px;
+  padding: 2px 5px;
+  margin-left: 8px;
   letter-spacing: 0.1px;
   overflow-x: hidden;
   white-space: nowrap;

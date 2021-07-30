@@ -29,6 +29,11 @@ export const INVITE_TO_WORKSPACE = 'INVITE_TO_WORKSPACE';
 export const CONFIRM_INVITE = 'CONFIRM_INVITE';
 
 /**
+ * Send request to confirm user invitation
+ */
+export const JOIN_BY_INVITE_LINK = 'JOIN_BY_INVITE_LINK';
+
+/**
  * Send request to update workspace
  */
 export const UPDATE_WORKSPACE = 'UPDATE_WORKSPACE';
