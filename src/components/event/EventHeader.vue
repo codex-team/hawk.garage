@@ -124,6 +124,7 @@ import { Project } from '@/types/project';
 import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
+import { JavaScriptAddons } from 'hawk.types';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -170,7 +171,7 @@ export default Vue.extend({
       }
 
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
-      const addons: {url?: string} = this.event.payload.addons;
+      const addons: {url?: string} = (this.event.payload.addons as JavaScriptAddons);
       const url: string = (addons && addons.url) || '';
 
       if (!trace) {

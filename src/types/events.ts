@@ -1,5 +1,6 @@
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
+import { EventAddons } from 'hawk.types';
 
 /**
  * Event marks enum
@@ -204,7 +205,7 @@ export interface HawkEventPayload {
   /**
    * Custom data provided by project users
    */
-  addons: Record<string, unknown>;
+  addons: EventAddons;
 
   /**
    * Event type: TypeError, ReferenceError etc.
