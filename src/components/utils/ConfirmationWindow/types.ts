@@ -35,7 +35,7 @@ export interface ConfirmationWindowOptions {
   /**
    * onConfirm callback when user clicks continue button
    */
-  onConfirm?: () => {};
+  onConfirm?: () => void;
 
   /**
    * Type of confirmation action

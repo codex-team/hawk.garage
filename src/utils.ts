@@ -1,4 +1,5 @@
 import mergeWith from 'lodash.mergewith';
+import { HawkEventDailyInfo } from './types/events';
 
 /**
  * Returns entity color from predefined list
@@ -22,9 +23,11 @@ export function getEntityColor(id: string): string {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  const decimalId = parseInt(id.substr(-1), 16); // take last id char and convert to decimal number system
+  const decimalRadix = 16;
+  const decimalId = parseInt(id.substr(-1), decimalRadix); // take last id char and convert to decimal number system
+  const colorsToRadix = decimalRadix / colors.length;
 
-  return colors[Math.floor(decimalId / 2)];
+  return colors[Math.floor(decimalId / colorsToRadix)];
 }
 
 /**
@@ -80,7 +83,7 @@ export const groupBy =
  * @param {number} utcMidnight - midnight in UTC
  * @returns {number} midnight in local timezone
  */
-function convertUtcMidnightToLocalMidnight(utcMidnight): number {
+function convertUtcMidnightToLocalMidnight(utcMidnight: number): number {
   const milliseconds = 1000;
   const hour = 60;
   const date = new Date(utcMidnight * milliseconds);
@@ -99,14 +102,15 @@ function convertUtcMidnightToLocalMidnight(utcMidnight): number {
  * @param {object[]} items - array of object with the  'groupingTimestamp' field
  * @param {boolean} [convertMidnight] - need to convert utc midnight to local
  */
-export function groupByGroupingTimestamp(items, convertMidnight = true): Record<string, unknown> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function groupByGroupingTimestamp(items: object[], convertMidnight = true): Record<string, unknown> {
   if (!convertMidnight) {
     return groupBy('groupingTimestamp')(items);
   }
 
   items = items.map((item) => {
     return Object.assign({}, item, {
-      groupingTimestamp: convertUtcMidnightToLocalMidnight(item.lastRepetitionTime),
+      groupingTimestamp: convertUtcMidnightToLocalMidnight((item as HawkEventDailyInfo).lastRepetitionTime),
     });
   });
 
@@ -142,6 +146,7 @@ export function isObject(item: any): boolean {
  *
  * @returns {object}
  */
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function deepMerge(target: object, ...sources: object[]): object {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {

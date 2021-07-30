@@ -71,7 +71,7 @@
         class="billing-card__info-bar"
       >
         <div class="billing-card__events">
-          {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }}{{ subExpiredDate | prettyDateFromDateTimeString }}
+          {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
         </div>
         <Progress
           :max="progressMaxDate"
@@ -433,13 +433,10 @@ export default Vue.extend({
       }
     }
 
-    &__title {
-    }
-
     &__info {
       display: grid;
-      grid-template-columns: 200px 200px 200px;
       grid-auto-rows: 29px;
+      grid-template-columns: 200px 200px 200px;
       margin-top: 20px;
 
       &-section {
@@ -463,10 +460,10 @@ export default Vue.extend({
     }
 
     &__plan {
-      width: 142px;
-      height: 36px;
       display: flex;
       align-items: center;
+      width: 142px;
+      height: 36px;
       padding: 9px 15px;
       border: 1px solid var(--color-text-main);
       border-radius: 3px;
@@ -520,9 +517,9 @@ export default Vue.extend({
     &__attention {
       width: 18px;
       height: 18px;
-      margin-left: 5px;
       margin-top: -12px;
       margin-bottom: -5px;
+      margin-left: 5px;
     }
 
     &__volume-boost {
@@ -533,7 +530,6 @@ export default Vue.extend({
       color: var(--color-indicator-positive);
       font-weight: 500;
       font-size: 13px;
-      font-family: Roboto;
       letter-spacing: 0.16px;
       background: var(--color-bg-main);
       border: solid 1px var(--color-indicator-positive);
@@ -546,7 +542,6 @@ export default Vue.extend({
       margin: 20px 166px 0 0;
       color: color-mod(var(--color-border) alpha(60%));
       font-size: 12px;
-      font-family: Roboto;
       letter-spacing: 0.15px;
     }
 

@@ -71,8 +71,8 @@ export default {
     align-items: center;
     height: 100%;
     padding: 0 15px;
-    cursor: pointer;
     overflow: hidden;
+    cursor: pointer;
   }
 
   &__name {
@@ -85,12 +85,12 @@ export default {
   }
 
   &__notifications {
+    flex-shrink: 0;
     width: 17px;
     height: 20px;
     margin-right: 19px;
     margin-left: auto;
     cursor: pointer;
-    flex-shrink: 0;
   }
 }
 </style>

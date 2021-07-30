@@ -131,7 +131,8 @@
       "title": "Аккаунт",
       "profileUpdated": "Профиль обновлён",
       "errors": {
-        "Wrong email format": "Некорректный формат почты"
+        "Wrong email format": "Некорректный формат почты",
+        "Wrong old password Try again": "Текущий пароль введен неверно"
       }
     },
     "appearance": {

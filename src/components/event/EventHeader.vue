@@ -278,13 +278,13 @@ export default Vue.extend({
   .event-header {
     padding: 35px 20px 0 20px;
     color: var(--color-text-second);
-    background-color: #121419;
     font-size: 14px;
+    background-color: #121419;
 
     &__breadcrumbs {
       display: flex;
-      font-weight: 500;
       margin-bottom: 22px;
+      font-weight: 500;
 
       &-item {
         display: flex;
@@ -293,8 +293,8 @@ export default Vue.extend({
         &:not(:last-of-type){
 
           &::after {
-            content: '/';
             margin: 0 10px;
+            content: '/';
           }
         }
 
@@ -305,19 +305,19 @@ export default Vue.extend({
     }
 
     &__type {
-      font-family: var(--font-monospace);
-      font-size: 12.2px;
-      letter-spacing: 0.21px;
       font-weight: 500;
+      font-size: 12.2px;
+      font-family: var(--font-monospace);
+      letter-spacing: 0.21px;
     }
 
     &__title {
       margin: 10px 0 15px;
+      overflow: hidden;
+      color: var(--color-text-main);
       font-size: 18px;
       line-height: 1.67;
-      overflow: hidden;
       text-overflow: ellipsis;
-      color: var(--color-text-main);
     }
 
     &__date {
