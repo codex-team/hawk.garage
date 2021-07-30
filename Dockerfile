@@ -1,7 +1,7 @@
 # build stage
 FROM node:lts-alpine as build-stage
 
-# install git, because Yarn can has dependencies installed from github (for example, hawk.types)
+# install git, because Yarn can have dependencies installed from GitHub (for example, hawk.types)
 RUN apk add --no-cache git
 
 WORKDIR /app
