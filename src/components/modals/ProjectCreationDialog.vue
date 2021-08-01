@@ -33,7 +33,7 @@
           class="button button--submit project-creation-dialog__submit"
           type="submit"
           :value="$t('projects.creationDialog.submitButton')"
-        />
+        >
       </form>
     </div>
   </PopupDialog>
