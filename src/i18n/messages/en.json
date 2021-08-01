@@ -131,7 +131,7 @@
       "title": "Account settings",
       "profileUpdated": "Profile was updated",
       "errors": {
-        "Wrong email format": "Wrong email format 0000",
+        "Wrong email format": "Wrong email format",
         "Wrong old password Try again": "Wrong old password. Try again."
       }
     },
