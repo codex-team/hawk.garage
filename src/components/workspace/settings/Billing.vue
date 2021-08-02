@@ -42,19 +42,6 @@ export default Vue.extend({
     BillingHistory,
     BillingCard,
   },
-  data(): BillingComponentData {
-    return {
-      /**
-       * List of payment operations
-       */
-      paymentsHistory: [],
-
-      /**
-       * Flag determines the loading of the history
-       */
-      isPaymentsHistoryLoading: false,
-    };
-  },
   /**
    * Do not show billing page by direct link if user is not admin
    *
@@ -88,6 +75,19 @@ export default Vue.extend({
 
       next();
     });
+  },
+  data(): BillingComponentData {
+    return {
+      /**
+       * List of payment operations
+       */
+      paymentsHistory: [],
+
+      /**
+       * Flag determines the loading of the history
+       */
+      isPaymentsHistoryLoading: false,
+    };
   },
   computed: {
     /**

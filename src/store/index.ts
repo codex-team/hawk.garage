@@ -50,7 +50,7 @@ export interface RootState {
 /**
  * TS ignore used to allow to connect not-refactored .js modules to TypeScript Vuex Module type
  */
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 export default new Vuex.Store({
   modules: {
     // @ts-ignore

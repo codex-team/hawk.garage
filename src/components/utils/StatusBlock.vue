@@ -62,8 +62,8 @@ export default Vue.extend({
     margin: 3px;
     padding: 4px 8px;
     color: var(--color-indicator-positive);
-    font-size: 13px;
     font-weight: normal;
+    font-size: 13px;
     line-height: 1em;
     letter-spacing: 0.16px;
     white-space: nowrap;

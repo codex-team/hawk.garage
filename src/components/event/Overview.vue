@@ -52,6 +52,8 @@ import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
 import { HawkEvent } from '@/types/events';
+import { EventAddons } from 'hawk.types';
+import { ValueOf } from '../../types/utils';
 
 export default Vue.extend({
   name: 'EventOverview',
@@ -139,10 +141,10 @@ export default Vue.extend({
      * Extract integration group from the addons
      * For example, 'vue' or 'react'
      *
-     * @param {string} integrationName - name of an integration
-     * @returns {object} object with integration addons
+     * @param integrationName - name of an integration
+     * @returns object with integration addons
      */
-    getIntegrationAddons(integrationName: string): object | null {
+    getIntegrationAddons(integrationName: string): ValueOf<EventAddons> | null {
       if (!this.hasAddons) {
         return null;
       }

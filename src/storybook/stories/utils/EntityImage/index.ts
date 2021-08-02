@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+
 import EntityImage from '@/components/utils/EntityImage.vue';
 import { withKnobs, number, text, array } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
+
 
 export default {
   title: 'Utils/EntityImage',

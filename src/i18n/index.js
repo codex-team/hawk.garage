@@ -14,6 +14,21 @@ const defaultPluralization = VueI18n.prototype.getChoiceIndex;
  * @returns {number} index -  a final choice index to select plural word by
  */
 VueI18n.prototype.getChoiceIndex = function (choice, choicesLength) {
+  /**
+   * I met a strange behaviour on the local machine
+   * when the 'defaultPluralization' (as well as VueI18n.prototype.getChoiceIndex) is undefined.
+   * Can't reproduce it on production, but let this workaround be here
+   * because its better to show the first choice of pluralization instead of disappearing of the whole component
+   *   — Peter, 2021 Jul 30th
+   */
+  if (!defaultPluralization){
+    const error = '( ཀ ʖ̯ ཀ) defaultPluralization failed to be defined.';
+
+    console.error(error);
+    this.vm.$sendToHawk(error)
+    return 0;
+  }
+
   // this === VueI18n instance, so the locale property also exists here
   if (this.locale !== 'ru') {
     return defaultPluralization.call(this, choice, choicesLength);
