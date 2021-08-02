@@ -1,10 +1,12 @@
 <template>
   <DetailsBase
     class="details-suspected-commit"
-    :expandShowed="commits.length > numberOfVisibleCommits"
+    :expand-showed="commits.length > numberOfVisibleCommits"
     @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
-    <template #header> {{ $t("event.suspectedCommits.header") }} </template>
+    <template #header>
+      {{ $t("event.suspectedCommits.header") }}
+    </template>
     <template #content>
       <div
         v-for="(commit, index) in filteredCommits"
@@ -48,12 +50,12 @@
         isMoreCommitsShown
           ? $t("event.suspectedCommits.hide")
           : $tc(
-              "event.suspectedCommits.moreRelease",
-              commits.length - numberOfVisibleCommits,
-              {
-                numberOfCommits: commits.length - numberOfVisibleCommits,
-              }
-            )
+            "event.suspectedCommits.moreRelease",
+            commits.length - numberOfVisibleCommits,
+            {
+              numberOfCommits: commits.length - numberOfVisibleCommits,
+            }
+          )
       }}
     </template>
   </DetailsBase>
@@ -112,9 +114,9 @@ export default Vue.extend({
 <style>
 .details-suspected-commit {
   &__content-block {
-    padding: 13px 15px;
     display: flex;
     flex-direction: row;
+    padding: 13px 15px;
   }
   &__left > div {
     height: 16px;
@@ -122,15 +124,15 @@ export default Vue.extend({
   &__left {
     display: flex;
     flex-direction: column;
-    font-size: 14px;
     font-weight: bold;
+    font-size: 14px;
     line-height: normal;
 
     &-title {
-      margin-bottom: 6px;
-      color: var(--color-text-main);
       max-width: 600px;
+      margin-bottom: 6px;
       overflow: hidden;
+      color: var(--color-text-main);
       white-space: nowrap;
       text-overflow: ellipsis;
     }
@@ -146,32 +148,32 @@ export default Vue.extend({
 
     &-relative-time {
       color: var(--color-text-second);
-      vertical-align: middle;
       font-weight: normal;
+      vertical-align: middle;
     }
   }
 
   &__right {
     display: flex;
-    margin-left: auto;
     flex-direction: column;
     justify-content: space-around;
+    margin-left: auto;
 
     &-hash-block {
       padding: 5px 10px;
       line-height: normal;
-      border-radius: 5px;
       background-color: var(--color-bg-code-fragment);
+      border-radius: 5px;
     }
 
     &-hash {
       display: block;
-      height: 14px;
       width: 42px;
-      font-family: var(--font-monospace);
-      font-size: 11px;
-      line-height: normal;
+      height: 14px;
       color: var(--color-text-second);
+      font-size: 11px;
+      font-family: var(--font-monospace);
+      line-height: normal;
     }
   }
 }

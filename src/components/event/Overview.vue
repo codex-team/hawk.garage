@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div v-if="event" class="event-overview">
+    <div
+      v-if="event"
+      class="event-overview"
+    >
       <DetailsSuspectedCommits
         v-if="
           event.release && event.release.commits && event.release.commits.length
@@ -35,11 +38,17 @@
         class="event-overview__section"
         :addons="addonsFiltered"
       />
-      <div v-if="isNoAdditionalInformation" class="empty-event-label">
+      <div
+        v-if="isNoAdditionalInformation"
+        class="empty-event-label"
+      >
         {{ $t("event.emptyData") }}
       </div>
     </div>
-    <div v-else class="event-overview__loading">
+    <div
+      v-else
+      class="event-overview__loading"
+    >
       {{ $t("event.loading") }}
     </div>
   </div>

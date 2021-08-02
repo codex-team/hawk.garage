@@ -71,7 +71,6 @@ Vue.filter('prettyTime', function (value: number) {
   const currentDate = new Date();
 
 
-
   if ((currentDate.getTime() - date.getTime()) / (MS_PER_MINUTE) < 1) {
     return 'now';
   }
@@ -216,34 +215,45 @@ Vue.filter('centsToDollars', function (value: number) {
  * @returns {string} relative time from today
  */
 Vue.filter('prettyRelativeTimeStr', function (date: string): string {
-  let currentTime = new Date();
-  let commitTime = new Date(date);
-  let diffInSeconds =
-    Math.abs(currentTime.valueOf() - commitTime.valueOf()) / 1000;
+  const MS_PER_SECOND = 1000;
+  const SECONDS_PER_YEAR = 31536000;
+  const SECONDS_PER_MONTH = 2592000;
+  const SECONDS_PER_DAYS = 86400;
+  const SECONDS_PER_HOURS = 3600;
+  const SECONDS_PER_MINUTE = 60;
+  const currentTime = new Date();
+  const commitTime = new Date(date);
+  const diffInSeconds =
+    Math.abs(currentTime.valueOf() - commitTime.valueOf()) / MS_PER_SECOND;
 
-  let numberOfYears = Math.floor(diffInSeconds / (60 * 60 * 24 * 365));
+  const numberOfYears = Math.floor(diffInSeconds / SECONDS_PER_YEAR);
+
   if (numberOfYears) {
     return i18n.tc('common.relativeTime.yearsAgo', numberOfYears, { numberOfYears: numberOfYears });
   }
 
-  let numberOfMonths = Math.floor(diffInSeconds / (60 * 60 * 24 * 30));
+  const numberOfMonths = Math.floor(diffInSeconds / SECONDS_PER_MONTH);
+
   if (numberOfMonths) {
     return i18n.tc('common.relativeTime.monthsAgo', numberOfMonths, { numberOfMonths: numberOfMonths });
   }
 
-  let numberOfDays = Math.floor(diffInSeconds / (60 * 60 * 24));
+  const numberOfDays = Math.floor(diffInSeconds / SECONDS_PER_DAYS);
+
   if (numberOfDays) {
     return i18n.tc('common.relativeTime.daysAgo', numberOfDays, { numberOfDays: numberOfDays });
   }
 
-  let numberOfHours = Math.floor(diffInSeconds / (60 * 60));
+  const numberOfHours = Math.floor(diffInSeconds / SECONDS_PER_HOURS);
+
   if (numberOfHours) {
     return i18n.tc('common.relativeTime.hoursAgo', numberOfHours, { numberOfHours: numberOfHours });
   }
 
-  let numberOfMinutes = Math.floor(diffInSeconds / 60);
+  const numberOfMinutes = Math.floor(diffInSeconds / SECONDS_PER_MINUTE);
+
   if (numberOfMinutes) {
-    return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });;
+    return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });
   }
 
   return i18n.t('common.relativeTime.secondsAgo').toString();
