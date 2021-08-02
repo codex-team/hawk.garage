@@ -48,7 +48,7 @@ interface GraphQLError {
  * @param request - GraphQL request that was sent
  * @param variables - request variables
  */
-function printApiError(error: GraphQLError, response: {data: object}, request: string, variables?: object): void {
+function printApiError(error: GraphQLError, response: {data: Record<string, unknown>}, request: string, variables?: Record<string, unknown>): void {
   console.log('\n');
   console.group('❌ API error ---> ' + error.message);
   console.groupCollapsed('┕ Error details');
@@ -96,10 +96,11 @@ interface ApiCallSettings {
  */
 export async function call(
   request: string,
-  variables?: object,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  variables?: Record<string, any>,
   files?: {[name: string]: File | undefined},
   { initial = false, force = false, allowErrors = false }: ApiCallSettings = {}
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
 

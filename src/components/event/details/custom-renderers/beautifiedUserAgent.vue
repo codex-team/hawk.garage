@@ -141,11 +141,11 @@ export default Vue.extend({
     }
 
     .icon {
-      height: 1em;
       width: 12px;
       max-width: 50px;
-      margin-right: 5px;
+      height: 1em;
       margin-top: -1px;
+      margin-right: 5px;
 
       &--macos {
         width: 44px;

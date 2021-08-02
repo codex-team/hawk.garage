@@ -52,7 +52,7 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
 /**
  * Returns all user's workspaces and project.
  *
- * @returns {Promise<[Workspace]>}
+ * @returns {Promise<Workspace[]>}
  */
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
   return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
@@ -104,9 +104,9 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * Get workspaces
  *
  * @param {Array} ids – id of fetching workspaces
- * @returns {Promise<[Workspace]>}
+ * @returns {Promise<Workspace[]>}
  */
-export async function getWorkspaces(ids: string): Promise<Workspace> {
+export async function getWorkspaces(ids: string): Promise<Workspace[]> {
   return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
 }
 

@@ -22,6 +22,7 @@ export const Default = (): unknown => ({
     },
     limit: {
       type: Number,
+      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
       default: number('Limit', 10000),
     },
     price: {

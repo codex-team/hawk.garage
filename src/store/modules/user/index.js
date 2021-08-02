@@ -197,9 +197,20 @@ const actions = {
    *
    * @param {object} context - vuex action context
    * @param {Passwords} passwords - user's pair of passwords
+   * @returns {void}
    */
   async [CHANGE_PASSWORD](context, passwords) {
-    return userApi.changePassword(passwords.old, passwords.new);
+    const response = await userApi.changePassword(passwords.old, passwords.new);
+
+    /**
+     * Response can contain errors.
+     * Throw such errors to the Vue component to display them for user
+     */
+    if (response.errors && response.errors.length) {
+      response.errors.forEach(error => {
+        throw new Error(error.message);
+      });
+    }
   },
 
   /**

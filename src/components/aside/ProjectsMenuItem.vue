@@ -134,9 +134,6 @@ export default {
       }
     }
 
-    &__info {
-    }
-
     &__name {
       display: flex;
       align-items: center;

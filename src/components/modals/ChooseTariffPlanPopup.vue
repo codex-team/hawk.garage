@@ -9,6 +9,7 @@
         <h2 class="choose-plan__title">
           {{ $t('workspaces.chooseTariffPlanDialog.title') }}
         </h2>
+        <!-- eslint-disable vue/no-v-html -->
         <p
           class="choose-plan__description"
           v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
