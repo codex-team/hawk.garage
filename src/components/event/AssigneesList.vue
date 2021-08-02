@@ -49,9 +49,8 @@
 </template>
 
 <script>
-// import EntityImage from '../utils/EntityImage';
-// import Icon from '../utils/Icon';
-// import User from '../../types/user';
+import EntityImage from '../utils/EntityImage';
+import Icon from '../utils/Icon';
 
 export default {
   name: 'AssigneesList',

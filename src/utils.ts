@@ -23,9 +23,9 @@ export function getEntityColor(id: string): string {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-  const decimalRadix = 16;
-  const decimalId = parseInt(id.substr(-1), decimalRadix); // take last id char and convert to decimal number system
-  const colorsToRadix = decimalRadix / colors.length;
+  const hexRadix = 16;
+  const decimalId = parseInt(id.substr(-1), hexRadix); // take last id char and convert to decimal number system
+  const colorsToRadix = hexRadix / colors.length;
 
   return colors[Math.floor(decimalId / colorsToRadix)];
 }
