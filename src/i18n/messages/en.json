@@ -34,6 +34,11 @@
       "title": "Confirm action",
       "continue": "Continue",
       "cancel": "Cancel"
+    },
+    "newVersionWindow":{
+      "newVersionMessage":"The new version is available.",
+      "refresh":"Refresh",
+      "whatsNew":"What’s new? 😏"
     }
   },
   "forms": {

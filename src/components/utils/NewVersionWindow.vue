@@ -8,11 +8,11 @@
     <div class="new-version-dialog__wrapper">
       <div class="new-version-window__wrapper">
         <span class="new-version-window__title">
-          The new version is available
+          {{ $t("components.newVersionWindow.newVersionMessage") }}
         </span>
         <UiButton
           :submit="true"
-          content="Refresh"
+          :content="$t('components.newVersionWindow.refresh')"
           class="new-version-window__refresh-button"
           @click="
             () => {
@@ -23,7 +23,7 @@
         />
         <UiButton
           secondary
-          content="What’s new? 😏"
+          :content="$t('components.newVersionWindow.whatsNew')"
           class="new-version-window__whatsnew-button"
           @click="
             () => {
