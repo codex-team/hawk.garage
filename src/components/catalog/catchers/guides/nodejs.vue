@@ -4,7 +4,7 @@
       class="guide-page__header"
       :background-image="require('../../../../assets/catalog/nodejs.svg')"
       github-link="https://github.com/codex-team/hawk.nodejs"
-      catcher-name="Javascript"
+      catcher-name="NodeJS"
       description="Track errors from your backend application written on JavaScript"
       readme-link="https://github.com/codex-team/hawk.nodejs/blob/master/README.md"
       last-version="2.0"
