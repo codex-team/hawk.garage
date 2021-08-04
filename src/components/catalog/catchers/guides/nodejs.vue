@@ -5,7 +5,7 @@
       :background-image="require('../../../../assets/catalog/nodejs.svg')"
       github-link="https://github.com/codex-team/hawk.nodejs"
       catcher-name="NodeJS"
-      description="Track errors from your backend application written on JavaScript"
+      description="Track errors from your backend application written on NodeJS"
       readme-link="https://github.com/codex-team/hawk.nodejs/blob/master/README.md"
       last-version="2.0"
     />
