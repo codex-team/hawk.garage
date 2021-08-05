@@ -56,17 +56,10 @@ export default {
      */
     // eventBus.$on('serviceWorkerUpdated', () => {      
       this.$notify.open({
-          description: 'The new version is available.',
+          description: this.$t('components.newVersionWindow.message'),
           notifierButtons:[{
-            buttonText: "Refresh",
+            buttonText: this.$t('components.newVersionWindow.refresh'),
             buttonType: "SUBMIT",
-            onConfirm: () => {
-              window.location.reload();
-            }
-          },
-          {
-            buttonText: "What’s new? 😏",
-            buttonType: "SECONDARY",
             onConfirm: () => {
               window.location.reload();
             }
