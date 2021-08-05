@@ -54,7 +54,7 @@ export default {
     /**
      * Connect to the event bus
      */
-    // eventBus.$on('serviceWorkerUpdated', () => {      
+    eventBus.$on('serviceWorkerUpdated', () => {      
       this.$notify.open({
           description: this.$t('components.newVersionWindow.message'),
           notifierButtons:[{
@@ -65,7 +65,7 @@ export default {
             }
           }]
       });
-    // });
+    });
   },
 
   /**
