@@ -19,7 +19,7 @@ export default {
    *
    * @param Vue - vue constructor
    */
-  install: (Vue: VueConstructor) => {
+  install: (Vue: VueConstructor): void => {
     const vueContainer = document.createElement('div');
     const notifierContainer = new Vue<NotifierWindowComponentType>({
       i18n,

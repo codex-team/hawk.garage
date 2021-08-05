@@ -35,7 +35,7 @@ export interface NotifierButton {
   /**
    * callback when user clicks notifier button
    */
-  onConfirm: () => {};
+  onConfirm: () => void;
 }
 
 /**
