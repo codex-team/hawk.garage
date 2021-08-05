@@ -1,7 +1,7 @@
-import { VueConstructor } from "vue";
-import NotifierWindow from "@/components/utils/NotifierWindow/NotifierWindow.vue";
-import { NotifierWindowOptions } from "../components/utils/NotifierWindow/types";
-import i18n from "../i18n";
+import { VueConstructor } from 'vue';
+import NotifierWindow from '@/components/utils/NotifierWindow/NotifierWindow.vue';
+import { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
+import i18n from '../i18n';
 
 /**
  * Type of notifier window component
@@ -20,10 +20,10 @@ export default {
    * @param Vue - vue constructor
    */
   install: (Vue: VueConstructor) => {
-    const vueContainer = document.createElement("div");
+    const vueContainer = document.createElement('div');
     const notifierContainer = new Vue<NotifierWindowComponentType>({
       i18n,
-      render: h => h(NotifierWindow)
+      render: h => h(NotifierWindow),
     });
 
     document.body.appendChild(vueContainer);
@@ -46,7 +46,7 @@ export default {
        */
       close() {
         (notifierContainer.$children[0] as NotifierWindowComponentType).close();
-      }
+      },
     };
-  }
+  },
 };
