@@ -36,9 +36,8 @@
       "cancel": "Cancel"
     },
     "newVersionWindow":{
-      "newVersionMessage":"The new version is available.",
-      "refresh":"Refresh",
-      "whatsNew":"What’s new? 😏"
+      "message":"The new version is available.",
+      "refresh":"Refresh"
     }
   },
   "forms": {
