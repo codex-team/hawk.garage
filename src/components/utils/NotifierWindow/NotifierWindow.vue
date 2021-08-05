@@ -8,26 +8,19 @@
     <div class="notifier-dialog__wrapper">
       <div class="notifier-window__wrapper">
         <span class="notifier-window__title">
-          {{ $t("components.newVersionWindow.newVersionMessage") }}
+          {{ description }}
         </span>
         <UiButton
-          :submit="true"
-          :content="$t('components.newVersionWindow.refresh')"
+          v-for="button in notifierButtons"
+          :key="button.buttonText"
+          :submit="button.buttonType === sumbitButton"
+          :secondary="button.buttonType === secondaryButton"
+          :warning="buttonType === warningButton"
+          :content="button.buttonText"
           class="notifier-window__refresh-button"
           @click="
             () => {
-              onRefresh();
-              close();
-            }
-          "
-        />
-        <UiButton
-          secondary
-          :content="$t('components.newVersionWindow.whatsNew')"
-          class="notifier-window__whatsnew-button"
-          @click="
-            () => {
-              onWhatsNew();
+              button.onConfirm();
               close();
             }
           "
@@ -52,6 +45,7 @@
 import Vue from 'vue';
 import UiButton from './UiButton.vue';
 import Icon from './Icon.vue';
+import { NotifierButtonType, NotifierButton, NotifierWindowOptions } from './types';
 
 export default Vue.extend({
   name: 'NotifierWindow',
@@ -62,38 +56,53 @@ export default Vue.extend({
   data() {
     return {
       /**
-       * Is new version window open
+       * Is notifier window open
        */
       isOpened: false,
+
+      /**
+       * Description of notification action
+       */
+      description: '',
+
+      /**
+       * Button type submit const
+       */
+      sumbitButton: NotifierButtonType.SUBMIT,
+
+      /**
+       * Button type warning const
+       */
+      warningButton: NotifierButtonType.WARNING,
+      
+      /**
+       * Button type secondary const
+       */
+      secondaryButton: NotifierButtonType.SECONDARY,
+      
+      /**
+       * Notifier window buttons
+       */
+      notifierButtons: [] as NotifierButton[]
     }
   },
   methods: {
     /**
-     * Show new version window
+     * Show notifier open window
+     * 
+     * @param options - options for displaying
      */
-    open() {
+    open(options?: NotifierWindowOptions) {
+      this.description = options && options.description || '';
+      this.notifierButtons = options && options.notifierButtons || [];
       this.isOpened = true;
     },
     /**
-     * onRefresh callback when user clicks refresh button
-     */
-    onRefresh: () => {
-       window.location.reload();
-    },
-    /**
-     * onWhatsNew callback when user clicks what's new button
-     */
-    onWhatsNew: () => {
-      window.open('docs', '_blank'); // add docs link
-    },
-    /**
-     * Hide new version window
+     * Hide notifier window
      */
     close() {
       this.isOpened = false;
     }
-
-
   }
 });
 </script>
