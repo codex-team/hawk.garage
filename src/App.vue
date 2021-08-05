@@ -6,7 +6,6 @@
 
 <script>
 import * as api from './api/index.ts';
-import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
 
