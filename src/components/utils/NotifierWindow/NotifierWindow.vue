@@ -17,7 +17,7 @@
           :secondary="button.buttonType === secondaryButton"
           :warning="buttonType === warningButton"
           :content="button.buttonText"
-          class="notifier-window__refresh-button"
+          class="notifier-window__button"
           @click="
             () => {
               button.onConfirm();
@@ -146,7 +146,6 @@ export default Vue.extend({
   }
   &-window {
     &__wrapper {
-      /* width: 483px;  uncomment for whats new button */
       padding: 8px 15px;
     }
 
@@ -157,17 +156,12 @@ export default Vue.extend({
       margin: 2px 14px 2px 0;
     }
 
-    &__refresh-button {
+    &__button {
       padding: 5px 11px;
       margin-right: 10px;
       border-radius: 13px;
     }
-    &__whatsnew-button {
-      padding: 5px 11px;
-      border-radius: 13px;
-      margin-right: 15px;
-      display: none; /* Remove for the whats new button */
-    }
+
     &__close-button {
       width: 14px;
       height: 14px;
