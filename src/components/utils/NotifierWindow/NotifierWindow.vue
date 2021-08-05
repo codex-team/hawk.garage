@@ -25,16 +25,14 @@
             }
           "
         />
-        <span>
-          <Icon
-            symbol="close"
-            class="notifier-window__close-button"
-            @click="
-              () => {
-                close();
-              }
-            "
-          />
+        <span
+          @click="
+            () => {
+              close();
+            }
+          "
+        >
+          <Icon symbol="close" class="notifier-window__close-button" />
         </span>
       </div>
     </div>
@@ -43,8 +41,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import UiButton from './UiButton.vue';
-import Icon from './Icon.vue';
+import UiButton from '../UiButton.vue';
+import Icon from '../Icon.vue';
 import { NotifierButtonType, NotifierButton, NotifierWindowOptions } from './types';
 
 export default Vue.extend({
