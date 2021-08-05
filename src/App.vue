@@ -54,9 +54,25 @@ export default {
     /**
      * Connect to the event bus
      */
-    eventBus.$on('serviceWorkerUpdated', () => {      
-      this.$notifyNewVersion.open();
-    });
+    // eventBus.$on('serviceWorkerUpdated', () => {      
+      this.$notify.open({
+          description: 'The new version is available.',
+          notifierButtons:[{
+            buttonText: "Refresh",
+            buttonType: "SUBMIT",
+            onConfirm: () => {
+              window.location.reload();
+            }
+          },
+          {
+            buttonText: "What’s new? 😏",
+            buttonType: "SECONDARY",
+            onConfirm: () => {
+              window.location.reload();
+            }
+          }]
+      });
+    // });
   },
 
   /**
