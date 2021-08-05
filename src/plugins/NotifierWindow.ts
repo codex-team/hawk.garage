@@ -29,7 +29,7 @@ export default {
     document.body.appendChild(vueContainer);
     notifierContainer.$mount(vueContainer);
 
-    Vue.prototype.$confirm = {
+    Vue.prototype.$notify = {
       /**
        * Open notifier window
        *
