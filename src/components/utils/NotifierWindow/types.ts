@@ -1,23 +1,36 @@
 /**
- * Type of notifier action
+ * Type of notifier button
  */
-export enum NotifierActionType {
+export enum NotifierButtonType {
   /**
-   * Confirm action
+   * Submit button
    */
-  CONFIRM = 'CONFIRM',
+  SUBMIT = 'SUBMIT',
 
   /**
-   * Notify action
+   * Secondary button
    */
-  NOTIFY = 'NOTIFY'
+  SECONDARY = 'SECONDARY',
+
+  /**
+   * Warning button
+   */
+  WARNING = 'WARNING'
 }
 
+/**
+ * Notifier button formate
+ */
 export interface NotifierButton {
   /**
    * Text in notifier button
    */
-  notifierButtonText: string;
+  buttonText: string;
+
+  /**
+   * notifier button type
+   */
+  buttonType: NotifierButtonType;
 
   /**
    * callback when user clicks notifier button
@@ -26,7 +39,7 @@ export interface NotifierButton {
 }
 
 /**
- * Options for creating confirmation window
+ * Options for creating notifier window
  */
 export interface NotifierWindowOptions {
   /**
@@ -35,12 +48,7 @@ export interface NotifierWindowOptions {
   description: string;
 
   /**
-   * Type of notifier action
-   */
-  actionType: NotifierActionType;
-
-  /**
-   * Notifier Buttons
+   * Notifier window Buttons
    */
   notifierButtons?: NotifierButton[];
 }
