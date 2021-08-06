@@ -32,7 +32,10 @@
             }
           "
         >
-          <Icon symbol="close" class="notifier-window__close-button" />
+          <Icon
+            symbol="close"
+            class="notifier-window__close-button"
+          />
         </span>
       </div>
     </div>
