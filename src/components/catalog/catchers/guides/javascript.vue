@@ -62,8 +62,8 @@
               project.token
             }}'})"&gt;&lt;/script&gt;
           </CodeBlock>
-          Initialization settings:
-          <table border="1">
+          <p>Initialization settings:</p>
+          <table class="guide-page__instructions-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -139,9 +139,9 @@
           </p>
           <CodeBlock language="javascript" copyable>
             try { <br />
-            throw new Error('My First Hawk Error');<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;throw new Error('My First Hawk Error');<br />
             } catch (e) { <br />
-            hawk.send(e);<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;hawk.send(e);<br />
             }
           </CodeBlock>
         </template>

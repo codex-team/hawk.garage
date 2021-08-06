@@ -66,9 +66,9 @@
           </p>
           <CodeBlock language="javascript" copyable>
             try { <br />
-            throw new Error('My First Hawk Error');<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;throw new Error('My First Hawk Error');<br />
             } catch (e) { <br />
-            HawkCatcher.send(e);<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;HawkCatcher.send(e);<br />
             }
           </CodeBlock>
         </template>
