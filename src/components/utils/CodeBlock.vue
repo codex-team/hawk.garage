@@ -103,6 +103,8 @@ export default {
     ^&__content {
       @apply --hide-scrollbar;
       overflow: hidden;
+      max-width: 93%;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
 

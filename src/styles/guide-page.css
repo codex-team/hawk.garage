@@ -15,6 +15,21 @@
     font-size: 12px;
     letter-spacing: 0.15px;
   }
+  &__instructions-table {
+    border-collapse: collapse;
+  }
+
+  &__instructions-table th {
+    background-color: var(--color-bg-main);
+  }
+
+  &__instructions-table td,
+  th {
+    vertical-align: middle;
+    text-align: left;
+    padding: 6px 13px;
+    border: 1px solid var(--color-delimiter-line);
+  }
 
   &__link-list {
     color: var(--color-indicator-medium);
