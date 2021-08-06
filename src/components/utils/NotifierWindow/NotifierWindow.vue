@@ -12,15 +12,15 @@
         </span>
         <UiButton
           v-for="button in notifierButtons"
-          :key="button.buttonText"
-          :submit="button.buttonType === sumbitButton"
-          :secondary="button.buttonType === secondaryButton"
-          :warning="buttonType === warningButton"
-          :content="button.buttonText"
+          :key="button.text"
+          :submit="button.type === sumbitButton"
+          :secondary="button.type === secondaryButton"
+          :warning="button.type === warningButton"
+          :content="button.text"
           class="notifier-window__button"
           @click="
             () => {
-              button.onConfirm();
+              button.onClick();
               close();
             }
           "
@@ -32,10 +32,7 @@
             }
           "
         >
-          <Icon
-            symbol="close"
-            class="notifier-window__close-button"
-          />
+          <Icon symbol="close" class="notifier-window__close-button" />
         </span>
       </div>
     </div>

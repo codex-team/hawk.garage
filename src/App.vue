@@ -58,9 +58,9 @@ export default {
       this.$notify.open({
           description: this.$t('components.newVersionWindow.message'),
           notifierButtons:[{
-            buttonText: this.$t('components.newVersionWindow.refresh'),
-            buttonType: NotifierButtonType.SUMIT,
-            onConfirm: () => {
+            text: this.$t('components.newVersionWindow.refresh'),
+            type: NotifierButtonType.SUBMIT,
+            onClick: () => {
               window.location.reload();
             }
           }]

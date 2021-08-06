@@ -25,17 +25,17 @@ export interface NotifierButton {
   /**
    * Text in notifier button
    */
-  buttonText: string;
+  text: string;
 
   /**
    * notifier button type
    */
-  buttonType: NotifierButtonType;
+  type: NotifierButtonType;
 
   /**
    * callback when user clicks notifier button
    */
-  onConfirm: () => void;
+  onClick: () => void;
 }
 
 /**
