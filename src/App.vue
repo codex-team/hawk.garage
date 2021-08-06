@@ -8,6 +8,7 @@
 import * as api from './api/index.ts';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
+import { NotifierButtonType } from './components/utils/NotifierWindow/types.ts';
 
 export default {
   name: 'App',
@@ -58,7 +59,7 @@ export default {
           description: this.$t('components.newVersionWindow.message'),
           notifierButtons:[{
             buttonText: this.$t('components.newVersionWindow.refresh'),
-            buttonType: "SUBMIT",
+            buttonType: NotifierButtonType.SUMIT,
             onConfirm: () => {
               window.location.reload();
             }
