@@ -95,7 +95,7 @@ export default {
   &__content {
     position: relative;
     width: 100%;
-
+    line-height: 1.5em;
     @apply --hide-scrollbar;
   }
 
