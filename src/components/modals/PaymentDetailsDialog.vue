@@ -2,24 +2,32 @@
   <PopupDialog @close="$emit('close')">
     <div class="payment-details">
       <div class="payment-details__header">
-        {{ isRecurrent ? $t('billing.autoProlongation.title') : $t('billing.paymentDetails.title') }}
+        {{
+          isRecurrent
+            ? $t("billing.autoProlongation.title")
+            : $t("billing.paymentDetails.title")
+        }}
       </div>
 
       <!--Description-->
       <div class="payment-details__description">
-        {{ isRecurrent ? $t('billing.autoProlongation.description') : $t('billing.paymentDetails.description') }}
+        {{
+          isRecurrent
+            ? $t("billing.autoProlongation.description")
+            : $t("billing.paymentDetails.description")
+        }}
       </div>
 
       <!--Details-->
       <div class="payment-details__details">
         <div class="payment-details__details-header">
-          {{ $t('billing.paymentDetails.details.title').toUpperCase() }}
+          {{ $t("billing.paymentDetails.details.title").toUpperCase() }}
         </div>
 
         <!--Workspace-->
         <div class="payment-details__details-item">
           <div class="payment-details__details-item-field">
-            {{ $t('common.workspace') }}
+            {{ $t("common.workspace") }}
           </div>
           <EntityImage
             :id="workspace.id"
@@ -38,7 +46,7 @@
         <!--Plan-->
         <div class="payment-details__details-item">
           <div class="payment-details__details-item-field">
-            {{ $t('common.plan') }}
+            {{ $t("common.plan") }}
           </div>
           <div class="payment-details__details-item-value">
             {{ readablePlanString }}
@@ -48,7 +56,7 @@
         <!--Price-->
         <div class="payment-details__details-item">
           <div class="payment-details__details-item-field">
-            {{ $t('common.price') }}
+            {{ $t("common.price") }}
           </div>
           <div class="payment-details__details-item-value">
             {{ priceWithDollar }}
@@ -61,7 +69,7 @@
           class="payment-details__details-item"
         >
           <div class="payment-details__details-item-field">
-            {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
+            {{ $t("billing.autoProlongation.theNextPaymentDateTitle") }}
           </div>
           <div class="payment-details__details-item-value">
             {{ nextPaymentDateString | prettyDateFromDateTimeString }}
@@ -83,7 +91,9 @@
       <TextFieldSet
         v-model="email"
         class="payment-details__email"
-        :label="$t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()"
+        :label="
+          $t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()
+        "
         :placeholder="email"
         disabled
       />
@@ -103,20 +113,18 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
+            {{ $t("billing.paymentDetails.allowCardSaving") }}
           </div>
         </div>
 
-        <div
-          class="payment-details__adoption-autoProlongation-item"
-        >
+        <div class="payment-details__adoption-autoProlongation-item">
           <UiCheckbox
             v-model="isAcceptedRecurrentPaymentAgreement"
             class="payment-details__adoption-checkbox"
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
+            {{ $t("billing.autoProlongation.acceptRecurrentPaymentAgreement") }}
           </div>
         </div>
 
@@ -127,7 +135,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
+            {{ $t("billing.autoProlongation.allowingChargesEveryMonth") }}
           </div>
         </div>
       </section>
@@ -147,7 +155,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
+            {{ $t("billing.paymentDetails.allowCardSaving") }}
           </div>
         </div>
 
@@ -158,7 +166,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
+            {{ $t("billing.paymentDetails.acceptPaymentAgreement") }}
           </div>
         </div>
       </section>
@@ -497,11 +505,29 @@ export default Vue.extend({
       if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
-        notifier.show({
-          message: this.$t('billing.paymentDetails.didNotAccept') as string,
-          style: 'error',
-          time: 5000,
-        });
+        if(this.isRecurrent){
+           if(!this.isAcceptedRecurrentPaymentAgreement){
+              notifier.show({
+                message: this.$t('billing.paymentDetails.didNotAcceptRecurrentPaymentAgreement') as string,
+                style: 'error',
+                time: 5000,
+              });
+           }
+           if(!this.isAcceptedChargingEveryMonth){
+              notifier.show({
+                message: this.$t('billing.paymentDetails.didNotAcceptChargingEveryMonth') as string,
+                style: 'error',
+                time: 5000,
+              });             
+           }
+        }
+        else{
+            notifier.show({
+              message: this.$t('billing.paymentDetails.didNotAccept') as string,
+              style: 'error',
+              time: 5000,
+            });
+          }
       }
     },
 
@@ -634,105 +660,104 @@ export default Vue.extend({
 </script>
 
 <style>
-  .payment-details {
-    width: 558px;
-    padding: 29px 21px 30px 30px;
-    color: var(--color-text-main);
-    font-size: 14px;
+.payment-details {
+  width: 558px;
+  padding: 29px 21px 30px 30px;
+  color: var(--color-text-main);
+  font-size: 14px;
 
-    &__header {
-      margin: 0 159px 20px 0;
-      font-weight: bold;
-      font-size: 18px;
-    }
+  &__header {
+    margin: 0 159px 20px 0;
+    font-weight: bold;
+    font-size: 18px;
+  }
 
-    &__description {
-      margin-bottom: 30px;
+  &__description {
+    margin-bottom: 30px;
+    color: var(--color-text-second);
+    line-height: 1.43;
+  }
+
+  &__details {
+    margin-bottom: 28px;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 0.15px;
+
+    &-header {
+      margin: 0 0 16px;
       color: var(--color-text-second);
-      line-height: 1.43;
     }
 
-    &__details {
-      margin-bottom: 28px;
-      font-weight: bold;
-      font-size: 12px;
-      letter-spacing: 0.15px;
-
-      &-header {
-        margin: 0 0 16px;
-        color: var(--color-text-second);
-      }
-
-      &-item {
-        display: flex;
-        margin: 19px 20px 15px 0;
-        font-weight: normal;
-        font-size: 14px;
-
-        &-workspace-image {
-          margin: -2px 5px 0 0;
-        }
-
-        &-field {
-          margin-right: 19px;
-        }
-
-        &-value {
-          font-weight: bold;
-        }
-
-      }
-    }
-
-    &__card {
-      width: 280px;
-      margin-bottom: 28px;
-      margin-left: 0;
-    }
-
-    &__email {
-      width: 280px;
-      margin-bottom: 28px;
-    }
-
-    &__adoption {
+    &-item {
       display: flex;
-      flex-direction: column;
-      margin-top: 20px;
-      margin-bottom: 28px;
+      margin: 19px 20px 15px 0;
+      font-weight: normal;
+      font-size: 14px;
 
-      &-checkbox {
-        margin-right: 12px;
-        margin-left: 0;
+      &-workspace-image {
+        margin: -2px 5px 0 0;
       }
 
-      &-description {
-        margin-top: 6px;
+      &-field {
+        margin-right: 19px;
       }
 
-      &-autoProlongation {
-        margin-bottom: 28px;
-
-        &-item {
-          display: flex;
-          margin-bottom: 9px;
-        }
-      }
-    }
-
-    &__bottom {
-      display: flex;
-
-      &-button {
-        margin-right: 118px;
-      }
-
-      &-cp-logo {
-        width: 201px;
-        height: 17px;
-        margin-top: 12px;
-        cursor: pointer;
+      &-value {
+        font-weight: bold;
       }
     }
   }
+
+  &__card {
+    width: 280px;
+    margin-bottom: 28px;
+    margin-left: 0;
+  }
+
+  &__email {
+    width: 280px;
+    margin-bottom: 28px;
+  }
+
+  &__adoption {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 28px;
+
+    &-checkbox {
+      margin-right: 12px;
+      margin-left: 0;
+    }
+
+    &-description {
+      margin-top: 6px;
+    }
+
+    &-autoProlongation {
+      margin-bottom: 28px;
+
+      &-item {
+        display: flex;
+        margin-bottom: 9px;
+      }
+    }
+  }
+
+  &__bottom {
+    display: flex;
+
+    &-button {
+      margin-right: 118px;
+    }
+
+    &-cp-logo {
+      width: 201px;
+      height: 17px;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+  }
+}
 </style>
