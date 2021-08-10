@@ -26,7 +26,7 @@
       {{ description }}
     </div>
     <div class="guide-page-header__info">
-      <div class="guide-page__source-code">
+      <div class="guide-page-header__source-code">
         <a :href="githubLink">View source</a>
       </div>
       <div class="guide-page-header__readme">
