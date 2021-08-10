@@ -284,6 +284,8 @@
       },
       "acceptPaymentAgreement": "Я понимаю и принимаю условия платежа (обязательно)",
       "didNotAccept": "Для оплаты нужно принять платежное соглашение",
+      "didNotAcceptRecurrentPaymentAgreement": "Чтобы продолжить, примите соглашение",
+      "didNotAcceptChargingEveryMonth": "Подтвердите согласие на ежемесячные списания",
       "allowCardSaving": "Сохранить карту для будущих платежей",
       "goToPaymentService": "Перейти к оплате",
       "payWithSelectedCard": "Оплатить с выбранной карты"
