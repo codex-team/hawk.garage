@@ -9,7 +9,6 @@
       catcher-name="Javascript"
       description="Advanced client catcher with errors bunching"
       readme-link="https://github.com/codex-team/hawk.javascript/blob/master/README.md"
-      last-version="2.0"
     />
     <div class="guide-page__instructions">
       <div class="guide-page__instructions-header">INSTALLATION</div>

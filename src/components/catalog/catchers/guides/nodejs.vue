@@ -7,7 +7,6 @@
       catcher-name="NodeJS"
       description="Track errors from your backend application written on NodeJS"
       readme-link="https://github.com/codex-team/hawk.nodejs/blob/master/README.md"
-      last-version="2.0"
     />
     <div class="guide-page__instructions">
       <div class="guide-page__instructions-header">INSTALLATION</div>
