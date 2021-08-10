@@ -18,7 +18,7 @@ export default {
 <style>
 .guide-section {
   position: relative;
-  margin-top: 16px;
+  margin-top: 25px;
   padding: 10px 20px;
   border: solid 1px rgba(219, 230, 255, 0.2);
   border-radius: 5px;
