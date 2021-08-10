@@ -28,10 +28,6 @@
           <CodeBlock language="javascript" copyable>
             $ npm install @hawk.so/javascript --save
           </CodeBlock>
-          Or
-          <CodeBlock language="javascript" copyable>
-            $ yarn add @hawk.so/javascript
-          </CodeBlock>
           Load from CDN:
           <CodeBlock language="html" copyable>
             &lt;script
@@ -45,14 +41,10 @@
         <template #content>
           <p>
             Create HawkCatcher class instance when script will be ready and pass
-            your Integration Token as follow:
+            your integration token as follow:
           </p>
           <CodeBlock language="javascript" copyable>
             const hawk = new HawkCatcher({token: '{{ project.token }}'});
-          </CodeBlock>
-          Or
-          <CodeBlock language="javascript" copyable>
-            const hawk = new HawkCatcher('{{ project.token }}');
           </CodeBlock>
           Or
           <CodeBlock language="html" copyable>
@@ -77,7 +69,7 @@
                 <td>token</td>
                 <td>string</td>
                 <td>require</td>
-                <td>Your project's Integration Token.</td>
+                <td>Your project's integration token.</td>
               </tr>
               <tr>
                 <td>release</td>
@@ -122,7 +114,7 @@
                 <td>function(event) => event</td>
                 <td>optional</td>
                 <td>
-                  This Method allows you to filter any data you don't want
+                  This method allows you to filter any data you don't want
                   sending to Hawk.
                 </td>
               </tr>

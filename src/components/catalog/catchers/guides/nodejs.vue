@@ -40,7 +40,7 @@
             passing a project token:
           </p>
           <CodeBlock language="javascript" copyable>
-            const HAWK_TOKEN = '{{ project.token }}';<br /><br />
+            const HAWK_TOKEN = '{{ project.token }}';<br />
             HawkCatcher.init(HAWK_TOKEN);
           </CodeBlock>
           <p>
