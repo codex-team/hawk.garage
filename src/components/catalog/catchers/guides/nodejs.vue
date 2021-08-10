@@ -26,20 +26,12 @@
           <CodeBlock language="javascript" copyable>
             $ npm install @hawk.so/nodejs --save
           </CodeBlock>
-          Or
-          <CodeBlock language="javascript" copyable>
-            $ yarn add @hawk.so/nodejs
-          </CodeBlock>
         </template>
       </GuideStepBlock>
       <GuideSection>
         <template #header> Initialize HawkCatcher </template>
         <template #content>
           <p>Add HawkCatcher module as follow:</p>
-          <CodeBlock language="javascript" copyable>
-            const HawkCatcher = require('@hawk.so/nodejs').default;
-          </CodeBlock>
-          Or
           <CodeBlock language="javascript" copyable>
             import HawkCatcher from '@hawk.so/nodejs';
           </CodeBlock>
@@ -48,11 +40,11 @@
             passing a project token:
           </p>
           <CodeBlock language="javascript" copyable>
-            const HAWK_TOKEN = '{{ project.token }}';<br />
+            const HAWK_TOKEN = '{{ project.token }}';<br /><br />
             HawkCatcher.init(HAWK_TOKEN);
           </CodeBlock>
           <p>
-            Now, Just write your code and HawkCatcher adds listeners for
+            Now, just write your code and HawkCatcher adds listeners for
             uncaughtException and unhandledRejection itself.
           </p>
         </template>
