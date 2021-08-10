@@ -4,8 +4,8 @@
       <div class="payment-details__header">
         {{
           isRecurrent
-            ? $t("billing.autoProlongation.title")
-            : $t("billing.paymentDetails.title")
+            ? $t('billing.autoProlongation.title')
+            : $t('billing.paymentDetails.title')
         }}
       </div>
 
@@ -13,21 +13,21 @@
       <div class="payment-details__description">
         {{
           isRecurrent
-            ? $t("billing.autoProlongation.description")
-            : $t("billing.paymentDetails.description")
+            ? $t('billing.autoProlongation.description')
+            : $t('billing.paymentDetails.description')
         }}
       </div>
 
       <!--Details-->
       <div class="payment-details__details">
         <div class="payment-details__details-header">
-          {{ $t("billing.paymentDetails.details.title").toUpperCase() }}
+          {{ $t('billing.paymentDetails.details.title').toUpperCase() }}
         </div>
 
         <!--Workspace-->
         <div class="payment-details__details-item">
           <div class="payment-details__details-item-field">
-            {{ $t("common.workspace") }}
+            {{ $t('common.workspace') }}
           </div>
           <EntityImage
             :id="workspace.id"
@@ -46,7 +46,7 @@
         <!--Plan-->
         <div class="payment-details__details-item">
           <div class="payment-details__details-item-field">
-            {{ $t("common.plan") }}
+            {{ $t('common.plan') }}
           </div>
           <div class="payment-details__details-item-value">
             {{ readablePlanString }}
@@ -56,7 +56,7 @@
         <!--Price-->
         <div class="payment-details__details-item">
           <div class="payment-details__details-item-field">
-            {{ $t("common.price") }}
+            {{ $t('common.price') }}
           </div>
           <div class="payment-details__details-item-value">
             {{ priceWithDollar }}
@@ -69,7 +69,7 @@
           class="payment-details__details-item"
         >
           <div class="payment-details__details-item-field">
-            {{ $t("billing.autoProlongation.theNextPaymentDateTitle") }}
+            {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
           </div>
           <div class="payment-details__details-item-value">
             {{ nextPaymentDateString | prettyDateFromDateTimeString }}
@@ -113,7 +113,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t("billing.paymentDetails.allowCardSaving") }}
+            {{ $t('billing.paymentDetails.allowCardSaving') }}
           </div>
         </div>
 
@@ -124,7 +124,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t("billing.autoProlongation.acceptRecurrentPaymentAgreement") }}
+            {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
           </div>
         </div>
 
@@ -135,7 +135,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t("billing.autoProlongation.allowingChargesEveryMonth") }}
+            {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
           </div>
         </div>
       </section>
@@ -155,7 +155,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t("billing.paymentDetails.allowCardSaving") }}
+            {{ $t('billing.paymentDetails.allowCardSaving') }}
           </div>
         </div>
 
@@ -166,7 +166,7 @@
           />
 
           <div class="payment-details__adoption-description">
-            {{ $t("billing.paymentDetails.acceptPaymentAgreement") }}
+            {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
           </div>
         </div>
       </section>
