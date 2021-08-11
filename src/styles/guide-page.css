@@ -29,6 +29,7 @@
     text-align: left;
     padding: 6px 13px;
     border: 1px solid var(--color-delimiter-line);
+    word-break: break-word;
   }
 
   &__link-list {
