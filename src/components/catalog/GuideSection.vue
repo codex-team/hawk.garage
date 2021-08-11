@@ -35,6 +35,10 @@ export default {
     transform: translateY(-50%);
   }
 
+  &__content {
+    overflow-x: auto;
+  }
+
   h3 {
     margin: 20px 0 15px 0;
     font-size: 16px;
