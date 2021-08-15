@@ -48,17 +48,22 @@ export default Vue.extend({
       default: 'Checkbox label',
     }
   },
-  computed: {
+  data() {
+    return {
+      /**
+       * Mutable value variable for using in checkbox
+       */
+      mutableValue: this.value,
+    }
+  },
+  watch: {
     /**
-     * Mutable value variable for using in checkbox
+     * Watch on value and emit input when it's changed
+     *
+     * @param value - new value
      */
-    mutableValue: {
-      get: function () {
-        return this.value;
-      },
-      set: function (value) {
-        this.$emit('input', value);
-      }
+    mutableValue: function (value) {
+      this.$emit('input', value);
     }
   }
 })
