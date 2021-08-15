@@ -29,6 +29,11 @@
     },
     "codeBlock": {
       "copy": "COPY"
+    },
+    "confirmationWindow": {
+      "title": "Confirm action",
+      "continue": "Continue",
+      "cancel": "Cancel"
     }
   },
   "forms": {
@@ -112,7 +117,8 @@
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
       }
-    }
+    },
+    "notFound": "Project not found"
   },
   "settings": {
     "account": {
@@ -125,7 +131,8 @@
       "title": "Account settings",
       "profileUpdated": "Profile was updated",
       "errors": {
-        "Wrong email format": "Wrong email format"
+        "Wrong email format": "Wrong email format",
+        "Wrong old password Try again": "Wrong old password. Try again."
       }
     },
     "appearance": {
@@ -170,7 +177,9 @@
       "title": "Choose a plan",
       "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you want a free unlimited access for non-profit products, contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
       "onSuccess": "Workspace plan has been successfully changed",
-      "onError": "Unable to change workspace plan due to an error, please try again later"
+      "onError": "Unable to change workspace plan due to an error, please try again later",
+      "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
+      "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan."
     },
     "creationDialog": {
       "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
@@ -321,7 +330,16 @@
       "assignee": "Assignee"
     },
     "emptyData": "This event has no context",
-    "notFound": "Event not found. Probably it was archived."
+    "notFound": "Event not found. Probably it was archived.",
+    "addons": {
+      "url": "URL",
+      "window": "Browser Window",
+      "beautifiedUserAgent": "User Agent"
+    },
+    "user": {
+      "unknown": "Unknown",
+      "noname": "No name"
+    }
   },
   "common": {
     "workspace": "Workspace",

@@ -1,6 +1,6 @@
 <template>
   <SettingsWindow on-close-route="../">
-    <template v-slot:header>
+    <template #header>
       <div class="settings-window__header account-settings__header">
         <div class="project-settings__logo settings-window__logo" />
         <div class="project-settings__title">
@@ -12,7 +12,7 @@
       </div>
     </template>
 
-    <template v-slot:menu>
+    <template #menu>
       <div>
         <router-link
           class="settings-window__menu-item"
@@ -50,7 +50,7 @@
       </div>
     </template>
 
-    <template v-slot:content>
+    <template #content>
       <router-view
         v-if="project"
         :project="project"
@@ -66,6 +66,7 @@ import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
 import { REMOVE_PROJECT } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
+import { ActionType } from '../../utils/ConfirmationWindow/types';
 
 export default Vue.extend({
   name: 'ProjectSettingsWindow',
@@ -97,24 +98,28 @@ export default Vue.extend({
      * Remove current project
      */
     async removeProject() {
-      if (!window.confirm(this.$i18n.t('projects.settings.removeConfirmation').toString())) {
-        return;
-      }
-      try {
-        await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
-        this.$router.push({ name: 'home' });
-        notifier.show({
-          message: this.$i18n.t('projects.settings.removeSuccess').toString(),
-          style: 'success',
-          time: 10000,
-        });
-      } catch {
-        notifier.show({
-          message: this.$i18n.t('projects.settings.removeError').toString(),
-          style: 'error',
-          time: 10000,
-        });
-      }
+      this.$confirm.open({
+        description: this.$i18n.t('projects.settings.removeConfirmation').toString(),
+        actionType: ActionType.DELETION,
+        continueButtonText: this.$i18n.t('projects.settings.remove').toString(),
+        onConfirm: async () => {
+          try {
+            await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
+            await this.$router.push({ name: 'home' });
+            notifier.show({
+              message: this.$i18n.t('projects.settings.removeSuccess').toString(),
+              style: 'success',
+              time: 10000,
+            });
+          } catch {
+            notifier.show({
+              message: this.$i18n.t('projects.settings.removeError').toString(),
+              style: 'error',
+              time: 10000,
+            });
+          }
+        }
+      });
     },
   },
 });

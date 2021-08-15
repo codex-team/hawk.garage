@@ -55,15 +55,24 @@ export default {
     },
     showInputs: Boolean,
   },
+  data(){
+    return {
+      old: '',
+      new: ''
+    }
+  },
+  mounted() {
+    this.data = this.value;
+  },
   methods: {
     oldPasswordInput(value) {
-      this.value.old = value;
-      this.$emit('input', this.value);
+      this.data.old = value;
+      this.$emit('input', this.data);
     },
 
     newPasswordInput(value) {
-      this.value.new = value;
-      this.$emit('input', this.value);
+      this.data.new = value;
+      this.$emit('input', this.data);
     },
   },
 };

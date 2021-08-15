@@ -204,6 +204,12 @@ import { BusinessOperationStatus } from '../../types/business-operation-status';
 const NEW_CARD_ID = 'NEW_CARD';
 
 /**
+ * The amount we will debit to confirm the subscription.
+ * After confirmation, we will refund the user money.
+ */
+const AMOUNT_FOR_CARD_VALIDATION = 1;
+
+/**
  * Transforms card data to CustomSelect option
  *
  * @param card - card data to transform
@@ -214,7 +220,7 @@ function cardToSelectOption(card: BankCard): CustomSelectOption {
     value: card.id,
     name: `**** **** **** ${card.lastFour}`,
   };
-};
+}
 
 export default Vue.extend({
   name: 'PaymentDetailsDialog',
@@ -284,7 +290,7 @@ export default Vue.extend({
       isAcceptedChargingEveryMonth: false,
 
       /**
-       * Workspace id for which the payment is made
+       * Workspace for which the payment is made
        */
       workspace,
 
@@ -361,14 +367,39 @@ export default Vue.extend({
     },
 
     /**
-     * Next payment date (current date + 1 month)
+     * Due date of the current workspace tariff plan
+     */
+    planDueDate(): Date {
+      const lastChargeDate = new Date(this.workspace.lastChargeDate);
+      return new Date(lastChargeDate.setMonth(lastChargeDate.getMonth() + 1));
+    },
+
+    /**
+     * Has workspace actual tariff plan or it's expired
+     */
+    isTariffPlanExpired(): boolean {
+      const date = new Date();
+
+      return date > this.planDueDate;
+    },
+
+    /**
+     * Next payment date
      */
     nextPaymentDateString(): string {
       const date = new Date();
 
-      date.setMonth(date.getMonth() + 1);
+      /**
+       * If the tariff plan is expired, we need to debit money now
+       * Otherwise, we will debit money when the tariff plan expires
+       */
+      if (this.isTariffPlanExpired) {
+        date.setMonth(date.getMonth() + 1);
 
-      return date.toDateString();
+        return date.toDateString();
+      }
+
+      return this.planDueDate.toDateString()
     },
 
     /**
@@ -381,6 +412,34 @@ export default Vue.extend({
 
       return this.isAcceptedPaymentAgreement;
     },
+
+    /**
+     * True if user pays for the current tariff plan (no plan-changing)
+     */
+    isPaymentForCurrentTariffPlan(): boolean {
+      return this.workspace.plan.id === this.plan.id;
+    },
+
+    /**
+     * True when we need to withdraw the amount only to validate the subscription
+     */
+    isOnlyCardValidationNeeded(): boolean {
+      /**
+       * In case of not recurrent payment we need to withdraw full amount
+       */
+      if (!this.isRecurrent) {
+        return false;
+      }
+
+      /**
+       * In case when user pays for another tariff plan we need to withdraw full amount
+       */
+      if (!this.isPaymentForCurrentTariffPlan) {
+        return false;
+      }
+
+      return !this.isTariffPlanExpired;
+    }
   },
   watch: {
     /**
@@ -499,6 +558,17 @@ export default Vue.extend({
             period: 1,
           },
         };
+
+        if (!this.isTariffPlanExpired) {
+          paymentData.cloudPayments.recurrent.startDate = this.nextPaymentDateString;
+          paymentData.cloudPayments.recurrent.amount = data.plan.monthlyCharge;
+        }
+      }
+
+      let amount = data.plan.monthlyCharge;
+
+      if (this.isOnlyCardValidationNeeded) {
+        amount = AMOUNT_FOR_CARD_VALIDATION;
       }
 
       widget.pay('charge',
@@ -508,7 +578,7 @@ export default Vue.extend({
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
-          amount: +data.plan.monthlyCharge,
+          amount,
           currency: data.currency,
           email: this.email,
 

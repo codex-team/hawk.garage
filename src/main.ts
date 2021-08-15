@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
+import ConfirmationWindow from './plugins/ConfirmationWindow';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -60,11 +61,12 @@ Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://
  */
 Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
   if (hawk) {
-    hawk.catchError(error);
+    hawk.send(error);
   }
 };
 
 Vue.use(VueCookies);
+Vue.use(ConfirmationWindow);
 
 /**
  * Configure API

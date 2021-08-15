@@ -94,10 +94,10 @@ export async function updateProfile(name, email, image) {
  * @returns {Promise<boolean>}
  */
 export async function changePassword(oldPassword, newPassword) {
-  return (await api.call(MUTATION_CHANGE_PASSWORD, {
+  return api.call(MUTATION_CHANGE_PASSWORD, {
     oldPassword,
     newPassword,
-  })).changePassword;
+  }, undefined, { allowErrors: true });
 }
 
 /**

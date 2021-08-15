@@ -51,7 +51,6 @@
 <script>
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
-import User from '../../types/user';
 
 export default {
   name: 'AssigneesList',

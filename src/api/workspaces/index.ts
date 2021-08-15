@@ -10,7 +10,7 @@ import {
   QUERY_WORKSPACES,
   QUERY_BALANCE,
   MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
-  MUTATION_CANCEL_SUBSCRIPTION
+  MUTATION_CANCEL_SUBSCRIPTION, MUTATION_JOIN_BY_INVITE_LINK
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
@@ -52,7 +52,7 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
 /**
  * Returns all user's workspaces and project.
  *
- * @returns {Promise<[Workspace]>}
+ * @returns {Promise<Workspace[]>}
  */
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
   return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
@@ -76,6 +76,17 @@ export async function inviteToWorkspace(workspaceId: string, userEmail: string):
 }
 
 /**
+ * Join to workspace by invite link
+ *
+ * @param inviteHash - workspace invite link
+ */
+export async function joinByInviteLink(inviteHash: string): Promise<boolean> {
+  return (await api.call(MUTATION_JOIN_BY_INVITE_LINK, {
+    inviteHash,
+  })).joinByInviteLink;
+}
+
+/**
  * Confirms user invitation
  *
  * @param {string} workspaceId - id of workspace where invitation should be confirmed
@@ -93,9 +104,9 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * Get workspaces
  *
  * @param {Array} ids – id of fetching workspaces
- * @returns {Promise<[Workspace]>}
+ * @returns {Promise<Workspace[]>}
  */
-export async function getWorkspaces(ids: string): Promise<Workspace> {
+export async function getWorkspaces(ids: string): Promise<Workspace[]> {
   return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
 }
 
