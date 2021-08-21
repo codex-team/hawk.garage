@@ -17,7 +17,7 @@ export const Default = (): unknown => ({
   components: { UiCheckboxWithLabel },
   template: `
     <UiCheckboxWithLabel
-      id="default-example-checker"
+      name="isChecked"
       label="Check me!"
       v-model="checked"
     />

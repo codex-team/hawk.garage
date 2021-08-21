@@ -8,7 +8,7 @@ Checkbox component with label.
 
 ```vue
 <UiCheckboxWithLabel
-  id="payment-details__should-save-card"
+  name="shouldSaveCard"
   v-model="shouldSaveCard"
   label="Save my card"
 />
@@ -18,6 +18,6 @@ Checkbox component with label.
 
 | Prop name | Type | Default value | Description |
 | --------- | ---- | ------------- | ----------- |
-| id | **String** | `null` | ID of checkbox linked with label |
+| name | **String** | `''` | Name of checkbox linked with label in form data |
 | value | **Boolean** | `null` | Value for binding with v-model |
 | label | **String** | `'Checkbox label'` | Text for displaying as label |
