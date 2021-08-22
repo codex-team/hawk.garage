@@ -10,6 +10,7 @@
     "signUp": "Sign up",
     "signUpSubmitText": "Register",
     "recoverPasswordSuccessMessage": "New password is sent to your email",
+    "signupSuccessMessage": "Your password is sent to your email",
     "errors": {
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",

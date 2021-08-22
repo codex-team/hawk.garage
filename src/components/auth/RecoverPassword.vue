@@ -85,7 +85,9 @@ export default class RecoverPassword extends Vue {
 
       this.$router.push({
         name: 'login',
-        params: { isPasswordRecoverSuccess: 'true' },
+        params: {
+          successMessage: this.$t('authPages.recoverPasswordSuccessMessage')
+        },
       });
     } catch (e) {
       console.error(e);

@@ -186,7 +186,7 @@ const router = new Router({
       name: 'login',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue'),
       props: route => ({
-        isPasswordRecoverSuccess: route.params.isPasswordRecoverSuccess === 'true',
+        successMessage: route.params.successMessage,
       }),
     },
     {

@@ -7,7 +7,7 @@
       :message="message"
       :alt-link="altLink"
       :alt-text="altText"
-      :is-password-recover-success="isPasswordRecoverSuccess"
+      :success-message="successMessage"
       @submit="login"
     />
   </div>
@@ -27,11 +27,11 @@ export default {
   mixins: [ offlineErrorMessage ],
   props: {
     /**
-     * Prop for getting information about recovering password result from router
+     * Success message text
      */
-    isPasswordRecoverSuccess: {
-      type: Boolean,
-      default: false,
+    successMessage: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -60,7 +60,6 @@ export default {
       message: null,
     };
   },
-
   async mounted() {
     if (
       this.$route.query.access_token &&
