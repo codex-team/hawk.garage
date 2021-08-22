@@ -206,6 +206,9 @@ export default {
 
     this.$store.dispatch(RESET_MODAL_DIALOG);
 
+    /**
+     * Onboarding. If a user has no workspace, show Create Workspace modal
+     */
     this.suggestWorkspaceCreation();
 
     /**
@@ -251,7 +254,7 @@ export default {
     },
 
     /**
-     * Onboarding. If there user has no workspace, show Create Workspace modal
+     * Onboarding. If a user has no workspace, show Create Workspace modal
      *
      * @return {void}
      */
