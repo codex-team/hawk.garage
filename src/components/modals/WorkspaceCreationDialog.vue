@@ -38,6 +38,7 @@ import { CREATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
+import notifier from 'codex-notifier';
 
 export default {
   name: 'WorkspaceCreationDialog',
@@ -69,7 +70,12 @@ export default {
         await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
         this.$emit('close');
       } catch (e) {
-        console.log(e);
+        console.error(e);
+
+        notifier.show({
+          message: this.$i18n.t('errors.' + e.message),
+          style: 'error',
+        });
       }
     },
   },
