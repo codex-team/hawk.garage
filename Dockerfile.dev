@@ -10,6 +10,4 @@ RUN yarn
 
 COPY . .
 
-RUN yarn install
-
 CMD ["yarn", "serve"]
