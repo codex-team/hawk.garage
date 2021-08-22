@@ -83,7 +83,8 @@ export default Vue.extend({
         this.$router.push({
           name: 'login',
           params: {
-            successMessage: this.$t('authPages.recoverPasswordSuccessMessage') as string
+            successMessage: this.$t('authPages.recoverPasswordSuccessMessage') as string,
+            emailPrefilled: email,
           },
         });
       } catch (e) {
