@@ -26,6 +26,11 @@ export interface Workspace {
   image?: string;
 
   /**
+   * Invite hash of workspace for invite links
+   */
+  inviteHash: string;
+
+  /**
    * Workspace members array
    */
   team: Member[];

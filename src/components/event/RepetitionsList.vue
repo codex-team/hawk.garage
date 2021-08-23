@@ -25,15 +25,15 @@
               size="22"
             />
             <span class="repetitions-list__user-name">
-              {{ repetition.payload.user ? repetition.payload.user.name || '—' : '' }}
+              {{ repetition.payload.user ? repetition.payload.user.name || $t('event.user.noname') : $t('event.user.unknown') }}
             </span>
           </span>
         </td>
-        <td
-          v-if="repetition.payload.addons && repetition.payload.addons.userAgent"
-          class="repetitions-list__col"
-        >
-          <span class="repetitions-list__user-browser">
+        <td class="repetitions-list__col">
+          <span
+            v-if="repetition.payload.addons && repetition.payload.addons.userAgent"
+            class="repetitions-list__user-browser"
+          >
             {{ getBrowser(repetition.payload.addons.userAgent) }}
           </span>
         </td>
@@ -46,14 +46,16 @@
           </span>
         </td>
         <td class="repetitions-list__col repetitions-list__col--fixed-short">
-          <a
-            class="repetitions-list__url"
-            :title="repetition.payload.addons.url"
-            :href="repetition.payload.addons.url"
-            @click.stop
-          >
-            {{ repetition.payload.addons.url }}
-          </a>
+          <span v-if="repetition.payload.addons && repetition.payload.addons.url">
+            <a
+              class="repetitions-list__url"
+              :title="repetition.payload.addons.url"
+              :href="repetition.payload.addons.url"
+              @click.stop
+            >
+              {{ repetition.payload.addons.url }}
+            </a>
+          </span>
         </td>
         <template v-if="repetition.payload.context">
           <td

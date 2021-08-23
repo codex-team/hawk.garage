@@ -32,7 +32,9 @@
         v-copyable="{selector: 'span', callback: onLinkCopied}"
         class="input workspace-team__invite-link-container clearfix"
       >
-        <span>{{ `${baseUrl}/join/${workspace.id}` }}</span>
+        <span class="workspace-team__invite-link-text">
+          {{ `${baseUrl}/join/${workspace.inviteHash}` }}
+        </span>
         <input
           type="button"
           class="workspace-team__copy-button"
@@ -181,6 +183,7 @@ export default Vue.extend({
     }
 
     &__invite-link-container {
+      display: flex;
       width: 600px;
       margin-top: 10px;
       color: var(--color-text-highlighted);
@@ -188,13 +191,19 @@ export default Vue.extend({
       cursor: pointer;
     }
 
+    &__invite-link-text {
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+    }
+
     &__copy-button {
-      float: right;
+      flex-shrink: 0;
       min-width: 60px;
       height: 23px;
+      margin-left: auto;
+      padding: 5px 15px;
       color: var(--color-text-main);
       font-size: 11px;
-      line-height: 23px;
       letter-spacing: 0.14px;
       background-color: var(--color-indicator-medium);
       border: 0;

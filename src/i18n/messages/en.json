@@ -4,12 +4,13 @@
     "githubButton": "Continue",
     "googleButton": "Sign in",
     "login": "Login",
-    "loginSubmitText": "Login",
+    "loginSubmitText": "Log in",
     "password": "PASSWORD",
     "recoverPassword": "Recover password",
     "signUp": "Sign up",
     "signUpSubmitText": "Register",
     "recoverPasswordSuccessMessage": "New password is sent to your email",
+    "signupSuccessMessage": "The password is sent to your email",
     "errors": {
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",
@@ -29,6 +30,11 @@
     },
     "codeBlock": {
       "copy": "COPY"
+    },
+    "confirmationWindow": {
+      "title": "Confirm action",
+      "continue": "Continue",
+      "cancel": "Cancel"
     }
   },
   "forms": {
@@ -112,7 +118,8 @@
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
       }
-    }
+    },
+    "notFound": "Project not found"
   },
   "settings": {
     "account": {
@@ -125,7 +132,8 @@
       "title": "Account settings",
       "profileUpdated": "Profile was updated",
       "errors": {
-        "Wrong email format": "Wrong email format"
+        "Wrong email format": "Wrong email format",
+        "Wrong old password Try again": "Wrong old password. Try again."
       }
     },
     "appearance": {
@@ -170,7 +178,9 @@
       "title": "Choose a plan",
       "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you want a free unlimited access for non-profit products, contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
       "onSuccess": "Workspace plan has been successfully changed",
-      "onError": "Unable to change workspace plan due to an error, please try again later"
+      "onError": "Unable to change workspace plan due to an error, please try again later",
+      "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
+      "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan."
     },
     "creationDialog": {
       "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
@@ -274,7 +284,10 @@
         "emailForTheInvoice": "Email for the invoice"
       },
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
-      "didNotAccept": "You need to accept the payment agreement to proceed with payment"
+      "didNotAccept": "You need to accept the payment agreement to proceed with payment",
+      "allowCardSaving": "Save card for future payments",
+      "goToPaymentService": "Go to payment service",
+      "payWithSelectedCard": "Pay with selected card"
     },
     "autoProlongation": {
       "title": "Auto prolongation",
@@ -316,6 +329,17 @@
     "context": "Context",
     "viewedBy": {
       "assignee": "Assignee"
+    },
+    "emptyData": "This event has no context",
+    "notFound": "Event not found. Probably it was archived.",
+    "addons": {
+      "url": "URL",
+      "window": "Browser Window",
+      "beautifiedUserAgent": "User Agent"
+    },
+    "user": {
+      "unknown": "Unknown",
+      "noname": "No name"
     }
   },
   "common": {
@@ -358,5 +382,8 @@
       "nov",
       "dec"
     ]
+  },
+  "errors": {
+    "Something went wrong": "Error occurred. Hawk just informed us about it."
   }
 }

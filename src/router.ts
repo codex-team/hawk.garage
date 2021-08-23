@@ -18,6 +18,7 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: AppShell,
+      props: true,
       children: [
         /**
          * Account settings
@@ -52,17 +53,26 @@ const router = new Router({
           ],
         },
         /**
-         * Workspace settings
+         * Workspace
          * ----------------
          */
         {
           path: 'workspace/:workspaceId',
+          name: 'workspace',
+        },
+
+        /**
+         * Workspace settings
+         * ----------------
+         */
+        {
+          path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
-          redirect: 'workspace/:workspaceId/settings',
+          redirect: 'workspace/:workspaceId/settings/general',
           children: [
             {
-              path: 'settings',
+              path: 'general',
               name: 'workspace-settings-general',
               component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/General.vue'),
               props: true,
@@ -176,11 +186,16 @@ const router = new Router({
       name: 'login',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue'),
       props: route => ({
-        isPasswordRecoverSuccess: route.params.isPasswordRecoverSuccess === 'true',
+        successMessage: route.params.successMessage,
+        emailPrefilled: route.params.emailPrefilled,
       }),
     },
     {
-      path: '/join/:workspaceId/:inviteHash?',
+      path: '/join/:inviteHash',
+      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next),
+    },
+    {
+      path: '/join/:workspaceId/:inviteHash',
       beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next),
     },
     {
@@ -192,7 +207,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const authRoutes = /^\/(login|sign-up|reset)/;
+  const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join)/;
 
   if (store.getters.isAuthenticated) {

@@ -9,6 +9,7 @@
         <h2 class="choose-plan__title">
           {{ $t('workspaces.chooseTariffPlanDialog.title') }}
         </h2>
+        <!-- eslint-disable vue/no-v-html -->
         <p
           class="choose-plan__description"
           v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
@@ -27,7 +28,7 @@
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
-          :disabled="selectedPlan.id === currentPlan.id"
+          :disabled="selectedPlan.id === workspace.plan.id"
           submit
           @click="onContinue"
         />
@@ -41,11 +42,11 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
-import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
-import { SET_MODAL_DIALOG, RESET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
+import { ActionType } from '../utils/ConfirmationWindow/types';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -68,14 +69,14 @@ export default Vue.extend({
 
     return {
       /**
+       * Workspace for which the tariff plan is selected
+       */
+      workspace,
+
+      /**
        * Selected plan object
        */
       selectedPlan: workspace.plan,
-
-      /**
-       * Current plan object
-       */
-      currentPlan: workspace.plan,
     };
   },
   computed: {
@@ -107,40 +108,67 @@ export default Vue.extend({
      */
     async onContinue(): Promise<void> {
       if (this.selectedPlan.monthlyCharge === 0) {
-        const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
-          workspaceId: this.workspaceId,
-          planId: this.selectedPlan.id,
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToFreePlanDescription').toString(),
+          onConfirm: async () => {
+            const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
+              workspaceId: this.workspaceId,
+              planId: this.selectedPlan.id,
+            });
+
+            if (!result) {
+              notifier.show({
+                message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
+                style: 'error',
+                time: 5000,
+              });
+
+              return;
+            }
+
+            notifier.show({
+              message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
+              style: 'success',
+              time: 5000,
+            });
+
+            await this.$store.dispatch(RESET_MODAL_DIALOG);
+
+            return;
+          }
         });
-
-        if (!result) {
-          notifier.show({
-            message: this.$t('workspaces.chooseTariffPlanDialog.onError') as string,
-            style: 'error',
-            time: 5000,
-          });
-
-          return;
-        }
-
-        this.currentPlan = this.selectedPlan;
-
-        notifier.show({
-          message: this.$t('workspaces.chooseTariffPlanDialog.onSuccess') as string,
-          style: 'success',
-          time: 5000,
-        });
-
-        this.$store.dispatch(RESET_MODAL_DIALOG);
-
         return;
       }
 
-      this.$store.dispatch(SET_MODAL_DIALOG, {
-        component: 'PaymentDetailsDialog',
-        data: {
-          workspaceId: this.workspaceId,
-          tariffPlanId: this.selectedPlan.id,
-        },
+      /**
+       * Don't show confirmation window if user changes free plan to paid
+       */
+      if (this.workspace.plan.monthlyCharge === 0) {
+        await this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'PaymentDetailsDialog',
+          data: {
+            workspaceId: this.workspaceId,
+            tariffPlanId: this.selectedPlan.id,
+            isRecurrent: !!this.workspace.subscriptionId,
+          },
+        });
+        return;
+      }
+
+      this.$confirm.open({
+        actionType: ActionType.SUBMIT,
+        description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+        onConfirm: async () => {
+          await this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspaceId,
+              tariffPlanId: this.selectedPlan.id,
+              isRecurrent: !!this.workspace.subscriptionId,
+            },
+          });
+        }
       });
     },
   },

@@ -1,14 +1,13 @@
-name: Build and deploy
+name: Build and push docker image
 
 on: [push]
 
 env:
   DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/hawk-garage
 
-
 jobs:
-  build_and_deploy:
-    runs-on: ubuntu-18.04
+  build:
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -27,7 +26,7 @@ jobs:
         with:
           envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
           envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
-          envkey_VUE_APP_API_ENDPOINT: "https://api.beta.hawk.so"
+          envkey_VUE_APP_API_ENDPOINT: "https://api.hawk.so"
 
       - name: Build and push docker image
         uses: docker/build-push-action@v1
@@ -37,14 +36,3 @@ jobs:
           repository: ${{ env.DOCKER_REPO }}
           tag_with_ref: true
           push: ${{ endsWith(github.ref, '/stage') || endsWith(github.ref, '/prod') }}
-
-      - name: Deploy on stage
-        if: endsWith(github.ref, '/stage')
-        run: |
-          curl --user ${{ secrets.DEPLOY_HAWK_STAGE_AUTH }} ${{ secrets.DEPLOY_HAWK_STAGE_ADDRESS }}?image=${{ env.DOCKER_REPO }}:stage
-
-      - name: Deploy on prod
-        if: endsWith(github.ref, '/prod')
-        run: |
-          DEPLOY_TOKEN_PROD=${{ secrets.DEPLOY_TOKEN_PROD }}
-          curl -X POST -H "Content-Type: application/json" --data "{\"branch\":\"prod\",\"secret_token\":\"$DEPLOY_TOKEN_PROD\"}" https://beta.hawk.so/deploy

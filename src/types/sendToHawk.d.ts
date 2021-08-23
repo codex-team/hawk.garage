@@ -1,8 +1,10 @@
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Vue from 'vue';
+
 /**
  * Augment Vue type with custom $sendToHawk method specified in {@link ./../main}
  */
-import Vue from 'vue';
-
 declare module 'vue/types/vue' {
   interface Vue {
     /**

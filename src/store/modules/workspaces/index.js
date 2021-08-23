@@ -5,6 +5,7 @@ import {
   SET_CURRENT_WORKSPACE,
   INVITE_TO_WORKSPACE,
   CONFIRM_INVITE,
+  JOIN_BY_INVITE_LINK,
   UPDATE_WORKSPACE,
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
@@ -12,7 +13,8 @@ import {
   GET_BUSINESS_OPERATIONS,
   GET_BALANCE,
   CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
-  CANCEL_SUBSCRIPTION
+  CANCEL_SUBSCRIPTION,
+  PAY_WITH_CARD
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -38,6 +40,7 @@ const mutationTypes = {
   UPDATE_BALANCE: 'UPDATE_BALANCE', // Update workspace balance
   SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
   SET_PLAN: 'SET_PLAN', // Set workspace tariff plan
+  PUSH_BUSINESS_OPERATION: 'PUSH_BUSINESS_OPERATION', // push new business operation to workspace payments history
 };
 
 /**
@@ -200,6 +203,17 @@ const actions = {
   },
 
   /**
+   * Send request to confirm user invitation
+   *
+   * @param {object} context - vuex action context
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.inviteHash - hash passed to the invite link
+   */
+  async [JOIN_BY_INVITE_LINK](context, { inviteHash }) {
+    await workspaceApi.joinByInviteLink(inviteHash);
+  },
+
+  /**
    * Sets current user workspace
    *
    * @param {Function} commit - standard Vuex commit function
@@ -332,6 +346,21 @@ const actions = {
   },
 
   /**
+   * Process payment via saved card
+   *
+   * @param {Function} commit - standard Vuex commit method
+   * @param {PayWithCardInput} args - data for payments
+   * @returns {Promise<void>}
+   */
+  async [PAY_WITH_CARD]({ commit }, args) {
+    const operation = await billingApi.payWithCard(args);
+
+    commit(mutationTypes.PUSH_BUSINESS_OPERATION, operation);
+
+    return operation;
+  },
+
+  /**
    * Fetch balance of workspace or workspaces
    *
    * @param {Function} commit - standard Vuex commit method
@@ -357,6 +386,7 @@ const actions = {
    * @param {string} planId - id of plan to set
    * @returns {Promise<void>}
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
     const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 
@@ -608,6 +638,18 @@ const mutations = {
         ];
       }
       );
+  },
+
+  /**
+   * Push new business operation to workspace payments history
+   *
+   * @param {object} state - module state
+   * @param {BusinessOperation} operation - operation to push
+   */
+  [mutationTypes.PUSH_BUSINESS_OPERATION](state, operation) {
+    const workspace = state.list.find(w => w.id === operation.payload.workspace.id);
+
+    Vue.set(workspace, 'paymentsHistory', [operation, ...workspace.paymentsHistory]);
   },
 
   /**

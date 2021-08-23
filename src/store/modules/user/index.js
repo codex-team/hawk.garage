@@ -9,7 +9,8 @@ import {
   RECOVER_PASSWORD,
   CHANGE_NOTIFICATIONS_CHANNEL,
   CHANGE_NOTIFICATIONS_RECEIVE_TYPE,
-  FETCH_NOTIFICATIONS_SETTINGS
+  FETCH_NOTIFICATIONS_SETTINGS,
+  FETCH_BANK_CARDS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as userApi from '../../../api/user';
@@ -29,6 +30,7 @@ const mutationTypes = {
  * @property {string} email - user's email
  * @property {string} name - user's name
  * @property {string} password - user's password
+ * @property {Array<BankCard>} bankCards - user's bank cards for one-click payments
  */
 
 /**
@@ -74,17 +76,7 @@ const actions = {
    * @returns {Promise<void>} - sign up status
    */
   async [SIGN_UP](context, user) {
-    const response = await userApi.signUp(user.email);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-    }
+    return userApi.signUp(user.email);
   },
 
   /**
@@ -95,18 +87,6 @@ const actions = {
    */
   async [LOGIN]({ commit }, user) {
     const response = await userApi.login(user.email, user.password);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-
-      return;
-    }
 
     commit(mutationTypes.SET_TOKENS, response.data.login);
   },
@@ -119,17 +99,7 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [RECOVER_PASSWORD](context, user) {
-    const response = await userApi.recoverPassword(user.email);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-    }
+    return userApi.recoverPassword(user.email);
   },
 
   /**
@@ -177,17 +147,7 @@ const actions = {
    * @param {User} user - user's params to update
    */
   async [UPDATE_PROFILE](context, user) {
-    const response = await userApi.updateProfile(user.name, user.email, user.image);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-    }
+    return userApi.updateProfile(user.name, user.email, user.image);
   },
 
   /**
@@ -195,6 +155,7 @@ const actions = {
    *
    * @param {object} context - vuex action context
    * @param {Passwords} passwords - user's pair of passwords
+   * @returns {void}
    */
   async [CHANGE_PASSWORD](context, passwords) {
     return userApi.changePassword(passwords.old, passwords.new);
@@ -213,6 +174,22 @@ const actions = {
 
     commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
       notifications,
+    }));
+  },
+
+  /**
+   * Fetches notifications settings and put it to the state
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - allows to call mutation
+   * @param {UserModuleState} context.state - module state
+   * @returns {Promise<void>}
+   */
+  async [FETCH_BANK_CARDS]({ commit, state }) {
+    const bankCards = await userApi.fetchBankCards();
+
+    commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
+      bankCards,
     }));
   },
 

@@ -47,7 +47,13 @@ export default {
       try {
         await this.$store.dispatch(SIGN_UP, { email });
 
-        this.$router.push('/login');
+        this.$router.push({
+          name: 'login',
+          params: {
+            successMessage: this.$t('authPages.signupSuccessMessage'),
+            emailPrefilled: email,
+          },
+        });
       } catch (e) {
         console.error(e);
 

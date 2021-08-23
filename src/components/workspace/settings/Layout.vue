@@ -1,6 +1,6 @@
 <template>
-  <SettingsWindow on-close-route="/">
-    <template v-slot:header>
+  <SettingsWindow :on-close-route="`/workspace/${$route.params.workspaceId}`">
+    <template #header>
       <div
         v-if="workspace"
         class="settings-window__header workspace-settings__header"
@@ -19,7 +19,7 @@
       </div>
     </template>
 
-    <template v-slot:menu>
+    <template #menu>
       <div v-if="workspace">
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
@@ -54,7 +54,7 @@
       </div>
     </template>
 
-    <template v-slot:content>
+    <template #content>
       <router-view
         v-if="workspace"
         :workspace="workspace"

@@ -5,8 +5,8 @@
     @close="$router.push({name: 'project-overview', params: { projectId }})"
   >
     <EventHeader
+      v-if="event || loading"
       :event="event"
-      :project-id="projectId"
       @tabChanged="tabChanged($event)"
     />
     <div class="event-layout__info">
@@ -17,9 +17,15 @@
           :project-id="projectId"
         />
         <div
-          v-else
+          v-else-if="loading"
           class="event-layout__loader"
         />
+        <div
+          v-else
+          class="empty-event"
+        >
+          {{ $t('event.notFound' ) }}
+        </div>
       </div>
     </div>
   </PopupDialog>
@@ -103,7 +109,12 @@ export default Vue.extend({
 
     this.loading = false;
 
-    this.markEventAsVisited();
+    /**
+     * It can be empty event if it was archived
+     */
+    if (this.event){
+      this.markEventAsVisited();
+    }
   },
 
   methods: {
@@ -129,6 +140,7 @@ export default Vue.extend({
 
 <style>
   @import "./../../styles/variables.css";
+  @import "./../../styles/custom-properties.css";
 
   .event-layout {
     /** Override Popup Dialog animation */
@@ -167,5 +179,9 @@ export default Vue.extend({
 
       @mixin loader 34px, var(--color-border), var(--color-text-second);
     }
+  }
+
+  .empty-event {
+    @apply --empty-placeholder;
   }
 </style>

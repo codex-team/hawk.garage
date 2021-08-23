@@ -39,6 +39,12 @@
     perspective: 1000px;
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   }
+
+  --empty-placeholder: {
+    padding: 80px 0;
+    color: var(--color-text-second);
+    text-align: center;
+  }
 }
 
 @keyframes shake {

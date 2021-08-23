@@ -5,7 +5,7 @@
       class="event-overview"
     >
       <DetailsBacktrace
-        v-if="event.payload.backtrace && event.payload.backtrace.length"
+        v-if="hasBacktrace"
         class="event-overview__section"
         :backtrace="event.payload.backtrace"
         :lang="lang"
@@ -22,7 +22,7 @@
         title="Vue"
       />
       <DetailsAddons
-        v-if="event.payload.context && Object.keys(event.payload.context).length"
+        v-if="hasContext"
         class="event-overview__section"
         :addons="event.payload.context"
         :title="$t('event.context')"
@@ -32,6 +32,12 @@
         class="event-overview__section"
         :addons="addonsFiltered"
       />
+      <div
+        v-if="isNoAdditionalInformation"
+        class="empty-event-label"
+      >
+        {{ $t('event.emptyData') }}
+      </div>
     </div>
     <div
       v-else
@@ -48,6 +54,8 @@ import DetailsCookie from './details/DetailsCookie.vue';
 import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
 import { HawkEvent } from '@/types/events';
+import { EventAddons } from 'hawk.types';
+import { ValueOf } from '../../types/utils';
 
 export default Vue.extend({
   name: 'EventOverview',
@@ -83,7 +91,7 @@ export default Vue.extend({
      * @returns {object}
      */
     addonsFiltered(): object | null {
-      if (!this.event.payload.addons) {
+      if (!this.hasAddons) {
         return null;
       }
 
@@ -98,17 +106,57 @@ export default Vue.extend({
 
       return filteredAddons;
     },
+
+    /**
+     * Return true if event has a backtrace info
+     *
+     * @returns {boolean}
+     */
+    hasBacktrace(): boolean {
+      return this.event.payload.backtrace && this.event.payload.backtrace.length > 0;
+    },
+
+    /**
+     * Return true if event has a context
+     *
+     * @returns {boolean}
+     */
+    hasContext(): boolean {
+      return this.event.payload.context && Object.keys(this.event.payload.context).length > 0;
+    },
+
+    /**
+     * Return true if event has addons
+     *
+     * @returns {boolean}
+     */
+    hasAddons(): boolean {
+      return this.event.payload.addons && Object.keys(this.event.payload.addons).length > 0;
+    },
+
+    /**
+     * Returns true if the event has no backtrace, context and addons
+     *
+     * @returns {boolean}
+     */
+    isNoAdditionalInformation(): boolean {
+      const noBacktrace = !this.hasBacktrace;
+      const noAddons = !this.hasAddons;
+      const noContext = !this.hasContext;
+
+      return noBacktrace && noAddons && noContext;
+    },
   },
   methods: {
     /**
      * Extract integration group from the addons
      * For example, 'vue' or 'react'
      *
-     * @param {string} integrationName - name of an integration
-     * @returns {object} object with integration addons
+     * @param integrationName - name of an integration
+     * @returns object with integration addons
      */
-    getIntegrationAddons(integrationName: string): object | null {
-      if (!this.event.payload.addons) {
+    getIntegrationAddons(integrationName: string): ValueOf<EventAddons> | null {
+      if (!this.hasAddons) {
         return null;
       }
 
@@ -123,6 +171,8 @@ export default Vue.extend({
 </script>
 
 <style>
+  @import "./../../styles/custom-properties.css";
+
   .event-overview {
     &__section {
       margin-bottom: 30px;
@@ -138,5 +188,9 @@ export default Vue.extend({
       border-radius: 9px;
       cursor: pointer;
     }
+  }
+
+  .empty-event-label {
+    @apply --empty-placeholder;
   }
 </style>

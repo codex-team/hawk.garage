@@ -44,17 +44,11 @@ import BillingWorkspace from '../../workspace/settings/BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
 import AddCard from '../../utils/billing/BankCardAdd.vue';
-import { BankCard } from '@/types/bank-card';
+import { BankCard } from '../../../types/bankCard';
+import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 
 import { User } from '@/types/user';
 import { Workspace } from '@/types/workspaces';
-
-interface BilingComponentData {
-  /**
-   * Bank Cards
-   */
-  cards: BankCard[],
-}
 
 export default Vue.extend({
   name: 'AccountBilling',
@@ -73,32 +67,6 @@ export default Vue.extend({
       required: true,
     },
   },
-  data(): BilingComponentData {
-    return {
-      /**
-       * Temporary cards for testing
-       *
-       * @todo replace with the real fetched cards
-       */
-      cards: [
-        {
-          id: '1',
-          pan: '3123',
-          name: '**** **** **** 3123',
-        },
-        {
-          id: '2',
-          pan: '3122',
-          name: '**** **** **** 3122',
-        },
-        {
-          id: '3',
-          pan: '3121',
-          name: '**** **** **** 3121',
-        },
-      ],
-    };
-  },
   computed: {
     /**
      * Workspaces in which current user is admin
@@ -108,8 +76,22 @@ export default Vue.extend({
         return this.$store.getters.isCurrentUserAdmin(workspace.id);
       });
     },
+
+    /**
+     * User's bank cards
+     */
+    cards(): BankCard[] {
+      const cards: BankCard[] = this.$store.state.user.data?.bankCards;
+
+      if (!cards) {
+        return [];
+      }
+
+      return cards;
+    },
   },
-  methods: {
+  mounted() {
+    this.$store.dispatch(FETCH_BANK_CARDS);
   },
 });
 </script>

@@ -27,6 +27,15 @@ directive @requireUserInWorkspace on FIELD_DEFINITION
 
 directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
 
+"""User bank card"""
+type BankCard {
+  """Bank card id"""
+  id: ID!
+
+  """Last four numbers of card PAN"""
+  lastFour: Int!
+}
+
 """Payment link structure"""
 type BillingSession {
   """Total payment amount in kopecs"""
@@ -104,17 +113,6 @@ type CancelSubscriptionResponse {
   record: Workspace!
 }
 
-type CardInfo {
-  """Card number (Pan)"""
-  pan: String!
-
-  """Card ID"""
-  cardId: String!
-
-  """Card expiration date"""
-  expDate: String!
-}
-
 """
 This object will be returned to the changeUserNotificationsChannel mutation
 """
@@ -136,24 +134,18 @@ type changeUserNotificationsReceiveTypeResponse {
 }
 
 """Payload for changing workspace tariff plan"""
-input ChangeWorkspacePlanInput {
+input ChangeWorkspacePlanForFreePlanInput {
   """Workspace ID"""
   workspaceId: ID!
-
-  """Tariff plan ID"""
-  planId: ID!
 }
 
 """Workspace tariff plan change mutation response"""
-type ChangeWorkspacePlanResponse {
-  """Business operation id"""
+type ChangeWorkspacePlanForFreePlanResponse {
+  """Workspace id which plan changed"""
   recordId: ID
 
-  """Modified workspace object"""
-  record: BusinessOperation
-
-  """Workspace balance"""
-  balance: Long!
+  """Workspace which plan changed"""
+  record: Workspace!
 }
 
 type ChartDataItem {
@@ -373,7 +365,7 @@ enum EventsSortOrder {
 """Event user representation"""
 type EventUser {
   """Internal user's identifier inside an app"""
-  id: ID!
+  id: ID
 
   """User public name"""
   name: String
@@ -417,22 +409,8 @@ type Mutation {
   """Remove card"""
   removeCard(cardNumber: String!): Boolean!
 
-  """Initialize recurrent payment"""
-  payWithCard(
-    """Total payment amount in kopecs"""
-    amount: Long!
-
-    """Workspace id for which the payment will be made"""
-    workspaceId: String!
-
-    """
-    Unique card identifier for recurrent payment. Omit this to pay with unattached card
-    """
-    cardId: Int!
-
-    """Payment form language"""
-    language: String
-  ): Boolean!
+  """Mutation for processing payment with saved card"""
+  payWithCard(input: PayWithCardInput!): PayWithCardResponse!
 
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
@@ -671,10 +649,10 @@ type Mutation {
   ): Boolean!
 
   """
-  Mutation in order to switch workspace tariff plan
-  Returns true if operation is successful
+  Mutation in order to switch workspace tariff plan to Free
+  Returns updated workspace
   """
-  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanInput): ChangeWorkspacePlanResponse!
+  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanForFreePlanInput): ChangeWorkspacePlanForFreePlanResponse!
 
   """Namespace for workspaces mutations"""
   workspace: WorkspaceMutations!
@@ -776,6 +754,29 @@ input PayOnceInput {
 
   """Payment form language"""
   language: SupportedBillingLanguages = RU
+}
+
+"""Data for processing payment with saved card"""
+input PayWithCardInput {
+  """Checksum for data validation"""
+  checksum: String!
+
+  """Card id for payment"""
+  cardId: String!
+
+  """
+  Is payment recurrent or not. If payment is recurrent, then the money will be debited every month
+  """
+  isRecurrent: Boolean
+}
+
+"""Response of mutation for processing payment with saved card"""
+type PayWithCardResponse {
+  """Id of the created business operation"""
+  recordId: ID!
+
+  """Created business operation"""
+  record: BusinessOperation!
 }
 
 """Pending member data in workspace"""
@@ -911,9 +912,6 @@ type ProjectNotificationsRule {
 type Query {
   """Healthcheck endpoint"""
   health: String!
-
-  """Get attached cards"""
-  cardList: [CardInfo!]!
 
   """Get workspace billing history"""
   businessOperations(
@@ -1110,6 +1108,9 @@ type User {
 
   """User notifications settings"""
   notifications: UserNotificationsSettings
+
+  """Saved bank cards for one-click payments"""
+  bankCards: [BankCard!]
 }
 
 """Available notify types with their active statuses"""

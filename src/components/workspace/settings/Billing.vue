@@ -17,7 +17,7 @@ import BillingCard from './BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import { BusinessOperation } from '../../../types/business-operation';
 import { ConfirmedMember, Workspace } from '@/types/workspaces';
-import { GET_BUSINESS_OPERATIONS, GET_BALANCE } from '@/store/modules/workspaces/actionTypes';
+import { GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
 import { Route } from 'vue-router';
 import notifier from 'codex-notifier';
 
@@ -41,19 +41,6 @@ export default Vue.extend({
   components: {
     BillingHistory,
     BillingCard,
-  },
-  data(): BillingComponentData {
-    return {
-      /**
-       * List of payment operations
-       */
-      paymentsHistory: [],
-
-      /**
-       * Flag determines the loading of the history
-       */
-      isPaymentsHistoryLoading: false,
-    };
   },
   /**
    * Do not show billing page by direct link if user is not admin
@@ -88,6 +75,19 @@ export default Vue.extend({
 
       next();
     });
+  },
+  data(): BillingComponentData {
+    return {
+      /**
+       * List of payment operations
+       */
+      paymentsHistory: [],
+
+      /**
+       * Flag determines the loading of the history
+       */
+      isPaymentsHistoryLoading: false,
+    };
   },
   computed: {
     /**

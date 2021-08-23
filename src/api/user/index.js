@@ -8,7 +8,7 @@ import {
   QUERY_CURRENT_USER,
   MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL,
   MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE,
-  QUERY_CURRENT_USER_WITH_NOTIFICATIONS
+  QUERY_CURRENT_USER_WITH_NOTIFICATIONS, QUERY_BANK_CARDS
 } from './queries';
 import * as api from '../index.ts';
 
@@ -29,7 +29,7 @@ export async function login(email, password) {
   return api.call(MUTATION_LOGIN, {
     email,
     password,
-  }, undefined, { allowErrors: true });
+  });
 }
 
 /**
@@ -39,7 +39,7 @@ export async function login(email, password) {
  * @returns {Promise<{data: {signUp: boolean}, errors: object[]}>} Response data
  */
 export async function signUp(email) {
-  return api.call(MUTATION_SIGN_UP, { email }, undefined, { allowErrors: true });
+  return api.call(MUTATION_SIGN_UP, { email });
 }
 
 /**
@@ -49,7 +49,7 @@ export async function signUp(email) {
  * @returns {Promise<{data: {resetPassword: boolean}, errors: object[]}>} Response data
  */
 export async function recoverPassword(email) {
-  return api.call(MUTATION_RECOVER_PASSWORD, { email }, undefined, { allowErrors: true });
+  return api.call(MUTATION_RECOVER_PASSWORD, { email });
 }
 
 /**
@@ -59,7 +59,7 @@ export async function recoverPassword(email) {
  * @returns {Promise<TokensPair>}
  */
 export async function refreshTokens(refreshToken) {
-  return (await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true })).refreshTokens;
+  return (await api.callOld(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true })).refreshTokens;
 }
 
 /**
@@ -68,7 +68,7 @@ export async function refreshTokens(refreshToken) {
  * @returns {Promise<User>}
  */
 export async function fetchCurrentUser() {
-  return (await api.call(QUERY_CURRENT_USER)).me;
+  return (await api.callOld(QUERY_CURRENT_USER)).me;
 }
 
 /**
@@ -83,7 +83,7 @@ export async function updateProfile(name, email, image) {
   return api.call(MUTATION_UPDATE_PROFILE, {
     name,
     email,
-  }, { image }, { allowErrors: true });
+  }, { image });
 }
 
 /**
@@ -94,10 +94,10 @@ export async function updateProfile(name, email, image) {
  * @returns {Promise<boolean>}
  */
 export async function changePassword(oldPassword, newPassword) {
-  return (await api.call(MUTATION_CHANGE_PASSWORD, {
+  return api.call(MUTATION_CHANGE_PASSWORD, {
     oldPassword,
     newPassword,
-  })).changePassword;
+  });
 }
 
 /**
@@ -106,7 +106,7 @@ export async function changePassword(oldPassword, newPassword) {
  * @returns {Promise<Pick<User, 'notifications'>>}
  */
 export async function fetchNotificationsSettings() {
-  return (await api.call(QUERY_CURRENT_USER_WITH_NOTIFICATIONS)).me;
+  return (await api.callOld(QUERY_CURRENT_USER_WITH_NOTIFICATIONS)).me;
 }
 
 /**
@@ -116,7 +116,7 @@ export async function fetchNotificationsSettings() {
  * @returns {Promise<{notifications: UserNotifications}>}
  */
 export async function updateNotificationsChannel(payload) {
-  return (await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
+  return (await api.callOld(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
     input: payload,
   })).changeUserNotificationsChannel;
 }
@@ -128,7 +128,16 @@ export async function updateNotificationsChannel(payload) {
  * @returns {Promise<{notifications: UserNotifications}>}
  */
 export async function updateNotificationsReceiveType(payload) {
-  return (await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
+  return (await api.callOld(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
     input: payload,
   })).changeUserNotificationsReceiveType;
+}
+
+/**
+ * Fetches user's bank cards for one-click payments
+ *
+ * @returns {Promise<Array<BankCard>>}
+ */
+export async function fetchBankCards() {
+  return (await api.callOld(QUERY_BANK_CARDS)).me.bankCards || [];
 }
