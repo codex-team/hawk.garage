@@ -18,7 +18,7 @@
       </div>
     </div>
     <button class="button button--small button--rounded catalog-item__install-button">
-      INSTALL
+      {{ $t('components.catalog.install') }}
     </button>
   </div>
 </template>
@@ -87,7 +87,8 @@ export default {
   }
 
   &__install-button {
-    margin: 15px;
+    margin: 15px auto 15px 15px;
+    text-transform: uppercase;
   }
 
   &__type {
