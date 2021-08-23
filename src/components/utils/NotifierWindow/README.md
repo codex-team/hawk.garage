@@ -31,13 +31,13 @@ this.$notify.close();
 
 | Option          | Type                      | Default value | Description              |
 | --------------- | ------------------------- | ------------- | ------------------------ |
-| description     | **String**                | `''`          | Description of Notifier  | \  |
+| description     | **String**                | `''`          | Description of Notifier  |
 | notifierButtons | **type NotifierButton[]** | []            | Array of Notifier Button |
 
 ### Notifier button type
 
 | Option  | Type         | Description          |
 | ------- | ------------ | -------------------- |
-| text    | **String**   | Notifier button Text | \  |
-| type    | **String**   | Notifier button Type | \  |
-| onClick | **Function** | `() => {}`           | Callback that calls on button click |
+| text    | **String**   | Notifier button Text |
+| type    | **String**   | Notifier button Type |
+| onClick | **Function** | Callback that calls on button click |

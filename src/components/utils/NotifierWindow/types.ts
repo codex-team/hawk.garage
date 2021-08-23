@@ -28,12 +28,12 @@ export interface NotifierButton {
   text: string;
 
   /**
-   * notifier button type
+   * Notifier button type
    */
   type: NotifierButtonType;
 
   /**
-   * callback when user clicks notifier button
+   * Callback when user clicks notifier button
    */
   onClick: () => void;
 }
