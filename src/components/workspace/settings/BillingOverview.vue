@@ -129,6 +129,12 @@ import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 
+/**
+ * Const value for the whole project
+ * Number of days of tariff plan period is valid
+ */
+const NUMBER_OF_DAYS_OF_TARIFF_PLAN = 30;
+
 export default Vue.extend({
   name: 'BillingOverview',
   components: {
@@ -277,7 +283,7 @@ export default Vue.extend({
     subExpiredDate(): Date {
       const expiredDate: Date = new Date(this.workspace.lastChargeDate);
 
-      expiredDate.setMonth(expiredDate.getMonth() + 1);
+      expiredDate.setDate(expiredDate.getDate() + NUMBER_OF_DAYS_OF_TARIFF_PLAN);
 
       return expiredDate;
     },
