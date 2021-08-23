@@ -71,6 +71,9 @@ export default {
 
         this.$emit('close');
 
+        /**
+         * Open created workspace
+         */
         this.$store.dispatch(SET_CURRENT_WORKSPACE, createdWorkspace);
       } catch (e) {
         console.error(e);
