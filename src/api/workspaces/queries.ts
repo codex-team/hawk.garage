@@ -75,7 +75,7 @@ export const MUTATION_CREATE_WORKSPACE = `
     $name: String!,
     $image: Upload
   ) {
-    createWorkspace(name: $name, image: $image) {
+    workspace: createWorkspace(name: $name, image: $image) {
       id
       name
       description

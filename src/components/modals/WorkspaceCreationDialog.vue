@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { CREATE_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { CREATE_WORKSPACE, SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
@@ -67,13 +67,21 @@ export default {
           workspaceInfo.image = this.image;
         }
 
-        await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
+        const createdWorkspace = await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
+
         this.$emit('close');
+
+        /**
+         * Open created workspace
+         */
+        this.$store.dispatch(SET_CURRENT_WORKSPACE, createdWorkspace);
       } catch (e) {
         console.error(e);
 
+        const dictKey = 'errors.' + e.message;
+
         notifier.show({
-          message: this.$i18n.t('errors.' + e.message),
+          message: this.$i18n.te(dictKey) ? this.$i18n.t(dictKey) : e.message,
           style: 'error',
         });
       }
