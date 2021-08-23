@@ -148,7 +148,7 @@ export default Vue.extend({
   align-items: center;
   padding: 12px 15px;
   color: var(--color-text-second);
-  background: transparent;
+  background-color: transparent;
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
   outline: none;
@@ -173,27 +173,27 @@ export default Vue.extend({
 
   &--submit {
     color: var(--color-text-main);
-    background: var(--color-indicator-medium);
+    background-color: var(--color-indicator-medium);
     border: 0;
 
     &:not(^&--disabled):hover {
-      background: var(--color-indicator-medium-dark);
+      background-color: var(--color-indicator-medium-dark);
     }
   }
 
   &--secondary {
     color: var(--color-text-main);
-    background: var(--color-indicator-low);
+    background-color: var(--color-indicator-low);
     border: 0;
   }
 
   &--warning {
     color: var(--color-text-main);
-    background: var(--color-indicator-critical);
+    background-color: var(--color-indicator-critical);
     border: 0;
 
     &:not(^&--disabled):hover {
-      background: var(--color-indicator-critical-dark);
+      background-color: var(--color-indicator-critical-dark);
     }
   }
 

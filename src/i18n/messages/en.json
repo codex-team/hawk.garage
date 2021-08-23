@@ -18,6 +18,13 @@
       "Network Error": "Server is not available. Check your internet connection."
     }
   },
+  "layout": {
+    "aside": {
+      "emptyProjectsList": "You haven't any integrations here.",
+      "createFirstProjectLabel": "Let’s create the new one.",
+      "createFirstProjectButton": "Create a project"
+    }
+  },
   "components": {
     "changePasswordFieldSet": {
       "newPassword": "New password",

@@ -18,6 +18,13 @@
       "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету."
     }
   },
+  "layout": {
+    "aside": {
+      "emptyProjectsList": "У вас еще нет проектов.",
+      "createFirstProjectLabel": "Добавьте первую интеграцию.",
+      "createFirstProjectButton": "Создать проект"
+    }
+  },
   "components": {
     "changePasswordFieldSet": {
       "newPassword": "Новый пароль",
