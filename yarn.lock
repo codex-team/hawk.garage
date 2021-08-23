@@ -1119,9 +1119,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hawk.so/javascript@^2.1.0":
+"@hawk.so/javascript@^2.10.0":
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-2.10.0.tgz#ee69bb699421ec3dd832b1a2a0d0273f686fdd2e"
+  integrity sha512-AKXwr5tMMyQwrEsGkPUBUTg0H2cXeC0oGzKznzytuDEgihhD6T7wea8nOcPPCG07uESvhaTb0e7ni+v6wYIfLw==
   dependencies:
     error-stack-parser "^2.0.6"
     hawk.types "https://github.com/codex-team/hawk.types"
@@ -6867,14 +6868,13 @@ hastscript@^6.0.0:
 
 hawk.types@codex-team/hawk.types:
   version "0.1.5"
-  uid c44fceb281215186a7fd85936d994c3312758ae5
   resolved "https://codeload.github.com/codex-team/hawk.types/tar.gz/c44fceb281215186a7fd85936d994c3312758ae5"
   dependencies:
     "@types/mongodb" "^3.5.34"
 
 "hawk.types@https://github.com/codex-team/hawk.types":
-  version "0.1.5"
-  resolved "https://github.com/codex-team/hawk.types#c44fceb281215186a7fd85936d994c3312758ae5"
+  version "0.1.6"
+  resolved "https://github.com/codex-team/hawk.types#7d6cf4c857759dad564fdc2ed77cc1cdda7484e5"
   dependencies:
     "@types/mongodb" "^3.5.34"
 
@@ -8007,6 +8007,7 @@ junk@^3.1.0:
 jwt-decode@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
+  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 killable@^1.0.1:
   version "1.0.1"
