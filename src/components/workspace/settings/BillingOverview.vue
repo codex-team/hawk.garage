@@ -277,7 +277,7 @@ export default Vue.extend({
     subExpiredDate(): Date {
       const expiredDate: Date = new Date(this.workspace.lastChargeDate);
 
-      expiredDate.setMonth(expiredDate.getMonth() + 1);
+      expiredDate.setDate(expiredDate.getDate() + 30);
 
       return expiredDate;
     },
