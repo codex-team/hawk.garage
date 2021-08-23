@@ -4,12 +4,13 @@
     "githubButton": "Continue",
     "googleButton": "Sign in",
     "login": "Login",
-    "loginSubmitText": "Login",
+    "loginSubmitText": "Log in",
     "password": "PASSWORD",
     "recoverPassword": "Recover password",
     "signUp": "Sign up",
     "signUpSubmitText": "Register",
     "recoverPasswordSuccessMessage": "New password is sent to your email",
+    "signupSuccessMessage": "The password is sent to your email",
     "errors": {
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",
@@ -383,5 +384,8 @@
       "nov",
       "dec"
     ]
+  },
+  "errors": {
+    "Something went wrong": "Error occurred. Hawk just informed us about it."
   }
 }

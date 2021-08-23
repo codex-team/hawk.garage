@@ -19,7 +19,8 @@
     <!--      >{{ $t('authPages.googleButton') }}</a>-->
     <!--    </div>-->
     <SuccessMessage
-      v-if="isPasswordRecoverSuccess"
+      v-if="successMessage"
+      :message="successMessage"
     />
     <div class="auth-form__container">
       <div class="auth-form__picture" />
@@ -107,11 +108,12 @@ export default {
     },
     /**
      * Show success message about sending message to email
-     * If recovering password was successful
+     * - after sign up
+     * - after password recovering
      */
-    isPasswordRecoverSuccess: {
-      type: Boolean,
-      default: false,
+    successMessage: {
+      type: String,
+      default: '',
     },
   },
 };

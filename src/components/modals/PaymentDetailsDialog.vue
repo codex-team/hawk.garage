@@ -103,41 +103,22 @@
         v-if="isRecurrent"
         class="payment-details__adoption-autoProlongation"
       >
-        <div
+        <UiCheckboxWithLabel
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+          v-model="shouldSaveCard"
           class="payment-details__adoption-autoProlongation-item"
-        >
-          <UiCheckbox
-            v-model="shouldSaveCard"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
-          </div>
-        </div>
-
-        <div class="payment-details__adoption-autoProlongation-item">
-          <UiCheckbox
-            v-model="isAcceptedRecurrentPaymentAgreement"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
-          </div>
-        </div>
-
-        <div class="payment-details__adoption-autoProlongation-item">
-          <UiCheckbox
-            v-model="isAcceptedChargingEveryMonth"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
-          </div>
-        </div>
+          :label="$t('billing.paymentDetails.allowCardSaving')"
+        />
+        <UiCheckboxWithLabel
+          v-model="isAcceptedRecurrentPaymentAgreement"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.autoProlongation.acceptRecurrentPaymentAgreement')"
+        />
+        <UiCheckboxWithLabel
+          v-model="isAcceptedChargingEveryMonth"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
+        />
       </section>
 
       <!--Basic payment agreement-->
@@ -145,30 +126,18 @@
         v-else
         class="payment-details__adoption"
       >
-        <div
+        <UiCheckboxWithLabel
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+          v-model="shouldSaveCard"
           class="payment-details__adoption-autoProlongation-item"
-        >
-          <UiCheckbox
-            v-model="shouldSaveCard"
-            class="payment-details__adoption-checkbox"
-          />
+          :label="$t('billing.paymentDetails.allowCardSaving')"
+        />
 
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
-          </div>
-        </div>
-
-        <div class="payment-details__adoption-autoProlongation-item">
-          <UiCheckbox
-            v-model="isAcceptedPaymentAgreement"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
-          </div>
-        </div>
+        <UiCheckboxWithLabel
+          v-model="isAcceptedPaymentAgreement"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.paymentDetails.acceptPaymentAgreement')"
+        />
       </section>
 
       <!--Button and cloudpayments logo-->
@@ -205,7 +174,6 @@ import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
-import UiCheckbox from '../forms/UiCheckbox.vue';
 import Icon from '../utils/Icon.vue';
 import notifier from 'codex-notifier';
 import axios from 'axios';
@@ -220,6 +188,7 @@ import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
+import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 
 /**
  * Id for the 'New card' option in select
@@ -254,7 +223,7 @@ export default Vue.extend({
     EntityImage,
     CustomSelect,
     TextFieldSet,
-    UiCheckbox,
+    UiCheckboxWithLabel
   },
   props: {
     /**
@@ -737,10 +706,17 @@ export default Vue.extend({
 
     &-autoProlongation {
       margin-bottom: 28px;
+      &-checkbox {
+        margin-right: 12px;
+        margin-left: 0;
+      }
 
-      &-item {
-        display: flex;
-        margin-bottom: 9px;
+      &-autoProlongation {
+        margin-bottom: 28px;
+
+        &-item {
+          margin-bottom: 9px;
+        }
       }
     }
   }

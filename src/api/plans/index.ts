@@ -7,5 +7,5 @@ import { Plan } from '@/types/plan';
  * Fetch all available plans
  */
 export async function getPlans(): Promise<Plan[]> {
-  return (await api.call(QUERY_PLANS)).plans;
+  return (await api.callOld(QUERY_PLANS)).plans;
 }
