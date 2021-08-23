@@ -187,6 +187,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue'),
       props: route => ({
         successMessage: route.params.successMessage,
+        emailPrefilled: route.params.emailPrefilled,
       }),
     },
     {

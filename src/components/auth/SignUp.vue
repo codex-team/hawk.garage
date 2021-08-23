@@ -50,7 +50,8 @@ export default {
         this.$router.push({
           name: 'login',
           params: {
-            successMessage: this.$t('authPages.signupSuccessMessage')
+            successMessage: this.$t('authPages.signupSuccessMessage'),
+            emailPrefilled: email,
           },
         });
       } catch (e) {
