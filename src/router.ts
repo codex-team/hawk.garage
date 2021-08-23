@@ -186,7 +186,8 @@ const router = new Router({
       name: 'login',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue'),
       props: route => ({
-        isPasswordRecoverSuccess: route.params.isPasswordRecoverSuccess === 'true',
+        successMessage: route.params.successMessage,
+        emailPrefilled: route.params.emailPrefilled,
       }),
     },
     {
@@ -206,7 +207,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const authRoutes = /^\/(login|sign-up|reset)/;
+  const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join)/;
 
   if (store.getters.isAuthenticated) {

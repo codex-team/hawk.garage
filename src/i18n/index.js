@@ -4,36 +4,15 @@ import messages from './messages/en';
 
 Vue.use(VueI18n);
 
-const defaultPluralization = VueI18n.prototype.getChoiceIndex;
-
 /**
  * Custom pluralization method for russian locale
  *
  * @param {number} choice - a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
  * @param {number} choicesLength - an overall amount of available choices
+ *
  * @returns {number} index -  a final choice index to select plural word by
  */
-VueI18n.prototype.getChoiceIndex = function (choice, choicesLength) {
-  /**
-   * I met a strange behaviour on the local machine
-   * when the 'defaultPluralization' (as well as VueI18n.prototype.getChoiceIndex) is undefined.
-   * Can't reproduce it on production, but let this workaround be here
-   * because its better to show the first choice of pluralization instead of disappearing of the whole component
-   *   — Peter, 2021 Jul 30th
-   */
-  if (!defaultPluralization){
-    const error = '( ཀ ʖ̯ ཀ) defaultPluralization failed to be defined.';
-
-    console.error(error);
-    this.vm.$sendToHawk(error)
-    return 0;
-  }
-
-  // this === VueI18n instance, so the locale property also exists here
-  if (this.locale !== 'ru') {
-    return defaultPluralization.call(this, choice, choicesLength);
-  }
-
+const russianPluralization = (choice, choicesLength) => {
   if (choice === 0) {
     return 0;
   }
@@ -58,6 +37,9 @@ const i18n = new VueI18n({
   messages: {
     en: messages,
   },
+  pluralizationRules: {
+    'ru': russianPluralization
+  }
 });
 
 const loadedLanguages = [ 'en' ];

@@ -66,7 +66,7 @@ function printApiError(error: GraphQLError, response: {data: Record<string, unkn
 }
 
 /**
- * Settings that can be passed in api.call() method (see below)
+ * Settings that can be passed in api.callOld() method (see below)
  */
 interface ApiCallSettings {
   /**
@@ -81,6 +81,8 @@ interface ApiCallSettings {
 
   /**
    * If true, request can return both data and errors object to handle them manually
+   *
+   * @deprecated
    */
   allowErrors?: boolean;
 }
@@ -95,6 +97,48 @@ interface ApiCallSettings {
  * @returns {Promise<*>} - request data
  */
 export async function call(
+  request: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  variables?: Record<string, any>,
+  files?: {[name: string]: File | undefined},
+  { initial = false, force = false }: ApiCallSettings = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any> {
+  const response = await callOld(request, variables, files, Object.assign({
+    initial,
+    force,
+  }, {
+    allowErrors: true, // forcefully set this flag. When all the requests will be refactored from api.callOld() to api.call(), remove this flag.
+  }));
+
+  /**
+   * Response can contain errors.
+   * Throw such errors to the Vue component to display them for user
+   */
+  if (response.errors && response.errors.length) {
+    response.errors.forEach(error => {
+      throw new Error(error.message);
+    });
+  }
+
+  return response;
+}
+
+/**
+ * Makes request to API (old)
+ *
+ * @deprecated GraphQL can return response along with errors.
+ *             Previously, we hardcoded only response (for ex. api.call('getUser').getUser) — and lose errors data
+ *             Later we added 'allowErrors' flag for new requests.
+ *             And for now, we have the new api.call() method that supports errors by default. Use it instead of this.
+ *
+ * @param {string} request - request to send
+ * @param {object} [variables] - request variables
+ * @param {object} [files] - files to upload
+ * @param {ApiCallSettings} [settings] - settings for call method
+ * @returns {Promise<*>} - request data
+ */
+export async function callOld(
   request: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables?: Record<string, any>,
@@ -141,8 +185,13 @@ export async function call(
    */
   if (allowErrors) {
     return response.data;
+  } else {
+    console.warn('Api call in old format. Should be refactored to support errors', request);
   }
 
+  /**
+   * @deprecated old format. See method jsdoc
+   */
   return response.data.data;
 }
 

@@ -5,10 +5,9 @@ on: [push]
 env:
   DOCKER_REPO: ${{ secrets.DOCKER_USERNAME }}/hawk-garage
 
-
 jobs:
-  build_and_deploy:
-    runs-on: ubuntu-18.04
+  build:
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2

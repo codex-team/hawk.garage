@@ -10,6 +10,7 @@
     "signUp": "Зарегистрироваться",
     "signUpSubmitText": "Зарегистрироваться",
     "recoverPasswordSuccessMessage": "Новый пароль отправлен на вашу почту",
+    "signupSuccessMessage": "Пароль отправлен на указанную почту",
     "errors": {
       "Wrong email or password": "Неправильный email или пароль",
       "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",
@@ -395,5 +396,8 @@
       "monthsAgo":" | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
       "yearsAgo":" | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
     }
+  },
+  "errors": {
+    "Something went wrong": "Произошла ошибка. Хоук уже сообщил нам о ней."
   }
 }

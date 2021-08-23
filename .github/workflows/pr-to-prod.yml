@@ -1,0 +1,24 @@
+name: PR with update prod from master/main branch
+
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    types: [closed]
+
+jobs:
+  update-from-master:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "prod"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: "Update prod"
+          pr_body: |
+            Auto-generated prod update suggestion
