@@ -382,5 +382,8 @@
       "nov",
       "dec"
     ]
+  },
+  "errors": {
+    "Something went wrong": "Error occurred. Hawk just informed us about it."
   }
 }

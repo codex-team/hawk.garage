@@ -37,7 +37,7 @@ interface CreateWorkspaceInput {
 export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
   const { image, ...rest } = workspaceInfo;
 
-  return (await api.call(MUTATION_CREATE_WORKSPACE, rest, { image })).createWorkspace;
+  return api.call(MUTATION_CREATE_WORKSPACE, rest, { image });
 }
 
 /**
@@ -46,7 +46,7 @@ export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Prom
  * @param {string} workspaceId - id of workspace to leave
  */
 export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
-  return (await api.call(MUTATION_LEAVE_WORKSPACE, { workspaceId })).leaveWorkspace;
+  return (await api.callOld(MUTATION_LEAVE_WORKSPACE, { workspaceId })).leaveWorkspace;
 }
 
 /**
@@ -57,7 +57,6 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
 export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
   return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
     initial: true,
-    allowErrors: true,
   });
 }
 
@@ -69,7 +68,7 @@ export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
  * @returns {Promise<boolean>} true if user invited successfully
  */
 export async function inviteToWorkspace(workspaceId: string, userEmail: string): Promise<boolean> {
-  return (await api.call(MUTATION_INVITE_TO_WORKSPACE, {
+  return (await api.callOld(MUTATION_INVITE_TO_WORKSPACE, {
     workspaceId,
     userEmail,
   })).inviteToWorkspace;
@@ -81,7 +80,7 @@ export async function inviteToWorkspace(workspaceId: string, userEmail: string):
  * @param inviteHash - workspace invite link
  */
 export async function joinByInviteLink(inviteHash: string): Promise<boolean> {
-  return (await api.call(MUTATION_JOIN_BY_INVITE_LINK, {
+  return (await api.callOld(MUTATION_JOIN_BY_INVITE_LINK, {
     inviteHash,
   })).joinByInviteLink;
 }
@@ -94,7 +93,7 @@ export async function joinByInviteLink(inviteHash: string): Promise<boolean> {
  * @returns {Promise<boolean>}
  */
 export async function confirmInvite(workspaceId: string, inviteHash: string): Promise<boolean> {
-  return (await api.call(MUTATION_CONFIRM_INVITE, {
+  return (await api.callOld(MUTATION_CONFIRM_INVITE, {
     workspaceId,
     inviteHash,
   })).confirmInvitation;
@@ -107,7 +106,7 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * @returns {Promise<Workspace[]>}
  */
 export async function getWorkspaces(ids: string): Promise<Workspace[]> {
-  return (await api.call(QUERY_WORKSPACES, { ids })).workspaces;
+  return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
 }
 
 /**
@@ -116,7 +115,7 @@ export async function getWorkspaces(ids: string): Promise<Workspace[]> {
  * @param ids – id of fetching workspaces balance
  */
 export async function getBalance(ids: string[]): Promise<Workspace> {
-  return (await api.call(QUERY_BALANCE, { ids })).workspaces;
+  return (await api.callOld(QUERY_BALANCE, { ids })).workspaces;
 }
 
 /**
@@ -128,7 +127,7 @@ export async function getBalance(ids: string[]): Promise<Workspace> {
  * @param image - logo image file
  */
 export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<boolean> {
-  return (await api.call(MUTATION_UPDATE_WORKSPACE, {
+  return (await api.callOld(MUTATION_UPDATE_WORKSPACE, {
     id,
     name,
     description,
@@ -144,7 +143,7 @@ export async function updateWorkspace(id: string, name: string, description: str
  * @returns {Promise<boolean>}
  */
 export async function grantAdminPermissions(workspaceId: string, userId: string, state = true): Promise<boolean> {
-  return (await api.call(MUTATION_GRANT_ADMIN_PERMISSIONS, {
+  return (await api.callOld(MUTATION_GRANT_ADMIN_PERMISSIONS, {
     workspaceId,
     userId,
     state,
@@ -164,7 +163,7 @@ export async function removeUserFromWorkspace(
   userId: string,
   userEmail: string
 ): Promise<boolean> {
-  return (await api.call(MUTATION_REMOVE_MEMBER_FROM_WORKSPACE, {
+  return (await api.callOld(MUTATION_REMOVE_MEMBER_FROM_WORKSPACE, {
     workspaceId,
     userId,
     userEmail,
@@ -181,7 +180,7 @@ export async function changePlanForFreePLan(
   workspaceId: string,
   planId: string
 ): Promise<APIResponse<Workspace>> {
-  return (await api.call(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
+  return (await api.callOld(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
     input: {
       workspaceId,
       planId,
@@ -195,7 +194,7 @@ export async function changePlanForFreePLan(
  * @param workspaceId - workspace id to cancel subscription for
  */
 export async function cancelSubscription(workspaceId: string): Promise<Pick<Workspace, 'id' | 'subscriptionId'>> {
-  return (await api.call(MUTATION_CANCEL_SUBSCRIPTION, {
+  return (await api.callOld(MUTATION_CANCEL_SUBSCRIPTION, {
     input: {
       workspaceId,
     },

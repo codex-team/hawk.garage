@@ -76,17 +76,7 @@ const actions = {
    * @returns {Promise<void>} - sign up status
    */
   async [SIGN_UP](context, user) {
-    const response = await userApi.signUp(user.email);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-    }
+    return userApi.signUp(user.email);
   },
 
   /**
@@ -97,18 +87,6 @@ const actions = {
    */
   async [LOGIN]({ commit }, user) {
     const response = await userApi.login(user.email, user.password);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-
-      return;
-    }
 
     commit(mutationTypes.SET_TOKENS, response.data.login);
   },
@@ -121,17 +99,7 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [RECOVER_PASSWORD](context, user) {
-    const response = await userApi.recoverPassword(user.email);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-    }
+    return userApi.recoverPassword(user.email);
   },
 
   /**
@@ -179,17 +147,7 @@ const actions = {
    * @param {User} user - user's params to update
    */
   async [UPDATE_PROFILE](context, user) {
-    const response = await userApi.updateProfile(user.name, user.email, user.image);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-    }
+    return userApi.updateProfile(user.name, user.email, user.image);
   },
 
   /**
@@ -200,17 +158,7 @@ const actions = {
    * @returns {void}
    */
   async [CHANGE_PASSWORD](context, passwords) {
-    const response = await userApi.changePassword(passwords.old, passwords.new);
-
-    /**
-     * Response can contain errors.
-     * Throw such errors to the Vue component to display them for user
-     */
-    if (response.errors && response.errors.length) {
-      response.errors.forEach(error => {
-        throw new Error(error.message);
-      });
-    }
+    return userApi.changePassword(passwords.old, passwords.new);
   },
 
   /**
