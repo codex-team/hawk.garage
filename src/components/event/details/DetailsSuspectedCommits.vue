@@ -25,6 +25,7 @@
             <EntityImage
               class="details-suspected-commit__left-image"
               :name="commit.author"
+              :id="commit.author.charCodeAt(0).toString(16)"
               size="16"
             />
             <span class="details-suspected-commit__left-author">
@@ -168,7 +169,6 @@ export default Vue.extend({
 
     &-hash {
       display: block;
-      width: 42px;
       height: 14px;
       color: var(--color-text-second);
       font-size: 11px;
