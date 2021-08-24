@@ -44,13 +44,14 @@ export interface APIError {
   positions?: Maybe<ReadonlyArray<number>>,
   path?: Maybe<ReadonlyArray<string | number>>,
   originalError?: Maybe<Error>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   extensions?: Maybe<{ [key: string]: any }>,
 }
 
 /**
  * Apollo GraphQL Error source
  */
-interface Source {
+declare class Source {
   body: string;
   name: string;
   locationOffset: Location;

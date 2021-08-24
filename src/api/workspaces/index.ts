@@ -14,7 +14,7 @@ import {
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
-import { APIResponseData } from '@/types/api';
+import { APIResponse, APIResponseData } from '@/types/api';
 
 interface CreateWorkspaceInput {
   /**
@@ -34,10 +34,10 @@ interface CreateWorkspaceInput {
  * @param {Workspace} workspaceInfo - workspace to create
  * @returns {Promise<Workspace>} created workspace
  */
-export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<Workspace> {
+export async function createWorkspace(workspaceInfo: CreateWorkspaceInput): Promise<APIResponse<{workspace: Workspace}>> {
   const { image, ...rest } = workspaceInfo;
 
-  return api.call(MUTATION_CREATE_WORKSPACE, rest, { image });
+  return await api.call(MUTATION_CREATE_WORKSPACE, rest, {image});
 }
 
 /**
@@ -54,7 +54,7 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  *
  * @returns {Promise<Workspace[]>}
  */
-export async function getAllWorkspacesWithProjects(): Promise<Workspace[]> {
+export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
   return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
     initial: true,
   });
