@@ -138,7 +138,7 @@ export default {
     }
 
     &__info {
-      max-width: calc(100% - var(--picture-size) - var(--picture-margin))
+      max-width: calc(100% - var(--picture-size) - var(--picture-margin) - 45px); /* 45 is estimated badge (2-digit) width */
     }
 
     &__name {
