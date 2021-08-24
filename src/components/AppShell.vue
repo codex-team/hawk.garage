@@ -13,7 +13,7 @@
           class="aside__search-field"
         />
         <div
-          v-if="projects"
+          v-if="projects.length"
           class="aside__projects-list"
         >
           <ProjectsMenuItem
@@ -24,6 +24,10 @@
             @click.native="onProjectMenuItemClick(project)"
           />
         </div>
+        <EmptyProjectsList
+          v-else-if="currentWorkspace"
+          :workspace="currentWorkspace"
+        />
       </div>
     </aside>
     <div class="app-shell__content">
@@ -51,6 +55,7 @@ import Sidebar from './sidebar/Sidebar';
 import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
+import EmptyProjectsList from './aside/EmptyProjectsList';
 import ProjectHeader from './project/ProjectHeader';
 import ProjectPlaceholder from './project/ProjectPlaceholder';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
@@ -67,6 +72,7 @@ export default {
     WorkspaceInfo,
     ProjectHeader,
     ProjectPlaceholder,
+    EmptyProjectsList
   },
   props: {
     /**

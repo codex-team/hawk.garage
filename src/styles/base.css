@@ -106,8 +106,6 @@ pre {
   }
 
   &--small {
-    width: 75px;
-    height: 23px;
     padding: 5px 15px;
     color: var(--color-text-main);
     font-weight: bold;

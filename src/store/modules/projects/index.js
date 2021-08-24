@@ -135,13 +135,16 @@ const actions = {
    *
    * @param {Function} commit - standard Vuex commit function
    * @param {Project} projectData - project params for creation
-   * @returns {Promise<void>}
+   * @returns {Promise<Project>}
    */
   async [CREATE_PROJECT]({ commit }, projectData) {
-    const newProjectData = await projectsApi.createProject(projectData);
+    const response = await projectsApi.createProject(projectData);
+    const project = response.data.project;
 
-    newProjectData.workspaceId = projectData.workspaceId;
-    commit(mutationTypes.ADD_PROJECT, newProjectData);
+    project.workspaceId = projectData.workspaceId;
+    commit(mutationTypes.ADD_PROJECT, project);
+
+    return project;
   },
 
   /**

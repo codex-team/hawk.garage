@@ -45,6 +45,7 @@ import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
 import CustomSelect from '../forms/CustomSelect';
+import notifier from 'codex-notifier';
 
 export default {
   name: 'ProjectCreationDialog',
@@ -88,11 +89,21 @@ export default {
           projectInfo.image = this.image;
         }
 
-        await this.$store.dispatch(CREATE_PROJECT, projectInfo);
+        const project = await this.$store.dispatch(CREATE_PROJECT, projectInfo);
 
         this.$emit('close');
+
+        /**
+         * Open created Project page
+         */
+        this.$router.push(`/project/${project.id}`);
       } catch (e) {
-        console.log(e);
+        console.error(e);
+
+        notifier.show({
+          message: e.message,
+          style: 'error',
+        });
       }
     },
   },
