@@ -2,12 +2,20 @@
   <PopupDialog @close="$emit('close')">
     <div class="payment-details">
       <div class="payment-details__header">
-        {{ isRecurrent ? $t('billing.autoProlongation.title') : $t('billing.paymentDetails.title') }}
+        {{
+          isRecurrent
+            ? $t('billing.autoProlongation.title')
+            : $t('billing.paymentDetails.title')
+        }}
       </div>
 
       <!--Description-->
       <div class="payment-details__description">
-        {{ isRecurrent ? $t('billing.autoProlongation.description') : $t('billing.paymentDetails.description') }}
+        {{
+          isRecurrent
+            ? $t('billing.autoProlongation.description')
+            : $t('billing.paymentDetails.description')
+        }}
       </div>
 
       <!--Details-->
@@ -83,7 +91,9 @@
       <TextFieldSet
         v-model="email"
         class="payment-details__email"
-        :label="$t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()"
+        :label="
+          $t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()
+        "
         :placeholder="email"
         disabled
       />
@@ -99,13 +109,11 @@
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.paymentDetails.allowCardSaving')"
         />
-
         <UiCheckboxWithLabel
           v-model="isAcceptedRecurrentPaymentAgreement"
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.autoProlongation.acceptRecurrentPaymentAgreement')"
         />
-
         <UiCheckboxWithLabel
           v-model="isAcceptedChargingEveryMonth"
           class="payment-details__adoption-autoProlongation-item"
@@ -466,11 +474,29 @@ export default Vue.extend({
       if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
-        notifier.show({
-          message: this.$t('billing.paymentDetails.didNotAccept') as string,
-          style: 'error',
-          time: 5000,
-        });
+        if(this.isRecurrent){
+           if(!this.isAcceptedRecurrentPaymentAgreement){
+              notifier.show({
+                message: this.$t('billing.paymentDetails.didNotAcceptRecurrentPaymentAgreement') as string,
+                style: 'error',
+                time: 5000,
+              });
+           }
+           if(!this.isAcceptedChargingEveryMonth){
+              notifier.show({
+                message: this.$t('billing.paymentDetails.didNotAcceptChargingEveryMonth') as string,
+                style: 'error',
+                time: 5000,
+              });             
+           }
+        }
+        else{
+            notifier.show({
+              message: this.$t('billing.paymentDetails.didNotAccept') as string,
+              style: 'error',
+              time: 5000,
+            });
+          }
       }
     },
 
@@ -603,73 +629,83 @@ export default Vue.extend({
 </script>
 
 <style>
-  .payment-details {
-    width: 558px;
-    padding: 29px 21px 30px 30px;
-    color: var(--color-text-main);
-    font-size: 14px;
+.payment-details {
+  width: 558px;
+  padding: 29px 21px 30px 30px;
+  color: var(--color-text-main);
+  font-size: 14px;
 
-    &__header {
-      margin: 0 159px 20px 0;
-      font-weight: bold;
-      font-size: 18px;
-    }
+  &__header {
+    margin: 0 159px 20px 0;
+    font-weight: bold;
+    font-size: 18px;
+  }
 
-    &__description {
-      margin-bottom: 30px;
+  &__description {
+    margin-bottom: 30px;
+    color: var(--color-text-second);
+    line-height: 1.43;
+  }
+
+  &__details {
+    margin-bottom: 28px;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 0.15px;
+
+    &-header {
+      margin: 0 0 16px;
       color: var(--color-text-second);
-      line-height: 1.43;
     }
 
-    &__details {
-      margin-bottom: 28px;
-      font-weight: bold;
-      font-size: 12px;
-      letter-spacing: 0.15px;
+    &-item {
+      display: flex;
+      margin: 19px 20px 15px 0;
+      font-weight: normal;
+      font-size: 14px;
 
-      &-header {
-        margin: 0 0 16px;
-        color: var(--color-text-second);
+      &-workspace-image {
+        margin: -2px 5px 0 0;
       }
 
-      &-item {
-        display: flex;
-        margin: 19px 20px 15px 0;
-        font-weight: normal;
-        font-size: 14px;
+      &-field {
+        margin-right: 19px;
+      }
 
-        &-workspace-image {
-          margin: -2px 5px 0 0;
-        }
-
-        &-field {
-          margin-right: 19px;
-        }
-
-        &-value {
-          font-weight: bold;
-        }
-
+      &-value {
+        font-weight: bold;
       }
     }
+  }
 
-    &__card {
-      width: 280px;
-      margin-bottom: 28px;
+  &__card {
+    width: 280px;
+    margin-bottom: 28px;
+    margin-left: 0;
+  }
+
+  &__email {
+    width: 280px;
+    margin-bottom: 28px;
+  }
+
+  &__adoption {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 28px;
+
+    &-checkbox {
+      margin-right: 12px;
       margin-left: 0;
     }
 
-    &__email {
-      width: 280px;
-      margin-bottom: 28px;
+    &-description {
+      margin-top: 6px;
     }
 
-    &__adoption {
-      display: flex;
-      flex-direction: column;
-      margin-top: 20px;
+    &-autoProlongation {
       margin-bottom: 28px;
-
       &-checkbox {
         margin-right: 12px;
         margin-left: 0;
@@ -683,20 +719,21 @@ export default Vue.extend({
         }
       }
     }
+  }
 
-    &__bottom {
-      display: flex;
+  &__bottom {
+    display: flex;
 
-      &-button {
-        margin-right: 118px;
-      }
+    &-button {
+      margin-right: 118px;
+    }
 
-      &-cp-logo {
-        width: 201px;
-        height: 17px;
-        margin-top: 12px;
-        cursor: pointer;
-      }
+    &-cp-logo {
+      width: 201px;
+      height: 17px;
+      margin-top: 12px;
+      cursor: pointer;
     }
   }
+}
 </style>
