@@ -312,6 +312,8 @@
       },
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
       "didNotAccept": "You need to accept the payment agreement to proceed with payment",
+      "didNotAcceptRecurrentPaymentAgreement": "You need to accept the recurrent payments agreement to proceed with payment",
+      "didNotAcceptChargingEveryMonth": "You need allow charges from your bank card every month to proceed with payment",
       "allowCardSaving": "Save card for future payments",
       "goToPaymentService": "Go to payment service",
       "payWithSelectedCard": "Pay with selected card"
