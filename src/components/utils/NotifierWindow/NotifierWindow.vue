@@ -6,7 +6,7 @@
     @close="close()"
   >
     <div class="notifier-dialog__wrapper">
-      <div class="notifier-window__wrapper">
+      <div class="notifier-window">
         <span class="notifier-window__title">
           {{ description }}
         </span>
@@ -26,16 +26,14 @@
           "
         />
         <span
+          class="notifier-window__close-button"
           @click="
             () => {
               close();
             }
           "
         >
-          <Icon
-            symbol="close"
-            class="notifier-window__close-button"
-          />
+          <Icon symbol="close" />
         </span>
       </div>
     </div>
@@ -75,12 +73,12 @@ export default Vue.extend({
        * Button type warning const
        */
       warningButton: NotifierButtonType.WARNING,
-      
+
       /**
        * Button type secondary const
        */
       secondaryButton: NotifierButtonType.SECONDARY,
-      
+
       /**
        * Notifier window buttons
        */
@@ -90,7 +88,7 @@ export default Vue.extend({
   methods: {
     /**
      * Show notifier open window
-     * 
+     *
      * @param options - options for displaying
      */
     open(options?: NotifierWindowOptions) {
@@ -109,31 +107,28 @@ export default Vue.extend({
 </script>
 
 <style>
-@keyframes bounceIn {
+@keyframes panel-in {
   0% {
     opacity: 0;
-    transform: scale(0.3);
+    transform: translateY(20px);
   }
 
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-
-  70% {
-    transform: scale(0.9);
+  80% {
+    transform: translateY(-10px);
   }
 
   100% {
-    transform: scale(1);
+    transform: none
   }
 }
 
 .notifier {
   &-dialog {
+    will-change: opacity, transform;
+
     &-animation {
       &-enter-active {
-        animation: bounceIn 600ms ease;
+        animation: panel-in 400ms ease-out;
       }
     }
 
@@ -144,32 +139,41 @@ export default Vue.extend({
       z-index: 9995;
       border-radius: 12px;
       background-color: var(--color-bg-second);
-      box-shadow: 0 6px 17px -4px rgb(0 0 0 / 61%);
+      box-shadow: 0 10px 32px 1px rgba(0,0,0,0.48);
     }
   }
   &-window {
-    &__wrapper {
-      padding: 8px 15px;
-    }
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
 
     &__title {
       font-size: 16px;
+      line-height: 22px;
       font-weight: normal;
       vertical-align: middle;
-      margin: 2px 14px 2px 0;
     }
 
     &__button {
       padding: 5px 11px;
       margin-right: 10px;
       border-radius: 13px;
+      margin-left: 17px;
     }
 
     &__close-button {
-      width: 14px;
-      height: 14px;
-      vertical-align: middle;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
       cursor: pointer;
+      margin-left: 6px;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
     }
   }
 }

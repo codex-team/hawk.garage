@@ -44,7 +44,7 @@
       "cancel": "Отменить"
     },
     "newVersionWindow":{
-      "message":"Доступна новая версия.",
+      "message":"Доступна новая версия",
       "refresh":"Обновить"
     },
     "catalog": {

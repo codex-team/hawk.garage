@@ -44,7 +44,7 @@
       "cancel": "Cancel"
     },
     "newVersionWindow":{
-      "message":"The new version is available.",
+      "message":"The new version is available",
       "refresh":"Refresh"
     },
     "catalog": {

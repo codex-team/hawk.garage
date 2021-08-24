@@ -58,16 +58,16 @@ export default {
     /**
      * Connect to the event bus
      */
-    eventBus.$on('serviceWorkerUpdated', () => {      
+    eventBus.$on('serviceWorkerUpdated', () => {
       this.$notify.open({
-          description: this.$t('components.newVersionWindow.message'),
-          notifierButtons:[{
-            text: this.$t('components.newVersionWindow.refresh'),
-            type: NotifierButtonType.SUBMIT,
-            onClick: () => {
-              window.location.reload();
-            }
-          }]
+        description: this.$t('components.newVersionWindow.message'),
+        notifierButtons: [ {
+          text: this.$t('components.newVersionWindow.refresh'),
+          type: NotifierButtonType.SUBMIT,
+          onClick: () => {
+            window.location.reload();
+          },
+        } ],
       });
     });
   },
