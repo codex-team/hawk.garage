@@ -106,7 +106,16 @@
       },
       "integrations": {
         "title": "Integrations",
-        "projectTokenLabel": "Your Integration token for"
+        "projectTokenLabel": "Your Integration token for",
+        "revokeText": [
+          "You can",
+          "this token and get the new one."
+        ],
+        "revoke": "Revoke",
+        "revokeConfirmation": {
+          "title": "Revoke integration token?",
+          "description": "After this action, Hawk will stop accepting events with the old integration token. You will need to replace it with a new one in your project."
+        }
       },
       "notifications": {
         "title": "Notifications",
