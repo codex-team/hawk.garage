@@ -110,6 +110,9 @@ export default {
 
 <style>
   .project-menu-item {
+    --picture-size: 26px;
+    --picture-margin: 15px;
+
     display: flex;
     align-items: stretch;
     justify-content: flex-start;
@@ -132,6 +135,10 @@ export default {
       &:hover {
         background: color-mod(var(--color-bg-sidebar) lightness(+1%));
       }
+    }
+
+    &__info {
+      max-width: calc(100% - var(--picture-size) - var(--picture-margin))
     }
 
     &__name {
@@ -164,7 +171,7 @@ export default {
     }
 
     &__picture {
-      margin-right: 15px;
+      margin-right: var(--picture-margin);
     }
 
     &__events-number {
