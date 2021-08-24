@@ -197,8 +197,11 @@ export default Vue.extend({
     }
 
     &__copy-button {
+      flex-shrink: 0;
       min-width: 60px;
       height: 23px;
+      margin-left: auto;
+      padding: 5px 15px;
       color: var(--color-text-main);
       font-size: 11px;
       letter-spacing: 0.14px;
@@ -207,9 +210,6 @@ export default Vue.extend({
       border-radius: 11.5px;
       outline: none;
       cursor: pointer;
-      flex-shrink: 0;
-      margin-left: auto;
-      padding: 5px 15px;
 
       &:hover {
         background-color: var(--color-indicator-medium-dark);

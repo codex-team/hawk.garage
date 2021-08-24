@@ -2,6 +2,8 @@ import Vue from 'vue';
 import { Plan } from '@/types/plan';
 import { FETCH_PLANS } from './actionTypes';
 import * as plansApi from '@/api/plans';
+import { ActionContext } from 'vuex';
+import { RootState } from '../../index';
 
 enum MutationType {
   SetPlans = 'SET_PLANS' // set plans to store
@@ -41,7 +43,7 @@ const actions = {
    *
    * @param commit - VueX commit method
    */
-  async [FETCH_PLANS]({ commit }): Promise<void> {
+  async [FETCH_PLANS]({ commit } : ActionContext<PlansModuleState, RootState>): Promise<void> {
     const plans = await plansApi.getPlans();
 
     commit(MutationType.SetPlans, plans);

@@ -13,7 +13,7 @@
           class="aside__search-field"
         />
         <div
-          v-if="projects"
+          v-if="projects.length"
           class="aside__projects-list"
         >
           <ProjectsMenuItem
@@ -24,6 +24,10 @@
             @click.native="onProjectMenuItemClick(project)"
           />
         </div>
+        <EmptyProjectsList
+          v-else-if="currentWorkspace"
+          :workspace="currentWorkspace"
+        />
       </div>
     </aside>
     <div class="app-shell__content">
@@ -51,10 +55,11 @@ import Sidebar from './sidebar/Sidebar';
 import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
+import EmptyProjectsList from './aside/EmptyProjectsList';
 import ProjectHeader from './project/ProjectHeader';
 import ProjectPlaceholder from './project/ProjectPlaceholder';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
-import { RESET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
+import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState } from 'vuex';
 import { misTranslit } from '../utils';
 
@@ -67,6 +72,7 @@ export default {
     WorkspaceInfo,
     ProjectHeader,
     ProjectPlaceholder,
+    EmptyProjectsList
   },
   props: {
     /**
@@ -204,6 +210,13 @@ export default {
      */
     await this.$store.dispatch(FETCH_INITIAL_DATA);
 
+    this.$store.dispatch(RESET_MODAL_DIALOG);
+
+    /**
+     * Onboarding. If a user has no workspace, show Create Workspace modal
+     */
+    this.suggestWorkspaceCreation();
+
     /**
      * Get current workspace
      */
@@ -218,8 +231,6 @@ export default {
      * Fetch current user data
      */
     this.$store.dispatch(FETCH_CURRENT_USER);
-
-    this.$store.dispatch(RESET_MODAL_DIALOG);
   },
   methods: {
     onModalClose() {
@@ -247,6 +258,19 @@ export default {
       }, () => {
       });
     },
+
+    /**
+     * Onboarding. If a user has no workspace, show Create Workspace modal
+     *
+     * @return {void}
+     */
+    suggestWorkspaceCreation(){
+      if (this.$store.state.workspaces.list.length > 0){
+        return;
+      }
+
+      this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
+    }
   },
 };
 

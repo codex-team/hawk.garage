@@ -139,7 +139,8 @@ const actions = {
    * @returns {Workspace} - created workspace
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
-    const createdWorkspace = await workspaceApi.createWorkspace(workspace);
+    const response = await workspaceApi.createWorkspace(workspace);
+    const createdWorkspace = response.data.workspace;
 
     commit(mutationTypes.ADD_WORKSPACE, createdWorkspace);
 
@@ -386,6 +387,7 @@ const actions = {
    * @param {string} planId - id of plan to set
    * @returns {Promise<void>}
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
     const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 

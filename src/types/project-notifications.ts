@@ -57,5 +57,6 @@ export enum ReceiveTypes {
   /**
    * Only first occurrence
    */
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   ONLY_NEW = 'ONLY_NEW',
 }

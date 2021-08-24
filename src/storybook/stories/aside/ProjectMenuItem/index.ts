@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+
 import ProjectsMenuItem from '@/components/aside/ProjectsMenuItem.vue';
 import mdx from './docs.mdx';
 import store from '../../../../store';

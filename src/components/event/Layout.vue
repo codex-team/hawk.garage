@@ -7,7 +7,6 @@
     <EventHeader
       v-if="event || loading"
       :event="event"
-      :project-id="projectId"
       @tabChanged="tabChanged($event)"
     />
     <div class="event-layout__info">

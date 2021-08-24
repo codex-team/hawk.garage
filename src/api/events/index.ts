@@ -30,7 +30,7 @@ import NotFoundError from '../../errors/404';
  * @returns {Promise<HawkEvent|null>}
  */
 export async function getEvent(projectId: string, eventId: string, repetitionId: string): Promise<HawkEvent | null> {
-  const project = await (await api.call(QUERY_EVENT, {
+  const project = await (await api.callOld(QUERY_EVENT, {
     projectId,
     eventId,
     repetitionId,
@@ -61,7 +61,7 @@ export async function fetchRecentEvents(
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {}
 ): Promise<EventsWithDailyInfo | null> {
-  const project = (await api.call(QUERY_RECENT_PROJECT_EVENTS, {
+  const project = (await api.callOld(QUERY_RECENT_PROJECT_EVENTS, {
     projectId,
     skip,
     sort,
@@ -87,7 +87,7 @@ export async function fetchRecentEvents(
 export async function getLatestRepetitions(
   projectId: string, eventId: string, limit: number
 ): Promise<HawkEventRepetition[]> {
-  return (await api.call(QUERY_LATEST_REPETITIONS, {
+  return (await api.callOld(QUERY_LATEST_REPETITIONS, {
     projectId,
     eventId,
     limit,
@@ -102,7 +102,7 @@ export async function getLatestRepetitions(
  * @returns {Promise<HawkEventRepetition | null>}
  */
 export async function getLatestRepetition(projectId: string, eventId: string): Promise<HawkEventRepetition | null> {
-  return (await api.call(QUERY_LATEST_REPETITIONS, {
+  return (await api.callOld(QUERY_LATEST_REPETITIONS, {
     projectId,
     eventId,
   })).project.event.repetitions.shift() || null;
@@ -116,7 +116,7 @@ export async function getLatestRepetition(projectId: string, eventId: string): P
  * @returns {Promise<boolean>}
  */
 export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
-  return (await api.call(MUTATION_VISIT_EVENT, {
+  return (await api.callOld(MUTATION_VISIT_EVENT, {
     projectId,
     eventId,
   })).visitEvent;
@@ -130,7 +130,7 @@ export async function visitEvent(projectId: string, eventId: string): Promise<bo
  * @param {string} mark — mark to set
  */
 export async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
-  return (await api.call(MUTATION_TOGGLE_EVENT_MARK, {
+  return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
     projectId,
     eventId,
     mark,
@@ -145,7 +145,7 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param {string} assignee - user id to assign
  */
 export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean; record: User }> {
-  return (await api.call(MUTATION_UPDATE_EVENT_ASSIGNEE, {
+  return (await api.callOld(MUTATION_UPDATE_EVENT_ASSIGNEE, {
     input: {
       projectId,
       eventId,
@@ -161,7 +161,7 @@ export async function updateAssignee(projectId: string, eventId: string, assigne
  * @param {string} eventId - event id
  */
 export async function removeAssignee(projectId: string, eventId: string): Promise<{ success: boolean }> {
-  return (await api.call(MUTATION_REMOVE_EVENT_ASSIGNEE, {
+  return (await api.callOld(MUTATION_REMOVE_EVENT_ASSIGNEE, {
     input: {
       projectId,
       eventId,
@@ -177,8 +177,8 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  * @param {number} days - how many days we need to fetchfor displaying in chart
  * @param {number} timezoneOffset - user's local timezone
  */
-export async function fetchChartData(projectId, eventId, days, timezoneOffset): Promise<EventChartItem[]> {
-  return (await api.call(QUERY_CHART_DATA, {
+export async function fetchChartData(projectId: string, eventId: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
+  return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     eventId,
     days,

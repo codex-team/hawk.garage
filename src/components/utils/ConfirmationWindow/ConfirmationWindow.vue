@@ -122,17 +122,17 @@ export default Vue.extend({
   }
 
   &__title {
-    font-size: 18px;
-    font-weight: bold;
 
     margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 18px;
   }
 
   &__description {
-    color: var(--color-text-second);
-    line-height: 1.43;
-    font-size: 14px;
     min-height: 1em;
+    color: var(--color-text-second);
+    font-size: 14px;
+    line-height: 1.43;
   }
 
   &__buttons-wrapper {

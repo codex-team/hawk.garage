@@ -9,36 +9,37 @@
             symbol="tick"
           />
           <div class="project-add-catcher__step-caption">
-            ADD A PROJECT
+            {{ $t('components.catalog.step1') }}
           </div>
         </div>
         <div class="project-add-catcher__steps-bind" />
         <div class="project-add-catcher__step">
           2
           <div class="project-add-catcher__step-caption">
-            INSTALL A CATCHER
+            {{ $t('components.catalog.step2') }}
           </div>
         </div>
       </div>
       <div class="project-add-catcher__info">
-        To start track events, you need to connect one of our Catchers
+        {{ $t('components.catalog.whatToDo') }}
       </div>
       <div class="project-add-catcher__catcher-docs clearfix">
         <div class="project-add-catcher__catcher-docs-text">
-          Catcher is a small script that will catch errors in your application and send it to your Hawk page.
+          {{ $t('components.catalog.whatIsCatcher') }}
         </div>
         <a
-          href="#"
+          href="https://docs.hawk.so/catchers"
           class="project-add-catcher__catcher-docs-link"
+          target="_blank"
         >
-          READ MORE
+          {{ $t('common.readMore') }}
         </a>
       </div>
     </div>
     <div class="project-add-catcher__catalog">
       <div class="project-add-catcher__catalog-container">
         <h2 class="project-add-catcher__catalog-header">
-          SELECT CATCHER
+          {{ $t('components.catalog.selectCatcherHeading') }}
         </h2>
         <CatalogItem
           v-for="item in items"
@@ -60,41 +61,6 @@
 import Icon from '../../utils/Icon';
 import CatalogItem from '../Item';
 
-const catalogItems = [
-  {
-    name: 'NODE.JS',
-    page: 'nodejs',
-    description: 'Track errors from your backend application written on JavaScript',
-    image: require('../../../assets/catalog/nodejs.svg'),
-  },
-  {
-    name: 'PHP',
-    page: 'php',
-    description: 'Can be connected as standalone script or as monolog provider',
-    image: require('../../../assets/catalog/php.svg'),
-  },
-  {
-    name: 'JAVASCRIPT',
-    page: 'javascript',
-    description: 'Advanced client catcher with errors bunching',
-    image: require('../../../assets/catalog/javascript/js@3x.jpg'),
-  },
-  {
-    name: 'PYTHON',
-    description: 'Small, simple and full-featured catcher',
-    image: require('../../../assets/catalog/python.svg'),
-  },
-  {
-    name: 'GO',
-    description: 'Deadly simple and fast errors tracking',
-    image: require('../../../assets/catalog/go/go@3x.jpg'),
-  },
-  {
-    name: 'SCALA',
-    description: 'Boost your scala application quality',
-    image: require('../../../assets/catalog/scala/scala@3x.jpg'),
-  },
-];
 
 export default {
   name: 'ProjectAddCatcher',
@@ -104,7 +70,41 @@ export default {
   },
   data() {
     return {
-      items: catalogItems,
+      items: [
+        {
+          name: 'NODE.JS',
+          page: 'nodejs',
+          description: this.$t('components.catalog.catchers.nodejs'),
+          image: require('../../../assets/catalog/nodejs.svg'),
+        },
+        {
+          name: 'PHP',
+          page: 'php',
+          description: this.$t('components.catalog.catchers.php'),
+          image: require('../../../assets/catalog/php.svg'),
+        },
+        {
+          name: 'JAVASCRIPT',
+          page: 'javascript',
+          description: this.$t('components.catalog.catchers.js'),
+          image: require('../../../assets/catalog/javascript/js@3x.jpg'),
+        },
+        {
+          name: 'PYTHON',
+          description: this.$t('components.catalog.catchers.python'),
+          image: require('../../../assets/catalog/python.svg'),
+        },
+        {
+          name: 'GO',
+          description: this.$t('components.catalog.catchers.go'),
+          image: require('../../../assets/catalog/go/go@3x.jpg'),
+        },
+        {
+          name: 'SCALA',
+          description: this.$t('components.catalog.catchers.scala'),
+          image: require('../../../assets/catalog/scala/scala@3x.jpg'),
+        },
+      ],
     };
   },
 };
@@ -138,6 +138,7 @@ export default {
       text-align: center;
       border: 2px solid var(--color-text-second);
       border-radius: 50%;
+      text-transform: uppercase;
 
       &:first-child {
         color: var(--color-text-second);
@@ -227,6 +228,7 @@ export default {
       font-size: 12px;
       letter-spacing: 0.28px;
       white-space: nowrap;
+      text-transform: uppercase;
     }
 
     &__catalog {
@@ -240,13 +242,12 @@ export default {
       left: 7.5px;
       flex-basis: 100%;
       margin: 33px 0 12.5px 0;
-      color: var(--color-text-second);
-      font-weight: bold;
-      font-size: 12px;
+      @apply --ui-label;
     }
 
     &__catalog-item {
       margin: 7.5px;
+      flex-grow: 1;
 
       &--not-implemented {
         opacity: 0.3;

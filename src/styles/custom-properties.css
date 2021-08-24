@@ -41,8 +41,8 @@
   }
 
   --empty-placeholder: {
-    color: var(--color-text-second);
     padding: 80px 0;
+    color: var(--color-text-second);
     text-align: center;
   }
 }

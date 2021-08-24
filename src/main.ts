@@ -13,6 +13,7 @@ import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
+import UniqueId from 'vue-unique-id';
 
 /**
  * Current build revision
@@ -62,11 +63,12 @@ Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://
  */
 Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
   if (hawk) {
-    hawk.catchError(error);
+    hawk.send(error);
   }
 };
 
 Vue.use(VueCookies);
+Vue.use(UniqueId);
 Vue.use(ConfirmationWindow);
 Vue.use(NotifierWindow);
 

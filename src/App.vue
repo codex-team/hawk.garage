@@ -86,8 +86,8 @@ export default {
 
   methods: {
     /**
-     * Add "ripple" effects: wave anivation on clicked elements
-     * To active effect, add "data-ripple" attrubute to any clickable element
+     * Add "ripple" effects: wave navigation on clicked elements
+     * To active effect, add "data-ripple" attribute to any clickable element
      *
      * @returns {void}
      */

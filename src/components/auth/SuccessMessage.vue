@@ -4,19 +4,28 @@
       <span class="success-message__icon">
         💌
       </span>
-      {{ $t('authPages.recoverPasswordSuccessMessage') }}
+      {{ message }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
 
-@Component
 /**
  * Component implements message of success password recover
  */
-export default class SuccessMessage extends Vue {}
+export default Vue.extend({
+  props: {
+    /**
+     * Message to show
+     */
+    message: {
+      type: String,
+      required: true,
+    }
+  }
+})
 </script>
 
 <style>

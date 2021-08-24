@@ -21,7 +21,7 @@ import { ChartData } from '../../types/events';
 export async function createProject(projectInfo) {
   const { image, ...rest } = projectInfo;
 
-  return (await api.call(MUTATION_CREATE_PROJECT, rest, { image })).createProject;
+  return (await api.call(MUTATION_CREATE_PROJECT, rest, { image }));
 }
 
 /**
@@ -33,7 +33,7 @@ export async function createProject(projectInfo) {
 export async function updateProject(projectInfo) {
   const { image, ...rest } = projectInfo;
 
-  return (await api.call(MUTATION_UPDATE_PROJECT, rest, { image })).updateProject;
+  return (await api.callOld(MUTATION_UPDATE_PROJECT, rest, { image })).updateProject;
 }
 
 /**
@@ -43,7 +43,7 @@ export async function updateProject(projectInfo) {
  * @returns {Promise<boolean>}
  */
 export async function removeProject(projectId) {
-  return (await api.call(MUTATION_REMOVE_PROJECT, { projectId })).removeProject;
+  return (await api.callOld(MUTATION_REMOVE_PROJECT, { projectId })).removeProject;
 }
 
 /**
@@ -60,7 +60,7 @@ export async function removeProject(projectId) {
  * @returns {Promise<RecentEvent[]>}
  */
 export async function fetchRecentErrors(projectId) {
-  return (await api.call(QUERY_RECENT_ERRORS, { projectId })).recent;
+  return (await api.callOld(QUERY_RECENT_ERRORS, { projectId })).recent;
 }
 
 /**
@@ -70,7 +70,7 @@ export async function fetchRecentErrors(projectId) {
  * @returns {Promise<number>}
  */
 export async function updateLastProjectVisit(projectId) {
-  return (await api.call(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
+  return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
 }
 
 /**
@@ -80,7 +80,7 @@ export async function updateLastProjectVisit(projectId) {
  * @returns {Promise<ProjectNotificationsRule>}
  */
 export async function addProjectNotificationsRule(payload) {
-  return (await api.call(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
+  return (await api.callOld(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).createProjectNotificationsRule;
 }
@@ -92,7 +92,7 @@ export async function addProjectNotificationsRule(payload) {
  * @returns {Promise<ProjectNotificationsRule>}
  */
 export async function updateProjectNotificationsRule(payload) {
-  return (await api.call(MUTATION_UPDATE_PROJECT_NOTIFY_RULE, {
+  return (await api.callOld(MUTATION_UPDATE_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).updateProjectNotificationsRule;
 }
@@ -104,7 +104,7 @@ export async function updateProjectNotificationsRule(payload) {
  * @returns {Promise<ProjectNotificationsRule>}
  */
 export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
-  return (await api.call(MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE, {
+  return (await api.callOld(MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).toggleProjectNotificationsRuleEnabledState;
 }
@@ -118,7 +118,7 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @returns {Promise<ChartData[] | null>}
  */
 export async function fetchChartData(projectId, days, timezoneOffset) {
-  return (await api.call(QUERY_CHART_DATA, {
+  return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     days,
     timezoneOffset,
