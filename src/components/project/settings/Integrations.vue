@@ -28,6 +28,8 @@ import Vue from 'vue';
 import {Project} from '../../../types/project';
 import TokenBlock from '../TokenBlock.vue';
 import {ActionType} from "../../utils/ConfirmationWindow/types";
+import {GENERATE_NEW_INTEGRATION_TOKEN} from '@/store/modules/projects/actionTypes';
+import notifier from "codex-notifier";
 
 export default Vue.extend({
   name: 'ProjectIntegrationsSettings',
@@ -52,8 +54,17 @@ export default Vue.extend({
         title: this.$t('projects.settings.integrations.revokeConfirmation.title') as string,
         description: this.$t('projects.settings.integrations.revokeConfirmation.description') as string,
         actionType: ActionType.SUBMIT,
-        onConfirm: () => {
-          console.log('Revoke token');
+        onConfirm: async () => {
+          try {
+            await this.$store.dispatch(GENERATE_NEW_INTEGRATION_TOKEN, { projectId: this.project.id });
+          } catch (e) {
+            console.error(e);
+
+            notifier.show({
+              message: this.$t(e.message) as string,
+              style: 'error',
+            });
+          }
         }
       });
     }

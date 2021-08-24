@@ -9,7 +9,7 @@ import {
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
   TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
-  FETCH_CHART_DATA
+  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -187,6 +187,25 @@ const actions = {
   },
 
   /**
+   * Send request to generate new integration token for project
+   *
+   * @param {Function} commit - standard Vuex commit function
+   * @param {String} projectId - project id for generation new token
+   *
+   * @returns {Promise<void>}
+   */
+  async [GENERATE_NEW_INTEGRATION_TOKEN]({ commit }, { projectId }) {
+    const response = await projectsApi.generateNewIntegrationToken(projectId);
+
+    const updatedProject = response.data.generateNewIntegrationToken.record;
+
+    console.log(updatedProject);
+    if (updatedProject) {
+      commit(mutationTypes.UPDATE_PROJECT, updatedProject);
+    }
+  },
+
+  /**
    * Fetch latest project events
    *
    * @param {Function} commit - standard Vuex commit function
@@ -352,7 +371,7 @@ const mutations = {
   [mutationTypes.UPDATE_PROJECT](state, project) {
     const index = state.list.findIndex(element => element.id === project.id);
 
-    state.list[index] = project;
+    Vue.set(state.list, index, project);
   },
 
   /**
