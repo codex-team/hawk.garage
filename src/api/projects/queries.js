@@ -54,9 +54,6 @@ export const MUTATION_GENERATE_NEW_INTEGRATION_TOKEN = `
     {
       record {
         id
-        name
-        description
-        image
         token
       }
     }

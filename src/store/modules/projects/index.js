@@ -199,7 +199,6 @@ const actions = {
 
     const updatedProject = response.data.generateNewIntegrationToken.record;
 
-    console.log(updatedProject);
     if (updatedProject) {
       commit(mutationTypes.UPDATE_PROJECT, updatedProject);
     }
