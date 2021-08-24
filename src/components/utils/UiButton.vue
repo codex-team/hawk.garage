@@ -3,6 +3,7 @@
     class="ui-button"
     :class="{
       'ui-button--submit': submit,
+      'ui-button--warning': warning,
       'ui-button--small': small,
       'ui-button--loading': isLoading,
       'ui-button--shaking': shaking,
@@ -77,6 +78,14 @@ export default Vue.extend({
     },
 
     /**
+     * Pass true to make button red
+     */
+    warning: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
      * Pass true to make button small size
      */
     small: {
@@ -139,7 +148,7 @@ export default Vue.extend({
   align-items: center;
   padding: 12px 15px;
   color: var(--color-text-second);
-  background: transparent;
+  background-color: transparent;
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
   outline: none;
@@ -164,18 +173,28 @@ export default Vue.extend({
 
   &--submit {
     color: var(--color-text-main);
-    background: var(--color-indicator-medium);
+    background-color: var(--color-indicator-medium);
     border: 0;
 
     &:not(^&--disabled):hover {
-      background: var(--color-indicator-medium-dark);
+      background-color: var(--color-indicator-medium-dark);
     }
   }
 
   &--secondary {
     color: var(--color-text-main);
-    background: var(--color-indicator-low);
+    background-color: var(--color-indicator-low);
     border: 0;
+  }
+
+  &--warning {
+    color: var(--color-text-main);
+    background-color: var(--color-indicator-critical);
+    border: 0;
+
+    &:not(^&--disabled):hover {
+      background-color: var(--color-indicator-critical-dark);
+    }
   }
 
   &--rounded {

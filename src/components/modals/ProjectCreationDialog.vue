@@ -2,10 +2,10 @@
   <PopupDialog @close="$emit('close')">
     <div class="project-creation-dialog">
       <h1 class="project-creation-dialog__header">
-        {{ $t('projects.creationDialog.title') }}
+        {{ $t("projects.creationDialog.title") }}
       </h1>
       <div class="project-creation-dialog__description">
-        {{ $t('projects.creationDialog.description') }}
+        {{ $t("projects.creationDialog.description") }}
       </div>
       <form
         class="project-creation-dialog__form"
@@ -45,6 +45,7 @@ import PopupDialog from '../utils/PopupDialog';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
 import CustomSelect from '../forms/CustomSelect';
+import notifier from 'codex-notifier';
 
 export default {
   name: 'ProjectCreationDialog',
@@ -66,7 +67,6 @@ export default {
      * @returns {Array<Workspace>} - registered workspaces with permission check
      */
     workspaces() {
-      const userId = this.$store.state.user.data.id;
       const workspaces = this.$store.state.workspaces.list.filter(workspace => {
         return this.$store.getters.isCurrentUserAdmin(workspace.id);
       });
@@ -89,11 +89,21 @@ export default {
           projectInfo.image = this.image;
         }
 
-        await this.$store.dispatch(CREATE_PROJECT, projectInfo);
+        const project = await this.$store.dispatch(CREATE_PROJECT, projectInfo);
 
         this.$emit('close');
+
+        /**
+         * Open created Project page
+         */
+        this.$router.push(`/project/${project.id}`);
       } catch (e) {
-        console.log(e);
+        console.error(e);
+
+        notifier.show({
+          message: e.message,
+          style: 'error',
+        });
       }
     },
   },
@@ -101,47 +111,47 @@ export default {
 </script>
 
 <style>
-  .project-creation-dialog {
-    max-width: 500px;
-    max-height: 385px;
-    padding: 30px;
+.project-creation-dialog {
+  max-width: 500px;
+  max-height: 385px;
+  padding: 30px;
 
-    &__header {
-      margin: 0;
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    &__description {
-      max-width: 363px;
-      margin-top: 20px;
-      color: var(--color-text-second);
-      font-size: 14px;
-      line-height: 1.43;
-    }
-
-    &__form {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      margin-top: 25px;
-    }
-
-    &__text-field {
-      min-width: 280px;
-    }
-
-    &__image-uploader {
-      margin-left: 30px;
-    }
-
-    &__submit {
-      margin-top: 32px;
-    }
-
-    &__select-workspaces {
-      width: 280px;
-      margin: 0 0 20px;
-    }
+  &__header {
+    margin: 0;
+    font-weight: bold;
+    font-size: 18px;
   }
+
+  &__description {
+    max-width: 363px;
+    margin-top: 20px;
+    color: var(--color-text-second);
+    font-size: 14px;
+    line-height: 1.43;
+  }
+
+  &__form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-top: 25px;
+  }
+
+  &__text-field {
+    min-width: 280px;
+  }
+
+  &__image-uploader {
+    margin-left: 30px;
+  }
+
+  &__submit {
+    margin-top: 32px;
+  }
+
+  &__select-workspaces {
+    width: 280px;
+    margin: 0 0 20px;
+  }
+}
 </style>

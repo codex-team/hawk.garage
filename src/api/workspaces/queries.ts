@@ -19,6 +19,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       billingPeriodEventsCount
       subscriptionId
       lastChargeDate
+      inviteHash
       ...WorkspaceWithTeam
       ...WorkspacePlan
       projects {
@@ -74,11 +75,12 @@ export const MUTATION_CREATE_WORKSPACE = `
     $name: String!,
     $image: Upload
   ) {
-    createWorkspace(name: $name, image: $image) {
+    workspace: createWorkspace(name: $name, image: $image) {
       id
       name
       description
       image
+      inviteHash
       ...WorkspaceWithTeam
     }
   }
@@ -113,14 +115,30 @@ export const MUTATION_LEAVE_WORKSPACE = `
 
 // language=GraphQL
 /**
+ * Mutation to join to workspace by invite link
+ */
+export const MUTATION_JOIN_BY_INVITE_LINK = `
+  mutation joinByInviteLink(
+    $inviteHash: String!
+  ) {
+    joinByInviteLink(inviteHash: $inviteHash) {
+      recordId
+    }
+  }
+`;
+
+// language=GraphQL
+/**
  * Mutation to confirm user invitation
  */
 export const MUTATION_CONFIRM_INVITE = `
   mutation confirmInvitation(
     $workspaceId: ID!,
-    $inviteHash: String
+    $inviteHash: String!
   ) {
-    confirmInvitation(workspaceId: $workspaceId, inviteHash: $inviteHash)
+    confirmInvitation(workspaceId: $workspaceId, inviteHash: $inviteHash) {
+      recordId
+    }
   }
 `;
 
@@ -137,6 +155,7 @@ export const QUERY_WORKSPACES = `
       image
       subscriptionId
       lastChargeDate
+      inviteHash
       ...WorkspacePlan
       ...WorkspaceWithTeam
     }

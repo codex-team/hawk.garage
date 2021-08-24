@@ -1,10 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
+import { APIResponse } from '../types/api';
 
 /**
  * Hawk API endpoint URL
  */
-export const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT;
+export const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT || '';
 
 /**
  * A promise that will be resolved after the initialization request
@@ -48,7 +49,7 @@ interface GraphQLError {
  * @param request - GraphQL request that was sent
  * @param variables - request variables
  */
-function printApiError(error: GraphQLError, response: {data: object}, request: string, variables?: object): void {
+function printApiError(error: GraphQLError, response: {data: Record<string, unknown>}, request: string, variables?: Record<string, unknown>): void {
   console.log('\n');
   console.group('❌ API error ---> ' + error.message);
   console.groupCollapsed('┕ Error details');
@@ -66,7 +67,7 @@ function printApiError(error: GraphQLError, response: {data: object}, request: s
 }
 
 /**
- * Settings that can be passed in api.call() method (see below)
+ * Settings that can be passed in api.callOld() method (see below)
  */
 interface ApiCallSettings {
   /**
@@ -81,12 +82,19 @@ interface ApiCallSettings {
 
   /**
    * If true, request can return both data and errors object to handle them manually
+   *
+   * @deprecated
    */
   allowErrors?: boolean;
 }
 
 /**
- * Makes request to API
+ * Makes request to API (old)
+ *
+ * @deprecated GraphQL can return response along with errors.
+ *             Previously, we hardcoded only response (for ex. api.call('getUser').getUser) — and lose errors data
+ *             Later we added 'allowErrors' flag for new requests.
+ *             And for now, we have the new api.call() method that supports errors by default. Use it instead of this.
  *
  * @param {string} request - request to send
  * @param {object} [variables] - request variables
@@ -94,12 +102,13 @@ interface ApiCallSettings {
  * @param {ApiCallSettings} [settings] - settings for call method
  * @returns {Promise<*>} - request data
  */
-export async function call(
+export async function callOld(
   request: string,
-  variables?: object,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  variables?: Record<string, any>,
   files?: {[name: string]: File | undefined},
   { initial = false, force = false, allowErrors = false }: ApiCallSettings = {}
-  // eslint-disable-next-line
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
   let promise: Promise<AxiosResponse>;
 
@@ -140,9 +149,52 @@ export async function call(
    */
   if (allowErrors) {
     return response.data;
+  } else {
+    console.warn('Api call in old format. Should be refactored to support errors', request);
   }
 
+  /**
+   * @deprecated old format. See method jsdoc
+   */
   return response.data.data;
+}
+
+/**
+ * Makes request to API
+ *
+ * @param {string} request - request to send
+ * @param {object} [variables] - request variables
+ * @param {object} [files] - files to upload
+ * @param {ApiCallSettings} [settings] - settings for call method
+ * @returns {Promise<*>} - request data
+ */
+export async function call(
+  request: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  variables?: Record<string, any>,
+  files?: {[name: string]: File | undefined},
+  { initial = false, force = false }: ApiCallSettings = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<APIResponse<any>> {
+  const response = await callOld(request, variables, files, Object.assign({
+    initial,
+    force,
+  }, {
+    allowErrors: true, // forcefully set this flag. When all the requests will be refactored from api.callOld() to api.call(), remove this flag.
+  }));
+
+  /**
+   * Response can contain errors.
+   * Throw such errors to the Vue component to display them for user
+   */
+  if (response.errors && response.errors.length) {
+    response.errors.forEach(error => {
+
+      throw new Error(error.message);
+    });
+  }
+
+  return response;
 }
 
 /**

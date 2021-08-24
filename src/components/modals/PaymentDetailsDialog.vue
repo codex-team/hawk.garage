@@ -2,12 +2,20 @@
   <PopupDialog @close="$emit('close')">
     <div class="payment-details">
       <div class="payment-details__header">
-        {{ isRecurrent ? $t('billing.autoProlongation.title') : $t('billing.paymentDetails.title') }}
+        {{
+          isRecurrent
+            ? $t('billing.autoProlongation.title')
+            : $t('billing.paymentDetails.title')
+        }}
       </div>
 
       <!--Description-->
       <div class="payment-details__description">
-        {{ isRecurrent ? $t('billing.autoProlongation.description') : $t('billing.paymentDetails.description') }}
+        {{
+          isRecurrent
+            ? $t('billing.autoProlongation.description')
+            : $t('billing.paymentDetails.description')
+        }}
       </div>
 
       <!--Details-->
@@ -83,7 +91,9 @@
       <TextFieldSet
         v-model="email"
         class="payment-details__email"
-        :label="$t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()"
+        :label="
+          $t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()
+        "
         :placeholder="email"
         disabled
       />
@@ -93,43 +103,22 @@
         v-if="isRecurrent"
         class="payment-details__adoption-autoProlongation"
       >
-        <div
+        <UiCheckboxWithLabel
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+          v-model="shouldSaveCard"
           class="payment-details__adoption-autoProlongation-item"
-        >
-          <UiCheckbox
-            v-model="shouldSaveCard"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
-          </div>
-        </div>
-
-        <div
+          :label="$t('billing.paymentDetails.allowCardSaving')"
+        />
+        <UiCheckboxWithLabel
+          v-model="isAcceptedRecurrentPaymentAgreement"
           class="payment-details__adoption-autoProlongation-item"
-        >
-          <UiCheckbox
-            v-model="isAcceptedRecurrentPaymentAgreement"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.acceptRecurrentPaymentAgreement') }}
-          </div>
-        </div>
-
-        <div class="payment-details__adoption-autoProlongation-item">
-          <UiCheckbox
-            v-model="isAcceptedChargingEveryMonth"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.autoProlongation.allowingChargesEveryMonth') }}
-          </div>
-        </div>
+          :label="$t('billing.autoProlongation.acceptRecurrentPaymentAgreement')"
+        />
+        <UiCheckboxWithLabel
+          v-model="isAcceptedChargingEveryMonth"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
+        />
       </section>
 
       <!--Basic payment agreement-->
@@ -137,30 +126,18 @@
         v-else
         class="payment-details__adoption"
       >
-        <div
+        <UiCheckboxWithLabel
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+          v-model="shouldSaveCard"
           class="payment-details__adoption-autoProlongation-item"
-        >
-          <UiCheckbox
-            v-model="shouldSaveCard"
-            class="payment-details__adoption-checkbox"
-          />
+          :label="$t('billing.paymentDetails.allowCardSaving')"
+        />
 
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.allowCardSaving') }}
-          </div>
-        </div>
-
-        <div class="payment-details__adoption-autoProlongation-item">
-          <UiCheckbox
-            v-model="isAcceptedPaymentAgreement"
-            class="payment-details__adoption-checkbox"
-          />
-
-          <div class="payment-details__adoption-description">
-            {{ $t('billing.paymentDetails.acceptPaymentAgreement') }}
-          </div>
-        </div>
+        <UiCheckboxWithLabel
+          v-model="isAcceptedPaymentAgreement"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.paymentDetails.acceptPaymentAgreement')"
+        />
       </section>
 
       <!--Button and cloudpayments logo-->
@@ -197,7 +174,6 @@ import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
-import UiCheckbox from '../forms/UiCheckbox.vue';
 import Icon from '../utils/Icon.vue';
 import notifier from 'codex-notifier';
 import axios from 'axios';
@@ -212,6 +188,7 @@ import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
+import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 
 /**
  * Id for the 'New card' option in select
@@ -246,7 +223,7 @@ export default Vue.extend({
     EntityImage,
     CustomSelect,
     TextFieldSet,
-    UiCheckbox,
+    UiCheckboxWithLabel
   },
   props: {
     /**
@@ -305,7 +282,7 @@ export default Vue.extend({
       isAcceptedChargingEveryMonth: false,
 
       /**
-       * Workspace id for which the payment is made
+       * Workspace for which the payment is made
        */
       workspace,
 
@@ -427,6 +404,34 @@ export default Vue.extend({
 
       return this.isAcceptedPaymentAgreement;
     },
+
+    /**
+     * True if user pays for the current tariff plan (no plan-changing)
+     */
+    isPaymentForCurrentTariffPlan(): boolean {
+      return this.workspace.plan.id === this.plan.id;
+    },
+
+    /**
+     * True when we need to withdraw the amount only to validate the subscription
+     */
+    isOnlyCardValidationNeeded(): boolean {
+      /**
+       * In case of not recurrent payment we need to withdraw full amount
+       */
+      if (!this.isRecurrent) {
+        return false;
+      }
+
+      /**
+       * In case when user pays for another tariff plan we need to withdraw full amount
+       */
+      if (!this.isPaymentForCurrentTariffPlan) {
+        return false;
+      }
+
+      return !this.isTariffPlanExpired;
+    }
   },
   watch: {
     /**
@@ -469,11 +474,29 @@ export default Vue.extend({
       if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
-        notifier.show({
-          message: this.$t('billing.paymentDetails.didNotAccept') as string,
-          style: 'error',
-          time: 5000,
-        });
+        if(this.isRecurrent){
+           if(!this.isAcceptedRecurrentPaymentAgreement){
+              notifier.show({
+                message: this.$t('billing.paymentDetails.didNotAcceptRecurrentPaymentAgreement') as string,
+                style: 'error',
+                time: 5000,
+              });
+           }
+           if(!this.isAcceptedChargingEveryMonth){
+              notifier.show({
+                message: this.$t('billing.paymentDetails.didNotAcceptChargingEveryMonth') as string,
+                style: 'error',
+                time: 5000,
+              });             
+           }
+        }
+        else{
+            notifier.show({
+              message: this.$t('billing.paymentDetails.didNotAccept') as string,
+              style: 'error',
+              time: 5000,
+            });
+          }
       }
     },
 
@@ -552,6 +575,12 @@ export default Vue.extend({
         }
       }
 
+      let amount = data.plan.monthlyCharge;
+
+      if (this.isOnlyCardValidationNeeded) {
+        amount = AMOUNT_FOR_CARD_VALIDATION;
+      }
+
       widget.pay('charge',
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
@@ -559,7 +588,7 @@ export default Vue.extend({
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
-          amount: this.isTariffPlanExpired ? +data.plan.monthlyCharge : AMOUNT_FOR_CARD_VALIDATION,
+          amount,
           currency: data.currency,
           email: this.email,
 
@@ -600,105 +629,111 @@ export default Vue.extend({
 </script>
 
 <style>
-  .payment-details {
-    width: 558px;
-    padding: 29px 21px 30px 30px;
-    color: var(--color-text-main);
-    font-size: 14px;
+.payment-details {
+  width: 558px;
+  padding: 29px 21px 30px 30px;
+  color: var(--color-text-main);
+  font-size: 14px;
 
-    &__header {
-      margin: 0 159px 20px 0;
-      font-weight: bold;
-      font-size: 18px;
-    }
+  &__header {
+    margin: 0 159px 20px 0;
+    font-weight: bold;
+    font-size: 18px;
+  }
 
-    &__description {
-      margin-bottom: 30px;
+  &__description {
+    margin-bottom: 30px;
+    color: var(--color-text-second);
+    line-height: 1.43;
+  }
+
+  &__details {
+    margin-bottom: 28px;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 0.15px;
+
+    &-header {
+      margin: 0 0 16px;
       color: var(--color-text-second);
-      line-height: 1.43;
     }
 
-    &__details {
-      margin-bottom: 28px;
-      font-weight: bold;
-      font-size: 12px;
-      letter-spacing: 0.15px;
+    &-item {
+      display: flex;
+      margin: 19px 20px 15px 0;
+      font-weight: normal;
+      font-size: 14px;
 
-      &-header {
-        margin: 0 0 16px;
-        color: var(--color-text-second);
+      &-workspace-image {
+        margin: -2px 5px 0 0;
       }
 
-      &-item {
-        display: flex;
-        margin: 19px 20px 15px 0;
-        font-weight: normal;
-        font-size: 14px;
+      &-field {
+        margin-right: 19px;
+      }
 
-        &-workspace-image {
-          margin: -2px 5px 0 0;
-        }
-
-        &-field {
-          margin-right: 19px;
-        }
-
-        &-value {
-          font-weight: bold;
-        }
-
+      &-value {
+        font-weight: bold;
       }
     }
+  }
 
-    &__card {
-      width: 280px;
-      margin-bottom: 28px;
+  &__card {
+    width: 280px;
+    margin-bottom: 28px;
+    margin-left: 0;
+  }
+
+  &__email {
+    width: 280px;
+    margin-bottom: 28px;
+  }
+
+  &__adoption {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 28px;
+
+    &-checkbox {
+      margin-right: 12px;
       margin-left: 0;
     }
 
-    &__email {
-      width: 280px;
-      margin-bottom: 28px;
+    &-description {
+      margin-top: 6px;
     }
 
-    &__adoption {
-      display: flex;
-      flex-direction: column;
-      margin-top: 20px;
+    &-autoProlongation {
       margin-bottom: 28px;
-
       &-checkbox {
         margin-right: 12px;
         margin-left: 0;
-      }
-
-      &-description {
-        margin-top: 6px;
       }
 
       &-autoProlongation {
         margin-bottom: 28px;
 
         &-item {
-          display: flex;
           margin-bottom: 9px;
         }
       }
     }
+  }
 
-    &__bottom {
-      display: flex;
+  &__bottom {
+    display: flex;
 
-      &-button {
-        margin-right: 118px;
-      }
+    &-button {
+      margin-right: 118px;
+    }
 
-      &-cp-logo {
-        width: 201px;
-        height: 17px;
-        margin-top: 12px;
-        cursor: pointer;
-      }
+    &-cp-logo {
+      width: 201px;
+      height: 17px;
+      margin-top: 12px;
+      cursor: pointer;
     }
   }
+}
 </style>

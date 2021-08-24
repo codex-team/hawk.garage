@@ -4,21 +4,15 @@ import messages from './messages/en';
 
 Vue.use(VueI18n);
 
-const defaultPluralization = VueI18n.prototype.getChoiceIndex;
-
 /**
  * Custom pluralization method for russian locale
  *
  * @param {number} choice - a choice index given by the input to $tc: `$tc('path.to.rule', choiceIndex)`
  * @param {number} choicesLength - an overall amount of available choices
+ *
  * @returns {number} index -  a final choice index to select plural word by
  */
-VueI18n.prototype.getChoiceIndex = function (choice, choicesLength) {
-  // this === VueI18n instance, so the locale property also exists here
-  if (this.locale !== 'ru') {
-    return defaultPluralization.call(this, choice, choicesLength);
-  }
-
+const russianPluralization = (choice, choicesLength) => {
   if (choice === 0) {
     return 0;
   }
@@ -43,6 +37,9 @@ const i18n = new VueI18n({
   messages: {
     en: messages,
   },
+  pluralizationRules: {
+    'ru': russianPluralization
+  }
 });
 
 const loadedLanguages = [ 'en' ];

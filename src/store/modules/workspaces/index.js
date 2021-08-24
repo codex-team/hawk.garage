@@ -5,6 +5,7 @@ import {
   SET_CURRENT_WORKSPACE,
   INVITE_TO_WORKSPACE,
   CONFIRM_INVITE,
+  JOIN_BY_INVITE_LINK,
   UPDATE_WORKSPACE,
   FETCH_WORKSPACE,
   GRANT_ADMIN_PERMISSIONS,
@@ -138,7 +139,8 @@ const actions = {
    * @returns {Workspace} - created workspace
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
-    const createdWorkspace = await workspaceApi.createWorkspace(workspace);
+    const response = await workspaceApi.createWorkspace(workspace);
+    const createdWorkspace = response.data.workspace;
 
     commit(mutationTypes.ADD_WORKSPACE, createdWorkspace);
 
@@ -199,6 +201,17 @@ const actions = {
    */
   async [CONFIRM_INVITE](context, { workspaceId, inviteHash }) {
     await workspaceApi.confirmInvite(workspaceId, inviteHash);
+  },
+
+  /**
+   * Send request to confirm user invitation
+   *
+   * @param {object} context - vuex action context
+   * @param {object} payload - vuex action payload
+   * @param {string} payload.inviteHash - hash passed to the invite link
+   */
+  async [JOIN_BY_INVITE_LINK](context, { inviteHash }) {
+    await workspaceApi.joinByInviteLink(inviteHash);
   },
 
   /**
@@ -374,6 +387,7 @@ const actions = {
    * @param {string} planId - id of plan to set
    * @returns {Promise<void>}
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
     const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 

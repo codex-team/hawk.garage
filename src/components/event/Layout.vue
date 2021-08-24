@@ -7,7 +7,6 @@
     <EventHeader
       v-if="event || loading"
       :event="event"
-      :project-id="projectId"
       @tabChanged="tabChanged($event)"
     />
     <div class="event-layout__info">
@@ -25,7 +24,7 @@
           v-else
           class="empty-event"
         >
-          {{ $t('event.notFound' )}}
+          {{ $t('event.notFound' ) }}
         </div>
       </div>
     </div>

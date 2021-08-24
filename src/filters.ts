@@ -10,15 +10,17 @@ import { capitalize, pad } from './utils';
  */
 Vue.filter('spacedNumber', function (value: number): string {
   const count = value.toString();
+  const thousandRank = 3;
+  const negativeThousandRank = -3;
 
-  if (count.length < 3) {
+  if (count.length < thousandRank) {
     return count;
   }
 
   let result = '';
 
-  for (let i = 1; i <= Math.ceil(count.length / 3); i++) {
-    result = `${count.slice(-3 * i, -3 * (i - 1) || undefined)} ` + result;
+  for (let i = 1; i <= Math.ceil(count.length / thousandRank); i++) {
+    result = `${count.slice(negativeThousandRank * i, negativeThousandRank * (i - 1) || undefined)} ` + result;
   }
 
   return result.trim();
@@ -60,12 +62,14 @@ Vue.filter('abbreviation', function (value: string): string {
  * @returns {string}
  */
 Vue.filter('prettyTime', function (value: number) {
-  const date = new Date(value * 1000);
+  const MS_PER_SECOND = 1000;
+  const SECONDS_PER_MINUTE = 60;
+  const MS_PER_MINUTE = MS_PER_SECOND * SECONDS_PER_MINUTE;
+  const date = new Date(value * MS_PER_SECOND);
   const currentDate = new Date();
 
-  const ONE_MINUTE_IN_MS = 1000 * 60;
 
-  if ((currentDate.getTime() - date.getTime()) / (ONE_MINUTE_IN_MS) < 1) {
+  if ((currentDate.getTime() - date.getTime()) / (MS_PER_MINUTE) < 1) {
     return 'now';
   }
 
@@ -102,7 +106,8 @@ Vue.filter('prettyDateStr', function (value: string): string {
  * @returns {string}
  */
 Vue.filter('prettyDate', function (value: number) {
-  const argumentDate = new Date(value * 1000);
+  const MS_PER_SECOND = 1000;
+  const argumentDate = new Date(value * MS_PER_SECOND);
   const argumentDay = argumentDate.getDate();
   const argumentMonth = argumentDate.getMonth();
   const argumentYear = argumentDate.getFullYear();
@@ -133,7 +138,8 @@ Vue.filter('prettyDate', function (value: number) {
  * @returns {string}
  */
 Vue.filter('prettyFullDate', function (value: number) {
-  const date = new Date(value * 1000);
+  const MS_PER_SECOND = 1000;
+  const date = new Date(value * MS_PER_SECOND);
 
   const day = date.getDate();
   const month = date.getMonth();
@@ -160,7 +166,7 @@ Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
  * Accepts GraphQL DateTime string like '1992-10-09T00:00:00Z'
  * Return string like '2020, Oct 9 00:00'
  *
- * @param datrStr - string like '1992-10-09T00:00:00Z'
+ * @param dateStr - string like '1992-10-09T00:00:00Z'
  * @param includeTime - pass true to include time to the result
  */
 Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTime = true): string {
@@ -187,5 +193,17 @@ Vue.filter('prettyDateFromDateTimeString', function (dateStr: string, includeTim
  * @returns {string}
  */
 Vue.filter('centsToDollars', function (value: number) {
-  return value / 100;
+  const CENTS_PER_DOLLAR = 100;
+
+  return value / CENTS_PER_DOLLAR;
+});
+
+
+/**
+ * Trims the string to max length and add ellipsis
+ *
+ * @returns {string}
+ */
+Vue.filter('trim', function (value: string, maxLen: number) {
+  return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
 });

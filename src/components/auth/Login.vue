@@ -7,7 +7,8 @@
       :message="message"
       :alt-link="altLink"
       :alt-text="altText"
-      :is-password-recover-success="isPasswordRecoverSuccess"
+      :success-message="successMessage"
+      ref="form"
       @submit="login"
     />
   </div>
@@ -27,11 +28,19 @@ export default {
   mixins: [ offlineErrorMessage ],
   props: {
     /**
-     * Prop for getting information about recovering password result from router
+     * Success message text
      */
-    isPasswordRecoverSuccess: {
-      type: Boolean,
-      default: false,
+    successMessage: {
+      type: String,
+      default: '',
+    },
+
+    /**
+     * Email passed to prefill the field
+     */
+    emailPrefilled: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -41,7 +50,7 @@ export default {
           autoComplete: 'email',
           label: this.$t('authPages.emailAddress'),
           name: 'email',
-          value: '',
+          value: this.emailPrefilled,
           placeholder: 'name@best-team.com',
           type: 'email',
         },
@@ -60,7 +69,6 @@ export default {
       message: null,
     };
   },
-
   async mounted() {
     if (
       this.$route.query.access_token &&
@@ -83,6 +91,13 @@ export default {
           style: 'error',
         });
       }
+    }
+
+    /**
+     * If email is prefilled, set focus to the password
+     */
+    if (this.emailPrefilled){
+      this.$refs.form.$el.querySelector('input[name="password"]').focus();
     }
   },
   methods: {

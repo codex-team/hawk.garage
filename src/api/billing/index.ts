@@ -8,7 +8,7 @@ import { BusinessOperation } from '../../types/business-operation';
  * @param ids - ids of workspaces
  */
 export async function getBusinessOperations(ids: string[]): Promise<BusinessOperation[]> {
-  return (await api.call(QUERY_BUSINESS_OPERATIONS, { ids })).businessOperations;
+  return (await api.callOld(QUERY_BUSINESS_OPERATIONS, { ids })).businessOperations;
 }
 
 /**
@@ -37,5 +37,5 @@ export interface PayWithCardInput {
  * @param input - data for payment processing
  */
 export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
-  return (await api.call(MUTATION_PAY_WITH_CARD, { input })).payWithCard.record;
+  return (await api.callOld(MUTATION_PAY_WITH_CARD, { input })).payWithCard.record;
 }
