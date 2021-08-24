@@ -10,16 +10,20 @@
       class="projects-integrations-settings-page__token"
       :token="project.token"
     />
-    <div class="projects-integrations-settings-page__revoke-container">
-      {{ $t('projects.settings.integrations.revokeText.0') }}
-      <span
-        class="projects-integrations-settings-page__revoke-button"
-        @click="revokeIntegrationToken()"
-      >
-        {{ $t('projects.settings.integrations.revoke') }}
-      </span>
-      {{ $t('projects.settings.integrations.revokeText.1') }}
-    </div>
+    <i18n
+      path="projects.settings.integrations.revokeText"
+      tag="div"
+      class="projects-integrations-settings-page__revoke-container"
+    >
+      <template #revoke>
+        <span
+          class="projects-integrations-settings-page__revoke-button"
+          @click="revokeIntegrationToken()"
+        >
+          {{ $t('projects.settings.integrations.revoke') }}
+        </span>
+      </template>
+    </i18n>
   </div>
 </template>
 

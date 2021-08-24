@@ -111,10 +111,7 @@
       "integrations": {
         "title": "Integrations",
         "projectTokenLabel": "Your Integration token for",
-        "revokeText": [
-          "You can",
-          "this token and get the new one."
-        ],
+        "revokeText": "You can {revoke} this token and get the new one.",
         "revoke": "Revoke",
         "revokeConfirmation": {
           "title": "Revoke integration token?",
