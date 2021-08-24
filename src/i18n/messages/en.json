@@ -43,6 +43,10 @@
       "continue": "Continue",
       "cancel": "Cancel"
     },
+    "newVersionWindow":{
+      "message":"The new version is available",
+      "refresh":"Refresh"
+    },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",
