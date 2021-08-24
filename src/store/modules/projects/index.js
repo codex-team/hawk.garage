@@ -371,7 +371,12 @@ const mutations = {
   [mutationTypes.UPDATE_PROJECT](state, project) {
     const index = state.list.findIndex(element => element.id === project.id);
 
-    Vue.set(state.list, index, project);
+    const updatedProjectObject = {
+      ...state.list[index],
+      ...project
+    }
+
+    Vue.set(state.list, index, updatedProjectObject);
   },
 
   /**
