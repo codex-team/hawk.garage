@@ -55,8 +55,8 @@ import Icon from '../../utils/Icon.vue';
 import { isObject } from '@/utils';
 import Json from '../../utils/Json.vue';
 import CodeBlock from '../../utils/CodeBlock.vue';
-import CustomRenderer_beautifiedUserAgent from './custom-renderers/beautifiedUserAgent.vue';
-import CustomRenderer_window from './custom-renderers/window.vue';
+import CustomRendererBeautifiedUserAgent from './custom-renderers/beautifiedUserAgent.vue';
+import CustomRendererWindow from './custom-renderers/window.vue';
 import { EventAddons } from 'hawk.types';
 import { Entries } from '../../../types/utils';
 
@@ -70,8 +70,8 @@ export default Vue.extend({
     Icon,
     Json,
     CodeBlock,
-    CustomRenderer_beautifiedUserAgent,
-    CustomRenderer_window,
+    CustomRendererBeautifiedUserAgent,
+    CustomRendererWindow,
   },
   props: {
     /**
@@ -91,13 +91,13 @@ export default Vue.extend({
   },
   data(): {
     customRendererNamePrefix: string
-  } {
+    } {
     return {
       /**
        * Custom render components should have the "CustomRenderer_" prefix
        */
       customRendererNamePrefix: 'CustomRenderer_',
-    }
+    };
   },
   computed: {
     /**
@@ -115,7 +115,7 @@ export default Vue.extend({
       return Object.entries(this.addons).filter(([name, _value]) => {
         return addonsBeautified[name] === undefined;
       }) as Entries<EventAddons>;
-    }
+    },
   },
   methods: {
     /**
@@ -124,7 +124,8 @@ export default Vue.extend({
      * How to add a custom renderer:
      *  1. Create a Component in './custom-renderers/' dir. Name it as addon named.
      *  2. Import this component to this file. Give it a name with the 'CustomRenderer_' prefix.
-     *     @example import CustomRenderer_window from './custom-renderers/window.vue';
+     *
+     *     @example import CustomRendererWindow from './custom-renderers/window.vue';
      *  3. Connect it to the 'components' section
      *
      *
@@ -149,7 +150,7 @@ export default Vue.extend({
       /**
        * Check for translation existence
        */
-      if (this.$i18n.te(dictKey)){
+      if (this.$i18n.te(dictKey)) {
         return this.$i18n.t(dictKey) as string;
       }
 

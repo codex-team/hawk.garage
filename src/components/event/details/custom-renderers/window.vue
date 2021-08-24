@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import Vue , { PropType } from 'vue';
+import Vue, { PropType } from 'vue';
 import { WindowData } from 'hawk.types';
 
 export default Vue.extend({
@@ -15,8 +15,8 @@ export default Vue.extend({
      */
     value: {
       type: Object as PropType<WindowData>,
-      required: true
-    }
-  }
-})
+      required: true,
+    },
+  },
+});
 </script>

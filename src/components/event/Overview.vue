@@ -90,7 +90,7 @@ export default Vue.extend({
      *
      * @returns {object}
      */
-    addonsFiltered(): object | null {
+    addonsFiltered(): {[key: string]: string} | null {
       if (!this.hasAddons) {
         return null;
       }

@@ -215,7 +215,7 @@ export default Vue.extend({
     EntityImage,
     CustomSelect,
     TextFieldSet,
-    UiCheckboxWithLabel
+    UiCheckboxWithLabel,
   },
   props: {
     /**
@@ -355,6 +355,7 @@ export default Vue.extend({
      */
     planDueDate(): Date {
       const lastChargeDate = new Date(this.workspace.lastChargeDate);
+
       return new Date(lastChargeDate.setMonth(lastChargeDate.getMonth() + 1));
     },
 
@@ -383,7 +384,7 @@ export default Vue.extend({
         return date.toDateString();
       }
 
-      return this.planDueDate.toDateString()
+      return this.planDueDate.toDateString();
     },
 
     /**
@@ -423,7 +424,7 @@ export default Vue.extend({
       }
 
       return !this.isTariffPlanExpired;
-    }
+    },
   },
   watch: {
     /**

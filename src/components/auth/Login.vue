@@ -1,6 +1,7 @@
 <template>
   <div class="auth-page">
     <Form
+      ref="form"
       class="auth-page__form"
       :fields="fields"
       :submit-text="submitText"
@@ -8,7 +9,6 @@
       :alt-link="altLink"
       :alt-text="altText"
       :success-message="successMessage"
-      ref="form"
       @submit="login"
     />
   </div>
@@ -96,7 +96,7 @@ export default {
     /**
      * If email is prefilled, set focus to the password
      */
-    if (this.emailPrefilled){
+    if (this.emailPrefilled) {
       this.$refs.form.$el.querySelector('input[name="password"]').focus();
     }
   },

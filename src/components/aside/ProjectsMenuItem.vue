@@ -50,7 +50,7 @@ export default {
     Badge,
     EntityImage,
   },
-  mixins: [projectBadges],
+  mixins: [ projectBadges ],
   props: {
     projectId: {
       type: String,

@@ -8,21 +8,20 @@
   </div>
 </template>
 
-<script>
-import * as api from './api/index.ts';
+<script lang="ts">
+import * as api from './api/';
 import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
   name: 'App',
   computed: {
     /**
      * Returns classname according to the theme name
-     *
-     * @returns {string}
      */
-    themeClass() {
+    themeClass(): string {
       return `app--theme--${this.$store.state.app.theme}`;
     },
   },
@@ -30,7 +29,7 @@ export default {
   /**
    * Vue hook. Called synchronously after the instance is created
    */
-  created() {
+  created(): void {
     /**
      * Setup watching on auth state
      */
@@ -72,10 +71,8 @@ export default {
 
   /**
    * Fired when all component nodes are ready
-   *
-   * @returns {void}
    */
-  mounted() {
+  mounted(): void {
     /**
      * Prepare "ripple" effect
      */
@@ -86,13 +83,12 @@ export default {
     /**
      * Add "ripple" effects: wave navigation on clicked elements
      * To active effect, add "data-ripple" attribute to any clickable element
-     *
-     * @returns {void}
      */
-    enableRipple() {
-      this.$refs['app'].addEventListener('mousedown', (e) => {
-        const el = e.target.nodeType === Node.ELEMENT_NODE ? e.target : e.target.parentNode;
-        const rEl = el.closest('[data-ripple]');
+    enableRipple(): void {
+      (this.$refs.app as Element)?.addEventListener('mousedown', (e: Event) => {
+        const target = e.target as HTMLElement;
+        const el = target.nodeType === Node.ELEMENT_NODE ? target : target.parentElement;
+        const rEl: HTMLElement | null | undefined = el?.closest('[data-ripple]');
 
         if (!rEl) {
           return;
@@ -109,8 +105,8 @@ export default {
         wrap.classList.add('ripple');
         rip.classList.add('ripple-wave');
 
-        rip.style.left = e.pageX - offset.left + 'px';
-        rip.style.top = e.pageY - offset.top + 'px';
+        rip.style.left = (<MouseEvent>e).pageX - offset.left + 'px';
+        rip.style.top = (<MouseEvent>e).pageY - offset.top + 'px';
 
         rEl.appendChild(wrap);
         wrap.appendChild(rip);
@@ -121,7 +117,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style src="./styles/base.css"></style>

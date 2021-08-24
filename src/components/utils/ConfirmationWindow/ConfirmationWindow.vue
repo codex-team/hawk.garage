@@ -44,7 +44,7 @@ export default Vue.extend({
   name: 'ConfirmationWindow',
   components: {
     PopupDialog,
-    UiButton
+    UiButton,
   },
   data() {
     return {
@@ -71,7 +71,9 @@ export default Vue.extend({
       /**
        * onConfirm callback when user clicks continue button
        */
-      onConfirm: () => {},
+      onConfirm: () => {
+        // do nothing
+      },
 
       /**
        * Type of confirmation action
@@ -87,7 +89,7 @@ export default Vue.extend({
        * Action type deletion const
        */
       deletionAction: ActionType.DELETION,
-    }
+    };
   },
   methods: {
     /**
@@ -99,7 +101,9 @@ export default Vue.extend({
       this.title = options && options.title || this.$i18n.t('components.confirmationWindow.title').toString();
       this.description = options && options.description || '';
       this.continueButtonText = options && options.continueButtonText || this.$i18n.t('components.confirmationWindow.continue').toString();
-      this.onConfirm = options && options.onConfirm || (() => {});
+      this.onConfirm = options && options.onConfirm || (() => {
+        // do nothing
+      });
       this.actionType = options && options.actionType || ActionType.SUBMIT;
       this.isOpened = true;
     },
@@ -109,8 +113,8 @@ export default Vue.extend({
      */
     close() {
       this.isOpened = false;
-    }
-  }
+    },
+  },
 });
 </script>
 

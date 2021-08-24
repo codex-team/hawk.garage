@@ -385,6 +385,7 @@ const actions = {
    * @param {object} getters - Store getters
    * @param {string} workspaceId - id of workspace to change plan
    * @param {string} planId - id of plan to set
+   * @param getters.workspaceId
    * @returns {Promise<void>}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental

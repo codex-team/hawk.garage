@@ -1,17 +1,17 @@
 <template>
   <div class="pp">
-    <div class="pp__pic"></div>
+    <div class="pp__pic" />
     <div class="pp__body">
-      <div class="pp__title"></div>
-      <div class="pp__desc"></div>
+      <div class="pp__title" />
+      <div class="pp__desc" />
     </div>
-    <div class="pp__badge"></div>
+    <div class="pp__badge" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ProjectPlaceholder'
+  name: 'ProjectPlaceholder',
 };
 </script>
 
@@ -23,8 +23,8 @@ export default {
   &__pic {
     width: 26px;
     height: 26px;
-    border-radius: 10px;
     margin-right: 15px;
+    border-radius: 10px;
   }
 
   &__body {
@@ -35,8 +35,8 @@ export default {
   &__badge,
   &__title,
   &__desc {
-    opacity: 0.07;
     background-color: var(--color-text-main);
+    opacity: 0.07;
   }
 
   &__title,
@@ -53,9 +53,9 @@ export default {
   &__badge {
     width: 40px;
     height: 20px;
-    border-radius: 7px;
-    margin-left: 30px;
     margin-top: 9px;
+    margin-left: 30px;
+    border-radius: 7px;
   }
 }
 </style>
