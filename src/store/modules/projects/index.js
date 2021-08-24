@@ -370,11 +370,17 @@ const mutations = {
   [mutationTypes.UPDATE_PROJECT](state, project) {
     const index = state.list.findIndex(element => element.id === project.id);
 
+    /**
+     * Merge an old project object with new data
+     */
     const updatedProjectObject = {
       ...state.list[index],
       ...project
     }
 
+    /**
+     * Update project item
+     */
     Vue.set(state.list, index, updatedProjectObject);
   },
 
