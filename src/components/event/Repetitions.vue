@@ -90,7 +90,7 @@ export default Vue.extend({
      */
     const groupedRepetitions = new Map();
 
-    repetitions.map(repetition => {
+    repetitions.forEach(repetition => {
       const date = this.getDate(repetition.payload.timestamp);
 
       if (!groupedRepetitions.get(date)) {

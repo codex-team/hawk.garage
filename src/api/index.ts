@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
+import { APIResponse } from '../types/api';
 
 /**
  * Hawk API endpoint URL
@@ -103,7 +104,7 @@ export async function call(
   files?: {[name: string]: File | undefined},
   { initial = false, force = false }: ApiCallSettings = {}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any> {
+): Promise<APIResponse<any>> {
   const response = await callOld(request, variables, files, Object.assign({
     initial,
     force,
@@ -117,6 +118,7 @@ export async function call(
    */
   if (response.errors && response.errors.length) {
     response.errors.forEach(error => {
+
       throw new Error(error.message);
     });
   }

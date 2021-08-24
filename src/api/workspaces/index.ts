@@ -14,7 +14,7 @@ import {
 } from './queries';
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
-import { APIResponse } from '@/types/api';
+import { APIResponseData } from '@/types/api';
 
 interface CreateWorkspaceInput {
   /**
@@ -179,7 +179,7 @@ export async function removeUserFromWorkspace(
 export async function changePlanForFreePLan(
   workspaceId: string,
   planId: string
-): Promise<APIResponse<Workspace>> {
+): Promise<APIResponseData<Workspace>> {
   return (await api.callOld(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
     input: {
       workspaceId,
