@@ -52,8 +52,8 @@ export interface APIError {
  * Apollo GraphQL Error source
  */
 declare class Source {
-  body: string;
-  name: string;
-  locationOffset: Location;
+  public body: string;
+  public name: string;
+  public locationOffset: Location;
   constructor(body: string, name?: string, locationOffset?: Location);
 }
