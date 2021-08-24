@@ -91,6 +91,8 @@ export default Vue.extend({
     &__revoke-button {
       display: inline-block;
       border-bottom: 1px solid var(--color-text-second);
+      line-height: 1em;
+      padding-bottom: 1px;
 
       cursor: pointer;
     }
