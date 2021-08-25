@@ -9,7 +9,8 @@ import {
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  GET_CHART_DATA,
+  GET_AFFECTED_USERS_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -93,7 +94,12 @@ enum MutationTypes {
   /**
    * Get chart data for en event for a few days
    */
-  SaveChartData = 'SAVE_CHART_DATA'
+  SaveChartData = 'SAVE_CHART_DATA',
+
+  /**
+   * Save affected users chart data for en event for a few days
+   */
+  SaveAffectedUsersChartData = 'SAVE_AFFECTED_USERS_CHART_DATA'
 }
 
 /**
@@ -666,6 +672,30 @@ const module: Module<EventsModuleState, RootState> = {
         data: chartData,
       });
     },
+
+    /**
+     * Get affected users chart data for an event for a few days
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {string} project.projectId - project's id
+     * @param {string} project.eventId - event's id
+     * @param {number} project.days - number of a "few" days
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
+    async [GET_AFFECTED_USERS_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
+      const timezoneOffset = (new Date()).getTimezoneOffset() * -1;
+      const chartData = await eventsApi.fetchAffectedUsersChartData(projectId, eventId, days, timezoneOffset);
+
+      commit(MutationTypes.SaveAffectedUsersChartData, {
+        projectId,
+        eventId,
+        data: chartData,
+      });
+    },
   },
   mutations: {
     /**
@@ -919,6 +949,22 @@ const module: Module<EventsModuleState, RootState> = {
       // const event = state.list[key];
 
       Vue.set(state.list[key], 'chartData', data);
+    },
+    /**
+     * Save event's affected users chart data
+     *
+     * @param {EventsModuleState} state - module state
+     *
+     * @param {object} project - object for project data
+     * @param {string} project.projectId - project ID
+     * @param {string} project.eventId - event ID
+     * @param {EventChartItem[]} project.data - array of dots
+     */
+    [MutationTypes.SaveAffectedUsersChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
+      const key = getEventsListKey(projectId, eventId);
+      // const event = state.list[key];
+
+      Vue.set(state.list[key], 'affectedUsersChartData', data);
     },
 
     /**

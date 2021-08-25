@@ -84,7 +84,7 @@
         </div>
         <div class="chart__pointer-tooltip-number">
           <AnimatedCounter :value="points[hoveredIndex].count | spacedNumber" />
-          events
+          {{ $tc(this.label, points[hoveredIndex].count) }}
         </div>
       </div>
     </div>
@@ -110,6 +110,14 @@ export default Vue.extend({
       type: Array as () => ChartItem[],
       default: () => [] as ChartItem[],
     },
+
+    /**
+     * Counter label key
+     */
+    label: {
+      type: String,
+      default: () => 'event.daily.label'
+    }
   },
   data() {
     return {

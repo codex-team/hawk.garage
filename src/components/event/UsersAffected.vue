@@ -10,6 +10,12 @@
       >
         {{ $tc('event.usersAffected.users', event.usersAffected) }}
       </div>
+      <div class="event-users-affected__section">
+        <div class="event-users-affected__label">
+          {{ $t('event.daily.lastTwoWeeks') }}
+        </div>
+        <Chart :points="chartData" label="event.usersAffected.label" />
+      </div>
     </div>
   </div>
 </template>
@@ -17,9 +23,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import { HawkEvent } from '@/types/events';
+import { GET_AFFECTED_USERS_CHART_DATA } from '../../store/modules/events/actionTypes';
+import Chart from '../events/Chart.vue';
+import { EventChartItem } from '../../types/chart';
 
 export default Vue.extend({
   name: 'UsersAffectedOverview',
+  components: {
+    Chart
+  },
   props: {
     /**
      * Viewed event
@@ -39,13 +51,26 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      groupedRepetitions: new Map(),
+      chartData: [] as EventChartItem[],
     };
   },
-  computed: {
-    originalEvent(): HawkEvent {
-      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
-    },
+  /**
+   * Vue created hook
+   * Used to fetch affected users on component creation
+   */
+  async created(): Promise<void> {
+    const twoWeeks = 14;
+    const boundingDays = 2;
+
+    if (!this.event.affectedUsersChartData) {
+      await this.$store.dispatch(GET_AFFECTED_USERS_CHART_DATA, {
+        projectId: this.projectId,
+        eventId: this.event.id,
+        days: twoWeeks + boundingDays,
+      });
+    }
+
+    this.chartData = this.event.affectedUsersChartData || [];
   },
 });
 </script>
@@ -66,9 +91,21 @@ export default Vue.extend({
     }
 
     &__affected {
+      margin-bottom: 25px;
+
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 24px;
+    }
+
+    &__since {
+      color: var(--color-text-main);
+      font-weight: bold;
+      font-size: 15px;
+
+      &-days {
+        color: var(--color-text-second);
+      }
     }
   }
 </style>

@@ -115,6 +115,11 @@ export interface HawkEvent {
   chartData?: EventChartItem[];
 
   /**
+   * Event affected users chart data for a few days
+   */
+  affectedUsersChartData?: EventChartItem[];
+
+  /**
    * Event release
    */
   release?: HawkEventRelease;

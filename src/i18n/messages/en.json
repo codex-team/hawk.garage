@@ -344,11 +344,13 @@
       "days": "{n} day | {n} days"
     },
     "daily": {
-      "lastTwoWeeks": "Last 2 weeks"
+      "lastTwoWeeks": "Last 2 weeks",
+      "label": "event | events"
     },
     "usersAffected": {
       "total": "Total",
-      "users": "{n} user | {n} users"
+      "users": "{n} user | {n} users",
+      "label": "user | users"
     },
     "navigation": {
       "overview": "Overview",

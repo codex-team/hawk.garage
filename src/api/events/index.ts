@@ -6,7 +6,8 @@ import {
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  QUERY_AFFECTED_USERS_CHART_DATA,
 } from './queries';
 import * as api from '@/api';
 import {
@@ -172,3 +173,28 @@ export async function fetchChartData(projectId: string, eventId: string, days: n
     timezoneOffset,
   })).project.event.chartData;
 }
+
+
+/**
+ * Fetch data for affected users chart
+ *
+ * @param {string} projectId - project id
+ * @param {string} eventId - event id
+ * @param {number} days - how many days we need to fetch for displaying in chart
+ * @param {number} timezoneOffset - user's local timezone
+ */
+export async function fetchAffectedUsersChartData(
+  projectId: string,
+  eventId: string,
+  days: number,
+  timezoneOffset: number
+): Promise<EventChartItem[]> {
+  return (await api.call(QUERY_AFFECTED_USERS_CHART_DATA, {
+    projectId,
+    eventId,
+    days,
+    timezoneOffset,
+  })).data.project.event.affectedUsersChartData;
+}
+
+
