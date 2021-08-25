@@ -475,29 +475,28 @@ export default Vue.extend({
       if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
-        if(this.isRecurrent){
-           if(!this.isAcceptedRecurrentPaymentAgreement){
-              notifier.show({
-                message: this.$t('billing.paymentDetails.didNotAcceptRecurrentPaymentAgreement') as string,
-                style: 'error',
-                time: 5000,
-              });
-           }
-           if(!this.isAcceptedChargingEveryMonth){
-              notifier.show({
-                message: this.$t('billing.paymentDetails.didNotAcceptChargingEveryMonth') as string,
-                style: 'error',
-                time: 5000,
-              });             
-           }
-        }
-        else{
+        if (this.isRecurrent) {
+          if (!this.isAcceptedRecurrentPaymentAgreement) {
             notifier.show({
-              message: this.$t('billing.paymentDetails.didNotAccept') as string,
+              message: this.$t('billing.paymentDetails.didNotAcceptRecurrentPaymentAgreement') as string,
               style: 'error',
               time: 5000,
             });
           }
+          if (!this.isAcceptedChargingEveryMonth) {
+            notifier.show({
+              message: this.$t('billing.paymentDetails.didNotAcceptChargingEveryMonth') as string,
+              style: 'error',
+              time: 5000,
+            });
+          }
+        } else {
+          notifier.show({
+            message: this.$t('billing.paymentDetails.didNotAccept') as string,
+            style: 'error',
+            time: 5000,
+          });
+        }
       }
     },
 
@@ -712,12 +711,8 @@ export default Vue.extend({
         margin-left: 0;
       }
 
-      &-autoProlongation {
-        margin-bottom: 28px;
-
-        &-item {
-          margin-bottom: 9px;
-        }
+      &-item {
+        margin-bottom: 9px;
       }
     }
   }
