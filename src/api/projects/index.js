@@ -45,7 +45,7 @@ export async function updateProject(projectInfo) {
 /**
  * Generates new integration token by project ID
  *
- * @param {String} id - project id
+ * @param {string} id - project id
  *
  * @returns {Promise<APIResponse<UpdateIntegrationTokenResponse>>}
  */

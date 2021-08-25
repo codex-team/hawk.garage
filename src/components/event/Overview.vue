@@ -71,7 +71,7 @@ export default Vue.extend({
     DetailsCookie,
     DetailsBacktrace,
     DetailsAddons,
-    DetailsSuspectedCommits
+    DetailsSuspectedCommits,
   },
   props: {
     /**
@@ -79,8 +79,8 @@ export default Vue.extend({
      */
     event: {
       type: Object as () => HawkEvent,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     /**
@@ -104,7 +104,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = ['vue'];
+      const integrationToFilter = [ 'vue' ];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {
@@ -174,8 +174,8 @@ export default Vue.extend({
       }
 
       return this.event.payload.addons[integrationName];
-    }
-  }
+    },
+  },
 });
 </script>
 

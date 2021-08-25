@@ -70,7 +70,7 @@ export default {
     currentProjectId() {
       return this.$route.params.projectId;
     },
-    
+
     project() {
       return this.$store.getters.getProjectById(this.projectId);
     },

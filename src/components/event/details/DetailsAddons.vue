@@ -17,7 +17,7 @@
         </div>
         <div class="event-details__value">
           <component
-            :is="customRendererNamePrefix + key"
+            :is="customRendererNamePrefix + capitalize(key)"
             v-if="isCustomRenderer(key)"
             :value="value"
           />
@@ -55,8 +55,8 @@ import Icon from '../../utils/Icon.vue';
 import { isObject } from '@/utils';
 import Json from '../../utils/Json.vue';
 import CodeBlock from '../../utils/CodeBlock.vue';
-import CustomRendererBeautifiedUserAgent from './custom-renderers/beautifiedUserAgent.vue';
-import CustomRendererWindow from './custom-renderers/window.vue';
+import CustomRendererBeautifiedUserAgent from './custom-renderers/BeautifiedUserAgent.vue';
+import CustomRendererWindow from './custom-renderers/Window.vue';
 import { EventAddons } from 'hawk.types';
 import { Entries } from '../../../types/utils';
 
@@ -96,7 +96,7 @@ export default Vue.extend({
       /**
        * Custom render components should have the "CustomRenderer_" prefix
        */
-      customRendererNamePrefix: 'CustomRenderer_',
+      customRendererNamePrefix: 'CustomRenderer',
     };
   },
   computed: {
@@ -125,7 +125,7 @@ export default Vue.extend({
      *  1. Create a Component in './custom-renderers/' dir. Name it as addon named.
      *  2. Import this component to this file. Give it a name with the 'CustomRenderer_' prefix.
      *
-     *     @example import CustomRendererWindow from './custom-renderers/window.vue';
+     *     @example import CustomRendererWindow from './custom-renderers/Window.vue';
      *  3. Connect it to the 'components' section
      *
      *
@@ -136,7 +136,7 @@ export default Vue.extend({
         .filter(name => name.startsWith(this.customRendererNamePrefix))
         .map(name => name.replace(this.customRendererNamePrefix, ''));
 
-      return key.match(new RegExp(customRenderers.join('|'), 'i')) !== null;
+      return this.capitalize(key).match(new RegExp(customRenderers.join('|'), 'i')) !== null;
     },
 
     /**
@@ -175,6 +175,15 @@ export default Vue.extend({
      */
     isHTML(key: string): boolean {
       return key === 'component' && this.title === 'Vue';
+    },
+
+    /**
+     * Uppercase the first letter
+     *
+     * @param string - string to process
+     */
+    capitalize(string: string): string {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     },
   },
 });

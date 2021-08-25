@@ -14,7 +14,7 @@ import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
 import Vue from 'vue';
-import { NotifierButtonType } from './components/utils/NotifierWindow/types.ts';
+import { NotifierButtonType } from './components/utils/NotifierWindow/types';
 
 export default Vue.extend({
   name: 'App',
@@ -60,9 +60,9 @@ export default Vue.extend({
      */
     eventBus.$on('serviceWorkerUpdated', () => {
       this.$notify.open({
-        description: this.$t('components.newVersionWindow.message'),
+        description: this.$t('components.newVersionWindow.message') as string,
         notifierButtons: [ {
-          text: this.$t('components.newVersionWindow.refresh'),
+          text: this.$t('components.newVersionWindow.refresh') as string,
           type: NotifierButtonType.SUBMIT,
           onClick: () => {
             window.location.reload();
@@ -88,10 +88,10 @@ export default Vue.extend({
      * To active effect, add "data-ripple" attribute to any clickable element
      */
     enableRipple(): void {
-      (this.$refs.app as Element)?.addEventListener('mousedown', (e: Event) => {
+      (this.$refs.app as HTMLElement)?.addEventListener('mousedown', (e: MouseEvent) => {
         const target = e.target as HTMLElement;
         const el = target.nodeType === Node.ELEMENT_NODE ? target : target.parentElement;
-        const rEl: HTMLElement | null | undefined = el?.closest('[data-ripple]');
+        const rEl = el?.closest<HTMLElement>('[data-ripple]');
 
         if (!rEl) {
           return;
@@ -108,8 +108,8 @@ export default Vue.extend({
         wrap.classList.add('ripple');
         rip.classList.add('ripple-wave');
 
-        rip.style.left = (<MouseEvent>e).pageX - offset.left + 'px';
-        rip.style.top = (<MouseEvent>e).pageY - offset.top + 'px';
+        rip.style.left = e.pageX - offset.left + 'px';
+        rip.style.top = e.pageY - offset.top + 'px';
 
         rEl.appendChild(wrap);
         wrap.appendChild(rip);
