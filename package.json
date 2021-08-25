@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@hawk.so/javascript": "^2.10.0",
-    "@hawk.so/webpack-plugin": "^0.2.1",
+    "@hawk.so/webpack-plugin": "^1.0.0",
     "@vue/cli-plugin-babel": "^4.1.2",
     "@vue/cli-plugin-pwa": "^4.1.2",
     "@vue/cli-plugin-typescript": "^4.1.2",

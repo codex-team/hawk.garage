@@ -1173,10 +1173,10 @@
     hawk.types "https://github.com/codex-team/hawk.types"
     jwt-decode "^3.1.2"
 
-"@hawk.so/webpack-plugin@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@hawk.so/webpack-plugin/-/webpack-plugin-0.2.1.tgz#a63bafcab1ee79d77ac3b7eb7fb2587fae740f48"
-  integrity sha512-z1KQskE1WHag3PjTxrd5eJlTdH2CnXZj4xVES0qcS5fNKshrtQednfvCQHfci1CYToRthV32VPXpQ9qAu65aqg==
+"@hawk.so/webpack-plugin@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@hawk.so/webpack-plugin/-/webpack-plugin-1.0.0.tgz#ddcf94badf89bac72f3c6e14e3071480593846c1"
+  integrity sha512-Ec+00AQ8cs7aYs7KXUiF6zpkU118Oe+o/AqdT6Y//FH6SUL7WLWDRbk+gUHgU27vH/PMCrpwRBBUTwVeKAt6ZA==
   dependencies:
     form-data "^3.0.0"
     gitlog "^4.0.4"
