@@ -30,6 +30,9 @@ declare namespace Cypress {
   }
 }
 
+/**
+ * Visits Hawk on localhost
+ */
 Cypress.Commands.add('visitHawk', () => {
   cy.visit('http://localhost:8080');
 })
