@@ -136,9 +136,9 @@ export default {
       font-weight: bold;
       line-height: 32px;
       text-align: center;
+      text-transform: uppercase;
       border: 2px solid var(--color-text-second);
       border-radius: 50%;
-      text-transform: uppercase;
 
       &:first-child {
         color: var(--color-text-second);
@@ -246,8 +246,8 @@ export default {
     }
 
     &__catalog-item {
-      margin: 7.5px;
       flex-grow: 1;
+      margin: 7.5px;
 
       &--not-implemented {
         opacity: 0.3;

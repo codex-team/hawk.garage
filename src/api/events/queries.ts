@@ -56,6 +56,15 @@ export const QUERY_EVENT = `
             addons
           }
         }
+        release {
+          releaseName
+          commits{
+            hash
+            author
+            title
+            date
+          }
+        }
       }
     }
   }

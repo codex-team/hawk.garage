@@ -365,6 +365,12 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
+    "suspectedCommits":{
+      "header": "Подозреваемые коммиты",
+      "hide": "скрыть",
+      "committed": "закоммитил(а)",
+      "moreRelease":" | еще {numberOfCommits} коммит в этом релизе | еще {numberOfCommits} коммита в этом релизе | еще {numberOfCommits} коммитов в этом релизе"
+    },
     "emptyData": "Это событие не имеет дополнительных данных",
     "notFound": "Событие не найдено. Возможно, оно было заархивировано.",
     "addons": {
@@ -417,6 +423,14 @@
       "ноя",
       "дек"
     ],
+    "relativeTime":{
+      "secondsAgo":"несколько секунд назад",
+      "minutesAgo":" | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
+      "hoursAgo":" | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
+      "daysAgo":" | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
+      "monthsAgo":" | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
+      "yearsAgo":" | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
+    },
     "readMore": "Подробнее"
   },
   "errors": {

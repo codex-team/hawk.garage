@@ -4,6 +4,13 @@
       v-if="event"
       class="event-overview"
     >
+      <DetailsSuspectedCommits
+        v-if="
+          event.release && event.release.commits && event.release.commits.length
+        "
+        class="event-overview__section"
+        :commits="event.release.commits"
+      />
       <DetailsBacktrace
         v-if="hasBacktrace"
         class="event-overview__section"
@@ -36,14 +43,14 @@
         v-if="isNoAdditionalInformation"
         class="empty-event-label"
       >
-        {{ $t('event.emptyData') }}
+        {{ $t("event.emptyData") }}
       </div>
     </div>
     <div
       v-else
       class="event-overview__loading"
     >
-      {{ $t('event.loading') }}
+      {{ $t("event.loading") }}
     </div>
   </div>
 </template>
@@ -52,6 +59,7 @@
 import Vue from 'vue';
 import DetailsCookie from './details/DetailsCookie.vue';
 import DetailsBacktrace from './details/DetailsBacktrace.vue';
+import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from 'hawk.types';
@@ -63,6 +71,7 @@ export default Vue.extend({
     DetailsCookie,
     DetailsBacktrace,
     DetailsAddons,
+    DetailsSuspectedCommits
   },
   props: {
     /**
@@ -70,8 +79,8 @@ export default Vue.extend({
      */
     event: {
       type: Object as () => HawkEvent,
-      required: true,
-    },
+      required: true
+    }
   },
   computed: {
     /**
@@ -95,7 +104,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = [ 'vue' ];
+      const integrationToFilter = ['vue'];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {
@@ -165,32 +174,31 @@ export default Vue.extend({
       }
 
       return this.event.payload.addons[integrationName];
-    },
-  },
+    }
+  }
 });
 </script>
 
 <style>
-  @import "./../../styles/custom-properties.css";
+@import "./../../styles/custom-properties.css";
 
-  .event-overview {
-    &__section {
-      margin-bottom: 30px;
-    }
-
-    &__loading {
-      height: 46px;
-      margin-top: 50px;
-      padding: 13px 11px 13px 15px;
-      font-weight: 500;
-      line-height: 20px;
-      background-color: var(--color-bg-main);
-      border-radius: 9px;
-      cursor: pointer;
-    }
+.event-overview {
+  &__section {
+    margin-bottom: 30px;
   }
-
-  .empty-event-label {
-    @apply --empty-placeholder;
+  &__loading {
+    height: 46px;
+    margin-top: 50px;
+    padding: 13px 11px 13px 15px;
+    font-weight: 500;
+    line-height: 20px;
+    background-color: var(--color-bg-main);
+    border-radius: 9px;
+    cursor: pointer;
   }
+}
+
+.empty-event-label {
+  @apply --empty-placeholder;
+}
 </style>

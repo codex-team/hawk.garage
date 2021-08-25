@@ -20,7 +20,7 @@ import {
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
 import NotFoundError from '../../errors/404';
-import {APIResponse} from '../../types/api';
+import { APIResponse } from '../../types/api';
 
 /**
  * Get specific event
