@@ -139,7 +139,8 @@ const actions = {
    * @returns {Workspace} - created workspace
    */
   async [CREATE_WORKSPACE]({ commit }, workspace) {
-    const createdWorkspace = await workspaceApi.createWorkspace(workspace);
+    const response = await workspaceApi.createWorkspace(workspace);
+    const createdWorkspace = response.data.workspace;
 
     commit(mutationTypes.ADD_WORKSPACE, createdWorkspace);
 

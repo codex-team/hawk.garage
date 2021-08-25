@@ -56,6 +56,15 @@ export const QUERY_EVENT = `
             addons
           }
         }
+        release {
+          releaseName
+          commits{
+            hash
+            author
+            title
+            date
+          }
+        }
       }
     }
   }
@@ -133,6 +142,7 @@ export const QUERY_LATEST_REPETITIONS = `
         repetitions(limit: $limit) {
           id
           payload {
+            title,
             release
             timestamp
             context

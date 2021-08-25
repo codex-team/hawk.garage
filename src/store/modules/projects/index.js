@@ -9,7 +9,7 @@ import {
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
   TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
-  FETCH_CHART_DATA
+  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -23,6 +23,7 @@ export const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   REMOVE_PROJECTS_BY_WORKSPACE_ID: 'REMOVE_PROJECTS_BY_WORKSPACE_ID', // Remove projects by workspace id from list
   UPDATE_PROJECT: 'UPDATE_PROJECT', // Set new info about a project
+  UPDATE_PROJECT_PROPERTY: 'UPDATE_PROJECT_PROPERTY', // Updates project property by key
   REMOVE_PROJECT: 'REMOVE_PROJECT', // Remove project by id
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
@@ -135,13 +136,16 @@ const actions = {
    *
    * @param {Function} commit - standard Vuex commit function
    * @param {Project} projectData - project params for creation
-   * @returns {Promise<void>}
+   * @returns {Promise<Project>}
    */
   async [CREATE_PROJECT]({ commit }, projectData) {
-    const newProjectData = await projectsApi.createProject(projectData);
+    const response = await projectsApi.createProject(projectData);
+    const project = response.data.project;
 
-    newProjectData.workspaceId = projectData.workspaceId;
-    commit(mutationTypes.ADD_PROJECT, newProjectData);
+    project.workspaceId = projectData.workspaceId;
+    commit(mutationTypes.ADD_PROJECT, project);
+
+    return project;
   },
 
   /**
@@ -180,6 +184,28 @@ const actions = {
 
     if (updatedProject) {
       commit(mutationTypes.UPDATE_PROJECT, updatedProject);
+    }
+  },
+
+  /**
+   * Send request to generate new integration token for project
+   *
+   * @param {Function} commit - standard Vuex commit function
+   * @param {String} projectId - project id for generation new token
+   *
+   * @returns {Promise<void>}
+   */
+  async [GENERATE_NEW_INTEGRATION_TOKEN]({ commit }, { projectId }) {
+    const response = await projectsApi.generateNewIntegrationToken(projectId);
+
+    const token = response.data.generateNewIntegrationToken.record.token;
+
+    if (token) {
+      commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+        projectId,
+        key: 'token',
+        value: token
+      });
     }
   },
 
@@ -350,6 +376,24 @@ const mutations = {
     const index = state.list.findIndex(element => element.id === project.id);
 
     state.list[index] = project;
+  },
+
+  /**
+   * Updates project property by provided key and value
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {string} projectId - updating project id
+   * @param {string} key - property in project object to update
+   * @param {string | number | boolean} value - new value
+   */
+  [mutationTypes.UPDATE_PROJECT_PROPERTY](state, {
+    projectId,
+    key,
+    value
+  }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    Vue.set(project, key, value);
   },
 
   /**

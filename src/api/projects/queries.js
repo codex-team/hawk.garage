@@ -12,7 +12,7 @@ export const MUTATION_CREATE_PROJECT = `
     $workspaceId: ID!
     $image: Upload
   ) {
-    createProject(name: $name, workspaceId: $workspaceId, image: $image) {
+    project: createProject(name: $name, workspaceId: $workspaceId, image: $image) {
       id
       name
       image
@@ -40,6 +40,23 @@ export const MUTATION_UPDATE_PROJECT = `
             image
         }
     }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for generating new integration token
+ */
+export const MUTATION_GENERATE_NEW_INTEGRATION_TOKEN = `
+  mutation generateNewIntegrationToken(
+    $id: ID!
+  ) {
+    generateNewIntegrationToken(id: $id)
+    {
+      record {
+        token
+      }
+    }
+  }
 `;
 
 // language=GraphQL

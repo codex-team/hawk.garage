@@ -20,6 +20,7 @@ import {
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
 import NotFoundError from '../../errors/404';
+import { APIResponse } from '../../types/api';
 
 /**
  * Get specific event
@@ -86,26 +87,12 @@ export async function fetchRecentEvents(
  */
 export async function getLatestRepetitions(
   projectId: string, eventId: string, limit: number
-): Promise<HawkEventRepetition[]> {
-  return (await api.callOld(QUERY_LATEST_REPETITIONS, {
+): Promise<APIResponse<{project: { event: { repetitions: HawkEventRepetition[] } } }>> {
+  return api.call(QUERY_LATEST_REPETITIONS, {
     projectId,
     eventId,
     limit,
-  })).project.event.repetitions;
-}
-
-/**
- * Fetches event's repetition from project and returns last
- *
- * @param {string} projectId - project's identifier
- * @param {string} eventId - event's identifier
- * @returns {Promise<HawkEventRepetition | null>}
- */
-export async function getLatestRepetition(projectId: string, eventId: string): Promise<HawkEventRepetition | null> {
-  return (await api.callOld(QUERY_LATEST_REPETITIONS, {
-    projectId,
-    eventId,
-  })).project.event.repetitions.shift() || null;
+  });
 }
 
 /**

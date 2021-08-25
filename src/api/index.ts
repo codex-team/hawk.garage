@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
+import { APIResponse } from '../types/api';
 
 /**
  * Hawk API endpoint URL
@@ -88,43 +89,6 @@ interface ApiCallSettings {
 }
 
 /**
- * Makes request to API
- *
- * @param {string} request - request to send
- * @param {object} [variables] - request variables
- * @param {object} [files] - files to upload
- * @param {ApiCallSettings} [settings] - settings for call method
- * @returns {Promise<*>} - request data
- */
-export async function call(
-  request: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  variables?: Record<string, any>,
-  files?: {[name: string]: File | undefined},
-  { initial = false, force = false }: ApiCallSettings = {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any> {
-  const response = await callOld(request, variables, files, Object.assign({
-    initial,
-    force,
-  }, {
-    allowErrors: true, // forcefully set this flag. When all the requests will be refactored from api.callOld() to api.call(), remove this flag.
-  }));
-
-  /**
-   * Response can contain errors.
-   * Throw such errors to the Vue component to display them for user
-   */
-  if (response.errors && response.errors.length) {
-    response.errors.forEach(error => {
-      throw new Error(error.message);
-    });
-  }
-
-  return response;
-}
-
-/**
  * Makes request to API (old)
  *
  * @deprecated GraphQL can return response along with errors.
@@ -193,6 +157,43 @@ export async function callOld(
    * @deprecated old format. See method jsdoc
    */
   return response.data.data;
+}
+
+/**
+ * Makes request to API
+ *
+ * @param {string} request - request to send
+ * @param {object} [variables] - request variables
+ * @param {object} [files] - files to upload
+ * @param {ApiCallSettings} [settings] - settings for call method
+ * @returns {Promise<*>} - request data
+ */
+export async function call(
+  request: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  variables?: Record<string, any>,
+  files?: {[name: string]: File | undefined},
+  { initial = false, force = false }: ApiCallSettings = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<APIResponse<any>> {
+  const response = await callOld(request, variables, files, Object.assign({
+    initial,
+    force,
+  }, {
+    allowErrors: true, // forcefully set this flag. When all the requests will be refactored from api.callOld() to api.call(), remove this flag.
+  }));
+
+  /**
+   * Response can contain errors.
+   * Throw such errors to the Vue component to display them for user
+   */
+  if (response.errors && response.errors.length) {
+    response.errors.forEach(error => {
+      throw new Error(error.message);
+    });
+  }
+
+  return response;
 }
 
 /**

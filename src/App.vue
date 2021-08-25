@@ -10,9 +10,9 @@
 
 <script>
 import * as api from './api/index.ts';
-import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
+import { NotifierButtonType } from './components/utils/NotifierWindow/types.ts';
 
 export default {
   name: 'App',
@@ -59,13 +59,15 @@ export default {
      * Connect to the event bus
      */
     eventBus.$on('serviceWorkerUpdated', () => {
-      notifier.show({
-        message: 'New version is available',
-        type: 'confirm',
-        okText: 'Refresh',
-        cancelText: 'Close',
-        okHandler: () => window.location.reload(),
-        time: 10000,
+      this.$notify.open({
+        description: this.$t('components.newVersionWindow.message'),
+        notifierButtons: [ {
+          text: this.$t('components.newVersionWindow.refresh'),
+          type: NotifierButtonType.SUBMIT,
+          onClick: () => {
+            window.location.reload();
+          },
+        } ],
       });
     });
   },
@@ -84,8 +86,8 @@ export default {
 
   methods: {
     /**
-     * Add "ripple" effects: wave anivation on clicked elements
-     * To active effect, add "data-ripple" attrubute to any clickable element
+     * Add "ripple" effects: wave navigation on clicked elements
+     * To active effect, add "data-ripple" attribute to any clickable element
      *
      * @returns {void}
      */
@@ -127,9 +129,9 @@ export default {
 <style src="./styles/base.css"></style>
 
 <style>
-  #app {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 </style>

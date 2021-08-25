@@ -1,6 +1,7 @@
 <template>
   <div class="auth-page">
     <Form
+      ref="form"
       class="auth-page__form"
       :fields="fields"
       :submit-text="submitText"
@@ -8,7 +9,6 @@
       :alt-link="altLink"
       :alt-text="altText"
       :success-message="successMessage"
-      ref="form"
       @submit="login"
     />
   </div>
