@@ -53,7 +53,6 @@ export const MUTATION_GENERATE_NEW_INTEGRATION_TOKEN = `
     generateNewIntegrationToken(id: $id)
     {
       record {
-        id
         token
       }
     }
