@@ -43,7 +43,7 @@
         v-if="isNoAdditionalInformation"
         class="empty-event-label"
       >
-        {{ $t("event.emptyData") }}
+        {{ isLoading ? $t("event.loading") : $t("event.emptyData") }}
       </div>
     </div>
     <div
@@ -81,6 +81,14 @@ export default Vue.extend({
       type: Object as () => HawkEvent,
       required: true,
     },
+
+    /**
+     * Flag determines if event is loading
+     */
+    isLoading: {
+      type: Boolean,
+      default: false,
+    }
   },
   computed: {
     /**
