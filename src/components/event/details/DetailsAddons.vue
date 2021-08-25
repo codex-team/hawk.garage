@@ -55,8 +55,8 @@ import Icon from '../../utils/Icon.vue';
 import { isObject } from '@/utils';
 import Json from '../../utils/Json.vue';
 import CodeBlock from '../../utils/CodeBlock.vue';
-import CustomRendererBeautifiedUserAgent from './custom-renderers/BeautifiedUserAgent.vue';
-import CustomRendererWindow from './custom-renderers/Window.vue';
+import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
+import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import { EventAddons } from 'hawk.types';
 import { Entries } from '../../../types/utils';
 
@@ -94,7 +94,7 @@ export default Vue.extend({
     } {
     return {
       /**
-       * Custom render components should have the "CustomRenderer_" prefix
+       * Custom render components should have the "CustomRenderer" prefix
        */
       customRendererNamePrefix: 'CustomRenderer',
     };
@@ -123,7 +123,7 @@ export default Vue.extend({
      *
      * How to add a custom renderer:
      *  1. Create a Component in './custom-renderers/' dir. Name it as addon named.
-     *  2. Import this component to this file. Give it a name with the 'CustomRenderer_' prefix.
+     *  2. Import this component to this file. Give it a name with the 'CustomRenderer' prefix.
      *
      *     @example import CustomRendererWindow from './custom-renderers/Window.vue';
      *  3. Connect it to the 'components' section
