@@ -268,7 +268,7 @@ const module: Module<EventsModuleState, RootState> = {
         let repetition;
 
         if (!repetitionId) {
-          repetition = state.repetitions[key][state.repetitions[key].length - 1];
+          repetition = state.repetitions[key][0];
         } else {
           repetition = state.repetitions[key].find(item => {
             return item.id === repetitionId;
@@ -475,11 +475,6 @@ const module: Module<EventsModuleState, RootState> = {
 
       if (repetition !== null) {
         event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
-        commit(MutationTypes.AddRepetitionPayload, {
-          projectId,
-          eventId,
-          repetition,
-        });
       }
     },
 
@@ -777,7 +772,9 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        state.repetitions[key] = [];
+        Vue.set(state.repetitions, key, [repetition]);
+
+        return;
       }
 
       state.repetitions[key].push(repetition);

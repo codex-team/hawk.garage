@@ -8,7 +8,7 @@
         {{ event.payload.timestamp | prettyFullDate }}
       </span>
 
-      <div class="event-header__breadcrumbs">
+      <div class="event-header__breadcrumbs" v-if="workspace">
         <router-link
           class="event-header__breadcrumbs-item"
           :to="'/workspace/' + workspace.id"
