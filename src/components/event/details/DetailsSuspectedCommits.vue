@@ -119,15 +119,12 @@ export default Vue.extend({
     flex-direction: row;
     padding: 13px 15px;
   }
-  &__left > div {
-    height: 16px;
-  }
   &__left {
     display: flex;
     flex-direction: column;
     font-weight: bold;
     font-size: 14px;
-    line-height: normal;
+    line-height: 16px;
 
     &-title {
       max-width: 600px;
@@ -145,6 +142,7 @@ export default Vue.extend({
     &-author {
       color: var(--color-text-second);
       vertical-align: middle;
+      display: inline-block;
     }
 
     &-relative-time {
@@ -169,11 +167,10 @@ export default Vue.extend({
 
     &-hash {
       display: block;
-      height: 14px;
       color: var(--color-text-second);
       font-size: 11px;
       font-family: var(--font-monospace);
-      line-height: normal;
+      line-height: 14px;
     }
   }
 }
