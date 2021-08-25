@@ -28,7 +28,6 @@ if (hawkToken) {
   plugins.push(new HawkWebpackPlugin({
     integrationToken: hawkToken,
     release: buildRevision,
-    commits: {}
   }));
 }
 
