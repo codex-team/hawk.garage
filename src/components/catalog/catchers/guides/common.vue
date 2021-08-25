@@ -43,8 +43,6 @@
 
 <script>
 import GuideStepBlock from "../../GuideStepBlock";
-import GuideSection from "../../GuideSection";
-import CodeBlock from "../../../utils/CodeBlock";
 import GuideHeader from "../../GuidePageHeader";
 import TokenBlock from "../../../project/TokenBlock";
 import UiButton from '../../../utils/UiButton';
@@ -53,8 +51,6 @@ export default {
   name: "SetupPhpCatcher",
   components: {
     GuideStepBlock,
-    CodeBlock,
-    GuideSection,
     TokenBlock,
     GuideHeader,
     UiButton
