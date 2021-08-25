@@ -14,6 +14,7 @@ import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
 import Vue from 'vue';
+import { NotifierButtonType } from './components/utils/NotifierWindow/types.ts';
 
 export default Vue.extend({
   name: 'App',
@@ -58,13 +59,15 @@ export default Vue.extend({
      * Connect to the event bus
      */
     eventBus.$on('serviceWorkerUpdated', () => {
-      notifier.show({
-        message: 'New version is available',
-        type: 'confirm',
-        okText: 'Refresh',
-        cancelText: 'Close',
-        okHandler: () => window.location.reload(),
-        time: 10000,
+      this.$notify.open({
+        description: this.$t('components.newVersionWindow.message'),
+        notifierButtons: [ {
+          text: this.$t('components.newVersionWindow.refresh'),
+          type: NotifierButtonType.SUBMIT,
+          onClick: () => {
+            window.location.reload();
+          },
+        } ],
       });
     });
   },
@@ -123,9 +126,9 @@ export default Vue.extend({
 <style src="./styles/base.css"></style>
 
 <style>
-  #app {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 </style>
