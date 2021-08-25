@@ -253,7 +253,7 @@ export default Vue.extend({
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
     const cards: BankCard[] = this.$store.state.user.data?.bankCards;
-    const selectedCard = (cards && cardToSelectOption(cards[0])) || undefined;
+    const selectedCard = (cards?.length > 0 && cardToSelectOption(cards[0])) || undefined;
 
     return {
       /**
