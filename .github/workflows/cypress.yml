@@ -5,8 +5,9 @@ on: [pull_request]
 jobs:
   e2e:
     runs-on: ubuntu-latest
+
     container:
-      image: node:12.11.1-alpine
+      image: cypress/browsers:node14.16.0-chrome89-ff86
 
     services:
       mongodb:
@@ -31,6 +32,11 @@ jobs:
       - name: Install deps
         run: yarn
 
-      - name: E2E
-        run: yarn e2e:ci
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          config: video=false
+          browser: chrome
+          start: npm start
+          env: VUE_APP_API_ENDPOINT=http://localhost:4000,VUE_APP_API_AUTH_GITHUB=http://localhost:3000/auth/github,VUE_APP_API_AUTH_GOOGLE=http://localhost:3000/auth/google,VUE_APP_CLOUDPAYMENTS_PUBLIC_ID=test_api_00000000000000000000001
 
