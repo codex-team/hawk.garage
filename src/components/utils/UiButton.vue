@@ -1,5 +1,6 @@
 <template>
-  <button
+  <comment
+    :is="href ? 'a' : 'button'"
     class="ui-button"
     :class="{
       'ui-button--submit': submit,
@@ -12,6 +13,7 @@
       'ui-button--secondary': secondary,
     }"
     :disabled="disabled"
+    :href="href || null"
     @click="$emit('click', $event)"
   >
     <Icon
@@ -23,7 +25,7 @@
     <span class="ui-button-text">
       {{ content }}
     </span>
-  </button>
+  </comment>
 </template>
 
 <script lang="ts">
@@ -116,6 +118,14 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    /**
+     * If passed, button will be presented as <a> tag
+     */
+    href: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -153,6 +163,7 @@ export default Vue.extend({
   border-radius: 4px;
   outline: none;
   user-select: none;
+  text-decoration: none !important;
 
   &:not(&--disabled) {
     cursor: pointer;
@@ -172,7 +183,7 @@ export default Vue.extend({
   }
 
   &--submit {
-    color: var(--color-text-main);
+    color: var(--color-text-main) !important;
     background-color: var(--color-indicator-medium);
     border: 0;
 

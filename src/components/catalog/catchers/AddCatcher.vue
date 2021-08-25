@@ -72,10 +72,10 @@ export default {
     return {
       items: [
         {
-          name: 'NODE.JS',
-          page: 'nodejs',
-          description: this.$t('components.catalog.catchers.nodejs'),
-          image: require('../../../assets/catalog/nodejs.svg'),
+          name: 'JAVASCRIPT',
+          page: 'javascript',
+          description: this.$t('components.catalog.catchers.js'),
+          image: require('../../../assets/catalog/javascript/js@3x.jpg'),
         },
         {
           name: 'PHP',
@@ -84,18 +84,20 @@ export default {
           image: require('../../../assets/catalog/php.svg'),
         },
         {
-          name: 'JAVASCRIPT',
-          page: 'javascript',
-          description: this.$t('components.catalog.catchers.js'),
-          image: require('../../../assets/catalog/javascript/js@3x.jpg'),
+          name: 'NODE.JS',
+          page: 'nodejs',
+          description: this.$t('components.catalog.catchers.nodejs'),
+          image: require('../../../assets/catalog/nodejs.svg'),
         },
         {
           name: 'PYTHON',
+          page: 'python',
           description: this.$t('components.catalog.catchers.python'),
           image: require('../../../assets/catalog/python.svg'),
         },
         {
           name: 'GO',
+          page: 'go',
           description: this.$t('components.catalog.catchers.go'),
           image: require('../../../assets/catalog/go/go@3x.jpg'),
         },

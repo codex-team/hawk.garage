@@ -5,138 +5,155 @@
       :background-image="
         require('../../../../assets/catalog/javascript/js@3x.jpg')
       "
-      github-link="https://github.com/codex-team/hawk.javascript"
-      catcher-name="Javascript"
-      description="Advanced client catcher with errors bunching"
-      readme-link="https://github.com/codex-team/hawk.javascript/blob/master/README.md"
+      :github-link="repoUrl"
+      catcher-name="JavaScript"
+      :description="this.$t('components.catalog.catchers.js')"
+      :readme-link="readmeUrl"
     />
     <div class="guide-page__instructions">
-      <div class="guide-page__instructions-header">INSTALLATION</div>
+      <div class="guide-page__instructions-header">
+        {{ $t('components.catalog.installation') }}
+      </div>
       <GuideStepBlock :step-number="1">
-        <template #header> GET AN INTEGRATION TOKEN </template>
+        <template #header>
+          {{ $t('components.catalog.getToken') }}
+        </template>
         <template #content>
-          Your Integration token for <b>{{ project.name }}</b
-          >:
+          {{ $t('components.catalog.hereIsToken') }}
           <TokenBlock :token="project.token" />
         </template>
       </GuideStepBlock>
       <GuideStepBlock :step-number="2" last>
-        <template #header> FOLLOW THE INSTALLATION GUIDE </template>
+        <template #header>
+          {{ $t('components.catalog.followGuide') }}
+        </template>
         <template #content>
-          Install package:
-          <CodeBlock language="javascript" copyable>
-            $ npm install @hawk.so/javascript --save
-          </CodeBlock>
-          Load from CDN:
-          <CodeBlock language="html" copyable>
-            &lt;script
-            src="https://cdn.jsdelivr.net/npm/@hawk.so/javascript@2.9.0/dist/hawk.min.js"
-            async&gt;&lt;/script&gt;
-          </CodeBlock>
+          <GuideSection>
+            <template #header>
+              {{ $t('components.catalog.installation') }}
+            </template>
+            <template #content>
+              <p>
+                Install the package:
+              </p>
+              <CodeBlock language="shell" copyable>
+                $ npm install @hawk.so/javascript --save
+              </CodeBlock>
+              Or load it from CDN:
+              <CodeBlock language="html" copyable>
+                &lt;script
+                src="https://cdn.jsdelivr.net/npm/@hawk.so/javascript@latest/dist/hawk.min.js"
+                async&gt;&lt;/script&gt;
+              </CodeBlock>
+            </template>
+          </GuideSection>
+          <GuideSection>
+            <template #header>
+              {{ $t('components.catalog.initialization') }}
+            </template>
+            <template #content>
+              <p>
+                Import the <code>HawkCatcher</code> class and initialize it with the Integration Token:
+              </p>
+              <CodeBlock language="javascript" copyable>
+                import HawkCatcher from '@hawk.so/javascript';
+                <br>
+                <br>
+                const hawk = new HawkCatcher({
+                <br>
+                  &nbsp;&nbsp;token: '{{ project.token }}'
+                <br>
+                });
+              </CodeBlock>
+              <p>
+                Initialization settings
+              </p>
+              <table class="guide-page__instructions-table">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Required</th>
+                  <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>token</td>
+                  <td><code>string</code></td>
+                  <td>require</td>
+                  <td>Your project's Integration token.</td>
+                </tr>
+                <tr>
+                  <td>release</td>
+                  <td><code>string</code>/<code>number</code></td>
+                  <td>optional</td>
+                  <td>
+                    Unique identifier of the release. Used for source map and commits sending.
+                  </td>
+                </tr>
+                <tr>
+                  <td>user</td>
+                  <td>
+                    <code>{id: string, name?: string, image?: string, url?: string}</code>
+                  </td>
+                  <td>optional</td>
+                  <td>Current authenticated user.</td>
+                </tr>
+                <tr>
+                  <td>context</td>
+                  <td><code>object</code></td>
+                  <td>optional</td>
+                  <td>Any data you want to pass with every message.</td>
+                </tr>
+                <tr>
+                  <td>vue</td>
+                  <td><code>Vue constructor</code></td>
+                  <td>optional</td>
+                  <td>
+                    Pass Vue constructor to set up the
+                    <a href="https://github.com/codex-team/hawk.javascript/blob/master/README.md#integrate-to-vue-application">
+                      Vue integration
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>disableGlobalErrorsHandling</td>
+                  <td><code>boolean</code></td>
+                  <td>optional</td>
+                  <td>Do not initialize global errors handling.</td>
+                </tr>
+                <tr>
+                  <td>beforeSend</td>
+                  <td><code>function(event) => event</code></td>
+                  <td>optional</td>
+                  <td>
+                    This method allows you to filter any data you don't want
+                    sending to Hawk.
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <p>
+                More options with details see at the Catcher's <a :href="readmeUrl">README.md</a>
+              </p>
+            </template>
+          </GuideSection>
+          <br>
+          <br>
+          <p>
+            {{ $t('components.catalog.readmeDisclaimer') }}
+          </p>
+          <p>
+            <UiButton
+              :content="$t('components.catalog.viewReadme')"
+              submit
+              :href="repoUrl"
+              target="_blank"
+            />
+          </p>
         </template>
       </GuideStepBlock>
-      <GuideSection>
-        <template #header> Initialize HawkCatcher </template>
-        <template #content>
-          <p>
-            Create HawkCatcher class instance when script will be ready and pass
-            your integration token as follow:
-          </p>
-          <CodeBlock language="javascript" copyable>
-            const hawk = new HawkCatcher({token: '{{ project.token }}'});
-          </CodeBlock>
-          Or
-          <CodeBlock language="html" copyable>
-            &lt;script
-            src="https://cdn.rawgit.com/codex-team/hawk.javascript/master/hawk.js"
-            onload="const hawk = new HawkCatcher({token: '{{
-              project.token
-            }}'})"&gt;&lt;/script&gt;
-          </CodeBlock>
-          <p>Initialization settings:</p>
-          <table class="guide-page__instructions-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Require</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>token</td>
-                <td>string</td>
-                <td>require</td>
-                <td>Your project's integration token.</td>
-              </tr>
-              <tr>
-                <td>release</td>
-                <td>string/number</td>
-                <td>optional</td>
-                <td>
-                  Unique identifier of the release. Used for source map
-                  consuming.
-                </td>
-              </tr>
-              <tr>
-                <td>user</td>
-                <td>
-                  {id: string, name?: string, image?: string, url?: string}
-                </td>
-                <td>optional</td>
-                <td>Current authenticated user.</td>
-              </tr>
-              <tr>
-                <td>context</td>
-                <td>object</td>
-                <td>optional</td>
-                <td>Any data you want to pass with every message.</td>
-              </tr>
-              <tr>
-                <td>vue</td>
-                <td>Vue constructor</td>
-                <td>optional</td>
-                <td>
-                  Pass Vue constructor to set up the [Vue
-                  integration](#integrate-to-vue-application).
-                </td>
-              </tr>
-              <tr>
-                <td>disableGlobalErrorsHandling</td>
-                <td>boolean</td>
-                <td>optional</td>
-                <td>Do not initialize global errors handling.</td>
-              </tr>
-              <tr>
-                <td>beforeSend</td>
-                <td>function(event) => event</td>
-                <td>optional</td>
-                <td>
-                  This method allows you to filter any data you don't want
-                  sending to Hawk.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </template>
-      </GuideSection>
-      <GuideSection>
-        <template #header> Send Exceptions Manually </template>
-        <template #content>
-          <p>
-            After initializing you can catch exceptions manually in try-catch
-            with .send() method follows:
-          </p>
-          <CodeBlock language="javascript" copyable>
-            try { <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;throw new Error('My First Hawk Error');<br />
-            } catch (e) { <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;hawk.send(e);<br />
-            }
-          </CodeBlock>
-        </template>
-      </GuideSection>
     </div>
   </div>
 </template>
@@ -147,6 +164,7 @@ import GuideStepBlock from '../../GuideStepBlock';
 import GuideHeader from '../../GuidePageHeader';
 import TokenBlock from '../../../project/TokenBlock';
 import CodeBlock from '../../../utils/CodeBlock';
+import UiButton from '../../../utils/UiButton';
 
 export default {
   name: 'SetupJavascriptCatcher',
@@ -155,7 +173,14 @@ export default {
     GuideHeader,
     TokenBlock,
     CodeBlock,
-    GuideSection
+    GuideSection,
+    UiButton
+  },
+  data(){
+    return {
+      repoUrl: 'https://github.com/codex-team/hawk.javascript',
+      readmeUrl: 'https://github.com/codex-team/hawk.javascript/blob/master/README.md'
+    }
   },
   computed: {
     /**

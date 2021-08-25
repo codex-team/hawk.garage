@@ -6,17 +6,28 @@
   &__instructions {
     padding: 40px;
     overflow: hidden;
+
+    &-header {
+      margin-bottom: 20px;
+      color: var(--color-text-second);
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.15px;
+      text-transform: uppercase;
+    }
+
+    a {
+      color: var(--color-text-highlighted);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
-  &__instructions-header {
-    margin-bottom: 20px;
-    color: var(--color-text-second);
-    font-weight: bold;
-    font-size: 12px;
-    letter-spacing: 0.15px;
-  }
   &__instructions-table {
     border-collapse: collapse;
+    width: 100%;
   }
 
   &__instructions-table th {
@@ -24,10 +35,10 @@
   }
 
   &__instructions-table td,
-  th {
+  &__instructions-table th {
     vertical-align: middle;
     text-align: left;
-    padding: 6px 13px;
+    padding: 10px 13px;
     border: 1px solid var(--color-delimiter-line);
   }
 
@@ -65,5 +76,12 @@
 
   .code-block {
     margin: 15px 0;
+  }
+
+  code {
+    background: var(--color-bg-third);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin: 0 2px;
   }
 }

@@ -32,6 +32,20 @@
 <script>
 import hljs from 'highlight.js';
 import notifier from 'codex-notifier';
+import shell from 'highlight.js/lib/languages/shell';
+import go from 'highlight.js/lib/languages/go';
+import python from 'highlight.js/lib/languages/python';
+import php from 'highlight.js/lib/languages/php';
+import typescript from 'highlight.js/lib/languages/typescript';
+import javascript from 'highlight.js/lib/languages/javascript';
+
+
+hljs.registerLanguage('shell', shell);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('typescript', typescript);
+hljs.registerLanguage('go', go);
+hljs.registerLanguage('php', php);
+hljs.registerLanguage('python', python);
 
 export default {
   name: 'CodeBlock',
@@ -55,7 +69,10 @@ export default {
      * @returns {boolean}
      */
     isSingleLine() {
-      return this.$slots.default[0].text.includes('\n') === false;
+      const hasLineBreak = this.$slots.default[0].text.includes('\n') === true;
+      const hasBr = this.$slots.default[0].text.includes('<br>') === true;
+
+      return !hasLineBreak && !hasBr;
     },
   },
   /**
