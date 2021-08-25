@@ -7,7 +7,7 @@ import {
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
 } from './queries';
 import * as api from '../index.ts';
 import { ChartData } from '../../types/events';
@@ -34,6 +34,23 @@ export async function updateProject(projectInfo) {
   const { image, ...rest } = projectInfo;
 
   return (await api.callOld(MUTATION_UPDATE_PROJECT, rest, { image })).updateProject;
+}
+
+/**
+ * @typedef {object} UpdateIntegrationTokenResponse
+ * @property {string} recordId - updated project id
+ * @property {ProjectDBScheme} record - updated project object
+ */
+
+/**
+ * Generates new integration token by project ID
+ *
+ * @param {String} id - project id
+ *
+ * @returns {Promise<APIResponse<UpdateIntegrationTokenResponse>>}
+ */
+export function generateNewIntegrationToken(id) {
+  return api.call(MUTATION_GENERATE_NEW_INTEGRATION_TOKEN, { id });
 }
 
 /**

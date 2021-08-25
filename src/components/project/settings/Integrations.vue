@@ -10,13 +10,30 @@
       class="projects-integrations-settings-page__token"
       :token="project.token"
     />
+    <i18n
+      path="projects.settings.integrations.revokeText"
+      tag="div"
+      class="projects-integrations-settings-page__revoke-container"
+    >
+      <template #revoke>
+        <span
+          class="projects-integrations-settings-page__revoke-button"
+          @click="revokeIntegrationToken()"
+        >
+          {{ $t('projects.settings.integrations.revoke') }}
+        </span>
+      </template>
+    </i18n>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import { Project } from '../../../types/project';
+import {Project} from '../../../types/project';
 import TokenBlock from '../TokenBlock.vue';
+import {ActionType} from "../../utils/ConfirmationWindow/types";
+import {GENERATE_NEW_INTEGRATION_TOKEN} from '@/store/modules/projects/actionTypes';
+import notifier from "codex-notifier";
 
 export default Vue.extend({
   name: 'ProjectIntegrationsSettings',
@@ -32,6 +49,30 @@ export default Vue.extend({
       required: true,
     },
   },
+  methods: {
+    /**
+     * Revokes integration token with confirmation
+     */
+    revokeIntegrationToken(): void {
+      this.$confirm.open({
+        title: this.$t('projects.settings.integrations.revokeConfirmation.title') as string,
+        description: this.$t('projects.settings.integrations.revokeConfirmation.description') as string,
+        actionType: ActionType.SUBMIT,
+        onConfirm: async () => {
+          try {
+            await this.$store.dispatch(GENERATE_NEW_INTEGRATION_TOKEN, { projectId: this.project.id });
+          } catch (e) {
+            console.error(e);
+
+            notifier.show({
+              message: this.$t(e.message) as string,
+              style: 'error',
+            });
+          }
+        }
+      });
+    }
+  }
 });
 </script>
 
@@ -41,6 +82,23 @@ export default Vue.extend({
   .projects-integrations-settings-page {
     &__token {
       margin-top: 15px;
+    }
+
+    &__revoke-container {
+      color: var(--color-text-second);
+      font-size: 14px;
+      line-height: 20px;
+
+      margin-top: 15px;
+    }
+
+    &__revoke-button {
+      display: inline-block;
+      border-bottom: 1px solid var(--color-text-second);
+      line-height: 1em;
+      padding-bottom: 1px;
+
+      cursor: pointer;
     }
   }
 </style>

@@ -70,8 +70,9 @@ export default {
     currentProjectId() {
       return this.$route.params.projectId;
     },
+    
     project() {
-      return this.$store.state.projects.list.find(_project => _project.id === this.projectId);
+      return this.$store.getters.getProjectById(this.projectId);
     },
 
     lastEventTitle() {
