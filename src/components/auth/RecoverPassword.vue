@@ -51,7 +51,7 @@ export default Vue.extend({
      * Field for displaying errors
      */
     message: {text: any, type: string} | null
-  }{
+    } {
     return {
       fields: [
         {
@@ -65,7 +65,7 @@ export default Vue.extend({
       ],
       submitText: this.$t('authPages.recoverPassword'),
       message: null,
-    }
+    };
   },
 
   methods: {
@@ -95,8 +95,8 @@ export default Vue.extend({
           style: 'error',
         });
       }
-    }
-  }
+    },
+  },
 });
 </script>
 

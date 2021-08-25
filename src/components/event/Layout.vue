@@ -112,7 +112,7 @@ export default Vue.extend({
     /**
      * It can be empty event if it was archived
      */
-    if (this.event){
+    if (this.event) {
       this.markEventAsVisited();
     }
   },

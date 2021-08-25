@@ -50,7 +50,7 @@ export default {
     Badge,
     EntityImage,
   },
-  mixins: [projectBadges],
+  mixins: [ projectBadges ],
   props: {
     projectId: {
       type: String,
@@ -70,7 +70,7 @@ export default {
     currentProjectId() {
       return this.$route.params.projectId;
     },
-    
+
     project() {
       return this.$store.getters.getProjectById(this.projectId);
     },

@@ -38,8 +38,8 @@ const i18n = new VueI18n({
     en: messages,
   },
   pluralizationRules: {
-    'ru': russianPluralization
-  }
+    'ru': russianPluralization,
+  },
 });
 
 const loadedLanguages = [ 'en' ];

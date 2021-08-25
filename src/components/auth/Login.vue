@@ -96,7 +96,7 @@ export default {
     /**
      * If email is prefilled, set focus to the password
      */
-    if (this.emailPrefilled){
+    if (this.emailPrefilled) {
       this.$refs.form.$el.querySelector('input[name="password"]').focus();
     }
   },

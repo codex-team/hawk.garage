@@ -123,7 +123,9 @@ export default {
       /**
        * Handler of window resize
        */
-      onResize: () => {},
+      onResize: () => {
+        // do nothing
+      },
 
       /**
        * Old window width
@@ -198,8 +200,8 @@ export default {
       }
 
       this.chartData = this.$store.state.projects.charts[this.projectId];
-    } catch (error){
-      if (error instanceof NotFoundError){
+    } catch (error) {
+      if (error instanceof NotFoundError) {
         notifier.show({
           message: this.$t('projects.notFound'),
           style: 'error',

@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from 'vue';
+import Vue, { PropType } from 'vue';
 import UiButton from '../utils/UiButton.vue';
 import Placeholder from './ProjectPlaceholder.vue';
 import { Workspace } from '../../types/workspaces';

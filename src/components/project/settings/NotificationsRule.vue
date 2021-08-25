@@ -143,13 +143,11 @@ export default Vue.extend({
      * formatted for TooltipMenu component
      */
     menuOptions(): TooltipMenuItem[] {
-      const $this = this;
-
       return [
         {
           title: this.$t('projects.settings.notifications.editRule') as string,
-          onClick() {
-            $this.$emit('editClicked', $this.rule.id);
+          onClick: () => {
+            this.$emit('editClicked', this.rule.id);
           },
         },
         {

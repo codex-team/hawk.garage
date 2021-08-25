@@ -191,7 +191,7 @@ const actions = {
    * Send request to generate new integration token for project
    *
    * @param {Function} commit - standard Vuex commit function
-   * @param {String} projectId - project id for generation new token
+   * @param {string} projectId - project id for generation new token
    *
    * @returns {Promise<void>}
    */
@@ -204,7 +204,7 @@ const actions = {
       commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
         projectId,
         key: 'token',
-        value: token
+        value: token,
       });
     }
   },
@@ -389,7 +389,7 @@ const mutations = {
   [mutationTypes.UPDATE_PROJECT_PROPERTY](state, {
     projectId,
     key,
-    value
+    value,
   }) {
     const project = state.list.find(_project => _project.id === projectId);
 

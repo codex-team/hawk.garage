@@ -8,21 +8,21 @@
   </div>
 </template>
 
-<script>
-import * as api from './api/index.ts';
+<script lang="ts">
+import * as api from './api/';
+import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
-import { NotifierButtonType } from './components/utils/NotifierWindow/types.ts';
+import Vue from 'vue';
+import { NotifierButtonType } from './components/utils/NotifierWindow/types';
 
-export default {
+export default Vue.extend({
   name: 'App',
   computed: {
     /**
      * Returns classname according to the theme name
-     *
-     * @returns {string}
      */
-    themeClass() {
+    themeClass(): string {
       return `app--theme--${this.$store.state.app.theme}`;
     },
   },
@@ -30,7 +30,7 @@ export default {
   /**
    * Vue hook. Called synchronously after the instance is created
    */
-  created() {
+  created(): void {
     /**
      * Setup watching on auth state
      */
@@ -60,9 +60,9 @@ export default {
      */
     eventBus.$on('serviceWorkerUpdated', () => {
       this.$notify.open({
-        description: this.$t('components.newVersionWindow.message'),
+        description: this.$t('components.newVersionWindow.message') as string,
         notifierButtons: [ {
-          text: this.$t('components.newVersionWindow.refresh'),
+          text: this.$t('components.newVersionWindow.refresh') as string,
           type: NotifierButtonType.SUBMIT,
           onClick: () => {
             window.location.reload();
@@ -74,10 +74,8 @@ export default {
 
   /**
    * Fired when all component nodes are ready
-   *
-   * @returns {void}
    */
-  mounted() {
+  mounted(): void {
     /**
      * Prepare "ripple" effect
      */
@@ -88,13 +86,12 @@ export default {
     /**
      * Add "ripple" effects: wave navigation on clicked elements
      * To active effect, add "data-ripple" attribute to any clickable element
-     *
-     * @returns {void}
      */
-    enableRipple() {
-      this.$refs['app'].addEventListener('mousedown', (e) => {
-        const el = e.target.nodeType === Node.ELEMENT_NODE ? e.target : e.target.parentNode;
-        const rEl = el.closest('[data-ripple]');
+    enableRipple(): void {
+      (this.$refs.app as HTMLElement)?.addEventListener('mousedown', (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const el = target.nodeType === Node.ELEMENT_NODE ? target : target.parentElement;
+        const rEl = el?.closest<HTMLElement>('[data-ripple]');
 
         if (!rEl) {
           return;
@@ -123,7 +120,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style src="./styles/base.css"></style>

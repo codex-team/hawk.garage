@@ -223,7 +223,7 @@ export default Vue.extend({
     EntityImage,
     CustomSelect,
     TextFieldSet,
-    UiCheckboxWithLabel
+    UiCheckboxWithLabel,
   },
   props: {
     /**
@@ -363,6 +363,7 @@ export default Vue.extend({
      */
     planDueDate(): Date {
       const lastChargeDate = new Date(this.workspace.lastChargeDate);
+
       return new Date(lastChargeDate.setMonth(lastChargeDate.getMonth() + 1));
     },
 
@@ -391,7 +392,7 @@ export default Vue.extend({
         return date.toDateString();
       }
 
-      return this.planDueDate.toDateString()
+      return this.planDueDate.toDateString();
     },
 
     /**
@@ -431,7 +432,7 @@ export default Vue.extend({
       }
 
       return !this.isTariffPlanExpired;
-    }
+    },
   },
   watch: {
     /**
@@ -474,29 +475,28 @@ export default Vue.extend({
       if (this.isAcceptedAllAgreements) {
         await this.processPayment();
       } else {
-        if(this.isRecurrent){
-           if(!this.isAcceptedRecurrentPaymentAgreement){
-              notifier.show({
-                message: this.$t('billing.paymentDetails.didNotAcceptRecurrentPaymentAgreement') as string,
-                style: 'error',
-                time: 5000,
-              });
-           }
-           if(!this.isAcceptedChargingEveryMonth){
-              notifier.show({
-                message: this.$t('billing.paymentDetails.didNotAcceptChargingEveryMonth') as string,
-                style: 'error',
-                time: 5000,
-              });             
-           }
-        }
-        else{
+        if (this.isRecurrent) {
+          if (!this.isAcceptedRecurrentPaymentAgreement) {
             notifier.show({
-              message: this.$t('billing.paymentDetails.didNotAccept') as string,
+              message: this.$t('billing.paymentDetails.didNotAcceptRecurrentPaymentAgreement') as string,
               style: 'error',
               time: 5000,
             });
           }
+          if (!this.isAcceptedChargingEveryMonth) {
+            notifier.show({
+              message: this.$t('billing.paymentDetails.didNotAcceptChargingEveryMonth') as string,
+              style: 'error',
+              time: 5000,
+            });
+          }
+        } else {
+          notifier.show({
+            message: this.$t('billing.paymentDetails.didNotAccept') as string,
+            style: 'error',
+            time: 5000,
+          });
+        }
       }
     },
 
@@ -711,12 +711,8 @@ export default Vue.extend({
         margin-left: 0;
       }
 
-      &-autoProlongation {
-        margin-bottom: 28px;
-
-        &-item {
-          margin-bottom: 9px;
-        }
+      &-item {
+        margin-bottom: 9px;
       }
     }
   }

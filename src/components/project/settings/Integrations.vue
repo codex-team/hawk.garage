@@ -29,11 +29,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Project} from '../../../types/project';
+import { Project } from '../../../types/project';
 import TokenBlock from '../TokenBlock.vue';
-import {ActionType} from "../../utils/ConfirmationWindow/types";
-import {GENERATE_NEW_INTEGRATION_TOKEN} from '@/store/modules/projects/actionTypes';
-import notifier from "codex-notifier";
+import { ActionType } from '../../utils/ConfirmationWindow/types';
+import { GENERATE_NEW_INTEGRATION_TOKEN } from '@/store/modules/projects/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'ProjectIntegrationsSettings',
@@ -69,10 +69,10 @@ export default Vue.extend({
               style: 'error',
             });
           }
-        }
+        },
       });
-    }
-  }
+    },
+  },
 });
 </script>
 
@@ -85,18 +85,18 @@ export default Vue.extend({
     }
 
     &__revoke-container {
+
+      margin-top: 15px;
       color: var(--color-text-second);
       font-size: 14px;
       line-height: 20px;
-
-      margin-top: 15px;
     }
 
     &__revoke-button {
       display: inline-block;
-      border-bottom: 1px solid var(--color-text-second);
-      line-height: 1em;
       padding-bottom: 1px;
+      line-height: 1em;
+      border-bottom: 1px solid var(--color-text-second);
 
       cursor: pointer;
     }

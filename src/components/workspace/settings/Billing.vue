@@ -51,7 +51,7 @@ export default Vue.extend({
    * @param from - the current route being navigated away from
    * @param next - this function must be called to resolve the hook.
    */
-  beforeRouteEnter(to: Route, from: Route, next: Function): void {
+  beforeRouteEnter(to: Route, from: Route, next): void {
     next(async vm => {
       const user = vm.$store.state.user.data;
 
@@ -64,7 +64,7 @@ export default Vue.extend({
 
       if (!isAdmin) {
         notifier.show({
-          message: vm.$t('workspaces.settings.errors.accessDenied'),
+          message: vm.$t('workspaces.settings.errors.accessDenied') as string,
           time: 5000,
           style: 'error',
         });
