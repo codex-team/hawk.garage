@@ -15,6 +15,7 @@
           v-if="event"
           :event="event"
           :project-id="projectId"
+          :isLoading="loading"
         />
         <div
           v-else-if="loading"

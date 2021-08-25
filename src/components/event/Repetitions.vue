@@ -17,7 +17,13 @@
         {{ $t('event.repetitions.title') }}
       </div>
 
+      <p
+        v-if="repetitionsLoading"
+      >
+        {{ $t("common.loading") }}
+      </p>
       <div
+        v-else
         v-for="date in groupedRepetitions.keys()"
         :key="date"
         class="event-repetitions__table"
@@ -65,6 +71,11 @@ export default Vue.extend({
   data: function () {
     return {
       groupedRepetitions: new Map(),
+
+      /**
+       * Flag determines if repetitions are loading
+       */
+      repetitionsLoading: true
     };
   },
   computed: {
@@ -101,6 +112,8 @@ export default Vue.extend({
     });
 
     this.groupedRepetitions = groupedRepetitions;
+
+    this.repetitionsLoading = false;
   },
   methods: {
     /**
