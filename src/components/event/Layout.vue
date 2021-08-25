@@ -37,7 +37,6 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
 import { HawkEvent } from '@/types/events';
 import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
-import { mapGetters } from 'vuex';
 
 export default Vue.extend({
   name: 'EventLayout',
@@ -47,6 +46,13 @@ export default Vue.extend({
   },
   data() {
     return {
+      /**
+       * Original (first) event data
+       *
+       * @type {HawkEvent}
+       */
+      repetitionId: this.$route.params.repetitionId,
+
       /**
        * Current project id
        *
@@ -78,18 +84,14 @@ export default Vue.extend({
   },
 
   computed: {
-    ...mapGetters({
-      getEvent: 'getProjectEventRepetition'
-    }),
     /**
      * Current viewed event
      */
     event(): HawkEvent {
-      const { repetitionId, eventId, projectId } = this.$route.params;
-
-      return this.getEvent(projectId, eventId, repetitionId);
+      return this.$store.getters.getProjectEventRepetition(this.projectId, this.eventId, this.repetitionId);
     },
   },
+
   /**
    * Vue created hook. Fetches error's data
    *

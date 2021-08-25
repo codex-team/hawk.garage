@@ -9,7 +9,7 @@
         v-for="repetition in repetitions"
         :key="repetition.id"
         class="repetitions-list__row"
-        @click="goToRepetition(repetition.id)"
+        @click="goToRepetition(repetition)"
       >
         <td class="repetitions-list__col repetitions-list__col--fixed-short">
           <span class="repetitions-list__time">
@@ -129,15 +129,15 @@ export default {
     /**
      * Provides navigation to the single repetition
      *
-     * @param {string} repetitionId - clicked repetition id
+     * @param {Repetition} repetition - clicked repetition
      */
-    goToRepetition(repetitionId) {
+    goToRepetition(repetition) {
       this.$router.push({
         name: 'event-overview',
         params: {
           projectId: this.projectId,
           eventId: this.event.id,
-          repetitionId: repetitionId,
+          repetitionId: repetition.id,
         },
       });
     },
