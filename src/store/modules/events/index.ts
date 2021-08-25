@@ -268,6 +268,9 @@ const module: Module<EventsModuleState, RootState> = {
         let repetition;
 
         if (!repetitionId) {
+          /**
+           * Repetitions go in reverse order, so first in array is latest occurred
+           */
           repetition = state.repetitions[key][0];
         } else {
           repetition = state.repetitions[key].find(item => {
