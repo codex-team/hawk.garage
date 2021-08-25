@@ -142,6 +142,7 @@ export const QUERY_LATEST_REPETITIONS = `
         repetitions(limit: $limit) {
           id
           payload {
+            title,
             release
             timestamp
             context
