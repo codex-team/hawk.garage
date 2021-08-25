@@ -1,0 +1,36 @@
+name: Cypress testing
+
+on: [pull_request]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    container:
+      image: node:12.11.1-alpine
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 15672:15672
+
+      api:
+        image: codexteamuser/hawk-api:stage
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+
+      - name: Install deps
+        run: yarn
+
+      - name: E2E
+        run: yarn e2e:ci
+
