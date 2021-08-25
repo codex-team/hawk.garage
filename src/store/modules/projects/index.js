@@ -23,6 +23,7 @@ export const mutationTypes = {
   ADD_PROJECT: 'ADD_PROJECT', // Add new project to the projects list
   REMOVE_PROJECTS_BY_WORKSPACE_ID: 'REMOVE_PROJECTS_BY_WORKSPACE_ID', // Remove projects by workspace id from list
   UPDATE_PROJECT: 'UPDATE_PROJECT', // Set new info about a project
+  UPDATE_PROJECT_PROPERTY: 'UPDATE_PROJECT_PROPERTY', // Updates project property by key
   REMOVE_PROJECT: 'REMOVE_PROJECT', // Remove project by id
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
@@ -197,10 +198,14 @@ const actions = {
   async [GENERATE_NEW_INTEGRATION_TOKEN]({ commit }, { projectId }) {
     const response = await projectsApi.generateNewIntegrationToken(projectId);
 
-    const updatedProject = response.data.generateNewIntegrationToken.record;
+    const token = response.data.generateNewIntegrationToken.record.token;
 
-    if (updatedProject) {
-      commit(mutationTypes.UPDATE_PROJECT, updatedProject);
+    if (token) {
+      commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+        projectId,
+        key: 'token',
+        value: token
+      });
     }
   },
 
@@ -370,18 +375,25 @@ const mutations = {
   [mutationTypes.UPDATE_PROJECT](state, project) {
     const index = state.list.findIndex(element => element.id === project.id);
 
-    /**
-     * Merge an old project object with new data
-     */
-    const updatedProjectObject = {
-      ...state.list[index],
-      ...project
-    }
+    state.list[index] = project;
+  },
 
-    /**
-     * Update project item
-     */
-    Vue.set(state.list, index, updatedProjectObject);
+  /**
+   * Updates project property by provided key and value
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {string} projectId - updating project id
+   * @param {string} key - property in project object to update
+   * @param {string | number | boolean} value - new value
+   */
+  [mutationTypes.UPDATE_PROJECT_PROPERTY](state, {
+    projectId,
+    key,
+    value
+  }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    Vue.set(project, key, value);
   },
 
   /**
