@@ -110,7 +110,13 @@
       },
       "integrations": {
         "title": "Integrations",
-        "projectTokenLabel": "Your Integration token for"
+        "projectTokenLabel": "Your Integration token for",
+        "revokeText": "You can {revoke} this token and get the new one.",
+        "revoke": "Revoke",
+        "revokeConfirmation": {
+          "title": "Revoke integration token?",
+          "description": "After this action, Hawk will stop accepting events with the old integration token. You will need to replace it with a new one in your project."
+        }
       },
       "notifications": {
         "title": "Notifications",
@@ -359,6 +365,12 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
+    "suspectedCommits":{
+      "header": "Suspected commits",
+      "hide": "hide",
+      "committed": "committed",
+      "moreRelease":"{numberOfCommits} more commit in this release | {numberOfCommits} more commits in this release"
+    },
     "emptyData": "This event has no context",
     "notFound": "Event not found. Probably it was archived.",
     "addons": {
@@ -411,6 +423,14 @@
       "nov",
       "dec"
     ],
+    "relativeTime":{
+      "secondsAgo":"few seconds ago",
+      "minutesAgo":"a minute ago | {numberOfMinutes} minutes ago",
+      "hoursAgo":"an hour ago | {numberOfHours} hours ago",
+      "daysAgo":"yesterday | {numberOfDays} days ago",
+      "monthsAgo":"a month ago | {numberOfMonths} months ago",
+      "yearsAgo":"a year ago | {numberOfYears} years ago"
+    },
     "readMore": "Read more"
   },
   "errors": {

@@ -70,8 +70,9 @@ export default {
     currentProjectId() {
       return this.$route.params.projectId;
     },
+    
     project() {
-      return this.$store.state.projects.list.find(_project => _project.id === this.projectId);
+      return this.$store.getters.getProjectById(this.projectId);
     },
 
     lastEventTitle() {
@@ -110,6 +111,9 @@ export default {
 
 <style>
   .project-menu-item {
+    --picture-size: 26px;
+    --picture-margin: 15px;
+
     display: flex;
     align-items: stretch;
     justify-content: flex-start;
@@ -132,6 +136,10 @@ export default {
       &:hover {
         background: color-mod(var(--color-bg-sidebar) lightness(+1%));
       }
+    }
+
+    &__info {
+      max-width: calc(100% - var(--picture-size) - var(--picture-margin) - 45px); /* 45 is estimated badge (2-digit) width */
     }
 
     &__name {
@@ -164,7 +172,7 @@ export default {
     }
 
     &__picture {
-      margin-right: 15px;
+      margin-right: var(--picture-margin);
     }
 
     &__events-number {

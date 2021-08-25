@@ -19,6 +19,11 @@ export const REMOVE_PROJECTS_BY_WORKSPACE_ID = 'REMOVE_PROJECTS_BY_WORKSPACE_ID'
 export const UPDATE_PROJECT = 'UPDATE_PROJECT';
 
 /**
+ * Send request to generate new integration token
+ */
+export const GENERATE_NEW_INTEGRATION_TOKEN = 'GENERATE_NEW_INTEGRATION_TOKEN';
+
+/**
  * Send request to remove project
  */
 export const REMOVE_PROJECT = 'REMOVE_PROJECT';

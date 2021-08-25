@@ -43,6 +43,23 @@ export const MUTATION_UPDATE_PROJECT = `
 `;
 
 // language=GraphQL
+/**
+ * Mutation for generating new integration token
+ */
+export const MUTATION_GENERATE_NEW_INTEGRATION_TOKEN = `
+  mutation generateNewIntegrationToken(
+    $id: ID!
+  ) {
+    generateNewIntegrationToken(id: $id)
+    {
+      record {
+        token
+      }
+    }
+  }
+`;
+
+// language=GraphQL
 export const QUERY_RECENT_ERRORS = `
   query RecentErrors($projectId: ID!) {
     recent(projectId: $projectId) {

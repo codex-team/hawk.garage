@@ -109,8 +109,8 @@ export default Vue.extend({
 <style>
 @keyframes panel-in {
   0% {
-    opacity: 0;
     transform: translateY(20px);
+    opacity: 0;
   }
 
   80% {
@@ -137,8 +137,8 @@ export default Vue.extend({
       right: 30px;
       bottom: 30px;
       z-index: 9995;
-      border-radius: 12px;
       background-color: var(--color-bg-second);
+      border-radius: 12px;
       box-shadow: 0 10px 32px 1px rgba(0,0,0,0.48);
     }
   }
@@ -148,17 +148,17 @@ export default Vue.extend({
     padding: 10px 15px;
 
     &__title {
+      font-weight: normal;
       font-size: 16px;
       line-height: 22px;
-      font-weight: normal;
       vertical-align: middle;
     }
 
     &__button {
-      padding: 5px 11px;
       margin-right: 10px;
-      border-radius: 13px;
       margin-left: 17px;
+      padding: 5px 11px;
+      border-radius: 13px;
     }
 
     &__close-button {
@@ -167,8 +167,8 @@ export default Vue.extend({
       justify-content: center;
       width: 24px;
       height: 24px;
-      cursor: pointer;
       margin-left: 6px;
+      cursor: pointer;
 
       svg {
         width: 14px;
