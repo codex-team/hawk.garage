@@ -18,6 +18,13 @@
       "Network Error": "Server is not available. Check your internet connection."
     }
   },
+  "layout": {
+    "aside": {
+      "emptyProjectsList": "You haven't any integrations here.",
+      "createFirstProjectLabel": "Let’s create the new one.",
+      "createFirstProjectButton": "Create a project"
+    }
+  },
   "components": {
     "changePasswordFieldSet": {
       "newPassword": "New password",
@@ -35,6 +42,26 @@
       "title": "Confirm action",
       "continue": "Continue",
       "cancel": "Cancel"
+    },
+    "newVersionWindow":{
+      "message":"The new version is available",
+      "refresh":"Refresh"
+    },
+    "catalog": {
+      "step1": "Add a project",
+      "step2": "Integrate a catcher",
+      "whatToDo": "To start track events, you need to connect one of our Catchers",
+      "whatIsCatcher": "Catcher is a small script that will catch errors in your application and send it to Hawk.",
+      "selectCatcherHeading": "Select a Catcher",
+      "catchers": {
+        "nodejs": "Track errors from the server application built on JS or TS",
+        "php": "Can be connected as a standalone script or as a monolog provider",
+        "js": "Advanced catcher with source maps support. Supports TS.",
+        "python": "Small, simple and full-featured catcher for any kind of scripts.",
+        "go": "Deadly simple and fast errors tracking",
+        "scala": "Boost your scala application quality"
+      },
+      "install": "Install"
     }
   },
   "forms": {
@@ -285,6 +312,8 @@
       },
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
       "didNotAccept": "You need to accept the payment agreement to proceed with payment",
+      "didNotAcceptRecurrentPaymentAgreement": "You need to accept the recurrent payments agreement to proceed with payment",
+      "didNotAcceptChargingEveryMonth": "You need allow charges from your bank card every month to proceed with payment",
       "allowCardSaving": "Save card for future payments",
       "goToPaymentService": "Go to payment service",
       "payWithSelectedCard": "Pay with selected card"
@@ -381,7 +410,8 @@
       "oct",
       "nov",
       "dec"
-    ]
+    ],
+    "readMore": "Read more"
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it."

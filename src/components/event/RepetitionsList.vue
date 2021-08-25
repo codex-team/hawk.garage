@@ -30,6 +30,13 @@
           </span>
         </td>
         <td class="repetitions-list__col">
+          <template
+            v-if="repetition.payload.title"
+          >
+            {{ repetition.payload.title }}
+          </template>
+        </td>
+        <td class="repetitions-list__col">
           <span
             v-if="repetition.payload.addons && repetition.payload.addons.userAgent"
             class="repetitions-list__user-browser"

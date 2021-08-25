@@ -430,7 +430,8 @@ const module: Module<EventsModuleState, RootState> = {
       { commit }: { commit: Commit },
       { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number }
     ): Promise<HawkEventRepetition[]> {
-      const repetitions = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
+      const response = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
+      const repetitions = response.data.project.event.repetitions;
 
       repetitions.map(repetition => {
         // save to the state

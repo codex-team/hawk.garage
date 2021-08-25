@@ -15,3 +15,8 @@ export type Entries<T> = {
  * type ValueOfFoo = ValueOf<Foo>; // string | number
  */
 export type ValueOf<T> = T[keyof T];
+
+/**
+ * Conveniently represents flow's "Maybe" type https://flow.org/en/docs/types/maybe/
+ */
+export type Maybe<T> = null | undefined | T;

@@ -21,7 +21,7 @@ import { ChartData } from '../../types/events';
 export async function createProject(projectInfo) {
   const { image, ...rest } = projectInfo;
 
-  return (await api.callOld(MUTATION_CREATE_PROJECT, rest, { image })).createProject;
+  return (await api.call(MUTATION_CREATE_PROJECT, rest, { image }));
 }
 
 /**
