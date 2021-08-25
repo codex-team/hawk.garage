@@ -382,14 +382,11 @@ const actions = {
    * Call change plan for free plan mutation
    *
    * @param {Function} commit - VueX commit method
-   * @param {object} getters - Store getters
    * @param {string} workspaceId - id of workspace to change plan
-   * @param {string} planId - id of plan to set
-   * @param getters.workspaceId
    * @returns {Promise<void>}
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
-  async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit, getters }, { workspaceId }) {
+  async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit }, { workspaceId }) {
     const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 
     commit(mutationTypes.SET_PLAN, {
