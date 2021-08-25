@@ -37,7 +37,7 @@ export async function updateProject(projectInfo) {
 }
 
 /**
- * @typedef {object} UpdateProjectResponse
+ * @typedef {object} UpdateIntegrationTokenResponse
  * @property {string} recordId - updated project id
  * @property {ProjectDBScheme} record - updated project object
  */
@@ -47,10 +47,10 @@ export async function updateProject(projectInfo) {
  *
  * @param {String} id - project id
  *
- * @returns {Promise<APIResponse<UpdateProjectResponse>>}
+ * @returns {Promise<APIResponse<UpdateIntegrationTokenResponse>>}
  */
-export async function generateNewIntegrationToken(id) {
-  return (await api.call(MUTATION_GENERATE_NEW_INTEGRATION_TOKEN, { id }));
+export function generateNewIntegrationToken(id) {
+  return api.call(MUTATION_GENERATE_NEW_INTEGRATION_TOKEN, { id });
 }
 
 /**
