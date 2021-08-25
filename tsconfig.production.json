@@ -1,6 +1,7 @@
 {
   "extends": "./config/tsconfig/base",
   "exclude": [
-    "src/storybook"
+    "src/storybook",
+    "cypress"
   ]
 }

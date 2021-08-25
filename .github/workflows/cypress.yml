@@ -1,0 +1,42 @@
+name: Cypress testing
+
+on: [push]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    container:
+      image: cypress/browsers:node14.16.0-chrome89-ff86
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+
+      rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+          - 15672:15672
+
+      api:
+        image: codexteamuser/hawk-api:stage
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v2
+
+      - name: Install deps
+        run: yarn
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          config: video=false
+          browser: chrome
+          start: yarn serve
+          env: VUE_APP_API_ENDPOINT=http://localhost:4000,VUE_APP_API_AUTH_GITHUB=http://localhost:3000/auth/github,VUE_APP_API_AUTH_GOOGLE=http://localhost:3000/auth/google,VUE_APP_CLOUDPAYMENTS_PUBLIC_ID=test_api_00000000000000000000001
+
