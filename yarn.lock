@@ -1164,14 +1164,20 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@hawk.so/javascript@^2.10.0":
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-2.10.0.tgz#ee69bb699421ec3dd832b1a2a0d0273f686fdd2e"
-  integrity sha512-AKXwr5tMMyQwrEsGkPUBUTg0H2cXeC0oGzKznzytuDEgihhD6T7wea8nOcPPCG07uESvhaTb0e7ni+v6wYIfLw==
+"@hawk.so/javascript@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.0.0.tgz#2149d57f18c60bb84961b264fab85dbf7391dc3c"
+  integrity sha512-U+/DZPnhjX5iHfnqfGkzCskY7ap72VcMAIL2JKHWTMqM89nhqXGziVgqOjofdynnH2Bt2zx35oOHc6j+IzIWAw==
   dependencies:
+    "@hawk.so/types" "^0.1.13"
     error-stack-parser "^2.0.6"
-    hawk.types "https://github.com/codex-team/hawk.types"
-    jwt-decode "^3.1.2"
+
+"@hawk.so/types@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@hawk.so/types/-/types-0.1.13.tgz#5a6a52a78c79e2ab99d8d5d339cb937b4442166d"
+  integrity sha512-vu0mWNWTr/WSQQqwmPbSQqrJmiXHiw90m8zkWjYLYYvaUgMahNsooG6FlonkmuYRR15kvMViuSTY55P4YEnNQg==
+  dependencies:
+    "@types/mongodb" "^3.5.34"
 
 "@hawk.so/webpack-plugin@^1.0.0":
   version "1.0.0"
@@ -7132,12 +7138,6 @@ hawk.types@codex-team/hawk.types:
   dependencies:
     "@types/mongodb" "^3.5.34"
 
-"hawk.types@https://github.com/codex-team/hawk.types":
-  version "0.1.6"
-  resolved "https://github.com/codex-team/hawk.types#7d6cf4c857759dad564fdc2ed77cc1cdda7484e5"
-  dependencies:
-    "@types/mongodb" "^3.5.34"
-
 he@1.2.x, he@^1.1.0, he@^1.1.1, he@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
@@ -8304,11 +8304,6 @@ jstransformer@1.0.0:
 junk@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/junk/-/junk-3.1.0.tgz#31499098d902b7e98c5d9b9c80f43457a88abfa1"
-
-jwt-decode@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
-  integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 killable@^1.0.1:
   version "1.0.1"
