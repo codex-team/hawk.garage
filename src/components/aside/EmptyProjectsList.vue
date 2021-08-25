@@ -4,10 +4,10 @@
     <Placeholder />
 
     <div class="empty-list">
-      <div class="empty-list__picture"></div>
-      {{  $t('layout.aside.emptyProjectsList') }}
+      <div class="empty-list__picture" />
+      {{ $t('layout.aside.emptyProjectsList') }}
       <template v-if="isAdmin">
-        {{  $t('layout.aside.createFirstProjectLabel') }}
+        {{ $t('layout.aside.createFirstProjectLabel') }}
       </template>
 
       <UiButton
@@ -63,14 +63,14 @@ export default Vue.extend({
 
 <style scoped>
 .empty-list {
-  padding: 34px 0;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
   width: 240px;
   margin: 0 auto;
-  font-size: 15px;
+  padding: 34px 0;
   font-weight: 500;
+  font-size: 15px;
   line-height: 20px;
   text-align: center;
 
@@ -79,20 +79,20 @@ export default Vue.extend({
     display: inline-block;
     width: 76px;
     height: 64px;
-    background-image: url("../../assets/hawk-flying.svg");
     margin: 0 auto 25px;
+    background-image: url("../../assets/hawk-flying.svg");
   }
 
   .ui-button {
     display: inline-block;
     width: auto;
     margin: 20px auto 0;
-    box-shadow: 0 5px 24px rgba(25, 137, 255, 0.4);
     padding: 10px 15px;
-    animation: reflection 4s linear infinite;
     background-image: linear-gradient(-70deg, rgba(255, 255, 255, 0) 20%, rgba(255,255,255, 0.7) 45%, rgba(255,255,255, 0.7) 55%, rgba(255, 255, 255, 0) 80%) !important;
     background-repeat: no-repeat;
     background-position: -120px 0;
+    box-shadow: 0 5px 24px rgba(25, 137, 255, 0.4);
+    animation: reflection 4s linear infinite;
   }
 }
 

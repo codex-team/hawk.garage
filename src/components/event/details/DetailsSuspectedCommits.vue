@@ -23,9 +23,9 @@
           </div>
           <div>
             <EntityImage
+              :id="commit.author.charCodeAt(0).toString(16)"
               class="details-suspected-commit__left-image"
               :name="commit.author"
-              :id="commit.author.charCodeAt(0).toString(16)"
               size="16"
             />
             <span class="details-suspected-commit__left-author">
@@ -140,9 +140,9 @@ export default Vue.extend({
     }
 
     &-author {
+      display: inline-block;
       color: var(--color-text-second);
       vertical-align: middle;
-      display: inline-block;
     }
 
     &-relative-time {

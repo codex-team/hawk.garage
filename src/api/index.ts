@@ -189,7 +189,6 @@ export async function call(
    */
   if (response.errors && response.errors.length) {
     response.errors.forEach(error => {
-
       throw new Error(error.message);
     });
   }
