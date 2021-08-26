@@ -159,7 +159,7 @@ export default Vue.extend({
          * As a workaround, we remove dots from message and from keys in dictionaries.
          */
         const dictKey = e.message.replaceAll('.', '');
-        const errorTranslationExist = this.$te('settings.account.errors.' + dictKey)
+        const errorTranslationExist = this.$te('settings.account.errors.' + dictKey);
 
         notifier.show({
           message: errorTranslationExist ? this.$t('settings.account.errors.' + dictKey) as string : e.message,

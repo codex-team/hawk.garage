@@ -126,7 +126,9 @@ export default Vue.extend({
       /**
        * Handler of window resize
        */
-      onResize: (): void => {},
+      onResize: (): void => {
+        // do nothing
+      },
 
       /**
        * Hovered point index

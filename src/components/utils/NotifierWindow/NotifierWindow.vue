@@ -50,7 +50,7 @@ export default Vue.extend({
   name: 'NotifierWindow',
   components: {
     UiButton,
-    Icon
+    Icon,
   },
   data() {
     return {
@@ -82,8 +82,8 @@ export default Vue.extend({
       /**
        * Notifier window buttons
        */
-      notifierButtons: [] as NotifierButton[]
-    }
+      notifierButtons: [] as NotifierButton[],
+    };
   },
   methods: {
     /**
@@ -101,8 +101,8 @@ export default Vue.extend({
      */
     close() {
       this.isOpened = false;
-    }
-  }
+    },
+  },
 });
 </script>
 

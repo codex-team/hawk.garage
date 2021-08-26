@@ -15,6 +15,7 @@
           v-if="event"
           :event="event"
           :project-id="projectId"
+          :isLoading="loading"
         />
         <div
           v-else-if="loading"
@@ -112,7 +113,7 @@ export default Vue.extend({
     /**
      * It can be empty event if it was archived
      */
-    if (this.event){
+    if (this.event) {
       this.markEventAsVisited();
     }
   },

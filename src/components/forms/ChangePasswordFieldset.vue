@@ -55,11 +55,11 @@ export default {
     },
     showInputs: Boolean,
   },
-  data(){
+  data() {
     return {
       old: '',
-      new: ''
-    }
+      new: '',
+    };
   },
   mounted() {
     this.data = this.value;

@@ -22,7 +22,7 @@ import UiCheckbox from '../UiCheckbox.vue';
 export default Vue.extend({
   name: 'UiCheckboxWithLabel',
   components: {
-    UiCheckbox
+    UiCheckbox,
   },
   props: {
     /**
@@ -47,7 +47,7 @@ export default Vue.extend({
     label: {
       type: String,
       default: 'Checkbox label',
-    }
+    },
   },
   data() {
     return {
@@ -55,7 +55,7 @@ export default Vue.extend({
        * Mutable value variable for using in checkbox
        */
       mutableValue: this.value,
-    }
+    };
   },
   watch: {
     /**
@@ -65,9 +65,9 @@ export default Vue.extend({
      */
     mutableValue: function (value) {
       this.$emit('input', value);
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style>

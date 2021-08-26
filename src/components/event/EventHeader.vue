@@ -137,7 +137,7 @@ export default Vue.extend({
     EntityImage,
     ProjectBadge,
   },
-  mixins: [projectBadges],
+  mixins: [ projectBadges ],
   props: {
     /**
      * Original (first) event data
@@ -244,7 +244,7 @@ export default Vue.extend({
      */
     workspace(): Workspace {
       return this.$store.getters.getWorkspaceByProjectId(this.projectId);
-    }
+    },
 
   },
   watch: {

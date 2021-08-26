@@ -72,7 +72,7 @@ export default Vue.extend({
   name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase,
-    EntityImage
+    EntityImage,
   },
   props: {
     /**
@@ -82,7 +82,7 @@ export default Vue.extend({
       type: Array as () => HawkEventCommit[],
       required: true,
     },
-    
+
   },
   data() {
     return {
@@ -94,12 +94,13 @@ export default Vue.extend({
        * Number of Visible Commits
        */
       numberOfVisibleCommits : 1,
-    
+
     };
   },
   computed: {
     /**
      * Displayed commits items
+     *
      * @returns { HawkEventCommit[] }
      */
     filteredCommits():HawkEventCommit[] {
