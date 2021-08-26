@@ -12,7 +12,7 @@
       </div>
       <div class="event-users-affected__section">
         <div class="event-users-affected__label">
-          {{ chartTotal }} {{ $tc('event.usersAffected.label', chartTotal) }} {{ $t('event.usersAffected.lastTwoWeeks') }}
+          {{ $t('event.daily.lastTwoWeeks') }}
         </div>
         <Chart :points="chartData" label="event.usersAffected.label" />
       </div>
@@ -53,14 +53,6 @@ export default Vue.extend({
     return {
       chartData: [] as EventChartItem[],
     };
-  },
-  computed: {
-    /**
-     * Returns total amount of events for last 2 weeks
-     */
-    chartTotal(): number {
-      return this.chartData.reduce((sum, { count }) => sum + count, 0);
-    },
   },
   /**
    * Vue created hook

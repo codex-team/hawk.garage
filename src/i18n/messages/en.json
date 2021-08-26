@@ -348,7 +348,6 @@
       "label": "event | events"
     },
     "usersAffected": {
-      "lastTwoWeeks": "for last 2 weeks",
       "total": "Total",
       "users": "{n} user | {n} users",
       "label": "user | users"
