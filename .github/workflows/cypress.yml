@@ -39,6 +39,6 @@ jobs:
         with:
           browser: chrome
           start: yarn serve
-          config_file: cypress.e2e.json
+          config-file: cypress.e2e.json
           env: VUE_APP_API_ENDPOINT=http://api:4000,VUE_APP_CLOUDPAYMENTS_PUBLIC_ID=test_api_00000000000000000000001
 
