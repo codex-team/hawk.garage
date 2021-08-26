@@ -144,7 +144,9 @@ export default {
     const users = workspace.team.reduce((accumulator, user) => {
       const userData = user.user;
 
-      accumulator.push(userData);
+      if (userData) {
+        accumulator.push(userData);
+      }
 
       return accumulator;
     }, []);
