@@ -289,6 +289,23 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
+     * Returnes list of event repetitions
+     *
+     * @param state - module state
+     */
+    getProjectEventRepetitions(state: EventsModuleState) {
+      /**
+       * @param projectId — id of project event is related to
+       * @param eventId - id of event
+       */
+      return (projectId: string, eventId: string): HawkEventRepetition[] => {
+        const key = getEventsListKey(projectId, eventId);
+
+        return state.repetitions[key] || []
+      }
+    },
+
+    /**
      * Returns latest recent event of the project by its id
      *
      * @param {EventsModuleState} state - Vuex state
@@ -430,10 +447,13 @@ const module: Module<EventsModuleState, RootState> = {
      * @returns {Promise<HawkEventRepetition[]>}
      */
     async [FETCH_EVENT_REPETITIONS](
-      { commit }: { commit: Commit },
-      { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number }
+      { commit, state }: { commit: Commit, state: EventsModuleState },
+      { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number; }
     ): Promise<HawkEventRepetition[]> {
-      const response = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
+      const key = getEventsListKey(projectId, eventId);
+      const skip = (state.repetitions[key] || []).length;
+
+      const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
       const repetitions = response.data.project.event.repetitions;
 
       repetitions.map(repetition => {
@@ -780,7 +800,7 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
-      state.repetitions[key].push(repetition);
+      Vue.set(state.repetitions, key, [...state.repetitions[key], repetition]);
     },
 
     /**
