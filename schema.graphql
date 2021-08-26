@@ -656,6 +656,28 @@ type Mutation {
 
   """Namespace for workspaces mutations"""
   workspace: WorkspaceMutations!
+
+
+  """
+  !Seed resolver!
+  Creates user
+  """
+  createUser(
+    """User email"""
+    email: String!
+    """User password"""
+    password: String!
+  ): User!
+
+
+  """
+  !Seed resolver!
+  Deletes user by email
+  """
+  deleteUser(
+    """User email"""
+    email: String!
+  ): Boolean
 }
 
 """All available notification channels"""
