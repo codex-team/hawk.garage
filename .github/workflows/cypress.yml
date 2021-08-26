@@ -24,7 +24,8 @@ jobs:
         image: codexteamuser/hawk-api:stage
         ports:
           - 4000:4000
-        env: NODE_ENV=e2e
+        env:
+          - NODE_ENV: e2e
 
     steps:
       - name: Checkout repository code
