@@ -150,7 +150,7 @@ export async function callOld(
   if (allowErrors) {
     return response.data;
   } else {
-    console.warn('Api call in old format. Should be refactored to support errors', request);
+    // console.warn('Api call in old format. Should be refactored to support errors', request);
   }
 
   /**

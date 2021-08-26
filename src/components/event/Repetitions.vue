@@ -22,7 +22,7 @@
       </div>
 
       <p
-        v-if="repetitionsLoading"
+        v-if="repetitionsLoadingFirstly"
       >
         {{ $t("common.loading") }}
       </p>
@@ -32,6 +32,9 @@
         :key="date"
         class="event-repetitions__table"
       >
+        <div class="event-repetitions__table-day">
+          {{ date }}
+        </div>
         <RepetitionsList
           :repetitions="groupedRepetitions.get(date)"
           :event="event"
@@ -92,7 +95,12 @@ export default Vue.extend({
       /**
        * Flag shows that repetitions are currently being fetched
        */
-      isLoadingRepetitions: false
+      isLoadingRepetitions: false,
+
+      /**
+       * Flag determines if repetitions are loading
+       */
+      repetitionsLoadingFirstly: true
     };
   },
   computed: {
@@ -161,6 +169,7 @@ export default Vue.extend({
       this.noMoreRepetitions = newRepetitions.length < REPETITIONS_LIMIT;
 
       this.isLoadingRepetitions = false;
+      this.repetitionsLoadingFirstly = false;
     },
   },
 });
@@ -188,8 +197,15 @@ export default Vue.extend({
     }
 
     &__table {
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-top: 30px;
+      margin-bottom: 60px;
+
+      &-day {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--color-text-second);
+      }
     }
 
     &__load-more {

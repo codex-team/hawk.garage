@@ -15,7 +15,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { deepMerge, groupByGroupingTimestamp } from '@/utils';
+import {deepMerge, filterBeautifiedAddons, groupByGroupingTimestamp} from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
@@ -27,6 +27,7 @@ import {
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
+import { JavaScriptAddons } from 'hawk.types';
 
 /**
  * Mutations enum for this module
@@ -456,6 +457,11 @@ const module: Module<EventsModuleState, RootState> = {
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
       const repetitions = response.data.project.event.repetitions;
 
+      /**
+       * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
+       */
+      filterBeautifiedAddons(repetitions);
+
       repetitions.map(repetition => {
         // save to the state
         commit(MutationTypes.AddRepetitionPayload, {
@@ -495,6 +501,9 @@ const module: Module<EventsModuleState, RootState> = {
       });
 
       const repetition = event.repetition;
+
+      filterBeautifiedAddons([ event ]);
+      filterBeautifiedAddons([ repetition ]);
 
       if (repetition !== null) {
         event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;

@@ -1,97 +1,113 @@
 <template>
-  <div class="repetitions-list">
-    <div class="repetitions-list__date">
-      {{ date }}
-    </div>
+  <div class="repetitions-table">
+    <table>
+      <!-- Table headings -->
+      <tr>
+        <th
+          v-for="column in columns"
+          :key="column"
+        >
+          {{ getAddonName(column) }}
+        </th>
+      </tr>
 
-    <table class="repetitions-list__table">
+      <!-- Table content -->
       <tr
         v-for="repetition in repetitions"
         :key="repetition.id"
-        class="repetitions-list__row"
         @click="goToRepetition(repetition.id)"
       >
-        <td class="repetitions-list__col repetitions-list__col--fixed-short">
-          <span class="repetitions-list__time">
-            {{ repetition.payload.timestamp | prettyTime }}
-          </span>
+        <!-- Time (always exists) -->
+        <td class="repetitions-table__time">
+          {{ repetition.payload.timestamp | prettyTime }}
         </td>
-        <td class="repetitions-list__col repetitions-list__col--fixed-medium">
-          <span class="repetitions-list__user">
-            <EntityImage
-              :id="repetition.payload.user ? repetition.payload.user.id : undefined"
-              :name="repetition.payload.user ? repetition.payload.user.email : undefined"
-              :image="repetition.payload.user ? repetition.payload.user.image : undefined"
-              size="22"
-            />
-            <span class="repetitions-list__user-name">
-              {{ repetition.payload.user ? repetition.payload.user.name || $t('event.user.noname') : $t('event.user.unknown') }}
-            </span>
-          </span>
+
+        <!-- User (optional) -->
+        <td
+          v-if="columns.includes('User')"
+          class="repetitions-table__user"
+        >
+          <EntityImage
+            v-if="repetition.payload.user"
+            :id="repetition.payload.user ? repetition.payload.user.id : undefined"
+            :name="repetition.payload.user ? repetition.payload.user.email : undefined"
+            :image="repetition.payload.user ? repetition.payload.user.image : undefined"
+            size="22"
+            :title="repetition.payload.user.name || $t('event.user.noname')"
+          />
         </td>
-        <td class="repetitions-list__col">
+
+        <!-- Release (optional) -->
+        <td
+          class="repetitions-table__release"
+          v-if="columns.includes('Release')"
+        >
+          <code v-if="repetition.payload.release">
+            {{ repetition.payload.release }}
+          </code>
+        </td>
+
+        <!-- Title (exists for the first repetition (original event) and for grouped by Levenshtein distance) -->
+        <td
+          v-if="columns.includes('Title')"
+        >
+          {{ repetition.payload.title }}
+        </td>
+
+        <!-- ...context fields -->
+        <td v-for="contextField in distinctContextKeys">
+           {{ repetition.payload.context[contextField] || '—' }}
+        </td>
+
+        <!-- ...addons fields -->
+        <td v-for="addonsField in distinctAddonsKeys">
+          <!-- addons with custom renderers -->
+          <component
+            :is="customRendererNamePrefix + capitalize(addonsField)"
+            v-if="isCustomRenderer(addonsField) && repetition.payload.addons[addonsField]"
+            :value="repetition.payload.addons[addonsField]"
+          />
+          <!-- other addons -->
           <template
-            v-if="repetition.payload.title"
+            v-else
           >
-            {{ repetition.payload.title }}
+            <!-- JSON value -->
+            <code
+              v-if="isObject(repetition.payload.addons[addonsField])"
+            >
+              &lt;Object&gt;
+            </code>
+
+            <!-- String value -->
+            <template v-else>
+              {{ repetition.payload.addons[addonsField] || '—' }}
+            </template>
           </template>
         </td>
-        <td class="repetitions-list__col">
-          <span
-            v-if="repetition.payload.addons && repetition.payload.addons.userAgent"
-            class="repetitions-list__user-browser"
-          >
-            {{ getBrowser(repetition.payload.addons.userAgent) }}
-          </span>
-        </td>
-        <td class="repetitions-list__col">
-          <span
-            v-if="repetition.payload.addons && repetition.payload.addons.window"
-            class="repetitions-list__user-screen"
-          >
-            {{ showWindowSize(repetition.payload.addons.window) }}
-          </span>
-        </td>
-        <td class="repetitions-list__col repetitions-list__col--fixed-short">
-          <span v-if="repetition.payload.addons && repetition.payload.addons.url">
-            <a
-              class="repetitions-list__url"
-              :title="repetition.payload.addons.url"
-              :href="repetition.payload.addons.url"
-              @click.stop
-            >
-              {{ repetition.payload.addons.url }}
-            </a>
-          </span>
-        </td>
-        <template v-if="repetition.payload.context">
-          <td
-            v-for="([name, value], index) of Object.entries(repetition.payload.context)"
-            :key="'context:' + repetition.id + ':' + index"
-            class="repetitions-list__col"
-          >
-            <div class="repetitions-list__context-field">
-              {{ name }}
-            </div>
-            <div class="repetitions-list__context-value">
-              {{ value }}
-            </div>
-          </td>
-        </template>
       </tr>
     </table>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
 import EntityImage from '../utils/EntityImage';
-import { getBrowserByUseragent } from '../../utils';
+import { EventDataAccepted } from 'hawk.types';
+import { EventAddons } from '../../../../types/src/base/event/addons';
+import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
+import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
+import AddonRenderers from '../../mixins/addonRenderers.ts';
 
-export default {
+export default Vue.extend({
   name: 'RepetitionsTable',
   components: {
     EntityImage,
+    CustomRendererBeautifiedUserAgent,
+    CustomRendererWindow,
   },
+  mixins: [
+    AddonRenderers
+  ],
   props: {
     /**
      * List of repetitions
@@ -105,7 +121,7 @@ export default {
      * Event that owns passed repetitions
      */
     event: {
-      type: Object,
+      type: Object as PropType<EventDataAccepted<EventAddons>>,
       required: true,
     },
 
@@ -125,8 +141,106 @@ export default {
       required: true,
     },
   },
+  mounted(){
+    this.lockChromeSwipeNavigation(true);
+  },
+  beforeDestroy() {
+    this.lockChromeSwipeNavigation(false);
+  },
+  computed: {
+    /**
+     * Unique addons keys
+     */
+    distinctAddonsKeys(): Set<string>{
+      return this.getDistinctKeysRepetitionsProperty('addons');
+    },
+
+    /**
+     * Unique context keys
+     */
+    distinctContextKeys(): Set<string>{
+      return this.getDistinctKeysRepetitionsProperty('context');
+    },
+
+    /**
+     * All table columns list
+     */
+    columns(): string[] {
+      let cols = [];
+
+      if (!this.repetitions.length){
+        return cols;
+      }
+
+      cols.push('Time');
+
+      let releaseSpecifiedSomewhere = false;
+      let userSpecifiedSomewhere = false;
+      let titleSpecifiedSomewhere = false;
+
+      this.repetitions.forEach(repetition => {
+        if (repetition.payload.release) {
+          releaseSpecifiedSomewhere = true;
+        }
+
+        if (repetition.payload.title) {
+          titleSpecifiedSomewhere = true;
+        }
+
+        if (repetition.payload.user && repetition.payload.user.name) {
+          userSpecifiedSomewhere = true;
+        }
+
+        if (titleSpecifiedSomewhere && userSpecifiedSomewhere){
+          return;
+        }
+      });
+
+      if (userSpecifiedSomewhere){
+        cols.push('User');
+      }
+
+      if (releaseSpecifiedSomewhere){
+        cols.push('Release');
+      }
+
+      if (userSpecifiedSomewhere){
+        cols.push('Title');
+      }
+
+      cols.push(...this.distinctAddonsKeys.values())
+      cols.push(...this.distinctContextKeys.values())
+
+      return cols;
+    }
+  },
   methods: {
     /**
+     * Returns the Set of distinct keys over several objects
+     *
+     * @param property — event property to iterate its keys
+     */
+    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons' ): Set<string>{
+      if (!this.repetitions.length){
+        return new Set();
+      }
+
+      return this.repetitions.reduce((keys, repetition) => {
+        if (!repetition.payload[property]){
+          return keys;
+        }
+
+        Object
+          .keys(repetition.payload[property])
+          .forEach(key => {
+            keys.add(key)
+          })
+
+        return keys;
+      }, new Set())
+    },
+
+/**
      * Provides navigation to the single repetition
      *
      * @param {string} repetitionId - clicked repetition id
@@ -141,133 +255,79 @@ export default {
         },
       });
     },
-    /**
-     * Show window size of repeated events
-     *
-     * @param {object} params - addon data
-     * @param {number | undefined} params.innerWidth - window inner width
-     * @param {number | undefined} params.innerHeight - window inner height
-     * @returns {string} window size in correct format
-     */
-    showWindowSize({ innerWidth, innerHeight }) {
-      let width = innerWidth;
-      let height = innerHeight;
-
-      /**
-       * As repetition store diff with first-ever event
-       * and if window size hasn't changed
-       * need to show original proportions
-       */
-      if (!width) {
-        width = this.event.payload.addons.window.innerWidth;
-      }
-
-      if (!height) {
-        height = this.event.payload.addons.window.innerHeight;
-      }
-
-      return width + 'x' + height;
-    },
 
     /**
-     * Return browser name and version by useragent
+     * Prevent accidental Chrome's 'two-fingers' swipe navigation on scrolling of repetitions table
      *
-     * @todo Do it on the worker side, see https://github.com/codex-team/hawk.workers/issues/131
-     * @param {string} useragent - event userAgent
-     * @returns {string}
+     * @param state - true to lock, false to unlock
      */
-    getBrowser(useragent) {
-      return getBrowserByUseragent(useragent).shift();
-    },
+    lockChromeSwipeNavigation(state){
+      document.body.classList.toggle('swipe-nav-disabled', state)
+    }
   },
-};
+});
 </script>
 
 <style>
-  .repetitions-list {
-    &__date {
-      margin-bottom: 10px;
-      color: var(--color-text-second);
-      font-size: 14px
-    }
+  .repetitions-table {
+    overflow: auto;
+    overscroll-behavior-x: none;
+    font-size: 14px;
 
-    &__table {
+    table {
       width: 100%;
-      margin-left: -10px;
-      border-spacing: 0;
+      border-collapse: collapse;
     }
 
-    &__row {
-      height: 40px;
+    th {
+      white-space: nowrap;
+    }
+
+    tr:not(:first-child){
       cursor: pointer;
 
       &:hover {
-        background-color: var(--color-bg-sidebar) !important;
+        .repetitions-table__time {
+          color: var(--color-text-main);
+        }
       }
     }
 
-    &__row:nth-child(even) {
-      background-color: var(--color-bg-main);
-    }
+    th,
+    td {
+      padding: 15px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
 
-    &__col {
-      padding: 6px 10px;
-      font-size: 13px;
-
-      &--fixed {
-        &-short {
-          width: 40px;
-        }
-        &-medium {
-          width: 120px;
-        }
+      &:first-child {
+        padding-left: 0;
       }
     }
 
     &__time {
       color: var(--color-text-second);
       letter-spacing: 0.16px;
+      width: 40px;
+      box-sizing: content-box;
     }
 
     &__user {
-      display: inline-flex;
-      align-items: center;
-
-      &-name {
-        display: inline-block;
-        width: 100px;
-        margin-left: 10px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
+      width: 22px;
     }
 
-    &__url {
+    code {
       display: inline-block;
-      max-width: 150px;
-      overflow: hidden;
+      background: var(--color-bg-main);
       color: var(--color-text-second);
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      padding: 4px;
+      border-radius: 5px;
+      font-weight: 500;
+      font-size: 12px;
+      font-family: var(--font-monospace);
     }
+  }
 
-    &__time,
-    &__user,
-    &__user-browser {
-      font-weight: bold;
-    }
-
-    &__context {
-      &-field {
-        margin-bottom: 2px;
-        color: var(--color-text-second);
-        font-size: 10px;
-      }
-
-      &-value {
-        font-size: 12px;
-      }
-    }
+  body.swipe-nav-disabled{
+    overscroll-behavior-x: none;
   }
 </style>

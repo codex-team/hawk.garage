@@ -106,6 +106,7 @@ export default Vue.extend({
       font-size: 14.6px;
       cursor: pointer;
       transition: color 200ms;
+      white-space: nowrap;
 
       &:hover,
       &--active {

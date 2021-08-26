@@ -60,6 +60,11 @@ export default Vue.extend({
       const aliases = {
         macos: [ 'mac os x' ],
       };
+
+      if (!this.value.os){
+        return;
+      }
+
       const os = this.value.os.toLowerCase();
 
       if (iconsAvailable.includes(os)) {
@@ -86,6 +91,11 @@ export default Vue.extend({
       const aliases = {
         yandex: ['yabrowser', 'Yandex Browser'],
       };
+
+      if (!this.value.browser){
+        return;
+      }
+
       const browser = this.value.browser.toLowerCase();
 
       if (iconsAvailable.includes(browser)) {

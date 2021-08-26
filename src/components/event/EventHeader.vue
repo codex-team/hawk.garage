@@ -82,6 +82,7 @@
           @click="markEvent('ignored')"
         />
         <UiButton
+          v-if="false"
           class="event-header__button"
           :content="$t('event.issue')"
           icon="github"
