@@ -44,7 +44,7 @@ Cypress.Commands.add('visitHawk', (path = '') => {
   cy.visit(`http://localhost:8080/${path}`);
 });
 
-const API_ENDPOINT = 'http://localhost:4000';
+const API_ENDPOINT = Cypress.env('API_ENDPOINT') || 'http://localhost:4000';
 
 /**
  * Creates new user using seed resolver
