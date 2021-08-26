@@ -1,6 +1,7 @@
 <template>
   <div
     class="chart"
+    :class="{'loader': isLoading}"
     @mousemove.passive="moveTooltip"
     @mouseleave.passive="hoveredIndex = -1"
   >
@@ -41,6 +42,7 @@
         </linearGradient>
       </defs>
       <polyline
+        v-if="!isLoading"
         class="chart__body-polyline"
         fill="none"
         :stroke="maxValue === minValue ? 'rgba(61, 133, 210, 0.22)' : 'url(#chart)'"
@@ -67,7 +69,7 @@
       </div>
     </div>
     <div
-      v-if="hoveredIndex > 0 && hoveredIndex < points.length - 1"
+      v-if="!isLoading && hoveredIndex > 0 && hoveredIndex < points.length - 1"
       :style="`left: ${pointerLeft}px;`"
       class="chart__pointer"
     >
@@ -117,6 +119,14 @@ export default Vue.extend({
     label: {
       type: String,
       default: () => 'event.daily.label'
+    },
+
+    /**
+     * If true, shows loader instead of chart line
+     */
+    isLoading: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -300,6 +310,12 @@ export default Vue.extend({
     height: 215px;
     background-color: var(--color-bg-main);
     border-radius: 3px;
+
+    &.loader::before {
+      border-color: var(--color-text-second);
+      border-left-color: transparent;
+      animation-duration: 0.8s;
+    }
 
     &__info {
       position: absolute;

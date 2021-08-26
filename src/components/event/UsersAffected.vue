@@ -14,7 +14,7 @@
         <div class="event-users-affected__label">
           {{ $t('event.daily.lastTwoWeeks') }}
         </div>
-        <Chart :points="chartData" label="event.usersAffected.label" />
+        <Chart :points="chartData" :is-loading="chartData.length === 0" label="event.usersAffected.label" />
       </div>
     </div>
   </div>
