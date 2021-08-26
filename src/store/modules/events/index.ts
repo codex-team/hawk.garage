@@ -15,7 +15,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import {deepMerge, filterBeautifiedAddons, groupByGroupingTimestamp} from '@/utils';
+import { deepMerge, filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
@@ -302,8 +302,8 @@ const module: Module<EventsModuleState, RootState> = {
       return (projectId: string, eventId: string): HawkEventRepetition[] => {
         const key = getEventsListKey(projectId, eventId);
 
-        return state.repetitions[key] || []
-      }
+        return state.repetitions[key] || [];
+      };
     },
 
     /**

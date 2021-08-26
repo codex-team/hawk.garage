@@ -1,8 +1,8 @@
 import mergeWith from 'lodash.mergewith';
-import {HawkEventDailyInfo, HawkEventRepetition} from './types/events';
-import {EventAddons, JavaScriptAddons} from 'hawk.types';
-import {EventDataAccepted} from '../../types/src/base/event/event';
-import {GroupedEventDBScheme} from '../../types/src/dbScheme/groupedEvent';
+import { HawkEventDailyInfo, HawkEventRepetition } from './types/events';
+import { EventAddons, JavaScriptAddons } from 'hawk.types';
+import { EventDataAccepted } from '../../types/src/base/event/event';
+import { GroupedEventDBScheme } from '../../types/src/dbScheme/groupedEvent';
 
 /**
  * Returns entity color from predefined list
@@ -409,9 +409,10 @@ export function pad(number: number, length = 2): string {
 
 /**
  * Some addons have their beautified versions added on backend processing
- *   — if so, show them instead of originals
+ * — if so, show them instead of originals
  *
- *  @see https://github.com/codex-team/hawk.garage/issues/436
+ * @param repetitions
+ * @see https://github.com/codex-team/hawk.garage/issues/436
  */
 export function filterBeautifiedAddons(repetitions: HawkEventRepetition[]): void {
   const addonsBeautified = {
@@ -420,9 +421,9 @@ export function filterBeautifiedAddons(repetitions: HawkEventRepetition[]): void
 
   repetitions.forEach(repetition => {
     Object.entries(addonsBeautified).forEach(([addonToRemove, _]) => {
-      if (repetition.payload.addons && repetition.payload.addons[addonToRemove]){
+      if (repetition.payload.addons && repetition.payload.addons[addonToRemove]) {
         delete repetition.payload.addons[addonToRemove];
       }
     });
-  })
+  });
 }

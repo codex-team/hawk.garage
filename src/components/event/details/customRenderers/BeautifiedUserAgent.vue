@@ -61,7 +61,7 @@ export default Vue.extend({
         macos: [ 'mac os x' ],
       };
 
-      if (!this.value.os){
+      if (!this.value.os) {
         return;
       }
 
@@ -92,7 +92,7 @@ export default Vue.extend({
         yandex: ['yabrowser', 'Yandex Browser'],
       };
 
-      if (!this.value.browser){
+      if (!this.value.browser) {
         return;
       }
 

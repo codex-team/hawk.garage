@@ -39,8 +39,8 @@
 
         <!-- Release (optional) -->
         <td
-          class="repetitions-table__release"
           v-if="columns.includes('Release')"
+          class="repetitions-table__release"
         >
           <code v-if="repetition.payload.release">
             {{ repetition.payload.release }}
@@ -55,12 +55,18 @@
         </td>
 
         <!-- ...context fields -->
-        <td v-for="contextField in distinctContextKeys">
-           {{ repetition.payload.context[contextField] || '—' }}
+        <td
+          v-for="contextField in distinctContextKeys"
+          :key="`context:${contextField}`"
+        >
+          {{ repetition.payload.context[contextField] || '—' }}
         </td>
 
         <!-- ...addons fields -->
-        <td v-for="addonsField in distinctAddonsKeys">
+        <td
+          v-for="addonsField in distinctAddonsKeys"
+          :key="`addons:${addonsField}`"
+        >
           <!-- addons with custom renderers -->
           <component
             :is="customRendererNamePrefix + capitalize(addonsField)"
@@ -91,12 +97,11 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import EntityImage from '../utils/EntityImage';
-import { EventDataAccepted } from 'hawk.types';
-import { EventAddons } from '../../../../types/src/base/event/addons';
+import EntityImage from '../utils/EntityImage.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
-import AddonRenderers from '../../mixins/addonRenderers.ts';
+import AddonRenderers from '../../mixins/addonRenderers';
+import { HawkEvent, HawkEventRepetition } from '../../types/events';
 
 export default Vue.extend({
   name: 'RepetitionsTable',
@@ -106,14 +111,14 @@ export default Vue.extend({
     CustomRendererWindow,
   },
   mixins: [
-    AddonRenderers
+    AddonRenderers,
   ],
   props: {
     /**
      * List of repetitions
      */
     repetitions: {
-      type: Array,
+      type: Array as PropType<HawkEventRepetition[]>,
       required: true,
     },
 
@@ -121,7 +126,7 @@ export default Vue.extend({
      * Event that owns passed repetitions
      */
     event: {
-      type: Object as PropType<EventDataAccepted<EventAddons>>,
+      type: Object as PropType<HawkEvent>,
       required: true,
     },
 
@@ -141,24 +146,18 @@ export default Vue.extend({
       required: true,
     },
   },
-  mounted(){
-    this.lockChromeSwipeNavigation(true);
-  },
-  beforeDestroy() {
-    this.lockChromeSwipeNavigation(false);
-  },
   computed: {
     /**
      * Unique addons keys
      */
-    distinctAddonsKeys(): Set<string>{
+    distinctAddonsKeys(): Set<string> {
       return this.getDistinctKeysRepetitionsProperty('addons');
     },
 
     /**
      * Unique context keys
      */
-    distinctContextKeys(): Set<string>{
+    distinctContextKeys(): Set<string> {
       return this.getDistinctKeysRepetitionsProperty('context');
     },
 
@@ -166,9 +165,9 @@ export default Vue.extend({
      * All table columns list
      */
     columns(): string[] {
-      let cols = [];
+      const cols: string[] = [];
 
-      if (!this.repetitions.length){
+      if (!this.repetitions.length) {
         return cols;
       }
 
@@ -191,28 +190,34 @@ export default Vue.extend({
           userSpecifiedSomewhere = true;
         }
 
-        if (titleSpecifiedSomewhere && userSpecifiedSomewhere){
+        if (titleSpecifiedSomewhere && userSpecifiedSomewhere) {
           return;
         }
       });
 
-      if (userSpecifiedSomewhere){
+      if (userSpecifiedSomewhere) {
         cols.push('User');
       }
 
-      if (releaseSpecifiedSomewhere){
+      if (releaseSpecifiedSomewhere) {
         cols.push('Release');
       }
 
-      if (userSpecifiedSomewhere){
+      if (userSpecifiedSomewhere) {
         cols.push('Title');
       }
 
-      cols.push(...this.distinctAddonsKeys.values())
-      cols.push(...this.distinctContextKeys.values())
+      cols.push(...this.distinctAddonsKeys.values());
+      cols.push(...this.distinctContextKeys.values());
 
       return cols;
-    }
+    },
+  },
+  mounted() {
+    this.lockChromeSwipeNavigation(true);
+  },
+  beforeDestroy() {
+    this.lockChromeSwipeNavigation(false);
   },
   methods: {
     /**
@@ -220,32 +225,32 @@ export default Vue.extend({
      *
      * @param property — event property to iterate its keys
      */
-    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons' ): Set<string>{
-      if (!this.repetitions.length){
+    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons' ): Set<string> {
+      if (!this.repetitions.length) {
         return new Set();
       }
 
       return this.repetitions.reduce((keys, repetition) => {
-        if (!repetition.payload[property]){
+        if (!repetition.payload[property]) {
           return keys;
         }
 
         Object
           .keys(repetition.payload[property])
           .forEach(key => {
-            keys.add(key)
-          })
+            keys.add(key);
+          });
 
         return keys;
-      }, new Set())
+      }, new Set() as Set<string>);
     },
 
-/**
+    /**
      * Provides navigation to the single repetition
      *
-     * @param {string} repetitionId - clicked repetition id
+     * @param repetitionId - clicked repetition id
      */
-    goToRepetition(repetitionId) {
+    goToRepetition(repetitionId: string): void {
       this.$router.push({
         name: 'event-overview',
         params: {
@@ -261,9 +266,9 @@ export default Vue.extend({
      *
      * @param state - true to lock, false to unlock
      */
-    lockChromeSwipeNavigation(state){
-      document.body.classList.toggle('swipe-nav-disabled', state)
-    }
+    lockChromeSwipeNavigation(state: boolean): void {
+      document.body.classList.toggle('swipe-nav-disabled', state);
+    },
   },
 });
 </script>
@@ -305,10 +310,10 @@ export default Vue.extend({
     }
 
     &__time {
+      box-sizing: content-box;
+      width: 40px;
       color: var(--color-text-second);
       letter-spacing: 0.16px;
-      width: 40px;
-      box-sizing: content-box;
     }
 
     &__user {
@@ -317,13 +322,13 @@ export default Vue.extend({
 
     code {
       display: inline-block;
-      background: var(--color-bg-main);
-      color: var(--color-text-second);
       padding: 4px;
-      border-radius: 5px;
+      color: var(--color-text-second);
       font-weight: 500;
       font-size: 12px;
       font-family: var(--font-monospace);
+      background: var(--color-bg-main);
+      border-radius: 5px;
     }
   }
 

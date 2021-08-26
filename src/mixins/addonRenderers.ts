@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import {isObject} from '../utils';
+import { isObject } from '../utils';
 
 /**
  * Useful methods for rendering event addons
@@ -7,7 +7,7 @@ import {isObject} from '../utils';
 export default Vue.extend( {
   data(): {
     customRendererNamePrefix: string
-  } {
+    } {
     return {
       /**
        * Custom render components should have the "CustomRenderer" prefix
@@ -73,5 +73,5 @@ export default Vue.extend( {
     isObject(value: any): boolean {
       return isObject(value);
     },
-  }
+  },
 });

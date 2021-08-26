@@ -57,7 +57,7 @@ import CodeBlock from '../../utils/CodeBlock.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import { EventAddons } from 'hawk.types';
-import AddonRenderers from '../../../mixins/addonRenderers.ts';
+import AddonRenderers from '../../../mixins/addonRenderers';
 
 /**
  * Details addons component
@@ -73,7 +73,7 @@ export default Vue.extend({
     CustomRendererWindow,
   },
   mixins: [
-    AddonRenderers
+    AddonRenderers,
   ],
   props: {
     /**

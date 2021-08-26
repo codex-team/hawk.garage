@@ -124,8 +124,8 @@ export default Vue.extend({
      */
     href: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
   data() {
     return {
@@ -158,12 +158,12 @@ export default Vue.extend({
   align-items: center;
   padding: 12px 15px;
   color: var(--color-text-second);
+  text-decoration: none !important;
   background-color: transparent;
   border: solid 1px color-mod(var(--color-text-main) alpha(10%));
   border-radius: 4px;
   outline: none;
   user-select: none;
-  text-decoration: none !important;
 
   &:not(&--disabled) {
     cursor: pointer;
