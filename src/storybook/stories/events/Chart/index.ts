@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 import Chart from '@/components/events/Chart.vue';
-import {boolean, object, text, withKnobs} from '@storybook/addon-knobs';
+import { boolean, object, text, withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 
 
 export default {
   title: 'Events/Chart',
-  component: [Chart],
+  component: [ Chart ],
   decorators: [
     withKnobs,
     () => ({
@@ -25,13 +26,13 @@ today.setHours(0, 0, 0, 0);
 
 const twoWeeksAgo = new Date().setDate(today.getDate() - 14);
 
-const points = Array.from({length: 14}, (_, i) => ({
+const points = Array.from({ length: 14 }, (_, i) => ({
   timestamp: twoWeeksAgo + i * 24 * 60 * 60 * 1000,
   count: 0,
 }));
 
 export const Default = (): unknown => ({
-  components: {Chart},
+  components: { Chart },
   template: `
     <Chart :points="points" :label="label" :isLoading="loading"/>
   `,
@@ -42,17 +43,17 @@ export const Default = (): unknown => ({
     },
     label: {
       type: String,
-      default: text('Label', 'event.daily.label')
+      default: text('Label', 'event.daily.label'),
     },
     loading: {
       type: Boolean,
-      default: boolean('isLoading', false)
-    }
+      default: boolean('isLoading', false),
+    },
   },
 });
 
 export const Loading = (): unknown => ({
-  components: {Chart},
+  components: { Chart },
   template: `
     <Chart :points="points" :label="label" :isLoading="loading" />
   `,
@@ -63,11 +64,11 @@ export const Loading = (): unknown => ({
     },
     label: {
       type: String,
-      default: text('Label', 'event.daily.label')
+      default: text('Label', 'event.daily.label'),
     },
     loading: {
       type: Boolean,
       default: true,
-    }
+    },
   },
 });

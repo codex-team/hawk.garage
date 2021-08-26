@@ -15,7 +15,7 @@
           v-if="event"
           :event="event"
           :project-id="projectId"
-          :isLoading="loading"
+          :is-loading="loading"
         />
         <div
           v-else-if="loading"
@@ -80,7 +80,7 @@ export default Vue.extend({
 
   computed: {
     ...mapGetters({
-      getEvent: 'getProjectEventRepetition'
+      getEvent: 'getProjectEventRepetition',
     }),
     /**
      * Current viewed event

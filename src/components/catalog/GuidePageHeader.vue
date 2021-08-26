@@ -1,5 +1,8 @@
 <template>
-  <div class="guide-page-header" :style="{ background }">
+  <div
+    class="guide-page-header"
+    :style="{ background }"
+  >
     <router-link
       class="guide-page-header__back-link"
       :to="{
@@ -89,10 +92,10 @@ export default {
   &__back-link {
     display: inline-flex;
     align-items: center;
-    opacity: 0.6;
-    padding: 10px 0;
     margin-top: -10px;
     margin-bottom: -10px;
+    padding: 10px 0;
+    opacity: 0.6;
 
     &:hover {
       opacity: 1;
@@ -137,10 +140,10 @@ export default {
       margin-right: 20px;
 
       svg {
-        fill: currentColor;
-        height: 20px;
         width: 20px;
+        height: 20px;
         margin-right: 10px;
+        fill: currentColor;
       }
     }
   }

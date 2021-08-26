@@ -27,7 +27,6 @@
     </div>
 
     <div class="billing-card__info">
-
       <!-- Plan -->
       <div class="billing-card__info-section">
         <div class="billing-card__label">
@@ -474,10 +473,10 @@ export default Vue.extend({
       display: flex;
       align-items: center;
       padding: 9px 15px;
+      white-space: nowrap;
       border: 1px solid var(--color-text-main);
       border-radius: 3px;
       cursor: pointer;
-      white-space: nowrap;
     }
 
     &__plan-name {

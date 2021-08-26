@@ -7,7 +7,7 @@ import {
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS,
   QUERY_CHART_DATA,
-  QUERY_AFFECTED_USERS_CHART_DATA,
+  QUERY_AFFECTED_USERS_CHART_DATA
 } from './queries';
 import * as api from '@/api';
 import {

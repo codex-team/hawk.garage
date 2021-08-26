@@ -307,8 +307,8 @@ const module: Module<EventsModuleState, RootState> = {
       return (projectId: string, eventId: string): HawkEventRepetition[] => {
         const key = getEventsListKey(projectId, eventId);
 
-        return state.repetitions[key] || []
-      }
+        return state.repetitions[key] || [];
+      };
     },
 
     /**
@@ -825,7 +825,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [repetition]);
+        Vue.set(state.repetitions, key, [ repetition ]);
 
         return;
       }

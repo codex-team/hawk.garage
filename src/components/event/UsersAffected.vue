@@ -14,7 +14,11 @@
         <div class="event-users-affected__label">
           {{ $t('event.daily.lastTwoWeeks') }}
         </div>
-        <Chart :points="chartData" :is-loading="chartData.length === 0" label="event.usersAffected.label" />
+        <Chart
+          :points="chartData"
+          :is-loading="chartData.length === 0"
+          label="event.usersAffected.label"
+        />
       </div>
     </div>
   </div>
@@ -30,7 +34,7 @@ import { EventChartItem } from '../../types/chart';
 export default Vue.extend({
   name: 'UsersAffectedOverview',
   components: {
-    Chart
+    Chart,
   },
   props: {
     /**
@@ -92,7 +96,6 @@ export default Vue.extend({
 
     &__affected {
       margin-bottom: 25px;
-
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 24px;

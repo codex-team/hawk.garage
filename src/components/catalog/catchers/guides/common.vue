@@ -21,7 +21,10 @@
           <TokenBlock :token="project.token" />
         </template>
       </GuideStepBlock>
-      <GuideStepBlock :step-number="2" last>
+      <GuideStepBlock
+        :step-number="2"
+        last
+      >
         <template #header>
           {{ $t('components.catalog.followGuide') }}
         </template>
@@ -42,20 +45,20 @@
 </template>
 
 <script>
-import GuideStepBlock from "../../GuideStepBlock";
-import GuideHeader from "../../GuidePageHeader";
-import TokenBlock from "../../../project/TokenBlock";
+import GuideStepBlock from '../../GuideStepBlock';
+import GuideHeader from '../../GuidePageHeader';
+import TokenBlock from '../../../project/TokenBlock';
 import UiButton from '../../../utils/UiButton';
 
 export default {
-  name: "SetupPhpCatcher",
+  name: 'SetupPhpCatcher',
   components: {
     GuideStepBlock,
     TokenBlock,
     GuideHeader,
-    UiButton
+    UiButton,
   },
-  data(){
+  data() {
     return {
       catchers: [
         {
@@ -89,9 +92,9 @@ export default {
           description: this.$t('components.catalog.catchers.go'),
           repoUrl: 'https://github.com/codex-team/hawk.go',
           readmeUrl: 'https://github.com/codex-team/hawk.go/blob/master/README.md',
-        }
+        },
       ],
-    }
+    };
   },
   computed: {
     /**
@@ -108,10 +111,10 @@ export default {
     /**
      * Viewed catcher info
      */
-    catcher(){
-      return this.catchers.find(catcher => catcher.route === this.$route.params.page)
-    }
-  }
+    catcher() {
+      return this.catchers.find(catcher => catcher.route === this.$route.params.page);
+    },
+  },
 };
 </script>
 
