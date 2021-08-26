@@ -26,71 +26,73 @@
       />
     </div>
 
-    <div
-      class="billing-card__info"
-    >
+    <div class="billing-card__info">
+
       <!-- Plan -->
-      <div class="billing-card__label">
-        {{ $t('billing.currentPlan') }}
-        <Icon
-          v-if="isEventsLimitExceeded"
-          class="billing-card__attention"
-          symbol="attention-sign"
-        />
+      <div class="billing-card__info-section">
+        <div class="billing-card__label">
+          {{ $t('billing.currentPlan') }}
+          <Icon
+            v-if="isEventsLimitExceeded"
+            class="billing-card__attention"
+            symbol="attention-sign"
+          />
+        </div>
+        <div
+          class="billing-card__plan"
+          @click="openChooseTariffPlan"
+        >
+          <div class="billing-card__plan-name">
+            {{ plan.name || 'Free' }}
+          </div>
+          <div class="billing-card__plan-coast">
+            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
+          </div>
+        </div>
       </div>
 
       <!-- Valid till -->
-      <div
-        class="billing-card__label"
-      >
-        {{ $t('billing.validTill').toUpperCase() }}
+      <div class="billing-card__info-section">
+        <div
+          class="billing-card__label"
+        >
+          {{ $t('billing.validTill').toUpperCase() }}
+        </div>
+        <div
+          class="billing-card__info-bar"
+        >
+          <div class="billing-card__events">
+            {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+          </div>
+          <Progress
+            :max="progressMaxDate"
+            :current="progressCurrentDate"
+            :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+            class="billing-card__volume-progress"
+          />
+        </div>
       </div>
 
       <!-- Volume -->
-      <div class="billing-card__label">
-        {{ $t('billing.volume') }}
-        <PositiveButton
-          v-if="isEventsLimitExceeded"
-          :content="$t('billing.boost') + '!'"
-        />
-      </div>
-
-      <div
-        class="billing-card__plan"
-        @click="openChooseTariffPlan"
-      >
-        <div class="billing-card__plan-name">
-          {{ plan.name || 'Free' }}
+      <div class="billing-card__info-section">
+        <div class="billing-card__label">
+          {{ $t('billing.volume') }}
+          <PositiveButton
+            v-if="isEventsLimitExceeded"
+            :content="$t('billing.boost') + '!'"
+          />
         </div>
-        <div class="billing-card__plan-coast">
-          {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
+        <div class="billing-card__info-bar">
+          <div class="billing-card__events">
+            {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
+          </div>
+          <Progress
+            :max="plan.eventsLimit || 0"
+            :current="eventsCount"
+            :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+            class="billing-card__volume-progress"
+          />
         </div>
-      </div>
-
-      <div
-        class="billing-card__info-bar"
-      >
-        <div class="billing-card__events">
-          {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
-        </div>
-        <Progress
-          :max="progressMaxDate"
-          :current="progressCurrentDate"
-          :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
-          class="billing-card__volume-progress"
-        />
-      </div>
-
-      <div class="billing-card__info-bar">
-        <div class="billing-card__events">
-          {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
-        </div>
-        <Progress
-          :max="plan.eventsLimit || 0"
-          :current="eventsCount"
-          :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
-          class="billing-card__volume-progress"
-        />
       </div>
     </div>
     <div class="billing-card__buttons">
@@ -440,13 +442,16 @@ export default Vue.extend({
     }
 
     &__info {
-      display: grid;
-      grid-auto-rows: 29px;
-      grid-template-columns: 200px 200px 200px;
+      display: flex;
       margin-top: 20px;
 
       &-section {
-        margin-right: 30px;
+        display: flex;
+        flex-direction: column;
+
+        &:not(:last-of-type){
+          margin-right: 30px;
+        }
       }
 
       &-bar {
@@ -468,12 +473,11 @@ export default Vue.extend({
     &__plan {
       display: flex;
       align-items: center;
-      width: 142px;
-      height: 36px;
       padding: 9px 15px;
       border: 1px solid var(--color-text-main);
       border-radius: 3px;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     &__plan-name {
@@ -499,6 +503,7 @@ export default Vue.extend({
       font-size: 14px;
       line-height: 16px;
       letter-spacing: 0.18px;
+      white-space: nowrap;
     }
 
     &__volume-progress {

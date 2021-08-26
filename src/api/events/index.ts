@@ -82,16 +82,18 @@ export async function fetchRecentEvents(
  *
  * @param {string} projectId - project's identifier
  * @param {string} eventId - event's identifier
+ * @param {number} skip — the number of repetitions to skip
  * @param {number} limit - the number of repetitions
  *
  * @returns {Promise<Event[]>}
  */
 export async function getLatestRepetitions(
-  projectId: string, eventId: string, limit: number
+  projectId: string, eventId: string, skip: number, limit: number
 ): Promise<APIResponse<{project: { event: { repetitions: HawkEventRepetition[] } } }>> {
   return api.call(QUERY_LATEST_REPETITIONS, {
     projectId,
     eventId,
+    skip,
     limit,
   });
 }

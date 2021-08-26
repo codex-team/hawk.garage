@@ -274,7 +274,10 @@ const module: Module<EventsModuleState, RootState> = {
         let repetition;
 
         if (!repetitionId) {
-          repetition = state.repetitions[key][state.repetitions[key].length - 1];
+          /**
+           * Repetitions go in reverse order, so first in array is latest occurred
+           */
+          repetition = state.repetitions[key][0];
         } else {
           repetition = state.repetitions[key].find(item => {
             return item.id === repetitionId;
@@ -289,6 +292,23 @@ const module: Module<EventsModuleState, RootState> = {
 
         return event;
       };
+    },
+
+    /**
+     * Returnes list of event repetitions
+     *
+     * @param state - module state
+     */
+    getProjectEventRepetitions(state: EventsModuleState) {
+      /**
+       * @param projectId — id of project event is related to
+       * @param eventId - id of event
+       */
+      return (projectId: string, eventId: string): HawkEventRepetition[] => {
+        const key = getEventsListKey(projectId, eventId);
+
+        return state.repetitions[key] || []
+      }
     },
 
     /**
@@ -433,10 +453,13 @@ const module: Module<EventsModuleState, RootState> = {
      * @returns {Promise<HawkEventRepetition[]>}
      */
     async [FETCH_EVENT_REPETITIONS](
-      { commit }: { commit: Commit },
-      { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number }
+      { commit, state }: { commit: Commit, state: EventsModuleState },
+      { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number; }
     ): Promise<HawkEventRepetition[]> {
-      const response = await eventsApi.getLatestRepetitions(projectId, eventId, limit);
+      const key = getEventsListKey(projectId, eventId);
+      const skip = (state.repetitions[key] || []).length;
+
+      const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
       const repetitions = response.data.project.event.repetitions;
 
       repetitions.map(repetition => {
@@ -481,11 +504,6 @@ const module: Module<EventsModuleState, RootState> = {
 
       if (repetition !== null) {
         event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
-        commit(MutationTypes.AddRepetitionPayload, {
-          projectId,
-          eventId,
-          repetition,
-        });
       }
     },
 
@@ -807,10 +825,12 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        state.repetitions[key] = [];
+        Vue.set(state.repetitions, key, [repetition]);
+
+        return;
       }
 
-      state.repetitions[key].push(repetition);
+      Vue.set(state.repetitions, key, [...state.repetitions[key], repetition]);
     },
 
     /**

@@ -61,7 +61,16 @@
         "go": "Deadly simple and fast errors tracking",
         "scala": "Boost your scala application quality"
       },
-      "install": "Install"
+      "backToCatalog": "Back to catalog",
+      "viewSource": "View source",
+      "viewReadme": "View README.md",
+      "install": "Install",
+      "installation": "Installation",
+      "initialization": "Initialization",
+      "getToken": "Get an Integration Token",
+      "hereIsToken": "Here is your Integration token. You can also found it in the project settings later.",
+      "followGuide": "Follow the Installation guide",
+      "readmeDisclaimer": "And the most actual guide at the README.md file in Catcher’s repo. As well as its source code."
     }
   },
   "forms": {

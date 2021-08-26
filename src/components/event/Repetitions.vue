@@ -1,6 +1,10 @@
 <template>
   <div class="event-repetitions">
-    <div class="event-repetitions__section">
+    <div
+      v-infinite-scroll="loadMoreRepetitions"
+      infinite-scroll-distance="300"
+      class="event-repetitions__section"
+    >
       <div class="event-repetitions__label">
         {{ $t('event.repetitions.total') }}
       </div>
@@ -35,6 +39,15 @@
           :date="date"
         />
       </div>
+
+      <div
+        v-if="repetitions.length && !noMoreRepetitions"
+        class="event-repetitions__load-more"
+        :class="{'loader': isLoadingRepetitions}"
+        @click="loadMoreRepetitions"
+      >
+        <span v-if="!isLoadingRepetitions">{{ $t('projects.loadMoreEvents') }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +57,8 @@ import Vue from 'vue';
 import { FETCH_EVENT_REPETITIONS } from '@/store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList.vue';
-import { HawkEvent } from '@/types/events';
+import {HawkEvent, HawkEventRepetition} from '@/types/events';
+import {mapGetters} from 'vuex';
 
 export default Vue.extend({
   name: 'RepetitionsOverview',
@@ -70,50 +84,46 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      groupedRepetitions: new Map(),
 
       /**
-       * Flag determines if repetitions are loading
+       * Flag that all event repetitions are fetched
        */
-      repetitionsLoading: true
+      noMoreRepetitions: false,
+      /**
+       * Flag shows that repetitions are currently being fetched
+       */
+      isLoadingRepetitions: false
     };
   },
   computed: {
+    ...mapGetters({
+      repetitions: 'getProjectEventRepetitions',
+    }),
     originalEvent(): HawkEvent {
       return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
     },
-  },
-  async created(): Promise<void> {
-    /**
-     * Dispatching action that fetches several latest repetitions
-     */
-    const repetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
-      projectId: this.projectId,
-      eventId: this.event.id,
-      limit: 50,
-    });
+    groupedRepetitions() {
+      /**
+       * We use Map here to save the key's order,
+       * `Object` does not guarantee the iteration order
+       *
+       * @type {Map<string, HawkEventRepetition[]>}
+       */
+      const groupedRepetitions = new Map();
 
-    /**
-     * We use Map here to save the key's order,
-     * `Object` does not guarantee the iteration order
-     *
-     * @type {Map<string, HawkEventRepetition[]>}
-     */
-    const groupedRepetitions = new Map();
+      this.repetitions(this.projectId, this.event.id).forEach(repetition => {
+        const date = this.getDate(repetition.payload.timestamp);
 
-    repetitions.forEach(repetition => {
-      const date = this.getDate(repetition.payload.timestamp);
+        if (!groupedRepetitions.get(date)) {
+          groupedRepetitions.set(date, []);
+        }
 
-      if (!groupedRepetitions.get(date)) {
-        groupedRepetitions.set(date, []);
-      }
+        groupedRepetitions.get(date).push(repetition);
+      });
 
-      groupedRepetitions.get(date).push(repetition);
-    });
 
-    this.groupedRepetitions = groupedRepetitions;
-
-    this.repetitionsLoading = false;
+      return groupedRepetitions;
+    }
   },
   methods: {
     /**
@@ -128,6 +138,29 @@ export default Vue.extend({
       const month = targetDate.getMonth();
 
       return `${day} ${i18n.t('common.months[' + month + ']')}`;
+    },
+
+    /**
+     * Loads 20 more repetitions
+     */
+    async loadMoreRepetitions() {
+      if (this.noMoreRepetitions || this.isLoadingRepetitions) {
+        return;
+      }
+
+      this.isLoadingRepetitions = true;
+
+      const REPETITIONS_LIMIT = 20;
+
+      const newRepetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
+        projectId: this.projectId,
+        eventId: this.event.id,
+        limit: REPETITIONS_LIMIT
+      });
+
+      this.noMoreRepetitions = newRepetitions.length < REPETITIONS_LIMIT;
+
+      this.isLoadingRepetitions = false;
     },
   },
 });
@@ -157,6 +190,17 @@ export default Vue.extend({
     &__table {
       margin-top: 20px;
       margin-bottom: 20px;
+    }
+
+    &__load-more {
+      height: 46px;
+      margin-top: 50px;
+      padding: 13px 11px 13px 15px;
+      font-weight: 500;
+      line-height: 20px;
+      background-color: var(--color-bg-main);
+      border-radius: 9px;
+      cursor: pointer;
     }
   }
 </style>
