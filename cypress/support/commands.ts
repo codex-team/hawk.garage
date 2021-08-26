@@ -23,20 +23,6 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-
-declare global {
-  namespace Cypress {
-    interface Chainable<Subject = any> {
-      visitHawk(path?: string): Chainable<Cypress.AUTWindow>;
-      createUser(email: string, password: string): Chainable<Cypress.Response<string>>
-      login(email?: string, password?: string): Chainable<void>;
-      register(email: string): Chainable<void>;
-      deleteUser(email: string): Chainable<Cypress.Response<boolean>>;
-      clearStorage(): Chainable<void>;
-    }
-  }
-}
-
 /**
  * Visits Hawk on localhost
  */
