@@ -70,15 +70,16 @@ export default {
     height: 28px;
     margin-left: 10px;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 28px;
-    letter-spacing: 0.15px;
+    letter-spacing: 0.16px;
+    text-transform: uppercase;
   }
 
   &__content {
     margin-top: 15px;
     margin-left: 10px;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   &__content-container {
