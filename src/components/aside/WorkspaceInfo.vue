@@ -22,7 +22,10 @@
       </router-link>
     </div>
     <div class="events-limit">
-      <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
+      <CircleProgress
+        :current="eventsCount"
+        :max="plan.eventsLimit || 0"
+      />
       <div class="events-limit__popup-dialog">
         <div class="events-limit__info-section">
           <div class="events-limit__label">
