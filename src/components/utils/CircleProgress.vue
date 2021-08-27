@@ -104,7 +104,7 @@ export default Vue.extend({
       return {
         strokeDasharray: `${CIRCUMFERENCE} ${CIRCUMFERENCE}`,
         strokeDashoffset: CIRCUMFERENCE - PERCENT * CIRCUMFERENCE,
-        stroke: PERCENT > 0.8 ? this.criticalColor : this.color,
+        stroke: PERCENT >= 0.9 ? this.criticalColor : this.color,
       };
     },
 

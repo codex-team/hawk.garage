@@ -39,7 +39,7 @@
             <Progress
               :max="plan.eventsLimit || 0"
               :current="eventsCount"
-              :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+              :color="(eventsCount / (plan.eventsLimit || eventsCount)) >= 0.9 ? 'var(--color-indicator-critical)' : 'rgba(219, 230, 255, 0.6)'"
               class="events-limit__volume-progress"
             />
           </div>
@@ -96,7 +96,9 @@ export default Vue.extend({
      * @returns {boolean} - shows whether the volume limit exceeded or not.
      */
     isEventsLimitExceeded(): boolean {
-      return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
+      const PERCENT = this.eventsCount / this.plan.eventsLimit;
+
+      return PERCENT >= 0.9;
     },
     /**
      * Total number of used events since the last charge date
