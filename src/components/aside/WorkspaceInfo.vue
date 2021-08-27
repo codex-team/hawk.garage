@@ -18,16 +18,7 @@
         {{ $t('workspaces.settings.label') }}
       </router-link>
     </div>
-    <TooltipDialog>
-      <template v-slot:content>
-        hi
-      </template>
-      <template v-slot:tooltip-content>
-        <div>
-        guys
-        </div>
-      </template>
-    </TooltipDialog>
+    <div>hi</div>
     <Icon
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
@@ -41,12 +32,10 @@
 import Vue from 'vue';
 import Icon from '../utils/Icon.vue';
 import EntityImage from '../utils/EntityImage.vue';
-import TooltipDialog from '../utils/TooltipDialog.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
 import Progress from '../utils/Progress.vue';
-import TooltipMenu, { TooltipMenuItem } from '../utils/TooltipMenu.vue';
 
 export default Vue.extend({
   name: 'WorkspaceInfo',
@@ -54,8 +43,7 @@ export default Vue.extend({
     EntityImage,
     Icon,
     PositiveButton,
-    Progress,
-    TooltipDialog
+    Progress
   },
   props: {
     /**
