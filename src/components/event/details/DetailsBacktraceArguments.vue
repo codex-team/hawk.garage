@@ -2,14 +2,24 @@
   <table class="args">
     <tr
       class="args__row"
-      v-for="(item, index) in argsList"
-      :key="`row:${index}`"
+      v-for="(item, row) in argsList"
+      :key="`row:${row}`"
     >
       <template
-        v-for="([key, value], j) in Object.entries(item)"
+        v-for="([key, value], col) in Object.entries(item)"
       >
-        <td class="args__key">{{ key }}</td>
-        <td class="args__value">{{ value }}</td>
+        <td
+          class="args__key"
+          :key="`row:${row}:col:${col}:key`"
+        >
+          {{ key }}
+        </td>
+        <td
+          class="args__value"
+          :key="`row:${row}:col:${col}:value`"
+        >
+          {{ value }}
+        </td>
       </template>
     </tr>
   </table>
