@@ -13,18 +13,33 @@
       </div>
       <router-link
         class="workspace-info__settings-link"
-        :to="{ name: 'workspace-settings', params: {workspaceId: workspace.id} }"
+        :to="{
+          name: 'workspace-settings',
+          params: { workspaceId: workspace.id },
+        }"
       >
-        {{ $t('workspaces.settings.label') }}
+        {{ $t("workspaces.settings.label") }}
       </router-link>
     </div>
-    <div class="workspace-info__events-limit">
-      <CircleProgress
-        :current="usedEventCount"
-        :max="plan.eventsLimit || 0"
-      />
-      <div class="workspace-info__events-limit-popup-dialog">
-        Data to be Display
+    <div class="events-limit">
+      <CircleProgress :current="usedEventCount" :max="plan.eventsLimit || 0" />
+      <div class="events-limit__popup-dialog">
+        <div class="events-limit__info-section">
+          <div class="events-limit__label">
+            {{ $t('billing.validTill').toUpperCase() }}
+          </div>
+          <div class="events-limit__info-bar">
+            <div class="events-limit__events">
+              {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+            </div>
+            <Progress
+              :max="progressMaxDate"
+              :current="progressCurrentDate"
+              :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+              class="events-limit__volume-progress"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <Icon
@@ -102,80 +117,80 @@ export default Vue.extend({
 </script>
 
 <style>
-  .workspace-info {
-    display: flex;
-    align-items: center;
-    height: 36px;
-    font-size: 14px;
-    line-height: 16px;
+.workspace-info {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  font-size: 14px;
+  line-height: 16px;
 
-    &__wrapper {
-      max-width: 200px;
-    }
+  &__wrapper {
+    max-width: 200px;
+  }
 
-    &__image {
-      margin-right: 15px;
-    }
+  &__image {
+    margin-right: 15px;
+  }
 
-    &__name {
-      overflow: hidden;
-      font-weight: 600;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
+  &__name {
+    overflow: hidden;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 
-    &__settings-link {
-      display: block;
-      margin-top: 2px;
-      color: var(--color-text-second);
-      cursor: pointer;
+  &__settings-link {
+    display: block;
+    margin-top: 2px;
+    color: var(--color-text-second);
+    cursor: pointer;
 
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    &__project-creation-button {
-      width: 26px;
-      height: 26px;
-      margin-left: 14px;
-      padding: 6px;
-      background-color: var(--color-indicator-medium);
-      border-radius: var(--border-radius);
-      cursor: pointer;
-    }
-
-    &__events-limit {
-      position: relative;
-      margin-left: auto;
-      line-height: 0px;
-
-      &-popup-dialog{
-        position: absolute;
-        top: 125%;
-        right: -150%;
-        z-index: 1;
-        width:200px;
-        padding:10px;
-        background-color: var(--color-bg-second);
-        border-radius:10px;
-        opacity: 0;
-
-        &::after {
-          position: absolute;
-          bottom: 100%;
-          left: 77%;
-          margin-left: -10px;
-          border-color: transparent transparent var(--color-bg-second) transparent;
-          border-style: solid;
-          border-width: 6px;
-          content: " ";
-        }
-      }
-      &:hover &-popup-dialog {
-        opacity: 1;
-        pointer-events: auto;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
+
+  &__project-creation-button {
+    width: 26px;
+    height: 26px;
+    margin-left: 14px;
+    padding: 6px;
+    background-color: var(--color-indicator-medium);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+  }
+}
+.events-limit {
+  position: relative;
+  margin-left: auto;
+  line-height: 0px;
+
+  &__popup-dialog {
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    right: -170%;
+    width: 194px;
+    height: 90px;
+    background-color: var(--color-bg-second);
+    box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
+    border-radius: 10px;
+    opacity: 0;
+
+    &::after {
+      position: absolute;
+      bottom: 100%;
+      left: 70%;
+      margin-left: -14px;
+      border-color: transparent transparent var(--color-bg-second) transparent;
+      border-style: solid;
+      border-width: 10px;
+      content: " ";
+    }
+  }
+  &:hover &__popup-dialog {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
 </style>
