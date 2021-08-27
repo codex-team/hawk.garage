@@ -58,7 +58,7 @@ export default Vue.extend({
      */
     width: {
       type: Number,
-      default: 26,
+      default: 28,
     },
 
     /**
@@ -66,7 +66,7 @@ export default Vue.extend({
      */
     height: {
       type: Number,
-      default: 26,
+      default: 28,
     },
 
     /**
@@ -119,10 +119,9 @@ export default Vue.extend({
 </script>
 
 <style>
-
- .progress-ring {
-   &__back {
-     stroke: var(--color-text-second);
-   }
- }
+.progress-ring {
+  &__back {
+    stroke: var(--color-text-second);
+  }
+}
 </style>
