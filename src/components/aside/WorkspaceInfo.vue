@@ -31,13 +31,18 @@
 import Vue from 'vue';
 import Icon from '../utils/Icon.vue';
 import EntityImage from '../utils/EntityImage.vue';
-import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
+import PositiveButton from '../utils/PostivieButton.vue';
+import { Plan } from '../../types/plan';
+import Progress from '../utils/Progress.vue';
 
 export default Vue.extend({
   name: 'WorkspaceInfo',
   components: {
     EntityImage,
     Icon,
+    PositiveButton,
+    Progress
   },
   props: {
     /**
@@ -49,10 +54,24 @@ export default Vue.extend({
     },
   },
   computed: {
+     /**
+     * Return workspace plan
+     * @returns {Plan} - return the plan of the 
+     */
+    plan(): Plan {
+      return this.workspace.plan;
+    },
+    /**
+     * Checking the volume spent
+     * @returns {boolean} - shows whether the volume limit exceeded or not.
+     */
+    isEventsLimitExceeded(): boolean {
+      return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
+    },
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
-    isAdmin() {
+    isAdmin(): boolean {
       return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
     },
   },
