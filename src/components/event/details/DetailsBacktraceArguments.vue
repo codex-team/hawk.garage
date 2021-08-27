@@ -44,7 +44,9 @@ export default Vue.extend({
      * Transforms string-like format of args to object-like
      */
     argsList(): Record<string, string>[] {
-      return this.args.map( item => {
+      const list: Record<string, string>[] = [];
+
+      this.args.map( item => {
         /**
          * Case when argument passed as string like '"name"="value"'
          */
@@ -54,13 +56,15 @@ export default Vue.extend({
            */
           const pair = item.split('=')
 
-          return {
+          list.push({
             [pair[0]]: pair[1]
-          }
+          })
+        } else {
+          console.warn('Unsupported args format:', item)
         }
-
-        return item as string;
       });
+
+      return list;
     }
   }
 });
