@@ -20,7 +20,7 @@
     </div>
     <CircleProgress
       class="workspace-info__events-limit-circle-progress"
-      :current="this.eventsCount"
+      :current="this.usedEventCount"
       :max="this.plan.eventsLimit || 0"
      />
     <Icon
@@ -76,9 +76,10 @@ export default Vue.extend({
       return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
     },
      /**
-     * Total number of errors since the last charge date
+     * Total number of used events since the last charge date
+     * @returns {number} - total number of used events.
      */
-    eventsCount():number {
+    usedEventCount():number {
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
