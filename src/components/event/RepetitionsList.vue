@@ -287,7 +287,7 @@ export default Vue.extend({
         value = JSON.stringify(value);
       }
 
-      return trim(value.toString(), maxLen);
+      return trim((value as any).toString(), maxLen);
     }
   },
 });
