@@ -18,15 +18,15 @@
         {{ $t('workspaces.settings.label') }}
       </router-link>
     </div>
-     <div class="workspace-info__events-limit">
+    <div class="workspace-info__events-limit">
       <CircleProgress
-        :current="this.usedEventCount"
-        :max="this.plan.eventsLimit || 0"
+        :current="usedEventCount"
+        :max="plan.eventsLimit || 0"
       />
       <div class="workspace-info__events-limit-popup-dialog">
         Data to be Display
       </div>
-     </div>
+    </div>
     <Icon
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
@@ -53,7 +53,7 @@ export default Vue.extend({
     Icon,
     PositiveButton,
     Progress,
-    CircleProgress
+    CircleProgress,
   },
   props: {
     /**
@@ -65,9 +65,9 @@ export default Vue.extend({
     },
   },
   computed: {
-     /**
+    /**
      * Return workspace plan
-     * @returns {Plan} - return the plan of the 
+     * @returns {Plan} - return the plan of the
      */
     plan(): Plan {
       return this.workspace.plan;
@@ -79,7 +79,7 @@ export default Vue.extend({
     isEventsLimitExceeded(): boolean {
       return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
     },
-     /**
+    /**
      * Total number of used events since the last charge date
      * @returns {number} - total number of used events.
      */
@@ -146,30 +146,30 @@ export default Vue.extend({
     }
 
     &__events-limit {
-      margin-left: auto;
       position: relative;
+      margin-left: auto;
       line-height: 0px;
 
       &-popup-dialog{
         position: absolute;
-        background-color: var(--color-bg-second);
         top: 125%;
         right: -150%;
-        opacity: 0;
         z-index: 1;
         width:200px;
         padding:10px;
+        background-color: var(--color-bg-second);
         border-radius:10px;
+        opacity: 0;
 
         &::after {
-          content: " ";
           position: absolute;
-          bottom: 100%; 
+          bottom: 100%;
           left: 77%;
           margin-left: -10px;
-          border-width: 6px;
-          border-style: solid;
           border-color: transparent transparent var(--color-bg-second) transparent;
+          border-style: solid;
+          border-width: 6px;
+          content: " ";
         }
       }
       &:hover &-popup-dialog {
