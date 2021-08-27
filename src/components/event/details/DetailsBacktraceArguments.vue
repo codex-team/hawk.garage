@@ -85,15 +85,5 @@ export default Vue.extend({
     padding-right: 20px;
     vertical-align: top;
   }
-
-  &__row {
-  }
-
-  &__key {
-  }
-
-  &__value {
-
-  }
 }
 </style>
