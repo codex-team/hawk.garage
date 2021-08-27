@@ -133,7 +133,7 @@ export default Vue.extend({
     &__project-creation-button {
       width: 26px;
       height: 26px;
-      margin-left: auto;
+      margin-left: 14px;
       padding: 6px;
       background-color: var(--color-indicator-medium);
       border-radius: var(--border-radius);
@@ -141,7 +141,7 @@ export default Vue.extend({
     }
 
     &__events-limit-circle-progress {
-      margin-left: 63px;
+      margin-left: auto;
     }
   }
 </style>
