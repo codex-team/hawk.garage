@@ -1,42 +1,92 @@
-name: Cypress testing
-
-on: [push]
-
-jobs:
-  e2e:
-    runs-on: ubuntu-latest
-
-    container:
-      image: cypress/browsers:node14.16.0-chrome89-ff86
-
-    services:
-      mongodb:
-        image: mongo
-        ports:
-          - 27017:27017
-
-      rabbitmq:
-        image: rabbitmq:3-management
-        ports:
-          - 15672:15672
-
-      api:
-        image: codexteamuser/hawk-api:stage
-        ports:
-          - 3000:3000
-
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v2
-
-      - name: Install deps
-        run: yarn
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          config: video=false
-          browser: chrome
-          start: yarn serve
-          env: VUE_APP_API_ENDPOINT=http://localhost:4000,VUE_APP_API_AUTH_GITHUB=http://localhost:3000/auth/github,VUE_APP_API_AUTH_GOOGLE=http://localhost:3000/auth/google,VUE_APP_CLOUDPAYMENTS_PUBLIC_ID=test_api_00000000000000000000001
-
+#name: Cypress testing
+#
+#on: [push]
+#
+#jobs:
+#  e2e:
+#    runs-on: ubuntu-latest
+#
+#    container:
+#      image: cypress/browsers:node14.16.0-chrome89-ff86
+#
+#    services:
+#      mongodb:
+#        image: mongo
+#        ports:
+#          - 27017:27017
+#        options: >-
+#          --health-cmd "mongo --quiet \"localhost:27017/test\" --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'"
+#          --health-interval 30s
+#          --health-timeout 10s
+#          --health-retries 5
+#          --health-start-period 30s
+#
+#
+#      rabbitmq:
+#        image: rabbitmq:3-management
+#        ports:
+#          - 15672:15672
+#
+#      api:
+#        image: codexteamuser/hawk-api:stage
+#        ports:
+#          - 4000:4000
+#        env:
+#          NODE_ENV: e2e
+#          PORT: 4000
+#          MONGO_HAWK_DB_URL: mongodb://mongodb:27017/hawk
+#          MONGO_EVENTS_DB_URL: mongodb://mongodb:27017/hawk_events
+#          MONGO_RECONNECT_TRIES: 60
+#          MONGO_RECONNECT_INTERVAL: 1000
+#          JWT_SECRET_REFRESH_TOKEN: abacaba
+#          JWT_SECRET_ACCESS_TOKEN: belarus
+#          JWT_SECRET_PROJECT_TOKEN: qwerty
+#          JWT_SECRET_BILLING_CHECKSUM: checksum_secret
+#          INVITE_LINK_HASH_SALT: secret_hash_salt
+#          PLAYGROUND_ENABLE: false
+#          AMQP_UR: amqp://guest:guest@rabbitmq
+#          BILLING_DEBUG: true
+#          BILLING_COMPANY_EMAIL: "team@hawk.so"
+#          CODEX_ACCOUNTING_URL: http://accounting:3999/graphql
+#          GITHUB_CLIENT_ID: fakedata
+#          GITHUB_CLIENT_SECRET: fakedata
+#          API_URL: http://127.0.0.1:4000
+#          GARAGE_URL: http://127.0.0.1:8080
+#          GARAGE_LOGIN_URL: http://127.0.0.1:8080/login
+#          UPLOAD_DIR: uploads
+#          CLOUDPAYMENTS_PUBLIC_ID: test_api_00000000000000000000001
+#
+#        options: >-
+#          --health-cmd "curl -f http://localhost:4000/.well-known/apollo/server-health"
+#          --health-interval 30s
+#          --health-timeout 10s
+#          --health-retries 5
+#          --health-start-period 30s
+#
+#    steps:
+#      - name: Checkout repository code
+#        uses: actions/checkout@v2
+#
+#      - name: Get yarn cache directory path
+#        id: yarn-cache-dir-path
+#        run: echo "::set-output name=dir::$(yarn cache dir)"
+#
+#      - uses: actions/cache@v2
+#        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+#        with:
+#          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+#          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-yarn-
+#
+#      - name: Install deps
+#        run: yarn
+#
+#      - name: Cypress run
+#        uses: cypress-io/github-action@v2
+#        with:
+#          browser: chrome
+#          start: yarn serve
+#          config-file: cypress.e2e.json
+#          env: VUE_APP_API_ENDPOINT=http://api:4000,VUE_APP_CLOUDPAYMENTS_PUBLIC_ID=test_api_00000000000000000000001
+#

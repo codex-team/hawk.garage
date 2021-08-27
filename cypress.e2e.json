@@ -1,0 +1,6 @@
+{
+  "video": false,
+  "env": {
+    "API_ENDPOINT": "http://api:4000"
+  }
+}
