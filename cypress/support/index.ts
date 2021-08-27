@@ -14,7 +14,21 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
+
+declare global {
+  namespace Cypress {
+    interface Chainable<Subject = any> {
+      visitHawk(path?: string): Chainable<Cypress.AUTWindow>;
+      createUser(email: string, password: string): Chainable<Cypress.Response<string>>
+      login(email?: string, password?: string): Chainable<void>;
+      register(email: string): Chainable<void>;
+      deleteUser(email: string): Chainable<Cypress.Response<boolean>>;
+      clearStorage(): Chainable<void>;
+    }
+  }
+}
+
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
