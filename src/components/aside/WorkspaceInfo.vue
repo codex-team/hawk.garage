@@ -18,11 +18,15 @@
         {{ $t('workspaces.settings.label') }}
       </router-link>
     </div>
-    <CircleProgress
-      class="workspace-info__events-limit-circle-progress"
-      :current="this.usedEventCount"
-      :max="this.plan.eventsLimit || 0"
-     />
+     <div class="workspace-info__events-limit">
+      <CircleProgress
+        :current="this.usedEventCount"
+        :max="this.plan.eventsLimit || 0"
+      />
+      <div class="workspace-info__events-limit-popup-dialog">
+        Data to be Display
+      </div>
+     </div>
     <Icon
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
@@ -141,8 +145,37 @@ export default Vue.extend({
       cursor: pointer;
     }
 
-    &__events-limit-circle-progress {
+    &__events-limit {
       margin-left: auto;
+      position: relative;
+      line-height: 0px;
+
+      &-popup-dialog{
+        position: absolute;
+        background-color: var(--color-bg-second);
+        top: 125%;
+        right: -150%;
+        opacity: 0;
+        z-index: 1;
+        width:200px;
+        padding:10px;
+        border-radius:10px;
+
+        &::after {
+          content: " ";
+          position: absolute;
+          bottom: 100%; 
+          left: 77%;
+          margin-left: -10px;
+          border-width: 6px;
+          border-style: solid;
+          border-color: transparent transparent var(--color-bg-second) transparent;
+        }
+      }
+      &:hover &-popup-dialog {
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
   }
 </style>
