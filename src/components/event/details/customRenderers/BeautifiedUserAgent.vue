@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import Vue , { PropType } from 'vue';
+import Vue, { PropType } from 'vue';
 import { BeautifiedUserAgent } from 'hawk.types';
 import Icon from '@/components/utils/Icon.vue';
 
@@ -45,8 +45,8 @@ export default Vue.extend({
      */
     value: {
       type: Object as PropType<BeautifiedUserAgent>,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     /**
@@ -58,23 +58,28 @@ export default Vue.extend({
        * For example, 'max os x' should use 'macos.svg' icon
        */
       const aliases = {
-        macos: ['mac os x']
+        macos: [ 'mac os x' ],
       };
+
+      if (!this.value.os) {
+        return;
+      }
+
       const os = this.value.os.toLowerCase();
 
-      if (iconsAvailable.includes(os)){
+      if (iconsAvailable.includes(os)) {
         return os;
       }
 
-      let icon: string | undefined = undefined;
+      let icon: string | undefined;
 
       Object.entries(aliases).forEach(([iconName, iconAliases]) => {
         iconAliases.forEach((alias) => {
-          if (alias.toLowerCase() === os){
+          if (alias.toLowerCase() === os) {
             icon = iconName;
           }
         });
-      })
+      });
 
       return icon;
     },
@@ -84,23 +89,28 @@ export default Vue.extend({
      */
     browserIcon(): string | undefined {
       const aliases = {
-        yandex: ['yabrowser', 'Yandex Browser']
+        yandex: ['yabrowser', 'Yandex Browser'],
       };
+
+      if (!this.value.browser) {
+        return;
+      }
+
       const browser = this.value.browser.toLowerCase();
 
-      if (iconsAvailable.includes(browser)){
+      if (iconsAvailable.includes(browser)) {
         return browser;
       }
 
-      let icon: string | undefined = undefined;
+      let icon: string | undefined;
 
       Object.entries(aliases).forEach(([iconName, iconAliases]) => {
         iconAliases.forEach((alias) => {
-          if (alias.toLowerCase() === browser){
+          if (alias.toLowerCase() === browser) {
             icon = iconName;
           }
         });
-      })
+      });
 
       return icon;
     },
@@ -112,14 +122,14 @@ export default Vue.extend({
     isNeedToShowOsName(): boolean {
       const logosContainingName = ['macos', 'ios'];
 
-      if (this.osIcon === undefined){
+      if (this.osIcon === undefined) {
         return true;
       }
 
       return logosContainingName.includes(this.osIcon) === false;
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style scoped>

@@ -136,8 +136,9 @@ export default Vue.extend({
             await this.$store.dispatch(RESET_MODAL_DIALOG);
 
             return;
-          }
+          },
         });
+
         return;
       }
 
@@ -153,6 +154,7 @@ export default Vue.extend({
             isRecurrent: !!this.workspace.subscriptionId,
           },
         });
+
         return;
       }
 
@@ -168,7 +170,7 @@ export default Vue.extend({
               isRecurrent: !!this.workspace.subscriptionId,
             },
           });
-        }
+        },
       });
     },
   },

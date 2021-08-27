@@ -32,8 +32,8 @@ const actions = {
    * Set current modal window data
    *
    * @param {Function} dispatch - standard Vuex dispatch function
-   * @property {string|null} component - name of current modal dialog component
-   * @property {object} data - any data for modal dialog
+   * @param {string|null} component - name of current modal dialog component
+   * @param {object} data - any data for modal dialog
    * @returns {Promise<void>}
    */
   async [SET_MODAL_DIALOG]({ commit }, { component, data = {} }) {

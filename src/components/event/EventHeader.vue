@@ -8,7 +8,10 @@
         {{ event.payload.timestamp | prettyFullDate }}
       </span>
 
-      <div class="event-header__breadcrumbs">
+      <div
+        v-if="workspace"
+        class="event-header__breadcrumbs"
+      >
         <router-link
           class="event-header__breadcrumbs-item"
           :to="'/workspace/' + workspace.id"
@@ -82,6 +85,7 @@
           @click="markEvent('ignored')"
         />
         <UiButton
+          v-if="false"
           class="event-header__button"
           :content="$t('event.issue')"
           icon="github"
@@ -137,7 +141,7 @@ export default Vue.extend({
     EntityImage,
     ProjectBadge,
   },
-  mixins: [projectBadges],
+  mixins: [ projectBadges ],
   props: {
     /**
      * Original (first) event data
@@ -244,7 +248,7 @@ export default Vue.extend({
      */
     workspace(): Workspace {
       return this.$store.getters.getWorkspaceByProjectId(this.projectId);
-    }
+    },
 
   },
   watch: {

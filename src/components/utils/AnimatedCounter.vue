@@ -33,12 +33,12 @@ export default Vue.extend({
       /**
        * Previous value to jump out
        */
-      prevValue: 0 as String | Number | null,
+      prevValue: 0 as string | number | null,
 
       /**
        * Current value to jump in
        */
-      curValue: 0 as String | Number | null,
+      curValue: 0 as string | number | null,
     };
   },
   watch: {

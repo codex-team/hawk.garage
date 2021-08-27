@@ -6,49 +6,50 @@
   &__instructions {
     padding: 40px;
     overflow: hidden;
-  }
 
-  &__instructions-header {
-    margin-bottom: 20px;
-    color: var(--color-text-second);
-    font-weight: bold;
-    font-size: 12px;
-    letter-spacing: 0.15px;
-  }
+    &-header {
+      margin-bottom: 20px;
+      color: var(--color-text-second);
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 0.15px;
+      text-transform: uppercase;
+    }
 
-  &__link-list {
-    color: var(--color-indicator-medium);
+    a {
+      color: var(--color-text-highlighted);
 
-    & li {
-      display: flex;
-      align-items: center;
-      margin-top: 15px;
-      line-height: 16px;
-
-      :last-child {
-        margin-top: 0;
-      }
-
-      a {
-        padding-bottom: 2px;
-        border-bottom: 1px dashed var(--color-indicator-medium);
-      }
-
-      &::before {
-        display: inline-block;
-        min-width: 4px;
-        min-height: 4px;
-        margin: -2px 8px 0 8px;
-        color: var(--color-indicator-medium);
-        font-weight: bold;
-        background-color: var(--color-indicator-medium);
-        border-radius: 50%;
-        content: " ";
+      &:hover {
+        text-decoration: underline;
       }
     }
   }
 
+  &__instructions-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  &__instructions-table th {
+    background-color: var(--color-bg-main);
+  }
+
+  &__instructions-table td,
+  &__instructions-table th {
+    padding: 10px 13px;
+    text-align: left;
+    vertical-align: middle;
+    border: 1px solid var(--color-delimiter-line);
+  }
+
   .code-block {
     margin: 15px 0;
+  }
+
+  code {
+    margin: 0 2px;
+    padding: 2px 6px;
+    background: var(--color-bg-third);
+    border-radius: 4px;
   }
 }

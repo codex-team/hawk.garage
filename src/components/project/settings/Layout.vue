@@ -118,7 +118,7 @@ export default Vue.extend({
               time: 10000,
             });
           }
-        }
+        },
       });
     },
   },

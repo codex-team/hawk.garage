@@ -1,17 +1,20 @@
 <template>
   <div
     class="guide-page-header"
-    :style="{background}"
+    :style="{ background }"
   >
     <router-link
       class="guide-page-header__back-link"
-      :to="{name:'add-catcher', params: {projectId: $route.params.projectId}}"
+      :to="{
+        name: 'add-catcher',
+        params: { projectId: $route.params.projectId },
+      }"
     >
       <Icon
         class="guide-page-header__back-link-icon"
         symbol="arrow-left"
       />
-      Back to other catchers
+      {{ $t('components.catalog.backToCatalog') }}
     </router-link>
     <div class="guide-page-header__name-container">
       <div class="guide-page-header__name">
@@ -26,15 +29,15 @@
       {{ description }}
     </div>
     <div class="guide-page-header__info">
-      <div class="guide-page__source-code">
-        <a :href="githubLink">View source</a>
-      </div>
-      <div class="guide-page-header__readme">
-        <a :href="readmeLink">View README.md</a>
-      </div>
-      <div class="guide-page-header__last-version">
-        Last version: {{ lastVersion }}
-      </div>
+      <a :href="githubLink">
+        <Icon symbol="github" />
+        {{ $t('components.catalog.viewSource') }}
+      </a>
+      <a
+        :href="readmeLink"
+      >
+        {{ $t('components.catalog.viewReadme') }}
+      </a>
     </div>
   </div>
 </template>
@@ -70,10 +73,6 @@ export default {
       type: String,
       required: true,
     },
-    lastVersion: {
-      type: String,
-      required: true,
-    },
   },
   data() {
     return {
@@ -84,77 +83,75 @@ export default {
 </script>
 
 <style>
-  .guide-page-header {
-    display: flex;
-    flex-direction: column;
-    height: 200px;
-    padding: 20px;
+.guide-page-header {
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+  padding: 20px;
 
-    &__back-link {
-      display: inline-flex;
-      align-items: center;
-      opacity: 0.6;
+  &__back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    padding: 10px 0;
+    opacity: 0.6;
 
-      &:hover {
-        opacity: 1;
-      }
+    &:hover {
+      opacity: 1;
     }
 
-    &__back-link-icon {
+    &-icon {
       width: 7px;
       height: 12px;
       margin-right: 8px;
       vertical-align: middle;
     }
+  }
 
-    &__name-container {
+  &__name-container {
+    display: flex;
+    margin-top: 20px;
+  }
+
+  &__name {
+    font-weight: bold;
+    font-size: 43px;
+  }
+
+  &__description {
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    white-space: nowrap;
+
+    a {
       display: flex;
-      margin-top: 20px;
-    }
+      align-items: center;
+      margin-right: 20px;
 
-    &__name {
-      font-weight: bold;
-      font-size: 43px;
-    }
-
-    &__description {
-      margin-top: 5px;
-      font-size: 15px;
-      line-height: 1.2;
-    }
-
-    &__info {
-      display: flex;
-      margin-top: auto;
-    }
-
-    &__label {
-      margin-top: 10px;
-      margin-left: 20px;
-    }
-
-    &__source-code,
-    &__readme,
-    &__last-version {
-      height: 20.5px;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 20.5px;
-      white-space: nowrap;
-    }
-
-    &__source-code {
-      padding-left: 30px;
-      background: no-repeat left/ auto 100% url("../../assets/github.svg");
-    }
-
-    &__readme {
-      margin-left: 20px;
-    }
-
-    &__last-version {
-      margin-left: auto;
-      font-weight: normal;
+      svg {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        fill: currentColor;
+      }
     }
   }
+
+  &__label {
+    margin-top: 10px;
+    margin-left: 20px;
+  }
+
+}
 </style>

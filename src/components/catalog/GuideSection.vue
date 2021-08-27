@@ -18,7 +18,7 @@ export default {
 <style>
 .guide-section {
   position: relative;
-  margin-top: 16px;
+  margin-top: 50px;
   padding: 10px 20px;
   border: solid 1px rgba(219, 230, 255, 0.2);
   border-radius: 5px;
@@ -28,11 +28,16 @@ export default {
     top: 0;
     left: 13px;
     margin: 0;
-    padding: 7px;
+    padding: 0 10px;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
+    letter-spacing: 0.2px;
     background-color: var(--color-bg-second);
     transform: translateY(-50%);
+  }
+
+  &__content {
+    overflow-x: auto;
   }
 
   h3 {

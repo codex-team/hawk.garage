@@ -9,7 +9,17 @@ export default {
    * @param {Function} next - next router guard
    */
   async beforeRouteEnter(to, _from, next) {
-    component = (await import(/* webpackChunkName: 'catcher-instructions-[request]' */ './guides/' + to.params.page)).default;
+    const hasSeparatePage = [
+      'javascript',
+    ];
+
+    let view = 'common';
+
+    if (hasSeparatePage.includes(to.params.page)) {
+      view = to.params.page;
+    }
+
+    component = (await import(/* webpackChunkName: 'catcher-instructions-[request]' */ './guides/' + view)).default;
     next();
   },
   render: h => h(component),

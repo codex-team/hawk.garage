@@ -72,7 +72,7 @@ export default {
     WorkspaceInfo,
     ProjectHeader,
     ProjectPlaceholder,
-    EmptyProjectsList
+    EmptyProjectsList,
   },
   props: {
     /**
@@ -250,27 +250,29 @@ export default {
           name: 'add-catcher',
           params: { projectId: project.id },
         }, () => {
+          // do nothing
         });
       }
       this.$router.push({
         name: 'project-overview',
         params: { projectId: project.id },
       }, () => {
+        // do nothing
       });
     },
 
     /**
      * Onboarding. If a user has no workspace, show Create Workspace modal
      *
-     * @return {void}
+     * @returns {void}
      */
-    suggestWorkspaceCreation(){
-      if (this.$store.state.workspaces.list.length > 0){
+    suggestWorkspaceCreation() {
+      if (this.$store.state.workspaces.list.length > 0) {
         return;
       }
 
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
-    }
+    },
   },
 };
 

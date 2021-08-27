@@ -23,9 +23,9 @@ export default Vue.extend({
     message: {
       type: String,
       required: true,
-    }
-  }
-})
+    },
+  },
+});
 </script>
 
 <style>

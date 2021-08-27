@@ -43,7 +43,7 @@ export default {
     EntityImage,
     Icon,
   },
-  mixins: [projectBadges],
+  mixins: [ projectBadges ],
   computed: {
     /**
      * Current viewed project
