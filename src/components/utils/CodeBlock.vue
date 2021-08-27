@@ -119,10 +119,10 @@ export default {
   &--one-line {
     ^&__content {
       @apply --hide-scrollbar;
-      overflow: hidden;
       max-width: 93%;
-      text-overflow: ellipsis;
+      overflow: hidden;
       white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     ^&__button-wrapper {

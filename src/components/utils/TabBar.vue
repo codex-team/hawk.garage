@@ -104,6 +104,7 @@ export default Vue.extend({
       margin-right: 25px;
       color: var(--color-text-second);
       font-size: 14.6px;
+      white-space: nowrap;
       cursor: pointer;
       transition: color 200ms;
 

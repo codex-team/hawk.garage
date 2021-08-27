@@ -88,7 +88,7 @@ export default Vue.extend({
     isLoading: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   computed: {
     /**

@@ -8,7 +8,10 @@
         {{ event.payload.timestamp | prettyFullDate }}
       </span>
 
-      <div class="event-header__breadcrumbs" v-if="workspace">
+      <div
+        v-if="workspace"
+        class="event-header__breadcrumbs"
+      >
         <router-link
           class="event-header__breadcrumbs-item"
           :to="'/workspace/' + workspace.id"
@@ -82,6 +85,7 @@
           @click="markEvent('ignored')"
         />
         <UiButton
+          v-if="false"
           class="event-header__button"
           :content="$t('event.issue')"
           icon="github"

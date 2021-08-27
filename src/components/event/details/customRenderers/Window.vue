@@ -1,7 +1,7 @@
 <template>
-  <span>
+  <nobr>
     {{ value.innerWidth }} × {{ value.innerHeight }}
-  </span>
+  </nobr>
 </template>
 
 <script lang="ts">

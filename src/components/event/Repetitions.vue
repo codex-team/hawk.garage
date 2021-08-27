@@ -22,16 +22,19 @@
       </div>
 
       <p
-        v-if="repetitionsLoading"
+        v-if="repetitionsLoadingFirstly"
       >
         {{ $t("common.loading") }}
       </p>
       <div
-        v-else
         v-for="date in groupedRepetitions.keys()"
+        v-else
         :key="date"
         class="event-repetitions__table"
       >
+        <div class="event-repetitions__table-day">
+          {{ date }}
+        </div>
         <RepetitionsList
           :repetitions="groupedRepetitions.get(date)"
           :event="event"
@@ -57,8 +60,8 @@ import Vue from 'vue';
 import { FETCH_EVENT_REPETITIONS } from '@/store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList.vue';
-import {HawkEvent, HawkEventRepetition} from '@/types/events';
-import {mapGetters} from 'vuex';
+import { HawkEvent, HawkEventRepetition } from '@/types/events';
+import { mapGetters } from 'vuex';
 
 export default Vue.extend({
   name: 'RepetitionsOverview',
@@ -92,7 +95,12 @@ export default Vue.extend({
       /**
        * Flag shows that repetitions are currently being fetched
        */
-      isLoadingRepetitions: false
+      isLoadingRepetitions: false,
+
+      /**
+       * Flag determines if repetitions are loading
+       */
+      repetitionsLoadingFirstly: true,
     };
   },
   computed: {
@@ -123,7 +131,7 @@ export default Vue.extend({
 
 
       return groupedRepetitions;
-    }
+    },
   },
   methods: {
     /**
@@ -155,12 +163,13 @@ export default Vue.extend({
       const newRepetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
         projectId: this.projectId,
         eventId: this.event.id,
-        limit: REPETITIONS_LIMIT
+        limit: REPETITIONS_LIMIT,
       });
 
       this.noMoreRepetitions = newRepetitions.length < REPETITIONS_LIMIT;
 
       this.isLoadingRepetitions = false;
+      this.repetitionsLoadingFirstly = false;
     },
   },
 });
@@ -188,8 +197,15 @@ export default Vue.extend({
     }
 
     &__table {
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-top: 30px;
+      margin-bottom: 60px;
+
+      &-day {
+        margin-bottom: 10px;
+        color: var(--color-text-second);
+        font-weight: 500;
+        font-size: 16px;
+      }
     }
 
     &__load-more {

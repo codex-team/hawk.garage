@@ -26,8 +26,8 @@
   }
 
   &__instructions-table {
-    border-collapse: collapse;
     width: 100%;
+    border-collapse: collapse;
   }
 
   &__instructions-table th {
@@ -36,42 +36,10 @@
 
   &__instructions-table td,
   &__instructions-table th {
-    vertical-align: middle;
-    text-align: left;
     padding: 10px 13px;
+    text-align: left;
+    vertical-align: middle;
     border: 1px solid var(--color-delimiter-line);
-  }
-
-  &__link-list {
-    color: var(--color-indicator-medium);
-
-    & li {
-      display: flex;
-      align-items: center;
-      margin-top: 15px;
-      line-height: 16px;
-
-      :last-child {
-        margin-top: 0;
-      }
-
-      a {
-        padding-bottom: 2px;
-        border-bottom: 1px dashed var(--color-indicator-medium);
-      }
-
-      &::before {
-        display: inline-block;
-        min-width: 4px;
-        min-height: 4px;
-        margin: -2px 8px 0 8px;
-        color: var(--color-indicator-medium);
-        font-weight: bold;
-        background-color: var(--color-indicator-medium);
-        border-radius: 50%;
-        content: " ";
-      }
-    }
   }
 
   .code-block {
@@ -79,9 +47,9 @@
   }
 
   code {
-    background: var(--color-bg-third);
-    padding: 2px 6px;
-    border-radius: 4px;
     margin: 0 2px;
+    padding: 2px 6px;
+    background: var(--color-bg-third);
+    border-radius: 4px;
   }
 }
