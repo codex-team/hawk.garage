@@ -180,6 +180,8 @@ export default Vue.extend({
     box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
     border-radius: 10px;
     visibility: hidden;
+    line-height: normal;
+    padding: 15px;
 
     &::after {
       position: absolute;
@@ -199,7 +201,6 @@ export default Vue.extend({
   }
 
   &__info {
-      display: flex;
       margin-top: 20px;
 
       &-section {
