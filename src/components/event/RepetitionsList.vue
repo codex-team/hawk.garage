@@ -59,7 +59,7 @@
           v-for="contextField in distinctContextKeys"
           :key="`context:${contextField}`"
         >
-          {{ repetition.payload.context[contextField] || '—' }}
+          {{ trim(repetition.payload.context[contextField], 100) || '—' }}
         </td>
 
         <!-- ...addons fields -->
@@ -81,12 +81,17 @@
             <code
               v-if="isObject(repetition.payload.addons[addonsField])"
             >
-              &lt;Object&gt;
+              <template v-if="JSON.stringify(repetition.payload.addons[addonsField]).length < 150">
+                <pre>{{ repetition.payload.addons[addonsField] }}</pre>
+              </template>
+              <template v-else>
+                &lt;Big Object&gt;
+              </template>
             </code>
 
             <!-- String value -->
             <template v-else>
-              {{ repetition.payload.addons[addonsField] || '—' }}
+              {{ trim(repetition.payload.addons[addonsField], 100)  || '—' }}
             </template>
           </template>
         </td>
@@ -102,6 +107,7 @@ import CustomRendererBeautifiedUserAgent from '@/components/event/details/custom
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import AddonRenderers from '../../mixins/addonRenderers';
 import { HawkEvent, HawkEventRepetition } from '../../types/events';
+import {isObject, trim} from '../../utils';
 
 export default Vue.extend({
   name: 'RepetitionsTable',
@@ -269,6 +275,20 @@ export default Vue.extend({
     lockChromeSwipeNavigation(state: boolean): void {
       document.body.classList.toggle('swipe-nav-disabled', state);
     },
+
+    /**
+     * Trims the value
+     *
+     * @param value - what to trim
+     * @param maxLen - how many chars to leave
+     */
+    trim(value: unknown, maxLen: number) {
+      if (isObject(value)){
+        value = JSON.stringify(value);
+      }
+
+      return trim(value.toString(), maxLen);
+    }
   },
 });
 </script>
@@ -314,6 +334,7 @@ export default Vue.extend({
       padding: 15px 10px;
       text-align: left;
       border-bottom: 1px solid var(--color-border);
+      vertical-align: top;
 
       &:first-child {
         padding-left: 0;
