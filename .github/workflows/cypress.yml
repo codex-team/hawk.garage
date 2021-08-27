@@ -57,6 +57,9 @@ jobs:
           --health-start-period 30s
 
     steps:
+      - name: API logs
+        run: docker logs "${{ job.services.mysql.id }}"
+
       - name: Checkout repository code
         uses: actions/checkout@v2
 
