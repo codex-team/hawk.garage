@@ -14,6 +14,13 @@ jobs:
         image: mongo
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd mongo --quiet "localhost:27017/test" --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'
+          --health-interval 30s
+          --health-timeout 10s
+          --health-retries 5
+          --health-start-period 30s
+
 
       rabbitmq:
         image: rabbitmq:3-management
