@@ -284,6 +284,17 @@ export default Vue.extend({
       border-collapse: collapse;
     }
 
+    &__time {
+      box-sizing: content-box;
+      width: 40px;
+      color: var(--color-text-second);
+      letter-spacing: 0.16px;
+    }
+
+    &__user {
+      width: 22px;
+    }
+
     th {
       white-space: nowrap;
     }
@@ -307,17 +318,6 @@ export default Vue.extend({
       &:first-child {
         padding-left: 0;
       }
-    }
-
-    &__time {
-      box-sizing: content-box;
-      width: 40px;
-      color: var(--color-text-second);
-      letter-spacing: 0.16px;
-    }
-
-    &__user {
-      width: 22px;
     }
 
     code {

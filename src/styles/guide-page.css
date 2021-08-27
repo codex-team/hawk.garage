@@ -42,38 +42,6 @@
     border: 1px solid var(--color-delimiter-line);
   }
 
-  &__link-list {
-    color: var(--color-indicator-medium);
-
-    & li {
-      display: flex;
-      align-items: center;
-      margin-top: 15px;
-      line-height: 16px;
-
-      :last-child {
-        margin-top: 0;
-      }
-
-      a {
-        padding-bottom: 2px;
-        border-bottom: 1px dashed var(--color-indicator-medium);
-      }
-
-      &::before {
-        display: inline-block;
-        min-width: 4px;
-        min-height: 4px;
-        margin: -2px 8px 0 8px;
-        color: var(--color-indicator-medium);
-        font-weight: bold;
-        background-color: var(--color-indicator-medium);
-        border-radius: 50%;
-        content: " ";
-      }
-    }
-  }
-
   .code-block {
     margin: 15px 0;
   }

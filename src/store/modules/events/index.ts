@@ -804,7 +804,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [repetition]);
+        Vue.set(state.repetitions, key, [ repetition ]);
 
         return;
       }
