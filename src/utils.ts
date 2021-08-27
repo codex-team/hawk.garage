@@ -1,8 +1,5 @@
 import mergeWith from 'lodash.mergewith';
 import { HawkEventDailyInfo, HawkEventRepetition } from './types/events';
-import { EventAddons, JavaScriptAddons } from 'hawk.types';
-import { EventDataAccepted } from '../../types/src/base/event/event';
-import { GroupedEventDBScheme } from '../../types/src/dbScheme/groupedEvent';
 
 /**
  * Returns entity color from predefined list

@@ -190,7 +190,7 @@ export default Vue.extend({
           userSpecifiedSomewhere = true;
         }
 
-        if (titleSpecifiedSomewhere && userSpecifiedSomewhere) {
+        if (titleSpecifiedSomewhere && userSpecifiedSomewhere && releaseSpecifiedSomewhere) {
           return;
         }
       });
