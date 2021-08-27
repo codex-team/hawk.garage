@@ -26,6 +26,29 @@ jobs:
           - 4000:4000
         env:
           NODE_ENV: e2e
+          PORT: 4000
+          MONGO_HAWK_DB_URL: mongodb://mongodb:27017/hawk
+          MONGO_EVENTS_DB_URL: mongodb://mongodb:27017/hawk_events
+          MONGO_RECONNECT_TRIES: 60
+          MONGO_RECONNECT_INTERVAL: 1000
+          JWT_SECRET_REFRESH_TOKEN: abacaba
+          JWT_SECRET_ACCESS_TOKEN: belarus
+          JWT_SECRET_PROJECT_TOKEN: qwerty
+          JWT_SECRET_BILLING_CHECKSUM: checksum_secret
+          INVITE_LINK_HASH_SALT: secret_hash_salt
+          PLAYGROUND_ENABLE: false
+          AMQP_UR: amqp://guest:guest@rabbitmq
+          BILLING_DEBUG: true
+          BILLING_COMPANY_EMAIL: "team@hawk.so"
+          CODEX_ACCOUNTING_URL: http://accounting:3999/graphql
+          GITHUB_CLIENT_ID: fakedata
+          GITHUB_CLIENT_SECRET: fakedata
+          API_URL: http://127.0.0.1:4000
+          GARAGE_URL: http://127.0.0.1:8080
+          GARAGE_LOGIN_URL: http://127.0.0.1:8080/login
+          UPLOAD_DIR: uploads
+          CLOUDPAYMENTS_PUBLIC_ID: test_api_00000000000000000000001
+
         options: >-
           --health-cmd "curl -f http://localhost:8080/auth/realms/master"
           --health-interval 30s
