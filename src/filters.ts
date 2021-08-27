@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import i18n from './i18n';
 import shortNumber from 'short-number';
-import { capitalize, pad } from './utils';
+import { capitalize, pad, trim } from './utils';
 
 /**
  * Filter that add space after first digit in 4-digits number
@@ -265,5 +265,5 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
  * @returns {string}
  */
 Vue.filter('trim', function (value: string, maxLen: number) {
-  return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
+  return trim(value, maxLen);
 });

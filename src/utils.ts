@@ -424,3 +424,13 @@ export function filterBeautifiedAddons(repetitions: HawkEventRepetition[]): void
     });
   });
 }
+
+/**
+ * Trims the string
+ *
+ * @param value - what to trim
+ * @param maxLen - how many chars to leave
+ */
+export function trim(value: string, maxLen: number): string {
+  return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
+}
