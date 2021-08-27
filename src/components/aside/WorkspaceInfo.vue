@@ -18,7 +18,11 @@
         {{ $t('workspaces.settings.label') }}
       </router-link>
     </div>
-    <div>hi</div>
+    <CircleProgress
+      class="workspace-info__events-limit-circle-progress"
+      :current="this.eventsCount"
+      :max="this.plan.eventsLimit || 0"
+     />
     <Icon
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
@@ -36,6 +40,7 @@ import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
 import Progress from '../utils/Progress.vue';
+import CircleProgress from '../utils/CircleProgress.vue';
 
 export default Vue.extend({
   name: 'WorkspaceInfo',
@@ -43,7 +48,8 @@ export default Vue.extend({
     EntityImage,
     Icon,
     PositiveButton,
-    Progress
+    Progress,
+    CircleProgress
   },
   props: {
     /**
@@ -68,6 +74,12 @@ export default Vue.extend({
      */
     isEventsLimitExceeded(): boolean {
       return this.plan.eventsLimit <= this.workspace.billingPeriodEventsCount;
+    },
+     /**
+     * Total number of errors since the last charge date
+     */
+    eventsCount():number {
+      return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
@@ -126,6 +138,10 @@ export default Vue.extend({
       background-color: var(--color-indicator-medium);
       border-radius: var(--border-radius);
       cursor: pointer;
+    }
+
+    &__events-limit-circle-progress {
+      margin-left: 63px;
     }
   }
 </style>
