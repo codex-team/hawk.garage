@@ -22,7 +22,7 @@
       </router-link>
     </div>
     <div class="events-limit">
-      <CircleProgress :current="eventCount" :max="plan.eventsLimit || 0" />
+      <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
       <div class="events-limit__popup-dialog">
         <div class="events-limit__info-section">
           <div class="events-limit__label">
@@ -102,7 +102,7 @@ export default Vue.extend({
      * Total number of used events since the last charge date
      * @returns {number} - total number of used events.
      */
-    eventCount():number {
+    eventsCount():number {
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
