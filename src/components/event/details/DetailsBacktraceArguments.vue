@@ -2,10 +2,11 @@
   <table class="args">
     <tr
       class="args__row"
-      v-for="item in argsList"
+      v-for="(item, index) in argsList"
+      :key="`row:${index}`"
     >
       <template
-        v-for="[key, value] in Object.entries(item)"
+        v-for="([key, value], j) in Object.entries(item)"
       >
         <td class="args__key">{{ key }}</td>
         <td class="args__value">{{ value }}</td>
@@ -24,7 +25,8 @@ export default Vue.extend({
      * Arguments for the stack trace frame
      */
     args: {
-      type: Array as PropType<string[]>
+      type: Array as PropType<string[]>,
+      required: true
     }
   },
   computed: {
@@ -47,7 +49,7 @@ export default Vue.extend({
           }
         }
 
-        return item;
+        return item as string;
       });
     }
   }
