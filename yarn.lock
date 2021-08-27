@@ -1284,10 +1284,10 @@
   dependencies:
     "@types/mongodb" "^3.5.34"
 
-"@hawk.so/webpack-plugin@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@hawk.so/webpack-plugin/-/webpack-plugin-1.0.0.tgz#ddcf94badf89bac72f3c6e14e3071480593846c1"
-  integrity sha512-Ec+00AQ8cs7aYs7KXUiF6zpkU118Oe+o/AqdT6Y//FH6SUL7WLWDRbk+gUHgU27vH/PMCrpwRBBUTwVeKAt6ZA==
+"@hawk.so/webpack-plugin@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@hawk.so/webpack-plugin/-/webpack-plugin-1.0.1.tgz#99b0fa19723a4d830eb8816924fe83b22fa55f49"
+  integrity sha512-ROz2z+AF8fdpc6L0Bo2T/1hUjS8OElTomO0PihmAjIo4QA9jUX34GqnvWJR74Vcke9gC3ajNOnZCls3yakNbNQ==
   dependencies:
     form-data "^3.0.0"
     gitlog "^4.0.4"
@@ -1488,7 +1488,7 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
 
-"@storybook/addon-actions@6.x.x":
+"@storybook/addon-actions@^6.3.7":
   version "6.3.7"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-6.3.7.tgz#b25434972bef351aceb3f7ec6fd66e210f256aac"
   integrity sha512-CEAmztbVt47Gw1o6Iw0VP20tuvISCEKk9CS/rCjHtb4ubby6+j/bkp3pkEUQIbyLdHiLWFMz0ZJdyA/U6T6jCw==
@@ -1511,7 +1511,7 @@
     util-deprecate "^1.0.2"
     uuid-browser "^3.1.0"
 
-"@storybook/addon-docs@6.x.x":
+"@storybook/addon-docs@^6.3.7":
   version "6.3.7"
   resolved "https://registry.yarnpkg.com/@storybook/addon-docs/-/addon-docs-6.3.7.tgz#a7b8ff2c0baf85fc9cc1b3d71f481ec40499f3cc"
   integrity sha512-cyuyoLuB5ELhbrXgnZneDCHqNq1wSdWZ4dzdHy1E5WwLPEhLlD6INfEsm8gnDIb4IncYuzMhK3XYBDd7d3ijOg==
@@ -1561,7 +1561,7 @@
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
-"@storybook/addon-knobs@6.x.x":
+"@storybook/addon-knobs@^6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@storybook/addon-knobs/-/addon-knobs-6.3.0.tgz#f289c072729651150a27a163371df20922c24f93"
   integrity sha512-wsZZ1t38KHdaxzrc9oPyiIJDihJnjHRRabrENQbylktJwETEjb2z3eX0iBRJGiz/YCHO+tGd0ItyZArOdijT6g==
@@ -1577,7 +1577,7 @@
     react-lifecycles-compat "^3.0.4"
     react-select "^3.2.0"
 
-"@storybook/addon-links@6.x.x":
+"@storybook/addon-links@^6.3.7":
   version "6.3.7"
   resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-6.3.7.tgz#f273abba6d056794a4aa920b2fa9639136e6747f"
   integrity sha512-/8Gq18o1DejP3Om0ZOJRkMzW5FoHqoAmR0pFx4DipmNu5lYy7V3krLw4jW4qja1MuQkZ53MGh08FJOoAc2RZvQ==
@@ -1614,7 +1614,7 @@
     prop-types "^15.7.2"
     util-deprecate "^1.0.2"
 
-"@storybook/addon-toolbars@6.x.x":
+"@storybook/addon-toolbars@^6.3.7":
   version "6.3.7"
   resolved "https://registry.yarnpkg.com/@storybook/addon-toolbars/-/addon-toolbars-6.3.7.tgz#acd0c9eea7fad056d995a821e34abddd5b065b9b"
   integrity sha512-UTIurbl2WXj/jSOj7ndqQ/WtG7kSpGp62T7gwEZTZ+h/3sJn+bixofBD/7+sXa4hWW07YgTXV547DMhzp5bygg==
@@ -14031,7 +14031,7 @@ vue-class-component@^7.0.2, vue-class-component@^7.1.0:
   version "7.2.6"
   resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-7.2.6.tgz#8471e037b8e4762f5a464686e19e5afc708502e4"
 
-vue-cli-plugin-storybook@^2.x.x:
+vue-cli-plugin-storybook@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-storybook/-/vue-cli-plugin-storybook-2.1.0.tgz#50ccc2116c172596b8166187dcab55960e4f0fd8"
   integrity sha512-/cmV4/HVk6BqzszZzgC/AIrh8/5Wot/7WpHu0PIBnNNO/viJbRUScj2oC0IHCGTD7FAENlqDDuRIkV5eroY6Gw==
