@@ -22,20 +22,24 @@
       </router-link>
     </div>
     <div class="events-limit">
-      <CircleProgress :current="usedEventCount" :max="plan.eventsLimit || 0" />
+      <CircleProgress :current="eventCount" :max="plan.eventsLimit || 0" />
       <div class="events-limit__popup-dialog">
         <div class="events-limit__info-section">
           <div class="events-limit__label">
-            {{ $t('billing.validTill').toUpperCase() }}
+            {{ $t('billing.volume') }}
+            <PositiveButton
+              v-if="isEventsLimitExceeded"
+              :content="$t('billing.boost') + '!'"
+            />
           </div>
           <div class="events-limit__info-bar">
             <div class="events-limit__events">
-              {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+              {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
             </div>
             <Progress
-              :max="progressMaxDate"
-              :current="progressCurrentDate"
-              :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
+              :max="plan.eventsLimit || 0"
+              :current="eventsCount"
+              :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
               class="events-limit__volume-progress"
             />
           </div>
@@ -98,7 +102,7 @@ export default Vue.extend({
      * Total number of used events since the last charge date
      * @returns {number} - total number of used events.
      */
-    usedEventCount():number {
+    eventCount():number {
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
@@ -175,7 +179,7 @@ export default Vue.extend({
     background-color: var(--color-bg-second);
     box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
     border-radius: 10px;
-    opacity: 0;
+    visibility: hidden;
 
     &::after {
       position: absolute;
@@ -188,9 +192,51 @@ export default Vue.extend({
       content: " ";
     }
   }
+
   &:hover &__popup-dialog {
-    opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
+
+  &__info {
+      display: flex;
+      margin-top: 20px;
+
+      &-section {
+        display: flex;
+        flex-direction: column;
+
+        &:not(:last-of-type){
+          margin-right: 30px;
+        }
+      }
+
+      &-bar {
+        padding-top: 3px;
+      }
+    }
+
+    &__label {
+      @apply --ui-label;
+      display: inline-block;
+      margin-right: 13px;
+      margin-bottom: 15px;
+    }
+
+    &__volume-progress {
+      width: 160px;
+      height: 5px;
+      margin-top: 7px;
+      background-color: color-mod(var(--color-border) alpha(25%));
+    }
+
+    &__events {
+      color: var(--color-text-main);
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 16px;
+      letter-spacing: 0.18px;
+      white-space: nowrap;
+    }
 }
 </style>
