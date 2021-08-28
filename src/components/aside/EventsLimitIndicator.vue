@@ -95,8 +95,6 @@ export default Vue.extend({
     z-index: 1;
     top: 150%;
     right: -170%;
-    width: 194px;
-    height: 90px;
     background-color: var(--color-bg-second);
     box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
     border-radius: 10px;
