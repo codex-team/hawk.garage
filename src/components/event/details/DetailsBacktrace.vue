@@ -18,26 +18,26 @@
           class="details-backtrace__header-row"
           @click="toggleViewState(index)"
         >
-          <div class="details-backtrace__left">
-            <span v-if="frame.function">
+          <div class="details-backtrace__method">
+            <template v-if="frame.function">
               {{ frame.function }}
-            </span>
+            </template>
             <span
               v-else
-              class="details-backtrace__left-anonymous-function"
+              class="details-backtrace__method-anonymous-function"
             >
-              (anonymous function)
+              Nameless scope
             </span>
           </div>
-          <div class="details-backtrace__right">
+          <div class="details-backtrace__location">
             <Filepath
               :location="frame.file"
               :title="frame.file"
-              class="details-backtrace__right-file"
+              class="details-backtrace__location-file"
             />
             <span
               v-if="frame.line"
-              class="details-backtrace__right-line"
+              class="details-backtrace__location-line"
             >
               line {{ getLocation(frame) }}
             </span>
@@ -49,14 +49,23 @@
             class="details-backtrace__arrow-down"
           />
         </div>
-        <CodeFragment
-          v-if="openedFrames.includes(index) && frame.sourceCode"
-          :lines="frame.sourceCode"
-          :lines-highlighted="[frame.line]"
-          :column-pointer="frame.column"
-          :filename="frame.file"
-          :lang="lang"
-        />
+        <div
+          v-show="openedFrames.includes(index)"
+        >
+          <DetailsBacktraceArguments
+            v-if="frame.arguments && frame.arguments.length"
+            :args="frame.arguments"
+          />
+          <CodeFragment
+            class="details-backtrace__code"
+            v-if="frame.sourceCode"
+            :lines="frame.sourceCode"
+            :lines-highlighted="[frame.line]"
+            :column-pointer="frame.column"
+            :filename="frame.file"
+            :lang="lang"
+          />
+        </div>
       </div>
     </template>
     <template #expandButton>
@@ -70,6 +79,7 @@ import DetailsBase from './DetailsBase';
 import CodeFragment from '../../utils/CodeFragment';
 import Filepath from '../../utils/Filepath';
 import Icon from '../../utils/Icon';
+import DetailsBacktraceArguments from './DetailsBacktraceArguments';
 
 export default {
   name: 'DetailsBacktrace',
@@ -78,6 +88,7 @@ export default {
     CodeFragment,
     Filepath,
     Icon,
+    DetailsBacktraceArguments
   },
   props: {
     /**
@@ -174,19 +185,13 @@ export default {
 
 <style>
   .details-backtrace {
-    &__source-code {
-      padding: 3px 9px;
-      font-size: 12px;
-      line-height: 21px;
-      background-color: #171920;
-      border: none;
-      border-radius: var(--border-radius);
-    }
-
     &__arrow-down {
+      position: absolute;
+      right: 5px;
+      top: 50%;
       width: 12px;
       height: 12px;
-      margin: 0 4px 0 11px;
+      margin: -6px 4px 0 11px;
 
       &--opened {
         transform: rotate(180deg);
@@ -196,9 +201,9 @@ export default {
     &__header-row {
       position: relative;
       display: flex;
-      align-items: center;
-      padding: 7px;
+      flex-direction: column;
       font-size: 13px;
+      line-height: 1.4em;
       letter-spacing: 0.15px;
       cursor: pointer;
     }
@@ -206,7 +211,7 @@ export default {
     &__content-block {
       display: flex;
       flex-direction: column;
-      padding: 5px;
+      padding: 5px 10px;
     }
 
     &__filename, &__line {
@@ -215,15 +220,17 @@ export default {
       font-family: var(--font-monospace);
     }
 
-    &__left {
+    &__method {
+      margin-top: 1px;
       &-anonymous-function{
         opacity: 0.3;
       }
     }
 
-    &__right {
+    &__location {
       display: flex;
-      margin-left: auto;
+      color: var(--color-text-second);
+      font-size: 12px;
 
       &-file {
         max-width: 600px;
@@ -235,6 +242,10 @@ export default {
       &-line {
         margin-left: 10px;
       }
+    }
+
+    &__code {
+      margin: 5px -2px 3px;
     }
   }
 </style>

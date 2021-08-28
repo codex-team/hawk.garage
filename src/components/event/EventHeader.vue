@@ -51,7 +51,7 @@
       </div>
 
       <h1 class="event-header__title">
-        {{ (!loading) ? event.payload.title : $t('event.loading') }}
+        {{ (!loading) ? event.payload.title : $t('event.loading') | trim(300)}}
       </h1>
       <Filepath
         class="event-header__location"
