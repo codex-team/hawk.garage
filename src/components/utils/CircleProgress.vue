@@ -1,21 +1,21 @@
 <template>
   <svg
     class="progress-ring"
-    :width="width"
-    :height="height"
+    :width="size"
+    :height="size"
     :stroke-width="strokeWidth"
   >
     <circle
       class="progress-ring__back"
-      :cx="width / 2"
-      :cy="height / 2"
+      :cx="size / 2"
+      :cy="size / 2"
       :r="radius"
       fill="transparent"
     />
     <circle
       :style="progressStyles"
-      :cx="width / 2"
-      :cy="height / 2"
+      :cx="size / 2"
+      :cy="size / 2"
       :r="radius"
       fill="transparent"
     />
@@ -54,17 +54,9 @@ export default Vue.extend({
     },
 
     /**
-     * The width of circle
+     * The size of circle
      */
-    width: {
-      type: Number,
-      default: 28,
-    },
-
-    /**
-     * The height of circle
-     */
-    height: {
+    size: {
       type: Number,
       default: 28,
     },
@@ -112,7 +104,7 @@ export default Vue.extend({
      * The radius of circle
      */
     radius(): number {
-      return this.width / 2 - 2 * this.strokeWidth;
+      return this.size / 2 - 2 * this.strokeWidth;
     },
   },
 });
