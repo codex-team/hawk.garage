@@ -21,9 +21,7 @@
         {{ $t("workspaces.settings.label") }}
       </router-link>
     </div>
-    <EventsLimitIndicator
-    :workspace="workspace"
-    />
+    <EventsLimitIndicator :workspace="workspace" />
     <Icon
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
@@ -33,13 +31,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import Icon from '../utils/Icon.vue';
 import EntityImage from '../utils/EntityImage.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import EventsLimitIndicator from './EventsLimitIndicator.vue';
 
-export default {
+export default Vue.extend({
   name: 'WorkspaceInfo',
   components: {
     EntityImage,
@@ -68,7 +67,7 @@ export default {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
     },
   },
-};
+});
 </script>
 
 <style>
