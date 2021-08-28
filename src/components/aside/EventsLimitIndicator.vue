@@ -41,7 +41,7 @@ import Progress from '../utils/Progress.vue';
 import CircleProgress from '../utils/CircleProgress.vue';
 
 export default Vue.extend({
-  name: 'WorkspaceInfo',
+  name: 'EventsLimitIndicator',
   components: {
     PositiveButton,
     Progress,
