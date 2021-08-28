@@ -23,11 +23,12 @@
           v-model="image"
           class="workspace-creation-dialog__image-uploader"
         />
-        <input
-          class="button button--submit workspace-creation-dialog__submit"
-          type="submit"
-          :value="$t('workspaces.creationDialog.submitButton')"
-        >
+        <UiButton
+          class="workspace-creation-dialog__submit"
+          :submit="true"
+          :content="$t('projects.creationDialog.submitButton')"
+          :disabled="isSubmitting"
+        />
       </form>
     </div>
   </PopupDialog>
@@ -36,6 +37,7 @@
 <script>
 import { CREATE_WORKSPACE, SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 import PopupDialog from '../utils/PopupDialog';
+import UiButton from '../utils/UiButton';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
 import notifier from 'codex-notifier';
@@ -46,11 +48,13 @@ export default {
     PopupDialog,
     TextFieldset,
     ImageUploader,
+    UiButton,
   },
   data() {
     return {
       name: '',
       image: null,
+      isSubmitting: false,
     };
   },
   methods: {
@@ -67,8 +71,11 @@ export default {
           workspaceInfo.image = this.image;
         }
 
+        this.isSubmitting = true;
+
         const createdWorkspace = await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
 
+        this.isSubmitting = false;
         this.$emit('close');
 
         /**
@@ -77,6 +84,8 @@ export default {
         this.$store.dispatch(SET_CURRENT_WORKSPACE, createdWorkspace);
       } catch (e) {
         console.error(e);
+
+        this.isSubmitting = false;
 
         const dictKey = 'errors.' + e.message;
 
