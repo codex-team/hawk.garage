@@ -36,8 +36,8 @@
             />
           </div>
           <div class="events-limit__info-bar">
-            <div class="events-limit__events">
-              {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
+            <div class="events-limi__events">
+              {{ eventsCount || 0 | abbreviateNumber }} / {{ plan.eventsLimit || 0 | abbreviateNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
             </div>
             <Progress
               :max="plan.eventsLimit || 0"
