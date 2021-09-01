@@ -6,7 +6,10 @@
         params: { workspaceId: workspace.id },
       }"
     >
-      <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
+      <CircleProgress
+        :current="eventsCount"
+        :max="plan.eventsLimit || 0"
+      />
     </router-link>
     <div class="events-limit-indicator__tooltip-dialog">
       <div class="events-limit-indicator__info-section">
