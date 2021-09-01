@@ -6,10 +6,7 @@
         params: { workspaceId: workspace.id },
       }"
     >
-      <CircleProgress
-        :current="eventsCount"
-        :max="plan.eventsLimit || 0"
-      />
+      <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
     </router-link>
     <div class="events-limit-indicator__tooltip-dialog">
       <div class="events-limit-indicator__info-section">
@@ -102,14 +99,16 @@ export default Vue.extend({
   &__tooltip-dialog {
     position: absolute;
     z-index: 1;
-    top: 150%;
+    top: 140%;
     right: -170%;
     background-color: var(--color-bg-second);
     box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
     border-radius: 10px;
-    visibility: hidden;
+    opacity: 0;
     line-height: normal;
     padding: 15px;
+    transition: opacity 0.1s ease-in;
+    pointer-events: none;
 
     &::after {
       position: absolute;
@@ -124,7 +123,7 @@ export default Vue.extend({
   }
 
   &:hover &__tooltip-dialog {
-    visibility: visible;
+    opacity: 1;
     pointer-events: auto;
   }
 
