@@ -317,9 +317,10 @@
         "error": "There was an error while paying"
       }
     },
+    "pricingAndPayments": "pricing and payments",
     "paymentDetails": {
       "title": "Payment details",
-      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won’t access and store your wire transfer data. You will get an invoice on your email. Read more about pricing and payments.",
+      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won’t access and store your wire transfer data. You will get an invoice on your email. Read more about {0}.",
       "details": {
         "title": "Details",
         "newCard": "New card",
@@ -335,7 +336,7 @@
     },
     "autoProlongation": {
       "title": "Auto prolongation",
-      "description": "You are about to subscribe for auto prolongation of the current plan of the workspace. That means that when the next payment date has come, the plan price will be automatically charged from your card. Read more in docs.",
+      "description": "You are about to subscribe for auto prolongation of the current plan of the workspace. That means that when the next payment date has come, the plan price will be automatically charged from your card. Read more about {0}.",
       "theNextPaymentDateTitle": "The next payment date",
       "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
       "allowingChargesEveryMonth": "I allow charges from my bank card every month"
