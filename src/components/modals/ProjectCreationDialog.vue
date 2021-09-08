@@ -29,11 +29,12 @@
           v-model="image"
           class="project-creation-dialog__image-uploader"
         />
-        <input
-          class="button button--submit project-creation-dialog__submit"
-          type="submit"
-          :value="$t('projects.creationDialog.submitButton')"
-        >
+        <UiButton
+          class="project-creation-dialog__submit"
+          :submit="true"
+          :content="$t('projects.creationDialog.submitButton')"
+          :disabled="isSubmitting"
+        />
       </form>
     </div>
   </PopupDialog>
@@ -42,6 +43,7 @@
 <script>
 import { CREATE_PROJECT } from '../../store/modules/projects/actionTypes';
 import PopupDialog from '../utils/PopupDialog';
+import UiButton from '../utils/UiButton';
 import TextFieldset from '../forms/TextFieldset';
 import ImageUploader from '../forms/ImageUploader';
 import CustomSelect from '../forms/CustomSelect';
@@ -54,12 +56,14 @@ export default {
     TextFieldset,
     ImageUploader,
     CustomSelect,
+    UiButton,
   },
   data() {
     return {
       name: '', // project name
       workspace: this.$store.state.workspaces.current || this.$store.state.workspaces.list[0], // project's workspace
       image: null,
+      isSubmitting: false,
     };
   },
   computed: {
@@ -89,7 +93,11 @@ export default {
           projectInfo.image = this.image;
         }
 
+        this.isSubmitting = true;
+
         const project = await this.$store.dispatch(CREATE_PROJECT, projectInfo);
+
+        this.isSubmitting = false;
 
         this.$emit('close');
 
@@ -99,6 +107,8 @@ export default {
         this.$router.push(`/project/${project.id}`);
       } catch (e) {
         console.error(e);
+
+        this.isSubmitting = false;
 
         notifier.show({
           message: e.message,
