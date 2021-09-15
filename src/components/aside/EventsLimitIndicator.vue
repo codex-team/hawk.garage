@@ -1,17 +1,16 @@
 <template>
-  <div class="events-limit-indicator">
-    <router-link
-      :to="{
-        name: 'workspace-settings-billing',
-        params: { workspaceId: workspace.id },
-      }"
-    >
-      <CircleProgress
-        :current="eventsCount"
-        :max="plan.eventsLimit || 0"
-      />
-    </router-link>
-    <div class="events-limit-indicator__tooltip-dialog">
+  <TooltipDialog>
+    <template v-slot:target>
+      <router-link
+        :to="{
+          name: 'workspace-settings-billing',
+          params: { workspaceId: workspace.id },
+        }"
+      >
+        <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
+      </router-link>
+    </template>
+    <template v-slot:tooltip-content>
       <div class="events-limit-indicator__info-section">
         <div class="events-limit-indicator__label">
           {{ $t("billing.volume") }}
@@ -38,8 +37,8 @@
           />
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+  </TooltipDialog>
 </template>
 
 <script lang="ts">
@@ -48,6 +47,7 @@ import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
 import Progress from '../utils/Progress.vue';
 import CircleProgress from '../utils/CircleProgress.vue';
+import TooltipDialog from '../utils/TooltipDialog.vue';
 
 export default Vue.extend({
   name: 'EventsLimitIndicator',
@@ -55,6 +55,7 @@ export default Vue.extend({
     PositiveButton,
     Progress,
     CircleProgress,
+    TooltipDialog,
   },
   props: {
     /**
