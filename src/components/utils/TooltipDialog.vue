@@ -1,9 +1,11 @@
 <template>
-  <div class="events-limit-indicator">
-    <slot name=""></slot>
-    <div class="events-limit-indicator__tooltip-dialog">
-      <slot name=""></slot>
-    </div>
+  <div class="tooltip-dialog">
+    <slot name="target"></slot>
+    <teleport to="body">
+      <div class="tooltip-dialog__container">
+        <slot name="tooltip-content"></slot>
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -15,12 +17,12 @@ export default Vue.extend({
 </script>
 
 <style>
-.events-limit-indicator {
+.tooltip-dialog {
   position: relative;
   margin-left: auto;
   line-height: 0px;
 
-  &__tooltip-dialog {
+  &__container {
     position: absolute;
     z-index: 1;
     top: 140%;
@@ -46,7 +48,7 @@ export default Vue.extend({
     }
   }
 
-  &:hover &__tooltip-dialog {
+  &:hover &__container {
     opacity: 1;
     pointer-events: auto;
   }
