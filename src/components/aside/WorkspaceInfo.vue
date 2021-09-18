@@ -102,8 +102,8 @@ export default Vue.extend({
           workspace:this.workspace,
         },
         popOverProps:{
-          top: '20%',
-          left: '14%',
+          top: '65px',
+          left: '215px',
         },
       });
     },

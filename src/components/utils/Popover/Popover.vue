@@ -4,10 +4,7 @@
     class="popover-container"
     :style="[popoverPositionStyle, showPopOver]"
   >
-    <component
-      :is="popOverComponent"
-      v-bind="popOverComponentProps"
-    ></component>
+    <component :is="popOverComponent" v-bind="popOverComponentProps" />
   </div>
 </template>
 
@@ -27,23 +24,35 @@ export default Vue.extend({
       isOpened: false,
       popOverComponent: null,
       popOverComponentProps: null,
-      popOverProps:{ 
-        top:"unset",
-        left:"unset",
-        right:"unset",
-        bottom:"unset"
+      popOverProps: {
+        top:'unset',
+        left:'unset',
+        right:'unset',
+        bottom:'unset'
       },
     };
   },
+  computed:{
+    popoverPositionStyle():PopoverPositionStyle {
+      return {
+        top: this.popOverProps?.top ?? 'unset',
+        bottom: this.popOverProps?.bottom ?? 'unset',
+        left: this.popOverProps?.left ?? 'unset',
+        right: this.popOverProps?.right ?? 'unset',
+      };
+    },
+    showPopOver() {
+      return {
+        opacity: 1,
+        pointerEvents: 'auto',
+      };
+    },
+  },
   methods: {
-    /**
-     * Show notifier open window
-     *
-     * @param options - options for displaying
-     */
     open(options) {
       if (!options.componentName) {
         this.popOverComponent = null;
+
         return;
       }
       this.popOverComponentProps = options.componentProps;
@@ -53,27 +62,11 @@ export default Vue.extend({
       this.isOpened = true;
     },
     /**
-     * Hide notifier window
+     * Hide popover
      */
     close() {
       this.isOpened = false;
     },
-  },
-  computed:{
-    popoverPositionStyle():PopoverPositionStyle{
-      return {
-        top: this.popOverProps?.top ?? "unset",
-        bottom: this.popOverProps?.bottom ?? "unset",
-        left: this.popOverProps?.left ?? "unset",
-        right: this.popOverProps?.right ?? "unset",
-      };
-    },
-    showPopOver(){
-      return{
-        opacity: 1,
-        pointerEvents: "auto",
-      };
-    }
   },
 });
 </script>

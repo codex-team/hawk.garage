@@ -32,17 +32,17 @@ declare module 'vue/types/vue' {
        * Close notifier window
        */
       close: () => void;
-    };
+    }
     $popover: {
       /**
-       * Open notifier window
+       * Open popover
        *
-       * @param options - notifier window options
+       * @param options - popover options
        */
       open: (options?) => void;
 
       /**
-       * Close notifier window
+       * Close popover
        */
       close: () => void;
     };

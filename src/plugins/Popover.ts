@@ -1,16 +1,23 @@
-import { VueConstructor } from "vue";
-import Popover from "@/components/utils/Popover/Popover.vue";
-import i18n from "../i18n";
+import { VueConstructor } from 'vue';
+import Popover from '@/components/utils/Popover/Popover.vue';
+import i18n from '../i18n';
 
 /**
- * Type of notifier window component
+ * Type of popover component
  */
 type PopoverComponentType = InstanceType<typeof Popover>;
 
 /**
- * Plugin for using notifier window in components
+ * Plugin for using popover in components
  *
- * @example this.$notify.open({ description: 'Hi! Hawk' });
+ * @example this.$popover.open({
+ * component: <any component>,
+ * componentProps: <pass props>,
+ *  popoverPros:{
+ *    top: '20%',
+ *    left: '40%',
+ *  }
+ * });
  */
 export default {
   /**
@@ -19,7 +26,7 @@ export default {
    * @param Vue - vue constructor
    */
   install: (Vue: VueConstructor): void => {
-    const vueContainer = document.createElement("div");
+    const vueContainer = document.createElement('div');
     const notifierContainer = new Vue<PopoverComponentType>({
       i18n,
       render: (h) => h(Popover),
@@ -30,9 +37,9 @@ export default {
 
     Vue.prototype.$popover = {
       /**
-       * Open notifier window
+       * Open popover
        *
-       * @param options - notifier window options
+       * @param options - popover options
        */
       open(options?) {
         (notifierContainer.$children[0] as PopoverComponentType).open(
