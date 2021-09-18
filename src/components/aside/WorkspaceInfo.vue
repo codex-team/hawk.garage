@@ -21,7 +21,11 @@
         {{ $t("workspaces.settings.label") }}
       </router-link>
     </div>
-    <div class="workspace-info__event-indicator" @mouseover="openPopOver">
+    <div
+      class="workspace-info__event-indicator"
+      @mouseover="openPopOver"
+      @mouseleave="closePopOver"
+    >
       <router-link
         :to="{
           name: 'workspace-settings-billing',
@@ -92,7 +96,16 @@ export default Vue.extend({
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
     },
     openPopOver(){
-      this.$popover.open({componentName:EventsLimitIndicator,componentProps:{workspace:this.workspace}});
+      this.$popover.open({
+        componentName:EventsLimitIndicator,
+        componentProps:{
+          workspace:this.workspace
+          },
+        popOverProps:{
+          top:"20%",
+          left:"14%"
+        }
+      });
     },
     closePopOver(){
       this.$popover.close();
