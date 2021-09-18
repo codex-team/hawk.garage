@@ -1,16 +1,11 @@
 <template>
-  <div
-    id="app"
-    ref="app"
-    :class="[themeClass]"
-  >
+  <div id="app" ref="app" :class="[themeClass]">
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import * as api from './api/';
-import notifier from 'codex-notifier';
 import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
 import Vue from 'vue';

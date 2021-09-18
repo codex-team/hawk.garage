@@ -21,7 +21,16 @@
         {{ $t("workspaces.settings.label") }}
       </router-link>
     </div>
-    <EventsLimitIndicator :workspace="workspace" />
+    <div class="workspace-info__event-indicator" @mouseover="openPopOver">
+      <router-link
+        :to="{
+          name: 'workspace-settings-billing',
+          params: { workspaceId: workspace.id },
+        }"
+      >
+        <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
+      </router-link>
+    </div>
     <Icon
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
@@ -36,13 +45,15 @@ import Vue from 'vue';
 import Icon from '../utils/Icon.vue';
 import EntityImage from '../utils/EntityImage.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
+import { Plan } from '../../types/plan';
+import CircleProgress from '../utils/CircleProgress.vue';
 import EventsLimitIndicator from './EventsLimitIndicator.vue';
 
 export default Vue.extend({
   name: 'WorkspaceInfo',
   components: {
     EntityImage,
-    EventsLimitIndicator,
+    CircleProgress,
     Icon,
   },
   props: {
@@ -61,11 +72,31 @@ export default Vue.extend({
     isAdmin() {
       return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
     },
+     /**
+     * Return workspace plan
+     * @returns {Plan} - return the plan of the
+     */
+    plan(): Plan {
+      return this.workspace.plan;
+    },
+     /**
+     * Total number of used events since the last charge date
+     * @returns {number} - total number of used events.
+     */
+    eventsCount():number {
+      return this.workspace.billingPeriodEventsCount || 0;
+    },
   },
   methods: {
     createProjectButtonClicked() {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
     },
+    openPopOver(){
+      this.$popover.open({componentName:EventsLimitIndicator,componentProps:{workspace:this.workspace}});
+    },
+    closePopOver(){
+      this.$popover.close();
+    }
   },
 });
 </script>
@@ -112,6 +143,12 @@ export default Vue.extend({
     background-color: var(--color-indicator-medium);
     border-radius: var(--border-radius);
     cursor: pointer;
+  }
+
+  &__event-indicator {
+    position: relative;
+    margin-left: auto;
+    line-height: 0px;
   }
 }
 </style>
