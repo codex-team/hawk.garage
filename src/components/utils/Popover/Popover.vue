@@ -1,5 +1,9 @@
 <template>
-  <div v-if="isOpened" class="popover-container">
+  <div
+    v-if="isOpened"
+    class="popover-container"
+    :style="[popoverPositionStyle, showPopOver]"
+  >
     <component
       :is="popOverComponent"
       v-bind="popOverComponentProps"
@@ -10,6 +14,12 @@
 <script lang="ts">
 import Vue from 'vue';
 
+export interface PopoverPositionStyle {
+  top: string;
+  bottom: string;
+  left: string;
+  right: string;
+}
 export default Vue.extend({
   name: 'Popover',
   data() {
@@ -17,6 +27,12 @@ export default Vue.extend({
       isOpened: false,
       popOverComponent: null,
       popOverComponentProps: null,
+      popOverProps:{ 
+        top:"unset",
+        left:"unset",
+        right:"unset",
+        bottom:"unset"
+      },
     };
   },
   methods: {
@@ -33,6 +49,7 @@ export default Vue.extend({
       this.popOverComponentProps = options.componentProps;
       console.log(JSON.stringify(options.componentProps));
       this.popOverComponent = options.componentName;
+      this.popOverProps = options.popOverProps;
       this.isOpened = true;
     },
     /**
@@ -41,6 +58,22 @@ export default Vue.extend({
     close() {
       this.isOpened = false;
     },
+  },
+  computed:{
+    popoverPositionStyle():PopoverPositionStyle{
+      return {
+        top: this.popOverProps?.top ?? "unset",
+        bottom: this.popOverProps?.bottom ?? "unset",
+        left: this.popOverProps?.left ?? "unset",
+        right: this.popOverProps?.right ?? "unset",
+      };
+    },
+    showPopOver(){
+      return{
+        opacity: 1,
+        pointerEvents: "auto",
+      };
+    }
   },
 });
 </script>
