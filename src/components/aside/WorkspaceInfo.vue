@@ -23,8 +23,8 @@
     </div>
     <div
       class="workspace-info__event-indicator"
-      @mouseover="openPopOver"
-      @mouseleave="closePopOver"
+      @mouseover="eventsIndicatorMouseover"
+      @mouseleave="eventsIndicatorMouseleave"
     >
       <router-link
         :to="{
@@ -76,14 +76,14 @@ export default Vue.extend({
     isAdmin() {
       return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
     },
-     /**
+    /**
      * Return workspace plan
      * @returns {Plan} - return the plan of the
      */
     plan(): Plan {
       return this.workspace.plan;
     },
-     /**
+    /**
      * Total number of used events since the last charge date
      * @returns {number} - total number of used events.
      */
@@ -95,21 +95,21 @@ export default Vue.extend({
     createProjectButtonClicked() {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
     },
-    openPopOver(){
+    eventsIndicatorMouseover() {
       this.$popover.open({
         componentName:EventsLimitIndicator,
         componentProps:{
-          workspace:this.workspace
-          },
+          workspace:this.workspace,
+        },
         popOverProps:{
-          top:"20%",
-          left:"14%"
-        }
+          top: '20%',
+          left: '14%',
+        },
       });
     },
-    closePopOver(){
+    eventsIndicatorMouseleave() {
       this.$popover.close();
-    }
+    },
   },
 });
 </script>
