@@ -2,9 +2,12 @@
   <div
     v-if="isOpened"
     class="popover-container"
-    :style="[popoverPositionStyle, showPopOver]"
+    :style="[popoverPositionStyle, showPopover]"
   >
-    <component :is="popOverComponent" v-bind="popOverComponentProps" />
+    <component
+      :is="popoverComponent"
+      v-bind="popoverComponentProps"
+    />
   </div>
 </template>
 
@@ -17,31 +20,33 @@ export interface PopoverPositionStyle {
   left: string;
   right: string;
 }
+
+
 export default Vue.extend({
   name: 'Popover',
   data() {
     return {
       isOpened: false,
-      popOverComponent: null,
-      popOverComponentProps: null,
-      popOverProps: {
+      popoverComponent: null,
+      popoverComponentProps: null,
+      popoverProps: {
         top:'unset',
         left:'unset',
         right:'unset',
-        bottom:'unset'
+        bottom:'unset',
       },
     };
   },
   computed:{
     popoverPositionStyle():PopoverPositionStyle {
       return {
-        top: this.popOverProps?.top ?? 'unset',
-        bottom: this.popOverProps?.bottom ?? 'unset',
-        left: this.popOverProps?.left ?? 'unset',
-        right: this.popOverProps?.right ?? 'unset',
+        top: this.popoverProps?.top ?? 'unset',
+        bottom: this.popoverProps?.bottom ?? 'unset',
+        left: this.popoverProps?.left ?? 'unset',
+        right: this.popoverProps?.right ?? 'unset',
       };
     },
-    showPopOver() {
+    showPopover() {
       return {
         opacity: 1,
         pointerEvents: 'auto',
@@ -50,15 +55,15 @@ export default Vue.extend({
   },
   methods: {
     open(options) {
-      if (!options.componentName) {
-        this.popOverComponent = null;
+      if (!options.component && !options.componentProps) {
+        this.popoverComponent = null;
+        this.popoverComponentProps = null;
 
         return;
       }
-      this.popOverComponentProps = options.componentProps;
-      console.log(JSON.stringify(options.componentProps));
-      this.popOverComponent = options.componentName;
-      this.popOverProps = options.popOverProps;
+      this.popoverComponent = options.component;
+      this.popoverComponentProps = options.componentProps;
+      this.popoverProps = options.popoverProps;
       this.isOpened = true;
     },
     /**

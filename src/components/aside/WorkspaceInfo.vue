@@ -97,11 +97,11 @@ export default Vue.extend({
     },
     eventsIndicatorMouseover() {
       this.$popover.open({
-        componentName:EventsLimitIndicator,
+        component:EventsLimitIndicator,
         componentProps:{
           workspace:this.workspace,
         },
-        popOverProps:{
+        popoverProps:{
           top: '65px',
           left: '215px',
         },
