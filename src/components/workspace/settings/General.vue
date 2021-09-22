@@ -34,10 +34,10 @@
         {{ $t('workspaces.settings.workspace.submit') }}
       </button>
     </form>
-    <hr class="delimiter">
-    <div class="workspace-settings__registered-info">
-      {{ $t('workspaces.settings.workspace.created') }}
-    </div>
+    <!--    <hr class="delimiter">-->
+    <!--    <div class="workspace-settings__registered-info">-->
+    <!--      {{ $t('workspaces.settings.workspace.created') }}-->
+    <!--    </div>-->
   </div>
 </template>
 
