@@ -9,7 +9,7 @@
         />
       </div>
       <div class="events-limit-indicator__info-bar">
-        <div class="events-limi__events">
+        <div class="events-limit__events">
           {{ eventsCount || 0 | abbreviateNumber }} /
           {{ plan.eventsLimit || 0 | abbreviateNumber }}
           {{ $tc("billing.volumeEvents", eventsCount) }}
@@ -50,6 +50,14 @@ export default Vue.extend({
       required: true,
     },
   },
+  data() {
+    return {
+      /**
+       * Threshold For Events Limit.
+       */
+      thresholdForEventsLimit : 0.9,
+    };
+  },
   computed: {
     /**
      * Return workspace plan
@@ -63,9 +71,9 @@ export default Vue.extend({
      * @returns {boolean} - shows whether the volume limit exceeded or not.
      */
     isEventsLimitExceeded(): boolean {
-      const PERCENT = this.eventsCount / this.plan.eventsLimit;
+      const FRACTION = this.eventsCount / this.plan.eventsLimit;
 
-      return PERCENT >= 0.9;
+      return FRACTION >= this.thresholdForEventsLimit;
     },
     /**
      * Total number of used events since the last charge date

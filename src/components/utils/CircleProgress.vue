@@ -91,12 +91,12 @@ export default Vue.extend({
      */
     progressStyles(): ProgressStyles {
       const CIRCUMFERENCE: number = 2 * Math.PI * this.radius;
-      const PERCENT: number = this.current / this.max;
+      const FRACTION: number = this.current / this.max;
 
       return {
         strokeDasharray: `${CIRCUMFERENCE} ${CIRCUMFERENCE}`,
-        strokeDashoffset: CIRCUMFERENCE - PERCENT * CIRCUMFERENCE,
-        stroke: PERCENT >= 0.9 ? this.criticalColor : this.color,
+        strokeDashoffset: CIRCUMFERENCE - FRACTION * CIRCUMFERENCE,
+        stroke: FRACTION >= 0.9 ? this.criticalColor : this.color,
       };
     },
 
