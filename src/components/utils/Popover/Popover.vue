@@ -3,6 +3,8 @@
     v-if="isOpened"
     class="popover-container"
     :style="[popoverPositionStyle, showPopover]"
+    @mouseleave="onMouseLeaveFromPopover"
+    @mouseenter="onMouseOverPopover"
   >
     <component
       :is="popoverComponent"
@@ -26,9 +28,25 @@ export default Vue.extend({
   name: 'Popover',
   data() {
     return {
+      /**
+       * Is popover open.
+       */
       isOpened: false,
+      /**
+       * Is Mouse on popover.
+       */
+      isMouseOver: false,
+      /**
+       * Popover child component need be display.
+       */
       popoverComponent: null,
+      /**
+       * Popover child component props.
+       */
       popoverComponentProps: null,
+      /**
+       * Popover position props.
+       */
       popoverProps: {
         top:'unset',
         left:'unset',
@@ -38,6 +56,9 @@ export default Vue.extend({
     };
   },
   computed:{
+    /**
+     * Style Sheet for positioning the popover w.r.t. Body tag.
+     */
     popoverPositionStyle():PopoverPositionStyle {
       return {
         top: this.popoverProps?.top ?? 'unset',
@@ -46,6 +67,9 @@ export default Vue.extend({
         right: this.popoverProps?.right ?? 'unset',
       };
     },
+    /**
+     * Style Sheet for making popover visible.
+     */
     showPopover() {
       return {
         opacity: 1,
@@ -54,6 +78,16 @@ export default Vue.extend({
     },
   },
   methods: {
+    // eslint-disable-next-line jsdoc/require-param
+    /**
+     *
+     * Open Popover.
+     *
+     * @param options - Displaying component information.
+     * @param options.component - component which need to be displayed.
+     * @param options.componentProps - component props for passed component.
+     * @param options.popoverProps - popover props.
+     */
     open(options) {
       if (!options.component && !options.componentProps) {
         this.popoverComponent = null;
@@ -70,7 +104,24 @@ export default Vue.extend({
      * Hide popover
      */
     close() {
-      this.isOpened = false;
+      if (!this.isMouseOver) {
+        this.isOpened = false;
+      }
+    },
+    /**
+     * When mouse leaves from popover.
+     */
+    onMouseLeaveFromPopover() {
+      this.isMouseOver = false;
+      if (this.isOpened) {
+        this.close();
+      }
+    },
+    /**
+     * When mouse enter on popover.
+     */
+    onMouseOverPopover() {
+      this.isMouseOver = true;
     },
   },
 });
