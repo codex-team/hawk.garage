@@ -57,8 +57,8 @@
             :args="frame.arguments"
           />
           <CodeFragment
-            class="details-backtrace__code"
             v-if="frame.sourceCode"
+            class="details-backtrace__code"
             :lines="frame.sourceCode"
             :lines-highlighted="[frame.line]"
             :column-pointer="frame.column"
@@ -88,7 +88,7 @@ export default {
     CodeFragment,
     Filepath,
     Icon,
-    DetailsBacktraceArguments
+    DetailsBacktraceArguments,
   },
   props: {
     /**
@@ -187,8 +187,8 @@ export default {
   .details-backtrace {
     &__arrow-down {
       position: absolute;
-      right: 5px;
       top: 50%;
+      right: 5px;
       width: 12px;
       height: 12px;
       margin: -6px 4px 0 11px;

@@ -1,22 +1,22 @@
 <template>
   <table class="args">
     <tr
-      class="args__row"
       v-for="(item, row) in argsList"
       :key="`row:${row}`"
+      class="args__row"
     >
       <template
         v-for="([key, value], col) in Object.entries(item)"
       >
         <td
-          class="args__key"
           :key="`row:${row}:col:${col}:key`"
+          class="args__key"
         >
           {{ key }}
         </td>
         <td
-          class="args__value"
           :key="`row:${row}:col:${col}:value`"
+          class="args__value"
         >
           {{ value }}
         </td>
@@ -36,8 +36,8 @@ export default Vue.extend({
      */
     args: {
       type: Array as PropType<string[]>,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     /**
@@ -50,36 +50,36 @@ export default Vue.extend({
         /**
          * Case when argument passed as string like '"name"="value"'
          */
-        if (typeof item === 'string' && item.includes('=')){
+        if (typeof item === 'string' && item.includes('=')) {
           /**
            * Split 'name=value' to ['name', 'value']
            */
-          const pair = item.split('=')
+          const pair = item.split('=');
 
           list.push({
-            [pair[0]]: pair[1]
-          })
+            [pair[0]]: pair[1],
+          });
         } else {
-          console.warn('Unsupported args format:', item)
+          console.warn('Unsupported args format:', item);
         }
       });
 
       return list;
-    }
-  }
+    },
+  },
 });
 </script>
 
 <style scoped>
 .args {
-  font-size: 11px;
-  line-height: 1.45em;
-  font-family: var(--font-monospace);
-  border-collapse: collapse;
-  margin-right: auto;
   margin-top: 8px;
+  margin-right: auto;
   margin-bottom: 8px;
   color: var(--color-text-second);
+  font-size: 11px;
+  font-family: var(--font-monospace);
+  line-height: 1.45em;
+  border-collapse: collapse;
 
   td {
     padding-right: 20px;

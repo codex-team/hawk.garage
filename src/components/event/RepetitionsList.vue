@@ -91,7 +91,7 @@
 
             <!-- String value -->
             <template v-else>
-              {{ trim(repetition.payload.addons[addonsField], 100)  || '—' }}
+              {{ trim(repetition.payload.addons[addonsField], 100) || '—' }}
             </template>
           </template>
         </td>
@@ -107,7 +107,7 @@ import CustomRendererBeautifiedUserAgent from '@/components/event/details/custom
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import AddonRenderers from '../../mixins/addonRenderers';
 import { HawkEvent, HawkEventRepetition } from '../../types/events';
-import {isObject, trim} from '../../utils';
+import { isObject, trim } from '../../utils';
 
 export default Vue.extend({
   name: 'RepetitionsTable',
@@ -283,12 +283,12 @@ export default Vue.extend({
      * @param maxLen - how many chars to leave
      */
     trim(value: unknown, maxLen: number) {
-      if (isObject(value)){
+      if (isObject(value)) {
         value = JSON.stringify(value);
       }
 
       return trim((value as any).toString(), maxLen);
-    }
+    },
   },
 });
 </script>
@@ -333,8 +333,8 @@ export default Vue.extend({
     td {
       padding: 15px 10px;
       text-align: left;
-      border-bottom: 1px solid var(--color-border);
       vertical-align: top;
+      border-bottom: 1px solid var(--color-border);
 
       &:first-child {
         padding-left: 0;
