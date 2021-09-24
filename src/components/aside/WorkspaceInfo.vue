@@ -27,12 +27,16 @@
       @mouseleave="eventsIndicatorMouseleave"
     >
       <router-link
+        v-if="isAdmin"
         :to="{
           name: 'workspace-settings-billing',
           params: { workspaceId: workspace.id },
         }"
       >
-        <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
+        <CircleProgress
+          :current="eventsCount"
+          :max="plan.eventsLimit || 0"
+        />
       </router-link>
     </div>
     <Icon
