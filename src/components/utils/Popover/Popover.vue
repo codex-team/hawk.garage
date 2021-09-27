@@ -135,10 +135,10 @@ export default Vue.extend({
   right: -170%;
   background-color: var(--color-bg-second);
   box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
-  border-radius: 10px;
+  border-radius: 5px;
   opacity: 0;
   line-height: normal;
-  padding: 15px;
+  padding: 15px 14px;
   transition: opacity 0.1s ease-in;
   pointer-events: none;
 
