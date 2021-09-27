@@ -40,10 +40,10 @@
         </button>
       </div>
     </form>
-    <hr class="delimiter">
-    <div class="project-settings__registered-info">
-      {{ $t('projects.settings.general.created') }}
-    </div>
+    <!--    <hr class="delimiter">-->
+    <!--    <div class="project-settings__registered-info">-->
+    <!--      {{ $t('projects.settings.general.created') }}-->
+    <!--    </div>-->
   </div>
 </template>
 

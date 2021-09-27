@@ -44,10 +44,10 @@
         {{ $t('settings.account.submit') }}
       </button>
     </form>
-    <hr class="delimiter">
-    <div class="account-settings__registered-info">
-      Registered at Aug 25, 2019
-    </div>
+    <!--    <hr class="delimiter">-->
+    <!--    <div class="account-settings__registered-info">-->
+    <!--      Registered at Aug 25, 2019-->
+    <!--    </div>-->
   </div>
 </template>
 
