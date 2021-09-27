@@ -5,11 +5,12 @@
         {{ $t("billing.volume") }}
         <PositiveButton
           v-if="isEventsLimitExceeded"
+          class="events-limit-indicator__label-boost-button"
           :content="$t('billing.boost') + '!'"
         />
       </div>
       <div class="events-limit-indicator__info-bar">
-        <div class="events-limit__events">
+        <div class="events-limit-indicator__events">
           {{ eventsCount || 0 | abbreviateNumber }} /
           {{ plan.eventsLimit || 0 | abbreviateNumber }}
           {{ $tc("billing.volumeEvents", eventsCount) }}
@@ -86,7 +87,8 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style lang="postcss">
+@import url("./../../styles/custom-properties.css");
 .events-limit-indicator {
   &__info {
     margin-top: 20px;
@@ -94,10 +96,6 @@ export default Vue.extend({
     &-section {
       display: flex;
       flex-direction: column;
-
-      &:not(:last-of-type) {
-        margin-right: 30px;
-      }
     }
 
     &-bar {
@@ -108,12 +106,13 @@ export default Vue.extend({
   &__label {
     @apply --ui-label;
     display: inline-block;
-    margin-right: 13px;
-    margin-bottom: 15px;
+    &-boost-button {
+      margin-left: 40px;
+    }
   }
 
   &__volume-progress {
-    width: 160px;
+    width: 163px;
     height: 5px;
     margin-top: 7px;
     background-color: color-mod(var(--color-border) alpha(25%));
@@ -126,6 +125,7 @@ export default Vue.extend({
     line-height: 16px;
     letter-spacing: 0.18px;
     white-space: nowrap;
+    margin-top: 15px;
   }
 }
 </style>
