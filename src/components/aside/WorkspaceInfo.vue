@@ -73,11 +73,19 @@ export default Vue.extend({
       required: true,
     },
   },
+  data() {
+    return  {
+      /**
+       * For deboucing the popover mouseleave event.
+       */
+      popoverTimout: -1,
+    };
+  },
   computed: {
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
-    isAdmin() {
+    isAdmin():boolean {
       return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
     },
     /**
@@ -99,7 +107,11 @@ export default Vue.extend({
     createProjectButtonClicked() {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'ProjectCreationDialog' });
     },
+    /**
+     * Show the event indicator popover.
+     */
     eventsIndicatorMouseover() {
+      window.clearTimeout(this.popoverTimout);
       this.$popover.open({
         component:EventsLimitIndicator,
         componentProps:{
@@ -111,8 +123,13 @@ export default Vue.extend({
         },
       });
     },
+    /**
+     * Close the event indicator popover.
+     */
     eventsIndicatorMouseleave() {
-      this.$popover.close();
+      this.popoverTimout = window.setTimeout(() => {
+        this.$popover.close();
+      }, 200);
     },
   },
 });

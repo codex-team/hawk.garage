@@ -4,7 +4,7 @@
     class="popover-container"
     :style="[popoverPositionStyle, showPopover]"
     @mouseleave="onMouseLeaveFromPopover"
-    @mouseenter="onMouseOverPopover"
+    @mouseenter="onMouseEnterPopover"
   >
     <component
       :is="popoverComponent"
@@ -120,7 +120,7 @@ export default Vue.extend({
     /**
      * When mouse enter on popover.
      */
-    onMouseOverPopover() {
+    onMouseEnterPopover() {
       this.isMouseOver = true;
     },
   },
