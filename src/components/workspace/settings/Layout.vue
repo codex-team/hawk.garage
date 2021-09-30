@@ -139,9 +139,9 @@ export default Vue.extend({
      */
     async leaveWorkspace() {
       this.$confirm.open({
-        description: this.$i18n.t('projects.settings.removeConfirmation').toString(),
+        description: this.$i18n.t('workspaces.settings.removeConfirmation').toString(),
         actionType: ActionType.DELETION,
-        continueButtonText: this.$i18n.t('projects.settings.remove').toString(),
+        continueButtonText: this.$i18n.t('workspaces.settings.remove').toString(),
         onConfirm: async () => {
           try {
             await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
