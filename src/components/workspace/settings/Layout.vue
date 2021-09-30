@@ -70,6 +70,7 @@ import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import { ActionType } from '../../utils/ConfirmationWindow/types';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
@@ -137,16 +138,23 @@ export default Vue.extend({
      * Leave current workspace
      */
     async leaveWorkspace() {
-      try {
-        await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
-        this.$router.push({ name: 'home' });
-      } catch (e) {
-        notifier.show({
-          message: this.$i18n.t('workspaces.settings.leaveError').toString(),
-          style: 'error',
-          time: 10000,
-        });
-      }
+      this.$confirm.open({
+        description: this.$i18n.t('projects.settings.removeConfirmation').toString(),
+        actionType: ActionType.DELETION,
+        continueButtonText: this.$i18n.t('projects.settings.remove').toString(),
+        onConfirm: async () => {
+          try {
+            await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
+            this.$router.push({ name: 'home' });
+          } catch (e) {
+            notifier.show({
+              message: this.$i18n.t('workspaces.settings.leaveError').toString(),
+              style: 'error',
+              time: 10000,
+            });
+          }
+        },
+      });
     },
   },
 });
