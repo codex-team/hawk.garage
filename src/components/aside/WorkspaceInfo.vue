@@ -119,7 +119,7 @@ export default Vue.extend({
         },
         popoverProps:{
           top: '65px',
-          left: '215px',
+          left: '208px',
         },
       });
     },

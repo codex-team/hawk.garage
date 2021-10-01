@@ -105,9 +105,10 @@ export default Vue.extend({
 
   &__label {
     @apply --ui-label;
-    display: inline-block;
+    display: flex;
+    justify-content: space-between;
     &-boost-button {
-      margin-left: 40px;
+      margin-top: 14px;
     }
   }
 
