@@ -185,7 +185,7 @@ export async function changePlanForFreePLan(
       workspaceId,
       planId,
     },
-  })).changeWorkspacePlanForFreePlan;
+  })).changeWorkspacePlanToDefault;
 }
 
 /**

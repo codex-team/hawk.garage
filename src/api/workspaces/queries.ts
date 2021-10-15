@@ -226,10 +226,10 @@ export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
  */
 // language=GraphQL
 export const MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = `
-    mutation changeWorkspacePlanForFreePlan(
-      $input: ChangeWorkspacePlanForFreePlanInput
+    mutation changeWorkspacePlanToDefault(
+      $input: changeWorkspacePlanToDefaultInput
     ) {
-      changeWorkspacePlanForFreePlan(input: $input) {
+      changeWorkspacePlanToDefault(input: $input) {
         recordId
         record {
           ...WorkspacePlan
