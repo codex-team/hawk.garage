@@ -225,7 +225,7 @@ export const MUTATION_REMOVE_MEMBER_FROM_WORKSPACE = `
  * Change workspace tariff plan for free plan
  */
 // language=GraphQL
-export const MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN = `
+export const MUTATION_CHANGE_WORKSPACE_PLAN_TO_DEFAULT = `
     mutation changeWorkspacePlanToDefault(
       $input: changeWorkspacePlanToDefaultInput
     ) {
