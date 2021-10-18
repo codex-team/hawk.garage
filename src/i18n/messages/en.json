@@ -145,7 +145,7 @@
         "slack": "Slack",
         "slackDescription": "Alerts through the Webhook App",
         "telegram": "Telegram",
-        "telegramDescription": "Alerts through the @codex_bot",
+        "telegramDescription": "Alerts through the @hawkso_bot",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveAllLabel": "All events",
