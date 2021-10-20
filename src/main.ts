@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import ConfirmationWindow from './plugins/ConfirmationWindow';
 import NotifierWindow from './plugins/NotifierWindow';
+import Popover from './plugins/Popover';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -71,6 +72,7 @@ Vue.use(VueCookies);
 Vue.use(UniqueId);
 Vue.use(ConfirmationWindow);
 Vue.use(NotifierWindow);
+Vue.use(Popover);
 
 /**
  * Configure API
