@@ -1,6 +1,6 @@
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { EventAddons } from 'hawk.types';
+import { EventAddons } from '@hawk.so/types';
 
 /**
  * Event marks enum

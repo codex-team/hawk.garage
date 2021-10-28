@@ -9,7 +9,7 @@ import {
   QUERY_ALL_WORKSPACES_WITH_PROJECTS,
   QUERY_WORKSPACES,
   QUERY_BALANCE,
-  MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
+  MUTATION_CHANGE_WORKSPACE_PLAN_TO_DEFAULT,
   MUTATION_CANCEL_SUBSCRIPTION, MUTATION_JOIN_BY_INVITE_LINK
 } from './queries';
 import * as api from '../index';
@@ -180,12 +180,12 @@ export async function changePlanForFreePLan(
   workspaceId: string,
   planId: string
 ): Promise<APIResponseData<Workspace>> {
-  return (await api.callOld(MUTATION_CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN, {
+  return (await api.callOld(MUTATION_CHANGE_WORKSPACE_PLAN_TO_DEFAULT, {
     input: {
       workspaceId,
       planId,
     },
-  })).changeWorkspacePlanForFreePlan;
+  })).changeWorkspacePlanToDefault;
 }
 
 /**

@@ -134,13 +134,13 @@ type changeUserNotificationsReceiveTypeResponse {
 }
 
 """Payload for changing workspace tariff plan"""
-input ChangeWorkspacePlanForFreePlanInput {
+input changeWorkspacePlanToDefaultInput {
   """Workspace ID"""
   workspaceId: ID!
 }
 
 """Workspace tariff plan change mutation response"""
-type ChangeWorkspacePlanForFreePlanResponse {
+type changeWorkspacePlanToDefaultResponse {
   """Workspace id which plan changed"""
   recordId: ID
 
@@ -652,7 +652,7 @@ type Mutation {
   Mutation in order to switch workspace tariff plan to Free
   Returns updated workspace
   """
-  changeWorkspacePlanForFreePlan(input: ChangeWorkspacePlanForFreePlanInput): ChangeWorkspacePlanForFreePlanResponse!
+  changeWorkspacePlanToDefault(input: changeWorkspacePlanToDefaultInput): changeWorkspacePlanToDefaultResponse!
 
   """Namespace for workspaces mutations"""
   workspace: WorkspaceMutations!

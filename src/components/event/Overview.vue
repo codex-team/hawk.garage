@@ -62,7 +62,7 @@ import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
 import { HawkEvent } from '@/types/events';
-import { EventAddons } from 'hawk.types';
+import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
 
 export default Vue.extend({
