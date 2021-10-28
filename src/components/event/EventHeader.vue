@@ -128,7 +128,7 @@ import { Project } from '@/types/project';
 import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
-import { JavaScriptAddons } from 'hawk.types';
+import { JavaScriptAddons } from '@hawk.so/types';
 
 export default Vue.extend({
   name: 'EventHeader',

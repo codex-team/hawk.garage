@@ -27,7 +27,7 @@ import {
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { JavaScriptAddons } from 'hawk.types';
+import { JavaScriptAddons } from '@hawk.so/types';
 
 /**
  * Mutations enum for this module
