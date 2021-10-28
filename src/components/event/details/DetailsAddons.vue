@@ -56,7 +56,7 @@ import Json from '../../utils/Json.vue';
 import CodeBlock from '../../utils/CodeBlock.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
-import { EventAddons } from 'hawk.types';
+import { EventAddons } from '@hawk.so/types';
 import AddonRenderers from '../../../mixins/addonRenderers';
 
 /**

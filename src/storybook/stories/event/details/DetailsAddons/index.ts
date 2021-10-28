@@ -1,7 +1,7 @@
 import DetailsAddons from '@/components/event/details/DetailsAddons.vue';
 import { withKnobs, text } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
-import { EventAddons } from 'hawk.types';
+import { EventAddons } from '@hawk.so/types';
 import { PropType } from 'vue';
 
 export default {
