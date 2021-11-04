@@ -157,16 +157,16 @@ export default Vue.extend({
           style: 'error',
           time: 10000,
         });
+        this.$confirm.open({
+          description: this.$i18n.t('workspaces.settings.removeConfirmation').toString(),
+          actionType: ActionType.DELETION,
+          continueButtonText: this.$i18n.t('workspaces.settings.remove').toString(),
+          onConfirm: async () => {
+            await this.$store.dispatch(DELETE_WORKSPACE, this.workspace!.id);
+            this.$router.push({ name: 'home' });
+          },
+        });
       }
-      this.$confirm.open({
-        description: this.$i18n.t('workspaces.settings.removeConfirmation').toString(),
-        actionType: ActionType.DELETION,
-        continueButtonText: this.$i18n.t('workspaces.settings.remove').toString(),
-        onConfirm: async () => {
-          await this.$store.dispatch(DELETE_WORKSPACE, this.workspace!.id);
-          this.$router.push({ name: 'home' });
-        },
-      });
     },
   },
 });
