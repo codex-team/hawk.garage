@@ -29,6 +29,7 @@
     "dotenv": "^8.2.0",
     "highlight.js": "^10.4.1",
     "http-server": "^0.12.0",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.mergewith": "^4.6.2",
     "normalize.css": "^8.0.1",
     "postcss-apply": "^0.12.0",

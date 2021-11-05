@@ -90,6 +90,7 @@ export default Vue.extend({
     },
     /**
      * Return workspace plan
+     *
      * @returns {Plan} - return the plan of the
      */
     plan(): Plan {
@@ -97,6 +98,7 @@ export default Vue.extend({
     },
     /**
      * Total number of used events since the last charge date
+     *
      * @returns {number} - total number of used events.
      */
     eventsCount():number {

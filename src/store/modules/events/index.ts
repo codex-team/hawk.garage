@@ -15,7 +15,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { deepMerge, filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
+import { repetitionAssembler, filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
@@ -27,7 +27,7 @@ import {
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { JavaScriptAddons } from '@hawk.so/types';
+import { deepMerge } from '@/utils';
 
 /**
  * Mutations enum for this module
@@ -282,7 +282,7 @@ const module: Module<EventsModuleState, RootState> = {
         const event = Object.assign({}, state.list[key]);
 
         if (repetition && repetition.payload) {
-          event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
+          event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
         }
 
         return event;
@@ -497,13 +497,13 @@ const module: Module<EventsModuleState, RootState> = {
        */
       commit(MutationTypes.UpdateEvent, {
         projectId,
-        event,
+        event: {
+          ...event,
+          payload: event.repetition ? repetitionAssembler(event.payload, event.repetition.payload) as HawkEventPayload : event.payload,
+        },
       });
 
       const repetition = event.repetition;
-
-      filterBeautifiedAddons([ event ]);
-      filterBeautifiedAddons([ repetition ]);
 
       if (repetition !== null) {
         event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
