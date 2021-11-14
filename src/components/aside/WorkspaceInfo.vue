@@ -33,10 +33,7 @@
           params: { workspaceId: workspace.id },
         }"
       >
-        <CircleProgress
-          :current="eventsCount"
-          :max="plan.eventsLimit || 0"
-        />
+        <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
       </router-link>
     </div>
     <Icon
@@ -119,7 +116,7 @@ export default Vue.extend({
         },
         popoverProps:{
           top: '65px',
-          left: '208px',
+          left: '215px',
         },
       });
     },
