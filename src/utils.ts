@@ -176,23 +176,13 @@ export function deepMerge(target: object, ...sources: object[]): object {
  * @param repetition - the difference with its repetition, for the repetition we want to display
  * @returns fully assembled payload of the current repetition
  */
-export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: HawkEventPayload ): HawkEventPayload {
+export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string ]: any} ): HawkEventPayload {
   const customizer = (originalParam: any, repetitionParam: any): any => {
     if (repetitionParam === null) {
       return originalParam;
     }
 
-    if (Array.isArray(repetitionParam) && Array.isArray(originalParam)) {
-      return repetitionParam.map((param, index) => {
-        if (!originalParam[index]) {
-          return param;
-        }
-
-        return repetitionAssembler(param, originalParam[index]);
-      });
-    }
-
-    if (typeof repetitionParam === 'object') {
+    if (typeof repetitionParam === 'object' && typeof originalEvent === 'object') {
       return repetitionAssembler(originalParam, repetitionParam);
     }
 
