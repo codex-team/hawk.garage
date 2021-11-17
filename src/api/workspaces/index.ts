@@ -16,6 +16,7 @@ import {
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
 import { APIResponse, APIResponseData } from '@/types/api';
+import { data } from 'cypress/types/jquery';
 
 interface CreateWorkspaceInput {
   /**
@@ -56,7 +57,7 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * @param {string} workspaceId - id of workspace to delete
  */
 export async function deleteWorkspace(workspaceId: string): Promise<boolean> {
-  return (await api.callOld(MUTATION_DELETE_WORKSPACE, { workspaceId })).deleteWorkspace;
+  return (await api.call(MUTATION_DELETE_WORKSPACE, { workspaceId })).data.deleteWorkspace;
 }
 
 /**
