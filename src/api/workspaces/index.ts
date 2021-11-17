@@ -16,7 +16,6 @@ import {
 import * as api from '../index';
 import { Workspace } from '@/types/workspaces';
 import { APIResponse, APIResponseData } from '@/types/api';
-import { data } from 'cypress/types/jquery';
 
 interface CreateWorkspaceInput {
   /**
