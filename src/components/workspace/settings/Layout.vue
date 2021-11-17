@@ -152,11 +152,6 @@ export default Vue.extend({
         await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
         this.$router.push({ name: 'home' });
       } catch (e) {
-        notifier.show({
-          message: this.$i18n.t('workspaces.settings.leaveError').toString(),
-          style: 'error',
-          time: 10000,
-        });
         this.$confirm.open({
           description: this.$i18n.t('workspaces.settings.removeConfirmation').toString(),
           actionType: ActionType.DELETION,
