@@ -1,7 +1,10 @@
-import { HawkEventPayload, HawkEventRepetition } from '@/types/events';
+import { HawkEventPayload } from '@/types/events';
 import cloneDeep from 'lodash.clonedeep';
 import { repetitionAssembler } from '../../src/utils';
 
+/**
+ * Empty event to test the merging of the event and it's repetition
+ */
 const baseEvent: HawkEventPayload = {
   title: '',
   timestamp: 0,
@@ -27,10 +30,18 @@ const baseEvent: HawkEventPayload = {
   addons: {}
 }
 
+/**
+ * Recursively make all fields possibly equal to zero
+ */
 type DeepNullability<T> = {
   [P in keyof T]: T[P] extends object ? DeepNullability<T[P]> : T[P] | null;
 };
 
+/**
+ * An event in which each field can possibly be equal to zero.
+ * If this is the case, then during the merge process we must replace 
+ * fields with null value with the original event values
+ */
 type RepetitionEventPayload = DeepNullability<HawkEventPayload>;
 
 describe('Merging of the repetition and the original event payloads at the overview stage', () => {
@@ -43,7 +54,7 @@ describe('Merging of the repetition and the original event payloads at the overv
     repetitionEvent = cloneDeep(baseEvent);
   });
 
-  it('Should get object params from the original event', () => {
+  it('should replace null field values of the repetition with the original event field values', () => {
     originalEvent = {
       ...originalEvent,
       release: 'Omega release',
@@ -64,7 +75,7 @@ describe('Merging of the repetition and the original event payloads at the overv
     expect(result).to.deep.equal(assembledRepetition);
   });
 
-  it('Should take the value from the repetition payload', () => {
+  it('should take the repetition value if it is not null insted of the original event value', () => {
     originalEvent = {
       ...originalEvent,
       release: 'Omega release',
@@ -85,7 +96,7 @@ describe('Merging of the repetition and the original event payloads at the overv
     expect(result).to.deep.equal(assembledRepetition);
   });
 
-  it('Should take the original value from the object in the array', () => {
+  it('should replace null field with the original event value in the array of objects', () => {
     originalEvent = {
       ...originalEvent,
       backtrace: [{ ...baseEvent.backtrace[0], line: 399 }],
@@ -106,7 +117,7 @@ describe('Merging of the repetition and the original event payloads at the overv
     expect(result).to.deep.equal(assembledRepetition);
   });
 
-  it('Should take the repetition value from the object in the array', () => {
+  it('should take the repetition field value instead of the original event value in the array of objects', () => {
     originalEvent = {
       ...originalEvent,
       backtrace: [{ ...baseEvent.backtrace[0], line: 399 }],
@@ -127,7 +138,7 @@ describe('Merging of the repetition and the original event payloads at the overv
     expect(result).to.deep.equal(assembledRepetition);
   });
 
-  it('Should take nullable params from the original event', () => {
+  it('should take null field values from the original event', () => {
     originalEvent = {
       ...originalEvent,
       backtrace: [
@@ -160,7 +171,7 @@ describe('Merging of the repetition and the original event payloads at the overv
     expect(result).to.deep.equal(assembledRepetition);
   });
 
-  it('Should replace some params in the array of objects', () => {
+  it('should replace null fields from the repetition using the original event values in the array of objects', () => {
     originalEvent = {
       ...originalEvent,
       backtrace: [
@@ -190,7 +201,7 @@ describe('Merging of the repetition and the original event payloads at the overv
     expect(result).to.deep.equal(assembledRepetition);
   });
 
-  it('Should take additional elements from the repetition', () => {
+  it('should add elements from the repetition that are not in the original event', () => {
     originalEvent = {
       ...originalEvent,
       backtrace: [

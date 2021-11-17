@@ -492,6 +492,11 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
+      const repetition = event.repetition;
+
+      filterBeautifiedAddons([ event ]);
+      filterBeautifiedAddons([ event.repetition ]);
+
       /**
        * Updates or sets event's fetched payload in the state
        */
@@ -499,15 +504,9 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         event: {
           ...event,
-          payload: event.repetition ? repetitionAssembler(event.payload, event.repetition.payload) as HawkEventPayload : event.payload,
+          payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
         },
       });
-
-      const repetition = event.repetition;
-
-      if (repetition !== null) {
-        event.payload = deepMerge(event.payload, repetition.payload) as HawkEventPayload;
-      }
     },
 
     /**
