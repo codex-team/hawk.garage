@@ -66,6 +66,7 @@
     "@storybook/addon-links": "^6.3.7",
     "@storybook/addon-notes": "^6.0.0-alpha.6",
     "@storybook/addon-toolbars": "^6.3.7",
+    "@storybook/core-server": "^6.3.12",
     "@storybook/vue": "6.x.x",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
