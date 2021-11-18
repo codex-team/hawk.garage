@@ -59,7 +59,9 @@
           v-for="contextField in distinctContextKeys"
           :key="`context:${contextField}`"
         >
-          {{ trim(repetition.payload.context[contextField], 100) || '—' }}
+          <template v-if="repetition.payload.context">
+            {{ trim(repetition.payload.context[contextField], 100) || '—' }}
+          </template>
         </td>
 
         <!-- ...addons fields -->
