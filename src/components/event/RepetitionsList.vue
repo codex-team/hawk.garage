@@ -70,7 +70,7 @@
           <!-- addons with custom renderers -->
           <component
             :is="customRendererNamePrefix + capitalize(addonsField)"
-            v-if="isCustomRenderer(addonsField) && repetition.payload.addons[addonsField]"
+            v-if="isCustomRenderer(addonsField) && repetition.payload.addons && repetition.payload.addons[addonsField]"
             :value="repetition.payload.addons[addonsField]"
           />
           <!-- other addons -->
@@ -79,7 +79,7 @@
           >
             <!-- JSON value -->
             <code
-              v-if="isObject(repetition.payload.addons[addonsField])"
+              v-if="repetition.payload.addons && isObject(repetition.payload.addons[addonsField])"
             >
               <template v-if="JSON.stringify(repetition.payload.addons[addonsField]).length < 150">
                 <pre>{{ repetition.payload.addons[addonsField] }}</pre>
@@ -90,7 +90,9 @@
             </code>
 
             <!-- String value -->
-            <template v-else>
+            <template
+              v-if="repetition.payload.addons && repetition.payload.addons[addonsField]"
+            >
               {{ trim(repetition.payload.addons[addonsField], 100) || '—' }}
             </template>
           </template>
@@ -285,6 +287,10 @@ export default Vue.extend({
     trim(value: unknown, maxLen: number) {
       if (isObject(value)) {
         value = JSON.stringify(value);
+      }
+
+      if (!value) {
+        return '';
       }
 
       return trim((value as any).toString(), maxLen);
