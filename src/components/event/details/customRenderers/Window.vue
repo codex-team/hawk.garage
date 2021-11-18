@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { WindowData } from 'hawk.types';
+import { WindowData } from '@hawk.so/types';
 
 export default Vue.extend({
   props: {

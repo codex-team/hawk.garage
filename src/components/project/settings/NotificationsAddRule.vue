@@ -41,7 +41,7 @@
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
             :is-invalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
-            placeholder="@codex_bot endpoint"
+            placeholder="@hawkso_bot endpoint"
           />
           <UiCheckbox
             v-model="form.channels.telegram.isEnabled"
