@@ -1,5 +1,6 @@
 import mergeWith from 'lodash.mergewith';
-import { HawkEventDailyInfo, HawkEventRepetition } from './types/events';
+import cloneDeep from 'lodash.clonedeep';
+import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
 
 /**
  * Returns entity color from predefined list
@@ -163,6 +164,32 @@ export function deepMerge(target: object, ...sources: object[]): object {
       });
     }
   });
+}
+
+/**
+ * One of the features of the events is that their repetition is the difference
+ * between the original, which greatly optimizes storage. So we need to restore
+ * the original repetition payload using the very first event and its difference
+ * between its repetition
+ *
+ * @param originalEvent - the very first event we received
+ * @param repetition - the difference with its repetition, for the repetition we want to display
+ * @returns fully assembled payload of the current repetition
+ */
+export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string ]: any} ): HawkEventPayload {
+  const customizer = (originalParam: any, repetitionParam: any): any => {
+    if (repetitionParam === null) {
+      return originalParam;
+    }
+
+    if (typeof repetitionParam === 'object' && typeof originalEvent === 'object') {
+      return repetitionAssembler(originalParam, repetitionParam);
+    }
+
+    return repetitionParam;
+  };
+
+  return mergeWith(cloneDeep(originalEvent), cloneDeep(repetition), customizer);
 }
 
 /**

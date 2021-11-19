@@ -4,7 +4,6 @@
       <div class="events-limit-indicator__label">
         {{ $t("billing.volume") }}
         <PositiveButton
-          v-if="isEventsLimitExceeded"
           class="events-limit-indicator__label-boost-button"
           :content="$t('billing.boost') + '!'"
         />
@@ -62,6 +61,7 @@ export default Vue.extend({
   computed: {
     /**
      * Return workspace plan
+     *
      * @returns {Plan} - return the plan of the
      */
     plan(): Plan {
@@ -69,6 +69,7 @@ export default Vue.extend({
     },
     /**
      * Checking the volume spent
+     *
      * @returns {boolean} - shows whether the volume limit exceeded or not.
      */
     isEventsLimitExceeded(): boolean {
@@ -78,6 +79,7 @@ export default Vue.extend({
     },
     /**
      * Total number of used events since the last charge date
+     *
      * @returns {number} - total number of used events.
      */
     eventsCount():number {
@@ -120,13 +122,13 @@ export default Vue.extend({
   }
 
   &__events {
+    margin-top: 15px;
     color: var(--color-text-main);
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.18px;
     white-space: nowrap;
-    margin-top: 15px;
   }
 }
 </style>
