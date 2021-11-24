@@ -130,15 +130,15 @@ export default Vue.extend({
 <style>
 .popover-container {
   position: absolute;
-  z-index: 1;
   top: 140%;
   right: -170%;
-  background-color: var(--color-bg-second);
-  box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
-  border-radius: 5px;
-  opacity: 0;
-  line-height: normal;
+  z-index: 1;
   padding: 15px 14px;
+  line-height: normal;
+  background-color: var(--color-bg-second);
+  border-radius: 5px;
+  box-shadow: 0 10px 23px 0 rgba(0, 0, 0, 0.34);
+  opacity: 0;
   transition: opacity 0.1s ease-in;
   pointer-events: none;
 
