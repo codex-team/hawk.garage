@@ -141,7 +141,7 @@ export default Vue.extend({
   line-height: 16px;
 
   &__wrapper {
-    max-width: 200px;
+    max-width: 175px;
   }
 
   &__image {
