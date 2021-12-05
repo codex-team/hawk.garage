@@ -23,6 +23,7 @@ import Vue from 'vue';
 import { HawkEvent } from '@/types/events';
 import Chart from '../events/Chart.vue';
 import { GET_AFFECTED_USERS_CHART_DATA } from '@/store/modules/events/actionTypes';
+import {AffectedUsersChartItem} from '../../types/chart';
 
 export default Vue.extend({
   name: 'UsersAffectedOverview',
@@ -46,9 +47,8 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      groupedRepetitions: new Map(),
       chart: [],
-    };
+    } as { chart: AffectedUsersChartItem[] };
   },
   computed: {
     originalEvent(): HawkEvent {
