@@ -6,7 +6,8 @@ import {
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
   QUERY_RECENT_PROJECT_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  QUERY_AFFECTED_USERS_CHART
 } from './queries';
 import * as api from '@/api';
 import {
@@ -88,7 +89,7 @@ export async function fetchRecentEvents(
  */
 export async function getLatestRepetitions(
   projectId: string, eventId: string, skip: number, limit: number
-): Promise<APIResponse<{project: { event: { repetitions: HawkEventRepetition[] } } }>> {
+): Promise<APIResponse<{ project: { event: { repetitions: HawkEventRepetition[] } } }>> {
   return api.call(QUERY_LATEST_REPETITIONS, {
     projectId,
     eventId,
@@ -173,4 +174,21 @@ export async function fetchChartData(projectId: string, eventId: string, days: n
     days,
     timezoneOffset,
   })).project.event.chartData;
+}
+
+/**
+ * Fetch data for aaffected users chart chart
+ *
+ * @param {string} projectId - project id
+ * @param {string} eventId - event id
+ * @param {number} days - how many days we need to fetch for displaying in chart
+ * @param {number} timezoneOffset - user's local timezone
+ */
+export async function fetchAffectedUsersChartData(projectId: string, eventId: string, days: number, timezoneOffset: number): Promise<APIResponse<{ project: { event: { usersAffectedChart: EventChartItem[] } } }>> {
+  return (await api.call(QUERY_AFFECTED_USERS_CHART, {
+    projectId,
+    eventId,
+    days,
+    timezoneOffset,
+  }));
 }
