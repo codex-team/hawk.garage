@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { CREATE_WORKSPACE, SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { CREATE_WORKSPACE, SET_CURRENT_WORKSPACE, FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 import PopupDialog from '../utils/PopupDialog';
 import UiButton from '../utils/UiButton';
 import TextFieldset from '../forms/TextFieldset';
@@ -74,6 +74,9 @@ export default {
         this.isSubmitting = true;
 
         const createdWorkspace = await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
+        // Create Workspace do not return plan information
+        // Need to fetch the workspace again.
+        const currentWorkspace = await this.$store.dispatch(FETCH_WORKSPACE, createdWorkspace.id);
 
         this.isSubmitting = false;
         this.$emit('close');
@@ -81,7 +84,7 @@ export default {
         /**
          * Open created workspace
          */
-        this.$store.dispatch(SET_CURRENT_WORKSPACE, createdWorkspace);
+        this.$store.dispatch(SET_CURRENT_WORKSPACE, currentWorkspace);
       } catch (e) {
         console.error(e);
 
