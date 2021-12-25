@@ -9,7 +9,8 @@ import {
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  GET_CHART_DATA,
+  GET_AFFECTED_USERS_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -26,7 +27,7 @@ import {
   HawkEventRepetition
 } from '@/types/events';
 import { User } from '@/types/user';
-import { EventChartItem } from '@/types/chart';
+import { AffectedUsersChartItem, EventChartItem } from '@/types/chart';
 import { deepMerge } from '@/utils';
 
 /**
@@ -94,7 +95,9 @@ enum MutationTypes {
   /**
    * Get chart data for en event for a few days
    */
-  SaveChartData = 'SAVE_CHART_DATA'
+  SaveChartData = 'SAVE_CHART_DATA',
+
+  SaveAffectedUsersChartData = 'SAVE_AFFECTED_USERS_CHART_DATA',
 }
 
 /**
@@ -114,7 +117,7 @@ export interface EventsModuleState {
   /**
    * Event's repetitions map
    */
-  repetitions: {[key: string]: HawkEventRepetition[]};
+  repetitions: { [key: string]: HawkEventRepetition[] };
 
   /**
    * Event's filters rules map by project id
@@ -129,7 +132,7 @@ export interface EventsModuleState {
   /**
    * Latest events map by project id
    */
-  latest: {[key: string]: HawkEventDailyInfo};
+  latest: { [key: string]: HawkEventDailyInfo };
 }
 
 /**
@@ -587,7 +590,11 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - event id
      * @param {User} payload.assignee - user to assign to this event
      */
-    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string; eventId: string; assignee: User }): Promise<void> {
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, {
+      projectId,
+      eventId,
+      assignee,
+    }: { projectId: string; eventId: string; assignee: User }): Promise<void> {
       const result = await eventsApi.updateAssignee(projectId, eventId, assignee.id);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
@@ -609,7 +616,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.projectId - project id
      * @param {string} payload.eventId - event id
      */
-    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string; eventId: string }): Promise<void> {
+    async [REMOVE_EVENT_ASSIGNEE]({ commit }, {
+      projectId,
+      eventId,
+    }: { projectId: string; eventId: string }): Promise<void> {
       const result = await eventsApi.removeAssignee(projectId, eventId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
@@ -632,7 +642,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsSortOrder} project.order - order to set
      * @param {string} project.projectId - project to set order for
      */
-    async [SET_EVENTS_ORDER]({ commit, dispatch }, { order, projectId }: { order: EventsSortOrder; projectId: string }): Promise<void> {
+    async [SET_EVENTS_ORDER]({ commit, dispatch }, {
+      order,
+      projectId,
+    }: { order: EventsSortOrder; projectId: string }): Promise<void> {
       commit(SET_EVENTS_ORDER, {
         order,
         projectId,
@@ -656,7 +669,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsFilters} project.filters - filters object to set
      * @param {string} project.projectId - projoect to set filters for
      */
-    async [SET_EVENTS_FILTERS]({ commit, dispatch }, { filters, projectId }: { filters: EventsFilters; projectId: string }): Promise<void> {
+    async [SET_EVENTS_FILTERS]({ commit, dispatch }, {
+      filters,
+      projectId,
+    }: { filters: EventsFilters; projectId: string }): Promise<void> {
       commit(SET_EVENTS_FILTERS, {
         filters,
         projectId,
@@ -682,7 +698,11 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {number} project.days - number of a "few" days
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, {
+      projectId,
+      eventId,
+      days,
+    }: { projectId: string; eventId: string; days: number }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
 
@@ -690,6 +710,40 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         eventId,
         data: chartData,
+      });
+    },
+
+    /**
+     * Get affected users chart data for an event for a few days
+     *
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {string} project.projectId - project's id
+     * @param {string} project.eventId - event's id
+     * @param {number} project.days - number of a "few" days
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
+    async [GET_AFFECTED_USERS_CHART_DATA]({ commit, dispatch }, {
+      projectId,
+      eventId,
+      days,
+    }: { projectId: string; eventId: string; days: number }): Promise<void> {
+      const timezoneOffset = (new Date()).getTimezoneOffset();
+      const response = await eventsApi.fetchAffectedUsersChartData(projectId, eventId, days, timezoneOffset);
+
+      if (response.errors?.length) {
+        return;
+      }
+
+      const data = response.data.project.event.usersAffectedChart;
+
+      commit(MutationTypes.SaveAffectedUsersChartData, {
+        projectId,
+        eventId,
+        data: data,
       });
     },
   },
@@ -879,7 +933,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsSortOrder} project.order - order to set
      * @param {string} project.projectId - project to set order for
      */
-    [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder; projectId: string }): void {
+    [SET_EVENTS_ORDER](state: EventsModuleState, {
+      order,
+      projectId,
+    }: { order: EventsSortOrder; projectId: string }): void {
       if (!state.filters[projectId]) {
         Vue.set(state.filters, projectId, {});
       }
@@ -896,7 +953,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsFilters} project.filters - filters object to set
      * @param {string} project.projectId - project to set filters for
      */
-    [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters; projectId: string }): void {
+    [SET_EVENTS_FILTERS](state: EventsModuleState, {
+      filters,
+      projectId,
+    }: { filters: EventsFilters; projectId: string }): void {
       if (!state.filters[projectId]) {
         Vue.set(state.filters, projectId, {});
       }
@@ -942,11 +1002,35 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} project.eventId - event ID
      * @param {EventChartItem[]} project.data - array of dots
      */
-    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
+    [MutationTypes.SaveChartData](state: EventsModuleState, {
+      projectId,
+      eventId,
+      data,
+    }: { projectId: string; eventId: string; data: EventChartItem[] }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.list[key];
 
       Vue.set(state.list[key], 'chartData', data);
+    },
+
+    /**
+     * Save event's affected users chart data
+     *
+     * @param {EventsModuleState} state - module state
+     *
+     * @param {object} project - object for project data
+     * @param {string} project.projectId - project ID
+     * @param {string} project.eventId - event ID
+     * @param {AffectedUsersChartItem[]} project.data - array of dots
+     */
+    [MutationTypes.SaveAffectedUsersChartData](state: EventsModuleState, {
+      projectId,
+      eventId,
+      data,
+    }: { projectId: string; eventId: string; data: AffectedUsersChartItem[] }): void {
+      const key = getEventsListKey(projectId, eventId);
+
+      Vue.set(state.list[key], 'affectedUsersChartData', data);
     },
 
     /**

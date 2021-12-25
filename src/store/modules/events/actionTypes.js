@@ -57,3 +57,8 @@ export const SET_EVENTS_FILTERS = 'SET_EVENTS_FILTERS';
  * Get chart data for target event
  */
 export const GET_CHART_DATA = 'GET_CHART_DATA';
+
+/**
+ * Get data for affected users chart
+ */
+export const GET_AFFECTED_USERS_CHART_DATA = 'GET_AFFECTED_USERS_CHART_DATA';

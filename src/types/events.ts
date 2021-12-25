@@ -1,5 +1,5 @@
 import { User } from '@/types/user';
-import { EventChartItem } from '@/types/chart';
+import { AffectedUsersChartItem, EventChartItem } from '@/types/chart';
 import { EventAddons } from '@hawk.so/types';
 
 /**
@@ -113,6 +113,11 @@ export interface HawkEvent {
    * Event chart data for a few days
    */
   chartData?: EventChartItem[];
+
+  /**
+   * Affected users chart data for a few days
+   */
+  affectedUsersChartData?: AffectedUsersChartItem[];
 
   /**
    * Event release
