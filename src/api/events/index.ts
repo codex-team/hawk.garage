@@ -184,11 +184,11 @@ export async function fetchChartData(projectId: string, eventId: string, days: n
  * @param {number} days - how many days we need to fetch for displaying in chart
  * @param {number} timezoneOffset - user's local timezone
  */
-export async function fetchAffectedUsersChartData(projectId: string, eventId: string, days: number, timezoneOffset: number): Promise<APIResponse<{ project: { event: { usersAffectedChart: EventChartItem[] } } }>> {
-  return (await api.call(QUERY_AFFECTED_USERS_CHART, {
+export function fetchAffectedUsersChartData(projectId: string, eventId: string, days: number, timezoneOffset: number): Promise<APIResponse<{ project: { event: { usersAffectedChart: EventChartItem[] } } }>> {
+  return api.call(QUERY_AFFECTED_USERS_CHART, {
     projectId,
     eventId,
     days,
     timezoneOffset,
-  }));
+  });
 }
