@@ -280,7 +280,7 @@ export default {
     &__line-numbers {
       display: flex;
       flex-direction: column;
-      width: 35px;
+      min-width: 35px;
 
       span {
         display: flex;
