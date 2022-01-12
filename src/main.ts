@@ -1,3 +1,4 @@
+import './styles/base.css';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import ConfirmationWindow from './plugins/ConfirmationWindow';
