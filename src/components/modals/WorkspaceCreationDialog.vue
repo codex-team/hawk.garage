@@ -26,7 +26,7 @@
         <UiButton
           class="workspace-creation-dialog__submit"
           :submit="true"
-          :content="$t('projects.creationDialog.submitButton')"
+          :content="$t('workspaces.creationDialog.submitButton')"
           :disabled="isSubmitting"
         />
       </form>
