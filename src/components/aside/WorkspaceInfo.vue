@@ -33,7 +33,11 @@
           params: { workspaceId: workspace.id },
         }"
       >
-        <CircleProgress :current="eventsCount" :max="plan.eventsLimit || 0" />
+        <CircleProgress
+          ref="events-count-circle"
+          :current="eventsCount"
+          :max="plan.eventsLimit || 0"
+        />
       </router-link>
     </div>
     <Icon
@@ -73,7 +77,7 @@ export default Vue.extend({
   data() {
     return  {
       /**
-       * For deboucing the popover mouseleave event.
+       * For debouncing the popover mouseleave event.
        */
       popoverTimout: -1,
     };
@@ -87,6 +91,7 @@ export default Vue.extend({
     },
     /**
      * Return workspace plan
+     *
      * @returns {Plan} - return the plan of the
      */
     plan(): Plan {
@@ -94,6 +99,7 @@ export default Vue.extend({
     },
     /**
      * Total number of used events since the last charge date
+     *
      * @returns {number} - total number of used events.
      */
     eventsCount():number {
@@ -110,13 +116,13 @@ export default Vue.extend({
     eventsIndicatorMouseover() {
       window.clearTimeout(this.popoverTimout);
       this.$popover.open({
-        component:EventsLimitIndicator,
+        component: EventsLimitIndicator,
         componentProps:{
-          workspace:this.workspace,
+          workspace: this.workspace,
+          isCurrentUserAdmin: this.isAdmin,
         },
         popoverProps:{
-          top: '65px',
-          left: '215px',
+          showBelowElement: (this.$refs['events-count-circle'] as Vue).$el,
         },
       });
     },
@@ -126,7 +132,7 @@ export default Vue.extend({
     eventsIndicatorMouseleave() {
       this.popoverTimout = window.setTimeout(() => {
         this.$popover.close();
-      }, 200);
+      }, 400);
     },
   },
 });
@@ -167,6 +173,7 @@ export default Vue.extend({
   }
 
   &__project-creation-button {
+    flex-shrink: 0;
     width: 26px;
     height: 26px;
     margin-left: 14px;

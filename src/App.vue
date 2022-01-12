@@ -1,5 +1,9 @@
 <template>
-  <div id="app" ref="app" :class="[themeClass]">
+  <div
+    id="app"
+    ref="app"
+    :class="[themeClass]"
+  >
     <router-view />
   </div>
 </template>

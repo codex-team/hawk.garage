@@ -13,8 +13,7 @@ this.$popover.open({
     <props of vue component>,
   },
   popoverProps: {
-    top: "65px",
-    left: "215px",
+    showBelowElement: this.$refs['events-count-circle'].$el,
   },
 });
 ```
@@ -31,13 +30,4 @@ this.$popover.close();
 | --------------- | ------------------------- | ------------- | ------------------------ |
 | component       | **Vue<Component>**        | `null`        | Any Vue Component        |
 | componentProps  | **Object**                | `null`        | Props object of passed Vue Component |
-| popoverProps    | **PopoverPositionStyle**  | { top: "unset", right:"unset", bottom:"unset", left:"unset"} | Popover position relative to the `body` tag|
-
-### PopoverPositionStyle description
-
-| Option  | Type        | Description              |
-| --------| ------------| ------------------------ |
-| top     | **String**  | `top` position relative to the `body` tag |
-| right   | **String**  | `right` position relative to the `body` tag |
-| bottom  | **String**  | `bottom` position relative to the `body` tag |
-| left    | **String**  | `left` position relative to the `body` tag |
+| popoverProps    | **Object**  | { showBelowElement: someElement} | Element to place popover below its center|
