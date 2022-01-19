@@ -157,8 +157,10 @@ const actions = {
    * @param {string} workspaceId - id of workspace for deleting
    */
   async [LEAVE_WORKSPACE]({ commit, dispatch }, workspaceId) {
-    await workspaceApi.leaveWorkspace(workspaceId);
-
+    const success = await workspaceApi.leaveWorkspace(workspaceId);
+    if (!success) {
+      return false;
+    }
     dispatch(REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
     commit(mutationTypes.SET_CURRENT_WORKSPACE, null);
     commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);

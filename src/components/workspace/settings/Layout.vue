@@ -149,18 +149,25 @@ export default Vue.extend({
      */
     async leaveWorkspace() {
       try {
-        await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
-        this.$router.push({ name: 'home' });
+        const isThereOtherAdmins = await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
+
+        if (!isThereOtherAdmins) {
+          this.$confirm.open({
+            description: this.$i18n.t('workspaces.settings.removeConfirmation').toString(),
+            actionType: ActionType.DELETION,
+            continueButtonText: this.$i18n.t('workspaces.settings.remove').toString(),
+            onConfirm: async () => {
+              await this.$store.dispatch(DELETE_WORKSPACE, this.workspace!.id);
+            },
+          });
+        }
       } catch (e) {
-        this.$confirm.open({
-          description: this.$i18n.t('workspaces.settings.removeConfirmation').toString(),
-          actionType: ActionType.DELETION,
-          continueButtonText: this.$i18n.t('workspaces.settings.remove').toString(),
-          onConfirm: async () => {
-            await this.$store.dispatch(DELETE_WORKSPACE, this.workspace!.id);
-            this.$router.push({ name: 'home' });
-          },
+        notifier.show({
+          message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
+          style: 'error',
+          time: 5000,
         });
+        await this.$router.push({ name: 'home' });
       }
     },
   },
