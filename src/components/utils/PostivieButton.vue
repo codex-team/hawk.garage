@@ -38,6 +38,7 @@ export default Vue.extend({
   border: solid 1px var(--color-indicator-positive);
   border-radius: 12.5px;
   outline: none;
+  cursor: pointer;
   user-select: none;
 
   &__text {
@@ -45,6 +46,14 @@ export default Vue.extend({
     color: var(--color-indicator-positive);
     font-size: 13px;
     letter-spacing: 0.16px;
+  }
+
+  &:hover {
+    background: var(--color-indicator-positive);
+  }
+
+  &:hover &__text {
+    color: #fff;
   }
 }
 </style>
