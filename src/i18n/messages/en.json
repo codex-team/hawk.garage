@@ -234,6 +234,8 @@
       "label": "Workspace settings",
       "leave": "Leave workspace",
       "leaveError": "You can't leave this workspace because you are the last admin",
+      "removeConfirmation": "Are you sure you want to delete this workspace?",
+      "remove": "Remove workspace",
       "workspace": {
         "title": "Workspace settings",
         "name": "Name",
