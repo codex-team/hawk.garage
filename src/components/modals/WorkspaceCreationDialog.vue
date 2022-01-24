@@ -74,9 +74,6 @@ export default {
         this.isSubmitting = true;
 
         const createdWorkspace = await this.$store.dispatch(CREATE_WORKSPACE, workspaceInfo);
-        // Create Workspace do not return plan information
-        // Need to fetch the workspace again.
-        const createdWorkspaceWithPlan = await this.$store.dispatch(FETCH_WORKSPACE, createdWorkspace.id);
 
         this.isSubmitting = false;
         this.$emit('close');
@@ -84,7 +81,7 @@ export default {
         /**
          * Open created workspace
          */
-        this.$store.dispatch(SET_CURRENT_WORKSPACE, createdWorkspaceWithPlan);
+        this.$store.dispatch(SET_CURRENT_WORKSPACE, createdWorkspace);
       } catch (e) {
         console.error(e);
 

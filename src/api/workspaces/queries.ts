@@ -82,10 +82,11 @@ export const MUTATION_CREATE_WORKSPACE = `
       image
       inviteHash
       ...WorkspaceWithTeam
+      ...WorkspacePlan
     }
   }
-
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
+  ${WORKSPACE_PLAN}
 `;
 
 // language=GraphQL
