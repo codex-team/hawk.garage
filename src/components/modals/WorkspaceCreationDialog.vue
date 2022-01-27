@@ -26,7 +26,7 @@
         <UiButton
           class="workspace-creation-dialog__submit"
           :submit="true"
-          :content="$t('projects.creationDialog.submitButton')"
+          :content="$t('workspaces.creationDialog.submitButton')"
           :disabled="isSubmitting"
         />
       </form>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { CREATE_WORKSPACE, SET_CURRENT_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
+import { CREATE_WORKSPACE, SET_CURRENT_WORKSPACE, FETCH_WORKSPACE } from '../../store/modules/workspaces/actionTypes';
 import PopupDialog from '../utils/PopupDialog';
 import UiButton from '../utils/UiButton';
 import TextFieldset from '../forms/TextFieldset';
