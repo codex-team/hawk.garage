@@ -257,7 +257,10 @@
         "brokenLinkNotification": "It seems, your link is broken",
         "grantAdmin": "Grant Admin",
         "withdrawPermissions": "Withdraw permissions",
-        "removeMember": "Remove"
+        "removeMember": "Remove",
+        "errors": {
+          "User is already invited to this workspace": "User is already invited to this workspace"
+        }
       },
       "billing": {
         "title": "Billing information"

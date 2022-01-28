@@ -156,10 +156,12 @@ export default Vue.extend({
 
         this.userEmail = '';
       } catch (e) {
+        const errorTranslationExist = this.$te('workspaces.settings.team.errors.' + e.message);
+
         notifier.show({
-          message: e.message,
+          message: errorTranslationExist ? this.$t('workspaces.settings.team.errors.' + e.message) as string : e.message,
           style: 'error',
-          time: 10000,
+          time: 5000,
         });
       }
     },
