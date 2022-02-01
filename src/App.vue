@@ -122,8 +122,6 @@ export default Vue.extend({
 });
 </script>
 
-<style src="./styles/base.css"></style>
-
 <style>
 #app {
   display: flex;
