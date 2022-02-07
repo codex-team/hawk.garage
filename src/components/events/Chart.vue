@@ -350,13 +350,13 @@ export default Vue.extend({
       flex-grow: 2;
 
       polyline {
-        animation: line-in 1.5s ease-in forwards;
+        animation: line-in 6s linear forwards;
         stroke-linecap: round;
         stroke-linejoin: round;
         vector-effect: non-scaling-stroke;
         shape-rendering: geometricPrecision;
-        stroke-dashoffset: 200%;
-        stroke-dasharray: 200%;
+        stroke-dashoffset: 1000%;
+        stroke-dasharray: 1000%;
       }
     }
 
