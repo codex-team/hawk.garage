@@ -257,7 +257,10 @@
         "brokenLinkNotification": "Ваша ссылка не действительна",
         "grantAdmin": "Администратор",
         "withdrawPermissions": "Не администратор",
-        "removeMember": "Удалить"
+        "removeMember": "Удалить",
+        "errors": {
+          "User is already invited to this workspace": "Пользователь уже приглашен"
+        }
       },
       "billing": {
         "title": "Платежи"
