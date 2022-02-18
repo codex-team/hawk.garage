@@ -17,7 +17,7 @@
           :key="card.id"
           :card="card"
         />
-        <AddCard :label="$t('billing.addCardButton')" />
+        <!-- <AddCard :label="$t('billing.addCardButton')" /> -->
       </div>
     </div>
 
