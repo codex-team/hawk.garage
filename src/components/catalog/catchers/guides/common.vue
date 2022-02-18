@@ -93,6 +93,14 @@ export default {
           repoUrl: 'https://github.com/codex-team/hawk.go',
           readmeUrl: 'https://github.com/codex-team/hawk.go/blob/master/README.md',
         },
+        {
+          route: 'kotlin',
+          name: 'Kotlin',
+          cover: require('../../../../assets/catalog/kotlin/kotlin@3x.jpg'),
+          description: this.$t('components.catalog.catchers.kotlin'),
+          repoUrl: 'https://github.com/codex-team/hawk.kotlin',
+          readmeUrl: 'https://github.com/codex-team/hawk.kotlin/blob/master/README.md',
+        },
       ],
     };
   },
