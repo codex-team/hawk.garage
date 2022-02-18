@@ -4,7 +4,10 @@
       {{ $t('settings.billing.title') }}
     </div>
 
-    <div class="account-billing__section">
+    <div 
+      v-if="cards.length > 0"
+      class="account-billing__section"
+    >
       <label class="account-billing__label">
         {{ $t('billing.connectedCards') }}
       </label>
