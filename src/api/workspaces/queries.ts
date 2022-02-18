@@ -119,7 +119,7 @@ export const MUTATION_LEAVE_WORKSPACE = `
  * Mutation to delete workspace
  */
 export const MUTATION_DELETE_WORKSPACE = `
- mutation leaveWorkspace(
+ mutation deleteWorkspace(
    $workspaceId: ID!
  ) {
    deleteWorkspace(workspaceId: $workspaceId)

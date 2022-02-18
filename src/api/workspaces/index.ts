@@ -55,8 +55,9 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  *
  * @param {string} workspaceId - id of workspace to delete
  */
-export async function deleteWorkspace(workspaceId: string): Promise<boolean> {
-  return (await api.call(MUTATION_DELETE_WORKSPACE, { workspaceId })).data.deleteWorkspace;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function deleteWorkspace(workspaceId: string): Promise<APIResponse<any>> {
+  return await api.call(MUTATION_DELETE_WORKSPACE, { workspaceId });
 }
 
 /**

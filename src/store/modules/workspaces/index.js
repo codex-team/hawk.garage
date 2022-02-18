@@ -155,9 +155,11 @@ const actions = {
    * @param {Function} context.commit - standard Vuex commit function
    * @param {Function} context.dispatch - standard Vuex dispatch function
    * @param {string} workspaceId - id of workspace for deleting
+   * @returns {boolean} - check if is there other admins are there.
    */
   async [LEAVE_WORKSPACE]({ commit, dispatch }, workspaceId) {
     const success = await workspaceApi.leaveWorkspace(workspaceId);
+
     if (!success) {
       return false;
     }
