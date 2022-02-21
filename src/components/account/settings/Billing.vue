@@ -4,7 +4,7 @@
       {{ $t('settings.billing.title') }}
     </div>
 
-    <div 
+    <div
       v-if="cards.length > 0"
       class="account-billing__section"
     >
@@ -46,7 +46,7 @@ import Vue from 'vue';
 import BillingWorkspace from '../../workspace/settings/BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
-import AddCard from '../../utils/billing/BankCardAdd.vue';
+// import AddCard from '../../utils/billing/BankCardAdd.vue';
 import { BankCard } from '../../../types/bankCard';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 
@@ -58,7 +58,6 @@ export default Vue.extend({
   components: {
     BillingWorkspace,
     Card,
-    AddCard,
     BillingHistory,
   },
   props: {
