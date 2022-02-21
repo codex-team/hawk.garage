@@ -28,7 +28,6 @@
 
 <script>
 import EntityImage from '../utils/EntityImage';
-import Icon from '../utils/Icon';
 import ProjectBadge from '@/components/project/ProjectBadge';
 import { projectBadges } from '@/mixins/projectBadges';
 
@@ -37,7 +36,6 @@ export default {
   components: {
     ProjectBadge,
     EntityImage,
-    Icon,
   },
   mixins: [ projectBadges ],
   computed: {
