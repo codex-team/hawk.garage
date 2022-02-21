@@ -2,10 +2,10 @@
   <div
     v-if="project"
     class="project-header"
+    @click="$router.push({name: 'project-settings-general', params: {projectId: project.id}})"
   >
     <div
       class="project-header__title-container"
-      @click="$router.push({name: 'project-settings-general', params: {projectId: project.id}})"
     >
       <EntityImage
         :id="project.id"
@@ -23,16 +23,11 @@
         </ProjectBadge>
       </div>
     </div>
-    <Icon
-      class="project-header__notifications"
-      symbol="bell"
-    />
   </div>
 </template>
 
 <script>
 import EntityImage from '../utils/EntityImage';
-import Icon from '../utils/Icon';
 import ProjectBadge from '@/components/project/ProjectBadge';
 import { projectBadges } from '@/mixins/projectBadges';
 
@@ -41,7 +36,6 @@ export default {
   components: {
     ProjectBadge,
     EntityImage,
-    Icon,
   },
   mixins: [ projectBadges ],
   computed: {
@@ -65,6 +59,11 @@ export default {
   align-items: center;
   height: 50px;
   border-bottom: 1px solid var(--color-bg-main);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-bg-main);
+  }
 
   &__title-container {
     display:flex;

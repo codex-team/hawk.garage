@@ -59,6 +59,7 @@
         "js": "Advanced catcher with source maps support. Supports TS.",
         "python": "Small, simple and full-featured catcher for any kind of scripts.",
         "go": "Deadly simple and fast errors tracking",
+        "kotlin": "Tracks errors in Kotlin and Java apps",
         "scala": "Boost your scala application quality"
       },
       "backToCatalog": "Back to catalog",
