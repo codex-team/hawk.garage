@@ -7,9 +7,9 @@
     <div class="bank-card__number">
       {{ `**** **** **** ${card.lastFour}` }}
     </div>
-    <div class="bank-card__detach-button">
-      {{ $t('billing.detachCard') }}
-    </div>
+<!--    <div class="bank-card__detach-button">-->
+<!--      {{ $t('billing.detachCard') }}-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -40,8 +40,8 @@ export default Vue.extend({
 
     &__icon {
       float: left;
-      width: 60px;
-      height:40px;
+      width: 40px;
+      height: 26px;
       margin-right: 10px;
     }
 
