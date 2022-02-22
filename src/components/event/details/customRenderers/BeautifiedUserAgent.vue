@@ -135,6 +135,7 @@ export default Vue.extend({
 <style scoped>
   .useragent {
     display: flex;
+    white-space: nowrap;
 
     &__browser,
     &__os {

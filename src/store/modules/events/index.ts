@@ -451,6 +451,8 @@ const module: Module<EventsModuleState, RootState> = {
       { commit, state }: { commit: Commit, state: EventsModuleState },
       { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number; }
     ): Promise<HawkEventRepetition[]> {
+      const originalEvent = await eventsApi.getEvent(projectId, eventId, eventId);
+
       const key = getEventsListKey(projectId, eventId);
       const skip = (state.repetitions[key] || []).length;
 
@@ -462,12 +464,19 @@ const module: Module<EventsModuleState, RootState> = {
        */
       filterBeautifiedAddons(repetitions);
 
+      if (originalEvent) {
+        filterBeautifiedAddons([ originalEvent ]);
+      }
+
       repetitions.map(repetition => {
         // save to the state
         commit(MutationTypes.AddRepetitionPayload, {
           projectId,
           eventId,
-          repetition,
+          repetition: {
+            ...repetition,
+            payload: originalEvent ? repetitionAssembler(originalEvent.payload, repetition.payload) as HawkEventPayload : repetition.payload,
+          },
         });
       });
 

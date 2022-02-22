@@ -7,9 +7,9 @@
     <div class="bank-card__number">
       {{ `**** **** **** ${card.lastFour}` }}
     </div>
-<!--    <div class="bank-card__detach-button">-->
-<!--      {{ $t('billing.detachCard') }}-->
-<!--    </div>-->
+    <!--    <div class="bank-card__detach-button">-->
+    <!--      {{ $t('billing.detachCard') }}-->
+    <!--    </div>-->
   </div>
 </template>
 

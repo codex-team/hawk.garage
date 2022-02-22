@@ -93,7 +93,7 @@
 
             <!-- String value -->
             <template
-              v-if="repetition.payload.addons && repetition.payload.addons[addonsField]"
+              v-else-if="repetition.payload.addons && repetition.payload.addons[addonsField]"
             >
               {{ trim(repetition.payload.addons[addonsField], 100) || '—' }}
             </template>
@@ -217,8 +217,8 @@ export default Vue.extend({
         cols.push('Title');
       }
 
-      cols.push(...this.distinctAddonsKeys.values());
       cols.push(...this.distinctContextKeys.values());
+      cols.push(...this.distinctAddonsKeys.values());
 
       return cols;
     },
