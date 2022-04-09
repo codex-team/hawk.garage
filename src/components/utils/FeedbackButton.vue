@@ -2,7 +2,9 @@
   <a href="mailto:team@hawk.so">
     <div class="feedback-wrapper">
       <Icon symbol="mail" />
-      <div class="feedback-description">Leave Feedback</div>
+      <div class="feedback-description">
+        {{ $t("components.feedbackButton.message") }}
+      </div>
     </div>
   </a>
 </template>
