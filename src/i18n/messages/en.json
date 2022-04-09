@@ -47,6 +47,9 @@
       "message":"The new version is available",
       "refresh":"Refresh"
     },
+    "feedbackButton":{
+      "message":"Leave feedback"
+    },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",
@@ -59,6 +62,7 @@
         "js": "Advanced catcher with source maps support. Supports TS.",
         "python": "Small, simple and full-featured catcher for any kind of scripts.",
         "go": "Deadly simple and fast errors tracking",
+        "kotlin": "Tracks errors in Kotlin and Java apps",
         "scala": "Boost your scala application quality"
       },
       "backToCatalog": "Back to catalog",

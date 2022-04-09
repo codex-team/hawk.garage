@@ -109,6 +109,11 @@ module.exports = {
     workboxOptions: {
       swSrc: 'public/service-worker.js',
     },
+    themeColor: '#242732',
+    msTileColor: '#000000',
+    iconPaths: {
+      msTileImage: 'img/icons/mstile-150x150.png'
+    }
   },
   assetsDir: 'static',
   pluginOptions: {

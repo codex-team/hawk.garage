@@ -140,6 +140,7 @@ export default Vue.extend({
     &__os {
       display: flex;
       align-items: center;
+      white-space: nowrap;
     }
 
     &__browser {

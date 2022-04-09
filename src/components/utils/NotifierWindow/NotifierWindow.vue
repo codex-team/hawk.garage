@@ -118,7 +118,7 @@ export default Vue.extend({
   }
 
   100% {
-    transform: none
+    transform: none;
   }
 }
 

@@ -9,7 +9,7 @@
       class="chart__info"
     >
       <span class="chart__info-today"> today </span>
-      <span class="chart__info-highlight"> {{ todayCount }} </span>
+      <span class="chart__info-highlight"> {{ todayCount | spacedNumber }} </span>
 
       <span
         v-if="difference !== 0"

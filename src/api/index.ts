@@ -283,7 +283,7 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
           originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
         } else {
           originalRequest.headers = {
-            Authorization: 'Bearer ' + newAccessToken
+            Authorization: 'Bearer ' + newAccessToken,
           };
         }
 
