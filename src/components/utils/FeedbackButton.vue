@@ -31,7 +31,7 @@ export default Vue.extend({
     background-color: var(--color-indicator-medium);
     padding: 8px 10px;
     box-shadow: 0px 9px 16px rgba(16, 106, 189, 0.3);
-    border-radius: 13px;
+    border-radius: 8px;
     cursor: pointer;
 
     display: flex;
