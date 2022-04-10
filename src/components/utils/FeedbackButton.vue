@@ -29,7 +29,7 @@ export default Vue.extend({
     bottom: 30px;
     z-index: 9995;
     background-color: var(--color-indicator-medium);
-    padding: 8px 15px;
+    padding: 8px 10px;
     box-shadow: 0px 9px 16px rgba(16, 106, 189, 0.3);
     border-radius: 13px;
     cursor: pointer;
@@ -39,15 +39,15 @@ export default Vue.extend({
     align-items: center;
 
     svg {
-      height: 23px;
-      width: 28px;
+      height: 16px;
+      width: 18px;
     }
   }
   &-description {
     font-weight: 500;
-    font-size: 18px;
-    line-height: 30px;
-    margin: 0px 12px;
+    font-size: 14px;
+    line-height: 12px;
+    margin: 0px 6px;
   }
 }
 </style>
