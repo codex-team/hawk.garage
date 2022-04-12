@@ -47,6 +47,9 @@
       "message":"The new version is available",
       "refresh":"Refresh"
     },
+    "feedbackButton":{
+      "message":"Leave feedback"
+    },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",

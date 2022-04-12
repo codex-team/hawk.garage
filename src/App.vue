@@ -5,6 +5,7 @@
     :class="[themeClass]"
   >
     <router-view />
+    <FeedbackButton />
   </div>
 </template>
 
@@ -14,9 +15,13 @@ import eventBus from './eventBus';
 import { loadLanguageAsync } from './i18n';
 import Vue from 'vue';
 import { NotifierButtonType } from './components/utils/NotifierWindow/types';
+import FeedbackButton from './components/utils/FeedbackButton.vue';
 
 export default Vue.extend({
   name: 'App',
+  components: {
+    FeedbackButton,
+  },
   computed: {
     /**
      * Returns classname according to the theme name
