@@ -14,8 +14,13 @@ import i18n from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
 import UniqueId from 'vue-unique-id';
+
+/**
+ * Integrations
+ */
+import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
+import amplitude from 'amplitude-js';
 
 /**
  * Current build revision
@@ -31,7 +36,7 @@ declare const buildRevision: string;
 let hawk: HawkCatcher;
 
 /**
- * Enable errors tracking
+ * Enable errors tracking via Hawk.so
  */
 if (process.env.VUE_APP_HAWK_TOKEN) {
   const hawkOptions: HawkInitialSettings = {
@@ -50,6 +55,15 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
   }
 
   hawk = new HawkCatcher(hawkOptions);
+}
+
+/**
+ * Enable analytics via Amplitude.com
+ */
+if (process.env.VUE_APP_AMPLITUDE_TOKEN) {
+  const amplitudeToken = process.env.VUE_APP_AMPLITUDE_TOKEN;
+
+  amplitude.getInstance().init(amplitudeToken);
 }
 
 Vue.config.devtools = process.env.NODE_ENV !== 'production';

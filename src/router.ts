@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 
+import amplitude from 'amplitude-js';
+
 import AppShell from './components/AppShell.vue';
 
 Vue.use(Router);
@@ -215,7 +217,15 @@ router.beforeEach((to, from, next) => {
       next('/');
     }
 
-    console.log('store.state.user', store.state.user.data.id);
+    try {
+      console.log('store.state.user', store.state.user);
+      console.log('store.state.user.data', store.state.user.data);
+      console.log('store.state.user.data.id', store.state.user.data.id);
+
+      // amplitude.
+    } catch (e) {
+      console.error(e);
+    }
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
