@@ -214,6 +214,8 @@ router.beforeEach((to, from, next) => {
     if (authRoutes.test(to.fullPath)) {
       next('/');
     }
+
+    console.log('store.state.user', store.state.user.data.id);
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
