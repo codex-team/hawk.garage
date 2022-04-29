@@ -2,5 +2,5 @@
  * Define available metrics
  */
 export enum AnalyticsEventType {
-  PageVisited = 'page visited',
+  PageVisited = 'Page Visited',
 }
