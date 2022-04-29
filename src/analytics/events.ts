@@ -1,6 +1,6 @@
 /**
  * Define available metrics
  */
-export enum AnalyticsEventTypes {
+export enum AnalyticsEventType {
   PageVisited = 'Page Visited',
 }
