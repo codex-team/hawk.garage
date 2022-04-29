@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 
-import amplitude from 'amplitude-js';
+import { Analytics, AnalyticsEventTypes } from './analytics';
 
 import AppShell from './components/AppShell.vue';
 
@@ -217,12 +217,15 @@ router.beforeEach((to, from, next) => {
       next('/');
     }
 
+    /**
+     * Track visit
+     */
     try {
-      console.log('store.state.user', store.state.user);
-      console.log('store.state.user.data', store.state.user.data);
-      console.log('store.state.user.data.id', store.state.user.data.id);
+      if (store.state.user && store.state.user.data && store.state.user.data.id) {
+        Analytics.setUserId(store.state.user.data.id);
+      }
 
-      // amplitude.
+      Analytics.track(AnalyticsEventTypes.PageVisited);
     } catch (e) {
       console.error(e);
     }
