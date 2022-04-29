@@ -216,24 +216,38 @@ router.beforeEach((to, from, next) => {
     if (authRoutes.test(to.fullPath)) {
       next('/');
     }
-
-    /**
-     * Track visit
-     */
-    try {
-      if (store.state.user && store.state.user.data && store.state.user.data.id) {
-        Analytics.setUserId(store.state.user.data.id);
-      }
-
-      Analytics.track(AnalyticsEventTypes.PageVisited);
-    } catch (e) {
-      console.error(e);
-    }
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
     }
   }
+
+  /**
+   * Track visit
+   */
+  try {
+    /**
+     * Try to get user id
+     */
+    if (store.state.user && store.state.user.data && store.state.user.data.id) {
+      Analytics.setUserId(store.state.user.data.id);
+    }
+
+    /**
+     * Event additional data
+     */
+    const eventProperties = {
+      url: to.fullPath,
+    };
+
+    /**
+     * Track event
+     */
+    Analytics.track(AnalyticsEventTypes.PageVisited, eventProperties);
+  } catch (e) {
+    console.error(e);
+  }
+
   next();
 });
 
