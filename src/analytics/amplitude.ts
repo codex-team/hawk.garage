@@ -2,6 +2,9 @@ import { init, track, setUserId } from '@amplitude/analytics-browser';
 import { EventOptions, Result } from '@amplitude/analytics-types';
 import { AnalyticsEventTypes } from './events';
 
+/**
+ * Flag if module was registered
+ */
 let isRegistered = false;
 
 /**
@@ -37,7 +40,7 @@ export const Analytics = {
   /**
    * Set user id
    *
-   * @param userId
+   * @param userId - user identifier
    */
   setUserId: (userId: string): void => {
     return setUserId(userId);
