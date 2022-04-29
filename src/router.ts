@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 
-import { Analytics, AnalyticsEventTypes } from './analytics';
+import { Analytics, AnalyticsEventType } from './analytics';
 
 import AppShell from './components/AppShell.vue';
 
@@ -243,7 +243,7 @@ router.beforeEach((to, from, next) => {
     /**
      * Track event
      */
-    Analytics.track(AnalyticsEventTypes.PageVisited, eventProperties);
+    Analytics.track(AnalyticsEventType.PageVisited, eventProperties);
   } catch (e) {
     console.error(e);
   }

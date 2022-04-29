@@ -1,6 +1,6 @@
 import { init, track, setUserId } from '@amplitude/analytics-browser';
 import { EventOptions, Result } from '@amplitude/analytics-types';
-import { AnalyticsEventTypes } from './events';
+import { AnalyticsEventType } from './events';
 
 /**
  * Flag if module was registered
@@ -29,7 +29,7 @@ export const Analytics = {
    * @param eventProperties - event properties
    * @param eventOptions - user info
    */
-  track: (eventType: AnalyticsEventTypes, eventProperties?: Record<string, any> | undefined, eventOptions?: EventOptions | undefined): Promise<Result|string> => {
+  track: (eventType: AnalyticsEventType, eventProperties?: Record<string, any> | undefined, eventOptions?: EventOptions | undefined): Promise<Result|string> => {
     if (!isRegistered) {
       return Promise.reject('Analytics module is not connected');
     }
