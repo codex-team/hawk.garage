@@ -116,4 +116,4 @@ export default Vue.extend({
     stroke: var(--color-text-second);
   }
 }
-</style></style>
+</style>
