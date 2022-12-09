@@ -269,6 +269,9 @@
       "billing": {
         "title": "Billing information"
       },
+      "volume": {
+        "title": "Used Volume"
+      },
       "errors": {
         "accessDenied": "You don't have enough rights to view this page"
       }

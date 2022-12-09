@@ -95,7 +95,7 @@ export default Vue.extend({
 
       return {
         strokeDasharray: `${CIRCUMFERENCE} ${CIRCUMFERENCE}`,
-        strokeDashoffset: CIRCUMFERENCE - FRACTION * CIRCUMFERENCE,
+        strokeDashoffset: Math.max(CIRCUMFERENCE - FRACTION * CIRCUMFERENCE, 0),
         stroke: FRACTION >= 0.9 ? this.criticalColor : this.color,
       };
     },
@@ -116,4 +116,4 @@ export default Vue.extend({
     stroke: var(--color-text-second);
   }
 }
-</style>
+</style></style>
