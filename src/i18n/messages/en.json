@@ -270,7 +270,10 @@
         "title": "Billing information"
       },
       "volume": {
-        "title": "Used Volume"
+        "title": "Used Volume",
+        "description_1": "We have no paid plans, so all features are available fo free.The limit of accepting events is 500 000 events per month.",
+        "description_2": "If you would like to increase your volume,please to contact us via the button below",
+        "emailButton": "Increase volume"
       },
       "errors": {
         "accessDenied": "You don't have enough rights to view this page"

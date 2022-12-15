@@ -76,10 +76,10 @@
       <div class="billing-card__info-section">
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
-<!--          <PositiveButton-->
-<!--            v-if="isEventsLimitExceeded"-->
-<!--            :content="$t('billing.boost') + '!'"-->
-<!--          />-->
+          <PositiveButton
+            v-if="isEventsLimitExceeded"
+            :content="$t('billing.boost') + '!'"
+          />
         </div>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
@@ -125,7 +125,7 @@ import UiButton from './../../utils/UiButton.vue';
 import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
-// import PositiveButton from '../../utils/PostivieButton.vue';
+import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
@@ -145,7 +145,7 @@ export default Vue.extend({
     UiButton,
     StatusBlock,
     Icon,
-    // PositiveButton,
+    PositiveButton,
   },
   props: {
     workspace: {

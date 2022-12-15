@@ -89,11 +89,11 @@ const router = new Router({
               name: 'workspace-settings-used-volume',
               component: () => import(/* webpackChunkName: 'workspace-used-volume' */ './components/workspace/settings/UsedVolume.vue'),
             },
-            // {
-            //   path: 'billing',
-            //   name: 'workspace-settings-billing',
-            //   component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/Billing.vue'),
-            // },
+            {
+              path: 'billing',
+              name: 'workspace-settings-billing',
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/UsedVolume.vue'),
+            },
           ],
         },
 
