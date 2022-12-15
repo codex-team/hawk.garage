@@ -33,14 +33,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import PositiveButton from '../utils/PostivieButton.vue';
+//import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
 import Progress from '../utils/Progress.vue';
 
 export default Vue.extend({
   name: 'EventsLimitIndicator',
   components: {
-    PositiveButton,
+    //PositiveButton,
     Progress,
   },
   props: {
