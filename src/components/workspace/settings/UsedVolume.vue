@@ -3,7 +3,7 @@
     <div class="settings-window-page__title">
       {{ $t('workspaces.settings.volume.title') }}
     </div>
-    <div class="workspace-volume__text">{{ $t('workspaces.settings.volume.description_1') }}</div>
+    <div class="workspace-volume__text">{{ $t('workspaces.settings.volume.description_1', {msg: plan.eventsLimit}) }}</div>
     <label class="label">{{ $t('workspaces.settings.volume.title') }}</label>
     <div class="events-limit-indicator__events">
       {{ eventsCount }} /
@@ -20,8 +20,8 @@
       class="events-limit-indicator__volume-progress workspace-volume__volume-progress"
     />
     <div class="workspace-volume__text">{{ $t('workspaces.settings.volume.description_2') }}</div>
-    <a href="mailto:team@hawk.so">
-      <div class="button workspace-volume__button">{{ $t('workspaces.settings.volume.emailButton') }}</div>
+    <a class="button workspace-volume__button" href="mailto:team@hawk.so">
+      {{ $t('workspaces.settings.volume.emailButton') }}
     </a>
   </div>
 </template>
@@ -89,25 +89,25 @@ export default Vue.extend({
 
 .workspace-volume {
   &__text {
-  margin-bottom: 35px;
-  max-width: 435px;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: .16px;
-  color: var(--color-text-second);
+    margin-bottom: 35px;
+    max-width: 435px;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: .16px;
+    color: var(--color-text-second);
   }
 
   &__volume-progress {
-  width: 400px;
-  height: 11px;
-  border-radius: 5px;
-  margin-bottom: 30px;
+    width: 400px;
+    height: 11px;
+    border-radius: 5px;
+    margin-bottom: 30px;
   }
 
   &__button {
-  display: inline-block;
-  padding: 12px;
-  font-weight: 700;
+    display: inline-block;
+    padding: 12px;
+    font-weight: 700;
   }
 }
 </style>
