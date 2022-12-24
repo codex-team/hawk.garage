@@ -3,12 +3,12 @@
     <div class="events-limit-indicator__info-section">
       <div class="events-limit-indicator__label">
         {{ $t("billing.volume") }}
-        <PositiveButton
-          v-if="isEventsLimitExceeded && isCurrentUserAdmin"
-          class="events-limit-indicator__label-boost-button"
-          :content="$t('billing.boost') + '!'"
-          @click="goToBilling"
-        />
+<!--        <PositiveButton-->
+<!--          v-if="isEventsLimitExceeded && isCurrentUserAdmin"-->
+<!--          class="events-limit-indicator__label-boost-button"-->
+<!--          :content="$t('billing.boost') + '!'"-->
+<!--          @click="goToBilling"-->
+<!--        />-->
       </div>
       <div class="events-limit-indicator__info-bar">
         <div class="events-limit-indicator__events">
@@ -33,14 +33,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import PositiveButton from '../utils/PostivieButton.vue';
+//import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
 import Progress from '../utils/Progress.vue';
 
 export default Vue.extend({
   name: 'EventsLimitIndicator',
   components: {
-    PositiveButton,
+    //PositiveButton,
     Progress,
   },
   props: {

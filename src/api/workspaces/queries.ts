@@ -157,6 +157,7 @@ export const QUERY_WORKSPACES = `
       subscriptionId
       lastChargeDate
       inviteHash
+      billingPeriodEventsCount
       ...WorkspacePlan
       ...WorkspaceWithTeam
     }

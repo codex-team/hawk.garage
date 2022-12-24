@@ -269,6 +269,12 @@
       "billing": {
         "title": "Billing information"
       },
+      "volume": {
+        "title": "Used Volume",
+        "description_1": "We have no prepaid plans. All features are available for free. The limit of accepted events is %{msg} events per month.",
+        "description_2": "If you would like to increase your volume, please contact us via the button below",
+        "emailButton": "Increase volume"
+      },
       "errors": {
         "accessDenied": "You don't have enough rights to view this page"
       }
