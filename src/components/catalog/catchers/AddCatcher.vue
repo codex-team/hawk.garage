@@ -102,10 +102,16 @@ export default {
           image: require('../../../assets/catalog/go/go@3x.jpg'),
         },
         {
-          name: 'SCALA',
-          description: this.$t('components.catalog.catchers.scala'),
-          image: require('../../../assets/catalog/scala/scala@3x.jpg'),
+          name: 'KOTLIN',
+          page: 'kotlin',
+          description: this.$t('components.catalog.catchers.kotlin'),
+          image: require('../../../assets/catalog/kotlin/kotlin@3x.jpg'),
         },
+        // {
+        //   name: 'SCALA',
+        //   description: this.$t('components.catalog.catchers.scala'),
+        //   image: require('../../../assets/catalog/scala/scala@3x.jpg'),
+        // },
       ],
     };
   },

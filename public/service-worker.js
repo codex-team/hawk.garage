@@ -35,7 +35,7 @@ workbox.routing.registerRoute(
 );
 
 if (workbox) {
-  console.log('Yay! Workbox is loaded');
+  console.log('Hawk worker loaded');
 } else {
-  console.log('Boo! Workbox didn\'t load');
+  console.log('Hawk worker didn\'t load');
 }

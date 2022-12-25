@@ -47,6 +47,9 @@
       "message":"The new version is available",
       "refresh":"Refresh"
     },
+    "feedbackButton":{
+      "message":"Leave feedback"
+    },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",
@@ -59,6 +62,7 @@
         "js": "Advanced catcher with source maps support. Supports TS.",
         "python": "Small, simple and full-featured catcher for any kind of scripts.",
         "go": "Deadly simple and fast errors tracking",
+        "kotlin": "Tracks errors in Kotlin and Java apps",
         "scala": "Boost your scala application quality"
       },
       "backToCatalog": "Back to catalog",
@@ -259,10 +263,19 @@
         "brokenLinkNotification": "It seems, your link is broken",
         "grantAdmin": "Grant Admin",
         "withdrawPermissions": "Withdraw permissions",
-        "removeMember": "Remove"
+        "removeMember": "Remove",
+        "errors": {
+          "User is already invited to this workspace": "User is already invited to this workspace"
+        }
       },
       "billing": {
         "title": "Billing information"
+      },
+      "volume": {
+        "title": "Used Volume",
+        "description_1": "We have no prepaid plans. All features are available for free. The limit of accepted events is %{msg} events per month.",
+        "description_2": "If you would like to increase your volume, please contact us via the button below",
+        "emailButton": "Increase volume"
       },
       "errors": {
         "accessDenied": "You don't have enough rights to view this page"

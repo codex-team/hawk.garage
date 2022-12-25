@@ -39,8 +39,8 @@ a {
  * Style for underlined links
  */
 .link--underlined {
-  border-bottom: 2px solid currentColor;
   padding-bottom: 1px;
+  border-bottom: 2px solid currentColor;
 }
 
 /**

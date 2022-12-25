@@ -195,9 +195,12 @@ const actions = {
    * @param {string} payload.userEmail - email of the invited user
    */
   async [INVITE_TO_WORKSPACE]({ commit }, { workspaceId, userEmail }) {
-    const success = await workspaceApi.inviteToWorkspace(workspaceId, userEmail);
+    const response = await workspaceApi.inviteToWorkspace(workspaceId, userEmail);
 
-    if (!success) {
+    /**
+     * Response can contain errors, so we should handle only existed fields
+     */
+    if (!response.data || !response.data.inviteToWorkspace) {
       return false;
     }
 

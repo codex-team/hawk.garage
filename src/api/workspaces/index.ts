@@ -76,13 +76,13 @@ export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ work
  *
  * @param {string} workspaceId - id of workspace to which user is invited
  * @param {string} userEmail - invited user`s email
- * @returns {Promise<boolean>} true if user invited successfully
+ * @returns true if user invited successfully
  */
-export async function inviteToWorkspace(workspaceId: string, userEmail: string): Promise<boolean> {
-  return (await api.callOld(MUTATION_INVITE_TO_WORKSPACE, {
+export async function inviteToWorkspace(workspaceId: string, userEmail: string): Promise<APIResponse<{inviteToWorkspace: boolean}>> {
+  return api.call(MUTATION_INVITE_TO_WORKSPACE, {
     workspaceId,
     userEmail,
-  })).inviteToWorkspace;
+  });
 }
 
 /**

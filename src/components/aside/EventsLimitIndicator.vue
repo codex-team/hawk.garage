@@ -3,11 +3,12 @@
     <div class="events-limit-indicator__info-section">
       <div class="events-limit-indicator__label">
         {{ $t("billing.volume") }}
-        <PositiveButton
-          v-if="isEventsLimitExceeded"
-          class="events-limit-indicator__label-boost-button"
-          :content="$t('billing.boost') + '!'"
-        />
+<!--        <PositiveButton-->
+<!--          v-if="isEventsLimitExceeded && isCurrentUserAdmin"-->
+<!--          class="events-limit-indicator__label-boost-button"-->
+<!--          :content="$t('billing.boost') + '!'"-->
+<!--          @click="goToBilling"-->
+<!--        />-->
       </div>
       <div class="events-limit-indicator__info-bar">
         <div class="events-limit-indicator__events">
@@ -32,14 +33,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import PositiveButton from '../utils/PostivieButton.vue';
+//import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
 import Progress from '../utils/Progress.vue';
 
 export default Vue.extend({
   name: 'EventsLimitIndicator',
   components: {
-    PositiveButton,
+    //PositiveButton,
     Progress,
   },
   props: {
@@ -48,6 +49,14 @@ export default Vue.extend({
      */
     workspace: {
       type: Object,
+      required: true,
+    },
+
+    /**
+     * Determines the admin status of the current user
+     */
+    isCurrentUserAdmin: {
+      type: Boolean,
       required: true,
     },
   },
@@ -62,6 +71,7 @@ export default Vue.extend({
   computed: {
     /**
      * Return workspace plan
+     *
      * @returns {Plan} - return the plan of the
      */
     plan(): Plan {
@@ -69,6 +79,7 @@ export default Vue.extend({
     },
     /**
      * Checking the volume spent
+     *
      * @returns {boolean} - shows whether the volume limit exceeded or not.
      */
     isEventsLimitExceeded(): boolean {
@@ -78,10 +89,19 @@ export default Vue.extend({
     },
     /**
      * Total number of used events since the last charge date
+     *
      * @returns {number} - total number of used events.
      */
-    eventsCount():number {
+    eventsCount(): number {
       return this.workspace.billingPeriodEventsCount || 0;
+    },
+  },
+  methods: {
+    /**
+     * Provides navigation to the Billing page
+     */
+    goToBilling(): void {
+      this.$root.$router.push(`/workspace/${this.workspace.id}/settings/billing`);
     },
   },
 });
@@ -107,6 +127,7 @@ export default Vue.extend({
     @apply --ui-label;
     display: flex;
     justify-content: space-between;
+
     &-boost-button {
       margin-top: 14px;
     }
@@ -120,13 +141,13 @@ export default Vue.extend({
   }
 
   &__events {
+    margin-top: 15px;
     color: var(--color-text-main);
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.18px;
     white-space: nowrap;
-    margin-top: 15px;
   }
 }
 </style>

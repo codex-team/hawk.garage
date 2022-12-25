@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import store from './store';
 
+import { Analytics, AnalyticsEventType } from './analytics';
+
 import AppShell from './components/AppShell.vue';
 
 Vue.use(Router);
@@ -45,11 +47,11 @@ const router = new Router({
               name: 'account-notifications',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Notifications.vue'),
             },
-            {
-              path: 'billing',
-              name: 'account-billing',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Billing.vue'),
-            },
+            // {
+            //   path: 'billing',
+            //   name: 'account-billing',
+            //   component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Billing.vue'),
+            // },
           ],
         },
         /**
@@ -83,9 +85,14 @@ const router = new Router({
               component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/settings/Team.vue'),
             },
             {
+              path: 'volume',
+              name: 'workspace-settings-used-volume',
+              component: () => import(/* webpackChunkName: 'workspace-used-volume' */ './components/workspace/settings/UsedVolume.vue'),
+            },
+            {
               path: 'billing',
               name: 'workspace-settings-billing',
-              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/Billing.vue'),
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/UsedVolume.vue'),
             },
           ],
         },
@@ -219,6 +226,33 @@ router.beforeEach((to, from, next) => {
       next('/login');
     }
   }
+
+  /**
+   * Track visit
+   */
+  try {
+    /**
+     * Try to get user id
+     */
+    if (store.state.user && store.state.user.data && store.state.user.data.id) {
+      Analytics.setUserId(store.state.user.data.id);
+    }
+
+    /**
+     * Event additional data
+     */
+    const eventProperties = {
+      url: to.fullPath,
+    };
+
+    /**
+     * Track event
+     */
+    Analytics.track(AnalyticsEventType.PageVisited, eventProperties);
+  } catch (e) {
+    console.error(e);
+  }
+
   next();
 });
 

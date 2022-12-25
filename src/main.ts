@@ -1,3 +1,4 @@
+import './styles/base.css';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import ConfirmationWindow from './plugins/ConfirmationWindow';
@@ -13,8 +14,13 @@ import i18n from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
 import UniqueId from 'vue-unique-id';
+
+/**
+ * Integrations
+ */
+import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
+import { Analytics } from './analytics';
 
 /**
  * Current build revision
@@ -30,7 +36,7 @@ declare const buildRevision: string;
 let hawk: HawkCatcher;
 
 /**
- * Enable errors tracking
+ * Enable errors tracking via Hawk.so
  */
 if (process.env.VUE_APP_HAWK_TOKEN) {
   const hawkOptions: HawkInitialSettings = {
@@ -51,11 +57,6 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
   hawk = new HawkCatcher(hawkOptions);
 }
 
-Vue.config.devtools = process.env.NODE_ENV !== 'production';
-
-Vue.prototype.$API_AUTH_GOOGLE = process.env.VUE_APP_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
-Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
-
 /**
  * Sends error to the Hawk
  *
@@ -67,6 +68,23 @@ Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
     hawk.send(error);
   }
 };
+
+/**
+ * Enable analytics via Amplitude.com
+ */
+if (process.env.VUE_APP_AMPLITUDE_TOKEN) {
+  Analytics.init(process.env.VUE_APP_AMPLITUDE_TOKEN);
+}
+
+/**
+ * Vue wrapper for sending analytics events
+ */
+Vue.prototype.$sendToAmplitude = Analytics.track;
+
+Vue.config.devtools = process.env.NODE_ENV !== 'production';
+
+Vue.prototype.$API_AUTH_GOOGLE = process.env.VUE_APP_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
+Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
 
 Vue.use(VueCookies);
 Vue.use(UniqueId);

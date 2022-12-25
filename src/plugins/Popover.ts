@@ -1,6 +1,7 @@
 import { VueConstructor } from 'vue';
 import Popover from '@/components/utils/Popover/Popover.vue';
 import i18n from '../i18n';
+import Router from '../router';
 
 /**
  * Type of popover component
@@ -14,8 +15,7 @@ type PopoverComponentType = InstanceType<typeof Popover>;
  * component: <any component>,
  * componentProps: <pass props>,
  *  popoverPros:{
- *    top: '20%',
- *    left: '40%',
+ *    showBelowElement: SomeElement,
  *  }
  * });
  */
@@ -29,6 +29,7 @@ export default {
     const vueContainer = document.createElement('div');
     const notifierContainer = new Vue<PopoverComponentType>({
       i18n,
+      router: Router,
       render: (h) => h(Popover),
     });
 

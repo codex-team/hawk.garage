@@ -1,5 +1,5 @@
 # build stage
-FROM node:lts-alpine as build-stage
+FROM node:16.19.0-alpine3.17 as build-stage
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY . .
 RUN yarn build
 
 # production stage
-FROM node:lts-alpine
+FROM node:16.19.0-alpine3.17
 
 RUN yarn global add http-server spa-http-server
 

@@ -279,7 +279,13 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
 
         tokenRefreshingRequest = null;
 
-        originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
+        } else {
+          originalRequest.headers = {
+            Authorization: 'Bearer ' + newAccessToken,
+          };
+        }
 
         return axios(originalRequest);
       } catch (error) {
