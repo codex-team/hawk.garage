@@ -15,9 +15,11 @@ RUN yarn build
 # production stage
 FROM node:16.19.0-alpine3.17
 
+WORKDIR /app
+
 RUN yarn global add http-server spa-http-server
 
-COPY --from=build-stage /app/dist /
+COPY --from=build-stage /app/dist ./
 
 EXPOSE 8080
 
