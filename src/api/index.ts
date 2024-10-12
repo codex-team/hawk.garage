@@ -150,8 +150,8 @@ export async function callOld(
         /**
          * Send error to Hawk
          */
-        track(new Error('TEST: ' + error.message), {
-          'Request': trim(request, 100),
+        track(new Error(error.message), {
+          'Request': request,
           'Error Path': error.path,
           'Variables': variables ?? {},
           'Response Data': response.data.data
