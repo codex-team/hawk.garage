@@ -156,16 +156,9 @@ export async function callOld(
           'Request': trim(request, 100),
           'Error Path': error.path,
           'Variables': variables ?? {},
-          'Response': Object.entries(response.data.data).reduce((acc, [key, value]) => {
-            if (JSON.stringify(value).length > 100) {
-              value = JSON.stringify(value).slice(0, 100) + '...';
-            }
-
-            acc[key] = value;
-
-            return acc;
-          }, {}),
+          'Response Data': response.data.data
         });
+
         printApiError(error, response.data, request, variables);
       });
     }
