@@ -180,9 +180,9 @@ export async function callOld(
     console.error('API Request Error', error);
 
     track(error as Error, {
-      request,
-      variables: variables ?? {},
-      response: response?.data,
+      'Request': request,
+      'Variables': variables ?? {},
+      'Response Data': response?.data.data,
     });
     throw error;
   }
