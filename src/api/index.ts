@@ -137,7 +137,6 @@ export async function callOld(
   let response;
 
   try { // handle axios errors
-
     if (initial || force) {
       response = await promise;
     } else {
@@ -154,7 +153,7 @@ export async function callOld(
           'Request': request,
           'Error Path': error.path,
           'Variables': variables ?? {},
-          'Response Data': response.data.data
+          'Response Data': response.data.data,
         });
 
         printApiError(error, response.data, request, variables);
@@ -177,7 +176,6 @@ export async function callOld(
      * @deprecated old format. See method jsdoc
      */
     return response.data.data;
-
   } catch (error) {
     console.error('API Request Error', error);
 
@@ -185,7 +183,7 @@ export async function callOld(
       request,
       variables: variables ?? {},
       response: response?.data,
-    })
+    });
     throw error;
   }
 }

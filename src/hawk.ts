@@ -1,4 +1,4 @@
-import HawkCatcher, { HawkInitialSettings, HawkJavaScriptEvent } from '@hawk.so/javascript';
+import HawkCatcher, { HawkInitialSettings, HawkJavaScriptEvent } from '@hawk.so/javascript'
 import type Vue from 'vue';
 
 /**
@@ -31,7 +31,10 @@ let hawk: HawkCatcher | null = null;
 /**
  * Composable for tracking errors via Hawk.so
  */
-export function useErrorTracker() {
+export function useErrorTracker(): {
+  initHawk: (options: ErrorTrackerInitialOptions) => void;
+  track: (...args: Parameters<HawkCatcher['send']>) => void;
+  } {
   /**
    * Initialize Hawk.so
    *
@@ -59,14 +62,14 @@ export function useErrorTracker() {
    * @param error - error to track
    * @param context - additional context
    */
-  function track(error: Parameters<HawkCatcher['send']>[0], context?: Parameters<HawkCatcher['send']>[1]): void {
+  function track(...args: Parameters<HawkCatcher['send']>): void {
     if (hawk) {
-      hawk.send(error, context);
+      hawk.send(...args);
     }
   }
 
   return {
     initHawk,
-    track
-  }
+    track,
+  };
 }
