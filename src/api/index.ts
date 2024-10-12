@@ -149,8 +149,6 @@ export async function callOld(
       response.data.errors.forEach(error => {
         /**
          * Send error to Hawk
-         *
-         * Context has limited length, so we need to trim it
          */
         track(new Error('TEST: ' + error.message), {
           'Request': trim(request, 100),
