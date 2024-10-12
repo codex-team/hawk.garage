@@ -92,7 +92,7 @@ const actions = {
     const recentEvents = {};
 
     projects.forEach(project => {
-      if (!project.recentEvents || !project.recentEvents.dailyInfo) {
+      if (!project.recentEvents || !project.recentEvents.dailyInfo || !project.recentEvents.events) {
         return;
       }
 

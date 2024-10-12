@@ -38,12 +38,19 @@ module.exports = {
     devServer: {
       progress: false,
     },
+    output: {
+      filename: `static/js/[name].[hash:8].${buildRevision}.js`,
+      chunkFilename: `static/js/[name].[hash:8].${buildRevision}.js`,
+    },
   },
   /**
    * Disable progress to boost bundling speed
    */
   devServer: {
     progress: false,
+    headers: {
+      'Cache-Control': 'private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+    },
   },
   chainWebpack: config => {
     /**
@@ -103,18 +110,18 @@ module.exports = {
       return options;
     });
   },
-  pwa: {
-    name: 'hawk.so',
-    workboxPluginMode: 'InjectManifest',
-    workboxOptions: {
-      swSrc: 'public/service-worker.js',
-    },
-    themeColor: '#242732',
-    msTileColor: '#000000',
-    iconPaths: {
-      msTileImage: 'img/icons/mstile-150x150.png'
-    }
-  },
+  // pwa: {
+  //   name: 'hawk.so',
+  //   workboxPluginMode: 'InjectManifest',
+  //   workboxOptions: {
+  //     swSrc: 'public/service-worker.js',
+  //   },
+  //   themeColor: '#242732',
+  //   msTileColor: '#000000',
+  //   iconPaths: {
+  //     msTileImage: 'img/icons/mstile-150x150.png'
+  //   }
+  // },
   assetsDir: 'static',
   pluginOptions: {
     storybook: {
