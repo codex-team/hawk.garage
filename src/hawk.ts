@@ -32,7 +32,7 @@ let hawk: HawkCatcher | null = null;
  * Composable for tracking errors via Hawk.so
  */
 export function useErrorTracker(): {
-  initHawk: (options: ErrorTrackerInitialOptions) => void;
+  init: (options: ErrorTrackerInitialOptions) => void;
   track: (...args: Parameters<HawkCatcher['send']>) => void;
   } {
   /**
@@ -40,7 +40,7 @@ export function useErrorTracker(): {
    *
    * @param options - params to be passed to hawk initialization
    */
-  function initHawk({ vue, user }: ErrorTrackerInitialOptions): void {
+  function init({ vue, user }: ErrorTrackerInitialOptions): void {
     if (process.env.VUE_APP_HAWK_TOKEN) {
       const hawkOptions: HawkInitialSettings = {
         token: process.env.VUE_APP_HAWK_TOKEN,
@@ -69,7 +69,7 @@ export function useErrorTracker(): {
   }
 
   return {
-    initHawk,
+    init,
     track,
   };
 }

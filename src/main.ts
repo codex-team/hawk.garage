@@ -21,7 +21,7 @@ import UniqueId from 'vue-unique-id';
 import { Analytics } from './analytics';
 import { useErrorTracker, ErrorTrackerInitialOptions } from './hawk';
 
-const { initHawk, track } = useErrorTracker();
+const { init: initHawk, track } = useErrorTracker();
 
 /**
  * Enable errors tracking via Hawk.so
