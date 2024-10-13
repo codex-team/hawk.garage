@@ -1286,10 +1286,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@hawk.so/javascript@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.0.4.tgz#d2a8bdd8d0e08381d4eadaaf6003e0c7122bd28b"
-  integrity sha512-AFXp/mavdmROvhnru/VMMPNe/H+qURt3Wlv+F7v4sNBHsMcStslhO442DUBNCdaFZCC3HWZOUsRzRf3nAAigaQ==
+"@hawk.so/javascript@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.0.6.tgz#4521cef80d99674fbe77a7e1b54b848ecc8a997f"
+  integrity sha512-/whIk+5JJJ+QalLyXmECnvzWQSh1F543cgK2VD3LcB6qGZzBQB6VDLGDLzU9ZWOfd3GHgV1QAREqthEmRBN8vA==
   dependencies:
     "@hawk.so/types" "^0.1.13"
     error-stack-parser "^2.0.6"
