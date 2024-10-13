@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
 import { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
-import { trim } from '@/utils';
 
 /**
  * Hawk API endpoint URL
