@@ -57,6 +57,12 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
 export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
   return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
     initial: true,
+
+    /**
+     * This request calls on the app start, so we don't want to break app if something goes wrong
+     * With this flag, errors from the API won't be thrown, but returned in the response for further handling
+     */
+    allowErrors: true,
   });
 }
 

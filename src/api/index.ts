@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
 import { APIResponse } from '../types/api';
+import { useErrorTracker } from '@/hawk';
 
 /**
  * Hawk API endpoint URL
@@ -16,6 +17,11 @@ let blockingRequest: Promise<AxiosResponse>;
  * If contains Promise, request for token refreshing was already send and need wait for it
  */
 let tokenRefreshingRequest: Promise<string> | null;
+
+/**
+ * Error tracking composable
+ */
+const { track } = useErrorTracker();
 
 /**
  * Describe format of the GraphQL API error item
@@ -129,34 +135,56 @@ export async function callOld(
 
   let response;
 
-  if (initial || force) {
-    response = await promise;
-  } else {
-    response = (await Promise.all([blockingRequest, promise]))[1];
-  }
+  try { // handle axios errors
+    if (initial || force) {
+      response = await promise;
+    } else {
+      response = (await Promise.all([blockingRequest, promise]))[1];
+    }
 
-  if (response.data.errors) {
-    response.data.errors.forEach(error => {
-      printApiError(error, response.data, request, variables);
+
+    if (response.data.errors) {
+      response.data.errors.forEach(error => {
+        /**
+         * Send error to Hawk
+         */
+        track(new Error(error.message), {
+          'Request': request,
+          'Error Path': error.path,
+          'Variables': variables ?? {},
+          'Response Data': response.data.data,
+        });
+
+        printApiError(error, response.data, request, variables);
+      });
+    }
+
+    /**
+     * For now (Apr 10, 2020) all previous code await to get only data
+     * so new request will pass allowErrors=true and get both errors and data
+     *
+     * @todo refactor old requests same way
+     */
+    if (allowErrors) {
+      return response.data;
+    } else {
+      // console.warn('Api call in old format. Should be refactored to support errors', request);
+    }
+
+    /**
+     * @deprecated old format. See method jsdoc
+     */
+    return response.data.data;
+  } catch (error) {
+    console.error('API Request Error', error);
+
+    track(error as Error, {
+      'Request': request,
+      'Variables': variables ?? {},
+      'Response Data': response?.data.data,
     });
+    throw error;
   }
-
-  /**
-   * For now (Apr 10, 2020) all previous code await to get only data
-   * so new request will pass allowErrors=true and get both errors and data
-   *
-   * @todo refactor old requests same way
-   */
-  if (allowErrors) {
-    return response.data;
-  } else {
-    // console.warn('Api call in old format. Should be refactored to support errors', request);
-  }
-
-  /**
-   * @deprecated old format. See method jsdoc
-   */
-  return response.data.data;
 }
 
 /**
@@ -173,7 +201,7 @@ export async function call(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables?: Record<string, any>,
   files?: {[name: string]: File | undefined},
-  { initial = false, force = false }: ApiCallSettings = {}
+  { initial = false, force = false, allowErrors = false }: ApiCallSettings = {}
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<APIResponse<any>> {
   const response = await callOld(request, variables, files, Object.assign({
@@ -186,8 +214,18 @@ export async function call(
   /**
    * Response can contain errors.
    * Throw such errors to the Vue component to display them for user
+   *
+   * Note from 2024-04-10:
+   *  - Now we have try-catch block components, since errors are thrown from the API module
+   *  - But it would be more safe to not throw errors from the API module, but return them in the response and then handle them in store or component.
+   *  - Refactoring steps: (@todo)
+   *     1. Rewrire all requests to use api.call() instead of api.callOld()
+   *     2. Get rid of allowErrors flag form the api.callOld() method
+   *     3. Provide a way to handle errors in the store
+   *     4. Review all try/catch statements in the components and remove them
+   * - For a temporary solution, we explicitly pass allowErrors=true when method is ready to receive errors as well as data
    */
-  if (response.errors && response.errors.length) {
+  if (response.errors && response.errors.length && allowErrors === false) {
     response.errors.forEach(error => {
       throw new Error(error.message);
     });
