@@ -9,7 +9,6 @@ import router from './router';
 import store from './store';
 import './filters';
 import './directives';
-import './registerServiceWorker';
 import i18n from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
@@ -19,43 +18,31 @@ import UniqueId from 'vue-unique-id';
 /**
  * Integrations
  */
-import HawkCatcher, { HawkInitialSettings, HawkUser } from '@hawk.so/javascript';
 import { Analytics } from './analytics';
+import { useErrorTracker, ErrorTrackerInitialOptions } from './hawk';
 
-/**
- * Current build revision
- * passed from Webpack Define Plugin
- */
-declare const buildRevision: string;
-
-/**
- * Frontend-errors tracking system
- *
- * @type {HawkCatcher}
- */
-let hawk: HawkCatcher;
+const { init: initHawk, track } = useErrorTracker();
 
 /**
  * Enable errors tracking via Hawk.so
  */
 if (process.env.VUE_APP_HAWK_TOKEN) {
-  const hawkOptions: HawkInitialSettings = {
-    token: process.env.VUE_APP_HAWK_TOKEN,
-    release: buildRevision,
+  const options: ErrorTrackerInitialOptions = {
     vue: Vue,
   };
 
   if (store.state.user && store.state.user.data && Object.keys(store.state.user.data).length) {
-    hawkOptions.user = {
+    options.user = {
       id: store.state.user.data.id,
       name: store.state.user.data.name || store.state.user.data.email,
       image: store.state.user.data.image,
       url: '',
-    } as HawkUser;
+    };
   }
 
-  hawk = new HawkCatcher(hawkOptions);
+  initHawk(options);
 }
+
 
 /**
  * Sends error to the Hawk
@@ -64,9 +51,7 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
  * @example this.$sendToHawk(new Error('Some error'));
  */
 Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
-  if (hawk) {
-    hawk.send(error);
-  }
+  track(error);
 };
 
 /**

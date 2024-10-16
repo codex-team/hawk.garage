@@ -205,32 +205,37 @@ export default {
    * Vue hook. Called synchronously after the instance is created
    */
   async created() {
-    /**
-     * Fetch user data
-     */
-    await this.$store.dispatch(FETCH_INITIAL_DATA);
+    try {
+      /**
+       * Fetch user data
+       */
+      await this.$store.dispatch(FETCH_INITIAL_DATA);
 
-    this.$store.dispatch(RESET_MODAL_DIALOG);
+      this.$store.dispatch(RESET_MODAL_DIALOG);
 
-    /**
-     * Onboarding. If a user has no workspace, show Create Workspace modal
-     */
-    this.suggestWorkspaceCreation();
+      /**
+       * Onboarding. If a user has no workspace, show Create Workspace modal
+       */
+      this.suggestWorkspaceCreation();
 
-    /**
-     * Get current workspace
-     */
-    const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
+      /**
+       * Get current workspace
+       */
+      const workspace = this.$store.getters.getWorkspaceById(this.workspaceId);
 
-    /**
-     * Set current workspace
-     */
-    this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
+      /**
+       * Set current workspace
+       */
+      this.$store.dispatch(SET_CURRENT_WORKSPACE, workspace);
 
-    /**
-     * Fetch current user data
-     */
-    this.$store.dispatch(FETCH_CURRENT_USER);
+      /**
+       * Fetch current user data
+       */
+      this.$store.dispatch(FETCH_CURRENT_USER);
+    } catch (error) {
+      console.error(error);
+      this.$sendToHawk(`Error on app initialization!: ${error.message}`);
+    }
   },
   methods: {
     onModalClose() {
