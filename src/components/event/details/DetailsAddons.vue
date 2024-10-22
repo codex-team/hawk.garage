@@ -1,10 +1,10 @@
 <template>
   <DetailsBase>
     <template #header>
-      {{ title }}
-      <template v-if="title === 'Vue' ">
-        <Icon symbol="vue" />
+      <template v-if="icon">
+        <Icon :symbol="icon" />
       </template>
+      {{ title }}
     </template>
     <template #content>
       <div
@@ -90,6 +90,14 @@ export default Vue.extend({
       type: Object as PropType<EventAddons>,
       required: true,
     },
+
+    /**
+     * Integration framework logo
+     */
+    icon: {
+      type: String,
+      default: '',
+    }
   },
   computed: {
   },
@@ -101,7 +109,7 @@ export default Vue.extend({
      * @param key - addon key
      */
     isHTML(key: string): boolean {
-      return key === 'component' && this.title === 'Vue';
+      return key.toLowerCase() === 'component' && ['Vue', 'Nuxt'].includes(this.title);
     },
   },
 });
