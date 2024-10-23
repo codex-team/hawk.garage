@@ -49,12 +49,13 @@ export default {
       font-size: 12px;
       letter-spacing: 0.15px;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
 
       .icon {
-        width: 16px;
-        height: 13px;
-        margin-top: -2px;
-        margin-left: 5px;
+        width: 20px;
+        height: 20px;
         vertical-align: middle;
       }
     }
