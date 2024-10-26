@@ -117,6 +117,68 @@ describe('Merging of the repetition and the original event payloads at the overv
     expect(result).to.deep.equal(assembledRepetition);
   });
 
+  it('(array of objects) should replace null in original if the repetition event has value', () => {
+    originalEvent = {
+      ...originalEvent,
+      backtrace: [
+        {
+          ...baseEvent.backtrace[0],
+          sourceCode: null
+        }
+      ],
+    };
+
+    repetitionEvent = {
+      ...repetitionEvent,
+      backtrace: [
+        {
+          ...baseEvent.backtrace[0],
+          sourceCode: [
+            {
+              content: '111',
+              line: 4
+            },
+            {
+              content: '222',
+              line: 5
+            },
+            {
+              content: '333',
+              line: 6
+            }
+          ]
+        }
+      ],
+    };
+
+    assembledRepetition = {
+      ...baseEvent,
+      backtrace: [
+        {
+          ...baseEvent.backtrace[0],
+          sourceCode: [
+            {
+              content: '111',
+              line: 4
+            },
+            {
+              content: '222',
+              line: 5
+            },
+            {
+              content: '333',
+              line: 6
+            }
+          ]
+        }
+      ],
+    };
+
+    const result = repetitionAssembler(originalEvent, repetitionEvent);
+
+    expect(result).to.deep.equal(assembledRepetition);
+  });
+
   it('should take the repetition field value instead of the original event value in the array of objects', () => {
     originalEvent = {
       ...originalEvent,

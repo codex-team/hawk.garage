@@ -252,7 +252,7 @@ export interface HawkEventBacktraceFrame {
   /**
    * Part of source code file near the called line
    */
-  sourceCode: BacktraceSourceCode[];
+  sourceCode: BacktraceSourceCode[] | null;
 
   /**
    * Function name extracted from current stack frame
