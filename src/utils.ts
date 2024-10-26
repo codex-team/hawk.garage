@@ -182,8 +182,19 @@ export function repetitionAssembler(originalEvent: HawkEventPayload, repetition:
       return originalParam;
     }
 
-    if (typeof repetitionParam === 'object' && typeof originalEvent === 'object') {
-      return repetitionAssembler(originalParam, repetitionParam);
+  
+    if (typeof repetitionParam === 'object' && typeof originalParam === 'object') {
+      /**
+       * If original event has null but repetition has some value, we need to return repetition value
+       */
+      if (originalParam === null) {
+        return repetitionParam;
+      /**
+       * Otherwise, we need to recursively merge original and repetition values
+       */
+      } else {
+        return repetitionAssembler(originalParam, repetitionParam);
+      }
     }
 
     return repetitionParam;
