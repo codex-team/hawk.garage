@@ -45,7 +45,7 @@
             {{ plan.name || 'Free' }}
           </div>
           <div class="billing-card__plan-coast">
-            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
+            {{ plan.monthlyCharge || 0 }}{{planCurrencySign}}/{{ $t('billing.payPeriod') }}
           </div>
         </div>
       </div>
@@ -216,6 +216,20 @@ export default Vue.extend({
      */
     plan(): Plan {
       return this.workspace.plan;
+    },
+
+    /**
+     * Return currency sign depending on plan currency
+     */
+    planCurrencySign(): string {
+      switch (this.plan.monthlyChargeCurrency) {
+        case 'USD':
+          return '$';
+        case 'RUB':
+          return '₽';
+        default:
+          return '';
+      }
     },
     /**
      * Total number of errors since the last charge date

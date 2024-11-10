@@ -821,6 +821,9 @@ type Plan {
   """Monthly charge for plan"""
   monthlyCharge: Int!
 
+  """Monthly charge currency for plan"""
+  monthlyChargeCurrency: String!
+
   """Events limit for plan"""
   eventsLimit: Int!
 
