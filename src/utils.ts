@@ -2,6 +2,17 @@ import mergeWith from 'lodash.mergewith';
 import cloneDeep from 'lodash.clonedeep';
 import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
 
+export function getCurrencySign(currency: string): string {
+  switch (currency) {
+    case 'USD':
+      return '$';
+    case 'RUB':
+      return '₽';
+    default:
+      return '';
+  }
+}
+
 /**
  * Returns entity color from predefined list
  *

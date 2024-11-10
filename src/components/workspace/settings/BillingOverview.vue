@@ -129,6 +129,7 @@ import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
+import { getCurrencySign } from '@/utils';
 
 /**
  * Const value for the whole project
@@ -222,14 +223,7 @@ export default Vue.extend({
      * Return currency sign depending on plan currency
      */
     planCurrencySign(): string {
-      switch (this.plan.monthlyChargeCurrency) {
-        case 'USD':
-          return '$';
-        case 'RUB':
-          return '₽';
-        default:
-          return '';
-      }
+      return getCurrencySign(this.plan.monthlyChargeCurrency);
     },
     /**
      * Total number of errors since the last charge date

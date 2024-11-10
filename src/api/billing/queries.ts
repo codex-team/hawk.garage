@@ -28,6 +28,7 @@ export const FRAGMENT_BUSINESS_OPERATION = `
           name
         }
         amount
+        currency
       }
     }
   }
