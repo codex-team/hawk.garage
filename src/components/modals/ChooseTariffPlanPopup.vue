@@ -21,6 +21,7 @@
             :name="plan.name"
             :limit="plan.eventsLimit"
             :price="plan.monthlyCharge"
+            :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
             @click.native="selectPlan(plan.id)"
           />

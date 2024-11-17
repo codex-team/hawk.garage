@@ -7,11 +7,11 @@
       {{ name }}
     </h4>
     <div class="tariff-plan__limit">
-      {{ limit | spacedNumber }} {{ $t('common.eventsPerMonth') }}
+      {{ limit | spacedNumber }} <span class="tariff-plan__limit-text">{{ $t('common.eventsPerMonth') }}</span>
     </div>
     <div class="tariff-plan__footer">
       <div class="tariff-plan__price">
-        {{ price === 0 ? $t('common.free') : `${$options.filters.spacedNumber(price)}${$t('common.dollarsPerMonth')}` }}
+        {{ price === 0 ? $t('common.free') : `${$options.filters.spacedNumber(price)}${$tc('common.moneyPerMonth', currencySign, { currency: currencySign })}` }}
       </div>
       <UiButton
         small
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { getCurrencySign } from '@/utils';
 import UiButton from './UiButton';
 
 export default {
@@ -54,6 +55,10 @@ export default {
       type: Number,
       required: true,
     },
+    currency: {
+      type: String,
+      required: true
+    },
     /**
      * Is plan card selected
      */
@@ -62,6 +67,11 @@ export default {
       default: false,
     },
   },
+  computed: {
+    currencySign() {
+      return getCurrencySign(this.currency)
+    }
+  }
 };
 </script>
 
@@ -73,6 +83,9 @@ export default {
     background: var(--color-bg-main);
     border-radius: 7px;
     cursor: pointer;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
 
     &--selected {
       padding: 17px 22px;
@@ -95,11 +108,17 @@ export default {
       letter-spacing: 0;
     }
 
+    &__limit-text {
+      white-space: nowrap;
+    }
+
     &__footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 30px 0 0;
+      margin-top: auto;
+      /* align-self: flex-end; */
+      /* margin: 30px 0 0; */
     }
 
     &__price {

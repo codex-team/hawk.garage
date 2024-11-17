@@ -415,8 +415,8 @@
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
     "continue": "Продолжить",
-    "eventsPerMonth": "соб. / мес",
-    "dollarsPerMonth": "$ / мес",
+    "eventsPerMonth": "событий / мес",
+    "moneyPerMonth": "{currency} / мес",
     "loading": "Загрузка...",
     "months": [
       "января",

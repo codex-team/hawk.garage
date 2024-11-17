@@ -416,7 +416,7 @@
     "select": "Select",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
-    "dollarsPerMonth": "$ / mo",
+    "moneyPerMonth": "{currency} / mo",
     "loading": "Loading...",
     "months": [
       "january",
