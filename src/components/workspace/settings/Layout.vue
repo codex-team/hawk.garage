@@ -41,7 +41,7 @@
 <!--          {{ $t('workspaces.settings.billing.title') }}-->
 <!--        </router-link>-->
         <router-link
-          v-if="isAdmin"
+          v-if="isAdmin && shouldShowBilling"
           class="settings-window__menu-item workspace-settings__menu-item"
           :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"
         >
@@ -119,6 +119,13 @@ export default Vue.extend({
 
       return member ? member.isAdmin : false;
     },
+
+    /**
+     * Check if billing button should be visible in menu
+     */
+    shouldShowBilling(): boolean {
+      return false;
+    }
   },
   async created(): Promise<void> {
     const workspaceId = this.$route.params.workspaceId;
