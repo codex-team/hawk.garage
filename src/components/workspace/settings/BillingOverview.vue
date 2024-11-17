@@ -45,13 +45,13 @@
             {{ plan.name || 'Free' }}
           </div>
           <div class="billing-card__plan-coast">
-            {{ plan.monthlyCharge || 0 }}{{planCurrencySign}}/{{ $t('billing.payPeriod') }}
+            {{ plan.monthlyCharge || 0 }}{{ planCurrencySign }}/{{ $t('billing.payPeriod') }}
           </div>
         </div>
       </div>
 
       <!-- Valid till -->
-      <div class="billing-card__info-section">
+      <div v-if="plan.monthlyCharge" class="billing-card__info-section">
         <div
           class="billing-card__label"
         >
