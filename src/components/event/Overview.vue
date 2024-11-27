@@ -44,6 +44,13 @@
         title="Flask"
       />
       <DetailsAddons
+        v-if="getIntegrationAddons('fastapi')"
+        class="event-overview__section"
+        :addons="getIntegrationAddons('fastapi')"
+        icon="fastapi"
+        title="FastAPI"
+      />
+      <DetailsAddons
         v-if="hasContext"
         class="event-overview__section"
         :addons="event.payload.context"
@@ -127,7 +134,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = [ 'vue', 'nuxt', 'flask' ];
+      const integrationToFilter = [ 'vue', 'nuxt', 'flask', 'fastapi'];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {
