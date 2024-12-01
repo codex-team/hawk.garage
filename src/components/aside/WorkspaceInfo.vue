@@ -29,7 +29,7 @@
       <router-link
         v-if="isAdmin"
         :to="{
-          name: 'workspace-settings-billing',
+          name: 'workspace-settings-used-volume',
           params: { workspaceId: workspace.id },
         }"
       >
