@@ -414,6 +414,7 @@
     "copiedNotification": "Скопировано!",
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
+    "selected": "Выбрано",
     "continue": "Продолжить",
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",

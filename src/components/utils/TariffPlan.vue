@@ -1,7 +1,10 @@
 <template>
   <div
     class="tariff-plan"
-    :class="{'tariff-plan--selected': selected}"
+    :class="{
+      'tariff-plan--selected': selected,
+      'tariff-plan--horizontal': horizontal,
+    }"
   >
     <h4 class="tariff-plan__name">
       {{ name }}
@@ -13,12 +16,14 @@
       <div class="tariff-plan__price">
         {{ price === 0 ? $t('common.free') : `${$options.filters.spacedNumber(price)}${$tc('common.moneyPerMonth', currencySign, { currency: currencySign })}` }}
       </div>
+      
       <UiButton
         small
         submit
         rounded
-        :content="$t('common.select')"
+        :content="isCurrentPlan ? $t('common.selected') : $t('common.select')"
         class="tariff-plan__button"
+        :disabled="isCurrentPlan"
       />
     </div>
   </div>
@@ -55,17 +60,31 @@ export default {
       type: Number,
       required: true,
     },
+    /**
+     * Currency for price
+     */
     currency: {
       type: String,
       required: true
     },
     /**
-     * Is plan card selected
+     * Is plan selected
      */
     selected: {
       type: Boolean,
       default: false,
     },
+    /**
+     * True if horizontal view enabled
+     */
+    horizontal: {
+      type: Boolean,
+      default: false
+    },
+    isCurrentPlan: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     currencySign() {
@@ -90,6 +109,34 @@ export default {
     &--selected {
       padding: 17px 22px;
       border: 3px solid var(--color-indicator-medium);
+    }
+
+    &--horizontal {
+      height: auto;
+      width: auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      &:not(:last-of-type) {
+        margin-bottom: 10px;
+      }
+
+      .tariff-plan__name {
+        margin-bottom: 0;
+        width: 100px;
+      }
+      .tariff-plan__limit {
+        width: 300px;
+      }
+
+      .tariff-plan__footer {
+        margin-left: auto;
+      }
+
+      .tariff-plan__price {
+        margin-right: 20px
+      }
     }
 
     &__name {
@@ -117,8 +164,6 @@ export default {
       align-items: center;
       justify-content: space-between;
       margin-top: auto;
-      /* align-self: flex-end; */
-      /* margin: 30px 0 0; */
     }
 
     &__price {

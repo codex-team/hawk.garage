@@ -14,7 +14,11 @@
           class="choose-plan__description"
           v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
         />
-        <div class="choose-plan__plans">
+
+        <div :class="{
+          'choose-plan__plans': true,
+          'choose-plan__plans--horizontal': plans.length > 3,
+        }">
           <TariffPlan
             v-for="plan in plans"
             :key="plan.id"
@@ -23,9 +27,12 @@
             :price="plan.monthlyCharge"
             :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
+            :isCurrentPlan="plan.id === workspace.plan.id"
             @click.native="selectPlan(plan.id)"
+            :horizontal="plans.length > 3"
           />
         </div>
+
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
@@ -217,8 +224,11 @@ export default Vue.extend({
 
     &__plans {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+    }
+    
+    &__plans--horizontal {
+      flex-direction: column;
     }
 
     &__continue-button {

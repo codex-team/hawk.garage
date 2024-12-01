@@ -414,6 +414,7 @@
     "copiedNotification": "Copied!",
     "free": "FREE",
     "select": "Select",
+    "selected": "Selected",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",
