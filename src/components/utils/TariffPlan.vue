@@ -124,7 +124,7 @@ export default {
 
       .tariff-plan__name {
         margin-bottom: 0;
-        width: 100px;
+        width: 150px;
       }
       .tariff-plan__limit {
         width: 300px;
