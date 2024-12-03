@@ -31,6 +31,30 @@
             @click.native="selectPlan(plan.id)"
             :horizontal="plans.length > 3"
           />
+
+          <div class="choose-plan__premium-card">
+            <div class="choose-plan__premium-card-title">
+              {{$t('workspaces.chooseTariffPlanDialog.premiumPlan')}}
+            </div>
+
+            <div class="choose-plan__premium-card-limit">
+              {{$t('workspaces.chooseTariffPlanDialog.premiumPlanLimit')}}
+            </div>
+
+            <div class="choose-plan__premium-card-price">
+              {{$t('workspaces.chooseTariffPlanDialog.premiumPlanPrice')}}
+            </div>
+
+            <a href="mailto:team@hawk.so">
+              <UiButton
+                small
+                submit
+                rounded
+                :content="$t('workspaces.chooseTariffPlanDialog.premiumPlanButtonText')"
+                class="tariff-plan__button"
+              />
+            </a>
+          </div>
         </div>
 
         <UiButton
@@ -233,6 +257,34 @@ export default Vue.extend({
 
     &__continue-button {
       margin-top: 30px;
+    }
+
+    &__premium-card {
+      background: var(--color-bg-main);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      padding: 20px 25px;
+    }
+
+    &__premium-card-title {
+      font-weight: 600;
+      width: 150px;
+    }
+
+    &__premium-card-limit {
+      color: var(--color-text-second);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    &__premium-card-price {
+      margin-left: auto;
+      color: var(--color-text-second);
+      font-weight: 600;
+      font-size: 13px;
+      margin-right: 20px;
     }
   }
 </style>
