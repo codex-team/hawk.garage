@@ -64,7 +64,7 @@
             {{ $t('common.price') }}
           </div>
           <div class="payment-details__details-item-value">
-            {{ priceWithDollar }}
+            {{ price }}
           </div>
         </div>
 
@@ -194,6 +194,7 @@ import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
+import { getCurrencySign } from '@/utils';
 
 /**
  * Id for the 'New card' option in select
@@ -348,8 +349,8 @@ export default Vue.extend({
      *
      * example: 100$
      */
-    priceWithDollar(): string {
-      return `${this.plan.monthlyCharge}$`;
+    price(): string {
+      return `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`;
     },
 
     /**
@@ -549,7 +550,7 @@ export default Vue.extend({
         this.$sendToHawk(e);
         notifier.show({
           message: this.$i18n.t('billing.widget.notifications.error') as string,
-          style: 'success',
+          style: 'error',
         });
       }
     },
@@ -726,7 +727,7 @@ export default Vue.extend({
     display: flex;
 
     &-button {
-      margin-right: 118px;
+      margin-right: auto;
     }
 
     &-cp-logo {

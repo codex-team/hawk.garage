@@ -45,13 +45,13 @@
             {{ plan.name || 'Free' }}
           </div>
           <div class="billing-card__plan-coast">
-            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
+            {{ plan.monthlyCharge || 0 }}{{ planCurrencySign }}/{{ $t('billing.payPeriod') }}
           </div>
         </div>
       </div>
 
       <!-- Valid till -->
-      <div class="billing-card__info-section">
+      <div v-if="plan.monthlyCharge" class="billing-card__info-section">
         <div
           class="billing-card__label"
         >
@@ -129,6 +129,7 @@ import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
+import { getCurrencySign } from '@/utils';
 
 /**
  * Const value for the whole project
@@ -216,6 +217,13 @@ export default Vue.extend({
      */
     plan(): Plan {
       return this.workspace.plan;
+    },
+
+    /**
+     * Return currency sign depending on plan currency
+     */
+    planCurrencySign(): string {
+      return getCurrencySign(this.plan.monthlyChargeCurrency);
     },
     /**
      * Total number of errors since the last charge date
