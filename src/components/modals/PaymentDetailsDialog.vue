@@ -550,7 +550,7 @@ export default Vue.extend({
         this.$sendToHawk(e);
         notifier.show({
           message: this.$i18n.t('billing.widget.notifications.error') as string,
-          style: 'success',
+          style: 'error',
         });
       }
     },
