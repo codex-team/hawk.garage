@@ -319,7 +319,7 @@ export default Vue.extend({
      * Return true if workspace plan is `Startup`
      */
     isFreePlan(): boolean {
-      return this.plan.name === 'Startup';
+      return this.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
     },
 
     /**
