@@ -383,13 +383,13 @@ export default Vue.extend({
         });
 
         notifier.show({
-          message: 'Subscription successfully canceled',
+          message: this.$i18n.t('billing.autoProlongation.cancelSuccessMessage') as string,
           style: 'success',
           time: 5000,
         });
       } catch {
         notifier.show({
-          message: 'Error during subscription cancelling',
+          message: this.$i18n.t('billing.autoProlongation.cancelErrorMessage') as string,
           style: 'error',
           time: 5000,
         });
