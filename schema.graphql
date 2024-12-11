@@ -762,8 +762,11 @@ type PayloadOfWorkspacePlanPurchase {
   """Workspace to which the payment is debited"""
   workspace: Workspace!
 
-  """Amount of payment in US cents"""
+  """Amount of payment * 100 """
   amount: Long!
+
+  """Currency of payment"""
+  currency: String!
 }
 
 """Input for single payment"""
@@ -820,6 +823,9 @@ type Plan {
 
   """Monthly charge for plan"""
   monthlyCharge: Int!
+
+  """Monthly charge currency for plan"""
+  monthlyChargeCurrency: String!
 
   """Events limit for plan"""
   eventsLimit: Int!

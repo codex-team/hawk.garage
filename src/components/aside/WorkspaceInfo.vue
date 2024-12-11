@@ -29,7 +29,9 @@
       <router-link
         v-if="isAdmin"
         :to="{
-          name: 'workspace-settings-used-volume', params: {workspaceId: workspace.id} }"
+          name: 'workspace-settings-used-volume',
+          params: { workspaceId: workspace.id },
+        }"
       >
         <CircleProgress
           ref="events-count-circle"
