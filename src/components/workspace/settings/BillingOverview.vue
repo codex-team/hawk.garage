@@ -76,10 +76,11 @@
       <div class="billing-card__info-section">
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
-          <PositiveButton
+
+          <!-- <PositiveButton
             v-if="isEventsLimitExceeded"
-            :content="$t('billing.boost') + '!'"
-          />
+            :content="$t('billing.boost')"
+          /> -->
         </div>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">

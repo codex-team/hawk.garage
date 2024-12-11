@@ -30,7 +30,6 @@ export default Vue.extend({
 
 .boostButton {
   display: flex;
-  width: 65px;
   height: 23px;
   margin-top: -19px;
   margin-left: 60px;
