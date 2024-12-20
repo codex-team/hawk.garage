@@ -55,7 +55,10 @@
       "step2": "Integrate a catcher",
       "whatToDo": "To start track events, you need to connect one of our Catchers",
       "whatIsCatcher": "Catcher is a small script that will catch errors in your application and send it to Hawk.",
+      "discoverMore": "Discover more integrations",
       "selectCatcherHeading": "Select a Catcher",
+      "migrationFromSentry": "Migration from Sentry",
+      "migrationFromSentryDescription": "Hawk can accept errors from Sentry SDK. You will need to change only one line.",
       "catchers": {
         "nodejs": "Track errors from the server application built on JS or TS",
         "php": "Can be connected as a standalone script or as a monolog provider",
@@ -74,7 +77,11 @@
       "getToken": "Get an Integration Token",
       "hereIsToken": "Here is your Integration token. You can also found it in the project settings later.",
       "followGuide": "Follow the Installation guide",
-      "readmeDisclaimer": "And the most actual guide at the README.md file in Catcher’s repo. As well as its source code."
+      "readmeDisclaimer": "And the most actual guide at the README.md file in Catcher’s repo. As well as its source code.",
+      "getDSN": "Get a DSN",
+      "hereIsDSN": "Here is your DSN. You can also found it in the project settings later.",
+      "useDSN": "Use DSN in Sentry SDK",
+      "useDSNText": "All Sentry SDK in one way or another support the `dsn` parameter. Pass the received DSN to the Sentry SDK options."
     }
   },
   "forms": {
@@ -129,7 +136,9 @@
         "revokeConfirmation": {
           "title": "Revoke integration token?",
           "description": "After this action, Hawk will stop accepting events with the old integration token. You will need to replace it with a new one in your project."
-        }
+        },
+        "sentryDSN": "Sentry DSN",
+        "sentryDSNText": "If you use Sentry SDK, you can use this DSN to send errors to Hawk."
       },
       "notifications": {
         "title": "Notifications",
