@@ -63,6 +63,11 @@ export default Vue.extend({
       required: true,
     },
   },
+  computed: {
+    sentryDSN(): string {
+      return getSentryDSN(this.project.token);
+    },
+  },
   methods: {
     /**
      * Revokes integration token with confirmation
@@ -85,11 +90,6 @@ export default Vue.extend({
           }
         },
       });
-    },
-  },
-  computed: {
-    sentryDSN(): string {
-      return getSentryDSN(this.project.token);
     },
   },
 });

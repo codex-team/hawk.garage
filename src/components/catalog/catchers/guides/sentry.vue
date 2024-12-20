@@ -38,12 +38,9 @@
 </template>
 
 <script>
-import GuideSection from '../../GuideSection';
 import GuideStepBlock from '../../GuideStepBlock';
 import GuideHeader from '../../GuidePageHeader';
 import TokenBlock from '../../../project/TokenBlock';
-import CodeBlock from '../../../utils/CodeBlock';
-import UiButton from '../../../utils/UiButton';
 import { getSentryDSN } from '../../../../utils';
 
 export default {
@@ -52,9 +49,6 @@ export default {
     GuideStepBlock,
     GuideHeader,
     TokenBlock,
-    CodeBlock,
-    GuideSection,
-    UiButton,
   },
   data() {
     return {
