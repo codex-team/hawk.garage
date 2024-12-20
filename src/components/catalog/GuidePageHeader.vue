@@ -22,18 +22,22 @@
       </div>
       <CatalogItemLabel
         class="guide-page-header__label"
-        item-type="catcher"
+        :item-type="badge"
       />
     </div>
     <div class="guide-page-header__description">
       {{ description }}
     </div>
     <div class="guide-page-header__info">
-      <a :href="githubLink">
+      <a
+        v-if="githubLink"
+        :href="githubLink"
+      >
         <Icon symbol="github" />
         {{ $t('components.catalog.viewSource') }}
       </a>
       <a
+        v-if="readmeLink"
         :href="readmeLink"
       >
         {{ $t('components.catalog.viewReadme') }}
@@ -61,9 +65,13 @@ export default {
       type: String,
       required: true,
     },
+    badge: {
+      type: String,
+      default: 'catcher',
+    },
     githubLink: {
       type: String,
-      required: true,
+      default: '',
     },
     description: {
       type: String,
@@ -71,7 +79,7 @@ export default {
     },
     readmeLink: {
       type: String,
-      required: true,
+      default: '',
     },
   },
   data() {
