@@ -1,6 +1,7 @@
 import mergeWith from 'lodash.mergewith';
 import cloneDeep from 'lodash.clonedeep';
 import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
+import { DecodedIntegrationToken } from '@hawk.so/types';
 
 /**
  * Returns entity color from predefined list
