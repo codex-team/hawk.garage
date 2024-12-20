@@ -26,7 +26,7 @@
           </div>
           <EventItem
             v-for="dailyEventInfo in eventsByDate"
-            :key="dailyEventInfo.groupHash"
+            :key="`${date}:${dailyEventInfo.groupHash}:${dailyEventInfo.lastRepetitionId}`"
             :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
             :count="dailyEventInfo.count"
             class="project-overview__event"

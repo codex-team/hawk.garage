@@ -10,9 +10,9 @@ declare module 'vue/types/vue' {
     /**
      * Sends error to the Hawk
      *
-     * @param {Error} error - error to send
+     * @param error - error or message to send
      * @example this.$sendToHawk(new Error('Some error'));
      */
-    $sendToHawk: (error: Error) => void;
+    $sendToHawk: (error: Error | string) => void;
   }
 }

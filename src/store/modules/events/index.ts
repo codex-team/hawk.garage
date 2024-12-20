@@ -262,6 +262,8 @@ const module: Module<EventsModuleState, RootState> = {
       return (projectId: string, eventId: string, repetitionId: string): HawkEvent | null => {
         const key = getEventsListKey(projectId, eventId);
 
+        // console.trace()
+
         if (!state.repetitions[key]) {
           return state.list[key] || null;
         }
@@ -497,6 +499,8 @@ const module: Module<EventsModuleState, RootState> = {
     async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<void> {
       const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
 
+      console.log('FETCH_EVENT_REPETITION', event);
+
       if (!event) {
         return;
       }
@@ -504,7 +508,12 @@ const module: Module<EventsModuleState, RootState> = {
       const repetition = event.repetition;
 
       filterBeautifiedAddons([ event ]);
-      filterBeautifiedAddons([ event.repetition ]);
+
+      if (event.repetition) {
+        filterBeautifiedAddons([ event.repetition ]);
+      }
+
+      console.log('repetition', repetition);
 
       /**
        * Updates or sets event's fetched payload in the state

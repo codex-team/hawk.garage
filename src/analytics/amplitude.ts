@@ -29,9 +29,9 @@ export const Analytics = {
    * @param eventProperties - event properties
    * @param eventOptions - user info
    */
-  track: (eventType: AnalyticsEventType, eventProperties?: Record<string, any> | undefined, eventOptions?: EventOptions | undefined): Promise<Result|string> => {
+  track: (eventType: AnalyticsEventType, eventProperties?: Record<string, any> | undefined, eventOptions?: EventOptions | undefined): boolean | Promise<Result|string> => {
     if (!isRegistered) {
-      return Promise.reject('Analytics module is not connected');
+      return false;
     }
 
     return track(eventType, eventProperties, eventOptions).promise;
@@ -43,6 +43,10 @@ export const Analytics = {
    * @param userId - user identifier
    */
   setUserId: (userId: string): void => {
+    if (!isRegistered) {
+      return;
+    }
+
     return setUserId(userId);
   },
 };

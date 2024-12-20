@@ -91,13 +91,15 @@ export interface HawkEvent {
 
   /**
    * Event repetition
+   *
+   * Null for original (first) event
    */
-  repetition: HawkEventRepetition;
+  repetition: HawkEventRepetition | null;
 
   /**
    * Event repetitions
    */
-  repetitions: HawkEventRepetition[];
+  repetitions?: HawkEventRepetition[];
 
   /**
    * How many users catch this error
@@ -176,21 +178,6 @@ export interface HawkEventPayload {
    * Event stack array from the latest call to the earliest
    */
   backtrace: HawkEventBacktraceFrame[];
-
-  /**
-   * Additional data about GET request
-   */
-  get: Record<string, unknown>;
-
-  /**
-   * Additional data about POST request
-   */
-  post: Record<string, unknown>;
-
-  /**
-   * HTTP headers
-   */
-  headers: Record<string, unknown>;
 
   /**
    * Source code version identifier

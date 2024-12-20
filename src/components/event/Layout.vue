@@ -97,23 +97,36 @@ export default Vue.extend({
    * @returns {Promise<void>}
    */
   async created() {
-    const eventId = this.$route.params.eventId;
-    const repetitionId = this.$route.params.repetitionId;
+    try {
+      const eventId = this.$route.params.eventId;
+      const repetitionId = this.$route.params.repetitionId;
 
-    await this.$store.dispatch(FETCH_EVENT_REPETITION, {
-      projectId: this.projectId,
-      eventId,
-      repetitionId,
-    });
+      await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+        projectId: this.projectId,
+        eventId,
+        repetitionId,
+      });
 
-    this.loading = false;
+      this.loading = false;
 
-    /**
-     * It can be empty event if it was archived
-     */
-    if (this.event) {
-      this.markEventAsVisited();
+      /**
+       * It can be empty event if it was archived
+       */
+      if (this.event) {
+        this.markEventAsVisited();
+      }
+    } catch (error) {
+      console.error(error);
+
+      this.$sendToHawk(`Error on Event page creation!: ${(error as Error).message}`);
+
+      this.$notify.open({
+        description: 'Error fetching event',
+      });
+    } finally {
+      this.loading = false;
     }
+
   },
 
   methods: {

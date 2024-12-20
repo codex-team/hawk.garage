@@ -47,10 +47,10 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
 /**
  * Sends error to the Hawk
  *
- * @param {Error} error - error to send
+ * @param error - error or message to send
  * @example this.$sendToHawk(new Error('Some error'));
  */
-Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
+Vue.prototype.$sendToHawk = function sendToHawk(error: Error | string): void {
   track(error);
 };
 

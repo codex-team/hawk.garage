@@ -177,12 +177,17 @@ export function deepMerge(target: object, ...sources: object[]): object {
  * @returns fully assembled payload of the current repetition
  */
 export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string ]: any} ): HawkEventPayload {
+  /**
+   * Specifies how to merge original and repetition values
+   * @param originalParam - value of some attribute from original event
+   * @param repetitionParam - value of some attribute from repetition event
+   */
   const customizer = (originalParam: any, repetitionParam: any): any => {
     if (repetitionParam === null) {
       return originalParam;
     }
 
-  
+
     if (typeof repetitionParam === 'object' && typeof originalParam === 'object') {
       /**
        * If original event has null but repetition has some value, we need to return repetition value
@@ -201,6 +206,56 @@ export function repetitionAssembler(originalEvent: HawkEventPayload, repetition:
   };
 
   return mergeWith(cloneDeep(originalEvent), cloneDeep(repetition), customizer);
+}
+
+export function _repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string ]: any} ): HawkEventPayload {
+  console.log('ASSERMBLER', originalEvent, repetition);
+
+  //  /**
+  //  * Event timestamp
+  //  */
+  //  timestamp: number;
+
+  //  /**
+  //   * Event stack array from the latest call to the earliest
+  //   */
+  //  backtrace: HawkEventBacktraceFrame[];
+
+  //  /**
+  //   * Source code version identifier
+  //   */
+  //  release: string;
+
+  //  /**
+  //   * Current authenticated user
+  //   */
+  //  user: EventUser;
+
+  //  /**
+  //   * Any additional data of Event
+  //   */
+  //  context: Record<string, unknown>;
+
+  //  /**
+  //   * Custom data provided by project users
+  //   */
+  //  addons: EventAddons;
+
+  //  /**
+  //   * Event type: TypeError, ReferenceError etc.
+  //   */
+  //  type?: string;
+
+  return {
+    title: repetition.title ?? originalEvent.title,
+    timestamp: repetition.timestamp ?? originalEvent.timestamp,
+    backtrace: repetition.backtrace === undefined ? originalEvent.backtrace : repetition.backtrace,
+    release: repetition.release ?? originalEvent.release,
+    user: repetition.user ?? originalEvent.user,
+    context: repetition.context ?? originalEvent.context,
+    addons: repetition.addons ?? originalEvent.addons,
+    type: repetition.type ?? originalEvent.type,
+  }
 }
 
 /**
