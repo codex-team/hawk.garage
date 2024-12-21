@@ -34,9 +34,13 @@
       {{ $t('projects.settings.integrations.sentryDSNText') }}
     </div>
     <TokenBlock
+      v-if="sentryDSN"
       class="projects-integrations-settings-page__token"
       :token="sentryDSN"
     />
+    <p v-else style="color: var(--color-indicator-critical);">
+      {{ $t('projects.settings.integrations.sentryDSNTextNoToken') }}
+    </p>
   </div>
 </template>
 

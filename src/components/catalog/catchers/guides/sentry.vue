@@ -19,7 +19,16 @@
         </template>
         <template #content>
           {{ $t('components.catalog.hereIsDSN') }}
-          <TokenBlock :token="computedDSN" />
+          <TokenBlock v-if="computedDSN" :token="computedDSN" />
+          <template v-else>
+            <p style="color: var(--color-indicator-critical);">
+              {{ $t('projects.settings.integrations.sentryDSNTextNoToken') }}
+            </p>
+            <UiButton
+              :href="`/project/${project.id}/settings/integrations`"
+              :content="$t('projects.settings.general.title')"
+            />
+          </template>
         </template>
       </GuideStepBlock>
       <GuideStepBlock
@@ -42,6 +51,7 @@ import GuideStepBlock from '../../GuideStepBlock';
 import GuideHeader from '../../GuidePageHeader';
 import TokenBlock from '../../../project/TokenBlock';
 import { getSentryDSN } from '../../../../utils';
+import UiButton from '../../../utils/UiButton';
 
 export default {
   name: 'SetupJavascriptCatcher',
@@ -49,6 +59,7 @@ export default {
     GuideStepBlock,
     GuideHeader,
     TokenBlock,
+    UiButton,
   },
   data() {
     return {

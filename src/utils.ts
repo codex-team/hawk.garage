@@ -509,5 +509,9 @@ function getHexIntegrationToken(token: string): string {
  * @param token - stringified integration token
  */
 export function getSentryDSN(token: string): string {
-  return `https://${getHexIntegrationToken(token)}@k1.hawk.so/0`;
+  try {
+    return `https://${getHexIntegrationToken(token)}@k1.hawk.so/0`;
+  } catch (e) {
+    return '';
+  }
 }

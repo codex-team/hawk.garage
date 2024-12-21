@@ -138,7 +138,8 @@
           "description": "After this action, Hawk will stop accepting events with the old integration token. You will need to replace it with a new one in your project."
         },
         "sentryDSN": "Sentry DSN",
-        "sentryDSNText": "If you use Sentry SDK, you can use this DSN to send errors to Hawk."
+        "sentryDSNText": "If you use Sentry SDK, you can use this DSN to send errors to Hawk.",
+        "sentryDSNTextNoToken": "It seems, you have an old integration token. Try to revoke it and get the new one."
       },
       "notifications": {
         "title": "Notifications",
