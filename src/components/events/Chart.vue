@@ -44,7 +44,7 @@
         class="chart__body-polyline"
         fill="none"
         :stroke="maxValue === minValue ? 'rgba(61, 133, 210, 0.22)' : 'url(#chart)'"
-        stroke-width="2.5"
+        stroke-width="2"
         :points="polylinePoints"
       />
     </svg>
@@ -350,13 +350,10 @@ export default Vue.extend({
       flex-grow: 2;
 
       polyline {
-        animation: line-in 1.5s ease-in forwards;
         stroke-linecap: round;
         stroke-linejoin: round;
         vector-effect: non-scaling-stroke;
         shape-rendering: geometricPrecision;
-        stroke-dashoffset: 200%;
-        stroke-dasharray: 200%;
       }
     }
 
@@ -434,12 +431,6 @@ export default Vue.extend({
           font-weight: 500;
         }
       }
-    }
-  }
-
-  @keyframes line-in {
-    to {
-      stroke-dashoffset: 0;
     }
   }
 
