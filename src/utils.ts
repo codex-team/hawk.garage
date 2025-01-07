@@ -3,6 +3,9 @@ import cloneDeep from 'lodash.clonedeep';
 import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
 import { DecodedIntegrationToken } from '@hawk.so/types';
 
+/**
+ * @param currency
+ */
 export function getCurrencySign(currency: string): string {
   switch (currency) {
     case 'USD':

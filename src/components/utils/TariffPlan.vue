@@ -16,7 +16,7 @@
       <div class="tariff-plan__price">
         {{ price === 0 ? $t('common.free') : `${$options.filters.spacedNumber(price)}${$tc('common.moneyPerMonth', currencySign, { currency: currencySign })}` }}
       </div>
-      
+
       <UiButton
         small
         submit
@@ -65,7 +65,7 @@ export default {
      */
     currency: {
       type: String,
-      required: true
+      required: true,
     },
     /**
      * Is plan selected
@@ -79,18 +79,18 @@ export default {
      */
     horizontal: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isCurrentPlan: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     currencySign() {
-      return getCurrencySign(this.currency)
-    }
-  }
+      return getCurrencySign(this.currency);
+    },
+  },
 };
 </script>
 

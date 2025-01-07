@@ -51,7 +51,10 @@
       </div>
 
       <!-- Valid till -->
-      <div v-if="plan.monthlyCharge" class="billing-card__info-section">
+      <div
+        v-if="plan.monthlyCharge"
+        class="billing-card__info-section"
+      >
         <div
           class="billing-card__label"
         >
@@ -147,7 +150,7 @@ export default Vue.extend({
     UiButton,
     StatusBlock,
     Icon,
-    PositiveButton,
+    // PositiveButton,
   },
   props: {
     workspace: {

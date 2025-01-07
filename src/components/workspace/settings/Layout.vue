@@ -33,13 +33,13 @@
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
-<!--        <router-link-->
-<!--          v-if="isAdmin"-->
-<!--          class="settings-window__menu-item workspace-settings__menu-item"-->
-<!--          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"-->
-<!--        >-->
-<!--          {{ $t('workspaces.settings.billing.title') }}-->
-<!--        </router-link>-->
+        <!--        <router-link-->
+        <!--          v-if="isAdmin"-->
+        <!--          class="settings-window__menu-item workspace-settings__menu-item"-->
+        <!--          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"-->
+        <!--        >-->
+        <!--          {{ $t('workspaces.settings.billing.title') }}-->
+        <!--        </router-link>-->
         <router-link
           v-if="isAdmin && shouldShowBilling"
           class="settings-window__menu-item workspace-settings__menu-item"
@@ -125,7 +125,7 @@ export default Vue.extend({
      */
     shouldShowBilling(): boolean {
       return false;
-    }
+    },
   },
   async created(): Promise<void> {
     const workspaceId = this.$route.params.workspaceId;

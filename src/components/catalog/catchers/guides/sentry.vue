@@ -19,7 +19,10 @@
         </template>
         <template #content>
           {{ $t('components.catalog.hereIsDSN') }}
-          <TokenBlock v-if="computedDSN" :token="computedDSN" />
+          <TokenBlock
+            v-if="computedDSN"
+            :token="computedDSN"
+          />
           <template v-else>
             <p style="color: var(--color-indicator-critical);">
               {{ $t('projects.settings.integrations.sentryDSNTextNoToken') }}

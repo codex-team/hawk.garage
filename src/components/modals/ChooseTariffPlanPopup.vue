@@ -15,10 +15,12 @@
           v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
         />
 
-        <div :class="{
-          'choose-plan__plans': true,
-          'choose-plan__plans--horizontal': plans.length > 3,
-        }">
+        <div
+          :class="{
+            'choose-plan__plans': true,
+            'choose-plan__plans--horizontal': plans.length > 3,
+          }"
+        >
           <TariffPlan
             v-for="plan in plans"
             :key="plan.id"
@@ -27,22 +29,22 @@
             :price="plan.monthlyCharge"
             :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
-            :isCurrentPlan="plan.id === workspace.plan.id"
-            @click.native="selectPlan(plan.id)"
+            :is-current-plan="plan.id === workspace.plan.id"
             :horizontal="plans.length > 3"
+            @click.native="selectPlan(plan.id)"
           />
 
           <div class="choose-plan__premium-card">
             <div class="choose-plan__premium-card-title">
-              {{$t('workspaces.chooseTariffPlanDialog.premiumPlan')}}
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlan') }}
             </div>
 
             <div class="choose-plan__premium-card-limit">
-              {{$t('workspaces.chooseTariffPlanDialog.premiumPlanLimit')}}
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlanLimit') }}
             </div>
 
             <div class="choose-plan__premium-card-price">
-              {{$t('workspaces.chooseTariffPlanDialog.premiumPlanPrice')}}
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlanPrice') }}
             </div>
 
             <a href="mailto:team@hawk.so">
@@ -250,7 +252,7 @@ export default Vue.extend({
       display: flex;
       justify-content: space-between;
     }
-    
+
     &__plans--horizontal {
       flex-direction: column;
     }
