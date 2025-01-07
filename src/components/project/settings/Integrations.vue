@@ -24,6 +24,23 @@
         </span>
       </template>
     </i18n>
+    <br>
+    <br>
+    <br>
+    <div class="settings-window-page__title">
+      {{ $t('projects.settings.integrations.sentryDSN') }}
+    </div>
+    <div>
+      {{ $t('projects.settings.integrations.sentryDSNText') }}
+    </div>
+    <TokenBlock
+      v-if="sentryDSN"
+      class="projects-integrations-settings-page__token"
+      :token="sentryDSN"
+    />
+    <p v-else style="color: var(--color-indicator-critical);">
+      {{ $t('projects.settings.integrations.sentryDSNTextNoToken') }}
+    </p>
   </div>
 </template>
 
@@ -34,6 +51,7 @@ import TokenBlock from '../TokenBlock.vue';
 import { ActionType } from '../../utils/ConfirmationWindow/types';
 import { GENERATE_NEW_INTEGRATION_TOKEN } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
+import { getSentryDSN } from '../../../utils';
 
 export default Vue.extend({
   name: 'ProjectIntegrationsSettings',
@@ -47,6 +65,11 @@ export default Vue.extend({
     project: {
       type: Object as () => Project,
       required: true,
+    },
+  },
+  computed: {
+    sentryDSN(): string {
+      return getSentryDSN(this.project.token);
     },
   },
   methods: {

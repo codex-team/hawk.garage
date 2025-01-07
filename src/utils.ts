@@ -1,6 +1,7 @@
 import mergeWith from 'lodash.mergewith';
 import cloneDeep from 'lodash.clonedeep';
 import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
+import { DecodedIntegrationToken } from '@hawk.so/types';
 
 export function getCurrencySign(currency: string): string {
   switch (currency) {
@@ -193,7 +194,7 @@ export function repetitionAssembler(originalEvent: HawkEventPayload, repetition:
       return originalParam;
     }
 
-  
+
     if (typeof repetitionParam === 'object' && typeof originalParam === 'object') {
       /**
        * If original event has null but repetition has some value, we need to return repetition value
@@ -482,4 +483,46 @@ export function filterBeautifiedAddons(repetitions: HawkEventRepetition[]): void
  */
 export function trim(value: string, maxLen: number): string {
   return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
+}
+
+
+/**
+ * Decode Hawk integration token
+ *
+ * @param token - stringified integration token
+ */
+function decodeIntegrationToken(token: string): DecodedIntegrationToken {
+  return JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+}
+
+/**
+ * Sentry DSN should follow this:
+ * const DSN_REGEX = /^(?:(\w+):)\/\/(?:(\w+)(?::(\w+)?)?@)([\w.-]+)(?::(\d+))?\/(.+)/;
+ * https://github.com/getsentry/sentry-javascript/blob/d773cb7324480ed3cffc14504f0e41951e344d19/packages/core/src/utils-hoist/dsn.ts#L7
+ *
+ * So we can't use our integration token as is.
+ * Instead, we will concatinate integrationId and secret and remove hyphens from their uuids.
+ *
+ * @param token - stringified integration token
+ */
+function getHexIntegrationToken(token: string): string {
+  const { integrationId, secret } = decodeIntegrationToken(token);
+
+  const removeHyphens = (str: string): string => str.replace(/-/g, '');
+
+  return `${removeHyphens(integrationId)}${removeHyphens(secret)}`;
+}
+
+
+/**
+ * Returns Sentry DSN from integration token
+ *
+ * @param token - stringified integration token
+ */
+export function getSentryDSN(token: string): string {
+  try {
+    return `https://${getHexIntegrationToken(token)}@k1.hawk.so/0`;
+  } catch (e) {
+    return '';
+  }
 }
