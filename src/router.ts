@@ -47,11 +47,11 @@ const router = new Router({
               name: 'account-notifications',
               component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Notifications.vue'),
             },
-            // {
-            //   path: 'billing',
-            //   name: 'account-billing',
-            //   component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Billing.vue'),
-            // },
+            {
+              path: 'billing',
+              name: 'account-billing',
+              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Billing.vue'),
+            },
           ],
         },
         /**
@@ -92,7 +92,7 @@ const router = new Router({
             {
               path: 'billing',
               name: 'workspace-settings-billing',
-              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/UsedVolume.vue'),
+              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/Billing.vue'),
             },
           ],
         },
@@ -235,7 +235,7 @@ router.beforeEach((to, from, next) => {
      * Try to get user id
      */
     if (store.state.user && store.state.user.data && store.state.user.data.id) {
-      Analytics.setUserId(store.state.user.data.id);
+      Analytics?.setUserId(store.state.user.data.id);
     }
 
     /**
@@ -248,7 +248,7 @@ router.beforeEach((to, from, next) => {
     /**
      * Track event
      */
-    Analytics.track(AnalyticsEventType.PageVisited, eventProperties);
+    Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
   } catch (e) {
     console.error(e);
   }

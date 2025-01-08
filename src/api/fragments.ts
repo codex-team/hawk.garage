@@ -121,6 +121,7 @@ export const WORKSPACE_PLAN = `
       id
       name
       monthlyCharge
+      monthlyChargeCurrency
       eventsLimit
     }
   }

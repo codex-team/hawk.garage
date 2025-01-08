@@ -14,17 +14,51 @@
           class="choose-plan__description"
           v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
         />
-        <div class="choose-plan__plans">
+
+        <div
+          :class="{
+            'choose-plan__plans': true,
+            'choose-plan__plans--horizontal': plans.length > 3,
+          }"
+        >
           <TariffPlan
             v-for="plan in plans"
             :key="plan.id"
             :name="plan.name"
             :limit="plan.eventsLimit"
             :price="plan.monthlyCharge"
+            :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
+            :is-current-plan="plan.id === workspace.plan.id"
+            :horizontal="plans.length > 3"
             @click.native="selectPlan(plan.id)"
           />
+
+          <div class="choose-plan__premium-card">
+            <div class="choose-plan__premium-card-title">
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlan') }}
+            </div>
+
+            <div class="choose-plan__premium-card-limit">
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlanLimit') }}
+            </div>
+
+            <div class="choose-plan__premium-card-price">
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlanPrice') }}
+            </div>
+
+            <a href="mailto:team@hawk.so">
+              <UiButton
+                small
+                submit
+                rounded
+                :content="$t('workspaces.chooseTariffPlanDialog.premiumPlanButtonText')"
+                class="tariff-plan__button"
+              />
+            </a>
+          </div>
         </div>
+
         <UiButton
           class="choose-plan__continue-button"
           :content="$t('common.continue')"
@@ -216,12 +250,43 @@ export default Vue.extend({
 
     &__plans {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+    }
+
+    &__plans--horizontal {
+      flex-direction: column;
     }
 
     &__continue-button {
       margin-top: 30px;
+    }
+
+    &__premium-card {
+      background: var(--color-bg-main);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      padding: 20px 25px;
+    }
+
+    &__premium-card-title {
+      font-weight: 600;
+      width: 150px;
+    }
+
+    &__premium-card-limit {
+      color: var(--color-text-second);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    &__premium-card-price {
+      margin-left: auto;
+      color: var(--color-text-second);
+      font-weight: 600;
+      font-size: 13px;
+      margin-right: 20px;
     }
   }
 </style>

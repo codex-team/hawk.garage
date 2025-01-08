@@ -29,7 +29,7 @@
           />
         </div>
         <div class="billing-history__amount">
-          {{ operation.payload.amount | centsToDollars }}$
+          {{ getAmountString(operation.payload.amount, operation.payload.currency) }}
         </div>
         <div class="billing-history__description">
           {{ getDescription(operation) }}
@@ -57,6 +57,7 @@ import EntityImage from './../EntityImage.vue';
 import { BusinessOperationType } from '@/types/business-operation-type';
 import i18n from './../../../i18n';
 import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
+import { getCurrencySign } from '@/utils';
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -101,6 +102,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    getAmountString(amount: number, currency: string): string {
+      return (amount / 100) + getCurrencySign(currency);
+    },
     /**
      * Get a status key to show it on the page
      *

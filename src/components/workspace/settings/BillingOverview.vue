@@ -45,13 +45,16 @@
             {{ plan.name || 'Free' }}
           </div>
           <div class="billing-card__plan-coast">
-            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
+            {{ plan.monthlyCharge || 0 }}{{ planCurrencySign }}/{{ $t('billing.payPeriod') }}
           </div>
         </div>
       </div>
 
       <!-- Valid till -->
-      <div class="billing-card__info-section">
+      <div
+        v-if="plan.monthlyCharge"
+        class="billing-card__info-section"
+      >
         <div
           class="billing-card__label"
         >
@@ -76,10 +79,11 @@
       <div class="billing-card__info-section">
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
-          <PositiveButton
+
+          <!-- <PositiveButton
             v-if="isEventsLimitExceeded"
-            :content="$t('billing.boost') + '!'"
-          />
+            :content="$t('billing.boost')"
+          /> -->
         </div>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
@@ -129,6 +133,7 @@ import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
+import { getCurrencySign } from '@/utils';
 
 /**
  * Const value for the whole project
@@ -145,7 +150,7 @@ export default Vue.extend({
     UiButton,
     StatusBlock,
     Icon,
-    PositiveButton,
+    // PositiveButton,
   },
   props: {
     workspace: {
@@ -216,6 +221,13 @@ export default Vue.extend({
      */
     plan(): Plan {
       return this.workspace.plan;
+    },
+
+    /**
+     * Return currency sign depending on plan currency
+     */
+    planCurrencySign(): string {
+      return getCurrencySign(this.plan.monthlyChargeCurrency);
     },
     /**
      * Total number of errors since the last charge date
@@ -311,7 +323,7 @@ export default Vue.extend({
      * Return true if workspace plan is `Startup`
      */
     isFreePlan(): boolean {
-      return this.plan.name === 'Startup';
+      return this.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
     },
 
     /**
@@ -374,13 +386,13 @@ export default Vue.extend({
         });
 
         notifier.show({
-          message: 'Subscription successfully canceled',
+          message: this.$i18n.t('billing.autoProlongation.cancelSuccessMessage') as string,
           style: 'success',
           time: 5000,
         });
       } catch {
         notifier.show({
-          message: 'Error during subscription cancelling',
+          message: this.$i18n.t('billing.autoProlongation.cancelErrorMessage') as string,
           style: 'error',
           time: 5000,
         });

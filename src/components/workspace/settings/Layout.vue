@@ -33,13 +33,21 @@
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
-<!--        <router-link-->
-<!--          v-if="isAdmin"-->
-<!--          class="settings-window__menu-item workspace-settings__menu-item"-->
-<!--          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"-->
-<!--        >-->
-<!--          {{ $t('workspaces.settings.billing.title') }}-->
-<!--        </router-link>-->
+        <!--        <router-link-->
+        <!--          v-if="isAdmin"-->
+        <!--          class="settings-window__menu-item workspace-settings__menu-item"-->
+        <!--          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"-->
+        <!--        >-->
+        <!--          {{ $t('workspaces.settings.billing.title') }}-->
+        <!--        </router-link>-->
+        <router-link
+          v-if="isAdmin && shouldShowBilling"
+          class="settings-window__menu-item workspace-settings__menu-item"
+          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"
+        >
+          {{ $t('workspaces.settings.billing.title') }}
+        </router-link>
+
         <router-link
           v-if="isAdmin"
           class="settings-window__menu-item workspace-settings__menu-item"
@@ -110,6 +118,13 @@ export default Vue.extend({
       const member = this.$store.getters.getCurrentUserInWorkspace(this.workspace);
 
       return member ? member.isAdmin : false;
+    },
+
+    /**
+     * Check if billing button should be visible in menu
+     */
+    shouldShowBilling(): boolean {
+      return false;
     },
   },
   async created(): Promise<void> {
