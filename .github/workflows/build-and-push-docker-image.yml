@@ -18,8 +18,9 @@ jobs:
         with:
           envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
           envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
-          envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
+          envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
           envkey_VUE_APP_API_ENDPOINT: "https://api.hawk.so"
+          envkey_VUE_APP_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
           # envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_STAGE }}
           # envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_STAGE }}
           # envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
@@ -33,6 +34,7 @@ jobs:
           envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
           envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
           envkey_VUE_APP_API_ENDPOINT: "https://api.hawk.so"
+          envkey_VUE_APP_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
 
       - name: Make prod envfile
         if: endsWith(github.ref, '/prod-ru')
@@ -42,6 +44,7 @@ jobs:
           envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
           envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
           envkey_VUE_APP_API_ENDPOINT: "https://api.hawk-tracker.ru"
+          envkey_VUE_APP_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
 
       - name: Build and push docker image
         uses: docker/build-push-action@v1
