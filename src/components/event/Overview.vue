@@ -134,7 +134,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = [ 'vue', 'nuxt', 'flask', 'fastapi'];
+      const integrationToFilter = ['vue', 'nuxt', 'flask', 'fastapi'];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {

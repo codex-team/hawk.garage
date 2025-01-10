@@ -3,7 +3,9 @@
     <div class="settings-window-page__title">
       {{ $t('workspaces.settings.volume.title') }}
     </div>
-    <div class="workspace-volume__text">{{ $t('workspaces.settings.volume.description_1', {msg: plan.eventsLimit}) }}</div>
+    <div class="workspace-volume__text">
+      {{ $t('workspaces.settings.volume.description_1', {msg: plan.eventsLimit}) }}
+    </div>
     <label class="label">{{ $t('workspaces.settings.volume.title') }}</label>
     <div class="events-limit-indicator__events">
       {{ eventsCount }} /
@@ -15,12 +17,17 @@
       :current="eventsCount"
       :color="
         eventsCount / (plan.eventsLimit || eventsCount) >= 0.9
-        ? 'var(--color-indicator-critical)'
-        : 'rgba(219, 230, 255, 0.6)'"
+          ? 'var(--color-indicator-critical)'
+          : 'rgba(219, 230, 255, 0.6)'"
       class="events-limit-indicator__volume-progress workspace-volume__volume-progress"
     />
-    <div class="workspace-volume__text">{{ $t('workspaces.settings.volume.description_2') }}</div>
-    <a class="button workspace-volume__button" href="mailto:team@hawk.so">
+    <div class="workspace-volume__text">
+      {{ $t('workspaces.settings.volume.description_2') }}
+    </div>
+    <a
+      class="button workspace-volume__button"
+      href="mailto:team@hawk.so"
+    >
       {{ $t('workspaces.settings.volume.emailButton') }}
     </a>
   </div>
@@ -28,8 +35,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Progress from "../../utils/Progress.vue";
-import {Plan} from "../../../types/plan";
+import Progress from '../../utils/Progress.vue';
+import { Plan } from '../../../types/plan';
 
 export default Vue.extend({
   name: 'WorkspaceSettingsUsedVolume',

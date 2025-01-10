@@ -232,11 +232,15 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Choose a plan",
-      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you want a free unlimited access for non-profit products, contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you have questions on plans, please contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
       "onSuccess": "Workspace plan has been successfully changed",
       "onError": "Unable to change workspace plan due to an error, please try again later",
       "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
-      "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan."
+      "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan.",
+      "premiumPlan": "Premium",
+      "premiumPlanLimit": "> 500 000 events / mo",
+      "premiumPlanPrice": "Individual",
+      "premiumPlanButtonText": "Contact us"
     },
     "creationDialog": {
       "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
@@ -362,7 +366,9 @@
       "description": "You are about to subscribe for auto prolongation of the current plan of the workspace. That means that when the next payment date has come, the plan price will be automatically charged from your card. Read more about {0}.",
       "theNextPaymentDateTitle": "The next payment date",
       "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
-      "allowingChargesEveryMonth": "I allow charges from my bank card every month"
+      "allowingChargesEveryMonth": "I allow charges from my bank card every month",
+      "cancelSuccessMessage": "Subscription successfully canceled",
+      "cancelErrorMessage": "Error during subscription cancelling"
     },
     "cloudPaymentsWidget": {
       "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month"
@@ -424,9 +430,10 @@
     "copiedNotification": "Copied!",
     "free": "FREE",
     "select": "Select",
+    "selected": "Selected",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
-    "dollarsPerMonth": "$ / mo",
+    "moneyPerMonth": "{currency} / mo",
     "loading": "Loading...",
     "months": [
       "january",

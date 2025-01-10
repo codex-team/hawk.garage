@@ -97,7 +97,7 @@ export default Vue.extend({
     icon: {
       type: String,
       default: '',
-    }
+    },
   },
   computed: {
   },

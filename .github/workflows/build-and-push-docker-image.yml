@@ -16,10 +16,14 @@ jobs:
         if: endsWith(github.ref, '/stage')
         uses: SpicyPizza/create-envfile@v1
         with:
-          envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_STAGE }}
-          envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_STAGE }}
+          envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
+          envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
           envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
-          envkey_VUE_APP_API_ENDPOINT: "https://api.stage.hawk.so"
+          envkey_VUE_APP_API_ENDPOINT: "https://api.hawk.so"
+          # envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_STAGE }}
+          # envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_STAGE }}
+          # envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
+          # envkey_VUE_APP_API_ENDPOINT: "https://api.stage.hawk.so"
 
       - name: Make prod envfile
         if: endsWith(github.ref, '/prod')

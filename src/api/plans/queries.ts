@@ -8,6 +8,7 @@ export const QUERY_PLANS = `
         id
         name
         monthlyCharge
+        monthlyChargeCurrency
         eventsLimit
       }
     }

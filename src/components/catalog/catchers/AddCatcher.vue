@@ -53,7 +53,11 @@
           @click.native="item.page && $router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: item.page}})"
         />
 
-        <a class="project-add-catcher__catalog-more" href="https://docs.hawk.so/integrations?from=garage" target="_blank">
+        <a
+          class="project-add-catcher__catalog-more"
+          href="https://docs.hawk.so/integrations?from=garage"
+          target="_blank"
+        >
           {{ $t('components.catalog.discoverMore') }}
         </a>
 
@@ -64,14 +68,13 @@
           type="external"
           class="project-add-catcher__catalog-item"
           :name="'SENTRY'"
-          :isWide="true"
+          :is-wide="true"
           :image="require('../../../assets/catalog/sentry.svg')"
           :description="$t('components.catalog.migrationFromSentryDescription')"
           @click.native="$router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: 'sentry'}})"
         />
-        <div class="project-add-catcher__migration-description"></div>
+        <div class="project-add-catcher__migration-description" />
       </div>
-
     </div>
   </div>
 </template>

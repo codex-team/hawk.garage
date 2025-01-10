@@ -4,6 +4,20 @@ import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './typ
 import { DecodedIntegrationToken } from '@hawk.so/types';
 
 /**
+ * @param currency
+ */
+export function getCurrencySign(currency: string): string {
+  switch (currency) {
+    case 'USD':
+      return '$';
+    case 'RUB':
+      return '₽';
+    default:
+      return '';
+  }
+}
+
+/**
  * Returns entity color from predefined list
  *
  * @param {string} [id] - for id-base picking colors (hex string)
