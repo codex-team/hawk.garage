@@ -393,7 +393,11 @@ export default Vue.extend({
        * Otherwise, we will debit money when the tariff plan expires
        */
       if (this.isTariffPlanExpired) {
-        date.setMonth(date.getMonth() + 1);
+        if (this.workspace.isDebug) {
+          date.setDate(date.getDate() + 1);
+        } else {
+          date.setMonth(date.getMonth() + 1);
+        }
 
         return date.toDateString();
       }
@@ -567,10 +571,12 @@ export default Vue.extend({
         checksum: data.checksum,
       };
 
+      const interval = this.workspace.isDebug ? 'Day' : 'Month';
+
       if (this.isRecurrent) {
         paymentData.cloudPayments = {
           recurrent: {
-            interval: 'Month',
+            interval,
             period: 1,
           },
         };
