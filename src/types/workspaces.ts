@@ -50,6 +50,9 @@ export interface Workspace {
    * Returns from CloudPayments
    */
   subscriptionId?: string;
+
+  /** True if workspace is used for debugging */
+  isDebug?: boolean;
 }
 
 /**
