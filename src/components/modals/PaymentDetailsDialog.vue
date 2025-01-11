@@ -313,7 +313,6 @@ export default Vue.extend({
      * New plan
      */
     plan(): Plan {
-      console.log(this.$store.getters.getPlanById(this.tariffPlanId))
       return this.$store.getters.getPlanById(this.tariffPlanId);
     },
 
