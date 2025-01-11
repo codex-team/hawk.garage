@@ -393,7 +393,7 @@ export default Vue.extend({
        * Otherwise, we will debit money when the tariff plan expires
        */
       if (this.isTariffPlanExpired) {
-        if (this.plan.paymentFrequency === 'daily') {
+        if (this.workspace.isDebug) {
           date.setDate(date.getDate() + 1);
         } else {
           date.setMonth(date.getMonth() + 1);

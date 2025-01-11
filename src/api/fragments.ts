@@ -123,7 +123,6 @@ export const WORKSPACE_PLAN = `
       monthlyCharge
       monthlyChargeCurrency
       eventsLimit
-      paymentFrequency
     }
   }
 `;

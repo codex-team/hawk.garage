@@ -827,9 +827,6 @@ type Plan {
   """Monthly charge currency for plan"""
   monthlyChargeCurrency: String!
 
-  """How often to charge payment for the plan"""
-  paymentFrequency: String
-
   """Events limit for plan"""
   eventsLimit: Int!
 
@@ -1207,6 +1204,9 @@ type Workspace {
   Returns from CloudPayments
   """
   subscriptionId: String
+
+  """True if workspace is used for debugging"""
+  isDebug: Boolean
 
   """Workspace projects array"""
   projects(
