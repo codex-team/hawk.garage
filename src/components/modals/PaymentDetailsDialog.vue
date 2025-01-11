@@ -313,6 +313,7 @@ export default Vue.extend({
      * New plan
      */
     plan(): Plan {
+      console.log(this.$store.getters.getPlanById(this.tariffPlanId))
       return this.$store.getters.getPlanById(this.tariffPlanId);
     },
 
@@ -571,7 +572,7 @@ export default Vue.extend({
         checksum: data.checksum,
       };
 
-      const interval = this.plan.paymentFrequency === 'daily' ? 'Day' : 'Month';
+      const interval = this.workspace.isDebug ? 'Day' : 'Month';
 
       if (this.isRecurrent) {
         paymentData.cloudPayments = {

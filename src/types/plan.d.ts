@@ -31,10 +31,4 @@ export interface Plan {
    * Is plan default
    */
   isDefault?: boolean;
-
-  /**
-   * How often to charge payment for the plan.
-   * Monthly by default.
-   */
-  paymentFrequency?: 'monthly' | 'daily'
 }
