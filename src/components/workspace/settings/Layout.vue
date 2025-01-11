@@ -23,15 +23,21 @@
       <div v-if="workspace">
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-settings-general', params: {workspaceId: workspace.id} }"
+          :to="{
+            name: 'workspace-settings-general',
+            params: { workspaceId: workspace.id },
+          }"
         >
-          {{ $t('workspaces.settings.workspace.title') }}
+          {{ $t("workspaces.settings.workspace.title") }}
         </router-link>
         <router-link
           class="settings-window__menu-item workspace-settings__menu-item"
-          :to="{ name: 'workspace-settings-team', params: {workspaceId: workspace.id} }"
+          :to="{
+            name: 'workspace-settings-team',
+            params: { workspaceId: workspace.id },
+          }"
         >
-          {{ $t('workspaces.settings.team.title') }}
+          {{ $t("workspaces.settings.team.title") }}
         </router-link>
         <!--        <router-link-->
         <!--          v-if="isAdmin"-->
@@ -55,16 +61,17 @@
         >
           {{ $t('workspaces.settings.volume.title') }}
         </router-link>
-        <hr class="delimiter workspace-settings__delimiter">
+        <hr class="delimiter workspace-settings__delimiter" />
         <div
-          class="settings-window__menu-item workspace-settings__menu-item settings-window__menu-item--attention"
+          class="
+            settings-window__menu-item
+            workspace-settings__menu-item
+            settings-window__menu-item--attention
+          "
           @click="leaveWorkspace"
         >
-          {{ $t('workspaces.settings.leave') }}
-          <Icon
-            class="settings-window__menu-icon"
-            symbol="logout"
-          />
+          {{ $t("workspaces.settings.leave") }}
+          <Icon class="settings-window__menu-icon" symbol="logout" />
         </div>
       </div>
     </template>
@@ -84,7 +91,8 @@ import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
-import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import { FETCH_WORKSPACE, LEAVE_WORKSPACE, DELETE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import { ActionType } from '../../utils/ConfirmationWindow/types';
 // eslint-disable-next-line no-unused-vars
 import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
@@ -160,14 +168,25 @@ export default Vue.extend({
      */
     async leaveWorkspace() {
       try {
-        await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
-        this.$router.push({ name: 'home' });
+        const isThereOtherAdmins = await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
+
+        if (!isThereOtherAdmins) {
+          this.$confirm.open({
+            description: this.$i18n.t('workspaces.settings.removeConfirmation').toString(),
+            actionType: ActionType.DELETION,
+            continueButtonText: this.$i18n.t('workspaces.settings.remove').toString(),
+            onConfirm: async () => {
+              await this.$store.dispatch(DELETE_WORKSPACE, this.workspace!.id);
+            },
+          });
+        }
       } catch (e) {
         notifier.show({
-          message: this.$i18n.t('workspaces.settings.leaveError').toString(),
+          message: this.$i18n.t(`workspaces.errors.${e.message}`) as string,
           style: 'error',
-          time: 10000,
+          time: 5000,
         });
+        await this.$router.push({ name: 'home' });
       }
     },
   },
@@ -175,32 +194,32 @@ export default Vue.extend({
 </script>
 
 <style>
-  .workspace-settings {
-    &__header {
-      margin-bottom: 40px;
-    }
-
-    &__logo {
-      margin-right: 10px;
-    }
-
-    &__title {
-      overflow: hidden;
-      color: var(--color-text-main);
-      font-weight: 500;
-      font-size: 15px;
-      line-height: 26px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    &__menu-item {
-      width: 200px;
-      margin-left: 0;
-    }
-
-    &__delimiter {
-      margin-left: 10px;
-    }
+.workspace-settings {
+  &__header {
+    margin-bottom: 40px;
   }
+
+  &__logo {
+    margin-right: 10px;
+  }
+
+  &__title {
+    overflow: hidden;
+    color: var(--color-text-main);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 26px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__menu-item {
+    width: 200px;
+    margin-left: 0;
+  }
+
+  &__delimiter {
+    margin-left: 10px;
+  }
+}
 </style>
