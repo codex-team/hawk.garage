@@ -157,6 +157,7 @@ export const QUERY_WORKSPACES = `
       image
       subscriptionId
       lastChargeDate
+      isDebug
       inviteHash
       billingPeriodEventsCount
       ...WorkspacePlan
