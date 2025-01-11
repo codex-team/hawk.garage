@@ -10,6 +10,7 @@ export const QUERY_PLANS = `
         monthlyCharge
         monthlyChargeCurrency
         eventsLimit
+        paymentFrequency
       }
     }
 `;

@@ -827,6 +827,9 @@ type Plan {
   """Monthly charge currency for plan"""
   monthlyChargeCurrency: String!
 
+  """How often to charge payment for the plan"""
+  paymentFrequency: String
+
   """Events limit for plan"""
   eventsLimit: Int!
 
