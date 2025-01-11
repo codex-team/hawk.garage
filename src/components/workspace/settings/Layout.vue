@@ -124,7 +124,7 @@ export default Vue.extend({
      * Check if billing button should be visible in menu
      */
     shouldShowBilling(): boolean {
-      return false;
+      return this.workspace?.isDebug === true;
     },
   },
   async created(): Promise<void> {
