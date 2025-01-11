@@ -570,7 +570,7 @@ export default Vue.extend({
       if (this.isRecurrent) {
         paymentData.cloudPayments = {
           recurrent: {
-            interval: 'Day',
+            interval: 'Month',
             period: 1,
           },
         };
