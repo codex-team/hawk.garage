@@ -570,7 +570,7 @@ export default Vue.extend({
       if (this.isRecurrent) {
         paymentData.cloudPayments = {
           recurrent: {
-            interval: 'Month',
+            interval: 'Day',
             period: 1,
           },
         };
@@ -587,7 +587,9 @@ export default Vue.extend({
         amount = AMOUNT_FOR_CARD_VALIDATION;
       }
 
-      widget.pay('charge',
+      const method = this.isOnlyCardValidationNeeded ? 'auth' : 'charge'
+
+      widget.pay(method,
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
           description: this.$t('billing.cloudPaymentsWidget.description', {
