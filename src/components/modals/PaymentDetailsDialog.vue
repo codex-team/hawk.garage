@@ -370,7 +370,13 @@ export default Vue.extend({
     planDueDate(): Date {
       const lastChargeDate = new Date(this.workspace.lastChargeDate);
 
-      return new Date(lastChargeDate.setMonth(lastChargeDate.getMonth() + 1));
+      if (this.workspace.isDebug) {
+        lastChargeDate.setDate(lastChargeDate.getDate() + 1);
+      } else {
+        lastChargeDate.setMonth(lastChargeDate.getMonth() + 1);
+      }
+
+      return new Date(lastChargeDate);
     },
 
     /**
