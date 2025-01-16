@@ -185,7 +185,7 @@ export default Vue.extend({
           data: {
             workspaceId: this.workspaceId,
             tariffPlanId: this.selectedPlan.id,
-            isRecurrent: !!this.workspace.subscriptionId,
+            isRecurrent: true,
           },
         });
 

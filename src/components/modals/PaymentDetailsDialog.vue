@@ -14,14 +14,7 @@
         tag="div"
         :path="isRecurrent ? 'billing.autoProlongation.description' : 'billing.paymentDetails.description'"
         class="payment-details__description"
-      >
-        <a
-          class="link link--underlined"
-          href="https://docs.hawk.so/payments"
-          rel="noreferrer noopener"
-          target="_blank"
-        >{{ $t('billing.pricingAndPayments') }}</a>
-      </i18n>
+      />
 
       <!--Details-->
       <div class="payment-details__details">
