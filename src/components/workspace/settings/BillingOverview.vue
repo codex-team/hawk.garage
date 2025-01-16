@@ -296,7 +296,7 @@ export default Vue.extend({
     subExpiredDate(): Date {
       const expiredDate: Date = new Date(this.workspace.lastChargeDate);
 
-      expiredDate.setDate(expiredDate.getDate() + NUMBER_OF_DAYS_OF_TARIFF_PLAN);
+      expiredDate.setDate(expiredDate.getDate() + (this.workspace.isDebug ? 1 : NUMBER_OF_DAYS_OF_TARIFF_PLAN));
 
       return expiredDate;
     },
