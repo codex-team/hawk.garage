@@ -359,7 +359,8 @@
       "didNotAcceptChargingEveryMonth": "You need allow charges from your bank card every month to proceed with payment",
       "allowCardSaving": "Save card for future payments",
       "goToPaymentService": "Go to payment service",
-      "payWithSelectedCard": "Pay with selected card"
+      "payWithSelectedCard": "Pay with selected card",
+      "newCard": "New card"
     },
     "autoProlongation": {
       "title": "Subscription",

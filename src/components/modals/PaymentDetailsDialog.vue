@@ -318,7 +318,7 @@ export default Vue.extend({
       const newCardOption: CustomSelectOption = {
         id: NEW_CARD_ID,
         value: NEW_CARD_ID,
-        name: 'New card',
+        name:  this.$t('billing.paymentDetails.newCard') as string
       };
 
       if (!cards) {
