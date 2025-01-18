@@ -20,6 +20,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       subscriptionId
       lastChargeDate
       isDebug
+      isBlocked
       inviteHash
       ...WorkspaceWithTeam
       ...WorkspacePlan
@@ -157,6 +158,8 @@ export const QUERY_WORKSPACES = `
       image
       subscriptionId
       lastChargeDate
+      isDebug
+      isBlocked
       inviteHash
       billingPeriodEventsCount
       ...WorkspacePlan

@@ -53,6 +53,9 @@ export interface Workspace {
 
   /** True if workspace is used for debugging */
   isDebug?: boolean;
+
+  /** True if workspace is blocked */
+  isBlocked?: boolean;
 }
 
 /**

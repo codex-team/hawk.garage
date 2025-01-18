@@ -102,7 +102,6 @@ export default {
 <style>
   .workspace-creation-dialog {
     max-width: 500px;
-    max-height: 300px;
     padding: 30px;
 
     &__header {
