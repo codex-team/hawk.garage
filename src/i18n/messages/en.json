@@ -326,6 +326,7 @@
       }
     },
     "buttons": {
+      "incrementEventsLimitWithPrice": "Increment limit from {price}",
       "incrementEventsLimit": "Increment events limit",
       "enableAutoPayment": "Enable auto payment",
       "prolongateCurrentPlan": "Prolongate current plan"

@@ -326,6 +326,7 @@
       }
     },
     "buttons": {
+      "incrementEventsLimitWithPrice": "Увеличить лимит от {price}",
       "incrementEventsLimit": "Увеличить лимит событий",
       "enableAutoPayment": "Включить автоплатеж",
       "prolongateCurrentPlan": "Продлить текущий план"
