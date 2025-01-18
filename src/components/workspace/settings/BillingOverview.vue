@@ -129,7 +129,7 @@ import UiButton from './../../utils/UiButton.vue';
 import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
-import PositiveButton from '../../utils/PostivieButton.vue';
+// import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
@@ -166,6 +166,21 @@ export default Vue.extend({
       incrementEventsLimit: {
         label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
         style: 'primary',
+        onClick: () => {
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'ChooseTariffPlanPopup',
+            data: {
+              workspaceId: this.workspace.id,
+            },
+          });
+        },
+      },
+      /**
+       * `Increment Event Limit` secondary button
+       */
+      incrementEventsLimitSecondary: {
+        label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
+        style: 'secondary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'ChooseTariffPlanPopup',
@@ -222,7 +237,34 @@ export default Vue.extend({
     plan(): Plan {
       return this.workspace.plan;
     },
+    /**
+     * Minimal plan price
+     */
+    minPlanPrice(): number {
+      const plans = this.$store.state.plans.list;
+      const plansPrices = plans.map(plan => plan.monthlyCharge).filter(price => price !== 0); 
 
+      return Math.min(...plansPrices);
+    },
+    /**
+     * `Increment Event Limit from` button
+     */
+    incrementEventsLimitWithPrice(): Button {
+      return {
+        label: this.$i18n.t('billing.buttons.incrementEventsLimitWithPrice', {
+          price: this.minPlanPrice + ' ' + this.planCurrencySign
+        }) as string,
+        style: 'primary',
+        onClick: () => {
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'ChooseTariffPlanPopup',
+            data: {
+              workspaceId: this.workspace.id,
+            },
+          });
+        },
+      }
+    },
     /**
      * Return currency sign depending on plan currency
      */
@@ -236,47 +278,32 @@ export default Vue.extend({
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
-     * Return buttons list depended on workspace state
+     * Returns buttons list depended on workspace state
      */
     buttons(): Button[] {
-      const buttonsList: Button[] = [];
-
-      /**
-       * if plan is `Startup` then return `Increment Events Limit` button
-       */
       if (this.isFreePlan) {
-        return [ this.incrementEventsLimit ];
+        return [ this.incrementEventsLimitWithPrice ];
+      }
+      
+      if (this.isBLocked) {
+        return [
+          this.incrementEventsLimit,
+          this.prolongateCurrentPlan
+        ];
       }
 
-      /**
-       * If autopay is off we necessary return `Enable Auto Payment` button
-       */
       if (!this.isAutoPayOn) {
-        buttonsList.push(this.enableAutoPayment);
-
-        /**
-         * If subscription is expired then return `Prolongate Current Plan` button
-         */
-        if (this.isSubExpired) {
-          buttonsList.push(this.prolongateCurrentPlan);
-
-          return buttonsList;
-        }
-
-        /**
-         * if autopay is off and events limit is exceeded then return `Increment Events Limit`
-         */
-        if (this.isEventsLimitExceeded) {
-          return [ this.incrementEventsLimit ];
-        }
-      } else if (this.isEventsLimitExceeded) {
-        /**
-         * If autopay is on and events limit is exceeded then return `Increment Events Limit`
-         */
-        return [ this.incrementEventsLimit ];
+        return [
+          this.enableAutoPayment,
+          this.incrementEventsLimitSecondary
+        ];
       }
 
-      return buttonsList;
+      if (this.isAutoPayOn) {
+        return [ this.incrementEventsLimit ]
+      }
+
+      return []
     },
     /**
      * Checking the volume spent
@@ -330,15 +357,7 @@ export default Vue.extend({
      * Return true if workspaces is blocked
      */
     isBLocked(): boolean {
-      if (this.isAutoPayOn) {
-        return this.isEventsLimitExceeded;
-      }
-
-      if (this.isFreePlan) {
-        return this.isEventsLimitExceeded;
-      } else {
-        return this.isEventsLimitExceeded || this.isSubExpired;
-      }
+      return this.workspace.isBlocked;
     },
   },
   /**

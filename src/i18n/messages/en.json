@@ -326,6 +326,7 @@
       }
     },
     "buttons": {
+      "incrementEventsLimitWithPrice": "Increment limit from {price}",
       "incrementEventsLimit": "Increment events limit",
       "enableAutoPayment": "Enable auto payment",
       "prolongateCurrentPlan": "Prolongate current plan"
@@ -359,11 +360,12 @@
       "didNotAcceptChargingEveryMonth": "You need allow charges from your bank card every month to proceed with payment",
       "allowCardSaving": "Save card for future payments",
       "goToPaymentService": "Go to payment service",
-      "payWithSelectedCard": "Pay with selected card"
+      "payWithSelectedCard": "Pay with selected card",
+      "newCard": "New card"
     },
     "autoProlongation": {
-      "title": "Auto prolongation",
-      "description": "You are about to subscribe for auto prolongation of the current plan of the workspace. That means that when the next payment date has come, the plan price will be automatically charged from your card. Read more about {0}.",
+      "title": "Subscription",
+      "description": "You are about to subscribe for paid tariff plan. That means that when the next payment date comes, the plan price will be automatically charged from your card.",
       "theNextPaymentDateTitle": "The next payment date",
       "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
       "allowingChargesEveryMonth": "I allow charges from my bank card every month",
