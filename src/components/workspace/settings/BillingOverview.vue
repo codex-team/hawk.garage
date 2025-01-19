@@ -39,7 +39,6 @@
         </div>
         <div
           class="billing-card__plan"
-          @click="openChooseTariffPlan"
         >
           <div class="billing-card__plan-name">
             {{ plan.name || 'Free' }}
@@ -491,11 +490,10 @@ export default Vue.extend({
     &__plan {
       display: flex;
       align-items: center;
-      padding: 9px 15px;
       white-space: nowrap;
-      border: 1px solid var(--color-text-main);
       border-radius: 3px;
-      cursor: pointer;
+      padding-top: 3px;
+      font-size: 14px;
     }
 
     &__plan-name {
