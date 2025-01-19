@@ -435,7 +435,8 @@ export default Vue.extend({
   @import url('./../../../styles/custom-properties.css');
 
   .billing-card {
-    width: var(--width-popup-form-container);
+    min-width: var(--width-popup-form-container);
+    width: fit-content;
     margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
