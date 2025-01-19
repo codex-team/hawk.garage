@@ -139,7 +139,7 @@ export const QUERY_CHART_DATA = `
     $days: Int!
     $timezoneOffset: Int!
   ) {
-    project(id: $projectId) {
+    project(projectId: $projectId) {
       chartData(days: $days, timezoneOffset: $timezoneOffset) {
         timestamp
         count
