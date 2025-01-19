@@ -39,7 +39,6 @@
         </div>
         <div
           class="billing-card__plan"
-          @click="openChooseTariffPlan"
         >
           <div class="billing-card__plan-name">
             {{ plan.name || 'Free' }}
@@ -102,8 +101,8 @@
       <UiButton
         v-for="(button, index) in buttons"
         :key="'button:' + index"
-        :submit="button.style === 'primary'"
-        :secondary="button.style === 'secondary'"
+        :submit="index === 0"
+        :secondary="index !== 0"
         :content="button.label"
         class="billing-card__buttons--default"
         @click="button.onClick"
@@ -165,22 +164,6 @@ export default Vue.extend({
        */
       incrementEventsLimit: {
         label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
-        style: 'primary',
-        onClick: () => {
-          this.$store.dispatch(SET_MODAL_DIALOG, {
-            component: 'ChooseTariffPlanPopup',
-            data: {
-              workspaceId: this.workspace.id,
-            },
-          });
-        },
-      },
-      /**
-       * `Increment Event Limit` secondary button
-       */
-      incrementEventsLimitSecondary: {
-        label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
-        style: 'secondary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'ChooseTariffPlanPopup',
@@ -195,7 +178,6 @@ export default Vue.extend({
        */
       enableAutoPayment: {
         label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
-        style: 'primary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'PaymentDetailsDialog',
@@ -212,7 +194,6 @@ export default Vue.extend({
        */
       prolongateCurrentPlan: {
         label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
-        style: 'secondary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'PaymentDetailsDialog',
@@ -249,12 +230,11 @@ export default Vue.extend({
     /**
      * `Increment Event Limit from` button
      */
-    incrementEventsLimitWithPrice(): Button {
+    incrementEventsLimitWithPrice(): Omit<Button, 'style'> {
       return {
         label: this.$i18n.t('billing.buttons.incrementEventsLimitWithPrice', {
           price: this.minPlanPrice + ' ' + this.planCurrencySign
         }) as string,
-        style: 'primary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'ChooseTariffPlanPopup',
@@ -280,7 +260,7 @@ export default Vue.extend({
     /**
      * Returns buttons list depended on workspace state
      */
-    buttons(): Button[] {
+    buttons(): Omit<Button, 'style'>[] {
       if (this.isFreePlan) {
         return [ this.incrementEventsLimitWithPrice ];
       }
@@ -292,10 +272,17 @@ export default Vue.extend({
         ];
       }
 
+      if (this.isSubExpired) {
+        return [
+          this.prolongateCurrentPlan,
+          this.incrementEventsLimit,
+        ]
+      }
+
       if (!this.isAutoPayOn) {
         return [
           this.enableAutoPayment,
-          this.incrementEventsLimitSecondary
+          this.incrementEventsLimit
         ];
       }
 
@@ -448,7 +435,8 @@ export default Vue.extend({
   @import url('./../../../styles/custom-properties.css');
 
   .billing-card {
-    width: var(--width-popup-form-container);
+    min-width: var(--width-popup-form-container);
+    width: fit-content;
     margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
@@ -503,11 +491,10 @@ export default Vue.extend({
     &__plan {
       display: flex;
       align-items: center;
-      padding: 9px 15px;
       white-space: nowrap;
-      border: 1px solid var(--color-text-main);
       border-radius: 3px;
-      cursor: pointer;
+      padding-top: 3px;
+      font-size: 14px;
     }
 
     &__plan-name {
