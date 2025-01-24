@@ -8,6 +8,12 @@ export interface PlanProlongationPayload extends PaymentData {
    * Hash to check data
    */
   checksum: string;
+
+  /**
+   * True if this is card linking operation.
+   * Charging minimal amount of money that will be returned
+   */
+  isCardLinkOperation: boolean;
 }
 
 

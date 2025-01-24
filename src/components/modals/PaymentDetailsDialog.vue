@@ -514,7 +514,7 @@ export default Vue.extend({
      */
     async processPayment(): Promise<void> {
       const response = await axios.get(
-        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
+        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}&isCardLinkOperation=${this.isOnlyCardValidationNeeded}`
       );
 
       if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
@@ -568,6 +568,7 @@ export default Vue.extend({
 
       const paymentData: PlanProlongationPayload = {
         checksum: data.checksum,
+        isCardLinkOperation: this.isOnlyCardValidationNeeded
       };
 
       const interval = this.workspace.isDebug ? 'Day' : 'Month';
