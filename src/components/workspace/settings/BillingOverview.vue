@@ -565,7 +565,6 @@ export default Vue.extend({
     }
 
     &__autopay-is-on {
-      width: 350px;
       height: 14px;
       margin: 20px 166px 0 0;
       color: color-mod(var(--color-border) alpha(60%));
