@@ -302,7 +302,6 @@ export default Vue.extend({
     },
     selectedThresholdPeriod: {
       handler: function (value: CustomSelectOption): void {
-        console.log('currentValue', value);
         if (!value) {
           return;
         }
@@ -325,8 +324,6 @@ export default Vue.extend({
      */
     if (this.rule) {
       const mergedRule = deepMerge(this.form, this.rule) as FormFilledByRule;
-
-      console.log('merge rule', this.rule)
 
       /**
        * Set selecteable fields to currently saved un rule
