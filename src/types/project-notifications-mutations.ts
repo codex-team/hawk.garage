@@ -32,12 +32,12 @@ export interface ProjectNotificationsAddRulePayload {
   /**
    * If this number of events is reached in the eventThresholdPeriod, the rule will be triggered
    */
-  threshold: number;
+  threshold?: number;
 
   /**
    * Size of period (in milliseconds) to count events to compare to rule threshold
    */
-  thresholdPeriod: number;
+  thresholdPeriod?: number;
 }
 
 /**

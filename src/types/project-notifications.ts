@@ -38,6 +38,16 @@ export interface ProjectNotificationsRule {
    * Available channels to receive
    */
   channels: ProjectNotificationsChannels;
+
+  /**
+   * Threshold to receive notification
+   */
+  threshold?: number;
+
+  /**
+   * Period to receive notification
+   */
+  thresholdPeriod?: NotificationTresholdPeriodEnum;
 }
 
 /**
