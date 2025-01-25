@@ -13,7 +13,7 @@
       {{ lastOccurrenceTimestamp | prettyTime }}
     </div>
     <div class="event-item__badge-container">
-      <EventBage
+      <EventBadge
         :count="count"
         :affected-users="affectedUsers"
         :is-visited="isVisited"
@@ -45,13 +45,13 @@
 import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
-import EventBage from './EventBage.vue';
+import EventBadge from './EventBadge.vue';
 
 export default {
   name: 'EventItem',
   components: {
     EventMark,
-    EventBage,
+    EventBadge,
     Icon,
     EntityImage,
   },

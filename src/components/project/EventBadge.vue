@@ -1,13 +1,13 @@
 <template>
   <div
-    :class="{'event-bage--visited': isVisited}"
-    class="event-bage"
+    :class="{'event-badge--visited': isVisited}"
+    class="event-badge"
   >
-    <span class="event-bage__count">
+    <span class="event-badge__count">
       {{ count }}
     </span>
-    <div v-if="affectedUsers !== null" class="event-bage__affected-users">
-      <Icon symbol="user-small" class="event-bage__affected-users-icon"/>
+    <div v-if="affectedUsers !== null" class="event-badge__affected-users">
+      <Icon symbol="user-small" class="event-badge__affected-users-icon"/>
       {{ affectedUsers }}
     </div>
   </div>
@@ -17,7 +17,7 @@
 import Icon from '../utils/Icon.vue';
 
 export default {
-  name: 'EventBage',
+  name: 'EventBadge',
   components: {
     Icon,
   },
@@ -50,7 +50,7 @@ export default {
 </script>
 
 <style>
-.event-bage {
+.event-badge {
   display: inline-flex;
   height: 20px;
   padding: 4px 7px 3px 7px;
