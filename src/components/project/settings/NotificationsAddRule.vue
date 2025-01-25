@@ -130,7 +130,7 @@ import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
-import { ProjectNotificationsRule, ReceiveTypes, NotificationTresholdPeriodEnum } from '@/types/project-notifications';
+import { ProjectNotificationsRule, ReceiveTypes, thresholdPeriodToMilliseconds, millisecondsToThresholdPeriod } from '@/types/project-notifications';
 import {
   ProjectNotificationsAddRulePayload,
   ProjectNotificationsUpdateRulePayload
@@ -207,7 +207,7 @@ export default Vue.extend({
           },
         },
         threshold: parseInt(selectedThreshold),
-        thresholdPeriod: NotificationTresholdPeriodEnum[selectedThresholdPeriod.id],
+        thresholdPeriod: thresholdPeriodToMilliseconds.get(selectedThresholdPeriod.id),
         whatToReceive: ReceiveTypes.ONLY_NEW,
         including: [],
         excluding: [],
@@ -302,7 +302,11 @@ export default Vue.extend({
     },
     selectedThresholdPeriod: {
       handler: function (value: CustomSelectOption): void {
-        this.$set(this.form, 'thresholdPeriod', NotificationTresholdPeriodEnum[value.id]);
+        console.log('currentValue', value);
+        if (!value) {
+          return;
+        }
+        this.$set(this.form, 'thresholdPeriod', thresholdPeriodToMilliseconds.get(value.id));
       },
     },
   },
@@ -322,13 +326,15 @@ export default Vue.extend({
     if (this.rule) {
       const mergedRule = deepMerge(this.form, this.rule) as FormFilledByRule;
 
+      console.log('merge rule', this.rule)
+
       /**
        * Set selecteable fields to currently saved un rule
        * If nothing is stored in rule, set default values
        */
       this.$data.selectedThreshold = this.rule.threshold?.toString() ?? '100';
       this.$data.selectedThresholdPeriod = this.seenMoreThresholdPeriod.find((option) => {
-        return option.id === NotificationTresholdPeriodEnum[this.rule.thresholdPeriod ?? 'hour'];
+        return option.id === millisecondsToThresholdPeriod.get(this.rule.thresholdPeriod ?? 3600000);
       }) as CustomSelectOption;
 
       /**

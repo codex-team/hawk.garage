@@ -72,24 +72,34 @@ export enum ReceiveTypes {
   ONLY_NEW = 'ONLY_NEW',
 }
 
-export enum NotificationTresholdPeriodEnum {
+/**
+ * Available periods to receive notification
+ * This map is used for comparisons between displayed threshold period values and stored ones
+ */
+export const thresholdPeriodToMilliseconds = new Map<string, number>([
   /**
    * One minute in milliseconds
    */
-  'minute' = 60000,
-
+  ['minute', 60000],
   /**
    * One hour in milliseconds
    */
-  'hour' = 3600000,
-
+  ['hour', 3600000],
   /**
    * One day in milliseconds
    */
-  'day' = 86400000,
-
+  ['day', 86400000],
   /**
    * One week in milliseconds
    */
-  'week' = 604800000,
-}
+  ['week', 604800000],
+]);
+
+
+/**
+ * Available periods to receive notification
+ * This map is used for comparisons between stored threshold period values and displayed ones
+ */
+export const millisecondsToThresholdPeriod = new Map<number, string>(
+  Array.from(thresholdPeriodToMilliseconds.entries()).map(([key, value]) => [value, key])
+);
