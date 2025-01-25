@@ -14,7 +14,7 @@
     </div>
     <div class="event-item__badge-container">
       <EventBadge
-        :count="count"
+        :event-count="count"
         :affected-users-count="affectedUsersCount"
         :is-visited="isVisited"
       />

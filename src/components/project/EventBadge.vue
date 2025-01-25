@@ -4,7 +4,7 @@
     class="event-badge"
   >
     <span class="event-badge__count">
-      {{ count | abbreviateNumber }}
+      {{ eventCount | abbreviateNumber }}
     </span>
     <div v-if="affectedUsersCount !== null" class="event-badge__affected-users">
       <Icon symbol="user-small" class="event-badge__affected-users-icon"/>
@@ -25,7 +25,7 @@ export default {
     /**
      * @type {number} - number of events
      */
-    count: {
+    eventCount: {
       type: Number,
       required: true,
     },
