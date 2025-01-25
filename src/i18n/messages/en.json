@@ -163,7 +163,7 @@
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Seen more than",
-        "receiveAllDescription": "All event occurrences. Max frequency is 1 alert/min.",
+        "receiveSeenMoreDescription": "All event occurrences. Max frequency is 1 alert/min.",
         "includingWordsLabel": "Including words",
         "includingWordsDescription": "Only events that includes passed words",
         "excludingWordsLabel": "Excluding words",
