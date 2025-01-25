@@ -44,8 +44,8 @@
             <div v-if="option.description !== undefined">
               {{ option.description }}
             </div>
-            <slot v-else name="description" :option="option"/>
           </div>
+          <slot v-else name="description" :option="option"/>
         </div>
 
         <UiRadio
