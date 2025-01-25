@@ -43,12 +43,12 @@
       "continue": "Continue",
       "cancel": "Cancel"
     },
-    "newVersionWindow":{
-      "message":"The new version is available",
-      "refresh":"Refresh"
+    "newVersionWindow": {
+      "message": "The new version is available",
+      "refresh": "Refresh"
     },
-    "feedbackButton":{
-      "message":"Leave feedback"
+    "feedbackButton": {
+      "message": "Leave feedback"
     },
     "catalog": {
       "step1": "Add a project",
@@ -101,7 +101,8 @@
       "sortLabel": "Sort",
       "sortOptions": {
         "byDate": "By time",
-        "byCount": "By count"
+        "byCount": "By count",
+        "byAffectedUsers": "By affected users"
       }
     },
     "placeholder": "No project selected",
@@ -404,11 +405,11 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
-    "suspectedCommits":{
+    "suspectedCommits": {
       "header": "Suspected commits",
       "hide": "hide",
       "committed": "committed",
-      "moreRelease":"{numberOfCommits} more commit in this release | {numberOfCommits} more commits in this release"
+      "moreRelease": "{numberOfCommits} more commit in this release | {numberOfCommits} more commits in this release"
     },
     "emptyData": "This event has no context",
     "notFound": "Event not found. Probably it was archived.",
@@ -463,13 +464,13 @@
       "nov",
       "dec"
     ],
-    "relativeTime":{
-      "secondsAgo":"few seconds ago",
-      "minutesAgo":"a minute ago | {numberOfMinutes} minutes ago",
-      "hoursAgo":"an hour ago | {numberOfHours} hours ago",
-      "daysAgo":"yesterday | {numberOfDays} days ago",
-      "monthsAgo":"a month ago | {numberOfMonths} months ago",
-      "yearsAgo":"a year ago | {numberOfYears} years ago"
+    "relativeTime": {
+      "secondsAgo": "few seconds ago",
+      "minutesAgo": "a minute ago | {numberOfMinutes} minutes ago",
+      "hoursAgo": "an hour ago | {numberOfHours} hours ago",
+      "daysAgo": "yesterday | {numberOfDays} days ago",
+      "monthsAgo": "a month ago | {numberOfMonths} months ago",
+      "yearsAgo": "a year ago | {numberOfYears} years ago"
     },
     "readMore": "Read more"
   },

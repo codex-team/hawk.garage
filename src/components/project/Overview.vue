@@ -29,6 +29,7 @@
             :key="dailyEventInfo.groupHash"
             :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
             :count="dailyEventInfo.count"
+            :affected-users="dailyEventInfo.affectedUsers"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
             @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
@@ -162,7 +163,18 @@ export default {
         return null;
       }
 
-      return this.$store.getters.getRecentEventsByProjectId(this.projectId);
+      const recentEvents = this.$store.getters.getRecentEventsByProjectId(this.projectId);
+
+      for (const key in recentEvents) {
+        console.log('key', key);
+        console.log('value', recentEvents[key].map((event) => event.affectedUsers));
+      }
+
+      if (!recentEvents) {
+        return null;
+      }
+
+      return recentEvents;
     },
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),

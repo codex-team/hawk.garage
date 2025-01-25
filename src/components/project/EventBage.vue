@@ -1,0 +1,88 @@
+<template>
+  <div
+    :class="{'event-bage--visited': isVisited}"
+    class="event-bage"
+  >
+    <span class="event-bage__count">
+      {{ count }}
+    </span>
+    <div v-if="affectedUsers !== null" class="event-bage__affected-users">
+      <Icon symbol="user-small" class="event-bage__affected-users-icon"/>
+      {{ affectedUsers }}
+    </div>
+  </div>
+</template>
+
+<script>
+import Icon from '../utils/Icon.vue';
+
+export default {
+  name: 'EventBage',
+  components: {
+    Icon,
+  },
+  props: {
+    /**
+     * @type {number} - number of events
+     */
+    count: {
+      type: Number,
+      required: true,
+    },
+
+    /**
+     * @type {number | null} - event affected users count, null for old events, when affected users count was not calculated
+     */
+    affectedUsers: {
+      type: [Number, null],
+      default: null,
+    },
+
+    /**
+     * @type {boolean} - true if user visited current event
+     */
+    isVisited: {
+      type: Boolean,
+      default: false,
+    },
+  },
+};
+</script>
+
+<style>
+.event-bage {
+  display: inline-flex;
+  height: 20px;
+  padding: 4px 7px 3px 7px;
+  color: var(--color-text-main);
+  line-height: 9px;
+  white-space: nowrap;
+  align-items: center;
+  background-color: var(--color-indicator-medium);
+  border-radius: 7px;
+
+  &__affected-users {
+    font-size: 10px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+
+    &-icon {
+      display: block;
+      width: 10px;
+      height: 10px;
+      margin-right: 2px;
+    }
+  }
+
+  &__count {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  &--visited {
+    color: var(--color-text-second);
+    background-color: var(--color-bg-main);
+  }
+}
+</style>
