@@ -101,12 +101,7 @@
         v-if="isRecurrent"
         class="payment-details__adoption-autoProlongation"
       >
-        <UiCheckboxWithLabel
-          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
-          v-model="shouldSaveCard"
-          class="payment-details__adoption-autoProlongation-item"
-          :label="$t('billing.paymentDetails.allowCardSaving')"
-        />
+      
         <UiCheckboxWithLabel
           v-model="isAcceptedRecurrentPaymentAgreement"
           class="payment-details__adoption-autoProlongation-item"
@@ -116,6 +111,12 @@
           v-model="isAcceptedChargingEveryMonth"
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
+        />
+        <UiCheckboxWithLabel
+          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+          v-model="shouldSaveCard"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.paymentDetails.allowCardSaving')"
         />
       </section>
 
