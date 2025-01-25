@@ -94,6 +94,7 @@ export default Vue.extend({
       sortOptions: {
         [EventsSortOrder.ByDate]: 'byDate',
         [EventsSortOrder.ByCount]: 'byCount',
+        [EventsSortOrder.ByAffectedUsers]: 'byAffectedUsers',
       },
     };
   },

@@ -13,10 +13,10 @@
       {{ lastOccurrenceTimestamp | prettyTime }}
     </div>
     <div class="event-item__badge-container">
-      <Badge
-        :content="count"
-        :type="isVisited ? 'silent' : 'default'"
-        class="event-item__count"
+      <EventBadge
+        :event-count="count"
+        :affected-users-count="affectedUsersCount"
+        :is-visited="isVisited"
       />
     </div>
     <div class="event-item__info">
@@ -42,16 +42,16 @@
 </template>
 
 <script>
-import Badge from '../utils/Badge';
 import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
+import EventBadge from './EventBadge.vue';
 
 export default {
   name: 'EventItem',
   components: {
     EventMark,
-    Badge,
+    EventBadge,
     Icon,
     EntityImage,
   },
@@ -78,6 +78,14 @@ export default {
     count: {
       type: [String, Number],
       default: '',
+    },
+
+    /**
+     * @type {number | null} - event affected users count, null for old events, when affected users count was not calculated
+     */
+    affectedUsersCount: {
+      type: [Number, null],
+      default: null,
     },
   },
   computed: {
@@ -132,7 +140,7 @@ export default {
     }
 
     &__badge-container {
-      min-width: 45px;
+      min-width: 60px;
       margin-left: 19px;
     }
 

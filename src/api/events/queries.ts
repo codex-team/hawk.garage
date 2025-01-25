@@ -117,6 +117,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupingTimestamp
           lastRepetitionId
           lastRepetitionTime
+          affectedUsers
         }
       }
     }
