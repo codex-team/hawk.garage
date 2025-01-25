@@ -53,7 +53,7 @@ export default {
 .event-badge {
   display: inline-flex;
   height: 20px;
-  padding: 4px 7px 3px 7px;
+  padding: 5px 5px;
   color: var(--color-text-main);
   line-height: 9px;
   white-space: nowrap;
