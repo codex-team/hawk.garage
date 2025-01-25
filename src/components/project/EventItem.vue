@@ -140,7 +140,7 @@ export default {
     }
 
     &__badge-container {
-      min-width: 45px;
+      min-width: 60px;
       margin-left: 19px;
     }
 

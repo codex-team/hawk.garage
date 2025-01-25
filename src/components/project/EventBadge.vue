@@ -59,7 +59,7 @@ export default {
   white-space: nowrap;
   align-items: center;
   background-color: var(--color-indicator-medium);
-  border-radius: 7px;
+  border-radius: 6px;
 
   &__affected-users {
     font-size: 10px;
