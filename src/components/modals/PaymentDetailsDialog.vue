@@ -399,10 +399,10 @@ export default Vue.extend({
           date.setMonth(date.getMonth() + 1);
         }
 
-        return date.toDateString();
+        return date.toString();
       }
 
-      return this.planDueDate.toDateString();
+      return this.planDueDate.toString();
     },
 
     /**
