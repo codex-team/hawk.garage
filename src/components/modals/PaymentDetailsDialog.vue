@@ -414,34 +414,6 @@ export default Vue.extend({
 
       return this.isAcceptedPaymentAgreement;
     },
-
-    /**
-     * True if user pays for the current tariff plan (no plan-changing)
-     */
-    isPaymentForCurrentTariffPlan(): boolean {
-      return this.workspace.plan.id === this.plan.id;
-    },
-
-    /**
-     * True when we need to withdraw the amount only to validate the subscription
-     */
-    isOnlyCardValidationNeeded(): boolean {
-      /**
-       * In case of not recurrent payment we need to withdraw full amount
-       */
-      if (!this.isRecurrent) {
-        return false;
-      }
-
-      /**
-       * In case when user pays for another tariff plan we need to withdraw full amount
-       */
-      if (!this.isPaymentForCurrentTariffPlan) {
-        return false;
-      }
-
-      return !this.isTariffPlanExpired;
-    },
   },
   watch: {
     /**
@@ -514,7 +486,7 @@ export default Vue.extend({
      */
     async processPayment(): Promise<void> {
       const response = await axios.get(
-        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}&isCardLinkOperation=${this.isOnlyCardValidationNeeded}`
+        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
       );
 
       if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
@@ -567,8 +539,7 @@ export default Vue.extend({
       const widget = new window.cp.CloudPayments({ language: this.$i18n.locale });
 
       const paymentData: PlanProlongationPayload = {
-        checksum: data.checksum,
-        isCardLinkOperation: this.isOnlyCardValidationNeeded
+        checksum: data.checksum
       };
 
       const interval = this.workspace.isDebug ? 'Day' : 'Month';
@@ -587,13 +558,8 @@ export default Vue.extend({
         }
       }
 
-      let amount = data.plan.monthlyCharge;
-
-      if (this.isOnlyCardValidationNeeded) {
-        amount = AMOUNT_FOR_CARD_VALIDATION;
-      }
-
-      const method = this.isOnlyCardValidationNeeded ? 'auth' : 'charge'
+      const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
+      const method = data.isCardLinkOperation ? 'auth' : 'charge'
 
       widget.pay(method,
         {
