@@ -135,7 +135,7 @@ export default Vue.extend({
         return this.$t('projects.settings.notifications.receiveNewLabel') as string;
       }
 
-      return this.$t('projects.settings.notifications.receiveAllLabel') as string;
+      return this.$t('projects.settings.notifications.receiveSeenMoreLabel') as string;
     },
 
     /**
