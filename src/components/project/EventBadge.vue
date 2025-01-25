@@ -4,11 +4,11 @@
     class="event-badge"
   >
     <span class="event-badge__count">
-      {{ count }}
+      {{ count | abbreviateNumber }}
     </span>
     <div v-if="affectedUsersCount !== null" class="event-badge__affected-users">
       <Icon symbol="user-small" class="event-badge__affected-users-icon"/>
-      {{ affectedUsersCount }}
+      {{ affectedUsersCount | abbreviateNumber }}
     </div>
   </div>
 </template>
