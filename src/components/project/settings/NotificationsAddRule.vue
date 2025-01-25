@@ -60,7 +60,7 @@
             name="whatToReceive"
             :options="receiveTypes"
           >
-            <template #description="{ option }">
+          <template #description="{ option }">
               <div v-if="option.id === receiveTypesEnum.SEEN_MORE">
                 <TextFieldset
                   v-model="selectedThreshold"
@@ -265,7 +265,6 @@ export default Vue.extend({
         {
           id: ReceiveTypes.SEEN_MORE,
           label: this.$t('projects.settings.notifications.receiveSeenMoreLabel') as string,
-          description: this.$t('projects.settings.notifications.receiveAllDescription') as string,
         },
       ],
 
@@ -295,6 +294,18 @@ export default Vue.extend({
       return this.$t('projects.settings.notifications.updateRuleSubmit') as string;
     },
   },
+  watch: {
+    selectedThreshold: {
+      handler: function (value: string): void {
+        this.$set(this.form, 'threshold', parseInt(value));
+      },
+    },
+    selectedThresholdPeriod: {
+      handler: function (value: CustomSelectOption): void {
+        this.$set(this.form, 'thresholdPeriod', NotificationTresholdPeriodEnum[value.id]);
+      },
+    },
+  },
   created(): void {
     /**
      * When we merge this.form and this.rule (on rule editing),
@@ -310,6 +321,15 @@ export default Vue.extend({
      */
     if (this.rule) {
       const mergedRule = deepMerge(this.form, this.rule) as FormFilledByRule;
+
+      /**
+       * Set selecteable fields to currently saved un rule
+       * If nothing is stored in rule, set default values
+       */
+      this.$data.selectedThreshold = this.rule.threshold?.toString() ?? '100';
+      this.$data.selectedThresholdPeriod = this.seenMoreThresholdPeriod.find((option) => {
+        return option.id === NotificationTresholdPeriodEnum[this.rule.thresholdPeriod ?? 'hour'];
+      }) as CustomSelectOption;
 
       /**
        * The type of this.form (ProjectNotificationsAddRulePayload)
