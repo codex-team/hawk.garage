@@ -59,7 +59,30 @@
             v-model="form.whatToReceive"
             name="whatToReceive"
             :options="receiveTypes"
-          />
+          >
+            <template #description="{ option }">
+              <div v-if="option.id === receiveTypesEnum.SEEN_MORE">
+                <TextFieldset
+                  v-model="selectedThreshold"
+                  type="number"
+                  :required="true"
+                  :isInvalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
+                  :label="$t('common.threshold')"
+                  :options="seenMoreThreshold"
+                  :need-image="false"
+                  />
+                <CustomSelect
+                  v-model="selectedThresholdPeriod"
+                  :label="$t('common.thresholdPeriod')"
+                  :options="seenMoreThresholdPeriod"
+                  :need-image="false"
+                />
+              </div>
+              <div v-else>
+                {{ option.description }}
+              </div>
+            </template>
+          </RadioButtonGroup>
         </section>
       </div>
     </section>
@@ -107,7 +130,7 @@ import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
-import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { ProjectNotificationsRule, ReceiveTypes, NotificationTresholdPeriodEnum } from '@/types/project-notifications';
 import {
   ProjectNotificationsAddRulePayload,
   ProjectNotificationsUpdateRulePayload
@@ -115,6 +138,9 @@ import {
 import { deepMerge } from '@/utils';
 import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
+import CustomSelect from '@/components/forms/CustomSelect.vue';
+import CustomSelectOption from '@/types/customSelectOption';
+import TextFieldset from './../../forms/TextFieldset.vue';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -122,7 +148,9 @@ export default Vue.extend({
     FormTextFieldset,
     RadioButtonGroup,
     UiCheckbox,
+    CustomSelect,
     UiButton,
+    TextFieldset
   },
   props: {
     /**
@@ -146,7 +174,18 @@ export default Vue.extend({
     receiveTypes: RadioButtonGroupItem[],
     isFormInvalid: boolean,
     isWaitingForResponse: boolean,
+    seenMoreThreshold: CustomSelectOption[],
+    seenMoreThresholdPeriod: CustomSelectOption[],
+    receiveTypesEnum: typeof ReceiveTypes,
+    selectedThreshold: string,
+    selectedThresholdPeriod: CustomSelectOption,
     } {
+    const selectedThreshold: string = '100';
+    const selectedThresholdPeriod: CustomSelectOption = {
+      id: 'hour',
+      name: this.$t('common.hour') as string,
+      value: 'hour',
+    };
     return {
       /**
        * Form filling state
@@ -167,10 +206,53 @@ export default Vue.extend({
             isEnabled: false,
           },
         },
+        threshold: parseInt(selectedThreshold),
+        thresholdPeriod: NotificationTresholdPeriodEnum[selectedThresholdPeriod.id],
         whatToReceive: ReceiveTypes.ONLY_NEW,
         including: [],
         excluding: [],
       },
+      receiveTypesEnum: ReceiveTypes,
+      seenMoreThreshold: [{
+        id: '1',
+        value: '10',
+        name: '10',
+      },
+      {
+        id: '2',
+        value: '100',
+        name: '100',
+      },
+      {
+        id: '3',
+        value: '1000',
+        name: '1000',
+      },
+      {
+        id: '4',
+        value: '10000',
+        name: '10000',
+      }],
+      seenMoreThresholdPeriod: [{
+        id: 'minute',
+        value: 'minute',
+        name: this.$t('common.minute') as string,
+      },
+      {
+        id: 'hour',
+        value: 'hour',
+        name: this.$t('common.hour') as string,
+      },
+      {
+        id: 'day',
+        value: 'day',
+        name: this.$t('common.day') as string,
+      },
+      {
+        id: 'week',
+        value: 'week',
+        name: this.$t('common.week') as string,
+      }],
       /**
        * Available options of 'What to receive'
        */
@@ -181,8 +263,8 @@ export default Vue.extend({
           description: this.$t('projects.settings.notifications.receiveNewDescription') as string,
         },
         {
-          id: ReceiveTypes.ALL,
-          label: this.$t('projects.settings.notifications.receiveAllLabel') as string,
+          id: ReceiveTypes.SEEN_MORE,
+          label: this.$t('projects.settings.notifications.receiveSeenMoreLabel') as string,
           description: this.$t('projects.settings.notifications.receiveAllDescription') as string,
         },
       ],
@@ -196,6 +278,9 @@ export default Vue.extend({
        * Used to show loader and block multiple sending
        */
       isWaitingForResponse: false,
+
+      selectedThreshold,
+      selectedThresholdPeriod,
     };
   },
   computed: {
@@ -330,7 +415,9 @@ export default Vue.extend({
       });
       const allChannelsEmpty = notEmptyChannels.length === 0;
 
-      if (allChannelsEmpty) {
+      const isThresholdInvalid = !/^[1-9]\d*$/.test(this.selectedThreshold);
+
+      if (allChannelsEmpty || isThresholdInvalid) {
         return false;
       }
 
