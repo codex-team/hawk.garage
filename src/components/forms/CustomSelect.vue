@@ -86,7 +86,7 @@ export default {
   },
   computed: {
     filteredOption() {
-      return this.options.filter(opt => opt !== this.value);
+      return this.options.filter(opt => opt.id !== this.value.id);
     },
   },
   methods: {
