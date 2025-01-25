@@ -165,7 +165,7 @@ export interface HawkEventDailyInfo {
   /**
    * Event affected users count, null for old events, when affected users count was not calculated
    */
-  readonly affectedUsersCount: number | null;
+  readonly affectedUsers: number | null;
 }
 
 /**

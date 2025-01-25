@@ -15,7 +15,7 @@
     <div class="event-item__badge-container">
       <EventBadge
         :count="count"
-        :affected-users="affectedUsers"
+        :affected-users-count="affectedUsersCount"
         :is-visited="isVisited"
       />
     </div>
@@ -83,7 +83,7 @@ export default {
     /**
      * @type {number | null} - event affected users count, null for old events, when affected users count was not calculated
      */
-    affectedUsers: {
+    affectedUsersCount: {
       type: [Number, null],
       default: null,
     },
