@@ -52,11 +52,34 @@ export enum ReceiveTypes {
   /**
    * All notifications
    */
-  ALL = 'ALL',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  SEEN_MORE = 'SEEN_MORE',
 
   /**
    * Only first occurrence
    */
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ONLY_NEW = 'ONLY_NEW',
+}
+
+export enum NotificationTresholdPeriodEnum {
+  /**
+   * One minute in milliseconds
+   */
+  'minute' = 60000,
+
+  /**
+   * One hour in milliseconds
+   */
+  'hour' = 3600000,
+
+  /**
+   * One day in milliseconds
+   */
+  'day' = 86400000,
+
+  /**
+   * One week in milliseconds
+   */
+  'week' = 604800000,
 }
