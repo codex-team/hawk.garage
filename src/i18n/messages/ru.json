@@ -101,7 +101,8 @@
       "sortLabel": "Сортировать",
       "sortOptions": {
         "byDate": "По времени",
-        "byCount": "По количеству"
+        "byCount": "По количеству",
+        "byAffectedUsers": "По количеству пользователей"
       }
     },
     "placeholder": "Выберите проект",

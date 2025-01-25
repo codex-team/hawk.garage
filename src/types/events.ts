@@ -23,7 +23,12 @@ export enum EventsSortOrder {
   /**
    * Sort by events count
    */
-  ByCount = 'BY_COUNT'
+  ByCount = 'BY_COUNT',
+
+  /**
+   * Sort by affected users count
+   */
+  ByAffectedUsers = 'BY_AFFECTED_USERS'
 }
 
 /**
@@ -156,6 +161,11 @@ export interface HawkEventDailyInfo {
    * Last event occurrence timestamp
    */
   readonly lastRepetitionTime: number;
+
+  /**
+   * Event affected users count, null for old events, when affected users count was not calculated
+   */
+  readonly affectedUsers: number | null;
 }
 
 /**

@@ -29,6 +29,7 @@
             :key="dailyEventInfo.groupHash"
             :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
             :count="dailyEventInfo.count"
+            :affected-users-count ="dailyEventInfo.affectedUsers"
             class="project-overview__event"
             :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
             @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
