@@ -6,7 +6,6 @@
           symbol="filter"
           class="filters-bar__filter-icon"
         />
-        {{ $t('projects.filters.filtersLabel') }}
       </div>
       <FlatButton
         v-for="(value, key) in filtersOptions"
@@ -24,7 +23,6 @@
           symbol="sort"
           class="filters-bar__sort-icon"
         />
-        {{ $t('projects.filters.sortLabel') }}
       </div>
       <FlatButton
         v-for="(value, key) in sortOptions"
