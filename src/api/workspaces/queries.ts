@@ -117,6 +117,19 @@ export const MUTATION_LEAVE_WORKSPACE = `
   }
 `;
 
+
+// language=GraphQL
+/**
+ * Mutation to delete workspace
+ */
+export const MUTATION_DELETE_WORKSPACE = `
+ mutation deleteWorkspace(
+   $workspaceId: ID!
+ ) {
+   deleteWorkspace(workspaceId: $workspaceId)
+ }
+`;
+
 // language=GraphQL
 /**
  * Mutation to join to workspace by invite link
