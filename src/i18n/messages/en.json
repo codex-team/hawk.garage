@@ -90,7 +90,6 @@
   },
   "projects": {
     "filters": {
-      "filtersLabel": "Filter",
       "filtersOptions": {
         "all": "All",
         "starred": "Starred",
@@ -98,7 +97,6 @@
         "unresolved": "Unresolved",
         "ignored": "Ignored"
       },
-      "sortLabel": "Sort",
       "sortOptions": {
         "byDate": "By time",
         "byCount": "By count",
