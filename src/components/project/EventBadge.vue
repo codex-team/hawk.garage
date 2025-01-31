@@ -6,7 +6,7 @@
     <span class="event-badge__count">
       {{ eventCount | abbreviateNumber }}
     </span>
-    <div v-if="affectedUsersCount !== null" class="event-badge__affected-users">
+    <div v-if="affectedUsersCount !== null && affectedUsersCount > 0" class="event-badge__affected-users">
       <Icon symbol="user-small" class="event-badge__affected-users-icon"/>
       {{ affectedUsersCount | abbreviateNumber }}
     </div>
