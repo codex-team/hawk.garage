@@ -462,24 +462,26 @@ export default Vue.extend({
       const channel = this.form.channels[channelName];
 
       switch (true) {
-        case (channelName === 'email' && this.form.channels.email.isEnabled):
+        case (channelName === 'email' && this.form.channels.email!.isEnabled):
           if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.form.channels.email!.endpoint)) {
             return false;
           }
           return true;
 
-        case (channelName === 'slack' && this.form.channels.slack.isEnabled):
+        case (channelName === 'slack' && this.form.channels.slack!.isEnabled):
           if (!/^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9]+\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(this.form.channels.slack!.endpoint)) {
             return false;
           }
           return true;
 
-        case (channelName === 'telegram' && this.form.channels.telegram.isEnabled):
+        case (channelName === 'telegram' && this.form.channels.telegram!.isEnabled):
           if (!/^https:\/\/notify\.bot\.codex\.so\/u\/[A-Za-z0-9]+$/.test(this.form.channels.telegram!.endpoint)) {
             return false;
           }
           return true;
       }
+
+      return true;
     },
   },
 });
