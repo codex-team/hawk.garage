@@ -60,8 +60,8 @@
             name="whatToReceive"
             :options="receiveTypes"
           >
-          <template #description="{ option }">
-              <div 
+            <template #description="{ option }">
+              <div
                 v-if="option.id === receiveTypesEnum.SEEN_MORE"
                 class="grid-form__seen-more-description"
               >
@@ -69,10 +69,10 @@
                   v-model="selectedThreshold"
                   type="number"
                   :required="true"
-                  :isInvalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
+                  :is-invalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
                   :label="$t('common.threshold')"
                   :need-image="false"
-                  />
+                />
                 <CustomSelect
                   v-model="selectedThresholdPeriod"
                   :label="$t('common.thresholdPeriod')"
@@ -152,7 +152,7 @@ export default Vue.extend({
     UiCheckbox,
     CustomSelect,
     UiButton,
-    TextFieldset
+    TextFieldset,
   },
   props: {
     /**
@@ -181,12 +181,13 @@ export default Vue.extend({
     selectedThreshold: string,
     selectedThresholdPeriod: CustomSelectOption,
     } {
-    const selectedThreshold: string = '100';
+    const selectedThreshold = '100';
     const selectedThresholdPeriod: CustomSelectOption = {
       id: 'hour',
       name: this.$t('common.hour') as string,
       value: 'hour',
     };
+
     return {
       /**
        * Form filling state
@@ -214,7 +215,7 @@ export default Vue.extend({
         excluding: [],
       },
       receiveTypesEnum: ReceiveTypes,
-      seenMoreThresholdPeriod: [{
+      seenMoreThresholdPeriod: [ {
         id: 'minute',
         value: 'minute',
         name: this.$t('common.minute') as string,
@@ -233,7 +234,7 @@ export default Vue.extend({
         id: 'week',
         value: 'week',
         name: this.$t('common.week') as string,
-      }],
+      } ],
       /**
        * Available options of 'What to receive'
        */
@@ -444,18 +445,21 @@ export default Vue.extend({
           if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.form.channels.email!.endpoint)) {
             return false;
           }
+
           return true;
 
         case (channelName === 'slack' && this.form.channels.slack!.isEnabled):
           if (!/^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9]+\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(this.form.channels.slack!.endpoint)) {
             return false;
           }
+
           return true;
 
         case (channelName === 'telegram' && this.form.channels.telegram!.isEnabled):
           if (!/^https:\/\/notify\.bot\.codex\.so\/u\/[A-Za-z0-9]+$/.test(this.form.channels.telegram!.endpoint)) {
             return false;
           }
+
           return true;
       }
 

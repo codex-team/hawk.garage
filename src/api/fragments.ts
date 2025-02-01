@@ -90,7 +90,7 @@ export const PROJECT_NOTIFICATIONS_RULE_POINTER_FRAGMENT = `
     id
     projectId
   }
-`
+`;
 
 // language=GraphQL
 /**

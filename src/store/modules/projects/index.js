@@ -301,8 +301,9 @@ const actions = {
   /**
    * - Send request for removing specific rule
    * - Remove from the state
-   * 
+   *
    * @param {ruleId} ruleId - id of the rule to be removed
+   * @param payload
    * @returns {Promise<void>}
    */
   async [REMOVE_NOTIFICATIONS_RULE]({ commit }, payload) {
@@ -503,16 +504,17 @@ const mutations = {
    * Delete notifications rule from project state
    *
    * @param {ProjectsModuleState} state - Vuex state~
-   *
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.projectId - project that contains rule
    * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @param payload.ruleId
    * @returns {void}
    */
   [mutationTypes.REMOVE_NOTIFICATIONS_RULE](state, { projectId, ruleId }) {
     const project = state.list.find(_project => _project.id === projectId);
-  
+
     const existedRuleIndex = project.notifications.findIndex(r => r.id === ruleId);
+
     if (existedRuleIndex !== -1) {
       Vue.delete(project.notifications, existedRuleIndex);
     }

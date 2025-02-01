@@ -45,7 +45,11 @@
               {{ option.description }}
             </div>
           </div>
-          <slot v-else name="description" :option="option"/>
+          <slot
+            v-else
+            name="description"
+            :option="option"
+          />
         </div>
 
         <UiRadio

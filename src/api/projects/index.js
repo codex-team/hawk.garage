@@ -115,6 +115,12 @@ export async function updateProjectNotificationsRule(payload) {
   })).updateProjectNotificationsRule;
 }
 
+/**
+ * Send request for removing specific project notifications rule
+ *
+ * @param {ProjectNotificationRulePointer} payload - update rule payload
+ * @returns {Promise<ProjectNotificationsRule>}
+ */
 export async function removeProjectNotificationsRule(payload) {
   return (await api.callOld(MUTATION_REMOVE_PROJECT_NOTIFY_RULE, {
     input: payload,

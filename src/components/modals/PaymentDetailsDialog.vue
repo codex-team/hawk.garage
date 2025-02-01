@@ -318,7 +318,7 @@ export default Vue.extend({
       const newCardOption: CustomSelectOption = {
         id: NEW_CARD_ID,
         value: NEW_CARD_ID,
-        name:  this.$t('billing.paymentDetails.newCard') as string
+        name:  this.$t('billing.paymentDetails.newCard') as string,
       };
 
       if (!cards) {
@@ -592,7 +592,7 @@ export default Vue.extend({
         amount = AMOUNT_FOR_CARD_VALIDATION;
       }
 
-      const method = this.isOnlyCardValidationNeeded ? 'auth' : 'charge'
+      const method = this.isOnlyCardValidationNeeded ? 'auth' : 'charge';
 
       widget.pay(method,
         {
