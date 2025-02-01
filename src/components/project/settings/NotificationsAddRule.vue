@@ -311,7 +311,9 @@ export default Vue.extend({
        * Set selecteable fields to currently saved un rule
        * If nothing is stored in rule, set default values
        */
-      this.$data.selectedThreshold = this.rule.threshold?.toString() ?? '100';
+      if (this.rule.threshold !== undefined) {
+        this.$data.selectedThreshold = this.rule.threshold.toString();
+      }
       this.$data.selectedThresholdPeriod = this.seenMoreThresholdPeriod.find((option) => {
         return option.id === millisecondsToThresholdPeriod.get(this.rule.thresholdPeriod ?? 3600000);
       }) as CustomSelectOption;
