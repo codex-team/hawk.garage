@@ -14,7 +14,7 @@
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
-            :is-invalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
+            :is-invalid="!isChannelEndpointValid('email')"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -27,7 +27,7 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
-            :is-invalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
+            :is-invalid="!isChannelEndpointValid('slack')"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
@@ -40,7 +40,7 @@
             :label="$t('projects.settings.notifications.telegram')"
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
-            :is-invalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
+            :is-invalid="!isChannelEndpointValid('telegram')"
             placeholder="@hawkso_bot endpoint"
           />
           <UiCheckbox
@@ -433,17 +433,20 @@ export default Vue.extend({
      * Validate saved form fields and return valid-status
      */
     validateForm(): boolean {
+      let allChannelsValid = true;
+
       /**
        * Check channels
        */
-      const notEmptyChannels = Object.keys(this.form.channels).filter((channelName: string) => {
-        return !this.checkChannelEmptiness(channelName);
+      const notEmptyChannels = Object.keys(this.form.channels).forEach((channelName: string) => {
+        if (!this.isChannelEndpointValid(channelName)) {
+          allChannelsValid = false;
+        }
       });
-      const allChannelsEmpty = notEmptyChannels.length === 0;
 
       const isThresholdInvalid = !/^[1-9]\d*$/.test(this.selectedThreshold);
 
-      if (allChannelsEmpty || isThresholdInvalid) {
+      if (!allChannelsValid || isThresholdInvalid) {
         return false;
       }
 
@@ -451,15 +454,32 @@ export default Vue.extend({
     },
 
     /**
-     * Return true if channel's endpoint is not filled
+     * Return true if passed channel endpoint is filled correctly
      *
      * @param channelName - key of this.form.channels object
      */
-    checkChannelEmptiness(channelName: string): boolean {
+    isChannelEndpointValid(channelName: string): boolean {
       const channel = this.form.channels[channelName];
-      const endpointEmpty = channel.endpoint.replace(/\s+/, '').trim().length === 0;
 
-      return endpointEmpty;
+      switch (true) {
+        case (channelName === 'email' && this.form.channels.email.isEnabled):
+          if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.form.channels.email!.endpoint)) {
+            return false;
+          }
+          return true;
+
+        case (channelName === 'slack' && this.form.channels.slack.isEnabled):
+          if (!/^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9]+\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(this.form.channels.slack!.endpoint)) {
+            return false;
+          }
+          return true;
+
+        case (channelName === 'telegram' && this.form.channels.telegram.isEnabled):
+          if (!/^https:\/\/notify\.bot\.codex\.so\/u\/[A-Za-z0-9]+$/.test(this.form.channels.telegram!.endpoint)) {
+            return false;
+          }
+          return true;
+      }
     },
   },
 });
