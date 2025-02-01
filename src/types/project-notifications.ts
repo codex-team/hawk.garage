@@ -76,6 +76,7 @@ export enum ReceiveTypes {
  * Available periods to receive notification
  * This map is used for comparisons between displayed threshold period values and stored ones
  */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 export const thresholdPeriodToMilliseconds = new Map<string, number>([
   /**
    * One minute in milliseconds
@@ -94,7 +95,7 @@ export const thresholdPeriodToMilliseconds = new Map<string, number>([
    */
   ['week', 604800000],
 ]);
-
+/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 /**
  * Available periods to receive notification

@@ -435,8 +435,8 @@ export default Vue.extend({
   @import url('./../../../styles/custom-properties.css');
 
   .billing-card {
-    min-width: var(--width-popup-form-container);
     width: fit-content;
+    min-width: var(--width-popup-form-container);
     margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
@@ -491,10 +491,10 @@ export default Vue.extend({
     &__plan {
       display: flex;
       align-items: center;
-      white-space: nowrap;
-      border-radius: 3px;
       padding-top: 3px;
       font-size: 14px;
+      white-space: nowrap;
+      border-radius: 3px;
     }
 
     &__plan-name {

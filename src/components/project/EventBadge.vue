@@ -6,8 +6,14 @@
     <span class="event-badge__count">
       {{ eventCount | abbreviateNumber }}
     </span>
-    <div v-if="affectedUsersCount !== null && affectedUsersCount > 0" class="event-badge__affected-users">
-      <Icon symbol="user-small" class="event-badge__affected-users-icon"/>
+    <div
+      v-if="affectedUsersCount !== null && affectedUsersCount > 0"
+      class="event-badge__affected-users"
+    >
+      <Icon
+        symbol="user-small"
+        class="event-badge__affected-users-icon"
+      />
       {{ affectedUsersCount | abbreviateNumber }}
     </div>
   </div>
@@ -52,20 +58,20 @@ export default {
 <style>
 .event-badge {
   display: inline-flex;
+  align-items: center;
   height: 20px;
   padding: 5px 5px;
   color: var(--color-text-main);
   line-height: 9px;
   white-space: nowrap;
-  align-items: center;
   background-color: var(--color-indicator-medium);
   border-radius: 6px;
 
   &__affected-users {
-    font-size: 10px;
-    margin-left: 10px;
     display: flex;
     align-items: center;
+    margin-left: 10px;
+    font-size: 10px;
 
     &-icon {
       display: block;
@@ -76,8 +82,8 @@ export default {
   }
 
   &__count {
-    font-size: 12px;
     font-weight: bold;
+    font-size: 12px;
   }
 
   &--visited {

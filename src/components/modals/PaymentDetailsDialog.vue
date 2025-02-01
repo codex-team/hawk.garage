@@ -101,7 +101,6 @@
         v-if="isRecurrent"
         class="payment-details__adoption-autoProlongation"
       >
-      
         <UiCheckboxWithLabel
           v-model="isAcceptedRecurrentPaymentAgreement"
           class="payment-details__adoption-autoProlongation-item"
@@ -540,7 +539,7 @@ export default Vue.extend({
       const widget = new window.cp.CloudPayments({ language: this.$i18n.locale });
 
       const paymentData: PlanProlongationPayload = {
-        checksum: data.checksum
+        checksum: data.checksum,
       };
 
       const interval = this.workspace.isDebug ? 'Day' : 'Month';
@@ -560,7 +559,7 @@ export default Vue.extend({
       }
 
       const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
-      const method = data.isCardLinkOperation ? 'auth' : 'charge'
+      const method = data.isCardLinkOperation ? 'auth' : 'charge';
 
       widget.pay(method,
         {
