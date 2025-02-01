@@ -71,7 +71,6 @@
                   :required="true"
                   :isInvalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
                   :label="$t('common.threshold')"
-                  :options="seenMoreThreshold"
                   :need-image="false"
                   />
                 <CustomSelect
@@ -177,7 +176,6 @@ export default Vue.extend({
     receiveTypes: RadioButtonGroupItem[],
     isFormInvalid: boolean,
     isWaitingForResponse: boolean,
-    seenMoreThreshold: CustomSelectOption[],
     seenMoreThresholdPeriod: CustomSelectOption[],
     receiveTypesEnum: typeof ReceiveTypes,
     selectedThreshold: string,
@@ -211,31 +209,11 @@ export default Vue.extend({
         },
         threshold: parseInt(selectedThreshold),
         thresholdPeriod: thresholdPeriodToMilliseconds.get(selectedThresholdPeriod.id),
-        whatToReceive: ReceiveTypes.ONLY_NEW,
+        whatToReceive: ReceiveTypes.SEEN_MORE,
         including: [],
         excluding: [],
       },
       receiveTypesEnum: ReceiveTypes,
-      seenMoreThreshold: [{
-        id: '1',
-        value: '10',
-        name: '10',
-      },
-      {
-        id: '2',
-        value: '100',
-        name: '100',
-      },
-      {
-        id: '3',
-        value: '1000',
-        name: '1000',
-      },
-      {
-        id: '4',
-        value: '10000',
-        name: '10000',
-      }],
       seenMoreThresholdPeriod: [{
         id: 'minute',
         value: 'minute',

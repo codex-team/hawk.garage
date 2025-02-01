@@ -5,6 +5,7 @@ import {
   MUTATION_UPDATE_LAST_VISIT,
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
+  MUTATION_REMOVE_PROJECT_NOTIFY_RULE,
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
   QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
@@ -112,6 +113,12 @@ export async function updateProjectNotificationsRule(payload) {
   return (await api.callOld(MUTATION_UPDATE_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).updateProjectNotificationsRule;
+}
+
+export async function removeProjectNotificationsRule(payload) {
+  return (await api.callOld(MUTATION_REMOVE_PROJECT_NOTIFY_RULE, {
+    input: payload,
+  })).removeProjectNotificationsRule;
 }
 
 /**

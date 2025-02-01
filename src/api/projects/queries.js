@@ -110,6 +110,19 @@ export const MUTATION_UPDATE_PROJECT_NOTIFY_RULE = `
 `;
 
 // language=GraphQL
+export const MUTATION_REMOVE_PROJECT_NOTIFY_RULE = `
+  mutation ( $input: ProjectNotificationRulePointer! ) {
+    deleteProjectNotificationsRule(
+      input: $input
+    ) {
+      ...ProjectNotificationsRule
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+`;
+
+// language=GraphQL
 export const MUTATION_REMOVE_PROJECT = `
   mutation removeProject($projectId: ID!) {
     removeProject(projectId: $projectId)

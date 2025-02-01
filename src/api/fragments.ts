@@ -85,6 +85,13 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
   }
 `;
 
+export const PROJECT_NOTIFICATIONS_RULE_POINTER_FRAGMENT = `
+  fragment ProjectNotificationRulePointer on ProjectNotificationRulePointer {
+    id
+    projectId
+  }
+`
+
 // language=GraphQL
 /**
  * This fields stored in users.notifications record

@@ -152,8 +152,8 @@ export default Vue.extend({
         },
         {
           title: this.$t('projects.settings.notifications.removeRule') as string,
-          onClick() {
-            console.log('Remove rule clicked');
+          onClick: () => {
+            this.$emit('removeClicked', this.rule.id);
           },
         },
       ];

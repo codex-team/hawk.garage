@@ -37,6 +37,7 @@
         :project-id="project.id"
         :enable-editing="userCanEdit"
         @editClicked="editRule"
+        @removeClicked="removeRule"
       />
     </section>
   </div>
@@ -152,6 +153,15 @@ export default Vue.extend({
     editRule(ruleId: string): void {
       this.ruleUnderEditingId = ruleId;
       this.addRuleOpened = true;
+    },
+
+    removeRule(ruleId: string): void {
+      this.$store.dispatch('REMOVE_NOTIFICATIONS_RULE', {
+        projectId: this.project.id,
+        ruleId,
+      });
+
+      this.$forceUpdate();
     },
 
     /**
