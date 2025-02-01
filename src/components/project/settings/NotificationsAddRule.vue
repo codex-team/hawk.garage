@@ -61,7 +61,10 @@
             :options="receiveTypes"
           >
           <template #description="{ option }">
-              <div v-if="option.id === receiveTypesEnum.SEEN_MORE">
+              <div 
+                v-if="option.id === receiveTypesEnum.SEEN_MORE"
+                class="grid-form__seen-more-description"
+              >
                 <TextFieldset
                   v-model="selectedThreshold"
                   type="number"
@@ -513,6 +516,21 @@ export default Vue.extend({
     .ui-button {
       margin-top: 30px;
       margin-right: 20px;
+    }
+
+    &__seen-more-description {
+      display: flex;
+      gap: 10px;
+
+      .form-fieldset__label, .custom-select__label {
+        font-weight: 400;
+        font-size: 13px;
+        text-transform: none;
+      }
+
+      .custom-select {
+        min-width: 100px;
+      }
     }
   }
 </style>

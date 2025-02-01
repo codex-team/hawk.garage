@@ -47,7 +47,7 @@ export interface ProjectNotificationsRule {
   /**
    * Period to receive notification
    */
-  thresholdPeriod?: NotificationTresholdPeriodEnum;
+  thresholdPeriod?: number;
 }
 
 /**
