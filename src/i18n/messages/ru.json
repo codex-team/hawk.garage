@@ -162,7 +162,7 @@
         "telegramDescription": "Уведомления через @hawkso_bot",
         "receiveNewLabel": "Только новые события",
         "receiveNewDescription": "При первом получении",
-        "receiveSeenMoreLabel": "Настроить",
+        "receiveSeenMoreLabel": "По частоте появления",
         "receiveSeeMoreDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
         "includingWordsLabel": "Включающие слова",
         "includingWordsDescription": "Только события, содержащие указанные слова",
