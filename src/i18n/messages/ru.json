@@ -43,12 +43,12 @@
       "continue": "Продолжить",
       "cancel": "Отменить"
     },
-    "newVersionWindow":{
-      "message":"Доступна новая версия",
-      "refresh":"Обновить"
+    "newVersionWindow": {
+      "message": "Доступна новая версия",
+      "refresh": "Обновить"
     },
-    "feedbackButton":{
-      "message":"Оставить отзыв"
+    "feedbackButton": {
+      "message": "Оставить отзыв"
     },
     "catalog": {
       "step1": "Создать проект",
@@ -90,7 +90,6 @@
   },
   "projects": {
     "filters": {
-      "filtersLabel": "Фильтр",
       "filtersOptions": {
         "all": "Все",
         "starred": "Избранные",
@@ -98,10 +97,10 @@
         "unresolved": "Неисправленные",
         "ignored": "Игнорируемые"
       },
-      "sortLabel": "Сортировать",
       "sortOptions": {
         "byDate": "По времени",
-        "byCount": "По количеству"
+        "byCount": "По количеству",
+        "byAffectedUsers": "По пользователям"
       }
     },
     "placeholder": "Выберите проект",
@@ -406,11 +405,11 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
-    "suspectedCommits":{
+    "suspectedCommits": {
       "header": "Подозреваемые коммиты",
       "hide": "скрыть",
       "committed": "закоммитил(а)",
-      "moreRelease":" | еще {numberOfCommits} коммит в этом релизе | еще {numberOfCommits} коммита в этом релизе | еще {numberOfCommits} коммитов в этом релизе"
+      "moreRelease": " | еще {numberOfCommits} коммит в этом релизе | еще {numberOfCommits} коммита в этом релизе | еще {numberOfCommits} коммитов в этом релизе"
     },
     "emptyData": "Это событие не имеет дополнительных данных",
     "notFound": "Событие не найдено. Возможно, оно было заархивировано.",
@@ -471,13 +470,13 @@
       "ноя",
       "дек"
     ],
-    "relativeTime":{
-      "secondsAgo":"несколько секунд назад",
-      "minutesAgo":" | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
-      "hoursAgo":" | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
-      "daysAgo":" | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
-      "monthsAgo":" | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
-      "yearsAgo":" | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
+    "relativeTime": {
+      "secondsAgo": "несколько секунд назад",
+      "minutesAgo": " | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
+      "hoursAgo": " | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
+      "daysAgo": " | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
+      "monthsAgo": " | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
+      "yearsAgo": " | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
     },
     "readMore": "Подробнее"
   },

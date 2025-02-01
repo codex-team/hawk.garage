@@ -23,4 +23,10 @@ export interface BeforePaymentPayload {
    * Hash to check data consistency
    */
   checksum: string;
+
+  /**
+   * True if this is card linking operation.
+   * Charging minimal amount of money that will be returned
+   */
+  isCardLinkOperation: boolean;
 }

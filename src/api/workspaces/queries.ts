@@ -56,6 +56,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
             count
             groupingTimestamp
             lastRepetitionTime
+            affectedUsers
           }
         }
       }
