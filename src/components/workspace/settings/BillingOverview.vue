@@ -223,7 +223,7 @@ export default Vue.extend({
      */
     minPlanPrice(): number {
       const plans = this.$store.state.plans.list;
-      const plansPrices = plans.map(plan => plan.monthlyCharge).filter(price => price !== 0); 
+      const plansPrices = plans.map(plan => plan.monthlyCharge).filter(price => price !== 0);
 
       return Math.min(...plansPrices);
     },
@@ -233,7 +233,7 @@ export default Vue.extend({
     incrementEventsLimitWithPrice(): Omit<Button, 'style'> {
       return {
         label: this.$i18n.t('billing.buttons.incrementEventsLimitWithPrice', {
-          price: this.minPlanPrice + ' ' + this.planCurrencySign
+          price: this.minPlanPrice + ' ' + this.planCurrencySign,
         }) as string,
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
@@ -243,7 +243,7 @@ export default Vue.extend({
             },
           });
         },
-      }
+      };
     },
     /**
      * Return currency sign depending on plan currency
@@ -264,11 +264,11 @@ export default Vue.extend({
       if (this.isFreePlan) {
         return [ this.incrementEventsLimitWithPrice ];
       }
-      
+
       if (this.isBLocked) {
         return [
           this.incrementEventsLimit,
-          this.prolongateCurrentPlan
+          this.prolongateCurrentPlan,
         ];
       }
 
@@ -276,21 +276,21 @@ export default Vue.extend({
         return [
           this.prolongateCurrentPlan,
           this.incrementEventsLimit,
-        ]
+        ];
       }
 
       if (!this.isAutoPayOn) {
         return [
           this.enableAutoPayment,
-          this.incrementEventsLimit
+          this.incrementEventsLimit,
         ];
       }
 
       if (this.isAutoPayOn) {
-        return [ this.incrementEventsLimit ]
+        return [ this.incrementEventsLimit ];
       }
 
-      return []
+      return [];
     },
     /**
      * Checking the volume spent
@@ -435,8 +435,8 @@ export default Vue.extend({
   @import url('./../../../styles/custom-properties.css');
 
   .billing-card {
-    min-width: var(--width-popup-form-container);
     width: fit-content;
+    min-width: var(--width-popup-form-container);
     margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
@@ -491,10 +491,10 @@ export default Vue.extend({
     &__plan {
       display: flex;
       align-items: center;
-      white-space: nowrap;
-      border-radius: 3px;
       padding-top: 3px;
       font-size: 14px;
+      white-space: nowrap;
+      border-radius: 3px;
     }
 
     &__plan-name {

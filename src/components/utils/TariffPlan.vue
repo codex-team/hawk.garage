@@ -96,15 +96,15 @@ export default {
 
 <style>
   .tariff-plan {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     width: 220px;
+    height: 140px;
     padding: 20px 25px;
     background: var(--color-bg-main);
     border-radius: 7px;
     cursor: pointer;
-    height: 140px;
-    display: flex;
-    flex-direction: column;
 
     &--selected {
       padding: 17px 22px;
@@ -112,19 +112,19 @@ export default {
     }
 
     &--horizontal {
-      height: auto;
-      width: auto;
       display: flex;
       flex-direction: row;
       align-items: center;
+      width: auto;
+      height: auto;
 
       &:not(:last-of-type) {
         margin-bottom: 10px;
       }
 
       .tariff-plan__name {
-        margin-bottom: 0;
         width: 150px;
+        margin-bottom: 0;
       }
       .tariff-plan__limit {
         width: 300px;

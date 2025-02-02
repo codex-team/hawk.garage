@@ -9,7 +9,8 @@ import {
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
   TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
-  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN
+  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
+  REMOVE_NOTIFICATIONS_RULE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -30,6 +31,7 @@ export const mutationTypes = {
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
   UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
+  REMOVE_NOTIFICATIONS_RULE: 'REMOVE_NOTIFICATIONS_RULE', // remove notify rule
 
   /**
    * Save data of events count for the last N days at the specific project
@@ -297,6 +299,20 @@ const actions = {
   },
 
   /**
+   * - Send request for removing specific rule
+   * - Remove from the state
+   *
+   * @param {ruleId} ruleId - id of the rule to be removed
+   * @param payload
+   * @returns {Promise<void>}
+   */
+  async [REMOVE_NOTIFICATIONS_RULE]({ commit }, payload) {
+    await projectsApi.removeProjectNotificationsRule(payload);
+
+    commit(mutationTypes.REMOVE_NOTIFICATIONS_RULE, payload);
+  },
+
+  /**
    * - Send request for toggle isEnabled state of the notify rule
    * - Update in the state
    *
@@ -470,7 +486,7 @@ const mutations = {
   /**
    * Reset updated notifications rule
    *
-   * @param {ProjectsModuleState} state - Vuex state
+   * @param {ProjectsModuleState} state - Vuex state~
    *
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.projectId - project that contains rule
@@ -482,6 +498,26 @@ const mutations = {
     const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
 
     Vue.set(project.notifications, existedRuleIndex, rule);
+  },
+
+  /**
+   * Delete notifications rule from project state
+   *
+   * @param {ProjectsModuleState} state - Vuex state~
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - project that contains rule
+   * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @param payload.ruleId
+   * @returns {void}
+   */
+  [mutationTypes.REMOVE_NOTIFICATIONS_RULE](state, { projectId, ruleId }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    const existedRuleIndex = project.notifications.findIndex(r => r.id === ruleId);
+
+    if (existedRuleIndex !== -1) {
+      Vue.delete(project.notifications, existedRuleIndex);
+    }
   },
 
   /**

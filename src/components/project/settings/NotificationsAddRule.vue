@@ -14,7 +14,7 @@
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
-            :is-invalid="isFormInvalid && form.channels.email.isEnabled && checkChannelEmptiness('email')"
+            :is-invalid="!isChannelEndpointValid('email')"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -27,7 +27,7 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
-            :is-invalid="isFormInvalid && form.channels.slack.isEnabled && checkChannelEmptiness('slack')"
+            :is-invalid="!isChannelEndpointValid('slack')"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
@@ -40,7 +40,7 @@
             :label="$t('projects.settings.notifications.telegram')"
             :description="$t('projects.settings.notifications.telegramDescription')"
             :hidden="!form.channels.telegram.isEnabled"
-            :is-invalid="isFormInvalid && form.channels.telegram.isEnabled && checkChannelEmptiness('telegram')"
+            :is-invalid="!isChannelEndpointValid('telegram')"
             placeholder="@hawkso_bot endpoint"
           />
           <UiCheckbox
@@ -59,7 +59,32 @@
             v-model="form.whatToReceive"
             name="whatToReceive"
             :options="receiveTypes"
-          />
+          >
+            <template #description="{ option }">
+              <div
+                v-if="option.id === receiveTypesEnum.SEEN_MORE"
+                class="grid-form__seen-more-description"
+              >
+                <TextFieldset
+                  v-model="selectedThreshold"
+                  type="number"
+                  :required="true"
+                  :is-invalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
+                  :label="$t('common.threshold')"
+                  :need-image="false"
+                />
+                <CustomSelect
+                  v-model="selectedThresholdPeriod"
+                  :label="$t('common.thresholdPeriod')"
+                  :options="seenMoreThresholdPeriod"
+                  :need-image="false"
+                />
+              </div>
+              <div v-else>
+                {{ option.description }}
+              </div>
+            </template>
+          </RadioButtonGroup>
         </section>
       </div>
     </section>
@@ -107,7 +132,7 @@ import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import UiButton, { UiButtonComponent } from './../../utils/UiButton.vue';
-import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import { ProjectNotificationsRule, ReceiveTypes, thresholdPeriodToMilliseconds, millisecondsToThresholdPeriod } from '@/types/project-notifications';
 import {
   ProjectNotificationsAddRulePayload,
   ProjectNotificationsUpdateRulePayload
@@ -115,6 +140,9 @@ import {
 import { deepMerge } from '@/utils';
 import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
+import CustomSelect from '@/components/forms/CustomSelect.vue';
+import CustomSelectOption from '@/types/customSelectOption';
+import TextFieldset from './../../forms/TextFieldset.vue';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -122,7 +150,9 @@ export default Vue.extend({
     FormTextFieldset,
     RadioButtonGroup,
     UiCheckbox,
+    CustomSelect,
     UiButton,
+    TextFieldset,
   },
   props: {
     /**
@@ -146,7 +176,18 @@ export default Vue.extend({
     receiveTypes: RadioButtonGroupItem[],
     isFormInvalid: boolean,
     isWaitingForResponse: boolean,
+    seenMoreThresholdPeriod: CustomSelectOption[],
+    receiveTypesEnum: typeof ReceiveTypes,
+    selectedThreshold: string,
+    selectedThresholdPeriod: CustomSelectOption,
     } {
+    const selectedThreshold = '100';
+    const selectedThresholdPeriod: CustomSelectOption = {
+      id: 'hour',
+      name: this.$t('common.hour') as string,
+      value: 'hour',
+    };
+
     return {
       /**
        * Form filling state
@@ -167,10 +208,33 @@ export default Vue.extend({
             isEnabled: false,
           },
         },
-        whatToReceive: ReceiveTypes.ONLY_NEW,
+        threshold: parseInt(selectedThreshold),
+        thresholdPeriod: thresholdPeriodToMilliseconds.get(selectedThresholdPeriod.id),
+        whatToReceive: ReceiveTypes.SEEN_MORE,
         including: [],
         excluding: [],
       },
+      receiveTypesEnum: ReceiveTypes,
+      seenMoreThresholdPeriod: [ {
+        id: 'minute',
+        value: 'minute',
+        name: this.$t('common.minute') as string,
+      },
+      {
+        id: 'hour',
+        value: 'hour',
+        name: this.$t('common.hour') as string,
+      },
+      {
+        id: 'day',
+        value: 'day',
+        name: this.$t('common.day') as string,
+      },
+      {
+        id: 'week',
+        value: 'week',
+        name: this.$t('common.week') as string,
+      } ],
       /**
        * Available options of 'What to receive'
        */
@@ -181,9 +245,8 @@ export default Vue.extend({
           description: this.$t('projects.settings.notifications.receiveNewDescription') as string,
         },
         {
-          id: ReceiveTypes.ALL,
-          label: this.$t('projects.settings.notifications.receiveAllLabel') as string,
-          description: this.$t('projects.settings.notifications.receiveAllDescription') as string,
+          id: ReceiveTypes.SEEN_MORE,
+          label: this.$t('projects.settings.notifications.receiveSeenMoreLabel') as string,
         },
       ],
 
@@ -196,6 +259,9 @@ export default Vue.extend({
        * Used to show loader and block multiple sending
        */
       isWaitingForResponse: false,
+
+      selectedThreshold,
+      selectedThresholdPeriod,
     };
   },
   computed: {
@@ -208,6 +274,21 @@ export default Vue.extend({
       }
 
       return this.$t('projects.settings.notifications.updateRuleSubmit') as string;
+    },
+  },
+  watch: {
+    selectedThreshold: {
+      handler: function (value: string): void {
+        this.$set(this.form, 'threshold', parseInt(value));
+      },
+    },
+    selectedThresholdPeriod: {
+      handler: function (value: CustomSelectOption): void {
+        if (!value) {
+          return;
+        }
+        this.$set(this.form, 'thresholdPeriod', thresholdPeriodToMilliseconds.get(value.id));
+      },
     },
   },
   created(): void {
@@ -225,6 +306,17 @@ export default Vue.extend({
      */
     if (this.rule) {
       const mergedRule = deepMerge(this.form, this.rule) as FormFilledByRule;
+
+      /**
+       * Set selecteable fields to currently saved un rule
+       * If nothing is stored in rule, set default values
+       */
+      if (this.rule.threshold !== undefined) {
+        this.$data.selectedThreshold = this.rule.threshold.toString();
+      }
+      this.$data.selectedThresholdPeriod = this.seenMoreThresholdPeriod.find((option) => {
+        return option.id === millisecondsToThresholdPeriod.get(this.rule.thresholdPeriod ?? 3600000);
+      }) as CustomSelectOption;
 
       /**
        * The type of this.form (ProjectNotificationsAddRulePayload)
@@ -322,15 +414,20 @@ export default Vue.extend({
      * Validate saved form fields and return valid-status
      */
     validateForm(): boolean {
+      let allChannelsValid = true;
+
       /**
        * Check channels
        */
-      const notEmptyChannels = Object.keys(this.form.channels).filter((channelName: string) => {
-        return !this.checkChannelEmptiness(channelName);
+      const notEmptyChannels = Object.keys(this.form.channels).forEach((channelName: string) => {
+        if (!this.isChannelEndpointValid(channelName)) {
+          allChannelsValid = false;
+        }
       });
-      const allChannelsEmpty = notEmptyChannels.length === 0;
 
-      if (allChannelsEmpty) {
+      const isThresholdInvalid = !/^[1-9]\d*$/.test(this.selectedThreshold);
+
+      if (!allChannelsValid || isThresholdInvalid) {
         return false;
       }
 
@@ -338,15 +435,37 @@ export default Vue.extend({
     },
 
     /**
-     * Return true if channel's endpoint is not filled
+     * Return true if passed channel endpoint is filled correctly
      *
      * @param channelName - key of this.form.channels object
      */
-    checkChannelEmptiness(channelName: string): boolean {
+    isChannelEndpointValid(channelName: string): boolean {
       const channel = this.form.channels[channelName];
-      const endpointEmpty = channel.endpoint.replace(/\s+/, '').trim().length === 0;
 
-      return endpointEmpty;
+      switch (true) {
+        case (channelName === 'email' && this.form.channels.email!.isEnabled):
+          if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.form.channels.email!.endpoint)) {
+            return false;
+          }
+
+          return true;
+
+        case (channelName === 'slack' && this.form.channels.slack!.isEnabled):
+          if (!/^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9]+\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(this.form.channels.slack!.endpoint)) {
+            return false;
+          }
+
+          return true;
+
+        case (channelName === 'telegram' && this.form.channels.telegram!.isEnabled):
+          if (!/^https:\/\/notify\.bot\.codex\.so\/u\/[A-Za-z0-9]+$/.test(this.form.channels.telegram!.endpoint)) {
+            return false;
+          }
+
+          return true;
+      }
+
+      return true;
     },
   },
 });
@@ -403,6 +522,21 @@ export default Vue.extend({
     .ui-button {
       margin-top: 30px;
       margin-right: 20px;
+    }
+
+    &__seen-more-description {
+      display: flex;
+      gap: 10px;
+
+      .form-fieldset__label, .custom-select__label {
+        font-weight: 400;
+        font-size: 13px;
+        text-transform: none;
+      }
+
+      .custom-select {
+        min-width: 100px;
+      }
     }
   }
 </style>

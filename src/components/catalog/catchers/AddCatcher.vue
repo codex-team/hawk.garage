@@ -308,12 +308,12 @@ export default {
     }
 
     &__catalog-more {
-      background-color: var(--color-bg-main);
-      margin: 7.5px 7.5px 50px;
-      text-align: center;
-      padding: 18px 20px;
-      border-radius: 4px;
       width: 100%;
+      margin: 7.5px 7.5px 50px;
+      padding: 18px 20px;
+      text-align: center;
+      background-color: var(--color-bg-main);
+      border-radius: 4px;
       cursor: pointer;
       transition: all 0.2s ease;
 
