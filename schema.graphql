@@ -185,6 +185,12 @@ input CreateProjectNotificationsRuleInput {
   """Words to exclude from notification"""
   excluding: [String!]! = []
 
+  """Treshold to be reached to send notification"""
+  threshold: Int = 100
+
+  """Treshold period in milliseconds"""
+  thresholdPeriod: Int = 3600000
+
   """Notification channels to recieve events"""
   channels: NotificationsChannelsInput!
 }

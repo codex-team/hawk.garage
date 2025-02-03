@@ -10,6 +10,7 @@ module.exports = {
     } ],
     'at-rule-no-unknown': [true, {
       ignoreAtRules: ['mixin', 'define-mixin']
-    }]
+    }],
+    'no-descending-specificity': null
   }
 };

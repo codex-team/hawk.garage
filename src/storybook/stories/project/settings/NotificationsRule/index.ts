@@ -48,7 +48,7 @@ function createRuleMock(): ProjectNotificationsRule {
     };
   }
 
-  rule.whatToReceive = getRandomArrayItem([ReceiveTypes.ONLY_NEW, ReceiveTypes.ALL]);
+  rule.whatToReceive = getRandomArrayItem([ReceiveTypes.ONLY_NEW, ReceiveTypes.SEEN_MORE]);
 
   if (getRandomArrayItem([1, 2]) === 1) {
     rule.excluding = ['Script error', 'chunk'];

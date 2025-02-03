@@ -96,19 +96,19 @@ export default Vue.extend({
 
 .workspace-volume {
   &__text {
-    margin-bottom: 35px;
     max-width: 435px;
+    margin-bottom: 35px;
+    color: var(--color-text-second);
     font-size: 14px;
     line-height: 20px;
     letter-spacing: .16px;
-    color: var(--color-text-second);
   }
 
   &__volume-progress {
     width: 400px;
     height: 11px;
-    border-radius: 5px;
     margin-bottom: 30px;
+    border-radius: 5px;
   }
 
   &__button {

@@ -75,8 +75,8 @@ export default {
   }
 
   &__header {
-    height: 100px;
     flex-shrink: 0;
+    height: 100px;
     background-position: center center;
     background-size: cover;
     border-radius: 4px;

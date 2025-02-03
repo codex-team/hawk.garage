@@ -262,16 +262,16 @@ export default Vue.extend({
     }
 
     &__premium-card {
-      background: var(--color-bg-main);
-      border-radius: 7px;
       display: flex;
       align-items: center;
       padding: 20px 25px;
+      background: var(--color-bg-main);
+      border-radius: 7px;
     }
 
     &__premium-card-title {
-      font-weight: 600;
       width: 150px;
+      font-weight: 600;
     }
 
     &__premium-card-limit {
@@ -282,11 +282,11 @@ export default Vue.extend({
     }
 
     &__premium-card-price {
+      margin-right: 20px;
       margin-left: auto;
       color: var(--color-text-second);
       font-weight: 600;
       font-size: 13px;
-      margin-right: 20px;
     }
   }
 </style>
