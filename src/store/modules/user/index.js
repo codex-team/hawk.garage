@@ -135,9 +135,22 @@ const actions = {
    * @param {Function} commit - standard Vuex commit function
    */
   async [FETCH_CURRENT_USER]({ commit }) {
-    const me = await userApi.fetchCurrentUser();
+    const response = await userApi.fetchCurrentUser();
 
-    commit(mutationTypes.SET_CURRENT_USER, me);
+    if (Array.isArray(response.errors) && response.errors.length) {
+      const code = response.errors[0].extensions.code;
+
+      /**
+       * If user is not authenticated, log out
+       */
+      if (code === 'UNAUTHENTICATED') {
+        commit(RESET_STORE);
+
+        return;
+      }
+    }
+
+    commit(mutationTypes.SET_CURRENT_USER, response.data.me);
   },
 
   /**
