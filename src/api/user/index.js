@@ -65,10 +65,10 @@ export async function refreshTokens(refreshToken) {
 /**
  * Get current user
  *
- * @returns {Promise<User>}
+ * @returns {Promise<APIResponse<{ me: User }>>}
  */
 export async function fetchCurrentUser() {
-  return (await api.callOld(QUERY_CURRENT_USER)).me;
+  return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
 }
 
 /**
