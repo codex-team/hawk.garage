@@ -401,7 +401,7 @@ export default Vue.extend({
         return date.toString();
       }
 
-      return this.planDueDate.toString();
+      return this.planDueDate.toISOString();
     },
 
     /**
