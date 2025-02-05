@@ -318,6 +318,8 @@
     "blocked": "Заблокирован",
     "operations": {
       "chargeForPlan": "Оплата за тарифный план {workspaceName}",
+      "cardLinkingChange": "Списание для проверки карты",
+      "cardLinkingRefund": "Возврат средств",
       "statuses": {
         "pending": "В ожидании",
         "processed": "Обработан",
@@ -372,7 +374,8 @@
       "cancelErrorMessage": "Ошибка при попытке отменить подписку"
     },
     "cloudPaymentsWidget": {
-      "description": "Оплата тарифа \"{tariffPlanName}\" для воркспейса {workspaceName} на месяц."
+      "description": "Оплата тарифа \"{tariffPlanName}\" для воркспейса {workspaceName} на месяц.",
+      "descriptionCardLinking": "Списание 1 рубля для проверки карты. Сумма будет автоматически возвращена."
     }
   },
   "event": {

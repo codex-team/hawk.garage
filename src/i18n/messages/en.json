@@ -318,6 +318,8 @@
     "blocked": "Blocked",
     "operations": {
       "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "cardLinkingChange": "Charge to confirm a card",
+      "cardLinkingRefund": "Refund for a card confirmation",
       "statuses": {
         "pending": "Pending",
         "processed": "Processed",
@@ -372,7 +374,8 @@
       "cancelErrorMessage": "Error during subscription cancelling"
     },
     "cloudPaymentsWidget": {
-      "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month"
+      "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month",
+      "descriptionCardLinking": "A temporary charge of 1 USD will be made to verify your card. The amount will be refunded automatically."
     }
   },
   "event": {

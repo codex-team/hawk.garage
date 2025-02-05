@@ -560,11 +560,12 @@ export default Vue.extend({
 
       const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
+      const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
       widget.pay(method,
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-          description: this.$t('billing.cloudPaymentsWidget.description', {
+          description: this.$t(titleKey, {
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,

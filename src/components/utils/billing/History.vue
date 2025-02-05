@@ -98,7 +98,7 @@ export default Vue.extend({
      * Get operations with type `WORKSPACE_PLAN_PURCHASE`
      */
     filteredOperations(): BusinessOperation[] {
-      return this.operations.filter(operation => operation.type === BusinessOperationType.WorkspacePlanPurchase);
+      return this.operations;//.filter(operation => operation.type === BusinessOperationType.WorkspacePlanPurchase);
     },
   },
   methods: {
@@ -131,6 +131,12 @@ export default Vue.extend({
             workspaceName: payload.workspace.name,
           }).toString();
         }
+
+        case BusinessOperationType.CardLinkCharge:
+          return i18n.t('billing.operations.cardLinkingChange').toString()
+
+        case BusinessOperationType.CardLinkRefund:
+          return i18n.t('billing.operations.cardLinkingRefund').toString()
 
         default:
           return operation.type;
