@@ -335,7 +335,7 @@ export default Vue.extend({
        * Set selecteable fields to currently saved un rule
        * If nothing is stored in rule, set default values
        */
-      if (this.rule.threshold !== undefined) {
+      if (this.rule.threshold !== undefined && this.rule.threshold !== null) {
         this.$data.selectedThreshold = this.rule.threshold.toString();
       }
       this.$data.selectedThresholdPeriod = this.seenMoreThresholdPeriod.find((option) => {
