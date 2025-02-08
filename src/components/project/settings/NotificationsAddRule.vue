@@ -10,11 +10,24 @@
       <div class="grid-form__section-content">
         <section>
           <FormTextFieldset
+            v-model="form.channels.telegram.endpoint"
+            :label="$t('projects.settings.notifications.telegram')"
+            :description="$t('projects.settings.notifications.telegramDescription')"
+            :hidden="!form.channels.telegram.isEnabled"
+            :is-invalid="!isChannelEndpointValid('telegram') && endpointShouldBeValidated.telegram"
+            placeholder="https://notify.bot.codex.so/u/XXXXXXXXXXXX"
+          />
+          <UiCheckbox
+            v-model="form.channels.telegram.isEnabled"
+          />
+        </section>
+        <section>
+          <FormTextFieldset
             v-model="form.channels.email.endpoint"
             :label="$t('projects.settings.notifications.email')"
             :description="$t('projects.settings.notifications.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
-            :is-invalid="!isChannelEndpointValid('email')"
+            :is-invalid="!isChannelEndpointValid('email') && endpointShouldBeValidated.email"
             placeholder="alerts@yourteam.org"
           />
           <UiCheckbox
@@ -27,24 +40,11 @@
             :label="$t('projects.settings.notifications.slack')"
             :description="$t('projects.settings.notifications.slackDescription')"
             :hidden="!form.channels.slack.isEnabled"
-            :is-invalid="!isChannelEndpointValid('slack')"
+            :is-invalid="!isChannelEndpointValid('slack') && endpointShouldBeValidated.slack"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
             v-model="form.channels.slack.isEnabled"
-          />
-        </section>
-        <section>
-          <FormTextFieldset
-            v-model="form.channels.telegram.endpoint"
-            :label="$t('projects.settings.notifications.telegram')"
-            :description="$t('projects.settings.notifications.telegramDescription')"
-            :hidden="!form.channels.telegram.isEnabled"
-            :is-invalid="!isChannelEndpointValid('telegram')"
-            placeholder="@hawkso_bot endpoint"
-          />
-          <UiCheckbox
-            v-model="form.channels.telegram.isEnabled"
           />
         </section>
       </div>
@@ -180,6 +180,25 @@ export default Vue.extend({
     receiveTypesEnum: typeof ReceiveTypes,
     selectedThreshold: string,
     selectedThresholdPeriod: CustomSelectOption,
+    /**
+     * Object that represents displaying of the validation state of each endpoint
+     */
+    endpointShouldBeValidated: {
+      /**
+       * Flag that represents, if validation state of the telegram endpoint should be displayed in textfield state
+       */
+      telegram: boolean,
+
+      /**
+       * Flag that represents, if validation state of the slack endpoint should be displayed in textfield state
+       */
+      slack: boolean,
+
+      /**
+       * Flag that represents, if validation state of the email endpoint should be displayed in textfield state
+       */
+      email: boolean,
+    },
     } {
     const selectedThreshold = '100';
     const selectedThresholdPeriod: CustomSelectOption = {
@@ -195,15 +214,15 @@ export default Vue.extend({
       form: {
         projectId: this.projectId,
         channels: {
-          email: {
+          telegram: {
             endpoint: '',
             isEnabled: true,
           },
-          slack: {
+          email: {
             endpoint: '',
             isEnabled: false,
           },
-          telegram: {
+          slack: {
             endpoint: '',
             isEnabled: false,
           },
@@ -262,6 +281,11 @@ export default Vue.extend({
 
       selectedThreshold,
       selectedThresholdPeriod,
+      endpointShouldBeValidated: {
+        telegram: false,
+        slack: false,
+        email: false
+      },
     };
   },
   computed: {
@@ -414,6 +438,10 @@ export default Vue.extend({
      * Validate saved form fields and return valid-status
      */
     validateForm(): boolean {
+      this.endpointShouldBeValidated.telegram = this.form.channels.telegram!.isEnabled;
+      this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
+      this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
+
       let allChannelsValid = true;
 
       /**
