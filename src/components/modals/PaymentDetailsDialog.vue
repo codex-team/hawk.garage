@@ -19,7 +19,7 @@
       <!--Details-->
       <div class="payment-details__details">
         <div class="payment-details__details-header">
-          {{ $t('billing.paymentDetails.details.title').toUpperCase() }}
+          {{ $t('billing.paymentDetails.details.title') }}
         </div>
 
         <!--Workspace-->
@@ -62,7 +62,7 @@
         </div>
 
         <!--The next payment date -->
-        <div
+        <!-- <div
           v-if="isRecurrent"
           class="payment-details__details-item"
         >
@@ -72,7 +72,7 @@
           <div class="payment-details__details-item-value">
             {{ nextPaymentDateString | prettyDateFromDateTimeString }}
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!--Email for the invoice-->
@@ -157,7 +157,7 @@ import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
-import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
+import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
@@ -320,7 +320,9 @@ export default Vue.extend({
      * example: 100$
      */
     price(): string {
-      return `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`;
+      return this.$t('common.moneyPerMonth', {
+        currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+      }).toString();
     },
 
     /**
@@ -518,6 +520,9 @@ export default Vue.extend({
 
           skin: 'modern',
           data: paymentData,
+          /**
+           * @todo add autoclose
+           */
         },
         {
           onSuccess: () => {
@@ -525,6 +530,8 @@ export default Vue.extend({
               message: this.$i18n.t('billing.widget.notifications.success') as string,
               style: 'success',
             });
+
+            this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
           },
           onFail: () => {
             notifier.show({
@@ -576,6 +583,7 @@ export default Vue.extend({
     &-header {
       margin: 0 0 16px;
       color: var(--color-text-second);
+      text-transform: uppercase;
     }
 
     &-item {

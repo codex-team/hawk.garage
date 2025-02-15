@@ -98,7 +98,7 @@ export default Vue.extend({
      * Get operations with type `WORKSPACE_PLAN_PURCHASE`
      */
     filteredOperations(): BusinessOperation[] {
-      return this.operations;//.filter(operation => operation.type === BusinessOperationType.WorkspacePlanPurchase);
+      return this.operations;
     },
   },
   methods: {

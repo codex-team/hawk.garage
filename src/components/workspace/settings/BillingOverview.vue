@@ -133,6 +133,7 @@ import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 import { getCurrencySign } from '@/utils';
+import { ActionType } from '@/components/utils/ConfirmationWindow/types';
 
 /**
  * Const value for the whole project
@@ -412,8 +413,15 @@ export default Vue.extend({
      * @param value - new value
      */
     async onAutoPayInput(value): Promise<void> {
+      
       if (!value) {
-        await this.cancelSubscription();
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          onConfirm: async () => {
+            await this.cancelSubscription();
+          },
+        });
 
         return;
       }
