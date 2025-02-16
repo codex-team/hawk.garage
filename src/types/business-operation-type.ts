@@ -13,10 +13,10 @@ export enum BusinessOperationType {
   DepositByUser = 'DEPOSIT_BY_USER',
 
   /**
-  * Charge minimal amount of money to link a card for further recurrent payments
-  */
+   * Charge minimal amount of money to link a card for further recurrent payments
+   */
   CardLinkCharge = 'CARD_LINK_CHARGE',
-  
+
   /**
    * Refund the money that were charged to link a card
    */

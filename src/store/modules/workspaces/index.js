@@ -413,8 +413,8 @@ const actions = {
     const data = await workspaceApi.cancelSubscription(workspaceId);
 
     commit(mutationTypes.SET_WORKSPACE_SUBSCRIPTION, {
-      id: data.id, 
-      subscriptionId: data.subscriptionId
+      id: data.id,
+      subscriptionId: data.subscriptionId,
     });
   },
 
@@ -681,14 +681,15 @@ const mutations = {
 
   /**
    * Upate workspace subscription
+   *
    * @param {WorkspacesModuleState} state - Vuex state
    * @param {Workspace['id']} workspaceId - id of workspace
    * @param {Workspace['subscriptionId']} subscriptionId - id of subscription or null if subscription is canceled
-   * 
+   *
    * @todo TEST THIS METHOD.
    *       It should reset subscriptionId to null if subscription is canceled
    */
-  [mutationTypes.SET_WORKSPACE_SUBSCRIPTION](state, {id, subscriptionId}) {
+  [mutationTypes.SET_WORKSPACE_SUBSCRIPTION](state, { id, subscriptionId }) {
     console.log('SET_WORKSPACE_SUBSCRIPTION', id, subscriptionId);
     const index = state.list.findIndex(w => w.id === id);
     const workspace = state.list[index];

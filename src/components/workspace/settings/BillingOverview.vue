@@ -413,7 +413,6 @@ export default Vue.extend({
      * @param value - new value
      */
     async onAutoPayInput(value): Promise<void> {
-      
       if (!value) {
         this.$confirm.open({
           actionType: ActionType.SUBMIT,

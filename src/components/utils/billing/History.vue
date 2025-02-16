@@ -133,10 +133,10 @@ export default Vue.extend({
         }
 
         case BusinessOperationType.CardLinkCharge:
-          return i18n.t('billing.operations.cardLinkingChange').toString()
+          return i18n.t('billing.operations.cardLinkingChange').toString();
 
         case BusinessOperationType.CardLinkRefund:
-          return i18n.t('billing.operations.cardLinkingRefund').toString()
+          return i18n.t('billing.operations.cardLinkingRefund').toString();
 
         default:
           return operation.type;
