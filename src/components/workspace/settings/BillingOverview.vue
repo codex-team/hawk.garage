@@ -416,7 +416,7 @@ export default Vue.extend({
       if (!value) {
         this.$confirm.open({
           actionType: ActionType.SUBMIT,
-          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          description: this.$i18n.t('workspaces.settings.billing.cancelSubscriptionText').toString(),
           onConfirm: async () => {
             await this.cancelSubscription();
           },

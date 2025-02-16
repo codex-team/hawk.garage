@@ -86,7 +86,7 @@
       /> -->
 
       <!--Email for the invoice-->
-      <TextFieldSet
+      <!-- <TextFieldSet
         v-model="email"
         class="payment-details__email"
         :label="
@@ -94,7 +94,7 @@
         "
         :placeholder="email"
         disabled
-      />
+      /> -->
 
       <!--Recurrent payment agreements-->
       <section
@@ -168,7 +168,7 @@ import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
 // import CustomSelect from '../forms/CustomSelect.vue';
-import TextFieldSet from '../forms/TextFieldset.vue';
+// import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
@@ -221,7 +221,7 @@ export default Vue.extend({
     PopupDialog,
     EntityImage,
     // CustomSelect,
-    TextFieldSet,
+    // TextFieldSet,
     UiCheckboxWithLabel,
   },
   props: {
@@ -252,7 +252,7 @@ export default Vue.extend({
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
     const cards: BankCard[] = this.$store.state.user.data?.bankCards;
-    const selectedCard = (cards?.length > 0 && cardToSelectOption(cards[0])) || undefined;
+    const selectedCard: CustomSelectOption | undefined = /* (cards?.length > 0 && cardToSelectOption(cards[0])) || */undefined;
 
     return {
       /**
@@ -293,7 +293,7 @@ export default Vue.extend({
       /**
        * Should API save user's bank card or no
        */
-      shouldSaveCard: true,
+      shouldSaveCard: false,
 
       /**
        * Selected bank card for this payment
@@ -352,11 +352,11 @@ export default Vue.extend({
      * Dynamic text for payment button
      */
     payButtonText(): string {
-      if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
-        return this.$t('billing.paymentDetails.goToPaymentService').toString();
-      }
+      // if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
+      return this.$t('billing.paymentDetails.goToPaymentService').toString();
+      // }
 
-      return this.$t('billing.paymentDetails.payWithSelectedCard').toString();
+      // return this.$t('billing.paymentDetails.payWithSelectedCard').toString();
     },
 
     /**
@@ -417,20 +417,20 @@ export default Vue.extend({
       return this.isAcceptedPaymentAgreement;
     },
   },
-  watch: {
-    /**
-     * Watcher on cards array
-     *
-     * @param newCards - updated cards array
-     */
-    cards(newCards: CustomSelectOption[]): void {
-      if (this.selectedCard) {
-        return;
-      }
+  // watch: {
+  //   /**
+  //    * Watcher on cards array
+  //    *
+  //    * @param newCards - updated cards array
+  //    */
+  //   cards(newCards: CustomSelectOption[]): void {
+  //     if (this.selectedCard) {
+  //       return;
+  //     }
 
-      this.selectedCard = newCards[1] || newCards[0];
-    },
-  },
+  //     this.selectedCard = newCards[1] || newCards[0];
+  //   },
+  // },
   mounted() {
     /**
      * Check if script was loaded
@@ -491,15 +491,15 @@ export default Vue.extend({
         `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
       );
 
-      if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
-        this.showPaymentWidget(response.data as BeforePaymentPayload);
-      } else {
-        await this.payWithCard({
-          checksum: response.data.checksum,
-          cardId: this.selectedCard.id,
-          isRecurrent: this.isRecurrent,
-        });
-      }
+      // if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
+      this.showPaymentWidget(response.data as BeforePaymentPayload);
+      // } else {
+      //   await this.payWithCard({
+      //     checksum: response.data.checksum,
+      //     cardId: this.selectedCard.id,
+      //     isRecurrent: this.isRecurrent,
+      //   });
+      // }
     },
 
     /**
