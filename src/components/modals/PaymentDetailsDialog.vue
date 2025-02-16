@@ -76,14 +76,14 @@
       </div>
 
       <!--Card-->
-      <CustomSelect
+      <!-- <CustomSelect
         v-if="cards.length > 1"
         v-model="selectedCard"
         :options="cards"
         :label="$t('common.card').toUpperCase()"
         :need-image="false"
         class="payment-details__card"
-      />
+      /> -->
 
       <!--Email for the invoice-->
       <TextFieldSet
@@ -111,12 +111,12 @@
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
         />
-        <UiCheckboxWithLabel
+        <!-- <UiCheckboxWithLabel
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
           v-model="shouldSaveCard"
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.paymentDetails.allowCardSaving')"
-        />
+        /> -->
       </section>
 
       <!--Basic payment agreement-->
