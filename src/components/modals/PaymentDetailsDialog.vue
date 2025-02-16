@@ -353,7 +353,7 @@ export default Vue.extend({
      */
     payButtonText(): string {
       // if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
-        return this.$t('billing.paymentDetails.goToPaymentService').toString();
+      return this.$t('billing.paymentDetails.goToPaymentService').toString();
       // }
 
       // return this.$t('billing.paymentDetails.payWithSelectedCard').toString();

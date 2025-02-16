@@ -284,7 +284,7 @@ export default Vue.extend({
       endpointShouldBeValidated: {
         telegram: false,
         slack: false,
-        email: false
+        email: false,
       },
     };
   },
