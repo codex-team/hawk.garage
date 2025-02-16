@@ -492,7 +492,7 @@ export default Vue.extend({
       );
 
       // if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
-        this.showPaymentWidget(response.data as BeforePaymentPayload);
+      this.showPaymentWidget(response.data as BeforePaymentPayload);
       // } else {
       //   await this.payWithCard({
       //     checksum: response.data.checksum,
