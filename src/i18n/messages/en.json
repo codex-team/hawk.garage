@@ -352,8 +352,7 @@
       "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won’t access and store your wire transfer data. You will get an invoice on your email. Read more about {0}.",
       "details": {
         "title": "Details",
-        "newCard": "New card",
-        "emailForTheInvoice": "Email for the invoice"
+        "newCard": "New card"
       },
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
       "didNotAccept": "You need to accept the payment agreement to proceed with payment",
