@@ -41,6 +41,7 @@ const mutationTypes = {
   SET_BUSINESS_OPERATIONS: 'SET_BUSINESS_OPERATIONS', // Set billing history
   SET_PLAN: 'SET_PLAN', // Set workspace tariff plan
   PUSH_BUSINESS_OPERATION: 'PUSH_BUSINESS_OPERATION', // push new business operation to workspace payments history
+  SET_WORKSPACE_SUBSCRIPTION: 'SET_WORKSPACE_SUBSCRIPTION', // Set workspace subscription
 };
 
 /**
@@ -49,6 +50,7 @@ const mutationTypes = {
  * @property {string} name - workspace name
  * @property {string} [image] - link to the workspace picture
  * @property {string} [description] - workspace description
+ * @property {string|null} [subscriptionId] - id of subscription or null if there is no recurrent subscription
  */
 
 /**
@@ -410,7 +412,10 @@ const actions = {
   async [CANCEL_SUBSCRIPTION]({ commit }, { workspaceId }) {
     const data = await workspaceApi.cancelSubscription(workspaceId);
 
-    commit(mutationTypes.SET_WORKSPACE, data);
+    commit(mutationTypes.SET_WORKSPACE_SUBSCRIPTION, {
+      id: data.id,
+      subscriptionId: data.subscriptionId,
+    });
   },
 
   /**
@@ -666,6 +671,32 @@ const mutations = {
     const workspace = state.list[index];
 
     Vue.set(workspace, 'plan', plan);
+
+    state.list = [
+      ...state.list.slice(0, index),
+      workspace,
+      ...state.list.slice(index + 1),
+    ];
+  },
+
+  /**
+   * Upate workspace subscription
+   *
+   * @param {WorkspacesModuleState} state - Vuex state
+   * @param {Workspace['id']} workspaceId - id of workspace
+   * @param {Workspace['subscriptionId']} subscriptionId - id of subscription or null if subscription is canceled
+   *
+   * @todo TEST THIS METHOD.
+   *       It should reset subscriptionId to null if subscription is canceled
+   */
+  [mutationTypes.SET_WORKSPACE_SUBSCRIPTION](state, { id, subscriptionId }) {
+    console.log('SET_WORKSPACE_SUBSCRIPTION', id, subscriptionId);
+    const index = state.list.findIndex(w => w.id === id);
+    const workspace = state.list[index];
+
+    console.log('workspace', workspace);
+
+    Vue.set(workspace, 'subscriptionId', subscriptionId);
 
     state.list = [
       ...state.list.slice(0, index),

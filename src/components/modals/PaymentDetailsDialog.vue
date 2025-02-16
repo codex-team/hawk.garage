@@ -19,7 +19,7 @@
       <!--Details-->
       <div class="payment-details__details">
         <div class="payment-details__details-header">
-          {{ $t('billing.paymentDetails.details.title').toUpperCase() }}
+          {{ $t('billing.paymentDetails.details.title') }}
         </div>
 
         <!--Workspace-->
@@ -62,7 +62,7 @@
         </div>
 
         <!--The next payment date -->
-        <div
+        <!-- <div
           v-if="isRecurrent"
           class="payment-details__details-item"
         >
@@ -72,18 +72,18 @@
           <div class="payment-details__details-item-value">
             {{ nextPaymentDateString | prettyDateFromDateTimeString }}
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!--Card-->
-      <CustomSelect
+      <!-- <CustomSelect
         v-if="cards.length > 1"
         v-model="selectedCard"
         :options="cards"
         :label="$t('common.card').toUpperCase()"
         :need-image="false"
         class="payment-details__card"
-      />
+      /> -->
 
       <!--Email for the invoice-->
       <TextFieldSet
@@ -111,12 +111,12 @@
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
         />
-        <UiCheckboxWithLabel
+        <!-- <UiCheckboxWithLabel
           v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
           v-model="shouldSaveCard"
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.paymentDetails.allowCardSaving')"
-        />
+        /> -->
       </section>
 
       <!--Basic payment agreement-->
@@ -167,7 +167,7 @@ import Vue from 'vue';
 import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
-import CustomSelect from '../forms/CustomSelect.vue';
+// import CustomSelect from '../forms/CustomSelect.vue';
 import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
@@ -180,7 +180,7 @@ import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
-import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
+import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
@@ -220,7 +220,7 @@ export default Vue.extend({
     UiButton,
     PopupDialog,
     EntityImage,
-    CustomSelect,
+    // CustomSelect,
     TextFieldSet,
     UiCheckboxWithLabel,
   },
@@ -343,7 +343,9 @@ export default Vue.extend({
      * example: 100$
      */
     price(): string {
-      return `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`;
+      return this.$t('common.moneyPerMonth', {
+        currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+      }).toString();
     },
 
     /**
@@ -401,7 +403,7 @@ export default Vue.extend({
         return date.toString();
       }
 
-      return this.planDueDate.toString();
+      return this.planDueDate.toISOString();
     },
 
     /**
@@ -560,11 +562,12 @@ export default Vue.extend({
 
       const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
+      const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
       widget.pay(method,
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-          description: this.$t('billing.cloudPaymentsWidget.description', {
+          description: this.$t(titleKey, {
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
@@ -578,6 +581,9 @@ export default Vue.extend({
 
           skin: 'mini',
           data: paymentData,
+          /**
+           * @todo add autoclose
+           */
         },
         {
           onSuccess: () => {
@@ -585,6 +591,8 @@ export default Vue.extend({
               message: this.$i18n.t('billing.widget.notifications.success') as string,
               style: 'success',
             });
+
+            this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
           },
           onFail: () => {
             notifier.show({
@@ -636,6 +644,7 @@ export default Vue.extend({
     &-header {
       margin: 0 0 16px;
       color: var(--color-text-second);
+      text-transform: uppercase;
     }
 
     &-item {
