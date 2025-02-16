@@ -86,7 +86,7 @@
       /> -->
 
       <!--Email for the invoice-->
-      <TextFieldSet
+      <!-- <TextFieldSet
         v-model="email"
         class="payment-details__email"
         :label="
@@ -94,7 +94,7 @@
         "
         :placeholder="email"
         disabled
-      />
+      /> -->
 
       <!--Recurrent payment agreements-->
       <section
@@ -293,7 +293,7 @@ export default Vue.extend({
       /**
        * Should API save user's bank card or no
        */
-      shouldSaveCard: true,
+      shouldSaveCard: false,
 
       /**
        * Selected bank card for this payment
