@@ -417,20 +417,20 @@ export default Vue.extend({
       return this.isAcceptedPaymentAgreement;
     },
   },
-  watch: {
-    /**
-     * Watcher on cards array
-     *
-     * @param newCards - updated cards array
-     */
-    cards(newCards: CustomSelectOption[]): void {
-      if (this.selectedCard) {
-        return;
-      }
+  // watch: {
+  //   /**
+  //    * Watcher on cards array
+  //    *
+  //    * @param newCards - updated cards array
+  //    */
+  //   cards(newCards: CustomSelectOption[]): void {
+  //     if (this.selectedCard) {
+  //       return;
+  //     }
 
-      this.selectedCard = newCards[1] || newCards[0];
-    },
-  },
+  //     this.selectedCard = newCards[1] || newCards[0];
+  //   },
+  // },
   mounted() {
     /**
      * Check if script was loaded
@@ -491,15 +491,15 @@ export default Vue.extend({
         `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
       );
 
-      if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
+      // if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
         this.showPaymentWidget(response.data as BeforePaymentPayload);
-      } else {
-        await this.payWithCard({
-          checksum: response.data.checksum,
-          cardId: this.selectedCard.id,
-          isRecurrent: this.isRecurrent,
-        });
-      }
+      // } else {
+      //   await this.payWithCard({
+      //     checksum: response.data.checksum,
+      //     cardId: this.selectedCard.id,
+      //     isRecurrent: this.isRecurrent,
+      //   });
+      // }
     },
 
     /**
