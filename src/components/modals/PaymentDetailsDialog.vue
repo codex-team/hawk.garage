@@ -75,6 +75,16 @@
         </div> -->
       </div>
 
+      <!--Card-->
+      <CustomSelect
+        v-if="cards.length > 1"
+        v-model="selectedCard"
+        :options="cards"
+        :label="$t('common.card').toUpperCase()"
+        :need-image="false"
+        class="payment-details__card"
+      />
+
       <!--Email for the invoice-->
       <TextFieldSet
         v-model="email"
@@ -101,6 +111,12 @@
           class="payment-details__adoption-autoProlongation-item"
           :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
         />
+        <UiCheckboxWithLabel
+          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+          v-model="shouldSaveCard"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.paymentDetails.allowCardSaving')"
+        />
       </section>
 
       <!--Basic payment agreement-->
@@ -108,6 +124,13 @@
         v-else
         class="payment-details__adoption"
       >
+        <UiCheckboxWithLabel
+          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+          v-model="shouldSaveCard"
+          class="payment-details__adoption-autoProlongation-item"
+          :label="$t('billing.paymentDetails.allowCardSaving')"
+        />
+
         <UiCheckboxWithLabel
           v-model="isAcceptedPaymentAgreement"
           class="payment-details__adoption-autoProlongation-item"
@@ -468,7 +491,45 @@ export default Vue.extend({
         `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
       );
 
-      this.showPaymentWidget(response.data as BeforePaymentPayload);
+      if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
+        this.showPaymentWidget(response.data as BeforePaymentPayload);
+      } else {
+        await this.payWithCard({
+          checksum: response.data.checksum,
+          cardId: this.selectedCard.id,
+          isRecurrent: this.isRecurrent,
+        });
+      }
+    },
+
+    /**
+     * Process payment via saved card
+     *
+     * @param input - data for processing payment
+     */
+    async payWithCard(input: PayWithCardInput): Promise<void> {
+      try {
+        const operation: BusinessOperation = await this.$store.dispatch(PAY_WITH_CARD, input);
+
+        if (operation.status === BusinessOperationStatus.Rejected) {
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.error') as string,
+            style: 'error',
+          });
+        } else {
+          notifier.show({
+            message: this.$i18n.t('billing.widget.notifications.success') as string,
+            style: 'success',
+          });
+        }
+        await this.$store.dispatch(RESET_MODAL_DIALOG);
+      } catch (e) {
+        this.$sendToHawk(e);
+        notifier.show({
+          message: this.$i18n.t('billing.widget.notifications.error') as string,
+          style: 'error',
+        });
+      }
     },
 
     /**
@@ -518,7 +579,7 @@ export default Vue.extend({
           invoiceId: data.invoiceId,
           accountId: this.$store.state.user.data.id,
 
-          skin: 'modern',
+          skin: 'mini',
           data: paymentData,
           /**
            * @todo add autoclose
