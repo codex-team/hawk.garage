@@ -168,7 +168,7 @@ import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
 // import CustomSelect from '../forms/CustomSelect.vue';
-import TextFieldSet from '../forms/TextFieldset.vue';
+// import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
@@ -221,7 +221,7 @@ export default Vue.extend({
     PopupDialog,
     EntityImage,
     // CustomSelect,
-    TextFieldSet,
+    // TextFieldSet,
     UiCheckboxWithLabel,
   },
   props: {
