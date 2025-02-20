@@ -2,6 +2,7 @@ import {
   CREATE_WORKSPACE,
   SET_WORKSPACES_LIST,
   LEAVE_WORKSPACE,
+  DELETE_WORKSPACE,
   SET_CURRENT_WORKSPACE,
   INVITE_TO_WORKSPACE,
   CONFIRM_INVITE,
@@ -150,6 +151,26 @@ const actions = {
   },
 
   /**
+   * Send request to leave workspace
+   *
+   * @param {object} context - vuex action context
+   * @param {Function} context.commit - standard Vuex commit function
+   * @param {Function} context.dispatch - standard Vuex dispatch function
+   * @param {string} workspaceId - id of workspace for deleting
+   * @returns {boolean} - check if is there other admins are there.
+   */
+  async [LEAVE_WORKSPACE]({ commit, dispatch }, workspaceId) {
+    const success = await workspaceApi.leaveWorkspace(workspaceId);
+
+    if (!success) {
+      return false;
+    }
+    dispatch(REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
+    commit(mutationTypes.SET_CURRENT_WORKSPACE, null);
+    commit(mutationTypes.REMOVE_WORKSPACE, workspaceId);
+  },
+
+  /**
    * Send request to delete workspace
    *
    * @param {object} context - vuex action context
@@ -157,8 +178,8 @@ const actions = {
    * @param {Function} context.dispatch - standard Vuex dispatch function
    * @param {string} workspaceId - id of workspace for deleting
    */
-  async [LEAVE_WORKSPACE]({ commit, dispatch }, workspaceId) {
-    await workspaceApi.leaveWorkspace(workspaceId);
+  async [DELETE_WORKSPACE]({ commit, dispatch }, workspaceId) {
+    await workspaceApi.deleteWorkspace(workspaceId);
 
     dispatch(REMOVE_PROJECTS_BY_WORKSPACE_ID, workspaceId);
     commit(mutationTypes.SET_CURRENT_WORKSPACE, null);
@@ -247,7 +268,7 @@ const actions = {
    * @returns {Promise<Workspace>}
    */
   async [FETCH_WORKSPACE]({ commit }, id) {
-    const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
+    const workspace = (await workspaceApi.getWorkspaces([id]))[0];
 
     if (!workspace) {
       throw new Error('The workspace was not found');
@@ -528,10 +549,10 @@ const mutations = {
   [mutationTypes.UPDATE_BUSINESS_OPERATIONS](state, { workspaceId, businessOperation }) {
     const index = state.list.findIndex(w => w.id === workspaceId);
     const workspace = state.list[index];
-    let updatedPaymentsHistory = [ businessOperation ];
+    let updatedPaymentsHistory = [businessOperation];
 
     if (workspace.paymentsHistory) {
-      updatedPaymentsHistory = [ businessOperation ].concat(workspace.paymentsHistory);
+      updatedPaymentsHistory = [businessOperation].concat(workspace.paymentsHistory);
     }
 
     Vue.set(workspace, 'paymentsHistory', updatedPaymentsHistory);
