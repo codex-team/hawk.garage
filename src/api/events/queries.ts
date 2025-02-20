@@ -198,6 +198,32 @@ export const QUERY_CHART_DATA = `
 
 // language=GraphQL
 /**
+ * Fetch data for affected users chart
+ * Display affected users for few days
+ */
+export const QUERY_AFFECTED_USERS_CHART = `
+  query AffectedUsersChartData (
+    $projectId: ID!
+    $eventId: ID!
+    $days: Int!
+    $timezoneOffset: Int!
+  ) {
+    project(id: $projectId) {
+      event(id: $eventId) {
+        usersAffectedChart(
+          days: $days,
+          timezoneOffset: $timezoneOffset
+        ) {
+          timestamp
+          count
+        }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `
