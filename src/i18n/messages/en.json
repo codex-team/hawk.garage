@@ -197,8 +197,6 @@
     "billing": {
       "title": "Billing information",
       "managedWorkspaces": "Managed workspaces",
-      "cancelSubscriptionText": "Are you sure you want to cancel subscription? Current plan will be valid until the end of the paid period."
-
     },
     "logout": "Log out",
     "notifications": {
@@ -282,7 +280,8 @@
         }
       },
       "billing": {
-        "title": "Billing information"
+        "title": "Billing information",
+        "cancelSubscriptionText": "Are you sure you want to cancel subscription? Current plan will be valid until the end of the paid period."
       },
       "volume": {
         "title": "Used Volume",
