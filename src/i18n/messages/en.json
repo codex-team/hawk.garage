@@ -196,7 +196,9 @@
     },
     "billing": {
       "title": "Billing information",
-      "managedWorkspaces": "Managed workspaces"
+      "managedWorkspaces": "Managed workspaces",
+      "cancelSubscriptionText": "Are you sure you want to cancel subscription? Current plan will be valid until the end of the paid period."
+
     },
     "logout": "Log out",
     "notifications": {
