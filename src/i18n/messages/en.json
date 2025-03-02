@@ -196,7 +196,7 @@
     },
     "billing": {
       "title": "Billing information",
-      "managedWorkspaces": "Managed workspaces",
+      "managedWorkspaces": "Managed workspaces"
     },
     "logout": "Log out",
     "notifications": {
