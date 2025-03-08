@@ -135,12 +135,6 @@ import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 import { getCurrencySign } from '@/utils';
 import { ActionType } from '@/components/utils/ConfirmationWindow/types';
 
-/**
- * Const value for the whole project
- * Number of days of tariff plan period is valid
- */
-const NUMBER_OF_DAYS_OF_TARIFF_PLAN = 30;
-
 export default Vue.extend({
   name: 'BillingOverview',
   components: {
@@ -309,9 +303,13 @@ export default Vue.extend({
      * Return subscription expiration date
      */
     subExpiredDate(): Date {
-      const expiredDate: Date = new Date(this.workspace.lastChargeDate);
+      const expiredDate = new Date(this.workspace.lastChargeDate);
 
-      expiredDate.setDate(expiredDate.getDate() + (this.workspace.isDebug ? 1 : NUMBER_OF_DAYS_OF_TARIFF_PLAN));
+      if (this.workspace.isDebug) {
+        expiredDate.setDate(expiredDate.getDate() + 1);
+      } else {
+        expiredDate.setMonth(expiredDate.getMonth() + 1);
+      }
 
       return expiredDate;
     },
