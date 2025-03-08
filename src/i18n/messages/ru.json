@@ -318,7 +318,7 @@
     "boost": "Увеличить",
     "blocked": "Заблокирован",
     "operations": {
-      "chargeForPlan": "Оплата за тарифный план {workspaceName}",
+      "chargeForPlan": "Оплата за тарифный план",
       "cardLinkingChange": "Списание для проверки карты",
       "cardLinkingRefund": "Возврат средств",
       "statuses": {

@@ -318,7 +318,7 @@
     "boost": "Boost",
     "blocked": "Blocked",
     "operations": {
-      "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "chargeForPlan": "Payment for a plan",
       "cardLinkingChange": "Charge to confirm a card",
       "cardLinkingRefund": "Refund for a card confirmation",
       "statuses": {
