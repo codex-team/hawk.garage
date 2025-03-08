@@ -127,9 +127,7 @@ export default Vue.extend({
         case BusinessOperationType.WorkspacePlanPurchase: {
           const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
 
-          return i18n.t('billing.operations.chargeForPlan', {
-            workspaceName: payload.workspace.name,
-          }).toString();
+          return i18n.t('billing.operations.chargeForPlan').toString();
         }
 
         case BusinessOperationType.CardLinkCharge:

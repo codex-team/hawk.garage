@@ -10,70 +10,86 @@
       </div>
 
       <!--Description-->
-      <i18n
-        tag="div"
-        :path="isRecurrent ? 'billing.autoProlongation.description' : 'billing.paymentDetails.description'"
+      <div
+        v-if="paymentData.isCardLinkOperation"
         class="payment-details__description"
-      />
-
-      <!--Details-->
-      <div class="payment-details__details">
-        <div class="payment-details__details-header">
-          {{ $t('billing.paymentDetails.details.title') }}
-        </div>
-
-        <!--Workspace-->
-        <div class="payment-details__details-item">
-          <div class="payment-details__details-item-field">
-            {{ $t('common.workspace') }}
-          </div>
-          <EntityImage
-            :id="workspace.id"
-            :name="workspace.name"
-            :title="workspace.name"
-            :image="workspace.image"
-            size="18"
-            class="payment-details__details-item-workspace-image"
-          />
-
-          <div class="payment-details__details-item-value">
-            {{ workspace.name }}
-          </div>
-        </div>
-
-        <!--Plan-->
-        <div class="payment-details__details-item">
-          <div class="payment-details__details-item-field">
-            {{ $t('common.plan') }}
-          </div>
-          <div class="payment-details__details-item-value">
-            {{ readablePlanString }}
-          </div>
-        </div>
-
-        <!--Price-->
-        <div class="payment-details__details-item">
-          <div class="payment-details__details-item-field">
-            {{ $t('common.price') }}
-          </div>
-          <div class="payment-details__details-item-value">
-            {{ price }}
-          </div>
-        </div>
-
-        <!--The next payment date -->
-        <!-- <div
-          v-if="isRecurrent"
-          class="payment-details__details-item"
-        >
-          <div class="payment-details__details-item-field">
-            {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
-          </div>
-          <div class="payment-details__details-item-value">
-            {{ nextPaymentDateString | prettyDateFromDateTimeString }}
-          </div>
-        </div> -->
+      >
+        <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ nextPaymentDateInSeconds | prettyFullDate(false) }}</p>
+        <p>💳 {{ $t('billing.cardLinking.howItWorks') }}</p>
+        <ul>
+          <li>– {{ $t('billing.cardLinking.step1') }}</li>
+          <li>– {{ $t('billing.cardLinking.step2', { date: $options.filters.prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
+        </ul>
       </div>
+
+
+      <template v-else>
+        <i18n
+          tag="div"
+          :path="isRecurrent ? 'billing.autoProlongation.description' : 'billing.paymentDetails.description'"
+          class="payment-details__description"
+        />
+
+        <!--Details-->
+        <div class="payment-details__details">
+          <div class="payment-details__details-header">
+            {{ $t('billing.paymentDetails.details.title') }}
+          </div>
+
+          <!--Workspace-->
+          <div class="payment-details__details-item">
+            <div class="payment-details__details-item-field">
+              {{ $t('common.workspace') }}
+            </div>
+            <EntityImage
+              :id="workspace.id"
+              :name="workspace.name"
+              :title="workspace.name"
+              :image="workspace.image"
+              size="18"
+              class="payment-details__details-item-workspace-image"
+            />
+
+            <div class="payment-details__details-item-value">
+              {{ workspace.name }}
+            </div>
+          </div>
+
+          <!--Plan-->
+          <div class="payment-details__details-item">
+            <div class="payment-details__details-item-field">
+              {{ $t('common.plan') }}
+            </div>
+            <div class="payment-details__details-item-value">
+              {{ readablePlanString }}
+            </div>
+          </div>
+
+          <!--Price-->
+          <div class="payment-details__details-item">
+            <div class="payment-details__details-item-field">
+              {{ $t('common.price') }}
+            </div>
+            <div class="payment-details__details-item-value">
+              {{ price }}
+            </div>
+          </div>
+
+          <!--The next payment date -->
+          <!-- <div
+            v-if="isRecurrent"
+            class="payment-details__details-item"
+          >
+            <div class="payment-details__details-item-field">
+              {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
+            </div>
+            <div class="payment-details__details-item-value">
+              {{ nextPaymentDateString | prettyDateFromDateTimeString }}
+            </div>
+          </div> -->
+        </div>
+      </template>
+
 
       <!--Card-->
       <!-- <CustomSelect
@@ -247,12 +263,18 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    /**
+     * Composed payment data
+     */
+    paymentData: {
+      type: Object as () => BeforePaymentPayload,
+      required: true,
+    },
   },
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
-    const cards: BankCard[] = this.$store.state.user.data?.bankCards;
-    const selectedCard: CustomSelectOption | undefined = /* (cards?.length > 0 && cardToSelectOption(cards[0])) || */undefined;
+    const selectedCard: CustomSelectOption | undefined = undefined;
 
     return {
       /**
@@ -386,7 +408,7 @@ export default Vue.extend({
     /**
      * Next payment date
      */
-    nextPaymentDateString(): string {
+    nextPaymentDate(): Date {
       const date = new Date();
 
       /**
@@ -400,10 +422,24 @@ export default Vue.extend({
           date.setMonth(date.getMonth() + 1);
         }
 
-        return date.toString();
+        return date;
       }
 
-      return this.planDueDate.toISOString();
+      return this.planDueDate;
+    },
+
+    /**
+     * Next payment date as string
+     */
+    nextPaymentDateString(): string {
+      return this.nextPaymentDate.toISOString();
+    },
+
+    /**
+     * Next payment date in seconds
+     */
+    nextPaymentDateInSeconds(): number {
+      return Math.floor(this.nextPaymentDate.getTime() / 1000);
     },
 
     /**
@@ -487,19 +523,7 @@ export default Vue.extend({
      * Method for payment processing
      */
     async processPayment(): Promise<void> {
-      const response = await axios.get(
-        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
-      );
-
-      // if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
-      this.showPaymentWidget(response.data as BeforePaymentPayload);
-      // } else {
-      //   await this.payWithCard({
-      //     checksum: response.data.checksum,
-      //     cardId: this.selectedCard.id,
-      //     isRecurrent: this.isRecurrent,
-      //   });
-      // }
+      this.showPaymentWidget(this.paymentData);
     },
 
     /**
@@ -524,7 +548,10 @@ export default Vue.extend({
         }
         await this.$store.dispatch(RESET_MODAL_DIALOG);
       } catch (e) {
-        this.$sendToHawk(e);
+        if (e instanceof Error) {
+          this.$sendToHawk(e);
+        }
+
         notifier.show({
           message: this.$i18n.t('billing.widget.notifications.error') as string,
           style: 'error',
@@ -613,13 +640,14 @@ export default Vue.extend({
       );
     },
   },
+
 });
 </script>
 
 <style>
 .payment-details {
   width: 558px;
-  padding: 29px 21px 30px 30px;
+  padding: 29px 21px 30px;
   color: var(--color-text-main);
   font-size: 14px;
 
@@ -631,7 +659,6 @@ export default Vue.extend({
 
   &__description {
     margin-bottom: 30px;
-    color: var(--color-text-second);
     line-height: 1.43;
   }
 
