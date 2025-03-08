@@ -142,7 +142,6 @@ Vue.filter('prettyDate', function (value: number) {
  * @returns {string}
  */
 Vue.filter('prettyFullDate', function (value: number) {
-
   const MS_PER_SECOND = 1000;
   const date = new Date(value * MS_PER_SECOND);
 

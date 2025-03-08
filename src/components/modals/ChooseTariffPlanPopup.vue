@@ -254,7 +254,6 @@ export default Vue.extend({
           this.$sendToHawk(new Error('Missing composed payment data when trying to open payment widget'));
         }
       }
-
     },
   },
 });

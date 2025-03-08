@@ -2,6 +2,11 @@ import { BeforePaymentPayload } from '@/types/before-payment-payload';
 import axios from 'axios';
 import { API_ENDPOINT } from '..';
 
+/**
+ * @param workspaceId
+ * @param tariffPlanId
+ * @param shouldSaveCard
+ */
 export async function composePayment(workspaceId: string, tariffPlanId: string, shouldSaveCard = false): Promise<BeforePaymentPayload> {
   const url = new URL(`${API_ENDPOINT}/billing/compose-payment`);
 

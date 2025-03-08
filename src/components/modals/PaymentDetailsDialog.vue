@@ -10,7 +10,10 @@
       </div>
 
       <!--Description-->
-      <div v-if="paymentData.isCardLinkOperation" class="payment-details__description">
+      <div
+        v-if="paymentData.isCardLinkOperation"
+        class="payment-details__description"
+      >
         <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ nextPaymentDateInSeconds | prettyFullDate(false) }}</p>
         <p>💳 {{ $t('billing.cardLinking.howItWorks') }}</p>
         <ul>
@@ -18,21 +21,21 @@
           <li>– {{ $t('billing.cardLinking.step2', { date: $options.filters.prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
         </ul>
       </div>
-      
-      
+
+
       <template v-else>
         <i18n
           tag="div"
           :path="isRecurrent ? 'billing.autoProlongation.description' : 'billing.paymentDetails.description'"
           class="payment-details__description"
         />
-        
+
         <!--Details-->
         <div class="payment-details__details">
           <div class="payment-details__details-header">
             {{ $t('billing.paymentDetails.details.title') }}
           </div>
-  
+
           <!--Workspace-->
           <div class="payment-details__details-item">
             <div class="payment-details__details-item-field">
@@ -46,12 +49,12 @@
               size="18"
               class="payment-details__details-item-workspace-image"
             />
-  
+
             <div class="payment-details__details-item-value">
               {{ workspace.name }}
             </div>
           </div>
-  
+
           <!--Plan-->
           <div class="payment-details__details-item">
             <div class="payment-details__details-item-field">
@@ -61,7 +64,7 @@
               {{ readablePlanString }}
             </div>
           </div>
-  
+
           <!--Price-->
           <div class="payment-details__details-item">
             <div class="payment-details__details-item-field">
@@ -71,7 +74,7 @@
               {{ price }}
             </div>
           </div>
-  
+
           <!--The next payment date -->
           <!-- <div
             v-if="isRecurrent"
@@ -403,8 +406,8 @@ export default Vue.extend({
     },
 
     /**
-    * Next payment date
-    */
+     * Next payment date
+     */
     nextPaymentDate(): Date {
       const date = new Date();
 
