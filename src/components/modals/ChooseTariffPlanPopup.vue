@@ -81,6 +81,7 @@ import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
+import { composePayment } from '@/api/billing/requests';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -180,14 +181,26 @@ export default Vue.extend({
        * Don't show confirmation window if user changes free plan to paid
        */
       if (this.workspace.plan.monthlyCharge === 0) {
-        await this.$store.dispatch(SET_MODAL_DIALOG, {
-          component: 'PaymentDetailsDialog',
-          data: {
-            workspaceId: this.workspaceId,
-            tariffPlanId: this.selectedPlan.id,
-            isRecurrent: true,
-          },
-        });
+        try {
+          const paymentData = await composePayment(this.workspaceId, this.selectedPlan.id);
+
+          await this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspaceId,
+              tariffPlanId: this.selectedPlan.id,
+              isRecurrent: true,
+              paymentData,
+            },
+          });
+        } catch (e) {
+          notifier.show({
+            message: this.$i18n.t('billing.paymentDetails.notifications.error') as string,
+            style: 'error',
+          });
+
+          this.$sendToHawk(new Error('Missing composed payment data when trying to open payment widget'));
+        }
 
         return;
       }
@@ -196,14 +209,26 @@ export default Vue.extend({
         actionType: ActionType.SUBMIT,
         description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
         onConfirm: async () => {
-          await this.$store.dispatch(SET_MODAL_DIALOG, {
-            component: 'PaymentDetailsDialog',
-            data: {
-              workspaceId: this.workspaceId,
-              tariffPlanId: this.selectedPlan.id,
-              isRecurrent: true,
-            },
-          });
+          try {
+            const paymentData = await composePayment(this.workspaceId, this.selectedPlan.id);
+
+            await this.$store.dispatch(SET_MODAL_DIALOG, {
+              component: 'PaymentDetailsDialog',
+              data: {
+                workspaceId: this.workspaceId,
+                tariffPlanId: this.selectedPlan.id,
+                isRecurrent: true,
+                paymentData,
+              },
+            });
+          } catch (e) {
+            notifier.show({
+              message: this.$i18n.t('billing.notifications.error') as string,
+              style: 'error',
+            });
+
+            this.$sendToHawk(new Error('Missing composed payment data when trying to open payment widget'));
+          }
         },
       });
     },

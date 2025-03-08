@@ -247,12 +247,18 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    /**
+     * Composed payment data
+     */
+    paymentData: {
+      type: Object as () => BeforePaymentPayload,
+      required: true,
+    },
   },
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
-    const cards: BankCard[] = this.$store.state.user.data?.bankCards;
-    const selectedCard: CustomSelectOption | undefined = /* (cards?.length > 0 && cardToSelectOption(cards[0])) || */undefined;
+    const selectedCard: CustomSelectOption | undefined = undefined;
 
     return {
       /**
@@ -487,19 +493,7 @@ export default Vue.extend({
      * Method for payment processing
      */
     async processPayment(): Promise<void> {
-      const response = await axios.get(
-        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
-      );
-
-      // if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
-      this.showPaymentWidget(response.data as BeforePaymentPayload);
-      // } else {
-      //   await this.payWithCard({
-      //     checksum: response.data.checksum,
-      //     cardId: this.selectedCard.id,
-      //     isRecurrent: this.isRecurrent,
-      //   });
-      // }
+      this.showPaymentWidget(this.paymentData);
     },
 
     /**
@@ -524,7 +518,10 @@ export default Vue.extend({
         }
         await this.$store.dispatch(RESET_MODAL_DIALOG);
       } catch (e) {
-        this.$sendToHawk(e);
+        if (e instanceof Error) {
+          this.$sendToHawk(e);
+        }
+
         notifier.show({
           message: this.$i18n.t('billing.widget.notifications.error') as string,
           style: 'error',
@@ -613,6 +610,7 @@ export default Vue.extend({
       );
     },
   },
+
 });
 </script>
 
