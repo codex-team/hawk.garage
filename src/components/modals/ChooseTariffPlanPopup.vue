@@ -205,32 +205,56 @@ export default Vue.extend({
         return;
       }
 
-      this.$confirm.open({
-        actionType: ActionType.SUBMIT,
-        description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
-        onConfirm: async () => {
-          try {
-            const paymentData = await composePayment(this.workspaceId, this.selectedPlan.id);
+      if (!this.workspace.isBlocked) {
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          onConfirm: async () => {
+            try {
+              const paymentData = await composePayment(this.workspaceId, this.selectedPlan.id);
 
-            await this.$store.dispatch(SET_MODAL_DIALOG, {
-              component: 'PaymentDetailsDialog',
-              data: {
-                workspaceId: this.workspaceId,
-                tariffPlanId: this.selectedPlan.id,
-                isRecurrent: true,
-                paymentData,
-              },
-            });
-          } catch (e) {
-            notifier.show({
-              message: this.$i18n.t('billing.notifications.error') as string,
-              style: 'error',
-            });
+              await this.$store.dispatch(SET_MODAL_DIALOG, {
+                component: 'PaymentDetailsDialog',
+                data: {
+                  workspaceId: this.workspaceId,
+                  tariffPlanId: this.selectedPlan.id,
+                  isRecurrent: true,
+                  paymentData,
+                },
+              });
+            } catch (e) {
+              notifier.show({
+                message: this.$i18n.t('billing.notifications.error') as string,
+                style: 'error',
+              });
 
-            this.$sendToHawk(new Error('Missing composed payment data when trying to open payment widget'));
-          }
-        },
-      });
+              this.$sendToHawk(new Error('Missing composed payment data when trying to open payment widget'));
+            }
+          },
+        });
+      } else {
+        try {
+          const paymentData = await composePayment(this.workspaceId, this.selectedPlan.id);
+
+          await this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspaceId,
+              tariffPlanId: this.selectedPlan.id,
+              isRecurrent: true,
+              paymentData,
+            },
+          });
+        } catch (e) {
+          notifier.show({
+            message: this.$i18n.t('billing.notifications.error') as string,
+            style: 'error',
+          });
+
+          this.$sendToHawk(new Error('Missing composed payment data when trying to open payment widget'));
+        }
+      }
+
     },
   },
 });
