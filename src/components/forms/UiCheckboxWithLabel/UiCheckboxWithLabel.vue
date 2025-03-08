@@ -9,9 +9,8 @@
     <label
       :for="$id('checkbox-with-label')"
       class="ui-checkbox__label"
-    >
-      {{ label }}
-    </label>
+      v-html="label"
+    ></label>
   </div>
 </template>
 
@@ -80,6 +79,14 @@ export default Vue.extend({
   &__label {
     cursor: pointer;
     user-select: none;
+
+    a {
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--color-text-second);
+      }
+    }
   }
 
   &__container {

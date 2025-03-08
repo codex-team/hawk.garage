@@ -371,7 +371,7 @@
       "title": "Subscription",
       "description": "You are about to subscribe for paid tariff plan. That means that when the next payment date comes, the plan price will be automatically charged from your card.",
       "theNextPaymentDateTitle": "The next payment date",
-      "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
+      "acceptRecurrentPaymentAgreement": "I understand and accept the <a href='https://hawk-tracker.ru/payments-agreement.pdf' target='_blank'>recurrent payments agreement</a>",
       "allowingChargesEveryMonth": "I allow charges from my bank card every month",
       "cancelSuccessMessage": "Subscription successfully canceled",
       "cancelErrorMessage": "Error during subscription cancelling"

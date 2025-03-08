@@ -371,7 +371,7 @@
       "title": "Оформление подписки",
       "description": "Вы собираетесь оформить подписку на платный тариф. При наступлении следующей даты платежа стоимость плана будет автоматически списана с вашей карты.",
       "theNextPaymentDateTitle": "Дата следующего списания",
-      "acceptRecurrentPaymentAgreement": "Я принимаю соглашение об автоматических платежах",
+      "acceptRecurrentPaymentAgreement": "Я принимаю <a href='https://hawk-tracker.ru/payments-agreement.pdf' target='_blank'>соглашение об автоматических платежах</a>",
       "allowingChargesEveryMonth": "Я разрешаю ежемесячные списания с моей банковской карты",
       "cancelSuccessMessage": "Подписка отменена",
       "cancelErrorMessage": "Ошибка при попытке отменить подписку"
