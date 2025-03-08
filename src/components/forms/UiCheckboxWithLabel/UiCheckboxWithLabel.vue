@@ -10,7 +10,7 @@
       :for="$id('checkbox-with-label')"
       class="ui-checkbox__label"
       v-html="label"
-    ></label>
+    />
   </div>
 </template>
 
