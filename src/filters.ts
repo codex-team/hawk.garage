@@ -142,6 +142,7 @@ Vue.filter('prettyDate', function (value: number) {
  * @returns {string}
  */
 Vue.filter('prettyFullDate', function (value: number) {
+
   const MS_PER_SECOND = 1000;
   const date = new Date(value * MS_PER_SECOND);
 
@@ -186,7 +187,7 @@ Vue.filter(
       i18n.t('common.shortMonths[' + month + ']').toString()
     );
 
-    let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
+    let result = `${isSameYear ? '' : year + ', '}${monthStr} ${day}`;
 
     if (includeTime) {
       result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;

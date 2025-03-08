@@ -379,6 +379,12 @@
     "cloudPaymentsWidget": {
       "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month",
       "descriptionCardLinking": "A temporary charge of 1 USD will be made to verify your card. The amount will be refunded automatically."
+    },
+    "cardLinking": {
+      "description": "You are about to subscribe, which will start on",
+      "howItWorks": "How it works?",
+      "step1": "We will charge and immediately refund 1 USD to link your card.",
+      "step2": "The first regular payment will be charged on {date}, and the subscription will start from that day."
     }
   },
   "event": {
