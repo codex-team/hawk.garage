@@ -9,6 +9,12 @@ export interface ProjectChartItem extends ChartItem {
 }
 
 /**
+ * Represents a single item of Project Affected Users chart
+ */
+export interface AffectedUsersChartItem extends ChartItem {
+}
+
+/**
  * Represents a single item of Event Daily chart
  */
 export interface EventChartItem extends ChartItem {

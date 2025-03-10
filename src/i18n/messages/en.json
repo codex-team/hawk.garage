@@ -391,7 +391,8 @@
     },
     "usersAffected": {
       "total": "Total",
-      "users": "{n} user | {n} users"
+      "users": "{n} user | {n} users",
+      "daily": "Daily for last two weeks"
     },
     "navigation": {
       "overview": "Overview",
