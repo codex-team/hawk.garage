@@ -19,6 +19,11 @@ export const CREATE_WORKSPACE = 'CREATE_WORKSPACE';
 export const LEAVE_WORKSPACE = 'LEAVE_WORKSPACE';
 
 /**
+ * Delete current workspace
+ */
+export const DELETE_WORKSPACE = 'DELETE_WORKSPACE';
+
+/**
  * Send request to invite user to workspace
  */
 export const INVITE_TO_WORKSPACE = 'INVITE_TO_WORKSPACE';
