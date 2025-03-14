@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isConsoleOutput">
+  <div class="console-output">
     <div
       v-for="(log, index) in logs"
       :key="index"
@@ -14,10 +14,7 @@
 
         <!-- Log message -->
         <span class="log-message">
-          <template v-if="log.method && log.method.toLowerCase() === 'log'">
-            {{ log.message }}
-          </template>
-          <template v-else-if="log.type">
+          <template v-if="log.type">
             {{ log.type }}: {{ log.message }}
           </template>
           <template v-else>
@@ -31,7 +28,7 @@
         </span>
       </div>
 
-      <!-- Stack trace (collapsible) -->
+      <!-- Collapsible stack trace -->
       <div v-if="expandedStack[index]" class="log-stack">
         {{ formatStack(log.stack) }}
       </div>
@@ -40,13 +37,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 
+/**
+ * Custom Renderer for Console Output
+ */
 export default Vue.extend({
   name: "ConsoleOutput",
   props: {
-    logs: {
-      type: Object,
+    /**
+     * Console logs object
+     */
+    value: {
+      type: Object as PropType<Record<string, any>>,
       required: true,
     },
   },
@@ -57,12 +60,10 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Check if provided data represents console logs
+     * Extract logs array from object
      */
-    isConsoleOutput(): boolean {
-      return Object.values(this.logs).every(
-        (log: any) => log && log.method && log.message && log.timestamp
-      );
+    logs(): any[] {
+      return Object.values(this.value);
     },
   },
   methods: {
@@ -102,7 +103,7 @@ export default Vue.extend({
     },
 
     /**
-     * Trim unnecessary blank lines from stack trace
+     * Format stack trace by removing unnecessary blank lines
      */
     formatStack(stack: string): string {
       return stack.trim();
@@ -125,14 +126,12 @@ export default Vue.extend({
   color: var(--color-text-main);
   border-left: 3px solid color-mod(var(--color-text-main) alpha(10%));
 }
-
 /* Log content: arrow, message, timestamp */
 .log-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
 /* Stack toggle arrow */
 .log-arrow {
   padding: 0 4px;
@@ -142,29 +141,24 @@ export default Vue.extend({
   user-select: none;
   color: var(--color-text-second);
   transition: transform 0.2s ease-in-out;
-
   &:hover {
     opacity: 0.6;
   }
 }
-
 .log-arrow.rotated {
   transform: rotate(90deg);
 }
-
 /* Log message */
 .log-message {
   flex-grow: 1;
   color: var(--color-text-main);
 }
-
 /* Timestamp */
 .log-timestamp {
   color: var(--color-text-second);
   font-size: 10px;
   margin-left: 10px;
 }
-
 /* Collapsible stack trace */
 .log-stack {
   font-size: var(--font-small);
@@ -174,32 +168,27 @@ export default Vue.extend({
   background: var(--color-bg-third);
   color: var(--color-text-main);
 }
-
 /* Log colors */
 .log-error {
   background: color-mod(var(--color-indicator-critical) alpha(15%));
   color: var(--color-indicator-critical);
   border-left-color: var(--color-indicator-critical-dark);
 }
-
 .log-warn {
   background: color-mod(var(--color-indicator-warning) alpha(15%));
   color: var(--color-indicator-warning);
   border-left-color: var(--color-indicator-warning);
 }
-
 .log-info {
   background: color-mod(var(--color-indicator-medium) alpha(15%));
   color: var(--color-indicator-medium);
   border-left-color: var(--color-indicator-medium-dark);
 }
-
 .log-debug {
   background: color-mod(var(--color-indicator-positive) alpha(15%));
   color: var(--color-indicator-positive);
   border-left-color: var(--color-indicator-positive);
 }
-
 .log-default {
   background: var(--color-bg-second);
   color: var(--color-text-main);

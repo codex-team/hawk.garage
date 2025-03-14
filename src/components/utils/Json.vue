@@ -1,18 +1,19 @@
 <template>
-  <ConsoleOutput v-if="isConsoleOutput" :logs="value" />
-  <JsonViewer v-else :value="value" theme="json-viewer-theme" :expand-depth="2" copyable />
+  <JsonViewer
+    :value="value"
+    theme="json-viewer-theme"
+    :expand-depth="2"
+    copyable
+  />
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import JsonViewer from "vue-json-viewer";
-import ConsoleOutput from "./ConsoleOutput.vue"; // Import ConsoleOutput
+import JsonViewer from 'vue-json-viewer';
 
-export default Vue.extend({
-  name: "Json",
+export default {
+  name: 'Json',
   components: {
     JsonViewer,
-    ConsoleOutput, // Register ConsoleOutput component
   },
   props: {
     /**
@@ -23,17 +24,7 @@ export default Vue.extend({
       required: true,
     },
   },
-  computed: {
-    /**
-     * Detect if the provided object is console output logs
-     */
-    isConsoleOutput(): boolean {
-      return Object.values(this.value).every(
-        (log: any) => log && log.method && log.message && log.timestamp
-      );
-    },
-  },
-});
+};
 </script>
 
 <style>
