@@ -1,10 +1,14 @@
 <template>
   <PopupDialog @close="$emit('close')">
-    
     <div class="payment-details">
-      <div v-if="isLoading" class="payment-details__loading">
-        <div class="payment-details__spinner"></div>
-        <div class="payment-details__loading-text">{{ $t('common.loading') }}</div>
+      <div
+        v-if="isLoading"
+        class="payment-details__loading"
+      >
+        <div class="payment-details__spinner" />
+        <div class="payment-details__loading-text">
+          {{ $t('common.loading') }}
+        </div>
       </div>
 
       <template v-else>
@@ -15,7 +19,7 @@
               : $t('billing.paymentDetails.title')
           }}
         </div>
-  
+
         <!--Description-->
         <div
           v-if="paymentData.isCardLinkOperation"
@@ -28,21 +32,21 @@
             <li>– {{ $t('billing.cardLinking.step2', { date: $options.filters.prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
           </ul>
         </div>
-  
-  
+
+
         <template v-else>
           <i18n
             tag="div"
             :path="isRecurrent ? 'billing.autoProlongation.description' : 'billing.paymentDetails.description'"
             class="payment-details__description"
           />
-  
+
           <!--Details-->
           <div class="payment-details__details">
             <div class="payment-details__details-header">
               {{ $t('billing.paymentDetails.details.title') }}
             </div>
-  
+
             <!--Workspace-->
             <div class="payment-details__details-item">
               <div class="payment-details__details-item-field">
@@ -56,12 +60,12 @@
                 size="18"
                 class="payment-details__details-item-workspace-image"
               />
-  
+
               <div class="payment-details__details-item-value">
                 {{ workspace.name }}
               </div>
             </div>
-  
+
             <!--Plan-->
             <div class="payment-details__details-item">
               <div class="payment-details__details-item-field">
@@ -71,7 +75,7 @@
                 {{ readablePlanString }}
               </div>
             </div>
-  
+
             <!--Price-->
             <div class="payment-details__details-item">
               <div class="payment-details__details-item-field">
@@ -81,7 +85,7 @@
                 {{ price }}
               </div>
             </div>
-  
+
             <!--The next payment date -->
             <!-- <div
               v-if="isRecurrent"
@@ -96,8 +100,8 @@
             </div> -->
           </div>
         </template>
-  
-  
+
+
         <!--Card-->
         <!-- <CustomSelect
           v-if="cards.length > 1"
@@ -107,7 +111,7 @@
           :need-image="false"
           class="payment-details__card"
         /> -->
-  
+
         <!--Email for the invoice-->
         <!-- <TextFieldSet
           v-model="email"
@@ -118,7 +122,7 @@
           :placeholder="email"
           disabled
         /> -->
-  
+
         <!--Recurrent payment agreements-->
         <section
           v-if="isRecurrent"
@@ -141,7 +145,7 @@
             :label="$t('billing.paymentDetails.allowCardSaving')"
           /> -->
         </section>
-  
+
         <!--Basic payment agreement-->
         <section
           v-else
@@ -153,14 +157,14 @@
             class="payment-details__adoption-autoProlongation-item"
             :label="$t('billing.paymentDetails.allowCardSaving')"
           />
-  
+
           <UiCheckboxWithLabel
             v-model="isAcceptedPaymentAgreement"
             class="payment-details__adoption-autoProlongation-item"
             :label="$t('billing.paymentDetails.acceptPaymentAgreement')"
           />
         </section>
-  
+
         <!--Button and cloudpayments logo-->
         <div class="payment-details__bottom">
           <UiButton
@@ -170,7 +174,7 @@
             :secondary="!isAcceptedAllAgreements"
             @click.prevent="onGoToServicePayment"
           />
-  
+
           <a
             :href="cpUrl"
             target="_blank"
@@ -290,7 +294,7 @@ export default Vue.extend({
        * Loading state while fetching payment data
        */
       isLoading: true,
-      
+
       /**
        * Payment data received from API
        */
@@ -504,7 +508,7 @@ export default Vue.extend({
     }
 
     this.$store.dispatch(FETCH_BANK_CARDS);
-    
+
     try {
       // Fetch payment data when component is mounted
       this.paymentData = await composePayment(this.workspaceId, this.tariffPlanId, this.shouldSaveCard);
@@ -559,7 +563,7 @@ export default Vue.extend({
       if (!this.paymentData) {
         return;
       }
-      
+
       this.showPaymentWidget(this.paymentData);
     },
 
