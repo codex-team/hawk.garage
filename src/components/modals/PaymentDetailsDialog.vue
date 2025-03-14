@@ -276,13 +276,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    /**
-     * Composed payment data
-     */
-    paymentData: {
-      type: Object as () => BeforePaymentPayload,
-      required: true,
-    },
   },
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
