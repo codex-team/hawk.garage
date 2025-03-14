@@ -31,7 +31,7 @@
             :selected="plan.id === selectedPlan.id"
             :is-current-plan="plan.id === workspace.plan.id"
             :horizontal="plans.length > 3"
-            @click.native="selectPlan(plan.id)"
+            @click.native="proceedWithPlan(plan.id)"
           />
 
           <div class="choose-plan__premium-card">
@@ -59,13 +59,6 @@
           </div>
         </div>
 
-        <UiButton
-          class="choose-plan__continue-button"
-          :content="$t('common.continue')"
-          :disabled="selectedPlan.id === workspace.plan.id"
-          submit
-          @click="onContinue"
-        />
       </div>
     </div>
   </PopupDialog>
@@ -123,12 +116,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    /**
-     * Select plan card by id
-     *
-     * @param id - plan id
-     */
-    selectPlan(id: string): void {
+    proceedWithPlan(id: string): void {
       const plan = this.plans.find(p => p.id === id);
 
       if (!plan) {
@@ -136,6 +124,8 @@ export default Vue.extend({
       }
 
       this.selectedPlan = plan;
+
+      this.onContinue();
     },
 
     /**
