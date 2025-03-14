@@ -81,6 +81,7 @@ import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
+import { composePayment } from '@/api/billing/requests';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -192,20 +193,31 @@ export default Vue.extend({
         return;
       }
 
-      this.$confirm.open({
-        actionType: ActionType.SUBMIT,
-        description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
-        onConfirm: async () => {
-          await this.$store.dispatch(SET_MODAL_DIALOG, {
-            component: 'PaymentDetailsDialog',
-            data: {
-              workspaceId: this.workspaceId,
-              tariffPlanId: this.selectedPlan.id,
-              isRecurrent: true,
-            },
-          });
-        },
-      });
+      if (!this.workspace.isBlocked) {
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          onConfirm: async () => {
+            await this.$store.dispatch(SET_MODAL_DIALOG, {
+              component: 'PaymentDetailsDialog',
+              data: {
+                workspaceId: this.workspaceId,
+                tariffPlanId: this.selectedPlan.id,
+                isRecurrent: true,
+              },
+            });
+          },
+        });
+      } else {
+        await this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'PaymentDetailsDialog',
+          data: {
+            workspaceId: this.workspaceId,
+            tariffPlanId: this.selectedPlan.id,
+            isRecurrent: true,
+          },
+        });
+      }
     },
   },
 });
