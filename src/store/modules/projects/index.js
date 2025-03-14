@@ -30,7 +30,7 @@ export const mutationTypes = {
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
   UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
-
+  SET_RELEASES_LIST: 'SET_RELEASES_LIST',
   /**
    * Save data of events count for the last N days at the specific project
    */
@@ -494,6 +494,32 @@ const mutations = {
    */
   [mutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
     state.charts[projectId] = data;
+  },
+
+  /**
+   * Fetch releases for a project (or all if projectId is not provided)
+   *
+   * @param {Function} commit - Vuex commit
+   * @param {string} [projectId] - (Optional) project id
+   * @returns {Promise<void>}
+   */
+  async FETCH_RELEASES({ commit }, projectId) {
+    try {
+      const releases = await projectsApi.fetchReleases(projectId);
+      commit('SET_RELEASES_LIST', releases);
+    } catch (error) {
+      console.error('Ошибка при получении релизов:', error);
+    }
+  },
+
+  /**
+   * Сохраняет список релизов в стейте
+   *
+   * @param {object} state - Vuex state
+   * @param {Array} releases - массив релизов
+   */
+  [mutationTypes.SET_RELEASES_LIST](state, releases) {
+    state.releases = releases;
   },
 };
 

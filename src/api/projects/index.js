@@ -7,7 +7,8 @@ import {
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
-  QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
+  QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
+  QUERY_GET_RELEASES,
 } from './queries';
 import * as api from '../index.ts';
 import { ChartData } from '../../types/events';
@@ -141,3 +142,14 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
     timezoneOffset,
   })).project.chartData;
 }
+
+/**
+ * Fetch releases for a given project (or all releases if projectId is not provided)
+ *
+ * @param {string} [projectId] - (Optional) project id to filter releases
+ * @returns {Promise<Array>} Array of release objects
+ */
+export async function fetchReleases(projectId) {
+  return (await api.callOld(QUERY_GET_RELEASES, { projectId })).getReleases;
+}
+
