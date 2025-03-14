@@ -174,26 +174,15 @@ export default Vue.extend({
        */
       enableAutoPayment: {
         label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
-        onClick: async () => {
-          try {
-            const paymentData = await composePayment(this.workspace.id, this.workspace.plan.id);
-
-            this.$store.dispatch(SET_MODAL_DIALOG, {
-              component: 'PaymentDetailsDialog',
-              data: {
-                workspaceId: this.workspace.id,
-                tariffPlanId: this.workspace.plan.id,
-                isRecurrent: true,
-                paymentData,
-              },
-            });
-          } catch (e) {
-            notifier.show({
-              message: this.$i18n.t('billing.notifications.error') as string,
-              style: 'error',
-            });
-            this.$sendToHawk(new Error('Failed to compose payment data for enabling auto payment'));
-          }
+        onClick: () => {
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspace.id,
+              tariffPlanId: this.workspace.plan.id,
+              isRecurrent: true,
+            },
+          });
         },
       },
       /**
@@ -201,27 +190,15 @@ export default Vue.extend({
        */
       prolongateCurrentPlan: {
         label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
-        onClick: async () => {
-          try {
-            const paymentData = await composePayment(this.workspace.id, this.workspace.plan.id);
-
-            this.$store.dispatch(SET_MODAL_DIALOG, {
-              component: 'PaymentDetailsDialog',
-              data: {
-                workspaceId: this.workspace.id,
-                tariffPlanId: this.workspace.plan.id,
-                isRecurrent: true,
-                paymentData,
-              },
-            });
-          } catch (e) {
-            notifier.show({
-              message: this.$i18n.t('billing.notifications.error') as string,
-              style: 'error',
-            });
-
-            this.$sendToHawk(new Error('Failed to compose payment data for prolongating current plan'));
-          }
+        onClick: () => {
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'PaymentDetailsDialog',
+            data: {
+              workspaceId: this.workspace.id,
+              tariffPlanId: this.workspace.plan.id,
+              isRecurrent: true,
+            },
+          });
         },
       },
       /**
@@ -447,26 +424,14 @@ export default Vue.extend({
         return;
       }
 
-      try {
-        const paymentData = await composePayment(this.workspace.id, this.workspace.plan.id);
-
-        this.$store.dispatch(SET_MODAL_DIALOG, {
-          component: 'PaymentDetailsDialog',
-          data: {
-            tariffPlanId: this.workspace.plan.id,
-            workspaceId: this.workspace.id,
-            isRecurrent: true,
-            paymentData,
-          },
-        });
-      } catch (e) {
-        notifier.show({
-          message: this.$i18n.t('billing.notifications.error') as string,
-          style: 'error',
-        });
-
-        this.$sendToHawk(new Error('Missing composed payment data when trying to open payment widget'));
-      }
+      this.$store.dispatch(SET_MODAL_DIALOG, {
+        component: 'PaymentDetailsDialog',
+        data: {
+          tariffPlanId: this.workspace.plan.id,
+          workspaceId: this.workspace.id,
+          isRecurrent: true,
+        },
+      });
     },
   },
 });
