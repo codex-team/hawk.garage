@@ -692,12 +692,21 @@ const module: Module<EventsModuleState, RootState> = {
     /**
      * Set events filters
      *
-     * @param root0
-     * @param root1
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {string} project.projectId - project to set filters for
+     * @param {EventsFilters} project.filters - filters to set
+     * @param {string} [project.search] - optional search query
      */
     async [SET_EVENTS_FILTERS]({ commit, dispatch }, { projectId, filters, search }) {
-      commit(SET_EVENTS_FILTERS, { projectId,
-        filters });
+      commit(SET_EVENTS_FILTERS, {
+        projectId,
+        filters,
+      });
+
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
       return dispatch(FETCH_RECENT_EVENTS, { projectId,
@@ -822,7 +831,9 @@ const module: Module<EventsModuleState, RootState> = {
      * Mutation for replacing recent events list
      *
      * @param {EventsModuleState} state - Vuex state
-     * @param {HawkEventsDailyInfoByProject} newList - new list of recent events
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - project that owns events
+     * @param {HawkEventsDailyInfoByDate} payload.recentEventsInfoByDate - grouped events list
      */
     [MutationTypes.SetRecentEventsList](state, { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }): void {
       if (!state.recent[projectId]) {
