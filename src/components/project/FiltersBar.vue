@@ -42,7 +42,7 @@ import Vue from 'vue';
 import FlatButton from '../utils/FilterButton.vue';
 import Icon from '../utils/Icon.vue';
 import { EventsFilters, EventsSortOrder } from '../../types/events';
-import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER } from '../../store/modules/events/actionTypes';
+import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER, FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 
 interface FiltersBarData {
   /**
@@ -155,10 +155,7 @@ export default Vue.extend({
 
       const filters = this.filtersOptions[key];
 
-      this.$store.dispatch(SET_EVENTS_FILTERS, {
-        filters,
-        projectId: this.projectId,
-      });
+      this.handleFiltersChange(filters);
     },
     /**
      * Set new events sorting order
@@ -170,10 +167,46 @@ export default Vue.extend({
         return;
       }
 
-      this.$store.dispatch(SET_EVENTS_ORDER, {
-        order: key,
-        projectId: this.projectId,
-      });
+      this.handleSortOrderChange(key);
+    },
+    /**
+     * Handle sort order change
+     *
+     * @param {string} order - new sort order
+     */
+    async handleSortOrderChange(order) {
+      this.isLoading = true;
+      try {
+        const search = this.$store.getters.getProjectSearch(this.projectId);
+
+        await this.$store.dispatch(SET_EVENTS_ORDER, {
+          projectId: this.projectId,
+          order,
+          search,
+        });
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    /**
+     * Handle filters change
+     *
+     * @param {EventsFilters} filters - new filters
+     */
+    async handleFiltersChange(filters) {
+      this.isLoading = true;
+      try {
+        const search = this.$store.getters.getProjectSearch(this.projectId);
+
+        await this.$store.dispatch(SET_EVENTS_FILTERS, {
+          projectId: this.projectId,
+          filters,
+          search,
+        });
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
 });

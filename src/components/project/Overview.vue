@@ -16,28 +16,38 @@
         v-if="recentEvents"
         class="project-overview__events"
       >
-        <div
-          v-for="(eventsByDate, date) in recentEvents"
-          :key="date"
-          class="project-overview__events-by-date"
-        >
-          <div class="project-overview__date">
-            {{ getDay(date) | prettyDate }}
+        <SearchField
+          v-model="searchQuery"
+          class="search-container"
+          @input="debouncedSearch"
+        />
+        <template v-if="!isListEmpty">
+          <div
+            v-for="(eventsByDate, date) in recentEvents"
+            :key="date"
+            class="project-overview__events-by-date"
+          >
+            <div class="project-overview__date">
+              {{ getDay(date) | prettyDate }}
+            </div>
+            <EventItem
+              v-for="(dailyEventInfo, index) in eventsByDate"
+              :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
+              :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
+              :count="dailyEventInfo.count"
+              :affected-users-count="dailyEventInfo.affectedUsers"
+              class="project-overview__event"
+              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
+              @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
+              @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
+            />
           </div>
-          <EventItem
-            v-for="dailyEventInfo in eventsByDate"
-            :key="dailyEventInfo.groupHash"
-            :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
-            :count="dailyEventInfo.count"
-            :affected-users-count="dailyEventInfo.affectedUsers"
-            class="project-overview__event"
-            :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
-            @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
-            @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
-          />
+        </template>
+        <div v-else-if="isLoadingEvents">
+          Loading...
         </div>
         <div
-          v-if="Object.keys(recentEvents).length && !noMoreEvents"
+          v-else-if="isListEmpty && !noMoreEvents && !isLoadingEvents"
           class="project-overview__load-more"
           :class="{'loader': isLoadingEvents}"
           @click="loadMoreEvents"
@@ -45,7 +55,7 @@
           <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
         </div>
         <div
-          v-if="Object.keys(recentEvents).length === 0"
+          v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
           class="project-overview__no-events-placeholder"
         >
           <div class="project-overview__divider" />
@@ -77,6 +87,7 @@ import { debounce } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
+import SearchField from '../forms/SearchField';
 
 export default {
   name: 'ProjectOverview',
@@ -85,6 +96,7 @@ export default {
     EventItem,
     AssigneesList,
     Chart,
+    SearchField,
   },
   data() {
     return {
@@ -132,6 +144,8 @@ export default {
        * Old window width
        */
       windowWidth: window.innerWidth,
+
+      searchQuery: '',
     };
   },
   computed: {
@@ -167,6 +181,14 @@ export default {
     },
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),
+
+    isListEmpty() {
+      if (!this.recentEvents) {
+        return true;
+      }
+
+      return Object.keys(this.recentEvents).length === 0;
+    }
   },
 
   /**
@@ -174,8 +196,15 @@ export default {
    * Used to fetch events on component creation
    */
   async created() {
+    /**
+     * Initialize debounced search handler
+     */
+    this.debouncedSearch = debounce((query) => {
+      this.handleSearch(query);
+    }, 500);
+
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId, search: this.searchQuery  });
 
       const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
 
@@ -224,12 +253,29 @@ export default {
     }
   },
 
+  destroyed(){
+    console.log('destroy');
+
+    this.$store.commit('SET_PROJECT_SEARCH', { 
+      projectId: this.projectId, 
+      search: '' 
+    });
+  },
+
   /**
    * Vue mounted hook
    * Used to update user's last project visit time
    */
   mounted() {
     this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
+  },
+
+  unmounted() {
+    /** Clear search query when component is unmounted */
+    /*this.$store.commit('SET_PROJECT_SEARCH', { 
+      projectId: this.projectId, 
+      search: '' 
+    });*/
   },
 
   methods: {
@@ -250,7 +296,10 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId });
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { 
+        projectId: this.projectId,
+        search: this.searchQuery 
+      });
       this.isLoadingEvents = false;
     },
 
@@ -320,6 +369,42 @@ export default {
         });
       }
     },
+
+    /**
+     * Handle search input
+     * @param {string} query - search query
+     */
+    async handleSearch(query) {
+      if (typeof query !== 'string') {
+        return;
+      }
+
+      const sanitizedQuery = query.slice(0, 100);
+
+      this.$store.commit('SET_PROJECT_SEARCH', { 
+        projectId: this.projectId, 
+        search: sanitizedQuery 
+      });
+
+      this.$store.commit('CLEAR_RECENT_EVENTS_LIST', { projectId: this.projectId });
+      
+      this.isLoadingEvents = true;
+      try {
+        this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { 
+          projectId: this.projectId,
+          search: sanitizedQuery 
+        });
+      } finally {
+        this.isLoadingEvents = false;
+      }
+    },
+  },
+
+  /**
+   * Clean up debounced function on component destroy
+   */
+  beforeDestroy() {
+    this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
 };
 </script>
@@ -393,5 +478,9 @@ export default {
       background: var(--color-text-second);
       border-radius: 2px;
     }
+  }
+
+  .search-container {
+    margin-top: 16px;
   }
 </style>

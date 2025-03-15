@@ -60,13 +60,15 @@ export async function fetchRecentEvents(
   projectId: string,
   skip = 0,
   sort = EventsSortOrder.ByDate,
-  filters: EventsFilters = {}
+  filters: EventsFilters = {},
+  search: string = ''
 ): Promise<EventsWithDailyInfo | null> {
   const project = (await api.callOld(QUERY_RECENT_PROJECT_EVENTS, {
     projectId,
     skip,
     sort,
     filters,
+    search,
   })).project;
 
   if (!project) {
