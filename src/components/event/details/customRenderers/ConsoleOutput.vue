@@ -1,20 +1,20 @@
 <template>
-  <div class="console-output">
+  <div class='console-output'>
     <div
-      v-for="(log, index) in logs"
-      :key="index"
-      class="log-entry"
-      :class="logClass(log.method)"
+      v-for='(log, index) in logs'
+      :key='index'
+      class='log-entry'
+      :class='logClass(log.method)'
     >
-      <div class="log-content">
-        <!-- Stack toggle arrow (only if stack exists) -->
-        <span v-if="log.stack" class="log-arrow" @click="toggleStack(index)">
-          <span :class="{ rotated: expandedStack[index] }">▶</span>
+      <div class='log-content'>
+        <!-- Stack toggle arrow (only if stack exists and is not empty) -->
+        <span v-if='log.stack && log.stack.length > 0' class='log-arrow' @click='toggleStack(index)'>
+          <span :class='{ rotated: expandedStack[index] }'>▶</span>
         </span>
 
         <!-- Log message -->
-        <span class="log-message">
-          <template v-if="log.type">
+        <span class='log-message'>
+          <template v-if='log.type'>
             {{ log.type }}: {{ log.message }}
           </template>
           <template v-else>
@@ -23,27 +23,27 @@
         </span>
 
         <!-- Timestamp -->
-        <span class="log-timestamp">
+        <span class='log-timestamp'>
           {{ formatTimestamp(log.timestamp) }}
         </span>
       </div>
 
       <!-- Collapsible stack trace -->
-      <div v-if="expandedStack[index]" class="log-stack">
+      <div v-if='expandedStack[index]' class='log-stack'>
         {{ formatStack(log.stack) }}
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import Vue, { PropType } from "vue";
+<script lang='ts'>
+import Vue, { PropType } from 'vue';
 
 /**
  * Custom Renderer for Console Output
  */
 export default Vue.extend({
-  name: "ConsoleOutput",
+  name: 'ConsoleOutput',
   props: {
     /**
      * Console logs object
@@ -71,14 +71,13 @@ export default Vue.extend({
      * Returns CSS class based on log method
      */
     logClass(method: string): string {
-      const logClasses = new Map<string, string>([
-        ["error", "log-error"],
-        ["warn", "log-warn"],
-        ["info", "log-info"],
-        ["debug", "log-debug"],
-      ]);
-
-      return logClasses.get(method?.toLowerCase()) || "log-default";
+      const logClasses: Record<string, string> = {
+        error: 'log-error',
+        warn: 'log-warn',
+        info: 'log-info',
+        debug: 'log-debug',
+      };
+      return logClasses[method?.toLowerCase()] || 'log-default';
     },
 
     /**
@@ -86,15 +85,18 @@ export default Vue.extend({
      */
     formatTimestamp(timestamp: string): string {
       const date = new Date(timestamp);
-      return date.toLocaleTimeString(undefined, {
+      const options: Intl.DateTimeFormatOptions = {
         hour12: false,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-        // @ts-ignore
-        fractionalSecondDigits: 3,
-      });
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      };
+
+      if ('fractionalSecondDigits' in Intl.DateTimeFormat.prototype) {
+        options.fractionalSecondDigits = 3;
+      }
+
+      return date.toLocaleTimeString(undefined, options);
     },
 
     /**
@@ -107,8 +109,8 @@ export default Vue.extend({
     /**
      * Format stack trace by removing unnecessary blank lines
      */
-    formatStack(stack: string): string {
-      return stack.trim();
+    formatStack(stack: string | null | undefined): string {
+      return stack?.trim() || 'No stack trace available';
     },
   },
 });
