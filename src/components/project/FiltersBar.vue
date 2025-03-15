@@ -57,7 +57,10 @@ interface FiltersBarData {
   },
   sortOptions: {
     [K in EventsSortOrder]: string
-  }
+  },
+  selectedFilter: string;
+  selectedOrder: EventsSortOrder;
+  isLoading: boolean;
 }
 
 export default Vue.extend({
@@ -94,6 +97,9 @@ export default Vue.extend({
         [EventsSortOrder.ByCount]: 'byCount',
         [EventsSortOrder.ByAffectedUsers]: 'byAffectedUsers',
       },
+      selectedFilter: '',
+      selectedOrder: 'desc',
+      isLoading: false
     };
   },
   computed: {
