@@ -91,6 +91,7 @@ export default Vue.extend({
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
+        // ts-expect-error - remove when update TS 
         fractionalSecondDigits: 3,
       });
     },
