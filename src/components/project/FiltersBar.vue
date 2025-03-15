@@ -44,6 +44,8 @@ import Icon from '../utils/Icon.vue';
 import { EventsFilters, EventsSortOrder } from '../../types/events';
 import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER, FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 
+type EventsSortOrder = 'desc' | 'asc';
+
 interface FiltersBarData {
   /**
    * Each property contains events filters combination to fit the condition
@@ -98,8 +100,8 @@ export default Vue.extend({
         [EventsSortOrder.ByAffectedUsers]: 'byAffectedUsers',
       },
       selectedFilter: '',
-      selectedOrder: 'desc',
-      isLoading: false,
+      selectedOrder: 'desc' as EventsSortOrder,
+      isLoading: false
     };
   },
   computed: {
