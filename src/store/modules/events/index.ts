@@ -27,9 +27,8 @@ import {
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { deepMerge } from '@/utils';
 import { patch } from '@n1ru4l/json-patch-plus';
-import { cloneDeep } from 'cypress/types/lodash';
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * Mutations enum for this module
@@ -281,10 +280,15 @@ const module: Module<EventsModuleState, RootState> = {
           });
         }
 
-        const event = Object.assign({}, state.list[key]);
+        const event = cloneDeep(state.list[key]);
 
-        if (repetition && repetition.delta) {
-          event.payload = patch({ left: event.payload, delta: JSON.parse(repetition.delta) });
+        console.log('--------------------------------');
+        console.log('event', event);
+        console.log('repetition', repetition);
+        console.log('--------------------------------');
+
+        if (repetition && repetition.delta && repetition.payload) {
+          event.payload = repetition.payload;
         } else if (repetition && repetition.payload) {
           event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
         }
@@ -464,9 +468,10 @@ const module: Module<EventsModuleState, RootState> = {
 
       const repetitions = response.data.project.event.repetitions.map(repetition => {
         if (repetition.delta && originalEvent) {
+          const eventPayload = cloneDeep(originalEvent.payload);
           return {
             ...repetition,
-            payload: patch({ left: originalEvent.payload, delta: JSON.parse(repetition.delta) }),
+            payload: patch({ left: eventPayload, delta: JSON.parse(repetition.delta) }),
           };
         } else {
           return repetition;
@@ -483,9 +488,8 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       repetitions.map(repetition => {
-        console.log('repetition', repetition);
         if (repetition.delta && originalEvent) {
-          const payloadClone = Object.assign({}, originalEvent.payload);
+          const payloadClone = cloneDeep(originalEvent.payload);
           commit(MutationTypes.AddRepetitionPayload, {
             projectId,
             eventId,
@@ -531,9 +535,10 @@ const module: Module<EventsModuleState, RootState> = {
       let repetition = event.repetition;
 
       if (event.repetition && event.repetition.delta) {
+        const eventPayload = cloneDeep(event.payload);
         repetition = {
           ...event.repetition,
-          payload: patch({ left: event.payload, delta: JSON.parse(event.repetition.delta) }),
+          payload: patch({ left: eventPayload, delta: JSON.parse(event.repetition.delta) }),
         };
       } else if (!event.repetition.payload) {
         repetition = {

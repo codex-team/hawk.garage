@@ -245,7 +245,7 @@ export interface HawkEventRepetition {
   /**
    * Delta payload
    */
-  delta?: string;
+  delta: string | null;
 }
 
 export interface HawkEventBacktraceFrame {
