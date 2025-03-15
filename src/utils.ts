@@ -191,7 +191,7 @@ export function deepMerge(target: object, ...sources: object[]): object {
  * @param repetition - the difference with its repetition, for the repetition we want to display
  * @returns fully assembled payload of the current repetition
  */
-export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string ]: any} ): HawkEventPayload {
+export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string]: any }): HawkEventPayload {
   const customizer = (originalParam: any, repetitionParam: any): any => {
     if (repetitionParam === null) {
       return originalParam;
@@ -204,9 +204,9 @@ export function repetitionAssembler(originalEvent: HawkEventPayload, repetition:
        */
       if (originalParam === null) {
         return repetitionParam;
-      /**
-       * Otherwise, we need to recursively merge original and repetition values
-       */
+        /**
+         * Otherwise, we need to recursively merge original and repetition values
+         */
       } else {
         return repetitionAssembler(originalParam, repetitionParam);
       }
@@ -315,7 +315,7 @@ export function escape(string: string): string;
  *                              replaced and total length of new chars added
  * @returns object with escaped string, count and length
  */
-export function escape(string: string, withCount: boolean): {value: string; count: number; length: number};
+export function escape(string: string, withCount: boolean): { value: string; count: number; length: number };
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
@@ -325,7 +325,7 @@ export function escape(string: string, withCount: boolean): {value: string; coun
  *                              replaced and total length of new chars added
  * @returns {string | {value, count, length}} escaped string or object with escaped string, count and length
  */
-export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
+export function escape(string: string, withCount = false): string | { value: string; count: number; length: number } {
   if (!string) {
     return '';
   }
@@ -484,7 +484,11 @@ export function filterBeautifiedAddons(repetitions: HawkEventRepetition[]): void
  * @param value - what to trim
  * @param maxLen - how many chars to leave
  */
-export function trim(value: string, maxLen: number): string {
+export function trim(value: string | undefined, maxLen: number): string {
+  if (!value) {
+    return '';
+  }
+
   return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
 }
 

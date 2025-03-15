@@ -29,6 +29,7 @@ import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
 import { deepMerge } from '@/utils';
 import { patch } from '@n1ru4l/json-patch-plus';
+import { cloneDeep } from 'cypress/types/lodash';
 
 /**
  * Mutations enum for this module
@@ -472,10 +473,6 @@ const module: Module<EventsModuleState, RootState> = {
         }
       });
 
-      console.log('repetitions', repetitions);
-
-      response.data.project.event.repetitions = repetitions;
-
       /**
        * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
        */
@@ -486,14 +483,15 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       repetitions.map(repetition => {
+        console.log('repetition', repetition);
         if (repetition.delta && originalEvent) {
-          console.log(JSON.parse(repetition.delta));
+          const payloadClone = Object.assign({}, originalEvent.payload);
           commit(MutationTypes.AddRepetitionPayload, {
             projectId,
             eventId,
             repetition: {
               ...repetition,
-              payload: patch({ left: originalEvent.payload, delta: JSON.parse(repetition.delta) }),
+              payload: patch({ left: payloadClone, delta: JSON.parse(repetition.delta) }),
             },
           });
         } else {
@@ -556,8 +554,7 @@ const module: Module<EventsModuleState, RootState> = {
         commit(MutationTypes.UpdateEvent, {
           projectId,
           event: {
-            ...event,
-            payload: patch({ left: event.payload, delta: JSON.parse(repetition.delta) }),
+            payload: repetition.payload,
           },
         });
       } else {

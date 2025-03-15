@@ -261,6 +261,7 @@ export default Vue.extend({
      * @param repetitionId - clicked repetition id
      */
     goToRepetition(repetitionId: string): void {
+      console.log('goToRepetition', this.repetitions);
       this.$router.push({
         name: 'event-overview',
         params: {
