@@ -447,6 +447,12 @@ const module: Module<EventsModuleState, RootState> = {
         eventsList: recentEvents.events,
       });
 
+      /**
+       * Handles events list updates based on search context
+       * If search parameter is present - replaces the entire events list (SetRecentEventsList)
+       * If no search parameter - appends new events to existing list (AddToRecentEventsList)
+       * This supports both search functionality and infinite scroll pagination
+       */
       if (search !== undefined) {
         commit(MutationTypes.SetRecentEventsList, {
           projectId,
@@ -659,18 +665,28 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Set events sort order
+     * Set sorting order for project
      *
-     * @param root0
-     * @param root1
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - VueX commit method
+     * @param {Function} context.dispatch - Vuex dispatch method
+     *
+     * @param {object} project - object of project data
+     * @param {EventsSortOrder} project.order - order to set
+     * @param {string} project.projectId - project to set order for
+     * @param {string} [project.search] - optional search query
      */
     async [SET_EVENTS_ORDER]({ commit, dispatch }, { projectId, order, search }) {
-      commit(SET_EVENTS_ORDER, { projectId,
-        order });
+      commit(SET_EVENTS_ORDER, {
+        projectId,
+        order,
+      });
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      return dispatch(FETCH_RECENT_EVENTS, { projectId,
-        search });
+      return dispatch(FETCH_RECENT_EVENTS, {
+        projectId,
+        search,
+      });
     },
 
     /**
