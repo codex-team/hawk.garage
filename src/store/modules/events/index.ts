@@ -28,6 +28,7 @@ import {
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
 import { deepMerge } from '@/utils';
+import { patch } from '@n1ru4l/json-patch-plus';
 
 /**
  * Mutations enum for this module
@@ -114,7 +115,7 @@ export interface EventsModuleState {
   /**
    * Event's repetitions map
    */
-  repetitions: {[key: string]: HawkEventRepetition[]};
+  repetitions: { [key: string]: HawkEventRepetition[] };
 
   /**
    * Event's filters rules map by project id
@@ -129,7 +130,7 @@ export interface EventsModuleState {
   /**
    * Latest events map by project id
    */
-  latest: {[key: string]: HawkEventDailyInfo};
+  latest: { [key: string]: HawkEventDailyInfo };
 }
 
 /**
@@ -281,7 +282,9 @@ const module: Module<EventsModuleState, RootState> = {
 
         const event = Object.assign({}, state.list[key]);
 
-        if (repetition && repetition.payload) {
+        if (repetition && repetition.delta) {
+          event.payload = patch({ left: event.payload, delta: JSON.parse(repetition.delta) });
+        } else if (repetition && repetition.payload) {
           event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
         }
 
@@ -457,7 +460,21 @@ const module: Module<EventsModuleState, RootState> = {
       const skip = (state.repetitions[key] || []).length;
 
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
-      const repetitions = response.data.project.event.repetitions;
+
+      const repetitions = response.data.project.event.repetitions.map(repetition => {
+        if (repetition.delta && originalEvent) {
+          return {
+            ...repetition,
+            payload: patch({ left: originalEvent.payload, delta: JSON.parse(repetition.delta) }),
+          };
+        } else {
+          return repetition;
+        }
+      });
+
+      console.log('repetitions', repetitions);
+
+      response.data.project.event.repetitions = repetitions;
 
       /**
        * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
@@ -465,19 +482,31 @@ const module: Module<EventsModuleState, RootState> = {
       filterBeautifiedAddons(repetitions);
 
       if (originalEvent) {
-        filterBeautifiedAddons([ originalEvent ]);
+        filterBeautifiedAddons([originalEvent]);
       }
 
       repetitions.map(repetition => {
-        // save to the state
-        commit(MutationTypes.AddRepetitionPayload, {
-          projectId,
-          eventId,
-          repetition: {
-            ...repetition,
-            payload: originalEvent ? repetitionAssembler(originalEvent.payload, repetition.payload) as HawkEventPayload : repetition.payload,
-          },
-        });
+        if (repetition.delta && originalEvent) {
+          console.log(JSON.parse(repetition.delta));
+          commit(MutationTypes.AddRepetitionPayload, {
+            projectId,
+            eventId,
+            repetition: {
+              ...repetition,
+              payload: patch({ left: originalEvent.payload, delta: JSON.parse(repetition.delta) }),
+            },
+          });
+        } else {
+          // save to the state
+          commit(MutationTypes.AddRepetitionPayload, {
+            projectId,
+            eventId,
+            repetition: {
+              ...repetition,
+              payload: originalEvent ? repetitionAssembler(originalEvent.payload, repetition.payload) as HawkEventPayload : repetition.payload,
+            },
+          });
+        }
       });
 
       return repetitions;
@@ -501,21 +530,44 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
-      const repetition = event.repetition;
+      let repetition = event.repetition;
 
-      filterBeautifiedAddons([ event ]);
-      filterBeautifiedAddons([ event.repetition ]);
+      if (event.repetition && event.repetition.delta) {
+        repetition = {
+          ...event.repetition,
+          payload: patch({ left: event.payload, delta: JSON.parse(event.repetition.delta) }),
+        };
+      } else if (!event.repetition.payload) {
+        repetition = {
+          ...event.repetition,
+          payload: event.payload,
+        };
+      }
+
+      event.repetition = repetition;
+
+      filterBeautifiedAddons([event]);
+      filterBeautifiedAddons([event.repetition]);
 
       /**
        * Updates or sets event's fetched payload in the state
        */
-      commit(MutationTypes.UpdateEvent, {
-        projectId,
-        event: {
-          ...event,
-          payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
-        },
-      });
+      if (repetition.delta && event) {
+        commit(MutationTypes.UpdateEvent, {
+          projectId,
+          event: {
+            ...event,
+            payload: patch({ left: event.payload, delta: JSON.parse(repetition.delta) }),
+          },
+        });
+      } else {
+        commit(MutationTypes.UpdateEvent, {
+          projectId,
+          event: {
+            payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
+          },
+        });
+      }
     },
 
     /**
@@ -691,7 +743,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {number} project.days - number of a "few" days
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: { projectId: string; eventId: string; days: number }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
 
@@ -812,7 +864,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [ repetition ]);
+        Vue.set(state.repetitions, key, [repetition]);
 
         return;
       }
@@ -951,7 +1003,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} project.eventId - event ID
      * @param {EventChartItem[]} project.data - array of dots
      */
-    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
+    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[] }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.list[key];
 

@@ -1006,16 +1006,60 @@ type RemoveAssigneeResponse {
   success: Boolean!
 }
 
-"""Event's repetitions. Make Event unique by repetition's payload"""
-type Repetition {
-  """Standalone repetition ID"""
-  id: ID!
 
-  """Event's hash"""
+"""
+Delta of the event's payload
+"""
+type RepetitionDelta {
+  """
+  Event timestamp. Can be empty if repetition has the same timestamp as original event
+  """
+  timestamp: [Float]
+
+  """
+  Event title
+  """
+  title: [String]
+
+  """
+  Event type: TypeError, ReferenceError etc.
+  """
+  type: [String]
+
+  """
+  Event severity level
+  """
+  level: [Int]
+
+  """
+  Source code version identifier
+  """
+  release: [String]
+}
+
+"""
+Repetition of the event
+"""
+type Repetition {
+  """
+  Standalone repetition ID
+  """
+  id: ID! @renameFrom(name: "_id")
+
+  """
+  Event's hash
+  """
   groupHash: String!
 
-  """Event's payload patch"""
+  """
+  Event's payload patch
+  """
   payload: RepetitionPayload!
+
+  """
+  Delta of the event's payload
+  """
+  delta: RepetitionDelta
 }
 
 """Type representing Event payload"""

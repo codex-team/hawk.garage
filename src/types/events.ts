@@ -241,6 +241,11 @@ export interface HawkEventRepetition {
    * Unique repetition payload
    */
   payload: HawkEventPayload;
+
+  /**
+   * Delta payload
+   */
+  delta?: string;
 }
 
 export interface HawkEventBacktraceFrame {
