@@ -188,7 +188,7 @@ export default {
       }
 
       return Object.keys(this.recentEvents).length === 0;
-    }
+    },
   },
 
   /**
@@ -204,7 +204,8 @@ export default {
     }, 500);
 
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId, search: this.searchQuery  });
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId,
+        search: this.searchQuery  });
 
       const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
 
@@ -253,10 +254,10 @@ export default {
     }
   },
 
-  destroyed(){
-    this.$store.commit('SET_PROJECT_SEARCH', { 
-      projectId: this.projectId, 
-      search: '' 
+  destroyed() {
+    this.$store.commit('SET_PROJECT_SEARCH', {
+      projectId: this.projectId,
+      search: '',
     });
   },
 
@@ -270,10 +271,17 @@ export default {
 
   unmounted() {
     /** Clear search query when component is unmounted */
-    this.$store.commit('SET_PROJECT_SEARCH', { 
-      projectId: this.projectId, 
-      search: '' 
+    this.$store.commit('SET_PROJECT_SEARCH', {
+      projectId: this.projectId,
+      search: '',
     });
+  },
+
+  /**
+   * Clean up debounced function on component destroy
+   */
+  beforeDestroy() {
+    this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
 
   methods: {
@@ -294,9 +302,9 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { 
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
         projectId: this.projectId,
-        search: this.searchQuery 
+        search: this.searchQuery,
       });
       this.isLoadingEvents = false;
     },
@@ -370,6 +378,7 @@ export default {
 
     /**
      * Handle search input
+     *
      * @param {string} query - search query
      */
     async handleSearch(query) {
@@ -379,30 +388,23 @@ export default {
 
       const sanitizedQuery = query.slice(0, 100);
 
-      this.$store.commit('SET_PROJECT_SEARCH', { 
-        projectId: this.projectId, 
-        search: sanitizedQuery 
+      this.$store.commit('SET_PROJECT_SEARCH', {
+        projectId: this.projectId,
+        search: sanitizedQuery,
       });
 
       this.$store.commit('CLEAR_RECENT_EVENTS_LIST', { projectId: this.projectId });
-      
+
       this.isLoadingEvents = true;
       try {
-        this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { 
+        this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
           projectId: this.projectId,
-          search: sanitizedQuery 
+          search: sanitizedQuery,
         });
       } finally {
         this.isLoadingEvents = false;
       }
     },
-  },
-
-  /**
-   * Clean up debounced function on component destroy
-   */
-  beforeDestroy() {
-    this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
 };
 </script>

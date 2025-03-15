@@ -99,7 +99,7 @@ export default Vue.extend({
       },
       selectedFilter: '',
       selectedOrder: 'desc',
-      isLoading: false
+      isLoading: false,
     };
   },
   computed: {

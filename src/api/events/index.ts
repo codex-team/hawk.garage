@@ -51,9 +51,8 @@ export async function getEvent(projectId: string, eventId: string, repetitionId:
  * @param {number} skip - certain number of documents to skip
  * @param {EventsSortOrder} sort - events sort order to use
  * @param {EventsFilters} filters - events filters to use
- *
+ * @param search
  * @throws Error - 404 when project id is incorrect
- *
  * @returns {Promise<EventsWithDailyInfo|null>}
  */
 export async function fetchRecentEvents(
@@ -61,7 +60,7 @@ export async function fetchRecentEvents(
   skip = 0,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
-  search: string = ''
+  search = ''
 ): Promise<EventsWithDailyInfo | null> {
   const project = (await api.callOld(QUERY_RECENT_PROJECT_EVENTS, {
     projectId,

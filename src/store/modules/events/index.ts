@@ -446,7 +446,7 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         eventsList: recentEvents.events,
       });
-      
+
       if (search !== undefined) {
         commit(MutationTypes.SetRecentEventsList, {
           projectId,
@@ -660,22 +660,32 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Set events sort order
+     *
+     * @param root0
+     * @param root1
      */
     async [SET_EVENTS_ORDER]({ commit, dispatch }, { projectId, order, search }) {
-      commit(SET_EVENTS_ORDER, { projectId, order });
+      commit(SET_EVENTS_ORDER, { projectId,
+        order });
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      return dispatch(FETCH_RECENT_EVENTS, { projectId, search });
+      return dispatch(FETCH_RECENT_EVENTS, { projectId,
+        search });
     },
 
     /**
      * Set events filters
+     *
+     * @param root0
+     * @param root1
      */
     async [SET_EVENTS_FILTERS]({ commit, dispatch }, { projectId, filters, search }) {
-      commit(SET_EVENTS_FILTERS, { projectId, filters });
+      commit(SET_EVENTS_FILTERS, { projectId,
+        filters });
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      return dispatch(FETCH_RECENT_EVENTS, { projectId, search });
+      return dispatch(FETCH_RECENT_EVENTS, { projectId,
+        search });
     },
 
     /**
@@ -751,6 +761,7 @@ const module: Module<EventsModuleState, RootState> = {
          */
         if (!state.recent[projectId][date]) {
           Vue.set(state.recent[projectId], date, recentEventsInfoByDate[date]);
+
           return;
         }
         const dailyEvents = recentEventsInfoByDate[date];
