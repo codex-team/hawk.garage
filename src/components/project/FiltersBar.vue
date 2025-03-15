@@ -42,9 +42,7 @@ import Vue from 'vue';
 import FlatButton from '../utils/FilterButton.vue';
 import Icon from '../utils/Icon.vue';
 import { EventsFilters, EventsSortOrder } from '../../types/events';
-import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER, FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
-
-type EventsSortOrder = 'desc' | 'asc';
+import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER } from '../../store/modules/events/actionTypes';
 
 interface FiltersBarData {
   /**
@@ -60,7 +58,6 @@ interface FiltersBarData {
   sortOptions: {
     [K in EventsSortOrder]: string
   },
-  selectedFilter: string;
   selectedOrder: EventsSortOrder;
   isLoading: boolean;
 }
@@ -99,9 +96,8 @@ export default Vue.extend({
         [EventsSortOrder.ByCount]: 'byCount',
         [EventsSortOrder.ByAffectedUsers]: 'byAffectedUsers',
       },
-      selectedFilter: '',
-      selectedOrder: 'desc' as EventsSortOrder,
-      isLoading: false
+      selectedOrder: EventsSortOrder.ByDate,
+      isLoading: false,
     };
   },
   computed: {
