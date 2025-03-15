@@ -254,8 +254,6 @@ export default {
   },
 
   destroyed(){
-    console.log('destroy');
-
     this.$store.commit('SET_PROJECT_SEARCH', { 
       projectId: this.projectId, 
       search: '' 
@@ -272,10 +270,10 @@ export default {
 
   unmounted() {
     /** Clear search query when component is unmounted */
-    /*this.$store.commit('SET_PROJECT_SEARCH', { 
+    this.$store.commit('SET_PROJECT_SEARCH', { 
       projectId: this.projectId, 
       search: '' 
-    });*/
+    });
   },
 
   methods: {
