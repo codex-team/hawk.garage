@@ -17,9 +17,6 @@
         v-model="createPatternForm"
         class="input section__input"
         placeholder="Attempt to read property \"
-        .*\"
-        on
-        array"
       >
       <UiButton
         class="section__button"
