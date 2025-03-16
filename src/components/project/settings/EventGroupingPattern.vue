@@ -54,7 +54,7 @@
 import Vue from 'vue';
 import UiButton from '@/components/utils/UiButton.vue';
 import FormTextFieldset from '../../forms/TextFieldset.vue';
-import { ProjectEventGroupingPattern } from '@/types/project-events-grouping-patterns';
+import { ProjectEventGroupingPattern } from '@/types/project-event-grouping-patterns';
 import { Project } from '@/types/project';
 import { Workspace, ConfirmedMember, Member } from '@/types/workspaces';
 import { 
