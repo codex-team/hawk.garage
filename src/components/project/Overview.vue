@@ -20,6 +20,9 @@
           v-model="searchQuery"
           class="search-container"
           @input="debouncedSearch"
+          skin="fancy"
+          :placeholder="searchFieldPlaceholder"
+          :isCMDKEnabled="true"
         />
         <template v-if="!isListEmpty">
           <div
@@ -88,6 +91,7 @@ import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
+import { getPlatform } from '@/utils';
 
 export default {
   name: 'ProjectOverview',
@@ -188,6 +192,10 @@ export default {
       }
 
       return Object.keys(this.recentEvents).length === 0;
+    },
+
+    searchFieldPlaceholder() {
+      return this.$t('forms.searchFieldWithCMDK', { cmd: getPlatform() === 'macos' ? '⌘' : 'Ctrl' });
     },
   },
 
