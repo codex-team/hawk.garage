@@ -105,6 +105,11 @@ export default Vue.extend({
      */
     async saveNewPattern(pattern: string): Promise<void> {
       try {
+        /**
+         * Check that the pattern is a valid regular expression
+         */
+        new RegExp(pattern);
+
         await this.$store.dispatch(ADD_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
           pattern });
         notifier.show({ message: 'Pattern added successfully',
@@ -126,6 +131,11 @@ export default Vue.extend({
      */
     async updatePattern(id: string, pattern: string): Promise<void> {
       try {
+        /**
+         * Check that the pattern is a valid regular expression
+         */
+        new RegExp(pattern);
+
         await this.$store.dispatch(UPDATE_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
           id,
           pattern });
