@@ -166,34 +166,18 @@ export async function fetchReleases(projectId) {
   if (!projectId) {
     throw new Error('projectId is required to fetch releases');
   }
-  console.log('[API] Fetching releases for project:', projectId);
-  console.log('[API] Query:', QUERY_GET_RELEASES);
-  console.log('[API] Variables:', { projectId });
-  console.log('[API] Request:', {
-    query: QUERY_GET_RELEASES,
-    variables: { projectId },
-  });
   
   try {
     const response = await api.call(QUERY_GET_RELEASES, { projectId }, undefined, { allowErrors: true });
-    console.log('[API] Full response:', response);
     
     if (response.errors) {
-      console.error('[API] GraphQL errors:', response.errors);
+      console.error('GraphQL errors:', response.errors);
       return [];
     }
     
-    const releases = response.data.getReleases;
-    console.log('[API] Fetched releases:', releases);
-    return releases;
+    return response.data.getReleases;
   } catch (error) {
-    console.error('[API] Failed to fetch releases:', error);
-    console.error('[API] Error details:', {
-      message: error.message,
-      stack: error.stack,
-      response: error.response?.data,
-      request: error.config
-    });
+    console.error('Failed to fetch releases:', error);
     return [];
   }
 }

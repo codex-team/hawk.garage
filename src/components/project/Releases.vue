@@ -84,7 +84,6 @@ export default {
     }
   },
   data() {
-    window.console.log('[Releases] Component initialized');
     return {
       /**
        * Tracks which releases are expanded by index
@@ -97,23 +96,14 @@ export default {
      * Current viewed project
      */
     project() {
-      window.console.log('[Releases] Getting project from store, projectId:', this.projectId);
-      const project = this.$store.getters.getProjectById(this.projectId);
-      window.console.log('[Releases] Project from store:', project);
-      if (!project) {
-        window.console.warn('[Releases] Project not found in store!');
-      }
-      return project;
+      return this.$store.getters.getProjectById(this.projectId);
     },
 
     /**
      * Project releases from Vuex store
      */
     releases() {
-      window.console.log('[Releases] Getting releases from project:', this.project?.releases);
-      const releases = this.project?.releases || [];
-      window.console.log('[Releases] Final releases array:', releases);
-      return releases;
+      return this.project?.releases || [];
     },
 
     /**
@@ -162,7 +152,6 @@ export default {
           return b.localeCompare(a);
         })
         .forEach(key => {
-          // Sort releases within each day by time (newest first)
           sortedGroups[key] = groups[key].sort((a, b) => 
             new Date(b.release).getTime() - new Date(a.release).getTime()
           );
@@ -172,20 +161,17 @@ export default {
     }
   },
   async created() {
-    window.console.log('[Releases] Component created, projectId:', this.projectId);
     try {
-      window.console.log('[Releases] Dispatching FETCH_PROJECT_RELEASES');
-      const result = await this.$store.dispatch(FETCH_PROJECT_RELEASES, this.projectId);
-      window.console.log('[Releases] FETCH_PROJECT_RELEASES result:', result);
+      await this.$store.dispatch(FETCH_PROJECT_RELEASES, this.projectId);
     } catch (error) {
-      window.console.error('[Releases] Error fetching releases:', error);
+      console.error('Error fetching releases:', error);
     }
   },
   mounted() {
-    window.console.log('[Releases] Component mounted');
+    console.log('[Releases] Component mounted');
   },
   beforeDestroy() {
-    window.console.log('[Releases] Component will be destroyed');
+    console.log('[Releases] Component will be destroyed');
   },
   methods: {
     /**
@@ -224,11 +210,9 @@ export default {
      * @param {string} releaseKey - Key of the release to toggle
      */
     toggleRelease(releaseKey) {
-      window.console.log('[Releases] Toggling release:', releaseKey);
       const newState = { ...this.expandedReleases };
       newState[releaseKey] = !newState[releaseKey];
       this.expandedReleases = newState;
-      window.console.log('[Releases] New expanded state:', this.expandedReleases);
     }
   }
 };
