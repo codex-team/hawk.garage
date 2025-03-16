@@ -11,6 +11,7 @@
         <SearchField
           v-model="searchQuery"
           class="aside__search-field"
+          :placeholder="$t('forms.searchField')"
         />
         <div
           v-if="projects.length"
