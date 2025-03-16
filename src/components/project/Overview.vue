@@ -310,6 +310,7 @@ export default {
       if (this.isAssigneesShowed) {
         this.isAssigneesShowed = false;
       } else {
+        console.log('showEventOverview', projectId, groupHash, repetitionId);
         this.$router.push({
           name: 'event-overview',
           params: {

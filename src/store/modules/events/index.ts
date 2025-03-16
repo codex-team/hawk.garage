@@ -282,11 +282,6 @@ const module: Module<EventsModuleState, RootState> = {
 
         const event = cloneDeep(state.list[key]);
 
-        console.log('--------------------------------');
-        console.log('event', event);
-        console.log('repetition', repetition);
-        console.log('--------------------------------');
-
         if (repetition && repetition.delta && repetition.payload) {
           event.payload = repetition.payload;
         } else if (repetition && repetition.payload) {
@@ -534,13 +529,15 @@ const module: Module<EventsModuleState, RootState> = {
 
       let repetition = event.repetition;
 
-      if (event.repetition && event.repetition.delta) {
+      const isNewDeltaFormat = !event.repetition.payload;
+
+      if (event.repetition.delta && isNewDeltaFormat) {
         const eventPayload = cloneDeep(event.payload);
         repetition = {
           ...event.repetition,
           payload: patch({ left: eventPayload, delta: JSON.parse(event.repetition.delta) }),
         };
-      } else if (!event.repetition.payload) {
+      } else if (isNewDeltaFormat) {
         repetition = {
           ...event.repetition,
           payload: event.payload,
@@ -555,17 +552,35 @@ const module: Module<EventsModuleState, RootState> = {
       /**
        * Updates or sets event's fetched payload in the state
        */
-      if (repetition.delta && event) {
+      if (isNewDeltaFormat && repetition.delta) {
+        const eventPayload = cloneDeep(event.payload);
+        console.log('aaaaaaaa', {
+          projectId,
+          event: {
+            ...event,
+            payload: repetition.payload,
+          },
+        })
         commit(MutationTypes.UpdateEvent, {
           projectId,
           event: {
+            ...event,
             payload: repetition.payload,
+          },
+        });
+      } else if (isNewDeltaFormat) {
+        commit(MutationTypes.UpdateEvent, {
+          projectId,
+          event: {
+            ...event,
+            payload: event.payload,
           },
         });
       } else {
         commit(MutationTypes.UpdateEvent, {
           projectId,
           event: {
+            ...event,
             payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
           },
         });
