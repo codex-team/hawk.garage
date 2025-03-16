@@ -280,11 +280,30 @@ const module: Module<EventsModuleState, RootState> = {
           });
         }
 
+        /**
+         * Make a deep copy of the event
+         */
         const event = cloneDeep(state.list[key]);
 
-        if (repetition && repetition.delta && repetition.payload) {
-          event.payload = repetition.payload;
+        /**
+         * Check if repetition is present and delta format is new (repetition.payload is null)
+         */
+        if (repetition && !repetition.payload) {
+          /**
+           * If delta is present, apply delta to the event payload
+           */
+          if (repetition.delta) {
+            event.payload = patch({ left: event.payload, delta: JSON.parse(repetition.delta) });
+          } else {
+            /**
+             * If delta is not present, set the event payload to the original event payload
+             */
+            event.payload = event.payload;
+          }
         } else if (repetition && repetition.payload) {
+          /**
+           * If repetition is present and delta format is old (repetition.payload is not null), assemble event payload
+           */
           event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
         }
 

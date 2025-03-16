@@ -240,7 +240,7 @@ export interface HawkEventRepetition {
   /**
    * Unique repetition payload, null for old delta format
    */
-  payload: HawkEventPayload | null;
+  payload: HawkEventPayload;
 
   /**
    * Delta payload, null for old delta format or if there is no delta between original and repetition
