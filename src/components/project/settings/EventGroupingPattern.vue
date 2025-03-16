@@ -16,7 +16,10 @@
       <input
         v-model="createPatternForm"
         class="input section__input"
-        placeholder="Attempt to read property \".*\" on array"
+        placeholder="Attempt to read property \"
+        .*\"
+        on
+        array"
       >
       <UiButton
         class="section__button"
@@ -109,6 +112,7 @@ export default Vue.extend({
       } catch (regexpError) {
         notifier.show({ message: 'Invalid regular expression pattern',
           style: 'error' });
+
         return;
       }
 
@@ -141,6 +145,7 @@ export default Vue.extend({
       } catch (regexpError) {
         notifier.show({ message: 'Invalid regular expression pattern',
           style: 'error' });
+
         return;
       }
 
