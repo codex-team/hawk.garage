@@ -16,14 +16,14 @@
           <div class="project-releases__day-header">{{ formatDayHeader(day) }}</div>
           <div
             v-for="(release, index) in dayReleases"
-            :key="release._id"
+            :key="release.id"
             class="project-releases__item"
             :class="{ 'project-releases__item--expanded': expandedReleases[`${day}-${index}`] }"
             @click="toggleRelease(`${day}-${index}`)"
           >
             <div class="project-releases__item-header">
               <div class="project-releases__item-info">
-                <div class="project-releases__time">{{ formatTime(release.releaseName) }}</div>
+                <div class="project-releases__time">{{ getTimestampFromReleaseName(release.releaseName) | prettyTime }}</div>
                 <div class="project-releases__name">{{ release.id }}</div>
               </div>
               <div class="project-releases__files-count">
@@ -31,22 +31,10 @@
               </div>
             </div>
             <div v-if="expandedReleases[`${day}-${index}`]" class="project-releases__details">
-              <div class="project-releases__commits" v-if="release.commits && release.commits.length">
-                <div class="project-releases__section-title">Commits</div>
-                <div
-                  v-for="(commit, commitIndex) in release.commits"
-                  :key="commitIndex"
-                  class="project-releases__commit"
-                >
-                  <div class="project-releases__commit-header">
-                    <span class="project-releases__commit-icon">📝</span>
-                    <span class="project-releases__commit-hash">{{ commit.hash.substring(0, 7) }}</span>
-                    <span class="project-releases__commit-author">{{ commit.author }}</span>
-                    <span class="project-releases__commit-date">{{ commit.date | prettyDate }}</span>
-                  </div>
-                  <div class="project-releases__commit-title">{{ commit.title }}</div>
-                </div>
-              </div>
+              <DetailsSuspectedCommits
+                v-if="release.commits && release.commits.length"
+                :commits="release.commits"
+              />
               <div class="project-releases__files" v-if="release.files && release.files.length">
                 <div class="project-releases__section-title">Source Maps</div>
                 <div
@@ -65,7 +53,18 @@
         v-else
         class="project-releases__empty"
       >
-        {{ $t('projects.noReleases') }}
+        <div class="project-releases__empty-title">{{ $t('components.releases.empty.title') }}</div>
+        <div class="project-releases__empty-description">
+          {{ $t('components.releases.empty.description') }}
+          <ul class="project-releases__empty-list">
+            <li>{{ $t('components.releases.empty.benefits.commits') }}</li>
+            <li>{{ $t('components.releases.empty.benefits.sourceMaps') }}</li>
+            <li>{{ $t('components.releases.empty.benefits.identify') }}</li>
+          </ul>
+          <a href="https://docs.hawk.so/releases" target="_blank" class="project-releases__empty-link">
+            {{ $t('components.releases.empty.learnMore') }}
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -73,9 +72,13 @@
 
 <script>
 import { FETCH_PROJECT_RELEASES } from '@/store/modules/projects/actionTypes';
+import DetailsSuspectedCommits from '../event/details/DetailsSuspectedCommits.vue';
 
 export default {
   name: 'ProjectReleases',
+  components: {
+    DetailsSuspectedCommits
+  },
   props: {
     projectId: {
       type: String,
@@ -113,7 +116,6 @@ export default {
       
       if (!this.releases) return groups;
 
-      // Get current date at start of day
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const yesterday = new Date(today);
@@ -172,19 +174,6 @@ export default {
   },
   methods: {
     /**
-     * Format date string to show only time
-     * @param {string} dateStr - Date string to format
-     * @returns {string} Formatted time
-     */
-    formatTime(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleTimeString(undefined, {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    },
-
-    /**
      * Format day header
      * @param {string} day - Day identifier ('today', 'yesterday', or YYYY-MM-DD)
      * @returns {string} Formatted day header
@@ -213,6 +202,15 @@ export default {
       const newState = { ...this.expandedReleases };
       newState[releaseKey] = !newState[releaseKey];
       this.expandedReleases = newState;
+    },
+
+    /**
+     * Convert release name string to timestamp in seconds
+     * @param {string} releaseName - Release name in ISO string format
+     * @returns {number} Timestamp in seconds
+     */
+    getTimestampFromReleaseName(releaseName) {
+      return Math.floor(new Date(releaseName).getTime() / 1000);
     }
   }
 };
@@ -331,47 +329,6 @@ export default {
     margin-bottom: 10px;
   }
 
-  &__commits {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  &__commit {
-    padding: 10px;
-    background: var(--color-bg-main);
-    border-radius: 6px;
-  }
-
-  &__commit-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-    color: var(--color-text-second);
-    font-size: 13px;
-  }
-
-  &__commit-icon {
-    width: 14px;
-    height: 14px;
-    color: var(--color-text-second);
-  }
-
-  &__commit-hash {
-    font-family: monospace;
-  }
-
-  &__commit-author {
-    margin-left: auto;
-  }
-
-  &__commit-title {
-    color: var(--color-text-main);
-    font-size: 14px;
-  }
-
   &__files {
     margin-top: 15px;
   }
@@ -395,11 +352,42 @@ export default {
 
   &__empty {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 200px;
     color: var(--color-text-second);
     font-size: 14px;
+    text-align: center;
+    padding: 20px;
+
+    &-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: var(--color-text-main);
+    }
+
+    &-description {
+      max-width: 400px;
+    }
+
+    &-list {
+      text-align: left;
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+
+    &-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--color-indicator-success);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 </style> 

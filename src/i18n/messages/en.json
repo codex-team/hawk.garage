@@ -82,6 +82,18 @@
       "hereIsDSN": "Here is your DSN. You can also found it in the project settings later.",
       "useDSN": "Use DSN in Sentry SDK",
       "useDSNText": "All Sentry SDK in one way or another support the `dsn` parameter. Pass the received DSN to the Sentry SDK options."
+    },
+    "releases": {
+      "empty": {
+        "title": "You do not have any releases yet",
+        "description": "Releases help you to:",
+        "benefits": {
+          "commits": "Associate commits with events",
+          "sourceMaps": "Upload and use JavaScript source maps",
+          "identify": "Identify suspicious commits for errors"
+        },
+        "learnMore": "Learn how to setup releases →"
+      }
     }
   },
   "forms": {
