@@ -121,17 +121,6 @@ export const USER_NOTIFICATIONS_FRAGMENT = `
 `;
 
 /**
- * Event grouping patterns frangment, used for presentation of the project patterns in graphql queries
- */
-// language=GraphQL
-export const EVENT_GROUPING_PATTERNS_FRAGMENT = `
-  fragment EventGroupingPattern on ProjectEventGroupingPattern {
-    id
-    pattern
-  }
-`
-
-/**
  * Query fragment for workspace tariff plan
  */
 // language=GraphQL
