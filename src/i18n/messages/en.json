@@ -86,7 +86,8 @@
   },
   "forms": {
     "imageUploader": "UPLOAD LOGO",
-    "searchField": "Search"
+    "searchField": "Search",
+    "searchFieldWithCMDK": "{cmd}+K to search"
   },
   "projects": {
     "filters": {
@@ -428,7 +429,8 @@
     "addons": {
       "url": "URL",
       "window": "Browser Window",
-      "beautifiedUserAgent": "User Agent"
+      "beautifiedUserAgent": "User Agent",
+      "consoleOutput": "Console Output"
     },
     "user": {
       "unknown": "Unknown",
