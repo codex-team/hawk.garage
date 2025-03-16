@@ -115,7 +115,7 @@ export default Vue.extend({
 
         return;
       }
-      
+
       try {
         await this.$store.dispatch(ADD_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
           pattern });
@@ -237,6 +237,7 @@ export default Vue.extend({
       } catch (error) {
         return false;
       }
+    },
   },
 });
 </script>
