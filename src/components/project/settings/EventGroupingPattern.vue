@@ -109,22 +109,13 @@ export default Vue.extend({
       /**
        * Check that the pattern is a valid regular expression
        */
-      try {
-        new RegExp(pattern);
-
-        /**
-         * Check that the pattern is a safe regular expression
-         */
-        if (!isSafeRegex(pattern)) {
-          throw new Error('Invalid regular expression pattern');
-        }
-      } catch (regexpError) {
+      if (!this.isRegexValid(pattern)) {
         notifier.show({ message: 'Invalid regular expression pattern',
           style: 'error' });
 
         return;
       }
-
+      
       try {
         await this.$store.dispatch(ADD_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
           pattern });
@@ -149,16 +140,7 @@ export default Vue.extend({
       /**
        * Check that the pattern is a valid regular expression
        */
-      try {
-        new RegExp(pattern);
-
-        /**
-         * Check that the pattern is a safe regular expression
-         */
-        if (!isSafeRegex(pattern)) {
-          throw new Error('Invalid regular expression pattern');
-        }
-      } catch (regexpError) {
+      if (!this.isRegexValid(pattern)) {
         notifier.show({ message: 'Invalid regular expression pattern',
           style: 'error' });
 
@@ -241,6 +223,20 @@ export default Vue.extend({
         });
       }
     },
+
+    /**
+     * Method that checks if the pattern is a valid regular expression
+     *
+     * @param pattern - pattern string to be checked
+     * @returns true if the pattern is a valid regular expression, false otherwise
+     */
+    isRegexValid(pattern: string): boolean {
+      try {
+        new RegExp(pattern);
+        return isSafeRegex(pattern);
+      } catch (error) {
+        return false;
+      }
   },
 });
 </script>
