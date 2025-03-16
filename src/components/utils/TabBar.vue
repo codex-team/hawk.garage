@@ -84,8 +84,9 @@ export default Vue.extend({
      * @param item - clicked navigation item
      */
     onNavigationItemClick(item: TabInfo) {
-      const index = this.items.indexOf(item);
-      this.$emit('tabChanged', index);
+      this.$router.push({
+        name: item.routeName,
+      });
     },
   },
 });
@@ -101,7 +102,6 @@ export default Vue.extend({
       display: flex;
       align-items: center;
       margin-right: 25px;
-      padding-bottom: 8px;
       color: var(--color-text-second);
       font-size: 14.6px;
       white-space: nowrap;

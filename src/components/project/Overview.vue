@@ -6,76 +6,60 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <div class="project-overview__tabs">
-        <TabBar
-          :items="[
-            { title: $t('Events'), routeName: 'project-overview' },
-            { title: $t('Releases'), routeName: 'project-releases' }
-          ]"
-          :active-item-index="currentTab"
-          @tabChanged="onTabChange"
-        />
-      </div>
-      <div v-if="currentTab === 0">
-        <Chart
-          :points="chartData"
-          class="project-overview__chart"
-        />
-        <FiltersBar />
-        <!-- Events content -->
+      <Chart
+        :points="chartData"
+        class="project-overview__chart"
+      />
+      <FiltersBar />
+      <!-- TODO: Add placeholder if there is no filtered events -->
+      <div
+        v-if="recentEvents"
+        class="project-overview__events"
+      >
         <div
-          v-if="recentEvents"
-          class="project-overview__events"
+          v-for="(eventsByDate, date) in recentEvents"
+          :key="date"
+          class="project-overview__events-by-date"
         >
-          <div
-            v-for="(eventsByDate, date) in recentEvents"
-            :key="date"
-            class="project-overview__events-by-date"
-          >
-            <div class="project-overview__date">
-              {{ getDay(date) | prettyDate }}
-            </div>
-            <EventItem
-              v-for="dailyEventInfo in eventsByDate"
-              :key="dailyEventInfo.groupHash"
-              :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
-              :count="dailyEventInfo.count"
-              :affected-users-count="dailyEventInfo.affectedUsers"
-              class="project-overview__event"
-              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
-              @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
-              @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
-            />
+          <div class="project-overview__date">
+            {{ getDay(date) | prettyDate }}
           </div>
-          <div
-            v-if="Object.keys(recentEvents).length && !noMoreEvents"
-            class="project-overview__load-more"
-            :class="{'loader': isLoadingEvents}"
-            @click="loadMoreEvents"
-          >
-            <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
-          </div>
-          <div
-            v-if="Object.keys(recentEvents).length === 0"
-            class="project-overview__no-events-placeholder"
-          >
-            <div class="project-overview__divider" />
-            {{ $t('projects.noEventsPlaceholder') }}
-          </div>
-          <AssigneesList
-            v-if="isAssigneesShowed"
-            v-click-outside="hideAssigneesList"
-            :style="assigneesListPosition"
-            :event-group-hash="eventGroupHash"
-            :project-id="projectId"
-            class="project-overview__assignees-list"
-            @hide="hideAssigneesList"
+          <EventItem
+            v-for="dailyEventInfo in eventsByDate"
+            :key="dailyEventInfo.groupHash"
+            :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
+            :count="dailyEventInfo.count"
+            :affected-users-count="dailyEventInfo.affectedUsers"
+            class="project-overview__event"
+            :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
+            @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
+            @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
           />
         </div>
-      </div>
-      <div v-else>
-        <!-- Releases content -->
-        <Releases :project-id="projectId" />
+        <div
+          v-if="Object.keys(recentEvents).length && !noMoreEvents"
+          class="project-overview__load-more"
+          :class="{'loader': isLoadingEvents}"
+          @click="loadMoreEvents"
+        >
+          <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
+        </div>
+        <div
+          v-if="Object.keys(recentEvents).length === 0"
+          class="project-overview__no-events-placeholder"
+        >
+          <div class="project-overview__divider" />
+          {{ $t('projects.noEventsPlaceholder') }}
+        </div>
+        <AssigneesList
+          v-if="isAssigneesShowed"
+          v-click-outside="hideAssigneesList"
+          :style="assigneesListPosition"
+          :event-group-hash="eventGroupHash"
+          :project-id="projectId"
+          class="project-overview__assignees-list"
+          @hide="hideAssigneesList"
+        />
       </div>
     </div>
     <router-view />
@@ -93,8 +77,6 @@ import { debounce } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
-import TabBar from '../utils/TabBar';
-import Releases from './Releases';
 
 export default {
   name: 'ProjectOverview',
@@ -103,8 +85,6 @@ export default {
     EventItem,
     AssigneesList,
     Chart,
-    TabBar,
-    Releases,
   },
   data() {
     return {
@@ -152,11 +132,6 @@ export default {
        * Old window width
        */
       windowWidth: window.innerWidth,
-
-      /**
-       * Current active tab index
-       */
-      currentTab: 0,
     };
   },
   computed: {
@@ -345,14 +320,6 @@ export default {
         });
       }
     },
-
-    /**
-     * Handle tab change
-     * @param {number} index - New tab index
-     */
-    onTabChange(index) {
-      this.currentTab = index;
-    },
   },
 };
 </script>
@@ -374,13 +341,6 @@ export default {
 
     &__chart {
       margin: 15px 15px 0;
-    }
-
-    &__tabs {
-      margin: 0 15px 25px;
-      padding: 15px;
-      background-color: var(--color-bg-second);
-      border-radius: 9px;
     }
 
     &__events {
