@@ -55,7 +55,7 @@
           </div>
         </template>
         <div v-else-if="isLoadingEvents">
-          Loading...
+          <EventItemSkeleton />
         </div>
         <div
           v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
@@ -92,7 +92,7 @@ import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
-
+import EventItemSkeleton from './EventItemSkeleton';
 export default {
   name: 'ProjectOverview',
   components: {
@@ -101,6 +101,7 @@ export default {
     AssigneesList,
     Chart,
     SearchField,
+    EventItemSkeleton,
   },
   data() {
     return {
