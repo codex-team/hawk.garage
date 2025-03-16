@@ -1,42 +1,43 @@
 <template>
-  <div class="projects-patterns-settings-page">
-    <div class="settings-window-page__title">
+  <div class="patterns">
+    <div class="patterns__title">
       {{ $t('projects.settings.patterns.title') }}
     </div>
-    <div class="settings-window-page__subtle">
+    <div class="patterns__description">
       {{ $t('projects.settings.patterns.description') }}
     </div>
     <div
       v-if="userCanEdit"
-      class="section"
+      class="patterns-section"
     >
-      <div class="section__title">
+      <div class="patterns-section__title">
         {{ $t('projects.settings.patterns.createPattern.title') }}
       </div>
       <input
         v-model="createPatternForm"
-        class="input section__input"
+        class="input patterns-section__input"
         placeholder="Attempt to read property \"
       >
       <UiButton
-        class="section__button"
+        class="patterns-section__button"
         :content="$t('projects.settings.patterns.create')"
         submit
         @click="saveNewPattern(createPatternForm)"
       />
     </div>
-    <div class="section">
-      <div class="section__title">
+    <div class="patterns-section">
+      <div class="patterns-section__title">
         {{ $t('projects.settings.patterns.patternList.title') }}
       </div>
-      <div class="pattern-list">
+      <div class="patterns-list">
         <div
           v-for="(pattern) in currentPatternsState"
           :key="pattern.id"
+          class="patterns-list__item"
         >
           <input
             v-model="pattern.pattern"
-            class="input section__input"
+            class="input patterns-section__input"
             :disabled="!userCanEdit"
             :placeholder="$t('projects.settings.patterns.createPattern.placeholder')"
           >
@@ -44,7 +45,7 @@
       </div>
       <UiButton
         v-if="userCanEdit"
-        class="section__button"
+        class="patterns-section__button"
         :content="$t('projects.settings.patterns.save')"
         submit
         @click="saveButtonClicked()"
@@ -229,14 +230,12 @@ export default Vue.extend({
 <style scoped>
 @import url('../../../styles/custom-properties.css');
 
-.projects-patterns-settings-page {
+.patterns {
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 75%;
-}
 
-.settings-window-page {
   &__title {
     margin-bottom: 5px;
     color: var(--color-text-main);
@@ -244,7 +243,7 @@ export default Vue.extend({
     font-size: 18px;
   }
 
-  &__subtle {
+  &__description {
     width: 85%;
     color: var(--color-text-main);
     font-weight: 400;
@@ -254,7 +253,7 @@ export default Vue.extend({
   }
 }
 
-.section {
+.patterns-section {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -286,10 +285,13 @@ export default Vue.extend({
   }
 }
 
-.pattern-list {
+.patterns-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
-}
 
-</style>@/types/project-event-grouping-patterns
+  &__item {
+    width: 100%;
+  }
+}
+</style>
