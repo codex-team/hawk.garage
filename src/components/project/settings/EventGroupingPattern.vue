@@ -16,7 +16,7 @@
       <input
         v-model="createPatternForm"
         class="input section__input"
-        :placeholder="$t('projects.settings.patterns.createPattern.placeholder')"
+        placeholder="Attempt to read property \".*\" on array"
       >
       <UiButton
         class="section__button"
@@ -188,7 +188,7 @@ export default Vue.extend({
         /**
          * If new pattern is empty, then we should remove it
          */
-        if (pattern.pattern === '') {
+        if (pattern.pattern.trim() === '') {
           this.removePattern(pattern.id);
 
           return;

@@ -179,8 +179,7 @@
         "create": "Add",
         "save": "Save",
         "createPattern": {
-          "title": "Add pattern",
-          "placeholder": "Attempt to read property \".*\" on array"
+          "title": "Add pattern"
         },
         "patternList": {
           "title": "Patterns"

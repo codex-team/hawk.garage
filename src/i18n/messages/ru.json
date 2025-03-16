@@ -179,8 +179,7 @@
         "create": "Добавить",
         "save": "Сохранить",
         "createPattern": {
-          "title": "Добавить шаблон",
-          "placeholder": "Attempt to read property \".*\" on array"
+          "title": "Добавить шаблон"
         },
         "patternList": {
           "title": "Шаблоны"
