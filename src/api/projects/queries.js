@@ -1,5 +1,5 @@
 import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
 } from '../fragments';
 
 /**
@@ -121,6 +121,42 @@ export const MUTATION_REMOVE_PROJECT_NOTIFY_RULE = `
 
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
+
+// language=GraphQL
+export const MUTATION_CREATE_PROJECT_PATTERN = `
+  mutation ( $input: CreateProjectEventGroupingPatternInput! ){
+    createProjectEventGroupingPattern(
+      input: $input
+    ) {
+      id
+      pattern
+    }
+  }
+`
+
+// language=GraphQL
+export const MUTATION_UPDATE_PROJECT_PATTERN = `
+  mutation ( $input: UpdateProjectEventGroupingPatternInput! ){
+    updateProjectEventGroupingPattern(
+      input: $input
+    ) {
+      id
+      pattern
+    }
+  }
+`
+
+// language=GraphQL
+export const MUTATION_REMOVE_PROJECT_PATTERN = `
+  mutation ( $input: RemoveProjectEventGroupingPatternInput! ){
+    removeProjectEventGroupingPattern(
+      input: $input
+    ) {
+      id
+      pattern
+    }
+  }
+` 
 
 // language=GraphQL
 export const MUTATION_REMOVE_PROJECT = `
