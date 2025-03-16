@@ -54,7 +54,6 @@
                   :key="fileIndex"
                   class="project-releases__file"
                 >
-                  <span class="project-releases__file-icon">📄</span>
                   <span class="project-releases__file-name">{{ file.originFileName }}</span>
                 </div>
               </div>
