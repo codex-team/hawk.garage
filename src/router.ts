@@ -121,10 +121,10 @@ const router = new Router({
               component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Notifications.vue'),
             },
             {
-              path: "patterns",
+              path: 'patterns',
               name: 'project-settings-patterns',
-              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/EventGroupingPattern.vue')
-            }
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/EventGroupingPattern.vue'),
+            },
           ],
         },
 

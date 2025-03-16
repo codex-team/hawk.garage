@@ -4,14 +4,14 @@
       {{ $t('projects.settings.patterns.title') }}
     </div>
     <div class="settings-window-page__subtle">
-      {{ $t('projects.settings.patterns.description')}}
+      {{ $t('projects.settings.patterns.description') }}
     </div>
-    <div 
+    <div
       v-if="userCanEdit"
       class="section"
     >
       <div class="section__title">
-        {{ $t('projects.settings.patterns.createPattern.title')}}
+        {{ $t('projects.settings.patterns.createPattern.title') }}
       </div>
       <input
         v-model="createPatternForm"
@@ -27,10 +27,13 @@
     </div>
     <div class="section">
       <div class="section__title">
-        {{ $t('projects.settings.patterns.patternList.title')}}
-      </div>  
+        {{ $t('projects.settings.patterns.patternList.title') }}
+      </div>
       <div class="pattern-list">
-        <div v-for="(pattern) in currentPatternsState" :key="pattern.id">
+        <div
+          v-for="(pattern) in currentPatternsState"
+          :key="pattern.id"
+        >
           <input
             v-model="pattern.pattern"
             class="input section__input"
@@ -39,13 +42,13 @@
           >
         </div>
       </div>
-    <UiButton 
-      v-if="userCanEdit"
-      class="section__button"
-      :content="$t('projects.settings.patterns.save')" 
-      @click="saveButtonClicked()"
-      submit
-    />
+      <UiButton
+        v-if="userCanEdit"
+        class="section__button"
+        :content="$t('projects.settings.patterns.save')"
+        submit
+        @click="saveButtonClicked()"
+      />
     </div>
   </div>
 </template>
@@ -57,8 +60,8 @@ import FormTextFieldset from '../../forms/TextFieldset.vue';
 import { ProjectEventGroupingPattern } from '@/types/project-event-grouping-patterns';
 import { Project } from '@/types/project';
 import { Workspace, ConfirmedMember, Member } from '@/types/workspaces';
-import { 
-  ADD_EVENT_GROUPING_PATTERN, 
+import {
+  ADD_EVENT_GROUPING_PATTERN,
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
@@ -72,7 +75,7 @@ export default Vue.extend({
     project: {
       type: Object as () => Project,
       required: true,
-    }
+    },
   },
   data() {
     return {
@@ -97,15 +100,19 @@ export default Vue.extend({
   methods: {
     /**
      * Method that will save new pattern and update current pattern state
+     *
      * @param pattern - pattern string to be saved
      */
     async saveNewPattern(pattern: string): Promise<void> {
       try {
-        await this.$store.dispatch(ADD_EVENT_GROUPING_PATTERN, { projectId: this.project.id, pattern });
-        notifier.show({ message: 'Pattern added successfully', style: 'success' });
+        await this.$store.dispatch(ADD_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
+          pattern });
+        notifier.show({ message: 'Pattern added successfully',
+          style: 'success' });
         this.createPatternForm = '';
       } catch (error) {
-        notifier.show({ message: `Failed to add pattern`, style: 'error' });
+        notifier.show({ message: `Failed to add pattern`,
+          style: 'error' });
       }
 
       this.updatePatternsState();
@@ -113,34 +120,44 @@ export default Vue.extend({
 
     /**
      * Method that will update pattern by id and update current pattern state
+     *
      * @param id - id of the existing pattern to be updated
      * @param pattern - new pattern string
      */
     async updatePattern(id: string, pattern: string): Promise<void> {
       try {
-        await this.$store.dispatch(UPDATE_EVENT_GROUPING_PATTERN, { projectId: this.project.id, id, pattern });
-        notifier.show({ message: 'Pattern updated', style: 'success' });
+        await this.$store.dispatch(UPDATE_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
+          id,
+          pattern });
+        notifier.show({ message: 'Pattern updated',
+          style: 'success' });
       } catch (error) {
-        notifier.show({ message: `Failed to update pattern: ${error}`, style: 'error' });
+        notifier.show({ message: `Failed to update pattern: ${error}`,
+          style: 'error' });
       }
 
       this.updatePatternsState();
     },
-    
+
     /**
      * Method that will remove pattern by id
+     *
      * @param id - id of the existing pattern to be removed
      * @param index - index of the pattern in the currentPatternsState list
      */
     async removePattern(id: string): Promise<void> {
       try {
-        await this.$store.dispatch(REMOVE_EVENT_GROUPING_PATTERN, { projectId: this.project.id, id });
-        notifier.show({ message: 'Pattern deleted', style: 'success' });
+        await this.$store.dispatch(REMOVE_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
+          id });
+        notifier.show({ message: 'Pattern deleted',
+          style: 'success' });
       } catch (error) {
-        notifier.show({ message: 'Failed to delete pattern', style: 'error' });
+        notifier.show({ message: 'Failed to delete pattern',
+          style: 'error' });
+
         return;
       }
-      
+
       this.updatePatternsState();
     },
 
@@ -154,6 +171,7 @@ export default Vue.extend({
          */
         if (pattern.pattern === '') {
           this.removePattern(pattern.id);
+
           return;
         }
 
@@ -162,12 +180,12 @@ export default Vue.extend({
          * If they are different - then we should save or remove
          */
         if (pattern.pattern !== this.project.eventGroupingPatterns?.find((existingPattern) => {
-          return existingPattern.id === pattern.id
+          return existingPattern.id === pattern.id;
         })?.pattern) {
           console.log('update pattern clicked for pattern: ', pattern.pattern, pattern.id);
           this.updatePattern(pattern.id, pattern.pattern);
         }
-      })
+      });
     },
 
     /**
@@ -179,11 +197,11 @@ export default Vue.extend({
           return {
             id: pattern.id,
             pattern: pattern.pattern,
-          }
+          };
         });
       }
-    }
-  }
+    },
+  },
 });
 </script>
 
@@ -206,12 +224,12 @@ export default Vue.extend({
   }
 
   &__subtle {
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 19px;
-    color: var(--color-text-main);
-    opacity: 0.6;
     width: 85%;
+    color: var(--color-text-main);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 19px;
+    opacity: 0.6;
   }
 }
 
@@ -222,28 +240,28 @@ export default Vue.extend({
   padding: 14px 0 30px 0;
 
   &__title {
-    opacity: 0.6;
-    font-size: 12px;
     font-weight: 700;
+    font-size: 12px;
     letter-spacing: 0.15px;
     text-transform: uppercase;
+    opacity: 0.6;
   }
 
   &__input {
-    font-family: var(--font-monospace);
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 17px;
     padding: 9px 12px;
+    font-weight: 400;
+    font-size: 12px;
+    font-family: var(--font-monospace);
+    line-height: 17px;
   }
 
   &__button {
     display: flex;
-    padding: 10px 32px;
-    justify-content: center;
-    align-items: center;
     gap: 10px;
+    align-items: center;
+    justify-content: center;
     max-width: 91px;
+    padding: 10px 32px;
   }
 }
 

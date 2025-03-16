@@ -141,7 +141,7 @@ export async function addEventGroupingPattern(payload) {
 export async function updateEventGroupingPattern(payload) {
   return (await api.callOld(MUTATION_UPDATE_PROJECT_PATTERN, {
     input: payload,
-  })).updateProjectEventGroupingPattern
+  })).updateProjectEventGroupingPattern;
 }
 
 /**
@@ -153,7 +153,7 @@ export async function updateEventGroupingPattern(payload) {
 export async function removeEventGroupingPattern(payload) {
   return (await api.callOld(MUTATION_REMOVE_PROJECT_PATTERN, {
     input: payload,
-  })).removeProjectEventGroupingPattern
+  })).removeProjectEventGroupingPattern;
 }
 
 /**

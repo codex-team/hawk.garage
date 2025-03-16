@@ -1,5 +1,5 @@
 import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
 } from '../fragments';
 
 /**
@@ -132,7 +132,7 @@ export const MUTATION_CREATE_PROJECT_PATTERN = `
       pattern
     }
   }
-`
+`;
 
 // language=GraphQL
 export const MUTATION_UPDATE_PROJECT_PATTERN = `
@@ -144,7 +144,7 @@ export const MUTATION_UPDATE_PROJECT_PATTERN = `
       pattern
     }
   }
-`
+`;
 
 // language=GraphQL
 export const MUTATION_REMOVE_PROJECT_PATTERN = `
@@ -156,7 +156,7 @@ export const MUTATION_REMOVE_PROJECT_PATTERN = `
       pattern
     }
   }
-` 
+`;
 
 // language=GraphQL
 export const MUTATION_REMOVE_PROJECT = `

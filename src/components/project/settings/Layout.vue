@@ -36,7 +36,7 @@
           class="settings-window__menu-item"
           :to="{ name: 'project-settings-patterns'}"
         >
-          {{ $t("projects.settings.patterns.title")}}
+          {{ $t("projects.settings.patterns.title") }}
         </router-link>
         <hr
           v-if="isAdmin"

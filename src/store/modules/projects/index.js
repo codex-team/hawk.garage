@@ -13,7 +13,7 @@ import {
   ADD_EVENT_GROUPING_PATTERN,
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN,
-  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
+  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -329,7 +329,8 @@ const actions = {
   async [ADD_EVENT_GROUPING_PATTERN]({ commit }, payload) {
     const response = await projectsApi.addEventGroupingPattern(payload);
 
-    commit(mutationTypes.ADD_EVENT_GROUPING_PATTERN, {projectId: payload.projectId, eventGroupingPattern: response});
+    commit(mutationTypes.ADD_EVENT_GROUPING_PATTERN, { projectId: payload.projectId,
+      eventGroupingPattern: response });
   },
 
   /**
@@ -343,7 +344,8 @@ const actions = {
   async [UPDATE_EVENT_GROUPING_PATTERN]({ commit }, payload) {
     const response = await projectsApi.updateEventGroupingPattern(payload);
 
-    commit(mutationTypes.UPDATE_EVENT_GROUPING_PATTERN, {projectId: payload.projectId, eventGroupingPattern: response});
+    commit(mutationTypes.UPDATE_EVENT_GROUPING_PATTERN, { projectId: payload.projectId,
+      eventGroupingPattern: response });
   },
 
   /**
@@ -357,7 +359,8 @@ const actions = {
   async [REMOVE_EVENT_GROUPING_PATTERN]({ commit }, payload) {
     const response = await projectsApi.removeEventGroupingPattern(payload);
 
-    commit(mutationTypes.REMOVE_EVENT_GROUPING_PATTERN, {projectId: payload.projectId, eventGroupingPatternId: response.id});
+    commit(mutationTypes.REMOVE_EVENT_GROUPING_PATTERN, { projectId: payload.projectId,
+      eventGroupingPatternId: response.id });
   },
 
   /**
@@ -579,14 +582,14 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.ADD_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
-    console.log('mutationTypes.ADD_EVENT_GROUPING_PATTERN', projectId, eventGroupingPattern); 
+    console.log('mutationTypes.ADD_EVENT_GROUPING_PATTERN', projectId, eventGroupingPattern);
 
     const project = state.list.find(_project => _project.id === projectId);
 
     if (project.eventGroupingPatterns === undefined) {
       project.eventGroupingPatterns = [];
     }
-    
+
     project.eventGroupingPatterns.push(eventGroupingPattern);
   },
 
@@ -594,13 +597,13 @@ const mutations = {
    * Reset updated notifications rule
    *
    * @param {ProjectsModuleState} state - Vuex state~
-   *
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.projectId - project that contains rule
    * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @param payload.eventGroupingPattern
    * @returns {void}
    */
-  [mutationTypes.UPDATE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern}) {
+  [mutationTypes.UPDATE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
     const project = state.list.find(_project => _project.id === projectId);
 
 
@@ -613,13 +616,13 @@ const mutations = {
    * Reset updated notifications rule
    *
    * @param {ProjectsModuleState} state - Vuex state~
-   *
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.projectId - project that contains rule
    * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @param payload.eventGroupingPatternId
    * @returns {void}
    */
-  [mutationTypes.REMOVE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPatternId}) {
+  [mutationTypes.REMOVE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPatternId }) {
     console.log('mutationTypes.REMOVE_EVENT_GROUPING_PATTERN', projectId, eventGroupingPatternId);
     const project = state.list.find(_project => _project.id === projectId);
 
