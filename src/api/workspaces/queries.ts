@@ -2,7 +2,8 @@ import {
   WORKSPACE_FRAGMENT_WITH_TEAM,
   USER_FRAGMENT,
   PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
-  WORKSPACE_PLAN
+  WORKSPACE_PLAN,
+  EVENT_GROUPING_PATTERNS_FRAGMENT
 } from '../fragments';
 
 // language=GraphQL
@@ -33,6 +34,9 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         unreadCount
         notifications {
           ...ProjectNotificationsRule
+        }
+        eventGroupingPatterns {
+          ...EventGroupingPattern
         }
         recentEvents(limit: 1) {
           events {
@@ -67,6 +71,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
   ${WORKSPACE_PLAN}
+  ${EVENT_GROUPING_PATTERNS_FRAGMENT}
 `;
 
 // language=GraphQL
