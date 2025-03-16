@@ -146,47 +146,48 @@ const router = new Router({
           path: 'project/:projectId',
           name: 'project-overview',
           component: () => import(/* webpackChunkName: 'project-overview' */ './components/project/Overview.vue'),
+        },
+
+        /**
+         * Project Releases
+         * -------------
+         */
+        {
+          path: 'project/:projectId/releases',
+          name: 'project-releases',
+          component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue'),
+          props: true
+        },
+
+        /**
+         * Project Event
+         * -------------
+         */
+        {
+          path: 'event/:eventId/:repetitionId?',
+          name: 'event',
+          component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue'),
+          redirect: 'event/:eventId/:repetitionId?/overview',
           children: [
-            /**
-             * Project Releases
-             * -------------
-             */
             {
-              path: 'releases',
-              name: 'project-releases',
-              component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue'),
+              path: 'overview',
+              name: 'event-overview',
+              component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Overview.vue'),
             },
-            /**
-             * Project Event
-             * -------------
-             */
             {
-              path: 'event/:eventId/:repetitionId?',
-              name: 'event',
-              component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue'),
-              redirect: 'event/:eventId/:repetitionId?/overview',
-              children: [
-                {
-                  path: 'overview',
-                  name: 'event-overview',
-                  component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Overview.vue'),
-                },
-                {
-                  path: 'repetitions',
-                  name: 'event-repetitions',
-                  component: () => import(/* webpackChunkName: 'event-repetitions' */ './components/event/Repetitions.vue'),
-                },
-                {
-                  path: 'daily',
-                  name: 'event-daily',
-                  component: () => import(/* webpackChunkName: 'event-daily' */ './components/event/Daily.vue'),
-                },
-                {
-                  path: 'affected',
-                  name: 'event-affected',
-                  component: () => import(/* webpackChunkName: 'event-affected' */ './components/event/UsersAffected.vue'),
-                },
-              ],
+              path: 'repetitions',
+              name: 'event-repetitions',
+              component: () => import(/* webpackChunkName: 'event-repetitions' */ './components/event/Repetitions.vue'),
+            },
+            {
+              path: 'daily',
+              name: 'event-daily',
+              component: () => import(/* webpackChunkName: 'event-daily' */ './components/event/Daily.vue'),
+            },
+            {
+              path: 'affected',
+              name: 'event-affected',
+              component: () => import(/* webpackChunkName: 'event-affected' */ './components/event/UsersAffected.vue'),
             },
           ],
         },
