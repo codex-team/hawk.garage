@@ -428,7 +428,8 @@
     "addons": {
       "url": "URL",
       "window": "Browser Window",
-      "beautifiedUserAgent": "User Agent"
+      "beautifiedUserAgent": "User Agent",
+      "consoleOutput": "Console Output"
     },
     "user": {
       "unknown": "Unknown",
