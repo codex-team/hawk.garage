@@ -238,9 +238,14 @@ export interface HawkEventRepetition {
   id: string;
 
   /**
-   * Unique repetition payload
+   * Unique repetition payload, null for old delta format
    */
   payload: HawkEventPayload;
+
+  /**
+   * Delta payload, null for old delta format or if there is no delta between original and repetition
+   */
+  delta: string | null;
 }
 
 export interface HawkEventBacktraceFrame {

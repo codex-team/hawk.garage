@@ -464,7 +464,7 @@ export function pad(number: number, length = 2): string {
  * @param repetitions
  * @see https://github.com/codex-team/hawk.garage/issues/436
  */
-export function filterBeautifiedAddons(repetitions: HawkEventRepetition[]): void {
+export function filterBeautifiedAddons(repetitions: Omit<HawkEventRepetition, 'delta'>[]): void {
   const addonsBeautified = {
     userAgent: 'beautifiedUserAgent',
   };

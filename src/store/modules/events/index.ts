@@ -27,7 +27,8 @@ import {
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { deepMerge } from '@/utils';
+import { patch } from '@n1ru4l/json-patch-plus';
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * Mutations enum for this module
@@ -114,7 +115,7 @@ export interface EventsModuleState {
   /**
    * Event's repetitions map
    */
-  repetitions: {[key: string]: HawkEventRepetition[]};
+  repetitions: { [key: string]: HawkEventRepetition[] };
 
   /**
    * Event's filters rules map by project id
@@ -129,7 +130,7 @@ export interface EventsModuleState {
   /**
    * Latest events map by project id
    */
-  latest: {[key: string]: HawkEventDailyInfo};
+  latest: { [key: string]: HawkEventDailyInfo };
 }
 
 /**
@@ -279,9 +280,31 @@ const module: Module<EventsModuleState, RootState> = {
           });
         }
 
-        const event = Object.assign({}, state.list[key]);
+        /**
+         * Make a deep copy of the event
+         */
+        const event = cloneDeep(state.list[key]);
 
-        if (repetition && repetition.payload) {
+        /**
+         * Check if repetition is present and delta format is new (repetition.payload is null)
+         */
+        if (repetition && !repetition.payload) {
+          /**
+           * If delta is present, apply delta to the event payload
+           */
+          if (repetition.delta) {
+            event.payload = patch({ left: event.payload,
+              delta: JSON.parse(repetition.delta) });
+          } else {
+            /**
+             * If delta is not present, set the event payload to the original event payload
+             */
+            event.payload = event.payload;
+          }
+        } else if (repetition && repetition.payload) {
+          /**
+           * If repetition is present and delta format is old (repetition.payload is not null), assemble event payload
+           */
           event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
         }
 
@@ -457,27 +480,60 @@ const module: Module<EventsModuleState, RootState> = {
       const skip = (state.repetitions[key] || []).length;
 
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
-      const repetitions = response.data.project.event.repetitions;
-
-      /**
-       * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
-       */
-      filterBeautifiedAddons(repetitions);
 
       if (originalEvent) {
         filterBeautifiedAddons([ originalEvent ]);
       }
 
-      repetitions.map(repetition => {
-        // save to the state
-        commit(MutationTypes.AddRepetitionPayload, {
-          projectId,
-          eventId,
-          repetition: {
+      /**
+       * If delta is present, apply delta to the event payload
+       */
+      const repetitions = response.data.project.event.repetitions.map(repetition => {
+        let processedRepetition: HawkEventRepetition;
+
+        const isNewDeltaFormat = !repetition.payload;
+
+        if (isNewDeltaFormat && originalEvent) {
+          const eventPayload = cloneDeep(originalEvent.payload);
+
+          /**
+           * If delta is present, apply delta to the event payload, otherwise set the event payload to the original event payload
+           */
+          processedRepetition = {
             ...repetition,
-            payload: originalEvent ? repetitionAssembler(originalEvent.payload, repetition.payload) as HawkEventPayload : repetition.payload,
-          },
-        });
+            payload: repetition.delta ? patch({ left: eventPayload,
+              delta: JSON.parse(repetition.delta) }) : eventPayload,
+          };
+        } else {
+          processedRepetition = repetition;
+        }
+
+        /**
+         * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
+         */
+        filterBeautifiedAddons([ processedRepetition ]);
+
+        /**
+         * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
+         */
+        if (isNewDeltaFormat) {
+          commit(MutationTypes.AddRepetitionPayload, {
+            projectId,
+            eventId,
+            repetition: processedRepetition,
+          });
+        } else {
+          commit(MutationTypes.AddRepetitionPayload, {
+            projectId,
+            eventId,
+            repetition: {
+              ...processedRepetition,
+              payload: originalEvent ? repetitionAssembler(originalEvent.payload, processedRepetition.payload) as HawkEventPayload : processedRepetition.payload,
+            },
+          });
+        }
+
+        return processedRepetition;
       });
 
       return repetitions;
@@ -501,21 +557,70 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
-      const repetition = event.repetition;
+      let repetition;
+
+      /**
+       * Check if delta format is new
+       */
+      const isNewDeltaFormat = !event.repetition.payload;
+
+      /**
+       * If delta format is new, apply delta to the event payload
+       */
+      if (event.repetition.delta && isNewDeltaFormat) {
+        const eventPayload = cloneDeep(event.payload);
+
+        repetition = {
+          ...event.repetition,
+          payload: patch({ left: eventPayload,
+            delta: JSON.parse(event.repetition.delta) }),
+        };
+      } else if (isNewDeltaFormat) {
+        /**
+         * If delta format is new, set the event payload to the original event payload in case if delta is null
+         */
+        repetition = {
+          ...event.repetition,
+          payload: event.payload,
+        };
+      } else {
+        /**
+         * If delta format is old, set the event repetition to the original event repetition
+         */
+        repetition = event.repetition;
+      }
+
+      /**
+       * Update event repetition
+       */
+      event.repetition = repetition;
 
       filterBeautifiedAddons([ event ]);
       filterBeautifiedAddons([ event.repetition ]);
 
       /**
-       * Updates or sets event's fetched payload in the state
+       * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
        */
-      commit(MutationTypes.UpdateEvent, {
-        projectId,
-        event: {
-          ...event,
-          payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
-        },
-      });
+      if (isNewDeltaFormat) {
+        commit(MutationTypes.UpdateEvent, {
+          projectId,
+          event: {
+            ...event,
+            payload: repetition.payload,
+          },
+        });
+      } else {
+        /**
+         * Save to the state, if delta format is old, assemble event payload and save to the state
+         */
+        commit(MutationTypes.UpdateEvent, {
+          projectId,
+          event: {
+            ...event,
+            payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
+          },
+        });
+      }
     },
 
     /**
@@ -691,7 +796,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {number} project.days - number of a "few" days
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: { projectId: string; eventId: string; days: number }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
 
@@ -951,7 +1056,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} project.eventId - event ID
      * @param {EventChartItem[]} project.data - array of dots
      */
-    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
+    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[] }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.list[key];
 
