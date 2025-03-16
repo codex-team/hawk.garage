@@ -222,7 +222,7 @@ export default Vue.extend({
     justify-content: space-between;
     width: 100%;
     margin-top: 25px;
-    padding: 0 21px;
+    padding-inline: var(--layout-padding-inline);
 
     &__section {
       display: flex;

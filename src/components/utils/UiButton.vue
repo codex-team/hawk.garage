@@ -11,10 +11,13 @@
       'ui-button--rounded': rounded,
       'ui-button--disabled': disabled,
       'ui-button--secondary': secondary,
+      'ui-button--icon-only': icon && !content,
+      'ui-button--iconic': iconic,
     }"
     :disabled="disabled"
     :href="href || null"
     @click="$emit('click', $event)"
+    data-ripple
   >
     <Icon
       v-if="icon"
@@ -107,6 +110,14 @@ export default Vue.extend({
      * Adds border radius for button
      */
     rounded: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Transparent only-icon button with curcle hover effect
+     */
+    iconic: {
       type: Boolean,
       default: false,
     },
@@ -214,6 +225,21 @@ export default Vue.extend({
     border-radius: 1000px;
   }
 
+  &--iconic {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    border: 0;
+
+    &:not(&--disabled):hover {
+      background-color: var(--color-bg-second);
+    }
+  }
+
   $loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
   $submitLoaderColor: color-mod(var(--color-indicator-medium) blend(black 12%));
   $loaderSize: 56px;
@@ -240,6 +266,10 @@ export default Vue.extend({
     width: 15px;
     height: 14px;
     margin-right: 5px;
+  }
+
+  &--icon-only &-icon {
+    margin-right: 0;
   }
 
   &-text {

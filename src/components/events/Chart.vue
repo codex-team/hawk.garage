@@ -290,7 +290,7 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     height: 215px;
-    background-color: var(--color-bg-main);
+    background-color: var(--color-bg-darken);
     border-radius: 3px;
 
     &__info {
