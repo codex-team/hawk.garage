@@ -32,6 +32,12 @@
         >
           {{ $t('projects.settings.notifications.title') }}
         </router-link>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'project-settings-patterns'}"
+        >
+          {{ $t("projects.settings.patterns.title")}}
+        </router-link>
         <hr
           v-if="isAdmin"
           class="delimiter"
