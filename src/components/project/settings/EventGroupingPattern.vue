@@ -66,6 +66,7 @@ import {
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
+import { isSafeRegex } from 'safe-regex';
 
 export default Vue.extend({
   name: 'ProjectSettingsPatterns',
@@ -105,8 +106,18 @@ export default Vue.extend({
      * @param pattern - pattern string to be saved
      */
     async saveNewPattern(pattern: string): Promise<void> {
+      /**
+       * Check that the pattern is a valid regular expression
+       */
       try {
         new RegExp(pattern);
+
+        /**
+         * Check that the pattern is a safe regular expression
+         */
+        if (!isSafeRegex(pattern)) {
+          throw new Error('Invalid regular expression pattern');
+        }
       } catch (regexpError) {
         notifier.show({ message: 'Invalid regular expression pattern',
           style: 'error' });
@@ -140,6 +151,13 @@ export default Vue.extend({
        */
       try {
         new RegExp(pattern);
+
+        /**
+         * Check that the pattern is a safe regular expression
+         */
+        if (!isSafeRegex(pattern)) {
+          throw new Error('Invalid regular expression pattern');
+        }
       } catch (regexpError) {
         notifier.show({ message: 'Invalid regular expression pattern',
           style: 'error' });
