@@ -172,6 +172,19 @@
         "ruleIsEnabled": "Enabled",
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
+      },
+      "patterns": {
+        "title": "Events Merging",
+        "description": "Here you can set up rules for manually merging events. This is useful for grouping similar events with slightly different titles but the same underlying nature.",
+        "create": "Add",
+        "save": "Save",
+        "createPattern": {
+          "title": "Add pattern",
+          "placeholder": "Attempt to read property \".*\" on array"
+        },
+        "patternList": {
+          "title": "Patterns"
+        }
       }
     },
     "notFound": "Project not found"
