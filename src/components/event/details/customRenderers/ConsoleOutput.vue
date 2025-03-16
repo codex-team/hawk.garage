@@ -14,8 +14,13 @@
 
         <!-- Log message -->
         <span class='log-message'>
-          <template v-if='log.type'>
-            {{ log.type }}: {{ log.message }}
+          <template v-if="log.type">
+            <template v-if="log.type === 'log'">
+              {{ log.message }}
+            </template>
+            <template v-else>
+              {{ log.type }}: {{ log.message }}
+            </template>
           </template>
           <template v-else>
             {{ log.message }}
@@ -85,18 +90,19 @@ export default Vue.extend({
      */
     formatTimestamp(timestamp: string): string {
       const date = new Date(timestamp);
-      const options: Intl.DateTimeFormatOptions = {
+
+      // Форматируем основную часть времени без миллисекунд
+      const timeString = date.toLocaleTimeString(undefined, {
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-      };
+      });
 
-      if ('fractionalSecondDigits' in Intl.DateTimeFormat.prototype) {
-        options.fractionalSecondDigits = 3;
-      }
+      // Добавляем миллисекунды вручную, заменяя `,` на `:`
+      const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
 
-      return date.toLocaleTimeString(undefined, options);
+      return `${timeString}:${milliseconds}`;
     },
 
     /**
@@ -112,8 +118,8 @@ export default Vue.extend({
     formatStack(stack: string | null | undefined): string {
       return stack?.trim() || 'No stack trace available';
     },
-  },
-});
+  }
+},);
 </script>
 
 <style scoped>
