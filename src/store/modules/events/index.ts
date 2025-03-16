@@ -400,7 +400,13 @@ const module: Module<EventsModuleState, RootState> = {
       { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
     ): void {
       commit(MutationTypes.SetEventsList, events);
-      commit(MutationTypes.SetRecentEventsList, recentEvents);
+
+      Object.entries(recentEvents).forEach(([projectId, recentEventsInfoByDate]) => {
+        commit(MutationTypes.SetRecentEventsList, {
+          projectId,
+          recentEventsInfoByDate,
+        });
+      });
       commit(MutationTypes.SetLatestEvents, recentEvents);
     },
 
@@ -414,9 +420,10 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} project - object of project data
      * @param {string} project.projectId - id of the project to fetch data
+     * @param {string} project.search - search query
      * @returns {Promise<boolean>} - true if there are no more events
      */
-    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search?: string }): Promise<boolean> {
+    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search: string }): Promise<boolean> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const recentEvents = await eventsApi.fetchRecentEvents(
@@ -431,7 +438,7 @@ const module: Module<EventsModuleState, RootState> = {
         return true;
       }
 
-      if (search !== undefined) {
+      if (search.trim().length > 0) {
         loadedEventsCount[projectId] = 0;
       }
 
@@ -453,7 +460,7 @@ const module: Module<EventsModuleState, RootState> = {
        * If no search parameter - appends new events to existing list (AddToRecentEventsList)
        * This supports both search functionality and infinite scroll pagination
        */
-      if (search !== undefined) {
+      if (search.trim().length > 0) {
         commit(MutationTypes.SetRecentEventsList, {
           projectId,
           recentEventsInfoByDate: eventsGroupedByDate,
@@ -836,9 +843,6 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEventsDailyInfoByDate} payload.recentEventsInfoByDate - grouped events list
      */
     [MutationTypes.SetRecentEventsList](state, { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }): void {
-      if (!state.recent[projectId]) {
-        Vue.set(state.recent, projectId, {});
-      }
       Vue.set(state.recent, projectId, recentEventsInfoByDate);
     },
 

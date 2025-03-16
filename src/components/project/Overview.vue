@@ -45,17 +45,17 @@
               @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
             />
           </div>
+          <div
+            v-if="!isListEmpty && !noMoreEvents && !isLoadingEvents"
+            class="project-overview__load-more"
+            :class="{'loader': isLoadingEvents}"
+            @click="loadMoreEvents"
+          >
+            <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
+          </div>
         </template>
         <div v-else-if="isLoadingEvents">
           Loading...
-        </div>
-        <div
-          v-else-if="isListEmpty && !noMoreEvents && !isLoadingEvents"
-          class="project-overview__load-more"
-          :class="{'loader': isLoadingEvents}"
-          @click="loadMoreEvents"
-        >
-          <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
         </div>
         <div
           v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
