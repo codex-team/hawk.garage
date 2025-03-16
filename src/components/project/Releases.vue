@@ -178,7 +178,10 @@ export default {
      */
     formatTime(dateStr) {
       const date = new Date(dateStr);
-      return date.toLocaleTimeString();
+      return date.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
     },
 
     /**
@@ -241,8 +244,11 @@ export default {
   }
 
   &__day-header {
-    font-weight: 600;
+    font-family: 'Roboto';
+    font-weight: 400;
     font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0px;
     color: var(--color-text-second);
     padding: 0 15px;
   }
@@ -282,13 +288,20 @@ export default {
   &__time {
     min-width: 30px;
     color: var(--color-text-second);
+    font-family: 'Roboto';
+    font-weight: 400;
     font-size: 12px;
+    line-height: 100%;
+    letter-spacing: 0px;
   }
 
   &__name {
+    font-family: 'Roboto';
+    font-weight: 500;
     font-size: 14px;
-    font-family: monospace;
-    color: var(--color-text-second);
+    line-height: 100%;
+    letter-spacing: 0px;
+    color: #DBE6FF;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -296,7 +309,11 @@ export default {
 
   &__files-count {
     color: var(--color-text-second);
-    font-size: 12px;
+    font-family: 'Roboto';
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0px;
   }
 
   &__details {
@@ -305,10 +322,13 @@ export default {
   }
 
   &__section-title {
-    font-weight: normal;
+    font-family: 'Roboto';
+    font-weight: 500;
     font-size: 13px;
-    margin-bottom: 10px;
+    line-height: 100%;
+    letter-spacing: 0px;
     color: var(--color-text-second);
+    margin-bottom: 10px;
   }
 
   &__commits {
