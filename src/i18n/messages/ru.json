@@ -86,7 +86,8 @@
   },
   "forms": {
     "imageUploader": "ЗАГР. ФОТО",
-    "searchField": "Поиск"
+    "searchField": "Поиск",
+    "searchFieldWithCMDK": "{cmd}+K для поиска"
   },
   "projects": {
     "filters": {

@@ -86,7 +86,8 @@
   },
   "forms": {
     "imageUploader": "UPLOAD LOGO",
-    "searchField": "Search"
+    "searchField": "Search",
+    "searchFieldWithCMDK": "{cmd}+K to search"
   },
   "projects": {
     "filters": {

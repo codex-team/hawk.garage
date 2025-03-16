@@ -529,3 +529,20 @@ export function getSentryDSN(token: string): string {
     return '';
   }
 }
+
+/**
+ * Returns platform name
+ *
+ * @returns {string}
+ */
+export function getPlatform(): 'macos' | 'windows' | 'linux' {
+  if (navigator.userAgent.includes('Mac')) {
+    return 'macos';
+  }
+
+  if (navigator.userAgent.includes('Win')) {
+    return 'windows';
+  }
+
+  return 'linux';
+}
