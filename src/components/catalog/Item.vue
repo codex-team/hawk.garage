@@ -1,5 +1,8 @@
 <template>
-  <div class="catalog-item">
+  <div
+    class="catalog-item"
+    :class="{'catalog-item--wide': isWide}"
+  >
     <div
       class="catalog-item__header"
       :style="{'background-image': `url(${image})`}"
@@ -48,6 +51,10 @@ export default {
       type: String,
       required: true,
     },
+    isWide: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -63,7 +70,12 @@ export default {
   cursor: pointer;
   transition: all 120ms ease;
 
+  &--wide {
+    max-width: 300px;
+  }
+
   &__header {
+    flex-shrink: 0;
     height: 100px;
     background-position: center center;
     background-size: cover;
@@ -87,7 +99,7 @@ export default {
   }
 
   &__install-button {
-    margin: 15px auto 15px 15px;
+    margin: 0 auto 15px 15px;
     text-transform: uppercase;
   }
 

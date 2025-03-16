@@ -11,6 +11,7 @@ export default {
   async beforeRouteEnter(to, _from, next) {
     const hasSeparatePage = [
       'javascript',
+      'sentry',
     ];
 
     let view = 'common';

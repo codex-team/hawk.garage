@@ -33,20 +33,28 @@
         >
           {{ $t('workspaces.settings.team.title') }}
         </router-link>
-<!--        <router-link-->
-<!--          v-if="isAdmin"-->
-<!--          class="settings-window__menu-item workspace-settings__menu-item"-->
-<!--          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"-->
-<!--        >-->
-<!--          {{ $t('workspaces.settings.billing.title') }}-->
-<!--        </router-link>-->
+        <!--        <router-link-->
+        <!--          v-if="isAdmin"-->
+        <!--          class="settings-window__menu-item workspace-settings__menu-item"-->
+        <!--          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"-->
+        <!--        >-->
+        <!--          {{ $t('workspaces.settings.billing.title') }}-->
+        <!--        </router-link>-->
         <router-link
+          v-if="isAdmin && shouldShowBilling"
+          class="settings-window__menu-item workspace-settings__menu-item"
+          :to="{ name: 'workspace-settings-billing', params: {workspaceId: workspace.id} }"
+        >
+          {{ $t('workspaces.settings.billing.title') }}
+        </router-link>
+
+        <!-- <router-link
           v-if="isAdmin"
           class="settings-window__menu-item workspace-settings__menu-item"
           :to="{ name: 'workspace-settings-used-volume', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.volume.title') }}
-        </router-link>
+        </router-link> -->
         <hr class="delimiter workspace-settings__delimiter">
         <div
           class="settings-window__menu-item workspace-settings__menu-item settings-window__menu-item--attention"
@@ -110,6 +118,13 @@ export default Vue.extend({
       const member = this.$store.getters.getCurrentUserInWorkspace(this.workspace);
 
       return member ? member.isAdmin : false;
+    },
+
+    /**
+     * Check if billing button should be visible in menu
+     */
+    shouldShowBilling(): boolean {
+      return true;
     },
   },
   async created(): Promise<void> {

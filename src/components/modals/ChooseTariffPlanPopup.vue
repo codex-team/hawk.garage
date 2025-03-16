@@ -14,24 +14,51 @@
           class="choose-plan__description"
           v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
         />
-        <div class="choose-plan__plans">
+
+        <div
+          :class="{
+            'choose-plan__plans': true,
+            'choose-plan__plans--horizontal': plans.length > 3,
+          }"
+        >
           <TariffPlan
             v-for="plan in plans"
             :key="plan.id"
             :name="plan.name"
             :limit="plan.eventsLimit"
             :price="plan.monthlyCharge"
+            :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
-            @click.native="selectPlan(plan.id)"
+            :is-current-plan="plan.id === workspace.plan.id"
+            :horizontal="plans.length > 3"
+            @click.native="proceedWithPlan(plan.id)"
           />
+
+          <div class="choose-plan__premium-card">
+            <div class="choose-plan__premium-card-title">
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlan') }}
+            </div>
+
+            <div class="choose-plan__premium-card-limit">
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlanLimit') }}
+            </div>
+
+            <div class="choose-plan__premium-card-price">
+              {{ $t('workspaces.chooseTariffPlanDialog.premiumPlanPrice') }}
+            </div>
+
+            <a href="mailto:team@hawk.so">
+              <UiButton
+                small
+                submit
+                rounded
+                :content="$t('workspaces.chooseTariffPlanDialog.premiumPlanButtonText')"
+                class="tariff-plan__button"
+              />
+            </a>
+          </div>
         </div>
-        <UiButton
-          class="choose-plan__continue-button"
-          :content="$t('common.continue')"
-          :disabled="selectedPlan.id === workspace.plan.id"
-          submit
-          @click="onContinue"
-        />
+
       </div>
     </div>
   </PopupDialog>
@@ -47,6 +74,7 @@ import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
+import { composePayment } from '@/api/billing/requests';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -88,12 +116,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    /**
-     * Select plan card by id
-     *
-     * @param id - plan id
-     */
-    selectPlan(id: string): void {
+    proceedWithPlan(id: string): void {
       const plan = this.plans.find(p => p.id === id);
 
       if (!plan) {
@@ -101,6 +124,8 @@ export default Vue.extend({
       }
 
       this.selectedPlan = plan;
+
+      this.onContinue();
     },
 
     /**
@@ -151,27 +176,38 @@ export default Vue.extend({
           data: {
             workspaceId: this.workspaceId,
             tariffPlanId: this.selectedPlan.id,
-            isRecurrent: !!this.workspace.subscriptionId,
+            isRecurrent: true,
           },
         });
 
         return;
       }
 
-      this.$confirm.open({
-        actionType: ActionType.SUBMIT,
-        description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
-        onConfirm: async () => {
-          await this.$store.dispatch(SET_MODAL_DIALOG, {
-            component: 'PaymentDetailsDialog',
-            data: {
-              workspaceId: this.workspaceId,
-              tariffPlanId: this.selectedPlan.id,
-              isRecurrent: !!this.workspace.subscriptionId,
-            },
-          });
-        },
-      });
+      if (!this.workspace.isBlocked) {
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          onConfirm: async () => {
+            await this.$store.dispatch(SET_MODAL_DIALOG, {
+              component: 'PaymentDetailsDialog',
+              data: {
+                workspaceId: this.workspaceId,
+                tariffPlanId: this.selectedPlan.id,
+                isRecurrent: true,
+              },
+            });
+          },
+        });
+      } else {
+        await this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'PaymentDetailsDialog',
+          data: {
+            workspaceId: this.workspaceId,
+            tariffPlanId: this.selectedPlan.id,
+            isRecurrent: true,
+          },
+        });
+      }
     },
   },
 });
@@ -216,12 +252,43 @@ export default Vue.extend({
 
     &__plans {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+    }
+
+    &__plans--horizontal {
+      flex-direction: column;
     }
 
     &__continue-button {
       margin-top: 30px;
+    }
+
+    &__premium-card {
+      display: flex;
+      align-items: center;
+      padding: 20px 25px;
+      background: var(--color-bg-main);
+      border-radius: 7px;
+    }
+
+    &__premium-card-title {
+      width: 150px;
+      font-weight: 600;
+    }
+
+    &__premium-card-limit {
+      color: var(--color-text-second);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    &__premium-card-price {
+      margin-right: 20px;
+      margin-left: auto;
+      color: var(--color-text-second);
+      font-weight: 600;
+      font-size: 13px;
     }
   }
 </style>

@@ -135,7 +135,7 @@ export default Vue.extend({
         return this.$t('projects.settings.notifications.receiveNewLabel') as string;
       }
 
-      return this.$t('projects.settings.notifications.receiveAllLabel') as string;
+      return this.$t('projects.settings.notifications.receiveSeenMoreLabel') as string;
     },
 
     /**
@@ -152,8 +152,8 @@ export default Vue.extend({
         },
         {
           title: this.$t('projects.settings.notifications.removeRule') as string,
-          onClick() {
-            console.log('Remove rule clicked');
+          onClick: () => {
+            this.$emit('removeClicked', this.rule.id);
           },
         },
       ];

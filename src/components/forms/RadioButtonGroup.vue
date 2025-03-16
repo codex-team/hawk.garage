@@ -41,8 +41,15 @@
             v-if="option.description"
             class="radio-button-group__option-description"
           >
-            {{ option.description }}
+            <div v-if="option.description !== undefined">
+              {{ option.description }}
+            </div>
           </div>
+          <slot
+            v-else
+            name="description"
+            :option="option"
+          />
         </div>
 
         <UiRadio

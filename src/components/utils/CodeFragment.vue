@@ -275,6 +275,10 @@ export default {
       flex-grow: 2;
       font-size: 12px;
       line-height: 21px;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     &__line-numbers {

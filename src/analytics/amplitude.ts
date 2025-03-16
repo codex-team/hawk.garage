@@ -43,6 +43,10 @@ export const Analytics = {
    * @param userId - user identifier
    */
   setUserId: (userId: string): void => {
+    if (!isRegistered) {
+      return;
+    }
+
     return setUserId(userId);
   },
 };

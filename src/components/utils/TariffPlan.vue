@@ -1,30 +1,36 @@
 <template>
   <div
     class="tariff-plan"
-    :class="{'tariff-plan--selected': selected}"
+    :class="{
+      'tariff-plan--selected': selected,
+      'tariff-plan--horizontal': horizontal,
+    }"
   >
     <h4 class="tariff-plan__name">
       {{ name }}
     </h4>
     <div class="tariff-plan__limit">
-      {{ limit | spacedNumber }} {{ $t('common.eventsPerMonth') }}
+      {{ limit | spacedNumber }} <span class="tariff-plan__limit-text">{{ $t('common.eventsPerMonth') }}</span>
     </div>
     <div class="tariff-plan__footer">
       <div class="tariff-plan__price">
-        {{ price === 0 ? $t('common.free') : `${$options.filters.spacedNumber(price)}${$t('common.dollarsPerMonth')}` }}
+        {{ price === 0 ? $t('common.free') : `${$options.filters.spacedNumber(price)}${$tc('common.moneyPerMonth', currencySign, { currency: currencySign })}` }}
       </div>
+
       <UiButton
         small
         submit
         rounded
-        :content="$t('common.select')"
+        :content="isCurrentPlan ? $t('common.selected') : $t('common.select')"
         class="tariff-plan__button"
+        :disabled="isCurrentPlan"
       />
     </div>
   </div>
 </template>
 
 <script>
+import { getCurrencySign } from '@/utils';
 import UiButton from './UiButton';
 
 export default {
@@ -55,11 +61,34 @@ export default {
       required: true,
     },
     /**
-     * Is plan card selected
+     * Currency for price
+     */
+    currency: {
+      type: String,
+      required: true,
+    },
+    /**
+     * Is plan selected
      */
     selected: {
       type: Boolean,
       default: false,
+    },
+    /**
+     * True if horizontal view enabled
+     */
+    horizontal: {
+      type: Boolean,
+      default: false,
+    },
+    isCurrentPlan: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  computed: {
+    currencySign() {
+      return getCurrencySign(this.currency);
     },
   },
 };
@@ -67,8 +96,11 @@ export default {
 
 <style>
   .tariff-plan {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     width: 220px;
+    height: 140px;
     padding: 20px 25px;
     background: var(--color-bg-main);
     border-radius: 7px;
@@ -77,6 +109,34 @@ export default {
     &--selected {
       padding: 17px 22px;
       border: 3px solid var(--color-indicator-medium);
+    }
+
+    &--horizontal {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: auto;
+      height: auto;
+
+      &:not(:last-of-type) {
+        margin-bottom: 10px;
+      }
+
+      .tariff-plan__name {
+        width: 150px;
+        margin-bottom: 0;
+      }
+      .tariff-plan__limit {
+        width: 300px;
+      }
+
+      .tariff-plan__footer {
+        margin-left: auto;
+      }
+
+      .tariff-plan__price {
+        margin-right: 20px
+      }
     }
 
     &__name {
@@ -95,11 +155,15 @@ export default {
       letter-spacing: 0;
     }
 
+    &__limit-text {
+      white-space: nowrap;
+    }
+
     &__footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 30px 0 0;
+      margin-top: auto;
     }
 
     &__price {

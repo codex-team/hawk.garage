@@ -185,6 +185,12 @@ input CreateProjectNotificationsRuleInput {
   """Words to exclude from notification"""
   excluding: [String!]! = []
 
+  """Treshold to be reached to send notification"""
+  threshold: Int = 100
+
+  """Treshold period in milliseconds"""
+  thresholdPeriod: Int = 3600000
+
   """Notification channels to recieve events"""
   channels: NotificationsChannelsInput!
 }
@@ -762,8 +768,11 @@ type PayloadOfWorkspacePlanPurchase {
   """Workspace to which the payment is debited"""
   workspace: Workspace!
 
-  """Amount of payment in US cents"""
+  """Amount of payment * 100 """
   amount: Long!
+
+  """Currency of payment"""
+  currency: String!
 }
 
 """Input for single payment"""
@@ -820,6 +829,9 @@ type Plan {
 
   """Monthly charge for plan"""
   monthlyCharge: Int!
+
+  """Monthly charge currency for plan"""
+  monthlyChargeCurrency: String!
 
   """Events limit for plan"""
   eventsLimit: Int!
@@ -1198,6 +1210,12 @@ type Workspace {
   Returns from CloudPayments
   """
   subscriptionId: String
+
+  """True if workspace is used for debugging"""
+  isDebug: Boolean
+
+  """True if workspace is blocked"""
+  isBlocked: Boolean
 
   """Workspace projects array"""
   projects(

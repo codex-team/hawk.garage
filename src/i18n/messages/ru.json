@@ -43,19 +43,22 @@
       "continue": "Продолжить",
       "cancel": "Отменить"
     },
-    "newVersionWindow":{
-      "message":"Доступна новая версия",
-      "refresh":"Обновить"
+    "newVersionWindow": {
+      "message": "Доступна новая версия",
+      "refresh": "Обновить"
     },
-    "feedbackButton":{
-      "message":"Оставить отзыв"
+    "feedbackButton": {
+      "message": "Оставить отзыв"
     },
     "catalog": {
       "step1": "Создать проект",
       "step2": "Интегрировать Кэтчер",
       "whatToDo": "Чтобы начать принимать ивенты, вам нужно интегрировать один из Кэтчеров",
       "whatIsCatcher": "Кэтчер это небольшой скрипт, который будет отлавливать ошибки в вашем приложении и отправлять их в Хоука.",
+      "discoverMore": "Посмотреть все интеграции",
       "selectCatcherHeading": "Выберите Кэтчер",
+      "migrationFromSentry": "Миграция из Sentry",
+      "migrationFromSentryDescription": "Хоук может принимать ошибки из Sentry SDK. Просто поменяйте DSN.",
       "catchers": {
         "nodejs": "Прокачайте серверное приложение на JS или TS",
         "php": "Держит нагрузки, ловит ошибки, поддерживает Monolog",
@@ -74,7 +77,11 @@
       "getToken": "Получить Интеграционный Токен",
       "hereIsToken": "Это ваш Интеграционный Токен. Вы сможете найти его в настройках проекта.",
       "followGuide": "Следуйте Инструкции по установке",
-      "readmeDisclaimer": "А наиболее актуальная инструкция — в README.md Кэтчера. А также его исходный код."
+      "readmeDisclaimer": "А наиболее актуальная инструкция — в README.md Кэтчера. А также его исходный код.",
+      "getDSN": "Получить DSN",
+      "hereIsDSN": "Это ваш DSN, который вы можете использовать в Sentry SDK.",
+      "useDSN": "Поменяйте DSN в Sentry SDK",
+      "useDSNText": "Все Sentry SDK в том или ином виде поддерживают параметр `dsn`. Передайте полученный DSN в опции Sentry SDK."
     }
   },
   "forms": {
@@ -83,7 +90,6 @@
   },
   "projects": {
     "filters": {
-      "filtersLabel": "Фильтр",
       "filtersOptions": {
         "all": "Все",
         "starred": "Избранные",
@@ -91,10 +97,10 @@
         "unresolved": "Неисправленные",
         "ignored": "Игнорируемые"
       },
-      "sortLabel": "Сортировать",
       "sortOptions": {
         "byDate": "По времени",
-        "byCount": "По количеству"
+        "byCount": "По количеству",
+        "byAffectedUsers": "По пользователям"
       }
     },
     "placeholder": "Выберите проект",
@@ -129,7 +135,10 @@
         "revokeConfirmation": {
           "title": "Отозвать интеграционный токен?",
           "description": "После этого действия Хоук перестанет принимать ивенты со старым интеграционным токеном. Вам будет необходимо заменить его на новый в вашем проекте."
-        }
+        },
+        "sentryDSN": "Sentry DSN",
+        "sentryDSNText": "Если вы используете Sentry SDK, вы можете использовать этот DSN для того, чтобы отправлять ошибки в Хоук.",
+        "sentryDSNTextNoToken": "Кажется, у вас старый интеграционный токен. Попробуйте отозвать его и получить новый."
       },
       "notifications": {
         "title": "Уведомления",
@@ -152,8 +161,8 @@
         "telegramDescription": "Уведомления через @hawkso_bot",
         "receiveNewLabel": "Только новые события",
         "receiveNewDescription": "При первом получении",
-        "receiveAllLabel": "Все события",
-        "receiveAllDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
+        "receiveSeenMoreLabel": "По частоте появления",
+        "receiveSeeMoreDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
         "includingWordsLabel": "Включающие слова",
         "includingWordsDescription": "Только события, содержащие указанные слова",
         "excludingWordsLabel": "Исключающие слова",
@@ -222,11 +231,15 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Выберите план",
-      "description": "Все тарифные планы включают в себя все <a href=\"{featuresUrl}\">возможности</a> сервиса. Если вы хотите получить неограниченный доступ к сервису для некоммерческих проектов, напишите нам на <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;<a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
       "onSuccess": "Тарифный план был успешно изменён",
       "onError": "Произошла ошибка, пожалуйста попробуйте ещё раз немного позже",
-      "confirmSetToFreePlanDescription": "Старый план будет отменён. Деньги за неиспользованные ошибки и время не будут возвращены.",
-      "confirmSetToPaidPlanDescription": "Старый план будет отменён. Деньги за неиспользованные ошибки и время не будут возвращены. Вам будет необходимо оплатить новый тарифный план."
+      "confirmSetToFreePlanDescription": "Старый план будет отменён. Неиспользованные ошибки и время не будут возвращены.",
+      "confirmSetToPaidPlanDescription": "Старый план отменяется. Возврат денег за неиспользованные ошибки и время не предусмотрен. Новый тариф нужно оплатить отдельно.",
+      "premiumPlan": "Премиум",
+      "premiumPlanLimit": "> 500 000 событий / мес",
+      "premiumPlanPrice": "Индивидуальная",
+      "premiumPlanButtonText": "Связаться"
     },
     "creationDialog": {
       "description": "Воркспейс объединяет несколько проектов. Вы сможете добавить коллег с доступом ко всем проектам внутри воркспейса.",
@@ -273,7 +286,8 @@
         "emailButton": "Увеличить объем"
       },
       "billing": {
-        "title": "Платежи"
+        "title": "Платежи",
+        "cancelSubscriptionText": "Вы уверены, что хотите отменить подписку? Текущий план будет действовать до конца платежного периода."
       },
       "errors": {
         "accessDenied": "У вас недостаточно прав для просмотра этой страницы"
@@ -304,7 +318,9 @@
     "boost": "Увеличить",
     "blocked": "Заблокирован",
     "operations": {
-      "chargeForPlan": "Оплата за тарифный план {workspaceName}",
+      "chargeForPlan": "Оплата за тарифный план",
+      "cardLinkingChange": "Списание для проверки карты",
+      "cardLinkingRefund": "Возврат средств",
       "statuses": {
         "pending": "В ожидании",
         "processed": "Обработан",
@@ -312,6 +328,7 @@
       }
     },
     "buttons": {
+      "incrementEventsLimitWithPrice": "Увеличить лимит от {price}",
       "incrementEventsLimit": "Увеличить лимит событий",
       "enableAutoPayment": "Включить автоплатеж",
       "prolongateCurrentPlan": "Продлить текущий план"
@@ -336,8 +353,7 @@
       "description": "Вы собираетесь оплатить тарифный план воркспейса. Ваш платеж будет защищен. Мы не не храним данные вашей банковской карты и не имеем к ним доступа. Вы получите чек на электронную почту. Больше информации об оплате — в {0}.",
       "details": {
         "title": "Детали",
-        "newCard": "Новая карта",
-        "emailForTheInvoice": "Почта для отправки чека"
+        "newCard": "Новая карта"
       },
       "acceptPaymentAgreement": "Я понимаю и принимаю условия платежа (обязательно)",
       "didNotAccept": "Для оплаты нужно принять платежное соглашение",
@@ -345,17 +361,30 @@
       "didNotAcceptChargingEveryMonth": "Подтвердите согласие на ежемесячные списания",
       "allowCardSaving": "Сохранить карту для будущих платежей",
       "goToPaymentService": "Перейти к оплате",
-      "payWithSelectedCard": "Оплатить с выбранной карты"
+      "payWithSelectedCard": "Оплатить с выбранной карты",
+      "newCard": "Новая карта"
+    },
+    "notifications": {
+      "error": "Произошла ошибка во время попытки провести платеж. Пожалуйста, попробуйте снова"
     },
     "autoProlongation": {
-      "title": "Автоматическое продление",
-      "description": "Вы собираетесь подписаться на автоматическое продление текущего плана воркспейса. Это означает, что при наступлении следующей даты платежа стоимость плана будет автоматически списана с вашей карты. Подробнее читайте в {0}.",
+      "title": "Оформление подписки",
+      "description": "Вы собираетесь оформить подписку на платный тариф. При наступлении следующей даты платежа стоимость плана будет автоматически списана с вашей карты.",
       "theNextPaymentDateTitle": "Дата следующего списания",
-      "acceptRecurrentPaymentAgreement": "Я понимаю и принимаю соглашение об автоматических платежах",
-      "allowingChargesEveryMonth": "Я разрешаю ежемесячные списания с моей банковской карты"
+      "acceptRecurrentPaymentAgreement": "Я принимаю <a href='https://hawk-tracker.ru/payments-agreement.pdf' target='_blank'>соглашение об автоматических платежах</a>",
+      "allowingChargesEveryMonth": "Я разрешаю ежемесячные списания с моей банковской карты",
+      "cancelSuccessMessage": "Подписка отменена",
+      "cancelErrorMessage": "Ошибка при попытке отменить подписку"
     },
     "cloudPaymentsWidget": {
-      "description": "Оплата тарифа \"{tariffPlanName}\" для воркспейса {workspaceName} на месяц."
+      "description": "Оплата тарифа \"{tariffPlanName}\" для воркспейса {workspaceName} на месяц.",
+      "descriptionCardLinking": "Списание 1 рубля для проверки карты. Сумма будет автоматически возвращена."
+    },
+    "cardLinking": {
+      "description": "Вы собираетесь оформить подписку, которая начнёт действовать с",
+      "howItWorks": "Как это работает?",
+      "step1": "Прямо сейчас мы спишем и сразу вернём 1 рубль — это нужно для привязки карты.",
+      "step2": "Первый регулярный платёж спишется {date}, и с этого дня подписка начнёт действовать."
     }
   },
   "event": {
@@ -388,11 +417,11 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
-    "suspectedCommits":{
+    "suspectedCommits": {
       "header": "Подозреваемые коммиты",
       "hide": "скрыть",
       "committed": "закоммитил(а)",
-      "moreRelease":" | еще {numberOfCommits} коммит в этом релизе | еще {numberOfCommits} коммита в этом релизе | еще {numberOfCommits} коммитов в этом релизе"
+      "moreRelease": " | еще {numberOfCommits} коммит в этом релизе | еще {numberOfCommits} коммита в этом релизе | еще {numberOfCommits} коммитов в этом релизе"
     },
     "emptyData": "Это событие не имеет дополнительных данных",
     "notFound": "Событие не найдено. Возможно, оно было заархивировано.",
@@ -411,13 +440,20 @@
     "plan": "План",
     "price": "Цена",
     "card": "Карта",
+    "threshold": "Встречалось больше",
+    "thresholdPeriod": "раз за",
     "copiedNotification": "Скопировано!",
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
+    "selected": "Выбрано",
     "continue": "Продолжить",
-    "eventsPerMonth": "соб. / мес",
-    "dollarsPerMonth": "$ / мес",
+    "eventsPerMonth": "событий / мес",
+    "moneyPerMonth": "{currency} / мес",
     "loading": "Загрузка...",
+    "minute": "минуту",
+    "hour": "час",
+    "day": "день",
+    "week": "неделю",
     "months": [
       "января",
       "февраля",
@@ -446,13 +482,13 @@
       "ноя",
       "дек"
     ],
-    "relativeTime":{
-      "secondsAgo":"несколько секунд назад",
-      "minutesAgo":" | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
-      "hoursAgo":" | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
-      "daysAgo":" | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
-      "monthsAgo":" | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
-      "yearsAgo":" | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
+    "relativeTime": {
+      "secondsAgo": "несколько секунд назад",
+      "minutesAgo": " | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
+      "hoursAgo": " | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
+      "daysAgo": " | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
+      "monthsAgo": " | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
+      "yearsAgo": " | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
     },
     "readMore": "Подробнее"
   },

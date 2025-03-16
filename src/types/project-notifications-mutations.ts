@@ -10,7 +10,7 @@ export interface ProjectNotificationsAddRulePayload {
   projectId: string;
 
   /**
-   * Receive type: 'ALL'  or 'ONLY_NEW'
+   * Receive type: 'SEEN_MORE'  or 'ONLY_NEW'
    */
   whatToReceive: ReceiveTypes;
 
@@ -28,6 +28,16 @@ export interface ProjectNotificationsAddRulePayload {
    * Available channels to receive
    */
   channels: ProjectNotificationsChannels;
+
+  /**
+   * If this number of events is reached in the eventThresholdPeriod, the rule will be triggered
+   */
+  threshold?: number;
+
+  /**
+   * Size of period (in milliseconds) to count events to compare to rule threshold
+   */
+  thresholdPeriod?: number;
 }
 
 /**

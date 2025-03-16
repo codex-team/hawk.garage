@@ -39,19 +39,21 @@
         </div>
         <div
           class="billing-card__plan"
-          @click="openChooseTariffPlan"
         >
           <div class="billing-card__plan-name">
             {{ plan.name || 'Free' }}
           </div>
           <div class="billing-card__plan-coast">
-            {{ plan.monthlyCharge || 0 }}$/{{ $t('billing.payPeriod') }}
+            {{ plan.monthlyCharge || 0 }}{{ planCurrencySign }}/{{ $t('billing.payPeriod') }}
           </div>
         </div>
       </div>
 
       <!-- Valid till -->
-      <div class="billing-card__info-section">
+      <div
+        v-if="plan.monthlyCharge"
+        class="billing-card__info-section"
+      >
         <div
           class="billing-card__label"
         >
@@ -76,10 +78,11 @@
       <div class="billing-card__info-section">
         <div class="billing-card__label">
           {{ $t('billing.volume') }}
-          <PositiveButton
+
+          <!-- <PositiveButton
             v-if="isEventsLimitExceeded"
-            :content="$t('billing.boost') + '!'"
-          />
+            :content="$t('billing.boost')"
+          /> -->
         </div>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
@@ -98,8 +101,8 @@
       <UiButton
         v-for="(button, index) in buttons"
         :key="'button:' + index"
-        :submit="button.style === 'primary'"
-        :secondary="button.style === 'secondary'"
+        :submit="index === 0"
+        :secondary="index !== 0"
         :content="button.label"
         class="billing-card__buttons--default"
         @click="button.onClick"
@@ -125,16 +128,13 @@ import UiButton from './../../utils/UiButton.vue';
 import Icon from '../../utils/Icon.vue';
 import { Plan } from '../../../types/plan';
 import { Button } from '../../../types/button';
-import PositiveButton from '../../utils/PostivieButton.vue';
+// import PositiveButton from '../../utils/PostivieButton.vue';
 import notifier from 'codex-notifier';
 import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTypes';
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
-
-/**
- * Const value for the whole project
- * Number of days of tariff plan period is valid
- */
-const NUMBER_OF_DAYS_OF_TARIFF_PLAN = 30;
+import { getCurrencySign } from '@/utils';
+import { ActionType } from '@/components/utils/ConfirmationWindow/types';
+import { composePayment } from '@/api/billing/requests';
 
 export default Vue.extend({
   name: 'BillingOverview',
@@ -145,7 +145,7 @@ export default Vue.extend({
     UiButton,
     StatusBlock,
     Icon,
-    PositiveButton,
+    // PositiveButton,
   },
   props: {
     workspace: {
@@ -160,7 +160,6 @@ export default Vue.extend({
        */
       incrementEventsLimit: {
         label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
-        style: 'primary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'ChooseTariffPlanPopup',
@@ -175,7 +174,6 @@ export default Vue.extend({
        */
       enableAutoPayment: {
         label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
-        style: 'primary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'PaymentDetailsDialog',
@@ -192,7 +190,6 @@ export default Vue.extend({
        */
       prolongateCurrentPlan: {
         label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
-        style: 'secondary',
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'PaymentDetailsDialog',
@@ -218,53 +215,78 @@ export default Vue.extend({
       return this.workspace.plan;
     },
     /**
+     * Minimal plan price
+     */
+    minPlanPrice(): number {
+      const plans = this.$store.state.plans.list;
+      const plansPrices = plans.map(plan => plan.monthlyCharge).filter(price => price !== 0);
+
+      return Math.min(...plansPrices);
+    },
+    /**
+     * `Increment Event Limit from` button
+     */
+    incrementEventsLimitWithPrice(): Omit<Button, 'style'> {
+      return {
+        label: this.$i18n.t('billing.buttons.incrementEventsLimitWithPrice', {
+          price: this.minPlanPrice + ' ' + this.planCurrencySign,
+        }) as string,
+        onClick: () => {
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'ChooseTariffPlanPopup',
+            data: {
+              workspaceId: this.workspace.id,
+            },
+          });
+        },
+      };
+    },
+    /**
+     * Return currency sign depending on plan currency
+     */
+    planCurrencySign(): string {
+      return getCurrencySign(this.plan.monthlyChargeCurrency);
+    },
+    /**
      * Total number of errors since the last charge date
      */
     eventsCount(): number {
       return this.workspace.billingPeriodEventsCount || 0;
     },
     /**
-     * Return buttons list depended on workspace state
+     * Returns buttons list depended on workspace state
      */
-    buttons(): Button[] {
-      const buttonsList: Button[] = [];
-
-      /**
-       * if plan is `Startup` then return `Increment Events Limit` button
-       */
+    buttons(): Omit<Button, 'style'>[] {
       if (this.isFreePlan) {
-        return [ this.incrementEventsLimit ];
+        return [ this.incrementEventsLimitWithPrice ];
       }
 
-      /**
-       * If autopay is off we necessary return `Enable Auto Payment` button
-       */
+      if (this.isBLocked) {
+        return [
+          this.incrementEventsLimit,
+          this.prolongateCurrentPlan,
+        ];
+      }
+
+      if (this.isSubExpired) {
+        return [
+          this.prolongateCurrentPlan,
+          this.incrementEventsLimit,
+        ];
+      }
+
       if (!this.isAutoPayOn) {
-        buttonsList.push(this.enableAutoPayment);
+        return [
+          this.enableAutoPayment,
+          this.incrementEventsLimit,
+        ];
+      }
 
-        /**
-         * If subscription is expired then return `Prolongate Current Plan` button
-         */
-        if (this.isSubExpired) {
-          buttonsList.push(this.prolongateCurrentPlan);
-
-          return buttonsList;
-        }
-
-        /**
-         * if autopay is off and events limit is exceeded then return `Increment Events Limit`
-         */
-        if (this.isEventsLimitExceeded) {
-          return [ this.incrementEventsLimit ];
-        }
-      } else if (this.isEventsLimitExceeded) {
-        /**
-         * If autopay is on and events limit is exceeded then return `Increment Events Limit`
-         */
+      if (this.isAutoPayOn) {
         return [ this.incrementEventsLimit ];
       }
 
-      return buttonsList;
+      return [];
     },
     /**
      * Checking the volume spent
@@ -282,9 +304,13 @@ export default Vue.extend({
      * Return subscription expiration date
      */
     subExpiredDate(): Date {
-      const expiredDate: Date = new Date(this.workspace.lastChargeDate);
+      const expiredDate = new Date(this.workspace.lastChargeDate);
 
-      expiredDate.setDate(expiredDate.getDate() + NUMBER_OF_DAYS_OF_TARIFF_PLAN);
+      if (this.workspace.isDebug) {
+        expiredDate.setDate(expiredDate.getDate() + 1);
+      } else {
+        expiredDate.setMonth(expiredDate.getMonth() + 1);
+      }
 
       return expiredDate;
     },
@@ -311,22 +337,14 @@ export default Vue.extend({
      * Return true if workspace plan is `Startup`
      */
     isFreePlan(): boolean {
-      return this.plan.name === 'Startup';
+      return this.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
     },
 
     /**
      * Return true if workspaces is blocked
      */
     isBLocked(): boolean {
-      if (this.isAutoPayOn) {
-        return this.isEventsLimitExceeded;
-      }
-
-      if (this.isFreePlan) {
-        return this.isEventsLimitExceeded;
-      } else {
-        return this.isEventsLimitExceeded || this.isSubExpired;
-      }
+      return this.workspace.isBlocked;
     },
   },
   /**
@@ -374,13 +392,13 @@ export default Vue.extend({
         });
 
         notifier.show({
-          message: 'Subscription successfully canceled',
+          message: this.$i18n.t('billing.autoProlongation.cancelSuccessMessage') as string,
           style: 'success',
           time: 5000,
         });
       } catch {
         notifier.show({
-          message: 'Error during subscription cancelling',
+          message: this.$i18n.t('billing.autoProlongation.cancelErrorMessage') as string,
           style: 'error',
           time: 5000,
         });
@@ -395,7 +413,13 @@ export default Vue.extend({
      */
     async onAutoPayInput(value): Promise<void> {
       if (!value) {
-        await this.cancelSubscription();
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.settings.billing.cancelSubscriptionText').toString(),
+          onConfirm: async () => {
+            await this.cancelSubscription();
+          },
+        });
 
         return;
       }
@@ -417,7 +441,8 @@ export default Vue.extend({
   @import url('./../../../styles/custom-properties.css');
 
   .billing-card {
-    width: var(--width-popup-form-container);
+    width: fit-content;
+    min-width: var(--width-popup-form-container);
     margin-bottom: 20px;
     padding: 20px;
     color: var(--color-text-main);
@@ -472,11 +497,10 @@ export default Vue.extend({
     &__plan {
       display: flex;
       align-items: center;
-      padding: 9px 15px;
+      padding-top: 3px;
+      font-size: 14px;
       white-space: nowrap;
-      border: 1px solid var(--color-text-main);
       border-radius: 3px;
-      cursor: pointer;
     }
 
     &__plan-name {
@@ -547,7 +571,6 @@ export default Vue.extend({
     }
 
     &__autopay-is-on {
-      width: 350px;
       height: 14px;
       margin: 20px 166px 0 0;
       color: color-mod(var(--color-border) alpha(60%));

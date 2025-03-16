@@ -110,6 +110,19 @@ export const MUTATION_UPDATE_PROJECT_NOTIFY_RULE = `
 `;
 
 // language=GraphQL
+export const MUTATION_REMOVE_PROJECT_NOTIFY_RULE = `
+  mutation ( $input: ProjectNotificationRulePointer! ) {
+    deleteProjectNotificationsRule(
+      input: $input
+    ) {
+      ...ProjectNotificationsRule
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+`;
+
+// language=GraphQL
 export const MUTATION_REMOVE_PROJECT = `
   mutation removeProject($projectId: ID!) {
     removeProject(projectId: $projectId)
@@ -139,7 +152,7 @@ export const QUERY_CHART_DATA = `
     $days: Int!
     $timezoneOffset: Int!
   ) {
-    project(id: $projectId) {
+    project(projectId: $projectId) {
       chartData(days: $days, timezoneOffset: $timezoneOffset) {
         timestamp
         count
@@ -150,20 +163,13 @@ export const QUERY_CHART_DATA = `
 
 //language=GraphQL
 /**
- * Get releases
+ * Get releases by project ID
  */
 export const QUERY_GET_RELEASES = `
-  query getReleases($projectId: ID) {
-    releases(projectId: $projectId) {
-      _id
+  query getReleases($projectId: ID!) {
+    getReleases(projectId: $projectId) {
       projectId
       release
-      commits {
-        hash
-        author
-        date
-        title
-      }
       files {
         mapFileName
         originFileName

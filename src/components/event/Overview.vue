@@ -37,6 +37,20 @@
         title="Nuxt"
       />
       <DetailsAddons
+        v-if="getIntegrationAddons('flask')"
+        class="event-overview__section"
+        :addons="getIntegrationAddons('flask')"
+        icon="flask"
+        title="Flask"
+      />
+      <DetailsAddons
+        v-if="getIntegrationAddons('fastapi')"
+        class="event-overview__section"
+        :addons="getIntegrationAddons('fastapi')"
+        icon="fastapi"
+        title="FastAPI"
+      />
+      <DetailsAddons
         v-if="hasContext"
         class="event-overview__section"
         :addons="event.payload.context"
@@ -120,7 +134,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = [ 'vue', 'nuxt' ];
+      const integrationToFilter = ['vue', 'nuxt', 'flask', 'fastapi'];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {

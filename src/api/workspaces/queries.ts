@@ -19,6 +19,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       billingPeriodEventsCount
       subscriptionId
       lastChargeDate
+      isDebug
+      isBlocked
       inviteHash
       ...WorkspaceWithTeam
       ...WorkspacePlan
@@ -54,6 +56,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
             count
             groupingTimestamp
             lastRepetitionTime
+            affectedUsers
           }
         }
       }
@@ -156,6 +159,8 @@ export const QUERY_WORKSPACES = `
       image
       subscriptionId
       lastChargeDate
+      isDebug
+      isBlocked
       inviteHash
       billingPeriodEventsCount
       ...WorkspacePlan

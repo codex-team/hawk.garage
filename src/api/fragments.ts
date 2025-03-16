@@ -80,6 +80,15 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
         isEnabled
       }
     }
+    threshold
+    thresholdPeriod
+  }
+`;
+
+export const PROJECT_NOTIFICATIONS_RULE_POINTER_FRAGMENT = `
+  fragment ProjectNotificationRulePointer on ProjectNotificationRulePointer {
+    id
+    projectId
   }
 `;
 
@@ -121,6 +130,7 @@ export const WORKSPACE_PLAN = `
       id
       name
       monthlyCharge
+      monthlyChargeCurrency
       eventsLimit
     }
   }

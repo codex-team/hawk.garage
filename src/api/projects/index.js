@@ -5,6 +5,7 @@ import {
   MUTATION_UPDATE_LAST_VISIT,
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
+  MUTATION_REMOVE_PROJECT_NOTIFY_RULE,
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
   QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
@@ -116,6 +117,18 @@ export async function updateProjectNotificationsRule(payload) {
 }
 
 /**
+ * Send request for removing specific project notifications rule
+ *
+ * @param {ProjectNotificationRulePointer} payload - update rule payload
+ * @returns {Promise<ProjectNotificationsRule>}
+ */
+export async function removeProjectNotificationsRule(payload) {
+  return (await api.callOld(MUTATION_REMOVE_PROJECT_NOTIFY_RULE, {
+    input: payload,
+  })).removeProjectNotificationsRule;
+}
+
+/**
  * Send request for updating specific project notifications rule
  *
  * @param {ProjectNotificationRulePointer} payload - update rule payload
@@ -144,12 +157,44 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
 }
 
 /**
- * Fetch releases for a given project (or all releases if projectId is not provided)
+ * Fetch releases for a given project
  *
- * @param {string} [projectId] - (Optional) project id to filter releases
+ * @param {string} projectId - Project id to fetch releases for
  * @returns {Promise<Array>} Array of release objects
  */
 export async function fetchReleases(projectId) {
-  return (await api.callOld(QUERY_GET_RELEASES, { projectId })).getReleases;
+  if (!projectId) {
+    throw new Error('projectId is required to fetch releases');
+  }
+  console.log('[API] Fetching releases for project:', projectId);
+  console.log('[API] Query:', QUERY_GET_RELEASES);
+  console.log('[API] Variables:', { projectId });
+  console.log('[API] Request:', {
+    query: QUERY_GET_RELEASES,
+    variables: { projectId },
+  });
+  
+  try {
+    const response = await api.call(QUERY_GET_RELEASES, { projectId }, undefined, { allowErrors: true });
+    console.log('[API] Full response:', response);
+    
+    if (response.errors) {
+      console.error('[API] GraphQL errors:', response.errors);
+      return [];
+    }
+    
+    const releases = response.data.getReleases;
+    console.log('[API] Fetched releases:', releases);
+    return releases;
+  } catch (error) {
+    console.error('[API] Failed to fetch releases:', error);
+    console.error('[API] Error details:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data,
+      request: error.config
+    });
+    return [];
+  }
 }
 

@@ -21,7 +21,7 @@
   "layout": {
     "aside": {
       "emptyProjectsList": "You haven't any integrations here.",
-      "createFirstProjectLabel": "Let’s create the new one.",
+      "createFirstProjectLabel": "Let's create the new one.",
       "createFirstProjectButton": "Create a project"
     }
   },
@@ -43,19 +43,22 @@
       "continue": "Continue",
       "cancel": "Cancel"
     },
-    "newVersionWindow":{
-      "message":"The new version is available",
-      "refresh":"Refresh"
+    "newVersionWindow": {
+      "message": "The new version is available",
+      "refresh": "Refresh"
     },
-    "feedbackButton":{
-      "message":"Leave feedback"
+    "feedbackButton": {
+      "message": "Leave feedback"
     },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",
       "whatToDo": "To start track events, you need to connect one of our Catchers",
       "whatIsCatcher": "Catcher is a small script that will catch errors in your application and send it to Hawk.",
+      "discoverMore": "Discover more integrations",
       "selectCatcherHeading": "Select a Catcher",
+      "migrationFromSentry": "Migration from Sentry",
+      "migrationFromSentryDescription": "Hawk can accept errors from Sentry SDK. You will need to change only one line.",
       "catchers": {
         "nodejs": "Track errors from the server application built on JS or TS",
         "php": "Can be connected as a standalone script or as a monolog provider",
@@ -74,7 +77,11 @@
       "getToken": "Get an Integration Token",
       "hereIsToken": "Here is your Integration token. You can also found it in the project settings later.",
       "followGuide": "Follow the Installation guide",
-      "readmeDisclaimer": "And the most actual guide at the README.md file in Catcher’s repo. As well as its source code."
+      "readmeDisclaimer": "And the most actual guide at the README.md file in Catcher's repo. As well as its source code.",
+      "getDSN": "Get a DSN",
+      "hereIsDSN": "Here is your DSN. You can also found it in the project settings later.",
+      "useDSN": "Use DSN in Sentry SDK",
+      "useDSNText": "All Sentry SDK in one way or another support the `dsn` parameter. Pass the received DSN to the Sentry SDK options."
     }
   },
   "forms": {
@@ -83,7 +90,6 @@
   },
   "projects": {
     "filters": {
-      "filtersLabel": "Filter",
       "filtersOptions": {
         "all": "All",
         "starred": "Starred",
@@ -91,10 +97,10 @@
         "unresolved": "Unresolved",
         "ignored": "Ignored"
       },
-      "sortLabel": "Sort",
       "sortOptions": {
         "byDate": "By time",
-        "byCount": "By count"
+        "byCount": "By count",
+        "byAffectedUsers": "By affected users"
       }
     },
     "placeholder": "No project selected",
@@ -129,7 +135,10 @@
         "revokeConfirmation": {
           "title": "Revoke integration token?",
           "description": "After this action, Hawk will stop accepting events with the old integration token. You will need to replace it with a new one in your project."
-        }
+        },
+        "sentryDSN": "Sentry DSN",
+        "sentryDSNText": "If you use Sentry SDK, you can use this DSN to send errors to Hawk.",
+        "sentryDSNTextNoToken": "It seems, you have an old integration token. Try to revoke it and get the new one."
       },
       "notifications": {
         "title": "Notifications",
@@ -152,8 +161,8 @@
         "telegramDescription": "Alerts through the @hawkso_bot",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
-        "receiveAllLabel": "All events",
-        "receiveAllDescription": "All event occurrences. Max frequency is 1 alert/min.",
+        "receiveSeenMoreLabel": "Frequency based",
+        "receiveSeenMoreDescription": "All event occurrences. Max frequency is 1 alert/min.",
         "includingWordsLabel": "Including words",
         "includingWordsDescription": "Only events that includes passed words",
         "excludingWordsLabel": "Excluding words",
@@ -222,14 +231,18 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Choose a plan",
-      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you want a free unlimited access for non-profit products, contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you have questions on plans, please contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
       "onSuccess": "Workspace plan has been successfully changed",
       "onError": "Unable to change workspace plan due to an error, please try again later",
       "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
-      "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan."
+      "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan.",
+      "premiumPlan": "Premium",
+      "premiumPlanLimit": "> 500 000 events / mo",
+      "premiumPlanPrice": "Individual",
+      "premiumPlanButtonText": "Contact us"
     },
     "creationDialog": {
-      "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
+      "description": "Workspace will contain your projects. You'll able to invite team members to join workspace and access projects.",
       "submitButton": "Create workspace",
       "title": "Organize new workspace",
       "workspaceNameLabel": "workspace name"
@@ -267,7 +280,8 @@
         }
       },
       "billing": {
-        "title": "Billing information"
+        "title": "Billing information",
+        "cancelSubscriptionText": "Are you sure you want to cancel subscription? Current plan will be valid until the end of the paid period."
       },
       "volume": {
         "title": "Used Volume",
@@ -304,7 +318,9 @@
     "boost": "Boost",
     "blocked": "Blocked",
     "operations": {
-      "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "chargeForPlan": "Payment for a plan",
+      "cardLinkingChange": "Charge to confirm a card",
+      "cardLinkingRefund": "Refund for a card confirmation",
       "statuses": {
         "pending": "Pending",
         "processed": "Processed",
@@ -312,13 +328,14 @@
       }
     },
     "buttons": {
+      "incrementEventsLimitWithPrice": "Increment limit from {price}",
       "incrementEventsLimit": "Increment events limit",
       "enableAutoPayment": "Enable auto payment",
       "prolongateCurrentPlan": "Prolongate current plan"
     },
     "processPayment": {
       "header": "Process payment",
-      "description": "This form allows you to fund the workspace’s balance. After selecting the amount you will be redirected to the payment service.",
+      "description": "This form allows you to fund the workspace's balance. After selecting the amount you will be redirected to the payment service.",
       "workspaceSelectLabel": "Select workspace",
       "cardSelectLabel": "Select card",
       "amountLabel": "Amount",
@@ -333,11 +350,10 @@
     "pricingAndPayments": "pricing and payments",
     "paymentDetails": {
       "title": "Payment details",
-      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won’t access and store your wire transfer data. You will get an invoice on your email. Read more about {0}.",
+      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won't access and store your wire transfer data. You will get an invoice on your email. Read more about {0}.",
       "details": {
         "title": "Details",
-        "newCard": "New card",
-        "emailForTheInvoice": "Email for the invoice"
+        "newCard": "New card"
       },
       "acceptPaymentAgreement": "I understand and accept the payment agreement (required)",
       "didNotAccept": "You need to accept the payment agreement to proceed with payment",
@@ -345,17 +361,30 @@
       "didNotAcceptChargingEveryMonth": "You need allow charges from your bank card every month to proceed with payment",
       "allowCardSaving": "Save card for future payments",
       "goToPaymentService": "Go to payment service",
-      "payWithSelectedCard": "Pay with selected card"
+      "payWithSelectedCard": "Pay with selected card",
+      "newCard": "New card"
+    },
+    "notifications": {
+      "error": "A payment processing error occurred. Please try again"
     },
     "autoProlongation": {
-      "title": "Auto prolongation",
-      "description": "You are about to subscribe for auto prolongation of the current plan of the workspace. That means that when the next payment date has come, the plan price will be automatically charged from your card. Read more about {0}.",
+      "title": "Subscription",
+      "description": "You are about to subscribe for paid tariff plan. That means that when the next payment date comes, the plan price will be automatically charged from your card.",
       "theNextPaymentDateTitle": "The next payment date",
-      "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
-      "allowingChargesEveryMonth": "I allow charges from my bank card every month"
+      "acceptRecurrentPaymentAgreement": "I understand and accept the <a href='https://hawk-tracker.ru/payments-agreement.pdf' target='_blank'>recurrent payments agreement</a>",
+      "allowingChargesEveryMonth": "I allow charges from my bank card every month",
+      "cancelSuccessMessage": "Subscription successfully canceled",
+      "cancelErrorMessage": "Error during subscription cancelling"
     },
     "cloudPaymentsWidget": {
-      "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month"
+      "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month",
+      "descriptionCardLinking": "A temporary charge of 1 USD will be made to verify your card. The amount will be refunded automatically."
+    },
+    "cardLinking": {
+      "description": "You are about to subscribe, which will start on",
+      "howItWorks": "How it works?",
+      "step1": "We will charge and immediately refund 1 USD to link your card.",
+      "step2": "The first regular payment will be charged on {date}, and the subscription will start from that day."
     }
   },
   "event": {
@@ -388,11 +417,11 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
-    "suspectedCommits":{
+    "suspectedCommits": {
       "header": "Suspected commits",
       "hide": "hide",
       "committed": "committed",
-      "moreRelease":"{numberOfCommits} more commit in this release | {numberOfCommits} more commits in this release"
+      "moreRelease": "{numberOfCommits} more commit in this release | {numberOfCommits} more commits in this release"
     },
     "emptyData": "This event has no context",
     "notFound": "Event not found. Probably it was archived.",
@@ -411,13 +440,20 @@
     "plan": "Plan",
     "price": "Price",
     "card": "Card",
+    "threshold": "Seen more than",
+    "thresholdPeriod": "in the last",
     "copiedNotification": "Copied!",
     "free": "FREE",
     "select": "Select",
+    "selected": "Selected",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
-    "dollarsPerMonth": "$ / mo",
+    "moneyPerMonth": "{currency} / mo",
     "loading": "Loading...",
+    "minute": "minute",
+    "hour": "hour",
+    "day": "day",
+    "week": "week",
     "months": [
       "january",
       "february",
@@ -446,13 +482,13 @@
       "nov",
       "dec"
     ],
-    "relativeTime":{
-      "secondsAgo":"few seconds ago",
-      "minutesAgo":"a minute ago | {numberOfMinutes} minutes ago",
-      "hoursAgo":"an hour ago | {numberOfHours} hours ago",
-      "daysAgo":"yesterday | {numberOfDays} days ago",
-      "monthsAgo":"a month ago | {numberOfMonths} months ago",
-      "yearsAgo":"a year ago | {numberOfYears} years ago"
+    "relativeTime": {
+      "secondsAgo": "few seconds ago",
+      "minutesAgo": "a minute ago | {numberOfMinutes} minutes ago",
+      "hoursAgo": "an hour ago | {numberOfHours} hours ago",
+      "daysAgo": "yesterday | {numberOfDays} days ago",
+      "monthsAgo": "a month ago | {numberOfMonths} months ago",
+      "yearsAgo": "a year ago | {numberOfYears} years ago"
     },
     "readMore": "Read more"
   },

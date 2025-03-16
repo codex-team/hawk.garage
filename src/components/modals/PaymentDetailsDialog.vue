@@ -1,170 +1,191 @@
 <template>
   <PopupDialog @close="$emit('close')">
     <div class="payment-details">
-      <div class="payment-details__header">
-        {{
-          isRecurrent
-            ? $t('billing.autoProlongation.title')
-            : $t('billing.paymentDetails.title')
-        }}
+      <div
+        v-if="isLoading"
+        class="payment-details__loading"
+      >
+        <div class="payment-details__spinner" />
+        <div class="payment-details__loading-text">
+          {{ $t('common.loading') }}
+        </div>
       </div>
 
-      <!--Description-->
-      <i18n
-        tag="div"
-        :path="isRecurrent ? 'billing.autoProlongation.description' : 'billing.paymentDetails.description'"
-        class="payment-details__description"
-      >
-        <a
-          class="link link--underlined"
-          href="https://docs.hawk.so/payments"
-          rel="noreferrer noopener"
-          target="_blank"
-        >{{ $t('billing.pricingAndPayments') }}</a>
-      </i18n>
-
-      <!--Details-->
-      <div class="payment-details__details">
-        <div class="payment-details__details-header">
-          {{ $t('billing.paymentDetails.details.title').toUpperCase() }}
+      <template v-else>
+        <div class="payment-details__header">
+          {{
+            isRecurrent
+              ? $t('billing.autoProlongation.title')
+              : $t('billing.paymentDetails.title')
+          }}
         </div>
 
-        <!--Workspace-->
-        <div class="payment-details__details-item">
-          <div class="payment-details__details-item-field">
-            {{ $t('common.workspace') }}
-          </div>
-          <EntityImage
-            :id="workspace.id"
-            :name="workspace.name"
-            :title="workspace.name"
-            :image="workspace.image"
-            size="18"
-            class="payment-details__details-item-workspace-image"
-          />
-
-          <div class="payment-details__details-item-value">
-            {{ workspace.name }}
-          </div>
-        </div>
-
-        <!--Plan-->
-        <div class="payment-details__details-item">
-          <div class="payment-details__details-item-field">
-            {{ $t('common.plan') }}
-          </div>
-          <div class="payment-details__details-item-value">
-            {{ readablePlanString }}
-          </div>
-        </div>
-
-        <!--Price-->
-        <div class="payment-details__details-item">
-          <div class="payment-details__details-item-field">
-            {{ $t('common.price') }}
-          </div>
-          <div class="payment-details__details-item-value">
-            {{ priceWithDollar }}
-          </div>
-        </div>
-
-        <!--The next payment date -->
+        <!--Description-->
         <div
-          v-if="isRecurrent"
-          class="payment-details__details-item"
+          v-if="paymentData.isCardLinkOperation"
+          class="payment-details__description"
         >
-          <div class="payment-details__details-item-field">
-            {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
-          </div>
-          <div class="payment-details__details-item-value">
-            {{ nextPaymentDateString | prettyDateFromDateTimeString }}
-          </div>
+          <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ nextPaymentDateInSeconds | prettyFullDate(false) }}</p>
+          <p>💳 {{ $t('billing.cardLinking.howItWorks') }}</p>
+          <ul>
+            <li>– {{ $t('billing.cardLinking.step1') }}</li>
+            <li>– {{ $t('billing.cardLinking.step2', { date: $options.filters.prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
+          </ul>
         </div>
-      </div>
 
-      <!--Card-->
-      <CustomSelect
-        v-if="cards.length > 1"
-        v-model="selectedCard"
-        :options="cards"
-        :label="$t('common.card').toUpperCase()"
-        :need-image="false"
-        class="payment-details__card"
-      />
 
-      <!--Email for the invoice-->
-      <TextFieldSet
-        v-model="email"
-        class="payment-details__email"
-        :label="
-          $t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()
-        "
-        :placeholder="email"
-        disabled
-      />
-
-      <!--Recurrent payment agreements-->
-      <section
-        v-if="isRecurrent"
-        class="payment-details__adoption-autoProlongation"
-      >
-        <UiCheckboxWithLabel
-          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
-          v-model="shouldSaveCard"
-          class="payment-details__adoption-autoProlongation-item"
-          :label="$t('billing.paymentDetails.allowCardSaving')"
-        />
-        <UiCheckboxWithLabel
-          v-model="isAcceptedRecurrentPaymentAgreement"
-          class="payment-details__adoption-autoProlongation-item"
-          :label="$t('billing.autoProlongation.acceptRecurrentPaymentAgreement')"
-        />
-        <UiCheckboxWithLabel
-          v-model="isAcceptedChargingEveryMonth"
-          class="payment-details__adoption-autoProlongation-item"
-          :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
-        />
-      </section>
-
-      <!--Basic payment agreement-->
-      <section
-        v-else
-        class="payment-details__adoption"
-      >
-        <UiCheckboxWithLabel
-          v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
-          v-model="shouldSaveCard"
-          class="payment-details__adoption-autoProlongation-item"
-          :label="$t('billing.paymentDetails.allowCardSaving')"
-        />
-
-        <UiCheckboxWithLabel
-          v-model="isAcceptedPaymentAgreement"
-          class="payment-details__adoption-autoProlongation-item"
-          :label="$t('billing.paymentDetails.acceptPaymentAgreement')"
-        />
-      </section>
-
-      <!--Button and cloudpayments logo-->
-      <div class="payment-details__bottom">
-        <UiButton
-          :content="payButtonText"
-          class="payment-details__bottom-button"
-          :submit="isAcceptedAllAgreements"
-          :secondary="!isAcceptedAllAgreements"
-          @click.prevent="onGoToServicePayment"
-        />
-
-        <a
-          :href="cpUrl"
-          target="_blank"
-        >
-          <Icon
-            symbol="cloud-payments-logo"
-            class="payment-details__bottom-cp-logo"
+        <template v-else>
+          <i18n
+            tag="div"
+            :path="isRecurrent ? 'billing.autoProlongation.description' : 'billing.paymentDetails.description'"
+            class="payment-details__description"
           />
-        </a>
-      </div>
+
+          <!--Details-->
+          <div class="payment-details__details">
+            <div class="payment-details__details-header">
+              {{ $t('billing.paymentDetails.details.title') }}
+            </div>
+
+            <!--Workspace-->
+            <div class="payment-details__details-item">
+              <div class="payment-details__details-item-field">
+                {{ $t('common.workspace') }}
+              </div>
+              <EntityImage
+                :id="workspace.id"
+                :name="workspace.name"
+                :title="workspace.name"
+                :image="workspace.image"
+                size="18"
+                class="payment-details__details-item-workspace-image"
+              />
+
+              <div class="payment-details__details-item-value">
+                {{ workspace.name }}
+              </div>
+            </div>
+
+            <!--Plan-->
+            <div class="payment-details__details-item">
+              <div class="payment-details__details-item-field">
+                {{ $t('common.plan') }}
+              </div>
+              <div class="payment-details__details-item-value">
+                {{ readablePlanString }}
+              </div>
+            </div>
+
+            <!--Price-->
+            <div class="payment-details__details-item">
+              <div class="payment-details__details-item-field">
+                {{ $t('common.price') }}
+              </div>
+              <div class="payment-details__details-item-value">
+                {{ price }}
+              </div>
+            </div>
+
+            <!--The next payment date -->
+            <!-- <div
+              v-if="isRecurrent"
+              class="payment-details__details-item"
+            >
+              <div class="payment-details__details-item-field">
+                {{ $t('billing.autoProlongation.theNextPaymentDateTitle') }}
+              </div>
+              <div class="payment-details__details-item-value">
+                {{ nextPaymentDateString | prettyDateFromDateTimeString }}
+              </div>
+            </div> -->
+          </div>
+        </template>
+
+
+        <!--Card-->
+        <!-- <CustomSelect
+          v-if="cards.length > 1"
+          v-model="selectedCard"
+          :options="cards"
+          :label="$t('common.card').toUpperCase()"
+          :need-image="false"
+          class="payment-details__card"
+        /> -->
+
+        <!--Email for the invoice-->
+        <!-- <TextFieldSet
+          v-model="email"
+          class="payment-details__email"
+          :label="
+            $t('billing.paymentDetails.details.emailForTheInvoice').toUpperCase()
+          "
+          :placeholder="email"
+          disabled
+        /> -->
+
+        <!--Recurrent payment agreements-->
+        <section
+          v-if="isRecurrent"
+          class="payment-details__adoption-autoProlongation"
+        >
+          <UiCheckboxWithLabel
+            v-model="isAcceptedRecurrentPaymentAgreement"
+            class="payment-details__adoption-autoProlongation-item"
+            :label="$t('billing.autoProlongation.acceptRecurrentPaymentAgreement')"
+          />
+          <UiCheckboxWithLabel
+            v-model="isAcceptedChargingEveryMonth"
+            class="payment-details__adoption-autoProlongation-item"
+            :label="$t('billing.autoProlongation.allowingChargesEveryMonth')"
+          />
+          <!-- <UiCheckboxWithLabel
+            v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+            v-model="shouldSaveCard"
+            class="payment-details__adoption-autoProlongation-item"
+            :label="$t('billing.paymentDetails.allowCardSaving')"
+          /> -->
+        </section>
+
+        <!--Basic payment agreement-->
+        <section
+          v-else
+          class="payment-details__adoption"
+        >
+          <UiCheckboxWithLabel
+            v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
+            v-model="shouldSaveCard"
+            class="payment-details__adoption-autoProlongation-item"
+            :label="$t('billing.paymentDetails.allowCardSaving')"
+          />
+
+          <UiCheckboxWithLabel
+            v-model="isAcceptedPaymentAgreement"
+            class="payment-details__adoption-autoProlongation-item"
+            :label="$t('billing.paymentDetails.acceptPaymentAgreement')"
+          />
+        </section>
+
+        <!--Button and cloudpayments logo-->
+        <div class="payment-details__bottom">
+          <UiButton
+            :content="payButtonText"
+            class="payment-details__bottom-button"
+            :submit="isAcceptedAllAgreements"
+            :secondary="!isAcceptedAllAgreements"
+            @click.prevent="onGoToServicePayment"
+          />
+
+          <a
+            :href="cpUrl"
+            target="_blank"
+          >
+            <Icon
+              symbol="cloud-payments-logo"
+              class="payment-details__bottom-cp-logo"
+            />
+          </a>
+        </div>
+      </template>
     </div>
   </PopupDialog>
 </template>
@@ -174,8 +195,8 @@ import Vue from 'vue';
 import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
-import CustomSelect from '../forms/CustomSelect.vue';
-import TextFieldSet from '../forms/TextFieldset.vue';
+// import CustomSelect from '../forms/CustomSelect.vue';
+// import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
@@ -187,13 +208,15 @@ import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
-import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS } from '@/store/modules/workspaces/actionTypes';
+import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
+import { getCurrencySign } from '@/utils';
+import { composePayment } from '@/api/billing/requests';
 
 /**
  * Id for the 'New card' option in select
@@ -226,8 +249,8 @@ export default Vue.extend({
     UiButton,
     PopupDialog,
     EntityImage,
-    CustomSelect,
-    TextFieldSet,
+    // CustomSelect,
+    // TextFieldSet,
     UiCheckboxWithLabel,
   },
   props: {
@@ -257,10 +280,19 @@ export default Vue.extend({
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
-    const cards: BankCard[] = this.$store.state.user.data?.bankCards;
-    const selectedCard = (cards?.length > 0 && cardToSelectOption(cards[0])) || undefined;
+    const selectedCard: CustomSelectOption | undefined = undefined;
 
     return {
+      /**
+       * Loading state while fetching payment data
+       */
+      isLoading: true,
+
+      /**
+       * Payment data received from API
+       */
+      paymentData: null as BeforePaymentPayload | null,
+
       /**
        * New card id to use it in template
        */
@@ -299,7 +331,7 @@ export default Vue.extend({
       /**
        * Should API save user's bank card or no
        */
-      shouldSaveCard: true,
+      shouldSaveCard: false,
 
       /**
        * Selected bank card for this payment
@@ -324,7 +356,7 @@ export default Vue.extend({
       const newCardOption: CustomSelectOption = {
         id: NEW_CARD_ID,
         value: NEW_CARD_ID,
-        name: 'New card',
+        name:  this.$t('billing.paymentDetails.newCard') as string,
       };
 
       if (!cards) {
@@ -348,19 +380,21 @@ export default Vue.extend({
      *
      * example: 100$
      */
-    priceWithDollar(): string {
-      return `${this.plan.monthlyCharge}$`;
+    price(): string {
+      return this.$t('common.moneyPerMonth', {
+        currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+      }).toString();
     },
 
     /**
      * Dynamic text for payment button
      */
     payButtonText(): string {
-      if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
-        return this.$t('billing.paymentDetails.goToPaymentService').toString();
-      }
+      // if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
+      return this.$t('billing.paymentDetails.goToPaymentService').toString();
+      // }
 
-      return this.$t('billing.paymentDetails.payWithSelectedCard').toString();
+      // return this.$t('billing.paymentDetails.payWithSelectedCard').toString();
     },
 
     /**
@@ -369,7 +403,13 @@ export default Vue.extend({
     planDueDate(): Date {
       const lastChargeDate = new Date(this.workspace.lastChargeDate);
 
-      return new Date(lastChargeDate.setMonth(lastChargeDate.getMonth() + 1));
+      if (this.workspace.isDebug) {
+        lastChargeDate.setDate(lastChargeDate.getDate() + 1);
+      } else {
+        lastChargeDate.setMonth(lastChargeDate.getMonth() + 1);
+      }
+
+      return new Date(lastChargeDate);
     },
 
     /**
@@ -384,7 +424,7 @@ export default Vue.extend({
     /**
      * Next payment date
      */
-    nextPaymentDateString(): string {
+    nextPaymentDate(): Date {
       const date = new Date();
 
       /**
@@ -392,12 +432,30 @@ export default Vue.extend({
        * Otherwise, we will debit money when the tariff plan expires
        */
       if (this.isTariffPlanExpired) {
-        date.setMonth(date.getMonth() + 1);
+        if (this.workspace.isDebug) {
+          date.setDate(date.getDate() + 1);
+        } else {
+          date.setMonth(date.getMonth() + 1);
+        }
 
-        return date.toDateString();
+        return date;
       }
 
-      return this.planDueDate.toDateString();
+      return this.planDueDate;
+    },
+
+    /**
+     * Next payment date as string
+     */
+    nextPaymentDateString(): string {
+      return this.nextPaymentDate.toISOString();
+    },
+
+    /**
+     * Next payment date in seconds
+     */
+    nextPaymentDateInSeconds(): number {
+      return Math.floor(this.nextPaymentDate.getTime() / 1000);
     },
 
     /**
@@ -410,74 +468,60 @@ export default Vue.extend({
 
       return this.isAcceptedPaymentAgreement;
     },
-
-    /**
-     * True if user pays for the current tariff plan (no plan-changing)
-     */
-    isPaymentForCurrentTariffPlan(): boolean {
-      return this.workspace.plan.id === this.plan.id;
-    },
-
-    /**
-     * True when we need to withdraw the amount only to validate the subscription
-     */
-    isOnlyCardValidationNeeded(): boolean {
-      /**
-       * In case of not recurrent payment we need to withdraw full amount
-       */
-      if (!this.isRecurrent) {
-        return false;
-      }
-
-      /**
-       * In case when user pays for another tariff plan we need to withdraw full amount
-       */
-      if (!this.isPaymentForCurrentTariffPlan) {
-        return false;
-      }
-
-      return !this.isTariffPlanExpired;
-    },
   },
-  watch: {
-    /**
-     * Watcher on cards array
-     *
-     * @param newCards - updated cards array
-     */
-    cards(newCards: CustomSelectOption[]): void {
-      if (this.selectedCard) {
-        return;
-      }
+  // watch: {
+  //   /**
+  //    * Watcher on cards array
+  //    *
+  //    * @param newCards - updated cards array
+  //    */
+  //   cards(newCards: CustomSelectOption[]): void {
+  //     if (this.selectedCard) {
+  //       return;
+  //     }
 
-      this.selectedCard = newCards[1] || newCards[0];
-    },
-  },
-  mounted() {
+  //     this.selectedCard = newCards[1] || newCards[0];
+  //   },
+  // },
+  async mounted() {
     /**
      * Check if script was loaded
      */
     if (window.cp && window.cp.CloudPayments) {
-      return;
+      // CloudPayments script is already loaded
+    } else {
+      /**
+       * Script is not loaded
+       * Then create a new script tag and it to the head
+       */
+      const widgetScript = document.createElement('script');
+
+      widgetScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments');
+      document.head.appendChild(widgetScript);
     }
 
-    /**
-     * Script is not loaded
-     * Then create a new script tag and it to the head
-     */
-    const widgetScript = document.createElement('script');
-
-    widgetScript.setAttribute('src', 'https://widget.cloudpayments.ru/bundles/cloudpayments');
-    document.head.appendChild(widgetScript);
-
     this.$store.dispatch(FETCH_BANK_CARDS);
+
+    try {
+      // Fetch payment data when component is mounted
+      this.paymentData = await composePayment(this.workspaceId, this.tariffPlanId, this.shouldSaveCard);
+    } catch (e) {
+      notifier.show({
+        message: this.$t('billing.notifications.error') as string,
+        style: 'error',
+        time: 5000,
+      });
+      this.$emit('close');
+    } finally {
+      this.isLoading = false;
+    }
   },
   methods: {
     /**
      * Open service payment
      */
     async onGoToServicePayment(): Promise<void> {
-      if (this.isAcceptedAllAgreements) {
+      if (this.isAcceptedAllAgreements && this.paymentData) {
         await this.processPayment();
       } else {
         if (this.isRecurrent) {
@@ -509,19 +553,11 @@ export default Vue.extend({
      * Method for payment processing
      */
     async processPayment(): Promise<void> {
-      const response = await axios.get(
-        `${API_ENDPOINT}/billing/compose-payment?workspaceId=${this.workspaceId}&tariffPlanId=${this.tariffPlanId}&shouldSaveCard=${this.shouldSaveCard}`
-      );
-
-      if (!this.selectedCard || this.selectedCard.id === NEW_CARD_ID) {
-        this.showPaymentWidget(response.data as BeforePaymentPayload);
-      } else {
-        await this.payWithCard({
-          checksum: response.data.checksum,
-          cardId: this.selectedCard.id,
-          isRecurrent: this.isRecurrent,
-        });
+      if (!this.paymentData) {
+        return;
       }
+
+      this.showPaymentWidget(this.paymentData);
     },
 
     /**
@@ -546,10 +582,13 @@ export default Vue.extend({
         }
         await this.$store.dispatch(RESET_MODAL_DIALOG);
       } catch (e) {
-        this.$sendToHawk(e);
+        if (e instanceof Error) {
+          this.$sendToHawk(e);
+        }
+
         notifier.show({
           message: this.$i18n.t('billing.widget.notifications.error') as string,
-          style: 'success',
+          style: 'error',
         });
       }
     },
@@ -566,10 +605,12 @@ export default Vue.extend({
         checksum: data.checksum,
       };
 
+      const interval = this.workspace.isDebug ? 'Day' : 'Month';
+
       if (this.isRecurrent) {
         paymentData.cloudPayments = {
           recurrent: {
-            interval: 'Month',
+            interval,
             period: 1,
           },
         };
@@ -580,16 +621,14 @@ export default Vue.extend({
         }
       }
 
-      let amount = data.plan.monthlyCharge;
+      const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
+      const method = data.isCardLinkOperation ? 'auth' : 'charge';
+      const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
-      if (this.isOnlyCardValidationNeeded) {
-        amount = AMOUNT_FOR_CARD_VALIDATION;
-      }
-
-      widget.pay('charge',
+      widget.pay(method,
         {
           publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
-          description: this.$t('billing.cloudPaymentsWidget.description', {
+          description: this.$t(titleKey, {
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
@@ -603,6 +642,9 @@ export default Vue.extend({
 
           skin: 'mini',
           data: paymentData,
+          /**
+           * @todo add autoclose
+           */
         },
         {
           onSuccess: () => {
@@ -610,6 +652,8 @@ export default Vue.extend({
               message: this.$i18n.t('billing.widget.notifications.success') as string,
               style: 'success',
             });
+
+            this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
           },
           onFail: () => {
             notifier.show({
@@ -630,15 +674,17 @@ export default Vue.extend({
       );
     },
   },
+
 });
 </script>
 
 <style>
 .payment-details {
   width: 558px;
-  padding: 29px 21px 30px 30px;
+  padding: 29px 21px 30px;
   color: var(--color-text-main);
   font-size: 14px;
+  min-height: 470px;
 
   &__header {
     margin: 0 159px 20px 0;
@@ -648,7 +694,6 @@ export default Vue.extend({
 
   &__description {
     margin-bottom: 30px;
-    color: var(--color-text-second);
     line-height: 1.43;
   }
 
@@ -661,6 +706,7 @@ export default Vue.extend({
     &-header {
       margin: 0 0 16px;
       color: var(--color-text-second);
+      text-transform: uppercase;
     }
 
     &-item {
@@ -726,7 +772,7 @@ export default Vue.extend({
     display: flex;
 
     &-button {
-      margin-right: 118px;
+      margin-right: auto;
     }
 
     &-cp-logo {
@@ -736,5 +782,46 @@ export default Vue.extend({
       cursor: pointer;
     }
   }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    color: var(--color-text-second);
+  }
+
+  &__loading-text {
+    font-size: 16px;
+    margin-top: 20px;
+  }
+
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--color-indicator-medium);
+    animation: spinner 0.8s linear infinite;
+  }
+
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+.payment-details__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* width: 558px;
+  height: 200px; */
+  color: var(--color-text-second);
+}
+
+.payment-details__loading-text {
+  font-size: 16px;
 }
 </style>

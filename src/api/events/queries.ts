@@ -6,7 +6,7 @@ import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
  */
 export const QUERY_EVENT = `
   query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID) {
-    project(id: $projectId) {
+    project(projectId: $projectId) {
       event(id: $eventId) {
         id
         catcherType
@@ -85,7 +85,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
     $sort: EventsSortOrder,
     $filters: EventsFiltersInput
   ) {
-    project(id: $projectId) {
+    project(projectId: $projectId) {
       recentEvents(limit: 15, skip: $skip, sort: $sort, filters: $filters) {
         events {
           id
@@ -117,6 +117,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           groupingTimestamp
           lastRepetitionId
           lastRepetitionTime
+          affectedUsers
         }
       }
     }
@@ -138,7 +139,7 @@ export const QUERY_LATEST_REPETITIONS = `
     $skip: Int,
     $limit: Int
   ) {
-    project(id: $projectId) {
+    project(projectId: $projectId) {
       event(id: $eventId) {
         repetitions(skip: $skip, limit: $limit) {
           id
@@ -181,7 +182,7 @@ export const QUERY_CHART_DATA = `
     $days: Int!
     $timezoneOffset: Int!
   ) {
-    project(id: $projectId) {
+    project(projectId: $projectId) {
       event(id: $eventId) {
         chartData(
           days: $days,

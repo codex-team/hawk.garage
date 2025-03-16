@@ -9,7 +9,9 @@ import {
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
   TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
-  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN
+  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
+  REMOVE_NOTIFICATIONS_RULE,
+  FETCH_PROJECT_RELEASES
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -228,6 +230,29 @@ const actions = {
   },
 
   /**
+   * Fetch project releases
+   *
+   * @param {Function} commit - standard Vuex commit function
+   * @param {string} projectId - id of the project to fetch releases for
+   * @returns {Promise<Array>} Array of releases
+   */
+  async [FETCH_PROJECT_RELEASES]({ commit }, projectId) {
+    try {
+      const releases = await projectsApi.fetchReleases(projectId);
+      
+      commit(mutationTypes.SET_RELEASES_LIST, {
+        projectId,
+        releases,
+      });
+
+      return releases;
+    } catch (error) {
+      console.error('Failed to fetch releases:', error);
+      return [];
+    }
+  },
+
+  /**
    * Send last-visit for passed project
    *
    * @param {object} context - vuex action context
@@ -343,7 +368,9 @@ const mutations = {
    * @param {Array<Project>} newList - new list of projects
    */
   [mutationTypes.SET_PROJECTS_LIST](state, newList) {
+    window.console.log('[Store] Setting projects list:', newList);
     Vue.set(state, 'list', newList);
+    window.console.log('[Store] State after setting projects:', state.list);
   },
 
   /**
@@ -497,30 +524,29 @@ const mutations = {
   },
 
   /**
-   * Fetch releases for a project (or all if projectId is not provided)
+   * Store releases list for a project
    *
-   * @param {Function} commit - Vuex commit
-   * @param {string} [projectId] - (Optional) project id
-   * @returns {Promise<void>}
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {object} payload - mutation payload
+   * @param {string} payload.projectId - id of the project to set releases for
+   * @param {Array} payload.releases - list of releases
    */
-  async FETCH_RELEASES({ commit }, projectId) {
-    try {
-      const releases = await projectsApi.fetchReleases(projectId);
-      commit('SET_RELEASES_LIST', releases);
-    } catch (error) {
-      console.error('Ошибка при получении релизов:', error);
-    }
-  },
+  [mutationTypes.SET_RELEASES_LIST](state, { projectId, releases }) {
+    window.console.log('[Store] Setting releases for project:', projectId);
+    window.console.log('[Store] Releases to set:', releases);
+    window.console.log('[Store] Current state.list:', state.list);
+    
+    const project = state.list.find(_project => _project.id === projectId);
+    window.console.log('[Store] Found project:', project);
 
-  /**
-   * Сохраняет список релизов в стейте
-   *
-   * @param {object} state - Vuex state
-   * @param {Array} releases - массив релизов
-   */
-  [mutationTypes.SET_RELEASES_LIST](state, releases) {
-    state.releases = releases;
-  },
+    if (project) {
+      window.console.log('[Store] Setting releases on project');
+      Vue.set(project, 'releases', releases);
+      window.console.log('[Store] Project after setting releases:', project);
+    } else {
+      window.console.warn('[Store] Project not found in state.list!');
+    }
+  }
 };
 
 export default {

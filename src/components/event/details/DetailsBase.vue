@@ -43,15 +43,15 @@ export default {
 <style>
   .event-details {
     &__header {
+      display: flex;
+      gap: 4px;
+      align-items: center;
       margin: 0 0 10px 0;
       color: var(--color-text-second);
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 0.15px;
       text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 4px;
 
       .icon {
         width: 20px;

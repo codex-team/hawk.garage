@@ -38,6 +38,16 @@ export interface ProjectNotificationsRule {
    * Available channels to receive
    */
   channels: ProjectNotificationsChannels;
+
+  /**
+   * Threshold to receive notification
+   */
+  threshold?: number;
+
+  /**
+   * Period to receive notification
+   */
+  thresholdPeriod?: number;
 }
 
 /**
@@ -52,7 +62,8 @@ export enum ReceiveTypes {
   /**
    * All notifications
    */
-  ALL = 'ALL',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  SEEN_MORE = 'SEEN_MORE',
 
   /**
    * Only first occurrence
@@ -60,3 +71,36 @@ export enum ReceiveTypes {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ONLY_NEW = 'ONLY_NEW',
 }
+
+/**
+ * Available periods to receive notification
+ * This map is used for comparisons between displayed threshold period values and stored ones
+ */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+export const thresholdPeriodToMilliseconds = new Map<string, number>([
+  /**
+   * One minute in milliseconds
+   */
+  ['minute', 60000],
+  /**
+   * One hour in milliseconds
+   */
+  ['hour', 3600000],
+  /**
+   * One day in milliseconds
+   */
+  ['day', 86400000],
+  /**
+   * One week in milliseconds
+   */
+  ['week', 604800000],
+]);
+/* eslint-enable @typescript-eslint/no-magic-numbers */
+
+/**
+ * Available periods to receive notification
+ * This map is used for comparisons between stored threshold period values and displayed ones
+ */
+export const millisecondsToThresholdPeriod = new Map<number, string>(
+  Array.from(thresholdPeriodToMilliseconds.entries()).map(([key, value]) => [value, key])
+);

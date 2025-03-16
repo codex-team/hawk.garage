@@ -29,7 +29,7 @@
           />
         </div>
         <div class="billing-history__amount">
-          {{ operation.payload.amount | centsToDollars }}$
+          {{ getAmountString(operation.payload.amount, operation.payload.currency) }}
         </div>
         <div class="billing-history__description">
           {{ getDescription(operation) }}
@@ -57,6 +57,7 @@ import EntityImage from './../EntityImage.vue';
 import { BusinessOperationType } from '@/types/business-operation-type';
 import i18n from './../../../i18n';
 import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
+import { getCurrencySign } from '@/utils';
 
 export default Vue.extend({
   name: 'BillingHistory',
@@ -97,10 +98,13 @@ export default Vue.extend({
      * Get operations with type `WORKSPACE_PLAN_PURCHASE`
      */
     filteredOperations(): BusinessOperation[] {
-      return this.operations.filter(operation => operation.type === BusinessOperationType.WorkspacePlanPurchase);
+      return this.operations;
     },
   },
   methods: {
+    getAmountString(amount: number, currency: string): string {
+      return (amount / 100) + getCurrencySign(currency);
+    },
     /**
      * Get a status key to show it on the page
      *
@@ -123,10 +127,14 @@ export default Vue.extend({
         case BusinessOperationType.WorkspacePlanPurchase: {
           const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
 
-          return i18n.t('billing.operations.chargeForPlan', {
-            workspaceName: payload.workspace.name,
-          }).toString();
+          return i18n.t('billing.operations.chargeForPlan').toString();
         }
+
+        case BusinessOperationType.CardLinkCharge:
+          return i18n.t('billing.operations.cardLinkingChange').toString();
+
+        case BusinessOperationType.CardLinkRefund:
+          return i18n.t('billing.operations.cardLinkingRefund').toString();
 
         default:
           return operation.type;

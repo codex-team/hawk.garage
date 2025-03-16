@@ -34,6 +34,11 @@ export const REMOVE_PROJECT = 'REMOVE_PROJECT';
 export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';
 
 /**
+ * Fetch project releases
+ */
+export const FETCH_PROJECT_RELEASES = 'FETCH_PROJECT_RELEASES';
+
+/**
  * Sends request to set last project visit
  */
 export const UPDATE_PROJECT_LAST_VISIT = 'UPDATE_PROJECT_LAST_VISIT';
@@ -47,6 +52,11 @@ export const ADD_NOTIFICATIONS_RULE = 'ADD_NOTIFICATIONS_RULE';
  * Update the notifications rule
  */
 export const UPDATE_NOTIFICATIONS_RULE = 'UPDATE_NOTIFICATIONS_RULE';
+
+/**
+ * Remove notifications rule
+ */
+export const REMOVE_NOTIFICATIONS_RULE = 'REMOVE_NOTIFICATIONS_RULE';
 
 /**
  * Toggle isEnabled state of the notifications rule

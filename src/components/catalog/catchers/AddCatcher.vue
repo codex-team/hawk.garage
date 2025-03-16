@@ -52,6 +52,28 @@
           :class="{'project-add-catcher__catalog-item--not-implemented': !item.page}"
           @click.native="item.page && $router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: item.page}})"
         />
+
+        <a
+          class="project-add-catcher__catalog-more"
+          href="https://docs.hawk.so/integrations?from=garage"
+          target="_blank"
+        >
+          {{ $t('components.catalog.discoverMore') }}
+        </a>
+
+        <h2 class="project-add-catcher__catalog-header">
+          {{ $t('components.catalog.migrationFromSentry') }}
+        </h2>
+        <CatalogItem
+          type="external"
+          class="project-add-catcher__catalog-item"
+          :name="'SENTRY'"
+          :is-wide="true"
+          :image="require('../../../assets/catalog/sentry.svg')"
+          :description="$t('components.catalog.migrationFromSentryDescription')"
+          @click.native="$router.push({name: 'setup-catcher', params: {projectId: $route.params.projectId, page: 'sentry'}})"
+        />
+        <div class="project-add-catcher__migration-description" />
       </div>
     </div>
   </div>
@@ -243,6 +265,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      margin-bottom: 100px;
     }
 
     &__catalog-header {
@@ -281,6 +304,22 @@ export default {
 
       @media (max-width: 907px) {
         max-width: 245px;
+      }
+    }
+
+    &__catalog-more {
+      width: 100%;
+      margin: 7.5px 7.5px 50px;
+      padding: 18px 20px;
+      text-align: center;
+      background-color: var(--color-bg-main);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        box-shadow: 0 6px 12px -5px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
       }
     }
   }
