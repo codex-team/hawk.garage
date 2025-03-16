@@ -480,49 +480,55 @@ const module: Module<EventsModuleState, RootState> = {
 
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
 
-      const repetitions = response.data.project.event.repetitions.map(repetition => {
-        if (repetition.delta && originalEvent) {
-          const eventPayload = cloneDeep(originalEvent.payload);
-          return {
-            ...repetition,
-            payload: patch({ left: eventPayload, delta: JSON.parse(repetition.delta) }),
-          };
-        } else {
-          return repetition;
-        }
-      });
-
-      /**
-       * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
-       */
-      filterBeautifiedAddons(repetitions);
-
       if (originalEvent) {
         filterBeautifiedAddons([originalEvent]);
       }
 
-      repetitions.map(repetition => {
-        if (repetition.delta && originalEvent) {
-          const payloadClone = cloneDeep(originalEvent.payload);
+      /**
+       * If delta is present, apply delta to the event payload
+       */
+      const repetitions = response.data.project.event.repetitions.map(repetition => {
+        let processedRepetition: HawkEventRepetition;
+
+        const isNewDeltaFormat = !repetition.payload;
+
+        if (isNewDeltaFormat && originalEvent) {
+          const eventPayload = cloneDeep(originalEvent.payload);
+
+          /**
+           * If delta is present, apply delta to the event payload, otherwise set the event payload to the original event payload
+           */
+          processedRepetition = {
+            ...repetition,
+            payload: repetition.delta ? patch({ left: eventPayload, delta: JSON.parse(repetition.delta) }) : eventPayload,
+          };
+        } else {
+          processedRepetition = repetition;
+        }
+
+       /**
+        * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
+        */
+        filterBeautifiedAddons([processedRepetition]);
+
+        /**
+         * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
+         */
+        if (isNewDeltaFormat) {
           commit(MutationTypes.AddRepetitionPayload, {
             projectId,
             eventId,
-            repetition: {
-              ...repetition,
-              payload: patch({ left: payloadClone, delta: JSON.parse(repetition.delta) }),
-            },
+            repetition: processedRepetition,
           });
         } else {
-          // save to the state
           commit(MutationTypes.AddRepetitionPayload, {
             projectId,
             eventId,
-            repetition: {
-              ...repetition,
-              payload: originalEvent ? repetitionAssembler(originalEvent.payload, repetition.payload) as HawkEventPayload : repetition.payload,
-            },
+            repetition: originalEvent ? repetitionAssembler(originalEvent.payload, processedRepetition.payload) as HawkEventPayload : processedRepetition.payload,
           });
         }
+
+        return processedRepetition;
       });
 
       return repetitions;
