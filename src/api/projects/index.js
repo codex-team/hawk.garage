@@ -175,7 +175,7 @@ export async function fetchReleases(projectId) {
       return [];
     }
     
-    return response.data.getReleases;
+    return response.data.project.releases;
   } catch (error) {
     console.error('Failed to fetch releases:', error);
     return [];

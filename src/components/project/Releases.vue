@@ -23,8 +23,8 @@
           >
             <div class="project-releases__item-header">
               <div class="project-releases__item-info">
-                <div class="project-releases__time">{{ formatTime(release.release) }}</div>
-                <div class="project-releases__name">{{ release._id }}</div>
+                <div class="project-releases__time">{{ formatTime(release.releaseName) }}</div>
+                <div class="project-releases__name">{{ release.id }}</div>
               </div>
               <div class="project-releases__files-count">
                 {{ release.files ? release.files.length : 0 }} files
@@ -120,7 +120,7 @@ export default {
       yesterday.setDate(yesterday.getDate() - 1);
 
       this.releases.forEach(release => {
-        const date = new Date(release.release);
+        const date = new Date(release.releaseName);
         const releaseDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         let day;
 
@@ -152,7 +152,7 @@ export default {
         })
         .forEach(key => {
           sortedGroups[key] = groups[key].sort((a, b) => 
-            new Date(b.release).getTime() - new Date(a.release).getTime()
+            new Date(b.releaseName).getTime() - new Date(a.releaseName).getTime()
           );
         });
 

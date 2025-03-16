@@ -166,14 +166,16 @@ export const QUERY_CHART_DATA = `
  * Get releases by project ID
  */
 export const QUERY_GET_RELEASES = `
-  query getReleases($projectId: ID!) {
-    getReleases(projectId: $projectId) {
-      _id
-      projectId
-      release
-      files {
-        mapFileName
-        originFileName
+  query getProjectReleases($projectId: ID!) {
+    project(projectId: $projectId) {
+      releases {
+        id
+        projectId
+        releaseName
+        files {
+          mapFileName
+          originFileName
+        }
       }
     }
   }
