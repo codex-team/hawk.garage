@@ -506,9 +506,9 @@ const module: Module<EventsModuleState, RootState> = {
           processedRepetition = repetition;
         }
 
-       /**
-        * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
-        */
+        /**
+         * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
+         */
         filterBeautifiedAddons([processedRepetition]);
 
         /**
@@ -524,7 +524,10 @@ const module: Module<EventsModuleState, RootState> = {
           commit(MutationTypes.AddRepetitionPayload, {
             projectId,
             eventId,
-            repetition: originalEvent ? repetitionAssembler(originalEvent.payload, processedRepetition.payload) as HawkEventPayload : processedRepetition.payload,
+            repetition: {
+              ...processedRepetition,
+              payload: originalEvent ? repetitionAssembler(originalEvent.payload, processedRepetition.payload) as HawkEventPayload : processedRepetition.payload,
+            },
           });
         }
 
