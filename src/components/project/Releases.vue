@@ -16,7 +16,7 @@
           <div class="project-releases__day-header">{{ formatDayHeader(day) }}</div>
           <div
             v-for="(release, index) in dayReleases"
-            :key="release.release"
+            :key="release._id"
             class="project-releases__item"
             :class="{ 'project-releases__item--expanded': expandedReleases[`${day}-${index}`] }"
             @click="toggleRelease(`${day}-${index}`)"
@@ -24,7 +24,7 @@
             <div class="project-releases__item-header">
               <div class="project-releases__item-info">
                 <div class="project-releases__time">{{ formatTime(release.release) }}</div>
-                <div class="project-releases__name">{{ release.release }}</div>
+                <div class="project-releases__name">{{ release._id }}</div>
               </div>
               <div class="project-releases__files-count">
                 {{ release.files ? release.files.length : 0 }} files
@@ -305,8 +305,9 @@ export default {
   }
 
   &__name {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 14px;
+    font-family: monospace;
+    color: var(--color-text-second);
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

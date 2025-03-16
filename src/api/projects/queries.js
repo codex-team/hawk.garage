@@ -168,6 +168,7 @@ export const QUERY_CHART_DATA = `
 export const QUERY_GET_RELEASES = `
   query getReleases($projectId: ID!) {
     getReleases(projectId: $projectId) {
+      _id
       projectId
       release
       files {
