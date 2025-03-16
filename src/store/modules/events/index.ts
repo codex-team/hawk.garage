@@ -293,7 +293,8 @@ const module: Module<EventsModuleState, RootState> = {
            * If delta is present, apply delta to the event payload
            */
           if (repetition.delta) {
-            event.payload = patch({ left: event.payload, delta: JSON.parse(repetition.delta) });
+            event.payload = patch({ left: event.payload,
+              delta: JSON.parse(repetition.delta) });
           } else {
             /**
              * If delta is not present, set the event payload to the original event payload
@@ -481,7 +482,7 @@ const module: Module<EventsModuleState, RootState> = {
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
 
       if (originalEvent) {
-        filterBeautifiedAddons([originalEvent]);
+        filterBeautifiedAddons([ originalEvent ]);
       }
 
       /**
@@ -500,7 +501,8 @@ const module: Module<EventsModuleState, RootState> = {
            */
           processedRepetition = {
             ...repetition,
-            payload: repetition.delta ? patch({ left: eventPayload, delta: JSON.parse(repetition.delta) }) : eventPayload,
+            payload: repetition.delta ? patch({ left: eventPayload,
+              delta: JSON.parse(repetition.delta) }) : eventPayload,
           };
         } else {
           processedRepetition = repetition;
@@ -509,7 +511,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
          */
-        filterBeautifiedAddons([processedRepetition]);
+        filterBeautifiedAddons([ processedRepetition ]);
 
         /**
          * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
@@ -567,9 +569,11 @@ const module: Module<EventsModuleState, RootState> = {
        */
       if (event.repetition.delta && isNewDeltaFormat) {
         const eventPayload = cloneDeep(event.payload);
+
         repetition = {
           ...event.repetition,
-          payload: patch({ left: eventPayload, delta: JSON.parse(event.repetition.delta) }),
+          payload: patch({ left: eventPayload,
+            delta: JSON.parse(event.repetition.delta) }),
         };
       } else if (isNewDeltaFormat) {
         /**
@@ -591,8 +595,8 @@ const module: Module<EventsModuleState, RootState> = {
        */
       event.repetition = repetition;
 
-      filterBeautifiedAddons([event]);
-      filterBeautifiedAddons([event.repetition]);
+      filterBeautifiedAddons([ event ]);
+      filterBeautifiedAddons([ event.repetition ]);
 
       /**
        * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
@@ -913,7 +917,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [repetition]);
+        Vue.set(state.repetitions, key, [ repetition ]);
 
         return;
       }
