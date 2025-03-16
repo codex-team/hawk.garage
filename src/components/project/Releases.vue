@@ -167,10 +167,8 @@ export default {
     }
   },
   mounted() {
-    console.log('[Releases] Component mounted');
   },
   beforeDestroy() {
-    console.log('[Releases] Component will be destroyed');
   },
   methods: {
     /**

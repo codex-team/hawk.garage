@@ -368,9 +368,7 @@ const mutations = {
    * @param {Array<Project>} newList - new list of projects
    */
   [mutationTypes.SET_PROJECTS_LIST](state, newList) {
-    window.console.log('[Store] Setting projects list:', newList);
     Vue.set(state, 'list', newList);
-    window.console.log('[Store] State after setting projects:', state.list);
   },
 
   /**
@@ -532,19 +530,10 @@ const mutations = {
    * @param {Array} payload.releases - list of releases
    */
   [mutationTypes.SET_RELEASES_LIST](state, { projectId, releases }) {
-    window.console.log('[Store] Setting releases for project:', projectId);
-    window.console.log('[Store] Releases to set:', releases);
-    window.console.log('[Store] Current state.list:', state.list);
-    
     const project = state.list.find(_project => _project.id === projectId);
-    window.console.log('[Store] Found project:', project);
 
     if (project) {
-      window.console.log('[Store] Setting releases on project');
       Vue.set(project, 'releases', releases);
-      window.console.log('[Store] Project after setting releases:', project);
-    } else {
-      window.console.warn('[Store] Project not found in state.list!');
     }
   }
 };
