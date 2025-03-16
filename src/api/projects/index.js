@@ -125,7 +125,7 @@ export async function updateProjectNotificationsRule(payload) {
  * @returns {Promise<ProjectEventGroupingPattern>} - created pattern
  */
 export async function addEventGroupingPattern(payload) {
-  const response = (await api.callOld(MUTATION_CREATE_PROJECT_PATTERN, {
+  const response = (await api.call(MUTATION_CREATE_PROJECT_PATTERN, {
     input: payload,
   })).createProjectEventGroupingPattern;
 
@@ -139,7 +139,7 @@ export async function addEventGroupingPattern(payload) {
  * @returns {Promise<ProjectEventGroupingPattern>} - updated pattern
  */
 export async function updateEventGroupingPattern(payload) {
-  return (await api.callOld(MUTATION_UPDATE_PROJECT_PATTERN, {
+  return (await api.call(MUTATION_UPDATE_PROJECT_PATTERN, {
     input: payload,
   })).updateProjectEventGroupingPattern;
 }
@@ -151,7 +151,7 @@ export async function updateEventGroupingPattern(payload) {
  * @returns {Promise<ProjectEventGroupingPattern>} - removed pattern
  */
 export async function removeEventGroupingPattern(payload) {
-  return (await api.callOld(MUTATION_REMOVE_PROJECT_PATTERN, {
+  return (await api.call(MUTATION_REMOVE_PROJECT_PATTERN, {
     input: payload,
   })).removeProjectEventGroupingPattern;
 }
