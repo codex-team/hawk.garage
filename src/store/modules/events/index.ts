@@ -555,10 +555,16 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
-      let repetition = event.repetition;
+      let repetition;
 
+      /**
+       * Check if delta format is new
+       */
       const isNewDeltaFormat = !event.repetition.payload;
 
+      /**
+       * If delta format is new, apply delta to the event payload
+       */
       if (event.repetition.delta && isNewDeltaFormat) {
         const eventPayload = cloneDeep(event.payload);
         repetition = {
@@ -566,45 +572,43 @@ const module: Module<EventsModuleState, RootState> = {
           payload: patch({ left: eventPayload, delta: JSON.parse(event.repetition.delta) }),
         };
       } else if (isNewDeltaFormat) {
+        /**
+         * If delta format is new, set the event payload to the original event payload in case if delta is null
+         */
         repetition = {
           ...event.repetition,
           payload: event.payload,
         };
+      } else {
+        /**
+         * If delta format is old, set the event repetition to the original event repetition
+         */
+        repetition = event.repetition;
       }
 
+      /**
+       * Update event repetition
+       */
       event.repetition = repetition;
 
       filterBeautifiedAddons([event]);
       filterBeautifiedAddons([event.repetition]);
 
       /**
-       * Updates or sets event's fetched payload in the state
+       * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
        */
-      if (isNewDeltaFormat && repetition.delta) {
-        const eventPayload = cloneDeep(event.payload);
-        console.log('aaaaaaaa', {
-          projectId,
-          event: {
-            ...event,
-            payload: repetition.payload,
-          },
-        })
+      if (isNewDeltaFormat) {
         commit(MutationTypes.UpdateEvent, {
           projectId,
           event: {
             ...event,
             payload: repetition.payload,
-          },
-        });
-      } else if (isNewDeltaFormat) {
-        commit(MutationTypes.UpdateEvent, {
-          projectId,
-          event: {
-            ...event,
-            payload: event.payload,
           },
         });
       } else {
+        /**
+         * Save to the state, if delta format is old, assemble event payload and save to the state
+         */
         commit(MutationTypes.UpdateEvent, {
           projectId,
           event: {
