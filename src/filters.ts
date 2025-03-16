@@ -186,7 +186,7 @@ Vue.filter(
       i18n.t('common.shortMonths[' + month + ']').toString()
     );
 
-    let result = `${isSameYear ? '' : year + ','} ${monthStr} ${day}`;
+    let result = `${isSameYear ? '' : year + ', '}${monthStr} ${day}`;
 
     if (includeTime) {
       result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;

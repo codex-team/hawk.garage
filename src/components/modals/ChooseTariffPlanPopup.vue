@@ -31,7 +31,7 @@
             :selected="plan.id === selectedPlan.id"
             :is-current-plan="plan.id === workspace.plan.id"
             :horizontal="plans.length > 3"
-            @click.native="selectPlan(plan.id)"
+            @click.native="proceedWithPlan(plan.id)"
           />
 
           <div class="choose-plan__premium-card">
@@ -59,13 +59,6 @@
           </div>
         </div>
 
-        <UiButton
-          class="choose-plan__continue-button"
-          :content="$t('common.continue')"
-          :disabled="selectedPlan.id === workspace.plan.id"
-          submit
-          @click="onContinue"
-        />
       </div>
     </div>
   </PopupDialog>
@@ -81,6 +74,7 @@ import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
+import { composePayment } from '@/api/billing/requests';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -122,12 +116,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    /**
-     * Select plan card by id
-     *
-     * @param id - plan id
-     */
-    selectPlan(id: string): void {
+    proceedWithPlan(id: string): void {
       const plan = this.plans.find(p => p.id === id);
 
       if (!plan) {
@@ -135,6 +124,8 @@ export default Vue.extend({
       }
 
       this.selectedPlan = plan;
+
+      this.onContinue();
     },
 
     /**
@@ -192,20 +183,31 @@ export default Vue.extend({
         return;
       }
 
-      this.$confirm.open({
-        actionType: ActionType.SUBMIT,
-        description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
-        onConfirm: async () => {
-          await this.$store.dispatch(SET_MODAL_DIALOG, {
-            component: 'PaymentDetailsDialog',
-            data: {
-              workspaceId: this.workspaceId,
-              tariffPlanId: this.selectedPlan.id,
-              isRecurrent: true,
-            },
-          });
-        },
-      });
+      if (!this.workspace.isBlocked) {
+        this.$confirm.open({
+          actionType: ActionType.SUBMIT,
+          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          onConfirm: async () => {
+            await this.$store.dispatch(SET_MODAL_DIALOG, {
+              component: 'PaymentDetailsDialog',
+              data: {
+                workspaceId: this.workspaceId,
+                tariffPlanId: this.selectedPlan.id,
+                isRecurrent: true,
+              },
+            });
+          },
+        });
+      } else {
+        await this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'PaymentDetailsDialog',
+          data: {
+            workspaceId: this.workspaceId,
+            tariffPlanId: this.selectedPlan.id,
+            isRecurrent: true,
+          },
+        });
+      }
     },
   },
 });
