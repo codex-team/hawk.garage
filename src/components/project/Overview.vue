@@ -93,6 +93,12 @@ import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
 import EventItemSkeleton from './EventItemSkeleton';
+
+/**
+ * Maximum length of the search query
+ */
+const SEARCH_MAX_LENGTH = 50;
+
 export default {
   name: 'ProjectOverview',
   components: {
@@ -395,7 +401,7 @@ export default {
         return;
       }
 
-      const sanitizedQuery = query.slice(0, 100);
+      const sanitizedQuery = query.slice(0, SEARCH_MAX_LENGTH);
 
       this.$store.commit('SET_PROJECT_SEARCH', {
         projectId: this.projectId,
