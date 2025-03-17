@@ -175,7 +175,10 @@
         "removeRule": "Remove rule"
       }
     },
-    "notFound": "Project not found"
+    "notFound": "Project not found",
+    "tabs": {
+      "events": "Events"
+    }
   },
   "settings": {
     "account": {

@@ -80,7 +80,7 @@ export default Vue.extend({
     tabs(): TabInfo[] {
       return [
         {
-          title: 'Events',
+          title: this.$t('projects.tabs.events') as string,
           routeName: 'project-overview',
         },
       ];
