@@ -372,7 +372,6 @@ export default Vue.extend({
     &__nav-bar, &__viewed-by {
       display: flex;
       justify-content: space-between;
-      height: 50px;
     }
   }
 </style>

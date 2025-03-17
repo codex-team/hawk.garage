@@ -32,10 +32,6 @@
       </div>
     </aside>
     <div class="app-shell__content">
-      <ProjectHeader
-        v-if="$route.params.projectId"
-        class="app-shell__project-header"
-      />
       <ProjectPlaceholder v-if="!$route.params.projectId" />
       <router-view :key="$route.params.projectId" />
     </div>
@@ -57,7 +53,6 @@ import SearchField from './forms/SearchField';
 import WorkspaceInfo from './aside/WorkspaceInfo';
 import ProjectsMenuItem from './aside/ProjectsMenuItem';
 import EmptyProjectsList from './aside/EmptyProjectsList';
-import ProjectHeader from './project/ProjectHeader';
 import ProjectPlaceholder from './project/ProjectPlaceholder';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
@@ -71,7 +66,6 @@ export default {
     ProjectsMenuItem,
     SearchField,
     WorkspaceInfo,
-    ProjectHeader,
     ProjectPlaceholder,
     EmptyProjectsList,
   },
@@ -297,10 +291,6 @@ export default {
       flex-grow: 1;
       overflow: hidden;
       background-color: var(--color-bg-second);
-    }
-
-    &__project-header {
-      flex-shrink: 0;
     }
   }
 
