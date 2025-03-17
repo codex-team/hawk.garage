@@ -155,10 +155,9 @@ export default {
   },
   methods: {
     /**
-     * Update assignee to other or remove him
-     *
+     * Updates the assignee for the current event
+     * @param {Object} user - The user to assign or unassign
      * @returns {void}
-     * @param user
      */
     async updateAssignee(user) {
       if (this.currentAssigneeId === user.id) {
