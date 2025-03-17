@@ -115,7 +115,7 @@ export default Vue.extend({
     },
 
     /**
-     * Transparent only-icon button with curcle hover effect
+     * Transparent only-icon button with circle hover effect
      */
     iconic: {
       type: Boolean,
