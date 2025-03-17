@@ -170,10 +170,6 @@ export default {
       console.error('Error fetching releases:', error);
     }
   },
-  mounted() {
-  },
-  beforeDestroy() {
-  },
   methods: {
     /**
      * Format day header
