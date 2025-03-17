@@ -438,7 +438,11 @@ const module: Module<EventsModuleState, RootState> = {
         return true;
       }
 
-      if (search.trim().length > 0) {
+      /**
+       * Reset loadedEventsCount only when starting a new search
+       * This ensures proper pagination during search
+       */
+      if (search.trim().length > 0 && !loadedEventsCount[projectId]) {
         loadedEventsCount[projectId] = 0;
       }
 
@@ -455,22 +459,14 @@ const module: Module<EventsModuleState, RootState> = {
       });
 
       /**
-       * Handles events list updates based on search context
-       * If search parameter is present - replaces the entire events list (SetRecentEventsList)
-       * If no search parameter - appends new events to existing list (AddToRecentEventsList)
-       * This supports both search functionality and infinite scroll pagination
+       * Always use AddToRecentEventsList for pagination
+       * This ensures that new events are appended to the existing list
+       * regardless of whether there is a search query or not
        */
-      if (search.trim().length > 0) {
-        commit(MutationTypes.SetRecentEventsList, {
-          projectId,
-          recentEventsInfoByDate: eventsGroupedByDate,
-        });
-      } else {
-        commit(MutationTypes.AddToRecentEventsList, {
-          projectId,
-          recentEventsInfoByDate: eventsGroupedByDate,
-        });
-      }
+      commit(MutationTypes.AddToRecentEventsList, {
+        projectId,
+        recentEventsInfoByDate: eventsGroupedByDate,
+      });
 
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
