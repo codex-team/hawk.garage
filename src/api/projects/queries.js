@@ -175,6 +175,7 @@ export const QUERY_GET_RELEASES = `
         files {
           mapFileName
           originFileName
+          size
         }
       }
     }

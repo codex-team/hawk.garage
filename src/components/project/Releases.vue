@@ -28,6 +28,9 @@
               </div>
               <div class="project-releases__files-count">
                 {{ release.files ? release.files.length : 0 }} files
+                <span v-if="release.files && release.files.length" class="project-releases__files-size">
+                  ({{ formatTotalSize(release.files) }})
+                </span>
               </div>
             </div>
             <div v-if="expandedReleases[`${day}-${index}`]" class="project-releases__details">
@@ -126,7 +129,6 @@ export default {
         const releaseDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         let day;
 
-        // Compare with today and yesterday
         if (releaseDay.getTime() === today.getTime()) {
           day = 'today';
         } else if (releaseDay.getTime() === yesterday.getTime()) {
@@ -211,6 +213,25 @@ export default {
      */
     getTimestampFromReleaseName(releaseName) {
       return Math.floor(new Date(releaseName).getTime() / 1000);
+    },
+
+    /**
+     * Format total size of files in bytes to human readable format
+     * @param {Array} files - Array of files with size property
+     * @returns {string} Formatted size
+     */
+    formatTotalSize(files) {
+      const totalSize = files.reduce((sum, file) => sum + (file.size || 0), 0);
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let size = totalSize;
+      let unitIndex = 0;
+
+      while (size >= 1024 && unitIndex < units.length - 1) {
+        size /= 1024;
+        unitIndex++;
+      }
+
+      return `${Math.round(size * 10) / 10} ${units[unitIndex]}`;
     }
   }
 };
@@ -312,6 +333,11 @@ export default {
     font-size: 14px;
     line-height: 100%;
     letter-spacing: 0px;
+  }
+
+  &__files-size {
+    margin-left: 5px;
+    color: var(--color-text-second);
   }
 
   &__details {
