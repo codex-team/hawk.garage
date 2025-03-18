@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import messages from './messages/en';
+import messages from './messages/ru';
 
 Vue.use(VueI18n);
 
@@ -32,17 +32,17 @@ const russianPluralization = (choice, choicesLength) => {
 };
 
 const i18n = new VueI18n({
-  locale: 'en',
+  locale: 'ru',
   fallbackLocale: 'en',
   messages: {
-    en: messages,
+    ru: messages,
   },
   pluralizationRules: {
     'ru': russianPluralization,
   },
 });
 
-const loadedLanguages = [ 'en' ];
+const loadedLanguages = [ 'ru' ];
 
 /**
  * Sets new i18n plugin locale

@@ -1,5 +1,6 @@
 import { User } from './user';
 import { ProjectNotificationsRule } from './project-notifications';
+import { ProjectEventGroupingPattern } from './project-event-grouping-patterns';
 
 /**
  * Structure represents a Project got from API
@@ -44,4 +45,9 @@ export interface Project {
    * List of notifications rules
    */
   notifications?: ProjectNotificationsRule[];
+
+  /**
+   * List of events grouping patterns
+   */
+  eventGroupingPatterns?: ProjectEventGroupingPattern[];
 }
