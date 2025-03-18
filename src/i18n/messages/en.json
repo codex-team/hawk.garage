@@ -86,7 +86,8 @@
   },
   "forms": {
     "imageUploader": "UPLOAD LOGO",
-    "searchField": "Search"
+    "searchField": "Search",
+    "searchFieldWithCMDK": "{cmd}+K to search"
   },
   "projects": {
     "filters": {
@@ -186,7 +187,10 @@
         }
       }
     },
-    "notFound": "Project not found"
+    "notFound": "Project not found",
+    "tabs": {
+      "events": "Events"
+    }
   },
   "settings": {
     "account": {
@@ -440,7 +444,8 @@
     "addons": {
       "url": "URL",
       "window": "Browser Window",
-      "beautifiedUserAgent": "User Agent"
+      "beautifiedUserAgent": "User Agent",
+      "consoleOutput": "Console Output"
     },
     "user": {
       "unknown": "Unknown",

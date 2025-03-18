@@ -20,6 +20,9 @@
           v-model="searchQuery"
           class="search-container"
           @input="debouncedSearch"
+          skin="fancy"
+          :placeholder="searchFieldPlaceholder"
+          :isCMDKEnabled="true"
         />
         <template v-if="!isListEmpty">
           <div
@@ -42,17 +45,17 @@
               @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
             />
           </div>
+          <div
+            v-if="!isListEmpty && !noMoreEvents && !isLoadingEvents"
+            class="project-overview__load-more"
+            :class="{'loader': isLoadingEvents}"
+            @click="loadMoreEvents"
+          >
+            <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
+          </div>
         </template>
         <div v-else-if="isLoadingEvents">
-          Loading...
-        </div>
-        <div
-          v-else-if="isListEmpty && !noMoreEvents && !isLoadingEvents"
-          class="project-overview__load-more"
-          :class="{'loader': isLoadingEvents}"
-          @click="loadMoreEvents"
-        >
-          <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
+          <EventItemSkeleton />
         </div>
         <div
           v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
@@ -88,6 +91,13 @@ import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
+import { getPlatform } from '@/utils';
+import EventItemSkeleton from './EventItemSkeleton';
+
+/**
+ * Maximum length of the search query
+ */
+const SEARCH_MAX_LENGTH = 50;
 
 export default {
   name: 'ProjectOverview',
@@ -97,6 +107,7 @@ export default {
     AssigneesList,
     Chart,
     SearchField,
+    EventItemSkeleton,
   },
   data() {
     return {
@@ -189,6 +200,10 @@ export default {
 
       return Object.keys(this.recentEvents).length === 0;
     },
+
+    searchFieldPlaceholder() {
+      return this.$t('forms.searchFieldWithCMDK', { cmd: getPlatform() === 'macos' ? '⌘' : 'Ctrl' });
+    },
   },
 
   /**
@@ -259,14 +274,6 @@ export default {
       projectId: this.projectId,
       search: '',
     });
-  },
-
-  /**
-   * Vue mounted hook
-   * Used to update user's last project visit time
-   */
-  mounted() {
-    this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
   },
 
   unmounted() {
@@ -386,7 +393,7 @@ export default {
         return;
       }
 
-      const sanitizedQuery = query.slice(0, 100);
+      const sanitizedQuery = query.slice(0, SEARCH_MAX_LENGTH);
 
       this.$store.commit('SET_PROJECT_SEARCH', {
         projectId: this.projectId,
@@ -425,13 +432,12 @@ export default {
     }
 
     &__chart {
-      margin: 15px 15px 0;
     }
 
     &__events {
       display: flex;
       flex-direction: column;
-      padding: 0 15px 15px;
+      padding: 0 var(--layout-padding-inline) 15px;
     }
 
     &__events-by-date {

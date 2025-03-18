@@ -400,7 +400,13 @@ const module: Module<EventsModuleState, RootState> = {
       { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
     ): void {
       commit(MutationTypes.SetEventsList, events);
-      commit(MutationTypes.SetRecentEventsList, recentEvents);
+
+      Object.entries(recentEvents).forEach(([projectId, recentEventsInfoByDate]) => {
+        commit(MutationTypes.SetRecentEventsList, {
+          projectId,
+          recentEventsInfoByDate,
+        });
+      });
       commit(MutationTypes.SetLatestEvents, recentEvents);
     },
 
@@ -414,9 +420,10 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} project - object of project data
      * @param {string} project.projectId - id of the project to fetch data
+     * @param {string} project.search - search query
      * @returns {Promise<boolean>} - true if there are no more events
      */
-    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search?: string }): Promise<boolean> {
+    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search: string }): Promise<boolean> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const recentEvents = await eventsApi.fetchRecentEvents(
@@ -431,7 +438,11 @@ const module: Module<EventsModuleState, RootState> = {
         return true;
       }
 
-      if (search !== undefined) {
+      /**
+       * Reset loadedEventsCount only when starting a new search
+       * This ensures proper pagination during search
+       */
+      if (search.trim().length > 0 && !loadedEventsCount[projectId]) {
         loadedEventsCount[projectId] = 0;
       }
 
@@ -448,22 +459,14 @@ const module: Module<EventsModuleState, RootState> = {
       });
 
       /**
-       * Handles events list updates based on search context
-       * If search parameter is present - replaces the entire events list (SetRecentEventsList)
-       * If no search parameter - appends new events to existing list (AddToRecentEventsList)
-       * This supports both search functionality and infinite scroll pagination
+       * Always use AddToRecentEventsList for pagination
+       * This ensures that new events are appended to the existing list
+       * regardless of whether there is a search query or not
        */
-      if (search !== undefined) {
-        commit(MutationTypes.SetRecentEventsList, {
-          projectId,
-          recentEventsInfoByDate: eventsGroupedByDate,
-        });
-      } else {
-        commit(MutationTypes.AddToRecentEventsList, {
-          projectId,
-          recentEventsInfoByDate: eventsGroupedByDate,
-        });
-      }
+      commit(MutationTypes.AddToRecentEventsList, {
+        projectId,
+        recentEventsInfoByDate: eventsGroupedByDate,
+      });
 
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
@@ -836,9 +839,6 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEventsDailyInfoByDate} payload.recentEventsInfoByDate - grouped events list
      */
     [MutationTypes.SetRecentEventsList](state, { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }): void {
-      if (!state.recent[projectId]) {
-        Vue.set(state.recent, projectId, {});
-      }
       Vue.set(state.recent, projectId, recentEventsInfoByDate);
     },
 

@@ -158,10 +158,14 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Unique addons keys
+     * Unique addons keys (excluding consoleOutput)
      */
     distinctAddonsKeys(): Set<string> {
-      return this.getDistinctKeysRepetitionsProperty('addons');
+      return new Set(
+        [...this.getDistinctKeysRepetitionsProperty('addons')].filter(
+          (key) => key !== 'consoleOutput'
+        )
+      );
     },
 
     /**
