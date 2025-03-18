@@ -16,7 +16,7 @@
       <input
         v-model="createPatternForm"
         class="input patterns-section__input"
-        placeholder="Attempt to read property \"
+        :placeholder='"Attempt to read property \".*\" on array"'
       >
       <UiButton
         class="patterns-section__button"
@@ -39,7 +39,7 @@
             v-model="pattern.pattern"
             class="input patterns-section__input"
             :disabled="!userCanEdit"
-            :placeholder="$t('projects.settings.patterns.createPattern.placeholder')"
+            :placeholder='"Attempt to read property \".*\" on array"'
           >
         </div>
       </div>
@@ -66,7 +66,7 @@ import {
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
-import { isSafeRegex } from 'safe-regex';
+import safe from 'safe-regex';
 
 export default Vue.extend({
   name: 'ProjectSettingsPatterns',
@@ -204,7 +204,6 @@ export default Vue.extend({
         if (pattern.pattern !== this.project.eventGroupingPatterns?.find((existingPattern) => {
           return existingPattern.id === pattern.id;
         })?.pattern) {
-          console.log('update pattern clicked for pattern: ', pattern.pattern, pattern.id);
           this.updatePattern(pattern.id, pattern.pattern);
         }
       });
@@ -233,7 +232,7 @@ export default Vue.extend({
     isRegexValid(pattern: string): boolean {
       try {
         new RegExp(pattern);
-        return isSafeRegex(pattern);
+        return safe(pattern);
       } catch (error) {
         return false;
       }
