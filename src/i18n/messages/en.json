@@ -89,7 +89,7 @@
         "description": "Releases are needed to:",
         "benefits": {
           "sourceMaps": "Upload and use source maps to view original source code instead of compiled/minified",
-          "identify": "Identify suspicious commits for errors"
+          "identify": "Identify suspicious commits associated with errors."
         },
         "learnMore": "Learn how to setup releases →"
       }
