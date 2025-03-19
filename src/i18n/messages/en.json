@@ -88,8 +88,7 @@
         "title": "You do not have any releases yet",
         "description": "Releases help you to:",
         "benefits": {
-          "commits": "Associate commits with events",
-          "sourceMaps": "Upload and use JavaScript source maps",
+          "sourceMaps": "Upload and use source maps to view original source code instead of compiled/minified",
           "identify": "Identify suspicious commits for errors"
         },
         "learnMore": "Learn how to setup releases →"

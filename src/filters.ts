@@ -267,3 +267,21 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
 Vue.filter('trim', function (value: string, maxLen: number) {
   return trim(value, maxLen);
 });
+
+/**
+ * Format file size in bytes to human readable format (e.g. "1.5 MB")
+ * @param {number} bytes - Size in bytes
+ * @returns {string} Formatted size with unit
+ */
+Vue.filter('formatFileSize', function (bytes: number): string {
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let size = bytes;
+  let unitIndex = 0;
+
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex++;
+  }
+
+  return `${Math.round(size * 10) / 10} ${units[unitIndex]}`;
+});

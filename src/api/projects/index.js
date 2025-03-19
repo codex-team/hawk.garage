@@ -172,7 +172,6 @@ export async function fetchReleases(projectId) {
     
     if (response.errors) {
       console.error('GraphQL errors:', response.errors);
-      return [];
     }
     
     return response.data.project.releases;

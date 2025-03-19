@@ -13,7 +13,7 @@
           :key="day"
           class="project-releases__day"
         >
-          <div class="project-releases__day-header">{{ formatDayHeader(day) }}</div>
+          <div class="project-releases__day-header">{{ day === 'today' ? 'Today' : day === 'yesterday' ? 'Yesterday' : new Date(day).getTime() / 1000 | prettyDate }}</div>
           <div
             v-for="(release, index) in dayReleases"
             :key="release.id"
@@ -23,13 +23,13 @@
           >
             <div class="project-releases__item-header">
               <div class="project-releases__item-info">
-                <div class="project-releases__time">{{ getTimestampFromReleaseName(release.releaseName) | prettyTime }}</div>
+                <div class="project-releases__time">{{ getTimestampFromReleaseId(release.id) | prettyTime }}</div>
                 <div class="project-releases__name">{{ release.id }}</div>
               </div>
               <div class="project-releases__files-count">
                 {{ release.files ? release.files.length : 0 }} files
                 <span v-if="release.files && release.files.length" class="project-releases__files-size">
-                  ({{ formatTotalSize(release.files) }})
+                  ({{ release.files.reduce((sum, file) => sum + (file.size || 0), 0) | formatFileSize }})
                 </span>
               </div>
             </div>
@@ -60,7 +60,6 @@
         <div class="project-releases__empty-description">
           {{ $t('components.releases.empty.description') }}
           <ul class="project-releases__empty-list">
-            <li>{{ $t('components.releases.empty.benefits.commits') }}</li>
             <li>{{ $t('components.releases.empty.benefits.sourceMaps') }}</li>
             <li>{{ $t('components.releases.empty.benefits.identify') }}</li>
           </ul>
@@ -112,7 +111,11 @@ export default {
     },
 
     /**
-     * Group releases by day
+     * Groups releases by day and sorts them by timestamp
+     * - Groups releases into 'today', 'yesterday', and date-based categories
+     * - Sorts groups with 'today' first, then 'yesterday', then by date
+     * - Sorts releases within each group by timestamp (newest first)
+     * @returns {Object} Object with days as keys and sorted releases as values
      */
     groupedReleases() {
       const groups = {};
@@ -125,7 +128,8 @@ export default {
       yesterday.setDate(yesterday.getDate() - 1);
 
       this.releases.forEach(release => {
-        const date = new Date(release.releaseName);
+        const timestamp = this.getTimestampFromReleaseId(release.id) * 1000;
+        const date = new Date(timestamp);
         const releaseDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         let day;
 
@@ -144,7 +148,6 @@ export default {
         groups[day].push(release);
       });
 
-      // Sort days in descending order
       const sortedGroups = {};
       Object.keys(groups)
         .sort((a, b) => {
@@ -156,7 +159,7 @@ export default {
         })
         .forEach(key => {
           sortedGroups[key] = groups[key].sort((a, b) => 
-            new Date(b.releaseName).getTime() - new Date(a.releaseName).getTime()
+            this.getTimestampFromReleaseId(b.id) - this.getTimestampFromReleaseId(a.id)
           );
         });
 
@@ -172,27 +175,6 @@ export default {
   },
   methods: {
     /**
-     * Format day header
-     * @param {string} day - Day identifier ('today', 'yesterday', or YYYY-MM-DD)
-     * @returns {string} Formatted day header
-     */
-    formatDayHeader(day) {
-      if (day === 'today') {
-        return 'Today';
-      } else if (day === 'yesterday') {
-        return 'Yesterday';
-      } else {
-        const date = new Date(day);
-        return date.toLocaleDateString(undefined, { 
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-      }
-    },
-
-    /**
      * Toggle release expansion state
      * @param {string} releaseKey - Key of the release to toggle
      */
@@ -203,31 +185,14 @@ export default {
     },
 
     /**
-     * Convert release name string to timestamp in seconds
-     * @param {string} releaseName - Release name in ISO string format
+     * Convert MongoDB ObjectId to timestamp in seconds
+     * @param {string} releaseId - MongoDB ObjectId
      * @returns {number} Timestamp in seconds
      */
-    getTimestampFromReleaseName(releaseName) {
-      return Math.floor(new Date(releaseName).getTime() / 1000);
-    },
-
-    /**
-     * Format total size of files in bytes to human readable format
-     * @param {Array} files - Array of files with size property
-     * @returns {string} Formatted size
-     */
-    formatTotalSize(files) {
-      const totalSize = files.reduce((sum, file) => sum + (file.size || 0), 0);
-      const units = ['B', 'KB', 'MB', 'GB'];
-      let size = totalSize;
-      let unitIndex = 0;
-
-      while (size >= 1024 && unitIndex < units.length - 1) {
-        size /= 1024;
-        unitIndex++;
-      }
-
-      return `${Math.round(size * 10) / 10} ${units[unitIndex]}`;
+    getTimestampFromReleaseId(releaseId) {
+      // MongoDB ObjectId contains timestamp in first 4 bytes
+      const timestamp = parseInt(releaseId.substring(0, 8), 16);
+      return timestamp;
     }
   }
 };
