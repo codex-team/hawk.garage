@@ -45,7 +45,12 @@
                   :key="fileIndex"
                   class="project-releases__file"
                 >
-                  <span class="project-releases__file-name">{{ file.originFileName }}</span>
+                  <span class="project-releases__file-name">
+                    {{ file.originFileName }} 
+                    <span class="project-releases__file-size">
+                      {{ file.size | formatFileSize }}
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -315,6 +320,14 @@ export default {
 
   &__file-name {
     font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__file-size {
+    color: var(--color-text-second);
+    font-size: 12px;
+    margin-left: 8px;
   }
 
   &__empty {
