@@ -289,6 +289,11 @@ Vue.filter('formatFileSize', function (bytes: number): string {
    */
   const DECIMAL_PLACES = 1;
 
+  /**
+   * Base number used for rounding (10 for decimal system)
+   */
+  const ROUNDING_BASE = 10;
+
   let size = bytes;
   let unitIndex = 0;
 
@@ -297,5 +302,5 @@ Vue.filter('formatFileSize', function (bytes: number): string {
     unitIndex++;
   }
 
-  return `${Math.round(size * Math.pow(10, DECIMAL_PLACES)) / Math.pow(10, DECIMAL_PLACES)} ${FILE_SIZE_UNITS[unitIndex]}`;
+  return `${Math.round(size * Math.pow(ROUNDING_BASE, DECIMAL_PLACES)) / Math.pow(ROUNDING_BASE, DECIMAL_PLACES)} ${FILE_SIZE_UNITS[unitIndex]}`;
 });
