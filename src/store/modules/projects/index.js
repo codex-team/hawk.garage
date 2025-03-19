@@ -10,7 +10,8 @@ import {
   UPDATE_NOTIFICATIONS_RULE,
   TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
   FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
-  REMOVE_NOTIFICATIONS_RULE
+  REMOVE_NOTIFICATIONS_RULE,
+  FETCH_PROJECT_RELEASES
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -32,6 +33,7 @@ export const mutationTypes = {
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
   UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
   REMOVE_NOTIFICATIONS_RULE: 'REMOVE_NOTIFICATIONS_RULE', // remove notify rule
+  SET_RELEASES_LIST: 'SET_RELEASES_LIST', // set releases list
 
   /**
    * Save data of events count for the last N days at the specific project
@@ -227,6 +229,29 @@ const actions = {
       projectId,
       eventsListByDate,
     });
+  },
+  
+  /**
+   * Fetch project releases
+   *
+   * @param {Function} commit - standard Vuex commit function
+   * @param {string} projectId - id of the project to fetch releases for
+   * @returns {Promise<Array>} Array of releases
+   */
+  async [FETCH_PROJECT_RELEASES]({ commit }, projectId) {
+    try {
+      const releases = await projectsApi.fetchReleases(projectId);
+
+      commit(mutationTypes.SET_RELEASES_LIST, {
+        projectId,
+        releases,
+      });
+
+      return releases;
+    } catch (error) {
+      console.error('Failed to fetch releases:', error);
+      return [];
+    }
   },
 
   /**
@@ -531,6 +556,22 @@ const mutations = {
   [mutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
     state.charts[projectId] = data;
   },
+
+  /**
+   * Store releases list for a project
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   * @param {object} payload - mutation payload
+   * @param {string} payload.projectId - id of the project to set releases for
+   * @param {Array} payload.releases - list of releases
+   */
+  [mutationTypes.SET_RELEASES_LIST](state, { projectId, releases }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    if (project) {
+      Vue.set(project, 'releases', releases);
+    }
+  }
 };
 
 export default {
