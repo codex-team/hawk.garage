@@ -10,8 +10,7 @@ import {
   UPDATE_NOTIFICATIONS_RULE,
   TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
   FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
-  REMOVE_NOTIFICATIONS_RULE,
-  FETCH_PROJECT_RELEASES
+  REMOVE_NOTIFICATIONS_RULE
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -32,7 +31,8 @@ export const mutationTypes = {
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
   UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
-  SET_RELEASES_LIST: 'SET_RELEASES_LIST',
+  REMOVE_NOTIFICATIONS_RULE: 'REMOVE_NOTIFICATIONS_RULE', // remove notify rule
+
   /**
    * Save data of events count for the last N days at the specific project
    */
@@ -230,29 +230,6 @@ const actions = {
   },
 
   /**
-   * Fetch project releases
-   *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {string} projectId - id of the project to fetch releases for
-   * @returns {Promise<Array>} Array of releases
-   */
-  async [FETCH_PROJECT_RELEASES]({ commit }, projectId) {
-    try {
-      const releases = await projectsApi.fetchReleases(projectId);
-      
-      commit(mutationTypes.SET_RELEASES_LIST, {
-        projectId,
-        releases,
-      });
-
-      return releases;
-    } catch (error) {
-      console.error('Failed to fetch releases:', error);
-      return [];
-    }
-  },
-
-  /**
    * Send last-visit for passed project
    *
    * @param {object} context - vuex action context
@@ -319,6 +296,20 @@ const actions = {
       projectId: payload.projectId,
       rule: ruleUpdated,
     });
+  },
+
+  /**
+   * - Send request for removing specific rule
+   * - Remove from the state
+   *
+   * @param {ruleId} ruleId - id of the rule to be removed
+   * @param payload
+   * @returns {Promise<void>}
+   */
+  async [REMOVE_NOTIFICATIONS_RULE]({ commit }, payload) {
+    await projectsApi.removeProjectNotificationsRule(payload);
+
+    commit(mutationTypes.REMOVE_NOTIFICATIONS_RULE, payload);
   },
 
   /**
@@ -495,7 +486,7 @@ const mutations = {
   /**
    * Reset updated notifications rule
    *
-   * @param {ProjectsModuleState} state - Vuex state
+   * @param {ProjectsModuleState} state - Vuex state~
    *
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.projectId - project that contains rule
@@ -510,6 +501,26 @@ const mutations = {
   },
 
   /**
+   * Delete notifications rule from project state
+   *
+   * @param {ProjectsModuleState} state - Vuex state~
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - project that contains rule
+   * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @param payload.ruleId
+   * @returns {void}
+   */
+  [mutationTypes.REMOVE_NOTIFICATIONS_RULE](state, { projectId, ruleId }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    const existedRuleIndex = project.notifications.findIndex(r => r.id === ruleId);
+
+    if (existedRuleIndex !== -1) {
+      Vue.delete(project.notifications, existedRuleIndex);
+    }
+  },
+
+  /**
    * Add data to store
    *
    * @param {EventsModuleState} state - Vuex state
@@ -520,22 +531,6 @@ const mutations = {
   [mutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
     state.charts[projectId] = data;
   },
-
-  /**
-   * Store releases list for a project
-   *
-   * @param {ProjectsModuleState} state - Vuex state
-   * @param {object} payload - mutation payload
-   * @param {string} payload.projectId - id of the project to set releases for
-   * @param {Array} payload.releases - list of releases
-   */
-  [mutationTypes.SET_RELEASES_LIST](state, { projectId, releases }) {
-    const project = state.list.find(_project => _project.id === projectId);
-
-    if (project) {
-      Vue.set(project, 'releases', releases);
-    }
-  }
 };
 
 export default {
