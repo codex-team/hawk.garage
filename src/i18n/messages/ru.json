@@ -175,7 +175,11 @@
         "removeRule": "Удалить"
       }
     },
-    "notFound": "Проект не найден"
+    "notFound": "Проект не найден",
+    "tabs": {
+      "events": "События",
+      "releases": "Релизы"
+    }
   },
   "settings": {
     "account": {

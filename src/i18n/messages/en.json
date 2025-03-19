@@ -21,7 +21,7 @@
   "layout": {
     "aside": {
       "emptyProjectsList": "You haven't any integrations here.",
-      "createFirstProjectLabel": "Let's create the new one.",
+      "createFirstProjectLabel": "Let’s create the new one.",
       "createFirstProjectButton": "Create a project"
     }
   },
@@ -77,7 +77,7 @@
       "getToken": "Get an Integration Token",
       "hereIsToken": "Here is your Integration token. You can also found it in the project settings later.",
       "followGuide": "Follow the Installation guide",
-      "readmeDisclaimer": "And the most actual guide at the README.md file in Catcher's repo. As well as its source code.",
+      "readmeDisclaimer": "And the most actual guide at the README.md file in Catcher’s repo. As well as its source code.",
       "getDSN": "Get a DSN",
       "hereIsDSN": "Here is your DSN. You can also found it in the project settings later.",
       "useDSN": "Use DSN in Sentry SDK",
@@ -187,7 +187,11 @@
         "removeRule": "Remove rule"
       }
     },
-    "notFound": "Project not found"
+    "notFound": "Project not found",
+    "tabs": {
+      "events": "Events",
+      "releases": "Releases"
+    }
   },
   "settings": {
     "account": {
@@ -255,7 +259,7 @@
       "premiumPlanButtonText": "Contact us"
     },
     "creationDialog": {
-      "description": "Workspace will contain your projects. You'll able to invite team members to join workspace and access projects.",
+      "description": "Workspace will contain your projects. You’ll able to invite team members to join workspace and access projects.",
       "submitButton": "Create workspace",
       "title": "Organize new workspace",
       "workspaceNameLabel": "workspace name"
@@ -348,7 +352,7 @@
     },
     "processPayment": {
       "header": "Process payment",
-      "description": "This form allows you to fund the workspace's balance. After selecting the amount you will be redirected to the payment service.",
+      "description": "This form allows you to fund the workspace’s balance. After selecting the amount you will be redirected to the payment service.",
       "workspaceSelectLabel": "Select workspace",
       "cardSelectLabel": "Select card",
       "amountLabel": "Amount",
@@ -363,7 +367,7 @@
     "pricingAndPayments": "pricing and payments",
     "paymentDetails": {
       "title": "Payment details",
-      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won't access and store your wire transfer data. You will get an invoice on your email. Read more about {0}.",
+      "description": "You are about to purchase a monthly plan for the workspace. Your payment will be secured. We won’t access and store your wire transfer data. You will get an invoice on your email. Read more about {0}.",
       "details": {
         "title": "Details",
         "newCard": "New card"

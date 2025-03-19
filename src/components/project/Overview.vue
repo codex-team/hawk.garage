@@ -276,14 +276,6 @@ export default {
     });
   },
 
-  /**
-   * Vue mounted hook
-   * Used to update user's last project visit time
-   */
-  mounted() {
-    this.$store.dispatch(UPDATE_PROJECT_LAST_VISIT, { projectId: this.projectId });
-  },
-
   unmounted() {
     /** Clear search query when component is unmounted */
     this.$store.commit('SET_PROJECT_SEARCH', {
@@ -440,13 +432,12 @@ export default {
     }
 
     &__chart {
-      margin: 15px 15px 0;
     }
 
     &__events {
       display: flex;
       flex-direction: column;
-      padding: 0 15px 15px;
+      padding: 0 var(--layout-padding-inline) 15px;
     }
 
     &__events-by-date {
