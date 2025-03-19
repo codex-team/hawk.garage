@@ -86,7 +86,7 @@
     "releases": {
       "empty": {
         "title": "You haven’t set up release uploads to Hawk yet.",
-        "description": "Releases help you to:",
+        "description": "Releases are needed to:",
         "benefits": {
           "sourceMaps": "Upload and use source maps to view original source code instead of compiled/minified",
           "identify": "Identify suspicious commits for errors"
