@@ -163,10 +163,6 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
  * @returns {Promise<Array>} Array of release objects
  */
 export async function fetchReleases(projectId) {
-  if (!projectId) {
-    throw new Error('projectId is required to fetch releases');
-  }
-  
   try {
     const response = await api.call(QUERY_GET_RELEASES, { projectId }, undefined, { allowErrors: true });
     

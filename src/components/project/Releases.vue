@@ -112,8 +112,8 @@ export default {
 
     /**
      * Groups releases by day and sorts them by timestamp
-     * - Groups releases into 'today', 'yesterday', and date-based categories
-     * - Sorts groups with 'today' first, then 'yesterday', then by date
+     * - Groups releases by date
+     * - Sorts groups by date (newest first)
      * - Sorts releases within each group by timestamp (newest first)
      * @returns {Object} Object with days as keys and sorted releases as values
      */
@@ -122,24 +122,10 @@ export default {
       
       if (!this.releases) return groups;
 
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-
       this.releases.forEach(release => {
         const timestamp = this.getTimestampFromReleaseId(release.id) * 1000;
         const date = new Date(timestamp);
-        const releaseDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        let day;
-
-        if (releaseDay.getTime() === today.getTime()) {
-          day = 'today';
-        } else if (releaseDay.getTime() === yesterday.getTime()) {
-          day = 'yesterday';
-        } else {
-          day = releaseDay.toISOString().split('T')[0];
-        }
+        const day = date.toISOString().split('T')[0];
         
         if (!groups[day]) {
           groups[day] = [];
@@ -150,13 +136,7 @@ export default {
 
       const sortedGroups = {};
       Object.keys(groups)
-        .sort((a, b) => {
-          if (a === 'today') return -1;
-          if (b === 'today') return 1;
-          if (a === 'yesterday') return -1;
-          if (b === 'yesterday') return 1;
-          return b.localeCompare(a);
-        })
+        .sort((a, b) => b.localeCompare(a))
         .forEach(key => {
           sortedGroups[key] = groups[key].sort((a, b) => 
             this.getTimestampFromReleaseId(b.id) - this.getTimestampFromReleaseId(a.id)
