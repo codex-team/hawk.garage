@@ -274,14 +274,28 @@ Vue.filter('trim', function (value: string, maxLen: number) {
  * @returns {string} Formatted size with unit
  */
 Vue.filter('formatFileSize', function (bytes: number): string {
-  const units = ['B', 'KB', 'MB', 'GB'];
+  /**
+   * File size units in order of magnitude
+   */
+  const FILE_SIZE_UNITS = ['B', 'KB', 'MB', 'GB'] as const;
+
+  /**
+   * Conversion factor between file size units (1024 bytes = 1 KB)
+   */
+  const BYTES_PER_UNIT = 1024;
+
+  /**
+   * Number of decimal places to round to
+   */
+  const DECIMAL_PLACES = 1;
+
   let size = bytes;
   let unitIndex = 0;
 
-  while (size >= 1024 && unitIndex < units.length - 1) {
-    size /= 1024;
+  while (size >= BYTES_PER_UNIT && unitIndex < FILE_SIZE_UNITS.length - 1) {
+    size /= BYTES_PER_UNIT;
     unitIndex++;
   }
 
-  return `${Math.round(size * 10) / 10} ${units[unitIndex]}`;
+  return `${Math.round(size * Math.pow(10, DECIMAL_PLACES)) / Math.pow(10, DECIMAL_PLACES)} ${FILE_SIZE_UNITS[unitIndex]}`;
 });
