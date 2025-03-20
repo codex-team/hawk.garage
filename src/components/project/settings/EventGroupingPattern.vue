@@ -123,6 +123,8 @@ export default Vue.extend({
           style: 'success' });
         this.createPatternForm = '';
       } catch (error) {
+        console.error('Error while adding pattern', error);
+
         notifier.show({ message: `Failed to add pattern`,
           style: 'error' });
       }
@@ -154,6 +156,8 @@ export default Vue.extend({
         notifier.show({ message: 'Pattern updated',
           style: 'success' });
       } catch (error) {
+        console.error('Error while updating pattern', error);
+
         notifier.show({ message: `Failed to update pattern`,
           style: 'error' });
       }
@@ -174,6 +178,8 @@ export default Vue.extend({
         notifier.show({ message: 'Pattern deleted',
           style: 'success' });
       } catch (error) {
+        console.error('Error while deleting pattern', error);
+
         notifier.show({ message: 'Failed to delete pattern',
           style: 'error' });
 
