@@ -582,11 +582,9 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.ADD_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
-    console.log('mutationTypes.ADD_EVENT_GROUPING_PATTERN', projectId, eventGroupingPattern);
-
     const project = state.list.find(_project => _project.id === projectId);
 
-    if (project.eventGroupingPatterns === undefined) {
+    if (!project.eventGroupingPatterns) {
       project.eventGroupingPatterns = [];
     }
 
@@ -606,7 +604,6 @@ const mutations = {
   [mutationTypes.UPDATE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
     const project = state.list.find(_project => _project.id === projectId);
 
-
     const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPattern.id);
 
     Vue.set(project.eventGroupingPatterns, existedPatternIndex, eventGroupingPattern);
@@ -623,7 +620,6 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.REMOVE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPatternId }) {
-    console.log('mutationTypes.REMOVE_EVENT_GROUPING_PATTERN', projectId, eventGroupingPatternId);
     const project = state.list.find(_project => _project.id === projectId);
 
     const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPatternId);
