@@ -182,7 +182,8 @@
           "title": "Add pattern"
         },
         "patternList": {
-          "title": "Patterns"
+          "title": "Patterns",
+          "emptyMessage": "You don't have any patterns yet."
         }
       }
     },

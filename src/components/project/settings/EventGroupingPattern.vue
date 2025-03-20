@@ -29,7 +29,13 @@
       <div class="patterns-section__title">
         {{ $t('projects.settings.patterns.patternList.title') }}
       </div>
-      <div class="patterns-list">
+      <div 
+        class="patterns-section__empty-message"
+        v-if="currentPatternsState.length === 0"
+      >
+        {{ $t('projects.settings.patterns.patternList.emptyMessage') }}
+      </div>
+      <div v-else class="patterns-list">
         <div
           v-for="(pattern) in currentPatternsState"
           :key="pattern.id"
@@ -44,7 +50,7 @@
         </div>
       </div>
       <UiButton
-        v-if="userCanEdit"
+        v-if="userCanEdit && currentPatternsState.length > 0"
         class="patterns-section__button"
         :content="$t('projects.settings.patterns.save')"
         submit
@@ -123,6 +129,8 @@ export default Vue.extend({
           style: 'success' });
         this.createPatternForm = '';
       } catch (error) {
+        console.error('Error while adding pattern', error);
+
         notifier.show({ message: `Failed to add pattern`,
           style: 'error' });
       }
@@ -154,6 +162,8 @@ export default Vue.extend({
         notifier.show({ message: 'Pattern updated',
           style: 'success' });
       } catch (error) {
+        console.error('Error while updating pattern', error);
+
         notifier.show({ message: `Failed to update pattern`,
           style: 'error' });
       }
@@ -174,6 +184,8 @@ export default Vue.extend({
         notifier.show({ message: 'Pattern deleted',
           style: 'success' });
       } catch (error) {
+        console.error('Error while deleting pattern', error);
+
         notifier.show({ message: 'Failed to delete pattern',
           style: 'error' });
 
@@ -231,6 +243,9 @@ export default Vue.extend({
      */
     isRegexValid(pattern: string): boolean {
       try {
+        if (pattern.trim() === '') {
+          return false;
+        }
         new RegExp(pattern);
         return safe(pattern);
       } catch (error) {
@@ -296,6 +311,14 @@ export default Vue.extend({
     justify-content: center;
     max-width: 91px;
     padding: 10px 32px;
+  }
+
+  &__empty-message {
+    color: var(--color-text-main);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 17px;
+    opacity: 0.6;
   }
 }
 
