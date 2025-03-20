@@ -116,7 +116,7 @@ export default Vue.extend({
        * Check that the pattern is a valid regular expression
        */
       if (!this.isRegexValid(pattern)) {
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternInvalid'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternInvalid').toString(),
           style: 'error' });
 
         return;
@@ -125,13 +125,13 @@ export default Vue.extend({
       try {
         await this.$store.dispatch(ADD_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
           pattern });
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternAdded'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternAdded').toString(),
           style: 'success' });
         this.createPatternForm = '';
       } catch (error) {
         console.error('Error while adding pattern', error);
 
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternSaveError'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternSaveError').toString(),
           style: 'error' });
       }
 
@@ -149,7 +149,7 @@ export default Vue.extend({
        * Check that the pattern is a valid regular expression
        */
       if (!this.isRegexValid(pattern)) {
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternInvalid'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternInvalid').toString(),
           style: 'error' });
 
         return;
@@ -159,12 +159,12 @@ export default Vue.extend({
         await this.$store.dispatch(UPDATE_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
           id,
           pattern });
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternUpdated'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternUpdated').toString(),
           style: 'success' });
       } catch (error) {
         console.error('Error while updating pattern', error);
 
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternUpdateError'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternUpdateError').toString(),
           style: 'error' });
       }
 
@@ -181,12 +181,12 @@ export default Vue.extend({
       try {
         await this.$store.dispatch(REMOVE_EVENT_GROUPING_PATTERN, { projectId: this.project.id,
           id });
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternDeleted'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternDeleted').toString(),
           style: 'success' });
       } catch (error) {
         console.error('Error while deleting pattern', error);
 
-        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternDeleteError'),
+        notifier.show({ message: this.$t('projects.settings.patterns.notifications.patternDeleteError').toString(),
           style: 'error' });
 
         return;
