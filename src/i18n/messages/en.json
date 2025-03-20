@@ -184,6 +184,15 @@
         "patternList": {
           "title": "Patterns",
           "emptyMessage": "You don't have any patterns yet."
+        },
+        "notifications": {
+          "patternAdded": "Pattern added successfully",
+          "patternUpdated": "Pattern updated",
+          "patternDeleted": "Pattern deleted",
+          "patternInvalid": "Invalid regular expression pattern",
+          "patternSaveError": "Error while adding pattern",
+          "patternUpdateError": "Error while updating pattern",
+          "patternDeleteError": "Error while deleting pattern"
         }
       }
     },

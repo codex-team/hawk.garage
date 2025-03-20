@@ -184,6 +184,15 @@
         "patternList": {
           "title": "Шаблоны",
           "emptyMessage": "У вас пока нет шаблонов."
+        },
+        "notifications": {
+          "patternAdded": "Шаблон добавлен успешно",
+          "patternUpdated": "Шаблон обновлен",
+          "patternDeleted": "Шаблон удален",
+          "patternInvalid": "Некорректный шаблон",
+          "patternSaveError": "Ошибка при добавлении шаблона",
+          "patternUpdateError": "Ошибка при обновлении шаблона",
+          "patternDeleteError": "Ошибка при удалении шаблона"
         }
       }
     },
