@@ -432,7 +432,8 @@
     "addons": {
       "url": "Адрес",
       "window": "Окно браузера",
-      "beautifiedUserAgent": "Клиент"
+      "beautifiedUserAgent": "Клиент",
+      "consoleOutput": "Лог Консоли"
     },
     "user": {
       "unknown": "Неизвестный",
