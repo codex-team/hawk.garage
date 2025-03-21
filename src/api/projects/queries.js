@@ -85,7 +85,7 @@ export const MUTATION_UPDATE_LAST_VISIT = `
 
 // language=GraphQL
 export const MUTATION_CREATE_PROJECT_NOTIFY_RULE = `
-  mutation ( $input: CreateProjectNotificationsRuleInput! ){
+  mutation createProjectNotificationsRule( $input: CreateProjectNotificationsRuleInput! ){
     createProjectNotificationsRule(
       input: $input
     ) {
@@ -98,7 +98,7 @@ export const MUTATION_CREATE_PROJECT_NOTIFY_RULE = `
 
 // language=GraphQL
 export const MUTATION_UPDATE_PROJECT_NOTIFY_RULE = `
-  mutation ( $input: UpdateProjectNotificationsRuleInput! ){
+  mutation updateProjectNotificationsRule( $input: UpdateProjectNotificationsRuleInput! ){
     updateProjectNotificationsRule(
       input: $input
     ) {
@@ -111,7 +111,7 @@ export const MUTATION_UPDATE_PROJECT_NOTIFY_RULE = `
 
 // language=GraphQL
 export const MUTATION_REMOVE_PROJECT_NOTIFY_RULE = `
-  mutation ( $input: ProjectNotificationRulePointer! ) {
+  mutation removeProjectNotificationsRule( $input: ProjectNotificationRulePointer! ) {
     deleteProjectNotificationsRule(
       input: $input
     ) {
@@ -123,6 +123,42 @@ export const MUTATION_REMOVE_PROJECT_NOTIFY_RULE = `
 `;
 
 // language=GraphQL
+export const MUTATION_CREATE_PROJECT_PATTERN = `
+  mutation createProjectEventGroupingPattern( $input: CreateProjectEventGroupingPatternInput! ){
+    createProjectEventGroupingPattern(
+      input: $input
+    ) {
+      id
+      pattern
+    }
+  }
+`;
+
+// language=GraphQL
+export const MUTATION_UPDATE_PROJECT_PATTERN = `
+  mutation updateProjectEventGroupingPattern( $input: UpdateProjectEventGroupingPatternInput! ){
+    updateProjectEventGroupingPattern(
+      input: $input
+    ) {
+      id
+      pattern
+    }
+  }
+`;
+
+// language=GraphQL
+export const MUTATION_REMOVE_PROJECT_PATTERN = `
+  mutation removeProjectEventGroupingPattern( $input: RemoveProjectEventGroupingPatternInput! ){
+    removeProjectEventGroupingPattern(
+      input: $input
+    ) {
+      id
+      pattern
+    }
+  }
+`;
+
+// language=GraphQL
 export const MUTATION_REMOVE_PROJECT = `
   mutation removeProject($projectId: ID!) {
     removeProject(projectId: $projectId)
@@ -131,7 +167,7 @@ export const MUTATION_REMOVE_PROJECT = `
 
 // language=GraphQL
 export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
-  mutation ( $input: ProjectNotificationRulePointer! ){
+  mutation toggleProjectNotificationsRuleEnabledState( $input: ProjectNotificationRulePointer! ){
     toggleProjectNotificationsRuleEnabledState(
       input: $input
     ) {

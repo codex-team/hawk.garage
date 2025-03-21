@@ -681,10 +681,10 @@ export default Vue.extend({
 <style>
 .payment-details {
   width: 558px;
+  min-height: 470px;
   padding: 29px 21px 30px;
   color: var(--color-text-main);
   font-size: 14px;
-  min-height: 470px;
 
   &__header {
     margin: 0 159px 20px 0;
@@ -793,16 +793,16 @@ export default Vue.extend({
   }
 
   &__loading-text {
-    font-size: 16px;
     margin-top: 20px;
+    font-size: 16px;
   }
 
   &__spinner {
     width: 40px;
     height: 40px;
     border: 3px solid rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
     border-top-color: var(--color-indicator-medium);
+    border-radius: 50%;
     animation: spinner 0.8s linear infinite;
   }
 
