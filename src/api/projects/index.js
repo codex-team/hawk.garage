@@ -6,6 +6,9 @@ import {
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
   MUTATION_REMOVE_PROJECT_NOTIFY_RULE,
+  MUTATION_CREATE_PROJECT_PATTERN,
+  MUTATION_UPDATE_PROJECT_PATTERN,
+  MUTATION_REMOVE_PROJECT_PATTERN,
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
   QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
@@ -113,6 +116,54 @@ export async function updateProjectNotificationsRule(payload) {
   return (await api.callOld(MUTATION_UPDATE_PROJECT_NOTIFY_RULE, {
     input: payload,
   })).updateProjectNotificationsRule;
+}
+
+/**
+ * Send request for creation new project event grouping pattern
+ *
+ * @param {AddProjectEventGroupingPatternPayload} payload - add pattern payload
+ * @returns {Promise<ProjectEventGroupingPattern>} - created pattern
+ */
+export async function addEventGroupingPattern(payload) {
+  const response = (await api.call(MUTATION_CREATE_PROJECT_PATTERN, {
+    input: payload,
+  }));
+
+  const addedPattern = response.data.createProjectEventGroupingPattern;
+
+  return addedPattern;
+}
+
+/**
+ * Send request for updating specific project event grouping pattern
+ *
+ * @param {UpdateProjectEventGroupingPatternPayload} payload - update pattern payload
+ * @returns {Promise<ProjectEventGroupingPattern>} - updated pattern
+ */
+export async function updateEventGroupingPattern(payload) {
+  const response = await api.call(MUTATION_UPDATE_PROJECT_PATTERN, {
+    input: payload,
+  });
+
+  const updatedPattern = response.data.updateProjectEventGroupingPattern;
+
+  return updatedPattern;
+}
+
+/**
+ * Send request for removing specific project event grouping pattern
+ *
+ * @param {ProjectEventGroupingPatternPointer} payload - remove pattern payload
+ * @returns {Promise<ProjectEventGroupingPattern>} - removed pattern
+ */
+export async function removeEventGroupingPattern(payload) {
+  const response = await api.call(MUTATION_REMOVE_PROJECT_PATTERN, {
+    input: payload,
+  });
+
+  const removedPattern = response.data.removeProjectEventGroupingPattern;
+
+  return removedPattern;
 }
 
 /**

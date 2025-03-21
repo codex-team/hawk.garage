@@ -54,6 +54,21 @@ export const UPDATE_NOTIFICATIONS_RULE = 'UPDATE_NOTIFICATIONS_RULE';
 export const REMOVE_NOTIFICATIONS_RULE = 'REMOVE_NOTIFICATIONS_RULE';
 
 /**
+ * Add new events grouping pattern
+ */
+export const ADD_EVENT_GROUPING_PATTERN = 'ADD_EVENT_GROUPING_PATTERN';
+
+/**
+ * Update the events grouping pattern
+ */
+export const UPDATE_EVENT_GROUPING_PATTERN = 'UPDATE_EVENT_GROUPING_PATTERN';
+
+/**
+ * Remove the events grouping pattern
+ */
+export const REMOVE_EVENT_GROUPING_PATTERN = 'REMOVE_EVENT_GROUPING_PATTERN';
+
+/**
  * Toggle isEnabled state of the notifications rule
  */
 export const TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE = 'TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE';

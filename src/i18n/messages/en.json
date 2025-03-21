@@ -173,6 +173,28 @@
         "ruleIsEnabled": "Enabled",
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
+      },
+      "patterns": {
+        "title": "Events Merging",
+        "description": "Here you can set up rules for manually merging events. This is useful for grouping similar events with slightly different titles but the same underlying nature.",
+        "create": "Add",
+        "save": "Save",
+        "createPattern": {
+          "title": "Add pattern"
+        },
+        "patternList": {
+          "title": "Patterns",
+          "emptyMessage": "You don't have any patterns yet."
+        },
+        "notifications": {
+          "patternAdded": "Pattern added successfully",
+          "patternUpdated": "Pattern updated",
+          "patternDeleted": "Pattern deleted",
+          "patternInvalid": "Invalid regular expression pattern",
+          "patternSaveError": "Error while adding pattern",
+          "patternUpdateError": "Error while updating pattern",
+          "patternDeleteError": "Error while deleting pattern"
+        }
       }
     },
     "notFound": "Project not found",

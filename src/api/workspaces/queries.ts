@@ -34,6 +34,10 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         notifications {
           ...ProjectNotificationsRule
         }
+        eventGroupingPatterns {
+          id
+          pattern
+        }
         recentEvents(limit: 1) {
           events {
             id
