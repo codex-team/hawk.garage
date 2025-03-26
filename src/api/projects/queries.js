@@ -196,3 +196,24 @@ export const QUERY_CHART_DATA = `
     }
   }
 `;
+
+//language=GraphQL
+/**
+ * Get releases by project ID
+ */
+export const QUERY_GET_RELEASES = `
+  query getProjectReleases($projectId: ID!) {
+    project(projectId: $projectId) {
+      releases {
+        id
+        projectId
+        releaseName
+        files {
+          mapFileName
+          originFileName
+          size
+        }
+      }
+    }
+  }
+`;

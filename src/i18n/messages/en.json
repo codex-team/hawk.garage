@@ -82,6 +82,17 @@
       "hereIsDSN": "Here is your DSN. You can also found it in the project settings later.",
       "useDSN": "Use DSN in Sentry SDK",
       "useDSNText": "All Sentry SDK in one way or another support the `dsn` parameter. Pass the received DSN to the Sentry SDK options."
+    },
+    "releases": {
+      "empty": {
+        "title": "You haven’t set up release uploads to Hawk yet.",
+        "description": "Releases are needed to:",
+        "benefits": {
+          "sourceMaps": "Upload and use source maps to view original source code instead of compiled/minified",
+          "identify": "Identify suspicious commits associated with errors."
+        },
+        "learnMore": "Learn how to setup releases →"
+      }
     }
   },
   "forms": {
@@ -199,7 +210,8 @@
     },
     "notFound": "Project not found",
     "tabs": {
-      "events": "Events"
+      "events": "Events",
+      "releases": "Releases"
     }
   },
   "settings": {
