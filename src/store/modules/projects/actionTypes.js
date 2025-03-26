@@ -34,11 +34,6 @@ export const REMOVE_PROJECT = 'REMOVE_PROJECT';
 export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';
 
 /**
- * Fetch project releases
- */
-export const FETCH_PROJECT_RELEASES = 'FETCH_PROJECT_RELEASES';
-
-/**
  * Sends request to set last project visit
  */
 export const UPDATE_PROJECT_LAST_VISIT = 'UPDATE_PROJECT_LAST_VISIT';

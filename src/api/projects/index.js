@@ -11,8 +11,7 @@ import {
   MUTATION_REMOVE_PROJECT_PATTERN,
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
-  QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
-  QUERY_GET_RELEASES,
+  QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
 } from './queries';
 import * as api from '../index.ts';
 import { ChartData } from '../../types/events';
@@ -206,25 +205,3 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
     timezoneOffset,
   })).project.chartData;
 }
-
-/**
- * Fetch releases for a given project
- *
- * @param {string} projectId - Project id to fetch releases for
- * @returns {Promise<Array>} Array of release objects
- */
-export async function fetchReleases(projectId) {
-  try {
-    const response = await api.call(QUERY_GET_RELEASES, { projectId }, undefined, { allowErrors: true });
-    
-    if (response.errors) {
-      console.error('GraphQL errors:', response.errors);
-    }
-    
-    return response.data.project.releases;
-  } catch (error) {
-    console.error('Failed to fetch releases:', error);
-    return [];
-  }
-}
-

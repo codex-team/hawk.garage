@@ -153,16 +153,6 @@ const router = new Router({
               name: 'setup-catcher',
               component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadGuidePages.js'),
             },
-            /**
-             * Project Releases
-             * -------------
-             */
-            {
-              path: 'releases',
-              name: 'project-releases',
-              component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue'),
-              props: true
-            },
           ],
         },
 

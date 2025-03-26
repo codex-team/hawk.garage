@@ -13,8 +13,7 @@ import {
   ADD_EVENT_GROUPING_PATTERN,
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN,
-  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
-  FETCH_PROJECT_RELEASES
+  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -39,7 +38,6 @@ export const mutationTypes = {
   ADD_EVENT_GROUPING_PATTERN: 'ADD_EVENT_GROUPING_PATTERN',
   UPDATE_EVENT_GROUPING_PATTERN: 'UPDATE_EVENT_GROUPING_PATTERN',
   REMOVE_EVENT_GROUPING_PATTERN: 'REMOVE_EVENT_GROUPING_PATTERN',
-  SET_RELEASES_LIST: 'SET_RELEASES_LIST', // set releases list
 
   /**
    * Save data of events count for the last N days at the specific project
@@ -235,29 +233,6 @@ const actions = {
       projectId,
       eventsListByDate,
     });
-  },
-  
-  /**
-   * Fetch project releases
-   *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {string} projectId - id of the project to fetch releases for
-   * @returns {Promise<Array>} Array of releases
-   */
-  async [FETCH_PROJECT_RELEASES]({ commit }, projectId) {
-    try {
-      const releases = await projectsApi.fetchReleases(projectId);
-
-      commit(mutationTypes.SET_RELEASES_LIST, {
-        projectId,
-        releases,
-      });
-
-      return releases;
-    } catch (error) {
-      console.error('Failed to fetch releases:', error);
-      return [];
-    }
   },
 
   /**
@@ -663,22 +638,6 @@ const mutations = {
   [mutationTypes.ADD_CHART_DATA](state, { projectId, data }) {
     state.charts[projectId] = data;
   },
-
-  /**
-   * Store releases list for a project
-   *
-   * @param {ProjectsModuleState} state - Vuex state
-   * @param {object} payload - mutation payload
-   * @param {string} payload.projectId - id of the project to set releases for
-   * @param {Array} payload.releases - list of releases
-   */
-  [mutationTypes.SET_RELEASES_LIST](state, { projectId, releases }) {
-    const project = state.list.find(_project => _project.id === projectId);
-
-    if (project) {
-      Vue.set(project, 'releases', releases);
-    }
-  }
 };
 
 export default {
