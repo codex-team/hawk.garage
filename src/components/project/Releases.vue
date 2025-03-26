@@ -62,7 +62,21 @@
         class="project-releases__empty"
       >
         <div class="project-releases__empty-title">{{ $t('components.releases.empty.title') }}</div>
-        <div class="project-releases__empty-description">{{ $t('components.releases.empty.description') }} <ul class="project-releases__empty-list"><li>{{ $t('components.releases.empty.benefits.sourceMaps') }}</li><li>{{ $t('components.releases.empty.benefits.identify') }}</li></ul><a href="https://docs.hawk.so/releases" target="_blank" class="project-releases__empty-link">{{ $t('components.releases.empty.learnMore') }}</a></div>
+        <div class="project-releases__empty-description">
+          {{ $t('components.releases.empty.description') }}
+          <ul class="project-releases__empty-list">
+            <li>{{ $t('components.releases.empty.benefits.sourceMaps') }}</li>
+            <li>{{ $t('components.releases.empty.benefits.identify') }}</li>
+          </ul>
+          <UiButton
+            href="https://docs.hawk.so/releases"
+            target="_blank"
+            content="Learn how to setup releases"
+            submit
+            medium
+            class="project-releases__empty-button"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -71,11 +85,13 @@
 <script>
 import { FETCH_PROJECT_RELEASES } from '@/store/modules/projects/actionTypes';
 import DetailsSuspectedCommits from '../event/details/DetailsSuspectedCommits.vue';
+import UiButton from '../utils/UiButton.vue';
 
 export default {
   name: 'ProjectReleases',
   components: {
-    DetailsSuspectedCommits
+    DetailsSuspectedCommits,
+    UiButton
   },
   props: {
     projectId: {
@@ -324,13 +340,14 @@ export default {
   &__empty {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     height: 200px;
     color: var(--color-text-second);
     font-size: 14px;
-    text-align: center;
+    text-align: left;
     padding: 20px;
+    width: 100%;
 
     &-title {
       font-size: 16px;
@@ -342,26 +359,26 @@ export default {
 
     &-description {
       max-width: 400px;
+      text-align: left;
       white-space: nowrap;
     }
 
     &-list {
-      text-align: left;
+      list-style-type: disc;
       margin: 10px 0;
       padding-left: 20px;
       white-space: nowrap;
+      display: block;
+
+      li {
+        display: list-item;
+        list-style-type: disc;
+        margin-left: 20px;
+      }
     }
 
-    &-link {
-      display: inline-block;
+    &-button {
       margin-top: 10px;
-      color: var(--color-indicator-success);
-      text-decoration: none;
-      white-space: nowrap;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 }
