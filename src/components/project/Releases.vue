@@ -62,16 +62,7 @@
         class="project-releases__empty"
       >
         <div class="project-releases__empty-title">{{ $t('components.releases.empty.title') }}</div>
-        <div class="project-releases__empty-description">
-          {{ $t('components.releases.empty.description') }}
-          <ul class="project-releases__empty-list">
-            <li>{{ $t('components.releases.empty.benefits.sourceMaps') }}</li>
-            <li>{{ $t('components.releases.empty.benefits.identify') }}</li>
-          </ul>
-          <a href="https://docs.hawk.so/releases" target="_blank" class="project-releases__empty-link">
-            {{ $t('components.releases.empty.learnMore') }}
-          </a>
-        </div>
+        <div class="project-releases__empty-description">{{ $t('components.releases.empty.description') }} <ul class="project-releases__empty-list"><li>{{ $t('components.releases.empty.benefits.sourceMaps') }}</li><li>{{ $t('components.releases.empty.benefits.identify') }}</li></ul><a href="https://docs.hawk.so/releases" target="_blank" class="project-releases__empty-link">{{ $t('components.releases.empty.learnMore') }}</a></div>
       </div>
     </div>
   </div>
@@ -346,16 +337,19 @@ export default {
       font-weight: 500;
       margin-bottom: 15px;
       color: var(--color-text-main);
+      white-space: nowrap;
     }
 
     &-description {
       max-width: 400px;
+      white-space: nowrap;
     }
 
     &-list {
       text-align: left;
       margin: 10px 0;
       padding-left: 20px;
+      white-space: nowrap;
     }
 
     &-link {
@@ -363,6 +357,7 @@ export default {
       margin-top: 10px;
       color: var(--color-indicator-success);
       text-decoration: none;
+      white-space: nowrap;
 
       &:hover {
         text-decoration: underline;
