@@ -41,7 +41,7 @@
     </div>
     <TabBar
       :items="tabs"
-      :active-item-index="activeTabIndex"
+      :active-item-index="0"
     />
   </div>
 </template>
@@ -83,18 +83,7 @@ export default Vue.extend({
           title: this.$t('projects.tabs.events') as string,
           routeName: 'project-overview',
         },
-        {
-          title: this.$t('projects.tabs.releases') as string,
-          routeName: 'project-releases',
-        },
       ];
-    },
-
-    /**
-     * Index of active tab based on current route
-     */
-    activeTabIndex(): number {
-      return this.tabs.findIndex(tab => tab.routeName === this.$route.name);
     },
   },
 });
