@@ -8,9 +8,12 @@ import {
   UPDATE_PROJECT,
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
-  TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
-  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
   REMOVE_NOTIFICATIONS_RULE,
+  TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE,
+  ADD_EVENT_GROUPING_PATTERN,
+  UPDATE_EVENT_GROUPING_PATTERN,
+  REMOVE_EVENT_GROUPING_PATTERN,
+  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN,
   FETCH_PROJECT_RELEASES
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -33,6 +36,9 @@ export const mutationTypes = {
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
   UPDATE_NOTIFICATIONS_RULE: 'UPDATE_NOTIFICATIONS_RULE', // reset updated notify rule
   REMOVE_NOTIFICATIONS_RULE: 'REMOVE_NOTIFICATIONS_RULE', // remove notify rule
+  ADD_EVENT_GROUPING_PATTERN: 'ADD_EVENT_GROUPING_PATTERN',
+  UPDATE_EVENT_GROUPING_PATTERN: 'UPDATE_EVENT_GROUPING_PATTERN',
+  REMOVE_EVENT_GROUPING_PATTERN: 'REMOVE_EVENT_GROUPING_PATTERN',
   SET_RELEASES_LIST: 'SET_RELEASES_LIST', // set releases list
 
   /**
@@ -338,6 +344,51 @@ const actions = {
   },
 
   /**
+   * - Send request for creation new events grouping pattern
+   * - Add created pattern to the state
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationsAddRulePayload} payload - rule form data
+   * @returns {Promise<void>}
+   */
+  async [ADD_EVENT_GROUPING_PATTERN]({ commit }, payload) {
+    const response = await projectsApi.addEventGroupingPattern(payload);
+
+    commit(mutationTypes.ADD_EVENT_GROUPING_PATTERN, { projectId: payload.projectId,
+      eventGroupingPattern: response });
+  },
+
+  /**
+   * - Send request for creation new rule
+   * - Add created rule to the state
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationsAddRulePayload} payload - rule form data
+   * @returns {Promise<void>}
+   */
+  async [UPDATE_EVENT_GROUPING_PATTERN]({ commit }, payload) {
+    const response = await projectsApi.updateEventGroupingPattern(payload);
+
+    commit(mutationTypes.UPDATE_EVENT_GROUPING_PATTERN, { projectId: payload.projectId,
+      eventGroupingPattern: response });
+  },
+
+  /**
+   * - Send request for creation new rule
+   * - Add created rule to the state
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {ProjectNotificationsAddRulePayload} payload - rule form data
+   * @returns {Promise<void>}
+   */
+  async [REMOVE_EVENT_GROUPING_PATTERN]({ commit }, payload) {
+    const response = await projectsApi.removeEventGroupingPattern(payload);
+
+    commit(mutationTypes.REMOVE_EVENT_GROUPING_PATTERN, { projectId: payload.projectId,
+      eventGroupingPatternId: response.id });
+  },
+
+  /**
    * - Send request for toggle isEnabled state of the notify rule
    * - Update in the state
    *
@@ -532,7 +583,7 @@ const mutations = {
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.projectId - project that contains rule
    * @param {ProjectNotificationsRule} payload.rule - updated rule
-   * @param payload.ruleId
+   * @param payload.ruleId - id of the rule to be removed
    * @returns {void}
    */
   [mutationTypes.REMOVE_NOTIFICATIONS_RULE](state, { projectId, ruleId }) {
@@ -543,6 +594,62 @@ const mutations = {
     if (existedRuleIndex !== -1) {
       Vue.delete(project.notifications, existedRuleIndex);
     }
+  },
+
+  /**
+   * Append new event grouping pattern to specified project
+   *
+   * @param {ProjectsModuleState} state - Vuex state
+   *
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - where to append
+   * @param {ProjectNotificationsRule} payload.eventGroupingPattern - pattern to append
+   * @returns {void}
+   */
+  [mutationTypes.ADD_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    if (!project.eventGroupingPatterns) {
+      project.eventGroupingPatterns = [];
+    }
+
+    project.eventGroupingPatterns.push(eventGroupingPattern);
+  },
+
+  /**
+   * Reset updated notifications rule
+   *
+   * @param {ProjectsModuleState} state - Vuex state~
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - project that contains rule
+   * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @param payload.eventGroupingPattern
+   * @returns {void}
+   */
+  [mutationTypes.UPDATE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPattern.id);
+
+    Vue.set(project.eventGroupingPatterns, existedPatternIndex, eventGroupingPattern);
+  },
+
+  /**
+   * Reset updated notifications rule
+   *
+   * @param {ProjectsModuleState} state - Vuex state~
+   * @param {object} payload - vuex mutation payload
+   * @param {string} payload.projectId - project that contains rule
+   * @param {ProjectNotificationsRule} payload.rule - updated rule
+   * @param payload.eventGroupingPatternId
+   * @returns {void}
+   */
+  [mutationTypes.REMOVE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPatternId }) {
+    const project = state.list.find(_project => _project.id === projectId);
+
+    const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPatternId);
+
+    Vue.delete(project.eventGroupingPatterns, existedPatternIndex);
   },
 
   /**
