@@ -2,8 +2,12 @@
   <div class="console-output">
     <div class="button-container" v-if="logs.length > 5">
       <button @click="expandedLogs = !expandedLogs" class="show-more-btn">
-        <span :class="{ rotated: expandedLogs }">▶</span>
-        {{ expandedLogs ? "Скрыть предыдущие" : "Показать предыдущие" }}
+        <span class="log-arrow" :class="{ rotated: expandedLogs }">▲</span>
+        {{
+          expandedLogs
+            ? $t("components.consoleOutput.hide_previous")
+            : $t("components.consoleOutput.show_previous")
+        }}
       </button>
     </div>
     <div
@@ -101,12 +105,15 @@ export default Vue.extend({
 <style scoped>
 .console-output {
   padding: 10px;
+  font-family: var(--font-monospace);
+  font-size: 11px;
+
+  --item-border-radius: 5px;
 }
 
 .log-entry {
-  font-family: var(--font-monospace);
   padding: 2px 4px;
-  border-radius: 5px;
+  border-radius: var(--item-border-radius);
   white-space: pre-wrap;
   margin-bottom: 2px;
   display: flex;
@@ -124,10 +131,13 @@ export default Vue.extend({
 
 .log-arrow {
   padding: 0 4px;
-  cursor: pointer;
   user-select: none;
   color: var(--color-text-second);
   transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    color: var(--color-text-main);
+  }
 }
 
 .log-arrow .rotated {
@@ -143,37 +153,34 @@ export default Vue.extend({
 
 .log-timestamp {
   color: var(--color-text-second);
-  font-size: 10px;
-  min-width: 84px;
+  min-width: 93px;
   height: 21px;
   display: flex;
   align-items: center;
 }
 
 .log-stack {
-  font-size: var(--font-small);
   margin: 2px 0;
   padding: 3px 8px;
-  border-radius: 4px;
+  border-radius: var(--item-border-radius);
   background: var(--color-bg-third);
   color: var(--color-text-main);
 }
 
 .button-container {
+  height: 25px;
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
 
   .show-more-btn {
     width: 100%;
     text-align: left;
-    padding: 6px 10px;
     background-color: inherit;
     border: none;
-    border-radius: var(--border-radius);
-    color: var(--color-text-main);
+    border-radius: var(--item-border-radius);
+    color: var(--color-text-second);
     cursor: pointer;
-    font-size: 14px;
     transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
@@ -188,10 +195,11 @@ export default Vue.extend({
 
     span {
       display: inline-block;
+      color: var(--color-text-second);
       margin-right: 8px;
 
       &.rotated {
-        transform: rotate(90deg);
+        transform: rotate(180deg);
       }
     }
   }
