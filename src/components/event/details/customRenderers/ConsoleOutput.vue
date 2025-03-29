@@ -11,8 +11,8 @@
       </button>
     </div>
     <div
-      v-for="(log, index) in displayedLogs"
-      :key="index"
+      v-for="log in displayedLogs"
+      :key="log.timestamp"
       class="log-entry"
       :class="logClass(log.method)"
     >
@@ -20,9 +20,9 @@
         <span
           v-if="log.stack && log.stack.length > 0"
           class="log-arrow"
-          @click="toggleStack(index)"
+          @click="toggleStack(log.timestamp)"
         >
-          <span :class="{ rotated: expandedStack[index] }">▶</span>
+          <span :class="{ rotated: expandedStack[log.timestamp] }">▶</span>
         </span>
         <span class="log-message">
           <template v-if="log.type">
@@ -36,7 +36,7 @@
           {{ formatTimestamp(log.timestamp) }}
         </span>
       </div>
-      <div v-if="expandedStack[index]" class="log-stack">
+      <div v-if="expandedStack[log.timestamp]" class="log-stack">
         {{ formatStack(log.stack) }}
       </div>
     </div>
@@ -50,13 +50,13 @@ export default Vue.extend({
   name: "ConsoleOutput",
   props: {
     value: {
-      type: Object as PropType<Record<string, any>>,
+      type: [Object, Array] as PropType<Record<string, any> | any[]>,
       required: true,
     },
   },
   data() {
     return {
-      expandedStack: {} as Record<number, boolean>,
+      expandedStack: {} as Record<string, boolean>,
       expandedLogs: false,
     };
   },
@@ -95,8 +95,8 @@ export default Vue.extend({
     formatStack(stack: string | null | undefined): string {
       return stack?.trim() || "No stack trace available";
     },
-    toggleStack(index: number) {
-      this.$set(this.expandedStack, index, !this.expandedStack[index]);
+    toggleStack(logKey: string) {
+      this.$set(this.expandedStack, logKey, !this.expandedStack[logKey]);
     },
   },
 });
@@ -107,7 +107,6 @@ export default Vue.extend({
   padding: 10px;
   font-family: var(--font-monospace);
   font-size: 11px;
-
   --item-border-radius: 5px;
 }
 
@@ -121,6 +120,35 @@ export default Vue.extend({
   background: var(--color-bg-second);
   color: var(--color-text-main);
   border-left: 3px solid color-mod(var(--color-text-main) alpha(10%));
+
+  &.log-error {
+    background: color-mod(var(--color-indicator-critical) alpha(15%));
+    border-left-color: var(--color-indicator-critical-dark);
+  }
+
+  &.log-warn {
+    background: color-mod(var(--color-indicator-warning) alpha(15%));
+    color: var(--color-indicator-warning);
+    border-left-color: var(--color-indicator-warning);
+  }
+
+  &.log-info {
+    background: color-mod(var(--color-indicator-medium) alpha(15%));
+    color: var(--color-indicator-medium);
+    border-left-color: var(--color-indicator-medium-dark);
+  }
+
+  &.log-debug {
+    background: color-mod(var(--color-indicator-positive) alpha(15%));
+    color: var(--color-indicator-positive);
+    border-left-color: var(--color-indicator-positive);
+  }
+
+  &.log-default {
+    background: var(--color-bg-second);
+    color: var(--color-text-main);
+    border-left-color: color-mod(var(--color-text-main) alpha(10%));
+  }
 }
 
 .log-content {
@@ -138,11 +166,11 @@ export default Vue.extend({
   &:hover {
     color: var(--color-text-main);
   }
-}
 
-.log-arrow .rotated {
-  display: inline-block;
-  transform: rotate(90deg);
+  .rotated {
+    display: inline-block;
+    transform: rotate(90deg);
+  }
 }
 
 .log-message {
@@ -203,35 +231,5 @@ export default Vue.extend({
       }
     }
   }
-}
-
-/* Log colors */
-.log-error {
-  background: color-mod(var(--color-indicator-critical) alpha(15%));
-  border-left-color: var(--color-indicator-critical-dark);
-}
-
-.log-warn {
-  background: color-mod(var(--color-indicator-warning) alpha(15%));
-  color: var(--color-indicator-warning);
-  border-left-color: var(--color-indicator-warning);
-}
-
-.log-info {
-  background: color-mod(var(--color-indicator-medium) alpha(15%));
-  color: var(--color-indicator-medium);
-  border-left-color: var(--color-indicator-medium-dark);
-}
-
-.log-debug {
-  background: color-mod(var(--color-indicator-positive) alpha(15%));
-  color: var(--color-indicator-positive);
-  border-left-color: var(--color-indicator-positive);
-}
-
-.log-default {
-  background: var(--color-bg-second);
-  color: var(--color-text-main);
-  border-left-color: color-mod(var(--color-text-main) alpha(10%));
 }
 </style>
