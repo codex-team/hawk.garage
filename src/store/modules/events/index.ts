@@ -543,6 +543,11 @@ const module: Module<EventsModuleState, RootState> = {
       filterBeautifiedAddons([ event ]);
       filterBeautifiedAddons([ event.repetition ]);
 
+      const originalEventTimestamp = event.payload.timestamp;
+      const newPayload = repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload
+
+      newPayload.timestamp = originalEventTimestamp;
+
       /**
        * Updates or sets event's fetched payload in the state
        */
@@ -550,7 +555,7 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         event: {
           ...event,
-          payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
+          payload: newPayload,
         },
       });
     },
