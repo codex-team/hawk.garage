@@ -11,8 +11,8 @@
       </button>
     </div>
     <div
-      v-for="log in displayedLogs"
-      :key="log.timestamp"
+      v-for="(log, index) in displayedLogs"
+      :key="`${log.timestamp}_${index}`"
       class="log-entry"
       :class="logClass(log.method)"
     >
@@ -20,23 +20,18 @@
         <span
           v-if="log.stack && log.stack.length > 0"
           class="log-arrow"
-          @click="toggleStack(log.timestamp)"
+          @click="toggleStack(`${log.timestamp}_${index}`)"
         >
-          <span :class="{ rotated: expandedStack[log.timestamp] }">▶</span>
+          <span :class="{ rotated: expandedStack[`${log.timestamp}_${index}`] }"
+            >▶</span
+          >
         </span>
-        <span class="log-message">
-          <template v-if="log.type">
-            {{ log.type !== "log" ? log.type + ": " : "" }}{{ log.message }}
-          </template>
-          <template v-else>
-            {{ log.message }}
-          </template>
-        </span>
+        <span class="log-message" v-html="formatMessage(log)"></span>
         <span class="log-timestamp">
           {{ formatTimestamp(log.timestamp) }}
         </span>
       </div>
-      <div v-if="expandedStack[log.timestamp]" class="log-stack">
+      <div v-if="expandedStack[`${log.timestamp}_${index}`]" class="log-stack">
         {{ formatStack(log.stack) }}
       </div>
     </div>
@@ -45,6 +40,16 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
+
+interface ConsoleLogEvent {
+  method: string;
+  timestamp: string;
+  type?: string;
+  message: string;
+  stack?: string;
+  fileLine?: string;
+  styles?: string[];
+}
 
 export default Vue.extend({
   name: "ConsoleOutput",
@@ -61,10 +66,10 @@ export default Vue.extend({
     };
   },
   computed: {
-    logs() {
+    logs(): ConsoleLogEvent[] {
       return Object.values(this.value);
     },
-    displayedLogs() {
+    displayedLogs(): ConsoleLogEvent[] {
       if (!this.expandedLogs && this.logs.length > 5) {
         return this.logs.slice(-5);
       }
@@ -97,6 +102,116 @@ export default Vue.extend({
     },
     toggleStack(logKey: string) {
       this.$set(this.expandedStack, logKey, !this.expandedStack[logKey]);
+    },
+    sanitizeHTML(str: string): string {
+      // Replace special characters with their HTML entities
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    },
+    formatMessage(log: ConsoleLogEvent): string {
+      if (!log.message.includes("%c")) {
+        return this.sanitizeHTML(log.message);
+      }
+
+      const parts = log.message.split("%c");
+      const styles = log.styles || [];
+      let result = "";
+
+      parts.forEach((part, index) => {
+        if (index === 0) {
+          result += this.sanitizeHTML(part);
+        } else {
+          const style = styles[index - 1] || "";
+          const sanitizedStyle = this.sanitizeStyle(style);
+          result += `<span style="${sanitizedStyle}">${this.sanitizeHTML(
+            part
+          )}</span>`;
+        }
+      });
+
+      return result;
+    },
+    sanitizeStyle(style: string): string {
+      // List of allowed CSS properties
+      const allowedProperties = [
+        "color",
+        "background-color",
+        "font-weight",
+        "font-style",
+        "text-decoration",
+        "font-size",
+        "font-family",
+      ];
+
+      // List of allowed values for specific properties
+      const allowedValues: Record<string, string[]> = {
+        "font-weight": [
+          "normal",
+          "bold",
+          "lighter",
+          "bolder",
+          "100",
+          "200",
+          "300",
+          "400",
+          "500",
+          "600",
+          "700",
+          "800",
+          "900",
+        ],
+        "font-style": ["normal", "italic", "oblique"],
+        "text-decoration": ["none", "underline", "line-through", "overline"],
+      };
+
+      const sanitizedStyles = style
+        .split(";")
+        .map((prop) => {
+          const [key, value] = prop.split(":").map((s) => s.trim());
+          const normalizedKey = key.toLowerCase();
+
+          if (allowedProperties.includes(normalizedKey)) {
+            // Check values for properties with a limited set of allowed values
+            if (allowedValues[normalizedKey]) {
+              const normalizedValue = value.toLowerCase();
+              if (allowedValues[normalizedKey].includes(normalizedValue)) {
+                return `${key}: ${value}`;
+              }
+            } else {
+              // For other properties, validate the value format
+              if (
+                normalizedKey === "color" ||
+                normalizedKey === "background-color"
+              ) {
+                // Validate that the value is a valid color
+                if (
+                  /^#[0-9A-Fa-f]{3,6}$|^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$|^rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*[0-1](\.[0-9]+)?\)$|^[a-zA-Z]+$/.test(
+                    value
+                  )
+                ) {
+                  return `${key}: ${value}`;
+                }
+              } else if (normalizedKey === "font-size") {
+                // Validate that the value is a valid font size
+                if (/^\d+(\.\d+)?(px|em|rem|pt|%)$/.test(value)) {
+                  return `${key}: ${value}`;
+                }
+              } else {
+                // For other properties, just return the key-value pair
+                return `${key}: ${value}`;
+              }
+            }
+          }
+          return "";
+        })
+        .filter(Boolean)
+        .join("; ");
+
+      return sanitizedStyles;
     },
   },
 });
@@ -165,6 +280,7 @@ export default Vue.extend({
 
   &:hover {
     color: var(--color-text-main);
+    cursor: pointer;
   }
 
   .rotated {
