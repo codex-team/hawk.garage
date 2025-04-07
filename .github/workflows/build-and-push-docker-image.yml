@@ -69,5 +69,6 @@ jobs:
       - name: Build and push production image
         uses: docker/build-push-action@v5
         with:
+          context: .
           tags: ${{ steps.meta.outputs.tags }}
           push: ${{ endsWith(github.ref, '/stage') || endsWith(github.ref, '/prod') || endsWith(github.ref, '/prod-ru') }}
