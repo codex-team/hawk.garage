@@ -50,6 +50,10 @@
     "feedbackButton": {
       "message": "Оставить отзыв"
     },
+    "consoleOutput": {
+      "show_previous": "Показать предыдущие",
+      "hide_previous": "Скрыть предыдущие"
+    },
     "catalog": {
       "step1": "Создать проект",
       "step2": "Интегрировать Кэтчер",
@@ -454,7 +458,8 @@
     "addons": {
       "url": "Адрес",
       "window": "Окно браузера",
-      "beautifiedUserAgent": "Клиент"
+      "beautifiedUserAgent": "Клиент",
+      "consoleOutput": "Лог Консоли"
     },
     "user": {
       "unknown": "Неизвестный",
