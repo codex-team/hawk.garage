@@ -1,8 +1,17 @@
 <template>
   <div class="console-output">
-    <div v-if="logs.length > 5" class="button-container">
-      <button class="show-more-btn" @click="expandedLogs = !expandedLogs">
-        <span class="log-arrow" :class="{ rotated: expandedLogs }">▲</span>
+    <div
+      v-if="logs.length > 5"
+      class="button-container"
+    >
+      <button
+        class="show-more-btn"
+        @click="expandedLogs = !expandedLogs"
+      >
+        <span
+          class="log-arrow"
+          :class="{ rotated: expandedLogs }"
+        >▲</span>
         {{
           expandedLogs
             ? $t("components.consoleOutput.hide_previous")
@@ -22,16 +31,22 @@
           class="log-arrow"
           @click="toggleStack(`${log.timestamp}_${index}`)"
         >
-          <span :class="{ rotated: expandedStack[`${log.timestamp}_${index}`] }"
-            >▶</span
-          >
+          <span
+            :class="{ rotated: expandedStack[`${log.timestamp}_${index}`] }"
+          >▶</span>
         </span>
-        <span class="log-message" v-html="formatMessage(log)" />
+        <span
+          class="log-message"
+          v-html="formatMessage(log)"
+        />
         <span class="log-timestamp">
           {{ formatTimestamp(log.timestamp) }}
         </span>
       </div>
-      <div v-if="expandedStack[`${log.timestamp}_${index}`]" class="log-stack">
+      <div
+        v-if="expandedStack[`${log.timestamp}_${index}`]"
+        class="log-stack"
+      >
         {{ formatStack(log.stack) }}
       </div>
     </div>
@@ -39,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
+import Vue, { PropType } from 'vue';
 
 interface ConsoleLogEvent {
   method: string;
@@ -52,7 +67,7 @@ interface ConsoleLogEvent {
 }
 
 export default Vue.extend({
-  name: "ConsoleOutput",
+  name: 'ConsoleOutput',
   props: {
     value: {
       type: [Object, Array] as PropType<Record<string, any> | any[]>,
@@ -86,13 +101,13 @@ export default Vue.extend({
      */
     logClass(method: string): string {
       const logClasses: Record<string, string> = {
-        error: "log-error",
-        warn: "log-warn",
-        info: "log-info",
-        debug: "log-debug",
+        error: 'log-error',
+        warn: 'log-warn',
+        info: 'log-info',
+        debug: 'log-debug',
       };
 
-      return logClasses[method?.toLowerCase()] || "log-default";
+      return logClasses[method?.toLowerCase()] || 'log-default';
     },
     /**
      * Formats a timestamp into a human-readable time string with milliseconds
@@ -104,11 +119,11 @@ export default Vue.extend({
       const date = new Date(timestamp);
       const timeString = date.toLocaleTimeString(undefined, {
         hour12: false,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
       });
-      const milliseconds = String(date.getMilliseconds()).padStart(3, "0");
+      const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
 
       return `${timeString}:${milliseconds}`;
     },
@@ -119,7 +134,7 @@ export default Vue.extend({
      * @returns {string} Formatted stack trace or fallback message
      */
     formatStack(stack: string | null | undefined): string {
-      return stack?.trim() || "No stack trace available";
+      return stack?.trim() || 'No stack trace available';
     },
     /**
      * Toggles the visibility of the stack trace for a specific log entry
@@ -138,11 +153,11 @@ export default Vue.extend({
     sanitizeHTML(str: string): string {
       // Replace special characters with their HTML entities
       return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     },
     /**
      * Formats a console log message with proper styling and sanitization
@@ -153,13 +168,13 @@ export default Vue.extend({
     formatMessage(log: ConsoleLogEvent): string {
       // Add log type prefix except for regular console.log
       const prefix =
-        log.method === "log" ? "" : `${log.type || log.method.toUpperCase()} `;
+        log.method === 'log' ? '' : `${log.type || log.method.toUpperCase()} `;
 
-      if (!log.message.includes("%c")) {
+      if (!log.message.includes('%c')) {
         return this.sanitizeHTML(prefix + log.message);
       }
 
-      const parts = log.message.split("%c");
+      const parts = log.message.split('%c');
       const styles = log.styles || [];
       let result = this.sanitizeHTML(prefix);
 
@@ -167,7 +182,7 @@ export default Vue.extend({
         if (index === 0) {
           result += this.sanitizeHTML(part);
         } else {
-          const style = styles[index - 1] || "";
+          const style = styles[index - 1] || '';
           const sanitizedStyle = this.sanitizeStyle(style);
 
           result += `<span style="${sanitizedStyle}">${this.sanitizeHTML(
@@ -187,40 +202,40 @@ export default Vue.extend({
     sanitizeStyle(style: string): string {
       // List of allowed CSS properties
       const allowedProperties = [
-        "color",
-        "background-color",
-        "font-weight",
-        "font-style",
-        "text-decoration",
-        "font-size",
-        "font-family",
+        'color',
+        'background-color',
+        'font-weight',
+        'font-style',
+        'text-decoration',
+        'font-size',
+        'font-family',
       ];
 
       // List of allowed values for specific properties
       const allowedValues: Record<string, string[]> = {
-        "font-weight": [
-          "normal",
-          "bold",
-          "lighter",
-          "bolder",
-          "100",
-          "200",
-          "300",
-          "400",
-          "500",
-          "600",
-          "700",
-          "800",
-          "900",
+        'font-weight': [
+          'normal',
+          'bold',
+          'lighter',
+          'bolder',
+          '100',
+          '200',
+          '300',
+          '400',
+          '500',
+          '600',
+          '700',
+          '800',
+          '900',
         ],
-        "font-style": ["normal", "italic", "oblique"],
-        "text-decoration": ["none", "underline", "line-through", "overline"],
+        'font-style': ['normal', 'italic', 'oblique'],
+        'text-decoration': ['none', 'underline', 'line-through', 'overline'],
       };
 
       const sanitizedStyles = style
-        .split(";")
+        .split(';')
         .map((prop) => {
-          const [key, value] = prop.split(":").map((s) => s.trim());
+          const [key, value] = prop.split(':').map((s) => s.trim());
           const normalizedKey = key.toLowerCase();
 
           if (allowedProperties.includes(normalizedKey)) {
@@ -234,8 +249,8 @@ export default Vue.extend({
             } else {
               // For other properties, validate the value format
               if (
-                normalizedKey === "color" ||
-                normalizedKey === "background-color"
+                normalizedKey === 'color' ||
+                normalizedKey === 'background-color'
               ) {
                 // Validate that the value is a valid color
                 if (
@@ -245,7 +260,7 @@ export default Vue.extend({
                 ) {
                   return `${key}: ${value}`;
                 }
-              } else if (normalizedKey === "font-size") {
+              } else if (normalizedKey === 'font-size') {
                 // Validate that the value is a valid font size
                 if (/^\d+(\.\d+)?(px|em|rem|pt|%)$/.test(value)) {
                   return `${key}: ${value}`;
@@ -257,10 +272,10 @@ export default Vue.extend({
             }
           }
 
-          return "";
+          return '';
         })
         .filter(Boolean)
-        .join("; ");
+        .join('; ');
 
       return sanitizedStyles;
     },
