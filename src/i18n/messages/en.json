@@ -86,7 +86,8 @@
   },
   "forms": {
     "imageUploader": "UPLOAD LOGO",
-    "searchField": "Search"
+    "searchField": "Search",
+    "searchFieldWithCMDK": "{cmd}+K to search"
   },
   "projects": {
     "filters": {
@@ -172,9 +173,34 @@
         "ruleIsEnabled": "Enabled",
         "editRule": "Edit rule",
         "removeRule": "Remove rule"
+      },
+      "patterns": {
+        "title": "Events Merging",
+        "description": "Here you can set up rules for manually merging events. This is useful for grouping similar events with slightly different titles but the same underlying nature.",
+        "create": "Add",
+        "save": "Save",
+        "createPattern": {
+          "title": "Add pattern"
+        },
+        "patternList": {
+          "title": "Patterns",
+          "emptyMessage": "You don't have any patterns yet."
+        },
+        "notifications": {
+          "patternAdded": "Pattern added successfully",
+          "patternUpdated": "Pattern updated",
+          "patternDeleted": "Pattern deleted",
+          "patternInvalid": "Invalid regular expression pattern",
+          "patternSaveError": "Error while adding pattern",
+          "patternUpdateError": "Error while updating pattern",
+          "patternDeleteError": "Error while deleting pattern"
+        }
       }
     },
-    "notFound": "Project not found"
+    "notFound": "Project not found",
+    "tabs": {
+      "events": "Events"
+    }
   },
   "settings": {
     "account": {
@@ -318,7 +344,7 @@
     "boost": "Boost",
     "blocked": "Blocked",
     "operations": {
-      "chargeForPlan": "Charge for {workspaceName} tariff plan",
+      "chargeForPlan": "Payment for a plan",
       "cardLinkingChange": "Charge to confirm a card",
       "cardLinkingRefund": "Refund for a card confirmation",
       "statuses": {
@@ -364,11 +390,14 @@
       "payWithSelectedCard": "Pay with selected card",
       "newCard": "New card"
     },
+    "notifications": {
+      "error": "A payment processing error occurred. Please try again"
+    },
     "autoProlongation": {
       "title": "Subscription",
       "description": "You are about to subscribe for paid tariff plan. That means that when the next payment date comes, the plan price will be automatically charged from your card.",
       "theNextPaymentDateTitle": "The next payment date",
-      "acceptRecurrentPaymentAgreement": "I understand and accept the recurrent payments agreement",
+      "acceptRecurrentPaymentAgreement": "I understand and accept the <a href='https://hawk-tracker.ru/payments-agreement.pdf' target='_blank'>recurrent payments agreement</a>",
       "allowingChargesEveryMonth": "I allow charges from my bank card every month",
       "cancelSuccessMessage": "Subscription successfully canceled",
       "cancelErrorMessage": "Error during subscription cancelling"
@@ -376,6 +405,12 @@
     "cloudPaymentsWidget": {
       "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month",
       "descriptionCardLinking": "A temporary charge of 1 USD will be made to verify your card. The amount will be refunded automatically."
+    },
+    "cardLinking": {
+      "description": "You are about to subscribe, which will start on",
+      "howItWorks": "How it works?",
+      "step1": "We will charge and immediately refund 1 USD to link your card.",
+      "step2": "The first regular payment will be charged on {date}, and the subscription will start from that day."
     }
   },
   "event": {
@@ -419,7 +454,8 @@
     "addons": {
       "url": "URL",
       "window": "Browser Window",
-      "beautifiedUserAgent": "User Agent"
+      "beautifiedUserAgent": "User Agent",
+      "consoleOutput": "Console Output"
     },
     "user": {
       "unknown": "Unknown",

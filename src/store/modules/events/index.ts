@@ -95,7 +95,12 @@ enum MutationTypes {
   /**
    * Get chart data for en event for a few days
    */
-  SaveChartData = 'SAVE_CHART_DATA'
+  SaveChartData = 'SAVE_CHART_DATA',
+
+  /**
+   * Set project search
+   */
+  SetProjectSearch = 'SET_PROJECT_SEARCH'
 }
 
 /**
@@ -130,7 +135,12 @@ export interface EventsModuleState {
   /**
    * Latest events map by project id
    */
-  latest: { [key: string]: HawkEventDailyInfo };
+  latest: {[key: string]: HawkEventDailyInfo};
+
+  /**
+   * Search parameter map by project id
+   */
+  search: { [key: string]: string };
 }
 
 /**
@@ -164,6 +174,7 @@ function initialState(): EventsModuleState {
     repetitions: {},
     filters: {},
     latest: {},
+    search: {},
   };
 }
 
@@ -392,6 +403,10 @@ const module: Module<EventsModuleState, RootState> = {
         return state.filters[projectId]?.order || EventsSortOrder.ByDate;
       };
     },
+
+    getProjectSearch: (state) => (projectId: string): string => {
+      return state.search[projectId] || '';
+    },
   },
   actions: {
     /**
@@ -408,7 +423,13 @@ const module: Module<EventsModuleState, RootState> = {
       { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
     ): void {
       commit(MutationTypes.SetEventsList, events);
-      commit(MutationTypes.SetRecentEventsList, recentEvents);
+
+      Object.entries(recentEvents).forEach(([projectId, recentEventsInfoByDate]) => {
+        commit(MutationTypes.SetRecentEventsList, {
+          projectId,
+          recentEventsInfoByDate,
+        });
+      });
       commit(MutationTypes.SetLatestEvents, recentEvents);
     },
 
@@ -422,20 +443,30 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} project - object of project data
      * @param {string} project.projectId - id of the project to fetch data
+     * @param {string} project.search - search query
      * @returns {Promise<boolean>} - true if there are no more events
      */
-    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId }: { projectId: string }): Promise<boolean> {
+    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search: string }): Promise<boolean> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const recentEvents = await eventsApi.fetchRecentEvents(
         projectId,
         loadedEventsCount[projectId] || 0,
         eventsSortOrder,
-        getters.getProjectFilters(projectId)
+        getters.getProjectFilters(projectId),
+        search
       );
 
       if (!recentEvents) {
         return true;
+      }
+
+      /**
+       * Reset loadedEventsCount only when starting a new search
+       * This ensures proper pagination during search
+       */
+      if (search.trim().length > 0 && !loadedEventsCount[projectId]) {
+        loadedEventsCount[projectId] = 0;
       }
 
       const eventsGroupedByDate = groupByGroupingTimestamp(
@@ -449,6 +480,12 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         eventsList: recentEvents.events,
       });
+
+      /**
+       * Always use AddToRecentEventsList for pagination
+       * This ensures that new events are appended to the existing list
+       * regardless of whether there is a search query or not
+       */
       commit(MutationTypes.AddToRecentEventsList, {
         projectId,
         recentEventsInfoByDate: eventsGroupedByDate,
@@ -745,42 +782,43 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {object} project - object of project data
      * @param {EventsSortOrder} project.order - order to set
      * @param {string} project.projectId - project to set order for
+     * @param {string} [project.search] - optional search query
      */
-    async [SET_EVENTS_ORDER]({ commit, dispatch }, { order, projectId }: { order: EventsSortOrder; projectId: string }): Promise<void> {
+    async [SET_EVENTS_ORDER]({ commit, dispatch }, { projectId, order, search }) {
       commit(SET_EVENTS_ORDER, {
-        order,
         projectId,
+        order,
       });
-
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      dispatch(FETCH_RECENT_EVENTS, {
+      return dispatch(FETCH_RECENT_EVENTS, {
         projectId,
+        search,
       });
     },
 
     /**
-     * Set filters for project
+     * Set events filters
      *
      * @param {object} context - vuex action context
      * @param {Function} context.commit - VueX commit method
      * @param {Function} context.dispatch - Vuex dispatch method
      *
      * @param {object} project - object of project data
-     * @param {EventsFilters} project.filters - filters object to set
-     * @param {string} project.projectId - projoect to set filters for
+     * @param {string} project.projectId - project to set filters for
+     * @param {EventsFilters} project.filters - filters to set
+     * @param {string} [project.search] - optional search query
      */
-    async [SET_EVENTS_FILTERS]({ commit, dispatch }, { filters, projectId }: { filters: EventsFilters; projectId: string }): Promise<void> {
+    async [SET_EVENTS_FILTERS]({ commit, dispatch }, { projectId, filters, search }) {
       commit(SET_EVENTS_FILTERS, {
-        filters,
         projectId,
+        filters,
       });
 
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      dispatch(FETCH_RECENT_EVENTS, {
-        projectId,
-      });
+      return dispatch(FETCH_RECENT_EVENTS, { projectId,
+        search });
     },
 
     /**
@@ -843,6 +881,10 @@ const module: Module<EventsModuleState, RootState> = {
       state,
       { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }
     ): void {
+      if (!state.recent[projectId]) {
+        Vue.set(state.recent, projectId, {});
+      }
+
       /**
        * Algorithm for merging the list of recent events from vuex store and server response
        */
@@ -897,10 +939,12 @@ const module: Module<EventsModuleState, RootState> = {
      * Mutation for replacing recent events list
      *
      * @param {EventsModuleState} state - Vuex state
-     * @param {HawkEventsDailyInfoByProject} newList - new list of recent events
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - project that owns events
+     * @param {HawkEventsDailyInfoByDate} payload.recentEventsInfoByDate - grouped events list
      */
-    [MutationTypes.SetRecentEventsList](state, newList: HawkEventsDailyInfoByProject): void {
-      Vue.set(state, 'recent', newList);
+    [MutationTypes.SetRecentEventsList](state, { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }): void {
+      Vue.set(state.recent, projectId, recentEventsInfoByDate);
     },
 
     /**
@@ -1026,7 +1070,6 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.ClearRecentEventsList](state: EventsModuleState, { projectId }: { projectId: string }): void {
       Vue.set(state.recent, projectId, {});
-
       loadedEventsCount[projectId] = 0;
     },
 
@@ -1070,6 +1113,18 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [RESET_STORE](state: EventsModuleState): void {
       Object.assign(state, initialState());
+    },
+
+    /**
+     * Set project search
+     *
+     * @param {EventsModuleState} state - module state
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.projectId - project id
+     * @param {string} payload.search - search string
+     */
+    [MutationTypes.SetProjectSearch](state: EventsModuleState, { projectId, search }: { projectId: string; search: string }): void {
+      Vue.set(state.search, projectId, search);
     },
   },
 };

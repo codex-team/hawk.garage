@@ -57,7 +57,9 @@ interface FiltersBarData {
   },
   sortOptions: {
     [K in EventsSortOrder]: string
-  }
+  },
+  selectedOrder: EventsSortOrder;
+  isLoading: boolean;
 }
 
 export default Vue.extend({
@@ -94,6 +96,8 @@ export default Vue.extend({
         [EventsSortOrder.ByCount]: 'byCount',
         [EventsSortOrder.ByAffectedUsers]: 'byAffectedUsers',
       },
+      selectedOrder: EventsSortOrder.ByDate,
+      isLoading: false,
     };
   },
   computed: {
@@ -155,10 +159,7 @@ export default Vue.extend({
 
       const filters = this.filtersOptions[key];
 
-      this.$store.dispatch(SET_EVENTS_FILTERS, {
-        filters,
-        projectId: this.projectId,
-      });
+      this.handleFiltersChange(filters);
     },
     /**
      * Set new events sorting order
@@ -170,10 +171,46 @@ export default Vue.extend({
         return;
       }
 
-      this.$store.dispatch(SET_EVENTS_ORDER, {
-        order: key,
-        projectId: this.projectId,
-      });
+      this.handleSortOrderChange(key);
+    },
+    /**
+     * Handle sort order change
+     *
+     * @param {string} order - new sort order
+     */
+    async handleSortOrderChange(order) {
+      this.isLoading = true;
+      try {
+        const search = this.$store.getters.getProjectSearch(this.projectId);
+
+        await this.$store.dispatch(SET_EVENTS_ORDER, {
+          projectId: this.projectId,
+          order,
+          search,
+        });
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    /**
+     * Handle filters change
+     *
+     * @param {EventsFilters} filters - new filters
+     */
+    async handleFiltersChange(filters) {
+      this.isLoading = true;
+      try {
+        const search = this.$store.getters.getProjectSearch(this.projectId);
+
+        await this.$store.dispatch(SET_EVENTS_FILTERS, {
+          projectId: this.projectId,
+          filters,
+          search,
+        });
+      } finally {
+        this.isLoading = false;
+      }
     },
   },
 });
@@ -185,7 +222,7 @@ export default Vue.extend({
     justify-content: space-between;
     width: 100%;
     margin-top: 25px;
-    padding: 0 21px;
+    padding-inline: var(--layout-padding-inline);
 
     &__section {
       display: flex;

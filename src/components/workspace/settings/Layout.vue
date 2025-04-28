@@ -48,13 +48,13 @@
           {{ $t('workspaces.settings.billing.title') }}
         </router-link>
 
-        <router-link
+        <!-- <router-link
           v-if="isAdmin"
           class="settings-window__menu-item workspace-settings__menu-item"
           :to="{ name: 'workspace-settings-used-volume', params: {workspaceId: workspace.id} }"
         >
           {{ $t('workspaces.settings.volume.title') }}
-        </router-link>
+        </router-link> -->
         <hr class="delimiter workspace-settings__delimiter">
         <div
           class="settings-window__menu-item workspace-settings__menu-item settings-window__menu-item--attention"
@@ -124,7 +124,7 @@ export default Vue.extend({
      * Check if billing button should be visible in menu
      */
     shouldShowBilling(): boolean {
-      return this.workspace?.isDebug === true;
+      return true;
     },
   },
   async created(): Promise<void> {
