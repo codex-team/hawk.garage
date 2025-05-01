@@ -29,4 +29,9 @@ export interface BeforePaymentPayload {
    * Charging minimal amount of money that will be returned
    */
   isCardLinkOperation: boolean;
+
+  /**
+   * Next payment date in ISO string format
+   */
+  nextPaymentDate: string;
 }
