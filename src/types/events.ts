@@ -246,6 +246,11 @@ export interface HawkEventRepetition {
    * Delta payload, null for old delta format or if there is no delta between original and repetition
    */
   delta: string | null;
+
+  /**
+   * Flag indicating if the payload has been patched
+   */
+  isPayloadPatched?: boolean;
 }
 
 export interface HawkEventBacktraceFrame {

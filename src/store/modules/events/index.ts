@@ -15,7 +15,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { repetitionAssembler, filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
+import { repetitionAssembler, filterBeautifiedAddons, groupByGroupingTimestamp, processRepetitionPayload } from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
@@ -135,7 +135,7 @@ export interface EventsModuleState {
   /**
    * Latest events map by project id
    */
-  latest: {[key: string]: HawkEventDailyInfo};
+  latest: { [key: string]: HawkEventDailyInfo };
 
   /**
    * Search parameter map by project id
@@ -297,32 +297,9 @@ const module: Module<EventsModuleState, RootState> = {
         const event = cloneDeep(state.list[key]);
 
         /**
-         * Check if repetition is present and delta format is new (repetition.payload is null)
+         * Process the repetition payload
          */
-        if (repetition && !repetition.payload && !repetition.isPayloadPatched) {
-          /**
-           * If delta is present, apply delta to the event payload
-           */
-          if (repetition.delta) {
-            event.payload = patch({ left: event.payload,
-              delta: JSON.parse(repetition.delta) });
-          } else {
-            /**
-             * If delta is not present, set the event payload to the original event payload
-             */
-            event.payload = event.payload;
-          }
-        } else if (repetition && repetition.payload && !repetition.isPayloadPatched) {
-          /**
-           * If repetition is present and delta format is old (repetition.payload is not null), assemble event payload
-           */
-          event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
-        } else if (repetition && repetition.isPayloadPatched) {
-          /**
-           * If the event payload is patched, set the event payload to the repetition payload
-           */
-          event.payload = repetition.payload;
-        }
+        event.payload = processRepetitionPayload(event.payload, repetition);
 
         return event;
       };
@@ -524,7 +501,7 @@ const module: Module<EventsModuleState, RootState> = {
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
 
       if (originalEvent) {
-        filterBeautifiedAddons([ originalEvent ]);
+        filterBeautifiedAddons([originalEvent]);
       }
 
       /**
@@ -543,8 +520,10 @@ const module: Module<EventsModuleState, RootState> = {
            */
           processedRepetition = {
             ...repetition,
-            payload: repetition.delta ? patch({ left: eventPayload,
-              delta: JSON.parse(repetition.delta) }) : eventPayload,
+            payload: repetition.delta ? patch({
+              left: eventPayload,
+              delta: JSON.parse(repetition.delta)
+            }) : eventPayload,
           };
         } else {
           processedRepetition = repetition;
@@ -553,7 +532,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
          */
-        filterBeautifiedAddons([ processedRepetition ]);
+        filterBeautifiedAddons([processedRepetition]);
 
         /**
          * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
@@ -616,8 +595,10 @@ const module: Module<EventsModuleState, RootState> = {
 
         repetition = {
           ...event.repetition,
-          payload: patch({ left: eventPayload,
-            delta: JSON.parse(event.repetition.delta) }),
+          payload: patch({
+            left: eventPayload,
+            delta: JSON.parse(event.repetition.delta)
+          }),
         };
       } else if (isNewDeltaFormat) {
         /**
@@ -639,8 +620,8 @@ const module: Module<EventsModuleState, RootState> = {
        */
       event.repetition = repetition;
 
-      filterBeautifiedAddons([ event ]);
-      filterBeautifiedAddons([ event.repetition ]);
+      filterBeautifiedAddons([event]);
+      filterBeautifiedAddons([event.repetition]);
 
       /**
        * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
@@ -824,8 +805,10 @@ const module: Module<EventsModuleState, RootState> = {
 
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      return dispatch(FETCH_RECENT_EVENTS, { projectId,
-        search });
+      return dispatch(FETCH_RECENT_EVENTS, {
+        projectId,
+        search
+      });
     },
 
     /**
@@ -968,7 +951,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [ repetition ]);
+        Vue.set(state.repetitions, key, [repetition]);
 
         return;
       }

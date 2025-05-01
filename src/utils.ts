@@ -2,6 +2,7 @@ import mergeWith from 'lodash.mergewith';
 import cloneDeep from 'lodash.clonedeep';
 import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
 import { DecodedIntegrationToken } from '@hawk.so/types';
+import { patch } from '@n1ru4l/json-patch-plus';
 
 /**
  * @param currency
@@ -191,7 +192,7 @@ export function deepMerge(target: object, ...sources: object[]): object {
  * @param repetition - the difference with its repetition, for the repetition we want to display
  * @returns fully assembled payload of the current repetition
  */
-export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string ]: any} ): HawkEventPayload {
+export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string]: any }): HawkEventPayload {
   const customizer = (originalParam: any, repetitionParam: any): any => {
     if (repetitionParam === null) {
       return originalParam;
@@ -204,9 +205,9 @@ export function repetitionAssembler(originalEvent: HawkEventPayload, repetition:
        */
       if (originalParam === null) {
         return repetitionParam;
-      /**
-       * Otherwise, we need to recursively merge original and repetition values
-       */
+        /**
+         * Otherwise, we need to recursively merge original and repetition values
+         */
       } else {
         return repetitionAssembler(originalParam, repetitionParam);
       }
@@ -315,7 +316,7 @@ export function escape(string: string): string;
  *                              replaced and total length of new chars added
  * @returns object with escaped string, count and length
  */
-export function escape(string: string, withCount: boolean): {value: string; count: number; length: number};
+export function escape(string: string, withCount: boolean): { value: string; count: number; length: number };
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
@@ -325,7 +326,7 @@ export function escape(string: string, withCount: boolean): {value: string; coun
  *                              replaced and total length of new chars added
  * @returns {string | {value, count, length}} escaped string or object with escaped string, count and length
  */
-export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
+export function escape(string: string, withCount = false): string | { value: string; count: number; length: number } {
   if (!string) {
     return '';
   }
@@ -545,4 +546,43 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
   }
 
   return 'linux';
+}
+
+/**
+ * Processes a repetition payload based on its format and state
+ * 
+ * @param originalEvent {HawkEventPayload} - The original event payload
+ * @param repetition {HawkEventRepetition} - The repetition to process
+ * @returns {HawkEventPayload} The processed repetition payload
+ */
+export function processRepetitionPayload(originalEvent: HawkEventPayload, repetition: HawkEventRepetition): HawkEventPayload {
+  if (!repetition) {
+    return originalEvent;
+  }
+
+  /**
+   * New delta format (repetition.payload is null)
+   */
+  if (!repetition.payload && !repetition.isPayloadPatched) {
+    if (repetition.delta) {
+      return patch({ left: originalEvent, delta: JSON.parse(repetition.delta) });
+    }
+    return originalEvent;
+  }
+
+  /**
+   * Old delta format (repetition.payload is not null)
+   */
+  if (repetition.payload && !repetition.isPayloadPatched) {
+    return repetitionAssembler(originalEvent, repetition.payload) as HawkEventPayload;
+  }
+
+  /**
+   * Already patched payload
+   */
+  if (repetition.isPayloadPatched) {
+    return repetition.payload;
+  }
+
+  return originalEvent;
 }
