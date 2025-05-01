@@ -299,7 +299,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Check if repetition is present and delta format is new (repetition.payload is null)
          */
-        if (repetition && !repetition.payload) {
+        if (repetition && !repetition.payload && !repetition.isPayloadPatched) {
           /**
            * If delta is present, apply delta to the event payload
            */
@@ -312,11 +312,16 @@ const module: Module<EventsModuleState, RootState> = {
              */
             event.payload = event.payload;
           }
-        } else if (repetition && repetition.payload) {
+        } else if (repetition && repetition.payload && !repetition.isPayloadPatched) {
           /**
            * If repetition is present and delta format is old (repetition.payload is not null), assemble event payload
            */
           event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
+        } else if (repetition && repetition.isPayloadPatched) {
+          /**
+           * If the event payload is patched, set the event payload to the repetition payload
+           */
+          event.payload = repetition.payload;
         }
 
         return event;
@@ -558,6 +563,7 @@ const module: Module<EventsModuleState, RootState> = {
             projectId,
             eventId,
             repetition: processedRepetition,
+            isPayloadPatched: true,
           });
         } else {
           commit(MutationTypes.AddRepetitionPayload, {
@@ -567,6 +573,7 @@ const module: Module<EventsModuleState, RootState> = {
               ...processedRepetition,
               payload: originalEvent ? repetitionAssembler(originalEvent.payload, processedRepetition.payload) as HawkEventPayload : processedRepetition.payload,
             },
+            isPayloadPatched: true,
           });
         }
 
