@@ -292,7 +292,7 @@ const module: Module<EventsModuleState, RootState> = {
         }
 
         /**
-         * Make a deep copy of the event
+         * Make a deep copy of the event, because we need to avoid mutating the original event
          */
         const event = cloneDeep(state.list[key]);
 
