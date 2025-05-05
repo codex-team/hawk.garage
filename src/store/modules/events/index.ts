@@ -500,17 +500,12 @@ const module: Module<EventsModuleState, RootState> = {
        * If delta is present, apply delta to the event payload
        */
       const repetitions = response.data.project.event.repetitions.map(repetition => {
-        let composedRepetition: HawkEventRepetition;
+        let composedRepetition: HawkEventRepetition = repetition;
 
-        if (!originalEvent) {
-          composedRepetition = repetition;
-          /**
-           * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
-           */
-        } else {
-          /**
-           * If delta is present, apply delta to the event payload, otherwise set the event payload to the original event payload
-           */
+        /**
+         * If original event is present, apply delta to the repetition payload
+         */
+        if (originalEvent) {
           composedRepetition = {
             ...repetition,
             payload: composeFullRepetitionEvent(originalEvent, repetition).payload,
