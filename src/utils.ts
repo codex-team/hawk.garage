@@ -580,7 +580,8 @@ export function composeRepetitionPayload(originalEvent: HawkEvent, repetition: H
    * New delta format (repetition.delta is not null)
    */
   if (repetition.delta) {
-    event.payload = patch({ left: originalEvent, delta: JSON.parse(repetition.delta) });
+    event.payload = patch({ left: originalEvent,
+      delta: JSON.parse(repetition.delta) });
 
     return event;
   }

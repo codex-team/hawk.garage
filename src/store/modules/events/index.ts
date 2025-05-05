@@ -506,7 +506,6 @@ const module: Module<EventsModuleState, RootState> = {
         const isNewDeltaFormat = !repetition.payload;
 
         if (isNewDeltaFormat && originalEvent) {
-
           /**
            * If delta is present, apply delta to the event payload, otherwise set the event payload to the original event payload
            */
