@@ -15,7 +15,7 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { repetitionAssembler, filterBeautifiedAddons, groupByGroupingTimestamp, processRepetitionPayload } from '@/utils';
+import { repetitionAssembler, filterBeautifiedAddons, groupByGroupingTimestamp, composeRepetitionPayload } from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
@@ -299,7 +299,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Process the repetition payload
          */
-        event.payload = processRepetitionPayload(event.payload, repetition);
+        event.payload = composeRepetitionPayload(event.payload, repetition);
 
         return event;
       };
@@ -545,12 +545,18 @@ const module: Module<EventsModuleState, RootState> = {
             isPayloadPatched: true,
           });
         } else {
+          let payload = processedRepetition.payload;
+
+          if (originalEvent) {
+            payload = composeRepetitionPayload(originalEvent.payload, processedRepetition);
+          }
+
           commit(MutationTypes.AddRepetitionPayload, {
             projectId,
             eventId,
             repetition: {
               ...processedRepetition,
-              payload: originalEvent ? repetitionAssembler(originalEvent.payload, processedRepetition.payload) as HawkEventPayload : processedRepetition.payload,
+              payload,
             },
             isPayloadPatched: true,
           });
@@ -598,10 +604,7 @@ const module: Module<EventsModuleState, RootState> = {
 
         repetition = {
           ...event.repetition,
-          payload: patch({
-            left: eventPayload,
-            delta: JSON.parse(event.repetition.delta),
-          }),
+          payload: composeRepetitionPayload(eventPayload, event.repetition),
         };
       } else if (isNewDeltaFormat) {
         /**
@@ -640,7 +643,7 @@ const module: Module<EventsModuleState, RootState> = {
           projectId,
           event: {
             ...event,
-            payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
+            payload: composeRepetitionPayload(event.payload, event.repetition),
           },
         });
       }
