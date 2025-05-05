@@ -582,7 +582,7 @@ export function composeFullRepetitionEvent(originalEvent: HawkEvent, repetition:
    */
   if (repetition.delta) {
     event.payload = patch({
-      left: originalEvent.payload,
+      left: event.payload,
       delta: JSON.parse(repetition.delta)
     });
 
