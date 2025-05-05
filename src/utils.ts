@@ -558,6 +558,7 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
  * @returns {HawkEvent} Updated event with processed repetition payload
  */
 export function composeFullRepetitionEvent(originalEvent: HawkEvent, repetition: HawkEventRepetition | undefined): HawkEvent {
+
   /**
    * Make a deep copy of the original event, because we need to avoid mutating the original event
    */
@@ -581,7 +582,7 @@ export function composeFullRepetitionEvent(originalEvent: HawkEvent, repetition:
    */
   if (repetition.delta) {
     event.payload = patch({
-      left: originalEvent,
+      left: originalEvent.payload,
       delta: JSON.parse(repetition.delta)
     });
 
