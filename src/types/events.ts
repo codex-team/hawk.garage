@@ -238,7 +238,7 @@ export interface HawkEventRepetition {
   id: string;
 
   /**
-   * Unique repetition payload, null for old delta format
+   * Unique repetition payload, null for new delta format
    */
   payload: HawkEventPayload;
 
@@ -248,7 +248,7 @@ export interface HawkEventRepetition {
   delta: string | null;
 
   /**
-   * Flag indicating if the payload has been patched
+   * Flag indicating if the payload has been patched, in case of processing repetition after fetching, we don't need to patch it again
    */
   isPayloadPatched?: boolean;
 }

@@ -550,7 +550,7 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
 
 /**
  * Processes a repetition payload based on its format and state
- * 
+ *
  * @param originalEvent {HawkEventPayload} - The original event payload
  * @param repetition {HawkEventRepetition} - The repetition to process
  * @returns {HawkEventPayload} The processed repetition payload
@@ -561,28 +561,26 @@ export function processRepetitionPayload(originalEvent: HawkEventPayload, repeti
   }
 
   /**
-   * New delta format (repetition.payload is null)
-   */
-  if (!repetition.payload && !repetition.isPayloadPatched) {
-    if (repetition.delta) {
-      return patch({ left: originalEvent, delta: JSON.parse(repetition.delta) });
-    }
-    return originalEvent;
-  }
-
-  /**
-   * Old delta format (repetition.payload is not null)
-   */
-  if (repetition.payload && !repetition.isPayloadPatched) {
-    return repetitionAssembler(originalEvent, repetition.payload) as HawkEventPayload;
-  }
-
-  /**
    * Already patched payload
    */
   if (repetition.isPayloadPatched) {
     return repetition.payload;
   }
 
-  return originalEvent;
+  /**
+   * New delta format (repetition.payload is null)
+   */
+  if (!repetition.payload) {
+    if (repetition.delta) {
+      return patch({ left: originalEvent,
+        delta: JSON.parse(repetition.delta) });
+    }
+
+    return originalEvent;
+  }
+
+  /**
+   * Old delta format (repetition.payload is not null)
+   */
+  return repetitionAssembler(originalEvent, repetition.payload) as HawkEventPayload;
 }

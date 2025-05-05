@@ -501,7 +501,7 @@ const module: Module<EventsModuleState, RootState> = {
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
 
       if (originalEvent) {
-        filterBeautifiedAddons([originalEvent]);
+        filterBeautifiedAddons([ originalEvent ]);
       }
 
       /**
@@ -522,7 +522,7 @@ const module: Module<EventsModuleState, RootState> = {
             ...repetition,
             payload: repetition.delta ? patch({
               left: eventPayload,
-              delta: JSON.parse(repetition.delta)
+              delta: JSON.parse(repetition.delta),
             }) : eventPayload,
           };
         } else {
@@ -532,7 +532,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
          */
-        filterBeautifiedAddons([processedRepetition]);
+        filterBeautifiedAddons([ processedRepetition ]);
 
         /**
          * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
@@ -580,7 +580,10 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
-      let repetition;
+      /**
+       * Default value for event repetition, in case of new delta format, we will patch it
+       */
+      let repetition = event.repetition;
 
       /**
        * Check if delta format is new
@@ -597,7 +600,7 @@ const module: Module<EventsModuleState, RootState> = {
           ...event.repetition,
           payload: patch({
             left: eventPayload,
-            delta: JSON.parse(event.repetition.delta)
+            delta: JSON.parse(event.repetition.delta),
           }),
         };
       } else if (isNewDeltaFormat) {
@@ -608,11 +611,6 @@ const module: Module<EventsModuleState, RootState> = {
           ...event.repetition,
           payload: event.payload,
         };
-      } else {
-        /**
-         * If delta format is old, set the event repetition to the original event repetition
-         */
-        repetition = event.repetition;
       }
 
       /**
@@ -620,8 +618,8 @@ const module: Module<EventsModuleState, RootState> = {
        */
       event.repetition = repetition;
 
-      filterBeautifiedAddons([event]);
-      filterBeautifiedAddons([event.repetition]);
+      filterBeautifiedAddons([ event ]);
+      filterBeautifiedAddons([ event.repetition ]);
 
       /**
        * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
@@ -807,7 +805,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       return dispatch(FETCH_RECENT_EVENTS, {
         projectId,
-        search
+        search,
       });
     },
 
@@ -951,7 +949,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [repetition]);
+        Vue.set(state.repetitions, key, [ repetition ]);
 
         return;
       }
