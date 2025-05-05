@@ -555,7 +555,7 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
  * @param repetition {HawkEventRepetition} - The repetition to process
  * @returns {HawkEventPayload} The processed repetition payload
  */
-export function processRepetitionPayload(originalEvent: HawkEventPayload, repetition: HawkEventRepetition): HawkEventPayload {
+export function composeRepetitionPayload(originalEvent: HawkEventPayload, repetition: HawkEventRepetition): HawkEventPayload {
   if (!repetition) {
     return originalEvent;
   }
