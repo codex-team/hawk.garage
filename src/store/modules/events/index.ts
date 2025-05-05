@@ -559,7 +559,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       commit(MutationTypes.UpdateEvent, {
         projectId,
-        event
+        event: composedRepetition,
       });
     },
 
