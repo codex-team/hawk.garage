@@ -493,7 +493,7 @@ const module: Module<EventsModuleState, RootState> = {
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
 
       if (originalEvent) {
-        filterBeautifiedAddons([ originalEvent ]);
+        filterBeautifiedAddons([originalEvent]);
       }
 
       /**
@@ -520,7 +520,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
          */
-        filterBeautifiedAddons([ composedRepetition ]);
+        filterBeautifiedAddons([composedRepetition]);
 
         commit(MutationTypes.AddRepetitionPayload, {
           projectId,
@@ -555,16 +555,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       const composedRepetition: HawkEvent = composeFullRepetitionEvent(event, event.repetition);
 
-      /**
-       * Update event repetition
-       */
-      event.repetition = {
-        ...event.repetition,
-        payload: composedRepetition.payload
-      };
-
-      filterBeautifiedAddons([ event ]);
-      filterBeautifiedAddons([ event.repetition ]);
+      filterBeautifiedAddons([composedRepetition]);
 
       commit(MutationTypes.UpdateEvent, {
         projectId,
@@ -875,7 +866,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [ repetition ]);
+        Vue.set(state.repetitions, key, [repetition]);
 
         return;
       }
