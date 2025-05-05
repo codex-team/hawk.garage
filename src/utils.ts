@@ -549,7 +549,7 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
 }
 
 /**
- * Helps to merge original event payload and repetition payload due to delta format,
+ * Helps to merge original event and repetition due to delta format,
  * in case of old delta format, we need to patch the payload
  * in case of new delta format, we need to assemble the payload
  *
@@ -557,7 +557,7 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
  * @param repetition {HawkEventRepetition} - The repetition to process
  * @returns {HawkEvent} Updated event with processed repetition payload
  */
-export function composeRepetitionPayload(originalEvent: HawkEvent, repetition: HawkEventRepetition | undefined): HawkEvent {
+export function composeFullRepetitionEvent(originalEvent: HawkEvent, repetition: HawkEventRepetition | undefined): HawkEvent {
   /**
    * Make a deep copy of the original event, because we need to avoid mutating the original event
    */
@@ -580,8 +580,10 @@ export function composeRepetitionPayload(originalEvent: HawkEvent, repetition: H
    * New delta format (repetition.delta is not null)
    */
   if (repetition.delta) {
-    event.payload = patch({ left: originalEvent,
-      delta: JSON.parse(repetition.delta) });
+    event.payload = patch({
+      left: originalEvent,
+      delta: JSON.parse(repetition.delta)
+    });
 
     return event;
   }
@@ -595,6 +597,7 @@ export function composeRepetitionPayload(originalEvent: HawkEvent, repetition: H
 
   /**
    * Old delta format (repetition.payload is not null)
+   * @todo remove after July 5 2025
    */
   event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
 

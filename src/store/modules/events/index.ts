@@ -15,14 +15,13 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { repetitionAssembler, filterBeautifiedAddons, groupByGroupingTimestamp, composeRepetitionPayload } from '@/utils';
+import { filterBeautifiedAddons, groupByGroupingTimestamp, composeFullRepetitionEvent } from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
   EventsSortOrder,
   HawkEvent,
   HawkEventDailyInfo,
-  HawkEventPayload,
   HawkEventRepetition
 } from '@/types/events';
 import { User } from '@/types/user';
@@ -292,7 +291,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Process the repetition payload
          */
-        const event = composeRepetitionPayload(state.list[key], repetition);
+        const event = composeFullRepetitionEvent(state.list[key], repetition);
 
         return event;
       };
@@ -501,56 +500,36 @@ const module: Module<EventsModuleState, RootState> = {
        * If delta is present, apply delta to the event payload
        */
       const repetitions = response.data.project.event.repetitions.map(repetition => {
-        let processedRepetition: HawkEventRepetition;
+        let composedRepetition: HawkEventRepetition;
 
-        const isNewDeltaFormat = !repetition.payload;
-
-        if (isNewDeltaFormat && originalEvent) {
+        if (!originalEvent) {
+          composedRepetition = repetition;
+          /**
+           * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
+           */
+        } else {
           /**
            * If delta is present, apply delta to the event payload, otherwise set the event payload to the original event payload
            */
-          processedRepetition = {
+          composedRepetition = {
             ...repetition,
-            payload: composeRepetitionPayload(originalEvent, repetition).payload,
+            payload: composeFullRepetitionEvent(originalEvent, repetition).payload,
           };
-        } else {
-          processedRepetition = repetition;
         }
 
         /**
          * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
          */
-        filterBeautifiedAddons([ processedRepetition ]);
+        filterBeautifiedAddons([ composedRepetition ]);
 
-        /**
-         * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
-         */
-        if (isNewDeltaFormat) {
-          commit(MutationTypes.AddRepetitionPayload, {
-            projectId,
-            eventId,
-            repetition: processedRepetition,
-            isPayloadPatched: true,
-          });
-        } else {
-          let payload = processedRepetition.payload;
+        commit(MutationTypes.AddRepetitionPayload, {
+          projectId,
+          eventId,
+          repetition: composedRepetition,
+          isPayloadPatched: true,
+        });
 
-          if (originalEvent) {
-            payload = composeRepetitionPayload(originalEvent, processedRepetition).payload;
-          }
-
-          commit(MutationTypes.AddRepetitionPayload, {
-            projectId,
-            eventId,
-            repetition: {
-              ...processedRepetition,
-              payload,
-            },
-            isPayloadPatched: true,
-          });
-        }
-
-        return processedRepetition;
+        return composedRepetition;
       });
 
       return repetitions;
@@ -574,65 +553,23 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
-      /**
-       * Default value for event repetition, in case of new delta format, we will patch it
-       */
-      let repetition = event.repetition;
-
-      /**
-       * Check if delta format is new
-       */
-      const isNewDeltaFormat = !event.repetition.payload;
-
-      /**
-       * If delta format is new, apply delta to the event payload
-       */
-      if (event.repetition.delta && isNewDeltaFormat) {
-        repetition = {
-          ...event.repetition,
-          payload: composeRepetitionPayload(event, event.repetition).payload,
-        };
-      } else if (isNewDeltaFormat) {
-        /**
-         * If delta format is new, set the event payload to the original event payload in case if delta is null
-         */
-        repetition = {
-          ...event.repetition,
-          payload: event.payload,
-        };
-      }
+      const composedRepetition: HawkEvent = composeFullRepetitionEvent(event, event.repetition);
 
       /**
        * Update event repetition
        */
-      event.repetition = repetition;
+      event.repetition = {
+        ...event.repetition,
+        payload: composedRepetition.payload
+      };
 
       filterBeautifiedAddons([ event ]);
       filterBeautifiedAddons([ event.repetition ]);
 
-      /**
-       * Save to the state, if delta format is new, otherwise assemble event payload and save to the state
-       */
-      if (isNewDeltaFormat) {
-        commit(MutationTypes.UpdateEvent, {
-          projectId,
-          event: {
-            ...event,
-            payload: repetition.payload,
-          },
-        });
-      } else {
-        /**
-         * Save to the state, if delta format is old, assemble event payload and save to the state
-         */
-        commit(MutationTypes.UpdateEvent, {
-          projectId,
-          event: {
-            ...event,
-            payload: composeRepetitionPayload(event, event.repetition).payload,
-          },
-        });
-      }
+      commit(MutationTypes.UpdateEvent, {
+        projectId,
+        event
+      });
     },
 
     /**
