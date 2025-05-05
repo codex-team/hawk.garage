@@ -27,8 +27,6 @@ import {
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { patch } from '@n1ru4l/json-patch-plus';
-import cloneDeep from 'lodash.clonedeep';
 
 /**
  * Mutations enum for this module
@@ -292,14 +290,9 @@ const module: Module<EventsModuleState, RootState> = {
         }
 
         /**
-         * Make a deep copy of the event, because we need to avoid mutating the original event
-         */
-        const event = cloneDeep(state.list[key]);
-
-        /**
          * Process the repetition payload
          */
-        event.payload = composeRepetitionPayload(event.payload, repetition);
+        const event = composeRepetitionPayload(state.list[key], repetition);
 
         return event;
       };
@@ -513,17 +506,13 @@ const module: Module<EventsModuleState, RootState> = {
         const isNewDeltaFormat = !repetition.payload;
 
         if (isNewDeltaFormat && originalEvent) {
-          const eventPayload = cloneDeep(originalEvent.payload);
 
           /**
            * If delta is present, apply delta to the event payload, otherwise set the event payload to the original event payload
            */
           processedRepetition = {
             ...repetition,
-            payload: repetition.delta ? patch({
-              left: eventPayload,
-              delta: JSON.parse(repetition.delta),
-            }) : eventPayload,
+            payload: composeRepetitionPayload(originalEvent, repetition).payload,
           };
         } else {
           processedRepetition = repetition;
@@ -548,7 +537,7 @@ const module: Module<EventsModuleState, RootState> = {
           let payload = processedRepetition.payload;
 
           if (originalEvent) {
-            payload = composeRepetitionPayload(originalEvent.payload, processedRepetition);
+            payload = composeRepetitionPayload(originalEvent, processedRepetition).payload;
           }
 
           commit(MutationTypes.AddRepetitionPayload, {
@@ -600,11 +589,9 @@ const module: Module<EventsModuleState, RootState> = {
        * If delta format is new, apply delta to the event payload
        */
       if (event.repetition.delta && isNewDeltaFormat) {
-        const eventPayload = cloneDeep(event.payload);
-
         repetition = {
           ...event.repetition,
-          payload: composeRepetitionPayload(eventPayload, event.repetition),
+          payload: composeRepetitionPayload(event, event.repetition).payload,
         };
       } else if (isNewDeltaFormat) {
         /**
@@ -643,7 +630,7 @@ const module: Module<EventsModuleState, RootState> = {
           projectId,
           event: {
             ...event,
-            payload: composeRepetitionPayload(event.payload, event.repetition),
+            payload: composeRepetitionPayload(event, event.repetition).payload,
           },
         });
       }

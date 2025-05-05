@@ -1,6 +1,6 @@
 import mergeWith from 'lodash.mergewith';
 import cloneDeep from 'lodash.clonedeep';
-import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
 import { DecodedIntegrationToken } from '@hawk.so/types';
 import { patch } from '@n1ru4l/json-patch-plus';
 
@@ -553,38 +553,49 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
  * in case of old delta format, we need to patch the payload
  * in case of new delta format, we need to assemble the payload
  *
- * @param originalEvent {HawkEventPayload} - The original event payload
+ * @param originalEvent {HawkEvent} - The original event
  * @param repetition {HawkEventRepetition} - The repetition to process
- * @returns {HawkEventPayload} The processed repetition payload
+ * @returns {HawkEvent} Updated event with processed repetition payload
  */
-export function composeRepetitionPayload(originalEvent: HawkEventPayload, repetition: HawkEventRepetition | undefined): HawkEventPayload {
+export function composeRepetitionPayload(originalEvent: HawkEvent, repetition: HawkEventRepetition | undefined): HawkEvent {
+  /**
+   * Make a deep copy of the original event, because we need to avoid mutating the original event
+   */
+  const event = cloneDeep(originalEvent);
+
   if (!repetition) {
-    return originalEvent;
+    return event;
   }
 
   /**
    * Already patched payload
    */
   if (repetition.isPayloadPatched) {
-    return repetition.payload;
+    event.payload = repetition.payload;
+
+    return event;
   }
 
   /**
    * New delta format (repetition.delta is not null)
    */
   if (repetition.delta) {
-    return patch({ left: originalEvent, delta: JSON.parse(repetition.delta) });
+    event.payload = patch({ left: originalEvent, delta: JSON.parse(repetition.delta) });
+
+    return event;
   }
 
   /**
    * New delta format (repetition.payload is null) and repetition.delta is null (there is no delta between original and repetition)
    */
   if (!repetition.payload) {
-    return originalEvent;
+    return event;
   }
 
   /**
    * Old delta format (repetition.payload is not null)
    */
-  return repetitionAssembler(originalEvent, repetition.payload) as HawkEventPayload;
+  event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
+
+  return event;
 }
