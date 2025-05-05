@@ -549,7 +549,9 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
 }
 
 /**
- * Processes a repetition payload based on its format and state
+ * Helps to merge original event payload and repetition payload due to delta format,
+ * in case of old delta format, we need to patch the payload
+ * in case of new delta format, we need to assemble the payload
  *
  * @param originalEvent {HawkEventPayload} - The original event payload
  * @param repetition {HawkEventRepetition} - The repetition to process
@@ -568,14 +570,16 @@ export function composeRepetitionPayload(originalEvent: HawkEventPayload, repeti
   }
 
   /**
-   * New delta format (repetition.payload is null)
+   * New delta format (repetition.delta is not null)
+   */
+  if (repetition.delta) {
+    return patch({ left: originalEvent, delta: JSON.parse(repetition.delta) });
+  }
+
+  /**
+   * New delta format (repetition.payload is null) and repetition.delta is null (there is no delta between original and repetition)
    */
   if (!repetition.payload) {
-    if (repetition.delta) {
-      return patch({ left: originalEvent,
-        delta: JSON.parse(repetition.delta) });
-    }
-
     return originalEvent;
   }
 
