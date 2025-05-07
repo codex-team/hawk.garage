@@ -55,6 +55,7 @@ export const QUERY_EVENT = `
             }
             addons
           }
+          delta
         }
         release {
           releaseName
@@ -165,6 +166,7 @@ export const QUERY_LATEST_REPETITIONS = `
             }
             addons
           }
+          delta
         }
       }
     }

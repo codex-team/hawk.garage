@@ -15,19 +15,17 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { repetitionAssembler, filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
+import { filterBeautifiedAddons, groupByGroupingTimestamp, composeFullRepetitionEvent } from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
   EventsSortOrder,
   HawkEvent,
   HawkEventDailyInfo,
-  HawkEventPayload,
   HawkEventRepetition
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { deepMerge } from '@/utils';
 
 /**
  * Mutations enum for this module
@@ -119,7 +117,7 @@ export interface EventsModuleState {
   /**
    * Event's repetitions map
    */
-  repetitions: {[key: string]: HawkEventRepetition[]};
+  repetitions: { [key: string]: HawkEventRepetition[] };
 
   /**
    * Event's filters rules map by project id
@@ -134,7 +132,7 @@ export interface EventsModuleState {
   /**
    * Latest events map by project id
    */
-  latest: {[key: string]: HawkEventDailyInfo};
+  latest: { [key: string]: HawkEventDailyInfo };
 
   /**
    * Search parameter map by project id
@@ -290,11 +288,10 @@ const module: Module<EventsModuleState, RootState> = {
           });
         }
 
-        const event = Object.assign({}, state.list[key]);
-
-        if (repetition && repetition.payload) {
-          event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
-        }
+        /**
+         * Process the repetition payload
+         */
+        const event = composeFullRepetitionEvent(state.list[key], repetition);
 
         return event;
       };
@@ -494,27 +491,40 @@ const module: Module<EventsModuleState, RootState> = {
       const skip = (state.repetitions[key] || []).length;
 
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
-      const repetitions = response.data.project.event.repetitions;
-
-      /**
-       * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
-       */
-      filterBeautifiedAddons(repetitions);
 
       if (originalEvent) {
-        filterBeautifiedAddons([ originalEvent ]);
+        filterBeautifiedAddons([originalEvent]);
       }
 
-      repetitions.map(repetition => {
-        // save to the state
+      /**
+       * If delta is present, apply delta to the event payload
+       */
+      const repetitions = response.data.project.event.repetitions.map(repetition => {
+        let composedRepetition: HawkEventRepetition = repetition;
+
+        /**
+         * If original event is present, apply delta to the repetition payload
+         */
+        if (originalEvent) {
+          composedRepetition = {
+            ...repetition,
+            payload: composeFullRepetitionEvent(originalEvent, repetition).payload,
+          };
+        }
+
+        /**
+         * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
+         */
+        filterBeautifiedAddons([composedRepetition]);
+
         commit(MutationTypes.AddRepetitionPayload, {
           projectId,
           eventId,
-          repetition: {
-            ...repetition,
-            payload: originalEvent ? repetitionAssembler(originalEvent.payload, repetition.payload) as HawkEventPayload : repetition.payload,
-          },
+          repetition: composedRepetition,
+          isPayloadPatched: true,
         });
+
+        return composedRepetition;
       });
 
       return repetitions;
@@ -538,20 +548,13 @@ const module: Module<EventsModuleState, RootState> = {
         return;
       }
 
-      const repetition = event.repetition;
+      const composedRepetition: HawkEvent = composeFullRepetitionEvent(event, event.repetition);
 
-      filterBeautifiedAddons([ event ]);
-      filterBeautifiedAddons([ event.repetition ]);
+      filterBeautifiedAddons([composedRepetition]);
 
-      /**
-       * Updates or sets event's fetched payload in the state
-       */
       commit(MutationTypes.UpdateEvent, {
         projectId,
-        event: {
-          ...event,
-          payload: repetition ? repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload : event.payload,
-        },
+        event: composedRepetition,
       });
     },
 
@@ -712,8 +715,10 @@ const module: Module<EventsModuleState, RootState> = {
 
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      return dispatch(FETCH_RECENT_EVENTS, { projectId,
-        search });
+      return dispatch(FETCH_RECENT_EVENTS, {
+        projectId,
+        search,
+      });
     },
 
     /**
@@ -729,7 +734,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {number} project.days - number of a "few" days
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: {projectId: string; eventId: string; days: number}): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: { projectId: string; eventId: string; days: number }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
 
@@ -856,7 +861,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [ repetition ]);
+        Vue.set(state.repetitions, key, [repetition]);
 
         return;
       }
@@ -994,7 +999,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} project.eventId - event ID
      * @param {EventChartItem[]} project.data - array of dots
      */
-    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[]}): void {
+    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[] }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.list[key];
 
