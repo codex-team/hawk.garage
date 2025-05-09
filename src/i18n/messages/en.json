@@ -50,6 +50,10 @@
     "feedbackButton": {
       "message": "Leave feedback"
     },
+    "consoleOutput": {
+      "show_previous": "Show previous",
+      "hide_previous": "Hide previous"
+    },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",
