@@ -252,11 +252,22 @@ export default Vue.extend({
                 normalizedKey === 'color' ||
                 normalizedKey === 'background-color'
               ) {
-                // Validate that the value is a valid color
+                // Anonymous functions to check color
+                const validHex = (v: string) =>
+                  /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(v);
+                const validRGB = (v: string) =>
+                  /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/.test(v);
+                const validRGBA = (v: string) =>
+                  /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(0|1|0?\.\d+)\s*\)$/.test(
+                    v
+                  );
+                const validColorName = (v: string) => /^[a-zA-Z]+$/.test(v);
+
                 if (
-                  /^#[0-9A-Fa-f]{3,6}$|^rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)$|^rgba\(\d{1,3},\s*\d{1,3},\s*\d{1,3},\s*[0-1](\.[0-9]+)?\)$|^[a-zA-Z]+$/.test(
-                    value
-                  )
+                  validHex(value) ||
+                  validRGB(value) ||
+                  validRGBA(value) ||
+                  validColorName(value)
                 ) {
                   return `${key}: ${value}`;
                 }
