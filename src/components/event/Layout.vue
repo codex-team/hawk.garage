@@ -37,7 +37,7 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
 import { HawkEvent } from '@/types/events';
-import { FETCH_EVENT_REPETITION, VISIT_EVENT } from '@/store/modules/events/actionTypes';
+import { FETCH_EVENT, FETCH_EVENT_REPETITIONS, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { mapGetters } from 'vuex';
 
 export default Vue.extend({
@@ -100,10 +100,14 @@ export default Vue.extend({
     const eventId = this.$route.params.eventId;
     const repetitionId = this.$route.params.repetitionId;
 
-    await this.$store.dispatch(FETCH_EVENT_REPETITION, {
+    await this.$store.dispatch(FETCH_EVENT, {
       projectId: this.projectId,
-      eventId,
-      repetitionId,
+      eventId
+    });
+
+    await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
+      projectId: this.projectId,
+      eventId
     });
 
     this.loading = false;

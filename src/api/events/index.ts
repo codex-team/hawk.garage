@@ -30,7 +30,7 @@ import { APIResponse } from '../../types/api';
  * @param {string} repetitionId - event's concrete repetition. This param is optional
  * @returns {Promise<HawkEvent|null>}
  */
-export async function getEvent(projectId: string, eventId: string, repetitionId: string): Promise<HawkEvent | null> {
+export async function getEvent(projectId: string, eventId: string, repetitionId?: string): Promise<HawkEvent | null> {
   const project = await (await api.callOld(QUERY_EVENT, {
     projectId,
     eventId,
