@@ -1,5 +1,5 @@
 import {
-  FETCH_EVENT_REPETITION,
+  FETCH_EVENT,
   FETCH_EVENT_REPETITIONS,
   FETCH_RECENT_EVENTS,
   INIT_EVENTS_MODULE,
@@ -541,20 +541,16 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - id of an event to fetch its repetition
      * @param {string} payload.repetitionId - id of specific repetition to fetch
      */
-    async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<void> {
-      const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
+    async [FETCH_EVENT]({ commit }, { projectId, eventId }): Promise<void> {
+      const event = await eventsApi.getEvent(projectId, eventId);
 
       if (!event) {
         return;
       }
 
-      const composedRepetition: HawkEvent = composeFullRepetitionEvent(event, event.repetition);
-
-      filterBeautifiedAddons([composedRepetition]);
-
       commit(MutationTypes.UpdateEvent, {
         projectId,
-        event: composedRepetition,
+        event,
       });
     },
 
