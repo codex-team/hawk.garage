@@ -1,7 +1,8 @@
 import mergeWith from 'lodash.mergewith';
 import cloneDeep from 'lodash.clonedeep';
-import { HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
+import { HawkEvent, HawkEventDailyInfo, HawkEventPayload, HawkEventRepetition } from './types/events';
 import { DecodedIntegrationToken } from '@hawk.so/types';
+import { patch } from '@n1ru4l/json-patch-plus';
 
 /**
  * @param currency
@@ -191,7 +192,7 @@ export function deepMerge(target: object, ...sources: object[]): object {
  * @param repetition - the difference with its repetition, for the repetition we want to display
  * @returns fully assembled payload of the current repetition
  */
-export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string ]: any} ): HawkEventPayload {
+export function repetitionAssembler(originalEvent: HawkEventPayload, repetition: { [key: string]: any }): HawkEventPayload {
   const customizer = (originalParam: any, repetitionParam: any): any => {
     if (repetitionParam === null) {
       return originalParam;
@@ -204,9 +205,9 @@ export function repetitionAssembler(originalEvent: HawkEventPayload, repetition:
        */
       if (originalParam === null) {
         return repetitionParam;
-      /**
-       * Otherwise, we need to recursively merge original and repetition values
-       */
+        /**
+         * Otherwise, we need to recursively merge original and repetition values
+         */
       } else {
         return repetitionAssembler(originalParam, repetitionParam);
       }
@@ -315,7 +316,7 @@ export function escape(string: string): string;
  *                              replaced and total length of new chars added
  * @returns object with escaped string, count and length
  */
-export function escape(string: string, withCount: boolean): {value: string; count: number; length: number};
+export function escape(string: string, withCount: boolean): { value: string; count: number; length: number };
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
@@ -325,7 +326,7 @@ export function escape(string: string, withCount: boolean): {value: string; coun
  *                              replaced and total length of new chars added
  * @returns {string | {value, count, length}} escaped string or object with escaped string, count and length
  */
-export function escape(string: string, withCount = false): string | {value: string; count: number; length: number} {
+export function escape(string: string, withCount = false): string | { value: string; count: number; length: number } {
   if (!string) {
     return '';
   }
@@ -464,7 +465,7 @@ export function pad(number: number, length = 2): string {
  * @param repetitions
  * @see https://github.com/codex-team/hawk.garage/issues/436
  */
-export function filterBeautifiedAddons(repetitions: HawkEventRepetition[]): void {
+export function filterBeautifiedAddons(repetitions: Omit<HawkEventRepetition, 'delta'>[]): void {
   const addonsBeautified = {
     userAgent: 'beautifiedUserAgent',
   };
@@ -545,4 +546,61 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
   }
 
   return 'linux';
+}
+
+/**
+ * Helps to merge original event and repetition due to delta format,
+ * in case of old delta format, we need to patch the payload
+ * in case of new delta format, we need to assemble the payload
+ *
+ * @param originalEvent {HawkEvent} - The original event
+ * @param repetition {HawkEventRepetition} - The repetition to process
+ * @returns {HawkEvent} Updated event with processed repetition payload
+ */
+export function composeFullRepetitionEvent(originalEvent: HawkEvent, repetition: HawkEventRepetition | undefined): HawkEvent {
+
+  /**
+   * Make a deep copy of the original event, because we need to avoid mutating the original event
+   */
+  const event = cloneDeep(originalEvent);
+
+  if (!repetition) {
+    return event;
+  }
+
+  /**
+   * Already patched payload
+   */
+  if (repetition.isPayloadPatched) {
+    event.payload = repetition.payload;
+
+    return event;
+  }
+
+  /**
+   * New delta format (repetition.delta is not null)
+   */
+  if (repetition.delta) {
+    event.payload = patch({
+      left: event.payload,
+      delta: JSON.parse(repetition.delta)
+    });
+
+    return event;
+  }
+
+  /**
+   * New delta format (repetition.payload is null) and repetition.delta is null (there is no delta between original and repetition)
+   */
+  if (!repetition.payload) {
+    return event;
+  }
+
+  /**
+   * Old delta format (repetition.payload is not null)
+   * @todo remove after July 5 2025
+   */
+  event.payload = repetitionAssembler(event.payload, repetition.payload) as HawkEventPayload;
+
+  return event;
 }
