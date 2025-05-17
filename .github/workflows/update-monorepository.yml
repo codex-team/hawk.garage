@@ -7,7 +7,7 @@ env:
   REPOSITORY_MONO_PATH: garage
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Mono repository update
         uses: peter-evans/repository-dispatch@v1
