@@ -1,79 +1,103 @@
 <template>
-  <div class='console-output'>
+  <div class="console-output">
     <div
-      v-for='(log, index) in logs'
-      :key='index'
-      class='log-entry'
-      :class='logClass(log.method)'
+      v-if="logs.length > 5"
+      class="button-container"
     >
-      <div class='log-content'>
-        <!-- Stack toggle arrow (only if stack exists and is not empty) -->
-        <span v-if='log.stack && log.stack.length > 0' class='log-arrow' @click='toggleStack(index)'>
-          <span :class='{ rotated: expandedStack[index] }'>▶</span>
+      <button
+        class="show-more-btn"
+        @click="expandedLogs = !expandedLogs"
+      >
+        <span
+          class="log-arrow"
+          :class="{ rotated: expandedLogs }"
+        >▲</span>
+        {{
+          expandedLogs
+            ? $t("components.consoleOutput.hide_previous")
+            : $t("components.consoleOutput.show_previous")
+        }}
+      </button>
+    </div>
+    <div
+      v-for="(log, index) in displayedLogs"
+      :key="`${log.timestamp}_${index}`"
+      class="log-entry"
+      :class="logClass(log.method)"
+    >
+      <div class="log-content">
+        <span
+          v-if="log.stack && log.stack.length > 0"
+          class="log-arrow"
+          @click="toggleStack(`${log.timestamp}_${index}`)"
+        >
+          <span
+            :class="{ rotated: expandedStack[`${log.timestamp}_${index}`] }"
+          >▶</span>
         </span>
-
-        <!-- Log message -->
-        <span class='log-message'>
-          <template v-if="log.type">
-            <template v-if="log.type === 'log'">
-              {{ log.message }}
-            </template>
-            <template v-else>
-              {{ log.type }}: {{ log.message }}
-            </template>
-          </template>
-          <template v-else>
-            {{ log.message }}
-          </template>
-        </span>
-
-        <!-- Timestamp -->
-        <span class='log-timestamp'>
+        <span
+          class="log-message"
+          v-html="formatMessage(log)"
+        />
+        <span class="log-timestamp">
           {{ formatTimestamp(log.timestamp) }}
         </span>
       </div>
-
-      <!-- Collapsible stack trace -->
-      <div v-if='expandedStack[index]' class='log-stack'>
+      <div
+        v-if="expandedStack[`${log.timestamp}_${index}`]"
+        class="log-stack"
+      >
         {{ formatStack(log.stack) }}
       </div>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import Vue, { PropType } from 'vue';
 
-/**
- * Custom Renderer for Console Output
- */
+interface ConsoleLogEvent {
+  method: string;
+  timestamp: string;
+  type?: string;
+  message: string;
+  stack?: string;
+  fileLine?: string;
+  styles?: string[];
+}
+
 export default Vue.extend({
   name: 'ConsoleOutput',
   props: {
-    /**
-     * Console logs object
-     */
     value: {
-      type: Object as PropType<Record<string, any>>,
+      type: [Object, Array] as PropType<Record<string, any> | any[]>,
       required: true,
     },
   },
   data() {
     return {
-      expandedStack: {} as Record<number, boolean>,
+      expandedStack: {} as Record<string, boolean>,
+      expandedLogs: false,
     };
   },
   computed: {
-    /**
-     * Extract logs array from object
-     */
-    logs(): any[] {
+    logs(): ConsoleLogEvent[] {
       return Object.values(this.value);
+    },
+    displayedLogs(): ConsoleLogEvent[] {
+      if (!this.expandedLogs && this.logs.length > 5) {
+        return this.logs.slice(-5);
+      }
+
+      return this.logs;
     },
   },
   methods: {
     /**
-     * Returns CSS class based on log method
+     * Returns the CSS class name for styling console log entries based on log level
+     *
+     * @param {string} method - The console method/log level ('error', 'warn', 'info', or 'debug')
+     * @returns {string} The corresponding CSS class name for styling the log entry
      */
     logClass(method: string): string {
       const logClasses: Record<string, string> = {
@@ -82,126 +106,323 @@ export default Vue.extend({
         info: 'log-info',
         debug: 'log-debug',
       };
+
       return logClasses[method?.toLowerCase()] || 'log-default';
     },
-
     /**
-     * Formats timestamp with milliseconds
+     * Formats a timestamp into a human-readable time string with milliseconds
+     *
+     * @param {string} timestamp - The timestamp to format
+     * @returns {string} Formatted time string in HH:MM:SS:mmm format
      */
     formatTimestamp(timestamp: string): string {
       const date = new Date(timestamp);
-
-      // Форматируем основную часть времени без миллисекунд
       const timeString = date.toLocaleTimeString(undefined, {
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
       });
-
-      // Добавляем миллисекунды вручную, заменяя `,` на `:`
       const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
 
       return `${timeString}:${milliseconds}`;
     },
-
     /**
-     * Toggle stack trace visibility
-     */
-    toggleStack(index: number) {
-      this.$set(this.expandedStack, index, !this.expandedStack[index]);
-    },
-
-    /**
-     * Format stack trace by removing unnecessary blank lines
+     * Formats a stack trace string, providing a fallback message if no trace is available
+     *
+     * @param {string | null | undefined} stack - The stack trace to format
+     * @returns {string} Formatted stack trace or fallback message
      */
     formatStack(stack: string | null | undefined): string {
       return stack?.trim() || 'No stack trace available';
     },
-  }
-},);
+    /**
+     * Toggles the visibility of the stack trace for a specific log entry
+     *
+     * @param {string} logKey - The unique identifier for the log entry
+     */
+    toggleStack(logKey: string) {
+      this.$set(this.expandedStack, logKey, !this.expandedStack[logKey]);
+    },
+    /**
+     * Sanitizes a string by replacing special HTML characters with their entities
+     *
+     * @param {string} str - The string to sanitize
+     * @returns {string} The sanitized string with HTML entities
+     */
+    sanitizeHTML(str: string): string {
+      // Replace special characters with their HTML entities
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    },
+    /**
+     * Formats a console log message with proper styling and sanitization
+     *
+     * @param {ConsoleLogEvent} log - The console log event to format
+     * @returns {string} HTML-formatted and sanitized log message with applied styles
+     */
+    formatMessage(log: ConsoleLogEvent): string {
+      // Add log type prefix except for regular console.log
+      const prefix =
+        log.method === 'log' ? '' : `${log.type || log.method.toUpperCase()} `;
+
+      if (!log.message.includes('%c')) {
+        return this.sanitizeHTML(prefix + log.message);
+      }
+
+      const parts = log.message.split('%c');
+      const styles = log.styles || [];
+      let result = this.sanitizeHTML(prefix);
+
+      parts.forEach((part, index) => {
+        if (index === 0) {
+          result += this.sanitizeHTML(part);
+        } else {
+          const style = styles[index - 1] || '';
+          const sanitizedStyle = this.sanitizeStyle(style);
+
+          result += `<span style="${sanitizedStyle}">${this.sanitizeHTML(
+            part
+          )}</span>`;
+        }
+      });
+
+      return result;
+    },
+    /**
+     * Sanitizes CSS styles by filtering allowed properties and values
+     *
+     * @param {string} style - The CSS style string to sanitize
+     * @returns {string} Sanitized CSS style string containing only allowed properties and values
+     */
+    sanitizeStyle(style: string): string {
+      // List of allowed CSS properties
+      const allowedProperties = [
+        'color',
+        'background-color',
+        'font-weight',
+        'font-style',
+        'text-decoration',
+        'font-size',
+        'font-family',
+      ];
+
+      // List of allowed values for specific properties
+      const allowedValues: Record<string, string[]> = {
+        'font-weight': [
+          'normal',
+          'bold',
+          'lighter',
+          'bolder',
+          '100',
+          '200',
+          '300',
+          '400',
+          '500',
+          '600',
+          '700',
+          '800',
+          '900',
+        ],
+        'font-style': ['normal', 'italic', 'oblique'],
+        'text-decoration': ['none', 'underline', 'line-through', 'overline'],
+      };
+
+      const sanitizedStyles = style
+        .split(';')
+        .map((prop) => {
+          const [key, value] = prop.split(':').map((s) => s.trim());
+          const normalizedKey = key.toLowerCase();
+
+          if (allowedProperties.includes(normalizedKey)) {
+            // Check values for properties with a limited set of allowed values
+            if (allowedValues[normalizedKey]) {
+              const normalizedValue = value.toLowerCase();
+
+              if (allowedValues[normalizedKey].includes(normalizedValue)) {
+                return `${key}: ${value}`;
+              }
+            } else {
+              // For other properties, validate the value format
+              if (
+                normalizedKey === 'color' ||
+                normalizedKey === 'background-color'
+              ) {
+                // Anonymous functions to check color
+                const validHex = (v: string) =>
+                  /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(v);
+                const validRGB = (v: string) =>
+                  /^rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\)$/.test(v);
+                const validRGBA = (v: string) =>
+                  /^rgba\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*(0|1|0?\.\d+)\s*\)$/.test(
+                    v
+                  );
+                const validColorName = (v: string) => /^[a-zA-Z]+$/.test(v);
+
+                if (
+                  validHex(value) ||
+                  validRGB(value) ||
+                  validRGBA(value) ||
+                  validColorName(value)
+                ) {
+                  return `${key}: ${value}`;
+                }
+              } else if (normalizedKey === 'font-size') {
+                // Validate that the value is a valid font size
+                if (/^\d+(\.\d+)?(px|em|rem|pt|%)$/.test(value)) {
+                  return `${key}: ${value}`;
+                }
+              } else {
+                // For other properties, just return the key-value pair
+                return `${key}: ${value}`;
+              }
+            }
+          }
+
+          return '';
+        })
+        .filter(Boolean)
+        .join('; ');
+
+      return sanitizedStyles;
+    },
+  },
+});
 </script>
 
 <style scoped>
-/* General log entry container */
-.log-entry {
+.console-output {
+  padding: 10px;
+  font-size: 11px;
   font-family: var(--font-monospace);
-  padding: 2px 4px;
-  border-radius: 5px;
-  white-space: pre-wrap;
-  margin-bottom: 2px;
+  --item-border-radius: 5px;
+}
+
+.log-entry {
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-second);
+  margin-bottom: 2px;
+  padding: 2px 4px;
   color: var(--color-text-main);
+  white-space: pre-wrap;
+  background: var(--color-bg-second);
   border-left: 3px solid color-mod(var(--color-text-main) alpha(10%));
-}
-/* Log content: arrow, message, timestamp */
-.log-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-/* Stack toggle arrow */
-.log-arrow {
-  padding: 0 4px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  color: var(--color-text-second);
-  transition: transform 0.2s ease-in-out;
-  &:hover {
-    opacity: 0.6;
+  border-radius: var(--item-border-radius);
+
+  &.log-error {
+    background: color-mod(var(--color-indicator-critical) alpha(15%));
+    border-left-color: var(--color-indicator-critical-dark);
+  }
+
+  &.log-warn {
+    color: var(--color-indicator-warning);
+    background: color-mod(var(--color-indicator-warning) alpha(15%));
+    border-left-color: var(--color-indicator-warning);
+  }
+
+  &.log-info {
+    color: var(--color-indicator-medium);
+    background: color-mod(var(--color-indicator-medium) alpha(15%));
+    border-left-color: var(--color-indicator-medium-dark);
+  }
+
+  &.log-debug {
+    color: var(--color-indicator-positive);
+    background: color-mod(var(--color-indicator-positive) alpha(15%));
+    border-left-color: var(--color-indicator-positive);
+  }
+
+  &.log-default {
+    color: var(--color-text-main);
+    background: var(--color-bg-second);
+    border-left-color: color-mod(var(--color-text-main) alpha(10%));
   }
 }
-.log-arrow.rotated {
-  transform: rotate(90deg);
+
+.log-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 }
-/* Log message */
+
+.log-arrow {
+  padding: 0 4px;
+  color: var(--color-text-second);
+  transition: transform 0.2s ease-in-out;
+  user-select: none;
+
+  &:hover {
+    color: var(--color-text-main);
+    cursor: pointer;
+  }
+
+  .rotated {
+    display: inline-block;
+    transform: rotate(90deg);
+  }
+}
+
 .log-message {
   flex-grow: 1;
-  color: var(--color-text-main);
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
-/* Timestamp */
+
 .log-timestamp {
+  display: flex;
+  align-items: center;
+  min-width: 93px;
+  height: 21px;
   color: var(--color-text-second);
-  font-size: 10px;
-  margin-left: 10px;
 }
-/* Collapsible stack trace */
+
 .log-stack {
-  font-size: var(--font-small);
   margin: 2px 0;
   padding: 3px 8px;
-  border-radius: 4px;
+  color: var(--color-text-main);
   background: var(--color-bg-third);
-  color: var(--color-text-main);
+  border-radius: var(--item-border-radius);
 }
-/* Log colors */
-.log-error {
-  background: color-mod(var(--color-indicator-critical) alpha(15%));
-  color: var(--color-indicator-critical);
-  border-left-color: var(--color-indicator-critical-dark);
-}
-.log-warn {
-  background: color-mod(var(--color-indicator-warning) alpha(15%));
-  color: var(--color-indicator-warning);
-  border-left-color: var(--color-indicator-warning);
-}
-.log-info {
-  background: color-mod(var(--color-indicator-medium) alpha(15%));
-  color: var(--color-indicator-medium);
-  border-left-color: var(--color-indicator-medium-dark);
-}
-.log-debug {
-  background: color-mod(var(--color-indicator-positive) alpha(15%));
-  color: var(--color-indicator-positive);
-  border-left-color: var(--color-indicator-positive);
-}
-.log-default {
-  background: var(--color-bg-second);
-  color: var(--color-text-main);
-  border-left-color: color-mod(var(--color-text-main) alpha(10%));
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  height: 25px;
+  margin-bottom: 2px;
+
+  .show-more-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: var(--color-text-second);
+    text-align: left;
+    background-color: inherit;
+    border: none;
+    border-radius: var(--item-border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: var(--color-bg-second);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    span {
+      display: inline-block;
+      margin-right: 8px;
+      color: var(--color-text-second);
+
+      &.rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
 </style>
