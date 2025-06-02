@@ -202,8 +202,8 @@ import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
 import Icon from '../utils/Icon.vue';
 import notifier from 'codex-notifier';
-import axios from 'axios';
-import { API_ENDPOINT } from '../../api';
+// import axios from 'axios';
+// import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
@@ -390,72 +390,17 @@ export default Vue.extend({
      * Dynamic text for payment button
      */
     payButtonText(): string {
-      // if (this.selectedCard && this.selectedCard.id === NEW_CARD_ID) {
       return this.$t('billing.paymentDetails.goToPaymentService').toString();
-      // }
-
-      // return this.$t('billing.paymentDetails.payWithSelectedCard').toString();
-    },
-
-    /**
-     * Due date of the current workspace tariff plan
-     */
-    planDueDate(): Date {
-      const lastChargeDate = new Date(this.workspace.lastChargeDate);
-
-      if (this.workspace.isDebug) {
-        lastChargeDate.setDate(lastChargeDate.getDate() + 1);
-      } else {
-        lastChargeDate.setMonth(lastChargeDate.getMonth() + 1);
-      }
-
-      return new Date(lastChargeDate);
-    },
-
-    /**
-     * Has workspace actual tariff plan or it's expired
-     */
-    isTariffPlanExpired(): boolean {
-      const date = new Date();
-
-      return date > this.planDueDate;
-    },
-
-    /**
-     * Next payment date
-     */
-    nextPaymentDate(): Date {
-      const date = new Date();
-
-      /**
-       * If the tariff plan is expired, we need to debit money now
-       * Otherwise, we will debit money when the tariff plan expires
-       */
-      if (this.isTariffPlanExpired) {
-        if (this.workspace.isDebug) {
-          date.setDate(date.getDate() + 1);
-        } else {
-          date.setMonth(date.getMonth() + 1);
-        }
-
-        return date;
-      }
-
-      return this.planDueDate;
-    },
-
-    /**
-     * Next payment date as string
-     */
-    nextPaymentDateString(): string {
-      return this.nextPaymentDate.toISOString();
     },
 
     /**
      * Next payment date in seconds
      */
     nextPaymentDateInSeconds(): number {
-      return Math.floor(this.nextPaymentDate.getTime() / 1000);
+      if (!this.paymentData?.nextPaymentDate) {
+        return 0;
+      }
+      return Math.floor(new Date(this.paymentData.nextPaymentDate).getTime() / 1000);
     },
 
     /**
@@ -615,8 +560,8 @@ export default Vue.extend({
           },
         };
 
-        if (!this.isTariffPlanExpired) {
-          paymentData.cloudPayments.recurrent.startDate = this.nextPaymentDateString;
+        if (data.nextPaymentDate) {
+          paymentData.cloudPayments.recurrent.startDate = data.nextPaymentDate;
           paymentData.cloudPayments.recurrent.amount = data.plan.monthlyCharge;
         }
       }
