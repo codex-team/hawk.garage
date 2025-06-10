@@ -180,7 +180,7 @@ export default Vue.extend({
 
       parts.forEach((part, index) => {
         if (index === 0) {
-          result += this.sanitizeHTML(part);
+          result += this.sanitizeHTML(part) + ' ';
         } else {
           const style = styles[index - 1] || '';
           const sanitizedStyle = this.sanitizeStyle(style);
@@ -296,7 +296,6 @@ export default Vue.extend({
 
 <style scoped>
 .console-output {
-  padding: 10px;
   font-size: 11px;
   font-family: var(--font-monospace);
   --item-border-radius: 5px;
