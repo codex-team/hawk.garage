@@ -180,14 +180,12 @@ export default Vue.extend({
 
       parts.forEach((part, index) => {
         if (index === 0) {
-          result += this.sanitizeHTML(part) + ' ';
+          result += this.sanitizeHTML(part);
         } else {
           const style = styles[index - 1] || '';
           const sanitizedStyle = this.sanitizeStyle(style);
 
-          result += `<span style="${sanitizedStyle}">${this.sanitizeHTML(
-            part
-          )}</span>`;
+          result += `<span style="${sanitizedStyle}">${this.sanitizeHTML(part)} </span>`;
         }
       });
 
