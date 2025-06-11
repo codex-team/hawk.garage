@@ -185,9 +185,7 @@ export default Vue.extend({
           const style = styles[index - 1] || '';
           const sanitizedStyle = this.sanitizeStyle(style);
 
-          result += `<span style="${sanitizedStyle}">${this.sanitizeHTML(
-            part
-          )}</span>`;
+          result += `<span style="${sanitizedStyle}">${this.sanitizeHTML(part)} </span>`;
         }
       });
 
@@ -296,7 +294,6 @@ export default Vue.extend({
 
 <style scoped>
 .console-output {
-  padding: 10px;
   font-size: 11px;
   font-family: var(--font-monospace);
   --item-border-radius: 5px;
