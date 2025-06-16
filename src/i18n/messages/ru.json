@@ -347,6 +347,8 @@
     "expired": "Истек",
     "boost": "Увеличить",
     "blocked": "Заблокирован",
+    "workspaceBlockedBanner": "Воркспейс {workspaceName} заблокирован",
+    "workspaceBlockedBannerDescription": "Вы не получаете новые события. Расширьте или продлите тарифный план, чтобы возобновить получение событий",
     "operations": {
       "chargeForPlan": "Оплата за тарифный план",
       "cardLinkingChange": "Списание для проверки карты",

@@ -24,6 +24,9 @@
           :placeholder="searchFieldPlaceholder"
           :isCMDKEnabled="true"
         />
+        <div v-if="isWorkspaceBlocked" class="project-overview__blocked-banner">
+          <span v-html="blockedBannerText"></span>
+        </div>
         <template v-if="!isListEmpty">
           <div
             v-for="(eventsByDate, date) in recentEvents"
@@ -176,6 +179,29 @@ export default {
      */
     project() {
       return this.$store.getters.getProjectById(this.projectId);
+    },
+
+    /**
+     * Check if workspace is blocked
+     */
+    isWorkspaceBlocked() {
+      if (!this.project) return false;
+      const workspace = this.$store.getters.getWorkspaceById(this.project.workspaceId);
+      return workspace?.isBlocked;
+    },
+
+    /**
+     * Text for the blocked banner
+     */
+    blockedBannerText() {
+      const workspaceName =
+        this.$store.getters.getWorkspaceById(this.project.workspaceId).name || 'this workspace';
+
+      return (
+        this.$t('billing.workspaceBlockedBanner', { workspaceName }) +
+        `<br>` +
+        this.$t('billing.workspaceBlockedBannerDescription')
+      );
     },
 
     /**
@@ -483,6 +509,24 @@ export default {
       margin: 40px 0 20px;
       background: var(--color-text-second);
       border-radius: 2px;
+    }
+
+    &__blocked-banner {
+      display: block;
+      height: auto;
+      margin: 15px;
+      width: calc(100% - 40px);
+      padding: 15px;
+      color: var(--color-indicator-critical);
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: 0.16px;
+      background: color-mod(var(--color-indicator-critical) alpha(20%));
+      border: 1px solid color-mod(var(--color-indicator-critical) alpha(20%));
+      border-radius: 6px;
+      text-align: center;
+      white-space: normal;
     }
   }
 

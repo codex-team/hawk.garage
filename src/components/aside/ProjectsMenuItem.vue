@@ -23,6 +23,11 @@
         >
           {{ badge }}
         </ProjectBadge>
+        <Icon
+          v-if="isWorkspaceBlocked"
+          symbol="attention-sign"
+          class="project-menu-item__blocked-icon"
+        />
       </div>
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
@@ -42,6 +47,7 @@ import EntityImage from '../utils/EntityImage';
 import { misTranslit, escape } from '../../utils';
 import ProjectBadge from '@/components/project/ProjectBadge';
 import { projectBadges } from '@/mixins/projectBadges';
+import Icon from '../utils/Icon.vue';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -49,6 +55,7 @@ export default {
     ProjectBadge,
     Badge,
     EntityImage,
+    Icon,
   },
   mixins: [ projectBadges ],
   props: {
@@ -104,6 +111,10 @@ export default {
       } else {
         return name;
       }
+    },
+    isWorkspaceBlocked() {
+      const workspace = this.$store.getters.getWorkspaceById(this.project.workspaceId);
+      return workspace?.isBlocked;
     },
   },
 };
@@ -177,6 +188,13 @@ export default {
 
     &__events-number {
       margin: auto 0 auto auto;
+    }
+
+    &__blocked-icon {
+      margin-left: 8px;
+      width: 18px;
+      height: 18px;
+      color: var(--color-indicator-critical);
     }
   }
 </style>

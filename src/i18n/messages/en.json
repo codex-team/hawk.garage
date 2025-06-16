@@ -347,6 +347,8 @@
     "expired": "Expired",
     "boost": "Boost",
     "blocked": "Blocked",
+    "workspaceBlockedBanner": "Workspace {workspaceName} is blocked",
+    "workspaceBlockedBannerDescription": "You are not receiving new events. Please upgrade or prolong your tariff plan to resume receiving events",
     "operations": {
       "chargeForPlan": "Payment for a plan",
       "cardLinkingChange": "Charge to confirm a card",
