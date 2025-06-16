@@ -325,6 +325,11 @@
     },
     "errors": {
       "The workspace was not found": "Воркспейс не найден"
+    },
+    "blocked": {
+      "banner": "Воркспейс {workspaceName} заблокирован.",
+      "description": "Вы не получаете новые события. Расширьте или продлите тарифный план, чтобы возобновить получение событий",
+      "incrementLimit": "Увеличить лимит от 99₽"
     }
   },
   "billing": {
@@ -347,8 +352,6 @@
     "expired": "Истек",
     "boost": "Увеличить",
     "blocked": "Заблокирован",
-    "workspaceBlockedBanner": "Воркспейс {workspaceName} заблокирован",
-    "workspaceBlockedBannerDescription": "Вы не получаете новые события. Расширьте или продлите тарифный план, чтобы возобновить получение событий",
     "operations": {
       "chargeForPlan": "Оплата за тарифный план",
       "cardLinkingChange": "Списание для проверки карты",

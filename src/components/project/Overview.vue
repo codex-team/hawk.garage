@@ -25,7 +25,14 @@
           :isCMDKEnabled="true"
         />
         <div v-if="isWorkspaceBlocked" class="project-overview__blocked-banner">
-          <span v-html="blockedBannerText"></span>
+          <div v-html="blockedBannerText" class="project-overview__blocked-banner-header"></div>
+          <div>{{ $t('workspaces.blocked.description') }}</div>
+          <UiButton
+            :content="$t('workspaces.blocked.incrementLimit')"
+            class="project-overview__blocked-banner-button"
+            submit
+            @click="incrementEventsLimit"
+          />
         </div>
         <template v-if="!isListEmpty">
           <div
@@ -96,6 +103,9 @@ import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
 import EventItemSkeleton from './EventItemSkeleton';
+import UiButton from '../utils/UiButton.vue';
+import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { FETCH_PLANS } from '../../store/modules/plans/actionTypes';
 
 /**
  * Maximum length of the search query
@@ -111,6 +121,7 @@ export default {
     Chart,
     SearchField,
     EventItemSkeleton,
+    UiButton,
   },
   data() {
     return {
@@ -197,11 +208,7 @@ export default {
       const workspaceName =
         this.$store.getters.getWorkspaceById(this.project.workspaceId).name || 'this workspace';
 
-      return (
-        this.$t('billing.workspaceBlockedBanner', { workspaceName }) +
-        `<br>` +
-        this.$t('billing.workspaceBlockedBannerDescription')
-      );
+      return this.$t('workspaces.blocked.banner', { workspaceName });
     },
 
     /**
@@ -438,6 +445,17 @@ export default {
         this.isLoadingEvents = false;
       }
     },
+
+    incrementEventsLimit() {
+      this.$store.dispatch(FETCH_PLANS).then(() => {
+        this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'ChooseTariffPlanPopup',
+          data: {
+            workspaceId: this.project.workspaceId,
+          },
+        });
+      });
+    },
   },
 };
 </script>
@@ -512,21 +530,26 @@ export default {
     }
 
     &__blocked-banner {
-      display: block;
       height: auto;
-      margin: 15px;
-      width: calc(100% - 40px);
+      margin: 15px 0;
+      width: 100%;
       padding: 15px;
       color: var(--color-indicator-critical);
-      font-weight: bold;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 1.5;
       letter-spacing: 0.16px;
       background: color-mod(var(--color-indicator-critical) alpha(20%));
       border: 1px solid color-mod(var(--color-indicator-critical) alpha(20%));
       border-radius: 6px;
-      text-align: center;
-      white-space: normal;
+
+      &-header {
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+
+      &-button {
+        margin-top: 15px;
+      }
     }
   }
 
