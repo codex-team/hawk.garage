@@ -12,12 +12,16 @@
         <span class="workspace-info__name-text" :title="workspace.name">
           {{ workspace.name }}
         </span>
-        <StatusBlock
+        <router-link
           v-if="workspace.isBlocked"
-          :content="$t('billing.blocked')"
-          bad
-          class="workspace-info__blocked"
-        />
+          :to="{
+            name: 'workspace-settings-billing',
+            params: { workspaceId: workspace.id },
+          }"
+          class="workspace-info__blocked-link"
+        >
+          <StatusBlock :content="$t('billing.blocked')" bad class="workspace-info__blocked" />
+        </router-link>
       </div>
       <router-link
         class="workspace-info__settings-link"
@@ -210,6 +214,14 @@ export default Vue.extend({
   &__blocked {
     display: inline-block;
     margin-left: 8px;
+  }
+
+  &__blocked-link {
+    text-decoration: none;
+
+    &:hover .workspace-info__blocked {
+      opacity: 0.8;
+    }
   }
 }
 </style>
