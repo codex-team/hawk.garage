@@ -112,9 +112,19 @@ export default {
         return name;
       }
     },
+
+    /**
+     * Current workspace
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceById(this.project.workspaceId);
+    },
+
+    /**
+     * Check if workspace is blocked
+     */
     isWorkspaceBlocked() {
-      const workspace = this.$store.getters.getWorkspaceById(this.project.workspaceId);
-      return workspace?.isBlocked;
+      return this.workspace?.isBlocked;
     },
   },
 };

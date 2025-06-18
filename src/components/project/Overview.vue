@@ -193,22 +193,25 @@ export default {
     },
 
     /**
+     * Current workspace
+     */
+     workspace() {
+      if (!this.project) return null;
+      return this.$store.getters.getWorkspaceById(this.project.workspaceId);
+    },
+
+    /**
      * Check if workspace is blocked
      */
     isWorkspaceBlocked() {
-      if (!this.project) return false;
-      const workspace = this.$store.getters.getWorkspaceById(this.project.workspaceId);
-      return workspace?.isBlocked;
+      return this.workspace?.isBlocked;
     },
 
     /**
      * Text for the blocked banner
      */
     blockedBannerText() {
-      const workspaceName =
-        this.$store.getters.getWorkspaceById(this.project.workspaceId).name || 'this workspace';
-
-      return this.$t('workspaces.blocked.banner', { workspaceName });
+      return this.$t('workspaces.blocked.banner', { workspaceName: this.workspace?.name });
     },
 
     /**
