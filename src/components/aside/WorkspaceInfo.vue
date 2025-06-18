@@ -9,7 +9,19 @@
     />
     <div class="workspace-info__wrapper">
       <div class="workspace-info__name">
-        {{ workspace.name }}
+        <span class="workspace-info__name-text" :title="workspace.name">
+          {{ workspace.name }}
+        </span>
+        <router-link
+          v-if="workspace.isBlocked"
+          :to="{
+            name: 'workspace-settings-billing',
+            params: { workspaceId: workspace.id },
+          }"
+          class="workspace-info__blocked-link"
+        >
+          <StatusBlock :content="$t('billing.blocked')" bad class="workspace-info__blocked" />
+        </router-link>
       </div>
       <router-link
         class="workspace-info__settings-link"
@@ -57,6 +69,7 @@ import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { Plan } from '../../types/plan';
 import CircleProgress from '../utils/CircleProgress.vue';
 import EventsLimitIndicator from './EventsLimitIndicator.vue';
+import StatusBlock from '../utils/StatusBlock.vue';
 
 export default Vue.extend({
   name: 'WorkspaceInfo',
@@ -64,6 +77,7 @@ export default Vue.extend({
     EntityImage,
     CircleProgress,
     Icon,
+    StatusBlock,
   },
   props: {
     /**
@@ -155,10 +169,18 @@ export default Vue.extend({
   }
 
   &__name {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+  }
+
+  &__name-text {
     overflow: hidden;
     font-weight: 600;
     white-space: nowrap;
     text-overflow: ellipsis;
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   &__settings-link {
@@ -187,6 +209,19 @@ export default Vue.extend({
     position: relative;
     margin-left: auto;
     line-height: 0px;
+  }
+
+  &__blocked {
+    display: inline-block;
+    margin-left: 8px;
+  }
+
+  &__blocked-link {
+    text-decoration: none;
+
+    &:hover .workspace-info__blocked {
+      opacity: 0.8;
+    }
   }
 }
 </style>

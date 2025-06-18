@@ -50,6 +50,10 @@
     "feedbackButton": {
       "message": "Leave feedback"
     },
+    "consoleOutput": {
+      "show_previous": "Show previous",
+      "hide_previous": "Hide previous"
+    },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",
@@ -321,6 +325,11 @@
     },
     "errors": {
       "The workspace was not found": "The workspace was not found"
+    },
+    "blocked": {
+      "banner": "Workspace {workspaceName} is blocked.",
+      "description": "You are not receiving new events. Please upgrade or prolong your tariff plan to resume receiving events",
+      "incrementLimit": "Increment limit from 99₽"
     }
   },
   "billing": {

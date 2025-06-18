@@ -24,6 +24,16 @@
           :placeholder="searchFieldPlaceholder"
           :isCMDKEnabled="true"
         />
+        <div v-if="isWorkspaceBlocked" class="project-overview__blocked-banner">
+          <div v-html="blockedBannerText" class="project-overview__blocked-banner-header"></div>
+          <div>{{ $t('workspaces.blocked.description') }}</div>
+          <UiButton
+            :content="$t('workspaces.blocked.incrementLimit')"
+            class="project-overview__blocked-banner-button"
+            submit
+            @click="incrementEventsLimit"
+          />
+        </div>
         <template v-if="!isListEmpty">
           <div
             v-for="(eventsByDate, date) in recentEvents"
@@ -93,6 +103,9 @@ import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
 import EventItemSkeleton from './EventItemSkeleton';
+import UiButton from '../utils/UiButton.vue';
+import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { FETCH_PLANS } from '../../store/modules/plans/actionTypes';
 
 /**
  * Maximum length of the search query
@@ -108,6 +121,7 @@ export default {
     Chart,
     SearchField,
     EventItemSkeleton,
+    UiButton,
   },
   data() {
     return {
@@ -176,6 +190,28 @@ export default {
      */
     project() {
       return this.$store.getters.getProjectById(this.projectId);
+    },
+
+    /**
+     * Current workspace
+     */
+     workspace() {
+      if (!this.project) return null;
+      return this.$store.getters.getWorkspaceById(this.project.workspaceId);
+    },
+
+    /**
+     * Check if workspace is blocked
+     */
+    isWorkspaceBlocked() {
+      return this.workspace?.isBlocked;
+    },
+
+    /**
+     * Text for the blocked banner
+     */
+    blockedBannerText() {
+      return this.$t('workspaces.blocked.banner', { workspaceName: this.workspace?.name });
     },
 
     /**
@@ -412,6 +448,17 @@ export default {
         this.isLoadingEvents = false;
       }
     },
+
+    incrementEventsLimit() {
+      this.$store.dispatch(FETCH_PLANS).then(() => {
+        this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'ChooseTariffPlanPopup',
+          data: {
+            workspaceId: this.project.workspaceId,
+          },
+        });
+      });
+    },
   },
 };
 </script>
@@ -483,6 +530,29 @@ export default {
       margin: 40px 0 20px;
       background: var(--color-text-second);
       border-radius: 2px;
+    }
+
+    &__blocked-banner {
+      height: auto;
+      margin: 15px 0;
+      width: 100%;
+      padding: 15px;
+      color: var(--color-indicator-critical);
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.16px;
+      background: color-mod(var(--color-indicator-critical) alpha(20%));
+      border: 1px solid color-mod(var(--color-indicator-critical) alpha(20%));
+      border-radius: 6px;
+
+      &-header {
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+
+      &-button {
+        margin-top: 15px;
+      }
     }
   }
 
