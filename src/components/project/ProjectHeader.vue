@@ -15,7 +15,10 @@
           size="26"
         />
         <div class="project-header__row-title">
-          <span class="project-header__row-title-text">{{ nameWithoutBadges(project.name) }}</span>
+          <span
+            class="project-header__row-title-text"
+            :title="project.name"
+          >{{ nameWithoutBadges(project.name) }}</span>
           <ProjectBadge
             v-for="(badge, index) in projectBadges(project.name)"
             :key="index"

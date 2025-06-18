@@ -16,7 +16,7 @@
         class="project-menu-item__name"
       >
         <!-- eslint-disable vue/no-v-html -->
-        <span v-html="name" />
+        <span v-html="name" :title="project.name" />
         <ProjectBadge
           v-for="(badge, index) in projectBadges(project.name)"
           :key="index"
