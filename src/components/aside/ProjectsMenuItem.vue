@@ -16,7 +16,7 @@
         class="project-menu-item__name"
       >
         <!-- eslint-disable vue/no-v-html -->
-        <span v-html="name" />
+        <span v-html="name" :title="project.name" />
         <ProjectBadge
           v-for="(badge, index) in projectBadges(project.name)"
           :key="index"
@@ -202,8 +202,8 @@ export default {
 
     &__blocked-icon {
       margin-left: 8px;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       color: var(--color-indicator-critical);
     }
   }
