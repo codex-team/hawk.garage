@@ -37,11 +37,13 @@
       </div>
     </div>
     <div class="project-add-catcher__catalog">
-      <BlockedWorkspaceBanner
-        v-if="isWorkspaceBlocked"
-        :workspace="workspace"
-        class="project-add-catcher__blocked-banner"
-      />
+      <div class="project-add-catcher__blocked-banner-container">
+        <BlockedWorkspaceBanner
+          v-if="isWorkspaceBlocked"
+          :workspace="workspace"
+          class="project-add-catcher__blocked-banner"
+        />
+      </div>
       <div class="project-add-catcher__catalog-container">
         <h2 class="project-add-catcher__catalog-header">
           {{ $t('components.catalog.selectCatcherHeading') }}
@@ -365,6 +367,10 @@ export default {
       box-shadow: 0 6px 12px -5px rgba(0, 0, 0, 0.15);
       transform: translateY(-2px);
     }
+  }
+
+  &__blocked-banner-container {
+    padding: 0 var(--layout-padding-inline) 15px;
   }
 }
 </style>

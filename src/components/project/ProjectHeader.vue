@@ -18,18 +18,19 @@
           <span
             class="project-header__row-title-text"
             :title="project.name"
-          >{{ nameWithoutBadges(project.name) }}</span>
+          >{{
+            nameWithoutBadges(project.name)
+          }}</span>
           <ProjectBadge
             v-for="(badge, index) in projectBadges(project.name)"
             :key="index"
           >
             {{ badge }}
           </ProjectBadge>
-          <StatusBlock
+          <Icon
             v-if="workspace && workspace.isBlocked"
-            :content="$t('billing.blocked')"
-            bad
-            class="project-header__blocked"
+            symbol="attention-sign"
+            class="project-header__blocked-icon"
           />
         </div>
       </div>
@@ -64,7 +65,7 @@ import ProjectBadge from './ProjectBadge.vue';
 import { projectBadges } from '../../mixins/projectBadges';
 import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import UiButton from '../utils/UiButton.vue';
-import StatusBlock from '../utils/StatusBlock.vue';
+import Icon from '../utils/Icon.vue';
 import { Project } from '@/types/project';
 
 export default Vue.extend({
@@ -74,7 +75,7 @@ export default Vue.extend({
     EntityImage,
     TabBar,
     UiButton,
-    StatusBlock,
+    Icon,
   },
   mixins: [ projectBadges ],
   computed: {
@@ -151,8 +152,12 @@ export default Vue.extend({
     }
   }
 
-  &__blocked {
+  &__blocked-icon {
     margin-left: 8px;
+    width: 16px;
+    height: 16px;
+    color: var(--color-indicator-critical);
+    flex-shrink: 0;
   }
 }
 

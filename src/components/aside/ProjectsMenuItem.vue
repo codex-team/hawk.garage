@@ -202,8 +202,8 @@ export default {
 
     &__blocked-icon {
       margin-left: 8px;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       color: var(--color-indicator-critical);
     }
   }
