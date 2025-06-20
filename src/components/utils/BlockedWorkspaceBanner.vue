@@ -23,10 +23,17 @@ export default {
   },
   props: {
     /**
-     * Workspace object
+     * Workspace name
      */
-    workspace: {
-      type: Object,
+    workspaceName: {
+      type: String,
+      required: true,
+    },
+    /**
+     * Workspace id
+     */
+    workspaceId: {
+      type: String,
       required: true,
     },
   },
@@ -35,7 +42,7 @@ export default {
      * Text for the blocked banner
      */
     blockedBannerText() {
-      return this.$t('workspaces.blocked.banner', { workspaceName: this.workspace?.name });
+      return this.$t('workspaces.blocked.banner', { workspaceName: this.workspaceName });
     },
   },
   methods: {
@@ -44,7 +51,7 @@ export default {
         this.$store.dispatch(SET_MODAL_DIALOG, {
           component: 'ChooseTariffPlanPopup',
           data: {
-            workspaceId: this.workspace.id,
+            workspaceId: this.workspaceId,
           },
         });
       });

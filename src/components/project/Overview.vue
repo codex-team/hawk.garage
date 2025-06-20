@@ -26,7 +26,8 @@
         />
         <BlockedWorkspaceBanner
           v-if="isWorkspaceBlocked"
-          :workspace="workspace"
+          :workspace-name="workspace.name"
+          :workspace-id="workspace.id"
         />
         <template v-if="!isListEmpty">
           <div
