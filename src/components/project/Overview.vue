@@ -19,10 +19,15 @@
         <SearchField
           v-model="searchQuery"
           class="search-container"
-          @input="debouncedSearch"
           skin="fancy"
           :placeholder="searchFieldPlaceholder"
-          :isCMDKEnabled="true"
+          :is-c-m-d-k-enabled="true"
+          @input="debouncedSearch"
+        />
+        <BlockedWorkspaceBanner
+          v-if="isWorkspaceBlocked"
+          :workspace-name="workspace.name"
+          :workspace-id="workspace.id"
         />
         <template v-if="!isListEmpty">
           <div
@@ -42,13 +47,19 @@
               class="project-overview__event"
               :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
-              @showEventOverview="showEventOverview(project.id, dailyEventInfo.groupHash, dailyEventInfo.lastRepetitionId)"
+              @showEventOverview="
+                showEventOverview(
+                  project.id,
+                  dailyEventInfo.groupHash,
+                  dailyEventInfo.lastRepetitionId
+                )
+              "
             />
           </div>
           <div
             v-if="!isListEmpty && !noMoreEvents && !isLoadingEvents"
             class="project-overview__load-more"
-            :class="{'loader': isLoadingEvents}"
+            :class="{ loader: isLoadingEvents }"
             @click="loadMoreEvents"
           >
             <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
@@ -85,7 +96,10 @@ import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
-import { UPDATE_PROJECT_LAST_VISIT, FETCH_CHART_DATA } from '../../store/modules/projects/actionTypes';
+import {
+  UPDATE_PROJECT_LAST_VISIT,
+  FETCH_CHART_DATA
+} from '../../store/modules/projects/actionTypes';
 import { debounce } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
@@ -93,6 +107,7 @@ import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
 import EventItemSkeleton from './EventItemSkeleton';
+import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
 
 /**
  * Maximum length of the search query
@@ -108,6 +123,7 @@ export default {
     Chart,
     SearchField,
     EventItemSkeleton,
+    BlockedWorkspaceBanner,
   },
   data() {
     return {
@@ -179,6 +195,24 @@ export default {
     },
 
     /**
+     * Current workspace
+     */
+    workspace() {
+      if (!this.project) {
+        return null;
+      }
+
+      return this.$store.getters.getWorkspaceById(this.project.workspaceId);
+    },
+
+    /**
+     * Check if workspace is blocked
+     */
+    isWorkspaceBlocked() {
+      return this.workspace?.isBlocked;
+    },
+
+    /**
      * Project recent errors
      *
      * @returns {RecentInfoByDate}
@@ -202,7 +236,9 @@ export default {
     },
 
     searchFieldPlaceholder() {
-      return this.$t('forms.searchFieldWithCMDK', { cmd: getPlatform() === 'macos' ? '⌘' : 'Ctrl' });
+      return this.$t('forms.searchFieldWithCMDK', {
+        cmd: getPlatform() === 'macos' ? '⌘' : 'Ctrl',
+      });
     },
   },
 
@@ -219,8 +255,10 @@ export default {
     }, 500);
 
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, { projectId: this.projectId,
-        search: this.searchQuery  });
+      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+        projectId: this.projectId,
+        search: this.searchQuery,
+      });
 
       const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
 
@@ -324,7 +362,9 @@ export default {
      * @param {GroupedEvent} event - event to display assignees list
      */
     showAssignees(projectId, groupHash, event) {
-      const boundingClientRect = event.target.closest('.event-item__assignee').getBoundingClientRect();
+      const boundingClientRect = event.target
+        .closest('.event-item__assignee')
+        .getBoundingClientRect();
 
       this.isAssigneesShowed = true;
       this.eventGroupHash = groupHash;
@@ -417,76 +457,76 @@ export default {
 </script>
 
 <style>
-  @import '../../styles/custom-properties.css';
+@import '../../styles/custom-properties.css';
 
-  .project-overview {
+.project-overview {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  &__content {
+    align-self: stretch;
+    overflow-y: auto;
+    @apply --hide-scrollbar;
+  }
+
+  &__chart {
+  }
+
+  &__events {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-
-    &__content {
-      align-self: stretch;
-      overflow-y: auto;
-      @apply --hide-scrollbar;
-    }
-
-    &__chart {
-    }
-
-    &__events {
-      display: flex;
-      flex-direction: column;
-      padding: 0 var(--layout-padding-inline) 15px;
-    }
-
-    &__events-by-date {
-      margin-top: 25px;
-    }
-
-    &__date {
-      margin-bottom: 20px;
-      margin-left: 11px;
-      color: var(--color-text-second);
-      font-size: 14px;
-    }
-
-    &__event {
-      cursor: pointer;
-    }
-
-    &__assignees-list {
-      position: absolute;
-      transform: translateX(-100%) translate(-15px, -5px);
-    }
-
-    &__load-more {
-      height: 46px;
-      margin-top: 50px;
-      padding: 13px 11px 13px 15px;
-      font-weight: 500;
-      line-height: 20px;
-      background-color: var(--color-bg-main);
-      border-radius: 9px;
-      cursor: pointer;
-    }
-
-    &__no-events-placeholder {
-      color: var(--color-text-second);
-      font-size: 14px;
-      letter-spacing: 0;
-    }
-
-    &__divider {
-      width: 68px;
-      height: 3px;
-      margin: 40px 0 20px;
-      background: var(--color-text-second);
-      border-radius: 2px;
-    }
+    padding: 0 var(--layout-padding-inline) 15px;
   }
 
-  .search-container {
-    margin-top: 16px;
+  &__events-by-date {
+    margin-top: 25px;
   }
+
+  &__date {
+    margin-bottom: 20px;
+    margin-left: 11px;
+    color: var(--color-text-second);
+    font-size: 14px;
+  }
+
+  &__event {
+    cursor: pointer;
+  }
+
+  &__assignees-list {
+    position: absolute;
+    transform: translateX(-100%) translate(-15px, -5px);
+  }
+
+  &__load-more {
+    height: 46px;
+    margin-top: 50px;
+    padding: 13px 11px 13px 15px;
+    font-weight: 500;
+    line-height: 20px;
+    background-color: var(--color-bg-main);
+    border-radius: 9px;
+    cursor: pointer;
+  }
+
+  &__no-events-placeholder {
+    color: var(--color-text-second);
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+
+  &__divider {
+    width: 68px;
+    height: 3px;
+    margin: 40px 0 20px;
+    background: var(--color-text-second);
+    border-radius: 2px;
+  }
+}
+
+.search-container {
+  margin-top: 16px;
+}
 </style>

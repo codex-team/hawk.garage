@@ -16,13 +16,18 @@
         class="project-menu-item__name"
       >
         <!-- eslint-disable vue/no-v-html -->
-        <span v-html="name" />
+        <span v-html="name" :title="project.name" />
         <ProjectBadge
           v-for="(badge, index) in projectBadges(project.name)"
           :key="index"
         >
           {{ badge }}
         </ProjectBadge>
+        <Icon
+          v-if="isWorkspaceBlocked"
+          symbol="attention-sign"
+          class="project-menu-item__blocked-icon"
+        />
       </div>
       <div class="project-menu-item__last-event">
         {{ lastEventTitle }}
@@ -42,6 +47,7 @@ import EntityImage from '../utils/EntityImage';
 import { misTranslit, escape } from '../../utils';
 import ProjectBadge from '@/components/project/ProjectBadge';
 import { projectBadges } from '@/mixins/projectBadges';
+import Icon from '../utils/Icon.vue';
 
 export default {
   name: 'ProjectsMenuItem',
@@ -49,6 +55,7 @@ export default {
     ProjectBadge,
     Badge,
     EntityImage,
+    Icon,
   },
   mixins: [ projectBadges ],
   props: {
@@ -104,6 +111,20 @@ export default {
       } else {
         return name;
       }
+    },
+
+    /**
+     * Current workspace
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceById(this.project.workspaceId);
+    },
+
+    /**
+     * Check if workspace is blocked
+     */
+    isWorkspaceBlocked() {
+      return this.workspace?.isBlocked;
     },
   },
 };
@@ -177,6 +198,13 @@ export default {
 
     &__events-number {
       margin: auto 0 auto auto;
+    }
+
+    &__blocked-icon {
+      margin-left: 8px;
+      width: 16px;
+      height: 16px;
+      color: var(--color-indicator-critical);
     }
   }
 </style>
