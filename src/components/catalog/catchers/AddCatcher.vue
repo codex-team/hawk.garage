@@ -40,7 +40,8 @@
       <div class="project-add-catcher__blocked-banner-container">
         <BlockedWorkspaceBanner
           v-if="isWorkspaceBlocked"
-          :workspace="workspace"
+          :workspace-name="workspace.name"
+          :workspace-id="workspace.id"
           class="project-add-catcher__blocked-banner"
         />
       </div>
