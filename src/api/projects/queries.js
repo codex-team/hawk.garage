@@ -1,5 +1,5 @@
 import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
 } from '../fragments';
 
 /**
@@ -17,8 +17,13 @@ export const MUTATION_CREATE_PROJECT = `
       name
       image
       token
+      notifications {
+        ...ProjectNotificationsRule
+      }
     }
   }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
 `;
 
 // language=GraphQL
