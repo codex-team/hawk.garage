@@ -19,7 +19,7 @@
         :is-visited="isVisited"
       />
     </div>
-    <div class="event-item__info">
+    <div class="event-item__info" :class="{ 'event-item__info--blurred': isEventAfterExpiry }">
       {{ event.payload.title }}
     </div>
     <Icon
@@ -46,6 +46,7 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
+import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscription';
 
 export default {
   name: 'EventItem',
@@ -120,6 +121,39 @@ export default {
 
       return mark;
     },
+
+    /**
+     * Returns project id from the route
+     */
+    projectId() {
+      return this.$route.params.projectId;
+    },
+
+    /**
+     * The project that owns the event
+     */
+    project() {
+      return this.$store.getters.getProjectById(this.projectId);
+    },
+
+    /**
+     * The workspace that owns the event
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    },
+
+    /**
+     * Check if event was received after subscription expiration
+     *
+     * @returns {boolean}
+     */
+    isEventAfterExpiry() {
+
+      console.log(this.lastOccurrenceTimestamp);
+      console.log(this.workspace.lastChargeDate);
+      return isEventAfterSubscriptionExpiry(this.lastOccurrenceTimestamp, this.workspace.lastChargeDate);
+    },
   },
 };
 </script>
@@ -153,6 +187,11 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
 
+      &--blurred {
+        filter: blur(4px);
+        user-select: none;
+        pointer-events: none;
+      }
     }
 
     &__assignee {

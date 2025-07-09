@@ -50,8 +50,11 @@
         {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
       </div>
 
-      <h1 class="event-header__title">
-        {{ (!loading) ? event.payload.title : $t('event.loading') | trim(300) }}
+      <h1
+        class="event-header__title"
+        :class="{ 'event-header__title--blurred': isEventAfterExpiry }"
+      >
+        {{ !loading ? event.payload.title : $t('event.loading') | trim(300) }}
       </h1>
       <Filepath
         class="event-header__location"
@@ -129,6 +132,7 @@ import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
+import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscription';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -188,6 +192,15 @@ export default Vue.extend({
       }
 
       return url;
+    },
+
+    /**
+     * Check if event was received after subscription expiration
+     *
+     * @returns {boolean}
+     */
+     isEventAfterExpiry(): boolean {
+      return isEventAfterSubscriptionExpiry(this.event.payload.timestamp, this.workspace.lastChargeDate);
     },
 
     /**
@@ -322,6 +335,12 @@ export default Vue.extend({
       font-size: 18px;
       line-height: 1.67;
       text-overflow: ellipsis;
+
+      &--blurred {
+        filter: blur(4px);
+        user-select: none;
+        pointer-events: none;
+      }
     }
 
     &__date {
