@@ -216,7 +216,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/RecoverPassword.vue'),
     },
     {
-      path: '/unsubscribe/:ruleId/:projectId',
+      path: '/unsubscribe/:projectId/:ruleId',
       beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'unsubscribe-handler' */'./unsubscribeHandler')).default(to, from, next),
     }
   ],
