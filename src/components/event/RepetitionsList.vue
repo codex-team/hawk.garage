@@ -19,7 +19,7 @@
       >
         <!-- Time (always exists) -->
         <td class="repetitions-table__time">
-          {{ repetition.payload.timestamp | prettyTime }}
+          {{ repetition.timestamp | prettyTime }}
         </td>
 
         <!-- User (optional) -->
