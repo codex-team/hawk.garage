@@ -210,11 +210,10 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
 /**
  * Send request for unsubscribing from notifications
  *
- * @param {ProjectNotificationRulePointer} payload - unsubscribe payload
- * @returns {Promise<ProjectNotificationsRule>}
+ * @param payload - unsubscribe payload
  */
 export async function unsubscribeFromNotifications(payload) {
-  return (await api.callOld(MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS, {
+  return (await api.call(MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS, {
     input: payload,
   })).unsubscribeFromNotifications;
 }
