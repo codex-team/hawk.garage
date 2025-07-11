@@ -224,7 +224,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
-  const routesAvailableWithoutAuth = /^\/(join)/;
+  const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
 
   if (store.getters.isAuthenticated) {
     if (authRoutes.test(to.fullPath)) {

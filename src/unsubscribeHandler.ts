@@ -1,7 +1,6 @@
 import { NavigationGuard } from 'vue-router';
 import notifier from 'codex-notifier';
 import i18n from './i18n';
-import store from './store';
 import * as projectsApi from './api/projects';
 
 const unsubscribeHandler: NavigationGuard = async function (to, from, next) {
