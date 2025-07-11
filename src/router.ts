@@ -218,7 +218,7 @@ const router = new Router({
     {
       path: '/unsubscribe/:projectId/:ruleId',
       beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'unsubscribe-handler' */'./unsubscribeHandler')).default(to, from, next),
-    }
+    },
   ],
 });
 

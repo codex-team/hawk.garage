@@ -26,6 +26,6 @@ const unsubscribeHandler: NavigationGuard = async function (to, from, next) {
   }
 
   next('/');
-}
+};
 
 export default unsubscribeHandler;
