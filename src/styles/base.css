@@ -192,7 +192,28 @@ body .cdx-notify {
   &__btns-wrapper {
     margin-top: 8px;
   }
+
 }
+
+@media (--media-mobile) {
+  body .cdx-notify {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin-top: 0;
+    padding: 30px 40px;
+    font-size: 36px;
+  }
+
+  body .cdx-notifies {
+    left: 20px;
+  }
+
+  body .cdx-notify__cross {
+    display: none;
+  }
+}
+
 
 /**
  * Loader
