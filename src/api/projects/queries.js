@@ -1,5 +1,5 @@
 import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
+  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
 } from '../fragments';
 
 /**
@@ -174,6 +174,19 @@ export const MUTATION_REMOVE_PROJECT = `
 export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
   mutation toggleProjectNotificationsRuleEnabledState( $input: ProjectNotificationRulePointer! ){
     toggleProjectNotificationsRuleEnabledState(
+      input: $input
+    ) {
+      ...ProjectNotificationsRule
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+`;
+
+// language=GraphQL
+export const MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS = `
+  mutation unsubscribeFromNotifications( $input: ProjectNotificationRulePointer! ){
+    unsubscribeFromNotifications(
       input: $input
     ) {
       ...ProjectNotificationsRule
