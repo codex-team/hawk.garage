@@ -14,13 +14,13 @@ const unsubscribeHandler: NavigationGuard = async function (to, from, next) {
     });
 
     notifier.show({
-      message: i18n.t('notifications.unsubscribe.success').toString(),
+      message: i18n.t('projects.settings.patterns.notifications.unsubscribe.success').toString(),
       style: 'success',
       time: 5000,
     });
   } catch (error) {
     notifier.show({
-      message: i18n.t('notifications.unsubscribe.error').toString(),
+      message: i18n.t('projects.settings.patterns.notifications.unsubscribe.error').toString(),
       style: 'error',
       time: 5000,
     });
