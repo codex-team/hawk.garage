@@ -11,6 +11,7 @@ import {
   MUTATION_REMOVE_PROJECT_PATTERN,
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
+  MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS,
   QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
 } from './queries';
 import * as api from '../index.ts';
@@ -204,4 +205,15 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
     days,
     timezoneOffset,
   })).project.chartData;
+}
+
+/**
+ * Send request for unsubscribing from notifications
+ *
+ * @param payload - unsubscribe payload
+ */
+export async function unsubscribeFromNotifications(payload) {
+  return (await api.call(MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS, {
+    input: payload,
+  })).unsubscribeFromNotifications;
 }

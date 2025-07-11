@@ -465,6 +465,12 @@ type Mutation {
     input: ProjectNotificationRulePointer
   ): ProjectNotificationsRule
 
+  """Unsubscribe from notifications by disabling the rule"""
+  unsubscribeFromNotifications(
+    """Data for unsubscribing"""
+    input: ProjectNotificationRulePointer!
+  ): ProjectNotificationsRule
+
   """Create project in given workspace"""
   createProject(
     """Workspace ID"""

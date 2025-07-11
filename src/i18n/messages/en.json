@@ -197,7 +197,12 @@
           "patternInvalid": "Invalid regular expression pattern",
           "patternSaveError": "Error while adding pattern",
           "patternUpdateError": "Error while updating pattern",
-          "patternDeleteError": "Error while deleting pattern"
+          "patternDeleteError": "Error while deleting pattern",
+          "unsubscribe": {
+            "success": "Successfully unsubscribed from notifications",
+            "error": "Failed to unsubscribe from notifications",
+            "invalidLink": "Invalid unsubscribe link"
+          }
         }
       }
     },
