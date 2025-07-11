@@ -184,6 +184,19 @@ export const MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE = `
 `;
 
 // language=GraphQL
+export const MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS = `
+  mutation unsubscribeFromNotifications( $input: ProjectNotificationRulePointer! ){
+    unsubscribeFromNotifications(
+      input: $input
+    ) {
+      ...ProjectNotificationsRule
+    }
+  }
+
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
+`;
+
+// language=GraphQL
 /**
  * Get data for chart
  */
