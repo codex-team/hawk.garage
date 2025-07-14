@@ -20,7 +20,7 @@
       />
     </div>
     <div class="event-item__info" :class="{ 'event-item__info--blurred': isEventAfterExpiry }">
-      {{ event.payload.title }}
+      {{ isEventAfterExpiry ? '••••••••••••••••••••••••••••••••••••••••••••••••••••••••••' : event.payload.title }}
     </div>
     <Icon
       v-if="!event.assignee"
