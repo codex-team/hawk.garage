@@ -48,7 +48,6 @@ import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
 import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscription';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
-import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 
 export default {
   name: 'EventItem',
@@ -164,13 +163,11 @@ export default {
     handleClick() {
       if (this.isEventAfterExpiry) {
         // If event is blurred, open modal with plans
-        this.$store.dispatch(FETCH_PLANS).then(() => {
-          this.$store.dispatch(SET_MODAL_DIALOG, {
-            component: 'EventLimitModal',
-            data: {
-              workspaceId: this.workspace.id,
-            },
-          });
+        this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'EventLimitModal',
+          data: {
+            workspaceId: this.workspace.id,
+          },
         });
       } else {
         // Otherwise open event overview
