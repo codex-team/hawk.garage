@@ -6,7 +6,7 @@
       [`event-item--${mark}-label`]: true,
     }"
     data-ripple
-    @click="$emit('showEventOverview')"
+    @click="handleClick"
   >
     <EventMark :mark="mark" />
     <div class="event-item__time">
@@ -20,7 +20,7 @@
       />
     </div>
     <div class="event-item__info" :class="{ 'event-item__info--blurred': isEventAfterExpiry }">
-      {{ isEventAfterExpiry ? '••••••••••••••••••••••••••••••••••••••••••••••••••••••••••' : event.payload.title }}
+      {{ event.payload.title }}
     </div>
     <Icon
       v-if="!event.assignee"
@@ -47,6 +47,8 @@ import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
 import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscription';
+import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
+import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 
 export default {
   name: 'EventItem',
@@ -149,10 +151,31 @@ export default {
      * @returns {boolean}
      */
     isEventAfterExpiry() {
-
-      console.log(this.lastOccurrenceTimestamp);
-      console.log(this.workspace.lastChargeDate);
-      return isEventAfterSubscriptionExpiry(this.lastOccurrenceTimestamp, this.workspace.lastChargeDate);
+      return isEventAfterSubscriptionExpiry(
+        this.lastOccurrenceTimestamp,
+        this.workspace.lastChargeDate
+      );
+    },
+  },
+  methods: {
+    /**
+     * Handle click on event item
+     */
+    handleClick() {
+      if (this.isEventAfterExpiry) {
+        // If event is blurred, open modal with plans
+        this.$store.dispatch(FETCH_PLANS).then(() => {
+          this.$store.dispatch(SET_MODAL_DIALOG, {
+            component: 'EventLimitModal',
+            data: {
+              workspaceId: this.workspace.id,
+            },
+          });
+        });
+      } else {
+        // Otherwise open event overview
+        this.$emit('showEventOverview');
+      }
     },
   },
 };
