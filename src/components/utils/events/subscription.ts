@@ -9,7 +9,8 @@ export function isEventAfterSubscriptionExpiry(
   eventTimestamp: number,
   workspaceLastChargeDate: Date
 ): boolean {
-  const eventDate = new Date(eventTimestamp * 1000);
+  const SECONDS_TO_MILLISECONDS = 1000;
+  const eventDate = new Date(eventTimestamp * SECONDS_TO_MILLISECONDS);
   const subscriptionExpiry = new Date(workspaceLastChargeDate);
 
   return eventDate > subscriptionExpiry;
