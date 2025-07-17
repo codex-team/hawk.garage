@@ -329,7 +329,7 @@
     "blocked": {
       "banner": "Workspace {workspaceName} is blocked.",
       "description": "You are not receiving new events. Please upgrade or prolong your tariff plan to resume receiving events",
-      "incrementLimit": "Increment limit from 99₽"
+      "upgradeButton": "Increase limit from 99₽"
     }
   },
   "billing": {
@@ -471,9 +471,9 @@
       "noname": "No name"
     },
     "limit": {
-      "title": "Event Unavailable",
-      "description": "This event is outside the current tariff plan limit.",
-      "upgradeButton": "Increase limit from 99₽"
+      "title": "Event Hidden",
+      "description": "We received this event but hid it because your subscription has expired.",
+      "upgradeButton": "Pay and view event"
     }
   },
   "common": {
