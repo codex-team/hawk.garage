@@ -3,7 +3,7 @@
     <div v-html="blockedBannerText" class="blocked-workspace-banner__header"></div>
     <div>{{ $t('workspaces.blocked.description') }}</div>
     <UiButton
-      :content="$t('workspaces.blocked.incrementLimit')"
+      :content="$t('workspaces.blocked.upgradeButton')"
       class="blocked-workspace-banner__button"
       submit
       @click="incrementEventsLimit"
