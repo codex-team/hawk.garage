@@ -61,16 +61,6 @@ export default Vue.extend({
   padding: 40px;
   text-align: center;
 
-  &__icon {
-    margin-bottom: 20px;
-
-    .icon {
-      width: 48px;
-      height: 48px;
-      color: var(--color-indicator-critical);
-    }
-  }
-
   &__title {
     margin: 0 0 15px;
     font-weight: bold;
