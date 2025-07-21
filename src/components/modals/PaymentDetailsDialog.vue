@@ -599,6 +599,7 @@ export default Vue.extend({
             });
 
             this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
+            this.$root.$emit('workspacePlanChanged', this.workspaceId);
           },
           onFail: () => {
             notifier.show({

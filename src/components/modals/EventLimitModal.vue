@@ -1,9 +1,6 @@
 <template>
   <PopupDialog @close="$emit('close')">
     <div class="event-limit-modal">
-      <div class="event-limit-modal__icon">
-        <Icon symbol="lock" />
-      </div>
       <h2 class="event-limit-modal__title">
         {{ $t('event.limit.title') }}
       </h2>
@@ -21,7 +18,6 @@
 import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import UiButton from '../utils/UiButton.vue';
-import Icon from '../utils/Icon.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 
@@ -30,7 +26,6 @@ export default Vue.extend({
   components: {
     PopupDialog,
     UiButton,
-    Icon,
   },
   props: {
     /**
