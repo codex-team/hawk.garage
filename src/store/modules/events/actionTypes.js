@@ -6,7 +6,7 @@ export const INIT_EVENTS_MODULE = 'INIT_EVENTS_MODULE';
 /**
  * Action for fetching event concrete repetition
  */
-export const FETCH_EVENT = 'FETCH_EVENT';
+export const FETCH_EVENT_REPETITION = 'FETCH_EVENT_REPETITION';
 
 /**
  * Fetch project recent events

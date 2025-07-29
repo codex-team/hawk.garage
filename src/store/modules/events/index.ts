@@ -1,5 +1,4 @@
 import {
-  FETCH_EVENT,
   FETCH_EVENT_REPETITIONS,
   FETCH_RECENT_EVENTS,
   INIT_EVENTS_MODULE,
@@ -9,7 +8,8 @@ import {
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  GET_CHART_DATA,
+  FETCH_EVENT_REPETITION
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
@@ -493,7 +493,7 @@ const module: Module<EventsModuleState, RootState> = {
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
 
       if (originalEvent) {
-        filterBeautifiedAddons([originalEvent]);
+        filterBeautifiedAddons([ originalEvent ]);
       }
 
       /**
@@ -515,7 +515,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
          */
-        filterBeautifiedAddons([composedRepetition]);
+        filterBeautifiedAddons([ composedRepetition ]);
 
         commit(MutationTypes.AddRepetitionPayload, {
           projectId,
@@ -525,6 +525,11 @@ const module: Module<EventsModuleState, RootState> = {
         });
 
         return composedRepetition;
+      });
+
+      commit(MutationTypes.UpdateEvent, {
+        projectId,
+        event: originalEvent,
       });
 
       return repetitions;
@@ -541,19 +546,28 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - id of an event to fetch its repetition
      * @param {string} payload.repetitionId - id of specific repetition to fetch
      */
-    async [FETCH_EVENT]({ commit }, { projectId, eventId }): Promise<void> {
-      const event = await eventsApi.getEvent(projectId, eventId);
+    async [FETCH_EVENT_REPETITION]({ commit }, { projectId, eventId, repetitionId }): Promise<void> {
+      const event = await eventsApi.getEvent(projectId, eventId, repetitionId);
 
       if (!event) {
         return;
       }
 
+      const repetition = event.repetition;
+
+      repetition.payload = composeFullRepetitionEvent(event, repetition).payload;
+
+      filterBeautifiedAddons([ event ]);
+      filterBeautifiedAddons([ event.repetition ]);
+
       commit(MutationTypes.UpdateEvent, {
         projectId,
-        event,
+        event: {
+          ...event,
+          payload: repetition.payload,
+        },
       });
     },
-
     /**
      * Send request to mark event as visited
      *
@@ -857,7 +871,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
 
       if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [repetition]);
+        Vue.set(state.repetitions, key, [ repetition ]);
 
         return;
       }
