@@ -73,7 +73,7 @@ import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
-import { composePayment } from '@/api/billing/requests';
+import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',
@@ -157,7 +157,7 @@ export default Vue.extend({
               time: 5000,
             });
 
-            this.$root.$emit('workspacePlanChanged', this.workspaceId);
+            await this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
             await this.$store.dispatch(RESET_MODAL_DIALOG);
 
             return;

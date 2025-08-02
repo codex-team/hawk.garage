@@ -46,9 +46,8 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
-import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscription';
+import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscriptionExpiry';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
-import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 
 export default {
   name: 'EventItem',
@@ -156,14 +155,6 @@ export default {
         this.workspace.lastChargeDate
       );
     },
-  },
-  mounted() {
-    // Listen for workspace plan changes to refresh expired events
-    this.$root.$on('workspacePlanChanged', (workspaceId) => {
-      if (workspaceId === this.workspace.id) {
-        this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
-      }
-    });
   },
   beforeDestroy() {
     this.$root.$off('workspacePlanChanged');
