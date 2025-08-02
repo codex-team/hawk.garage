@@ -157,8 +157,8 @@ export default Vue.extend({
               time: 5000,
             });
 
-            this.$root.$emit('workspacePlanChanged', this.workspaceId);
             await this.$store.dispatch(RESET_MODAL_DIALOG);
+            this.$root.$emit('workspacePlanChanged', this.workspaceId);
 
             return;
           },
