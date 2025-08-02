@@ -592,14 +592,13 @@ export default Vue.extend({
            */
         },
         {
-          onSuccess: () => {
+          onSuccess: async () => {
             notifier.show({
               message: this.$i18n.t('billing.widget.notifications.success') as string,
               style: 'success',
             });
 
-            this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
-            this.$root.$emit('workspacePlanChanged', this.workspaceId);
+            await this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
           },
           onFail: () => {
             notifier.show({
