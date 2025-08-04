@@ -26,11 +26,13 @@
           {{ $t('projects.settings.notifications.ruleIncludingLabel') }}
         </span>
         <div class="n-rule__filter-rules">
-          <StatusBlock
-            v-for="(filter, index) in rule.including"
-            :key="index"
-            :content="filter"
-          />
+          <template v-for="(filter, index) in rule.including">
+            <StatusBlock
+              v-if="filter"
+              :key="index"
+              :content="filter"
+            />
+          </template>
         </div>
       </div>
       <div
@@ -41,12 +43,14 @@
           {{ $t('projects.settings.notifications.ruleExcludingLabel') }}
         </span>
         <div class="n-rule__filter-rules">
-          <StatusBlock
-            v-for="(filter, index) in rule.excluding"
-            :key="index"
-            :content="filter"
-            bad
-          />
+          <template v-for="(filter, index) in rule.excluding">
+            <StatusBlock
+              v-if="filter"
+              :key="index"
+              :content="filter"
+              bad
+            />
+          </template>
         </div>
       </div>
     </section>
