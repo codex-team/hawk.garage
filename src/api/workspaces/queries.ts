@@ -50,8 +50,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
               starred
               ignored
             }
+            timestamp
             payload {
-              timestamp
               title
             }
           }

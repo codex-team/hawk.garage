@@ -20,11 +20,11 @@ export const QUERY_EVENT = `
           starred
           ignored
         }
+        timestamp
         payload {
           title
           type
           release
-          timestamp
           context
           user {
             id
@@ -40,9 +40,9 @@ export const QUERY_EVENT = `
         usersAffected
         repetition(id: $repetitionId) {
           id
+          timestamp
           payload {
             release
-            timestamp
             context
             user {
               id
@@ -108,8 +108,8 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
             ignored
           }
           catcherType
+          timestamp
           payload {
-            timestamp
             title
           }
         }
@@ -145,10 +145,10 @@ export const QUERY_LATEST_REPETITIONS = `
       event(id: $eventId) {
         repetitions(skip: $skip, limit: $limit) {
           id
+          timestamp
           payload {
             title,
             release
-            timestamp
             context
             user {
               id
