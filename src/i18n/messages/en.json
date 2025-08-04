@@ -163,7 +163,7 @@
         "slack": "Slack",
         "slackDescription": "Alerts through the Webhook App",
         "telegram": "Telegram",
-        "telegramDescription": "Alerts through the @hawkso_bot",
+        "telegramDescription": "Alerts through the <a href='https://t.me/hawkso_bot' target='_blank'>@hawkso_bot</a>",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Frequency based",
