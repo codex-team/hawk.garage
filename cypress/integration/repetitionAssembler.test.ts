@@ -7,7 +7,6 @@ import { repetitionAssembler } from '../../src/utils';
  */
 const baseEvent: HawkEventPayload = {
   title: '',
-  timestamp: 0,
   backtrace: [{
     file: '',
     line: 0,
