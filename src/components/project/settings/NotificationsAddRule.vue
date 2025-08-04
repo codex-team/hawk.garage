@@ -98,7 +98,7 @@
             :value="form.including ? form.including.join(','): ''"
             :label="$t('projects.settings.notifications.includingWordsLabel')"
             :description="$t('projects.settings.notifications.includingWordsDescription')"
-            placeholder="codex, editor"
+            placeholder="hawk tracker, editor"
             @input="splitIncludingFilters"
           />
         </section>
@@ -107,7 +107,7 @@
             :value="form.excluding ? form.excluding.join(','): ''"
             :label="$t('projects.settings.notifications.excludingWordsLabel')"
             :description="$t('projects.settings.notifications.excludingWordsDescription')"
-            placeholder="chunk. unknow"
+            placeholder="chunk, unknow"
             @input="splitExcludingFilters"
           />
         </section>
