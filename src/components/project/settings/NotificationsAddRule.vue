@@ -107,7 +107,7 @@
             :value="form.excluding ? form.excluding.join(','): ''"
             :label="$t('projects.settings.notifications.excludingWordsLabel')"
             :description="$t('projects.settings.notifications.excludingWordsDescription')"
-            placeholder="chunk, unknow"
+            placeholder="chunk, unknown"
             @input="splitExcludingFilters"
           />
         </section>
