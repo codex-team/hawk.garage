@@ -120,7 +120,7 @@ export default Vue.extend({
       const groupedRepetitions = new Map();
 
       this.repetitions(this.projectId, this.event.id).forEach(repetition => {
-        const date = this.getDate(repetition.payload.timestamp);
+        const date = this.getDate(repetition.timestamp);
 
         if (!groupedRepetitions.get(date)) {
           groupedRepetitions.set(date, []);
