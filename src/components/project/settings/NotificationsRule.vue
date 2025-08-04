@@ -236,5 +236,9 @@ export default Vue.extend({
         margin-right: 20px;
       }
     }
+
+    &__bot-link {
+      text-decoration: underline;
+    }
   }
 </style>
