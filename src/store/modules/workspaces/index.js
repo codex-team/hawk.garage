@@ -397,7 +397,6 @@ const actions = {
     commit(mutationTypes.SET_PLAN, {
       workspaceId,
       plan: result.record.plan,
-      lastChargeDate: result.record.lastChargeDate,
     });
 
     return result;
@@ -667,12 +666,11 @@ const mutations = {
    * @param {string} workspaceId - id of workspace to set plan
    * @param {Plan} plan - plan to set
    */
-  [mutationTypes.SET_PLAN](state, { workspaceId, plan, lastChargeDate }) {
+  [mutationTypes.SET_PLAN](state, { workspaceId, plan }) {
     const index = state.list.findIndex(w => w.id === workspaceId);
     const workspace = state.list[index];
 
     Vue.set(workspace, 'plan', plan);
-    Vue.set(workspace, 'lastChargeDate', lastChargeDate);
 
     state.list = [
       ...state.list.slice(0, index),

@@ -163,15 +163,15 @@
         "slack": "Slack",
         "slackDescription": "Alerts through the Webhook App",
         "telegram": "Telegram",
-        "telegramDescription": "Alerts through the @hawkso_bot",
+        "telegramDescription": "Alerts through the <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Frequency based",
         "receiveSeenMoreDescription": "All event occurrences. Max frequency is 1 alert/min.",
-        "includingWordsLabel": "Including words",
-        "includingWordsDescription": "Only events that includes passed words",
-        "excludingWordsLabel": "Excluding words",
-        "excludingWordsDescription": "Skip events with these words",
+        "includingWordsLabel": "Include events with text",
+        "includingWordsDescription": "Notifications are sent only for events that contain the specified text in the title",
+        "excludingWordsLabel": "Exclude events with text",
+        "excludingWordsDescription": "Notifications about events with the specified text in the title are not sent",
         "ruleIncludingLabel": "Including",
         "ruleExcludingLabel": "Excluding",
         "ruleIsEnabled": "Enabled",
@@ -197,7 +197,12 @@
           "patternInvalid": "Invalid regular expression pattern",
           "patternSaveError": "Error while adding pattern",
           "patternUpdateError": "Error while updating pattern",
-          "patternDeleteError": "Error while deleting pattern"
+          "patternDeleteError": "Error while deleting pattern",
+          "unsubscribe": {
+            "success": "Successfully unsubscribed from notifications",
+            "error": "Failed to unsubscribe from notifications",
+            "invalidLink": "Invalid unsubscribe link"
+          }
         }
       }
     },
@@ -329,7 +334,7 @@
     "blocked": {
       "banner": "Workspace {workspaceName} is blocked.",
       "description": "You are not receiving new events. Please upgrade or prolong your tariff plan to resume receiving events",
-      "upgradeButton": "Increase limit from 99₽"
+      "incrementLimit": "Increment limit from 99₽"
     }
   },
   "billing": {
@@ -469,11 +474,6 @@
     "user": {
       "unknown": "Unknown",
       "noname": "No name"
-    },
-    "limit": {
-      "title": "Event Hidden",
-      "description": "We received this event but have hidden it because your subscription has expired.",
-      "upgradeButton": "Pay and view event"
     }
   },
   "common": {

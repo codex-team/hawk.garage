@@ -163,15 +163,15 @@
         "slack": "Slack",
         "slackDescription": "Уведомления через Webhook App",
         "telegram": "Telegram",
-        "telegramDescription": "Уведомления через @hawkso_bot",
+        "telegramDescription": "Уведомления через <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
         "receiveNewLabel": "Только новые события",
         "receiveNewDescription": "При первом получении",
         "receiveSeenMoreLabel": "По частоте появления",
         "receiveSeeMoreDescription": "Все повторения. Максимальная частота — 1 событие в минуту",
-        "includingWordsLabel": "Включающие слова",
-        "includingWordsDescription": "Только события, содержащие указанные слова",
-        "excludingWordsLabel": "Исключающие слова",
-        "excludingWordsDescription": "Пропустить события с такими словами",
+        "includingWordsLabel": "Включить события с текстом",
+        "includingWordsDescription": "Отправляются уведомления только о событиях, которые содержат указанный текст в заголовке",
+        "excludingWordsLabel": "Исключить события с текстом",
+        "excludingWordsDescription": "Уведомления о событиях с указанным текстом в заголовке не отправляются",
         "ruleIncludingLabel": "Со словами",
         "ruleExcludingLabel": "Исключая слова",
         "ruleIsEnabled": "Активно",
@@ -197,7 +197,12 @@
           "patternInvalid": "Некорректный шаблон",
           "patternSaveError": "Ошибка при добавлении шаблона",
           "patternUpdateError": "Ошибка при обновлении шаблона",
-          "patternDeleteError": "Ошибка при удалении шаблона"
+          "patternDeleteError": "Ошибка при удалении шаблона",
+          "unsubscribe": {
+            "success": "Подписка на уведомления отключена",
+            "error": "Не удалось отписаться от уведомлений",
+            "invalidLink": "Недействительная ссылка для отписки от уведомлений"
+          }
         }
       }
     },
@@ -329,7 +334,7 @@
     "blocked": {
       "banner": "Воркспейс {workspaceName} заблокирован.",
       "description": "Вы не получаете новые события. Расширьте или продлите тарифный план, чтобы возобновить получение событий",
-      "upgradeButton": "Увеличить лимит от 99₽"
+      "incrementLimit": "Увеличить лимит от 99₽"
     }
   },
   "billing": {
@@ -469,11 +474,6 @@
     "user": {
       "unknown": "Неизвестный",
       "noname": "Безымянный"
-    },
-    "limit": {
-      "title": "Событие скрыто",
-      "description": "Мы получили это событие, но скрыли его, потому что ваша подписка закончилась.",
-      "upgradeButton": "Оплатить и посмотреть событие"
     }
   },
   "common": {

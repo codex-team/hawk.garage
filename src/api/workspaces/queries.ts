@@ -50,8 +50,8 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
               starred
               ignored
             }
+            timestamp
             payload {
-              timestamp
               title
             }
           }
@@ -244,7 +244,6 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN_TO_DEFAULT = `
         recordId
         record {
           ...WorkspacePlan
-          lastChargeDate
         }
       }
     }
