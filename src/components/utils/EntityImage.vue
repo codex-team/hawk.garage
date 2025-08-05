@@ -114,7 +114,7 @@ export default {
        */
       css.borderRadius = this.radius + 'px';
 
-      if (!this.isPlaceholder) {
+      if (!this.isPlaceholder && this.name) {
         const isSingleCharAbbreviation = this.name.split(' ')
           .filter(part => part !== '').length === 1;
 
