@@ -472,7 +472,7 @@
     },
     "limit": {
       "title": "Event Hidden",
-      "description": "We received this event but hid it because your subscription has expired.",
+      "description": "We received this event but have hidden it because your subscription has expired.",
       "upgradeButton": "Pay and view event"
     }
   },
