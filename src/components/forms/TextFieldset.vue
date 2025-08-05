@@ -16,7 +16,8 @@
       v-if="description"
       class="form-fieldset__description"
     >
-      {{ description }}
+      <!-- eslint-disable vue/no-v-html -->
+      <span v-html="description" />
     </div>
     <input
       :id="name"
