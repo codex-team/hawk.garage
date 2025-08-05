@@ -329,28 +329,6 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Returns latest event for certain project
-     *
-     * @param {EventsModuleState} state - Vuex state
-     */
-    getLatestEvent(state: EventsModuleState): ((projectId: string) => HawkEvent | null) {
-      /**
-       * @param {string} projectId - event's project id
-       */
-      return (projectId: string): HawkEvent | null => {
-        const latestProjectEvent = state.latest[projectId];
-
-        if (latestProjectEvent) {
-          const lastEventGroupHash = latestProjectEvent.groupHash;
-
-          return Object.values(state.list).find((event) => event.groupHash === lastEventGroupHash) || null;
-        }
-
-        return null;
-      };
-    },
-
-    /**
      * Get filters for project
      *
      * @param {EventsModuleState} state - module state
@@ -394,10 +372,8 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEventsDailyInfoByProject} payload.recentEvents - projects recent events
      */
     [INIT_EVENTS_MODULE](
-      { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
+      { commit }, { recentEvents }: { recentEvents: HawkEventsDailyInfoByProject }
     ): void {
-      commit(MutationTypes.SetEventsList, events);
-
       Object.entries(recentEvents).forEach(([projectId, recentEventsInfoByDate]) => {
         commit(MutationTypes.SetRecentEventsList, {
           projectId,
@@ -420,7 +396,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} project.search - search query
      * @returns {Promise<boolean>} - true if there are no more events
      */
-    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search: string }): Promise<boolean> {
+    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search: string }): Promise<[boolean, HawkEvent[]]> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const recentEvents = await eventsApi.fetchRecentEvents(
@@ -432,7 +408,7 @@ const module: Module<EventsModuleState, RootState> = {
       );
 
       if (!recentEvents) {
-        return true;
+        return [ true, [] ];
       }
 
       /**
@@ -450,11 +426,6 @@ const module: Module<EventsModuleState, RootState> = {
 
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
 
-      commit(MutationTypes.AddToEventsList, {
-        projectId,
-        eventsList: recentEvents.events,
-      });
-
       /**
        * Always use AddToRecentEventsList for pagination
        * This ensures that new events are appended to the existing list
@@ -465,7 +436,7 @@ const module: Module<EventsModuleState, RootState> = {
         recentEventsInfoByDate: eventsGroupedByDate,
       });
 
-      return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
+      return [ recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT, recentEvents.events ];
     },
 
     /**

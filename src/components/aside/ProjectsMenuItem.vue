@@ -83,10 +83,10 @@ export default {
     },
 
     lastEventTitle() {
-      const latestEvents = this.$store.getters.getLatestEvent(this.projectId);
+      const project = this.$store.getters.getProjectById(this.projectId);
 
-      if (latestEvents) {
-        return latestEvents.payload.title;
+      if (project.recentEvents) {
+        return project.recentEvents.events[0].payload.title;
       }
 
       return 'No one catcher connected';
