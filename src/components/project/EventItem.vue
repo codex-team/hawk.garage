@@ -19,7 +19,7 @@
         :is-visited="isVisited"
       />
     </div>
-    <div class="event-item__info" :class="{ 'event-item__info--blurred': isEventAfterExpiry }">
+    <div class="event-item__info" :class="{ 'event-item__info--blurred': isEventBlurred }">
       {{ event.payload.title }}
     </div>
     <Icon
@@ -145,6 +145,13 @@ export default {
     },
 
     /**
+     * Check if workspace is blocked
+     */
+    isWorkspaceBlocked() {
+      return this.workspace?.isBlocked;
+    },
+
+    /**
      * Check if event was received after subscription expiration
      *
      * @returns {boolean}
@@ -155,6 +162,15 @@ export default {
         this.workspace.lastChargeDate
       );
     },
+
+    /**
+     * Check if event is blurred
+     *
+     * @returns {boolean}
+     */
+    isEventBlurred() {
+      return this.isEventAfterExpiry && this.isWorkspaceBlocked;
+    },
   },
   beforeDestroy() {
     this.$root.$off('workspacePlanChanged');
@@ -164,8 +180,7 @@ export default {
      * Handle click on event item
      */
     handleClick() {
-      if (this.isEventAfterExpiry) {
-        // If event is blurred, open modal with plans
+      if (this.isEventBlurred) {
         this.$store.dispatch(SET_MODAL_DIALOG, {
           component: 'EventLimitModal',
           data: {
@@ -173,7 +188,6 @@ export default {
           },
         });
       } else {
-        // Otherwise open event overview
         this.$emit('showEventOverview');
       }
     },
