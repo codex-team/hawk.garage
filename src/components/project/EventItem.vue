@@ -6,7 +6,7 @@
       [`event-item--${mark}-label`]: true,
     }"
     data-ripple
-    @click="$emit('showEventOverview')"
+    @click="handleClick"
   >
     <EventMark :mark="mark" />
     <div class="event-item__time">
@@ -19,7 +19,7 @@
         :is-visited="isVisited"
       />
     </div>
-    <div class="event-item__info">
+    <div class="event-item__info" :class="{ 'event-item__info--blurred': isEventAfterExpiry }">
       {{ event.payload.title }}
     </div>
     <Icon
@@ -46,6 +46,8 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
+import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscriptionExpiry';
+import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 
 export default {
   name: 'EventItem',
@@ -120,6 +122,61 @@ export default {
 
       return mark;
     },
+
+    /**
+     * Returns project id from the route
+     */
+    projectId() {
+      return this.$route.params.projectId;
+    },
+
+    /**
+     * The project that owns the event
+     */
+    project() {
+      return this.$store.getters.getProjectById(this.projectId);
+    },
+
+    /**
+     * The workspace that owns the event
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    },
+
+    /**
+     * Check if event was received after subscription expiration
+     *
+     * @returns {boolean}
+     */
+    isEventAfterExpiry() {
+      return isEventAfterSubscriptionExpiry(
+        this.lastOccurrenceTimestamp,
+        this.workspace.lastChargeDate
+      );
+    },
+  },
+  beforeDestroy() {
+    this.$root.$off('workspacePlanChanged');
+  },
+  methods: {
+    /**
+     * Handle click on event item
+     */
+    handleClick() {
+      if (this.isEventAfterExpiry) {
+        // If event is blurred, open modal with plans
+        this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'EventLimitModal',
+          data: {
+            workspaceId: this.workspace.id,
+          },
+        });
+      } else {
+        // Otherwise open event overview
+        this.$emit('showEventOverview');
+      }
+    },
   },
 };
 </script>
@@ -153,6 +210,11 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
 
+      &--blurred {
+        filter: blur(4px);
+        user-select: none;
+        pointer-events: none;
+      }
     }
 
     &__assignee {
