@@ -244,7 +244,6 @@ export const MUTATION_CHANGE_WORKSPACE_PLAN_TO_DEFAULT = `
         recordId
         record {
           ...WorkspacePlan
-          lastChargeDate
         }
       }
     }
