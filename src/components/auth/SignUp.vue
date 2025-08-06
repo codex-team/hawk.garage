@@ -3,6 +3,7 @@
     <Form
       class="auth-page__form"
       :fields="fields"
+      :hidden-fields="hiddenFields"
       :submit-text="submitText"
       :message="message"
       @submit="signUp"
@@ -33,19 +34,54 @@ export default {
           type: 'email',
         },
       ],
+      hiddenFields: this.extractUtmParameters(),
       submitText: this.$t('authPages.signUpSubmitText'),
       message: null,
     };
   },
   methods: {
     /**
+     * Extract UTM parameters from URL query string
+     */
+    extractUtmParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const utmFields = [];
+
+      const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+
+      utmParams.forEach((param) => {
+        const value = urlParams.get(param);
+        if (value) {
+          utmFields.push({
+            name: param,
+            value: value,
+            type: 'hidden',
+          });
+        }
+      });
+
+      return utmFields;
+    },
+
+    /**
      * Form submit event handler
      */
     async signUp() {
       const email = this.fields[0].value;
+      const utmData = {};
+
+      // Collect UTM data from hidden fields and transform to clean format
+      this.hiddenFields.forEach((field) => {
+        // Remove 'utm_' prefix from field names
+        const cleanKey = field.name.replace('utm_', '');
+        utmData[cleanKey] = field.value;
+      });
 
       try {
-        await this.$store.dispatch(SIGN_UP, { email });
+        await this.$store.dispatch(SIGN_UP, {
+          email,
+          utm: Object.keys(utmData).length > 0 ? utmData : undefined,
+        });
 
         this.$router.push({
           name: 'login',
