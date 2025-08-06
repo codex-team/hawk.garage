@@ -34,27 +34,24 @@ export default {
           type: 'email',
         },
       ],
-      hiddenFields: this.extractUtmParameters(),
       submitText: this.$t('authPages.signUpSubmitText'),
       message: null,
     };
   },
-  methods: {
+  computed: {
     /**
-     * Extract UTM parameters from URL query string
+     * Extract UTM parameters from route query and make them reactive
      */
-    extractUtmParameters() {
-      const urlParams = new URLSearchParams(window.location.search);
+    hiddenFields() {
       const utmFields = [];
-
       const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 
       utmParams.forEach((param) => {
-        const value = urlParams.get(param);
-        if (value) {
+        const value = this.$route.query[param];
+        if (value && typeof value === 'string' && value.trim().length > 0) {
           utmFields.push({
             name: param,
-            value: value,
+            value: value.trim(),
             type: 'hidden',
           });
         }
@@ -64,23 +61,31 @@ export default {
     },
 
     /**
-     * Form submit event handler
+     * Get UTM data as object for API calls
      */
-    async signUp() {
-      const email = this.fields[0].value;
+    utmData() {
       const utmData = {};
 
-      // Collect UTM data from hidden fields and transform to clean format
       this.hiddenFields.forEach((field) => {
         // Remove 'utm_' prefix from field names
         const cleanKey = field.name.replace('utm_', '');
         utmData[cleanKey] = field.value;
       });
 
+      return Object.keys(utmData).length > 0 ? utmData : undefined;
+    },
+  },
+  methods: {
+    /**
+     * Form submit event handler
+     */
+    async signUp() {
+      const email = this.fields[0].value;
+
       try {
         await this.$store.dispatch(SIGN_UP, {
           email,
-          utm: Object.keys(utmData).length > 0 ? utmData : undefined,
+          utm: this.utmData,
         });
 
         this.$router.push({
