@@ -36,10 +36,17 @@ export async function login(email, password) {
  * Sign up by email and return status (true or false)
  *
  * @param {string} email - Email
+ * @param {object} utm - UTM parameters object
  * @returns {Promise<{data: {signUp: boolean}, errors: object[]}>} Response data
  */
-export async function signUp(email) {
-  return api.call(MUTATION_SIGN_UP, { email });
+export async function signUp(email, utm) {
+  const variables = { email };
+
+  if (utm && Object.keys(utm).length > 0) {
+    variables.utm = utm;
+  }
+
+  return api.call(MUTATION_SIGN_UP, variables);
 }
 
 /**
