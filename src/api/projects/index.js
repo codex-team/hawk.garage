@@ -1,7 +1,6 @@
 import {
   MUTATION_CREATE_PROJECT,
   MUTATION_UPDATE_PROJECT,
-  QUERY_RECENT_ERRORS,
   MUTATION_UPDATE_LAST_VISIT,
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
@@ -66,23 +65,6 @@ export function generateNewIntegrationToken(id) {
  */
 export async function removeProject(projectId) {
   return (await api.callOld(MUTATION_REMOVE_PROJECT, { projectId })).removeProject;
-}
-
-/**
- * @typedef RecentEvent
- * @property {Event} event - occurred event
- * @property {number} count - number of this error
- * @property {Date} date - date when error occurred
- */
-
-/**
- * Fetch latest project events
- *
- * @param {string} projectId - project to fetch errors
- * @returns {Promise<RecentEvent[]>}
- */
-export async function fetchRecentErrors(projectId) {
-  return (await api.callOld(QUERY_RECENT_ERRORS, { projectId })).recent;
 }
 
 /**
