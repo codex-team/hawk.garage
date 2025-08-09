@@ -539,6 +539,7 @@
     "readMore": "Read more"
   },
   "errors": {
-    "Something went wrong": "Error occurred. Hawk just informed us about it."
+    "Something went wrong": "Error occurred. Hawk just informed us about it.",
+    "You need to refresh your tokens": "Your session has expired. Please log in again."
   }
 }

@@ -73,7 +73,6 @@ import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
-import { composePayment } from '@/api/billing/requests';
 
 export default Vue.extend({
   name: 'ChooseTariffPlanPopup',

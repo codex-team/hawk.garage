@@ -134,7 +134,6 @@ import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTyp
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 import { getCurrencySign } from '@/utils';
 import { ActionType } from '@/components/utils/ConfirmationWindow/types';
-import { composePayment } from '@/api/billing/requests';
 
 export default Vue.extend({
   name: 'BillingOverview',
