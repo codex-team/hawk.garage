@@ -139,6 +139,32 @@ export interface EventsWithDailyInfo {
 }
 
 /**
+ * Interface representing Hawk daily event properties with event information
+ */
+export interface DailyEvent {
+  id: string;
+  groupingTimestamp: number;
+  count: number;
+  affectedUsers: number;
+  event: HawkEvent;
+}
+
+/**
+ * Interface representing a portion of daily events
+ */
+export interface DailyEventsPortion {
+  /**
+   * Pointer to the next portion of daily events, null if there are no more events
+   */
+  nextCursor: string | null;
+  /**
+   * List of daily events
+   * Each event contains information about the event and its occurrence on a specific day
+   */
+  dailyEvents: DailyEvent[];
+}
+
+/**
  * Information about Event for specific day
  */
 export interface HawkEventDailyInfo {

@@ -99,6 +99,13 @@ enum MutationTypes {
    * Set project search
    */
   SetProjectSearch = 'SET_PROJECT_SEARCH',
+
+  /**
+   * Set daily events next cursor
+   * Should be called each time when new daily events portion is fetched
+   * Should be called to nullify the next cursor when switching to another project
+   */
+  SetDailyEventsNextCursor = 'SET_DAILY_EVENTS_NEXT_CURSOR',
 }
 
 /**
@@ -117,10 +124,20 @@ export interface EventsModuleState {
   dailyEvents: HawkEventsDailyInfoByProject;
 
   /**
+   * Pointer to the next daily event for pagination
+   * Should be nullified on ProjectOverview unmount
+   */
+  dailyEventsNextCursor: string | null;
+
+  /**
    * @todo - do not store whole repetition in the state, store only id of the event which is stored in state.events
    * Event's repetitions map. Used for pagination of event repetitions
    */
   eventRepetitions: { [key: string]: HawkEventRepetition[] };
+  
+  /**
+   * @todo - add eventRepetitionsNextCursor and use cursor based pagination for repetitions
+   */
 
   /**
    * Event's filters rules map by project id
@@ -169,9 +186,10 @@ interface HawkEventsDailyInfoByDate {
  */
 function initialState(): EventsModuleState {
   return {
-    list: {},
-    recent: {},
-    repetitions: {},
+    events: {},
+    dailyEvents: {},
+    eventRepetitions: {},
+    dailyEventsNextCursor: null,
     filters: {},
     latest: {},
     search: {},
@@ -422,6 +440,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} project.projectId - id of the project to fetch data
      * @param {string} project.search - search query
      * @returns {Promise<boolean>} - true if there are no more events
+     * @todo - remove this method, use FETCH_PROJECT_OVERVIEW instead
      */
     async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search: string }): Promise<boolean> {
       const RECENT_EVENTS_FETCH_LIMIT = 15;
@@ -485,6 +504,8 @@ const module: Module<EventsModuleState, RootState> = {
         throw new Error('Error [FETCH_PROJECT_OVERVIEW]: Project not found');
       }
 
+      const dailyEvents = dailyEventsPortion.dailyEvents;
+
       /**
        * Reset loadedEventsCount only when starting a new search
        * This ensures proper pagination during search
@@ -494,7 +515,15 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       const eventsGroupedByDate = groupByGroupingTimestamp(
-        dailyEventsPortion.dailyInfo,
+        dailyEvents.map(portion => {
+          return {
+            id: portion.id,
+            count: portion.count,
+            affectedUsers: portion.affectedUsers,
+            groupingTimestamp: portion.groupingTimestamp,
+            eventId: portion.event.id
+          }
+        }),
         eventsSortOrder !== EventsSortOrder.ByCount
       );
 
@@ -502,7 +531,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       commit(MutationTypes.AddToEventsList, {
         projectId,
-        eventsList: dailyEventsPortion.events,
+        eventsList: dailyEvents.map(portion => portion.event),
       });
 
       /**
@@ -514,6 +543,10 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         recentEventsInfoByDate: eventsGroupedByDate,
       });
+
+      commit(MutationTypes.SetDailyEventsNextCursor, {
+        nextCursor: dailyEventsPortion.nextCursor,
+      })
     },
 
 
@@ -912,6 +945,18 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       Vue.set(state.eventRepetitions, key, [...state.eventRepetitions[key], repetition]);
+    },
+
+    /**
+     * Sets next cursor for daily events pagination
+     *
+     * @param {EventsModuleState} state - Vuex state
+     *
+     * @param {object} payload - vuex mutation payload
+     * @param {string | null} payload.nextCursor - new value of the daily events next cursor
+     */
+    [MutationTypes.SetDailyEventsNextCursor](state: EventsModuleState, { nextCursor }: { nextCursor: string | null }): void {
+      state.dailyEventsNextCursor = nextCursor;
     },
 
     /**

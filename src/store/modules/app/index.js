@@ -50,6 +50,8 @@ const actions = {
    *
    * @param {Function} dispatch - standard Vuex dispatch function
    * @returns {Promise<void>}
+   * 
+   * @todo - rewrite to new dailyEvents pattern
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
     const response = await workspacesApi.getAllWorkspacesWithProjects();

@@ -11,6 +11,7 @@ import {
 } from './queries';
 import * as api from '@/api';
 import {
+  DailyEventsPortion,
   EventMark,
   EventsFilters,
   EventsSortOrder,
@@ -84,7 +85,7 @@ export async function fetchDailyEventsPortion(
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
   search = ''
-): Promise<EventsWithDailyInfo | null> {
+): Promise<DailyEventsPortion | null> {
   const response = (await api.call(QUERY_PROJECT_OVERVIEW, {
     projectId,
     cursor: nextCursor,
