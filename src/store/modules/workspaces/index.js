@@ -90,7 +90,7 @@ const getters = {
      * @param {string} id project id to find
      * @returns {Project}
      */
-    id => state.list.find(workspace => workspace.id === id),
+    id => state.events.find(workspace => workspace.id === id),
 
   /**
    * Returns current user in the provided workspace
@@ -437,19 +437,19 @@ const mutations = {
    * @param {Workspace} workspace - workspace params for setting
    */
   [mutationTypes.SET_WORKSPACE](state, workspace) {
-    const index = state.list.findIndex(element => element.id === workspace.id);
+    const index = state.events.findIndex(element => element.id === workspace.id);
 
     if (state.current && workspace.id === state.current.id) {
       state.current = workspace;
     }
 
-    state.list = [
-      ...state.list.slice(0, index),
+    state.events = [
+      ...state.events.slice(0, index),
       {
-        ...state.list[index],
+        ...state.events[index],
         ...workspace,
       },
-      ...state.list.slice(index + 1),
+      ...state.events.slice(index + 1),
     ];
   },
 
@@ -460,7 +460,7 @@ const mutations = {
    * @param {Workspace} workspace - workspace params for creation
    */
   [mutationTypes.ADD_WORKSPACE](state, workspace) {
-    state.list.push(workspace);
+    state.events.push(workspace);
   },
 
   /**
@@ -472,13 +472,13 @@ const mutations = {
   [mutationTypes.REMOVE_WORKSPACE](state, workspaceId) {
     let index = null;
 
-    state.list.find((element, i) => {
+    state.events.find((element, i) => {
       if (element.id === workspaceId) {
         index = i;
       }
     });
     if (index !== null) {
-      state.list.splice(index, 1);
+      state.events.splice(index, 1);
     }
   },
 
@@ -513,10 +513,10 @@ const mutations = {
    * @param {object} payload.changes - changes to update
    */
   [mutationTypes.UPDATE_MEMBER](state, { workspaceId, userId, changes }) {
-    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].team.findIndex(member => !isPendingMember(member) && member.user.id === userId);
+    const workspaceIndex = state.events.findIndex(w => w.id === workspaceId);
+    const memberIndex = state.events[workspaceIndex].team.findIndex(member => !isPendingMember(member) && member.user.id === userId);
 
-    Object.assign(state.list[workspaceIndex].team[memberIndex], changes);
+    Object.assign(state.events[workspaceIndex].team[memberIndex], changes);
   },
 
   /**
@@ -527,8 +527,8 @@ const mutations = {
    * @param {BusinessOperation} payload.businessOperation - business operation to add to operations history
    */
   [mutationTypes.UPDATE_BUSINESS_OPERATIONS](state, { workspaceId, businessOperation }) {
-    const index = state.list.findIndex(w => w.id === workspaceId);
-    const workspace = state.list[index];
+    const index = state.events.findIndex(w => w.id === workspaceId);
+    const workspace = state.events[index];
     let updatedPaymentsHistory = [ businessOperation ];
 
     if (workspace.paymentsHistory) {
@@ -546,8 +546,8 @@ const mutations = {
    * @param {number} payload.amount - business operation to add to operations history
    */
   [mutationTypes.UPDATE_BALANCE](state, { workspaceId, balance }) {
-    const index = state.list.findIndex(w => w.id === workspaceId);
-    const workspace = state.list[index];
+    const index = state.events.findIndex(w => w.id === workspaceId);
+    const workspace = state.events[index];
 
     Vue.set(workspace, 'balance', balance);
   },
@@ -562,9 +562,9 @@ const mutations = {
    * @param {object} payload.data - user data
    */
   [mutationTypes.ADD_PENDING_MEMBER](state, { workspaceId, data }) {
-    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
+    const workspaceIndex = state.events.findIndex(w => w.id === workspaceId);
 
-    state.list[workspaceIndex].team.push(data);
+    state.events[workspaceIndex].team.push(data);
   },
 
   /**
@@ -577,11 +577,11 @@ const mutations = {
    * @param {string} payload.userId - id of user to remove
    */
   [mutationTypes.REMOVE_MEMBER](state, { workspaceId, userId }) {
-    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].team.findIndex(member => member.user.id === userId);
+    const workspaceIndex = state.events.findIndex(w => w.id === workspaceId);
+    const memberIndex = state.events[workspaceIndex].team.findIndex(member => member.user.id === userId);
 
     if (memberIndex > -1) {
-      state.list[workspaceIndex].team.splice(memberIndex, 1);
+      state.events[workspaceIndex].team.splice(memberIndex, 1);
     }
   },
 
@@ -595,11 +595,11 @@ const mutations = {
    * @param {string} payload.userEmail - email of user to remove
    */
   [mutationTypes.REMOVE_PENDING_MEMBER](state, { workspaceId, userEmail }) {
-    const workspaceIndex = state.list.findIndex(w => w.id === workspaceId);
-    const memberIndex = state.list[workspaceIndex].team.findIndex(m => m.email === userEmail);
+    const workspaceIndex = state.events.findIndex(w => w.id === workspaceId);
+    const memberIndex = state.events[workspaceIndex].team.findIndex(m => m.email === userEmail);
 
     if (memberIndex > -1) {
-      state.list[workspaceIndex].team.splice(memberIndex, 1);
+      state.events[workspaceIndex].team.splice(memberIndex, 1);
     }
   },
 
@@ -634,15 +634,15 @@ const mutations = {
 
     Object.entries(groupedByWorkspaceId)
       .forEach(([workspaceId, operationsOfWorkspace]) => {
-        const index = state.list.findIndex(w => w.id === workspaceId);
-        const workspace = state.list[index];
+        const index = state.events.findIndex(w => w.id === workspaceId);
+        const workspace = state.events[index];
 
         Vue.set(workspace, 'paymentsHistory', operationsOfWorkspace);
 
-        state.list = [
-          ...state.list.slice(0, index),
+        state.events = [
+          ...state.events.slice(0, index),
           workspace,
-          ...state.list.slice(index + 1),
+          ...state.events.slice(index + 1),
         ];
       }
       );
@@ -655,7 +655,7 @@ const mutations = {
    * @param {BusinessOperation} operation - operation to push
    */
   [mutationTypes.PUSH_BUSINESS_OPERATION](state, operation) {
-    const workspace = state.list.find(w => w.id === operation.payload.workspace.id);
+    const workspace = state.events.find(w => w.id === operation.payload.workspace.id);
 
     Vue.set(workspace, 'paymentsHistory', [operation, ...workspace.paymentsHistory]);
   },
@@ -668,16 +668,16 @@ const mutations = {
    * @param {Plan} plan - plan to set
    */
   [mutationTypes.SET_PLAN](state, { workspaceId, plan, lastChargeDate }) {
-    const index = state.list.findIndex(w => w.id === workspaceId);
-    const workspace = state.list[index];
+    const index = state.events.findIndex(w => w.id === workspaceId);
+    const workspace = state.events[index];
 
     Vue.set(workspace, 'plan', plan);
     Vue.set(workspace, 'lastChargeDate', lastChargeDate);
 
-    state.list = [
-      ...state.list.slice(0, index),
+    state.events = [
+      ...state.events.slice(0, index),
       workspace,
-      ...state.list.slice(index + 1),
+      ...state.events.slice(index + 1),
     ];
   },
 
@@ -693,17 +693,17 @@ const mutations = {
    */
   [mutationTypes.SET_WORKSPACE_SUBSCRIPTION](state, { id, subscriptionId }) {
     console.log('SET_WORKSPACE_SUBSCRIPTION', id, subscriptionId);
-    const index = state.list.findIndex(w => w.id === id);
-    const workspace = state.list[index];
+    const index = state.events.findIndex(w => w.id === id);
+    const workspace = state.events[index];
 
     console.log('workspace', workspace);
 
     Vue.set(workspace, 'subscriptionId', subscriptionId);
 
-    state.list = [
-      ...state.list.slice(0, index),
+    state.events = [
+      ...state.events.slice(0, index),
       workspace,
-      ...state.list.slice(index + 1),
+      ...state.events.slice(index + 1),
     ];
   },
 

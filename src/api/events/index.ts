@@ -5,6 +5,7 @@ import {
   MUTATION_REMOVE_EVENT_ASSIGNEE,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS,
+  QUERY_PROJECT_OVERVIEW,
   QUERY_RECENT_PROJECT_EVENTS,
   QUERY_CHART_DATA
 } from './queries';
@@ -75,6 +76,30 @@ export async function fetchRecentEvents(
   }
 
   return project.recentEvents;
+}
+
+export async function fetchDailyEventsPortion(
+  projectId: string,
+  nextCursor: string | null = null,
+  sort = EventsSortOrder.ByDate,
+  filters: EventsFilters = {},
+  search = ''
+): Promise<EventsWithDailyInfo | null> {
+  const response = (await api.call(QUERY_PROJECT_OVERVIEW, {
+    projectId,
+    cursor: nextCursor,
+    sort,
+    filters,
+    search,
+  }));
+
+  const project = response.data.project;
+
+  if (!project) {
+    throw new NotFoundError();
+  }
+
+  return project.dailyEventsPortion;
 }
 
 /**

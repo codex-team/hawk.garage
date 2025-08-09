@@ -33,7 +33,7 @@ const getters = {
    * @param state - module state
    */
   getPlanById: (state: PlansModuleState) => (id: string): Plan | undefined => {
-    return state.list.find(plan => plan.id === id);
+    return state.events.find(plan => plan.id === id);
   },
 };
 
