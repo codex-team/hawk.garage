@@ -216,7 +216,6 @@ import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 import { getCurrencySign } from '@/utils';
-import { errorCodes } from '@/api';
 
 /**
  * Id for the 'New card' option in select
@@ -456,8 +455,6 @@ export default Vue.extend({
       const key = 'errors.' + (e as Error).message;
       const message = this.$te(key) ? this.$t(key) as string : this.$t('billing.notifications.error');
 
-      console.log('this.$te(key)', key, this.$te(key));
-      
       notifier.show({
         message: message as string,
         style: 'error',
