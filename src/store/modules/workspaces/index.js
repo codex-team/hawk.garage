@@ -378,7 +378,15 @@ const actions = {
    * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
    */
   async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
-    return billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
+    const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
+
+    const { data, errors } = result;
+
+    if (errors) {
+      throw new Error(errors[0].message);
+    }
+
+    return data.composePayment;
   },
 
   /**

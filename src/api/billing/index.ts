@@ -52,10 +52,8 @@ export async function composePayment(
   workspaceId: string,
   tariffPlanId: string,
   shouldSaveCard = false
-): Promise<BeforePaymentPayload> {
-  const { data, errors } = await api.call(QUERY_COMPOSE_PAYMENT, {
+): Promise<unknown> {
+  return await api.call(QUERY_COMPOSE_PAYMENT, {
     input: { workspaceId, tariffPlanId, shouldSaveCard },
   });
-
-  return data.composePayment as BeforePaymentPayload;
 }
