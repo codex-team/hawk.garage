@@ -11,6 +11,7 @@ import {
   QUERY_CURRENT_USER_WITH_NOTIFICATIONS, QUERY_BANK_CARDS
 } from './queries';
 import * as api from '../index.ts';
+import { processUtmParams } from '../../utils/utm';
 
 /**
  * @typedef {object} TokensPair
@@ -42,21 +43,10 @@ export async function login(email, password) {
 export async function signUp(email, utm) {
   const variables = { email };
 
-  // Add UTM data if provided and valid
-  if (utm && typeof utm === 'object' && !Array.isArray(utm) && Object.keys(utm).length > 0) {
-    // Basic validation - only include valid UTM keys
-    const validUtmKeys = ['source', 'medium', 'campaign', 'content', 'term'];
-    const validUtm = {};
-
-    for (const [key, value] of Object.entries(utm)) {
-      if (validUtmKeys.includes(key) && typeof value === 'string' && value.trim().length > 0) {
-        validUtm[key] = value.trim();
-      }
-    }
-
-    if (Object.keys(validUtm).length > 0) {
-      variables.utm = validUtm;
-    }
+  // Process UTM data (validate and sanitize)
+  const processedUtm = processUtmParams(utm);
+  if (processedUtm) {
+    variables.utm = processedUtm;
   }
 
   return api.call(MUTATION_SIGN_UP, variables);
