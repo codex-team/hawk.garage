@@ -2,6 +2,7 @@ import {
   FETCH_EVENT,
   FETCH_EVENT_REPETITIONS,
   FETCH_RECENT_EVENTS,
+  FETCH_PROJECT_OVERVIEW,
   INIT_EVENTS_MODULE,
   REMOVE_EVENT_ASSIGNEE,
   SET_EVENTS_FILTERS,
@@ -97,7 +98,9 @@ enum MutationTypes {
   /**
    * Set project search
    */
-  SetProjectSearch = 'SET_PROJECT_SEARCH'
+  SetProjectSearch = 'SET_PROJECT_SEARCH',
+
+  fetchProjectOverview = 'FETCH_PROJECT_OVERVIEW',
 }
 
 /**
@@ -107,7 +110,7 @@ export interface EventsModuleState {
   /**
    * Map for storing HawkEvent by their unique key (projectId:eventId)
    */
-  list: EventsMap;
+  events: EventsMap;
 
   /**
    * Project's recent events grouped by date RecentInfoByDate
@@ -215,7 +218,7 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} groupHash - event group hash
        */
       return (projectId: string, groupHash: string): HawkEvent | null => {
-        const eventEntry = Object.entries(state.list).find(([key, _event]) =>
+        const eventEntry = Object.entries(state.events).find(([key, _event]) =>
           key.startsWith(projectId) && _event.groupHash === groupHash);
 
         const event = eventEntry && eventEntry[1];
@@ -253,7 +256,7 @@ const module: Module<EventsModuleState, RootState> = {
       return (projectId: string, eventId: string): HawkEvent | null => {
         const key = getEventsListKey(projectId, eventId);
 
-        return state.list[key] || null;
+        return state.events[key] || null;
       };
     },
 
@@ -272,7 +275,7 @@ const module: Module<EventsModuleState, RootState> = {
         const key = getEventsListKey(projectId, eventId);
 
         if (!state.repetitions[key]) {
-          return state.list[key] || null;
+          return state.events[key] || null;
         }
 
         let repetition;
@@ -291,7 +294,7 @@ const module: Module<EventsModuleState, RootState> = {
         /**
          * Process the repetition payload
          */
-        const event = composeFullRepetitionEvent(state.list[key], repetition);
+        const event = composeFullRepetitionEvent(state.events[key], repetition);
 
         return event;
       };
@@ -343,7 +346,7 @@ const module: Module<EventsModuleState, RootState> = {
         if (latestProjectEvent) {
           const lastEventGroupHash = latestProjectEvent.groupHash;
 
-          return Object.values(state.list).find((event) => event.groupHash === lastEventGroupHash) || null;
+          return Object.values(state.events).find((event) => event.groupHash === lastEventGroupHash) || null;
         }
 
         return null;
@@ -467,6 +470,52 @@ const module: Module<EventsModuleState, RootState> = {
 
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
+
+    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }): Promise<void> {
+      const eventsSortOrder = getters.getProjectOrder(projectId);
+      const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
+        projectId,
+        nextCursor,
+        eventsSortOrder,
+        getters.getProjectFilters(projectId),
+        search
+      );
+
+      if (dailyEventsPortion === null) {
+        throw new Error('Error [FETCH_PROJECT_OVERVIEW]: Project not found');
+      }
+
+      /**
+       * Reset loadedEventsCount only when starting a new search
+       * This ensures proper pagination during search
+       */
+      if (search.trim().length > 0 && !loadedEventsCount[projectId]) {
+        loadedEventsCount[projectId] = 0;
+      }
+
+      const eventsGroupedByDate = groupByGroupingTimestamp(
+        dailyEventsPortion.dailyInfo,
+        eventsSortOrder !== EventsSortOrder.ByCount
+      );
+
+      loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
+
+      commit(MutationTypes.AddToEventsList, {
+        projectId,
+        eventsList: recentEvents.events,
+      });
+
+      /**
+       * Always use AddToRecentEventsList for pagination
+       * This ensures that new events are appended to the existing list
+       * regardless of whether there is a search query or not
+       */
+      commit(MutationTypes.AddToRecentEventsList, {
+        projectId,
+        recentEventsInfoByDate: eventsGroupedByDate,
+      });
+    },
+
 
     /**
      * Fetches latest repetitions
@@ -827,7 +876,7 @@ const module: Module<EventsModuleState, RootState> = {
       { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }
     ): void {
       eventsList.forEach((event) => {
-        Vue.set(state.list, getEventsListKey(projectId, event.id), event);
+        Vue.set(state.events, getEventsListKey(projectId, event.id), event);
       });
     },
 
@@ -877,12 +926,12 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.UpdateEvent](state, { projectId, event }): void {
       const key = getEventsListKey(projectId, event.id);
 
-      if (state.list[key]) {
-        const obj = Object.assign({}, state.list[key], event);
+      if (state.events[key]) {
+        const obj = Object.assign({}, state.events[key], event);
 
-        Vue.set(state.list, key, obj);
+        Vue.set(state.events, key, obj);
       } else {
-        Vue.set(state.list, key, event);
+        Vue.set(state.events, key, event);
       }
     },
 
@@ -899,10 +948,10 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.MarkAsVisited](state, { projectId, eventId, user }): void {
       const key = getEventsListKey(projectId, eventId);
 
-      const event = state.list[key];
+      const event = state.events[key];
       const visitedBy = new Set([...(event.visitedBy || []), user]);
 
-      Vue.set(state.list[key], 'visitedBy', Array.from(visitedBy));
+      Vue.set(state.events[key], 'visitedBy', Array.from(visitedBy));
     },
 
     /**
@@ -918,10 +967,10 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.ToggleMark](state, { projectId, eventId, mark }): void {
       const key = getEventsListKey(projectId, eventId);
 
-      const event = state.list[key];
+      const event = state.events[key];
       const { marks } = event;
 
-      Vue.set(state.list[key].marks, mark, !marks[mark]);
+      Vue.set(state.events[key].marks, mark, !marks[mark]);
     },
 
     /**
@@ -997,9 +1046,9 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[] }): void {
       const key = getEventsListKey(projectId, eventId);
-      // const event = state.list[key];
+      // const event = state.events[key];
 
-      Vue.set(state.list[key], 'chartData', data);
+      Vue.set(state.events[key], 'chartData', data);
     },
 
     /**
