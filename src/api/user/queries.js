@@ -18,8 +18,8 @@ mutation login($email: String!, $password: String!) {
  * SignUp mutation
  */
 export const MUTATION_SIGN_UP = `
-mutation signUp($email: String!) {
-  signUp(email: $email)
+mutation signUp($email: String!, $utm: UtmInput) {
+  signUp(email: $email, utm: $utm)
 }
 `;
 

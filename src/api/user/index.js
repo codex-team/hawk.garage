@@ -11,6 +11,7 @@ import {
   QUERY_CURRENT_USER_WITH_NOTIFICATIONS, QUERY_BANK_CARDS
 } from './queries';
 import * as api from '../index.ts';
+import { processUtmParams } from '../../utils/utm';
 
 /**
  * @typedef {object} TokensPair
@@ -36,10 +37,19 @@ export async function login(email, password) {
  * Sign up by email and return status (true or false)
  *
  * @param {string} email - Email
+ * @param {object} utm - UTM parameters object
  * @returns {Promise<{data: {signUp: boolean}, errors: object[]}>} Response data
  */
-export async function signUp(email) {
-  return api.call(MUTATION_SIGN_UP, { email });
+export async function signUp(email, utm) {
+  const variables = { email };
+
+  // Process UTM data (validate and sanitize)
+  const processedUtm = processUtmParams(utm);
+  if (processedUtm) {
+    variables.utm = processedUtm;
+  }
+
+  return api.call(MUTATION_SIGN_UP, variables);
 }
 
 /**

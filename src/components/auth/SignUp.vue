@@ -3,6 +3,7 @@
     <Form
       class="auth-page__form"
       :fields="fields"
+      :hidden-fields="hiddenFields"
       :submit-text="submitText"
       :message="message"
       @submit="signUp"
@@ -37,6 +38,43 @@ export default {
       message: null,
     };
   },
+  computed: {
+    /**
+     * Extract UTM parameters from route query and make them reactive
+     */
+    hiddenFields() {
+      const utmFields = [];
+      const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+
+      utmParams.forEach((param) => {
+        const value = this.$route.query[param];
+        if (value && typeof value === 'string' && value.trim().length > 0) {
+          utmFields.push({
+            name: param,
+            value: value.trim(),
+            type: 'hidden',
+          });
+        }
+      });
+
+      return utmFields;
+    },
+
+    /**
+     * Get UTM data as object for API calls
+     */
+    utmData() {
+      const utmData = {};
+
+      this.hiddenFields.forEach((field) => {
+        // Remove 'utm_' prefix from field names
+        const cleanKey = field.name.replace('utm_', '');
+        utmData[cleanKey] = field.value;
+      });
+
+      return Object.keys(utmData).length > 0 ? utmData : undefined;
+    },
+  },
   methods: {
     /**
      * Form submit event handler
@@ -45,7 +83,10 @@ export default {
       const email = this.fields[0].value;
 
       try {
-        await this.$store.dispatch(SIGN_UP, { email });
+        await this.$store.dispatch(SIGN_UP, {
+          email,
+          utm: this.utmData,
+        });
 
         this.$router.push({
           name: 'login',

@@ -55,6 +55,14 @@
           :label="field.label"
           :placeholder="field.placeholder"
         />
+        <!-- Hidden fields for UTM parameters -->
+        <input
+          v-for="(field, index) in hiddenFields"
+          :key="`hidden-${index}`"
+          type="hidden"
+          :name="field.name"
+          :value="field.value"
+        />
         <div class="auth-form__action-container">
           <input
             v-if="submitText"
@@ -89,6 +97,10 @@ export default {
     fields: {
       type: Array,
       required: true,
+    },
+    hiddenFields: {
+      type: Array,
+      default: () => [],
     },
     submitText: {
       type: String,
