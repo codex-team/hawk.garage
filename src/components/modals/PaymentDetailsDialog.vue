@@ -217,7 +217,6 @@ import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 import { getCurrencySign } from '@/utils';
 import { errorCodes } from '@/api';
-import { ApiError } from '@/types/api-error';
 
 /**
  * Id for the 'New card' option in select
