@@ -5,7 +5,7 @@
         {{ $t('event.repetitions.since') }}
       </div>
       <div class="event-daily__since">
-        {{ originalEvent.payload.timestamp | prettyFullDate }}
+        {{ originalEvent.timestamp | prettyFullDate }}
         <span
           v-if="daysRepeating > 1"
           class="event-daily__since-days"
@@ -77,7 +77,7 @@ export default Vue.extend({
       }
 
       const now = (new Date()).getTime();
-      const eventTimestamp = this.originalEvent.payload.timestamp * 1000;
+      const eventTimestamp = this.originalEvent.timestamp * 1000;
       const firstOccurrence = (new Date(eventTimestamp).getTime());
       const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 

@@ -20,7 +20,6 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import UiButton from '../utils/UiButton.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
-
 export default Vue.extend({
   name: 'EventLimitModal',
   components: {
@@ -60,21 +59,18 @@ export default Vue.extend({
   max-width: 500px;
   padding: 40px;
   text-align: center;
-
   &__title {
     margin: 0 0 15px;
     font-weight: bold;
     font-size: 20px;
     color: var(--color-text-main);
   }
-
   &__description {
     margin: 0 0 30px;
     color: var(--color-text-second);
     font-size: 14px;
     line-height: 1.5;
   }
-
   &__actions {
     display: flex;
     gap: 15px;

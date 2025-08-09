@@ -115,6 +115,11 @@ export interface HawkEvent {
   assignee: User;
 
   /**
+   * Unix timestamp of the event
+   */
+  timestamp: number;
+
+  /**
    * Event chart data for a few days
    */
   chartData?: EventChartItem[];
@@ -176,11 +181,6 @@ export interface HawkEventPayload {
    * Event title
    */
   title: string;
-
-  /**
-   * Event timestamp
-   */
-  timestamp: number;
 
   /**
    * Event stack array from the latest call to the earliest
@@ -251,6 +251,11 @@ export interface HawkEventRepetition {
    * Flag indicating if the payload has been patched, in case of processing repetition after fetching, we don't need to patch it again
    */
   isPayloadPatched?: boolean;
+
+  /**
+   * Unix timestamp of the repetition date
+   */
+  timestamp: number;
 }
 
 export interface HawkEventBacktraceFrame {

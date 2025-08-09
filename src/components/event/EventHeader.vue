@@ -5,7 +5,7 @@
         v-if="!loading"
         class="event-header__date"
       >
-        {{ event.payload.timestamp | prettyFullDate }}
+        {{ event.timestamp | prettyFullDate }}
       </span>
 
       <div

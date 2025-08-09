@@ -358,7 +358,10 @@ export default Vue.extend({
      * @param value - user input string with commas
      */
     splitIncludingFilters(value: string): void {
-      this.form.including = value.split(',');
+      this.form.including = value.split(',').flatMap((item) => {
+        item = item.trim()
+        return item !== '' ? item : [];
+      });
     },
 
     /**
@@ -367,7 +370,10 @@ export default Vue.extend({
      * @param value - user input string with commas
      */
     splitExcludingFilters(value: string): void {
-      this.form.excluding = value.split(',');
+      this.form.excluding = value.split(',').flatMap((item) => {
+        item = item.trim()
+        return item !== '' ? item : [];
+      });
     },
 
     /**
