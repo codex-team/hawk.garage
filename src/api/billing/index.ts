@@ -1,6 +1,7 @@
-import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS } from './queries';
+import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
 import { BusinessOperation } from '../../types/business-operation';
+import { BeforePaymentPayload } from '@/types/before-payment-payload';
 
 /**
  * Request business operations list for passed workspaces
@@ -38,4 +39,21 @@ export interface PayWithCardInput {
  */
 export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
   return (await api.callOld(MUTATION_PAY_WITH_CARD, { input })).payWithCard.record;
+}
+
+/**
+ * Prepare payment data (compose payment)
+ *
+ * @param workspaceId - id of workspace
+ * @param tariffPlanId - id of plan
+ * @param shouldSaveCard - whether to save the card
+ */
+export async function composePayment(
+  workspaceId: string,
+  tariffPlanId: string,
+  shouldSaveCard = false
+): Promise<unknown> {
+  return await api.call(QUERY_COMPOSE_PAYMENT, {
+    input: { workspaceId, tariffPlanId, shouldSaveCard },
+  });
 }

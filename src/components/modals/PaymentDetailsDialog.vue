@@ -22,7 +22,7 @@
 
         <!--Description-->
         <div
-          v-if="paymentData.isCardLinkOperation"
+          v-if="paymentData && paymentData.isCardLinkOperation"
           class="payment-details__description"
         >
           <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ nextPaymentDateInSeconds | prettyFullDate(false) }}</p>
@@ -208,7 +208,7 @@ import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
 import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
-import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
+import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
 import { PayWithCardInput } from '../../api/billing';
@@ -216,7 +216,6 @@ import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 import { getCurrencySign } from '@/utils';
-import { composePayment } from '@/api/billing/requests';
 
 /**
  * Id for the 'New card' option in select
@@ -445,17 +444,23 @@ export default Vue.extend({
       document.head.appendChild(widgetScript);
     }
 
-    this.$store.dispatch(FETCH_BANK_CARDS);
-
     try {
-      // Fetch payment data when component is mounted
-      this.paymentData = await composePayment(this.workspaceId, this.tariffPlanId, this.shouldSaveCard);
+      // Fetch payment data when component is mounted via store
+      this.paymentData = await this.$store.dispatch(COMPOSE_PAYMENT, {
+        workspaceId: this.workspaceId,
+        tariffPlanId: this.tariffPlanId,
+        shouldSaveCard: this.shouldSaveCard,
+      });
     } catch (e) {
+      const key = 'errors.' + (e as Error).message;
+      const message = this.$te(key) ? this.$t(key) as string : this.$t('billing.notifications.error');
+
       notifier.show({
-        message: this.$t('billing.notifications.error') as string,
+        message: message as string,
         style: 'error',
         time: 5000,
       });
+      
       this.$emit('close');
     } finally {
       this.isLoading = false;
