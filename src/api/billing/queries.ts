@@ -63,3 +63,24 @@ export const MUTATION_PAY_WITH_CARD = `
 
   ${FRAGMENT_BUSINESS_OPERATION}
 `;
+
+// language=GraphQL
+/**
+ * Query to prepare payment data (GraphQL version of composePayment)
+ */
+export const QUERY_COMPOSE_PAYMENT = `
+  query ComposePayment($input: ComposePaymentInput!) {
+    composePayment(input: $input) {
+      invoiceId
+      plan {
+        id
+        name
+        monthlyCharge
+      }
+      isCardLinkOperation
+      currency
+      checksum
+      nextPaymentDate
+    }
+  }
+`;

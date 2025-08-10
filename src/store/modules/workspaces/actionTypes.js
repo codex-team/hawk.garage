@@ -77,3 +77,8 @@ export const CANCEL_SUBSCRIPTION = 'CANCEL_SUBSCRIPTION';
  * Process payment via saved card
  */
 export const PAY_WITH_CARD = 'PAY_WITH_CARD';
+
+/**
+ * Prepare payment data
+ */
+export const COMPOSE_PAYMENT = 'COMPOSE_PAYMENT';
