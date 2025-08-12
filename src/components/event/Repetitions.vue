@@ -60,7 +60,7 @@ import Vue from 'vue';
 import { FETCH_EVENT_REPETITIONS } from '@/store/modules/events/actionTypes';
 import i18n from './../../i18n';
 import RepetitionsList from './RepetitionsList.vue';
-import { HawkEvent, HawkEventRepetition } from '@/types/events';
+import { HawkEvent } from '@/types/events';
 import { mapGetters } from 'vuex';
 
 export default Vue.extend({
@@ -108,7 +108,7 @@ export default Vue.extend({
       repetitions: 'getProjectEventRepetitions',
     }),
     originalEvent(): HawkEvent {
-      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
+      return this.$store.getters.getProjectEventById(this.projectId, this.event.groupHash);
     },
     groupedRepetitions() {
       /**
@@ -119,7 +119,7 @@ export default Vue.extend({
        */
       const groupedRepetitions = new Map();
 
-      this.repetitions(this.projectId, this.event.id).forEach(repetition => {
+      this.repetitions(this.projectId, this.event.groupHash).forEach(repetition => {
         const date = this.getDate(repetition.timestamp);
 
         if (!groupedRepetitions.get(date)) {
@@ -162,7 +162,7 @@ export default Vue.extend({
 
       const newRepetitions = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
         projectId: this.projectId,
-        eventId: this.event.id,
+        groupHash: this.event.groupHash,
         limit: REPETITIONS_LIMIT,
       });
 

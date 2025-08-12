@@ -37,7 +37,7 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
 import { HawkEvent } from '@/types/events';
-import { FETCH_EVENT, FETCH_EVENT_REPETITIONS, VISIT_EVENT } from '@/store/modules/events/actionTypes';
+import { FETCH_EVENT, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { mapGetters } from 'vuex';
 
 export default Vue.extend({
@@ -88,7 +88,7 @@ export default Vue.extend({
     event(): HawkEvent {
       const { repetitionId, eventId, projectId } = this.$route.params;
 
-      return this.getEvent(projectId, eventId, repetitionId);
+      return this.getEvent(projectId, repetitionId);
     },
   },
   /**
@@ -97,17 +97,11 @@ export default Vue.extend({
    * @returns {Promise<void>}
    */
   async created() {
-    const eventId = this.$route.params.eventId;
     const repetitionId = this.$route.params.repetitionId;
 
     await this.$store.dispatch(FETCH_EVENT, {
       projectId: this.projectId,
-      eventId
-    });
-
-    await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
-      projectId: this.projectId,
-      eventId
+      repetitionId,
     });
 
     this.loading = false;
@@ -133,7 +127,7 @@ export default Vue.extend({
       if (!this.event.visitedBy || !this.event.visitedBy.find(user => user.id === userId)) {
         this.$store.dispatch(VISIT_EVENT, {
           projectId: this.projectId,
-          eventId: this.eventId,
+          groupHash: this.event.groupHash,
         });
       }
     },

@@ -27,7 +27,7 @@
 import Vue from 'vue';
 import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
-import { HawkEvent, HawkEventRepetition } from '../../types/events';
+import { HawkEvent } from '../../types/events';
 import { EventChartItem } from '../../types/chart';
 
 export default Vue.extend({
@@ -64,7 +64,7 @@ export default Vue.extend({
     /**
      * Get the the first event entity
      */
-    originalEvent(): HawkEventRepetition {
+    originalEvent(): HawkEvent {
       return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
     },
 
@@ -77,7 +77,7 @@ export default Vue.extend({
       }
 
       const now = (new Date()).getTime();
-      const eventTimestamp = this.originalEvent.timestamp * 1000;
+      const eventTimestamp = this.originalEvent.firstAppearanceTimestamp * 1000;
       const firstOccurrence = (new Date(eventTimestamp).getTime());
       const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
@@ -95,7 +95,7 @@ export default Vue.extend({
     if (!this.event.chartData) {
       await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
-        eventId: this.event.id,
+        groupHash: this.event.groupHash,
         days: twoWeeks + boundingDays,
       });
     }

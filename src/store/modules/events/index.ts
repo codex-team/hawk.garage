@@ -15,14 +15,14 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Commit, Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { filterBeautifiedAddons, groupByGroupingTimestamp, composeFullRepetitionEvent } from '@/utils';
+import { filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
 import { RootState } from '../../index';
 import {
   EventsFilters,
   EventsSortOrder,
   HawkEvent,
   HawkEventDailyInfo,
-  HawkEventRepetition
+  HawkEventRepetitionsMap
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -35,6 +35,11 @@ enum MutationTypes {
    * Set new events list
    */
   SetEventsList = 'SET_EVENTS_LIST',
+
+  /**
+   * Add new data to event repetitions list
+   */
+  AddToEventRepetitions = 'ADD_TO_EVENT_REPETITIONS',
 
   /**
    * Set new recent events list
@@ -117,7 +122,7 @@ export interface EventsModuleState {
   /**
    * Event's repetitions map
    */
-  repetitions: { [key: string]: HawkEventRepetition[] };
+  eventRepetitions: HawkEventRepetitionsMap;
 
   /**
    * Event's filters rules map by project id
@@ -168,7 +173,7 @@ function initialState(): EventsModuleState {
   return {
     list: {},
     recent: {},
-    repetitions: {},
+    eventRepetitions: {},
     filters: {},
     latest: {},
     search: {},
@@ -266,34 +271,11 @@ const module: Module<EventsModuleState, RootState> = {
       /**
        * @param projectId - event's project id
        * @param eventId - event id
-       * @param repetitionId - id of specific repetition of the event
        */
-      return (projectId: string, eventId: string, repetitionId: string): HawkEvent | null => {
+      return (projectId: string, eventId: string): HawkEvent | null => {
         const key = getEventsListKey(projectId, eventId);
 
-        if (!state.repetitions[key]) {
-          return state.list[key] || null;
-        }
-
-        let repetition;
-
-        if (!repetitionId) {
-          /**
-           * Repetitions go in reverse order, so first in array is latest occurred
-           */
-          repetition = state.repetitions[key][0];
-        } else {
-          repetition = state.repetitions[key].find(item => {
-            return item.id === repetitionId;
-          });
-        }
-
-        /**
-         * Process the repetition payload
-         */
-        const event = composeFullRepetitionEvent(state.list[key], repetition);
-
-        return event;
+        return state.list[key];
       };
     },
 
@@ -306,11 +288,16 @@ const module: Module<EventsModuleState, RootState> = {
       /**
        * @param projectId — id of project event is related to
        * @param eventId - id of event
+       * @param groupHash
        */
-      return (projectId: string, eventId: string): HawkEventRepetition[] => {
-        const key = getEventsListKey(projectId, eventId);
+      return (projectId: string, groupHash: string): HawkEvent[] => {
+        const repetitions = state.eventRepetitions[groupHash];
 
-        return state.repetitions[key] || [];
+        if (!repetitions) {
+          return [];
+        }
+
+        return repetitions.eventIds.map(eventId => state.list[getEventsListKey(projectId, eventId)]);
       };
     },
 
@@ -483,48 +470,27 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_EVENT_REPETITIONS](
       { commit, state }: { commit: Commit, state: EventsModuleState },
-      { projectId, eventId, limit }: { projectId: string; eventId: string; limit: number; }
-    ): Promise<HawkEventRepetition[]> {
-      const originalEvent = await eventsApi.getEvent(projectId, eventId, eventId);
+      { projectId, groupHash, limit }: { projectId: string; groupHash: string; limit: number; }
+    ): Promise<HawkEvent[]> {
+      const cursor = state.eventRepetitions[groupHash]?.cursor;
 
-      const key = getEventsListKey(projectId, eventId);
-      const skip = (state.repetitions[key] || []).length;
+      const response = await eventsApi.getLatestRepetitions(projectId, groupHash, limit, cursor);
 
-      const response = await eventsApi.getLatestRepetitions(projectId, eventId, skip, limit);
+      const repetitions = response.data.project.event.repetitions;
 
-      if (originalEvent) {
-        filterBeautifiedAddons([originalEvent]);
-      }
+      repetitions.forEach(repetition => {
+        filterBeautifiedAddons([ repetition ]);
+      });
 
-      /**
-       * If delta is present, apply delta to the event payload
-       */
-      const repetitions = response.data.project.event.repetitions.map(repetition => {
-        let composedRepetition: HawkEventRepetition = repetition;
+      commit(MutationTypes.AddToEventsList, {
+        projectId,
+        eventsList: repetitions,
+      });
 
-        /**
-         * If original event is present, apply delta to the repetition payload
-         */
-        if (originalEvent) {
-          composedRepetition = {
-            ...repetition,
-            payload: composeFullRepetitionEvent(originalEvent, repetition).payload,
-          };
-        }
-
-        /**
-         * Solution for not displaying both `userAgent` and `beautifiedUserAgent` addons
-         */
-        filterBeautifiedAddons([composedRepetition]);
-
-        commit(MutationTypes.AddRepetitionPayload, {
-          projectId,
-          eventId,
-          repetition: composedRepetition,
-          isPayloadPatched: true,
-        });
-
-        return composedRepetition;
+      commit(MutationTypes.AddToEventRepetitions, {
+        groupHash,
+        eventIds: repetitions.map(repetition => repetition.id),
+        cursor: response.data.project.event.cursor,
       });
 
       return repetitions;
@@ -565,15 +531,15 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.projectId - project event is related to
      * @param {string} payload.eventId - visited event
      */
-    async [VISIT_EVENT]({ commit, rootState }, { projectId, eventId }): Promise<void> {
-      const result = await eventsApi.visitEvent(projectId, eventId);
+    async [VISIT_EVENT]({ commit, rootState }, { projectId, groupHash }): Promise<void> {
+      const result = await eventsApi.visitEvent(projectId, groupHash);
 
       const user = (rootState as RootState).user.data;
 
       if (result) {
         commit(MutationTypes.MarkAsVisited, {
           projectId,
-          eventId,
+          groupHash,
           user,
         });
       }
@@ -590,10 +556,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - event to set mark
      * @param {EventMark} payload.mark - mark to set
      */
-    async [TOGGLE_EVENT_MARK]({ commit }, { projectId, eventId, mark }): Promise<void> {
+    async [TOGGLE_EVENT_MARK]({ commit }, { projectId, groupHash, mark }): Promise<void> {
       const commitAction = (): void => commit(MutationTypes.ToggleMark, {
         projectId,
-        eventId,
+        groupHash,
         mark,
       });
 
@@ -602,7 +568,7 @@ const module: Module<EventsModuleState, RootState> = {
        */
       commitAction();
 
-      const result = await eventsApi.toggleEventMark(projectId, eventId, mark);
+      const result = await eventsApi.toggleEventMark(projectId, groupHash, mark);
 
       /**
        * If API returns error, revert state
@@ -629,12 +595,12 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - project id
-     * @param {string} payload.eventId - event id
+     * @param {string} payload.groupHash - event id
      * @param {User} payload.assignee - user to assign to this event
      */
-    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string; eventId: string; assignee: User }): Promise<void> {
-      const result = await eventsApi.updateAssignee(projectId, eventId, assignee.id);
-      const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, groupHash, assignee }: { projectId: string; groupHash: string; assignee: User }): Promise<void> {
+      const result = await eventsApi.updateAssignee(projectId, groupHash, assignee.id);
+      const event: HawkEvent = this.getters.getProjectEventById(projectId, groupHash);
 
       if (result.success) {
         commit(MutationTypes.SetEventAssignee, {
@@ -652,11 +618,11 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - project id
-     * @param {string} payload.eventId - event id
+     * @param {string} payload.groupHash - event id
      */
-    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string; eventId: string }): Promise<void> {
-      const result = await eventsApi.removeAssignee(projectId, eventId);
-      const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, groupHash }: { projectId: string; groupHash: string }): Promise<void> {
+      const result = await eventsApi.removeAssignee(projectId, groupHash);
+      const event: HawkEvent = this.getters.getProjectEventById(projectId, groupHash);
 
       if (result.success) {
         commit(MutationTypes.SetEventAssignee, {
@@ -726,17 +692,17 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} project - object of project data
      * @param {string} project.projectId - project's id
-     * @param {string} project.eventId - event's id
+     * @param {string} project.groupHash - event's id
      * @param {number} project.days - number of a "few" days
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: { projectId: string; eventId: string; days: number }): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, groupHash, days }: { projectId: string; groupHash: string; days: number }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
-      const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
+      const chartData = await eventsApi.fetchChartData(projectId, groupHash, days, timezoneOffset);
 
       commit(MutationTypes.SaveChartData, {
         projectId,
-        eventId,
+        groupHash,
         data: chartData,
       });
     },
@@ -750,6 +716,22 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.SetEventsList](state, eventsMap: EventsMap): void {
       Vue.set(state, 'list', eventsMap);
+    },
+
+    /**
+     * Mutation for adding new event repetitions to the store
+     *
+     * @param {EventsModuleState} state - Vuex state
+     * @param {object} payload - vuex mutation payload
+     * @param {string} payload.groupHash - event's id
+     * @param {string[]} payload.eventIds - array of event ids
+     * @param {string} [payload.cursor] - cursor for pagination
+     */
+    [MutationTypes.AddToEventRepetitions](state, { groupHash, eventIds, cursor }: { groupHash: string; eventIds: string[]; cursor?: string }): void {
+      Vue.set(state.eventRepetitions, groupHash, {
+        eventIds: [...(state.eventRepetitions[groupHash]?.eventIds || []), ...eventIds],
+        cursor,
+      });
     },
 
     /**
@@ -841,28 +823,6 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.SetRecentEventsList](state, { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }): void {
       Vue.set(state.recent, projectId, recentEventsInfoByDate);
-    },
-
-    /**
-     * Updates repetitions for event id
-     *
-     * @param state - event module state
-     *
-     * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - id of a project that owns the event
-     * @param {string} payload.eventId - id of the event
-     * @param {HawkEvent} payload.repetition - repetition to save
-     */
-    [MutationTypes.AddRepetitionPayload](state: EventsModuleState, { projectId, eventId, repetition }): void {
-      const key = getEventsListKey(projectId, eventId);
-
-      if (!state.repetitions[key]) {
-        Vue.set(state.repetitions, key, [repetition]);
-
-        return;
-      }
-
-      Vue.set(state.repetitions, key, [...state.repetitions[key], repetition]);
     },
 
     /**

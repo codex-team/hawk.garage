@@ -1,4 +1,4 @@
-import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
+import { USER_FRAGMENT, EVENT_BACKTRACE, EVENT_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
@@ -8,71 +8,12 @@ export const QUERY_EVENT = `
   query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID) {
     project(projectId: $projectId) {
       event(id: $eventId) {
-        id
-        catcherType
-        totalCount
-        groupHash
-        visitedBy {
-          ...User
-        }
-        marks {
-          resolved
-          starred
-          ignored
-        }
-        timestamp
-        payload {
-          title
-          type
-          release
-          context
-          user {
-            id
-            name
-            photo
-          }
-          get
-          backtrace {
-            ...eventBacktrace
-          }
-          addons
-        }
-        usersAffected
-        repetition(id: $repetitionId) {
-          id
-          timestamp
-          payload {
-            release
-            context
-            user {
-              id
-              name
-              photo
-            }
-            get
-            backtrace {
-              ...eventBacktrace
-            }
-            addons
-          }
-          delta
-        }
-        release {
-          releaseName
-          commits{
-            hash
-            author
-            title
-            date
-          }
-        }
+        ...Event
       }
     }
   }
 
-  ${USER_FRAGMENT}
-
-  ${EVENT_BACKTRACE}
+  ${EVENT_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -137,36 +78,14 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 export const QUERY_LATEST_REPETITIONS = `
   query LatestRepetitions(
     $projectId: ID!,
-    $eventId: ID!,
-    $skip: Int,
-    $limit: Int
+    $groupHash: ID!,
+    $limit: Int,
+    $cursor: String
   ) {
     project(projectId: $projectId) {
-      event(id: $eventId) {
-        repetitions(skip: $skip, limit: $limit) {
-          id
-          timestamp
-          payload {
-            title,
-            release
-            context
-            user {
-              id
-              name
-              photo
-            }
-            get
-            backtrace {
-              line
-              sourceCode {
-                line
-                content
-              }
-              file
-            }
-            addons
-          }
-          delta
+      event(groupHash: $groupHash) {
+        repetitions(limit: $limit, cursor: $cursor) {
+          ...Event
         }
       }
     }
@@ -204,8 +123,8 @@ export const QUERY_CHART_DATA = `
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `
-  mutation visitEvent($projectId: ID!, $eventId: ID!) {
-    visitEvent(project: $projectId, id: $eventId)
+  mutation visitEvent($projectId: ID!, $groupHash: ID!) {
+    visitEvent(project: $projectId, groupHash: $groupHash)
   }
 `;
 
@@ -214,8 +133,8 @@ export const MUTATION_VISIT_EVENT = `
  * GraphQL Mutation to set mark to event for current user
  */
 export const MUTATION_TOGGLE_EVENT_MARK = `
-  mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
-    toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
+  mutation toggleEventMark($projectId: ID!, $groupHash: ID!, $mark: EventMark!) {
+    toggleEventMark(project: $projectId, groupHash: $groupHash, mark: $mark)
   }
 `;
 
