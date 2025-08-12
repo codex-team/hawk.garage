@@ -4,6 +4,18 @@
 const VALID_UTM_KEYS = ['source', 'medium', 'campaign', 'content', 'term'];
 
 /**
+ * Regular expression for valid UTM characters
+ * Allows: alphanumeric, spaces, hyphens, underscores, dots
+ */
+const VALID_UTM_CHARACTERS = /^[a-zA-Z0-9\s\-_.]+$/;
+
+/**
+ * Regular expression for invalid UTM characters (inverse of VALID_UTM_CHARACTERS)
+ * Used for cleaning/sanitizing values
+ */
+const INVALID_UTM_CHARACTERS = /[^a-zA-Z0-9\s\-_.]/g;
+
+/**
  * Validates UTM parameters object
  * @param {Object} utm - UTM parameters to validate
  * @returns {boolean} - true if valid, false if invalid
@@ -44,7 +56,7 @@ export function validateUtmParams(utm) {
       }
 
       // Check for valid characters - only allow alphanumeric, spaces, hyphens, underscores, dots
-      if (!/^[a-zA-Z0-9\s\-_.]+$/.test(value)) {
+      if (!VALID_UTM_CHARACTERS.test(value)) {
         return false;
       }
     }
@@ -68,10 +80,7 @@ export function sanitizeUtmParams(utm) {
   for (const [key, value] of Object.entries(utm)) {
     if (VALID_UTM_KEYS.includes(key) && value && typeof value === 'string') {
       // Sanitize value: keep only allowed characters and limit length
-      const cleanValue = value
-        .replace(/[^a-zA-Z0-9\s\-_.]/g, '')
-        .trim()
-        .substring(0, 200);
+      const cleanValue = value.replace(INVALID_UTM_CHARACTERS, '').trim().substring(0, 200);
 
       if (cleanValue.length > 0) {
         sanitized[key] = cleanValue;
