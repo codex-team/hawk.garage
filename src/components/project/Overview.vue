@@ -13,7 +13,7 @@
       <FiltersBar />
       <!-- TODO: Add placeholder if there is no filtered events -->
       <div
-        v-if="recentEvents"
+        v-if="dailyEvents"
         class="project-overview__events"
       >
         <SearchField
@@ -31,7 +31,7 @@
         />
         <template v-if="!isListEmpty">
           <div
-            v-for="(eventsByDate, date) in recentEvents"
+            v-for="(eventsByDate, date) in dailyEvents"
             :key="date"
             class="project-overview__events-by-date"
           >
@@ -41,11 +41,11 @@
             <EventItem
               v-for="(dailyEventInfo, index) in eventsByDate"
               :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-              :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
+              :last-occurrence-timestamp="dailyEventInfo.event.timestamp"
               :count="dailyEventInfo.count"
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
-              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
+              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.event.groupHash)"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
               @showEventOverview="
                 showEventOverview(
@@ -69,7 +69,7 @@
           <EventItemSkeleton />
         </div>
         <div
-          v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
+          v-else-if="Object.keys(dailyEvents).length === 0 && !isLoadingEvents"
           class="project-overview__no-events-placeholder"
         >
           <div class="project-overview__divider" />
@@ -95,7 +95,7 @@ import EventItem from './EventItem';
 import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import {
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
@@ -212,26 +212,26 @@ export default {
     },
 
     /**
-     * Project recent errors
+     * Project daily events
      *
      * @returns {RecentInfoByDate}
      */
-    recentEvents() {
+    dailyEvents() {
       if (!this.project) {
         return null;
       }
 
-      return this.$store.getters.getRecentEventsByProjectId(this.projectId);
+      return this.$store.getters.getDailyEventsByProjectId(this.projectId);
     },
 
     ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),
 
     isListEmpty() {
-      if (!this.recentEvents) {
+      if (!this.dailyEvents) {
         return true;
       }
 
-      return Object.keys(this.recentEvents).length === 0;
+      return Object.keys(this.dailyEvents).length === 0;
     },
 
     searchFieldPlaceholder() {
@@ -254,7 +254,7 @@ export default {
     }, 500);
 
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+      this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
         search: this.searchQuery,
       });
@@ -311,6 +311,9 @@ export default {
       projectId: this.projectId,
       search: '',
     });
+
+    // @todo - commit daily events nextCursor flush 
+    this.$store.commit('')
   },
 
   unmounted() {
@@ -346,7 +349,7 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+      this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
         search: this.searchQuery,
       });
@@ -443,7 +446,7 @@ export default {
 
       this.isLoadingEvents = true;
       try {
-        this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+        this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
           projectId: this.projectId,
           search: sanitizedQuery,
         });

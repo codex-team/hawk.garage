@@ -184,14 +184,9 @@ export interface HawkEventDailyInfo {
   readonly groupingTimestamp: number;
 
   /**
-   * Event's last repetition id
+   * Id of the event that would represent all events with same groupHash in this day
    */
-  readonly lastRepetitionId: string;
-
-  /**
-   * Last event occurrence timestamp
-   */
-  readonly lastRepetitionTime: number;
+  readonly event: HawkEventRepetition;
 
   /**
    * Event affected users count, null for old events, when affected users count was not calculated
@@ -256,6 +251,7 @@ export interface HawkEventPayload {
 
 /**
  * Hawk repetition payload
+ * @todo use only event hawk event type for daily info
  */
 export interface HawkEventRepetition {
   /**

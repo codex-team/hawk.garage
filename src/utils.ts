@@ -127,7 +127,7 @@ export function groupByGroupingTimestamp(items: object[], convertMidnight = true
 
   items = items.map((item) => {
     return Object.assign({}, item, {
-      groupingTimestamp: convertUtcMidnightToLocalMidnight((item as HawkEventDailyInfo).lastRepetitionTime),
+      groupingTimestamp: convertUtcMidnightToLocalMidnight((item as HawkEventDailyInfo).event.timestamp),
     });
   });
 

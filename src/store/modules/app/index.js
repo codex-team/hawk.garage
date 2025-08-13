@@ -91,24 +91,26 @@ const actions = {
     /**
      * @type {RecentInfoByDate} - latest event from all projects
      */
-    const recentEvents = {};
+    const dailyEvents = {};
 
     projects.forEach(project => {
-      if (!project.recentEvents || !project.recentEvents.dailyInfo || !project.recentEvents.events) {
+      if (!project.dailyEventsPortion || !project.dailyEventsPortion.dailyEvents) {
         return;
       }
 
-      recentEvents[project.id] = groupByGroupingTimestamp(project.recentEvents.dailyInfo);
+      dailyEvents[project.id] = groupByGroupingTimestamp(project.dailyEventsPortion.dailyEvents);
 
-      project.recentEvents.events.forEach(event => {
-        events[project.id + ':' + event.id] = event;
+      project.dailyEventsPortion.dailyEvents.forEach(dailyEvent => {
+        events[project.id + ':' + dailyEvent.event.id] = dailyEvent.event;
       });
-      delete project.recentEvents;
+      delete project.dailyEvents;
     });
+
+    console.log('init events module with', events, dailyEvents)
 
     dispatch(INIT_EVENTS_MODULE, {
       events,
-      recentEvents,
+      dailyEvents,
     });
   },
 

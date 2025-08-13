@@ -905,6 +905,20 @@ type Project {
     search: String
   ): RecentEvents
 
+  dailyEventsPortion(
+    """Events sort order"""
+    sort: EventsSortOrder
+
+    """Pointer to the start of the next daily events portion"""
+    cursor: String
+
+    """Event marks by which events should be sorted"""
+    filters: EventsFiltersInput
+
+    """Search query"""
+    search: String
+  )
+
   """Return events that occurred after a certain timestamp"""
   chartData(
     """How many days we need to fetch for displaying in a chart"""

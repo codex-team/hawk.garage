@@ -109,7 +109,7 @@ const getters = {
      * @param {string} id project id to find
      * @returns {Project}
      */
-    id => state.events.find(project => project.id === id),
+    id => state.list.find(project => project.id === id),
 
   /**
    * Returns workspace by id
@@ -402,7 +402,7 @@ const mutations = {
    * @param {Project} project - project to add
    */
   [mutationTypes.ADD_PROJECT](state, project) {
-    state.events.push(project);
+    state.list.push(project);
   },
 
   /**
@@ -412,7 +412,7 @@ const mutations = {
    * @param {string} workspaceId - workspace id
    */
   [mutationTypes.REMOVE_PROJECTS_BY_WORKSPACE_ID](state, workspaceId) {
-    state.events = state.events.filter((project) => project.workspaceId !== workspaceId);
+    state.list = state.list.filter((project) => project.workspaceId !== workspaceId);
   },
 
   /**
@@ -422,9 +422,9 @@ const mutations = {
    * @param {Project} project - project to update
    */
   [mutationTypes.UPDATE_PROJECT](state, project) {
-    const index = state.events.findIndex(element => element.id === project.id);
+    const index = state.list.findIndex(element => element.id === project.id);
 
-    state.events[index] = project;
+    state.list[index] = project;
   },
 
   /**
@@ -440,7 +440,7 @@ const mutations = {
     key,
     value,
   }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     Vue.set(project, key, value);
   },
@@ -452,7 +452,7 @@ const mutations = {
    * @param {string} projectId - project id
    */
   [mutationTypes.REMOVE_PROJECT](state, projectId) {
-    state.events = state.events.filter((project) => project.id !== projectId);
+    state.list = state.list.filter((project) => project.id !== projectId);
   },
 
   /**
@@ -465,7 +465,7 @@ const mutations = {
    * @param {EventsListByDate} payload.eventsListByDate - new event list
    */
   [mutationTypes.SET_EVENTS_LIST_BY_DATE](state, { projectId, eventsListByDate }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     Vue.set(project, 'eventsListByDate', eventsListByDate);
   },
@@ -475,7 +475,7 @@ const mutations = {
    * @param {string} projectId - id of the project to set data
    */
   [mutationTypes.RESET_PROJECT_UNREAD_COUNT](state, { projectId }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     /**
      * Project Id got from URL here. It can be incorrect
@@ -507,7 +507,7 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.PUSH_NOTIFICATIONS_RULE](state, { projectId, rule }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     if (!project.notifications) {
       project.notifications = [];
@@ -527,7 +527,7 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.UPDATE_NOTIFICATIONS_RULE](state, { projectId, rule }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
     const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
 
     Vue.set(project.notifications, existedRuleIndex, rule);
@@ -544,7 +544,7 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.REMOVE_NOTIFICATIONS_RULE](state, { projectId, ruleId }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     const existedRuleIndex = project.notifications.findIndex(r => r.id === ruleId);
 
@@ -564,7 +564,7 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.ADD_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     if (!project.eventGroupingPatterns) {
       project.eventGroupingPatterns = [];
@@ -584,7 +584,7 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.UPDATE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPattern }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPattern.id);
 
@@ -602,7 +602,7 @@ const mutations = {
    * @returns {void}
    */
   [mutationTypes.REMOVE_EVENT_GROUPING_PATTERN](state, { projectId, eventGroupingPatternId }) {
-    const project = state.events.find(_project => _project.id === projectId);
+    const project = state.list.find(_project => _project.id === projectId);
 
     const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPatternId);
 

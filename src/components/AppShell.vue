@@ -243,7 +243,7 @@ export default {
      * @param {Project} project - clicked project
      */
     onProjectMenuItemClick(project) {
-      const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(project.id);
+      const recentProjectEvents = this.$store.getters.getDailyEventsByProjectId(project.id);
 
       if (!recentProjectEvents) {
         return this.$router.push({

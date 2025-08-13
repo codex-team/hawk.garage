@@ -236,6 +236,10 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} groupHash - event group hash
        */
       return (projectId: string, groupHash: string): HawkEvent | null => {
+        console.log('get event by projetId and group hash', projectId, groupHash);
+
+        console.log(Object.entries(state.events).forEach(event => console.log('event in state', event)))
+
         const eventEntry = Object.entries(state.events).find(([key, _event]) =>
           key.startsWith(projectId) && _event.groupHash === groupHash);
 
@@ -254,7 +258,7 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param state - Vuex state
      */
-    getRecentEventsByProjectId(state: EventsModuleState) {
+    getDailyEventsByProjectId(state: EventsModuleState) {
       /**
        * @param {string} projectId - event's project id
        */
@@ -412,20 +416,20 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} payload - vuex action payload
      * @param {EventsMap} payload.events - events map
-     * @param {HawkEventsDailyInfoByProject} payload.recentEvents - projects recent events
+     * @param {HawkEventsDailyInfoByProject} payload.dailyEvents - projects recent events
      */
     [INIT_EVENTS_MODULE](
-      { commit }, { events, recentEvents }: { events: EventsMap; recentEvents: HawkEventsDailyInfoByProject }
+      { commit }, { events, dailyEvents }: { events: EventsMap; dailyEvents: HawkEventsDailyInfoByProject }
     ): void {
       commit(MutationTypes.SetEventsList, events);
 
-      Object.entries(recentEvents).forEach(([projectId, recentEventsInfoByDate]) => {
+      Object.entries(dailyEvents).forEach(([projectId, recentEventsInfoByDate]) => {
         commit(MutationTypes.SetRecentEventsList, {
           projectId,
           recentEventsInfoByDate,
         });
       });
-      commit(MutationTypes.SetLatestEvents, recentEvents);
+      commit(MutationTypes.SetLatestEvents, dailyEvents);
     },
 
     /**
@@ -490,11 +494,11 @@ const module: Module<EventsModuleState, RootState> = {
       return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
     },
 
-    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }): Promise<void> {
+    async [FETCH_PROJECT_OVERVIEW]({ commit, getters, state }, { projectId, search }: { projectId: string; search: string, nextCursor: string | null }): Promise<void> {
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
-        nextCursor,
+        state.dailyEventsNextCursor,
         eventsSortOrder,
         getters.getProjectFilters(projectId),
         search
@@ -527,7 +531,7 @@ const module: Module<EventsModuleState, RootState> = {
         eventsSortOrder !== EventsSortOrder.ByCount
       );
 
-      loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + dailyEventsPortion.length;
+      loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + dailyEvents.length;
 
       commit(MutationTypes.AddToEventsList, {
         projectId,
@@ -767,7 +771,7 @@ const module: Module<EventsModuleState, RootState> = {
       });
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      return dispatch(FETCH_RECENT_EVENTS, {
+      return dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId,
         search,
       });
@@ -793,7 +797,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       commit(MutationTypes.ClearRecentEventsList, { projectId });
 
-      return dispatch(FETCH_RECENT_EVENTS, {
+      return dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId,
         search,
       });
@@ -831,7 +835,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {EventsMap} eventsMap - new list of events
      */
     [MutationTypes.SetEventsList](state, eventsMap: EventsMap): void {
-      Vue.set(state, 'list', eventsMap);
+      Vue.set(state, 'events', eventsMap);
     },
 
     /**
@@ -922,6 +926,8 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEventsDailyInfoByDate} payload.recentEventsInfoByDate - grouped events list
      */
     [MutationTypes.SetRecentEventsList](state, { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }): void {
+      console.log('setting daily event to the store', projectId, recentEventsInfoByDate);
+
       Vue.set(state.dailyEvents, projectId, recentEventsInfoByDate);
     },
 

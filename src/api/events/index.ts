@@ -86,7 +86,7 @@ export async function fetchDailyEventsPortion(
   filters: EventsFilters = {},
   search = ''
 ): Promise<DailyEventsPortion | null> {
-  const response = (await api.call(QUERY_PROJECT_OVERVIEW, {
+  const response = (await api.callOld(QUERY_PROJECT_OVERVIEW, {
     projectId,
     cursor: nextCursor,
     sort,
