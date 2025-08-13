@@ -11,7 +11,7 @@ import {
   QUERY_CURRENT_USER_WITH_NOTIFICATIONS, QUERY_BANK_CARDS
 } from './queries';
 import * as api from '../index.ts';
-import { processUtmParams } from '../../utils/utm.ts';
+import { processUtmParams } from '../../components/utils/utm/utm.ts';
 
 /**
  * @typedef {object} TokensPair
