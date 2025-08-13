@@ -21,8 +21,7 @@ import {
   EventsFilters,
   EventsSortOrder,
   HawkEvent,
-  HawkEventDailyInfo,
-  HawkEventRepetitionsMap
+  HawkEventDailyInfo
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
