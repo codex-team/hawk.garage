@@ -16,12 +16,13 @@ import Form from './Form';
 import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
+import { validateUtmParams } from '../utils/utm/utm';
 
 export default {
   components: {
     Form,
   },
-  mixins: [ offlineErrorMessage ],
+  mixins: [offlineErrorMessage],
   data() {
     return {
       fields: [
@@ -40,20 +41,28 @@ export default {
   },
   computed: {
     /**
-     * Extract UTM parameters from route query and make them reactive
+     * Extract and validate UTM parameters from route query
      */
     hiddenFields() {
       const utmFields = [];
-      const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 
-      utmParams.forEach((param) => {
-        const value = this.$route.query[param];
-        if (value && typeof value === 'string' && value.trim().length > 0) {
-          utmFields.push({
-            name: param,
-            value: value.trim(),
-            type: 'hidden',
-          });
+      // Extract and validate each utm_ param individually
+      Object.entries(this.$route.query).forEach(([key, value]) => {
+        if (key.startsWith('utm_') && value) {
+          const cleanKey = key.replace('utm_', '');
+
+          // Validate single param
+          const singleParam = { [cleanKey]: value };
+          const validatedParam = validateUtmParams(singleParam);
+
+          // If this param is valid, add to fields
+          if (validatedParam[cleanKey]) {
+            utmFields.push({
+              name: key, // keep original utm_ prefix
+              value: validatedParam[cleanKey],
+              type: 'hidden',
+            });
+          }
         }
       });
 
