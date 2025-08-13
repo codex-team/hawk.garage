@@ -130,13 +130,6 @@ export interface HawkEvent {
   release?: HawkEventRelease;
 }
 
-export interface HawkEventRepetitionsMap {
-  [key: string]: {
-    cursor?: string;
-    eventIds: string[];
-  };
-}
-
 /**
  * Events along with information about each for specific days
  */

@@ -78,12 +78,12 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 export const QUERY_LATEST_REPETITIONS = `
   query LatestRepetitions(
     $projectId: ID!,
-    $groupHash: ID!,
+    $eventId: ID!,
     $limit: Int,
     $cursor: String
   ) {
     project(projectId: $projectId) {
-      event(groupHash: $groupHash) {
+      event(id: $eventId) {
         repetitions(limit: $limit, cursor: $cursor) {
           ...Event
         }
@@ -123,8 +123,8 @@ export const QUERY_CHART_DATA = `
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `
-  mutation visitEvent($projectId: ID!, $groupHash: ID!) {
-    visitEvent(project: $projectId, groupHash: $groupHash)
+  mutation visitEvent($projectId: ID!, $eventId: ID!) {
+    visitEvent(project: $projectId, id: $eventId)
   }
 `;
 
@@ -133,9 +133,8 @@ export const MUTATION_VISIT_EVENT = `
  * GraphQL Mutation to set mark to event for current user
  */
 export const MUTATION_TOGGLE_EVENT_MARK = `
-  mutation toggleEventMark($projectId: ID!, $groupHash: ID!, $mark: EventMark!) {
-    toggleEventMark(project: $projectId, groupHash: $groupHash, mark: $mark)
-  }
+  mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
+    toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
 `;
 
 // language=GraphQL

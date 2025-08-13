@@ -14,7 +14,7 @@ import {
   EventsFilters,
   EventsSortOrder,
   EventsWithDailyInfo,
-  HawkEvent
+  HawkEvent,
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -80,20 +80,20 @@ export async function fetchRecentEvents(
  * Fetches latest event's repetitions from project
  *
  * @param {string} projectId - project's identifier
- * @param {string} groupHash - event's group hash
- * @param {string} cursor - cursor to fetch next page of repetitions
+ * @param {string} eventId - event's identifier
  * @param {number} limit - the number of repetitions
+ * @param {string} cursor - the cursor to fetch the next page of repetitions
  *
  * @returns {Promise<Event[]>}
  */
 export async function getLatestRepetitions(
-  projectId: string, groupHash: string, limit: number, cursor?: string
+  projectId: string, eventId: string, limit: number, cursor?: string
 ): Promise<APIResponse<{project: { event: { repetitions: HawkEvent[], cursor?: string } } }>> {
   return api.call(QUERY_LATEST_REPETITIONS, {
     projectId,
-    groupHash,
+    eventId,
     cursor,
-    limit,
+    limit
   });
 }
 
@@ -101,13 +101,13 @@ export async function getLatestRepetitions(
  * Mark event as visited for current user
  *
  * @param {string} projectId - project event related to
- * @param {string} groupHash — visited event
+ * @param {string} eventId — visited event
  * @returns {Promise<boolean>}
  */
-export async function visitEvent(projectId: string, groupHash: string): Promise<boolean> {
+export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
   return (await api.callOld(MUTATION_VISIT_EVENT, {
     projectId,
-    groupHash,
+    eventId,
   })).visitEvent;
 }
 
@@ -115,13 +115,13 @@ export async function visitEvent(projectId: string, groupHash: string): Promise<
  * Set or unset mark to event
  *
  * @param {string} projectId - project event is related to
- * @param {string} groupHash — event Id
+ * @param {string} eventId — event Id
  * @param {string} mark — mark to set
  */
-export async function toggleEventMark(projectId: string, groupHash: string, mark: EventMark): Promise<boolean> {
+export async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
   return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
     projectId,
-    groupHash,
+    eventId,
     mark,
   })).toggleEventMark;
 }
@@ -130,14 +130,14 @@ export async function toggleEventMark(projectId: string, groupHash: string, mark
  * Update assignee
  *
  * @param {string} projectId - project id
- * @param {string} groupHash - event id
+ * @param {string} eventId - event id
  * @param {string} assignee - user id to assign
  */
-export async function updateAssignee(projectId: string, groupHash: string, assignee: string): Promise<{ success: boolean; record: User }> {
+export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean; record: User }> {
   return (await api.callOld(MUTATION_UPDATE_EVENT_ASSIGNEE, {
     input: {
       projectId,
-      groupHash,
+      eventId,
       assignee,
     },
   })).events.updateAssignee;
@@ -147,13 +147,13 @@ export async function updateAssignee(projectId: string, groupHash: string, assig
  * Remove assignee
  *
  * @param {string} projectId - project id
- * @param {string} groupHash - event id
+ * @param {string} eventId - event id
  */
-export async function removeAssignee(projectId: string, groupHash: string): Promise<{ success: boolean }> {
+export async function removeAssignee(projectId: string, eventId: string): Promise<{ success: boolean }> {
   return (await api.callOld(MUTATION_REMOVE_EVENT_ASSIGNEE, {
     input: {
       projectId,
-      groupHash,
+      eventId,
     },
   })).events.removeAssignee;
 }
@@ -162,14 +162,14 @@ export async function removeAssignee(projectId: string, groupHash: string): Prom
  * Fetch data for chart
  *
  * @param {string} projectId - project id
- * @param {string} groupHash - event id
+ * @param {string} eventId - event id
  * @param {number} days - how many days we need to fetchfor displaying in chart
  * @param {number} timezoneOffset - user's local timezone
  */
-export async function fetchChartData(projectId: string, groupHash: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
+export async function fetchChartData(projectId: string, eventId: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
-    groupHash,
+    eventId,
     days,
     timezoneOffset,
   })).project.event.chartData;

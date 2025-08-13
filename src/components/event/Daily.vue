@@ -5,7 +5,7 @@
         {{ $t('event.repetitions.since') }}
       </div>
       <div class="event-daily__since">
-        {{ originalEvent.timestamp | prettyFullDate }}
+        {{ event.firstAppearanceTimestamp | prettyFullDate }}
         <span
           v-if="daysRepeating > 1"
           class="event-daily__since-days"
@@ -29,6 +29,7 @@ import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { HawkEvent } from '../../types/events';
 import { EventChartItem } from '../../types/chart';
+import { event } from 'cypress/types/jquery';
 
 export default Vue.extend({
   name: 'EventDaily',
@@ -62,22 +63,15 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Get the the first event entity
-     */
-    originalEvent(): HawkEvent {
-      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
-    },
-
-    /**
      * Return concrete date
      */
     daysRepeating(): number {
-      if (!this.originalEvent) {
+      if (!this.event) {
         return 0;
       }
 
       const now = (new Date()).getTime();
-      const eventTimestamp = this.originalEvent.firstAppearanceTimestamp * 1000;
+      const eventTimestamp = this.event.firstAppearanceTimestamp * 1000;
       const firstOccurrence = (new Date(eventTimestamp).getTime());
       const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
@@ -95,7 +89,7 @@ export default Vue.extend({
     if (!this.event.chartData) {
       await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
-        groupHash: this.event.groupHash,
+        eventId: this.event.id,
         days: twoWeeks + boundingDays,
       });
     }
