@@ -81,31 +81,17 @@ const actions = {
 
     dispatch(SET_PROJECTS_LIST, projects);
 
-    /**
-     * @type {object<string, GroupedEvent>} - all fetched events
-     */
-    const events = {};
-
-    /**
-     * @type {RecentInfoByDate} - latest event from all projects
-     */
-    const recentEvents = {};
-
     projects.forEach(project => {
       if (!project.recentEvents || !project.recentEvents.dailyInfo || !project.recentEvents.events) {
         return;
       }
 
       recentEvents[project.id] = groupByGroupingTimestamp(project.recentEvents.dailyInfo);
-
-      project.recentEvents.events.forEach(event => {
-        events[project.id + ':' + event.id] = event;
-      });
-      delete project.recentEvents;
     });
 
+    console.log('recentEvents', recentEvents);
+
     dispatch(INIT_EVENTS_MODULE, {
-      events,
       recentEvents,
     });
   },

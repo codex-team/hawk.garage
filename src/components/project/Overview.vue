@@ -45,7 +45,7 @@
               :count="dailyEventInfo.count"
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
-              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
+              :event="getEventByGroupHash(dailyEventInfo.groupHash)"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
               @showEventOverview="
                 showEventOverview(
@@ -69,7 +69,7 @@
           <EventItemSkeleton />
         </div>
         <div
-          v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
+          v-else-if="isListEmpty && !isLoadingEvents"
           class="project-overview__no-events-placeholder"
         >
           <div class="project-overview__divider" />
@@ -94,7 +94,6 @@
 import EventItem from './EventItem';
 import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
-import { mapGetters } from 'vuex';
 import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
 import {
   UPDATE_PROJECT_LAST_VISIT,
@@ -151,6 +150,8 @@ export default {
        * Data for a chart
        */
       chartData: [],
+
+      events: [],
 
       /**
        * Assignees list position in pixels
@@ -225,8 +226,6 @@ export default {
       return this.$store.getters.getRecentEventsByProjectId(this.projectId);
     },
 
-    ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),
-
     isListEmpty() {
       if (!this.recentEvents) {
         return true;
@@ -255,17 +254,26 @@ export default {
     }, 500);
 
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+      if (this.project) {
+        const latestEvent = this.project.recentEvents.events[0] || null;
+
+        if (latestEvent) {
+          this.events = [latestEvent];
+        }
+      }
+
+      const [noMoreEvents, events] = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
         projectId: this.projectId,
         search: this.searchQuery,
       });
 
-      const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
+      this.events = [...events];
+      this.noMoreEvents = noMoreEvents;
 
       /**
        * Redirect to the "add catcher" page if there are no events
        */
-      if (!latestEvent) {
+      if (this.events.length === 0) {
         await this.$router.push({
           name: 'add-catcher',
           params: { projectId: this.projectId },
@@ -347,11 +355,29 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+      const [noMoreEvents, events] = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
         projectId: this.projectId,
         search: this.searchQuery,
       });
+
+      this.events = [...this.events, ...events];
+      this.noMoreEvents = noMoreEvents;
+
       this.isLoadingEvents = false;
+    },
+
+    getEventByGroupHash(groupHash) {
+      const event = this.events.find((event) => event.groupHash === groupHash);
+
+      if (!event) {
+        return null;
+      }
+
+      return event;
+    },
+
+    setEvents(events) {
+      this.events = events;
     },
 
     /**
@@ -416,7 +442,7 @@ export default {
           name: 'event-overview',
           params: {
             projectId: projectId,
-            eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
+            eventId: this.getEventByGroupHash(groupHash).id,
             repetitionId: repetitionId,
           },
         });
