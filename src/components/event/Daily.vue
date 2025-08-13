@@ -29,7 +29,6 @@ import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { HawkEvent } from '../../types/events';
 import { EventChartItem } from '../../types/chart';
-import { event } from 'cypress/types/jquery';
 
 export default Vue.extend({
   name: 'EventDaily',
