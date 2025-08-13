@@ -19,9 +19,9 @@ const MAX_UTM_VALUE_LENGTH = 50;
  * @param {Object} utm - UTM parameters to validate
  * @returns {Object} - filtered valid UTM parameters
  */
-export function validateUtmParams(utm: any): Record<string, string> {
+export function validateUtmParams(utm: any): Record<string, string> | undefined {
   if (!utm || typeof utm !== 'object' || Array.isArray(utm)) {
-    return {};
+    return undefined;
   }
 
   const result: Record<string, string> = {};
