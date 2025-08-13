@@ -135,6 +135,7 @@ export const MUTATION_VISIT_EVENT = `
 export const MUTATION_TOGGLE_EVENT_MARK = `
   mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
     toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
+  }
 `;
 
 // language=GraphQL
