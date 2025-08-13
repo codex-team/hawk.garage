@@ -36,11 +36,6 @@ enum MutationTypes {
   SetEventsList = 'SET_EVENTS_LIST',
 
   /**
-   * Add new data to event repetitions list
-   */
-  AddToEventRepetitions = 'ADD_TO_EVENT_REPETITIONS',
-
-  /**
    * Set new recent events list
    */
   SetRecentEventsList = 'SET_RECENT_EVENTS_LIST',
@@ -59,11 +54,6 @@ enum MutationTypes {
    * Add new data to event list
    */
   AddToEventsList = 'ADD_TO_EVENTS_LIST',
-
-  /**
-   * Save loaded event
-   */
-  AddRepetitionPayload = 'ADD_REPETITION_PAYLOAD',
 
   /**
    * Update event
@@ -581,7 +571,7 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - project id
-     * @param {string} payload.groupHash - event id
+     * @param {string} payload.eventId - event id
      */
     async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string; eventId: string }): Promise<void> {
       const result = await eventsApi.removeAssignee(projectId, eventId);
