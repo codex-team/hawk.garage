@@ -76,7 +76,7 @@ const actions = {
    * @returns {Promise<void>} - sign up status
    */
   async [SIGN_UP](context, user) {
-    return userApi.signUp(user.email);
+    return userApi.signUp(user.email, user.utm);
   },
 
   /**
