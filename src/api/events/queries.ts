@@ -5,7 +5,7 @@ import { USER_FRAGMENT, EVENT_BACKTRACE, EVENT_FRAGMENT } from '../fragments';
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID) {
+  query Event($projectId: ID!, $eventId: ID!) {
     project(projectId: $projectId) {
       event(id: $eventId) {
         ...Event
@@ -50,6 +50,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           }
           catcherType
           timestamp
+          firstAppearanceTimestamp
           payload {
             title
           }
@@ -85,11 +86,16 @@ export const QUERY_LATEST_REPETITIONS = `
     project(projectId: $projectId) {
       event(id: $eventId) {
         repetitions(limit: $limit, cursor: $cursor) {
-          ...Event
+          cursor
+          repetitions {
+            ...Event
+          }
         }
       }
     }
   }
+
+  ${EVENT_FRAGMENT}
 `;
 
 // language=GraphQL

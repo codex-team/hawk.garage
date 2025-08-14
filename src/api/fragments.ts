@@ -37,6 +37,12 @@ export const EVENT_FRAGMENT = `
     id
     catcherType
     totalCount
+    assignee {
+      id
+      name
+      email
+      image
+    }
     groupHash
     visitedBy {
       ...User
@@ -47,6 +53,7 @@ export const EVENT_FRAGMENT = `
       ignored
     }
     timestamp
+    firstAppearanceTimestamp
     payload {
       title
       type

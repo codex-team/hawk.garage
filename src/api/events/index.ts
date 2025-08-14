@@ -29,11 +29,10 @@ import { APIResponse } from '../../types/api';
  * @param {string} repetitionId - event's concrete repetition. This param is optional
  * @returns {Promise<HawkEvent|null>}
  */
-export async function getEvent(projectId: string, eventId: string, repetitionId?: string): Promise<HawkEvent | null> {
+export async function getEvent(projectId: string, eventId: string): Promise<HawkEvent | null> {
   const project = await (await api.callOld(QUERY_EVENT, {
     projectId,
     eventId,
-    repetitionId,
   })).project;
 
   if (!project) {
@@ -88,7 +87,7 @@ export async function fetchRecentEvents(
  */
 export async function getLatestRepetitions(
   projectId: string, eventId: string, limit: number, cursor?: string
-): Promise<APIResponse<{project: { event: { repetitions: HawkEvent[], cursor?: string } } }>> {
+): Promise<APIResponse<{project: { event: { repetitions: { repetitions: HawkEvent[], cursor?: string } } } }>> {
   return api.call(QUERY_LATEST_REPETITIONS, {
     projectId,
     eventId,

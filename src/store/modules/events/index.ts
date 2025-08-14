@@ -434,8 +434,8 @@ const module: Module<EventsModuleState, RootState> = {
 
       const response = await eventsApi.getLatestRepetitions(projectId, eventId, limit, cursor);
 
-      const repetitions = response.data.project.event.repetitions;
-      const nextCursor = response.data.project.event.cursor;
+      const repetitions = response.data.project.event.repetitions.repetitions;
+      const nextCursor = response.data.project.event.repetitions.cursor;
 
       repetitions.forEach(repetition => {
         filterBeautifiedAddons([ repetition ]);

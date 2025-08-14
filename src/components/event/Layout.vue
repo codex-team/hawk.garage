@@ -86,9 +86,9 @@ export default Vue.extend({
      * Current viewed event
      */
     event(): HawkEvent {
-      const { repetitionId, projectId } = this.$route.params;
+      const { repetitionId, projectId, eventId } = this.$route.params;
 
-      return this.getEvent(projectId, repetitionId);
+      return this.getEvent(projectId, repetitionId || eventId);
     },
   },
   /**
@@ -98,10 +98,11 @@ export default Vue.extend({
    */
   async created() {
     const repetitionId = this.$route.params.repetitionId;
+    const eventId = this.$route.params.eventId;
 
     await this.$store.dispatch(FETCH_EVENT, {
       projectId: this.projectId,
-      repetitionId,
+      eventId: repetitionId || eventId,
     });
 
     this.loading = false;
