@@ -331,8 +331,8 @@ type Event {
   """Release data"""
   release: Release
 
-  """Event repetitions"""
-  repetitions(cursor: String = null, limit: Int = 10): RepetitionsResponse!
+  """Event repetitions portion"""
+  repetitionsPortion(cursor: String = null, limit: Int = 10): RepetitionsPortion!
 
   """Array of users who visited event"""
   visitedBy: [User!]
@@ -1176,9 +1176,9 @@ input RemoveProjectEventGroupingPatternInput {
 }
 
 """Object returned in repetitions property of event object"""
-type RepetitionsResponse {
+type RepetitionsPortion {
   repetitions: [Event!]
-  cursor: String
+  nextCursor: String
 }
 
 """Source code line representation"""

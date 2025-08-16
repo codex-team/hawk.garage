@@ -55,13 +55,6 @@ export default Vue.extend({
       projectId: this.$route.params.projectId,
 
       /**
-       * Current event id
-       *
-       * @type {string}
-       */
-      eventId: this.$route.params.eventId,
-
-      /**
        * Status of repetition-diff fetching
        *
        * @type {boolean}

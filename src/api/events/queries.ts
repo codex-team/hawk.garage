@@ -76,7 +76,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
  *
  * @type {string}
  */
-export const QUERY_LATEST_REPETITIONS = `
+export const QUERY_LATEST_REPETITIONS_PORTION = `
   query LatestRepetitions(
     $projectId: ID!,
     $eventId: ID!,
@@ -85,8 +85,8 @@ export const QUERY_LATEST_REPETITIONS = `
   ) {
     project(projectId: $projectId) {
       event(id: $eventId) {
-        repetitions(limit: $limit, cursor: $cursor) {
-          cursor
+        repetitionsPortion(limit: $limit, cursor: $cursor) {
+          nextCursor
           repetitions {
             ...Event
           }

@@ -432,10 +432,10 @@ const module: Module<EventsModuleState, RootState> = {
       { projectId, eventId, limit, cursor }: { projectId: string; eventId: string; limit: number; cursor?: string }
     ): Promise<{ repetitions: HawkEvent[]; nextCursor?: string }> {
 
-      const response = await eventsApi.getLatestRepetitions(projectId, eventId, limit, cursor);
+      const response = await eventsApi.getRepetitionsPortion(projectId, eventId, limit, cursor);
 
-      const repetitions = response.data.project.event.repetitions.repetitions;
-      const nextCursor = response.data.project.event.repetitions.cursor;
+      const repetitions = response.data.project.event.repetitionsPortion.repetitions;
+      const nextCursor = response.data.project.event.repetitionsPortion.nextCursor;
 
       repetitions.forEach(repetition => {
         filterBeautifiedAddons([ repetition ]);
@@ -548,7 +548,7 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - project id
-     * @param {string} payload.groupHash - event id
+     * @param {string} payload.eventId - event id
      * @param {User} payload.assignee - user to assign to this event
      */
     async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string; eventId: string; assignee: User }): Promise<void> {

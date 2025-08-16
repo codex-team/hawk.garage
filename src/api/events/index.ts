@@ -4,7 +4,7 @@ import {
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
   QUERY_EVENT,
-  QUERY_LATEST_REPETITIONS,
+  QUERY_LATEST_REPETITIONS_PORTION,
   QUERY_RECENT_PROJECT_EVENTS,
   QUERY_CHART_DATA
 } from './queries';
@@ -76,7 +76,7 @@ export async function fetchRecentEvents(
 }
 
 /**
- * Fetches latest event's repetitions from project
+ * Fetches event's repetitions portion from project
  *
  * @param {string} projectId - project's identifier
  * @param {string} eventId - event's identifier
@@ -85,10 +85,10 @@ export async function fetchRecentEvents(
  *
  * @returns {Promise<Event[]>}
  */
-export async function getLatestRepetitions(
+export async function getRepetitionsPortion(
   projectId: string, eventId: string, limit: number, cursor?: string
-): Promise<APIResponse<{project: { event: { repetitions: { repetitions: HawkEvent[], cursor?: string } } } }>> {
-  return api.call(QUERY_LATEST_REPETITIONS, {
+): Promise<APIResponse<{project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
+  return api.call(QUERY_LATEST_REPETITIONS_PORTION, {
     projectId,
     eventId,
     cursor,
