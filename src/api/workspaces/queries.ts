@@ -38,36 +38,32 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           id
           pattern
         }
-        recentEvents(limit: 1) {
-          events {
+        dailyEventsPortion(limit: 1) {
+          nextCursor
+          dailyEvents {
             id
-            groupHash
-            visitedBy {
-              ...User
-            }
-            marks {
-              resolved
-              starred
-              ignored
-            }
-            timestamp
-            payload {
-              title
-            }
-          }
-          dailyInfo {
-            groupHash
             count
-            groupingTimestamp
-            lastRepetitionTime
             affectedUsers
+            groupingTimestamp
+            event {
+              id
+              groupHash
+              marks {
+                resolved
+                starred
+                ignored
+              }
+              timestamp
+              payload {
+                title
+              }
+            }
           }
         }
       }
     }
   }
 
-  ${USER_FRAGMENT}
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
   ${WORKSPACE_PLAN}

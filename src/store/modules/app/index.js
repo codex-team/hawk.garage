@@ -50,6 +50,8 @@ const actions = {
    *
    * @param {Function} dispatch - standard Vuex dispatch function
    * @returns {Promise<void>}
+   * 
+   * @todo - rewrite to new dailyEvents pattern
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
     const response = await workspacesApi.getAllWorkspacesWithProjects();
@@ -65,12 +67,33 @@ const actions = {
 
     const workspaces = response.data.workspaces;
 
+    /**
+     * @type {object<string, GroupedEvent>} - all fetched events
+     */
+    const events = {};
+
     dispatch(SET_WORKSPACES_LIST, workspaces);
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
         workspace.projects.forEach(project => {
           project.workspaceId = workspace.id;
+
+          const dailyEvents = project.dailyEventsPortion.dailyEvents
+
+          /**
+           * From fetching initial data we've got project with one daily event (latest one)
+           * We should save it's id to the projects state and save event to the events state
+           */
+          if (dailyEvents.length) {
+            project.latestEvent = dailyEvents[0];
+            
+            console.log('would be saved as project.latestEvent', project.latestEvent);
+
+            events[project.id + ':' + dailyEvents[0].event.id] = dailyEvents[0].event;
+
+            delete project.dailyEventsPortion;
+          }
         });
         accumulator.push(...workspace.projects);
         delete workspace.projects;
@@ -81,32 +104,8 @@ const actions = {
 
     dispatch(SET_PROJECTS_LIST, projects);
 
-    /**
-     * @type {object<string, GroupedEvent>} - all fetched events
-     */
-    const events = {};
-
-    /**
-     * @type {RecentInfoByDate} - latest event from all projects
-     */
-    const recentEvents = {};
-
-    projects.forEach(project => {
-      if (!project.recentEvents || !project.recentEvents.dailyInfo || !project.recentEvents.events) {
-        return;
-      }
-
-      recentEvents[project.id] = groupByGroupingTimestamp(project.recentEvents.dailyInfo);
-
-      project.recentEvents.events.forEach(event => {
-        events[project.id + ':' + event.id] = event;
-      });
-      delete project.recentEvents;
-    });
-
     dispatch(INIT_EVENTS_MODULE, {
       events,
-      recentEvents,
     });
   },
 

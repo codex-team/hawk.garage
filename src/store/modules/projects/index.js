@@ -218,24 +218,6 @@ const actions = {
   },
 
   /**
-   * Fetch latest project events
-   *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {string} projectId - id of the project to fetch
-   * @returns {Promise<void>}
-   */
-  async [FETCH_RECENT_ERRORS]({ commit }, projectId) {
-    const recentEvents = await projectsApi.fetchRecentErrors(projectId);
-
-    const eventsListByDate = groupByGroupingTimestamp(recentEvents);
-
-    commit(mutationTypes.SET_EVENTS_LIST_BY_DATE, {
-      projectId,
-      eventsListByDate,
-    });
-  },
-
-  /**
    * Send last-visit for passed project
    *
    * @param {object} context - vuex action context

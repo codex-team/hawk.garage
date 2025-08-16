@@ -11,9 +11,10 @@
         class="project-overview__chart"
       />
       <FiltersBar />
+      <!-- TODO: Add model that will ask to fetch project overview one more time to reload recentEvents with new sorting order or filter  -->
       <!-- TODO: Add placeholder if there is no filtered events -->
       <div
-        v-if="recentEvents"
+        v-if="dailyEvents"
         class="project-overview__events"
       >
         <SearchField
@@ -31,7 +32,7 @@
         />
         <template v-if="!isListEmpty">
           <div
-            v-for="(eventsByDate, date) in recentEvents"
+            v-for="(eventsByDate, date) in dailyEvents"
             :key="date"
             class="project-overview__events-by-date"
           >
@@ -39,13 +40,13 @@
               {{ getDay(date) | prettyDate }}
             </div>
             <EventItem
-              v-for="(dailyEventInfo, index) in eventsByDate"
+              v-for="(dailyEventInfo, index) in  и"
               :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-              :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
+              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.event.id).timestamp"
               :count="dailyEventInfo.count"
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
-              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
+              :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
               @showEventOverview="
                 showEventOverview(
@@ -69,7 +70,7 @@
           <EventItemSkeleton />
         </div>
         <div
-          v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
+          v-else-if="Object.keys(dailyEvents).length === 0 && !isLoadingEvents"
           class="project-overview__no-events-placeholder"
         >
           <div class="project-overview__divider" />
@@ -95,12 +96,11 @@ import EventItem from './EventItem';
 import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import {
-  UPDATE_PROJECT_LAST_VISIT,
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
-import { debounce } from '@/utils';
+import { debounce, groupByGroupingTimestamp } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
@@ -160,6 +160,10 @@ export default {
         right: 0,
       },
 
+      dailyEventsNextCursor: null,
+
+      dailyEvents: {},
+
       /**
        * Handler of window resize
        */
@@ -191,7 +195,9 @@ export default {
      * @returns {Project}
      */
     project() {
-      return this.$store.getters.getProjectById(this.projectId);
+      const project = this.$store.getters.getProjectById(this.projectId);
+
+      return project;
     },
 
     /**
@@ -212,27 +218,14 @@ export default {
       return this.workspace?.isBlocked;
     },
 
-    /**
-     * Project recent errors
-     *
-     * @returns {RecentInfoByDate}
-     */
-    recentEvents() {
-      if (!this.project) {
-        return null;
-      }
-
-      return this.$store.getters.getRecentEventsByProjectId(this.projectId);
-    },
-
-    ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),
+    ...mapGetters([ 'getProjectEventById' ]),
 
     isListEmpty() {
-      if (!this.recentEvents) {
+      if (!this.dailyEvents) {
         return true;
       }
 
-      return Object.keys(this.recentEvents).length === 0;
+      return Object.keys(this.dailyEvents).length === 0;
     },
 
     searchFieldPlaceholder() {
@@ -255,12 +248,18 @@ export default {
     }, 500);
 
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+      this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
         search: this.searchQuery,
       });
 
-      const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
+      const latestEvent = this.project.latestEvent;
+
+      console.log('before')
+
+      this.dailyEvents = groupByGroupingTimestamp([latestEvent]);
+
+      console.log('daily events after grouping by timestamp', dailyEvents);
 
       /**
        * Redirect to the "add catcher" page if there are no events
@@ -312,6 +311,9 @@ export default {
       projectId: this.projectId,
       search: '',
     });
+
+    // @todo - commit daily events nextCursor flush 
+    this.$store.commit('')
   },
 
   unmounted() {
@@ -347,11 +349,20 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+      const { nextCursor, dailyEvenstPortion } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
+        nextCursor: this.nextCursor,
         search: this.searchQuery,
-      });
+      });      
       this.isLoadingEvents = false;
+
+      this.nextCursor = nextCursor;
+      this.dailyEvents = {
+        ...this.dailyEvents,
+        ...dailyEvenstPortion
+      };
+
+      console.log('next cursor and daily events in component updated', this.nextCursor, this.dailyEvents);
     },
 
     /**
@@ -444,7 +455,7 @@ export default {
 
       this.isLoadingEvents = true;
       try {
-        this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+        this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
           projectId: this.projectId,
           search: sanitizedQuery,
         });

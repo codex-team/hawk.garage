@@ -128,6 +128,49 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
   ${USER_FRAGMENT}
 `;
 
+export const QUERY_PROJECT_OVERVIEW = `
+  query ProjectOverview(
+    $projectId: ID!
+
+    $sort: EventsSortOrder,
+    $filters: EventsFiltersInput,
+    $search: String
+  ) {
+    project(projectId: $projectId) {
+      dailyEventsPortion(sort: $sort, filters: $filters, search: $search) {
+        nextCursor
+        dailyEvents {
+          id
+          count
+          affectedUsers
+          groupingTimestamp
+          event {
+            id
+            groupHash
+            totalCount
+            usersAffected
+            assignee {
+            ...User
+            }
+            marks {
+              resolved
+              starred
+              ignored
+            }
+            catcherType
+            timestamp
+            payload {
+              title
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  ${USER_FRAGMENT}
+`
+
 // language=GraphQL
 /**
  * GraphQL query for latest repetitions
