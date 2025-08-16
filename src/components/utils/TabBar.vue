@@ -86,6 +86,7 @@ export default Vue.extend({
     onNavigationItemClick(item: TabInfo) {
       this.$router.push({
         name: item.routeName,
+        params: this.$route.params,
       });
     },
   },
