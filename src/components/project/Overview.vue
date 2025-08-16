@@ -11,6 +11,7 @@
         class="project-overview__chart"
       />
       <FiltersBar />
+      <!-- TODO: Add model that will ask to fetch project overview one more time to reload recentEvents with new sorting order or filter  -->
       <!-- TODO: Add placeholder if there is no filtered events -->
       <div
         v-if="dailyEvents"
@@ -39,13 +40,13 @@
               {{ getDay(date) | prettyDate }}
             </div>
             <EventItem
-              v-for="(dailyEventInfo, index) in eventsByDate"
+              v-for="(dailyEventInfo, index) in  и"
               :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-              :last-occurrence-timestamp="dailyEventInfo.event.timestamp"
+              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.event.id).timestamp"
               :count="dailyEventInfo.count"
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
-              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.event.groupHash)"
+              :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
               @showEventOverview="
                 showEventOverview(
@@ -99,7 +100,7 @@ import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import {
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
-import { debounce } from '@/utils';
+import { debounce, groupByGroupingTimestamp } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
@@ -159,6 +160,10 @@ export default {
         right: 0,
       },
 
+      dailyEventsNextCursor: null,
+
+      dailyEvents: {},
+
       /**
        * Handler of window resize
        */
@@ -190,7 +195,9 @@ export default {
      * @returns {Project}
      */
     project() {
-      return this.$store.getters.getProjectById(this.projectId);
+      const project = this.$store.getters.getProjectById(this.projectId);
+
+      return project;
     },
 
     /**
@@ -211,20 +218,7 @@ export default {
       return this.workspace?.isBlocked;
     },
 
-    /**
-     * Project daily events
-     *
-     * @returns {RecentInfoByDate}
-     */
-    dailyEvents() {
-      if (!this.project) {
-        return null;
-      }
-
-      return this.$store.getters.getDailyEventsByProjectId(this.projectId);
-    },
-
-    ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),
+    ...mapGetters([ 'getProjectEventById' ]),
 
     isListEmpty() {
       if (!this.dailyEvents) {
@@ -259,7 +253,13 @@ export default {
         search: this.searchQuery,
       });
 
-      const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
+      const latestEvent = this.project.latestEvent;
+
+      console.log('before')
+
+      this.dailyEvents = groupByGroupingTimestamp([latestEvent]);
+
+      console.log('daily events after grouping by timestamp', dailyEvents);
 
       /**
        * Redirect to the "add catcher" page if there are no events
@@ -349,11 +349,20 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+      const { nextCursor, dailyEvenstPortion } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
+        nextCursor: this.nextCursor,
         search: this.searchQuery,
-      });
+      });      
       this.isLoadingEvents = false;
+
+      this.nextCursor = nextCursor;
+      this.dailyEvents = {
+        ...this.dailyEvents,
+        ...dailyEvenstPortion
+      };
+
+      console.log('next cursor and daily events in component updated', this.nextCursor, this.dailyEvents);
     },
 
     /**

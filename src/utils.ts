@@ -127,11 +127,20 @@ export function groupByGroupingTimestamp(items: object[], convertMidnight = true
 
   items = items.map((item) => {
     return Object.assign({}, item, {
-      groupingTimestamp: convertUtcMidnightToLocalMidnight((item as HawkEventDailyInfo).event.timestamp),
+      groupingTimestamp: convertUtcMidnightToLocalMidnight((item as HawkEventDailyInfo).groupingTimestamp),
     });
   });
 
-  return groupBy('groupingTimestamp')(items);
+  try { 
+    const grouped = groupBy('groupingTimestamp')(items);
+
+    console.log('grouped', grouped);
+
+    return grouped;
+  } catch (e) {
+    console.log(`grouping error ${e}`)
+  }
+
 }
 
 /**

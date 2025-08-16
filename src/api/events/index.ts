@@ -94,7 +94,7 @@ export async function fetchDailyEventsPortion(
     search,
   }));
 
-  const project = response.data.project;
+  const project = response.project;
 
   if (!project) {
     throw new NotFoundError();

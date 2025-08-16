@@ -1,7 +1,6 @@
 import {
   FETCH_EVENT,
   FETCH_EVENT_REPETITIONS,
-  FETCH_RECENT_EVENTS,
   FETCH_PROJECT_OVERVIEW,
   INIT_EVENTS_MODULE,
   REMOVE_EVENT_ASSIGNEE,
@@ -22,7 +21,6 @@ import {
   EventsFilters,
   EventsSortOrder,
   HawkEvent,
-  HawkEventDailyInfo,
   HawkEventRepetition
 } from '@/types/events';
 import { User } from '@/types/user';
@@ -38,19 +36,9 @@ enum MutationTypes {
   SetEventsList = 'SET_EVENTS_LIST',
 
   /**
-   * Set new recent events list
-   */
-  SetRecentEventsList = 'SET_RECENT_EVENTS_LIST',
-
-  /**
    * Set or update event assignee
    */
   SetEventAssignee = 'SET_EVENT_ASSIGNEE',
-
-  /**
-   * Add new data to recent event list
-   */
-  AddToRecentEventsList = 'ADD_TO_RECENT_EVENTS_LIST',
 
   /**
    * Add new data to event list
@@ -81,16 +69,6 @@ enum MutationTypes {
   ToggleMark = 'TOGGLE_MARK',
 
   /**
-   * Clear project's recent events list
-   */
-  ClearRecentEventsList = 'CLEAR_RECENT_EVENTS_LIST',
-
-  /**
-   * Set latest events for projects to disply in projects menu
-   */
-  SetLatestEvents = 'SET_LATEST_EVENTS',
-
-  /**
    * Get chart data for en event for a few days
    */
   SaveChartData = 'SAVE_CHART_DATA',
@@ -99,13 +77,6 @@ enum MutationTypes {
    * Set project search
    */
   SetProjectSearch = 'SET_PROJECT_SEARCH',
-
-  /**
-   * Set daily events next cursor
-   * Should be called each time when new daily events portion is fetched
-   * Should be called to nullify the next cursor when switching to another project
-   */
-  SetDailyEventsNextCursor = 'SET_DAILY_EVENTS_NEXT_CURSOR',
 }
 
 /**
@@ -118,26 +89,10 @@ export interface EventsModuleState {
   events: EventsMap;
 
   /**
-   * Project's recent events grouped by date RecentInfoByDate
-   * Used for displaying recent events grouped by date in project overview
-   */
-  dailyEvents: HawkEventsDailyInfoByProject;
-
-  /**
-   * Pointer to the next daily event for pagination
-   * Should be nullified on ProjectOverview unmount
-   */
-  dailyEventsNextCursor: string | null;
-
-  /**
    * @todo - do not store whole repetition in the state, store only id of the event which is stored in state.events
    * Event's repetitions map. Used for pagination of event repetitions
    */
   eventRepetitions: { [key: string]: HawkEventRepetition[] };
-  
-  /**
-   * @todo - add eventRepetitionsNextCursor and use cursor based pagination for repetitions
-   */
 
   /**
    * Event's filters rules map by project id
@@ -148,11 +103,6 @@ export interface EventsModuleState {
       order: EventsSortOrder;
     };
   };
-
-  /**
-   * Latest events map by project id
-   */
-  latest: { [key: string]: HawkEventDailyInfo };
 
   /**
    * Search parameter map by project id
@@ -168,30 +118,13 @@ interface EventsMap {
 }
 
 /**
- * Map for storing Event's daily info grouped by date per project
- */
-interface HawkEventsDailyInfoByProject {
-  [key: string]: HawkEventsDailyInfoByDate;
-}
-
-/**
- *  Map to store Event's daily info grouped by date
- */
-interface HawkEventsDailyInfoByDate {
-  [key: string]: HawkEventDailyInfo[];
-}
-
-/**
  * Creates and return module state
  */
 function initialState(): EventsModuleState {
   return {
     events: {},
-    dailyEvents: {},
     eventRepetitions: {},
-    dailyEventsNextCursor: null,
     filters: {},
-    latest: {},
     search: {},
   };
 }
@@ -236,10 +169,6 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} groupHash - event group hash
        */
       return (projectId: string, groupHash: string): HawkEvent | null => {
-        console.log('get event by projetId and group hash', projectId, groupHash);
-
-        console.log(Object.entries(state.events).forEach(event => console.log('event in state', event)))
-
         const eventEntry = Object.entries(state.events).find(([key, _event]) =>
           key.startsWith(projectId) && _event.groupHash === groupHash);
 
@@ -254,18 +183,6 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Returns recent event of the project by its id
-     *
-     * @param state - Vuex state
-     */
-    getDailyEventsByProjectId(state: EventsModuleState) {
-      /**
-       * @param {string} projectId - event's project id
-       */
-      return (projectId: string): HawkEventsDailyInfoByDate => state.dailyEvents[projectId];
-    },
-
-    /**
      * List state keeps only original Event
      *
      * @param state - module state
@@ -276,6 +193,8 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} eventId - event id
        */
       return (projectId: string, eventId: string): HawkEvent | null => {
+        console.log('getting project event by id', projectId, eventId);
+          
         const key = getEventsListKey(projectId, eventId);
 
         return state.events[key] || null;
@@ -340,42 +259,6 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Returns latest recent event of the project by its id
-     *
-     * @param {EventsModuleState} state - Vuex state
-     */
-    getLatestEventDailyInfo(state) {
-      /**
-       * @param {string} projectId - event's project id
-       */
-      return (projectId: string): HawkEventDailyInfo | null => {
-        return state.latest[projectId];
-      };
-    },
-
-    /**
-     * Returns latest event for certain project
-     *
-     * @param {EventsModuleState} state - Vuex state
-     */
-    getLatestEvent(state: EventsModuleState): ((projectId: string) => HawkEvent | null) {
-      /**
-       * @param {string} projectId - event's project id
-       */
-      return (projectId: string): HawkEvent | null => {
-        const latestProjectEvent = state.latest[projectId];
-
-        if (latestProjectEvent) {
-          const lastEventGroupHash = latestProjectEvent.groupHash;
-
-          return Object.values(state.events).find((event) => event.groupHash === lastEventGroupHash) || null;
-        }
-
-        return null;
-      };
-    },
-
-    /**
      * Get filters for project
      *
      * @param {EventsModuleState} state - module state
@@ -419,86 +302,17 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {HawkEventsDailyInfoByProject} payload.dailyEvents - projects recent events
      */
     [INIT_EVENTS_MODULE](
-      { commit }, { events, dailyEvents }: { events: EventsMap; dailyEvents: HawkEventsDailyInfoByProject }
+      { commit }, { events }: { events: EventsMap }
     ): void {
       commit(MutationTypes.SetEventsList, events);
-
-      Object.entries(dailyEvents).forEach(([projectId, recentEventsInfoByDate]) => {
-        commit(MutationTypes.SetRecentEventsList, {
-          projectId,
-          recentEventsInfoByDate,
-        });
-      });
-      commit(MutationTypes.SetLatestEvents, dailyEvents);
     },
 
-    /**
-     * Get latest project events
-     *
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - standard Vuex commit function
-     * @param {object} context.getters - module getters
-     *
-     * @param {object} project - object of project data
-     * @param {string} project.projectId - id of the project to fetch data
-     * @param {string} project.search - search query
-     * @returns {Promise<boolean>} - true if there are no more events
-     * @todo - remove this method, use FETCH_PROJECT_OVERVIEW instead
-     */
-    async [FETCH_RECENT_EVENTS]({ commit, getters }, { projectId, search }: { projectId: string, search: string }): Promise<boolean> {
-      const RECENT_EVENTS_FETCH_LIMIT = 15;
-      const eventsSortOrder = getters.getProjectOrder(projectId);
-      const recentEvents = await eventsApi.fetchRecentEvents(
-        projectId,
-        loadedEventsCount[projectId] || 0,
-        eventsSortOrder,
-        getters.getProjectFilters(projectId),
-        search
-      );
-
-      if (!recentEvents) {
-        return true;
-      }
-
-      /**
-       * Reset loadedEventsCount only when starting a new search
-       * This ensures proper pagination during search
-       */
-      if (search.trim().length > 0 && !loadedEventsCount[projectId]) {
-        loadedEventsCount[projectId] = 0;
-      }
-
-      const eventsGroupedByDate = groupByGroupingTimestamp(
-        recentEvents.dailyInfo,
-        eventsSortOrder !== EventsSortOrder.ByCount
-      );
-
-      loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + recentEvents.dailyInfo.length;
-
-      commit(MutationTypes.AddToEventsList, {
-        projectId,
-        eventsList: recentEvents.events,
-      });
-
-      /**
-       * Always use AddToRecentEventsList for pagination
-       * This ensures that new events are appended to the existing list
-       * regardless of whether there is a search query or not
-       */
-      commit(MutationTypes.AddToRecentEventsList, {
-        projectId,
-        recentEventsInfoByDate: eventsGroupedByDate,
-      });
-
-      return recentEvents.dailyInfo.length !== RECENT_EVENTS_FETCH_LIMIT;
-    },
-
-    async [FETCH_PROJECT_OVERVIEW]({ commit, getters, state }, { projectId, search }: { projectId: string; search: string, nextCursor: string | null }): Promise<void> {
+    // @todo move to the projects actions
+    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }): Promise<Record<string, unknown>> {
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
-        state.dailyEventsNextCursor,
+        nextCursor,
         eventsSortOrder,
         getters.getProjectFilters(projectId),
         search
@@ -521,10 +335,8 @@ const module: Module<EventsModuleState, RootState> = {
       const eventsGroupedByDate = groupByGroupingTimestamp(
         dailyEvents.map(portion => {
           return {
-            id: portion.id,
-            count: portion.count,
-            affectedUsers: portion.affectedUsers,
-            groupingTimestamp: portion.groupingTimestamp,
+            ...portion,
+            event: undefined,
             eventId: portion.event.id
           }
         }),
@@ -538,21 +350,8 @@ const module: Module<EventsModuleState, RootState> = {
         eventsList: dailyEvents.map(portion => portion.event),
       });
 
-      /**
-       * Always use AddToRecentEventsList for pagination
-       * This ensures that new events are appended to the existing list
-       * regardless of whether there is a search query or not
-       */
-      commit(MutationTypes.AddToRecentEventsList, {
-        projectId,
-        recentEventsInfoByDate: eventsGroupedByDate,
-      });
-
-      commit(MutationTypes.SetDailyEventsNextCursor, {
-        nextCursor: dailyEventsPortion.nextCursor,
-      })
+      return eventsGroupedByDate;
     },
-
 
     /**
      * Fetches latest repetitions
@@ -769,7 +568,7 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         order,
       });
-      commit(MutationTypes.ClearRecentEventsList, { projectId });
+      // commit(MutationTypes.ClearRecentEventsList, { projectId });
 
       return dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId,
@@ -795,7 +594,7 @@ const module: Module<EventsModuleState, RootState> = {
         filters,
       });
 
-      commit(MutationTypes.ClearRecentEventsList, { projectId });
+      // commit(MutationTypes.ClearRecentEventsList, { projectId });
 
       return dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId,
@@ -851,55 +650,6 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Mutation for adding new recent events data to the store
-     *
-     * @param {EventsModuleState} state - Vuex state
-     *
-     * @param {object} payload - vuex mutation payload
-     * @param payload.projectId - project that owns events
-     * @param payload.recentEventsInfoByDate - grouped events list
-     */
-    [MutationTypes.AddToRecentEventsList](
-      state,
-      { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }
-    ): void {
-      if (!state.dailyEvents[projectId]) {
-        Vue.set(state.dailyEvents, projectId, {});
-      }
-
-      /**
-       * Algorithm for merging the list of recent events from vuex store and server response
-       */
-      Object.keys(recentEventsInfoByDate).forEach((date) => {
-        /**
-         * If there is no data for this date, then assign a value without merging
-         */
-        if (!state.dailyEvents[projectId][date]) {
-          Vue.set(state.dailyEvents[projectId], date, recentEventsInfoByDate[date]);
-
-          return;
-        }
-        const dailyEvents = recentEventsInfoByDate[date];
-
-        /**
-         * Merge all daily events info separately
-         */
-        dailyEvents.forEach((dailyEvent) => {
-          const infoIndex = state.dailyEvents[projectId][date].findIndex((e) => e.groupHash === dailyEvent.groupHash);
-
-          /**
-           * If there is data about this event in store then update it. Else just push it to the list
-           */
-          if (infoIndex !== -1) {
-            state.dailyEvents[projectId][date][infoIndex] = dailyEvent;
-          } else {
-            state.dailyEvents[projectId][date].push(dailyEvent);
-          }
-        });
-      });
-    },
-
-    /**
      * Mutation for adding new events to the store
      *
      * @param {EventsModuleState} state - Vuex state
@@ -915,20 +665,6 @@ const module: Module<EventsModuleState, RootState> = {
       eventsList.forEach((event) => {
         Vue.set(state.events, getEventsListKey(projectId, event.id), event);
       });
-    },
-
-    /**
-     * Mutation for replacing recent events list
-     *
-     * @param {EventsModuleState} state - Vuex state
-     * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - project that owns events
-     * @param {HawkEventsDailyInfoByDate} payload.recentEventsInfoByDate - grouped events list
-     */
-    [MutationTypes.SetRecentEventsList](state, { projectId, recentEventsInfoByDate }: { projectId: string; recentEventsInfoByDate: HawkEventsDailyInfoByDate }): void {
-      console.log('setting daily event to the store', projectId, recentEventsInfoByDate);
-
-      Vue.set(state.dailyEvents, projectId, recentEventsInfoByDate);
     },
 
     /**
@@ -951,18 +687,6 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       Vue.set(state.eventRepetitions, key, [...state.eventRepetitions[key], repetition]);
-    },
-
-    /**
-     * Sets next cursor for daily events pagination
-     *
-     * @param {EventsModuleState} state - Vuex state
-     *
-     * @param {object} payload - vuex mutation payload
-     * @param {string | null} payload.nextCursor - new value of the daily events next cursor
-     */
-    [MutationTypes.SetDailyEventsNextCursor](state: EventsModuleState, { nextCursor }: { nextCursor: string | null }): void {
-      state.dailyEventsNextCursor = nextCursor;
     },
 
     /**
@@ -1056,33 +780,6 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       Vue.set(state.filters[projectId], 'filters', filters);
-    },
-
-    /**
-     * Clear project's recent events list
-     *
-     * @param {EventsModuleState} state - module state
-     * @param {string} projectId - project to clear
-     */
-    [MutationTypes.ClearRecentEventsList](state: EventsModuleState, { projectId }: { projectId: string }): void {
-      Vue.set(state.dailyEvents, projectId, {});
-      loadedEventsCount[projectId] = 0;
-    },
-
-    /**
-     * Set projects' latest events
-     *
-     * @param {EventsModuleState} state - module state
-     * @param {HawkEventsDailyInfoByProject} recentEvents - projects' recent events
-     */
-    [MutationTypes.SetLatestEvents](state: EventsModuleState, recentEvents: HawkEventsDailyInfoByProject): void {
-      Object
-        .entries(recentEvents)
-        .forEach(([projectId, eventsByTimestamp]) => {
-          const eventInfo = Object.values(eventsByTimestamp)[0][0];
-
-          Vue.set(state.latest, projectId, eventInfo);
-        });
     },
 
     /**

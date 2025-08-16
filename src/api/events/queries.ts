@@ -131,28 +131,25 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 export const QUERY_PROJECT_OVERVIEW = `
   query ProjectOverview(
     $projectId: ID!
-    $cursor: String
+
     $sort: EventsSortOrder,
     $filters: EventsFiltersInput,
     $search: String
   ) {
     project(projectId: $projectId) {
-      dailyEventsPortion(cursor: $cursor, sort: $sort, filters: $filters, search: $search) {
+      dailyEventsPortion(sort: $sort, filters: $filters, search: $search) {
         nextCursor
         dailyEvents {
           id
-          groupingTimestamp
           count
           affectedUsers
+          groupingTimestamp
           event {
             id
             groupHash
             totalCount
-            affectedUsers
+            usersAffected
             assignee {
-            ...User
-            }
-            visitedBy {
             ...User
             }
             marks {
