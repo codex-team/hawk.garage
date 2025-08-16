@@ -1,78 +1,19 @@
-import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
+import { USER_FRAGMENT, EVENT_BACKTRACE, EVENT_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID) {
+  query Event($projectId: ID!, $eventId: ID!) {
     project(projectId: $projectId) {
       event(id: $eventId) {
-        id
-        catcherType
-        totalCount
-        groupHash
-        visitedBy {
-          ...User
-        }
-        marks {
-          resolved
-          starred
-          ignored
-        }
-        timestamp
-        payload {
-          title
-          type
-          release
-          context
-          user {
-            id
-            name
-            photo
-          }
-          get
-          backtrace {
-            ...eventBacktrace
-          }
-          addons
-        }
-        usersAffected
-        repetition(id: $repetitionId) {
-          id
-          timestamp
-          payload {
-            release
-            context
-            user {
-              id
-              name
-              photo
-            }
-            get
-            backtrace {
-              ...eventBacktrace
-            }
-            addons
-          }
-          delta
-        }
-        release {
-          releaseName
-          commits{
-            hash
-            author
-            title
-            date
-          }
-        }
+        ...Event
       }
     }
   }
 
-  ${USER_FRAGMENT}
-
-  ${EVENT_BACKTRACE}
+  ${EVENT_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -109,6 +50,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
           }
           catcherType
           timestamp
+          firstAppearanceTimestamp
           payload {
             title
           }
@@ -134,43 +76,26 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
  *
  * @type {string}
  */
-export const QUERY_LATEST_REPETITIONS = `
+export const QUERY_LATEST_REPETITIONS_PORTION = `
   query LatestRepetitions(
     $projectId: ID!,
     $eventId: ID!,
-    $skip: Int,
-    $limit: Int
+    $limit: Int,
+    $cursor: String
   ) {
     project(projectId: $projectId) {
       event(id: $eventId) {
-        repetitions(skip: $skip, limit: $limit) {
-          id
-          timestamp
-          payload {
-            title,
-            release
-            context
-            user {
-              id
-              name
-              photo
-            }
-            get
-            backtrace {
-              line
-              sourceCode {
-                line
-                content
-              }
-              file
-            }
-            addons
+        repetitionsPortion(limit: $limit, cursor: $cursor) {
+          nextCursor
+          repetitions {
+            ...Event
           }
-          delta
         }
       }
     }
   }
+
+  ${EVENT_FRAGMENT}
 `;
 
 // language=GraphQL

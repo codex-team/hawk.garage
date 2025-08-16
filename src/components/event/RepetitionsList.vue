@@ -110,7 +110,7 @@ import EntityImage from '../utils/EntityImage.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import AddonRenderers from '../../mixins/addonRenderers';
-import { HawkEvent, HawkEventRepetition } from '../../types/events';
+import { HawkEvent } from '../../types/events';
 import { isObject, trim } from '../../utils';
 
 export default Vue.extend({
@@ -128,7 +128,7 @@ export default Vue.extend({
      * List of repetitions
      */
     repetitions: {
-      type: Array as PropType<HawkEventRepetition[]>,
+      type: Array as PropType<HawkEvent[]>,
       required: true,
     },
 
@@ -162,7 +162,7 @@ export default Vue.extend({
      */
     distinctAddonsKeys(): Set<string> {
       return new Set(
-        [...this.getDistinctKeysRepetitionsProperty('addons')].filter(
+        [ ...this.getDistinctKeysRepetitionsProperty('addons') ].filter(
           (key) => key !== 'consoleOutput'
         )
       );

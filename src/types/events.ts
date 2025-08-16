@@ -95,14 +95,9 @@ export interface HawkEvent {
   payload: HawkEventPayload;
 
   /**
-   * Event repetition
-   */
-  repetition: HawkEventRepetition;
-
-  /**
    * Event repetitions
    */
-  repetitions: HawkEventRepetition[];
+  repetitions: HawkEvent[];
 
   /**
    * How many users catch this error
@@ -118,6 +113,11 @@ export interface HawkEvent {
    * Unix timestamp of the event
    */
   timestamp: number;
+
+  /**
+   * Unix timestamp of the event first appearance
+   */
+  firstAppearanceTimestamp: number;
 
   /**
    * Event chart data for a few days
@@ -226,36 +226,6 @@ export interface HawkEventPayload {
    * Event type: TypeError, ReferenceError etc.
    */
   type?: string;
-}
-
-/**
- * Hawk repetition payload
- */
-export interface HawkEventRepetition {
-  /**
-   * Repetitions ID
-   */
-  id: string;
-
-  /**
-   * Unique repetition payload, null for new delta format
-   */
-  payload: HawkEventPayload;
-
-  /**
-   * Delta payload, null for old delta format or if there is no delta between original and repetition
-   */
-  delta: string | null;
-
-  /**
-   * Flag indicating if the payload has been patched, in case of processing repetition after fetching, we don't need to patch it again
-   */
-  isPayloadPatched?: boolean;
-
-  /**
-   * Unix timestamp of the repetition date
-   */
-  timestamp: number;
 }
 
 export interface HawkEventBacktraceFrame {

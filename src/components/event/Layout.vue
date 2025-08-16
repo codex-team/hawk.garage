@@ -7,7 +7,6 @@
     <EventHeader
       v-if="event || loading"
       :event="event"
-      @tabChanged="tabChanged($event)"
     />
     <div class="event-layout__info">
       <div class="event-layout__container">
@@ -37,7 +36,7 @@ import Vue from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
 import { HawkEvent } from '@/types/events';
-import { FETCH_EVENT, FETCH_EVENT_REPETITIONS, VISIT_EVENT } from '@/store/modules/events/actionTypes';
+import { FETCH_EVENT, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { mapGetters } from 'vuex';
 
 export default Vue.extend({
@@ -54,13 +53,6 @@ export default Vue.extend({
        * @type {string}
        */
       projectId: this.$route.params.projectId,
-
-      /**
-       * Current event id
-       *
-       * @type {string}
-       */
-      eventId: this.$route.params.eventId,
 
       /**
        * Status of repetition-diff fetching
@@ -86,9 +78,9 @@ export default Vue.extend({
      * Current viewed event
      */
     event(): HawkEvent {
-      const { repetitionId, eventId, projectId } = this.$route.params;
+      const { repetitionId, projectId, eventId } = this.$route.params;
 
-      return this.getEvent(projectId, eventId, repetitionId);
+      return this.getEvent(projectId, repetitionId || eventId);
     },
   },
   /**
@@ -97,17 +89,12 @@ export default Vue.extend({
    * @returns {Promise<void>}
    */
   async created() {
-    const eventId = this.$route.params.eventId;
     const repetitionId = this.$route.params.repetitionId;
+    const eventId = this.$route.params.eventId;
 
     await this.$store.dispatch(FETCH_EVENT, {
       projectId: this.projectId,
-      eventId
-    });
-
-    await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
-      projectId: this.projectId,
-      eventId
+      eventId: repetitionId || eventId,
     });
 
     this.loading = false;
@@ -133,7 +120,7 @@ export default Vue.extend({
       if (!this.event.visitedBy || !this.event.visitedBy.find(user => user.id === userId)) {
         this.$store.dispatch(VISIT_EVENT, {
           projectId: this.projectId,
-          eventId: this.eventId,
+          eventId: this.event.id,
         });
       }
     },
