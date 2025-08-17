@@ -186,7 +186,7 @@ export interface HawkEventDailyInfo {
   /**
    * Id of the event that would represent all events with same groupHash in this day
    */
-  readonly event: HawkEventRepetition;
+  readonly event: HawkEvent;
 
   /**
    * Event affected users count, null for old events, when affected users count was not calculated

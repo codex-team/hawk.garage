@@ -182,6 +182,7 @@ const module: Module<EventsModuleState, RootState> = {
        */
       return (projectId: string, eventId: string): HawkEvent | null => {
         console.log('getting project event by id', projectId, eventId);
+        console.log('state events', Object.entries(state.events))
           
         const key = getEventsListKey(projectId, eventId);
 
@@ -254,7 +255,8 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     // @todo move to the projects actions
-    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }): Promise<Record<string, unknown>> {
+    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }): 
+      Promise<{eventsGroupedByDate: Record<string, unknown>, nextCursor: string | null}> {
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
@@ -263,12 +265,12 @@ const module: Module<EventsModuleState, RootState> = {
         getters.getProjectFilters(projectId),
         search
       );
-
+      
       if (dailyEventsPortion === null) {
         throw new Error('Error [FETCH_PROJECT_OVERVIEW]: Project not found');
       }
-
-      const dailyEvents = dailyEventsPortion.dailyEvents;
+      
+      const dailyEvents = dailyEventsPortion.dailyEvents
 
       /**
        * Reset loadedEventsCount only when starting a new search
@@ -296,7 +298,7 @@ const module: Module<EventsModuleState, RootState> = {
         eventsList: dailyEvents.map(portion => portion.event),
       });
 
-      return eventsGroupedByDate;
+      return { eventsGroupedByDate, nextCursor: dailyEventsPortion.nextCursor};
     },
 
     /**

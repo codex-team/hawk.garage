@@ -87,11 +87,12 @@ const actions = {
            */
           if (dailyEvents.length) {
             project.latestEvent = dailyEvents[0];
-            
-            console.log('would be saved as project.latestEvent', project.latestEvent);
 
-            events[project.id + ':' + dailyEvents[0].event.id] = dailyEvents[0].event;
+            project.latestEvent.eventId = project.latestEvent.event.id;
 
+            events[project.id + ':' + project.latestEvent.eventId] = dailyEvents[0].event;
+
+            delete project.latestEvent.event;
             delete project.dailyEventsPortion;
           }
         });

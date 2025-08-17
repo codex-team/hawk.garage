@@ -10,7 +10,9 @@
         :points="chartData"
         class="project-overview__chart"
       />
-      <FiltersBar />
+      <FiltersBar 
+        @state-changed="reloadDailyEvents"
+      />
       <!-- TODO: Add model that will ask to fetch project overview one more time to reload recentEvents with new sorting order or filter  -->
       <!-- TODO: Add placeholder if there is no filtered events -->
       <div
@@ -40,19 +42,18 @@
               {{ getDay(date) | prettyDate }}
             </div>
             <EventItem
-              v-for="(dailyEventInfo, index) in  и"
+              v-for="(dailyEventInfo, index) in eventsByDate"
               :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.event.id).timestamp"
+              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.eventId ?  dailyEventInfo.eventId : dailyEvents).timestamp"
               :count="dailyEventInfo.count"
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
-              :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
+              :event="dailyEventInfo.event"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
               @showEventOverview="
                 showEventOverview(
                   project.id,
-                  dailyEventInfo.groupHash,
-                  dailyEventInfo.lastRepetitionId
+                  dailyEventInfo.event,
                 )
               "
             />
@@ -248,18 +249,19 @@ export default {
     }, 500);
 
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+      const { eventsGroupedByDate, nextCursor } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
         search: this.searchQuery,
       });
 
+      console.log('events grouped by date', eventsGroupedByDate, nextCursor)
+
+      this.dailyEventsNextCursor = nextCursor;
+      this.noMoreEvents = this.dailyEventsNextCursor === null;
+
       const latestEvent = this.project.latestEvent;
 
-      console.log('before')
-
-      this.dailyEvents = groupByGroupingTimestamp([latestEvent]);
-
-      console.log('daily events after grouping by timestamp', dailyEvents);
+      this.dailyEvents = groupByGroupingTimestamp([latestEvent, ...Object.values(eventsGroupedByDate)]);
 
       /**
        * Redirect to the "add catcher" page if there are no events
@@ -311,9 +313,6 @@ export default {
       projectId: this.projectId,
       search: '',
     });
-
-    // @todo - commit daily events nextCursor flush 
-    this.$store.commit('')
   },
 
   unmounted() {
@@ -353,10 +352,13 @@ export default {
         projectId: this.projectId,
         nextCursor: this.nextCursor,
         search: this.searchQuery,
-      });      
+      });
       this.isLoadingEvents = false;
 
       this.nextCursor = nextCursor;
+      
+      console.log('this.dailyevents + dailyEventsportion', this.dailyEvents, dailyEvenstPortion)
+
       this.dailyEvents = {
         ...this.dailyEvents,
         ...dailyEvenstPortion
@@ -416,19 +418,16 @@ export default {
      * Opens event overview popup
      *
      * @param {string} projectId - id of the event's project
-     * @param {string} groupHash - event's group hash
-     * @param {string} repetitionId - event's repetition id
      */
-    showEventOverview(projectId, groupHash, repetitionId) {
+    showEventOverview(projectId, event) {
       if (this.isAssigneesShowed) {
         this.isAssigneesShowed = false;
       } else {
         this.$router.push({
           name: 'event-overview',
           params: {
-            projectId: projectId,
-            eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
-            repetitionId: repetitionId,
+            projectId,
+            event,
           },
         });
       }
@@ -455,14 +454,27 @@ export default {
 
       this.isLoadingEvents = true;
       try {
-        this.noMoreEvents = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+        const { nextCursor, dailyEvenstPortion } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
           projectId: this.projectId,
-          search: sanitizedQuery,
+          nextCursor: this.nextCursor,
+          search: this.searchQuery,
         });
+
+        console.log('this.dailyeventsporiton',this.dailyEvenstPortion)
+
+        this.dailyEventsNextCursor = nextCursor;
+        this.dailyEventsPortion = {...this.dailyEvenstPortion, ...groupByGroupingTimestamp(dailyEvents)};
       } finally {
         this.isLoadingEvents = false;
       }
     },
+
+    async reloadDailyEvents() {
+      this.nextCursor = null;
+      this.dailyEvents = {};
+
+      this.loadMoreEvents();
+    }
   },
 };
 </script>

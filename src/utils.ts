@@ -129,16 +129,7 @@ export function groupByGroupingTimestamp(items: object[], convertMidnight = true
     });
   });
 
-  try { 
-    const grouped = groupBy('groupingTimestamp')(items);
-
-    console.log('grouped', grouped);
-
-    return grouped;
-  } catch (e) {
-    console.log(`grouping error ${e}`)
-  }
-
+  return groupBy('groupingTimestamp')(items);
 }
 
 /**
