@@ -149,6 +149,10 @@ export interface DailyEvent {
   event: HawkEvent;
 }
 
+export type DailyEventWithEventLinked = Omit<DailyEvent, 'event'> & {
+  eventId: string,
+}
+
 /**
  * Interface representing a portion of daily events
  */

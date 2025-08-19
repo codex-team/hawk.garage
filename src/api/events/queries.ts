@@ -73,13 +73,13 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
 export const QUERY_PROJECT_OVERVIEW = `
   query ProjectOverview(
     $projectId: ID!
-
+    $cursor: String
     $sort: EventsSortOrder,
     $filters: EventsFiltersInput,
     $search: String
   ) {
     project(projectId: $projectId) {
-      dailyEventsPortion(sort: $sort, filters: $filters, search: $search) {
+      dailyEventsPortion(sort: $sort, filters: $filters, search: $search, nextCursor: $cursor) {
         nextCursor
         dailyEvents {
           id

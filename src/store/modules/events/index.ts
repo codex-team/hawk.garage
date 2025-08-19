@@ -13,15 +13,15 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
-import { Commit, Module } from 'vuex';
+import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
 import { RootState } from '../../index';
 import {
+  DailyEventWithEventLinked,
   EventsFilters,
   EventsSortOrder,
   HawkEvent,
-  HawkEventDailyInfo
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -256,7 +256,7 @@ const module: Module<EventsModuleState, RootState> = {
 
     // @todo move to the projects actions
     async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }): 
-      Promise<{eventsGroupedByDate: Record<string, unknown>, nextCursor: string | null}> {
+      Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
@@ -280,17 +280,6 @@ const module: Module<EventsModuleState, RootState> = {
         loadedEventsCount[projectId] = 0;
       }
 
-      const eventsGroupedByDate = groupByGroupingTimestamp(
-        dailyEvents.map(portion => {
-          return {
-            ...portion,
-            event: undefined,
-            eventId: portion.event.id
-          }
-        }),
-        eventsSortOrder !== EventsSortOrder.ByCount
-      );
-
       loadedEventsCount[projectId] = (loadedEventsCount[projectId] || 0) + dailyEvents.length;
 
       commit(MutationTypes.AddToEventsList, {
@@ -298,7 +287,15 @@ const module: Module<EventsModuleState, RootState> = {
         eventsList: dailyEvents.map(portion => portion.event),
       });
 
-      return { eventsGroupedByDate, nextCursor: dailyEventsPortion.nextCursor};
+      const dailyEventsWithEventsLinked = dailyEvents.map(dailyEvent => {
+        return {
+          ...dailyEvent,
+          event: undefined,
+          eventId: dailyEvent.event.id
+        }
+      })
+
+      return { dailyEventsWithEventsLinked, nextCursor: dailyEventsPortion.nextCursor};
     },
 
     /**

@@ -34,7 +34,7 @@
         />
         <template v-if="!isListEmpty">
           <div
-            v-for="(eventsByDate, date) in dailyEvents"
+            v-for="(eventsByDate, date) in dailyEventsGrouped"
             :key="date"
             class="project-overview__events-by-date"
           >
@@ -44,11 +44,11 @@
             <EventItem
               v-for="(dailyEventInfo, index) in eventsByDate"
               :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.eventId ?  dailyEventInfo.eventId : dailyEvents).timestamp"
+              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.eventId).timestamp"
               :count="dailyEventInfo.count"
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
-              :event="dailyEventInfo.event"
+              :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
               @showEventOverview="
                 showEventOverview(
@@ -71,7 +71,7 @@
           <EventItemSkeleton />
         </div>
         <div
-          v-else-if="Object.keys(dailyEvents).length === 0 && !isLoadingEvents"
+          v-else-if="dailyEvents.length === 0 && !isLoadingEvents"
           class="project-overview__no-events-placeholder"
         >
           <div class="project-overview__divider" />
@@ -163,7 +163,7 @@ export default {
 
       dailyEventsNextCursor: null,
 
-      dailyEvents: {},
+      dailyEvents: [],
 
       /**
        * Handler of window resize
@@ -226,7 +226,15 @@ export default {
         return true;
       }
 
-      return Object.keys(this.dailyEvents).length === 0;
+      return this.dailyEvents.length === 0;
+    },
+
+    dailyEventsGrouped() {
+      if (this.dailyEvents.length) {
+        return groupByGroupingTimestamp(this.dailyEvents);
+      }
+
+      return {};
     },
 
     searchFieldPlaceholder() {
@@ -249,19 +257,18 @@ export default {
     }, 500);
 
     try {
-      const { eventsGroupedByDate, nextCursor } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+      const { dailyEventsWithEventsLinked, nextCursor } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
         search: this.searchQuery,
+        cursor: this.dailyEventsNextCursor,
       });
-
-      console.log('events grouped by date', eventsGroupedByDate, nextCursor)
 
       this.dailyEventsNextCursor = nextCursor;
       this.noMoreEvents = this.dailyEventsNextCursor === null;
 
       const latestEvent = this.project.latestEvent;
 
-      this.dailyEvents = groupByGroupingTimestamp([latestEvent, ...Object.values(eventsGroupedByDate)]);
+      this.dailyEvents = [...dailyEventsWithEventsLinked];
 
       /**
        * Redirect to the "add catcher" page if there are no events
@@ -348,9 +355,9 @@ export default {
         return;
       }
       this.isLoadingEvents = true;
-      const { nextCursor, dailyEvenstPortion } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+      const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
-        nextCursor: this.nextCursor,
+        nextCursor: this.dailyEventsNextCursor,
         search: this.searchQuery,
       });
       this.isLoadingEvents = false;
@@ -359,10 +366,10 @@ export default {
       
       console.log('this.dailyevents + dailyEventsportion', this.dailyEvents, dailyEvenstPortion)
 
-      this.dailyEvents = {
+      this.dailyEvents = [
         ...this.dailyEvents,
-        ...dailyEvenstPortion
-      };
+        ...dailyEventsWithEventsLinked
+      ];
 
       console.log('next cursor and daily events in component updated', this.nextCursor, this.dailyEvents);
     },
@@ -454,16 +461,16 @@ export default {
 
       this.isLoadingEvents = true;
       try {
-        const { nextCursor, dailyEvenstPortion } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+        const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
           projectId: this.projectId,
-          nextCursor: this.nextCursor,
+          nextCursor: this.dailyEventsNextCursor,
           search: this.searchQuery,
         });
 
         console.log('this.dailyeventsporiton',this.dailyEvenstPortion)
 
         this.dailyEventsNextCursor = nextCursor;
-        this.dailyEventsPortion = {...this.dailyEvenstPortion, ...groupByGroupingTimestamp(dailyEvents)};
+        this.dailyEvents = [...this.dailyEvents, ...dailyEventsWithEventsLinked];
       } finally {
         this.isLoadingEvents = false;
       }
@@ -471,7 +478,7 @@ export default {
 
     async reloadDailyEvents() {
       this.nextCursor = null;
-      this.dailyEvents = {};
+      this.dailyEvents = [];
 
       this.loadMoreEvents();
     }
