@@ -375,12 +375,11 @@ export default {
 
       this.isLoadingEvents = false;
 
-      this.nextCursor = nextCursor;
+      this.dailyEventsNextCursor = nextCursor;
 
-      this.dailyEvents = [
-        ...this.dailyEvents,
-        ...dailyEventsWithEventsLinked,
-      ];
+      this.noMoreEvents = this.dailyEventsNextCursor === null;
+
+      this.dailyEvents.push(...dailyEventsWithEventsLinked);
     },
 
     /**
@@ -485,7 +484,7 @@ export default {
     },
 
     async reloadDailyEvents() {
-      this.nextCursor = null;
+      this.dailyEventsNextCursor = null;
       this.dailyEvents = [];
 
       this.noMoreEvents = false;
