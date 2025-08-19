@@ -149,6 +149,9 @@ export interface DailyEvent {
   event: HawkEvent;
 }
 
+/**
+ * Interface that represents daily events with pointer to the event stored in the state
+ */
 export type DailyEventWithEventLinked = Omit<DailyEvent, 'event'> & {
   eventId: string,
 };

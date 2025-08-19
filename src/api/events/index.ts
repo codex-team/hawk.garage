@@ -78,11 +78,11 @@ export async function fetchRecentEvents(
 }
 
 /**
- * @param projectId
- * @param nextCursor
- * @param sort
- * @param filters
- * @param search
+ * @param projectId - id of the project
+ * @param nextCursor - pointer to the next portion of daily events
+ * @param sort - sort order for daily events
+ * @param filters - filters for daily events
+ * @param search - search string for daily events
  */
 export async function fetchDailyEventsPortion(
   projectId: string,
