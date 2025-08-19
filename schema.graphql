@@ -354,14 +354,14 @@ type Event {
   """Event timestamp"""
   timestamp: Float!
 
+  """First appearance timestamp"""
+  firstAppearanceTimestamp: Float!
+
   """Release data"""
   release: Release
 
-  """Event concrete repetition"""
-  repetition(id: ID): Repetition
-
-  """Event repetitions"""
-  repetitions(skip: Int = 0, limit: Int = 10): [Repetition!]
+  """Event repetitions portion"""
+  repetitionsPortion(cursor: String = null, limit: Int = 10): RepetitionsPortion!
 
   """Array of users who visited event"""
   visitedBy: [User!]
@@ -542,7 +542,13 @@ type Mutation {
   attachCard(language: String): BillingSession!
 
   """Mutation marks event as visited for current user"""
-  visitEvent(project: ID!, id: ID!): Boolean!
+  visitEvent(
+    """ID of project event is related to"""
+    projectId: ID!
+
+    """ID of the event to visit"""
+    eventId: ID!
+  ): Boolean!
 
   """Mutation sets or unsets passed mark to event"""
   toggleEventMark(
@@ -1191,7 +1197,7 @@ type Release {
   releaseName: String!
 
   """Release commits"""
-  commits: [Commit!]!
+  commits: [Commit]
 }
 
 input RemoveAssigneeInput {
@@ -1216,60 +1222,10 @@ input RemoveProjectEventGroupingPatternInput {
   projectId: ID!
 }
 
-"""Repetition of the event"""
-type Repetition {
-  """Standalone repetition ID"""
-  id: ID!
-
-  """Event's hash"""
-  groupHash: String!
-
-  """Event's payload patch"""
-  payload: RepetitionPayload
-
-  """Delta of the event's payload, stringified JSON"""
-  delta: String
-
-  """Event timestamp"""
-  timestamp: Float!
-}
-
-"""
-Type representing Event payload. All fields can be omitted if there are no difference with the original
-"""
-type RepetitionPayload {
-  """Event title"""
-  title: String
-
-  """Event type: TypeError, ReferenceError etc."""
-  type: String
-
-  """Event severity level"""
-  level: Int
-
-  """Event stack array from the latest call to the earliest"""
-  backtrace: [EventBacktraceFrame!]
-
-  """Additional data about GET request"""
-  get: JSONObject
-
-  """Additional data about POST request"""
-  post: JSONObject
-
-  """HTTP headers"""
-  headers: JSONObject
-
-  """Source code version identifier"""
-  release: String
-
-  """Current authenticated user"""
-  user: EventUser
-
-  """Any additional data of Event"""
-  context: EncodedJSON
-
-  """Custom data provided by project users"""
-  addons: EncodedJSON
+"""Object returned in repetitions property of event object"""
+type RepetitionsPortion {
+  repetitions: [Event!]
+  nextCursor: String
 }
 
 """Source code line representation"""

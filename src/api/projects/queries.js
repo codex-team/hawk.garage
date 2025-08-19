@@ -184,7 +184,7 @@ export const MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS = `
  * Get data for chart
  */
 export const QUERY_CHART_DATA = `
-  query ProjectRecentEvents (
+  query ProjectChartData (
     $projectId: ID!,
     $days: Int!
     $timezoneOffset: Int!

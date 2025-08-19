@@ -181,9 +181,6 @@ const module: Module<EventsModuleState, RootState> = {
        * @param {string} eventId - event id
        */
       return (projectId: string, eventId: string): HawkEvent | null => {
-        console.log('getting project event by id', projectId, eventId);
-        console.log('state events', Object.entries(state.events))
-          
         const key = getEventsListKey(projectId, eventId);
 
         return state.events[key] || null;

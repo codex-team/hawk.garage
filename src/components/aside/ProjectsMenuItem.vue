@@ -85,8 +85,6 @@ export default {
     lastEventTitle() {
       const latestEvent = this.project.latestEvent;
 
-      console.log('latestEvent', latestEvent)
-
       if (latestEvent) {
         const latestEventInfo = this.$store.getters.getProjectEventById(this.project.id, latestEvent.eventId);
 

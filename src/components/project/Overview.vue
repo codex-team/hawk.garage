@@ -53,7 +53,7 @@
               @showEventOverview="
                 showEventOverview(
                   project.id,
-                  dailyEventInfo.event,
+                  dailyEventInfo.eventId,
                 )
               "
             />
@@ -257,6 +257,10 @@ export default {
     }, 500);
 
     try {
+      if (this.project && this.project.latestEvent) {
+        this.dailyEvents = [this.project.latestEvent];
+      }
+
       const { dailyEventsWithEventsLinked, nextCursor } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
         search: this.searchQuery,
@@ -363,15 +367,11 @@ export default {
       this.isLoadingEvents = false;
 
       this.nextCursor = nextCursor;
-      
-      console.log('this.dailyevents + dailyEventsportion', this.dailyEvents, dailyEvenstPortion)
 
       this.dailyEvents = [
         ...this.dailyEvents,
         ...dailyEventsWithEventsLinked
       ];
-
-      console.log('next cursor and daily events in component updated', this.nextCursor, this.dailyEvents);
     },
 
     /**
@@ -426,7 +426,7 @@ export default {
      *
      * @param {string} projectId - id of the event's project
      */
-    showEventOverview(projectId, event) {
+    showEventOverview(projectId, eventId) {
       if (this.isAssigneesShowed) {
         this.isAssigneesShowed = false;
       } else {
@@ -434,7 +434,7 @@ export default {
           name: 'event-overview',
           params: {
             projectId,
-            event,
+            repetitionId: eventId,
           },
         });
       }
@@ -467,8 +467,6 @@ export default {
           search: this.searchQuery,
         });
 
-        console.log('this.dailyeventsporiton',this.dailyEvenstPortion)
-
         this.dailyEventsNextCursor = nextCursor;
         this.dailyEvents = [...this.dailyEvents, ...dailyEventsWithEventsLinked];
       } finally {
@@ -479,6 +477,8 @@ export default {
     async reloadDailyEvents() {
       this.nextCursor = null;
       this.dailyEvents = [];
+
+      this.noMoreEvents = false;
 
       this.loadMoreEvents();
     }

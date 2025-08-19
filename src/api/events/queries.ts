@@ -1,4 +1,4 @@
-import { USER_FRAGMENT, EVENT_BACKTRACE, EVENT_FRAGMENT } from '../fragments';
+import { USER_FRAGMENT, EVENT_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
@@ -87,30 +87,14 @@ export const QUERY_PROJECT_OVERVIEW = `
           affectedUsers
           groupingTimestamp
           event {
-            id
-            groupHash
-            totalCount
-            usersAffected
-            assignee {
-            ...User
-            }
-            marks {
-              resolved
-              starred
-              ignored
-            }
-            catcherType
-            timestamp
-            payload {
-              title
-            }
+            ...Event
           }
         }
       }
     }
   }
   
-  ${USER_FRAGMENT}
+  ${EVENT_FRAGMENT}
 `
 
 // language=GraphQL
@@ -173,7 +157,7 @@ export const QUERY_CHART_DATA = `
  */
 export const MUTATION_VISIT_EVENT = `
   mutation visitEvent($projectId: ID!, $eventId: ID!) {
-    visitEvent(project: $projectId, id: $eventId)
+    visitEvent(projectId: $projectId, eventId: $eventId)
   }
 `;
 
