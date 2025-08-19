@@ -2,7 +2,6 @@ import {
   CREATE_PROJECT,
   REMOVE_PROJECTS_BY_WORKSPACE_ID,
   REMOVE_PROJECT,
-  FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
@@ -18,7 +17,6 @@ import {
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';
-import { groupByGroupingTimestamp } from '../../../utils';
 
 /**
  * Mutations enum for this module

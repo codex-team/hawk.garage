@@ -161,7 +161,7 @@ export default Vue.extend({
 
       this.handleFiltersChange(filters);
 
-      this.$emit('state-changed')
+      this.$emit('state-changed');
     },
     /**
      * Set new events sorting order
@@ -175,7 +175,7 @@ export default Vue.extend({
 
       this.handleSortOrderChange(key);
 
-      this.$emit('state-changed')
+      this.$emit('state-changed');
     },
     /**
      * Handle sort order change

@@ -6,7 +6,6 @@ import * as workspacesApi from '../../../api/workspaces/index.ts';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
 import { INIT_EVENTS_MODULE } from '../events/actionTypes';
-import { groupByGroupingTimestamp } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -50,8 +49,6 @@ const actions = {
    *
    * @param {Function} dispatch - standard Vuex dispatch function
    * @returns {Promise<void>}
-   * 
-   * @todo - rewrite to new dailyEvents pattern
    */
   async [FETCH_INITIAL_DATA]({ dispatch }) {
     const response = await workspacesApi.getAllWorkspacesWithProjects();
@@ -79,7 +76,7 @@ const actions = {
         workspace.projects.forEach(project => {
           project.workspaceId = workspace.id;
 
-          const dailyEvents = project.dailyEventsPortion.dailyEvents
+          const dailyEvents = project.dailyEventsPortion.dailyEvents;
 
           /**
            * From fetching initial data we've got project with one daily event (latest one)

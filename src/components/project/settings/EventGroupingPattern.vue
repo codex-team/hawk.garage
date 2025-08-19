@@ -16,7 +16,7 @@
       <input
         v-model="createPatternForm"
         class="input patterns-section__input"
-        :placeholder='"Attempt to read property \".*\" on array"'
+        :placeholder="&quot;Attempt to read property \&quot;.*\&quot; on array&quot;"
       >
       <UiButton
         class="patterns-section__button"
@@ -29,13 +29,16 @@
       <div class="patterns-section__title">
         {{ $t('projects.settings.patterns.patternList.title') }}
       </div>
-      <div 
-        class="patterns-section__empty-message"
+      <div
         v-if="currentPatternsState.length === 0"
+        class="patterns-section__empty-message"
       >
         {{ $t('projects.settings.patterns.patternList.emptyMessage') }}
       </div>
-      <div v-else class="patterns-list">
+      <div
+        v-else
+        class="patterns-list"
+      >
         <div
           v-for="(pattern) in currentPatternsState"
           :key="pattern.id"
@@ -45,7 +48,7 @@
             v-model="pattern.pattern"
             class="input patterns-section__input"
             :disabled="!userCanEdit"
-            :placeholder='"Attempt to read property \".*\" on array"'
+            :placeholder="&quot;Attempt to read property \&quot;.*\&quot; on array&quot;"
           >
         </div>
       </div>
@@ -247,6 +250,7 @@ export default Vue.extend({
           return false;
         }
         new RegExp(pattern);
+
         return safe(pattern);
       } catch (error) {
         return false;

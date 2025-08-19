@@ -129,43 +129,43 @@ export default Vue.extend({
 
   &__row {
     display: flex;
-    align-items: center;
-    cursor: pointer;
     flex: 1;
+    align-items: center;
     min-width: 0;
+    cursor: pointer;
 
     &-title {
       display: flex;
+      flex-shrink: 1;
       align-items: center;
+      min-width: 0;
       margin-left: 10px;
       color: var(--color-text-main);
       font-weight: bold;
       font-size: 15px;
-      min-width: 0;
-      flex-shrink: 1;
 
       &-text {
         overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }
 
   &__blocked-icon {
-    margin-left: 8px;
+    flex-shrink: 0;
     width: 16px;
     height: 16px;
+    margin-left: 8px;
     color: var(--color-indicator-critical);
-    flex-shrink: 0;
   }
 }
 
 &__settings-button {
-  margin-left: auto;
+  flex-shrink: 0;
   margin-top: -5px;
   margin-bottom: -5px;
-  flex-shrink: 0;
+  margin-left: auto;
 }
 
 &__row-skeleton {
@@ -175,16 +175,16 @@ export default Vue.extend({
   &-image {
     width: 26px;
     height: 26px;
-    border-radius: 6px;
-    background-color: var(--color-bg-second);
     margin-right: 10px;
+    background-color: var(--color-bg-second);
+    border-radius: 6px;
   }
 
   &-title {
     width: 100px;
     height: 15px;
-    border-radius: 6px;
     background-color: var(--color-bg-second);
+    border-radius: 6px;
   }
 }
 

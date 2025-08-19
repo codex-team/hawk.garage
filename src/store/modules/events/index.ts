@@ -15,13 +15,13 @@ import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
 import { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
-import { filterBeautifiedAddons, groupByGroupingTimestamp } from '@/utils';
+import { filterBeautifiedAddons } from '@/utils';
 import { RootState } from '../../index';
 import {
   DailyEventWithEventLinked,
   EventsFilters,
   EventsSortOrder,
-  HawkEvent,
+  HawkEvent
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -252,7 +252,7 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     // @todo move to the projects actions
-    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }): 
+    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }):
       Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
       const eventsSortOrder = getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
@@ -262,12 +262,12 @@ const module: Module<EventsModuleState, RootState> = {
         getters.getProjectFilters(projectId),
         search
       );
-      
+
       if (dailyEventsPortion === null) {
         throw new Error('Error [FETCH_PROJECT_OVERVIEW]: Project not found');
       }
-      
-      const dailyEvents = dailyEventsPortion.dailyEvents
+
+      const dailyEvents = dailyEventsPortion.dailyEvents;
 
       /**
        * Reset loadedEventsCount only when starting a new search
@@ -288,11 +288,12 @@ const module: Module<EventsModuleState, RootState> = {
         return {
           ...dailyEvent,
           event: undefined,
-          eventId: dailyEvent.event.id
-        }
-      })
+          eventId: dailyEvent.event.id,
+        };
+      });
 
-      return { dailyEventsWithEventsLinked, nextCursor: dailyEventsPortion.nextCursor};
+      return { dailyEventsWithEventsLinked,
+        nextCursor: dailyEventsPortion.nextCursor };
     },
 
     /**
@@ -312,7 +313,6 @@ const module: Module<EventsModuleState, RootState> = {
       { commit },
       { projectId, eventId, limit, cursor }: { projectId: string; eventId: string; limit: number; cursor?: string }
     ): Promise<{ repetitions: HawkEvent[]; nextCursor?: string }> {
-
       const response = await eventsApi.getRepetitionsPortion(projectId, eventId, limit, cursor);
 
       const repetitions = response.data.project.event.repetitionsPortion.repetitions;
@@ -327,7 +327,8 @@ const module: Module<EventsModuleState, RootState> = {
         eventsList: repetitions,
       });
 
-      return { repetitions, nextCursor };
+      return { repetitions,
+        nextCursor };
     },
 
     /**

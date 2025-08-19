@@ -244,8 +244,6 @@ export default {
      * @param {Project} project - clicked project
      */
     onProjectMenuItemClick(project) {
-      console.log(!project.latestEvent);
-
       if (!project.latestEvent) {
         return this.$router.push({
           name: 'add-catcher',

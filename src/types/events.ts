@@ -151,7 +151,7 @@ export interface DailyEvent {
 
 export type DailyEventWithEventLinked = Omit<DailyEvent, 'event'> & {
   eventId: string,
-}
+};
 
 /**
  * Interface representing a portion of daily events

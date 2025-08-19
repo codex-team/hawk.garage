@@ -9,7 +9,10 @@
     />
     <div class="workspace-info__wrapper">
       <div class="workspace-info__name">
-        <span class="workspace-info__name-text" :title="workspace.name">
+        <span
+          class="workspace-info__name-text"
+          :title="workspace.name"
+        >
           {{ workspace.name }}
         </span>
         <router-link
@@ -20,7 +23,11 @@
           }"
           class="workspace-info__blocked-link"
         >
-          <StatusBlock :content="$t('billing.blocked')" bad class="workspace-info__blocked" />
+          <StatusBlock
+            :content="$t('billing.blocked')"
+            bad
+            class="workspace-info__blocked"
+          />
         </router-link>
       </div>
       <router-link
@@ -175,12 +182,12 @@ export default Vue.extend({
   }
 
   &__name-text {
+    flex-shrink: 1;
+    min-width: 0;
     overflow: hidden;
     font-weight: 600;
     white-space: nowrap;
     text-overflow: ellipsis;
-    flex-shrink: 1;
-    min-width: 0;
   }
 
   &__settings-link {

@@ -95,7 +95,7 @@ export const QUERY_PROJECT_OVERVIEW = `
   }
   
   ${EVENT_FRAGMENT}
-`
+`;
 
 // language=GraphQL
 /**

@@ -16,7 +16,7 @@ import {
   EventsFilters,
   EventsSortOrder,
   EventsWithDailyInfo,
-  HawkEvent,
+  HawkEvent
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -77,6 +77,13 @@ export async function fetchRecentEvents(
   return project.recentEvents;
 }
 
+/**
+ * @param projectId
+ * @param nextCursor
+ * @param sort
+ * @param filters
+ * @param search
+ */
 export async function fetchDailyEventsPortion(
   projectId: string,
   nextCursor: string | null = null,
@@ -118,7 +125,7 @@ export async function getRepetitionsPortion(
     projectId,
     eventId,
     cursor,
-    limit
+    limit,
   });
 }
 

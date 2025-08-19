@@ -8,12 +8,10 @@
     >
       <Chart
         :points="chartData"
-        class="project-overview__chart"
       />
-      <FiltersBar 
+      <FiltersBar
         @state-changed="reloadDailyEvents"
       />
-      <!-- TODO: Add model that will ask to fetch project overview one more time to reload recentEvents with new sorting order or filter  -->
       <!-- TODO: Add placeholder if there is no filtered events -->
       <div
         v-if="dailyEvents"
@@ -161,8 +159,14 @@ export default {
         right: 0,
       },
 
+      /**
+       * Pagination cursor for next dailyEvents portion
+       */
       dailyEventsNextCursor: null,
 
+      /**
+       * Raw (not grouped by groupingTimestamp) dailyEvents list
+       */
       dailyEvents: [],
 
       /**
@@ -229,6 +233,10 @@ export default {
       return this.dailyEvents.length === 0;
     },
 
+    /**
+     * Daily events grouped by grouping timestamp
+     * Based on data.dailyEvents
+     */
     dailyEventsGrouped() {
       if (this.dailyEvents.length) {
         return groupByGroupingTimestamp(this.dailyEvents);
@@ -258,7 +266,7 @@ export default {
 
     try {
       if (this.project && this.project.latestEvent) {
-        this.dailyEvents = [this.project.latestEvent];
+        this.dailyEvents = [ this.project.latestEvent ];
       }
 
       const { dailyEventsWithEventsLinked, nextCursor } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
@@ -272,7 +280,7 @@ export default {
 
       const latestEvent = this.project.latestEvent;
 
-      this.dailyEvents = [...dailyEventsWithEventsLinked];
+      this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
 
       /**
        * Redirect to the "add catcher" page if there are no events
@@ -364,13 +372,14 @@ export default {
         nextCursor: this.dailyEventsNextCursor,
         search: this.searchQuery,
       });
+
       this.isLoadingEvents = false;
 
       this.nextCursor = nextCursor;
 
       this.dailyEvents = [
         ...this.dailyEvents,
-        ...dailyEventsWithEventsLinked
+        ...dailyEventsWithEventsLinked,
       ];
     },
 
@@ -425,6 +434,7 @@ export default {
      * Opens event overview popup
      *
      * @param {string} projectId - id of the event's project
+     * @param {string} eventId - id of the event to be shown
      */
     showEventOverview(projectId, eventId) {
       if (this.isAssigneesShowed) {
@@ -481,7 +491,7 @@ export default {
       this.noMoreEvents = false;
 
       this.loadMoreEvents();
-    }
+    },
   },
 };
 </script>
@@ -499,9 +509,6 @@ export default {
     align-self: stretch;
     overflow-y: auto;
     @apply --hide-scrollbar;
-  }
-
-  &__chart {
   }
 
   &__events {
