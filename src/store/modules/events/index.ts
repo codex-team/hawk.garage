@@ -311,9 +311,9 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_EVENT_REPETITIONS](
       { commit },
-      { projectId, eventId, limit, cursor }: { projectId: string; eventId: string; limit: number; cursor?: string }
+      { projectId, eventId, originalEventId, limit, cursor }: { projectId: string; eventId: string; originalEventId: string; limit: number; cursor?: string }
     ): Promise<{ repetitions: HawkEvent[]; nextCursor?: string }> {
-      const response = await eventsApi.getRepetitionsPortion(projectId, eventId, limit, cursor);
+      const response = await eventsApi.getRepetitionsPortion(projectId, eventId, originalEventId, limit, cursor);
 
       const repetitions = response.data.project.event.repetitionsPortion.repetitions;
       const nextCursor = response.data.project.event.repetitionsPortion.nextCursor;
@@ -342,8 +342,8 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.eventId - id of an event to fetch its repetition
      * @param {string} payload.repetitionId - id of specific repetition to fetch
      */
-    async [FETCH_EVENT]({ commit }, { projectId, eventId }): Promise<void> {
-      const event = await eventsApi.getEvent(projectId, eventId);
+    async [FETCH_EVENT]({ commit }, { projectId, eventId, originalEventId }): Promise<void> {
+      const event = await eventsApi.getEvent(projectId, eventId, originalEventId);
 
       if (!event) {
         return;
@@ -531,9 +531,9 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {number} project.days - number of a "few" days
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, days }: { projectId: string; eventId: string; days: number }): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, originalEventId, days }: { projectId: string; eventId: string; originalEventId: string; days: number }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
-      const chartData = await eventsApi.fetchChartData(projectId, eventId, days, timezoneOffset);
+      const chartData = await eventsApi.fetchChartData(projectId, eventId, originalEventId, days, timezoneOffset);
 
       commit(MutationTypes.SaveChartData, {
         projectId,
@@ -624,22 +624,26 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Toggle mark for passed event
+     * Toggle mark for all events that have originalEventId which is equal to passed eventId
      *
      * @param {EventsModuleState} state - events module state
      *
      * @param {object} payload - vuex mutation payload
      * @param {string} payload.projectId - project event is related to
-     * @param {string} payload.eventId - event mark should be set to
+     * @param {string} payload.eventId - original event of the updated one
      * @param {EventMark} payload.mark - mark to set
      */
     [MutationTypes.ToggleMark](state, { projectId, eventId, mark }): void {
-      const key = getEventsListKey(projectId, eventId);
-
-      const event = state.events[key];
-      const { marks } = event;
-
-      Vue.set(state.events[key].marks, mark, !marks[mark]);
+      Object.entries(state.events).forEach(([key, event]) => {
+        // Only look at events for this project
+        if (!key.startsWith(`${projectId}:`)) return;
+    
+        // Only update events whose originalEventId matches eventId
+        if (event.originalEventId !== eventId) return;
+    
+        // Toggle the mark
+        Vue.set(event.marks, mark, !event.marks[mark]);
+      });
     },
 
     /**

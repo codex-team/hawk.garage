@@ -53,7 +53,8 @@ export const EVENT_FRAGMENT = `
       ignored
     }
     timestamp
-    firstAppearanceTimestamp
+    originalTimestamp
+    originalEventId
     payload {
       title
       type

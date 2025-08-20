@@ -266,11 +266,11 @@ export default Vue.extend({
      * @param {string} mark - mark to set
      */
     markEvent(mark) {
-      const { projectId, eventId, repetitionId } = this.$route.params;
+      const { projectId, eventId } = this.$route.params;
 
       this.$store.dispatch(TOGGLE_EVENT_MARK, {
         projectId,
-        eventId: eventId || repetitionId,
+        eventId,
         mark,
       });
     },

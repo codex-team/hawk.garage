@@ -5,9 +5,9 @@ import { USER_FRAGMENT, EVENT_FRAGMENT } from '../fragments';
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!) {
+  query Event($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
     project(projectId: $projectId) {
-      event(id: $eventId) {
+      event(eventId: $eventId, originalEventId: $originalEventId) {
         ...Event
       }
     }
@@ -107,11 +107,12 @@ export const QUERY_LATEST_REPETITIONS_PORTION = `
   query LatestRepetitions(
     $projectId: ID!,
     $eventId: ID!,
+    $originalEventId: ID!,
     $limit: Int,
     $cursor: String
   ) {
     project(projectId: $projectId) {
-      event(id: $eventId) {
+      event(eventId: $eventId, originalEventId: $originalEventId) {
         repetitionsPortion(limit: $limit, cursor: $cursor) {
           nextCursor
           repetitions {
@@ -134,11 +135,12 @@ export const QUERY_CHART_DATA = `
   query EventChartData (
     $projectId: ID!
     $eventId: ID!
+    $originalEventId: ID!
     $days: Int!
     $timezoneOffset: Int!
   ) {
     project(projectId: $projectId) {
-      event(id: $eventId) {
+      event(eventId: $eventId, originalEventId: $originalEventId) {
         chartData(
           days: $days,
           timezoneOffset: $timezoneOffset
@@ -156,8 +158,8 @@ export const QUERY_CHART_DATA = `
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `
-  mutation visitEvent($projectId: ID!, $eventId: ID!) {
-    visitEvent(projectId: $projectId, eventId: $eventId)
+  mutation visitEvent($projectId: ID!, originalEventId: ID!) {
+    visitEvent(projectId: $projectId, eventId: $originalEventId)
   }
 `;
 

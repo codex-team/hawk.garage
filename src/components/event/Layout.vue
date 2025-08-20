@@ -78,9 +78,9 @@ export default Vue.extend({
      * Current viewed event
      */
     event(): HawkEvent {
-      const { repetitionId, projectId, eventId } = this.$route.params;
+      const { repetitionId, projectId } = this.$route.params;
 
-      return this.getEvent(projectId, repetitionId || eventId);
+      return this.getEvent(projectId, repetitionId);
     },
   },
   /**
@@ -94,7 +94,8 @@ export default Vue.extend({
 
     await this.$store.dispatch(FETCH_EVENT, {
       projectId: this.projectId,
-      eventId: repetitionId || eventId,
+      eventId: repetitionId,
+      originalEventId: eventId,
     });
 
     this.loading = false;
@@ -120,7 +121,7 @@ export default Vue.extend({
       if (!this.event.visitedBy || !this.event.visitedBy.find(user => user.id === userId)) {
         this.$store.dispatch(VISIT_EVENT, {
           projectId: this.projectId,
-          eventId: this.event.id,
+          originalEventId: this.event.originalEventId,
         });
       }
     },

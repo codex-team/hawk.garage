@@ -52,6 +52,7 @@
                 showEventOverview(
                   project.id,
                   dailyEventInfo.eventId,
+                  getProjectEventById(project.id, dailyEventInfo.eventId).originalEventId
                 )
               "
             />
@@ -434,8 +435,9 @@ export default {
      *
      * @param {string} projectId - id of the event's project
      * @param {string} eventId - id of the event to be shown
+     * @param {string} originalEventId - id of the original event
      */
-    showEventOverview(projectId, eventId) {
+    showEventOverview(projectId, eventId, originalEventId) {
       if (this.isAssigneesShowed) {
         this.isAssigneesShowed = false;
       } else {
@@ -443,6 +445,7 @@ export default {
           name: 'event-overview',
           params: {
             projectId,
+            eventId: originalEventId, 
             repetitionId: eventId,
           },
         });

@@ -28,13 +28,14 @@ import { APIResponse } from '../../types/api';
  *
  * @param {string} projectId - event's project
  * @param {string} eventId - id of the event
- * @param {string} repetitionId - event's concrete repetition. This param is optional
+ * @param {string} originalEventId - id of the original event
  * @returns {Promise<HawkEvent|null>}
  */
-export async function getEvent(projectId: string, eventId: string): Promise<HawkEvent | null> {
+export async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
   const project = await (await api.callOld(QUERY_EVENT, {
     projectId,
     eventId,
+    originalEventId,
   })).project;
 
   if (!project) {
@@ -113,17 +114,19 @@ export async function fetchDailyEventsPortion(
  *
  * @param {string} projectId - project's identifier
  * @param {string} eventId - event's identifier
+ * @param {string} originalEventId - id of the original event
  * @param {number} limit - the number of repetitions
  * @param {string} cursor - the cursor to fetch the next page of repetitions
  *
  * @returns {Promise<Event[]>}
  */
 export async function getRepetitionsPortion(
-  projectId: string, eventId: string, limit: number, cursor?: string
+  projectId: string, eventId: string, originalEventId: string, limit: number, cursor?: string
 ): Promise<APIResponse<{project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
   return api.call(QUERY_LATEST_REPETITIONS_PORTION, {
     projectId,
     eventId,
+    originalEventId,
     cursor,
     limit,
   });
@@ -198,10 +201,11 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  * @param {number} days - how many days we need to fetchfor displaying in chart
  * @param {number} timezoneOffset - user's local timezone
  */
-export async function fetchChartData(projectId: string, eventId: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
+export async function fetchChartData(projectId: string, eventId: string, originalEventId: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     eventId,
+    originalEventId,
     days,
     timezoneOffset,
   })).project.event.chartData;

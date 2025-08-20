@@ -117,7 +117,12 @@ export interface HawkEvent {
   /**
    * Unix timestamp of the event first appearance
    */
-  firstAppearanceTimestamp: number;
+  originalTimestamp: number;
+
+  /**
+   * Id of the original event
+   */
+  originalEventId: string;
 
   /**
    * Event chart data for a few days

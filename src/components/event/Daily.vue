@@ -5,7 +5,7 @@
         {{ $t('event.repetitions.since') }}
       </div>
       <div class="event-daily__since">
-        {{ event.firstAppearanceTimestamp | prettyFullDate }}
+        {{ event.originalTimestamp | prettyFullDate }}
         <span
           v-if="daysRepeating > 1"
           class="event-daily__since-days"
@@ -70,7 +70,7 @@ export default Vue.extend({
       }
 
       const now = (new Date()).getTime();
-      const eventTimestamp = this.event.firstAppearanceTimestamp * 1000;
+      const eventTimestamp = this.event.originalTimestamp * 1000;
       const firstOccurrence = (new Date(eventTimestamp).getTime());
       const differenceInDays = (now - firstOccurrence) / (1000 * 3600 * 24);
 
@@ -89,6 +89,7 @@ export default Vue.extend({
       await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
         eventId: this.event.id,
+        originalEventId: this.event.originalEventId,
         days: twoWeeks + boundingDays,
       });
     }
