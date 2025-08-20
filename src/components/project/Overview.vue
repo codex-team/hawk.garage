@@ -445,7 +445,7 @@ export default {
           name: 'event-overview',
           params: {
             projectId,
-            eventId: originalEventId, 
+            eventId: originalEventId,
             repetitionId: eventId,
           },
         });

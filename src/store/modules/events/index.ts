@@ -636,11 +636,15 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.ToggleMark](state, { projectId, eventId, mark }): void {
       Object.entries(state.events).forEach(([key, event]) => {
         // Only look at events for this project
-        if (!key.startsWith(`${projectId}:`)) return;
-    
+        if (!key.startsWith(`${projectId}:`)) {
+          return;
+        }
+
         // Only update events whose originalEventId matches eventId
-        if (event.originalEventId !== eventId) return;
-    
+        if (event.originalEventId !== eventId) {
+          return;
+        }
+
         // Toggle the mark
         Vue.set(event.marks, mark, !event.marks[mark]);
       });

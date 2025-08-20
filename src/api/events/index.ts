@@ -198,6 +198,7 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  *
  * @param {string} projectId - project id
  * @param {string} eventId - event id
+ * @param {string} originalEventId - id of the original event
  * @param {number} days - how many days we need to fetchfor displaying in chart
  * @param {number} timezoneOffset - user's local timezone
  */
