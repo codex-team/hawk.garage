@@ -42,6 +42,10 @@ module.exports = {
       filename: `static/js/[name].[hash:8].${buildRevision}.js`,
       chunkFilename: `static/js/[name].[hash:8].${buildRevision}.js`,
     },
+    // resolve: {
+    //   extensions: ['.js', '.ts', '.vue', '.json', '.mjs'],
+    //   mainFields: ['module', 'main'],
+    // },
   },
   /**
    * Disable progress to boost bundling speed
@@ -52,7 +56,31 @@ module.exports = {
       'Cache-Control': 'private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
     },
   },
-  chainWebpack: config => {
+    chainWebpack: config => {
+    /**
+     * Configure webpack to handle @hawk.so/javascript ES modules
+     * by using the correct module resolution and excluding from TypeScript
+     */
+    // config.resolve.mainFields = ['module', 'main'];
+
+    /**
+     * Exclude @hawk.so/javascript from TypeScript processing
+     */
+    config.module
+      .rule('hawk-exclude')
+      .test(/node_modules\/@hawk\.so\/javascript/)
+      .use('babel-loader')
+      .loader('babel-loader')
+      .options({
+        presets: [
+          ['@babel/preset-env', {
+            targets: {
+              browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
+            }
+          }]
+        ]
+      });
+
     /**
      * Use DefinePlugin to pass some variables to the sources
      */
