@@ -252,19 +252,19 @@ const module: Module<EventsModuleState, RootState> = {
       commit(MutationTypes.SetEventsList, events);
     },
 
-    
+
     /**
      * Returns nextCursor for pagination and portion of daily events with eventId pointer to the event of the state.events
-     * 
+     *
      * @todo move to the projects actions
-     * 
+     *
      * @param {object} context - vuex action context
      * @param {Function} context.commit - standard Vuex commit function
      *
      * @param {object} payload - vuex action payload
-     * @param {String} payload.projectId - id of the project to get overview for
-     * @param {String} payload.search - event searching regex string
-     * @param {String} payload.nextCursor - pointer to the first daily event of the portion
+     * @param {string} payload.projectId - id of the project to get overview for
+     * @param {string} payload.search - event searching regex string
+     * @param {string} payload.nextCursor - pointer to the first daily event of the portion
      */
     async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }):
       Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
@@ -313,10 +313,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param context.commit - to call mutations
      *
      * @param {object} payload - vuex action payload
-     * @param {String} payload.projectId - id of a project that owns events
-     * @param {String} payload.originalEventId - id of an original event to fetch its repetitions
-     * @param {Number} payload.limit - how many items to fetch
-     * @param {String} payload.cursor - pointer to the first repetition of the portion
+     * @param {string} payload.projectId - id of a project that owns events
+     * @param {string} payload.originalEventId - id of an original event to fetch its repetitions
+     * @param {number} payload.limit - how many items to fetch
+     * @param {string} payload.cursor - pointer to the first repetition of the portion
      *
      * @returns {Promise<{ repetitions: HawkEvent[]; nextCursor?: string }>}
      */

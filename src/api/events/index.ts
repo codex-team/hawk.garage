@@ -80,7 +80,7 @@ export async function fetchRecentEvents(
 
 /**
  * Returns portion (list) of daily events with pointer to the first daily event of the next portion
- * 
+ *
  * @param projectId - id of the project
  * @param nextCursor - pointer to the next portion of daily events
  * @param sort - sort order for daily events

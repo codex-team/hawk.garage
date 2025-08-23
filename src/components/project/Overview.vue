@@ -343,6 +343,8 @@ export default {
 
     /**
      * Load older events to the list
+     *
+     * @param overwrite - determine whenever we need to overwrite this.dailyEvents
      */
     async loadMoreEvents(overwrite) {
       if (this.isLoadingEvents === true) {
@@ -365,7 +367,7 @@ export default {
       this.noMoreEvents = this.dailyEventsNextCursor === null;
 
       if (overwrite) {
-        this.dailyEvents = [...dailyEventsWithEventsLinked];
+        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
       } else {
         this.dailyEvents.push(...dailyEventsWithEventsLinked);
       }
@@ -470,7 +472,7 @@ export default {
         });
 
         this.dailyEventsNextCursor = nextCursor;
-        this.dailyEvents = [...dailyEventsWithEventsLinked];
+        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
       } finally {
         this.isLoadingEvents = false;
       }
