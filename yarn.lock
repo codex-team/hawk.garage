@@ -1286,13 +1286,15 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@hawk.so/javascript@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.0.6.tgz#4521cef80d99674fbe77a7e1b54b848ecc8a997f"
-  integrity sha512-/whIk+5JJJ+QalLyXmECnvzWQSh1F543cgK2VD3LcB6qGZzBQB6VDLGDLzU9ZWOfd3GHgV1QAREqthEmRBN8vA==
+"@hawk.so/javascript@^3.2.8":
+  version "3.2.8"
+  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.2.8.tgz#22b25668eb52ab6dcd9b42749f5ba93ae377fac6"
+  integrity sha512-eWq1wiVcDF9qmD6Unm5VSXm8aQk6JHaJWAArLyWhQuDfDyWLcieyNJe8O42UrtfjpFK4/qIOoXDQv4CE9700Rw==
   dependencies:
-    "@hawk.so/types" "^0.1.13"
-    error-stack-parser "^2.0.6"
+    "@hawk.so/types" "^0.1.20"
+    error-stack-parser "^2.1.4"
+    safe-stringify "^1.1.1"
+    vite-plugin-dts "^4.2.4"
 
 "@hawk.so/types@^0.1.13":
   version "0.1.13"
