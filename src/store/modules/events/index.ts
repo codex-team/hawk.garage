@@ -277,10 +277,6 @@ const module: Module<EventsModuleState, RootState> = {
         search
       );
 
-      if (dailyEventsPortion === null) {
-        throw new Error('Error [FETCH_PROJECT_OVERVIEW]: Project not found');
-      }
-
       const dailyEvents = dailyEventsPortion.dailyEvents;
 
       /**

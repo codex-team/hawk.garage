@@ -270,28 +270,7 @@ export default {
         this.dailyEvents = [ this.project.latestEvent ];
       }
 
-      const { dailyEventsWithEventsLinked, nextCursor } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
-        projectId: this.projectId,
-        search: this.searchQuery,
-        cursor: this.dailyEventsNextCursor,
-      });
-
-      this.dailyEventsNextCursor = nextCursor;
-      this.noMoreEvents = this.dailyEventsNextCursor === null;
-
-      const latestEvent = this.project.latestEvent;
-
-      this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
-
-      /**
-       * Redirect to the "add catcher" page if there are no events
-       */
-      if (!latestEvent) {
-        await this.$router.push({
-          name: 'add-catcher',
-          params: { projectId: this.projectId },
-        });
-      }
+      this.loadMoreEvents(true);
 
       // How many days will be displayed in the chart
       const twoWeeks = 14;
@@ -360,10 +339,11 @@ export default {
     getDay(date) {
       return parseInt(date.replace('groupingTimestamp:', ''), 10);
     },
+
     /**
      * Load older events to the list
      */
-    async loadMoreEvents() {
+    async loadMoreEvents(overwrite = false) {
       if (this.noMoreEvents) {
         return;
       }
@@ -380,7 +360,11 @@ export default {
 
       this.noMoreEvents = this.dailyEventsNextCursor === null;
 
-      this.dailyEvents.push(...dailyEventsWithEventsLinked);
+      if (overwrite) {
+        this.dailyEvents = [...dailyEventsWithEventsLinked]
+      } else {
+        this.dailyEvents.push(...dailyEventsWithEventsLinked);
+      }
     },
 
     /**
