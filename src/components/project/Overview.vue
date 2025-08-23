@@ -461,21 +461,10 @@ export default {
         search: sanitizedQuery,
       });
 
-      this.$store.commit('CLEAR_RECENT_EVENTS_LIST', { projectId: this.projectId });
+      this.noMoreEvents = false;
+      this.dailyEventsNextCursor = null;
 
-      this.isLoadingEvents = true;
-      try {
-        const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
-          projectId: this.projectId,
-          nextCursor: this.dailyEventsNextCursor,
-          search: this.searchQuery,
-        });
-
-        this.dailyEventsNextCursor = nextCursor;
-        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
-      } finally {
-        this.isLoadingEvents = false;
-      }
+      this.loadMoreEvents(true);
     },
 
     async reloadDailyEvents() {

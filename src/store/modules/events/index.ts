@@ -329,7 +329,7 @@ const module: Module<EventsModuleState, RootState> = {
       let repetitions: HawkEvent[] = [];
       let nextCursor: string | undefined;
 
-      if (!response.data.project || !response.data.project.event || !response.data.project.event.repetitionsPortion) {
+      if (response.data.project && response.data.project.event && response.data.project.event.repetitionsPortion) {
         repetitions = response.data.project.event.repetitionsPortion.repetitions;
         nextCursor = response.data.project.event.repetitionsPortion.nextCursor;
       }

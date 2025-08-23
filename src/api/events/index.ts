@@ -91,12 +91,18 @@ export async function fetchDailyEventsPortion(
 export async function getRepetitionsPortion(
   projectId: string, originalEventId: string, limit: number, cursor?: string
 ): Promise<APIResponse<{project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
-  return api.call(QUERY_EVENT_REPETITIONS_PORTION, {
+  const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
     limit,
     projectId,
     originalEventId,
     cursor,
   });
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
+  }
+
+  return response.data
 }
 
 /**
