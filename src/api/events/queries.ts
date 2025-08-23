@@ -70,7 +70,7 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
   ${USER_FRAGMENT}
 `;
 
-export const QUERY_PROJECT_OVERVIEW = `
+export const QUERY_PROJECT_DAILY_EVENTS = `
   query ProjectOverview(
     $projectId: ID!
     $cursor: String

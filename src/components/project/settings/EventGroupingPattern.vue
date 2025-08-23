@@ -16,7 +16,7 @@
       <input
         v-model="createPatternForm"
         class="input patterns-section__input"
-        :placeholder="&quot;Attempt to read property \&quot;.*\&quot; on array&quot;"
+        placeholder="Attempt to read property &quot;.*&quot; on array"
       >
       <UiButton
         class="patterns-section__button"
@@ -47,8 +47,8 @@
           <input
             v-model="pattern.pattern"
             class="input patterns-section__input"
+            placeholder="Attempt to read property &quot;.*&quot; on array"
             :disabled="!userCanEdit"
-            :placeholder="&quot;Attempt to read property \&quot;.*\&quot; on array&quot;"
           >
         </div>
       </div>

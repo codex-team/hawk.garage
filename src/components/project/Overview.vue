@@ -480,7 +480,7 @@ export default {
         });
 
         this.dailyEventsNextCursor = nextCursor;
-        this.dailyEvents = [...this.dailyEvents, ...dailyEventsWithEventsLinked];
+        this.dailyEvents = [...dailyEventsWithEventsLinked];
       } finally {
         this.isLoadingEvents = false;
       }

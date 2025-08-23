@@ -5,7 +5,7 @@ import {
   MUTATION_REMOVE_EVENT_ASSIGNEE,
   QUERY_EVENT,
   QUERY_LATEST_REPETITIONS_PORTION,
-  QUERY_PROJECT_OVERVIEW,
+  QUERY_PROJECT_DAILY_EVENTS,
   QUERY_RECENT_PROJECT_EVENTS,
   QUERY_CHART_DATA
 } from './queries';
@@ -79,6 +79,8 @@ export async function fetchRecentEvents(
 }
 
 /**
+ * Returns portion (list) of daily events with pointer to the first daily event of the next portion
+ * 
  * @param projectId - id of the project
  * @param nextCursor - pointer to the next portion of daily events
  * @param sort - sort order for daily events
@@ -92,7 +94,7 @@ export async function fetchDailyEventsPortion(
   filters: EventsFilters = {},
   search = ''
 ): Promise<DailyEventsPortion | null> {
-  const response = (await api.callOld(QUERY_PROJECT_OVERVIEW, {
+  const response = (await api.callOld(QUERY_PROJECT_DAILY_EVENTS, {
     projectId,
     cursor: nextCursor,
     sort,

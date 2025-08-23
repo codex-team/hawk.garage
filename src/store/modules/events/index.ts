@@ -251,15 +251,28 @@ const module: Module<EventsModuleState, RootState> = {
       commit(MutationTypes.SetEventsList, events);
     },
 
-    // @todo move to the projects actions
-    async [FETCH_PROJECT_OVERVIEW]({ commit, getters }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }):
+    
+    /**
+     * Returns nextCursor for pagination and portion of daily events with eventId pointer to the event of the state.events
+     * 
+     * @todo move to the projects actions
+     * 
+     * @param {object} context - vuex action context
+     * @param {Function} context.commit - standard Vuex commit function
+     *
+     * @param {object} payload - vuex action payload
+     * @param {String} payload.projectId - id of the project to get overview for
+     * @param {String} payload.search - event searching regex string
+     * @param {String} payload.nextCursor - pointer to the first daily event of the portion
+     */
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }):
       Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
-      const eventsSortOrder = getters.getProjectOrder(projectId);
+      const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
         nextCursor,
         eventsSortOrder,
-        getters.getProjectFilters(projectId),
+        this.getters.getProjectFilters(projectId),
         search
       );
 
