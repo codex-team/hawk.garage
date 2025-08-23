@@ -2,7 +2,8 @@
   <div class="project-overview">
     <div
       v-if="project"
-      v-infinite-scroll="loadMoreEvents"
+      v-infinite-scroll="() => loadMoreEvents(false)"
+      :infinite-scroll-disabled="noMoreEvents || isLoadingEvents"
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
@@ -61,7 +62,7 @@
             v-if="!isListEmpty && !noMoreEvents && !isLoadingEvents"
             class="project-overview__load-more"
             :class="{ loader: isLoadingEvents }"
-            @click="loadMoreEvents"
+            @click="loadMoreEvents(false)"
           >
             <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
           </div>
@@ -130,7 +131,7 @@ export default {
       /**
        * Shows if there are no more events or there are
        */
-      noMoreEvents: true,
+      noMoreEvents: false,
 
       /**
        * Indicates whether items are loading or not.
@@ -343,10 +344,15 @@ export default {
     /**
      * Load older events to the list
      */
-    async loadMoreEvents(overwrite = false) {
+    async loadMoreEvents(overwrite) {
+      if (this.isLoadingEvents === true) {
+        return;
+      }
+
       if (this.noMoreEvents) {
         return;
       }
+
       this.isLoadingEvents = true;
       const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
@@ -354,17 +360,17 @@ export default {
         search: this.searchQuery,
       });
 
-      this.isLoadingEvents = false;
-
       this.dailyEventsNextCursor = nextCursor;
 
       this.noMoreEvents = this.dailyEventsNextCursor === null;
 
       if (overwrite) {
-        this.dailyEvents = [...dailyEventsWithEventsLinked]
+        this.dailyEvents = [...dailyEventsWithEventsLinked];
       } else {
         this.dailyEvents.push(...dailyEventsWithEventsLinked);
       }
+
+      this.isLoadingEvents = false;
     },
 
     /**
@@ -472,11 +478,9 @@ export default {
 
     async reloadDailyEvents() {
       this.dailyEventsNextCursor = null;
-      this.dailyEvents = [];
-
       this.noMoreEvents = false;
 
-      this.loadMoreEvents();
+      this.loadMoreEvents(true);
     },
   },
 };

@@ -93,7 +93,7 @@ export async function fetchDailyEventsPortion(
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
   search = ''
-): Promise<DailyEventsPortion | null> {
+): Promise<DailyEventsPortion> {
   const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
     projectId,
     cursor: nextCursor,
