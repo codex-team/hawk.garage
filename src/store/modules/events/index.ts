@@ -79,6 +79,7 @@ enum MutationTypes {
  */
 export interface EventsModuleState {
   /**
+   * @todo - use Map instead of object
    * Map for storing all HawkEvents by their unique keys — (projectId:eventId)
    */
   events: EventsMap;

@@ -103,7 +103,7 @@ export const QUERY_PROJECT_DAILY_EVENTS = `
  *
  * @type {string}
  */
-export const QUERY_LATEST_REPETITIONS_PORTION = `
+export const QUERY_EVENT_REPETITIONS_PORTION = `
   query LatestRepetitions(
     $projectId: ID!,
     $eventId: ID!,

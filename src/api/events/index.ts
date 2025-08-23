@@ -4,7 +4,7 @@ import {
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
   QUERY_EVENT,
-  QUERY_LATEST_REPETITIONS_PORTION,
+  QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
   QUERY_RECENT_PROJECT_EVENTS,
   QUERY_CHART_DATA
@@ -94,18 +94,18 @@ export async function fetchDailyEventsPortion(
   filters: EventsFilters = {},
   search = ''
 ): Promise<DailyEventsPortion | null> {
-  const response = (await api.callOld(QUERY_PROJECT_DAILY_EVENTS, {
+  const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
     projectId,
     cursor: nextCursor,
     sort,
     filters,
     search,
-  }));
+  });
 
-  const project = response.project;
+  const project = response.data.project;
 
-  if (!project) {
-    throw new NotFoundError();
+  if (response.errors.length) {
+    response.errors.forEach(e => console.error(e));
   }
 
   return project.dailyEventsPortion;
@@ -125,7 +125,7 @@ export async function fetchDailyEventsPortion(
 export async function getRepetitionsPortion(
   projectId: string, eventId: string, originalEventId: string, limit: number, cursor?: string
 ): Promise<APIResponse<{project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
-  return api.call(QUERY_LATEST_REPETITIONS_PORTION, {
+  return api.call(QUERY_EVENT_REPETITIONS_PORTION, {
     projectId,
     eventId,
     originalEventId,
