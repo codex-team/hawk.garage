@@ -317,17 +317,18 @@ const module: Module<EventsModuleState, RootState> = {
      * @param context.commit - to call mutations
      *
      * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - id of a project that owns events
-     * @param {string} payload.eventId - id of an event to fetch its repetitions
-     * @param {number} payload.limit - how many items to fetch
+     * @param {String} payload.projectId - id of a project that owns events
+     * @param {String} payload.originalEventId - id of an original event to fetch its repetitions
+     * @param {Number} payload.limit - how many items to fetch
+     * @param {String} payload.cursor - pointer to the first repetition of the portion
      *
      * @returns {Promise<{ repetitions: HawkEvent[]; nextCursor?: string }>}
      */
     async [FETCH_EVENT_REPETITIONS](
       { commit },
-      { projectId, eventId, originalEventId, limit, cursor }: { projectId: string; eventId: string; originalEventId: string; limit: number; cursor?: string }
+      { projectId, originalEventId, limit, cursor }: { projectId: string; originalEventId: string; limit: number; cursor?: string }
     ): Promise<{ repetitions: HawkEvent[]; nextCursor?: string }> {
-      const response = await eventsApi.getRepetitionsPortion(projectId, eventId, originalEventId, limit, cursor);
+      const response = await eventsApi.getRepetitionsPortion(projectId, originalEventId, originalEventId, limit, cursor);
 
       const repetitions = response.data.project.event.repetitionsPortion.repetitions;
       const nextCursor = response.data.project.event.repetitionsPortion.nextCursor;

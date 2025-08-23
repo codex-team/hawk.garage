@@ -168,7 +168,6 @@ export default Vue.extend({
 
       const { repetitions: newRepetitions, nextCursor } = await this.$store.dispatch(FETCH_EVENT_REPETITIONS, {
         projectId: this.projectId,
-        eventId: this.event.id,
         originalEventId: this.event.originalEventId,
         limit: REPETITIONS_LIMIT,
         cursor: this.nextCursor,

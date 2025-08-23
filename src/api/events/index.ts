@@ -104,7 +104,7 @@ export async function fetchDailyEventsPortion(
 
   const project = response.data.project;
 
-  if (response.errors.length) {
+  if (response.errors?.length) {
     response.errors.forEach(e => console.error(e));
   }
 
