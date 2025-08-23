@@ -324,10 +324,15 @@ const module: Module<EventsModuleState, RootState> = {
       { commit },
       { projectId, originalEventId, limit, cursor }: { projectId: string; originalEventId: string; limit: number; cursor?: string }
     ): Promise<{ repetitions: HawkEvent[]; nextCursor?: string }> {
-      const response = await eventsApi.getRepetitionsPortion(projectId, originalEventId, originalEventId, limit, cursor);
+      const response = await eventsApi.getRepetitionsPortion(projectId, originalEventId, limit, cursor);
 
-      const repetitions = response.data.project.event.repetitionsPortion.repetitions;
-      const nextCursor = response.data.project.event.repetitionsPortion.nextCursor;
+      let repetitions: HawkEvent[] = [];
+      let nextCursor: string | undefined;
+
+      if (!response.data.project || !response.data.project.event || !response.data.project.event.repetitionsPortion) {
+        repetitions = response.data.project.event.repetitionsPortion.repetitions;
+        nextCursor = response.data.project.event.repetitionsPortion.nextCursor;
+      }
 
       repetitions.forEach(repetition => {
         filterBeautifiedAddons([ repetition ]);
@@ -544,7 +549,7 @@ const module: Module<EventsModuleState, RootState> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
     async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, originalEventId, days }: { projectId: string; eventId: string; originalEventId: string; days: number }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
-      const chartData = await eventsApi.fetchChartData(projectId, eventId, originalEventId, days, timezoneOffset);
+      const chartData = await eventsApi.fetchChartData(projectId, originalEventId, days, timezoneOffset);
 
       commit(MutationTypes.SaveChartData, {
         projectId,

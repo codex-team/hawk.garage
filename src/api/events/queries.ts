@@ -16,62 +16,8 @@ export const QUERY_EVENT = `
   ${EVENT_FRAGMENT}
 `;
 
-// language=GraphQL
-/**
- * Get project recent events
- */
-export const QUERY_RECENT_PROJECT_EVENTS = `
-  query ProjectRecentEvents (
-    $projectId: ID!,
-    $skip: Int!,
-    $sort: EventsSortOrder,
-    $filters: EventsFiltersInput,
-    $search: String
-  ) {
-    project(projectId: $projectId) {
-      recentEvents(limit: 15, skip: $skip, sort: $sort, filters: $filters, search: $search) {
-        events {
-          id
-          groupHash
-          totalCount
-          assignee {
-            id
-            name
-            email
-            image
-          }
-          visitedBy {
-           ...User
-          }
-          marks {
-            resolved
-            starred
-            ignored
-          }
-          catcherType
-          timestamp
-          firstAppearanceTimestamp
-          payload {
-            title
-          }
-        }
-        dailyInfo {
-          groupHash
-          count
-          groupingTimestamp
-          lastRepetitionId
-          lastRepetitionTime
-          affectedUsers
-        }
-      }
-    }
-  }
-
-  ${USER_FRAGMENT}
-`;
-
 export const QUERY_PROJECT_DAILY_EVENTS = `
-  query ProjectOverview(
+  query ProjectDailyEvents(
     $projectId: ID!
     $cursor: String
     $sort: EventsSortOrder,
@@ -106,13 +52,12 @@ export const QUERY_PROJECT_DAILY_EVENTS = `
 export const QUERY_EVENT_REPETITIONS_PORTION = `
   query LatestRepetitions(
     $projectId: ID!,
-    $eventId: ID!,
     $originalEventId: ID!,
     $limit: Int,
     $cursor: String
   ) {
     project(projectId: $projectId) {
-      event(eventId: $eventId, originalEventId: $originalEventId) {
+      event(eventId: $originalEventId, originalEventId: $originalEventId) {
         repetitionsPortion(limit: $limit, cursor: $cursor) {
           nextCursor
           repetitions {
@@ -134,13 +79,12 @@ export const QUERY_EVENT_REPETITIONS_PORTION = `
 export const QUERY_CHART_DATA = `
   query EventChartData (
     $projectId: ID!
-    $eventId: ID!
     $originalEventId: ID!
     $days: Int!
     $timezoneOffset: Int!
   ) {
     project(projectId: $projectId) {
-      event(eventId: $eventId, originalEventId: $originalEventId) {
+      event(eventId: $originalEventId, originalEventId: $originalEventId) {
         chartData(
           days: $days,
           timezoneOffset: $timezoneOffset
