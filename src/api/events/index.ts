@@ -102,7 +102,7 @@ export async function getRepetitionsPortion(
     response.errors.forEach(e => console.error(e));
   }
 
-  return response.data
+  return response
 }
 
 /**
