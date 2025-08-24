@@ -14,7 +14,8 @@ import {
   GET_BALANCE,
   CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
   CANCEL_SUBSCRIPTION,
-  PAY_WITH_CARD
+  PAY_WITH_CARD,
+  COMPOSE_PAYMENT
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -364,6 +365,28 @@ const actions = {
     commit(mutationTypes.PUSH_BUSINESS_OPERATION, operation);
 
     return operation;
+  },
+
+  /**
+   * Prepare payment data before opening payment widget
+   *
+   * @param {Function} commit - standard Vuex commit method
+   * @param {object} payload - compose payment payload
+   * @param {string} payload.workspaceId - workspace id
+   * @param {string} payload.tariffPlanId - plan id
+   * @param {boolean} [payload.shouldSaveCard] - whether to save a card
+   * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
+   */
+  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
+    const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
+
+    const { data, errors } = result;
+
+    if (errors) {
+      throw new Error(errors[0].message);
+    }
+
+    return data.composePayment;
   },
 
   /**
