@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
 import { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
+import notifier from 'codex-notifier';
+import i18n from '@/i18n';
 
 /**
  * Hawk API endpoint URL
@@ -156,6 +158,17 @@ export async function callOld(
         });
 
         printApiError(error, response.data, request, variables);
+
+        if (error.extensions.code === errorCodes.UNAUTHENTICATED) {
+          const key = 'errors.' + error.message;
+          const message = i18n.te(key) ? i18n.t(key) as string : i18n.t('billing.notifications.error');
+  
+          notifier.show({
+            message: message as string,
+            style: 'error',
+            time: 5000,
+          });
+        }
       });
     }
 
@@ -259,6 +272,11 @@ export const errorCodes = {
    * Error throws when user send expired access token and tries to access private resources
    */
   ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR',
+
+  /**
+   * Error throws when user's refresh token is expired or invalid
+   */
+  UNAUTHENTICATED: 'UNAUTHENTICATED',
 };
 
 /**
