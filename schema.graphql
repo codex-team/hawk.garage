@@ -1,9 +1,3 @@
-"""Access to the field only to authorized users"""
-directive @requireAuth on FIELD_DEFINITION
-
-"""Access to the field only for admins"""
-directive @requireAdmin on FIELD_DEFINITION
-
 """Directive for field renaming"""
 directive @renameFrom(
   """Parent's field name"""
@@ -16,16 +10,26 @@ directive @default(
   value: String!
 ) on FIELD_DEFINITION
 
+"""Directive for checking a field for empty space"""
+directive @validate(notEmpty: Boolean, isEmail: Boolean) on ARGUMENT_DEFINITION
+
 """Directive for automatically image uploading"""
 directive @uploadImage on ARGUMENT_DEFINITION
 
-"""Directive for checking a field for empty space"""
-directive @validate(notEmpty: Boolean, isEmail: Boolean) on ARGUMENT_DEFINITION
+"""Access to the field only to authorized users"""
+directive @requireAuth on FIELD_DEFINITION
+
+"""Access to the field only for admins"""
+directive @requireAdmin on FIELD_DEFINITION
 
 """Directive for checking user in workspace"""
 directive @requireUserInWorkspace on FIELD_DEFINITION
 
-directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
 
 """User bank card"""
 type BankCard {
@@ -91,11 +95,14 @@ enum BusinessOperationType {
 
   """Workspace deposit balance by user"""
   DEPOSIT_BY_USER
-}
 
-enum CacheControlScope {
-  PUBLIC
-  PRIVATE
+  """
+  Charge minimal amount of money to link a card for further recurrent payments
+  """
+  CARD_LINK_CHARGE
+
+  """Refund the money that were charged to link a card"""
+  CARD_LINK_REFUND
 }
 
 """Input data for cancelSubscription mutation"""
@@ -156,6 +163,66 @@ type ChartDataItem {
   count: Int
 }
 
+"""Release commit"""
+type Commit {
+  """Hash of the commit"""
+  hash: String!
+
+  """Commit author"""
+  author: String!
+
+  """Commit title"""
+  title: String!
+
+  """Commit creation date"""
+  date: DateTime!
+}
+
+"""Input for composePayment query"""
+input ComposePaymentInput {
+  """Workspace id for which the payment will be made"""
+  workspaceId: ID!
+
+  """Tariff plan id user is going to pay for"""
+  tariffPlanId: ID!
+
+  """Whether card should be saved for future recurrent payments"""
+  shouldSaveCard: Boolean
+}
+
+"""Minimal plan info used in composePayment response"""
+type ComposePaymentPlanInfo {
+  """Plan id in MongoDB"""
+  id: ID!
+
+  """Plan name"""
+  name: String!
+
+  """Monthly charge for plan"""
+  monthlyCharge: Int!
+}
+
+"""Response of composePayment query"""
+type ComposePaymentResponse {
+  """Human-readable invoice identifier"""
+  invoiceId: String!
+
+  """Selected plan info"""
+  plan: ComposePaymentPlanInfo!
+
+  """True if only card linking validation payment is expected"""
+  isCardLinkOperation: Boolean!
+
+  """Currency code"""
+  currency: String!
+
+  """Checksum for subsequent payment verification"""
+  checksum: String!
+
+  """Next payment date (recurrent start)"""
+  nextPaymentDate: DateTime!
+}
+
 """Confirmed member data in workspace"""
 type ConfirmedMember {
   """Member info id"""
@@ -166,6 +233,15 @@ type ConfirmedMember {
 
   """True if user has admin permissions"""
   isAdmin: Boolean!
+}
+
+"""Input type for creating new event grouping pattern"""
+input CreateProjectEventGroupingPatternInput {
+  """Pattern string"""
+  pattern: String!
+
+  """Id of the project"""
+  projectId: ID!
 }
 
 """Input type for creating new notification rule"""
@@ -185,14 +261,32 @@ input CreateProjectNotificationsRuleInput {
   """Words to exclude from notification"""
   excluding: [String!]! = []
 
-  """Treshold to be reached to send notification"""
-  threshold: Int = 100
-
-  """Treshold period in milliseconds"""
-  thresholdPeriod: Int = 3600000
-
   """Notification channels to recieve events"""
   channels: NotificationsChannelsInput!
+
+  """Threshold to receive notification"""
+  threshold: Int
+
+  """Period to receive notification"""
+  thresholdPeriod: Int
+}
+
+"""Daily event information with event itself"""
+type DailyEvent {
+  """ID of the daily event"""
+  id: ID!
+
+  """Count of events in this day"""
+  count: Int!
+
+  """Count of the users affected by this event in this day"""
+  affectedUsers: Int!
+
+  """Timestamp of the event grouping"""
+  groupingTimestamp: Int!
+
+  """Event itself"""
+  event: Event!
 }
 
 """Information about event per day"""
@@ -211,6 +305,20 @@ type DailyEventInfo {
 
   """Last event occurrence timestamp"""
   lastRepetitionTime: Float!
+
+  """How many users catch this error per day"""
+  affectedUsers: Int
+}
+
+"""Pagination cursor of events portion and list of daily events"""
+type DailyEventsPortion {
+  """
+  Cursor to the next portion of the events, null if there are no events left
+  """
+  nextCursor: String
+
+  """Daily event information"""
+  dailyEvents: [DailyEvent]
 }
 
 """
@@ -243,11 +351,17 @@ type Event {
   """Event payload"""
   payload: EventPayload!
 
-  """Event concrete repetition"""
-  repetition(id: ID): Repetition
+  """Event timestamp"""
+  timestamp: Float!
 
-  """Event repetitions"""
-  repetitions(limit: Int = 10): [Repetition!]
+  """First appearance timestamp"""
+  firstAppearanceTimestamp: Float!
+
+  """Release data"""
+  release: Release
+
+  """Event repetitions portion"""
+  repetitionsPortion(cursor: String = null, limit: Int = 10): RepetitionsPortion!
 
   """Array of users who visited event"""
   visitedBy: [User!]
@@ -311,9 +425,6 @@ type EventPayload {
   """Event type: TypeError, ReferenceError etc."""
   type: String
 
-  """Event timestamp"""
-  timestamp: Float!
-
   """Event severity level"""
   level: Int
 
@@ -342,6 +453,14 @@ type EventPayload {
   addons: EncodedJSON
 }
 
+input EventsFilter {
+  """
+  Search query string. Only alphanumeric characters, spaces, and some special characters are allowed.
+  Max length: 100 characters
+  """
+  search: String
+}
+
 """Events filters input type"""
 input EventsFiltersInput {
   """If True, includes events with resolved mark to the output"""
@@ -366,6 +485,7 @@ type EventsMutations {
 enum EventsSortOrder {
   BY_DATE
   BY_COUNT
+  BY_AFFECTED_USERS
 }
 
 """Event user representation"""
@@ -422,7 +542,13 @@ type Mutation {
   attachCard(language: String): BillingSession!
 
   """Mutation marks event as visited for current user"""
-  visitEvent(project: ID!, id: ID!): Boolean!
+  visitEvent(
+    """ID of project event is related to"""
+    projectId: ID!
+
+    """ID of the event to visit"""
+    eventId: ID!
+  ): Boolean!
 
   """Mutation sets or unsets passed mark to event"""
   toggleEventMark(
@@ -465,7 +591,7 @@ type Mutation {
     input: ProjectNotificationRulePointer
   ): ProjectNotificationsRule
 
-  """Unsubscribe from notifications by disabling the rule"""
+  """Unsubscribes from notifications by disabling the rule"""
   unsubscribeFromNotifications(
     """Data for unsubscribing"""
     input: ProjectNotificationRulePointer!
@@ -498,6 +624,12 @@ type Mutation {
     image: Upload
   ): Project!
 
+  """Generates new project integration token by id"""
+  generateNewIntegrationToken(
+    """What project to regenerate integration token"""
+    id: ID!
+  ): UpdateProjectResponse!
+
   """Remove project"""
   removeProject(
     """What project to remove"""
@@ -514,6 +646,9 @@ type Mutation {
   signUp(
     """Registration email"""
     email: String!
+
+    """UTM parameters"""
+    utm: UtmInput
   ): Boolean!
 
   """Login user with provided email and password"""
@@ -609,17 +744,23 @@ type Mutation {
     image: Upload
   ): Boolean!
 
+  """Join to workspace by invite link with hash"""
+  joinByInviteLink(
+    """Workspace invite hash from link"""
+    inviteHash: String!
+  ): UpdateWorkspaceResponse!
+
   """
   Confirm invitation to workspace
   Returns true if operation is successful
   """
   confirmInvitation(
     """Hash from invitation link"""
-    inviteHash: String
+    inviteHash: String!
 
     """Id of the workspace to which the user was invited"""
     workspaceId: ID!
-  ): Boolean!
+  ): UpdateWorkspaceResponse!
 
   """
   Grant admin permissions
@@ -661,7 +802,7 @@ type Mutation {
   ): Boolean!
 
   """
-  Mutation in order to switch workspace tariff plan to Free
+  Mutation in order to switch workspace tariff plan to default
   Returns updated workspace
   """
   changeWorkspacePlanToDefault(input: changeWorkspacePlanToDefaultInput): changeWorkspacePlanToDefaultResponse!
@@ -669,27 +810,23 @@ type Mutation {
   """Namespace for workspaces mutations"""
   workspace: WorkspaceMutations!
 
+  """Creates new event grouping pattern"""
+  createProjectEventGroupingPattern(
+    """Data for creating"""
+    input: CreateProjectEventGroupingPatternInput!
+  ): ProjectEventGroupingPattern
 
-  """
-  !Seed resolver!
-  Creates user
-  """
-  createUser(
-    """User email"""
-    email: String!
-    """User password"""
-    password: String!
-  ): User!
+  """Updates existing event grouping pattern"""
+  updateProjectEventGroupingPattern(
+    """Data for updating"""
+    input: UpdateProjectEventGroupingPatternInput!
+  ): ProjectEventGroupingPattern
 
-
-  """
-  !Seed resolver!
-  Deletes user by email
-  """
-  deleteUser(
-    """User email"""
-    email: String!
-  ): Boolean
+  """Removes notifications rule from project"""
+  removeProjectEventGroupingPattern(
+    """Data for deleting"""
+    input: RemoveProjectEventGroupingPatternInput!
+  ): ProjectEventGroupingPattern
 }
 
 """All available notification channels"""
@@ -774,7 +911,7 @@ type PayloadOfWorkspacePlanPurchase {
   """Workspace to which the payment is debited"""
   workspace: Workspace!
 
-  """Amount of payment * 100 """
+  """1/100 of the final amount. (US cents for USD, kopecks for RUB)"""
   amount: Long!
 
   """Currency of payment"""
@@ -836,7 +973,7 @@ type Plan {
   """Monthly charge for plan"""
   monthlyCharge: Int!
 
-  """Monthly charge currency for plan"""
+  """Currency of monthlyCharge"""
   monthlyChargeCurrency: String!
 
   """Events limit for plan"""
@@ -862,6 +999,9 @@ type Project {
 
   """Project description"""
   description: String
+
+  """Date of creating project"""
+  creationDate: DateTime!
 
   """Project domain"""
   domain: String
@@ -905,6 +1045,24 @@ type Project {
     search: String
   ): RecentEvents
 
+  """Portion of daily events"""
+  dailyEventsPortion(
+    """Maximum number of results"""
+    limit: Int! = 50
+
+    """Next Cursor to fetch next portion of events"""
+    nextCursor: String
+
+    """Events sort order"""
+    sort: EventsSortOrder
+
+    """Event marks by which events should be sorted"""
+    filters: EventsFiltersInput
+
+    """Search query"""
+    search: String
+  ): DailyEventsPortion
+
   """Return events that occurred after a certain timestamp"""
   chartData(
     """How many days we need to fetch for displaying in a chart"""
@@ -919,6 +1077,28 @@ type Project {
 
   """Project notification settings"""
   notifications: [ProjectNotificationsRule]
+
+  """Event grouping patterns"""
+  eventGroupingPatterns: [ProjectEventGroupingPattern]
+}
+
+"""Project event grouping settings"""
+type ProjectEventGroupingPattern {
+  """id of the event grouping pattern"""
+  id: ID!
+
+  """event grouping pattern string"""
+  pattern: String!
+}
+
+type ProjectEventGroupingPatternContent {
+  """event grouping pattern string"""
+  pattern: String!
+}
+
+type ProjectEventGroupingPatternPointer {
+  """id of the event grouping pattern"""
+  id: ID!
 }
 
 """Input type for specifying project notifications rule"""
@@ -949,6 +1129,12 @@ type ProjectNotificationsRule {
 
   """Notification channels to recieve events"""
   channels: NotificationsChannels
+
+  """Threshold to receive notification"""
+  threshold: Int
+
+  """Period to receive notification"""
+  thresholdPeriod: Int
 }
 
 """API queries"""
@@ -962,10 +1148,13 @@ type Query {
     ids: [ID!] = []
   ): [BusinessOperation!]!
 
+  """Prepare payment data before charge (GraphQL version of composePayment)"""
+  composePayment(input: ComposePaymentInput!): ComposePaymentResponse!
+
   """Returns project info"""
   project(
     """Project id"""
-    id: ID!
+    projectId: ID!
   ): Project
 
   """Returns authenticated user data"""
@@ -989,8 +1178,8 @@ enum ReceiveTypes {
   """Receive only new events"""
   ONLY_NEW
 
-  """Receive all events"""
-  ALL
+  """Receive all events that reached threshold in period"""
+  SEEN_MORE
 }
 
 """Event information per day with these events"""
@@ -1000,6 +1189,15 @@ type RecentEvents {
 
   """Information about occurred events per day"""
   dailyInfo: [DailyEventInfo]
+}
+
+"""Release data of the corresponding event"""
+type Release {
+  """Release name"""
+  releaseName: String!
+
+  """Release commits"""
+  commits: [Commit]
 }
 
 input RemoveAssigneeInput {
@@ -1015,49 +1213,19 @@ type RemoveAssigneeResponse {
   success: Boolean!
 }
 
-"""Event's repetitions. Make Event unique by repetition's payload"""
-type Repetition {
-  """Standalone repetition ID"""
+"""Input type for deleting of the event grouping pattern"""
+input RemoveProjectEventGroupingPatternInput {
+  """Id of the pattern to be removed"""
   id: ID!
 
-  """Event's hash"""
-  groupHash: String!
-
-  """Event's payload patch"""
-  payload: RepetitionPayload!
+  """Id of the project"""
+  projectId: ID!
 }
 
-"""Type representing Event payload"""
-type RepetitionPayload {
-  """Event timestamp"""
-  timestamp: Float
-
-  """Event severity level"""
-  level: Int
-
-  """Event stack array from the latest call to the earliest"""
-  backtrace: [EventBacktraceFrame!]
-
-  """Additional data about GET request"""
-  get: JSONObject
-
-  """Additional data about POST request"""
-  post: JSONObject
-
-  """HTTP headers"""
-  headers: JSONObject
-
-  """Source code version identifier"""
-  release: String
-
-  """Current authenticated user"""
-  user: EventUser
-
-  """Any additional data of Event"""
-  context: EncodedJSON
-
-  """Custom data provided by project users"""
-  addons: EncodedJSON
+"""Object returned in repetitions property of event object"""
+type RepetitionsPortion {
+  repetitions: [Event!]
+  nextCursor: String
 }
 
 """Source code line representation"""
@@ -1108,6 +1276,18 @@ type UpdateAssigneeResponse {
   record: User!
 }
 
+"""Input type for updating of the event grouping pattern"""
+input UpdateProjectEventGroupingPatternInput {
+  """Id of the pattern to be updated"""
+  id: ID!
+
+  """New pattern string"""
+  pattern: String!
+
+  """Id of the project"""
+  projectId: ID!
+}
+
 """Input type for updating exsiting notification rule"""
 input UpdateProjectNotificationsRuleInput {
   """Rule id to update"""
@@ -1130,9 +1310,33 @@ input UpdateProjectNotificationsRuleInput {
 
   """Notification channels to recieve events"""
   channels: NotificationsChannelsInput!
+
+  """Threshold to receive notification"""
+  threshold: Int
+
+  """Period to receive notification"""
+  thresholdPeriod: Int
 }
 
-"""The `Upload` scalar type represents a file upload."""
+"""Respose object with updated project and his id"""
+type UpdateProjectResponse {
+  """Project id"""
+  recordId: ID!
+
+  """Modified project"""
+  record: Project!
+}
+
+"""Response of updated workspace mutations"""
+type UpdateWorkspaceResponse {
+  """Id of updated workspace"""
+  recordId: ID!
+
+  """Updated workspace object"""
+  record: Workspace!
+}
+
+"""Uploading file"""
 scalar Upload
 
 """Represent User type"""
@@ -1145,6 +1349,9 @@ type User {
 
   """User's name"""
   name: String
+
+  """Date of registration"""
+  registrationDate: DateTime!
 
   """User's image"""
   image: String
@@ -1188,6 +1395,24 @@ enum UserNotificationType {
   SystemMessages
 }
 
+"""UTM parameters input type"""
+input UtmInput {
+  """UTM source"""
+  source: String
+
+  """UTM medium"""
+  medium: String
+
+  """UTM campaign"""
+  campaign: String
+
+  """UTM content"""
+  content: String
+
+  """UTM term"""
+  term: String
+}
+
 """Represent Workspace info"""
 type Workspace {
   """Workspace id"""
@@ -1199,11 +1424,17 @@ type Workspace {
   """Workspace description"""
   description: String
 
+  """Date of creating workspace"""
+  creationDate: DateTime!
+
   """Workspace logo image"""
   image: String
 
   """Workspace team info"""
   team: [Member!]!
+
+  """Invite hash for joining in workspace via link"""
+  inviteHash: String!
 
   """Total number of errors since the last charge date"""
   billingPeriodEventsCount: Int
@@ -1220,10 +1451,10 @@ type Workspace {
   """
   subscriptionId: String
 
-  """True if workspace is used for debugging"""
+  """ True if workspace is used for debugging """
   isDebug: Boolean
 
-  """True if workspace is blocked"""
+  """ True if workspace is blocked """
   isBlocked: Boolean
 
   """Workspace projects array"""

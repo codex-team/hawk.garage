@@ -19,7 +19,10 @@
         :is-visited="isVisited"
       />
     </div>
-    <div class="event-item__info" :class="{ 'event-item__info--blurred': isEventBlurred }">
+    <div
+      class="event-item__info"
+      :class="{ 'event-item__info--blurred': isEventBlurred }"
+    >
       {{ event.payload.title }}
     </div>
     <Icon

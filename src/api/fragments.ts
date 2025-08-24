@@ -10,7 +10,6 @@ export const USER_FRAGMENT = `
     image
   }
 `;
-
 // language=GraphQL
 /**
  * Fragment represents event backtrace
@@ -28,6 +27,66 @@ export const EVENT_BACKTRACE = `
     arguments
   }
 `;
+
+// language=GraphQL
+/**
+ * Fragment represents event fragment
+ */
+export const EVENT_FRAGMENT = `
+  fragment Event on Event {
+    id
+    catcherType
+    totalCount
+    assignee {
+      id
+      name
+      email
+      image
+    }
+    groupHash
+    visitedBy {
+      ...User
+    }
+    marks {
+      resolved
+      starred
+      ignored
+    }
+    timestamp
+    originalTimestamp
+    originalEventId
+    payload {
+      title
+      type
+      release
+      context
+      user {
+        id
+        name
+        photo
+      }
+      get
+      backtrace {
+        ...eventBacktrace
+      }
+      addons
+    }
+    usersAffected
+    release {
+      releaseName
+      commits{
+        hash
+        author
+        title
+        date
+      }
+    }
+  }
+
+  ${USER_FRAGMENT}
+  ${EVENT_BACKTRACE}
+`;
+
 
 // language=GraphQL
 /**

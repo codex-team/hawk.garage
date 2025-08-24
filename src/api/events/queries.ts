@@ -1,131 +1,46 @@
-import { USER_FRAGMENT, EVENT_BACKTRACE } from '../fragments';
+import { USER_FRAGMENT, EVENT_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
  * Get specific error
  */
 export const QUERY_EVENT = `
-  query Event($projectId: ID!, $eventId: ID!, $repetitionId: ID) {
+  query Event($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
     project(projectId: $projectId) {
-      event(id: $eventId) {
-        id
-        catcherType
-        totalCount
-        groupHash
-        visitedBy {
-          ...User
-        }
-        marks {
-          resolved
-          starred
-          ignored
-        }
-        timestamp
-        payload {
-          title
-          type
-          release
-          context
-          user {
-            id
-            name
-            photo
-          }
-          get
-          backtrace {
-            ...eventBacktrace
-          }
-          addons
-        }
-        usersAffected
-        repetition(id: $repetitionId) {
-          id
-          timestamp
-          payload {
-            release
-            context
-            user {
-              id
-              name
-              photo
-            }
-            get
-            backtrace {
-              ...eventBacktrace
-            }
-            addons
-          }
-          delta
-        }
-        release {
-          releaseName
-          commits{
-            hash
-            author
-            title
-            date
-          }
-        }
+      event(eventId: $eventId, originalEventId: $originalEventId) {
+        ...Event
       }
     }
   }
 
-  ${USER_FRAGMENT}
-
-  ${EVENT_BACKTRACE}
+  ${EVENT_FRAGMENT}
 `;
 
-// language=GraphQL
-/**
- * Get project recent events
- */
-export const QUERY_RECENT_PROJECT_EVENTS = `
-  query ProjectRecentEvents (
-    $projectId: ID!,
-    $skip: Int!,
+export const QUERY_PROJECT_DAILY_EVENTS = `
+  query ProjectDailyEvents(
+    $projectId: ID!
+    $cursor: String
     $sort: EventsSortOrder,
     $filters: EventsFiltersInput,
     $search: String
   ) {
     project(projectId: $projectId) {
-      recentEvents(limit: 15, skip: $skip, sort: $sort, filters: $filters, search: $search) {
-        events {
+      dailyEventsPortion(sort: $sort, filters: $filters, search: $search, nextCursor: $cursor) {
+        nextCursor
+        dailyEvents {
           id
-          groupHash
-          totalCount
-          assignee {
-            id
-            name
-            email
-            image
-          }
-          visitedBy {
-           ...User
-          }
-          marks {
-            resolved
-            starred
-            ignored
-          }
-          catcherType
-          timestamp
-          payload {
-            title
-          }
-        }
-        dailyInfo {
-          groupHash
           count
-          groupingTimestamp
-          lastRepetitionId
-          lastRepetitionTime
           affectedUsers
+          groupingTimestamp
+          event {
+            ...Event
+          }
         }
       }
     }
   }
-
-  ${USER_FRAGMENT}
+  
+  ${EVENT_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -134,43 +49,26 @@ export const QUERY_RECENT_PROJECT_EVENTS = `
  *
  * @type {string}
  */
-export const QUERY_LATEST_REPETITIONS = `
+export const QUERY_EVENT_REPETITIONS_PORTION = `
   query LatestRepetitions(
     $projectId: ID!,
-    $eventId: ID!,
-    $skip: Int,
-    $limit: Int
+    $originalEventId: ID!,
+    $limit: Int,
+    $cursor: String
   ) {
     project(projectId: $projectId) {
-      event(id: $eventId) {
-        repetitions(skip: $skip, limit: $limit) {
-          id
-          timestamp
-          payload {
-            title,
-            release
-            context
-            user {
-              id
-              name
-              photo
-            }
-            get
-            backtrace {
-              line
-              sourceCode {
-                line
-                content
-              }
-              file
-            }
-            addons
+      event(eventId: $originalEventId, originalEventId: $originalEventId) {
+        repetitionsPortion(limit: $limit, cursor: $cursor) {
+          nextCursor
+          repetitions {
+            ...Event
           }
-          delta
         }
       }
     }
   }
+
+  ${EVENT_FRAGMENT}
 `;
 
 // language=GraphQL
@@ -181,12 +79,12 @@ export const QUERY_LATEST_REPETITIONS = `
 export const QUERY_CHART_DATA = `
   query EventChartData (
     $projectId: ID!
-    $eventId: ID!
+    $originalEventId: ID!
     $days: Int!
     $timezoneOffset: Int!
   ) {
     project(projectId: $projectId) {
-      event(id: $eventId) {
+      event(eventId: $originalEventId, originalEventId: $originalEventId) {
         chartData(
           days: $days,
           timezoneOffset: $timezoneOffset
@@ -204,8 +102,8 @@ export const QUERY_CHART_DATA = `
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `
-  mutation visitEvent($projectId: ID!, $eventId: ID!) {
-    visitEvent(project: $projectId, id: $eventId)
+  mutation visitEvent($projectId: ID!, originalEventId: ID!) {
+    visitEvent(projectId: $projectId, eventId: $originalEventId)
   }
 `;
 

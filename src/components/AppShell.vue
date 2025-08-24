@@ -109,13 +109,14 @@ export default {
     projects() {
       let projectList = this.$store.state.projects.list
         .map(project => {
-          const latestEventInfo = this.$store.getters.getLatestEventDailyInfo(project.id);
+          const latestEvent = project.latestEvent;
 
           return {
             id: project.id,
             name: project.name,
             workspaceId: project.workspaceId,
-            timestamp: new Date(latestEventInfo ? latestEventInfo.lastRepetitionTime : 0), // timestamp of the last occurred event
+            latestEvent: project.latestEvent,
+            timestamp: new Date(latestEvent ? latestEvent.timestamp : 0), // timestamp of the last occurred event
           };
         });
 
@@ -243,9 +244,7 @@ export default {
      * @param {Project} project - clicked project
      */
     onProjectMenuItemClick(project) {
-      const recentProjectEvents = this.$store.getters.getRecentEventsByProjectId(project.id);
-
-      if (!recentProjectEvents) {
+      if (!project.latestEvent) {
         return this.$router.push({
           name: 'add-catcher',
           params: { projectId: project.id },
@@ -253,6 +252,7 @@ export default {
           // do nothing
         });
       }
+
       this.$router.push({
         name: 'project-overview',
         params: { projectId: project.id },

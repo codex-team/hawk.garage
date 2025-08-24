@@ -2,7 +2,6 @@ import {
   CREATE_PROJECT,
   REMOVE_PROJECTS_BY_WORKSPACE_ID,
   REMOVE_PROJECT,
-  FETCH_RECENT_ERRORS,
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
@@ -18,7 +17,6 @@ import {
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import Vue from 'vue';
-import { groupByGroupingTimestamp } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -215,24 +213,6 @@ const actions = {
         value: token,
       });
     }
-  },
-
-  /**
-   * Fetch latest project events
-   *
-   * @param {Function} commit - standard Vuex commit function
-   * @param {string} projectId - id of the project to fetch
-   * @returns {Promise<void>}
-   */
-  async [FETCH_RECENT_ERRORS]({ commit }, projectId) {
-    const recentEvents = await projectsApi.fetchRecentErrors(projectId);
-
-    const eventsListByDate = groupByGroupingTimestamp(recentEvents);
-
-    commit(mutationTypes.SET_EVENTS_LIST_BY_DATE, {
-      projectId,
-      eventsListByDate,
-    });
   },
 
   /**

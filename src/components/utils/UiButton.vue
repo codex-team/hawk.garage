@@ -16,8 +16,8 @@
     }"
     :disabled="disabled"
     :href="href || null"
-    @click="$emit('click', $event)"
     data-ripple
+    @click="$emit('click', $event)"
   >
     <Icon
       v-if="icon"
@@ -226,14 +226,14 @@ export default Vue.extend({
   }
 
   &--iconic {
-    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 32px;
     height: 32px;
-    border-radius: 32px;
+    padding: 0;
     border: 0;
+    border-radius: 32px;
 
     &:not(&--disabled):hover {
       background-color: var(--color-bg-second);

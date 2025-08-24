@@ -29,11 +29,6 @@ export const GENERATE_NEW_INTEGRATION_TOKEN = 'GENERATE_NEW_INTEGRATION_TOKEN';
 export const REMOVE_PROJECT = 'REMOVE_PROJECT';
 
 /**
- * Fetch project recent errors
- */
-export const FETCH_RECENT_ERRORS = 'FETCH_RECENT_ERRORS';
-
-/**
  * Sends request to set last project visit
  */
 export const UPDATE_PROJECT_LAST_VISIT = 'UPDATE_PROJECT_LAST_VISIT';

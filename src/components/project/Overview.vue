@@ -2,18 +2,20 @@
   <div class="project-overview">
     <div
       v-if="project"
-      v-infinite-scroll="loadMoreEvents"
+      v-infinite-scroll="() => loadMoreEvents(false)"
+      :infinite-scroll-disabled="noMoreEvents || isLoadingEvents"
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
       <Chart
         :points="chartData"
-        class="project-overview__chart"
       />
-      <FiltersBar />
+      <FiltersBar
+        @state-changed="reloadDailyEvents"
+      />
       <!-- TODO: Add placeholder if there is no filtered events -->
       <div
-        v-if="recentEvents"
+        v-if="dailyEvents"
         class="project-overview__events"
       >
         <SearchField
@@ -31,7 +33,7 @@
         />
         <template v-if="!isListEmpty">
           <div
-            v-for="(eventsByDate, date) in recentEvents"
+            v-for="(eventsByDate, date) in dailyEventsGrouped"
             :key="date"
             class="project-overview__events-by-date"
           >
@@ -41,17 +43,17 @@
             <EventItem
               v-for="(dailyEventInfo, index) in eventsByDate"
               :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-              :last-occurrence-timestamp="dailyEventInfo.lastRepetitionTime"
+              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.eventId).timestamp"
               :count="dailyEventInfo.count"
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
-              :event="getEventByProjectIdAndGroupHash(project.id, dailyEventInfo.groupHash)"
+              :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
               @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
               @showEventOverview="
                 showEventOverview(
                   project.id,
-                  dailyEventInfo.groupHash,
-                  dailyEventInfo.lastRepetitionId
+                  dailyEventInfo.eventId,
+                  getProjectEventById(project.id, dailyEventInfo.eventId).originalEventId
                 )
               "
             />
@@ -60,7 +62,7 @@
             v-if="!isListEmpty && !noMoreEvents && !isLoadingEvents"
             class="project-overview__load-more"
             :class="{ loader: isLoadingEvents }"
-            @click="loadMoreEvents"
+            @click="loadMoreEvents(false)"
           >
             <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
           </div>
@@ -69,7 +71,7 @@
           <EventItemSkeleton />
         </div>
         <div
-          v-else-if="Object.keys(recentEvents).length === 0 && !isLoadingEvents"
+          v-else-if="dailyEvents.length === 0 && !isLoadingEvents"
           class="project-overview__no-events-placeholder"
         >
           <div class="project-overview__divider" />
@@ -95,12 +97,11 @@ import EventItem from './EventItem';
 import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
-import { FETCH_RECENT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import {
-  UPDATE_PROJECT_LAST_VISIT,
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
-import { debounce } from '@/utils';
+import { debounce, groupByGroupingTimestamp } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
@@ -130,7 +131,7 @@ export default {
       /**
        * Shows if there are no more events or there are
        */
-      noMoreEvents: true,
+      noMoreEvents: false,
 
       /**
        * Indicates whether items are loading or not.
@@ -159,6 +160,16 @@ export default {
         top: 0,
         right: 0,
       },
+
+      /**
+       * Pagination cursor for next dailyEvents portion
+       */
+      dailyEventsNextCursor: null,
+
+      /**
+       * Raw (not grouped by groupingTimestamp) dailyEvents list
+       */
+      dailyEvents: [],
 
       /**
        * Handler of window resize
@@ -191,7 +202,9 @@ export default {
      * @returns {Project}
      */
     project() {
-      return this.$store.getters.getProjectById(this.projectId);
+      const project = this.$store.getters.getProjectById(this.projectId);
+
+      return project;
     },
 
     /**
@@ -212,27 +225,26 @@ export default {
       return this.workspace?.isBlocked;
     },
 
-    /**
-     * Project recent errors
-     *
-     * @returns {RecentInfoByDate}
-     */
-    recentEvents() {
-      if (!this.project) {
-        return null;
-      }
-
-      return this.$store.getters.getRecentEventsByProjectId(this.projectId);
-    },
-
-    ...mapGetters([ 'getEventByProjectIdAndGroupHash' ]),
+    ...mapGetters([ 'getProjectEventById' ]),
 
     isListEmpty() {
-      if (!this.recentEvents) {
+      if (!this.dailyEvents) {
         return true;
       }
 
-      return Object.keys(this.recentEvents).length === 0;
+      return this.dailyEvents.length === 0;
+    },
+
+    /**
+     * Daily events grouped by grouping timestamp
+     * Based on data.dailyEvents
+     */
+    dailyEventsGrouped() {
+      if (this.dailyEvents.length) {
+        return groupByGroupingTimestamp(this.dailyEvents);
+      }
+
+      return {};
     },
 
     searchFieldPlaceholder() {
@@ -255,22 +267,11 @@ export default {
     }, 500);
 
     try {
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
-        projectId: this.projectId,
-        search: this.searchQuery,
-      });
-
-      const latestEvent = this.$store.getters.getLatestEvent(this.projectId);
-
-      /**
-       * Redirect to the "add catcher" page if there are no events
-       */
-      if (!latestEvent) {
-        await this.$router.push({
-          name: 'add-catcher',
-          params: { projectId: this.projectId },
-        });
+      if (this.project && this.project.latestEvent) {
+        this.dailyEvents = [ this.project.latestEvent ];
       }
+
+      this.loadMoreEvents(true);
 
       // How many days will be displayed in the chart
       const twoWeeks = 14;
@@ -339,18 +340,38 @@ export default {
     getDay(date) {
       return parseInt(date.replace('groupingTimestamp:', ''), 10);
     },
+
     /**
      * Load older events to the list
+     *
+     * @param overwrite - determine whenever we need to overwrite this.dailyEvents
      */
-    async loadMoreEvents() {
+    async loadMoreEvents(overwrite) {
+      if (this.isLoadingEvents === true) {
+        return;
+      }
+
       if (this.noMoreEvents) {
         return;
       }
+
       this.isLoadingEvents = true;
-      this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
+      const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
         projectId: this.projectId,
+        nextCursor: this.dailyEventsNextCursor,
         search: this.searchQuery,
       });
+
+      this.dailyEventsNextCursor = nextCursor;
+
+      this.noMoreEvents = this.dailyEventsNextCursor === null;
+
+      if (overwrite) {
+        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
+      } else {
+        this.dailyEvents.push(...dailyEventsWithEventsLinked);
+      }
+
       this.isLoadingEvents = false;
     },
 
@@ -405,19 +426,19 @@ export default {
      * Opens event overview popup
      *
      * @param {string} projectId - id of the event's project
-     * @param {string} groupHash - event's group hash
-     * @param {string} repetitionId - event's repetition id
+     * @param {string} eventId - id of the event to be shown
+     * @param {string} originalEventId - id of the original event
      */
-    showEventOverview(projectId, groupHash, repetitionId) {
+    showEventOverview(projectId, eventId, originalEventId) {
       if (this.isAssigneesShowed) {
         this.isAssigneesShowed = false;
       } else {
         this.$router.push({
           name: 'event-overview',
           params: {
-            projectId: projectId,
-            eventId: this.getEventByProjectIdAndGroupHash(projectId, groupHash).id,
-            repetitionId: repetitionId,
+            projectId,
+            eventId: originalEventId,
+            repetitionId: eventId,
           },
         });
       }
@@ -440,17 +461,17 @@ export default {
         search: sanitizedQuery,
       });
 
-      this.$store.commit('CLEAR_RECENT_EVENTS_LIST', { projectId: this.projectId });
+      this.noMoreEvents = false;
+      this.dailyEventsNextCursor = null;
 
-      this.isLoadingEvents = true;
-      try {
-        this.noMoreEvents = await this.$store.dispatch(FETCH_RECENT_EVENTS, {
-          projectId: this.projectId,
-          search: sanitizedQuery,
-        });
-      } finally {
-        this.isLoadingEvents = false;
-      }
+      this.loadMoreEvents(true);
+    },
+
+    async reloadDailyEvents() {
+      this.dailyEventsNextCursor = null;
+      this.noMoreEvents = false;
+
+      this.loadMoreEvents(true);
     },
   },
 };
@@ -469,9 +490,6 @@ export default {
     align-self: stretch;
     overflow-y: auto;
     @apply --hide-scrollbar;
-  }
-
-  &__chart {
   }
 
   &__events {
