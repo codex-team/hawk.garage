@@ -216,6 +216,7 @@ import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 import { getCurrencySign } from '@/utils';
+import { errorMessages } from '@/api/const';
 
 /**
  * Id for the 'New card' option in select
@@ -452,7 +453,13 @@ export default Vue.extend({
         shouldSaveCard: this.shouldSaveCard,
       });
     } catch (e) {
-      const key = 'errors.' + (e as Error).message;
+      const error = e as Error;
+
+      if (error.message === errorMessages.ACCESS_TOKEN_EXPIRED_ERROR) {
+        return;
+      }
+
+      const key = 'errors.' + error.message;
       const message = this.$te(key) ? this.$t(key) as string : this.$t('billing.notifications.error');
 
       notifier.show({

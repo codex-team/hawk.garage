@@ -158,17 +158,6 @@ export async function callOld(
         });
 
         printApiError(error, response.data, request, variables);
-
-        if (error.extensions.code === errorCodes.UNAUTHENTICATED) {
-          const key = 'errors.' + error.message;
-          const message = i18n.te(key) ? i18n.t(key) as string : i18n.t('billing.notifications.error');
-  
-          notifier.show({
-            message: message as string,
-            style: 'error',
-            time: 5000,
-          });
-        }
       });
     }
 
@@ -345,6 +334,8 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
 
         return axios(originalRequest);
       } catch (error) {
+        tokenRefreshingRequest = null;
+
         console.error(error);
         eventsHandlers.onAuthError();
 

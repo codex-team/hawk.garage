@@ -14,6 +14,7 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as userApi from '../../../api/user';
+import { errorCodes } from '@/api';
 
 /**
  * Mutations enum for this module
@@ -143,7 +144,7 @@ const actions = {
       /**
        * If user is not authenticated, log out
        */
-      if (code === 'UNAUTHENTICATED') {
+      if (code === errorCodes.UNAUTHENTICATED) {
         commit(RESET_STORE);
 
         return;
