@@ -468,7 +468,7 @@ export default Vue.extend({
         style: 'error',
         time: 5000,
       });
-      
+
       this.$emit('close');
     } finally {
       this.isLoading = false;

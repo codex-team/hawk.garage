@@ -39,7 +39,11 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           pattern
         }
         dailyEventsPortion(limit: 1) {
-          nextCursor
+          nextCursor {
+            groupingTimestampBound
+            sortValueBound
+            idBound
+          }
           dailyEvents {
             id
             count

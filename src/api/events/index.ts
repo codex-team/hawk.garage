@@ -10,11 +10,11 @@ import {
 } from './queries';
 import * as api from '@/api';
 import {
+  DailyEventsCursor,
   DailyEventsPortion,
   EventMark,
   EventsFilters,
   EventsSortOrder,
-  EventsWithDailyInfo,
   HawkEvent
 } from '@/types/events';
 import { User } from '@/types/user';
@@ -54,7 +54,7 @@ export async function getEvent(projectId: string, eventId: string, originalEvent
  */
 export async function fetchDailyEventsPortion(
   projectId: string,
-  nextCursor: string | null = null,
+  nextCursor: DailyEventsCursor | null = null,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
   search = ''
@@ -102,20 +102,20 @@ export async function getRepetitionsPortion(
     response.errors.forEach(e => console.error(e));
   }
 
-  return response
+  return response;
 }
 
 /**
  * Mark event as visited for current user
  *
  * @param {string} projectId - project event related to
- * @param {string} eventId — visited event
+ * @param {string} originalEventId — original event id of the visited one
  * @returns {Promise<boolean>}
  */
-export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
+export async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
   return (await api.callOld(MUTATION_VISIT_EVENT, {
     projectId,
-    eventId,
+    originalEventId,
   })).visitEvent;
 }
 

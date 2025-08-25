@@ -21,7 +21,8 @@ import {
   DailyEventWithEventLinked,
   EventsFilters,
   EventsSortOrder,
-  HawkEvent
+  HawkEvent,
+  DailyEventsCursor
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -264,9 +265,9 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - id of the project to get overview for
      * @param {string} payload.search - event searching regex string
-     * @param {string} payload.nextCursor - pointer to the first daily event of the portion
+     * @param {DailyEventsCursor|null} payload.nextCursor - pointer to the first daily event of the portion to fetch
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }):
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null }):
       Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
@@ -380,17 +381,17 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - project event is related to
-     * @param {string} payload.eventId - visited event
+     * @param {string} payload.originalEventId - original event of the visited one
      */
-    async [VISIT_EVENT]({ commit, rootState }, { projectId, eventId }): Promise<void> {
-      const result = await eventsApi.visitEvent(projectId, eventId);
+    async [VISIT_EVENT]({ commit, rootState }, { projectId, originalEventId }): Promise<void> {
+      const result = await eventsApi.visitEvent(projectId, originalEventId);
 
       const user = (rootState as RootState).user.data;
 
       if (result) {
         commit(MutationTypes.MarkAsVisited, {
           projectId,
-          eventId,
+          originalEventId,
           user,
         });
       }
@@ -621,22 +622,31 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Mark event as visited in state
+     * Mark all events (with the same originalEventId) as visited by the user
      *
      * @param {EventsModuleState} state - events module state
-     *
      * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - project event is related to
-     * @param {string} payload.eventId - visited event
-     * @param {User} payload.user - user who visited event
+     * @param {string} payload.projectId - project these events belong to
+     * @param {string} payload.originalEventId - original event id to match
+     * @param {User} payload.user - user who visited the event(s)
      */
-    [MutationTypes.MarkAsVisited](state, { projectId, eventId, user }): void {
-      const key = getEventsListKey(projectId, eventId);
+    [MutationTypes.MarkAsVisited](state, { projectId, originalEventId, user }): void {
+      Object.entries(state.events).forEach(([key, event]) => {
+        // Only look at events for this project
+        if (!key.startsWith(`${projectId}:`)) {
+          return;
+        }
 
-      const event = state.events[key];
-      const visitedBy = new Set([...(event.visitedBy || []), user]);
+        // Only update events whose originalEventId matches
+        if (event.originalEventId !== originalEventId) {
+          return;
+        }
 
-      Vue.set(state.events[key], 'visitedBy', Array.from(visitedBy));
+        // Append user once (preserve existing values)
+        const visitedBy = Array.from(new Set([...(event.visitedBy || []), user]));
+
+        Vue.set(event, 'visitedBy', visitedBy);
+      });
     },
 
     /**

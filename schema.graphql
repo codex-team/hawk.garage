@@ -285,7 +285,9 @@ type DailyEvent {
   """Timestamp of the event grouping"""
   groupingTimestamp: Int!
 
-  """Event itself"""
+  """
+  Last repetition of the day that represents all of the repetition this day
+  """
   event: Event!
 }
 
@@ -310,14 +312,32 @@ type DailyEventInfo {
   affectedUsers: Int
 }
 
+"""Cursor for fetching daily events portion"""
+type DailyEventsCursor {
+  """Grouping timestamp of the first event in the next portion"""
+  groupingTimestampBound: Int!
+
+  """Sort key value of the first event in the next portion"""
+  sortValueBound: Int!
+
+  """ID of the first event of in the next portion"""
+  idBound: ID!
+}
+
+input DailyEventsCursorInput {
+  groupingTimestampBound: Int!
+  sortValueBound: Int!
+  idBound: ID!
+}
+
 """Pagination cursor of events portion and list of daily events"""
 type DailyEventsPortion {
   """
-  Cursor to the next portion of the events, null if there are no events left
+  Pointer to the next portion of dailyEvents, null if there are no events left
   """
-  nextCursor: String
+  nextCursor: DailyEventsCursor
 
-  """Daily event information"""
+  """List of daily events"""
   dailyEvents: [DailyEvent]
 }
 
@@ -354,8 +374,11 @@ type Event {
   """Event timestamp"""
   timestamp: Float!
 
-  """First appearance timestamp"""
-  firstAppearanceTimestamp: Float!
+  """First occurrence timestamp"""
+  originalTimestamp: Float!
+
+  """Id of the original event"""
+  originalEventId: ID!
 
   """Release data"""
   release: Release
@@ -1016,7 +1039,7 @@ type Project {
   uidAdded: User!
 
   """Project's Event"""
-  event(id: ID!): Event
+  event(eventId: ID!, originalEventId: ID!): Event
 
   """Project events"""
   events(
@@ -1050,13 +1073,13 @@ type Project {
     """Maximum number of results"""
     limit: Int! = 50
 
-    """Next Cursor to fetch next portion of events"""
-    nextCursor: String
+    """Pointer to the first event of the portion that would be fetched"""
+    nextCursor: DailyEventsCursorInput
 
     """Events sort order"""
     sort: EventsSortOrder
 
-    """Event marks by which events should be sorted"""
+    """Event marks by which events should be filtered"""
     filters: EventsFiltersInput
 
     """Search query"""
@@ -1197,7 +1220,7 @@ type Release {
   releaseName: String!
 
   """Release commits"""
-  commits: [Commit]
+  commits: [Commit!]!
 }
 
 input RemoveAssigneeInput {
