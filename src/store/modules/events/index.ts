@@ -21,7 +21,8 @@ import {
   DailyEventWithEventLinked,
   EventsFilters,
   EventsSortOrder,
-  HawkEvent
+  HawkEvent,
+  DailyEventsCursor,
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -264,9 +265,9 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {object} payload - vuex action payload
      * @param {string} payload.projectId - id of the project to get overview for
      * @param {string} payload.search - event searching regex string
-     * @param {string} payload.nextCursor - pointer to the first daily event of the portion
+     * @param {DailyEventsCursor|null} payload.nextCursor - pointer to the first daily event of the portion to fetch
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: string | null }):
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null }):
       Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(

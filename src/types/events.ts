@@ -342,7 +342,6 @@ export interface HawkEventRelease {
   commits: HawkEventCommit[];
 }
 
-
 /**
  * Hawk Event Commit format
  */
@@ -366,4 +365,27 @@ export interface HawkEventCommit {
    * Commit date
    */
   date: Date;
+}
+
+/**
+ * Daily evetns pagination cursor
+ * It points to the first event of the next portion by current sort order
+ */
+export interface DailyEventsCursor {
+  /**
+   * Grouping timestamp of the daily event - it represents the day of the event
+   */
+  groupingTimestampBound: number;
+
+  /**
+   * Sort key boundary of the daily events portion - it depends on the current sort order
+   * It could be timestamp, events count or affected users count
+   */
+  sortValueBound: number;
+
+  /**
+   * Stringified ObjectId of the daily event - it is used for dailyEvent timestamp ordering
+   * Because ObjectId is based on the timestamp
+   */
+  idBound: string;
 }

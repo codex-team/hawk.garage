@@ -10,11 +10,11 @@ import {
 } from './queries';
 import * as api from '@/api';
 import {
+  DailyEventsCursor,
   DailyEventsPortion,
   EventMark,
   EventsFilters,
   EventsSortOrder,
-  EventsWithDailyInfo,
   HawkEvent
 } from '@/types/events';
 import { User } from '@/types/user';
@@ -54,7 +54,7 @@ export async function getEvent(projectId: string, eventId: string, originalEvent
  */
 export async function fetchDailyEventsPortion(
   projectId: string,
-  nextCursor: string | null = null,
+  nextCursor: DailyEventsCursor | null = null,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
   search = ''

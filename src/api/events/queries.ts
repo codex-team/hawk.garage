@@ -1,4 +1,4 @@
-import { USER_FRAGMENT, EVENT_FRAGMENT } from '../fragments';
+import { EVENT_FRAGMENT } from '../fragments';
 
 // language=GraphQL
 /**
@@ -19,14 +19,18 @@ export const QUERY_EVENT = `
 export const QUERY_PROJECT_DAILY_EVENTS = `
   query ProjectDailyEvents(
     $projectId: ID!
-    $cursor: String
-    $sort: EventsSortOrder,
-    $filters: EventsFiltersInput,
+    $cursor: DailyEventsCursorInput
+    $sort: EventsSortOrder
+    $filters: EventsFiltersInput
     $search: String
   ) {
     project(projectId: $projectId) {
       dailyEventsPortion(sort: $sort, filters: $filters, search: $search, nextCursor: $cursor) {
-        nextCursor
+        nextCursor {
+          groupingTimestampBound
+          sortValueBound
+          idBound
+        }
         dailyEvents {
           id
           count
