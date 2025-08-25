@@ -102,7 +102,7 @@ export const QUERY_CHART_DATA = `
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `
-  mutation visitEvent($projectId: ID!, originalEventId: ID!) {
+  mutation visitEvent($projectId: ID!, $originalEventId: ID!) {
     visitEvent(projectId: $projectId, eventId: $originalEventId)
   }
 `;

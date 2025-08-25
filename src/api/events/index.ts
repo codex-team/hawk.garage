@@ -109,13 +109,13 @@ export async function getRepetitionsPortion(
  * Mark event as visited for current user
  *
  * @param {string} projectId - project event related to
- * @param {string} eventId — visited event
+ * @param {string} originalEventId — original event id of the visited one
  * @returns {Promise<boolean>}
  */
-export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
+export async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
   return (await api.callOld(MUTATION_VISIT_EVENT, {
     projectId,
-    eventId,
+    originalEventId,
   })).visitEvent;
 }
 
