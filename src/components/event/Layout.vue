@@ -114,8 +114,6 @@ export default Vue.extend({
      */
     markEventAsVisited() {
       const userId = this.$store.state.user.data.id;
-      console.log('this.event is')
-      console.log(this.event)
 
       /**
        * Dispatch VISIT_EVENT action on component create

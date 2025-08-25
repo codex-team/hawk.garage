@@ -22,7 +22,7 @@ import {
   EventsFilters,
   EventsSortOrder,
   HawkEvent,
-  DailyEventsCursor,
+  DailyEventsCursor
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
@@ -633,13 +633,18 @@ const module: Module<EventsModuleState, RootState> = {
     [MutationTypes.MarkAsVisited](state, { projectId, originalEventId, user }): void {
       Object.entries(state.events).forEach(([key, event]) => {
         // Only look at events for this project
-        if (!key.startsWith(`${projectId}:`)) return;
+        if (!key.startsWith(`${projectId}:`)) {
+          return;
+        }
 
         // Only update events whose originalEventId matches
-        if (event.originalEventId !== originalEventId) return;
+        if (event.originalEventId !== originalEventId) {
+          return;
+        }
 
         // Append user once (preserve existing values)
         const visitedBy = Array.from(new Set([...(event.visitedBy || []), user]));
+
         Vue.set(event, 'visitedBy', visitedBy);
       });
     },
