@@ -40,9 +40,9 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         }
         dailyEventsPortion(limit: 1) {
           nextCursor {
-            groupingTimestampBound
-            sortValueBound
-            idBound
+            groupingTimestampBoundary
+            sortValueBoundary
+            idBoundary
           }
           dailyEvents {
             id
