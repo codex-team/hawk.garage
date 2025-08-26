@@ -160,6 +160,8 @@ export default Vue.extend({
       const filters = this.filtersOptions[key];
 
       this.handleFiltersChange(filters);
+
+      this.$emit('state-changed');
     },
     /**
      * Set new events sorting order
@@ -172,6 +174,8 @@ export default Vue.extend({
       }
 
       this.handleSortOrderChange(key);
+
+      this.$emit('state-changed');
     },
     /**
      * Handle sort order change

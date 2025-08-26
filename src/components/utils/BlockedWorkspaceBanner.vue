@@ -1,6 +1,9 @@
 <template>
   <div class="blocked-workspace-banner">
-    <div v-html="blockedBannerText" class="blocked-workspace-banner__header"></div>
+    <div
+      class="blocked-workspace-banner__header"
+      v-html="blockedBannerText"
+    />
     <div>{{ $t('workspaces.blocked.description') }}</div>
     <UiButton
       :content="$t('workspaces.blocked.upgradeButton')"
@@ -62,9 +65,9 @@ export default {
 
 <style>
 .blocked-workspace-banner {
+  width: 100%;
   height: auto;
   margin: 15px 0;
-  width: 100%;
   padding: 15px;
   color: var(--color-indicator-critical);
   font-size: 14px;

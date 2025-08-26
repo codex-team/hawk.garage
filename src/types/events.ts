@@ -95,14 +95,9 @@ export interface HawkEvent {
   payload: HawkEventPayload;
 
   /**
-   * Event repetition
-   */
-  repetition: HawkEventRepetition;
-
-  /**
    * Event repetitions
    */
-  repetitions: HawkEventRepetition[];
+  repetitions: HawkEvent[];
 
   /**
    * How many users catch this error
@@ -118,6 +113,16 @@ export interface HawkEvent {
    * Unix timestamp of the event
    */
   timestamp: number;
+
+  /**
+   * Unix timestamp of the event first appearance
+   */
+  originalTimestamp: number;
+
+  /**
+   * Id of the original event
+   */
+  originalEventId: string;
 
   /**
    * Event chart data for a few days
@@ -136,6 +141,39 @@ export interface HawkEvent {
 export interface EventsWithDailyInfo {
   events: HawkEvent[];
   dailyInfo: HawkEventDailyInfo[];
+}
+
+/**
+ * Interface representing Hawk daily event properties with event information
+ */
+export interface DailyEvent {
+  id: string;
+  groupingTimestamp: number;
+  count: number;
+  affectedUsers: number;
+  event: HawkEvent;
+}
+
+/**
+ * Interface that represents daily events with pointer to the event stored in the state
+ */
+export type DailyEventWithEventLinked = Omit<DailyEvent, 'event'> & {
+  eventId: string,
+};
+
+/**
+ * Interface representing a portion of daily events
+ */
+export interface DailyEventsPortion {
+  /**
+   * Pointer to the next portion of daily events, null if there are no more events
+   */
+  nextCursor: string | null;
+  /**
+   * List of daily events
+   * Each event contains information about the event and its occurrence on a specific day
+   */
+  dailyEvents: DailyEvent[];
 }
 
 /**
@@ -158,14 +196,9 @@ export interface HawkEventDailyInfo {
   readonly groupingTimestamp: number;
 
   /**
-   * Event's last repetition id
+   * Id of the event that would represent all events with same groupHash in this day
    */
-  readonly lastRepetitionId: string;
-
-  /**
-   * Last event occurrence timestamp
-   */
-  readonly lastRepetitionTime: number;
+  readonly event: HawkEvent;
 
   /**
    * Event affected users count, null for old events, when affected users count was not calculated
@@ -226,36 +259,6 @@ export interface HawkEventPayload {
    * Event type: TypeError, ReferenceError etc.
    */
   type?: string;
-}
-
-/**
- * Hawk repetition payload
- */
-export interface HawkEventRepetition {
-  /**
-   * Repetitions ID
-   */
-  id: string;
-
-  /**
-   * Unique repetition payload, null for new delta format
-   */
-  payload: HawkEventPayload;
-
-  /**
-   * Delta payload, null for old delta format or if there is no delta between original and repetition
-   */
-  delta: string | null;
-
-  /**
-   * Flag indicating if the payload has been patched, in case of processing repetition after fetching, we don't need to patch it again
-   */
-  isPayloadPatched?: boolean;
-
-  /**
-   * Unix timestamp of the repetition date
-   */
-  timestamp: number;
 }
 
 export interface HawkEventBacktraceFrame {
@@ -339,7 +342,6 @@ export interface HawkEventRelease {
   commits: HawkEventCommit[];
 }
 
-
 /**
  * Hawk Event Commit format
  */
@@ -363,4 +365,27 @@ export interface HawkEventCommit {
    * Commit date
    */
   date: Date;
+}
+
+/**
+ * Daily evetns pagination cursor
+ * It points to the first event of the next portion by current sort order
+ */
+export interface DailyEventsCursor {
+  /**
+   * Grouping timestamp of the daily event - it represents the day of the event
+   */
+  groupingTimestampBoundary: number;
+
+  /**
+   * Sort key boundary of the daily events portion - it depends on the current sort order
+   * It could be timestamp, events count or affected users count
+   */
+  sortValueBoundary: number;
+
+  /**
+   * Stringified ObjectId of the daily event - it is used for dailyEvent timestamp ordering
+   * Because ObjectId is based on the timestamp
+   */
+  idBoundary: string;
 }

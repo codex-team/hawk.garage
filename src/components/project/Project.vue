@@ -13,7 +13,7 @@ import ProjectHeader from './ProjectHeader';
 export default {
   name: 'Project',
   components: {
-    ProjectHeader
+    ProjectHeader,
   },
   computed: {
     /**
@@ -32,7 +32,7 @@ export default {
      */
     project() {
       return this.$store.getters.getProjectById(this.projectId);
-    }
+    },
   },
   /**
    * Vue mounted hook
@@ -42,7 +42,7 @@ export default {
     if (this.project) {
       this.$store.dispatch('UPDATE_PROJECT_LAST_VISIT', { projectId: this.projectId });
     }
-  }
+  },
 };
 </script>
 
