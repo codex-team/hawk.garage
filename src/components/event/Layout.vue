@@ -78,9 +78,9 @@ export default Vue.extend({
      * Current viewed event
      */
     event(): HawkEvent {
-      const { repetitionId, projectId } = this.$route.params;
+      const { repetitionId, eventId, projectId } = this.$route.params;
 
-      return this.getEvent(projectId, repetitionId);
+      return this.getEvent(projectId, repetitionId ?? eventId);
     },
   },
   /**
