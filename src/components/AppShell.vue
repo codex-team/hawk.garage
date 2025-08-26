@@ -117,6 +117,7 @@ export default {
 
           if (project.latestEvent) {
             const latestEventId = project.latestEvent.eventId;
+
             latestEvent = this.getEvent(project.id, latestEventId);
           }
 

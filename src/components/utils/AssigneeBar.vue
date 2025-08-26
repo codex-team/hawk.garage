@@ -32,7 +32,7 @@
       v-if="isAssigneesShowed"
       v-click-outside="hideAssigneesList"
       :project-id="projectId"
-      :event-group-hash="event.groupHash"
+      :event-id="event.id"
       triangle="top"
       class="assignee-bar__assignees-list"
       @hide="hideAssigneesList"
