@@ -56,7 +56,7 @@ import EmptyProjectsList from './aside/EmptyProjectsList';
 import ProjectPlaceholder from './project/ProjectPlaceholder';
 import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
 
 export default {
@@ -96,6 +96,10 @@ export default {
       modalDialogData: state => state.modalDialog.data,
     }),
 
+    ...mapGetters({
+      getEvent: 'getProjectEventRepetition',
+    }),
+
     /**
      * @returns {Array<Workspace>} - registered workspaces
      */
@@ -109,13 +113,18 @@ export default {
     projects() {
       let projectList = this.$store.state.projects.list
         .map(project => {
-          const latestEvent = project.latestEvent;
+          let latestEvent = null;
+
+          if (project.latestEvent) {
+            const latestEventId = project.latestEvent.eventId;
+            latestEvent = this.getEvent(project.id, latestEventId);
+          }
 
           return {
             id: project.id,
             name: project.name,
             workspaceId: project.workspaceId,
-            latestEvent: project.latestEvent,
+            latestEvent,
             timestamp: new Date(latestEvent ? latestEvent.timestamp : 0), // timestamp of the last occurred event
           };
         });
