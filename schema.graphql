@@ -281,7 +281,6 @@ type DailyEvent {
 
   """Count of the users affected by this event in this day"""
   affectedUsers: Int!
-  lastRepetitionTime: Int!
 
   """Timestamp of the event grouping"""
   groupingTimestamp: Int!
