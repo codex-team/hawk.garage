@@ -86,6 +86,7 @@ export default Vue.extend({
     onNavigationItemClick(item: TabInfo) {
       this.$router.push({
         name: item.routeName,
+        params: this.$route.params,
       });
     },
   },
@@ -95,9 +96,9 @@ export default Vue.extend({
 <style>
   .tab-bar {
     display: flex;
+    height: 50px;
     font-weight: 500;
     letter-spacing: 0.37px;
-    height: 50px;
 
     &__item {
       display: flex;

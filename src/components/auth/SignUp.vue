@@ -22,7 +22,7 @@ export default {
   components: {
     Form,
   },
-  mixins: [offlineErrorMessage],
+  mixins: [ offlineErrorMessage ],
   data() {
     return {
       fields: [
@@ -78,6 +78,7 @@ export default {
       this.hiddenFields.forEach((field) => {
         // Remove 'utm_' prefix from field names
         const cleanKey = field.name.replace('utm_', '');
+
         utmData[cleanKey] = field.value;
       });
 

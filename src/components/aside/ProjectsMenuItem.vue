@@ -16,7 +16,10 @@
         class="project-menu-item__name"
       >
         <!-- eslint-disable vue/no-v-html -->
-        <span v-html="name" :title="project.name" />
+        <span
+          :title="project.name"
+          v-html="name"
+        />
         <ProjectBadge
           v-for="(badge, index) in projectBadges(project.name)"
           :key="index"
@@ -83,10 +86,12 @@ export default {
     },
 
     lastEventTitle() {
-      const latestEvents = this.$store.getters.getLatestEvent(this.projectId);
+      const latestEvent = this.project.latestEvent;
 
-      if (latestEvents) {
-        return latestEvents.payload.title;
+      if (latestEvent) {
+        const latestEventInfo = this.$store.getters.getProjectEventById(this.project.id, latestEvent.eventId);
+
+        return latestEventInfo.payload.title;
       }
 
       return 'No one catcher connected';
@@ -201,9 +206,9 @@ export default {
     }
 
     &__blocked-icon {
-      margin-left: 8px;
       width: 16px;
       height: 16px;
+      margin-left: 8px;
       color: var(--color-indicator-critical);
     }
   }

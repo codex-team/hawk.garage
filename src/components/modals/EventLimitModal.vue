@@ -8,7 +8,11 @@
         {{ $t('event.limit.description') }}
       </p>
       <div class="event-limit-modal__actions">
-        <UiButton :content="$t('event.limit.upgradeButton')" submit @click="upgradePlan" />
+        <UiButton
+          :content="$t('event.limit.upgradeButton')"
+          submit
+          @click="upgradePlan"
+        />
       </div>
     </div>
   </PopupDialog>
@@ -61,9 +65,9 @@ export default Vue.extend({
   text-align: center;
   &__title {
     margin: 0 0 15px;
+    color: var(--color-text-main);
     font-weight: bold;
     font-size: 20px;
-    color: var(--color-text-main);
   }
   &__description {
     margin: 0 0 30px;

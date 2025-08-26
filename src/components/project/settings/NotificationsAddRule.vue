@@ -359,7 +359,8 @@ export default Vue.extend({
      */
     splitIncludingFilters(value: string): void {
       this.form.including = value.split(',').flatMap((item) => {
-        item = item.trim()
+        item = item.trim();
+
         return item !== '' ? item : [];
       });
     },
@@ -371,7 +372,8 @@ export default Vue.extend({
      */
     splitExcludingFilters(value: string): void {
       this.form.excluding = value.split(',').flatMap((item) => {
-        item = item.trim()
+        item = item.trim();
+
         return item !== '' ? item : [];
       });
     },

@@ -6,7 +6,6 @@ import * as workspacesApi from '../../../api/workspaces/index.ts';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
 import { INIT_EVENTS_MODULE } from '../events/actionTypes';
-import { groupByGroupingTimestamp } from '../../../utils';
 
 /**
  * Mutations enum for this module
@@ -65,12 +64,39 @@ const actions = {
 
     const workspaces = response.data.workspaces;
 
+    /**
+     * @type {object<string, GroupedEvent>} - all fetched events
+     */
+    const events = {};
+
     dispatch(SET_WORKSPACES_LIST, workspaces);
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
         workspace.projects.forEach(project => {
           project.workspaceId = workspace.id;
+
+          const dailyEvents = project.dailyEventsPortion.dailyEvents;
+
+          /**
+           * From fetching initial data we've got project with one daily event (latest one)
+           * We should save it's id to the projects state and save event to the events state
+           */
+          if (dailyEvents.length) {
+            project.latestEvent = dailyEvents[0];
+
+            /**
+             * Remove event and store only eventId.
+             * Event itself is stored in the events state
+             */
+            project.latestEvent.eventId = project.latestEvent.event.id;
+            events[project.id + ':' + project.latestEvent.eventId] = dailyEvents[0].event;
+            delete project.latestEvent.event;
+          } else {
+            project.latestEvent = null;
+          }
+
+          delete project.dailyEventsPortion;
         });
         accumulator.push(...workspace.projects);
         delete workspace.projects;
@@ -81,32 +107,8 @@ const actions = {
 
     dispatch(SET_PROJECTS_LIST, projects);
 
-    /**
-     * @type {object<string, GroupedEvent>} - all fetched events
-     */
-    const events = {};
-
-    /**
-     * @type {RecentInfoByDate} - latest event from all projects
-     */
-    const recentEvents = {};
-
-    projects.forEach(project => {
-      if (!project.recentEvents || !project.recentEvents.dailyInfo || !project.recentEvents.events) {
-        return;
-      }
-
-      recentEvents[project.id] = groupByGroupingTimestamp(project.recentEvents.dailyInfo);
-
-      project.recentEvents.events.forEach(event => {
-        events[project.id + ':' + event.id] = event;
-      });
-      delete project.recentEvents;
-    });
-
     dispatch(INIT_EVENTS_MODULE, {
       events,
-      recentEvents,
     });
   },
 

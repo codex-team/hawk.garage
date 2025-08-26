@@ -399,6 +399,7 @@ export default Vue.extend({
       if (!this.paymentData?.nextPaymentDate) {
         return 0;
       }
+
       return Math.floor(new Date(this.paymentData.nextPaymentDate).getTime() / 1000);
     },
 
@@ -460,7 +461,7 @@ export default Vue.extend({
         style: 'error',
         time: 5000,
       });
-      
+
       this.$emit('close');
     } finally {
       this.isLoading = false;
