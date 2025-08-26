@@ -53,6 +53,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
             id
             count
             affectedUsers
+            lastRepetitionTime
             groupingTimestamp
             event {
               ...Event
