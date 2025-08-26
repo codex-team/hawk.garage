@@ -65,6 +65,12 @@ export async function fetchDailyEventsPortion(
     sort,
     filters,
     search,
+  }, undefined, {
+    /**
+     * This request calls on the app start, so we don't want to break app if something goes wrong
+     * With this flag, errors from the API won't be thrown, but returned in the response for further handling
+     */
+    allowErrors: true,
   });
 
   const project = response.data.project;
@@ -96,6 +102,12 @@ export async function getRepetitionsPortion(
     projectId,
     originalEventId,
     cursor,
+  }, undefined, {
+    /**
+     * This request calls on the app start, so we don't want to break app if something goes wrong
+     * With this flag, errors from the API won't be thrown, but returned in the response for further handling
+     */
+    allowErrors: true,
   });
 
   if (response.errors?.length) {
