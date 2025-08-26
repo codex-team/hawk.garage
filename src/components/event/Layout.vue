@@ -94,7 +94,7 @@ export default Vue.extend({
 
     await this.$store.dispatch(FETCH_EVENT, {
       projectId: this.projectId,
-      eventId: repetitionId,
+      eventId: repetitionId ?? eventId,
       originalEventId: eventId,
     });
 
