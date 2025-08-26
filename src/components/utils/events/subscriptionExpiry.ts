@@ -15,6 +15,7 @@ export function isEventAfterSubscriptionExpiry(
 
   // Calculate subscription expiry date (lastChargeDate + 1 month)
   const subscriptionExpiry = new Date(subscriptionLastChargeDate);
+
   subscriptionExpiry.setMonth(subscriptionExpiry.getMonth() + 1);
 
   return eventDate > subscriptionExpiry;

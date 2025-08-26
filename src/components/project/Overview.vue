@@ -48,7 +48,7 @@
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
               :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
-              @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.groupHash, $event)"
+              @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.eventId, $event)"
               @showEventOverview="
                 showEventOverview(
                   project.id,
@@ -81,7 +81,7 @@
           v-if="isAssigneesShowed"
           v-click-outside="hideAssigneesList"
           :style="assigneesListPosition"
-          :event-group-hash="eventGroupHash"
+          :event-id="assigneesEventId"
           :project-id="projectId"
           class="project-overview__assignees-list"
           @hide="hideAssigneesList"
@@ -144,9 +144,9 @@ export default {
       isAssigneesShowed: false,
 
       /**
-       * Event group hash for assignees
+       * Id of the event which assignees are showed
        */
-      eventGroupHash: '',
+      assigneesEventId: '',
 
       /**
        * Data for a chart
@@ -379,16 +379,16 @@ export default {
      * Shows assignees list for the specific event
      *
      * @param {string} projectId - id of the current project
-     * @param {string} groupHash - group hash of the event day
+     * @param {string} assigneesEventId - id of the event which assignees should be showed
      * @param {GroupedEvent} event - event to display assignees list
      */
-    showAssignees(projectId, groupHash, event) {
+    showAssignees(projectId, assigneesEventId, event) {
       const boundingClientRect = event.target
         .closest('.event-item__assignee')
         .getBoundingClientRect();
 
       this.isAssigneesShowed = true;
-      this.eventGroupHash = groupHash;
+      this.assigneesEventId = assigneesEventId;
       this.assigneesListPosition = {
         top: `${boundingClientRect.y - 3}px`,
         left: `${boundingClientRect.x}px`,
@@ -430,6 +430,7 @@ export default {
      * @param {string} originalEventId - id of the original event
      */
     showEventOverview(projectId, eventId, originalEventId) {
+      this.assigneesEventId = eventId;
       if (this.isAssigneesShowed) {
         this.isAssigneesShowed = false;
       } else {
