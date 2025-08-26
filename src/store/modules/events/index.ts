@@ -451,12 +451,14 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {User} payload.assignee - user to assign to this event
      */
     async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string; eventId: string; assignee: User }): Promise<void> {
-      const result = await eventsApi.updateAssignee(projectId, eventId, assignee.id);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+
+      const result = await eventsApi.updateAssignee(projectId, event.originalEventId, assignee.id);
 
       if (result.success) {
         commit(MutationTypes.SetEventAssignee, {
-          event,
+          projectId,
+          originalEventId: event.originalEventId,
           assignee: result.record,
         });
       }
@@ -478,7 +480,8 @@ const module: Module<EventsModuleState, RootState> = {
 
       if (result.success) {
         commit(MutationTypes.SetEventAssignee, {
-          event,
+          projectId,
+          originalEventId: event.originalEventId,
           assignee: null,
         });
       }
@@ -562,11 +565,27 @@ const module: Module<EventsModuleState, RootState> = {
      *
      * @param state - state for update event assignee.
      * @param {object} payload - vuex action payload
-     * @param {HawkEvent} payload.event - event for which we install assignee
+     * @param {string} payload.projectId - id of the project event is related to
+     * @param {string} payload.originalEventId - original event id to match
      * @param {User | null} payload.assignee - user to assign to this event
      */
-    [MutationTypes.SetEventAssignee](state, { event, assignee }): void {
-      Vue.set(event, 'assignee', assignee);
+    [MutationTypes.SetEventAssignee](
+      state,
+      { projectId, originalEventId, assignee }
+    ): void {
+      Object.entries(state.events).forEach(([key, currentEvent]) => {
+        // Only look at events for this project
+        if (!key.startsWith(`${projectId}:`)) {
+          return;
+        }
+
+        // Only update events whose originalEventId matches
+        if (currentEvent.originalEventId !== originalEventId) {
+          return;
+        }
+
+        Vue.set(currentEvent, 'assignee', assignee);
+      });
     },
 
     /**

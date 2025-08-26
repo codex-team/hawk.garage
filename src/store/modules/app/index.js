@@ -85,13 +85,18 @@ const actions = {
           if (dailyEvents.length) {
             project.latestEvent = dailyEvents[0];
 
+            /**
+             * Remove event and store only eventId.
+             * Event itself is stored in the events state
+             */
             project.latestEvent.eventId = project.latestEvent.event.id;
-
             events[project.id + ':' + project.latestEvent.eventId] = dailyEvents[0].event;
-
             delete project.latestEvent.event;
-            delete project.dailyEventsPortion;
+          } else {
+            project.latestEvent = null;
           }
+
+          delete project.dailyEventsPortion;
         });
         accumulator.push(...workspace.projects);
         delete workspace.projects;
