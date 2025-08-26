@@ -16,8 +16,8 @@ directive @validate(notEmpty: Boolean, isEmail: Boolean) on ARGUMENT_DEFINITION
 """Directive for automatically image uploading"""
 directive @uploadImage on ARGUMENT_DEFINITION
 
-"""Access to the field only to authorized users"""
-directive @requireAuth on FIELD_DEFINITION
+"""Allow access to the field to anonymous users"""
+directive @allowAnon on FIELD_DEFINITION
 
 """Access to the field only for admins"""
 directive @requireAdmin on FIELD_DEFINITION
@@ -281,6 +281,7 @@ type DailyEvent {
 
   """Count of the users affected by this event in this day"""
   affectedUsers: Int!
+  lastRepetitionTime: Int!
 
   """Timestamp of the event grouping"""
   groupingTimestamp: Int!
