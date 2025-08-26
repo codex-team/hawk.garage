@@ -18,7 +18,7 @@
         </template>
         <template #content>
           {{ $t('components.catalog.hereIsToken') }}
-          <TokenBlock :token="project.token" />
+          <TokenBlock v-if="project" :token="project.token" />
         </template>
       </GuideStepBlock>
       <GuideStepBlock

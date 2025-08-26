@@ -7,6 +7,7 @@
       {{ $t('projects.settings.integrations.projectTokenLabel') }} <b>{{ project.name }}</b>:
     </div>
     <TokenBlock
+      v-if="project"
       class="projects-integrations-settings-page__token"
       :token="project.token"
     />
@@ -72,6 +73,10 @@ export default Vue.extend({
   },
   computed: {
     sentryDSN(): string {
+      if (!this.project) {
+        return '';
+      }
+
       return getSentryDSN(this.project.token);
     },
   },
