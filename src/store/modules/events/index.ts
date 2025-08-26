@@ -501,12 +501,6 @@ const module: Module<EventsModuleState, RootState> = {
         projectId,
         order,
       });
-      // commit(MutationTypes.ClearRecentEventsList, { projectId });
-
-      return dispatch(FETCH_PROJECT_OVERVIEW, {
-        projectId,
-        search,
-      });
     },
 
     /**
@@ -525,13 +519,6 @@ const module: Module<EventsModuleState, RootState> = {
       commit(SET_EVENTS_FILTERS, {
         projectId,
         filters,
-      });
-
-      // commit(MutationTypes.ClearRecentEventsList, { projectId });
-
-      return dispatch(FETCH_PROJECT_OVERVIEW, {
-        projectId,
-        search,
       });
     },
 
