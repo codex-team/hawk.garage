@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
 import { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
@@ -142,19 +142,12 @@ export async function callOld(
       response = (await Promise.all([blockingRequest, promise]))[1];
     }
 
+    if (!response || !response.data) {
+      return response;
+    }
 
     if (response.data.errors) {
       response.data.errors.forEach(error => {
-        /**
-         * Send error to Hawk
-         */
-        track(new Error(error.message), {
-          'Request': request,
-          'Error Path': error.path,
-          'Variables': variables ?? {},
-          'Response Data': response.data.data,
-        });
-
         printApiError(error, response.data, request, variables);
       });
     }
@@ -178,11 +171,6 @@ export async function callOld(
   } catch (error) {
     console.error('API Request Error', error);
 
-    track(error as Error, {
-      'Request': request,
-      'Variables': variables ?? {},
-      'Response Data': response?.data.data,
-    });
     throw error;
   }
 }
@@ -284,6 +272,7 @@ interface ApiModuleHandlers {
  * @param {ApiModuleHandlers} eventsHandlers - object with handlers
  */
 export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void {
+
   /**
    * Interceptors that handles the error of expired tokens
    */
@@ -296,6 +285,9 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
      */
     async (response: AxiosResponse): Promise<AxiosResponse> => {
       const errors = response.data.errors;
+      
+      trackErrors(response);
+
       const isTokenExpiredError = errors && errors[0].extensions.code === errorCodes.ACCESS_TOKEN_EXPIRED_ERROR;
 
       if (!errors || !isTokenExpiredError) {
@@ -332,6 +324,35 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
 
         return response;
       }
+    },
+
+    (errorResponse: AxiosError) => {
+
+      if (errorResponse.response) {
+        trackErrors(errorResponse.response);
+      }
+
+      return errorResponse;
     }
   );
+}
+
+
+/**
+ * Sends errors to Hawk
+ *
+ * @param response - Axios response object
+ */
+function trackErrors(response: AxiosResponse) {
+  const errors = response.data?.errors || [];
+
+  errors.forEach(error => {
+    track(error.message, {
+      path: error.path,
+      payload: response.config.data,
+      locations: error.locations,
+      stacktrace: error.extensions.exception.stacktrace,
+      code: error.extensions.code,
+    });
+  });
 }
