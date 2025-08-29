@@ -20,6 +20,8 @@ import UniqueId from 'vue-unique-id';
  */
 import { Analytics } from './analytics';
 import { useErrorTracker, ErrorTrackerInitialOptions } from './hawk';
+import notifier from 'codex-notifier';
+import { errorMessages } from './api/const';
 
 const { init: initHawk, track } = useErrorTracker();
 
@@ -95,6 +97,14 @@ api.setupApiModuleHandlers({
    */
   onAuthError() {
     store.dispatch(RESET_STORE);
+
+    const key = 'errors.' + errorMessages.UNAUTHENTICATED;
+
+    notifier.show({
+      message: i18n.t(key) as string,
+      style: 'error',
+      time: 5000,
+    });
   },
 });
 

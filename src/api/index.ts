@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
 import { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
+import notifier from 'codex-notifier';
+import i18n from '@/i18n';
 
 /**
  * Hawk API endpoint URL
@@ -259,6 +261,11 @@ export const errorCodes = {
    * Error throws when user send expired access token and tries to access private resources
    */
   ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR',
+
+  /**
+   * Error throws when user's refresh token is expired or invalid
+   */
+  UNAUTHENTICATED: 'UNAUTHENTICATED',
 };
 
 /**
@@ -327,6 +334,8 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
 
         return axios(originalRequest);
       } catch (error) {
+        tokenRefreshingRequest = null;
+
         console.error(error);
         eventsHandlers.onAuthError();
 
