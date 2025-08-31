@@ -89,7 +89,14 @@ api.setupApiModuleHandlers({
    * Action will update access token in store and return it
    */
   async onTokenExpired() {
-    return (await store.dispatch(REFRESH_TOKENS)).accessToken;
+    const tokens = await store.dispatch(REFRESH_TOKENS);
+
+    // New tokens might be missing is case of expired refresh token
+    if (!tokens) {
+      return null;
+    }
+
+    return tokens.accessToken;
   },
 
   /**

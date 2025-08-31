@@ -125,6 +125,11 @@ const actions = {
   async [REFRESH_TOKENS]({ commit, state }) {
     const tokens = await userApi.refreshTokens(state.refreshToken);
 
+    // New tokens might be missing is case of expired refresh token
+    if (!tokens) {
+      return null;
+    }
+
     commit(mutationTypes.SET_TOKENS, tokens);
 
     return tokens;
@@ -262,7 +267,13 @@ const mutations = {
    * @param {string} payload.accessToken - user's access token
    * @param {string} payload.refreshToken - user's refresh token for getting new tokens pair
    */
-  [mutationTypes.SET_TOKENS](state, { accessToken, refreshToken }) {
+  [mutationTypes.SET_TOKENS](state, tokens) {
+    if (!tokens) {
+      return;
+    }
+
+    const { accessToken, refreshToken } = tokens;
+
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
   },

@@ -2,8 +2,6 @@ import axios, { AxiosResponse } from 'axios';
 import { prepareFormData } from '@/api/utils';
 import { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
-import notifier from 'codex-notifier';
-import i18n from '@/i18n';
 
 /**
  * Hawk API endpoint URL
@@ -185,6 +183,7 @@ export async function callOld(
       'Variables': variables ?? {},
       'Response Data': response?.data.data,
     });
+
     throw error;
   }
 }
@@ -212,6 +211,17 @@ export async function call(
   }, {
     allowErrors: true, // forcefully set this flag. When all the requests will be refactored from api.callOld() to api.call(), remove this flag.
   }));
+
+  
+  /**
+   * Token refreshing is done in response interceptor. If refreshing fails, special
+   * flag is set and response is returned as is to the caller.
+   * 
+   * It helps not to throw original "access token expired" error.
+   */
+  if (response._apiFlags && response._apiFlags.authError) {
+    return response;
+  }
 
   /**
    * Response can contain errors.
@@ -337,7 +347,12 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
         tokenRefreshingRequest = null;
 
         console.error(error);
+        
         eventsHandlers.onAuthError();
+
+        response.data._apiFlags = {
+          authError: true,
+        }
 
         return response;
       }

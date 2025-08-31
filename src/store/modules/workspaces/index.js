@@ -380,10 +380,10 @@ const actions = {
   async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
     const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
 
-    const { data, errors } = result;
+    const { data } = result;
 
-    if (errors) {
-      throw new Error(errors[0].message);
+    if (!data) {
+      return null
     }
 
     return data.composePayment;
