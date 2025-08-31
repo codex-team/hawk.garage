@@ -265,10 +265,10 @@ const mutations = {
    * Mutation caused by successful authentication
    *
    * @param {UserModuleState} state - Vuex state
-   *
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.accessToken - user's access token
    * @param {string} payload.refreshToken - user's refresh token for getting new tokens pair
+   * @param tokens
    */
   [mutationTypes.SET_TOKENS](state, tokens) {
     if (!tokens) {
