@@ -33,7 +33,7 @@ if (hawkToken) {
 
 module.exports = {
   configureWebpack: {
-    devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'eval',
+    devtool: process.env.NODE_ENV === 'production' ? 'hidden-source-map' : 'eval-source-map',
     plugins,
     devServer: {
       progress: false,
