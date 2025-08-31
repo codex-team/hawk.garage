@@ -271,10 +271,6 @@ const mutations = {
    * @param tokens
    */
   [mutationTypes.SET_TOKENS](state, tokens) {
-    if (!tokens) {
-      return;
-    }
-
     const { accessToken, refreshToken } = tokens;
 
     state.accessToken = accessToken;
