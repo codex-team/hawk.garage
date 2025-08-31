@@ -126,13 +126,6 @@ const actions = {
   async [REFRESH_TOKENS]({ commit, state }) {
     const tokens = await userApi.refreshTokens(state.refreshToken);
 
-    /**
-     * New tokens might be missing is case of expired refresh token
-     */
-    if (!tokens) {
-      return null;
-    }
-
     commit(mutationTypes.SET_TOKENS, tokens);
 
     return tokens;
@@ -265,12 +258,19 @@ const mutations = {
    * Mutation caused by successful authentication
    *
    * @param {UserModuleState} state - Vuex state
+   *
    * @param {object} payload - vuex mutation payload
    * @param {string} payload.accessToken - user's access token
    * @param {string} payload.refreshToken - user's refresh token for getting new tokens pair
-   * @param tokens
    */
   [mutationTypes.SET_TOKENS](state, tokens) {
+    if (!tokens) {
+      state.accessToken = '';
+      state.refreshToken = '';
+
+      return;
+    }
+
     const { accessToken, refreshToken } = tokens;
 
     state.accessToken = accessToken;
