@@ -22,6 +22,7 @@ import { Analytics } from './analytics';
 import { useErrorTracker, ErrorTrackerInitialOptions } from './hawk';
 import notifier from 'codex-notifier';
 import { errorMessages } from './api/const';
+import { debounce } from './utils';
 
 const { init: initHawk, track } = useErrorTracker();
 
@@ -102,7 +103,7 @@ api.setupApiModuleHandlers({
   /**
    * If user refresh token is invalid then log out user
    */
-  onAuthError() {
+  onAuthError: debounce(() => {
     store.dispatch(RESET_STORE);
 
     const key = 'errors.' + errorMessages.UNAUTHENTICATED;
@@ -112,7 +113,7 @@ api.setupApiModuleHandlers({
       style: 'error',
       time: 5000,
     });
-  },
+  }, 1000),
 });
 
 new Vue({

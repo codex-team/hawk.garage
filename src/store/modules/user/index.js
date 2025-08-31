@@ -114,18 +114,21 @@ const actions = {
   },
 
   /**
-   * Send request for refreshing tokens pair
+   * Send request for refreshing tokens pair.
+   * Returns null if refresh token is expired.
    *
    * @param {object} context - vuex action context
    * @param {Function} context.commit - standard Vuex commit function
    * @param {UserModuleState} context.state - vuex state
    *
-   * @returns {Promise<TokensPair>}
+   * @returns {Promise<TokensPair> | null}
    */
   async [REFRESH_TOKENS]({ commit, state }) {
     const tokens = await userApi.refreshTokens(state.refreshToken);
 
-    // New tokens might be missing is case of expired refresh token
+    /**
+     * New tokens might be missing is case of expired refresh token
+     */
     if (!tokens) {
       return null;
     }
