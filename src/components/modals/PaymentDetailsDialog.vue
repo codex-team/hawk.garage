@@ -454,11 +454,6 @@ export default Vue.extend({
       });
     } catch (e) {
       const error = e as Error;
-
-      if (error.message === errorMessages.ACCESS_TOKEN_EXPIRED_ERROR) {
-        return;
-      }
-
       const key = 'errors.' + error.message;
       const message = this.$te(key) ? this.$t(key) as string : this.$t('billing.notifications.error');
 

@@ -68,9 +68,14 @@ export async function recoverPassword(email) {
  * @returns {Promise<TokensPair>}
  */
 export async function refreshTokens(refreshToken) {
-  return (await api.callOld(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true })).refreshTokens;
-}
+  const response = await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true });
 
+  if (response === null || response.data === null) {
+    return null;
+  }
+
+  return response.data.refreshTokens;
+}
 /**
  * Get current user
  *
