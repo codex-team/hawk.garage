@@ -212,11 +212,11 @@ export async function call(
     allowErrors: true, // forcefully set this flag. When all the requests will be refactored from api.callOld() to api.call(), remove this flag.
   }));
 
-  
+
   /**
    * Token refreshing is done in response interceptor. If refreshing fails, special
    * flag is set and response is returned as is to the caller.
-   * 
+   *
    * It helps not to throw original "access token expired" error.
    */
   if (response._apiFlags && response._apiFlags.authError) {
@@ -347,12 +347,12 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
         tokenRefreshingRequest = null;
 
         console.error(error);
-        
+
         eventsHandlers.onAuthError();
 
         response.data._apiFlags = {
           authError: true,
-        }
+        };
 
         return response;
       }

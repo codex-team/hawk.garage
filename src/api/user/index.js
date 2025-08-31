@@ -71,6 +71,8 @@ export async function refreshTokens(refreshToken) {
   const response = await api.call(MUTATION_REFRESH_TOKENS, { refreshToken }, undefined, { force: true });
 
   if (response === null || response.data === null) {
+    console.error('Failed to refresh tokens');
+
     return null;
   }
 

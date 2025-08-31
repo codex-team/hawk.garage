@@ -375,6 +375,7 @@ const actions = {
    * @param {string} payload.workspaceId - workspace id
    * @param {string} payload.tariffPlanId - plan id
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
+   * @param context
    * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
    */
   async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
@@ -383,7 +384,7 @@ const actions = {
     const { data } = result;
 
     if (!data) {
-      return null
+      return null;
     }
 
     return data.composePayment;
