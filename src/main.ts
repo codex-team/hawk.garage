@@ -15,6 +15,8 @@ import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import UniqueId from 'vue-unique-id';
 
+const DEBOUNCE_TIMEOUT = 1000;
+
 /**
  * Integrations
  */
@@ -113,7 +115,7 @@ api.setupApiModuleHandlers({
       style: 'error',
       time: 5000,
     });
-  }, 1000),
+  }, DEBOUNCE_TIMEOUT),
 });
 
 new Vue({
