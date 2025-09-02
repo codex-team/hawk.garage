@@ -500,6 +500,7 @@ const mutations = {
         index = i;
       }
     });
+
     if (index !== null) {
       state.list.splice(index, 1);
     }
