@@ -68,9 +68,9 @@ export default {
     },
 
     /**
-     * Current event group hash
+     * Id of the current event
      */
-    eventGroupHash: {
+    eventId: {
       type: String,
       default: '',
     },
@@ -103,7 +103,8 @@ export default {
      * @returns {string} - assignee id or empty string
      */
     currentAssigneeId() {
-      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
+      const currentEvent = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+
       const assignee = currentEvent.assignee;
 
       if (assignee && assignee.id) {
@@ -111,17 +112,6 @@ export default {
       }
 
       return '';
-    },
-
-    /**
-     * Event id
-     *
-     * @returns {string}
-     */
-    eventId() {
-      const currentEvent = this.$store.getters.getEventByProjectIdAndGroupHash(this.projectId, this.eventGroupHash);
-
-      return currentEvent.id;
     },
 
     /**

@@ -375,15 +375,16 @@ const actions = {
    * @param {string} payload.workspaceId - workspace id
    * @param {string} payload.tariffPlanId - plan id
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
+   * @param context
    * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
    */
   async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
     const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
 
-    const { data, errors } = result;
+    const { data } = result;
 
-    if (errors) {
-      throw new Error(errors[0].message);
+    if (!data) {
+      return null;
     }
 
     return data.composePayment;
@@ -500,6 +501,7 @@ const mutations = {
         index = i;
       }
     });
+
     if (index !== null) {
       state.list.splice(index, 1);
     }

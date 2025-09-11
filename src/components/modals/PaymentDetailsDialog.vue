@@ -399,6 +399,7 @@ export default Vue.extend({
       if (!this.paymentData?.nextPaymentDate) {
         return 0;
       }
+
       return Math.floor(new Date(this.paymentData.nextPaymentDate).getTime() / 1000);
     },
 
@@ -452,7 +453,8 @@ export default Vue.extend({
         shouldSaveCard: this.shouldSaveCard,
       });
     } catch (e) {
-      const key = 'errors.' + (e as Error).message;
+      const error = e as Error;
+      const key = 'errors.' + error.message;
       const message = this.$te(key) ? this.$t(key) as string : this.$t('billing.notifications.error');
 
       notifier.show({
@@ -460,7 +462,7 @@ export default Vue.extend({
         style: 'error',
         time: 5000,
       });
-      
+
       this.$emit('close');
     } finally {
       this.isLoading = false;

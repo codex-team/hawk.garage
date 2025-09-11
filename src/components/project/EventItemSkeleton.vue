@@ -1,9 +1,10 @@
 <template>
-  <div class="event-item-skeleton" >
+  <div class="event-item-skeleton">
     <div class="event-item-skeleton__day skeleton-bar" />
     <div
+      v-for="i in 10"
+      :key="i"
       class="event-item-skeleton-row"
-      v-for="i in 10" :key="i"
     >
       <div class="skeleton-bar event-item-skeleton-row__time" />
       <div class="skeleton-bar event-item-skeleton-row__badge-container" />
@@ -37,12 +38,11 @@ export default {
   }
 
   &-row {
-    margin: 10px 0;
     display: flex;
-    align-items: center;
     gap: 24px;
+    align-items: center;
+    margin: 10px 0;
     padding-block: 10px;
-
 
 
     &__time {

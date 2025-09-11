@@ -65,23 +65,6 @@ export const MUTATION_GENERATE_NEW_INTEGRATION_TOKEN = `
 `;
 
 // language=GraphQL
-export const QUERY_RECENT_ERRORS = `
-  query RecentErrors($projectId: ID!) {
-    recent(projectId: $projectId) {
-      date
-      count
-      event {
-        id
-        payload {
-          title
-          timestamp
-        }
-      }
-    }
-  }
-`;
-
-// language=GraphQL
 export const MUTATION_UPDATE_LAST_VISIT = `
     mutation lastProjectVisit($projectId: ID!) {
         updateLastProjectVisit(projectId: $projectId)
@@ -201,7 +184,7 @@ export const MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS = `
  * Get data for chart
  */
 export const QUERY_CHART_DATA = `
-  query ProjectRecentEvents (
+  query ProjectChartData (
     $projectId: ID!,
     $days: Int!
     $timezoneOffset: Int!

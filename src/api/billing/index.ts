@@ -54,6 +54,8 @@ export async function composePayment(
   shouldSaveCard = false
 ): Promise<unknown> {
   return await api.call(QUERY_COMPOSE_PAYMENT, {
-    input: { workspaceId, tariffPlanId, shouldSaveCard },
+    input: { workspaceId,
+      tariffPlanId,
+      shouldSaveCard },
   });
 }

@@ -1,16 +1,19 @@
 <template>
-  <div class="form-search-field" :class="{ 'form-search-field--fancy': skin === 'fancy' }">
+  <div
+    class="form-search-field"
+    :class="{ 'form-search-field--fancy': skin === 'fancy' }"
+  >
     <Icon
       class="form-search-field__search-icon"
       symbol="search"
     />
     <input
+      ref="input"
       class="form-search-field__input"
       type="text"
       :placeholder="placeholder"
       :value="value"
       @input="onChange"
-      ref="input"
     >
     <div
       v-show="inputValue"
@@ -32,11 +35,6 @@ export default {
   name: 'FormSearchField',
   components: {
     Icon,
-  },
-  data() {
-    return {
-      inputValue: this.value,
-    };
   },
   props: {
     value: {
@@ -60,6 +58,11 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  data() {
+    return {
+      inputValue: this.value,
+    };
   },
   created() {
     if (this.isCMDKEnabled) {
@@ -97,38 +100,38 @@ export default {
   .form-search-field {
     position: relative;
     display: flex;
-    align-items: center;
-    padding-inline: 16px;
-    border-radius: var(--border-radius);
-    background-color: var(--color-bg-sidebar);
-    font-size: 14px;
     gap: 8px;
+    align-items: center;
+    font-size: 14px;
+    background-color: var(--color-bg-sidebar);
+    border-radius: var(--border-radius);
+    padding-inline: 16px;
 
     &--fancy {
       background-color: var(--color-bg-main);
-      box-shadow: inset 3px 8px 14px rgba(0, 0, 0, 0.11);
-      border: 1px solid transparent;
       background-image:
           linear-gradient(var(--color-bg-main), var(--color-bg-main)),
           linear-gradient(to bottom, #1B2033, #404659);
-        background-origin: border-box;
         background-clip: padding-box, border-box;
+        background-origin: border-box;
+      border: 1px solid transparent;
+      box-shadow: inset 3px 8px 14px rgba(0, 0, 0, 0.11);
     }
 
     &__input {
       width: 100%;
+      padding: 0;
+      color: var(--color-text-main);
+      font-size: inherit;
+      font-family: inherit;
+      line-height: inherit;
+      line-height: 16px;
       background-color: transparent;
       border: none;
       outline: none;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
-      font-family: inherit;
-      font-size: inherit;
-      line-height: inherit;
-      color: var(--color-text-main);
-      line-height: 16px;
-      padding: 0;
       padding-block: 11px;
 
       &::placeholder {
@@ -149,21 +152,21 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      animation: fadeIn 0.2s ease-in-out;
-      color: var(--color-text-second);
       width: 22px;
       height: 22px;
+      color: var(--color-text-second);
+      cursor: pointer;
+      animation: fadeIn 0.2s ease-in-out;
       &:hover {
         color: var(--color-text-main);
       }
     }
 
     &__clear-icon {
-      cursor: pointer;
       width: 12px;
       height: 12px;
       color: inherit;
+      cursor: pointer;
     }
 
     @keyframes fadeIn {

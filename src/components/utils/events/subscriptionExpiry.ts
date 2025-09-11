@@ -11,7 +11,12 @@ export function isEventAfterSubscriptionExpiry(
 ): boolean {
   const SECONDS_TO_MILLISECONDS = 1000;
   const eventDate = new Date(eventTimestamp * SECONDS_TO_MILLISECONDS);
-  const subscriptionExpiry = new Date(workspaceLastChargeDate);
+  const subscriptionLastChargeDate = new Date(workspaceLastChargeDate);
+
+  // Calculate subscription expiry date (lastChargeDate + 1 month)
+  const subscriptionExpiry = new Date(subscriptionLastChargeDate);
+
+  subscriptionExpiry.setMonth(subscriptionExpiry.getMonth() + 1);
 
   return eventDate > subscriptionExpiry;
 }

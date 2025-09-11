@@ -4,22 +4,21 @@ import {
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
   QUERY_EVENT,
-  QUERY_LATEST_REPETITIONS,
-  QUERY_RECENT_PROJECT_EVENTS,
+  QUERY_EVENT_REPETITIONS_PORTION,
+  QUERY_PROJECT_DAILY_EVENTS,
   QUERY_CHART_DATA
 } from './queries';
 import * as api from '@/api';
 import {
+  DailyEventsCursor,
+  DailyEventsPortion,
   EventMark,
   EventsFilters,
   EventsSortOrder,
-  EventsWithDailyInfo,
-  HawkEvent,
-  HawkEventRepetition
+  HawkEvent
 } from '@/types/events';
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import NotFoundError from '../../errors/404';
 import { APIResponse } from '../../types/api';
 
 /**
@@ -27,14 +26,14 @@ import { APIResponse } from '../../types/api';
  *
  * @param {string} projectId - event's project
  * @param {string} eventId - id of the event
- * @param {string} repetitionId - event's concrete repetition. This param is optional
+ * @param {string} originalEventId - id of the original event
  * @returns {Promise<HawkEvent|null>}
  */
-export async function getEvent(projectId: string, eventId: string, repetitionId?: string): Promise<HawkEvent | null> {
+export async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
   const project = await (await api.callOld(QUERY_EVENT, {
     projectId,
     eventId,
-    repetitionId,
+    originalEventId,
   })).project;
 
   if (!project) {
@@ -45,70 +44,90 @@ export async function getEvent(projectId: string, eventId: string, repetitionId?
 }
 
 /**
- * Returns latest project events
+ * Returns portion (list) of daily events with pointer to the first daily event of the next portion
  *
- * @param {string} projectId - id of the project to fetch recent errors
- * @param {number} skip - certain number of documents to skip
- * @param {EventsSortOrder} sort - events sort order to use
- * @param {EventsFilters} filters - events filters to use
- * @param search
- * @throws Error - 404 when project id is incorrect
- * @returns {Promise<EventsWithDailyInfo|null>}
+ * @param projectId - id of the project
+ * @param nextCursor - pointer to the next portion of daily events
+ * @param sort - sort order for daily events
+ * @param filters - filters for daily events
+ * @param search - search string for daily events
  */
-export async function fetchRecentEvents(
+export async function fetchDailyEventsPortion(
   projectId: string,
-  skip = 0,
+  nextCursor: DailyEventsCursor | null = null,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
   search = ''
-): Promise<EventsWithDailyInfo | null> {
-  const project = (await api.callOld(QUERY_RECENT_PROJECT_EVENTS, {
+): Promise<DailyEventsPortion> {
+  const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
     projectId,
-    skip,
+    cursor: nextCursor,
     sort,
     filters,
     search,
-  })).project;
+  }, undefined, {
+    /**
+     * This request calls on the app start, so we don't want to break app if something goes wrong
+     * With this flag, errors from the API won't be thrown, but returned in the response for further handling
+     */
+    allowErrors: true,
+  });
 
-  if (!project) {
-    throw new NotFoundError();
+  const project = response.data.project;
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
   }
 
-  return project.recentEvents;
+  return project?.dailyEventsPortion ?? { cursor: null,
+    dailyEventsPortion: [] };
 }
 
 /**
- * Fetches latest event's repetitions from project
+ * Fetches event's repetitions portion from project
  *
  * @param {string} projectId - project's identifier
  * @param {string} eventId - event's identifier
- * @param {number} skip — the number of repetitions to skip
+ * @param {string} originalEventId - id of the original event
  * @param {number} limit - the number of repetitions
+ * @param {string} cursor - the cursor to fetch the next page of repetitions
  *
  * @returns {Promise<Event[]>}
  */
-export async function getLatestRepetitions(
-  projectId: string, eventId: string, skip: number, limit: number
-): Promise<APIResponse<{project: { event: { repetitions: HawkEventRepetition[] } } }>> {
-  return api.call(QUERY_LATEST_REPETITIONS, {
-    projectId,
-    eventId,
-    skip,
+export async function getRepetitionsPortion(
+  projectId: string, originalEventId: string, limit: number, cursor?: string
+): Promise<APIResponse<{project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
+  const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
     limit,
+    projectId,
+    originalEventId,
+    cursor,
+  }, undefined, {
+    /**
+     * This request calls on the app start, so we don't want to break app if something goes wrong
+     * With this flag, errors from the API won't be thrown, but returned in the response for further handling
+     */
+    allowErrors: true,
   });
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
+  }
+
+  return response;
 }
 
 /**
  * Mark event as visited for current user
  *
  * @param {string} projectId - project event related to
- * @param {string} eventId — visited event
+ * @param {string} originalEventId — original event id of the visited one
  * @returns {Promise<boolean>}
  */
-export async function visitEvent(projectId: string, eventId: string): Promise<boolean> {
+export async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
   return (await api.callOld(MUTATION_VISIT_EVENT, {
     projectId,
-    eventId,
+    originalEventId,
   })).visitEvent;
 }
 
@@ -131,7 +150,7 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * Update assignee
  *
  * @param {string} projectId - project id
- * @param {string} eventId - event id
+ * @param {string} eventId - original event id
  * @param {string} assignee - user id to assign
  */
 export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean; record: User }> {
@@ -163,14 +182,14 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  * Fetch data for chart
  *
  * @param {string} projectId - project id
- * @param {string} eventId - event id
+ * @param {string} originalEventId - id of the original event
  * @param {number} days - how many days we need to fetchfor displaying in chart
  * @param {number} timezoneOffset - user's local timezone
  */
-export async function fetchChartData(projectId: string, eventId: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
+export async function fetchChartData(projectId: string, originalEventId: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
-    eventId,
+    originalEventId,
     days,
     timezoneOffset,
   })).project.event.chartData;

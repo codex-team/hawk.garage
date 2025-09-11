@@ -183,6 +183,7 @@ export async function callOld(
       'Variables': variables ?? {},
       'Response Data': response?.data.data,
     });
+
     throw error;
   }
 }
@@ -210,6 +211,17 @@ export async function call(
   }, {
     allowErrors: true, // forcefully set this flag. When all the requests will be refactored from api.callOld() to api.call(), remove this flag.
   }));
+
+
+  /**
+   * Token refreshing is done in response interceptor. If refreshing fails, special
+   * flag is set and response is returned as is to the caller.
+   *
+   * It helps not to throw original "access token expired" error.
+   */
+  if (response._apiFlags && response._apiFlags.authError) {
+    return response;
+  }
 
   /**
    * Response can contain errors.
@@ -259,6 +271,11 @@ export const errorCodes = {
    * Error throws when user send expired access token and tries to access private resources
    */
   ACCESS_TOKEN_EXPIRED_ERROR: 'ACCESS_TOKEN_EXPIRED_ERROR',
+
+  /**
+   * Error throws when user's refresh token is expired or invalid
+   */
+  UNAUTHENTICATED: 'UNAUTHENTICATED',
 };
 
 /**
@@ -327,8 +344,15 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
 
         return axios(originalRequest);
       } catch (error) {
+        tokenRefreshingRequest = null;
+
         console.error(error);
+
         eventsHandlers.onAuthError();
+
+        response.data._apiFlags = {
+          authError: true,
+        };
 
         return response;
       }

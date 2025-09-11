@@ -15,11 +15,16 @@ import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 import UniqueId from 'vue-unique-id';
 
+const DEBOUNCE_TIMEOUT = 1000;
+
 /**
  * Integrations
  */
 import { Analytics } from './analytics';
 import { useErrorTracker, ErrorTrackerInitialOptions } from './hawk';
+import notifier from 'codex-notifier';
+import { errorMessages } from './api/const';
+import { debounce } from './utils';
 
 const { init: initHawk, track } = useErrorTracker();
 
@@ -87,15 +92,30 @@ api.setupApiModuleHandlers({
    * Action will update access token in store and return it
    */
   async onTokenExpired() {
-    return (await store.dispatch(REFRESH_TOKENS)).accessToken;
+    const tokens = await store.dispatch(REFRESH_TOKENS);
+
+    // New tokens might be missing is case of expired refresh token
+    if (!tokens) {
+      return null;
+    }
+
+    return tokens.accessToken;
   },
 
   /**
    * If user refresh token is invalid then log out user
    */
-  onAuthError() {
+  onAuthError: debounce(() => {
     store.dispatch(RESET_STORE);
-  },
+
+    const key = 'errors.' + errorMessages.UNAUTHENTICATED;
+
+    notifier.show({
+      message: i18n.t(key) as string,
+      style: 'error',
+      time: 5000,
+    });
+  }, DEBOUNCE_TIMEOUT),
 });
 
 new Vue({
