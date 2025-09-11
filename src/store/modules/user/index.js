@@ -14,6 +14,7 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as userApi from '../../../api/user';
+import { errorCodes } from '@/api';
 
 /**
  * Mutations enum for this module
@@ -113,13 +114,14 @@ const actions = {
   },
 
   /**
-   * Send request for refreshing tokens pair
+   * Send request for refreshing tokens pair.
+   * Returns null if refresh token is expired.
    *
    * @param {object} context - vuex action context
    * @param {Function} context.commit - standard Vuex commit function
    * @param {UserModuleState} context.state - vuex state
    *
-   * @returns {Promise<TokensPair>}
+   * @returns {Promise<TokensPair> | null}
    */
   async [REFRESH_TOKENS]({ commit, state }) {
     const tokens = await userApi.refreshTokens(state.refreshToken);
@@ -143,7 +145,7 @@ const actions = {
       /**
        * If user is not authenticated, log out
        */
-      if (code === 'UNAUTHENTICATED') {
+      if (code === errorCodes.UNAUTHENTICATED) {
         commit(RESET_STORE);
 
         return;
@@ -261,7 +263,16 @@ const mutations = {
    * @param {string} payload.accessToken - user's access token
    * @param {string} payload.refreshToken - user's refresh token for getting new tokens pair
    */
-  [mutationTypes.SET_TOKENS](state, { accessToken, refreshToken }) {
+  [mutationTypes.SET_TOKENS](state, tokens) {
+    if (!tokens) {
+      state.accessToken = '';
+      state.refreshToken = '';
+
+      return;
+    }
+
+    const { accessToken, refreshToken } = tokens;
+
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
   },

@@ -453,7 +453,8 @@ export default Vue.extend({
         shouldSaveCard: this.shouldSaveCard,
       });
     } catch (e) {
-      const key = 'errors.' + (e as Error).message;
+      const error = e as Error;
+      const key = 'errors.' + error.message;
       const message = this.$te(key) ? this.$t(key) as string : this.$t('billing.notifications.error');
 
       notifier.show({
