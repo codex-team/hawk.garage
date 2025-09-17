@@ -71,7 +71,7 @@ export default Vue.extend( {
      * @returns {boolean} true if it is an object
      */
     isObject(value: any): boolean {
-      return isObject(value);
+      return isObject(value) || Array.isArray(value);
     },
   },
 });
