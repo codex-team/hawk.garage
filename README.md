@@ -56,4 +56,4 @@ See [`LICENSE`](./LICENSE) for terms, including:
 **Change Date:** 2029-01-01
 **Change License:** Apache-2.0 (after the Change Date)
 
-"Hawk" name and logo are trademarks of CodeX Team.
+"Hawk" name and logo are trademarks of CodeX.
