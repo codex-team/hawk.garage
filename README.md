@@ -49,11 +49,3 @@ Run `yarn get-schema` to load schema from local server
 
 Source code is available under **Business Source License 1.1 (BSL 1.1)**.
 See [`LICENSE`](./LICENSE) for terms, including:
-
-- Allowed: self-hosted use for own/internal needs; research and evaluation.
-- Restricted: using the code to run a competing SaaS without licensor's permission.
-
-**Change Date:** 2029-01-01
-**Change License:** Apache-2.0 (after the Change Date)
-
-"Hawk" name and logo are trademarks of CodeX.
