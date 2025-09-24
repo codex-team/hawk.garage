@@ -51,6 +51,13 @@
         title="FastAPI"
       />
       <DetailsAddons
+        v-if="getIntegrationAddons('django')"
+        class="event-overview__section"
+        :addons="getIntegrationAddons('django')"
+        icon="django"
+        title="Django"
+      />
+      <DetailsAddons
         v-if="hasContext"
         class="event-overview__section"
         :addons="event.payload.context"
@@ -134,7 +141,7 @@ export default Vue.extend({
         return null;
       }
 
-      const integrationToFilter = ['vue', 'nuxt', 'flask', 'fastapi'];
+      const integrationToFilter = ['vue', 'nuxt', 'flask', 'fastapi', 'django'];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {
