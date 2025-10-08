@@ -211,7 +211,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
@@ -261,7 +261,7 @@ function cardToSelectOption(card: BankCard): CustomSelectOption {
   };
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'PaymentDetailsDialog',
   components: {
     Icon,
@@ -599,7 +599,7 @@ export default Vue.extend({
 
       widget.pay(method,
         {
-          publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
+          publicId: import.meta.env.VITE_CLOUDPAYMENTS_PUBLIC_ID,
           description: this.$t(titleKey, {
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,

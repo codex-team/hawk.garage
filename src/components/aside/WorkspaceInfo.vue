@@ -63,13 +63,13 @@
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
       symbol="plus"
-      @click.native="createProjectButtonClicked"
+      @click="createProjectButtonClicked"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from '../utils/Icon.vue';
 import EntityImage from '../utils/EntityImage.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
@@ -78,7 +78,7 @@ import CircleProgress from '../utils/CircleProgress.vue';
 import EventsLimitIndicator from './EventsLimitIndicator.vue';
 import StatusBlock from '../utils/StatusBlock.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'WorkspaceInfo',
   components: {
     EntityImage,

@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 
 import app from './modules/app';
 import user from './modules/user';
@@ -12,9 +11,7 @@ import plans, { PlansModuleState } from './modules/plans/index';
 import createPersistedState from 'vuex-persistedstate';
 import { User } from '../types/user';
 
-Vue.use(Vuex);
-
-const debug = process.env.NODE_ENV !== 'production';
+const debug = import.meta.env.MODE !== 'production';
 
 /**
  * This structure represents state of User Module
@@ -51,7 +48,7 @@ export interface RootState {
  * TS ignore used to allow to connect not-refactored .js modules to TypeScript Vuex Module type
  */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-export default new Vuex.Store({
+export default createStore({
   modules: {
     // @ts-ignore
     app,

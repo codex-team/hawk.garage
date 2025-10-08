@@ -118,7 +118,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Progress from '../../utils/Progress.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
@@ -135,7 +135,7 @@ import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 import { getCurrencySign } from '@/utils';
 import { ActionType } from '@/components/utils/ConfirmationWindow/types';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'BillingOverview',
   components: {
     UiSwitch,
@@ -340,7 +340,7 @@ export default Vue.extend({
      * Return true if workspace plan is `Startup`
      */
     isFreePlan(): boolean {
-      return this.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
+      return this.plan.id === import.meta.env.VITE_FREE_PLAN_ID;
     },
 
     /**

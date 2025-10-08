@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { User } from '../../../types/user';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import {
@@ -103,7 +103,7 @@ import { NotificationsChannelSettings } from '../../../types/notifications';
 import notifier from 'codex-notifier';
 import Icon from './../../utils/Icon.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     UiCheckbox,
     Icon,

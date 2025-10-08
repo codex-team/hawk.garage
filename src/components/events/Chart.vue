@@ -92,12 +92,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { debounce } from '@/utils';
 import { ChartItem } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'Chart',
   components: {
     AnimatedCounter,

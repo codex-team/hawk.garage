@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import BillingCard from './BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import { BusinessOperation } from '../../../types/business-operation';
@@ -36,7 +36,7 @@ interface BillingComponentData {
   isPaymentsHistoryLoading: boolean,
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'WorkspaceSettingsBilling',
   components: {
     BillingHistory,

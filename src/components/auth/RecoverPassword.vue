@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Form from './Form.vue';
 import VueI18n from 'vue-i18n';
 import { RECOVER_PASSWORD } from '../../store/modules/user/actionTypes';
@@ -21,7 +21,7 @@ import notifier from 'codex-notifier';
 /**
  * Class implements reset password form component
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'RecoverPassword',
   components: {
     Form,

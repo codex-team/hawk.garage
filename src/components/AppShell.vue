@@ -22,7 +22,7 @@
             :key="project.id"
             :search-query="searchQuery"
             :project-id="project.id"
-            @click.native="onProjectMenuItemClick(project)"
+            @click="onProjectMenuItemClick(project)"
           />
         </div>
         <EmptyProjectsList
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
@@ -59,7 +59,7 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDial
 import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
 
-export default {
+export default defineComponent({
   name: 'AppShell',
   components: {
     Sidebar,
@@ -172,7 +172,7 @@ export default {
         return;
       }
 
-      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
+      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}.vue`));
     },
     /**
      * When the workspace changes user goes to the '/' or 'workspace/:workspaceId' routes
@@ -282,9 +282,9 @@ export default {
       }
 
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
-    },
-  },
-};
+    }
+  }
+});
 
 </script>
 

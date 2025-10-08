@@ -28,7 +28,7 @@ export default {
      * @returns {string}
      */
     iconId() {
-      require(`../../assets/sprite-icons/${this.symbol}.svg`);
+      import(`../../assets/sprite-icons/${this.symbol}.svg?url`);
 
       return `#${this.symbol}`;
     },

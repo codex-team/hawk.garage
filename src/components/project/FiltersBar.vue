@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FlatButton from '../utils/FilterButton.vue';
 import Icon from '../utils/Icon.vue';
 import { EventsFilters, EventsSortOrder } from '../../types/events';
@@ -62,7 +62,7 @@ interface FiltersBarData {
   isLoading: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'FiltersBar',
   components: {
     Icon,

@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Badge from './Badge.vue';
 
 /**
@@ -44,7 +44,7 @@ export interface TabInfo {
   badge?: number,
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'TabBar',
   components: {
     Badge,

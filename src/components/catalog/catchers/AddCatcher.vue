@@ -58,7 +58,7 @@
           :image="item.image"
           :description="item.description"
           :class="{ 'project-add-catcher__catalog-item--not-implemented': !item.page }"
-          @click.native="
+          @click="
             item.page &&
               $router.push({
                 name: 'setup-catcher',
@@ -85,7 +85,7 @@
           :is-wide="true"
           :image="require('../../../assets/catalog/sentry.svg')"
           :description="$t('components.catalog.migrationFromSentryDescription')"
-          @click.native="
+          @click="
             $router.push({
               name: 'setup-catcher',
               params: { projectId: $route.params.projectId, page: 'sentry' },

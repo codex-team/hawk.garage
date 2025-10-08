@@ -1,4 +1,5 @@
 import mergeWith from 'lodash.mergewith';
+import shortNumber from 'short-number';
 import { HawkEvent, HawkEventDailyInfo } from './types/events';
 import { DecodedIntegrationToken } from '@hawk.so/types';
 
@@ -508,3 +509,22 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
 
   return 'linux';
 }
+
+/**
+ * Abbreviates numbers (e.g., 1000 -> 1K, 1000000 -> 1M)
+ *
+ * @param value - number to abbreviate
+ * @returns {string} abbreviated number
+ */
+export function abbreviateNumber(value: number): string {
+  const maxNumberWithoutAbbreviation = 9999;
+
+  if (value < maxNumberWithoutAbbreviation) {
+    return value.toString();
+  }
+
+  return shortNumber(value);
+}
+
+// Export filter utilities
+export * from './utils/filters';

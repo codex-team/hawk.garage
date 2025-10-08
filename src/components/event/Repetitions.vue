@@ -57,13 +57,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { FETCH_EVENT_REPETITIONS } from '@/store/modules/events/actionTypes';
-import i18n from './../../i18n';
+import { i18n } from './../../i18n';
 import RepetitionsList from './RepetitionsList.vue';
 import { HawkEvent } from '@/types/events';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RepetitionsOverview',
   components: {
     RepetitionsList,

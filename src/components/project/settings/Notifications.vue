@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import AddRule from './NotificationsAddRule.vue';
 import Rule from './NotificationsRule.vue';
 import { ProjectNotificationsRule } from '@/types/project-notifications';
@@ -52,7 +52,7 @@ import UiButton from '@/components/utils/UiButton.vue';
 import { Project } from '@/types/project';
 import { Member, Workspace, ConfirmedMember } from '@/types/workspaces';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsNotifications',
   components: {
     AddRule,

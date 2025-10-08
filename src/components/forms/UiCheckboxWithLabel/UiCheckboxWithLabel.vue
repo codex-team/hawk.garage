@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import UiCheckbox from '../UiCheckbox.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UiCheckboxWithLabel',
   components: {
     UiCheckbox,

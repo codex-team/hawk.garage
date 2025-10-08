@@ -15,10 +15,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { HawkEvent } from '@/types/events';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UsersAffectedOverview',
   props: {
     /**

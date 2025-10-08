@@ -34,11 +34,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Progress from '../../utils/Progress.vue';
 import { Plan } from '../../../types/plan';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'WorkspaceSettingsUsedVolume',
   components: {
     Progress,

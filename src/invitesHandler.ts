@@ -1,8 +1,8 @@
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import notifier from 'codex-notifier';
 import store from './store';
 import { CONFIRM_INVITE, JOIN_BY_INVITE_LINK } from './store/modules/workspaces/actionTypes';
-import i18n from './i18n';
+import { i18n } from './i18n';
 import { NavigationGuard } from 'vue-router';
 
 const invitesHandler: NavigationGuard = async function (to, from, next) {

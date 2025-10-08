@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import UiRadio from './UiRadio.vue';
 
 /**
@@ -103,7 +103,7 @@ export interface RadioButtonGroupItem {
   description?: string;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RadioButtonGroup',
   components: {
     UiRadio,

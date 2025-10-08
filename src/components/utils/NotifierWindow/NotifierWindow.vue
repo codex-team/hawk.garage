@@ -41,12 +41,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import UiButton from '../UiButton.vue';
 import Icon from '../Icon.vue';
 import { NotifierButtonType, NotifierButton, NotifierWindowOptions } from './types';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'NotifierWindow',
   components: {
     UiButton,

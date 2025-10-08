@@ -12,12 +12,12 @@
 <script lang="ts">
 import * as api from './api/';
 import eventBus from './eventBus';
-import { loadLanguageAsync } from './i18n';
-import Vue from 'vue';
+// import { loadLanguageAsync } from './i18n';
+import { defineComponent } from 'vue';
 import { NotifierButtonType } from './components/utils/NotifierWindow/types';
 import FeedbackButton from './components/utils/FeedbackButton.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'App',
   components: {
     FeedbackButton,
@@ -51,11 +51,11 @@ export default Vue.extend({
     /**
      * Load user preferred language and setup watching on the app state
      */
-    loadLanguageAsync(this.$store.state.app.language);
+    // loadLanguageAsync(this.$store.state.app.language);
     this.$store.watch(
       state => state.app.language,
       newLang => {
-        loadLanguageAsync(newLang);
+        // loadLanguageAsync(newLang);
       }
     );
 

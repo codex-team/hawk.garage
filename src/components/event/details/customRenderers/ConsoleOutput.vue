@@ -66,7 +66,7 @@ interface ConsoleLogEvent {
   styles?: string[];
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ConsoleOutput',
   props: {
     value: {

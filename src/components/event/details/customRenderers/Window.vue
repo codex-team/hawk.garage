@@ -8,7 +8,7 @@
 import Vue, { PropType } from 'vue';
 import { WindowData } from '@hawk.so/types';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     /**
      * Addon value

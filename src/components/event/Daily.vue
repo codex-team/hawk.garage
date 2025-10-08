@@ -24,13 +24,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { HawkEvent } from '../../types/events';
 import { EventChartItem } from '../../types/chart';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventDaily',
   components: {
     Chart,

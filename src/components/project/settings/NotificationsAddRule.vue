@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
@@ -144,7 +144,7 @@ import CustomSelect from '@/components/forms/CustomSelect.vue';
 import CustomSelectOption from '@/types/customSelectOption';
 import TextFieldset from './../../forms/TextFieldset.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsNotificationsAddRule',
   components: {
     FormTextFieldset,

@@ -1,20 +1,17 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
 import AppShell from './components/AppShell.vue';
 
-Vue.use(Router);
-
 /**
  * Disable return-type rule to leave router 'component' imports with short syntax
  */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-const router = new Router({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/',

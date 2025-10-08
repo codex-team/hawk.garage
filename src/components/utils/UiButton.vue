@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 
 /**
@@ -44,7 +44,7 @@ export interface UiButtonComponent {
   shake: () => void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UiButton',
   components: {
     Icon,
@@ -164,6 +164,10 @@ export default Vue.extend({
 <style>
 @import '../../styles/custom-properties.css';
 
+$loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
+$submitLoaderColor: color-mod(var(--color-indicator-medium) blend(black 12%));
+$loaderSize: 56px;
+
 .ui-button {
   display: inline-flex;
   align-items: center;
@@ -239,10 +243,6 @@ export default Vue.extend({
       background-color: var(--color-bg-second);
     }
   }
-
-  $loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
-  $submitLoaderColor: color-mod(var(--color-indicator-medium) blend(black 12%));
-  $loaderSize: 56px;
 
   &--loading,
   &--submit&--loading {

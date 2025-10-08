@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from '../utils/EntityImage.vue';
 import ProjectBadge from './ProjectBadge.vue';
 import { projectBadges } from '../../mixins/projectBadges';
@@ -68,7 +68,7 @@ import UiButton from '../utils/UiButton.vue';
 import Icon from '../utils/Icon.vue';
 import { Project } from '@/types/project';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectHeader',
   components: {
     ProjectBadge,

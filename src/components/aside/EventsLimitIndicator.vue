@@ -12,8 +12,8 @@
       </div>
       <div class="events-limit-indicator__info-bar">
         <div class="events-limit-indicator__events">
-          {{ eventsCount || 0 | abbreviateNumber }} /
-          {{ plan.eventsLimit || 0 | abbreviateNumber }}
+          {{ abbreviatedEventsCount }} /
+          {{ abbreviatedEventsLimit }}
           {{ $tc("billing.volumeEvents", eventsCount) }}
         </div>
         <Progress
@@ -32,12 +32,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 // import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
 import Progress from '../utils/Progress.vue';
+import { abbreviateNumber } from '../../utils';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventsLimitIndicator',
   components: {
     // PositiveButton,
@@ -94,6 +95,22 @@ export default Vue.extend({
      */
     eventsCount(): number {
       return this.workspace.billingPeriodEventsCount || 0;
+    },
+    /**
+     * Abbreviated events count
+     *
+     * @returns {string} - abbreviated events count
+     */
+    abbreviatedEventsCount(): string {
+      return abbreviateNumber(this.eventsCount || 0);
+    },
+    /**
+     * Abbreviated events limit
+     *
+     * @returns {string} - abbreviated events limit
+     */
+    abbreviatedEventsLimit(): string {
+      return abbreviateNumber(this.plan.eventsLimit || 0);
     },
   },
   methods: {

@@ -6,7 +6,7 @@ import { useErrorTracker } from '@/hawk';
 /**
  * Hawk API endpoint URL
  */
-export const API_ENDPOINT: string = process.env.VUE_APP_API_ENDPOINT || '';
+export const API_ENDPOINT: string = import.meta.env.VITE_API_ENDPOINT || '';
 
 /**
  * A promise that will be resolved after the initialization request

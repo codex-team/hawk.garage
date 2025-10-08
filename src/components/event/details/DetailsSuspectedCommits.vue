@@ -63,12 +63,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import { HawkEventCommit } from '@/types/events';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase,

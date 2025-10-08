@@ -10,12 +10,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
 /**
  * Component implements message of success password recover
  */
-export default Vue.extend({
+export default defineComponent({
   props: {
     /**
      * Message to show

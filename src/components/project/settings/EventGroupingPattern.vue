@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import UiButton from '@/components/utils/UiButton.vue';
 import FormTextFieldset from '../../forms/TextFieldset.vue';
 import { ProjectEventGroupingPattern } from '@/types/project-event-grouping-patterns';
@@ -77,7 +77,7 @@ import {
 import notifier from 'codex-notifier';
 import safe from 'safe-regex';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsPatterns',
   components: {
     UiButton,

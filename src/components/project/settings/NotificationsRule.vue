@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import {
   ProjectNotificationsChannels,
   ProjectNotificationsRule,
@@ -81,7 +81,7 @@ import UiSwitch from '@/components/forms/UiSwitch.vue';
 import { ProjectNotificationRulePointer } from '../../../types/project-notifications-mutations';
 import { TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE } from '../../../store/modules/projects/actionTypes';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsNotificationsRule',
   components: {
     StatusBlock,

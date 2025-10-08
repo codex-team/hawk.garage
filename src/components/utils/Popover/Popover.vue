@@ -18,7 +18,7 @@
 <script lang="ts">
 import Vue, { Component } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'Popover',
   data(): {
     /**

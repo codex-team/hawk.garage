@@ -63,7 +63,7 @@ import AddonRenderers from '../../../mixins/addonRenderers';
 /**
  * Details addons component
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'DetailsAddons',
   components: {
     DetailsBase,

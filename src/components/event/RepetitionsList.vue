@@ -113,7 +113,7 @@ import AddonRenderers from '../../mixins/addonRenderers';
 import { HawkEvent } from '../../types/events';
 import { isObject, trim } from '../../utils';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RepetitionsTable',
   components: {
     EntityImage,

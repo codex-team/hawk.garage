@@ -52,14 +52,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from './../EntityImage.vue';
 import { BusinessOperationType } from '@/types/business-operation-type';
-import i18n from './../../../i18n';
+import { i18n } from './../../../i18n';
 import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
 import { getCurrencySign } from '@/utils';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'BillingHistory',
   components: {
     EntityImage,

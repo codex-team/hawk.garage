@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import DetailsCookie from './details/DetailsCookie.vue';
 import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
@@ -87,7 +87,7 @@ import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventOverview',
   components: {
     DetailsCookie,

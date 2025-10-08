@@ -32,14 +32,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
 import { HawkEvent } from '@/types/events';
 import { FETCH_EVENT, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { mapGetters } from 'vuex';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventLayout',
   components: {
     PopupDialog,

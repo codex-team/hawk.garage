@@ -114,7 +114,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
 import UiButton from '../utils/UiButton.vue';
@@ -130,7 +130,7 @@ import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventHeader',
   components: {
     TabBar,

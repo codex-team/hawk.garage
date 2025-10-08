@@ -16,7 +16,6 @@ import {
   MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
 } from './queries';
 import * as api from '../index.ts';
-import { ChartData } from '../../types/events';
 import { QUERY_PROJECT_RELEASES } from './queries';
 
 /**

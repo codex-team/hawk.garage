@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FormTextFieldset from '../../forms/TextFieldset.vue';
 import FormImageUploader from '../../forms/ImageUploader.vue';
 import { Project } from '../../../types/project';
@@ -81,7 +81,7 @@ interface UpdateProjectPayload {
   image?: File;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsGeneral',
   components: {
     FormTextFieldset,

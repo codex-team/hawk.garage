@@ -14,7 +14,7 @@ export interface ErrorTrackerInitialOptions {
   /**
    * Instance of the Vue app
    */
-  vue: typeof Vue;
+  vue: any;
 
   /**
    * Current user to be attached to events
@@ -41,9 +41,9 @@ export function useErrorTracker(): {
    * @param options - params to be passed to hawk initialization
    */
   function init({ vue, user }: ErrorTrackerInitialOptions): void {
-    if (process.env.VUE_APP_HAWK_TOKEN) {
+    if (import.meta.env.VITE_HAWK_TOKEN) {
       const hawkOptions: HawkInitialSettings = {
-        token: process.env.VUE_APP_HAWK_TOKEN,
+        token: import.meta.env.VITE_HAWK_TOKEN,
         release: buildRevision,
         vue,
       };
