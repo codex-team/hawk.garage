@@ -47,7 +47,7 @@
 <script>
 import Badge from '../utils/Badge';
 import EntityImage from '../utils/EntityImage';
-import { misTranslit, escape } from '../../utils';
+import { misTranslit, escape, trim } from '../../utils';
 import ProjectBadge from '@/components/project/ProjectBadge';
 import { projectBadges } from '@/mixins/projectBadges';
 import Icon from '../utils/Icon.vue';
@@ -107,7 +107,7 @@ export default {
       ];
 
       const nameMaxLen = 20;
-      const name = this.$options.filters.trim(escapedName, nameMaxLen);
+      const name = trim(escapedName, nameMaxLen);
 
       if (this.searchQuery) {
         return name.replace(new RegExp(`${searchConditions.join('|')}`, 'gi'), (match) => {

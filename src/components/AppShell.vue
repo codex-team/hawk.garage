@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, markRaw } from 'vue';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
@@ -81,7 +81,7 @@ export default defineComponent({
   data() {
     return {
       /**
-       * Current opened modal window
+       * Current opened modal window - используем markRaw для избежания реактивности
        */
       modalComponent: null,
       searchQuery: '',
@@ -172,7 +172,15 @@ export default defineComponent({
         return;
       }
 
-      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}.vue`));
+      import(`./modals/${componentName}.vue`)
+        .then(module => {
+          this.modalComponent = markRaw(module.default);
+        })
+        .catch(error => {
+          console.error(`Failed to load modal component: ${componentName}`, error);
+
+          this.modalComponent = null;
+        });
     },
     /**
      * When the workspace changes user goes to the '/' or 'workspace/:workspaceId' routes

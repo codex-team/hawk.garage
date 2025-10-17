@@ -83,7 +83,7 @@
           class="project-add-catcher__catalog-item"
           :name="'SENTRY'"
           :is-wide="true"
-          :image="require('../../../assets/catalog/sentry.svg')"
+          :image="sentryImage"
           :description="$t('components.catalog.migrationFromSentryDescription')"
           @click="
             $router.push({
@@ -103,6 +103,14 @@ import Icon from '../../utils/Icon';
 import CatalogItem from '../Item';
 import BlockedWorkspaceBanner from '../../utils/BlockedWorkspaceBanner.vue';
 
+import jsImage from '../../../assets/catalog/javascript/js@3x.jpg';
+import phpImage from '../../../assets/catalog/php.svg';
+import nodejsImage from '../../../assets/catalog/nodejs.svg';
+import pythonImage from '../../../assets/catalog/python.svg';
+import goImage from '../../../assets/catalog/go/go@3x.jpg';
+import kotlinImage from '../../../assets/catalog/kotlin/kotlin@3x.jpg';
+import sentryImage from '../../../assets/catalog/sentry.svg';
+
 export default {
   name: 'ProjectAddCatcher',
   components: {
@@ -117,42 +125,42 @@ export default {
           name: 'JAVASCRIPT',
           page: 'javascript',
           description: this.$t('components.catalog.catchers.js'),
-          image: require('../../../assets/catalog/javascript/js@3x.jpg'),
+          image: jsImage,
         },
         {
           name: 'PHP',
           page: 'php',
           description: this.$t('components.catalog.catchers.php'),
-          image: require('../../../assets/catalog/php.svg'),
+          image: phpImage,
         },
         {
           name: 'NODE.JS',
           page: 'nodejs',
           description: this.$t('components.catalog.catchers.nodejs'),
-          image: require('../../../assets/catalog/nodejs.svg'),
+          image: nodejsImage,
         },
         {
           name: 'PYTHON',
           page: 'python',
           description: this.$t('components.catalog.catchers.python'),
-          image: require('../../../assets/catalog/python.svg'),
+          image: pythonImage,
         },
         {
           name: 'GO',
           page: 'go',
           description: this.$t('components.catalog.catchers.go'),
-          image: require('../../../assets/catalog/go/go@3x.jpg'),
+          image: goImage,
         },
         {
           name: 'KOTLIN',
           page: 'kotlin',
           description: this.$t('components.catalog.catchers.kotlin'),
-          image: require('../../../assets/catalog/kotlin/kotlin@3x.jpg'),
+          image: kotlinImage,
         },
         // {
         //   name: 'SCALA',
         //   description: this.$t('components.catalog.catchers.scala'),
-        //   image: require('../../../assets/catalog/scala/scala@3x.jpg'),
+        //   image: scalaImage,
         // },
       ],
     };
@@ -165,6 +173,10 @@ export default {
       const projectId = this.$route.params.projectId;
 
       return this.$store.getters.getProjectById(projectId);
+    },
+
+    sentryImage() {
+      return sentryImage;
     },
 
     /**
