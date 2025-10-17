@@ -68,7 +68,7 @@ const router = createRouter({
           path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
-          redirect: 'workspace/:workspaceId/settings/general',
+          redirect: (to) => `/workspace/${to.params.workspaceId}/settings/general`,
           children: [
             {
               path: 'general',

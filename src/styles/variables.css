@@ -1,14 +1,14 @@
 :root {
   /** Texts */
   --color-text-main: #dbe6ff;
-  --color-text-second: color-mod(var(--color-text-main) alpha(60%));
+  --color-text-second: rgb(from var(--color-text-main) r g b / 0.6);
   --color-text-dark: var(--color-bg-main);
   --color-text-highlighted: #719dff;
 
   /** Backgrounds */
   --color-bg-main: #242732;
   --color-bg-second: #2f3341;
-  --color-bg-third: color-mod(var(--color-text-main) alpha(8%));
+  --color-bg-third: rgb(from var(--color-text-main) r g b / 0.08);
   --color-bg-sidebar: #1a1d26;
   --color-bg-darken: #282B37;
   --color-bg-main-transparent: rgba(36, 39, 50, 0);
@@ -28,7 +28,7 @@
 
   --color-border-input: #1f2230;
   --color-border: rgba(219, 230, 255, 0.2);
-  --color-delimiter-line: color-mod(var(--color-text-main) alpha(10%));
+  --color-delimiter-line: rgb(from var(--color-text-main) r g b / 0.1);
 
   --font-monospace: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
 

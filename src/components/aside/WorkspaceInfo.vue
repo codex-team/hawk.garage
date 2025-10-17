@@ -17,10 +17,7 @@
         </span>
         <router-link
           v-if="workspace.isBlocked"
-          :to="{
-            name: 'workspace-settings-billing',
-            params: { workspaceId: workspace.id },
-          }"
+          :to="{ name: 'workspace-settings-billing', params: { workspaceId: workspace.id } }"
           class="workspace-info__blocked-link"
         >
           <StatusBlock
@@ -32,10 +29,7 @@
       </div>
       <router-link
         class="workspace-info__settings-link"
-        :to="{
-          name: 'workspace-settings',
-          params: { workspaceId: workspace.id },
-        }"
+        :to="{ name: 'workspace-settings', params: { workspaceId: workspace.id } }"
       >
         {{ $t("workspaces.settings.label") }}
       </router-link>
@@ -47,10 +41,7 @@
     >
       <router-link
         v-if="isAdmin"
-        :to="{
-          name: 'workspace-settings-billing',
-          params: { workspaceId: workspace.id },
-        }"
+        :to="{ name: 'workspace-settings-billing', params: { workspaceId: workspace.id } }"
       >
         <CircleProgress
           ref="events-count-circle"

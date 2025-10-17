@@ -58,9 +58,10 @@ export default defineConfig({
           importFrom: 'src/styles/variables.css',
           stage: 0,
           features: {
-            'color-mod-function': {}
+            'color-function': {}
           }
-        })
+        }),
+        require('cssnano')()
       ]
     }
   },

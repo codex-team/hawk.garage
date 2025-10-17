@@ -12,7 +12,9 @@
     "@hawk.so/javascript": "^3.2.8",
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
+    "cssnano": "^7.1.1",
     "fast-glob": "^3.3.3",
+    "highlight.js": "^11.11.1",
     "install": "^0.13.0",
     "lodash.mergewith": "^4.6.2",
     "normalize.css": "^8.0.1",
@@ -21,6 +23,7 @@
     "vue-cookies": "^1.8.6",
     "vue-i18n": "11",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-json-viewer": "^2.2.22",
     "vue-router": "^4.5.1",
     "vuex": "^4.1.0",
     "vuex-persistedstate": "^4.1.0"
