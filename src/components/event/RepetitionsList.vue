@@ -33,7 +33,7 @@
             :name="repetition.payload.user ? repetition.payload.user.email : undefined"
             :image="repetition.payload.user ? repetition.payload.user.image : undefined"
             size="22"
-            :title="repetition.payload.user.name || $t('event.user.noname')"
+            :title="repetition.payload.user.name || repetition.payload.user.id || $t('event.user.noname')"
           />
         </td>
 
@@ -200,7 +200,7 @@ export default Vue.extend({
           titleSpecifiedSomewhere = true;
         }
 
-        if (repetition.payload.user && repetition.payload.user.name) {
+        if (repetition.payload.user && repetition.payload.user.id) {
           userSpecifiedSomewhere = true;
         }
 
