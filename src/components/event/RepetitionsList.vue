@@ -200,7 +200,7 @@ export default Vue.extend({
           titleSpecifiedSomewhere = true;
         }
 
-        if (repetition.payload.user && repetition.payload.user.name) {
+        if (repetition.payload.user && repetition.payload.user.id) {
           userSpecifiedSomewhere = true;
         }
 
