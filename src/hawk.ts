@@ -28,6 +28,15 @@ export interface ErrorTrackerInitialOptions {
  */
 let hawk: HawkCatcher | null = null;
 
+const errorsBlacklist = [
+  'You need to refresh your tokens',
+  'Navigation cancelled from',
+  'Redirected when going from',
+  'Avoided redundant navigation to current location',
+  'User with this email already registered',
+  'Wrong email or password'
+];
+
 /**
  * Composable for tracking errors via Hawk.so
  */
@@ -46,6 +55,11 @@ export function useErrorTracker(): {
         token: process.env.VUE_APP_HAWK_TOKEN,
         release: buildRevision,
         vue,
+        beforeSend: (event) => {
+          const isBlacklisted = errorsBlacklist.find(text => event.title.startsWith(text));
+
+          return isBlacklisted ? false : event;
+        },
       };
 
       if (user) {
