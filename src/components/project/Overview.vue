@@ -479,7 +479,7 @@ export default {
 </script>
 
 <style>
-@import '../../styles/custom-properties.css';
+  @import '../../styles/custom-properties.css';
 
 .project-overview {
   display: flex;
@@ -490,7 +490,7 @@ export default {
   &__content {
     align-self: stretch;
     overflow-y: auto;
-    @apply --hide-scrollbar;
+    @mixin hide-scrollbar;
   }
 
   &__events {

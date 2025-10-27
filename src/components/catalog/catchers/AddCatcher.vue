@@ -206,7 +206,7 @@ export default {
 .project-add-catcher {
   height: 100%;
   overflow-y: auto;
-  @apply --hide-scrollbar;
+  @mixin hide-scrollbar;
 
   &__header {
     padding: 80px 10px 27px 10px;
@@ -333,7 +333,7 @@ export default {
     left: 7.5px;
     flex-basis: 100%;
     margin: 33px 0 12.5px 0;
-    @apply --ui-label;
+    @mixin ui-label;
   }
 
   &__catalog-item {

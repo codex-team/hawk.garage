@@ -63,7 +63,7 @@
           class="billing-card__info-bar"
         >
           <div class="billing-card__events">
-            {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+            {{ validTillText }}
           </div>
           <Progress
             :max="progressMaxDate"
@@ -86,7 +86,7 @@
         </div>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
-            {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
+            {{ volumeEventsText }}
           </div>
           <Progress
             :max="plan.eventsLimit || 0"
@@ -112,7 +112,7 @@
       v-if="!isFreePlan && isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
-      {{ $t('billing.autoPayIsOn') }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+      {{ autoPayIsOnText }}
     </div>
   </div>
 </template>
@@ -134,6 +134,7 @@ import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTyp
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 import { getCurrencySign } from '@/utils';
 import { ActionType } from '@/components/utils/ConfirmationWindow/types';
+import { prettyDateFromDateTimeString, spacedNumber } from '@/utils/filters';
 
 export default defineComponent({
   name: 'BillingOverview',
@@ -349,6 +350,36 @@ export default defineComponent({
     isBLocked(): boolean {
       return this.workspace.isBlocked;
     },
+
+    /**
+     * Return formatted text for valid till section
+     */
+    validTillText(): string {
+      const expiredText = this.isSubExpired && !this.isAutoPayOn ? this.$t('billing.expired') : '';
+      const dateText = prettyDateFromDateTimeString(this.subExpiredDate.toISOString());
+      
+      return `${expiredText} ${dateText}`.trim();
+    },
+
+    /**
+     * Return formatted text for auto pay is on section
+     */
+    autoPayIsOnText(): string {
+      const autoPayText = this.$t('billing.autoPayIsOn');
+      const dateText = prettyDateFromDateTimeString(this.subExpiredDate.toISOString());
+      
+      return `${autoPayText} ${dateText}`;
+    },
+
+    /**
+     * Return formatted text for volume events section
+     */
+    volumeEventsText(): string {
+      const currentEvents = spacedNumber(this.eventsCount || 0);
+      const limitEvents = spacedNumber(this.plan.eventsLimit || 0);
+      const eventsText = this.$t('billing.volumeEvents', { count: this.eventsCount });
+      return `${currentEvents} / ${limitEvents} ${eventsText}`;
+    },
   },
   /**
    * Fetch available plans before component is created
@@ -491,7 +522,7 @@ export default defineComponent({
     }
 
     &__label {
-      @apply --ui-label;
+      @mixin ui-label;
       display: inline-block;
       margin-right: 13px;
       margin-bottom: 15px;

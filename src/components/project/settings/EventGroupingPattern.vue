@@ -261,7 +261,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import url('../../../styles/custom-properties.css');
 
 .patterns {
   display: flex;

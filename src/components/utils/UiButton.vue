@@ -194,7 +194,7 @@ $loaderSize: 56px;
   }
 
   &--shaking {
-    @apply --shaking;
+    @mixin shaking;
   }
 
   &--submit {

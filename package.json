@@ -47,6 +47,7 @@
     "postcss-nested": "^7.0.2",
     "postcss-nested-ancestors": "^3.0.0",
     "postcss-preset-env": "^10.4.0",
+    "postcss-simple-vars": "^7.0.1",
     "typescript": "^5.9.3",
     "vite": "^7.1.9",
     "vite-plugin-svg-icons": "^2.0.1"

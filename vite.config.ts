@@ -49,9 +49,8 @@ export default defineConfig({
     postcss: {
       plugins: [
         require('postcss-import'),
-        require('postcss-apply'),
-        require('postcss-mixins'),
         require('postcss-simple-vars'),
+        require('postcss-mixins'),
         require('postcss-nested-ancestors'),
         require('postcss-nested'),
         require('postcss-preset-env')({

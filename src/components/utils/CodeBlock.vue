@@ -113,12 +113,12 @@ export default {
     position: relative;
     width: 100%;
     line-height: 1.5em;
-    @apply --hide-scrollbar;
+    @mixin hide-scrollbar;
   }
 
   &--one-line {
     ^&__content {
-      @apply --hide-scrollbar;
+      @mixin hide-scrollbar;
       max-width: 93%;
       overflow: hidden;
       white-space: nowrap;

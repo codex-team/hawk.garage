@@ -16,43 +16,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { Component } from 'vue';
+import { defineComponent, Component, markRaw } from 'vue';
 
 export default defineComponent({
   name: 'Popover',
-  data(): {
-    /**
-     * Is popover open.
-     */
-    isOpened: boolean,
-
-    /**
-     * Is Mouse on popover.
-     */
-    isMouseOver: boolean,
-
-    /**
-     * Popover child component need be display.
-     */
-    popoverComponent?: Component,
-
-    /**
-     * Popover child component props.
-     */
-    popoverComponentProps?: Record<string, unknown>,
-
-    /**
-     * Popover position props.
-     */
-    popoverProps: {
-      showBelowElement?: Element,
-    },
-
-    /**
-     * Provides some delay between mouse leave and hiding
-     */
-    hidingDelay?: ReturnType<typeof setTimeout>,
-    } {
+  data() {
     return {
       /**
        * Is popover open.
@@ -65,19 +33,21 @@ export default defineComponent({
       /**
        * Popover child component need be display.
        */
-      popoverComponent: undefined,
+      popoverComponent: undefined as Component | undefined,
       /**
        * Popover child component props.
        */
-      popoverComponentProps: undefined,
+      popoverComponentProps: undefined as Record<string, unknown> | undefined,
       /**
        * Popover position props.
        */
       popoverProps: {
-        showBelowElement: undefined,
+        showBelowElement: undefined as Element | undefined,
       },
-
-      hidingDelay: undefined,
+      /**
+       * Provides some delay between mouse leave and hiding
+       */
+      hidingDelay: undefined as ReturnType<typeof setTimeout> | undefined,
     };
   },
   computed:{
@@ -119,7 +89,7 @@ export default defineComponent({
         return;
       }
 
-      this.popoverComponent = options.component;
+      this.popoverComponent = markRaw(options.component);
       this.popoverComponentProps = options.componentProps;
       this.popoverProps = options.popoverProps;
       this.isOpened = true;

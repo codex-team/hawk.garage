@@ -14,7 +14,7 @@
         <div class="events-limit-indicator__events">
           {{ abbreviatedEventsCount }} /
           {{ abbreviatedEventsLimit }}
-          {{ $tc("billing.volumeEvents", eventsCount) }}
+          {{ $t("billing.volumeEvents", { count: eventsCount }) }}
         </div>
         <Progress
           :max="plan.eventsLimit || 0"
@@ -125,7 +125,8 @@ export default defineComponent({
 </script>
 
 <style lang="postcss">
-@import url("./../../styles/custom-properties.css");
+@import './../../styles/custom-properties.css';
+
 .events-limit-indicator {
   &__info {
     margin-top: 20px;
@@ -141,7 +142,7 @@ export default defineComponent({
   }
 
   &__label {
-    @apply --ui-label;
+    @mixin ui-label;
     display: flex;
     justify-content: space-between;
 

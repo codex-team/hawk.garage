@@ -54,7 +54,6 @@ export default defineComponent({
 </script>
 
 <style>
-  @import url('../../styles/custom-properties.css');
 
   .status {
     display: inline-block;

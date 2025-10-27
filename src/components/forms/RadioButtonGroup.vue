@@ -130,7 +130,7 @@ export default defineComponent({
 </script>
 
 <style>
-  @import url('./../../styles/custom-properties.css');
+  @import './../../styles/custom-properties.css';
 
   .radio-button-group{
     &__option {
@@ -159,7 +159,7 @@ export default defineComponent({
       }
 
       &-label {
-        @apply --ui-label;
+        @mixin ui-label;
         margin-bottom: 7px;
       }
 

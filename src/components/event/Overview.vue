@@ -210,7 +210,7 @@ export default defineComponent({
 </script>
 
 <style>
-@import "./../../styles/custom-properties.css";
+@import '../../styles/custom-properties.css';
 
 .event-overview {
   &__section {
@@ -229,6 +229,6 @@ export default defineComponent({
 }
 
 .empty-event-label {
-  @apply --empty-placeholder;
+  @mixin empty-placeholder;
 }
 </style>

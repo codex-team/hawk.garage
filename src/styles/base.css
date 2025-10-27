@@ -1,5 +1,6 @@
 @import "normalize.css";
 @import "variables.css";
+@import "custom-properties.css";
 @import "code-highlighting.css";
 @import "ripple-effect.css";
 

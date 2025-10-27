@@ -101,7 +101,7 @@ export default defineComponent({
 <style src="../../../styles/settings-window-page.css"></style>
 
 <style>
-  @import url('./../../../styles/custom-properties.css');
+  @import '../../../styles/custom-properties.css';
 
   .account-billing {
     &__section {
@@ -110,7 +110,7 @@ export default defineComponent({
     }
 
     &__label {
-      @apply --ui-label;
+      @mixin ui-label;
       display: block;
       margin-bottom: 15px;
     }

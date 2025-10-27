@@ -237,13 +237,13 @@ export default defineComponent({
 </script>
 
 <style>
-  @import url('../../../styles/custom-properties.css');
+@import '../../../styles/custom-properties.css';
 
   .acc-notifies {
     max-width: var(--width-popup-form-container);
 
     h3 {
-      @apply --ui-label;
+      @mixin ui-label;
     }
 
     section {
@@ -282,7 +282,7 @@ export default defineComponent({
     }
 
     &__description {
-      @apply --font-small;
+      @mixin font-small;
       flex-grow: 2;
       color: var(--color-text-second);
     }

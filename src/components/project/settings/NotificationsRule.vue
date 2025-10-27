@@ -181,10 +181,10 @@ export default defineComponent({
 </script>
 
 <style>
-  @import url('../../../styles/custom-properties.css');
+  @import '../../../styles/custom-properties.css';
 
   .n-rule {
-    @apply --font-small;
+    @mixin font-small;
     max-width: var(--width-popup-form-container);
 
     padding: 20px 0;

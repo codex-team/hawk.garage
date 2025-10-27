@@ -178,14 +178,14 @@ export default defineComponent({
 <style src="../../../styles/settings-window-page.css"></style>
 
 <style>
-  @import url('../../../styles/custom-properties.css');
+  @import '../../../styles/custom-properties.css';
 
   .modal-form {
     &__section {
       margin-bottom: 50px;
 
       &-title {
-        @apply --ui-label;
+        @mixin ui-label;
         margin-bottom: 15px;
 
         & + .n-rule {

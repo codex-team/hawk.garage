@@ -317,7 +317,7 @@ export default defineComponent({
     background-color: var(--color-bg-main);
 
     &__right-column {
-      @apply --hide-scrollbar;
+      @mixin hide-scrollbar;
       width: 342px;
       overflow-y: auto;
     }

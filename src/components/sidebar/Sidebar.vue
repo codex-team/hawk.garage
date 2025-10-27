@@ -240,7 +240,7 @@ export default {
     }
 
     &__scrollable {
-      @apply --hide-scrollbar;
+      @mixin hide-scrollbar;
       position: relative;
       max-height: 100%;
       padding-top: 20px;

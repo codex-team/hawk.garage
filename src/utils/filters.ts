@@ -163,7 +163,7 @@ export function prettyDateFromDateTimeString(dateStr: string, includeTime = true
   const year = date.getFullYear();
   const isSameYear = now.getFullYear() === year;
   const monthStr = capitalize(
-    i18n.t('common.shortMonths[' + month + ']').toString()
+    i18n.global.t('common.shortMonths[' + month + ']').toString()
   );
 
   let result = `${isSameYear ? '' : year + ', '}${monthStr} ${day}`;

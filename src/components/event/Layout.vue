@@ -173,6 +173,6 @@ export default defineComponent({
   }
 
   .empty-event {
-    @apply --empty-placeholder;
+    @mixin empty-placeholder;
   }
 </style>

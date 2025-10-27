@@ -1,12 +1,12 @@
-import { VueConstructor } from 'vue';
+import { App, createApp, ComponentPublicInstance } from 'vue';
 import Popover from '@/components/utils/Popover/Popover.vue';
-import i18n from '../i18n';
+import { i18n } from '../i18n';
 import Router from '../router';
 
 /**
  * Type of popover component
  */
-type PopoverComponentType = InstanceType<typeof Popover>;
+type PopoverComponentType = ComponentPublicInstance<typeof Popover>;
 
 /**
  * Plugin for using popover in components
@@ -23,36 +23,35 @@ export default {
   /**
    * Install Vue plugin
    *
-   * @param Vue - vue constructor
+   * @param app - Vue 3 app instance
    */
-  install: (Vue: VueConstructor): void => {
+  install: (app: App): void => {
     const vueContainer = document.createElement('div');
-    const notifierContainer = new Vue<PopoverComponentType>({
-      i18n,
-      router: Router,
-      render: (h) => h(Popover),
-    });
+    const popoverApp = createApp(Popover);
+    
+    // Подключаем i18n и router к приложению popover
+    popoverApp.use(i18n);
+    popoverApp.use(Router);
 
     document.body.appendChild(vueContainer);
-    notifierContainer.$mount(vueContainer);
+    const popoverInstance = popoverApp.mount(vueContainer) as PopoverComponentType;
 
-    Vue.prototype.$popover = {
+    // Добавляем глобальное свойство для доступа к popover
+    app.config.globalProperties.$popover = {
       /**
        * Open popover
        *
        * @param options - popover options
        */
       open(options?) {
-        (notifierContainer.$children[0] as PopoverComponentType).open(
-          options
-        );
+        popoverInstance.open(options);
       },
 
       /**
-       * Close notifier window
+       * Close popover
        */
       close() {
-        (notifierContainer.$children[0] as PopoverComponentType).close();
+        popoverInstance.close();
       },
     };
   },
