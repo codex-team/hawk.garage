@@ -10,7 +10,7 @@
   >
     <EventMark :mark="mark" />
     <div class="event-item__time">
-      {{ lastOccurrenceTimestamp | prettyTime }}
+      {{ formattedTime }}
     </div>
     <div class="event-item__badge-container">
       <EventBadge
@@ -49,6 +49,7 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
+import { prettyTime } from '@/utils/filters';
 import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscriptionExpiry';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 
@@ -173,6 +174,13 @@ export default {
      */
     isEventBlurred() {
       return this.isEventAfterExpiry && this.isWorkspaceBlocked;
+    },
+
+    /**
+     * Computed property that returns formatted time for last occurrence
+     */
+    formattedTime() {
+      return prettyTime(this.lastOccurrenceTimestamp);
     },
   },
   beforeDestroy() {

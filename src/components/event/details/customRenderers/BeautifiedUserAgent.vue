@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { BeautifiedUserAgent } from '@hawk.so/types';
 import Icon from '@/components/utils/Icon.vue';
 

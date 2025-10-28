@@ -1,11 +1,11 @@
 <template>
-  <nobr>
+  <span class="window-dimensions">
     {{ value.innerWidth }} × {{ value.innerHeight }}
-  </nobr>
+  </span>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { WindowData } from '@hawk.so/types';
 
 export default defineComponent({
@@ -20,3 +20,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.window-dimensions {
+  white-space: nowrap;
+}
+</style>

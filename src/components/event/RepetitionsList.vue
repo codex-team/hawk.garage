@@ -19,7 +19,7 @@
       >
         <!-- Time (always exists) -->
         <td class="repetitions-table__time">
-          {{ repetition.timestamp | prettyTime }}
+          {{ formatTimeByRepetition(repetition) }}
         </td>
 
         <!-- User (optional) -->
@@ -105,7 +105,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import { prettyTime } from '@/utils/filters';
 import EntityImage from '../utils/EntityImage.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
@@ -225,6 +226,15 @@ export default defineComponent({
       cols.push(...this.distinctAddonsKeys.values());
 
       return cols;
+    },
+
+    /**
+     * Computed property that returns a function to format time by repetition
+     */
+    formatTimeByRepetition() {
+      return (repetition: HawkEvent) => {
+        return prettyTime(repetition.timestamp);
+      };
     },
   },
   mounted() {

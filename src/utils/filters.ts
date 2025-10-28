@@ -115,7 +115,7 @@ export function prettyDate(value: number): string {
     return i18n.t('common.yesterday').toString();
   }
 
-  return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
+  return `${argumentDay} ${i18n.global.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
 }
 
 /**
@@ -132,7 +132,7 @@ export function prettyFullDate(value: number): string {
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${pad(hours)}:${pad(minutes)}`;
+  return `${day} ${i18n.global.t(`common.shortMonths[${month}]`)}, ${pad(hours)}:${pad(minutes)}`;
 }
 
 /**
@@ -145,7 +145,7 @@ export function prettyDateFromTimestamp(timestamp: number): string {
   const day = date.getDate();
   const month = date.getMonth();
 
-  return `${day} ${i18n.t('common.shortMonths[' + month + ']')}`;
+  return `${day} ${i18n.global.t('common.shortMonths[' + month + ']')}`;
 }
 
 /**

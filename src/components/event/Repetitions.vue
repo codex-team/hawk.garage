@@ -12,7 +12,7 @@
         v-if="event"
         class="event-repetitions__repeats"
       >
-        {{ $tc('event.repetitions.times', event.totalCount) }}
+        {{ $t('event.repetitions.times', { n: event.totalCount }) }}
       </div>
     </div>
 
@@ -151,7 +151,7 @@ export default defineComponent({
       const day = targetDate.getDate();
       const month = targetDate.getMonth();
 
-      return `${day} ${i18n.t('common.months[' + month + ']')}`;
+      return `${day} ${i18n.global.t('common.months[' + month + ']')}`;
     },
 
     /**

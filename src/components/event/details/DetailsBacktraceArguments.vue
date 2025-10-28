@@ -6,16 +6,14 @@
       class="args__row"
     >
       <template
-        v-for="([key, value], col) in Object.entries(item)"
+        v-for="([key, value], col) in Object.entries(item)" :key="`row:${row}:col:${col}:key`"
       >
         <td
-          :key="`row:${row}:col:${col}:key`"
           class="args__key"
         >
           {{ key }}
         </td>
         <td
-          :key="`row:${row}:col:${col}:value`"
           class="args__value"
         >
           {{ value }}
@@ -26,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: 'DetailsBacktraceArguments',

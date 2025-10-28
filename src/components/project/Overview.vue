@@ -38,7 +38,7 @@
             class="project-overview__events-by-date"
           >
             <div class="project-overview__date">
-              {{ getDay(date) | prettyDate }}
+              {{ formatDate(date) }}
             </div>
             <EventItem
               v-for="(dailyEventInfo, index) in eventsByDate"
@@ -101,7 +101,7 @@ import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import {
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
-import { debounce, groupByGroupingTimestamp } from '@/utils';
+import { debounce, groupByGroupingTimestamp, prettyDate } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
@@ -339,6 +339,17 @@ export default {
      */
     getDay(date) {
       return parseInt(date.replace('groupingTimestamp:', ''), 10);
+    },
+
+    /**
+     * Format date using prettyDate utility
+     *
+     * @param {string} date - grouped day key like 'date:1576011600'
+     * @returns {string}
+     */
+    formatDate(date) {
+      const timestamp = this.getDay(date);
+      return prettyDate(timestamp);
     },
 
     /**

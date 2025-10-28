@@ -8,7 +8,7 @@
         v-if="event"
         class="event-users-affected__affected"
       >
-        {{ $tc('event.usersAffected.users', event.usersAffected) }}
+        {{ $t('event.usersAffected.users', { n: event.usersAffected }) }}
       </div>
     </div>
   </div>
