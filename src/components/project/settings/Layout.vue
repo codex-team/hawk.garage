@@ -38,6 +38,12 @@
         >
           {{ $t("projects.settings.patterns.title") }}
         </router-link>
+        <router-link
+          class="settings-window__menu-item"
+          :to="{ name: 'project-settings-rate-limits' }"
+        >
+          {{ $t('projects.settings.rateLimits.title') }}
+        </router-link>
         <hr
           v-if="isAdmin"
           class="delimiter"
@@ -132,23 +138,23 @@ export default Vue.extend({
 </script>
 
 <style>
-  .project-settings {
-    &__header {
-      margin-left: -62px;
-    }
-    &__logo {
-      background-image: url("../../../assets/hawk-logo.png");
-      background-position: center center;
-      background-size: cover;
-    }
-    &__title {
-      font-weight: bold;
-      font-size: 18px;
-    }
-    &__caption {
-      margin-top: 3px;
-      color: var(--color-text-second);
-      font-size: 14px;
-    }
+.project-settings {
+  &__header {
+    margin-left: -62px;
   }
+  &__logo {
+    background-image: url('../../../assets/hawk-logo.png');
+    background-position: center center;
+    background-size: cover;
+  }
+  &__title {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  &__caption {
+    margin-top: 3px;
+    color: var(--color-text-second);
+    font-size: 14px;
+  }
+}
 </style>

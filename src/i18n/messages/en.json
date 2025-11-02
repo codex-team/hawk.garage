@@ -204,6 +204,13 @@
             "invalidLink": "Invalid unsubscribe link"
           }
         }
+      },
+      "rateLimits": {
+        "title": "Rate Limits",
+        "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
+        "period": "Period (seconds)",
+        "rateLimitedCounter": "Rate limited events",
+        "submit": "Save"
       }
     },
     "notFound": "Project not found",

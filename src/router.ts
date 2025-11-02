@@ -184,6 +184,14 @@ const router = new Router({
               name: 'project-settings-patterns',
               component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/EventGroupingPattern.vue'),
             },
+            {
+              path: 'rate-limits',
+              name: 'project-settings-rate-limits',
+              component: () =>
+                import(
+                  /* webpackChunkName: 'project-settings' */ './components/project/settings/RateLimits.vue'
+                ),
+            },
           ],
         },
       ],
