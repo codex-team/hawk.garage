@@ -13,7 +13,7 @@
           type="number"
           :required="true"
           :is-invalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
-          :label="$t('common.threshold')"
+          :label="$t('projects.settings.rateLimits.threshold')"
           @input="showSubmitButton = true"
         />
         <TextFieldset

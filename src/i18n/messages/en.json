@@ -208,8 +208,8 @@
       "rateLimits": {
         "title": "Rate Limits",
         "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
-        "period": "Period (seconds)",
-        "rateLimitedCounter": "Rate limited events",
+        "threshold": "Seen more than",
+        "period": "for period (seconds)",
         "submit": "Save"
       }
     },
