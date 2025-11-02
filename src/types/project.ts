@@ -50,4 +50,14 @@ export interface Project {
    * List of events grouping patterns
    */
   eventGroupingPatterns?: ProjectEventGroupingPattern[];
+
+  /**
+   * Rate limit threshold (N events)
+   */
+  rateLimitN?: number;
+
+  /**
+   * Rate limit period in seconds (T seconds)
+   */
+  rateLimitT?: number;
 }

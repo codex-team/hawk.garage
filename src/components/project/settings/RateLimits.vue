@@ -26,15 +26,6 @@
         />
       </div>
 
-      <div v-if="rateLimitedCounter !== null" class="project-settings__stats">
-        <div class="project-settings__stat-label">
-          {{ $t('projects.settings.rateLimits.rateLimitedCounter') }}:
-        </div>
-        <div class="project-settings__stat-value">
-          {{ rateLimitedCounter }}
-        </div>
-      </div>
-
       <div class="project-settings__submit-area">
         <button
           v-if="showSubmitButton"
@@ -50,18 +41,27 @@
 <script lang="ts">
 import Vue from 'vue';
 import TextFieldset from '../../forms/TextFieldset.vue';
+import { Project } from '../../../types/project';
 
 export default Vue.extend({
   name: 'RateLimits',
   components: {
     TextFieldset,
   },
+  props: {
+    /**
+     * The project we are working with
+     */
+    project: {
+      type: Object as () => Project,
+      required: true,
+    },
+  },
   data() {
     return {
-      selectedThreshold: '100',
-      periodSeconds: '3600',
+      selectedThreshold: this.project.rateLimitN?.toString() || '100',
+      periodSeconds: this.project.rateLimitT?.toString() || '3600',
       showSubmitButton: false,
-      rateLimitedCounter: null as number | null,
     };
   },
 });
