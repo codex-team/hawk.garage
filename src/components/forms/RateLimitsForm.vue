@@ -29,6 +29,14 @@
       >
         {{ $t('projects.settings.rateLimits.submit') }}
       </button>
+      <button
+        v-if="value && !disabled"
+        class="button button--submit rate-limits-form__clear-button"
+        type="button"
+        @click="handleClear"
+      >
+        {{ $t('projects.settings.rateLimits.clear') }}
+      </button>
     </div>
   </form>
 </template>
@@ -76,8 +84,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      selectedThreshold: this.value?.N?.toString() || '3000',
-      periodSeconds: this.value?.T?.toString() || '60',
+      selectedThreshold: this.value?.N?.toString() || '',
+      periodSeconds: this.value?.T?.toString() || '',
       showSubmitButton: false,
     };
   },
@@ -116,6 +124,17 @@ export default Vue.extend({
       this.$emit('submit', rateLimitSettings);
       this.showSubmitButton = false;
     },
+
+    /**
+     * Handle clear button click
+     */
+    handleClear() {
+      if (this.disabled) {
+        return;
+      }
+
+      this.$emit('clear');
+    },
   },
 });
 </script>
@@ -149,6 +168,10 @@ export default Vue.extend({
   }
 
   &__submit-button {
+    margin: 0 10px 20px 0;
+  }
+
+  &__clear-button {
     margin: 0 0 20px 0;
   }
 }

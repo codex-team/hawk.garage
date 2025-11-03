@@ -63,7 +63,7 @@ export const MUTATION_UPDATE_PROJECT = `
 export const MUTATION_UPDATE_PROJECT_RATE_LIMITS = `
     mutation updateProjectRateLimits(
         $id: ID!
-        $rateLimitSettings: RateLimitSettingsInput!
+        $rateLimitSettings: RateLimitSettingsInput
     ) {
         updateProjectRateLimits(
             id: $id,

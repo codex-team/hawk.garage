@@ -10,6 +10,7 @@
       :value="project.rateLimitSettings"
       :disabled="!isRateLimitsAvailable"
       @submit="handleSubmit"
+      @clear="handleClear"
     />
     <div v-if="!isRateLimitsAvailable" class="project-settings__paid-only-message">
       {{ $t('projects.settings.rateLimits.paidOnlyMessage') }}
@@ -92,6 +93,31 @@ export default Vue.extend({
 
         notifier.show({
           message: this.$t('projects.settings.rateLimits.updatedMessage') as string,
+          style: 'success',
+          time: 5000,
+        });
+      } catch (e) {
+        const error = e as Error;
+        notifier.show({
+          message: error.message,
+          style: 'error',
+          time: 5000,
+        });
+      }
+    },
+
+    /**
+     * Handle clear button click from RateLimitsForm component
+     */
+    async handleClear(): Promise<void> {
+      try {
+        await this.$store.dispatch(UPDATE_PROJECT_RATE_LIMITS, {
+          id: this.project.id,
+          rateLimitSettings: null,
+        });
+
+        notifier.show({
+          message: this.$t('projects.settings.rateLimits.clearedMessage') as string,
           style: 'success',
           time: 5000,
         });
