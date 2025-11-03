@@ -57,7 +57,7 @@
         <div
           class="billing-card__label"
         >
-          {{ $t('billing.validTill').toUpperCase() }}
+          {{ $t('billing.validTill') }}
         </div>
         <div
           class="billing-card__info-bar"
@@ -303,6 +303,10 @@ export default Vue.extend({
      * Return subscription expiration date
      */
     subExpiredDate(): Date {
+      if (this.workspace.paidUntil) {
+        return new Date(this.workspace.paidUntil);
+      }
+
       const expiredDate = new Date(this.workspace.lastChargeDate);
 
       if (this.workspace.isDebug) {
