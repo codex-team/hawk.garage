@@ -116,7 +116,7 @@ export default Vue.extend({
     isThresholdInvalid(): boolean {
       const str = this.currentThreshold.toString().trim();
       if (!str) {
-        return false; // Пустое поле не считается невалидным
+        return false;
       }
       const num = Number.parseInt(str, 10);
       return Number.isNaN(num) || num <= 0 || !/^\d+$/.test(str);
@@ -128,7 +128,7 @@ export default Vue.extend({
     isPeriodInvalid(): boolean {
       const str = this.currentPeriod.toString().trim();
       if (!str) {
-        return false; // Пустое поле не считается невалидным
+        return false;
       }
       const num = Number.parseInt(str, 10);
       return Number.isNaN(num) || num < 60 || !/^\d+$/.test(str);
