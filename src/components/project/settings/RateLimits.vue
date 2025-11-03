@@ -6,41 +6,20 @@
     <div class="project-settings__description">
       {{ $t('projects.settings.rateLimits.description') }}
     </div>
-    <form class="project-settings__form" @submit.prevent="save">
-      <div class="project-settings__rate-limit-fields">
-        <TextFieldset
-          v-model="selectedThreshold"
-          type="number"
-          :required="true"
-          :is-invalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
-          :label="$t('projects.settings.rateLimits.threshold')"
-          @input="showSubmitButton = true"
-        />
-        <TextFieldset
-          v-model="periodSeconds"
-          type="number"
-          :required="true"
-          :is-invalid="!/^[1-9]\d*$/.test(periodSeconds.toString())"
-          :label="$t('projects.settings.rateLimits.period')"
-          @input="showSubmitButton = true"
-        />
-      </div>
-
-      <div class="project-settings__submit-area">
-        <button
-          v-if="showSubmitButton"
-          class="button button--submit project-settings__submit-button"
-        >
-          {{ $t('projects.settings.rateLimits.submit') }}
-        </button>
-      </div>
-    </form>
+    <RateLimitsForm
+      :value="project.rateLimitSettings"
+      :disabled="!isRateLimitsAvailable"
+      @submit="handleSubmit"
+    />
+    <div v-if="!isRateLimitsAvailable" class="project-settings__paid-only-message">
+      {{ $t('projects.settings.rateLimits.paidOnlyMessage') }}
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import TextFieldset from '../../forms/TextFieldset.vue';
+import RateLimitsForm, { RateLimitsFormData } from '../../forms/RateLimitsForm.vue';
 import { Project } from '../../../types/project';
 import { UPDATE_PROJECT_RATE_LIMITS } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
@@ -48,7 +27,7 @@ import notifier from 'codex-notifier';
 export default Vue.extend({
   name: 'RateLimits',
   components: {
-    TextFieldset,
+    RateLimitsForm,
   },
   props: {
     /**
@@ -59,28 +38,57 @@ export default Vue.extend({
       required: true,
     },
   },
-  data() {
-    return {
-      selectedThreshold: this.project.rateLimitSettings?.N?.toString() || '3000',
-      periodSeconds: this.project.rateLimitSettings?.T?.toString() || '60',
-      showSubmitButton: false,
-    };
+  computed: {
+    /**
+     * The workspace that owns the project
+     */
+    workspace() {
+      if (!this.project) {
+        return null;
+      }
+
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
+
+    /**
+     * Check if workspace is blocked
+     */
+    isWorkspaceBlocked() {
+      return this.workspace?.isBlocked;
+    },
+
+    /**
+     * Return true if workspace plan is free
+     */
+    isFreePlan(): boolean {
+      if (!this.workspace || !this.workspace.plan) {
+        return false;
+      }
+
+      return (
+        this.workspace.plan.monthlyCharge === 0 ||
+        this.workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID
+      );
+    },
+
+    /**
+     * Check if rate limits feature is available
+     * Available only for paid plans and non-blocked workspaces
+     */
+    isRateLimitsAvailable(): boolean {
+      return !this.isFreePlan && !this.isWorkspaceBlocked;
+    },
   },
   methods: {
     /**
-     * Form submit event handler
+     * Handle form submit from RateLimitsForm component
      */
-    async save(): Promise<void> {
+    async handleSubmit(rateLimitSettings: RateLimitsFormData): Promise<void> {
       try {
         await this.$store.dispatch(UPDATE_PROJECT_RATE_LIMITS, {
           id: this.project.id,
-          rateLimitSettings: {
-            N: Number.parseInt(this.selectedThreshold, 10),
-            T: Number.parseInt(this.periodSeconds, 10),
-          },
+          rateLimitSettings,
         });
-
-        this.showSubmitButton = false;
 
         notifier.show({
           message: this.$t('projects.settings.rateLimits.updatedMessage') as string,
@@ -135,16 +143,14 @@ export default Vue.extend({
     opacity: 0.6;
   }
 
-  &__rate-limit-fields {
-    display: flex;
-    gap: 10px;
+  &__paid-only-message {
     margin-bottom: 20px;
-
-    .form-fieldset__label {
-      font-weight: 400;
-      font-size: 13px;
-      text-transform: none;
-    }
+    background-color: var(--color-bg-second);
+    border-radius: 8px;
+    color: var(--color-text-main);
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 19px;
   }
 
   &__section,
