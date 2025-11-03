@@ -24,6 +24,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       inviteHash
       ...WorkspaceWithTeam
       ...WorkspacePlan
+      paidUntil
       projects {
         id
         token

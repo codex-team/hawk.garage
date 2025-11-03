@@ -75,6 +75,7 @@ export default Vue.extend({
       font-size: 14px;
       line-height: 16px;
       letter-spacing: 0.18px;
+      white-space: nowrap;
 
       ^&--checked & {
         color: var(--color-text-main);
