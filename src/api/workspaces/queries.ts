@@ -2,7 +2,7 @@ import {
   WORKSPACE_FRAGMENT_WITH_TEAM,
   PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
   WORKSPACE_PLAN,
-  EVENT_FRAGMENT
+  EVENT_FRAGMENT,
 } from '../fragments';
 
 // language=GraphQL
@@ -37,6 +37,10 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
         eventGroupingPatterns {
           id
           pattern
+        }
+        rateLimitSettings {
+          N
+          T
         }
         dailyEventsPortion(limit: 1) {
           nextCursor {
