@@ -37,7 +37,7 @@
         {{ $t('projects.settings.rateLimits.submit') }}
       </button>
       <button
-        class="button ui-button--warning rate-limits-form__clear-button"
+        class="button button--submit rate-limits-form__clear-button"
         type="button"
         :disabled="!value || disabled"
         @click="handleClear"
@@ -331,6 +331,11 @@ export default Vue.extend({
 
   &__clear-button {
     margin: 0 0 20px 0;
+    background-color: var(--color-indicator-critical);
+
+    &:hover {
+      background-color: var(--color-indicator-critical-dark);
+    }
 
     &:disabled {
       cursor: not-allowed;
@@ -341,7 +346,6 @@ export default Vue.extend({
   &__error-message {
     color: var(--color-indicator-critical);
     font-size: 13px;
-    margin-top: -15px;
     margin-bottom: 20px;
   }
 }

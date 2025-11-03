@@ -122,7 +122,7 @@ export default Vue.extend({
 @import url('../../../styles/custom-properties.css');
 
 .project-settings {
-  width: 100%;
+  width: 75%;
 
   &__form {
     display: flex;
