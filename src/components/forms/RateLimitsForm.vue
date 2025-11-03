@@ -6,7 +6,7 @@
         type="number"
         :required="true"
         :disabled="disabled"
-        :is-invalid="!/^[1-9]\d*$/.test(selectedThreshold.toString())"
+        :is-invalid="!isThresholdValid"
         :label="$t('projects.settings.rateLimits.threshold')"
         @input="onInput"
       />
@@ -15,7 +15,7 @@
         type="number"
         :required="true"
         :disabled="disabled"
-        :is-invalid="!/^[1-9]\d*$/.test(periodSeconds.toString())"
+        :is-invalid="!isPeriodValid"
         :label="$t('projects.settings.rateLimits.period')"
         @input="onInput"
       />
@@ -23,7 +23,7 @@
 
     <div class="rate-limits-form__submit-area">
       <button
-        v-if="showSubmitButton && !disabled"
+        v-if="showSubmitButton && !disabled && isFormValid"
         class="button button--submit rate-limits-form__submit-button"
         type="submit"
       >
@@ -89,6 +89,38 @@ export default Vue.extend({
       showSubmitButton: false,
     };
   },
+  computed: {
+    /**
+     * Check if threshold value is valid (positive integer > 0)
+     */
+    isThresholdValid(): boolean {
+      const str = this.selectedThreshold.toString().trim();
+      if (!str) {
+        return false;
+      }
+      const num = Number.parseInt(str, 10);
+      return !Number.isNaN(num) && num > 0 && /^[1-9]\d*$/.test(str);
+    },
+
+    /**
+     * Check if period value is valid (positive integer > 0)
+     */
+    isPeriodValid(): boolean {
+      const str = this.periodSeconds.toString().trim();
+      if (!str) {
+        return false;
+      }
+      const num = Number.parseInt(str, 10);
+      return !Number.isNaN(num) && num > 0 && /^[1-9]\d*$/.test(str);
+    },
+
+    /**
+     * Check if form is valid and can be submitted
+     */
+    isFormValid(): boolean {
+      return this.isThresholdValid && this.isPeriodValid;
+    },
+  },
   watch: {
     value: {
       handler(newValue: RateLimitSettings | null | undefined) {
@@ -118,7 +150,7 @@ export default Vue.extend({
      * Handle form submit
      */
     handleSubmit() {
-      if (this.disabled) {
+      if (this.disabled || !this.isFormValid) {
         return;
       }
 
