@@ -36,10 +36,19 @@
 <script lang="ts">
 import Vue from 'vue';
 import TextFieldset from './TextFieldset.vue';
-import { ProjectRateLimitSettings } from '../../types/project';
 
-export interface RateLimitsFormData {
+/**
+ * Rate limits configuration
+ */
+export interface RateLimitSettings {
+  /**
+   * Rate limit threshold (N events)
+   */
   N: number;
+
+  /**
+   * Rate limit period in seconds (T seconds)
+   */
   T: number;
 }
 
@@ -53,7 +62,7 @@ export default Vue.extend({
      * Current rate limit settings
      */
     value: {
-      type: Object as () => ProjectRateLimitSettings | null | undefined,
+      type: Object as () => RateLimitSettings | null | undefined,
       default: null,
     },
 
@@ -74,7 +83,7 @@ export default Vue.extend({
   },
   watch: {
     value: {
-      handler(newValue: ProjectRateLimitSettings | null | undefined) {
+      handler(newValue: RateLimitSettings | null | undefined) {
         if (newValue) {
           this.selectedThreshold = newValue.N?.toString() || '3000';
           this.periodSeconds = newValue.T?.toString() || '60';
@@ -99,7 +108,7 @@ export default Vue.extend({
         return;
       }
 
-      const rateLimitSettings: RateLimitsFormData = {
+      const rateLimitSettings: RateLimitSettings = {
         N: Number.parseInt(this.selectedThreshold, 10),
         T: Number.parseInt(this.periodSeconds, 10),
       };

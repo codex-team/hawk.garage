@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import RateLimitsForm, { RateLimitsFormData } from '../../forms/RateLimitsForm.vue';
+import RateLimitsForm, { RateLimitSettings } from '../../forms/RateLimitsForm.vue';
 import { Project } from '../../../types/project';
 import { UPDATE_PROJECT_RATE_LIMITS } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
@@ -83,7 +83,7 @@ export default Vue.extend({
     /**
      * Handle form submit from RateLimitsForm component
      */
-    async handleSubmit(rateLimitSettings: RateLimitsFormData): Promise<void> {
+    async handleSubmit(rateLimitSettings: RateLimitSettings): Promise<void> {
       try {
         await this.$store.dispatch(UPDATE_PROJECT_RATE_LIMITS, {
           id: this.project.id,
