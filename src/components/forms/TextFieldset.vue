@@ -30,8 +30,10 @@
       :required="required"
       :hidden="hidden"
       :disabled="disabled"
-      @input="$emit('input', $event.target.value)"
-    >
+      :maxlength="maxlength"
+      @input="handleInput"
+      @keypress="$emit('keypress', $event)"
+    />
   </fieldset>
 </template>
 
@@ -123,6 +125,30 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    maxlength: {
+      type: Number,
+      default: undefined,
+    },
+  },
+  methods: {
+    /**
+     * Handle input event and enforce maxlength if provided
+     */
+    handleInput(event) {
+      let value = event.target.value;
+
+      // Enforce maxlength for number inputs (browsers ignore maxlength for type="number")
+      if (
+        this.maxlength !== undefined &&
+        this.maxlength !== null &&
+        value.length > this.maxlength
+      ) {
+        value = value.slice(0, this.maxlength);
+        event.target.value = value;
+      }
+
+      this.$emit('input', value);
     },
   },
 };

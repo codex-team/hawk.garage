@@ -210,6 +210,7 @@
         "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
         "threshold": "No more than",
         "period": "for period (seconds)",
+        "periodDescription": "Minimum value: 60 seconds",
         "submit": "Save",
         "clear": "Clear",
         "updatedMessage": "Rate limits updated successfully",

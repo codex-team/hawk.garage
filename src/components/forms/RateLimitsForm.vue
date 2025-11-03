@@ -6,33 +6,40 @@
         type="number"
         :required="true"
         :disabled="disabled"
-        :is-invalid="!isThresholdValid"
+        :is-invalid="isThresholdInvalid"
+        :maxlength="10"
         :label="$t('projects.settings.rateLimits.threshold')"
         @input="onThresholdInput"
+        @keypress="onKeyPress"
       />
       <TextFieldset
         :value="currentPeriod"
         type="number"
         :required="true"
         :disabled="disabled"
-        :is-invalid="!isPeriodValid"
+        :is-invalid="isPeriodInvalid"
+        :maxlength="10"
         :label="$t('projects.settings.rateLimits.period')"
         @input="onPeriodInput"
+        @keypress="onKeyPress"
       />
     </div>
 
     <div class="rate-limits-form__submit-area">
+      <div v-if="showPeriodError" class="rate-limits-form__error-message">
+        {{ $t('projects.settings.rateLimits.periodDescription') }}
+      </div>
       <button
-        v-if="showSubmitButton && !disabled && isFormValid"
         class="button button--submit rate-limits-form__submit-button"
         type="submit"
+        :disabled="disabled || !isFormValid || !hasChanges"
       >
         {{ $t('projects.settings.rateLimits.submit') }}
       </button>
       <button
-        v-if="value && !disabled"
-        class="button button--submit rate-limits-form__clear-button"
+        class="button ui-button--warning rate-limits-form__clear-button"
         type="button"
+        :disabled="!value || disabled"
         @click="handleClear"
       >
         {{ $t('projects.settings.rateLimits.clear') }}
@@ -86,7 +93,6 @@ export default Vue.extend({
     return {
       selectedThreshold: '',
       periodSeconds: '',
-      showSubmitButton: false,
     };
   },
   computed: {
@@ -105,6 +111,42 @@ export default Vue.extend({
     },
 
     /**
+     * Check if threshold value should be marked as invalid (only if value is entered)
+     */
+    isThresholdInvalid(): boolean {
+      const str = this.currentThreshold.toString().trim();
+      if (!str) {
+        return false; // Пустое поле не считается невалидным
+      }
+      const num = Number.parseInt(str, 10);
+      return Number.isNaN(num) || num <= 0 || !/^\d+$/.test(str);
+    },
+
+    /**
+     * Check if period value should be marked as invalid (only if value is entered)
+     */
+    isPeriodInvalid(): boolean {
+      const str = this.currentPeriod.toString().trim();
+      if (!str) {
+        return false; // Пустое поле не считается невалидным
+      }
+      const num = Number.parseInt(str, 10);
+      return Number.isNaN(num) || num < 60 || !/^\d+$/.test(str);
+    },
+
+    /**
+     * Show period error message when user enters invalid value
+     */
+    showPeriodError(): boolean {
+      const str = this.currentPeriod.toString().trim();
+      if (!str) {
+        return false;
+      }
+      const num = Number.parseInt(str, 10);
+      return !Number.isNaN(num) && num < 60 && /^\d+$/.test(str);
+    },
+
+    /**
      * Check if threshold value is valid (positive integer > 0)
      */
     isThresholdValid(): boolean {
@@ -113,11 +155,11 @@ export default Vue.extend({
         return false;
       }
       const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num > 0 && /^[1-9]\d*$/.test(str);
+      return !Number.isNaN(num) && num > 0 && /^\d+$/.test(str);
     },
 
     /**
-     * Check if period value is valid (positive integer > 0)
+     * Check if period value is valid (positive integer >= 60)
      */
     isPeriodValid(): boolean {
       const str = this.currentPeriod.toString().trim();
@@ -125,7 +167,7 @@ export default Vue.extend({
         return false;
       }
       const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num > 0 && /^[1-9]\d*$/.test(str);
+      return !Number.isNaN(num) && num >= 60 && /^\d+$/.test(str);
     },
 
     /**
@@ -133,6 +175,33 @@ export default Vue.extend({
      */
     isFormValid(): boolean {
       return this.isThresholdValid && this.isPeriodValid;
+    },
+
+    /**
+     * Check if form values have changed from original
+     */
+    hasChanges(): boolean {
+      const thresholdStr = this.currentThreshold.toString().trim();
+      const periodStr = this.currentPeriod.toString().trim();
+
+      const currentN = thresholdStr ? Number.parseInt(thresholdStr, 10) : null;
+      const currentT = periodStr ? Number.parseInt(periodStr, 10) : null;
+
+      const originalN = this.value?.N ?? null;
+      const originalT = this.value?.T ?? null;
+
+      // If both are null/empty, no changes
+      if (currentN === null && currentT === null && originalN === null && originalT === null) {
+        return false;
+      }
+
+      // If original was null but we have values, there are changes
+      if (originalN === null && originalT === null && (currentN !== null || currentT !== null)) {
+        return true;
+      }
+
+      // Compare values
+      return currentN !== originalN || currentT !== originalT;
     },
   },
   watch: {
@@ -144,7 +213,6 @@ export default Vue.extend({
         this.selectedThreshold = '';
         this.periodSeconds = '';
       }
-      this.showSubmitButton = false;
     },
   },
   methods: {
@@ -152,16 +220,46 @@ export default Vue.extend({
      * Handle threshold input changes
      */
     onThresholdInput(value: string) {
-      this.selectedThreshold = value;
-      this.showSubmitButton = true;
+      let numericValue = value.replace(/\D/g, '');
+      if (numericValue.length > 10) {
+        numericValue = numericValue.slice(0, 10);
+      }
+      this.selectedThreshold = numericValue;
     },
 
     /**
      * Handle period input changes
      */
     onPeriodInput(value: string) {
-      this.periodSeconds = value;
-      this.showSubmitButton = true;
+      let numericValue = value.replace(/\D/g, '');
+      if (numericValue.length > 10) {
+        numericValue = numericValue.slice(0, 10);
+      }
+      this.periodSeconds = numericValue;
+    },
+
+    /**
+     * Prevent non-numeric input
+     */
+    onKeyPress(event: KeyboardEvent) {
+      const allowedKeys = [
+        'Backspace',
+        'Delete',
+        'ArrowLeft',
+        'ArrowRight',
+        'ArrowUp',
+        'ArrowDown',
+        'Tab',
+        'Home',
+        'End',
+      ];
+      const isDigit = /^\d$/.test(event.key);
+      const isAllowedKey = allowedKeys.includes(event.key);
+      const isModifier = event.ctrlKey || event.metaKey || event.altKey;
+
+      if (!isDigit && !isAllowedKey && !isModifier) {
+        event.preventDefault();
+      }
     },
 
     /**
@@ -178,7 +276,6 @@ export default Vue.extend({
       };
 
       this.$emit('submit', rateLimitSettings);
-      this.showSubmitButton = false;
     },
 
     /**
@@ -225,10 +322,27 @@ export default Vue.extend({
 
   &__submit-button {
     margin: 0 10px 20px 0;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 
   &__clear-button {
     margin: 0 0 20px 0;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__error-message {
+    color: var(--color-indicator-critical);
+    font-size: 13px;
+    margin-top: -15px;
+    margin-bottom: 20px;
   }
 }
 </style>
