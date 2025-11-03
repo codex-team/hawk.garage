@@ -34,24 +34,13 @@ export const MUTATION_UPDATE_PROJECT = `
         $name: String!
         $description: String
         $image: Upload
-        $rateLimitSettings: RateLimitSettingsInput
     ) {
-        updateProject(
-            id: $id,
-            name: $name,
-            description: $description,
-            image: $image,
-            rateLimitSettings: $rateLimitSettings
-        )
+        updateProject(id: $id, name: $name, description: $description, image: $image)
         {
             id
             name
             description
             image
-            rateLimitSettings {
-                N
-                T
-            }
         }
     }
 `;
