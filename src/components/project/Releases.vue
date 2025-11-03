@@ -88,13 +88,16 @@ export default {
 
     localMidnight(tsSec) {
       const d = new Date(tsSec * 1000);
+
       d.setHours(0, 0, 0, 0);
+
       return Math.floor(d.getTime() / 1000);
     },
 
     formatTime(tsSec) {
       const d = new Date(tsSec * 1000);
       const pad = (n) => (n < 10 ? '0' + n : '' + n);
+
       return pad(d.getHours()) + ':' + pad(d.getMinutes());
     },
   },
@@ -115,11 +118,11 @@ export default {
 
 .release-row {
   display: flex;
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 12px;
   margin: 8px 0;
+  padding: 10px 12px;
   background-color: transparent;
   border: none;
   border-radius: 10px;
@@ -132,51 +135,51 @@ export default {
 
 .release-row__left {
   display: flex;
-  align-items: center;
   gap: 10px;
+  align-items: center;
   min-width: 0;
 }
 
 .release-row__time {
   flex-shrink: 0;
+  width: 42px;
   color: var(--color-text-second);
   font-size: 12px;
-  width: 42px;
 }
 
 .release-row__title {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
   color: var(--color-text-main);
   font-weight: 600;
   font-size: 14px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .release-row__right {
   display: flex;
-  align-items: center;
   gap: 16px;
+  align-items: center;
 }
 
 .release-row__metric {
-  font-size: 13px;
   color: var(--color-text-main);
+  font-size: 13px;
 }
 
 .release-row__metric-label {
-  color: var(--color-text-main);
-  font-size: 13px;
-  font-weight: 600;
   margin-right: 6px;
+  color: var(--color-text-main);
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .release-row__metric-value {
   color: var(--color-text-main);
-  font-size: 13px;
   font-weight: 600;
+  font-size: 13px;
 }
 
 .project-releases__empty {
