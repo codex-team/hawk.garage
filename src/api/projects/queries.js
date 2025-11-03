@@ -59,9 +59,6 @@ export const MUTATION_UPDATE_PROJECT_RATE_LIMITS = `
             rateLimitSettings: $rateLimitSettings
         ) {
             id
-            name
-            description
-            image
             rateLimitSettings {
                 N
                 T
