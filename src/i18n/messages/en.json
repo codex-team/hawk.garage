@@ -210,7 +210,8 @@
         "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
         "threshold": "No more than",
         "period": "for period (seconds)",
-        "submit": "Save"
+        "submit": "Save",
+        "updatedMessage": "Rate limits updated successfully"
       }
     },
     "notFound": "Project not found",

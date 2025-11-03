@@ -6,7 +6,7 @@
     <div class="project-settings__description">
       {{ $t('projects.settings.rateLimits.description') }}
     </div>
-    <form class="project-settings__form" @submit.prevent>
+    <form class="project-settings__form" @submit.prevent="save">
       <div class="project-settings__rate-limit-fields">
         <TextFieldset
           v-model="selectedThreshold"
@@ -42,6 +42,9 @@
 import Vue from 'vue';
 import TextFieldset from '../../forms/TextFieldset.vue';
 import { Project } from '../../../types/project';
+import { UpdateProjectPayload } from '../../../types/project-mutations';
+import { UPDATE_PROJECT } from '@/store/modules/projects/actionTypes';
+import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'RateLimits',
@@ -59,10 +62,44 @@ export default Vue.extend({
   },
   data() {
     return {
-      selectedThreshold: this.project.rateLimitN?.toString() || '100',
-      periodSeconds: this.project.rateLimitT?.toString() || '3600',
+      selectedThreshold: this.project.rateLimitSettings?.N?.toString() || '3000',
+      periodSeconds: this.project.rateLimitSettings?.T?.toString() || '60',
       showSubmitButton: false,
     };
+  },
+  methods: {
+    /**
+     * Form submit event handler
+     */
+    async save(): Promise<void> {
+      try {
+        const payload: UpdateProjectPayload = {
+          id: this.project.id,
+          name: this.project.name,
+          rateLimitSettings: {
+            N: Number.parseInt(this.selectedThreshold, 10),
+            T: Number.parseInt(this.periodSeconds, 10),
+          },
+        };
+
+        await this.$store.dispatch(UPDATE_PROJECT, payload);
+
+        this.showSubmitButton = false;
+
+        notifier.show({
+          message: this.$t('projects.settings.rateLimits.updatedMessage') as string,
+          style: 'success',
+          time: 5000,
+        });
+      } catch (e: unknown) {
+        const error = e as Error;
+        notifier.show({
+          message: error.message,
+          style: 'error',
+          time: 5000,
+        });
+      }
+    },
   },
 });
 </script>

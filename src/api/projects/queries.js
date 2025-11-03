@@ -1,6 +1,4 @@
-import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
-} from '../fragments';
+import { PROJECT_NOTIFICATIONS_RULE_FRAGMENT } from '../fragments';
 
 /**
  * Mutation for creating new project
@@ -36,13 +34,24 @@ export const MUTATION_UPDATE_PROJECT = `
         $name: String!
         $description: String
         $image: Upload
+        $rateLimitSettings: RateLimitSettingsInput
     ) {
-        updateProject(id: $id, name: $name, description: $description, image: $image)
+        updateProject(
+            id: $id,
+            name: $name,
+            description: $description,
+            image: $image,
+            rateLimitSettings: $rateLimitSettings
+        )
         {
             id
             name
             description
             image
+            rateLimitSettings {
+                N
+                T
+            }
         }
     }
 `;
