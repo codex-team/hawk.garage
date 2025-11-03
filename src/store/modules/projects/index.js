@@ -207,7 +207,10 @@ const actions = {
     const updatedProject = await projectsApi.updateProjectRateLimits(id, rateLimitSettings);
 
     if (updatedProject) {
-      commit(mutationTypes.UPDATE_PROJECT, updatedProject);
+      commit(mutationTypes.UPDATE_PROJECT, {
+        ...updatedProject,
+        id,
+      });
     }
   },
 

@@ -58,7 +58,6 @@ export const MUTATION_UPDATE_PROJECT_RATE_LIMITS = `
             id: $id,
             rateLimitSettings: $rateLimitSettings
         ) {
-            id
             rateLimitSettings {
                 N
                 T
