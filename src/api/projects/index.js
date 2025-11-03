@@ -193,11 +193,15 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
 /**
  * Fetch project releases
  *
- * @param {string} projectId
- * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number}>>}
+ * @param {string} projectId - id of the project to fetch releases
+ * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number, commitsCount: number, filesCount: number}>>} - list of releases with unique events count, commits count and files count
  */
 export async function fetchProjectReleases(projectId) {
   const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
+
+  if (response.errors?.length) {
+    response.errors.forEach(console.error);
+  }
 
   return response.data.project.releases;
 }

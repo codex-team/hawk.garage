@@ -1,4 +1,3 @@
-<!-- eslint-disable -->
 <template>
   <div class="project-releases">
     <div
@@ -19,9 +18,19 @@
           class="release-row"
         >
           <div class="release-row__left">
-            <div class="release-row__time">{{ formatTime(release.timestamp) }}</div>
-            <Badge :content="release.newEventsCount" :type="release.newEventsCount === 0 ? 'silent' : undefined" />
-            <div class="release-row__title" :title="release.release">{{ release.release }}</div>
+            <div class="release-row__time">
+              {{ formatTime(release.timestamp) }}
+            </div>
+            <Badge
+              :content="release.newEventsCount"
+              :type="release.newEventsCount === 0 ? 'silent' : undefined"
+            />
+            <div
+              class="release-row__title"
+              :title="release.release"
+            >
+              {{ release.release }}
+            </div>
           </div>
           <div class="release-row__right">
             <div class="release-row__metric">
@@ -36,16 +45,17 @@
         </div>
       </div>
     </div>
-    <div v-else class="project-releases__empty">
+    <div
+      v-else
+      class="project-releases__empty"
+    >
       —
     </div>
   </div>
-
 </template>
 
 <script>
 import { fetchProjectReleases } from '@/api/projects';
-import { groupBy } from '@/utils';
 import Badge from '@/components/utils/Badge.vue';
 
 export default {
@@ -68,12 +78,22 @@ export default {
         return {};
       }
 
-      const withGrouping = this.releases.map(r => ({
-        ...r,
-        groupingTimestamp: this.localMidnight(r.timestamp),
-      }));
+      const groups = {};
 
-      return groupBy('groupingTimestamp')(withGrouping);
+      for (const release of this.releases) {
+        const d = new Date(release.timestamp * 1000);
+
+        d.setHours(0, 0, 0, 0);
+        const groupingTimestamp = Math.floor(d.getTime() / 1000);
+        const key = 'groupingTimestamp:' + groupingTimestamp;
+
+        if (!groups[key]) {
+          groups[key] = [];
+        }
+        groups[key].push(release);
+      }
+
+      return groups;
     },
   },
   async created() {
@@ -86,20 +106,14 @@ export default {
       return parseInt(key.replace('groupingTimestamp:', ''), 10);
     },
 
-    localMidnight(tsSec) {
-      const d = new Date(tsSec * 1000);
-
-      d.setHours(0, 0, 0, 0);
-
-      return Math.floor(d.getTime() / 1000);
-    },
-
     formatTime(tsSec) {
-      const d = new Date(tsSec * 1000);
-      const pad = (n) => (n < 10 ? '0' + n : '' + n);
-
-      return pad(d.getHours()) + ':' + pad(d.getMinutes());
+      return new Intl.DateTimeFormat(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(tsSec * 1000));
     },
+
+    // removed custom offset function: local midnight grouping is simpler and consistent with UI
   },
 };
 </script>
