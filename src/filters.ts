@@ -94,11 +94,11 @@ Vue.filter('prettyDateStr', function (value: string): string {
   const currentDate = new Date().getDate();
 
   if (+day === currentDate) {
-    return 'Today';
+    return i18n.t('common.today').toString();
   }
 
   if (+day === currentDate - 1) {
-    return 'Yesterday';
+    return i18n.t('common.yesterday').toString();
   }
 
   return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
@@ -122,7 +122,7 @@ Vue.filter('prettyDate', function (value: number) {
     argumentMonth === currentDate.getMonth() &&
     argumentYear === currentDate.getFullYear()
   ) {
-    return 'Today';
+    return i18n.t('common.today').toString();
   }
 
   if (
@@ -130,7 +130,7 @@ Vue.filter('prettyDate', function (value: number) {
     argumentMonth === currentDate.getMonth() &&
     argumentYear === currentDate.getFullYear()
   ) {
-    return 'Yesterday';
+    return i18n.t('common.yesterday').toString();
   }
 
   return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
