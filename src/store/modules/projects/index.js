@@ -209,7 +209,7 @@ const actions = {
       rateLimitSettings
     );
 
-    if (response) {
+    if (response && response.rateLimitSettings !== undefined) {
       commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
         projectId: id,
         key: 'rateLimitSettings',
