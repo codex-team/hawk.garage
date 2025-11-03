@@ -91,7 +91,7 @@ export default Vue.extend({
           style: 'success',
           time: 5000,
         });
-      } catch (e: unknown) {
+      } catch (e) {
         const error = e as Error;
         notifier.show({
           message: error.message,
