@@ -6,6 +6,7 @@ import {
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
   UPDATE_PROJECT_RATE_LIMITS,
+  REMOVE_PROJECT_RATE_LIMITS,
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
   REMOVE_NOTIFICATIONS_RULE,
@@ -135,7 +136,6 @@ const getters = {
       return getters.getWorkspaceById(project.workspaceId);
     };
   },
-
 };
 
 const actions = {
@@ -206,6 +206,14 @@ const actions = {
    */
   async [UPDATE_PROJECT_RATE_LIMITS]({ commit }, { id, rateLimitSettings }) {
     const updatedProject = await projectsApi.updateProjectRateLimits(id, rateLimitSettings);
+
+    if (updatedProject) {
+      commit(mutationTypes.UPDATE_PROJECT, updatedProject);
+    }
+  },
+
+  async [REMOVE_PROJECT_RATE_LIMITS]({ commit }, { id }) {
+    const updatedProject = await projectsApi.removeProjectRateLimits(id);
 
     if (updatedProject) {
       commit(mutationTypes.UPDATE_PROJECT, updatedProject);

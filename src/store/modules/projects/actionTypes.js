@@ -77,3 +77,8 @@ export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
  * Send request to update project rate limits settings
  */
 export const UPDATE_PROJECT_RATE_LIMITS = 'UPDATE_PROJECT_RATE_LIMITS';
+
+/**
+ * Send request to remove project rate limits settings
+ */
+export const REMOVE_PROJECT_RATE_LIMITS = 'REMOVE_PROJECT_RATE_LIMITS';
