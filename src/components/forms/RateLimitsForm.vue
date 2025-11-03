@@ -95,9 +95,15 @@ export default Vue.extend({
         if (newValue) {
           this.selectedThreshold = newValue.N?.toString() || '3000';
           this.periodSeconds = newValue.T?.toString() || '60';
+        } else {
+          // If value is null/undefined, reset to empty/default values
+          this.selectedThreshold = '';
+          this.periodSeconds = '';
         }
+        this.showSubmitButton = false;
       },
       immediate: true,
+      deep: true,
     },
   },
   methods: {

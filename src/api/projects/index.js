@@ -2,7 +2,6 @@ import {
   MUTATION_CREATE_PROJECT,
   MUTATION_UPDATE_PROJECT,
   MUTATION_UPDATE_PROJECT_RATE_LIMITS,
-  MUTATION_REMOVE_PROJECT_RATE_LIMITS,
   MUTATION_UPDATE_LAST_VISIT,
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
@@ -47,22 +46,12 @@ export async function updateProject(projectInfo) {
  * Update project rate limits settings
  *
  * @param {string} id - project id
- * @param {ProjectRateLimitSettings} rateLimitSettings - rate limit settings
+ * @param {ProjectRateLimitSettings | null} rateLimitSettings - rate limit settings (null to remove)
  * @returns {Promise<Project>}
  */
 export async function updateProjectRateLimits(id, rateLimitSettings) {
   return (await api.callOld(MUTATION_UPDATE_PROJECT_RATE_LIMITS, { id, rateLimitSettings }))
     .updateProjectRateLimits;
-}
-
-/**
- * Remove project rate limits settings
- *
- * @param {string} id - project id
- * @returns {Promise<Project>}
- */
-export async function removeProjectRateLimits(id) {
-  return (await api.callOld(MUTATION_REMOVE_PROJECT_RATE_LIMITS, { id })).removeProjectRateLimits;
 }
 
 /**

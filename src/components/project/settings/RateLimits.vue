@@ -7,6 +7,11 @@
       {{ $t('projects.settings.rateLimits.description') }}
     </div>
     <RateLimitsForm
+      :key="`rate-limits-${project.id}-${
+        project.rateLimitSettings
+          ? `${project.rateLimitSettings.N}-${project.rateLimitSettings.T}`
+          : 'null'
+      }`"
       :value="project.rateLimitSettings"
       :disabled="!isRateLimitsAvailable"
       @submit="handleSubmit"
@@ -22,10 +27,7 @@
 import Vue from 'vue';
 import RateLimitsForm, { RateLimitSettings } from '../../forms/RateLimitsForm.vue';
 import { Project } from '../../../types/project';
-import {
-  UPDATE_PROJECT_RATE_LIMITS,
-  REMOVE_PROJECT_RATE_LIMITS,
-} from '@/store/modules/projects/actionTypes';
+import { UPDATE_PROJECT_RATE_LIMITS } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
 
 export default Vue.extend({
@@ -114,8 +116,9 @@ export default Vue.extend({
      */
     async handleClear(): Promise<void> {
       try {
-        await this.$store.dispatch(REMOVE_PROJECT_RATE_LIMITS, {
+        await this.$store.dispatch(UPDATE_PROJECT_RATE_LIMITS, {
           id: this.project.id,
+          rateLimitSettings: null,
         });
 
         notifier.show({

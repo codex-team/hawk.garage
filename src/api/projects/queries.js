@@ -63,31 +63,12 @@ export const MUTATION_UPDATE_PROJECT = `
 export const MUTATION_UPDATE_PROJECT_RATE_LIMITS = `
     mutation updateProjectRateLimits(
         $id: ID!
-        $rateLimitSettings: RateLimitSettingsInput!
+        $rateLimitSettings: RateLimitSettingsInput
     ) {
         updateProjectRateLimits(
             id: $id,
             rateLimitSettings: $rateLimitSettings
         ) {
-            id
-            name
-            description
-            image
-            rateLimitSettings {
-                N
-                T
-            }
-        }
-    }
-`;
-
-// language=GraphQL
-/**
- * Mutation for removing project rate limits settings
- */
-export const MUTATION_REMOVE_PROJECT_RATE_LIMITS = `
-    mutation removeProjectRateLimits($id: ID!) {
-        removeProjectRateLimits(id: $id) {
             id
             name
             description

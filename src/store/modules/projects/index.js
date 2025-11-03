@@ -6,7 +6,6 @@ import {
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
   UPDATE_PROJECT_RATE_LIMITS,
-  REMOVE_PROJECT_RATE_LIMITS,
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
   REMOVE_NOTIFICATIONS_RULE,
@@ -206,14 +205,6 @@ const actions = {
    */
   async [UPDATE_PROJECT_RATE_LIMITS]({ commit }, { id, rateLimitSettings }) {
     const updatedProject = await projectsApi.updateProjectRateLimits(id, rateLimitSettings);
-
-    if (updatedProject) {
-      commit(mutationTypes.UPDATE_PROJECT, updatedProject);
-    }
-  },
-
-  async [REMOVE_PROJECT_RATE_LIMITS]({ commit }, { id }) {
-    const updatedProject = await projectsApi.removeProjectRateLimits(id);
 
     if (updatedProject) {
       commit(mutationTypes.UPDATE_PROJECT, updatedProject);
@@ -449,7 +440,15 @@ const mutations = {
   [mutationTypes.UPDATE_PROJECT](state, project) {
     const index = state.list.findIndex(element => element.id === project.id);
 
-    state.list[index] = project;
+    if (index !== -1) {
+      const existingProject = state.list[index];
+
+      Vue.set(state.list, index, {
+        ...project,
+        workspaceId: existingProject.workspaceId,
+        latestEvent: existingProject.latestEvent,
+      });
+    }
   },
 
   /**
