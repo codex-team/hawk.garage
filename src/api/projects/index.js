@@ -197,9 +197,9 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
  * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number}>>}
  */
 export async function fetchProjectReleases(projectId) {
-  const response = await api.callOld(QUERY_PROJECT_RELEASES, { projectId });
+  const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
-  return response.project.releases;
+  return response.data.project.releases;
 }
 
 /**
