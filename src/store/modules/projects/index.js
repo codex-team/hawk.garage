@@ -204,12 +204,16 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [UPDATE_PROJECT_RATE_LIMITS]({ commit }, { id, rateLimitSettings }) {
-    const updatedProject = await projectsApi.updateProjectRateLimits(id, rateLimitSettings);
+    const response = await projectsApi.updateProjectRateLimits(
+      id,
+      rateLimitSettings
+    );
 
-    if (updatedProject) {
-      commit(mutationTypes.UPDATE_PROJECT, {
-        ...updatedProject,
-        id,
+    if (response) {
+      commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+        projectId: id,
+        key: 'rateLimitSettings',
+        value: response.rateLimitSettings,
       });
     }
   },
