@@ -58,22 +58,6 @@ export default defineComponent({
         // loadLanguageAsync(newLang);
       }
     );
-
-    /**
-     * Connect to the event bus
-     */
-    eventBus.$on('serviceWorkerUpdated', () => {
-      this.$notify.open({
-        description: this.$t('components.newVersionWindow.message') as string,
-        notifierButtons: [ {
-          text: this.$t('components.newVersionWindow.refresh') as string,
-          type: NotifierButtonType.SUBMIT,
-          onClick: () => {
-            window.location.reload();
-          },
-        } ],
-      });
-    });
   },
 
   /**

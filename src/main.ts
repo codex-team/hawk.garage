@@ -3,7 +3,6 @@ import { createApp } from 'vue';
 import 'virtual:svg-icons-register';
 import VueCookies from 'vue-cookies';
 import ConfirmationWindow from './plugins/ConfirmationWindow';
-import NotifierWindow from './plugins/NotifierWindow';
 import Popover from './plugins/Popover';
 import App from './App.vue';
 import router from './router';
@@ -86,9 +85,8 @@ app.config.globalProperties.$API_AUTH_GOOGLE = import.meta.env.VITE_API_AUTH_GOO
 app.config.globalProperties.$API_AUTH_GITHUB = import.meta.env.VITE_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
 
 app.use(VueCookies);
-// Vue.use(ConfirmationWindow);
-// Vue.use(NotifierWindow);
-// Vue.use(Popover);
+app.use(ConfirmationWindow);
+app.use(Popover);
 
 /**
  * Configure API
