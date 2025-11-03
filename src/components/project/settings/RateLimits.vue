@@ -42,8 +42,7 @@
 import Vue from 'vue';
 import TextFieldset from '../../forms/TextFieldset.vue';
 import { Project } from '../../../types/project';
-import { UpdateProjectPayload } from '../../../types/project-mutations';
-import { UPDATE_PROJECT } from '@/store/modules/projects/actionTypes';
+import { UPDATE_PROJECT_RATE_LIMITS } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
 
 export default Vue.extend({
@@ -73,16 +72,13 @@ export default Vue.extend({
      */
     async save(): Promise<void> {
       try {
-        const payload: UpdateProjectPayload = {
+        await this.$store.dispatch(UPDATE_PROJECT_RATE_LIMITS, {
           id: this.project.id,
-          name: this.project.name,
           rateLimitSettings: {
             N: Number.parseInt(this.selectedThreshold, 10),
             T: Number.parseInt(this.periodSeconds, 10),
           },
-        };
-
-        await this.$store.dispatch(UPDATE_PROJECT, payload);
+        });
 
         this.showSubmitButton = false;
 

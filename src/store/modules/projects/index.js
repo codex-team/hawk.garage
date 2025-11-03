@@ -5,6 +5,7 @@ import {
   SET_PROJECTS_LIST,
   UPDATE_PROJECT_LAST_VISIT,
   UPDATE_PROJECT,
+  UPDATE_PROJECT_RATE_LIMITS,
   ADD_NOTIFICATIONS_RULE,
   UPDATE_NOTIFICATIONS_RULE,
   REMOVE_NOTIFICATIONS_RULE,
@@ -12,7 +13,8 @@ import {
   ADD_EVENT_GROUPING_PATTERN,
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN,
-  FETCH_CHART_DATA, GENERATE_NEW_INTEGRATION_TOKEN
+  FETCH_CHART_DATA,
+  GENERATE_NEW_INTEGRATION_TOKEN,
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -187,6 +189,23 @@ const actions = {
    */
   async [UPDATE_PROJECT]({ commit }, projectData) {
     const updatedProject = await projectsApi.updateProject(projectData);
+
+    if (updatedProject) {
+      commit(mutationTypes.UPDATE_PROJECT, updatedProject);
+    }
+  },
+
+  /**
+   * Send request to update project rate limits settings
+   *
+   * @param {Function} commit - standard Vuex commit function
+   * @param {object} payload - payload with project id and rate limit settings
+   * @param {string} payload.id - project id
+   * @param {ProjectRateLimitSettings} payload.rateLimitSettings - rate limit settings
+   * @returns {Promise<void>}
+   */
+  async [UPDATE_PROJECT_RATE_LIMITS]({ commit }, { id, rateLimitSettings }) {
+    const updatedProject = await projectsApi.updateProjectRateLimits(id, rateLimitSettings);
 
     if (updatedProject) {
       commit(mutationTypes.UPDATE_PROJECT, updatedProject);

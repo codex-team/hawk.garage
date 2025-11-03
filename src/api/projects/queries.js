@@ -58,6 +58,31 @@ export const MUTATION_UPDATE_PROJECT = `
 
 // language=GraphQL
 /**
+ * Mutation for updating project rate limits settings
+ */
+export const MUTATION_UPDATE_PROJECT_RATE_LIMITS = `
+    mutation updateProjectRateLimits(
+        $id: ID!
+        $rateLimitSettings: RateLimitSettingsInput!
+    ) {
+        updateProjectRateLimits(
+            id: $id,
+            rateLimitSettings: $rateLimitSettings
+        ) {
+            id
+            name
+            description
+            image
+            rateLimitSettings {
+                N
+                T
+            }
+        }
+    }
+`;
+
+// language=GraphQL
+/**
  * Mutation for generating new integration token
  */
 export const MUTATION_GENERATE_NEW_INTEGRATION_TOKEN = `
