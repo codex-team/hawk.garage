@@ -52,6 +52,10 @@ export default defineConfig({
         require('postcss-simple-vars'),
         require('postcss-mixins'),
         require('postcss-nested-ancestors'),
+        require('postcss-color-mod-function')({
+          importFrom: 'src/styles/variables.css',
+          unresolved: 'ignore',
+        }),
         require('postcss-nested'),
         require('postcss-preset-env')({
           importFrom: 'src/styles/variables.css',

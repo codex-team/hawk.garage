@@ -567,7 +567,7 @@ export default defineComponent({
       width: 160px;
       height: 5px;
       margin-top: 7px;
-      background-color: color-mod(var(--color-border) alpha(25%));
+      background-color: color-mod(var(--color-border-base) alpha(25%));
     }
 
     &__buttons {
@@ -607,7 +607,7 @@ export default defineComponent({
     &__autopay-is-on {
       height: 14px;
       margin: 20px 166px 0 0;
-      color: color-mod(var(--color-border) alpha(60%));
+      color: color-mod(var(--color-border-base) alpha(60%));
       font-size: 12px;
       letter-spacing: 0.15px;
     }

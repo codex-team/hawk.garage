@@ -458,7 +458,7 @@ export function trim(value: string, maxLen: number): string {
  * @param token - stringified integration token
  */
 function decodeIntegrationToken(token: string): DecodedIntegrationToken {
-  return JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+  return JSON.parse(atob(token));
 }
 
 /**

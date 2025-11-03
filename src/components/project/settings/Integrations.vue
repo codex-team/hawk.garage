@@ -10,20 +10,12 @@
       class="projects-integrations-settings-page__token"
       :token="project.token"
     />
-    <i18n
-      path="projects.settings.integrations.revokeText"
-      tag="div"
+
+    <div
       class="projects-integrations-settings-page__revoke-container"
-    >
-      <template #revoke>
-        <span
-          class="projects-integrations-settings-page__revoke-button"
-          @click="revokeIntegrationToken()"
-        >
-          {{ $t('projects.settings.integrations.revoke') }}
-        </span>
-      </template>
-    </i18n>
+      v-html="$t('projects.settings.integrations.revokeText')"
+      @click="revokeIntegrationToken()"
+    />
     <br>
     <br>
     <br>

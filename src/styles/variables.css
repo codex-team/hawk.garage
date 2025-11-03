@@ -1,7 +1,8 @@
 :root {
   /** Texts */
   --color-text-main: #dbe6ff;
-  --color-text-second: rgb(from var(--color-text-main) r g b / 0.6);
+  /* "rgba from" does not work with color-mod */
+  --color-text-second: #dbe6ff99;
   --color-text-dark: var(--color-bg-main);
   --color-text-highlighted: #719dff;
 

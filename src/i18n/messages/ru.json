@@ -135,8 +135,7 @@
       "integrations": {
         "title": "Интеграции",
         "projectTokenLabel": "Интеграционный токен для проекта",
-        "revokeText": "Вы можете {revoke} этот токен и получить новый.",
-        "revoke": "Отозвать",
+        "revokeText": "Вы можете <span class='projects-integrations-settings-page__revoke-button'>Отозвать</span> этот токен и получить новый.",
         "revokeConfirmation": {
           "title": "Отозвать интеграционный токен?",
           "description": "После этого действия Хоук перестанет принимать ивенты со старым интеграционным токеном. Вам будет необходимо заменить его на новый в вашем проекте."

@@ -69,8 +69,8 @@ export default {
      * @returns {boolean}
      */
     isSingleLine() {
-      const hasLineBreak = this.$slots.default[0].text.includes('\n') === true;
-      const hasBr = this.$slots.default[0].text.includes('<br>') === true;
+      const hasLineBreak = this.$slots.default[0]?.text.includes('\n') === true;
+      const hasBr = this.$slots.default[0]?.text.includes('<br>') === true;
 
       return !hasLineBreak && !hasBr;
     },

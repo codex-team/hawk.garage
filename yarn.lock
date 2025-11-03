@@ -125,6 +125,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/color-helpers/-/color-helpers-5.1.0.tgz#106c54c808cabfd1ab4c602d8505ee584c2996ef"
   integrity sha512-S11EXWJyy0Mz5SYvRmY8nJYTFFd1LCNV+7cXyAgQtOOuzb4EsgfqDufL+9esx72/eLhsRdGZwaldu/h+E4t4BA==
 
+"@csstools/convert-colors@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
+  integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
+
 "@csstools/css-calc@^2.1.4":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@csstools/css-calc/-/css-calc-2.1.4.tgz#8473f63e2fcd6e459838dd412401d5948f224c65"
@@ -3190,6 +3195,14 @@ postcss-color-hex-alpha@^10.0.0:
   integrity sha512-1kervM2cnlgPs2a8Vt/Qbe5cQ++N7rkYo/2rz2BkqJZIHQwaVuJgQH38REHrAi4uM0b1fqxMkWYmese94iMp3w==
   dependencies:
     "@csstools/utilities" "^2.0.0"
+    postcss-value-parser "^4.2.0"
+
+postcss-color-mod-function@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/postcss-color-mod-function/-/postcss-color-mod-function-4.1.1.tgz#8af2171aec20035416a0c79fe3e29e14e026689c"
+  integrity sha512-pX35vgWh0c5gqYd/a5baiTr329GyEt56KBldQIEZwOi9V2eXC+9+e7yjnIKqjidHKxzstEfBJEbOXma8Ang33g==
+  dependencies:
+    "@csstools/convert-colors" "^1.4.0"
     postcss-value-parser "^4.2.0"
 
 postcss-color-rebeccapurple@^10.0.0:
