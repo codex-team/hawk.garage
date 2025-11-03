@@ -60,20 +60,29 @@ export default Vue.extend({
      * Check if workspace is blocked
      */
     isWorkspaceBlocked() {
-      return this.workspace?.isBlocked;
+      if (!this.project) {
+        return false;
+      }
+
+      const workspace = this.$store.getters.getWorkspaceByProjectId(this.project.id);
+      return workspace?.isBlocked;
     },
 
     /**
      * Return true if workspace plan is free
      */
     isFreePlan(): boolean {
-      if (!this.workspace || !this.workspace.plan) {
+      if (!this.project) {
+        return false;
+      }
+
+      const workspace = this.$store.getters.getWorkspaceByProjectId(this.project.id);
+      if (!workspace || !workspace.plan) {
         return false;
       }
 
       return (
-        this.workspace.plan.monthlyCharge === 0 ||
-        this.workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID
+        workspace.plan.monthlyCharge === 0 || workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID
       );
     },
 
