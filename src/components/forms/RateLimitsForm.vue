@@ -2,22 +2,22 @@
   <form class="rate-limits-form" @submit.prevent="handleSubmit">
     <div class="rate-limits-form__fields">
       <TextFieldset
-        v-model="selectedThreshold"
+        :value="currentThreshold"
         type="number"
         :required="true"
         :disabled="disabled"
         :is-invalid="!isThresholdValid"
         :label="$t('projects.settings.rateLimits.threshold')"
-        @input="onInput"
+        @input="onThresholdInput"
       />
       <TextFieldset
-        v-model="periodSeconds"
+        :value="currentPeriod"
         type="number"
         :required="true"
         :disabled="disabled"
         :is-invalid="!isPeriodValid"
         :label="$t('projects.settings.rateLimits.period')"
-        @input="onInput"
+        @input="onPeriodInput"
       />
     </div>
 
@@ -84,17 +84,31 @@ export default Vue.extend({
   },
   data() {
     return {
-      selectedThreshold: this.value?.N?.toString() || '',
-      periodSeconds: this.value?.T?.toString() || '',
+      selectedThreshold: '',
+      periodSeconds: '',
       showSubmitButton: false,
     };
   },
   computed: {
     /**
+     * Current threshold value from prop or local state
+     */
+    currentThreshold(): string {
+      return this.selectedThreshold || this.value?.N?.toString() || '';
+    },
+
+    /**
+     * Current period value from prop or local state
+     */
+    currentPeriod(): string {
+      return this.periodSeconds || this.value?.T?.toString() || '';
+    },
+
+    /**
      * Check if threshold value is valid (positive integer > 0)
      */
     isThresholdValid(): boolean {
-      const str = this.selectedThreshold.toString().trim();
+      const str = this.currentThreshold.toString().trim();
       if (!str) {
         return false;
       }
@@ -106,7 +120,7 @@ export default Vue.extend({
      * Check if period value is valid (positive integer > 0)
      */
     isPeriodValid(): boolean {
-      const str = this.periodSeconds.toString().trim();
+      const str = this.currentPeriod.toString().trim();
       if (!str) {
         return false;
       }
@@ -122,27 +136,31 @@ export default Vue.extend({
     },
   },
   watch: {
-    value: {
-      handler(newValue: RateLimitSettings | null | undefined) {
-        if (newValue) {
-          this.selectedThreshold = newValue.N?.toString() || '3000';
-          this.periodSeconds = newValue.T?.toString() || '60';
-        } else {
-          // If value is null/undefined, reset to empty/default values
-          this.selectedThreshold = '';
-          this.periodSeconds = '';
-        }
-        this.showSubmitButton = false;
-      },
-      immediate: true,
-      deep: true,
+    value() {
+      if (this.value) {
+        this.selectedThreshold = this.value.N?.toString() || '';
+        this.periodSeconds = this.value.T?.toString() || '';
+      } else {
+        this.selectedThreshold = '';
+        this.periodSeconds = '';
+      }
+      this.showSubmitButton = false;
     },
   },
   methods: {
     /**
-     * Handle input changes
+     * Handle threshold input changes
      */
-    onInput() {
+    onThresholdInput(value: string) {
+      this.selectedThreshold = value;
+      this.showSubmitButton = true;
+    },
+
+    /**
+     * Handle period input changes
+     */
+    onPeriodInput(value: string) {
+      this.periodSeconds = value;
       this.showSubmitButton = true;
     },
 
@@ -155,8 +173,8 @@ export default Vue.extend({
       }
 
       const rateLimitSettings: RateLimitSettings = {
-        N: Number.parseInt(this.selectedThreshold, 10),
-        T: Number.parseInt(this.periodSeconds, 10),
+        N: Number.parseInt(this.currentThreshold, 10),
+        T: Number.parseInt(this.currentPeriod, 10),
       };
 
       this.$emit('submit', rateLimitSettings);

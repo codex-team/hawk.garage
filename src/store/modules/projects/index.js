@@ -443,10 +443,10 @@ const mutations = {
     if (index !== -1) {
       const existingProject = state.list[index];
 
+      // Should merge existing project with new project to avoid losing existing data
       Vue.set(state.list, index, {
+        ...existingProject,
         ...project,
-        workspaceId: existingProject.workspaceId,
-        latestEvent: existingProject.latestEvent,
       });
     }
   },

@@ -7,11 +7,7 @@
       {{ $t('projects.settings.rateLimits.description') }}
     </div>
     <RateLimitsForm
-      :key="`rate-limits-${project.id}-${
-        project.rateLimitSettings
-          ? `${project.rateLimitSettings.N}-${project.rateLimitSettings.T}`
-          : 'null'
-      }`"
+      :key="project.id"
       :value="project.rateLimitSettings"
       :disabled="!isRateLimitsAvailable"
       @submit="handleSubmit"
@@ -46,32 +42,10 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * The workspace that owns the project
+     * Check if rate limits feature is available
+     * Available only for paid plans
      */
-    workspace() {
-      if (!this.project) {
-        return null;
-      }
-
-      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
-    },
-
-    /**
-     * Check if workspace is blocked
-     */
-    isWorkspaceBlocked() {
-      if (!this.project) {
-        return false;
-      }
-
-      const workspace = this.$store.getters.getWorkspaceByProjectId(this.project.id);
-      return workspace?.isBlocked;
-    },
-
-    /**
-     * Return true if workspace plan is free
-     */
-    isFreePlan(): boolean {
+    isRateLimitsAvailable(): boolean {
       if (!this.project) {
         return false;
       }
@@ -81,17 +55,11 @@ export default Vue.extend({
         return false;
       }
 
-      return (
-        workspace.plan.monthlyCharge === 0 || workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID
-      );
-    },
+      const isFree =
+        workspace.plan.monthlyCharge === 0 ||
+        workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
 
-    /**
-     * Check if rate limits feature is available
-     * Available only for paid plans and non-blocked workspaces
-     */
-    isRateLimitsAvailable(): boolean {
-      return !this.isFreePlan && !this.isWorkspaceBlocked;
+      return !isFree;
     },
   },
   methods: {
