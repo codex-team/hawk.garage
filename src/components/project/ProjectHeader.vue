@@ -95,7 +95,7 @@ export default Vue.extend({
     /**
      * Current workspace
      */
-    workspace(): Workspace {
+    workspace(): Workspace | null {
       if (!this.project) {
         return null;
       }
