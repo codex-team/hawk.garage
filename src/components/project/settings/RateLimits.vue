@@ -119,8 +119,6 @@ export default Vue.extend({
 <style src="../../../styles/settings-window-page.css"></style>
 
 <style>
-@import url('../../../styles/custom-properties.css');
-
 .project-settings {
   width: 75%;
 

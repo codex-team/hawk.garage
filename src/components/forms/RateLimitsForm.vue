@@ -18,7 +18,7 @@
         :disabled="disabled"
         :is-invalid="!isPeriodValid"
         :min="60"
-        :max="31536000"
+        :max="2678400"
         :label="$t('projects.settings.rateLimits.period')"
       />
     </div>
@@ -46,21 +46,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import TextFieldset from './TextFieldset.vue';
-
-/**
- * Rate limits configuration
- */
-export interface RateLimitSettings {
-  /**
-   * Rate limit threshold (N events)
-   */
-  N: number;
-
-  /**
-   * Rate limit period in seconds (T seconds)
-   */
-  T: number;
-}
+import { ProjectRateLimitSettings } from '@/types/project';
 
 export default Vue.extend({
   name: 'RateLimitsForm',
@@ -72,7 +58,7 @@ export default Vue.extend({
      * Current rate limit settings
      */
     value: {
-      type: Object as () => RateLimitSettings | null | undefined,
+      type: Object as () => ProjectRateLimitSettings | null | undefined,
       default: null,
     },
 
@@ -106,7 +92,7 @@ export default Vue.extend({
     isPeriodValid(): boolean {
       const str = this.currentPeriod.toString().trim();
       const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num >= 60 && num <= 31536000 && /^\d+$/.test(str);
+      return !Number.isNaN(num) && num >= 60 && num <= 2678400 && /^\d+$/.test(str);
     },
 
     /**
@@ -135,9 +121,9 @@ export default Vue.extend({
   watch: {
     value: {
       handler() {
-        // Default: 10,000 events per day (86400 seconds in a day)
+        // Default: 10,000 events per hour (3600 seconds in an hour)
         this.currentThreshold = this.value?.N?.toString() || '10000';
-        this.currentPeriod = this.value?.T?.toString() || '86400';
+        this.currentPeriod = this.value?.T?.toString() || '3600';
       },
       immediate: true,
     },
@@ -151,7 +137,7 @@ export default Vue.extend({
         return;
       }
 
-      const rateLimitSettings: RateLimitSettings = {
+      const rateLimitSettings: ProjectRateLimitSettings = {
         N: Number.parseInt(this.currentThreshold, 10),
         T: Number.parseInt(this.currentPeriod, 10),
       };
