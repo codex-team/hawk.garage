@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import EntityImage from '../utils/EntityImage.vue';
 import ProjectBadge from './ProjectBadge.vue';
 import { projectBadges } from '../../mixins/projectBadges';
@@ -69,6 +69,7 @@ import Icon from '../utils/Icon.vue';
 import { Project } from '@/types/project';
 import SkeletonAvatar from '../utils/SkeletonAvatar.vue';
 import SkeletonBar from '../utils/SkeletonBar.vue';
+import { Workspace } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'ProjectHeader',
@@ -84,8 +85,9 @@ export default Vue.extend({
   mixins: [ projectBadges ],
   props: {
     project: {
-      type: Object as () => Project,
-      required: true,
+      type: Object as PropType<Project | null>,
+      required: false,
+      default: null,
     },
   },
   computed: {
@@ -93,12 +95,12 @@ export default Vue.extend({
     /**
      * Current workspace
      */
-    workspace(): any {
+    workspace(): Workspace {
       if (!this.project) {
         return null;
       }
 
-      return this.$store.getters.getWorkspaceById((this.project as any).workspaceId);
+      return this.$store.getters.getWorkspaceById(this.project.workspaceId);
     },
 
     /**
