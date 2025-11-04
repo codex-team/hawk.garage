@@ -34,13 +34,13 @@ export default {
 .skeleton-avatar {
   @apply --skeleton-base;
 
-  --size: 20px;
+  --size: 26px;
   width: var(--size);
   height: var(--size);
   border-radius: calc(var(--size) / 3.8);
 
   &--small {
-    --size: 20px;
+    --size: 26px;
   }
 
   &--medium {

@@ -31,6 +31,7 @@
           v-else-if="currentWorkspace"
           :workspace="currentWorkspace"
         />
+        <ProjectsMenuSkeleton v-else-if="initialDataLoading" />
       </div>
     </aside>
     <div class="app-shell__content">
@@ -61,6 +62,8 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDial
 import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
 
+import ProjectsMenuSkeleton from './aside/ProjectsMenuSkeleton';
+
 export default {
   name: 'AppShell',
   components: {
@@ -70,6 +73,7 @@ export default {
     WorkspaceInfo,
     ProjectPlaceholder,
     EmptyProjectsList,
+    ProjectsMenuSkeleton,
   },
   props: {
     /**
