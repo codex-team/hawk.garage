@@ -67,7 +67,7 @@ app.config.globalProperties.$sendToHawk = function sendToHawk(error: Error): voi
  * Enable analytics via Amplitude.com
  */
 if (import.meta.env.VITE_AMPLITUDE_TOKEN) {
-  Analytics.init(import.meta.env.VITE_AMPLITUDE_TOKEN);
+  void Analytics.init(import.meta.env.VITE_AMPLITUDE_TOKEN);
 }
 
 setupDirectives(app);
@@ -108,7 +108,7 @@ api.setupApiModuleHandlers({
    * If user refresh token is invalid then log out user
    */
   onAuthError: debounce(() => {
-    store.dispatch(RESET_STORE);
+    void store.dispatch(RESET_STORE);
 
     const key = 'errors.' + errorMessages.UNAUTHENTICATED;
 

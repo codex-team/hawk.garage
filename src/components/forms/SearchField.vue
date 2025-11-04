@@ -11,7 +11,7 @@
       ref="input"
       class="form-search-field__input"
       type="text"
-      :placeholder="placeholder"
+      :placeholder="placeholderText"
       :value="modelValue"
       @input="onChange"
     >
@@ -43,9 +43,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default() {
-        return this.$t('forms.searchField');
-      },
+      default: null,
     },
     skin: {
       type: String,
@@ -63,6 +61,11 @@ export default {
     return {
       inputValue: this.modelValue,
     };
+  },
+  computed: {
+    placeholderText() {
+      return this.placeholder || this.$t('forms.searchField');
+    },
   },
   created() {
     if (this.isCMDKEnabled) {

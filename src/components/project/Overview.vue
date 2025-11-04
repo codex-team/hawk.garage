@@ -101,12 +101,11 @@ import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import {
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
-import { debounce, groupByGroupingTimestamp, prettyDate } from '@/utils';
+import { debounce, groupByGroupingTimestamp, prettyDate, getPlatform } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
-import { getPlatform } from '@/utils';
 import EventItemSkeleton from './EventItemSkeleton';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
 
@@ -313,9 +312,7 @@ export default {
       projectId: this.projectId,
       search: '',
     });
-  },
 
-  unmounted() {
     /** Clear search query when component is unmounted */
     this.$store.commit('SET_PROJECT_SEARCH', {
       projectId: this.projectId,

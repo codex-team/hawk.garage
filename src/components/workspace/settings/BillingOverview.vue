@@ -88,7 +88,7 @@
           <div class="billing-card__events">
             {{ volumeEventsText }}
           </div>
-          <Progress
+          <ProgressBar
             :max="plan.eventsLimit || 0"
             :current="eventsCount"
             :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
@@ -120,7 +120,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
-import Progress from '../../utils/Progress.vue';
+import ProgressBar from '../../utils/Progress.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
 import StatusBlock from '../../utils/StatusBlock.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
@@ -140,7 +140,7 @@ export default defineComponent({
   name: 'BillingOverview',
   components: {
     UiSwitch,
-    Progress,
+    ProgressBar,
     EntityImage,
     UiButton,
     StatusBlock,

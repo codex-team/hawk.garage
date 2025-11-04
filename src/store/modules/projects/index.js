@@ -96,7 +96,7 @@ function initialState() {
  *
  * @namespace Getters
  */
-const getters = {
+const projectsGetters = {
   /**
    * Returns project by id
    *
@@ -654,7 +654,7 @@ const mutations = {
 
 export default {
   state: initialState(),
-  getters,
+  getters: projectsGetters,
   actions,
   mutations,
 };

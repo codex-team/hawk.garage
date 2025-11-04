@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page">
-    <Form
+    <FormComponent
       class="auth-page__form"
       :fields="fields"
       :hidden-fields="hiddenFields"
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Form from './Form';
+import FormComponent from './Form';
 import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
@@ -20,7 +20,7 @@ import { validateUtmParams } from '../utils/utm/utm';
 
 export default {
   components: {
-    Form,
+    FormComponent,
   },
   mixins: [offlineErrorMessage],
   data() {

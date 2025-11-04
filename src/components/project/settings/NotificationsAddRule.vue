@@ -65,7 +65,7 @@
                 v-if="option.id === receiveTypesEnum.SEEN_MORE"
                 class="grid-form__seen-more-description"
               >
-                <TextFieldset
+                <FormTextFieldset
                   v-model="selectedThreshold"
                   type="number"
                   :required="true"
@@ -142,7 +142,6 @@ import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modul
 import notifier from 'codex-notifier';
 import CustomSelect from '@/components/forms/CustomSelect.vue';
 import CustomSelectOption from '@/types/customSelectOption';
-import TextFieldset from './../../forms/TextFieldset.vue';
 
 export default defineComponent({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -152,7 +151,6 @@ export default defineComponent({
     UiCheckbox,
     CustomSelect,
     UiButton,
-    TextFieldset,
   },
   props: {
     /**
@@ -450,16 +448,7 @@ export default defineComponent({
       this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
       this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
 
-      let allChannelsValid = true;
-
-      /**
-       * Check channels
-       */
-      const notEmptyChannels = Object.keys(this.form.channels).forEach((channelName: string) => {
-        if (!this.isChannelEndpointValid(channelName)) {
-          allChannelsValid = false;
-        }
-      });
+      const allChannelsValid = true;
 
       const isThresholdInvalid = !/^[1-9]\d*$/.test(this.selectedThreshold);
 
@@ -476,8 +465,6 @@ export default defineComponent({
      * @param channelName - key of this.form.channels object
      */
     isChannelEndpointValid(channelName: string): boolean {
-      const channel = this.form.channels[channelName];
-
       switch (true) {
         case (channelName === 'email' && this.form.channels.email!.isEnabled):
           if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.form.channels.email!.endpoint)) {

@@ -66,7 +66,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import UiButton from '@/components/utils/UiButton.vue';
-import FormTextFieldset from '../../forms/TextFieldset.vue';
 import { ProjectEventGroupingPattern } from '@/types/project-event-grouping-patterns';
 import { Project } from '@/types/project';
 import { Workspace, ConfirmedMember, Member } from '@/types/workspaces';
@@ -251,7 +250,7 @@ export default defineComponent({
         new RegExp(pattern);
 
         return safe(pattern);
-      } catch (error) {
+      } catch {
         return false;
       }
     },

@@ -29,7 +29,7 @@
       v-if="!event.assignee"
       symbol="assignee"
       class="event-item__assignee event-item__assignee--icon"
-      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+      @click.stop="$emit('onAssigneeIconClick', $event)"
     />
     <EntityImage
       v-else
@@ -39,7 +39,7 @@
       :name="event.assignee.name || event.assignee.email"
       :title="event.assignee.name || event.assignee.email"
       size="20"
-      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+      @click.stop="$emit('onAssigneeIconClick', $event)"
     />
   </div>
 </template>

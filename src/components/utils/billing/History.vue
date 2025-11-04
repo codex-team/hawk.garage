@@ -56,7 +56,7 @@ import { defineComponent } from 'vue';
 import EntityImage from './../EntityImage.vue';
 import { BusinessOperationType } from '@/types/business-operation-type';
 import { i18n } from './../../../i18n';
-import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
+import { BusinessOperation } from '@/types/business-operation';
 import { getCurrencySign } from '@/utils';
 import { prettyDateFromDateTimeString } from '@/utils/filters';
 
@@ -137,8 +137,6 @@ export default defineComponent({
     getDescription(operation: BusinessOperation): string {
       switch (operation.type) {
         case BusinessOperationType.WorkspacePlanPurchase: {
-          const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
-
           return i18n.global.t('billing.operations.chargeForPlan').toString();
         }
 

@@ -25,11 +25,11 @@
           v-if="paymentData && paymentData.isCardLinkOperation"
           class="payment-details__description"
         >
-          <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ nextPaymentDateInSeconds | prettyFullDate(false) }}</p>
+          <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ prettyFullDate(nextPaymentDateInSeconds) }}</p>
           <p>💳 {{ $t('billing.cardLinking.howItWorks') }}</p>
           <ul>
             <li>– {{ $t('billing.cardLinking.step1') }}</li>
-            <li>– {{ $t('billing.cardLinking.step2', { date: $options.filters.prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
+            <li>– {{ $t('billing.cardLinking.step2', { date: prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
           </ul>
         </div>
 
@@ -224,7 +224,6 @@ import notifier from 'codex-notifier';
 // import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
-import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
@@ -233,7 +232,7 @@ import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
-import { getCurrencySign } from '@/utils';
+import { getCurrencySign, prettyFullDate } from '@/utils';
 
 /**
  * Id for the 'New card' option in select
@@ -487,6 +486,7 @@ export default defineComponent({
     }
   },
   methods: {
+    prettyFullDate,
     /**
      * Open service payment
      */

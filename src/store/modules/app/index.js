@@ -38,7 +38,7 @@ export const Languages = {
  * @property {Themes} theme - name of the current theme
  * @property {Languages} language - app language
  */
-const state = {
+const appState = {
   theme: Themes.DARK,
   language: Languages.en,
 };
@@ -145,7 +145,7 @@ const mutations = {
 };
 
 export default {
-  state,
+  state: appState,
   actions,
   mutations,
 };

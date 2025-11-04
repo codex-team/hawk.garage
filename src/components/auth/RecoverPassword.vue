@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page">
-    <Form
+    <FormComponent
       class="auth-page__form"
       :fields="fields"
       :submit-text="submitText"
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Form from './Form.vue';
+import FormComponent from './Form.vue';
 import VueI18n from 'vue-i18n';
 import { RECOVER_PASSWORD } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
@@ -24,7 +24,7 @@ import notifier from 'codex-notifier';
 export default defineComponent({
   name: 'RecoverPassword',
   components: {
-    Form,
+    FormComponent,
   },
   mixins: [
     offlineErrorMessage,
@@ -73,7 +73,6 @@ export default defineComponent({
     /**
      * Method recover user's password by email from form
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
     async recoverPassword(): Promise<void> {
       const emailField = this.fields.find(field => field.name === 'email');
       const email = emailField ? emailField.value : '';

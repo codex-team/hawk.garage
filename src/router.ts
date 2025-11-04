@@ -67,7 +67,7 @@ const router = createRouter({
           path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
-          redirect: to => `/workspace/${to.params.workspaceId}/settings/general`,
+          redirect: to => `/workspace/${to.params.workspaceId.toString()}/settings/general`,
           children: [
             {
               path: 'general',
@@ -266,7 +266,7 @@ router.beforeEach((to, from, next) => {
     /**
      * Track event
      */
-    Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
+    void Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
   } catch (e) {
     console.error(e);
   }

@@ -78,7 +78,7 @@ function initialState() {
  *
  * @namespace Getters
  */
-const getters = {
+const workspacesGetters = {
   /**
    * Returns workspace by id
    *
@@ -413,7 +413,6 @@ const actions = {
    * @param {string} workspaceId - id of workspace to change plan
    * @returns {Promise<void>}
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   async [CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN]({ commit }, { workspaceId }) {
     const result = await workspaceApi.changePlanForFreePLan(workspaceId);
 
@@ -749,7 +748,7 @@ const mutations = {
 
 export default {
   state: initialState(),
-  getters,
+  getters: workspacesGetters,
   actions,
   mutations,
 };

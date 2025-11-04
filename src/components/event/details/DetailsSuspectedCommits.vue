@@ -33,7 +33,7 @@
             </span>
             <span class="details-suspected-commit__left-relative-time">
               {{ $t("event.suspectedCommits.committed") }}
-              {{ commit.date | prettyRelativeTimeStr }}
+              {{ prettyRelativeTimeStr(commit.date.toISOString()) }}
             </span>
           </div>
         </div>
@@ -67,6 +67,7 @@ import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import { HawkEventCommit } from '@/types/events';
+import { prettyRelativeTimeStr } from '@/utils';
 
 export default defineComponent({
   name: 'DetailsSuspectedCommits',
@@ -109,6 +110,9 @@ export default defineComponent({
         ? this.commits
         : this.commits.slice(0, this.numberOfVisibleCommits);
     },
+  },
+  methods: {
+    prettyRelativeTimeStr,
   },
 });
 </script>

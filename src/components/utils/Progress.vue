@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="progress">
     <div
       class="progress__bar"
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'Progress',
+  name: 'ProgressBar',
   props: {
     current: {
       type: Number,

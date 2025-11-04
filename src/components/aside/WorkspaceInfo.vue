@@ -134,7 +134,7 @@ export default defineComponent({
           isCurrentUserAdmin: this.isAdmin,
         },
         popoverProps: {
-          showBelowElement: (this.$refs['events-count-circle'] as Vue).$el,
+          showBelowElement: this.$refs['events-count-circle'].$el,
         },
       });
     },

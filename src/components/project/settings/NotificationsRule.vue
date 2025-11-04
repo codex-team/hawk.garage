@@ -122,8 +122,8 @@ export default defineComponent({
       const result = {} as ProjectNotificationsChannels;
 
       Object.entries(this.rule.channels as ProjectNotificationsChannels)
-        .filter(([_name, channel]) => channel ? channel.endpoint !== '' : false)
-        .filter(([_name, channel]) => channel ? channel.isEnabled === true : false)
+        .filter(([, channel]) => channel ? channel.endpoint !== '' : false)
+        .filter(([, channel]) => channel ? channel.isEnabled === true : false)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });

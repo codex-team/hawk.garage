@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="events-limit-indicator__tooltip-dialog">
     <div class="events-limit-indicator__info-section">
       <div class="events-limit-indicator__label">
@@ -16,7 +16,7 @@
           {{ abbreviatedEventsLimit }}
           {{ $t("billing.volumeEvents", { count: eventsCount }) }}
         </div>
-        <Progress
+        <ProgressBar
           :max="plan.eventsLimit || 0"
           :current="eventsCount"
           :color="
@@ -35,14 +35,14 @@
 import { defineComponent } from 'vue';
 // import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
-import Progress from '../utils/Progress.vue';
+import ProgressBar from '../utils/Progress.vue';
 import { abbreviateNumber } from '../../utils';
 
 export default defineComponent({
   name: 'EventsLimitIndicator',
   components: {
     // PositiveButton,
-    Progress,
+    ProgressBar,
   },
   props: {
     /**

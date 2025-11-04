@@ -55,9 +55,7 @@ interface FiltersBarData {
     unresolved: EventsFilters;
     ignored: EventsFilters;
   };
-  sortOptions: {
-    [K in EventsSortOrder]: string
-  };
+  sortOptions: Record<EventsSortOrder, string>;
   selectedOrder: EventsSortOrder;
   isLoading: boolean;
 }

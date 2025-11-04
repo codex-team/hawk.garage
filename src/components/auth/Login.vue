@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page">
-    <Form
+    <FormComponent
       ref="form"
       class="auth-page__form"
       :fields="fields"
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Form from './Form';
+import FormComponent from './Form';
 import { LOGIN, SET_TOKENS } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
@@ -23,7 +23,7 @@ import notifier from 'codex-notifier';
 export default {
   name: 'Login',
   components: {
-    Form,
+    FormComponent,
   },
   mixins: [offlineErrorMessage],
   props: {

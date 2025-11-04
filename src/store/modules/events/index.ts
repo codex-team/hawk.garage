@@ -514,7 +514,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param project.eventId - event's id
      * @param project.days - number of a "few" days
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, originalEventId, days }: { projectId: string;
       eventId: string;
       originalEventId: string;

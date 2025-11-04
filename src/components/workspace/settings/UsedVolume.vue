@@ -12,7 +12,7 @@
       {{ plan.eventsLimit }}
       {{ $tc("billing.volumeEvents", eventsCount) }}
     </div>
-    <Progress
+    <ProgressBar
       :max="plan.eventsLimit || 0"
       :current="eventsCount"
       :color="
@@ -35,13 +35,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Progress from '../../utils/Progress.vue';
+import ProgressBar from '../../utils/Progress.vue';
 import { Plan } from '../../../types/plan';
 
 export default defineComponent({
   name: 'WorkspaceSettingsUsedVolume',
   components: {
-    Progress,
+    ProgressBar,
   },
   props: {
     /**
