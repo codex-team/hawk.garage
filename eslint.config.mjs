@@ -37,7 +37,6 @@ export default [
       '@typescript-eslint/no-empty-object-type': 'warn',
       '@typescript-eslint/no-redundant-type-constituents': 'warn',
       '@typescript-eslint/require-await': 'warn',
-      // '@typescript-eslint/ban-types': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
 
       'n/no-missing-import': 'warn',
