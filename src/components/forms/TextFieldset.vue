@@ -26,13 +26,13 @@
       :type="type || 'text'"
       :name="name"
       :value="value"
+      :min="min"
+      :max="max"
       :placeholder="placeholder"
       :required="required"
       :hidden="hidden"
       :disabled="disabled"
-      :maxlength="maxlength"
-      @input="handleInput"
-      @keypress="$emit('keypress', $event)"
+      @input="$emit('input', $event.target.value)"
     />
   </fieldset>
 </template>
@@ -126,29 +126,21 @@ export default {
       type: Boolean,
       default: false,
     },
-    maxlength: {
-      type: Number,
-      default: undefined,
-    },
-  },
-  methods: {
+
     /**
-     * Handle input event and enforce maxlength if provided
+     * Minimum value for number type
      */
-    handleInput(event) {
-      let value = event.target.value;
+    min: {
+      type: Number,
+      default: null,
+    },
 
-      // Enforce maxlength for number inputs (browsers ignore maxlength for type="number")
-      if (
-        this.maxlength !== undefined &&
-        this.maxlength !== null &&
-        value.length > this.maxlength
-      ) {
-        value = value.slice(0, this.maxlength);
-        event.target.value = value;
-      }
-
-      this.$emit('input', value);
+    /**
+     * Maximum value for number type
+     */
+    max: {
+      type: Number,
+      default: null,
     },
   },
 };

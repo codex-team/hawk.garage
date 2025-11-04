@@ -2,33 +2,28 @@
   <form class="rate-limits-form" @submit.prevent="handleSubmit">
     <div class="rate-limits-form__fields">
       <TextFieldset
-        :value="currentThreshold"
+        v-model="currentThreshold"
         type="number"
         :required="true"
         :disabled="disabled"
-        :is-invalid="isThresholdInvalid"
-        :maxlength="10"
+        :is-invalid="!isThresholdValid"
+        :min="1"
+        :max="1000000000"
         :label="$t('projects.settings.rateLimits.threshold')"
-        @input="onThresholdInput"
-        @keypress="onKeyPress"
       />
       <TextFieldset
-        :value="currentPeriod"
+        v-model="currentPeriod"
         type="number"
         :required="true"
         :disabled="disabled"
-        :is-invalid="isPeriodInvalid"
-        :maxlength="10"
+        :is-invalid="!isPeriodValid"
+        :min="60"
+        :max="31536000"
         :label="$t('projects.settings.rateLimits.period')"
-        @input="onPeriodInput"
-        @keypress="onKeyPress"
       />
     </div>
 
     <div class="rate-limits-form__submit-area">
-      <div v-if="showPeriodError" class="rate-limits-form__error-message">
-        {{ $t('projects.settings.rateLimits.periodDescription') }}
-      </div>
       <button
         class="button button--submit rate-limits-form__submit-button"
         type="submit"
@@ -91,71 +86,18 @@ export default Vue.extend({
   },
   data() {
     return {
-      selectedThreshold: '',
-      periodSeconds: '',
+      currentThreshold: '',
+      currentPeriod: '',
     };
   },
   computed: {
-    /**
-     * Current threshold value from prop or local state
-     */
-    currentThreshold(): string {
-      return this.selectedThreshold || this.value?.N?.toString() || '';
-    },
-
-    /**
-     * Current period value from prop or local state
-     */
-    currentPeriod(): string {
-      return this.periodSeconds || this.value?.T?.toString() || '';
-    },
-
-    /**
-     * Check if threshold value should be marked as invalid (only if value is entered)
-     */
-    isThresholdInvalid(): boolean {
-      const str = this.currentThreshold.toString().trim();
-      if (!str) {
-        return false;
-      }
-      const num = Number.parseInt(str, 10);
-      return Number.isNaN(num) || num <= 0 || !/^\d+$/.test(str);
-    },
-
-    /**
-     * Check if period value should be marked as invalid (only if value is entered)
-     */
-    isPeriodInvalid(): boolean {
-      const str = this.currentPeriod.toString().trim();
-      if (!str) {
-        return false;
-      }
-      const num = Number.parseInt(str, 10);
-      return Number.isNaN(num) || num < 60 || !/^\d+$/.test(str);
-    },
-
-    /**
-     * Show period error message when user enters invalid value
-     */
-    showPeriodError(): boolean {
-      const str = this.currentPeriod.toString().trim();
-      if (!str) {
-        return false;
-      }
-      const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num < 60 && /^\d+$/.test(str);
-    },
-
     /**
      * Check if threshold value is valid (positive integer > 0)
      */
     isThresholdValid(): boolean {
       const str = this.currentThreshold.toString().trim();
-      if (!str) {
-        return false;
-      }
       const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num > 0 && /^\d+$/.test(str);
+      return !Number.isNaN(num) && num >= 1 && num <= 1000000000 && /^\d+$/.test(str);
     },
 
     /**
@@ -163,11 +105,8 @@ export default Vue.extend({
      */
     isPeriodValid(): boolean {
       const str = this.currentPeriod.toString().trim();
-      if (!str) {
-        return false;
-      }
       const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num >= 60 && /^\d+$/.test(str);
+      return !Number.isNaN(num) && num >= 60 && num <= 31536000 && /^\d+$/.test(str);
     },
 
     /**
@@ -190,78 +129,20 @@ export default Vue.extend({
       const originalN = this.value?.N ?? null;
       const originalT = this.value?.T ?? null;
 
-      // If both are null/empty, no changes
-      if (currentN === null && currentT === null && originalN === null && originalT === null) {
-        return false;
-      }
-
-      // If original was null but we have values, there are changes
-      if (originalN === null && originalT === null && (currentN !== null || currentT !== null)) {
-        return true;
-      }
-
-      // Compare values
       return currentN !== originalN || currentT !== originalT;
     },
   },
   watch: {
-    value() {
-      if (this.value) {
-        this.selectedThreshold = this.value.N?.toString() || '';
-        this.periodSeconds = this.value.T?.toString() || '';
-      } else {
-        this.selectedThreshold = '';
-        this.periodSeconds = '';
-      }
+    value: {
+      handler() {
+        // Default: 10,000 events per day (86400 seconds in a day)
+        this.currentThreshold = this.value?.N?.toString() || '10000';
+        this.currentPeriod = this.value?.T?.toString() || '86400';
+      },
+      immediate: true,
     },
   },
   methods: {
-    /**
-     * Handle threshold input changes
-     */
-    onThresholdInput(value: string) {
-      let numericValue = value.replace(/\D/g, '');
-      if (numericValue.length > 10) {
-        numericValue = numericValue.slice(0, 10);
-      }
-      this.selectedThreshold = numericValue;
-    },
-
-    /**
-     * Handle period input changes
-     */
-    onPeriodInput(value: string) {
-      let numericValue = value.replace(/\D/g, '');
-      if (numericValue.length > 10) {
-        numericValue = numericValue.slice(0, 10);
-      }
-      this.periodSeconds = numericValue;
-    },
-
-    /**
-     * Prevent non-numeric input
-     */
-    onKeyPress(event: KeyboardEvent) {
-      const allowedKeys = [
-        'Backspace',
-        'Delete',
-        'ArrowLeft',
-        'ArrowRight',
-        'ArrowUp',
-        'ArrowDown',
-        'Tab',
-        'Home',
-        'End',
-      ];
-      const isDigit = /^\d$/.test(event.key);
-      const isAllowedKey = allowedKeys.includes(event.key);
-      const isModifier = event.ctrlKey || event.metaKey || event.altKey;
-
-      if (!isDigit && !isAllowedKey && !isModifier) {
-        event.preventDefault();
-      }
-    },
-
     /**
      * Handle form submit
      */

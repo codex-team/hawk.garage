@@ -50,7 +50,7 @@ export async function updateProject(projectInfo) {
  * @returns {Promise<Project>}
  */
 export async function updateProjectRateLimits(id, rateLimitSettings) {
-  const response = (await api.call(MUTATION_UPDATE_PROJECT_RATE_LIMITS, { id, rateLimitSettings }))
+  const response = await api.call(MUTATION_UPDATE_PROJECT_RATE_LIMITS, { id, rateLimitSettings })
 
   const updatedProjectRateLimits = response.data.updateProjectRateLimits;
 
