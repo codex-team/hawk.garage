@@ -47,7 +47,7 @@ export async function updateProject(projectInfo) {
  *
  * @param {string} id - project id
  * @param {ProjectRateLimitSettings | null} rateLimitSettings - rate limit settings (null to remove)
- * @returns {Promise<Project>}
+ * @returns {Promise<ProjectRateLimitSettings | null>}
  */
 export async function updateProjectRateLimits(id, rateLimitSettings) {
   const response = await api.call(MUTATION_UPDATE_PROJECT_RATE_LIMITS, { id, rateLimitSettings })
