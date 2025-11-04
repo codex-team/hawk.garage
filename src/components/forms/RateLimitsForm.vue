@@ -8,7 +8,7 @@
         :disabled="disabled"
         :is-invalid="!isThresholdValid"
         :min="1"
-        :max="1000000000"
+        :max="maxThreshold"
         :label="$t('projects.settings.rateLimits.threshold')"
       />
       <TextFieldset
@@ -69,6 +69,14 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Maximum threshold value (from plan events limit)
+     */
+    maxThreshold: {
+      type: Number,
+      default: 1000000000,
+    },
   },
   data() {
     return {
@@ -78,21 +86,17 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Check if threshold value is valid (positive integer > 0)
+     * Check if threshold value is valid (positive integer >= 1)
      */
     isThresholdValid(): boolean {
-      const str = this.currentThreshold.toString().trim();
-      const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num >= 1 && num <= 1000000000 && /^\d+$/.test(str);
+      return this.isStringNumeric(this.currentThreshold, 1, this.maxThreshold);
     },
 
     /**
      * Check if period value is valid (positive integer >= 60)
      */
     isPeriodValid(): boolean {
-      const str = this.currentPeriod.toString().trim();
-      const num = Number.parseInt(str, 10);
-      return !Number.isNaN(num) && num >= 60 && num <= 2678400 && /^\d+$/.test(str);
+      return this.isStringNumeric(this.currentPeriod, 60, 2678400);
     },
 
     /**
@@ -121,14 +125,23 @@ export default Vue.extend({
   watch: {
     value: {
       handler() {
-        // Default: 10,000 events per hour (3600 seconds in an hour)
-        this.currentThreshold = this.value?.N?.toString() || '10000';
+        // Default: maxThreshold events per hour (3600 seconds in an hour)
+        this.currentThreshold = this.value?.N?.toString() || this.maxThreshold.toString();
         this.currentPeriod = this.value?.T?.toString() || '3600';
       },
       immediate: true,
     },
   },
   methods: {
+    /**
+     * Check if string is numeric and within min/max range
+     */
+    isStringNumeric(str: string, min: number, max: number): boolean {
+      const trimmed = str.toString().trim();
+      const num = Number.parseInt(trimmed, 10);
+      return !Number.isNaN(num) && num >= min && num <= max && /^\d+$/.test(trimmed);
+    },
+
     /**
      * Handle form submit
      */

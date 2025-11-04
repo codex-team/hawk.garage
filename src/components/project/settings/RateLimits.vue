@@ -10,6 +10,7 @@
       :key="project.id"
       :value="project.rateLimitSettings"
       :disabled="!isRateLimitsAvailable"
+      :max-threshold="maxThreshold"
       @submit="handleSubmit"
       @clear="handleClear"
     />
@@ -21,8 +22,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import RateLimitsForm, { RateLimitSettings } from '../../forms/RateLimitsForm.vue';
-import { Project } from '../../../types/project';
+import RateLimitsForm from '../../forms/RateLimitsForm.vue';
+import { Project, ProjectRateLimitSettings } from '../../../types/project';
 import { UPDATE_PROJECT_RATE_LIMITS } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
 
@@ -61,12 +62,20 @@ export default Vue.extend({
 
       return !isFree;
     },
+
+    /**
+     * Get workspace plan events limit
+     */
+    maxThreshold(): number {
+      const workspace = this.$store.getters.getWorkspaceByProjectId(this.project.id);
+      return workspace?.plan?.eventsLimit || 1000000000;
+    },
   },
   methods: {
     /**
      * Handle form submit from RateLimitsForm component
      */
-    async handleSubmit(rateLimitSettings: RateLimitSettings): Promise<void> {
+    async handleSubmit(rateLimitSettings: ProjectRateLimitSettings): Promise<void> {
       try {
         await this.$store.dispatch(UPDATE_PROJECT_RATE_LIMITS, {
           id: this.project.id,
