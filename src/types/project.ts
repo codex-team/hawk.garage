@@ -3,6 +3,21 @@ import { ProjectNotificationsRule } from './project-notifications';
 import { ProjectEventGroupingPattern } from './project-event-grouping-patterns';
 
 /**
+ * Rate limits configuration for a project
+ */
+export interface ProjectRateLimitSettings {
+  /**
+   * Rate limit threshold (N events)
+   */
+  N: number;
+
+  /**
+   * Rate limit period in seconds (T seconds)
+   */
+  T: number;
+}
+
+/**
  * Structure represents a Project got from API
  */
 export interface Project {
@@ -50,4 +65,9 @@ export interface Project {
    * List of events grouping patterns
    */
   eventGroupingPatterns?: ProjectEventGroupingPattern[];
+
+  /**
+   * Rate limits configuration
+   */
+  rateLimitSettings?: ProjectRateLimitSettings;
 }

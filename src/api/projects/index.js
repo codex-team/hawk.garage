@@ -1,6 +1,7 @@
 import {
   MUTATION_CREATE_PROJECT,
   MUTATION_UPDATE_PROJECT,
+  MUTATION_UPDATE_PROJECT_RATE_LIMITS,
   MUTATION_UPDATE_LAST_VISIT,
   MUTATION_CREATE_PROJECT_NOTIFY_RULE,
   MUTATION_UPDATE_PROJECT_NOTIFY_RULE,
@@ -11,7 +12,8 @@ import {
   MUTATION_REMOVE_PROJECT,
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
   MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS,
-  QUERY_CHART_DATA, MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
+  QUERY_CHART_DATA,
+  MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
 } from './queries';
 import * as api from '../index.ts';
 import { ChartData } from '../../types/events';
@@ -39,6 +41,30 @@ export async function updateProject(projectInfo) {
   const { image, ...rest } = projectInfo;
 
   return (await api.callOld(MUTATION_UPDATE_PROJECT, rest, { image })).updateProject;
+}
+
+/**
+ * Update project rate limit settings
+ *
+ * @param {string} id - project id
+ * @param {ProjectRateLimitSettings | null} rateLimitSettings - rate limit settings (null to remove)
+ * @returns {Promise<ProjectRateLimitSettings | null>}
+ */
+export async function updateProjectRateLimits(id, rateLimitSettings) {
+  const response = await api.call(
+    MUTATION_UPDATE_PROJECT_RATE_LIMITS,
+    { id, rateLimitSettings },
+    undefined,
+    { allowErrors: true }
+  );
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
+  }
+
+  const updatedProjectRateLimits = response.data.updateProjectRateLimits;
+
+  return updatedProjectRateLimits;
 }
 
 /**

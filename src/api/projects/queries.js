@@ -1,6 +1,4 @@
-import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
-} from '../fragments';
+import { PROJECT_NOTIFICATIONS_RULE_FRAGMENT } from '../fragments';
 
 /**
  * Mutation for creating new project
@@ -43,6 +41,27 @@ export const MUTATION_UPDATE_PROJECT = `
             name
             description
             image
+        }
+    }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for updating project rate limits settings
+ */
+export const MUTATION_UPDATE_PROJECT_RATE_LIMITS = `
+    mutation updateProjectRateLimits(
+        $id: ID!
+        $rateLimitSettings: RateLimitSettingsInput
+    ) {
+        updateProjectRateLimits(
+            id: $id,
+            rateLimitSettings: $rateLimitSettings
+        ) {
+            rateLimitSettings {
+                N
+                T
+            }
         }
     }
 `;
