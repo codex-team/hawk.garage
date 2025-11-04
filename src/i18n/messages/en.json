@@ -303,7 +303,9 @@
         "image": "Image",
         "submit": "Save",
         "created": "Created at Aug 25, 2019",
-        "updatedMessage": "Workspace was updated"
+        "updatedMessage": "Workspace was updated",
+        "id": "Workspace ID",
+        "idDescription": "Please provide it when contacting support"
       },
       "team": {
         "title": "Team",
@@ -411,7 +413,13 @@
       "allowCardSaving": "Save card for future payments",
       "goToPaymentService": "Go to payment service",
       "payWithSelectedCard": "Pay with selected card",
-      "newCard": "New card"
+      "newCard": "New card",
+      "invoice": {
+        "title": "Payment by invoice",
+        "description": "If you want to pay for the plan by issuing an invoice, please contact us at",
+        "readMore": "Read more about payment by invoice",
+        "emailSubject": "Request for payment by invoice. Workspace {workspaceName} (id {workspaceId}). Plan {planName}"
+      }
     },
     "notifications": {
       "error": "A payment processing error occurred. Please try again"

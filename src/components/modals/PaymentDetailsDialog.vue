@@ -185,6 +185,26 @@
             />
           </a>
         </div>
+
+        <div class="payment-details__invoice">
+          <h3> {{ $t('billing.paymentDetails.invoice.title') }} </h3>
+
+          {{ $t('billing.paymentDetails.invoice.description') }}
+          <a
+            :href="`mailto:team@hawk.so?subject=${encodeURIComponent($t('billing.paymentDetails.invoice.emailSubject', { workspaceName: workspace.name, workspaceId: workspace.id, planName: plan.name }))}`"
+            target="_blank"
+            class="payment-details__invoice-email"
+          >
+            team@hawk.so
+          </a>
+          <a
+            href="https://docs.hawk-tracker.ru/pay-by-invoice"
+            target="_blank"
+            class="payment-details__invoice-read-more"
+          >
+            {{ $t('billing.paymentDetails.invoice.readMore') }}
+          </a>
+        </div>
       </template>
     </div>
   </PopupDialog>
@@ -761,6 +781,47 @@ export default Vue.extend({
   @keyframes spinner {
     to {
       transform: rotate(360deg);
+    }
+  }
+
+  &__invoice {
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--color-text-second);
+    line-height: 1.4;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 1px;
+      background-color: var(--color-delimiter-line);
+    }
+
+    h3 {
+      font-size: inherit;
+      font-weight: 500;
+      color: var(--color-text-main);
+      margin-bottom: 6px;
+    }
+
+    &-read-more {
+      display: inline-block;
+      margin-top: 6px;
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    &-email {
+      display: inline-block;
+      color: inherit;
+      color: var(--color-indicator-medium);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--color-indicator-medium-dark);
+      }
     }
   }
 }
