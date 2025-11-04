@@ -21,7 +21,10 @@
         v-if="event.payload.cookies && event.payload.cookies.length"
         class="event-overview__section"
         :cookies="event.payload.cookies"
-      />
+      />                <!-- Debug -->
+      <pre style=" padding: 10px; margin-bottom: 10px;">{{ JSON.stringify(event.payload, null, 2) }}</pre>
+
+      <DetailsUser v-if="event.payload.user" class="event-overview__section" :payloadUser="event.payload.user" />
       <DetailsAddons
         v-if="getIntegrationAddons('vue')"
         class="event-overview__section"
@@ -83,6 +86,7 @@ import DetailsCookie from './details/DetailsCookie.vue';
 import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
+import DetailsUser from './details/DetailsUser.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
@@ -94,6 +98,7 @@ export default Vue.extend({
     DetailsBacktrace,
     DetailsAddons,
     DetailsSuspectedCommits,
+    DetailsUser,
   },
   props: {
     /**
