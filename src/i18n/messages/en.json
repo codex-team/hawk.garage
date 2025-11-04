@@ -500,8 +500,14 @@
       "consoleOutput": "Console Output"
     },
     "user": {
+      "affectedUser": "Affected user",
+      "title": "User",
+      "id": "ID",
+      "name": "Name",
+      "link": "Link",
       "unknown": "Unknown",
-      "noname": "No name"
+      "noname": "No name",
+      "viewProfile": "View profile"
     },
     "limit": {
       "title": "Event Hidden",
