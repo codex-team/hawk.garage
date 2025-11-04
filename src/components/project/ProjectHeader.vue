@@ -38,8 +38,8 @@
         v-else
         class="project-header__row-skeleton"
       >
-        <div class="project-header__row-skeleton-image" />
-        <div class="project-header__row-skeleton-title" />
+        <SkeletonAvatar size="small" />
+        <SkeletonBar width="100px" height="15px" />
       </div>
       <UiButton
         v-if="project"
@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import EntityImage from '../utils/EntityImage.vue';
 import ProjectBadge from './ProjectBadge.vue';
 import { projectBadges } from '../../mixins/projectBadges';
@@ -67,6 +67,9 @@ import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import UiButton from '../utils/UiButton.vue';
 import Icon from '../utils/Icon.vue';
 import { Project } from '@/types/project';
+import SkeletonAvatar from '../utils/SkeletonAvatar.vue';
+import SkeletonBar from '../utils/SkeletonBar.vue';
+import { Workspace } from '@/types/workspaces';
 
 export default Vue.extend({
   name: 'ProjectHeader',
@@ -76,27 +79,28 @@ export default Vue.extend({
     TabBar,
     UiButton,
     Icon,
+    SkeletonAvatar,
+    SkeletonBar,
   },
   mixins: [ projectBadges ],
-  computed: {
-    /**
-     * Currently viewed project
-     */
-    project(): Project | null {
-      const projectId = this.$route.params.projectId;
-
-      return this.$store.getters.getProjectById(projectId);
+  props: {
+    project: {
+      type: Object as PropType<Project | null>,
+      required: false,
+      default: null,
     },
+  },
+  computed: {
 
     /**
      * Current workspace
      */
-    workspace(): any {
+    workspace(): Workspace | null {
       if (!this.project) {
         return null;
       }
 
-      return this.$store.getters.getWorkspaceById((this.project as any).workspaceId);
+      return this.$store.getters.getWorkspaceById(this.project.workspaceId);
     },
 
     /**
@@ -134,8 +138,11 @@ export default Vue.extend({
 
   &__project {
     display: flex;
-    align-items: center;
     padding-block: 12px;
+  }
+
+  &__settings-button {
+    margin: -3px;
   }
 
   &__row {
@@ -161,6 +168,11 @@ export default Vue.extend({
         text-overflow: ellipsis;
       }
     }
+    &-skeleton {
+      display: flex;
+      align-items : center;
+      gap: 10px;
+    }
   }
 
   &__blocked-icon {
@@ -177,26 +189,6 @@ export default Vue.extend({
   margin-top: -5px;
   margin-bottom: -5px;
   margin-left: auto;
-}
-
-&__row-skeleton {
-  display: flex;
-  align-items: center;
-
-  &-image {
-    width: 26px;
-    height: 26px;
-    margin-right: 10px;
-    background-color: var(--color-bg-second);
-    border-radius: 6px;
-  }
-
-  &-title {
-    width: 100px;
-    height: 15px;
-    background-color: var(--color-bg-second);
-    border-radius: 6px;
-  }
 }
 
 .tab-bar {
