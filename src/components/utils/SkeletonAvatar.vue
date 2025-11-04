@@ -5,27 +5,29 @@
   />
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+
+type SkeletonAvatarSize = 'small' | 'medium' | 'large';
+
 /**
  * Reusable skeleton avatar component with animated gradient
  */
-export default {
+export default Vue.extend({
   name: 'SkeletonAvatar',
   props: {
     /**
      * Size of the avatar skeleton
-     *
-     * @type {'small' | 'medium' | 'large'}
      */
     size: {
-      type: String,
-      default: 'medium',
-      validator: (value) => {
-        return [ 'small', 'medium', 'large' ].includes(value);
+      type: String as PropType<SkeletonAvatarSize>,
+      default: 'medium' as SkeletonAvatarSize,
+      validator: (value: string): boolean => {
+        return ['small', 'medium', 'large'].includes(value);
       },
     },
   },
-};
+});
 </script>
 
 <style>

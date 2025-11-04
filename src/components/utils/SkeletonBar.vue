@@ -6,30 +6,30 @@
   />
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+
+type SkeletonBarSize = 'small' | 'medium' | 'large';
+
 /**
  * Reusable skeleton bar component with animated gradient
  */
-export default {
+export default Vue.extend({
   name: 'SkeletonBar',
   props: {
     /**
      * Predefined size variant
-     *
-     * @type {'small' | 'medium' | 'large'}
      */
     size: {
-      type: String,
-      default: 'medium',
-      validator: (value) => {
-        return [ 'small', 'medium', 'large' ].includes(value);
+      type: String as PropType<SkeletonBarSize>,
+      default: 'medium' as SkeletonBarSize,
+      validator: (value: string): boolean => {
+        return ['small', 'medium', 'large'].includes(value);
       },
     },
 
     /**
      * Custom width
-     *
-     * @type {string}
      */
     width: {
       type: String,
@@ -38,8 +38,6 @@ export default {
 
     /**
      * Custom height
-     *
-     * @type {string}
      */
     height: {
       type: String,
@@ -48,15 +46,13 @@ export default {
 
     /**
      * Whether to use rounded corners
-     *
-     * @type {boolean}
      */
     rounded: {
       type: Boolean,
       default: false,
     },
   },
-};
+});
 </script>
 
 <style>

@@ -25,14 +25,15 @@
   </div>
 </template>
 
-<script>
-import SkeletonAvatar from '../utils/SkeletonAvatar';
-import SkeletonBar from '../utils/SkeletonBar';
+<script lang="ts">
+import Vue from 'vue';
+import SkeletonAvatar from '../utils/SkeletonAvatar.vue';
+import SkeletonBar from '../utils/SkeletonBar.vue';
 
 /**
  * Skeleton loader for projects menu items
  */
-export default {
+export default Vue.extend({
   name: 'ProjectsMenuSkeleton',
   components: {
     SkeletonAvatar,
@@ -41,15 +42,13 @@ export default {
   props: {
     /**
      * Number of skeleton items to display
-     *
-     * @type {number}
      */
     count: {
       type: Number,
       default: 5,
     },
   },
-};
+});
 </script>
 
 <style>
