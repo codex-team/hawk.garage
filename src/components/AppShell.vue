@@ -1,7 +1,9 @@
 <template>
   <div class="app-shell">
     <aside class="aside">
-      <Sidebar />
+      <Sidebar
+        :is-loading="initialDataLoading"
+      />
       <div class="aside__right-column">
         <WorkspaceInfo
           v-if="currentWorkspace"
@@ -85,6 +87,13 @@ export default {
        */
       modalComponent: null,
       searchQuery: '',
+
+      /**
+       * Status of initial data loading
+       *
+       * @type {boolean}
+       */
+      initialDataLoading: false,
     };
   },
   computed: {
@@ -212,6 +221,7 @@ export default {
    */
   async created() {
     try {
+      this.initialDataLoading = true;
       /**
        * Fetch user data
        */
@@ -241,6 +251,8 @@ export default {
     } catch (error) {
       console.error(error);
       this.$sendToHawk(`Error on app initialization!: ${error.message}`);
+    } finally {
+      this.initialDataLoading = false;
     }
   },
   methods: {
