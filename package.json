@@ -3,21 +3,21 @@
   "version": "0.4.3",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "NODE_OPTIONS='--openssl-legacy-provider' vue-cli-service serve",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' vue-cli-service build",
     "lint": "yarn lint:js && yarn lint:css",
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
     "lint:js": "eslint src/ --ext .js --ext .ts --ext .vue --fix",
     "serve:prod": "http-server ./dist --push-state -c-0",
-    "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
-    "storybook:build": "vue-cli-service storybook:build -c config/storybook",
+    "storybook": "NODE_OPTIONS='--openssl-legacy-provider' vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
+    "storybook:build": "NODE_OPTIONS='--openssl-legacy-provider' vue-cli-service storybook:build -c config/storybook",
     "get-schema": "get-graphql-schema http://localhost:4000/graphql > schema.graphql",
     "cy:run": "cypress run",
     "e2e:ci": "start-server-and-test serve 8080 cy:run"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^0.3.1",
-    "@hawk.so/javascript": "^3.0.6",
+    "@hawk.so/javascript": "^3.2.8",
     "@hawk.so/types": "^0.1.18",
     "@hawk.so/webpack-plugin": "^1.0.1",
     "@n1ru4l/json-patch-plus": "^0.2.0",
@@ -40,6 +40,7 @@
     "postcss-nested-ancestors": "^2.0.0",
     "postcss-preset-env": "^6.6.0",
     "postcss-simple-vars": "^5.0.2",
+    "safe-regex": "^2.1.0",
     "short-number": "^1.0.7",
     "spa-http-server": "^0.9.0",
     "svgo": "^1.1.0",
@@ -57,8 +58,7 @@
     "vue-template-compiler": "^2.6.11",
     "vue-unique-id": "^3.2.1",
     "vuex": "^3.1.2",
-    "vuex-persistedstate": "^3.0.1",
-    "safe-regex": "^2.1.0"
+    "vuex-persistedstate": "^3.0.1"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^6.3.12",
