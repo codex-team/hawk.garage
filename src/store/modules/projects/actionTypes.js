@@ -72,3 +72,8 @@ export const TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE = 'TOGGLE_NOTIFICATIONS_RUL
  * Get events counters for the last N days at the specific project
  */
 export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
+
+/**
+ * Send request to update project rate limits settings
+ */
+export const UPDATE_PROJECT_RATE_LIMITS = 'UPDATE_PROJECT_RATE_LIMITS';

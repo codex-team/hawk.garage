@@ -144,6 +144,11 @@ const router = new Router({
               ],
             },
             {
+              path: 'releases',
+              name: 'project-releases',
+              component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue'),
+            },
+            {
               path: 'add-catcher',
               name: 'add-catcher',
               component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue'),
@@ -183,6 +188,14 @@ const router = new Router({
               path: 'patterns',
               name: 'project-settings-patterns',
               component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/EventGroupingPattern.vue'),
+            },
+            {
+              path: 'rate-limits',
+              name: 'project-settings-rate-limits',
+              component: () =>
+                import(
+                  /* webpackChunkName: 'project-settings' */ './components/project/settings/RateLimits.vue'
+                ),
             },
           ],
         },

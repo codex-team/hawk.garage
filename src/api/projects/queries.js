@@ -1,6 +1,4 @@
-import {
-  PROJECT_NOTIFICATIONS_RULE_FRAGMENT
-} from '../fragments';
+import { PROJECT_NOTIFICATIONS_RULE_FRAGMENT } from '../fragments';
 
 /**
  * Mutation for creating new project
@@ -43,6 +41,27 @@ export const MUTATION_UPDATE_PROJECT = `
             name
             description
             image
+        }
+    }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for updating project rate limits settings
+ */
+export const MUTATION_UPDATE_PROJECT_RATE_LIMITS = `
+    mutation updateProjectRateLimits(
+        $id: ID!
+        $rateLimitSettings: RateLimitSettingsInput
+    ) {
+        updateProjectRateLimits(
+            id: $id,
+            rateLimitSettings: $rateLimitSettings
+        ) {
+            rateLimitSettings {
+                N
+                T
+            }
         }
     }
 `;
@@ -193,6 +212,24 @@ export const QUERY_CHART_DATA = `
       chartData(days: $days, timezoneOffset: $timezoneOffset) {
         timestamp
         count
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Get project releases
+ */
+export const QUERY_PROJECT_RELEASES = `
+  query ProjectReleases($projectId: ID!) {
+    project(projectId: $projectId) {
+      releases {
+        release
+        timestamp
+        newEventsCount
+        commitsCount
+        filesCount
       }
     }
   }

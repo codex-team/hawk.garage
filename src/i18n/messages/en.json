@@ -204,11 +204,31 @@
             "invalidLink": "Invalid unsubscribe link"
           }
         }
+      },
+      "rateLimits": {
+        "title": "Rate Limits",
+        "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
+        "threshold": "No more than",
+        "period": "for period (seconds)",
+        "submit": "Save",
+        "clear": "Clear",
+        "updatedMessage": "Rate limits updated successfully",
+        "clearedMessage": "Rate limits cleared successfully",
+        "paidOnlyMessage": "Rate limits are available only for paid plans"
       }
     },
     "notFound": "Project not found",
     "tabs": {
-      "events": "Events"
+      "events": "Events",
+      "releases": "Releases"
+    },
+    "releases": {
+      "noNewEvents": "No new events",
+      "stats": {
+        "newEvents": "New events",
+        "commits": "Commits",
+        "files": "Files"
+      }
     }
   },
   "settings": {
@@ -294,7 +314,9 @@
         "image": "Image",
         "submit": "Save",
         "created": "Created at Aug 25, 2019",
-        "updatedMessage": "Workspace was updated"
+        "updatedMessage": "Workspace was updated",
+        "id": "Workspace ID",
+        "idDescription": "Please provide it when contacting support"
       },
       "team": {
         "title": "Team",
@@ -402,7 +424,13 @@
       "allowCardSaving": "Save card for future payments",
       "goToPaymentService": "Go to payment service",
       "payWithSelectedCard": "Pay with selected card",
-      "newCard": "New card"
+      "newCard": "New card",
+      "invoice": {
+        "title": "Payment by invoice",
+        "description": "If you want to pay for the plan by issuing an invoice, please contact us at",
+        "readMore": "Read more about payment by invoice",
+        "emailSubject": "Request for payment by invoice. Workspace {workspaceName} (id {workspaceId}). Plan {planName}"
+      }
     },
     "notifications": {
       "error": "A payment processing error occurred. Please try again"
@@ -500,6 +528,8 @@
     "hour": "hour",
     "day": "day",
     "week": "week",
+    "today": "Today",
+    "yesterday": "Yesterday",
     "months": [
       "january",
       "february",
