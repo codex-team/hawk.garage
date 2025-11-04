@@ -21,7 +21,7 @@
         v-if="event.payload.cookies && event.payload.cookies.length"
         class="event-overview__section"
         :cookies="event.payload.cookies"
-      />                <!-- Debug -->
+      />
       <DetailsUser v-if="event.payload.user" class="event-overview__section" :payloadUser="event.payload.user" />
       <DetailsAddons
         v-if="getIntegrationAddons('vue')"
