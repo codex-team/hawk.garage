@@ -208,7 +208,16 @@
     },
     "notFound": "Проект не найден",
     "tabs": {
-      "events": "События"
+      "events": "События",
+      "releases": "Релизы"
+    },
+    "releases": {
+      "noNewEvents": "Нет новых событий",
+      "stats": {
+        "newEvents": "Новые события",
+        "commits": "Коммиты",
+        "files": "Файлы"
+      }
     }
   },
   "settings": {
@@ -500,6 +509,8 @@
     "hour": "час",
     "day": "день",
     "week": "неделю",
+    "today": "Сегодня",
+    "yesterday": "Вчера",
     "months": [
       "января",
       "февраля",

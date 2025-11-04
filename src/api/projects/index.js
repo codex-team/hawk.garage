@@ -15,6 +15,7 @@ import {
 } from './queries';
 import * as api from '../index.ts';
 import { ChartData } from '../../types/events';
+import { QUERY_PROJECT_RELEASES } from './queries';
 
 /**
  * Create project and returns its id
@@ -187,6 +188,22 @@ export async function fetchChartData(projectId, days, timezoneOffset) {
     days,
     timezoneOffset,
   })).project.chartData;
+}
+
+/**
+ * Fetch project releases
+ *
+ * @param {string} projectId - id of the project to fetch releases
+ * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number, commitsCount: number, filesCount: number}>>} - list of releases with unique events count, commits count and files count
+ */
+export async function fetchProjectReleases(projectId) {
+  const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
+
+  if (response.errors?.length) {
+    response.errors.forEach(console.error);
+  }
+
+  return response.data.project.releases;
 }
 
 /**

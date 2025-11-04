@@ -208,7 +208,16 @@
     },
     "notFound": "Project not found",
     "tabs": {
-      "events": "Events"
+      "events": "Events",
+      "releases": "Releases"
+    },
+    "releases": {
+      "noNewEvents": "No new events",
+      "stats": {
+        "newEvents": "New events",
+        "commits": "Commits",
+        "files": "Files"
+      }
     }
   },
   "settings": {
@@ -500,6 +509,8 @@
     "hour": "hour",
     "day": "day",
     "week": "week",
+    "today": "Today",
+    "yesterday": "Yesterday",
     "months": [
       "january",
       "february",

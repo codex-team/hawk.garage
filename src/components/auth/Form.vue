@@ -62,7 +62,7 @@
           type="hidden"
           :name="field.name"
           :value="field.value"
-        />
+        >
         <div class="auth-form__action-container">
           <input
             v-if="submitText"

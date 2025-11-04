@@ -144,6 +144,11 @@ const router = new Router({
               ],
             },
             {
+              path: 'releases',
+              name: 'project-releases',
+              component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue'),
+            },
+            {
               path: 'add-catcher',
               name: 'add-catcher',
               component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue'),
