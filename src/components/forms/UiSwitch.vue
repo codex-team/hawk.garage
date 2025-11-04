@@ -1,7 +1,7 @@
 <template>
   <div
     class="ui-switch"
-    :class="{'ui-switch--checked': value}"
+    :class="{'ui-switch--checked': modelValue}"
     @click="clicked"
   >
     <div class="ui-switch__slider" />
@@ -24,14 +24,14 @@ export default defineComponent({
       type: String,
       default: undefined,
     },
-    value: {
+    modelValue: {
       type: Boolean,
       default: false,
     },
   },
   methods: {
     clicked() {
-      this.$emit('input', !this.value);
+      this.$emit('update:modelValue', !this.modelValue);
     },
   },
 });

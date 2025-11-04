@@ -21,18 +21,18 @@
     <template v-if="showInputs">
       <FormTextFieldset
         auto-complete="current-password"
-        :value="value.old"
+        :modelValue="modelValue.old"
         :label="$t('components.changePasswordFieldSet.oldPassword')"
         type="password"
-        @input="oldPasswordInput"
+        @update:modelValue="oldPasswordInput"
       />
       <FormTextFieldset
         auto-complete="new-password"
-        :value="value.new"
+        :modelValue="modelValue.new"
         class="change-password-fieldset__new-password"
         :label="$t('components.changePasswordFieldSet.newPassword')"
         type="password"
-        @input="newPasswordInput"
+        @update:modelValue="newPasswordInput"
       />
     </template>
   </fieldset>
@@ -40,7 +40,7 @@
 
 <script>
 import Icon from '../utils/Icon';
-import FormTextFieldset from './TextFieldset';
+import FormTextFieldset from './TextFieldset.vue';
 
 export default {
   name: 'ChangePasswordFieldset',
@@ -49,7 +49,7 @@ export default {
     Icon,
   },
   props: {
-    value: {
+    modelValue: {
       type: Object,
       required: true,
     },
@@ -67,12 +67,12 @@ export default {
   methods: {
     oldPasswordInput(value) {
       this.data.old = value;
-      this.$emit('input', this.data);
+      this.$emit('update:modelValue', this.data);
     },
 
     newPasswordInput(value) {
       this.data.new = value;
-      this.$emit('input', this.data);
+      this.$emit('update:modelValue', this.data);
     },
   },
 };

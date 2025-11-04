@@ -51,9 +51,9 @@
         </div>
         <div class="settings-field__input">
           <UiCheckbox
-            :value="getChannelState(channelName)"
+            :modelValue="getChannelState(channelName)"
             :disabled="isChannelUnavailable(channelName) || !user.email"
-            @input="channelChanged(channelName, $event)"
+            @update:modelValue="channelChanged(channelName, $event)"
           />
         </div>
       </div>
@@ -75,9 +75,9 @@
         </div>
         <div class="settings-field__input">
           <UiCheckbox
-            :value="user.notifications.whatToReceive[action]"
+            :modelValue="user.notifications.whatToReceive[action]"
             :disabled="action === 'SystemMessages'"
-            @input="whatToReceiveChanged(action, $event)"
+            @update:modelValue="whatToReceiveChanged(action, $event)"
           />
         </div>
       </div>

@@ -17,10 +17,11 @@
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
           <FormImageUploader
             v-model="image"
-            @input="showSubmitButton = true"
+            @update:modelValue="showSubmitButton = true"
           />
         </section>
       </div>
+
       <FormTextFieldset
         v-model="email"
         auto-complete="email"

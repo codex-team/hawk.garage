@@ -8,7 +8,7 @@
   >
     <input
       :id="id"
-      :checked="value"
+      :checked="modelValue"
       :name="name"
       type="checkbox"
       :disabled="disabled"
@@ -46,7 +46,7 @@ export default defineComponent({
     /**
      * Value binded with v-model
      */
-    value: {
+    modelValue: {
       type: Boolean,
       default: null,
     },
@@ -73,7 +73,7 @@ export default defineComponent({
         return;
       }
 
-      this.$emit('input', !this.value);
+      this.$emit('update:modelValue', !this.modelValue);
     },
   },
 });
