@@ -34,10 +34,28 @@
         {{ $t('workspaces.settings.workspace.submit') }}
       </button>
     </form>
-    <!--    <hr class="delimiter">-->
+       <hr class="delimiter">
     <!--    <div class="workspace-settings__registered-info">-->
     <!--      {{ $t('workspaces.settings.workspace.created') }}-->
     <!--    </div>-->
+
+    <div class="workspace-settings__id">
+      <label
+        class="label workspace-settings__label"
+      >
+        {{ $t('workspaces.settings.workspace.id') }}
+      </label>
+      <div class="workspace-settings__id-description">
+        {{ $t('workspaces.settings.workspace.idDescription') }}
+      </div>
+      <CodeBlock
+        language="plaintext"
+        copyable
+        class="workspace-settings__id-value"
+      >
+        {{ workspace.id }}
+      </CodeBlock>
+    </div>
   </div>
 </template>
 
@@ -45,6 +63,7 @@
 import Vue from 'vue';
 import FormTextFieldset from '../../forms/TextFieldset.vue';
 import FormImageUploader from '../../forms/ImageUploader.vue';
+import CodeBlock from '../../utils/CodeBlock.vue';
 import notifier from 'codex-notifier';
 import { UPDATE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import { Workspace } from '@/types/workspaces';
@@ -79,6 +98,7 @@ export default Vue.extend({
   components: {
     FormImageUploader,
     FormTextFieldset,
+    CodeBlock,
   },
   props: {
     /**
@@ -147,6 +167,7 @@ export default Vue.extend({
 <style src="../../../styles/settings-window-page.css"></style>
 
 <style>
+@import "../../../styles/custom-properties.css";
 .workspace-settings {
   width: 100%;
 
@@ -177,5 +198,28 @@ export default Vue.extend({
     color: var(--color-text-second);
     font-size: 13px;
   }
+
+  &__id {
+    margin-top: 15px;
+    color: var(--color-text-second);
+    font-size: 13px;
+
+    &-description {
+      margin-top: 10px;
+    }
+
+    &-value {
+      margin-top: 10px;
+      max-width: 400px;
+      padding: 8px 10px;
+
+      .code-block__button-wrapper {
+        padding-right: 8px;
+      }
+    }
+  }
+
+
+
 }
 </style>
