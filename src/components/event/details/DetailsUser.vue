@@ -17,10 +17,10 @@
               size="22"
               :title="payloadUser.name || payloadUser.id || $t('event.user.noname')"
             />
-            <span v-if="payloadUser.name" class="event-details__user-name">
+            <span v-if="payloadUser.name" class="event-details__user-name" :title="$t('event.user.name')">
               {{ payloadUser.name }}
             </span>
-            <span v-if="payloadUser.id" class="event-details__user-id">
+            <span v-if="payloadUser.id" class="event-details__user-id" :title="$t('event.user.id')">
               ({{ payloadUser.id }})
             </span>
             <a
@@ -29,6 +29,7 @@
               target="_blank"
               rel="noopener noreferrer"
               class="event-details__user-link-button"
+              :title="$t('event.user.viewProfile')"
             >
               <span>{{ $t('event.user.link') }}</span>
               <Icon symbol="link-external" class="event-details__link-icon" />

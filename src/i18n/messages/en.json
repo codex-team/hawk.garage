@@ -504,8 +504,6 @@
       "title": "User",
       "id": "ID",
       "name": "Name",
-      "url": "URL",
-      "image": "Image",
       "link": "Link",
       "unknown": "Unknown",
       "noname": "No name",
