@@ -1,6 +1,9 @@
 <template>
   <div class="project">
-    <ProjectHeader class="project__header" />
+    <ProjectHeader
+      class="project__header"
+      :project="project"
+    />
     <div class="project__content">
       <router-view />
     </div>
