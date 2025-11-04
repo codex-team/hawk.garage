@@ -12,3 +12,8 @@ export const i18n = createI18n({
   },
   legacy: true,
 })
+
+
+export function setLanguage(lang) {
+  i18n.global.locale = lang;
+}
