@@ -57,8 +57,8 @@ export async function updateProjectRateLimits(id, rateLimitSettings) {
     { allowErrors: true }
   );
 
-  if (response.errors && response.errors.length > 0) {
-    console.error('API errors:', response.errors);
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
   }
 
   const updatedProjectRateLimits = response.data.updateProjectRateLimits;
