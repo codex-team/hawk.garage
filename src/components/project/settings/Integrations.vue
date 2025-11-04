@@ -13,8 +13,8 @@
 
     <div
       class="projects-integrations-settings-page__revoke-container"
-      v-html="$t('projects.settings.integrations.revokeText')"
       @click="revokeIntegrationToken()"
+      v-html="$t('projects.settings.integrations.revokeText')"
     />
     <br>
     <br>

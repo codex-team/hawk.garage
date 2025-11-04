@@ -48,8 +48,8 @@
               :affected-users-count="dailyEventInfo.affectedUsers"
               class="project-overview__event"
               :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
-              @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.eventId, $event)"
-              @showEventOverview="
+              @on-assignee-icon-click="showAssignees(project.id, dailyEventInfo.eventId, $event)"
+              @show-event-overview="
                 showEventOverview(
                   project.id,
                   dailyEventInfo.eventId,
@@ -225,7 +225,7 @@ export default {
       return this.workspace?.isBlocked;
     },
 
-    ...mapGetters([ 'getProjectEventById' ]),
+    ...mapGetters(['getProjectEventById']),
 
     isListEmpty() {
       if (!this.dailyEvents) {
@@ -268,7 +268,7 @@ export default {
 
     try {
       if (this.project && this.project.latestEvent) {
-        this.dailyEvents = [ this.project.latestEvent ];
+        this.dailyEvents = [this.project.latestEvent];
       }
 
       this.loadMoreEvents(true);
@@ -308,7 +308,7 @@ export default {
     }
   },
 
-  destroyed() {
+  unmounted() {
     this.$store.commit('SET_PROJECT_SEARCH', {
       projectId: this.projectId,
       search: '',
@@ -326,7 +326,7 @@ export default {
   /**
    * Clean up debounced function on component destroy
    */
-  beforeDestroy() {
+  beforeUnmount() {
     this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
 
@@ -349,6 +349,7 @@ export default {
      */
     formatDate(date) {
       const timestamp = this.getDay(date);
+
       return prettyDate(timestamp);
     },
 
@@ -378,7 +379,7 @@ export default {
       this.noMoreEvents = this.dailyEventsNextCursor === null;
 
       if (overwrite) {
-        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
+        this.dailyEvents = [...dailyEventsWithEventsLinked];
       } else {
         this.dailyEvents.push(...dailyEventsWithEventsLinked);
       }

@@ -123,7 +123,7 @@ export default defineComponent({
        */
       const groupedRepetitions = new Map();
 
-      this.repetitions.forEach(repetition => {
+      this.repetitions.forEach((repetition) => {
         const date = this.getDate(repetition.timestamp);
 
         if (!groupedRepetitions.get(date)) {

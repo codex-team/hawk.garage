@@ -167,8 +167,8 @@ export default defineComponent({
      */
     formatMessage(log: ConsoleLogEvent): string {
       // Add log type prefix except for regular console.log
-      const prefix =
-        log.method === 'log' ? '' : `${log.type || log.method.toUpperCase()} `;
+      const prefix
+        = log.method === 'log' ? '' : `${log.type || log.method.toUpperCase()} `;
 
       if (!log.message.includes('%c')) {
         return this.sanitizeHTML(prefix + log.message);
@@ -233,7 +233,7 @@ export default defineComponent({
       const sanitizedStyles = style
         .split(';')
         .map((prop) => {
-          const [key, value] = prop.split(':').map((s) => s.trim());
+          const [key, value] = prop.split(':').map(s => s.trim());
           const normalizedKey = key.toLowerCase();
 
           if (allowedProperties.includes(normalizedKey)) {
@@ -247,8 +247,8 @@ export default defineComponent({
             } else {
               // For other properties, validate the value format
               if (
-                normalizedKey === 'color' ||
-                normalizedKey === 'background-color'
+                normalizedKey === 'color'
+                || normalizedKey === 'background-color'
               ) {
                 // Anonymous functions to check color
                 const validHex = (v: string) =>
@@ -262,10 +262,10 @@ export default defineComponent({
                 const validColorName = (v: string) => /^[a-zA-Z]+$/.test(v);
 
                 if (
-                  validHex(value) ||
-                  validRGB(value) ||
-                  validRGBA(value) ||
-                  validColorName(value)
+                  validHex(value)
+                  || validRGB(value)
+                  || validRGBA(value)
+                  || validColorName(value)
                 ) {
                   return `${key}: ${value}`;
                 }

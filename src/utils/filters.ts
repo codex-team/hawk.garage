@@ -3,7 +3,6 @@ import { capitalize, pad, trim } from '../utils';
 
 /**
  * Filter that add space after first digit in 4-digits number
- *
  * @param value - filter value
  */
 export function spacedNumber(value: number): string {
@@ -26,8 +25,8 @@ export function spacedNumber(value: number): string {
 
 /**
  * Return workspace name abbreviation (one or two symbols)
- *
- * @returns {string}
+ * @param value
+ * @returns
  */
 export function abbreviation(value: string): string {
   if (!value) {
@@ -43,8 +42,8 @@ export function abbreviation(value: string): string {
 
 /**
  * Returns prettifying time ('now' or time in hh:mm)
- *
- * @returns {string}
+ * @param value
+ * @returns
  */
 export function prettyTime(value: number): string {
   const MS_PER_SECOND = 1000;
@@ -65,13 +64,13 @@ export function prettyTime(value: number): string {
 
 /**
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
- *
- * @returns {string}
+ * @param value
+ * @returns
  */
 export function prettyDateStr(value: string): string {
   const [day, month]: number[] = value
     .split('-')
-    .map((stringValue) => +stringValue);
+    .map(stringValue => +stringValue);
 
   const currentDate = new Date().getDate();
 
@@ -88,8 +87,8 @@ export function prettyDateStr(value: string): string {
 
 /**
  * Returns prettified date from string
- *
- * @returns {string}
+ * @param value
+ * @returns
  */
 export function prettyDate(value: number): string {
   const MS_PER_SECOND = 1000;
@@ -100,17 +99,17 @@ export function prettyDate(value: number): string {
   const currentDate = new Date();
 
   if (
-    argumentDay === currentDate.getDate() &&
-    argumentMonth === currentDate.getMonth() &&
-    argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate()
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
   ) {
     return i18n.t('common.today').toString();
   }
 
   if (
-    argumentDay === currentDate.getDate() - 1 &&
-    argumentMonth === currentDate.getMonth() &&
-    argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate() - 1
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
   ) {
     return i18n.t('common.yesterday').toString();
   }
@@ -120,8 +119,8 @@ export function prettyDate(value: number): string {
 
 /**
  * Returns prettified date ('29 aug, 14:30')
- *
- * @returns {string}
+ * @param value
+ * @returns
  */
 export function prettyFullDate(value: number): string {
   const MS_PER_SECOND = 1000;
@@ -137,8 +136,7 @@ export function prettyFullDate(value: number): string {
 
 /**
  * Returns prettifying date from timestamp
- *
- * @param {number} timestamp - timestamp
+ * @param timestamp - timestamp
  */
 export function prettyDateFromTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
@@ -151,7 +149,6 @@ export function prettyDateFromTimestamp(timestamp: number): string {
 /**
  * Accepts GraphQL DateTime string like '1992-10-09T00:00:00Z'
  * Return string like '2020, Oct 9 00:00'
- *
  * @param dateStr - string like '1992-10-09T00:00:00Z'
  * @param includeTime - pass true to include time to the result
  */
@@ -177,8 +174,8 @@ export function prettyDateFromDateTimeString(dateStr: string, includeTime = true
 
 /**
  * Convert US cents to dollars
- *
- * @returns {string}
+ * @param value
+ * @returns
  */
 export function centsToDollars(value: number): number {
   const CENTS_PER_DOLLAR = 100;
@@ -189,9 +186,8 @@ export function centsToDollars(value: number): number {
 /**
  * Converts relative time into pretty string like '2021-05-20T15:40:51.000+00:00'.
  * Returns string like 'hours ago'.
- *
- * @param {string} date - date in string formate
- * @returns {string} relative time from today
+ * @param date - date in string formate
+ * @returns relative time from today
  */
 export function prettyRelativeTimeStr(date: string): string {
   const MS_PER_SECOND = 1000;
@@ -202,8 +198,8 @@ export function prettyRelativeTimeStr(date: string): string {
   const SECONDS_PER_MINUTE = 60;
   const currentTime = new Date();
   const commitTime = new Date(date);
-  const diffInSeconds =
-    Math.abs(currentTime.valueOf() - commitTime.valueOf()) / MS_PER_SECOND;
+  const diffInSeconds
+    = Math.abs(currentTime.valueOf() - commitTime.valueOf()) / MS_PER_SECOND;
 
   const numberOfYears = Math.floor(diffInSeconds / SECONDS_PER_YEAR);
 
@@ -240,8 +236,9 @@ export function prettyRelativeTimeStr(date: string): string {
 
 /**
  * Trims the string to max length and add ellipsis
- *
- * @returns {string}
+ * @param value
+ * @param maxLen
+ * @returns
  */
 export function trimString(value: string, maxLen: number): string {
   return trim(value, maxLen);

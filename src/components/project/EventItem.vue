@@ -183,7 +183,7 @@ export default {
       return prettyTime(this.lastOccurrenceTimestamp);
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$root.$off('workspacePlanChanged');
   },
   methods: {

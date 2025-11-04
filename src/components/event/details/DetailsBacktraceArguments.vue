@@ -6,7 +6,8 @@
       class="args__row"
     >
       <template
-        v-for="([key, value], col) in Object.entries(item)" :key="`row:${row}:col:${col}:key`"
+        v-for="([key, value], col) in Object.entries(item)"
+        :key="`row:${row}:col:${col}:key`"
       >
         <td
           class="args__key"
@@ -44,7 +45,7 @@ export default defineComponent({
     argsList(): Record<string, string>[] {
       const list: Record<string, string>[] = [];
 
-      this.args.map( item => {
+      this.args.map((item) => {
         /**
          * Case when argument passed as string like '"name"="value"'
          */

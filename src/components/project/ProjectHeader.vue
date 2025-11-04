@@ -77,7 +77,7 @@ export default defineComponent({
     UiButton,
     Icon,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   computed: {
     /**
      * Currently viewed project

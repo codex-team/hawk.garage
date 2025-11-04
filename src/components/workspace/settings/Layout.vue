@@ -73,7 +73,7 @@
       <router-view
         v-if="workspace"
         :workspace="workspace"
-        @workspaceUpdated="updateWorkspace"
+        @workspace-updated="updateWorkspace"
       />
     </template>
   </SettingsWindow>
@@ -85,7 +85,7 @@ import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
-// eslint-disable-next-line no-unused-vars
+
 import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
 

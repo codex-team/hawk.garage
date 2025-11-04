@@ -66,7 +66,7 @@ import { defineComponent } from 'vue';
 import notifier from 'codex-notifier';
 import { INVITE_TO_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import TeamMember from './TeamMember.vue';
-// eslint-disable-next-line no-unused-vars
+
 import { Workspace, Member } from '@/types/workspaces';
 
 export default defineComponent({

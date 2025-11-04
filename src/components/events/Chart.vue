@@ -224,7 +224,7 @@ export default defineComponent({
         return '';
       }
 
-      const points : string[] = [];
+      const points: string[] = [];
 
       this.points.forEach((day, index) => {
         const value = day.count;
@@ -287,7 +287,7 @@ export default defineComponent({
 
     window.addEventListener('resize', this.onResize);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {

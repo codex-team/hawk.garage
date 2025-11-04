@@ -1,4 +1,5 @@
-import { App, createApp, ComponentPublicInstance } from 'vue';
+import type { App, ComponentPublicInstance } from 'vue';
+import { createApp } from 'vue';
 import Popover from '@/components/utils/Popover/Popover.vue';
 import { i18n } from '../i18n';
 import Router from '../router';
@@ -10,7 +11,6 @@ type PopoverComponentType = ComponentPublicInstance<typeof Popover>;
 
 /**
  * Plugin for using popover in components
- *
  * @example this.$popover.open({
  * component: <any component>,
  * componentProps: <pass props>,
@@ -22,13 +22,12 @@ type PopoverComponentType = ComponentPublicInstance<typeof Popover>;
 export default {
   /**
    * Install Vue plugin
-   *
    * @param app - Vue 3 app instance
    */
   install: (app: App): void => {
     const vueContainer = document.createElement('div');
     const popoverApp = createApp(Popover);
-    
+
     // Подключаем i18n и router к приложению popover
     popoverApp.use(i18n);
     popoverApp.use(Router);
@@ -40,7 +39,6 @@ export default {
     app.config.globalProperties.$popover = {
       /**
        * Open popover
-       *
        * @param options - popover options
        */
       open(options?) {

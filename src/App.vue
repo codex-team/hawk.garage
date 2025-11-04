@@ -38,7 +38,7 @@ export default defineComponent({
      */
     this.$store.watch(
       state => state.user.accessToken,
-      accessToken => {
+      (accessToken) => {
         if (!accessToken) {
           this.$router.push('/login');
         }
@@ -52,7 +52,7 @@ export default defineComponent({
     setLanguage(this.$store.state.app.language);
     this.$store.watch(
       state => state.app.language,
-      newLang => {
+      (newLang) => {
         setLanguage(newLang);
       }
     );

@@ -18,7 +18,8 @@ const DEBOUNCE_TIMEOUT = 1000;
  * Integrations
  */
 import { Analytics } from './analytics';
-import { useErrorTracker, ErrorTrackerInitialOptions } from './hawk';
+import type { ErrorTrackerInitialOptions } from './hawk';
+import { useErrorTracker } from './hawk';
 import notifier from 'codex-notifier';
 import { errorMessages } from './api/const';
 import { debounce } from './utils';
@@ -32,7 +33,6 @@ app.use(router);
 app.use(store);
 app.use(i18n);
 app.mount('#app');
-
 
 /**
  * Enable errors tracking via Hawk.so
@@ -54,11 +54,9 @@ if (import.meta.env.VITE_HAWK_TOKEN) {
   initHawk(options);
 }
 
-
 /**
  * Sends error to the Hawk
- *
- * @param {Error} error - error to send
+ * @param error - error to send
  * @example this.$sendToHawk(new Error('Some error'));
  */
 app.config.globalProperties.$sendToHawk = function sendToHawk(error: Error): void {
@@ -72,14 +70,12 @@ if (import.meta.env.VITE_AMPLITUDE_TOKEN) {
   Analytics.init(import.meta.env.VITE_AMPLITUDE_TOKEN);
 }
 
-
 setupDirectives(app);
 
 /**
  * Vue wrapper for sending analytics events
  */
 app.config.globalProperties.$sendToAmplitude = Analytics.track;
-
 
 app.config.globalProperties.$API_AUTH_GOOGLE = import.meta.env.VITE_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
 app.config.globalProperties.$API_AUTH_GITHUB = import.meta.env.VITE_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
@@ -123,4 +119,3 @@ api.setupApiModuleHandlers({
     });
   }, DEBOUNCE_TIMEOUT),
 });
-

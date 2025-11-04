@@ -17,7 +17,7 @@
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
           <FormImageUploader
             v-model="image"
-            @update:modelValue="showSubmitButton = true"
+            @update:model-value="showSubmitButton = true"
           />
         </section>
       </div>
@@ -34,8 +34,8 @@
       />
       <ChangePasswordFieldset
         v-model="passwords"
+        v-model:show-inputs="showPasswordFieldset"
         class="account-settings__section"
-        :show-inputs.sync="showPasswordFieldset"
         @input="showSubmitButton = true"
       />
       <button

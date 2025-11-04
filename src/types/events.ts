@@ -1,6 +1,6 @@
-import { User } from '@/types/user';
-import { EventChartItem } from '@/types/chart';
-import { EventAddons } from '@hawk.so/types';
+import type { User } from '@/types/user';
+import type { EventChartItem } from '@/types/chart';
+import type { EventAddons } from '@hawk.so/types';
 
 /**
  * Event marks enum
@@ -158,7 +158,7 @@ export interface DailyEvent {
  * Interface that represents daily events with pointer to the event stored in the state
  */
 export type DailyEventWithEventLinked = Omit<DailyEvent, 'event'> & {
-  eventId: string,
+  eventId: string;
 };
 
 /**

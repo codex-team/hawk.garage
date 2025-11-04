@@ -105,6 +105,8 @@ export default defineComponent({
   methods: {
     /**
      * Format date using prettyDateFromDateTimeString function
+     *
+     * @param dateValue
      */
     getFormattedDate(dateValue: number | string): string {
       const dateString = typeof dateValue === 'number' ? new Date(dateValue).toISOString() : dateValue;

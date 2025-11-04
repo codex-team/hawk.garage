@@ -434,7 +434,7 @@ const mutations = {
    * @param {string} workspaceId - workspace id
    */
   [mutationTypes.REMOVE_PROJECTS_BY_WORKSPACE_ID](state, workspaceId) {
-    state.list = state.list.filter((project) => project.workspaceId !== workspaceId);
+    state.list = state.list.filter(project => project.workspaceId !== workspaceId);
   },
 
   /**
@@ -482,7 +482,7 @@ const mutations = {
    * @param {string} projectId - project id
    */
   [mutationTypes.REMOVE_PROJECT](state, projectId) {
-    state.list = state.list.filter((project) => project.id !== projectId);
+    state.list = state.list.filter(project => project.id !== projectId);
   },
 
   /**

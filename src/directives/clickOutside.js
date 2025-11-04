@@ -20,6 +20,7 @@ export default {
       }
 
       console.warn(warn);
+
       return;
     }
     // Define Handler and cache it on the element

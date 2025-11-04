@@ -21,18 +21,18 @@
     <template v-if="showInputs">
       <FormTextFieldset
         auto-complete="current-password"
-        :modelValue="modelValue.old"
+        :model-value="modelValue.old"
         :label="$t('components.changePasswordFieldSet.oldPassword')"
         type="password"
-        @update:modelValue="oldPasswordInput"
+        @update:model-value="oldPasswordInput"
       />
       <FormTextFieldset
         auto-complete="new-password"
-        :modelValue="modelValue.new"
+        :model-value="modelValue.new"
         class="change-password-fieldset__new-password"
         :label="$t('components.changePasswordFieldSet.newPassword')"
         type="password"
-        @update:modelValue="newPasswordInput"
+        @update:model-value="newPasswordInput"
       />
     </template>
   </fieldset>

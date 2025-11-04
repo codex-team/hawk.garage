@@ -4,10 +4,10 @@ import { isObject } from '../utils';
 /**
  * Useful methods for rendering event addons
  */
-export default defineComponent( {
+export default defineComponent({
   data(): {
-    customRendererNamePrefix: string
-    } {
+    customRendererNamePrefix: string;
+  } {
     return {
       /**
        * Custom render components should have the "CustomRenderer" prefix
@@ -20,13 +20,10 @@ export default defineComponent( {
      * Some addons can have custom renderer moved to separate component.
      *
      * How to add a custom renderer:
-     *  1. Create a Component in './custom-renderers/' dir. Name it as addon named.
-     *  2. Import this component to this file. Give it a name with the 'CustomRenderer' prefix.
-     *
+     * 1. Create a Component in './custom-renderers/' dir. Name it as addon named.
+     * 2. Import this component to this file. Give it a name with the 'CustomRenderer' prefix.
      *     @example import CustomRendererWindow from './custom-renderers/Window.vue';
      *  3. Connect it to the 'components' section
-     *
-     *
      * @param key - addons keys to check
      */
     isCustomRenderer(key: string): boolean {
@@ -39,7 +36,6 @@ export default defineComponent( {
 
     /**
      * Return addon name in human-readable form
-     *
      * @param name - addon original key
      */
     getAddonName(name: string): string {
@@ -57,7 +53,6 @@ export default defineComponent( {
 
     /**
      * Uppercase the first letter
-     *
      * @param string - string to process
      */
     capitalize(string: string): string {
@@ -66,9 +61,8 @@ export default defineComponent( {
 
     /**
      * Check if passed variable is an Object
-     *
      * @param value - what to check
-     * @returns {boolean} true if it is an object
+     * @returns true if it is an object
      */
     isObject(value: any): boolean {
       return isObject(value) || Array.isArray(value);

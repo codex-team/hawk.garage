@@ -163,8 +163,8 @@ export default defineComponent({
      */
     distinctAddonsKeys(): Set<string> {
       return new Set(
-        [ ...this.getDistinctKeysRepetitionsProperty('addons') ].filter(
-          (key) => key !== 'consoleOutput'
+        [...this.getDistinctKeysRepetitionsProperty('addons')].filter(
+          key => key !== 'consoleOutput'
         )
       );
     },
@@ -192,7 +192,7 @@ export default defineComponent({
       let userSpecifiedSomewhere = false;
       let titleSpecifiedSomewhere = false;
 
-      this.repetitions.forEach(repetition => {
+      this.repetitions.forEach((repetition) => {
         if (repetition.payload.release) {
           releaseSpecifiedSomewhere = true;
         }
@@ -240,7 +240,7 @@ export default defineComponent({
   mounted() {
     this.lockChromeSwipeNavigation(true);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.lockChromeSwipeNavigation(false);
   },
   methods: {
@@ -249,7 +249,7 @@ export default defineComponent({
      *
      * @param property — event property to iterate its keys
      */
-    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons' ): Set<string> {
+    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons'): Set<string> {
       if (!this.repetitions.length) {
         return new Set();
       }
@@ -261,7 +261,7 @@ export default defineComponent({
 
         Object
           .keys(repetition.payload[property])
-          .forEach(key => {
+          .forEach((key) => {
             keys.add(key);
           });
 

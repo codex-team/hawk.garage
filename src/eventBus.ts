@@ -12,8 +12,10 @@ class EventBus {
   }
 
   $off(event: string, callback?: Function): void {
-    if (!this.listeners[event]) return;
-    
+    if (!this.listeners[event]) {
+      return;
+    }
+
     if (callback) {
       this.listeners[event] = this.listeners[event].filter(cb => cb !== callback);
     } else {
@@ -22,9 +24,11 @@ class EventBus {
   }
 
   $emit(event: string, ...args: any[]): void {
-    if (!this.listeners[event]) return;
-    
-    this.listeners[event].forEach(callback => {
+    if (!this.listeners[event]) {
+      return;
+    }
+
+    this.listeners[event].forEach((callback) => {
       callback(...args);
     });
   }
@@ -34,6 +38,7 @@ class EventBus {
       callback(...args);
       this.$off(event, onceCallback);
     };
+
     this.$on(event, onceCallback);
   }
 }

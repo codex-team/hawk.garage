@@ -74,7 +74,6 @@ export default defineComponent({
   line-height: 20px;
   text-align: center;
 
-
   &__picture {
     display: inline-block;
     width: 76px;

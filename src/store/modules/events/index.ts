@@ -13,19 +13,21 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import Vue from 'vue';
-import { Module } from 'vuex';
+import type { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { filterBeautifiedAddons } from '@/utils';
-import { RootState } from '../../index';
-import {
+import type { RootState } from '../../index';
+import type {
   DailyEventWithEventLinked,
   EventsFilters,
-  EventsSortOrder,
   HawkEvent,
   DailyEventsCursor
 } from '@/types/events';
-import { User } from '@/types/user';
-import { EventChartItem } from '@/types/chart';
+import {
+  EventsSortOrder
+} from '@/types/events';
+import type { User } from '@/types/user';
+import type { EventChartItem } from '@/types/chart';
 
 /**
  * Mutations enum for this module
@@ -72,7 +74,7 @@ enum MutationTypes {
   /**
    * Set project search
    */
-  SetProjectSearch = 'SET_PROJECT_SEARCH',
+  SetProjectSearch = 'SET_PROJECT_SEARCH'
 }
 
 /**
@@ -126,11 +128,9 @@ const loadedEventsCount: { [key: string]: number } = {};
 
 /**
  * Compose events list key
- *
- * @param {string} projectId - id of the project
- * @param {string} eventId - id of event in that project
- *
- * @returns {string} key
+ * @param projectId - id of the project
+ * @param eventId - id of event in that project
+ * @returns key
  */
 function getEventsListKey(projectId: string, eventId: string): string {
   return `${projectId}:${eventId}`;
@@ -144,19 +144,16 @@ const module: Module<EventsModuleState, RootState> = {
 
   /**
    * All Vuex getters will be stored under this namespace
-   *
-   * @namespace Getters
    */
   getters: {
     /**
      * Returns event by it's group hash and project id
-     *
      * @param state - Vuex state
      */
     getEventByProjectIdAndGroupHash(state: EventsModuleState) {
       /**
-       * @param {string} projectId - event's project id
-       * @param {string} groupHash - event group hash
+       * @param projectId - event's project id
+       * @param groupHash - event group hash
        */
       return (projectId: string, groupHash: string): HawkEvent | null => {
         const eventEntry = Object.entries(state.events).find(([key, _event]) =>
@@ -174,13 +171,12 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * List state keeps only original Event
-     *
      * @param state - module state
      */
     getProjectEventById(state: EventsModuleState) {
       /**
-       * @param {string} projectId - event's project id
-       * @param {string} eventId - event id
+       * @param projectId - event's project id
+       * @param eventId - event id
        */
       return (projectId: string, eventId: string): HawkEvent | null => {
         const key = getEventsListKey(projectId, eventId);
@@ -191,7 +187,6 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Returns repetition by its id
-     *
      * @param state - module state
      */
     getProjectEventRepetition(state: EventsModuleState) {
@@ -206,12 +201,11 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Get filters for project
-     *
-     * @param {EventsModuleState} state - module state
+     * @param state - module state
      */
     getProjectFilters(state: EventsModuleState): (projectId: string) => EventsFilters {
       /**
-       * @param {string} projectId - project to get filters for
+       * @param projectId - project to get filters for
        */
       return (projectId: string): EventsFilters => {
         return state.filters[projectId]?.filters || {};
@@ -220,32 +214,29 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Get events sorting order for project
-     *
-     * @param {EventsModuleState} state - module state
+     * @param state - module state
      */
     getProjectOrder(state: EventsModuleState): (projectId: string) => EventsSortOrder {
       /**
-       * @param {string} projectId - project to get order for
+       * @param projectId - project to get order for
        */
       return (projectId: string): EventsSortOrder => {
         return state.filters[projectId]?.order || EventsSortOrder.ByDate;
       };
     },
 
-    getProjectSearch: (state) => (projectId: string): string => {
+    getProjectSearch: state => (projectId: string): string => {
       return state.search[projectId] || '';
     },
   },
   actions: {
     /**
      * Initializes the module
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - standard Vuex commit function
-     *
-     * @param {object} payload - vuex action payload
-     * @param {EventsMap} payload.events - events map
-     * @param {HawkEventsDailyInfoByProject} payload.dailyEvents - projects recent events
+     * @param context - vuex action context
+     * @param context.commit - standard Vuex commit function
+     * @param payload - vuex action payload
+     * @param payload.events - events map
+     * @param payload.dailyEvents - projects recent events
      */
     [INIT_EVENTS_MODULE](
       { commit }, { events }: { events: EventsMap }
@@ -253,22 +244,21 @@ const module: Module<EventsModuleState, RootState> = {
       commit(MutationTypes.SetEventsList, events);
     },
 
-
     /**
      * Returns nextCursor for pagination and portion of daily events with eventId pointer to the event of the state.events
-     *
      * @todo move to the projects actions
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - standard Vuex commit function
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - id of the project to get overview for
-     * @param {string} payload.search - event searching regex string
-     * @param {DailyEventsCursor|null} payload.nextCursor - pointer to the first daily event of the portion to fetch
+     * @param context - vuex action context
+     * @param context.commit - standard Vuex commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - id of the project to get overview for
+     * @param payload.search - event searching regex string
+     * @param payload.nextCursor - pointer to the first daily event of the portion to fetch
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null }):
-      Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string;
+      search: string;
+      nextCursor: DailyEventsCursor | null; }):
+      Promise<{ dailyEventsWithEventsLinked: DailyEventWithEventLinked[];
+        nextCursor: string | null; }> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
@@ -295,7 +285,7 @@ const module: Module<EventsModuleState, RootState> = {
         eventsList: dailyEvents.map(portion => portion.event),
       });
 
-      const dailyEventsWithEventsLinked = dailyEvents.map(dailyEvent => {
+      const dailyEventsWithEventsLinked = dailyEvents.map((dailyEvent) => {
         return {
           ...dailyEvent,
           event: undefined,
@@ -309,22 +299,23 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Fetches latest repetitions
-     *
-     * @param {object} context - vuex action context
+     * @param context - vuex action context
      * @param context.commit - to call mutations
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - id of a project that owns events
-     * @param {string} payload.originalEventId - id of an original event to fetch its repetitions
-     * @param {number} payload.limit - how many items to fetch
-     * @param {string} payload.cursor - pointer to the first repetition of the portion
-     *
-     * @returns {Promise<{ repetitions: HawkEvent[]; nextCursor?: string }>}
+     * @param payload - vuex action payload
+     * @param payload.projectId - id of a project that owns events
+     * @param payload.originalEventId - id of an original event to fetch its repetitions
+     * @param payload.limit - how many items to fetch
+     * @param payload.cursor - pointer to the first repetition of the portion
+     * @returns
      */
     async [FETCH_EVENT_REPETITIONS](
       { commit },
-      { projectId, originalEventId, limit, cursor }: { projectId: string; originalEventId: string; limit: number; cursor?: string }
-    ): Promise<{ repetitions: HawkEvent[]; nextCursor?: string }> {
+      { projectId, originalEventId, limit, cursor }: { projectId: string;
+        originalEventId: string;
+        limit: number;
+        cursor?: string; }
+    ): Promise<{ repetitions: HawkEvent[];
+      nextCursor?: string; }> {
       const response = await eventsApi.getRepetitionsPortion(projectId, originalEventId, limit, cursor);
 
       let repetitions: HawkEvent[] = [];
@@ -335,8 +326,8 @@ const module: Module<EventsModuleState, RootState> = {
         nextCursor = response.data.project.event.repetitionsPortion.nextCursor;
       }
 
-      repetitions.forEach(repetition => {
-        filterBeautifiedAddons([ repetition ]);
+      repetitions.forEach((repetition) => {
+        filterBeautifiedAddons([repetition]);
       });
 
       commit(MutationTypes.AddToEventsList, {
@@ -350,14 +341,12 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Fetches original event's repetition or last repetition if repetition id was not passed
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - standard Vuex commit function
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - id of a project that owns the event
-     * @param {string} payload.eventId - id of an event to fetch its repetition
-     * @param {string} payload.repetitionId - id of specific repetition to fetch
+     * @param context - vuex action context
+     * @param context.commit - standard Vuex commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - id of a project that owns the event
+     * @param payload.eventId - id of an event to fetch its repetition
+     * @param payload.repetitionId - id of specific repetition to fetch
      */
     async [FETCH_EVENT]({ commit }, { projectId, eventId, originalEventId }): Promise<void> {
       const event = await eventsApi.getEvent(projectId, eventId, originalEventId);
@@ -374,19 +363,17 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Send request to mark event as visited
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit function
-     * @param {object} context.rootState - root VueX state
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - project event is related to
-     * @param {string} payload.originalEventId - original event of the visited one
+     * @param context - vuex action context
+     * @param context.commit - VueX commit function
+     * @param context.rootState - root VueX state
+     * @param payload - vuex action payload
+     * @param payload.projectId - project event is related to
+     * @param payload.originalEventId - original event of the visited one
      */
     async [VISIT_EVENT]({ commit, rootState }, { projectId, originalEventId }): Promise<void> {
       const result = await eventsApi.visitEvent(projectId, originalEventId);
 
-      const user = (rootState as RootState).user.data;
+      const user = (rootState).user.data;
 
       if (result) {
         commit(MutationTypes.MarkAsVisited, {
@@ -399,14 +386,12 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Send request to set mark to event
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - vuex commit function
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - project event is related to
-     * @param {string} payload.eventId - event to set mark
-     * @param {EventMark} payload.mark - mark to set
+     * @param context - vuex action context
+     * @param context.commit - vuex commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - project event is related to
+     * @param payload.eventId - event to set mark
+     * @param payload.mark - mark to set
      */
     async [TOGGLE_EVENT_MARK]({ commit }, { projectId, eventId, mark }): Promise<void> {
       const commitAction = (): void => commit(MutationTypes.ToggleMark, {
@@ -432,8 +417,7 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Resets module state
-     *
-     * @param {Function} commit - standard Vuex commit function
+     * @param commit - standard Vuex commit function
      */
     [RESET_STORE]({ commit }): void {
       commit(RESET_STORE);
@@ -441,16 +425,16 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Update event assignee
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit function
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - project id
-     * @param {string} payload.eventId - event id
-     * @param {User} payload.assignee - user to assign to this event
+     * @param context - vuex action context
+     * @param context.commit - VueX commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - project id
+     * @param payload.eventId - event id
+     * @param payload.assignee - user to assign to this event
      */
-    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string; eventId: string; assignee: User }): Promise<void> {
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string;
+      eventId: string;
+      assignee: User; }): Promise<void> {
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
       const result = await eventsApi.updateAssignee(projectId, event.originalEventId, assignee.id);
@@ -466,15 +450,14 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Remove event assignee
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit function
-     *
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - project id
-     * @param {string} payload.eventId - event id
+     * @param context - vuex action context
+     * @param context.commit - VueX commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - project id
+     * @param payload.eventId - event id
      */
-    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string; eventId: string }): Promise<void> {
+    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string;
+      eventId: string; }): Promise<void> {
       const result = await eventsApi.removeAssignee(projectId, eventId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
@@ -489,15 +472,13 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Set sorting order for project
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit method
-     * @param {Function} context.dispatch - Vuex dispatch method
-     *
-     * @param {object} project - object of project data
-     * @param {EventsSortOrder} project.order - order to set
-     * @param {string} project.projectId - project to set order for
-     * @param {string} [project.search] - optional search query
+     * @param context - vuex action context
+     * @param context.commit - VueX commit method
+     * @param context.dispatch - Vuex dispatch method
+     * @param project - object of project data
+     * @param project.order - order to set
+     * @param project.projectId - project to set order for
+     * @param [project.search] - optional search query
      */
     async [SET_EVENTS_ORDER]({ commit, dispatch }, { projectId, order, search }) {
       commit(SET_EVENTS_ORDER, {
@@ -508,15 +489,13 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Set events filters
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit method
-     * @param {Function} context.dispatch - Vuex dispatch method
-     *
-     * @param {object} project - object of project data
-     * @param {string} project.projectId - project to set filters for
-     * @param {EventsFilters} project.filters - filters to set
-     * @param {string} [project.search] - optional search query
+     * @param context - vuex action context
+     * @param context.commit - VueX commit method
+     * @param context.dispatch - Vuex dispatch method
+     * @param project - object of project data
+     * @param project.projectId - project to set filters for
+     * @param project.filters - filters to set
+     * @param [project.search] - optional search query
      */
     async [SET_EVENTS_FILTERS]({ commit, dispatch }, { projectId, filters, search }) {
       commit(SET_EVENTS_FILTERS, {
@@ -527,18 +506,19 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Get chart data for an event for a few days
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit method
-     * @param {Function} context.dispatch - Vuex dispatch method
-     *
-     * @param {object} project - object of project data
-     * @param {string} project.projectId - project's id
-     * @param {string} project.eventId - event's id
-     * @param {number} project.days - number of a "few" days
+     * @param context - vuex action context
+     * @param context.commit - VueX commit method
+     * @param context.dispatch - Vuex dispatch method
+     * @param project - object of project data
+     * @param project.projectId - project's id
+     * @param project.eventId - event's id
+     * @param project.days - number of a "few" days
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, originalEventId, days }: { projectId: string; eventId: string; originalEventId: string; days: number }): Promise<void> {
+    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, originalEventId, days }: { projectId: string;
+      eventId: string;
+      originalEventId: string;
+      days: number; }): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(projectId, originalEventId, days, timezoneOffset);
 
@@ -552,9 +532,8 @@ const module: Module<EventsModuleState, RootState> = {
   mutations: {
     /**
      * Mutation for replacing events list
-     *
-     * @param {EventsModuleState} state - Vuex state
-     * @param {EventsMap} eventsMap - new list of events
+     * @param state - Vuex state
+     * @param eventsMap - new list of events
      */
     [MutationTypes.SetEventsList](state, eventsMap: EventsMap): void {
       state.events = eventsMap;
@@ -562,12 +541,11 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Mutation for update event assignee
-     *
      * @param state - state for update event assignee.
-     * @param {object} payload - vuex action payload
-     * @param {string} payload.projectId - id of the project event is related to
-     * @param {string} payload.originalEventId - original event id to match
-     * @param {User | null} payload.assignee - user to assign to this event
+     * @param payload - vuex action payload
+     * @param payload.projectId - id of the project event is related to
+     * @param payload.originalEventId - original event id to match
+     * @param payload.assignee - user to assign to this event
      */
     [MutationTypes.SetEventAssignee](
       state,
@@ -590,16 +568,15 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Mutation for adding new events to the store
-     *
-     * @param {EventsModuleState} state - Vuex state
-     *
-     * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - id of the project to add
-     * @param {Array<HawkEvent>} payload.eventsList - new list of events
+     * @param state - Vuex state
+     * @param payload - vuex mutation payload
+     * @param payload.projectId - id of the project to add
+     * @param payload.eventsList - new list of events
      */
     [MutationTypes.AddToEventsList](
       state,
-      { projectId, eventsList }: { projectId: string; eventsList: HawkEvent[] }
+      { projectId, eventsList }: { projectId: string;
+        eventsList: HawkEvent[]; }
     ): void {
       eventsList.forEach((event) => {
         state.events[getEventsListKey(projectId, event.id)] = event;
@@ -608,18 +585,17 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Updates event
-     *
-     * @param {EventsModuleState} state - Vuex state
-     *
-     * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - project's identifier
-     * @param {HawkEvent} payload.event - Event object
+     * @param state - Vuex state
+     * @param payload - vuex mutation payload
+     * @param payload.projectId - project's identifier
+     * @param payload.event - Event object
      */
     [MutationTypes.UpdateEvent](state, { projectId, event }): void {
       const key = getEventsListKey(projectId, event.id);
 
       if (state.events[key]) {
         const obj = Object.assign({}, state.events[key], event);
+
         state.events[key] = obj;
       } else {
         state.events[key] = event;
@@ -628,12 +604,11 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Mark all events (with the same originalEventId) as visited by the user
-     *
-     * @param {EventsModuleState} state - events module state
-     * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - project these events belong to
-     * @param {string} payload.originalEventId - original event id to match
-     * @param {User} payload.user - user who visited the event(s)
+     * @param state - events module state
+     * @param payload - vuex mutation payload
+     * @param payload.projectId - project these events belong to
+     * @param payload.originalEventId - original event id to match
+     * @param payload.user - user who visited the event(s)
      */
     [MutationTypes.MarkAsVisited](state, { projectId, originalEventId, user }): void {
       Object.entries(state.events).forEach(([key, event]) => {
@@ -656,13 +631,11 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Toggle mark for all events that have originalEventId which is equal to passed eventId
-     *
-     * @param {EventsModuleState} state - events module state
-     *
-     * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - project event is related to
-     * @param {string} payload.eventId - original event of the updated one
-     * @param {EventMark} payload.mark - mark to set
+     * @param state - events module state
+     * @param payload - vuex mutation payload
+     * @param payload.projectId - project event is related to
+     * @param payload.eventId - original event of the updated one
+     * @param payload.mark - mark to set
      */
     [MutationTypes.ToggleMark](state, { projectId, eventId, mark }): void {
       Object.entries(state.events).forEach(([key, event]) => {
@@ -683,14 +656,13 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Set sorting order for project
-     *
-     * @param {EventsModuleState} state - module state
-     *
-     * @param {object} project - object for project data
-     * @param {EventsSortOrder} project.order - order to set
-     * @param {string} project.projectId - project to set order for
+     * @param state - module state
+     * @param project - object for project data
+     * @param project.order - order to set
+     * @param project.projectId - project to set order for
      */
-    [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder; projectId: string }): void {
+    [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder;
+      projectId: string; }): void {
       if (!state.filters[projectId]) {
         state.filters[projectId] = {};
       }
@@ -700,14 +672,13 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Set filters for project
-     *
-     * @param {EventsModuleState} state - module state
-     *
-     * @param {object} project - object for project data
-     * @param {EventsFilters} project.filters - filters object to set
-     * @param {string} project.projectId - project to set filters for
+     * @param state - module state
+     * @param project - object for project data
+     * @param project.filters - filters object to set
+     * @param project.projectId - project to set filters for
      */
-    [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters; projectId: string }): void {
+    [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters;
+      projectId: string; }): void {
       if (!state.filters[projectId]) {
         state.filters[projectId] = {};
       }
@@ -717,15 +688,15 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Save event's chart data
-     *
-     * @param {EventsModuleState} state - module state
-     *
-     * @param {object} project - object for project data
-     * @param {string} project.projectId - project ID
-     * @param {string} project.eventId - event ID
-     * @param {EventChartItem[]} project.data - array of dots
+     * @param state - module state
+     * @param project - object for project data
+     * @param project.projectId - project ID
+     * @param project.eventId - event ID
+     * @param project.data - array of dots
      */
-    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string; eventId: string; data: EventChartItem[] }): void {
+    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string;
+      eventId: string;
+      data: EventChartItem[]; }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.events[key];
 
@@ -734,8 +705,7 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Resets module state
-     *
-     * @param {EventsModuleState} state - Vuex state
+     * @param state - Vuex state
      */
     [RESET_STORE](state: EventsModuleState): void {
       Object.assign(state, initialState());
@@ -743,13 +713,13 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Set project search
-     *
-     * @param {EventsModuleState} state - module state
-     * @param {object} payload - vuex mutation payload
-     * @param {string} payload.projectId - project id
-     * @param {string} payload.search - search string
+     * @param state - module state
+     * @param payload - vuex mutation payload
+     * @param payload.projectId - project id
+     * @param payload.search - search string
      */
-    [MutationTypes.SetProjectSearch](state: EventsModuleState, { projectId, search }: { projectId: string; search: string }): void {
+    [MutationTypes.SetProjectSearch](state: EventsModuleState, { projectId, search }: { projectId: string;
+      search: string; }): void {
       state.search[projectId] = search;
     },
   },

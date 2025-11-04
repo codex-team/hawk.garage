@@ -5,7 +5,7 @@ import mdx from './docs.mdx';
 export default {
   title: 'Forms/UiCheckboxWithLabel',
   component: UiCheckboxWithLabel,
-  decorators: [ centered ],
+  decorators: [centered],
   parameters: {
     docs: {
       page: mdx,

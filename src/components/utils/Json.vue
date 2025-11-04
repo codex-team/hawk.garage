@@ -6,13 +6,13 @@
     copyable
     class="json-viewer-theme"
     theme="dark"
-    showIcon
-    :showLine="false"
+    show-icon
+    :show-line="false"
   />
 </template>
 
 <script lang="ts">
-import VueJsonPretty from 'vue-json-pretty'
+import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
 
 export default {

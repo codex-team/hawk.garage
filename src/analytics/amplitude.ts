@@ -1,6 +1,6 @@
 import { init, track, setUserId } from '@amplitude/analytics-browser';
-import { EventOptions, Result } from '@amplitude/analytics-types';
-import { AnalyticsEventType } from './events';
+import type { EventOptions, Result } from '@amplitude/analytics-types';
+import type { AnalyticsEventType } from './events';
 
 /**
  * Flag if module was registered
@@ -13,7 +13,6 @@ let isRegistered = false;
 export const Analytics = {
   /**
    * Initialize the analytics system
-   *
    * @param token - token for project in Amplitude
    */
   init: (token: string): Promise<void> => {
@@ -24,12 +23,11 @@ export const Analytics = {
 
   /**
    * Send an event to analytics server
-   *
    * @param eventType - event name
    * @param eventProperties - event properties
    * @param eventOptions - user info
    */
-  track: (eventType: AnalyticsEventType, eventProperties?: Record<string, any> | undefined, eventOptions?: EventOptions | undefined): Promise<Result|string> | undefined => {
+  track: (eventType: AnalyticsEventType, eventProperties?: Record<string, any>, eventOptions?: EventOptions): Promise<Result | string> | undefined => {
     if (!isRegistered) {
       return;
     }
@@ -39,7 +37,6 @@ export const Analytics = {
 
   /**
    * Set user id
-   *
    * @param userId - user identifier
    */
   setUserId: (userId: string): void => {

@@ -41,11 +41,10 @@ import { defineComponent } from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import TooltipMenu, { TooltipMenuItem } from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
-// eslint-disable-next-line no-unused-vars
+
 import { Member } from '@/types/workspaces';
 import { isPendingMember } from '@/store/modules/workspaces/helpers';
 import notifier from 'codex-notifier';
-// eslint-disable-next-line no-unused-vars
 
 export default defineComponent({
   name: 'TeamMember',
@@ -101,7 +100,8 @@ export default defineComponent({
       if (!isPendingMember(this.member)) {
         options.push({
           title: (this.member.isAdmin
-            ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin')) as string,
+            ? this.$t('workspaces.settings.team.withdrawPermissions')
+            : this.$t('workspaces.settings.team.grantAdmin')) as string,
           onClick: this.toggleAdminPermissions,
         });
       }

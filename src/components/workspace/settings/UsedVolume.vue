@@ -57,7 +57,7 @@ export default defineComponent({
       /**
        * Threshold For Events Limit.
        */
-      thresholdForEventsLimit : 0.9,
+      thresholdForEventsLimit: 0.9,
     };
   },
   computed: {

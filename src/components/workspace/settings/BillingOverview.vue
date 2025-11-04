@@ -258,7 +258,7 @@ export default defineComponent({
      */
     buttons(): Omit<Button, 'style'>[] {
       if (this.isFreePlan) {
-        return [ this.incrementEventsLimitWithPrice ];
+        return [this.incrementEventsLimitWithPrice];
       }
 
       if (this.isBLocked) {
@@ -283,7 +283,7 @@ export default defineComponent({
       }
 
       if (this.isAutoPayOn) {
-        return [ this.incrementEventsLimit ];
+        return [this.incrementEventsLimit];
       }
 
       return [];
@@ -357,7 +357,7 @@ export default defineComponent({
     validTillText(): string {
       const expiredText = this.isSubExpired && !this.isAutoPayOn ? this.$t('billing.expired') : '';
       const dateText = prettyDateFromDateTimeString(this.subExpiredDate.toISOString());
-      
+
       return `${expiredText} ${dateText}`.trim();
     },
 
@@ -367,7 +367,7 @@ export default defineComponent({
     autoPayIsOnText(): string {
       const autoPayText = this.$t('billing.autoPayIsOn');
       const dateText = prettyDateFromDateTimeString(this.subExpiredDate.toISOString());
-      
+
       return `${autoPayText} ${dateText}`;
     },
 
@@ -378,6 +378,7 @@ export default defineComponent({
       const currentEvents = spacedNumber(this.eventsCount || 0);
       const limitEvents = spacedNumber(this.plan.eventsLimit || 0);
       const eventsText = this.$t('billing.volumeEvents', { count: this.eventsCount });
+
       return `${currentEvents} / ${limitEvents} ${eventsText}`;
     },
   },

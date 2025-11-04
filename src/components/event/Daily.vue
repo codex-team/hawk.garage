@@ -53,7 +53,7 @@ export default defineComponent({
       required: true,
     },
   },
-  data: function (): {chartData: EventChartItem[]} {
+  data: function (): { chartData: EventChartItem[] } {
     return {
       /**
        * Data for a chart
@@ -69,6 +69,7 @@ export default defineComponent({
       if (!this.event?.originalTimestamp) {
         return '';
       }
+
       return prettyFullDate(this.event.originalTimestamp);
     },
 

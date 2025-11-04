@@ -29,6 +29,7 @@ export default {
 
     if (!childToCopy) {
       console.warn('[Vue-copyable:] child element not found for selector:', binding.value.selector);
+
       return;
     }
 

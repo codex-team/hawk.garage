@@ -1,7 +1,6 @@
 import ruMessages from './messages/ru';
 import enMessages from './messages/en';
-import { createI18n } from 'vue-i18n'
-
+import { createI18n } from 'vue-i18n';
 
 export const i18n = createI18n({
   locale: 'ru',
@@ -11,8 +10,7 @@ export const i18n = createI18n({
     en: enMessages,
   },
   legacy: true,
-})
-
+});
 
 export function setLanguage(lang) {
   i18n.global.locale = lang;

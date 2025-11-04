@@ -87,7 +87,7 @@ export default defineComponent({
     },
   },
   data() {
-    return  {
+    return {
       /**
        * For debouncing the popover mouseleave event.
        */
@@ -98,7 +98,7 @@ export default defineComponent({
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
-    isAdmin():boolean {
+    isAdmin(): boolean {
       return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
     },
     /**
@@ -114,7 +114,7 @@ export default defineComponent({
      *
      * @returns {number} - total number of used events.
      */
-    eventsCount():number {
+    eventsCount(): number {
       return this.workspace.billingPeriodEventsCount || 0;
     },
   },
@@ -129,11 +129,11 @@ export default defineComponent({
       window.clearTimeout(this.popoverTimout);
       this.$popover.open({
         component: EventsLimitIndicator,
-        componentProps:{
+        componentProps: {
           workspace: this.workspace,
           isCurrentUserAdmin: this.isAdmin,
         },
-        popoverProps:{
+        popoverProps: {
           showBelowElement: (this.$refs['events-count-circle'] as Vue).$el,
         },
       });

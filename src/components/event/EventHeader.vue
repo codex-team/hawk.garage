@@ -45,7 +45,6 @@
         </router-link>
       </div>
 
-
       <div class="event-header__type">
         {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
       </div>
@@ -142,7 +141,7 @@ export default defineComponent({
     EntityImage,
     ProjectBadge,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   props: {
     /**
      * Original (first) event data
@@ -176,7 +175,7 @@ export default defineComponent({
       }
 
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
-      const addons: {url?: string} = (this.event.payload.addons as JavaScriptAddons);
+      const addons: { url?: string } = this.event.payload.addons as JavaScriptAddons;
       const url: string = (addons && addons.url) || '';
 
       if (!trace) {
@@ -213,11 +212,13 @@ export default defineComponent({
           title: this.$i18n.t('event.navigation.daily') as string,
           routeName: 'event-daily',
         },
-        ...(showAffectedUsers ? [ {
-          title: this.$i18n.t('event.navigation.usersAffected') as string,
-          routeName: 'event-affected',
-          badge: this.event.usersAffected,
-        } ] : []),
+        ...(showAffectedUsers
+          ? [{
+              title: this.$i18n.t('event.navigation.usersAffected') as string,
+              routeName: 'event-affected',
+              badge: this.event.usersAffected,
+            }]
+          : []),
       ];
     },
 
@@ -263,6 +264,7 @@ export default defineComponent({
      */
     trimmedTitle(): string {
       const text = !this.loading ? this.event.payload.title : this.$t('event.loading');
+
       return trimString(text, 300);
     },
 

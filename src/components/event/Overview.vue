@@ -129,7 +129,7 @@ export default defineComponent({
      *
      * @returns {object}
      */
-    addonsFiltered(): {[key: string]: string} | null {
+    addonsFiltered(): { [key: string]: string } | null {
       if (!this.hasAddons) {
         return null;
       }

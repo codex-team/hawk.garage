@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import NotificationsRule from '@/components/project/settings/NotificationsRule.vue';
-import { ProjectNotificationsRule, ReceiveTypes } from '@/types/project-notifications';
+import type { ProjectNotificationsRule } from '@/types/project-notifications';
+import { ReceiveTypes } from '@/types/project-notifications';
 import store from '../../../../../store';
 import router from '@/router';
 import { withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 import i18n from '@/i18n';
 
-
 /**
  * Return random item of an array
- *
  * @param arr - list of available options
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

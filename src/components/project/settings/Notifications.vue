@@ -36,8 +36,8 @@
         :rule="rule"
         :project-id="project.id"
         :enable-editing="userCanEdit"
-        @editClicked="editRule"
-        @removeClicked="removeRule"
+        @edit-clicked="editRule"
+        @remove-clicked="removeRule"
       />
     </section>
   </div>
@@ -69,9 +69,9 @@ export default defineComponent({
     },
   },
   data(): {
-    addRuleOpened: boolean,
-    ruleUnderEditingId?: string,
-    } {
+    addRuleOpened: boolean;
+    ruleUnderEditingId?: string;
+  } {
     return {
       /**
        * Flag indicates Add Rule form opening state
@@ -108,7 +108,7 @@ export default defineComponent({
         return undefined;
       }
 
-      return this.rules.find((rule) => rule.id === this.ruleUnderEditingId);
+      return this.rules.find(rule => rule.id === this.ruleUnderEditingId);
     },
 
     /**

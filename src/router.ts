@@ -8,7 +8,6 @@ import AppShell from './components/AppShell.vue';
 /**
  * Disable return-type rule to leave router 'component' imports with short syntax
  */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 const router = createRouter({
   history: createWebHistory(),
@@ -68,7 +67,7 @@ const router = createRouter({
           path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
-          redirect: (to) => `/workspace/${to.params.workspaceId}/settings/general`,
+          redirect: to => `/workspace/${to.params.workspaceId}/settings/general`,
           children: [
             {
               path: 'general',

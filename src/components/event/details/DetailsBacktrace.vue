@@ -2,7 +2,7 @@
   <DetailsBase
     class="details-backtrace"
     :expand-showed="backtrace.length !== 4 && backtrace.length > 3"
-    @expandClicked="isMoreFilesShown = !isMoreFilesShown"
+    @expand-clicked="isMoreFilesShown = !isMoreFilesShown"
   >
     <template #header>
       BACKTRACE

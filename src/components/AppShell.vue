@@ -112,7 +112,7 @@ export default defineComponent({
      */
     projects() {
       let projectList = this.$store.state.projects.list
-        .map(project => {
+        .map((project) => {
           let latestEvent = null;
 
           if (project.latestEvent) {
@@ -138,7 +138,7 @@ export default defineComponent({
 
         const searchRegexp = new RegExp(`${searchConditions.join('|')}`, 'gi');
 
-        projectList = projectList.filter(project => {
+        projectList = projectList.filter((project) => {
           return searchRegexp.test(project.name);
         });
       }
@@ -173,10 +173,10 @@ export default defineComponent({
       }
 
       import(`./modals/${componentName}.vue`)
-        .then(module => {
+        .then((module) => {
           this.modalComponent = markRaw(module.default);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(`Failed to load modal component: ${componentName}`, error);
 
           this.modalComponent = null;
@@ -290,8 +290,8 @@ export default defineComponent({
       }
 
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
-    }
-  }
+    },
+  },
 });
 
 </script>

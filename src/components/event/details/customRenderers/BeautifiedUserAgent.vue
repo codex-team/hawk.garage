@@ -58,7 +58,7 @@ export default defineComponent({
        * For example, 'max os x' should use 'macos.svg' icon
        */
       const aliases = {
-        macos: [ 'mac os x' ],
+        macos: ['mac os x'],
       };
 
       if (!this.value.os) {

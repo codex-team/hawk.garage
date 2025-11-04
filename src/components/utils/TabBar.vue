@@ -41,7 +41,7 @@ export interface TabInfo {
   /**
    * Optional counter for the badge
    */
-  badge?: number,
+  badge?: number;
 }
 
 export default defineComponent({

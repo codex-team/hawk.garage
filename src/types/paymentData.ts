@@ -29,7 +29,6 @@ interface RecurrentPaymentSettings {
 interface CloudPaymentsSettings {
   /**
    * Data for recurrent payments
-   *
    * @see https://developers.cloudpayments.ru/#rekurrentnye-platezhi-podpiska
    */
   recurrent: RecurrentPaymentSettings;

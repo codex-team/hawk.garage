@@ -34,24 +34,25 @@ export default defineComponent({
      * Fields for reset password form
      */
     fields: {
-      autoComplete: string,
-      label: VueI18n.TranslateResult,
-      name: string,
-      value: string,
-      placeholder: string,
-      type: string
-    }[],
+      autoComplete: string;
+      label: VueI18n.TranslateResult;
+      name: string;
+      value: string;
+      placeholder: string;
+      type: string;
+    }[];
 
     /**
      * Text for submit button in reset password form
      */
-    submitText: VueI18n.TranslateResult,
+    submitText: VueI18n.TranslateResult;
 
     /**
      * Field for displaying errors
      */
-    message: {text: any, type: string} | null
-    } {
+    message: { text: any;
+      type: string; } | null;
+  } {
     return {
       fields: [
         {

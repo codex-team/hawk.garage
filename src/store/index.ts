@@ -5,17 +5,18 @@ import user from './modules/user';
 import workspaces from './modules/workspaces';
 import projects from './modules/projects';
 import modalDialog from './modules/modalDialog';
-import events, { EventsModuleState } from './modules/events/index';
-import plans, { PlansModuleState } from './modules/plans/index';
+import type { EventsModuleState } from './modules/events/index';
+import events from './modules/events/index';
+import type { PlansModuleState } from './modules/plans/index';
+import plans from './modules/plans/index';
 
 import createPersistedState from 'vuex-persistedstate';
-import { User } from '../types/user';
+import type { User } from '../types/user';
 
 const debug = import.meta.env.MODE !== 'production';
 
 /**
  * This structure represents state of User Module
- *
  * @todo rewrite User Module to ts and move this interface there
  */
 interface UserModuleState {

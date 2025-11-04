@@ -50,11 +50,11 @@ export default defineComponent({
       hidingDelay: undefined as ReturnType<typeof setTimeout> | undefined,
     };
   },
-  computed:{
+  computed: {
     /**
      * Style Sheet for positioning the popover w.r.t. Body tag.
      */
-    popoverPositionStyle(): Record<string, string|number> {
+    popoverPositionStyle(): Record<string, string | number> {
       if (!this.popoverProps.showBelowElement) {
         return {
           display: 'none',
@@ -71,7 +71,7 @@ export default defineComponent({
     },
   },
   methods: {
-    // eslint-disable-next-line jsdoc/require-param
+
     /**
      *
      * Open Popover.
