@@ -506,6 +506,7 @@
       "name": "Name",
       "url": "URL",
       "image": "Image",
+      "link": "Link",
       "unknown": "Unknown",
       "noname": "No name",
       "viewProfile": "View profile"

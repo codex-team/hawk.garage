@@ -9,33 +9,29 @@
           {{ $t('event.user.title') }}
         </div>
         <div class="event-details__value">
-                <!-- Debug -->
-      <pre style=" padding: 10px; margin-bottom: 10px;">{{ JSON.stringify(payloadUser) }}</pre>
-
           <div class="event-details__user-value">
             <EntityImage
-              :id="payloadUser ? payloadUser.id : undefined"
-              :name="payloadUser ? payloadUser.name : undefined"
-              :image="payloadUser ? payloadUser.photo : undefined"
+              :id="payloadUser.photo ? payloadUser.id : undefined"
+              :name="payloadUser.photo ? payloadUser.name || payloadUser.id : undefined"
+              :image="payloadUser.photo"
               size="22"
               :title="payloadUser.name || payloadUser.id || $t('event.user.noname')"
             />
-            <span v-if="payloadUser.id" class="event-details__user-id">
-              {{ payloadUser.id }}
-            </span>
-            <span v-if="payloadUser.name">/</span>
             <span v-if="payloadUser.name" class="event-details__user-name">
               {{ payloadUser.name }}
             </span>
-            <span v-if="payloadUser.url">/</span>
+            <span v-if="payloadUser.id" class="event-details__user-id">
+              ({{ payloadUser.id }})
+            </span>
             <a
               v-if="payloadUser.url"
               :href="payloadUser.url"
               target="_blank"
-              class="event-details__user-url"
-              :title="$t('event.user.viewProfile')"
+              rel="noopener noreferrer"
+              class="event-details__user-link-button"
             >
-              {{ payloadUser.url }}
+              <span>{{ $t('event.user.link') }}</span>
+              <Icon symbol="link-external" class="event-details__link-icon" />
             </a>
           </div>
         </div>
@@ -48,20 +44,22 @@
 import Vue, { PropType } from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
-import { EventUser } from '@/types/events';
+import Icon from '../../utils/Icon.vue';
+import { AffectedUser } from '@hawk.so/types';
 
 export default Vue.extend({
   name: 'DetailsUser',
   components: {
     DetailsBase,
     EntityImage,
+    Icon,
   },
   props: {
     /**
      * Event user data
      */
     payloadUser: {
-      type: Object as PropType<EventUser>,
+      type: Object as PropType<AffectedUser>,
       required: true,
     },
   },
@@ -70,29 +68,51 @@ export default Vue.extend({
 
 <style>
 .event-details {
-  &__user-value {
-    display: flex;
+  &__value {
+    flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
+  }
+
+  &__user-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     flex-wrap: wrap;
   }
 
+  &__user-link-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 22px;
+    padding: 0 6px;
+    color: var(--color-text-second);
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+
+    &:hover {
+      color: var(--color-text-main);
+    }
+  }
+
+  &__link-icon {
+    width: 12px;
+    height: 12px;
+  }
+
   &__user-id {
-    font-family: var(--font-monospace);
+    color: var(--color-text-second);
   }
 
   &__user-name {
-    font-weight: 500;
     color: var(--color-text-main);
-  }
-
-  &__user-url {
-    /* color: var(--color-link); */
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 }
 </style>

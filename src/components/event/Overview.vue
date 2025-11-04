@@ -22,8 +22,6 @@
         class="event-overview__section"
         :cookies="event.payload.cookies"
       />                <!-- Debug -->
-      <pre style=" padding: 10px; margin-bottom: 10px;">{{ JSON.stringify(event.payload, null, 2) }}</pre>
-
       <DetailsUser v-if="event.payload.user" class="event-overview__section" :payloadUser="event.payload.user" />
       <DetailsAddons
         v-if="getIntegrationAddons('vue')"
