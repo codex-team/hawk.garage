@@ -70,6 +70,7 @@ export default defineConfig({
   },
   build: {
     sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : true,
+    assetsInlineLimit: 0,
     rollupOptions: {
       output: {
         chunkFileNames: 'static/js/[name].[hash].js',
