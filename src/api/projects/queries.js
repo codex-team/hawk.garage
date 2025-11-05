@@ -234,3 +234,27 @@ export const QUERY_PROJECT_RELEASES = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Get project release details
+ */
+export const QUERY_PROJECT_RELEASE_DETAILS = `
+  query ProjectReleaseDetails($projectId: ID!, $release: String!) {
+    project(projectId: $projectId) {
+      releaseDetails(release: $release) {
+        release
+        commitsCount
+        filesCount
+        files { mapFileName originFileName }
+        commits { hash author title date }
+        events(limit: 50) {
+          id
+          totalCount
+          timestamp
+          payload { title }
+        }
+      }
+    }
+  }
+`;

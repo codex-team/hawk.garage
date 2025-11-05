@@ -147,6 +147,30 @@ const router = new Router({
               path: 'releases',
               name: 'project-releases',
               component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue'),
+              children: [
+                {
+                  path: ':release',
+                  name: 'project-release',
+                  component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/release/Layout.vue'),
+                  children: [
+                    {
+                      path: 'events',
+                      name: 'project-release-events',
+                      component: () => import(/* webpackChunkName: 'project-release' */ './components/project/release/Events.vue'),
+                    },
+                    {
+                      path: 'files',
+                      name: 'project-release-files',
+                      component: () => import(/* webpackChunkName: 'project-release' */ './components/project/release/Files.vue'),
+                    },
+                    {
+                      path: 'commits',
+                      name: 'project-release-commits',
+                      component: () => import(/* webpackChunkName: 'project-release' */ './components/project/release/Commits.vue'),
+                    },
+                  ],
+                },
+              ],
             },
             {
               path: 'add-catcher',

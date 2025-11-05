@@ -21,7 +21,7 @@ export default {
   computed: {
     /**
      * Returns project id from the route
-     *
+     *ute
      * @returns {string}
      */
     projectId() {

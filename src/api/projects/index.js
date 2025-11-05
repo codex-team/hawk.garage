@@ -17,7 +17,7 @@ import {
 } from './queries';
 import * as api from '../index.ts';
 import { ChartData } from '../../types/events';
-import { QUERY_PROJECT_RELEASES } from './queries';
+import { QUERY_PROJECT_RELEASES, QUERY_PROJECT_RELEASE_DETAILS } from './queries';
 
 /**
  * Create project and returns its id
@@ -231,6 +231,22 @@ export async function fetchProjectReleases(projectId) {
   }
 
   return response.data.project.releases;
+}
+
+/**
+ * Fetch specific release details
+ *
+ * @param {string} projectId
+ * @param {string} release
+ */
+export async function fetchProjectReleaseDetails(projectId, release) {
+  const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId, release });
+
+  if (response.errors?.length) {
+    response.errors.forEach(console.error);
+  }
+
+  return response.data.project.releaseDetails;
 }
 
 /**
