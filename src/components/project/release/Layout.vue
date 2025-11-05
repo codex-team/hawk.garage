@@ -23,8 +23,8 @@
           :active-item-index="activeTabIndex"
         />
       </div>
-      <div class="release-layout__content">
-        <router-view />
+      <div  v-if="dataLoaded"  class="release-layout__content">
+        <router-view :release-details="releaseDetails" />
       </div>
     </div>
   </PopupDialog>
@@ -33,12 +33,23 @@
 <script>
 import TabBar from '@/components/utils/TabBar.vue';
 import PopupDialog from '@/components/utils/PopupDialog.vue';
+import { fetchProjectReleaseDetails } from '@/api/projects';
 
 export default {
   name: 'ReleaseLayout',
   components: {
     TabBar,
     PopupDialog
+  },
+  data() {
+    return {
+      releaseDetails: {
+        events: [],
+        files: [],
+        commits: [],
+      },
+      dataLoaded: false,
+    };
   },
   computed: {
     projectId() {
@@ -73,6 +84,19 @@ export default {
 
       return map[this.$route.name] ?? 0;
     },
+  },
+  async created() {
+    const details = await fetchProjectReleaseDetails(this.projectId, this.release);
+    console.log('Loaded details:', details);
+    this.releaseDetails = {
+      events: details?.events || [],
+      files: details?.files || [],
+      commits: details?.commits || [],
+    };
+    console.log('Set releaseDetails:', this.releaseDetails);
+    await this.$nextTick();
+    this.dataLoaded = true;
+    console.log('dataLoaded set to true');
   },
   methods: {
     close() {

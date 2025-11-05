@@ -152,6 +152,7 @@ const router = new Router({
                   path: ':release',
                   name: 'project-release',
                   component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/release/Layout.vue'),
+                  redirect: { name: 'project-release-events' },
                   children: [
                     {
                       path: 'events',

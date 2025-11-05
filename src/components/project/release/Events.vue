@@ -15,14 +15,16 @@
 </template>
 
 <script>
-import { fetchProjectReleaseDetails } from "@/api/projects";
 import EventItem from "@/components/project/EventItem.vue";
 
 export default {
   name: "ReleaseEvents",
   components: { EventItem },
-  data() {
-    return { events: [] };
+  props: {
+    releaseDetails: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     projectId() {
@@ -31,10 +33,13 @@ export default {
     release() {
       return this.$route.params.release;
     },
+    events() {
+      console.log('events computed', this.releaseDetails);
+      return this.releaseDetails.events || [];
+    },
   },
-  async created() {
-    const details = await fetchProjectReleaseDetails(this.projectId, this.release);
-    this.events = details?.events || [];
+  mounted() {
+    console.log('Events mounted, releaseDetails:', this.releaseDetails);
   },
   methods: {
     normalizeEvent(e) {
