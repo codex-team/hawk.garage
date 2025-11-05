@@ -535,12 +535,17 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {object} project - object of project data
      * @param {string} project.projectId - project's id
      * @param {string} project.eventId - event's id
-     * @param {number} project.days - number of a "few" days
+     * @param {string} project.groupingBy - grouping mode: 'hours' or 'days'
+     * @param {number} project.rangeValue - range value: number of hours or days depending on groupingBy
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, originalEventId, days }: { projectId: string; eventId: string; originalEventId: string; days: number }): Promise<void> {
+    async [GET_CHART_DATA](
+      { commit, dispatch },
+      { projectId, eventId, originalEventId, groupingBy, rangeValue }:
+        { projectId: string; eventId: string; originalEventId: string; groupingBy: 'hours' | 'days'; rangeValue: number }
+    ): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
-      const chartData = await eventsApi.fetchChartData(projectId, originalEventId, days, timezoneOffset);
+      const chartData = await eventsApi.fetchChartData(projectId, originalEventId, groupingBy, rangeValue, timezoneOffset);
 
       commit(MutationTypes.SaveChartData, {
         projectId,

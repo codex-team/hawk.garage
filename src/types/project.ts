@@ -27,6 +27,11 @@ export interface Project {
   id: string;
 
   /**
+   * Id of the workspace to which the project belongs
+   */
+  workspaceId: string;
+
+  /**
    * Project Integration Token
    */
   token: string;

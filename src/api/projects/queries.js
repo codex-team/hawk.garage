@@ -205,11 +205,12 @@ export const MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS = `
 export const QUERY_CHART_DATA = `
   query ProjectChartData (
     $projectId: ID!,
-    $days: Int!
+    $groupingBy: String!
+    $rangeValue: Int!
     $timezoneOffset: Int!
   ) {
     project(projectId: $projectId) {
-      chartData(days: $days, timezoneOffset: $timezoneOffset) {
+      chartData(groupingBy: $groupingBy, rangeValue: $rangeValue, timezoneOffset: $timezoneOffset) {
         timestamp
         count
       }

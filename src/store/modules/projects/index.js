@@ -393,12 +393,13 @@ const actions = {
    *
    * @param {object} payload - vuex action payload
    * @param {string} payload.projectId - id of the project to fetch data
-   * @param {number} payload.days - how many days we need to fetch for displaying in a chart
+   * @param {string} payload.groupingBy - grouping mode: 'hours' or 'days'
+   * @param {number} payload.rangeValue - range value: number of hours or days depending on groupingBy
    * @returns {Promise<void>}
    */
-  async [FETCH_CHART_DATA]({ commit }, { projectId, days }) {
+  async [FETCH_CHART_DATA]({ commit }, { projectId, groupingBy, rangeValue }) {
     const timezoneOffset = (new Date()).getTimezoneOffset();
-    const chartData = await projectsApi.fetchChartData(projectId, days, timezoneOffset);
+    const chartData = await projectsApi.fetchChartData(projectId, groupingBy, rangeValue, timezoneOffset);
 
     commit(mutationTypes.ADD_CHART_DATA, {
       projectId,

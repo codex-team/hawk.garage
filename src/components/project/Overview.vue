@@ -273,14 +273,15 @@ export default {
 
       this.loadMoreEvents(true);
 
-      // How many days will be displayed in the chart
-      const twoWeeks = 14;
-      const boundingDays = 2;
+      // How many hours or days will be displayed in the chart
+      const oneDay = 24;
+      const groupingBy = 'hours';
 
       if (!this.$store.state.projects.charts[this.projectId]) {
         await this.$store.dispatch(FETCH_CHART_DATA, {
           projectId: this.projectId,
-          days: twoWeeks + boundingDays,
+          groupingBy: groupingBy,
+          rangeValue: oneDay,
         });
       }
 
