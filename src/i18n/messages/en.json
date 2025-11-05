@@ -94,6 +94,15 @@
     "searchFieldWithCMDK": "{cmd}+K to search"
   },
   "projects": {
+    "chart": {
+      "byMinutes": "By minutes",
+      "byHours": "By hours",
+      "byDays": "By days",
+      "lastHour": "Last hour",
+      "lastDay": "Last day",
+      "lastWeek": "Last week",
+      "lastMonth": "Last month"
+    },
     "filters": {
       "filtersOptions": {
         "all": "All",

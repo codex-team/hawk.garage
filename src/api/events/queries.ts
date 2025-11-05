@@ -84,15 +84,17 @@ export const QUERY_CHART_DATA = `
   query EventChartData (
     $projectId: ID!
     $originalEventId: ID!
-    $groupingBy: String!
-    $rangeValue: Int!
+    $startDate: String!
+    $endDate: String!
+    $groupBy: Int!
     $timezoneOffset: Int!
   ) {
     project(projectId: $projectId) {
       event(eventId: $originalEventId, originalEventId: $originalEventId) {
         chartData(
-          groupingBy: $groupingBy,
-          rangeValue: $rangeValue,
+          startDate: $startDate,
+          endDate: $endDate,
+          groupBy: $groupBy,
           timezoneOffset: $timezoneOffset
         ) {
           timestamp
