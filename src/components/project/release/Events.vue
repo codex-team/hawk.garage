@@ -7,7 +7,6 @@
       :last-occurrence-timestamp="event.timestamp"
       :count="event.totalCount"
       :affected-users-count="event.affectedUsers || null"
-      class="release-events__item"
       @showEventOverview="showEventOverview(event)"
     />
     <div v-if="!events.length" class="release-events__empty">—</div>
@@ -63,17 +62,6 @@ export default {
 </script>
 
 <style>
-.release-events__item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: default;
-}
-.release-events__item:hover {
-  background: var(--color-bg-main);
-}
 .release-events__time {
   color: var(--color-text-second);
   font-size: 12px;

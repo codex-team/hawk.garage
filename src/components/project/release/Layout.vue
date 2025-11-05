@@ -144,6 +144,6 @@ export default {
   text-overflow: ellipsis;
 }
 .release-layout__content {
-  padding-inline: var(--layout-padding-inline);
+  padding: 12px var(--layout-padding-inline);
 }
 </style>

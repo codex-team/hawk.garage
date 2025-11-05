@@ -17,33 +17,7 @@
         "
         data-ripple
       >
-        <div class="details-suspected-commit__left">
-          <div class="details-suspected-commit__left-title">
-            {{ commit.title }}
-          </div>
-          <div>
-            <EntityImage
-              :id="commit.author.charCodeAt(0).toString(16)"
-              class="details-suspected-commit__left-image"
-              :name="commit.author"
-              size="16"
-            />
-            <span class="details-suspected-commit__left-author">
-              {{ commit.author }}
-            </span>
-            <span class="details-suspected-commit__left-relative-time">
-              {{ $t("event.suspectedCommits.committed") }}
-              {{ commit.date | prettyRelativeTimeStr }}
-            </span>
-          </div>
-        </div>
-        <div class="details-suspected-commit__right">
-          <div class="details-suspected-commit__right-hash-block">
-            <span class="details-suspected-commit__right-hash">
-              {{ commit.hash.substr(0, 7) }}
-            </span>
-          </div>
-        </div>
+        <CommitItem :commit="commit" />
       </div>
     </template>
     <template #expandButton>
@@ -66,6 +40,7 @@
 import Vue from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
+import CommitItem from '../../utils/CommitItem.vue';
 import { HawkEventCommit } from '@/types/events';
 
 export default Vue.extend({
@@ -73,6 +48,7 @@ export default Vue.extend({
   components: {
     DetailsBase,
     EntityImage,
+    CommitItem,
   },
   props: {
     /**
