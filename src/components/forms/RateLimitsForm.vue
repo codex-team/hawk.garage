@@ -1,5 +1,8 @@
 <template>
-  <form class="rate-limits-form" @submit.prevent="handleSubmit">
+  <form
+    class="rate-limits-form"
+    @submit.prevent="handleSubmit"
+  >
     <div class="rate-limits-form__fields">
       <TextFieldset
         v-model="currentThreshold"
@@ -135,10 +138,15 @@ export default Vue.extend({
   methods: {
     /**
      * Check if string is numeric and within min/max range
+     *
+     * @param str
+     * @param min
+     * @param max
      */
     isStringNumeric(str: string, min: number, max: number): boolean {
       const trimmed = str.toString().trim();
       const num = Number.parseInt(trimmed, 10);
+
       return !Number.isNaN(num) && num >= min && num <= max && /^\d+$/.test(trimmed);
     },
 
@@ -224,9 +232,9 @@ export default Vue.extend({
   }
 
   &__error-message {
+    margin-bottom: 20px;
     color: var(--color-indicator-critical);
     font-size: 13px;
-    margin-bottom: 20px;
   }
 }
 </style>
