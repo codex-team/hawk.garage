@@ -76,20 +76,5 @@ export default {
 </script>
 
 <style>
-.release-events__time {
-  color: var(--color-text-second);
-  font-size: 12px;
-  min-width: 42px;
-}
-.release-events__title {
-  color: var(--color-text-main);
-  font-size: 14px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.release-events__empty {
-  color: var(--color-text-second);
-  padding: 16px 0;
-}
+
 </style>

@@ -246,6 +246,7 @@ export const QUERY_PROJECT_RELEASE_DETAILS = `
         release
         commitsCount
         filesCount
+        timestamp
         files { mapFileName originFileName }
         commits { hash author title date }
         events(limit: 50) {

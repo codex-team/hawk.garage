@@ -34,6 +34,13 @@ export default {
 </script>
 
 <style>
+.release-commits {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .release-commits__empty {
   color: var(--color-text-second); padding: 16px 0;
 }
@@ -41,5 +48,8 @@ export default {
 .release-commits__item {
   padding: 6px 0;
   border-bottom: 1px solid var(--color-bg-second);
+  background: var(--color-bg-main);
+  padding: 13px 15px;
+  border-radius: 10px;
 }
 </style>

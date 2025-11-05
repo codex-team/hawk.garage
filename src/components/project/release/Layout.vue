@@ -5,25 +5,58 @@
   >
     <div>
       <div class="release-layout__header">
-        <div class="breadcrumbs">
-          <!-- <router-link :to="{ name: 'project-overview', params: { projectId } }">
-            {{ project?.name || $t("projects.placeholder") }}
-          </router-link> -->
-          <span class="breadcrumbs__sep">/</span>
-          <!-- <span>{{ release }}</span> -->
-        </div>
-        <!-- <div
-          class="release-layout__title"
-          :title="release"
+        <div class="event-layout__container">
+        <span
+          v-if="releaseDetails.timestamp"
+          class="release-layout__date"
         >
+          {{ releaseDetails.timestamp | prettyFullDate }}
+        </span>
+        <div class="breadcrumbs">
+          <router-link
+            v-if="workspace"
+            class="breadcrumbs__item"
+            :to="{ name: 'workspace', params: { workspaceId: workspace.id } }"
+          >
+            <EntityImage
+              :id="workspace.id"
+              :image="workspace.image"
+              :name="workspace.name"
+              size="16"
+            />
+            {{ workspace.name }}
+          </router-link>
+          <router-link
+            v-if="project"
+            class="breadcrumbs__item"
+            :to="{ name: 'project-overview', params: { projectId } }"
+          >
+            <EntityImage
+              :id="project.id"
+              :image="project.image"
+              :name="project.name"
+              size="16"
+            />
+            {{ nameWithoutBadges(project.name) || $t('projects.placeholder') }}
+            <ProjectBadge
+              v-for="(badge, index) in projectBadges(project.name)"
+              :key="index"
+            >
+              {{ badge }}
+            </ProjectBadge>
+          </router-link>
+        </div>
+        <div class="release-layout__title" :title="release">
           {{ release }}
-        </div> -->
+        </div>
+        </div>
         <TabBar
+          class="release-layout__tab-bar"
           :items="tabs"
           :active-item-index="activeTabIndex"
         />
       </div>
-      <div  v-if="dataLoaded"  class="release-layout__content">
+      <div v-if="releaseDetails.timestamp" class="release-layout__content">
         <router-view :release-details="releaseDetails" />
       </div>
     </div>
@@ -34,16 +67,23 @@
 import TabBar from '@/components/utils/TabBar.vue';
 import PopupDialog from '@/components/utils/PopupDialog.vue';
 import { fetchProjectReleaseDetails } from '@/api/projects';
+import EntityImage from '@/components/utils/EntityImage.vue';
+import ProjectBadge from '@/components/project/ProjectBadge.vue';
+import { projectBadges } from '@/mixins/projectBadges';
 
 export default {
   name: 'ReleaseLayout',
   components: {
     TabBar,
-    PopupDialog
+    PopupDialog,
+    EntityImage,
+    ProjectBadge,
   },
+  mixins: [ projectBadges ],
   data() {
     return {
       releaseDetails: {
+        timestamp: null,
         events: [],
         files: [],
         commits: [],
@@ -60,6 +100,9 @@ export default {
     },
     project() {
       return this.$store.getters.getProjectById(this.projectId);
+    },
+    workspace() {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
     },
     tabs() {
       return [
@@ -87,16 +130,15 @@ export default {
   },
   async created() {
     const details = await fetchProjectReleaseDetails(this.projectId, this.release);
-    console.log('Loaded details:', details);
     this.releaseDetails = {
+      timestamp: details?.timestamp || null,
       events: details?.events || [],
       files: details?.files || [],
       commits: details?.commits || [],
     };
-    console.log('Set releaseDetails:', this.releaseDetails);
+
     await this.$nextTick();
     this.dataLoaded = true;
-    console.log('dataLoaded set to true');
   },
   methods: {
     close() {
@@ -121,19 +163,37 @@ export default {
   max-width: var(--width-event-center-container);
 }
 .release-layout__header {
-  padding-inline: var(--layout-padding-inline);
-  border-bottom: 1px solid var(--color-bg-second);
+  padding: 35px var(--layout-padding-inline) 0 var(--layout-padding-inline);
+  color: var(--color-text-second);
+  background-color: #121419;
+  margin: 0 auto;
 }
+
+.release-layout__header .event-layout__container {
+  margin: 0 auto;
+  max-width: var(--width-event-center-container);
+}
+
 .breadcrumbs {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  margin-bottom: 22px;
+  font-weight: 500;
   color: var(--color-text-second);
-  font-size: 12px;
-  padding-top: 8px;
+  font-size: 14px;
 }
 .breadcrumbs a {
   color: var(--color-text-second);
+}
+.breadcrumbs__item {
+  display: flex;
+  align-items: center;
+}
+.breadcrumbs__item:not(:last-of-type)::after {
+  margin: 0 10px;
+  content: '/';
+}
+.breadcrumbs__item .entity-image {
+  margin-right: 10px;
 }
 .breadcrumbs__sep {
   color: var(--color-text-second);
@@ -150,5 +210,14 @@ export default {
 }
 .release-layout__content {
   padding: 12px var(--layout-padding-inline);
+}
+.release-layout__tab-bar {
+  margin: 0 auto;
+  max-width: var(--width-event-center-container);
+}
+.release-layout__date {
+  float: right;
+  font-size: 12px;
+  line-height: 23px;
 }
 </style>

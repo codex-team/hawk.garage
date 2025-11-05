@@ -17,7 +17,6 @@
     >
       <span class="release-files__ext" :class="'release-files__ext--' + item.ext">{{ item.ext }}</span>
       <span class="release-files__name">{{ item.primaryName }}</span>
-      <span class="release-files__path">{{ item.primaryDir }}</span>
       <span
         v-if="item.mapName"
         class="release-files__map"
@@ -48,7 +47,7 @@ export default {
       return (this.files || []).map((entry) => {
         if (typeof entry === 'string') {
           const primaryFullPath = entry;
-          const primaryName = this.getName(primaryFullPath);
+          const primaryName = primaryFullPath;
           const primaryDir = this.getDir(primaryFullPath);
           const ext = this.getExt(primaryFullPath);
           // If it's a .map, also compute derived origin name (best-effort)
@@ -67,7 +66,7 @@ export default {
         // Object form: { mapFileName: string, originFileName: string }
         const mapFullPath = entry.mapFileName || '';
         const primaryFullPath = entry.originFileName || '';
-        const primaryName = this.getName(primaryFullPath);
+        const primaryName = primaryFullPath;
         const primaryDir = this.getDir(primaryFullPath);
         const ext = this.getExt(primaryFullPath) || 'file';
         const mapName = mapFullPath ? this.getName(mapFullPath) : null;
@@ -123,6 +122,7 @@ export default {
 <style>
 .release-files {
   padding-inline: 12px 0;
+  margin-top: 12px;
 }
 
 .release-files__toolbar {
@@ -134,7 +134,8 @@ export default {
 
 .release-files__count {
   color: var(--color-text-second);
-  font-size: 12px;
+  font-size: 14px;
+  margin-left: 11px
 }
 
 .release-files__search {
@@ -142,7 +143,7 @@ export default {
   min-width: 180px;
   padding: 6px 10px;
   color: var(--color-text-main);
-  font-size: 13px;
+  font-size: 14px;
   background: var(--color-bg-main);
   border: 1px solid var(--color-bg-second);
   border-radius: 8px;
@@ -151,18 +152,14 @@ export default {
 
 .release-files__item {
   display: grid;
-  grid-template-columns: min-content 4fr max-content 4fr; /* ext | name | path | map */
+  grid-template-columns: min-content 1fr 1fr; /* ext | name | path | map */
   align-items: start;
   gap: 6px 20px;
-  padding: 12px;
+  padding: 14px;
   color: var(--color-text-main);
-  font-size: 13px;
+  font-size: 14px;
   border-bottom: 1px solid var(--color-bg-second);
   border-radius: 8px;
-}
-
-.release-files__item:hover {
-  background: var(--color-bg-main);
 }
 
 .release-files__ext {
@@ -171,7 +168,7 @@ export default {
   padding: 2px 6px;
   color: var(--color-text-main);
   font-weight: 700;
-  font-size: 11px;
+  font-size: 12px;
   text-transform: uppercase;
   background: var(--color-bg-main);
   border: 1px solid var(--color-bg-second);
@@ -197,10 +194,10 @@ export default {
   margin-left: 12px;
   padding: 2px 8px;
   color: var(--color-text-main);
-  font-size: 11px;
+  font-size: 12px;
   background: var(--color-bg-main);
   border: 1px solid var(--color-bg-second);
-  border-radius: 999px;
+  border-radius: 8px;
 }
 
 .release-files__empty { color: var(--color-text-second); padding: 16px 0; }
