@@ -14,7 +14,7 @@ import {
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN,
   FETCH_CHART_DATA,
-  GENERATE_NEW_INTEGRATION_TOKEN,
+  GENERATE_NEW_INTEGRATION_TOKEN
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
