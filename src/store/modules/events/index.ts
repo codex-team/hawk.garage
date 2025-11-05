@@ -526,7 +526,7 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Get chart data for an event for a few days
+     * Get chart data for an event for a specified period
      *
      * @param {object} context - vuex action context
      * @param {Function} context.commit - VueX commit method
@@ -535,17 +535,25 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {object} project - object of project data
      * @param {string} project.projectId - project's id
      * @param {string} project.eventId - event's id
-     * @param {string} project.groupingBy - grouping mode: 'hours' or 'days'
-     * @param {number} project.rangeValue - range value: number of hours or days depending on groupingBy
+     * @param {string} project.startDate - start date
+     * @param {string} project.endDate - end date
+     * @param {number} project.groupBy - grouping interval in minutes
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
     async [GET_CHART_DATA](
       { commit, dispatch },
-      { projectId, eventId, originalEventId, groupingBy, rangeValue }:
-        { projectId: string; eventId: string; originalEventId: string; groupingBy: 'hours' | 'days'; rangeValue: number }
+      { projectId, eventId, originalEventId, startDate, endDate, groupBy }:
+        { projectId: string; eventId: string; originalEventId: string; startDate: string; endDate: string; groupBy: number }
     ): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
-      const chartData = await eventsApi.fetchChartData(projectId, originalEventId, groupingBy, rangeValue, timezoneOffset);
+      const chartData = await eventsApi.fetchChartData(
+        projectId,
+        originalEventId,
+        startDate,
+        endDate,
+        groupBy,
+        timezoneOffset
+      );
 
       commit(MutationTypes.SaveChartData, {
         projectId,

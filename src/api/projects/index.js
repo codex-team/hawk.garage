@@ -204,16 +204,18 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * Fetch data for chart
  *
  * @param {string} projectId - id of the project to fetch recent errors
- * @param {string} groupingBy - grouping mode: 'hours' or 'days'
- * @param {number} rangeValue - range value: number of hours or days depending on groupingBy
+ * @param {string} startDate - start date (ISO string or Unix timestamp in seconds)
+ * @param {string} endDate - end date (ISO string or Unix timestamp in seconds)
+ * @param {number} groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
  * @param {number} timezoneOffset - user's local timezone offset
  * @returns {Promise<ChartData[] | null>}
  */
-export async function fetchChartData(projectId, groupingBy, rangeValue, timezoneOffset) {
+export async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
-    groupingBy,
-    rangeValue,
+    startDate,
+    endDate,
+    groupBy,
     timezoneOffset,
   })).project.chartData;
 }

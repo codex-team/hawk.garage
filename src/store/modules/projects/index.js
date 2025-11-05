@@ -386,20 +386,27 @@ const actions = {
   },
 
   /**
-   * Get events counters for the last N days at the specific project
+   * Get events counters for a specified period at the specific project
    *
    * @param {object} context - vuex action context
    * @param {Function} context.commit - standard Vuex commit function
    *
    * @param {object} payload - vuex action payload
    * @param {string} payload.projectId - id of the project to fetch data
-   * @param {string} payload.groupingBy - grouping mode: 'hours' or 'days'
-   * @param {number} payload.rangeValue - range value: number of hours or days depending on groupingBy
+   * @param {string} payload.startDate - start date (ISO string or Unix timestamp)
+   * @param {string} payload.endDate - end date (ISO string or Unix timestamp)
+   * @param {number} payload.groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
    * @returns {Promise<void>}
    */
-  async [FETCH_CHART_DATA]({ commit }, { projectId, groupingBy, rangeValue }) {
+  async [FETCH_CHART_DATA]({ commit }, { projectId, startDate, endDate, groupBy }) {
     const timezoneOffset = (new Date()).getTimezoneOffset();
-    const chartData = await projectsApi.fetchChartData(projectId, groupingBy, rangeValue, timezoneOffset);
+    const chartData = await projectsApi.fetchChartData(
+      projectId,
+      startDate,
+      endDate,
+      groupBy,
+      timezoneOffset
+    );
 
     commit(mutationTypes.ADD_CHART_DATA, {
       projectId,

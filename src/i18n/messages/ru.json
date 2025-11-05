@@ -94,6 +94,15 @@
     "searchFieldWithCMDK": "{cmd}+K для поиска"
   },
   "projects": {
+    "chart": {
+      "byMinutes": "По минутам",
+      "byHours": "По часам",
+      "byDays": "По дням",
+      "lastHour": "За час",
+      "lastDay": "За день",
+      "lastWeek": "За неделю",
+      "lastMonth": "За месяц"
+    },
     "filters": {
       "filtersOptions": {
         "all": "Все",
