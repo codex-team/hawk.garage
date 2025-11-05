@@ -252,6 +252,7 @@ export const QUERY_PROJECT_RELEASE_DETAILS = `
           id
           totalCount
           timestamp
+          usersAffected
           payload { title }
         }
       }

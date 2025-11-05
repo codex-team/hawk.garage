@@ -1,24 +1,22 @@
 <template>
   <div class="release-events">
-    <EventItem
-      v-for="event in events"
-      :key="event.id"
-      :event="normalizeEvent(event)"
-      :last-occurrence-timestamp="event.timestamp"
-      :count="event.totalCount"
-      :affected-users-count="event.affectedUsers || null"
-      @showEventOverview="showEventOverview(event)"
+    <EventsList
+      :events="dailyEventsCompatible"
+      :project-id="projectId"
+      :is-loading="false"
+      :no-more="true"
+      :get-project-event-by-id="getProjectEventByIdCompat"
+      @showEventOverview="showEventOverviewPayload($event)"
     />
-    <div v-if="!events.length" class="release-events__empty">—</div>
   </div>
 </template>
 
 <script>
-import EventItem from "@/components/project/EventItem.vue";
+import EventsList from "@/components/project/EventsList.vue";
 
 export default {
   name: "ReleaseEvents",
-  components: { EventItem },
+  components: { EventsList },
   props: {
     releaseDetails: {
       type: Object,
@@ -33,27 +31,43 @@ export default {
       return this.$route.params.release;
     },
     events() {
-      console.log('events computed', this.releaseDetails);
       return this.releaseDetails.events || [];
     },
-  },
-  mounted() {
-    console.log('Events mounted, releaseDetails:', this.releaseDetails);
+    eventMap() {
+      const map = {};
+      this.events.forEach(event => { map[event.id] = { marks: {}, ...event }; });
+      return map;
+    },
+    dailyEventsCompatible() {
+      return this.events.map(event => ({
+        groupingTimestamp: this.getUtcMidnightSeconds(event.timestamp),
+        eventId: event.id,
+        count: event.totalCount,
+        affectedUsers: (event.affectedUsers != null ? event.affectedUsers : event.usersAffected) ?? null,
+        groupHash: event.id,
+      }));
+    },
   },
   methods: {
-    normalizeEvent(e) {
-      return {
-        marks: {},
-        ...e,
-      };
+    getProjectEventByIdCompat(projectId, eventId) {
+      return this.eventMap[eventId];
     },
-    showEventOverview(event) {
+    /**
+     * Return UTC midnight in seconds from timestamp that may be ms or s
+     */
+    getUtcMidnightSeconds(ts) {
+      const ms = ts < 1e12 ? ts * 1000 : ts;
+      const d = new Date(ms);
+      const utcMs = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+      return Math.floor(utcMs / 1000);
+    },
+    showEventOverviewPayload(payload) {
       this.$router.push({
         name: 'event-overview',
         params: {
-          projectId: this.projectId,
-          eventId: event.originalEventId,
-          repetitionId: event.id,
+          projectId: payload.projectId,
+          eventId: payload.originalEventId,
+          repetitionId: payload.eventId,
         },
       });
     },

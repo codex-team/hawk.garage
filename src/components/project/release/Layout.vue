@@ -115,6 +115,11 @@ export default {
   flex-direction: column;
   height: 100%;
 }
+
+.release-layout__content {
+  margin: 0 auto;
+  max-width: var(--width-event-center-container);
+}
 .release-layout__header {
   padding-inline: var(--layout-padding-inline);
   border-bottom: 1px solid var(--color-bg-second);
