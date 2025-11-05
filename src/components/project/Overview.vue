@@ -31,52 +31,16 @@
           :workspace-name="workspace.name"
           :workspace-id="workspace.id"
         />
-        <template v-if="!isListEmpty">
-          <div
-            v-for="(eventsByDate, date) in dailyEventsGrouped"
-            :key="date"
-            class="project-overview__events-by-date"
-          >
-            <div class="project-overview__date">
-              {{ getDay(date) | prettyDate }}
-            </div>
-            <EventItem
-              v-for="(dailyEventInfo, index) in eventsByDate"
-              :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-              :last-occurrence-timestamp="getProjectEventById(project.id, dailyEventInfo.eventId).timestamp"
-              :count="dailyEventInfo.count"
-              :affected-users-count="dailyEventInfo.affectedUsers"
-              class="project-overview__event"
-              :event="getProjectEventById(project.id, dailyEventInfo.eventId)"
-              @onAssigneeIconClick="showAssignees(project.id, dailyEventInfo.eventId, $event)"
-              @showEventOverview="
-                showEventOverview(
-                  project.id,
-                  dailyEventInfo.eventId,
-                  getProjectEventById(project.id, dailyEventInfo.eventId).originalEventId
-                )
-              "
-            />
-          </div>
-          <div
-            v-if="!isListEmpty && !noMoreEvents && !isLoadingEvents"
-            class="project-overview__load-more"
-            :class="{ loader: isLoadingEvents }"
-            @click="loadMoreEvents(false)"
-          >
-            <span v-if="!isLoadingEvents">{{ $t('projects.loadMoreEvents') }}</span>
-          </div>
-        </template>
-        <div v-else-if="isLoadingEvents">
-          <EventItemSkeleton />
-        </div>
-        <div
-          v-else-if="dailyEvents.length === 0 && !isLoadingEvents"
-          class="project-overview__no-events-placeholder"
-        >
-          <div class="project-overview__divider" />
-          {{ $t('projects.noEventsPlaceholder') }}
-        </div>
+        <EventsList
+          :events="dailyEvents"
+          :project-id="project.id"
+          :is-loading="isLoadingEvents"
+          :no-more="noMoreEvents"
+          :get-project-event-by-id="getProjectEventById"
+          @loadMore="loadMoreEvents(false)"
+          @assigneeIconClick="showAssignees($event.projectId, $event.eventId, $event.nativeEvent)"
+          @showEventOverview="showEventOverview($event.projectId, $event.eventId, $event.originalEventId)"
+        />
         <AssigneesList
           v-if="isAssigneesShowed"
           v-click-outside="hideAssigneesList"
@@ -93,7 +57,7 @@
 </template>
 
 <script>
-import EventItem from './EventItem';
+import EventsList from './EventsList.vue';
 import AssigneesList from '../event/AssigneesList';
 import Chart from '../events/Chart';
 import { mapGetters } from 'vuex';
@@ -107,7 +71,6 @@ import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
-import EventItemSkeleton from './EventItemSkeleton';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
 
 /**
@@ -119,11 +82,10 @@ export default {
   name: 'ProjectOverview',
   components: {
     FiltersBar,
-    EventItem,
+    EventsList,
     AssigneesList,
     Chart,
     SearchField,
-    EventItemSkeleton,
     BlockedWorkspaceBanner,
   },
   data() {

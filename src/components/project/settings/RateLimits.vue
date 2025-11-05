@@ -14,7 +14,10 @@
       @submit="handleSubmit"
       @clear="handleClear"
     />
-    <div v-if="!isRateLimitsAvailable" class="project-settings__paid-only-message">
+    <div
+      v-if="!isRateLimitsAvailable"
+      class="project-settings__paid-only-message"
+    >
       {{ $t('projects.settings.rateLimits.paidOnlyMessage') }}
     </div>
   </div>
@@ -52,6 +55,7 @@ export default Vue.extend({
       }
 
       const workspace = this.$store.getters.getWorkspaceByProjectId(this.project.id);
+
       if (!workspace || !workspace.plan) {
         return false;
       }
@@ -68,12 +72,15 @@ export default Vue.extend({
      */
     maxThreshold(): number {
       const workspace = this.$store.getters.getWorkspaceByProjectId(this.project.id);
+
       return workspace?.plan?.eventsLimit || 1000000000;
     },
   },
   methods: {
     /**
      * Handle form submit from RateLimitsForm component
+     *
+     * @param rateLimitSettings
      */
     async handleSubmit(rateLimitSettings: ProjectRateLimitSettings): Promise<void> {
       try {
@@ -89,6 +96,7 @@ export default Vue.extend({
         });
       } catch (e) {
         const error = e as Error;
+
         notifier.show({
           message: error.message,
           style: 'error',
@@ -114,6 +122,7 @@ export default Vue.extend({
         });
       } catch (e) {
         const error = e as Error;
+
         notifier.show({
           message: error.message,
           style: 'error',
@@ -160,12 +169,12 @@ export default Vue.extend({
 
   &__paid-only-message {
     margin-bottom: 20px;
-    background-color: var(--color-bg-second);
-    border-radius: 8px;
     color: var(--color-text-main);
     font-weight: 400;
     font-size: 13px;
     line-height: 19px;
+    background-color: var(--color-bg-second);
+    border-radius: 8px;
   }
 
   &__section,
