@@ -3,6 +3,7 @@ import {
   PROJECT_NOTIFICATIONS_RULE_FRAGMENT,
   WORKSPACE_PLAN,
   EVENT_FRAGMENT,
+  EVENT_BACKTRACE,
 } from '../fragments';
 
 // language=GraphQL
@@ -55,7 +56,34 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
             affectedUsers
             groupingTimestamp
             event {
-              ...Event
+              id
+              groupHash
+              totalCount
+              timestamp
+              originalTimestamp
+              originalEventId
+              marks {
+                resolved
+                starred
+                ignored
+              }
+              payload {
+                title
+                type
+                release
+                context
+                user {
+                  id
+                  name
+                  url
+                  photo
+                }
+                get
+                backtrace {
+                  ...eventBacktrace
+                }
+                addons
+              }
             }
           }
         }
@@ -66,7 +94,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
   ${WORKSPACE_FRAGMENT_WITH_TEAM}
   ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
   ${WORKSPACE_PLAN}
-  ${EVENT_FRAGMENT}
+  ${EVENT_BACKTRACE}
 `;
 
 // language=GraphQL
