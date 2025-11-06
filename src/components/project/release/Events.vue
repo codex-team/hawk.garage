@@ -1,18 +1,6 @@
 <template>
   <div class="release-events">
-    <EventsList
-      v-if="events.length"
-      :project-id="projectId"
-      :is-loading="false"
-      :no-more="true"
-      :get-project-event-by-id="getProjectEventById"
-    />
-    <EmptyState
-      v-else
-      icon="like"
-      :title="$t('projects.releases.empty.eventsTitle')"
-      :description="$t('projects.releases.empty.eventsDesc')"
-    />
+    <EventsList fallback="fancy-release" />
   </div>
 </template>
 
@@ -40,26 +28,6 @@ export default Vue.extend({
     },
     release(): string {
       return this.$route.params.release;
-    },
-    events(): DailyEvent[] {
-      return this.releaseDetails.dailyEventsPortion.dailyEvents || [];
-    },
-    eventMap(): Record<string, HawkEvent> {
-      const map: Record<string, HawkEvent> = {};
-
-      this.events.forEach((dailyEvent: DailyEvent) => {
-        map[dailyEvent.event.id] = dailyEvent.event
-      });
-
-      return map;
-    },
-    dailyEventsCompatible(): { groupingTimestamp: number; eventId: string; count: number; affectedUsers: number }[] {
-      return this.events.map((dailyEvent: DailyEvent) => ({
-        groupingTimestamp: dailyEvent.groupingTimestamp,
-        eventId: dailyEvent.event.id,
-        count: dailyEvent.count,
-        affectedUsers: dailyEvent.affectedUsers,
-      }));
     },
 
     ...mapGetters([ 'getProjectEventById' ]),

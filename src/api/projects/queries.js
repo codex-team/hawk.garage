@@ -253,12 +253,6 @@ export const QUERY_PROJECT_RELEASE_DETAILS = `
           length
         }
         commits { hash author title date }
-        dailyEventsPortion(limit: 50, release: $release) {
-          dailyEvents {
-            id
-            count
-          }
-        }
       }
     }
   }

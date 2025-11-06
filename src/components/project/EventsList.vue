@@ -44,8 +44,16 @@
       v-else
       class="events-list__no-events-placeholder"
     >
-      <div class="events-list__divider" />
-      {{ $t('projects.noEventsPlaceholder') }}
+      <EmptyState
+        v-if="fallback === 'fancy-release'"
+        icon="like"
+        :title="$t('projects.releases.empty.eventsTitle')"
+        :description="$t('projects.releases.empty.eventsDesc')"
+      />
+      <template v-else-if="fallback === 'simple'">
+        <div class="events-list__divider" />
+        {{ $t('projects.noEventsPlaceholder') }}
+      </template>
     </div>
     <AssigneesList
       v-if="isAssigneesShowed"
@@ -68,6 +76,7 @@ import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
+import EmptyState from '../utils/EmptyState.vue';
 
 /**
  * Events list component grouped by days.
@@ -90,6 +99,7 @@ export default {
     EventItemSkeleton,
     AssigneesList,
     SearchField,
+    EmptyState,
   },
   data() {
     return {
@@ -149,6 +159,12 @@ export default {
        */
       assigneesAnchorEl: null,
     };
+  },
+  props: {
+    fallback: {
+      type: String,
+      default: 'simple',
+    },
   },
   created() {
     this.loadMoreEvents(true);
@@ -264,6 +280,10 @@ export default {
 
       this.dailyEventsNextCursor = nextCursor;
       this.noMore = this.dailyEventsNextCursor === null;
+
+      if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
+        this.$emit('no-events');
+      }
 
       if (overwrite) {
         this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
