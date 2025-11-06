@@ -22,7 +22,11 @@
         class="event-overview__section"
         :cookies="event.payload.cookies"
       />
-      <DetailsUser v-if="event.payload.user" class="event-overview__section" :payloadUser="event.payload.user" />
+      <DetailsUser
+        v-if="event.payload.user"
+        class="event-overview__section"
+        :payload-user="event.payload.user"
+      />
       <DetailsAddons
         v-if="getIntegrationAddons('vue')"
         class="event-overview__section"

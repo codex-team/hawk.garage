@@ -34,7 +34,7 @@
         {{ $t('workspaces.settings.workspace.submit') }}
       </button>
     </form>
-       <hr class="delimiter">
+    <hr class="delimiter">
     <!--    <div class="workspace-settings__registered-info">-->
     <!--      {{ $t('workspaces.settings.workspace.created') }}-->
     <!--    </div>-->
@@ -209,8 +209,8 @@ export default Vue.extend({
     }
 
     &-value {
-      margin-top: 10px;
       max-width: 400px;
+      margin-top: 10px;
       padding: 8px 10px;
 
       .code-block__button-wrapper {
@@ -218,7 +218,6 @@ export default Vue.extend({
       }
     }
   }
-
 
 
 }

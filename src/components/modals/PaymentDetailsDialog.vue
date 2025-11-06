@@ -786,23 +786,23 @@ export default Vue.extend({
 
   &__invoice {
     margin-top: 20px;
-    font-size: 14px;
     color: var(--color-text-second);
+    font-size: 14px;
     line-height: 1.4;
 
     &::before {
-      content: '';
       display: block;
       width: 100%;
       height: 1px;
       background-color: var(--color-delimiter-line);
+      content: '';
     }
 
     h3 {
-      font-size: inherit;
-      font-weight: 500;
-      color: var(--color-text-main);
       margin-bottom: 6px;
+      color: var(--color-text-main);
+      font-weight: 500;
+      font-size: inherit;
     }
 
     &-read-more {
@@ -824,17 +824,5 @@ export default Vue.extend({
       }
     }
   }
-}
-.payment-details__loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* width: 558px;
-  height: 200px; */
-  color: var(--color-text-second);
-}
-
-.payment-details__loading-text {
-  font-size: 16px;
 }
 </style>

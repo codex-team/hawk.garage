@@ -228,6 +228,15 @@
         "newEvents": "New events",
         "commits": "Commits",
         "files": "Files"
+      },
+      "empty": {
+        "eventsTitle": "No errors found in this release",
+        "eventsDesc": "Events captured within this release will appear here",
+        "commitsTitle": "No commits",
+        "commitsDesc": "There are no commits attached to this release",
+        "filesTitle": "No files found",
+        "filesDesc": "This release has no uploaded artifact files",
+        "learnMore": "Learn more about releases"
       }
     }
   },
