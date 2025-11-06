@@ -16,6 +16,7 @@
           v-for="release in items"
           :key="release.release"
           class="release-row"
+          @click="openRelease(release.release)"
         >
           <div class="release-row__left">
             <div class="release-row__time">
@@ -51,6 +52,7 @@
     >
       —
     </div>
+    <router-view />
   </div>
 </template>
 
@@ -113,7 +115,13 @@ export default {
       }).format(new Date(tsSec * 1000));
     },
 
-    // removed custom offset function: local midnight grouping is simpler and consistent with UI
+    openRelease(release) {
+      this.$router.push({
+        name: 'project-release',
+        params: { projectId: this.projectId,
+          release },
+      });
+    },
   },
 };
 </script>
