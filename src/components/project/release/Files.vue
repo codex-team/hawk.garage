@@ -1,6 +1,6 @@
 <template>
   <div class="release-files">
-    <div class="release-files__toolbar">
+    <div v-if="files.length > 0" class="release-files__toolbar">
       <div class="release-files__count">{{ normalizedFiltered.length }} {{ $t('projects.releases.stats.files') }}</div>
       <input
         v-model="search"
@@ -23,15 +23,24 @@
         :title="item.mapFullPath"
       >map: {{ item.mapName }}</span>
     </div>
-    <div v-if="!normalizedFiltered.length" class="release-files__empty">—</div>
+    <EmptyState
+      v-if="!this.files.length"
+      icon="file"
+      :title="$t('projects.releases.empty.filesTitle')"
+      :description="$t('projects.releases.empty.filesDesc')"
+      :action-text="$t('projects.releases.empty.learnMore')"
+      :action-href="docLink"
+    />
   </div>
 
 </template>
 
 <script>
+import EmptyState from '../../utils/EmptyState.vue';
 
 export default {
   name: 'ReleaseFiles',
+  components: { EmptyState },
   props: {
     releaseDetails: {
       type: Object,
@@ -41,6 +50,12 @@ export default {
   computed: {
     projectId() { return this.$route.params.projectId; },
     release() { return this.$route.params.release; },
+    docLink() {
+      const locale = (this.$i18n && this.$i18n.locale) || 'en';
+      return String(locale).startsWith('ru')
+        ? 'https://docs.hawk-tracker.ru/releases'
+        : 'https://docs.hawk.so/releases';
+    },
     files() { return this.releaseDetails.files || []; },
     normalized() {
       // Normalize both string entries and object entries with mapFileName/originFileName
@@ -202,6 +217,7 @@ export default {
 }
 
 .release-files__empty { color: var(--color-text-second); padding: 16px 0; }
+/* empty-state styles moved to shared component */
 
 /* Accent colors for common extensions */
 .release-files__ext--js, .release-files__ext--ts, .release-files__ext--tsx, .release-files__ext--jsx {

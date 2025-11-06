@@ -23,7 +23,7 @@ export default Vue.extend({
       type: String as PropType<SkeletonAvatarSize>,
       default: 'medium' as SkeletonAvatarSize,
       validator: (value: string): boolean => {
-        return ['small', 'medium', 'large'].includes(value);
+        return ['xxs', 'small', 'medium', 'large'].includes(value);
       },
     },
   },

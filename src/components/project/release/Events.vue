@@ -1,6 +1,7 @@
 <template>
   <div class="release-events">
     <EventsList
+      v-if="events.length"
       :events="dailyEventsCompatible"
       :project-id="projectId"
       :is-loading="false"
@@ -8,15 +9,22 @@
       :get-project-event-by-id="getProjectEventByIdCompat"
       @showEventOverview="showEventOverviewPayload($event)"
     />
+    <EmptyState
+      v-else
+      icon="like"
+      :title="$t('projects.releases.empty.eventsTitle')"
+      :description="$t('projects.releases.empty.eventsDesc')"
+    />
   </div>
 </template>
 
 <script>
 import EventsList from "@/components/project/EventsList.vue";
+import EmptyState from "@/components/utils/EmptyState.vue";
 
 export default {
   name: "ReleaseEvents",
-  components: { EventsList },
+  components: { EventsList, EmptyState },
   props: {
     releaseDetails: {
       type: Object,
@@ -66,7 +74,7 @@ export default {
         name: 'event-overview',
         params: {
           projectId: payload.projectId,
-          eventId: payload.originalEventId,
+          eventId: payload.eventId,
           repetitionId: payload.eventId,
         },
       });
@@ -80,4 +88,5 @@ export default {
   margin: 0 auto;
   max-width: var(--width-event-center-container);
 }
+/* empty-state styles moved to shared component */
 </style>
