@@ -76,5 +76,8 @@ export default {
 </script>
 
 <style>
-
+.release-events {
+  margin: 0 auto;
+  max-width: var(--width-event-center-container);
+}
 </style>

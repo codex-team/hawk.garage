@@ -122,7 +122,8 @@ export default {
 <style>
 .release-files {
   padding-inline: 12px 0;
-  margin-top: 12px;
+  margin: 12px auto 0 auto;
+  max-width: var(--width-event-center-container);
 }
 
 .release-files__toolbar {

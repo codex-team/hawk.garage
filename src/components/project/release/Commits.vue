@@ -35,10 +35,11 @@ export default {
 
 <style>
 .release-commits {
-  margin-top: 12px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  margin: 12px auto 0 auto;
+  max-width: var(--width-event-center-container);
 }
 
 .release-commits__empty {

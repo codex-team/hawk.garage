@@ -12,7 +12,16 @@
         >
           {{ releaseDetails.timestamp | prettyFullDate }}
         </span>
-        <div class="breadcrumbs">
+        <SkeletonBar
+          v-else
+          class="release-layout__date"
+          size="small"
+          width="140px"
+        />
+        <div
+          v-if="releaseDetails.timestamp"
+          class="breadcrumbs"
+        >
           <router-link
             v-if="workspace"
             class="breadcrumbs__item"
@@ -46,8 +55,31 @@
             </ProjectBadge>
           </router-link>
         </div>
-        <div class="release-layout__title" :title="release">
+        <div
+          v-else
+          class="breadcrumbs"
+        >
+          <div class="breadcrumbs__item">
+            <SkeletonAvatar size="xxs" />
+            <SkeletonBar size="small" width="120px" />
+          </div>
+          <div class="breadcrumbs__item">
+            <SkeletonAvatar size="xxs" />
+            <SkeletonBar size="small" width="160px" />
+          </div>
+        </div>
+        <div
+          v-if="releaseDetails.timestamp"
+          class="release-layout__title"
+          :title="release"
+        >
           {{ release }}
+        </div>
+        <div
+          v-else
+          class="release-layout__title"
+        >
+          <SkeletonBar size="large" width="300px" />
         </div>
         </div>
         <TabBar
@@ -58,6 +90,9 @@
       </div>
       <div v-if="releaseDetails.timestamp" class="release-layout__content">
         <router-view :release-details="releaseDetails" />
+      </div>
+      <div v-else class="release-layout__content release-layout__content--spinner">
+        <Spinner size="medium" width="100%" />
       </div>
     </div>
   </PopupDialog>
@@ -70,6 +105,9 @@ import { fetchProjectReleaseDetails } from '@/api/projects';
 import EntityImage from '@/components/utils/EntityImage.vue';
 import ProjectBadge from '@/components/project/ProjectBadge.vue';
 import { projectBadges } from '@/mixins/projectBadges';
+import SkeletonBar from '@/components/utils/SkeletonBar.vue';
+import SkeletonAvatar from '@/components/utils/SkeletonAvatar.vue';
+import Spinner from '@/components/utils/Spinner.vue';
 
 export default {
   name: 'ReleaseLayout',
@@ -78,6 +116,9 @@ export default {
     PopupDialog,
     EntityImage,
     ProjectBadge,
+    SkeletonBar,
+    SkeletonAvatar,
+    Spinner,
   },
   mixins: [ projectBadges ],
   data() {
@@ -159,11 +200,10 @@ export default {
 }
 
 .release-layout__content {
-  margin: 0 auto;
-  max-width: var(--width-event-center-container);
+  padding: 25px 30px;
 }
 .release-layout__header {
-  padding: 35px var(--layout-padding-inline) 0 var(--layout-padding-inline);
+  padding: 35px 20px 0 20px;
   color: var(--color-text-second);
   background-color: #121419;
   margin: 0 auto;
@@ -187,6 +227,7 @@ export default {
 .breadcrumbs__item {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 .breadcrumbs__item:not(:last-of-type)::after {
   margin: 0 10px;
@@ -208,9 +249,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.release-layout__content {
-  padding: 12px var(--layout-padding-inline);
-}
+
 .release-layout__tab-bar {
   margin: 0 auto;
   max-width: var(--width-event-center-container);
@@ -220,4 +259,17 @@ export default {
   font-size: 12px;
   line-height: 23px;
 }
+
+.release-layout__tab-bar--skeleton {
+  padding-bottom: 24px;
+}
+
+.release-layout__content--spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 25px auto;
+}
+
 </style>

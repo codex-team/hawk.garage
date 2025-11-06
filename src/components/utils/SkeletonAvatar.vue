@@ -8,7 +8,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
-type SkeletonAvatarSize = 'small' | 'medium' | 'large';
+type SkeletonAvatarSize = 'xxs' | 'small' | 'medium' | 'large';
 
 /**
  * Reusable skeleton avatar component with animated gradient
@@ -40,6 +40,10 @@ export default Vue.extend({
   width: var(--size);
   height: var(--size);
   border-radius: calc(var(--size) / 3.8);
+
+  &--xxs {
+    --size: 16px;
+  }
 
   &--small {
     --size: 26px;
