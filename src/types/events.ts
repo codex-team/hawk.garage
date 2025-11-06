@@ -1,7 +1,7 @@
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
-import { EventAddons } from '@hawk.so/types';
 import { ReleaseCommit } from './release';
+import { EventAddons, AffectedUser } from '@hawk.so/types';
 
 /**
  * Event marks enum
@@ -244,7 +244,7 @@ export interface HawkEventPayload {
   /**
    * Current authenticated user
    */
-  user: EventUser;
+  user: AffectedUser;
 
   /**
    * Any additional data of Event
@@ -304,28 +304,6 @@ export interface BacktraceSourceCode {
    * line's content
    */
   content: string;
-}
-
-export interface EventUser {
-  /**
-   * User id
-   */
-  id: number;
-
-  /**
-   * User name
-   */
-  name: string;
-
-  /**
-   * User url
-   */
-  url: string;
-
-  /**
-   * User photo
-   */
-  photo: string;
 }
 
 /**
