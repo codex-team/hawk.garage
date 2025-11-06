@@ -56,7 +56,6 @@ export default Vue.extend({
     chartRange: string;
     chartGrouping: string;
     rangeOptions: UiSelectOption[];
-    groupingOptions: UiSelectOption[];
   } {
     return {
       /**
@@ -95,11 +94,40 @@ export default Vue.extend({
           value: 'month',
         },
       ],
-
-      /**
-       * Options for chart grouping
-       */
-      groupingOptions: [
+    };
+  },
+  mounted() {
+    if (!this.$store.state.projects.charts[this.projectId]) {
+      void this.fetchChartData();
+    }
+  },
+  watch: {
+    chartRange: {
+      handler(newVal) {
+        /* Reset grouping if current grouping is disabled for new range */
+        const currentOption = this.groupingOptions.find(opt => opt.value === this.chartGrouping);
+        if (currentOption && currentOption.isDisabled) {
+          /* Set to first enabled option */
+          const enabledOption = this.groupingOptions.find(opt => !opt.isDisabled);
+          if (enabledOption) {
+            this.chartGrouping = enabledOption.value;
+          }
+        }
+        this.fetchChartData();
+      },
+    },
+    chartGrouping: {
+      handler(newVal) {
+        this.fetchChartData();
+      },
+    },
+  },
+  computed: {
+    /**
+     * Options for chart grouping with disabled state based on selected range
+     */
+    groupingOptions(): UiSelectOption[] {
+      const allOptions: UiSelectOption[] = [
         {
           label: this.$t('projects.chart.byMinutes') as string,
           value: 'minutes',
@@ -112,27 +140,39 @@ export default Vue.extend({
           label: this.$t('projects.chart.byDays') as string,
           value: 'days',
         },
-      ],
-    };
-  },
-  mounted() {
-    if (!this.$store.state.projects.charts[this.projectId]) {
-      void this.fetchChartData();
-    }
-  },
-  watch: {
-    chartRange: {
-      handler(newVal) {
-        this.fetchChartData();
-      },
+      ];
+
+      /* Set disabled state based on selected range */
+      switch (this.chartRange) {
+        case 'hour':
+          /* hour -> only minutes */
+          return allOptions.map(option => ({
+            ...option,
+            isDisabled: option.value !== 'minutes',
+          }));
+        case 'day':
+          /* day -> hours, minutes */
+          return allOptions.map(option => ({
+            ...option,
+            isDisabled: option.value === 'days',
+          }));
+        case 'week':
+          /* week -> hours, days */
+          return allOptions.map(option => ({
+            ...option,
+            isDisabled: option.value === 'minutes',
+          }));
+        case 'month':
+          /* month -> only days */
+          return allOptions.map(option => ({
+            ...option,
+            isDisabled: option.value !== 'days',
+          }));
+        default:
+          return allOptions;
+      }
     },
-    chartGrouping: {
-      handler(newVal) {
-        this.fetchChartData();
-      },
-    },
-  },
-  computed: {
+
     nowCount(): number {
       return this.chartData.slice(-1)[0]?.count || 0;
     },
@@ -147,7 +187,7 @@ export default Vue.extend({
     /**
      * Fetch chart data based on current range and grouping settings
      */
-    async fetchChartData() {
+    async fetchChartData(): Promise<void> {
       const now = new Date();
       let startDate, endDate, groupBy;
 
@@ -182,16 +222,16 @@ export default Vue.extend({
 
       this.chartData = this.$store.state.projects.charts[this.projectId];
     },
-    changeChartRange(range: string) {
+    changeChartRange(range: string): void {
       this.chartRange = range;
     },
-    changeChartGrouping(grouping: string) {
+    changeChartGrouping(grouping: string): void {
       this.chartGrouping = grouping;
     },
-    isGroupingAvailable(grouping: string) {
+    isGroupingAvailable(grouping: string): boolean {
       return true;
     },
-    isRangeAvailable(range: string) {
+    isRangeAvailable(range: string): boolean {
       return true;
     },
   },
@@ -250,6 +290,10 @@ export default Vue.extend({
         &-increase::before {
           border-top-color: #f15454;
           transform: rotate(180deg) translateY(7px);
+        }
+
+        &-decrease::before {
+          top: 50%;
         }
       }
     }

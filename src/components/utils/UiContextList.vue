@@ -6,8 +6,9 @@
       class="ui-context-list__item"
       :class="{
         'ui-context-list__item--active': item.isActive,
+        'ui-context-list__item--disabled': item.isDisabled,
       }"
-      @click="item.onActivate"
+      @click="onClick(item)"
     >
       <Icon
         v-if="item.icon"
@@ -45,6 +46,11 @@ export interface UiContextListItem {
    * Optional Icon to display in the item
    */
   icon?: string;
+
+  /**
+   * Whether the item is disabled
+   */
+  isDisabled?: boolean;
 }
 
 export default Vue.extend({
@@ -58,6 +64,14 @@ export default Vue.extend({
     items: {
       type: Array as () => UiContextListItem[],
       default: () => [],
+    },
+  },
+  methods: {
+    onClick(item: UiContextListItem): void {
+      if (item.isDisabled) {
+        return;
+      }
+      item.onActivate();
     },
   },
 });
@@ -101,7 +115,12 @@ export default Vue.extend({
     &--active {
       font-weight: 800;
       pointer-events: none;
-      opacity: 0.6;
+      color: var(--color-text-highlighted);
+    }
+
+    &--disabled {
+      cursor: default;
+      opacity: 0.4;
     }
 
     .icon {
