@@ -181,8 +181,6 @@ export default Vue.extend({
       });
 
       this.chartData = this.$store.state.projects.charts[this.projectId];
-      this.chartData[this.chartData.length - 2].count = 31;
-      this.chartData[this.chartData.length - 1].count = 100;
     },
     changeChartRange(range: string) {
       this.chartRange = range;
