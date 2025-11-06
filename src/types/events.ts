@@ -1,6 +1,7 @@
 import { User } from '@/types/user';
 import { EventChartItem } from '@/types/chart';
 import { EventAddons } from '@hawk.so/types';
+import { ReleaseCommit } from './release';
 
 /**
  * Event marks enum
@@ -339,33 +340,9 @@ export interface HawkEventRelease {
   /**
    * Release Commits
    */
-  commits: HawkEventCommit[];
+  commits: ReleaseCommit[];
 }
 
-/**
- * Hawk Event Commit format
- */
-export interface HawkEventCommit {
-  /**
-   * Commit Hash
-   */
-  hash: string;
-
-  /**
-   * Commit Author
-   */
-  author: string;
-
-  /**
-   * Commit Title
-   */
-  title: string;
-
-  /**
-   * Commit date
-   */
-  date: Date;
-}
 
 /**
  * Daily evetns pagination cursor

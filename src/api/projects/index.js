@@ -17,6 +17,7 @@ import {
 } from './queries';
 import * as api from '../index.ts';
 import { ChartData } from '../../types/events';
+import { ReleaseDetails } from '../../types/release';
 import { QUERY_PROJECT_RELEASES, QUERY_PROJECT_RELEASE_DETAILS } from './queries';
 
 /**
@@ -238,6 +239,7 @@ export async function fetchProjectReleases(projectId) {
  *
  * @param {string} projectId
  * @param {string} release
+ * @returns {Promise<ReleaseDetails>}
  */
 export async function fetchProjectReleaseDetails(projectId, release) {
   const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId, release });

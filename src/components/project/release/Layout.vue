@@ -108,6 +108,7 @@ import { projectBadges } from '@/mixins/projectBadges';
 import SkeletonBar from '@/components/utils/SkeletonBar.vue';
 import SkeletonAvatar from '@/components/utils/SkeletonAvatar.vue';
 import Spinner from '@/components/utils/Spinner.vue';
+import { ReleaseDetails } from '@/types/release';
 
 export default {
   name: 'ReleaseLayout',
@@ -121,15 +122,21 @@ export default {
     Spinner,
   },
   mixins: [ projectBadges ],
-  data() {
+  data(): {
+    releaseDetails: ReleaseDetails;
+    dataLoaded: boolean;
+  } {
     return {
       releaseDetails: {
-        timestamp: null,
+        timestamp: 0,
         dailyEventsPortion: {
           dailyEvents: [],
         },
         files: [],
         commits: [],
+        commitsCount: 0,
+        filesCount: 0,
+        release: '',
       },
       dataLoaded: false,
     };
@@ -242,7 +249,7 @@ export default {
   color: var(--color-text-second);
 }
 .release-layout__title {
-  padding: 8px 0 6px;
+  padding: 6px 0 16px;
   padding-inline: 0;
   color: var(--color-text-main);
   font-weight: 700;

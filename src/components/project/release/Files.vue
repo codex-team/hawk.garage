@@ -33,7 +33,7 @@
       </span>
     </div>
     <EmptyState
-      v-if="!this.files.length"
+      v-if="!files.length"
       icon="file"
       :title="$t('projects.releases.empty.filesTitle')"
       :description="$t('projects.releases.empty.filesDesc')"
@@ -45,28 +45,48 @@
 </template>
 
 <script lang="ts">
+import { ReleaseDetails } from '@/types/release';
 import EmptyState from '../../utils/EmptyState.vue';
+import { PropType } from 'vue';
 
 export default {
   name: 'ReleaseFiles',
   components: { EmptyState },
   props: {
     releaseDetails: {
-      type: Object,
+      type: Object as PropType<ReleaseDetails>,
       required: true,
     },
   },
   computed: {
-    projectId() { return this.$route.params.projectId; },
-    release() { return this.$route.params.release; },
-    docLink() {
+    projectId(): string {
+      return this.$route.params.projectId;
+    },
+    release(): string {
+      return this.$route.params.release;
+    },
+    docLink(): string {
       const locale = (this.$i18n && this.$i18n.locale) || 'en';
       return String(locale).startsWith('ru')
         ? 'https://docs.hawk-tracker.ru/releases'
         : 'https://docs.hawk.so/releases';
     },
-    files() { return this.releaseDetails.files || []; },
-    normalized() {
+    files(): {
+      mapFileName: string;
+      originFileName: string;
+      length: number | null;
+    }[] {
+      return this.releaseDetails.files || [];
+    },
+    normalized(): {
+      primaryFullPath: string;
+      primaryName: string;
+      primaryDir: string;
+      ext: string;
+      mapName: string | null;
+      mapFullPath: string;
+      length: number | null;
+    } {
       return (this.files || []).map((entry) => {
         const mapFullPath = entry.mapFileName || '';
         const primaryFullPath = entry.originFileName || '';
@@ -86,7 +106,15 @@ export default {
         };
       });
     },
-    normalizedFiltered() {
+    normalizedFiltered(): {
+      primaryFullPath: string;
+      primaryName: string;
+      primaryDir: string;
+      ext: string;
+      mapName: string | null;
+      mapFullPath: string;
+      length: number | null;
+    }[] {
       if (!this.search) {
         return this.normalized;
       }
@@ -103,7 +131,7 @@ export default {
     };
   },
   methods: {
-    formatBytes(bytes) {
+    formatBytes(bytes: number): string {
       if (typeof bytes !== 'number' || isNaN(bytes)) {
         return '—';
       }
@@ -120,19 +148,19 @@ export default {
       const rounded = value >= 10 ? Math.round(value) : Math.round(value * 10) / 10;
       return `${rounded} ${units[unitIndex]}`;
     },
-    getExt(file) {
+    getExt(file: string): string {
       const base = this.getName(file);
       const parts = base.split('.');
       if (parts.length < 2) return 'file';
-      return parts.pop().toLowerCase();
+      return parts?.pop()?.toLowerCase() || 'file';
     },
-    getName(file) {
+    getName(file: string): string {
       if (typeof file !== 'string') return '';
       const slash = file.lastIndexOf('/')
         ;
       return slash >= 0 ? file.slice(slash + 1) : file;
     },
-    getDir(file) {
+    getDir(file: string): string {
       if (typeof file !== 'string') return '';
       const slash = file.lastIndexOf('/');
       return slash >= 0 ? file.slice(0, slash) : '';
@@ -177,7 +205,7 @@ export default {
   grid-template-columns: 40px auto 50px; /* ext | name | length */
   align-items: start;
   gap: 4px;
-  padding: 14px 0;
+  padding: 8px 0;
   color: var(--color-text-main);
   font-size: 14px;
   border-bottom: 1px solid var(--color-bg-second);
@@ -200,7 +228,7 @@ export default {
 }
 
 .release-files__name {
-  font-weight: 600;
+  font-weight: 500;
   white-space: normal;
   overflow-wrap: anywhere;
 }
@@ -214,7 +242,7 @@ export default {
 }
 
 .release-files__length {
-  color: var(--color-text-main);
+  color: var(--color-text-second);
   font-size: 12px;
   text-align: right;
   justify-self: end;
