@@ -10,9 +10,9 @@
         v-model="chartGrouping"
       />
       <div class="project-chart__controls-today">
-        {{ $t('projects.chart.today') }}
+        {{ $t('projects.chart.now') }}
         <span class="project-chart__controls-today-count">
-          {{ todayCount | spacedNumber }}
+          {{ nowCount | spacedNumber }}
         </span>
         <span
           v-if="difference !== 0"
@@ -133,14 +133,14 @@ export default Vue.extend({
     },
   },
   computed: {
-    todayCount(): number {
+    nowCount(): number {
       return this.chartData.slice(-1)[0]?.count || 0;
     },
-    yesterdayCount(): number {
+    preLastPointCounter(): number {
       return this.chartData.slice(-2, -1)[0]?.count || 0;
     },
     difference(): number {
-      return this.todayCount - this.yesterdayCount;
+      return this.nowCount - this.preLastPointCounter;
     },
   },
   methods: {
@@ -181,6 +181,8 @@ export default Vue.extend({
       });
 
       this.chartData = this.$store.state.projects.charts[this.projectId];
+      this.chartData[this.chartData.length - 2].count = 31;
+      this.chartData[this.chartData.length - 1].count = 100;
     },
     changeChartRange(range: string) {
       this.chartRange = range;
@@ -219,6 +221,39 @@ export default Vue.extend({
       line-height: 12px;
       font-weight: 500;
       color: var(--color-text-second);
+
+      &-difference {
+        &-increase,
+        &-decrease {
+          position: relative;
+          margin-left: 18px;
+          color: #f15454;
+          font-weight: bold;
+        }
+
+        &-increase {
+          color: #f15454;
+        }
+
+        &-decrease {
+          color: #2ccf6c;
+        }
+
+        &-increase::before,
+        &-decrease::before {
+          position: absolute;
+          top: 52%;
+          left: -12px;
+          border: 4px solid transparent;
+          border-top: 5.5px solid #2ccf6c;
+          content: '';
+        }
+
+        &-increase::before {
+          border-top-color: #f15454;
+          transform: rotate(180deg) translateY(7px);
+        }
+      }
     }
   }
 }

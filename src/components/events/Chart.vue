@@ -36,14 +36,12 @@
     >
       <div
         class="chart__ox-inner"
-        :style="{
-          margin: `0 ${stepX / 2}px`
-        }"
       >
         <span
           v-for="(item, index) in visibleLegendPoints"
           :key="item.index"
           class="chart__ox-item"
+          :style="{ left: `${item.index * stepX}px`, transform: 'translateX(-50%)' }"
         >
           {{ formatTimestamp(item.point.timestamp * 1000) }}
         </span>
@@ -370,38 +368,6 @@ export default Vue.extend({
         margin-left: 6px;
         font-weight: bold;
       }
-
-      &-increase,
-      &-decrease {
-        position: relative;
-        margin-left: 32px;
-        color: #f15454;
-        font-weight: bold;
-        font-size: 13px;
-      }
-
-      &-increase {
-        color: #f15454;
-      }
-
-      &-decrease {
-        color: #2ccf6c;
-      }
-
-      &-increase::before,
-      &-decrease::before {
-        position: absolute;
-        top: 4px;
-        left: -18px;
-        border: 5.5px solid transparent;
-        border-top: 9px solid #2ccf6c;
-        content: '';
-      }
-
-      &-increase::before {
-        border-top-color: #f15454;
-        transform: rotate(180deg) translateY(7px);
-      }
     }
 
     &__body {
@@ -420,18 +386,19 @@ export default Vue.extend({
       padding: 15px 0;
 
       &-inner {
-        display: flex;
-        justify-content: space-between;
+        position: relative;
+        width: 100%;
+        height: 100%;
       }
 
       &-item {
-        flex: 1;
+        position: absolute;
+        left: 0;
         color: var(--color-text-main);
         font-size: 11px;
         text-align: center;
         opacity: 0.3;
-        background-color: rgb(76, 32, 32);
-        box-shadow: inset 0 0 0 1px red;
+        transform-origin: center;
 
         &:first-of-type,
         &:last-of-type {

@@ -95,7 +95,7 @@
   },
   "projects": {
     "chart": {
-      "today": "Today",
+      "now": "Now",
       "byMinutes": "By minutes",
       "byHours": "By hours",
       "byDays": "By days",
