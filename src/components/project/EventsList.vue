@@ -6,8 +6,7 @@
       skin="fancy"
       :placeholder="searchFieldPlaceholder"
       :is-c-m-d-k-enabled="true"
-      :project-id="projectId"
-      @search="reloadDailyEvents"
+      @input="debouncedSearch"
     />
     <template v-if="hasItems">
       <div
@@ -63,7 +62,7 @@
 <script>
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
-import { groupByGroupingTimestamp } from '@/utils';
+import { groupByGroupingTimestamp, debounce } from '@/utils';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
@@ -121,6 +120,10 @@ export default {
        */
       isAssigneesShowed: false,
       /**
+       * Debounced search handler
+       */
+      debouncedSearch: null,
+      /**
        * Id of the event which assignees are shown
        */
       assigneesEventId: '',
@@ -149,6 +152,24 @@ export default {
   },
   created() {
     this.loadMoreEvents(true);
+
+    const SEARCH_MAX_LENGTH = 50;
+
+    this.debouncedSearch = debounce((query) => {
+      const sanitized = typeof query === 'string' ? query.slice(0, SEARCH_MAX_LENGTH) : '';
+
+      if (this.projectId) {
+        this.$store.commit('SET_PROJECT_SEARCH', {
+          projectId: this.projectId,
+          search: sanitized,
+        });
+      }
+
+      this.reloadDailyEvents();
+    }, 500);
+  },
+  beforeDestroy() {
+    this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   computed: {
     /**
@@ -198,6 +219,7 @@ export default {
     },
   },
   methods: {
+    // debouncedSearch инициализируется в created и используется как обработчик @input
     /**
      * Return midnight timestamp extracted from grouping key
      *
@@ -269,13 +291,11 @@ export default {
     onAssigneeIconClick(eventId, nativeEvent) {
       const targetEl = nativeEvent && nativeEvent.target ? nativeEvent.target : null;
       let anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
-      if (!anchorEl) {
-        const itemEl = targetEl && targetEl.closest ? targetEl.closest('.event-item') : null;
-        anchorEl = itemEl && itemEl.querySelector ? itemEl.querySelector('.event-item__assignee') : null;
-      }
+
       if (!anchorEl) {
         return;
       }
+
       const boundingClientRect = anchorEl.getBoundingClientRect();
       this.assigneesAnchorEl = anchorEl;
 
@@ -286,14 +306,11 @@ export default {
         left: `${boundingClientRect.left}px`,
       };
       this.windowWidth = window.innerWidth;
-      this.onResize = this.$options.methods.setAssigneesPosition.bind(this);
+      this.onResize = this.setAssigneesPosition.bind(this);
 
       // TODO: Add throttle to the resize event
       window.addEventListener('resize', this.onResize);
       window.addEventListener('scroll', this.onResize, true);
-
-      // Keep emitting for backward compatibility if someone listens outside
-      this.$emit('assigneeIconClick', { projectId: this.projectId, eventId, nativeEvent });
     },
     /**
      * Emit identifiers to open event overview

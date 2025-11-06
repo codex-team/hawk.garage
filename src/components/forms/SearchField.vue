@@ -30,7 +30,6 @@
 
 <script>
 import Icon from '../utils/Icon';
-import { debounce } from '@/utils';
 
 export default {
   name: 'FormSearchField',
@@ -59,55 +58,31 @@ export default {
       type: Boolean,
       default: false,
     },
-    /**
-     * Project id to commit search into store
-     */
-    projectId: {
-      type: String,
-      default: '',
-    },
   },
   data() {
     return {
       inputValue: this.value,
-      debouncedSearch: null,
     };
   },
   created() {
     if (this.isCMDKEnabled) {
       document.addEventListener('keydown', this.handleKeyDown);
     }
-    const SEARCH_MAX_LENGTH = 50;
-    this.debouncedSearch = debounce((query) => {
-      const sanitized = typeof query === 'string' ? query.slice(0, SEARCH_MAX_LENGTH) : '';
-
-      if (this.projectId) {
-        this.$store.commit('SET_PROJECT_SEARCH', {
-          projectId: this.projectId,
-          search: sanitized,
-        });
-      }
-
-      this.$emit('search', sanitized);
-    }, 500);
   },
   beforeDestroy() {
     if (this.isCMDKEnabled) {
       document.removeEventListener('keydown', this.handleKeyDown);
     }
-    this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   methods: {
     onChange(event) {
       this.inputValue = event.target.value;
       this.$emit('input', event.target.value);
-      this.debouncedSearch && this.debouncedSearch(this.inputValue);
     },
     clearInput() {
       this.inputValue = '';
       this.$emit('input', '');
       this.$refs.input.focus();
-      this.debouncedSearch && this.debouncedSearch('');
     },
     handleKeyDown(event) {
       const isCmd = event.metaKey || event.ctrlKey;
