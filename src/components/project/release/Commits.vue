@@ -51,11 +51,6 @@ export default Vue.extend({
       return this.releaseDetails.commits || [];
     },
   },
-  methods: {
-    short(hash) {
-      return hash ? hash.slice(0, 7) : '';
-    },
-  },
 });
 </script>
 
