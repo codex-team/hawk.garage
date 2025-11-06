@@ -125,7 +125,9 @@ export default {
     return {
       releaseDetails: {
         timestamp: null,
-        events: [],
+        dailyEventsPortion: {
+          dailyEvents: [],
+        },
         files: [],
         commits: [],
       },
@@ -173,7 +175,7 @@ export default {
     const details = await fetchProjectReleaseDetails(this.projectId, this.release);
     this.releaseDetails = {
       timestamp: details?.timestamp || null,
-      events: details?.events || [],
+      dailyEventsPortion: details?.dailyEventsPortion || { dailyEvents: [] },
       files: details?.files || [],
       commits: details?.commits || [],
     };

@@ -249,12 +249,22 @@ export const QUERY_PROJECT_RELEASE_DETAILS = `
         timestamp
         files { mapFileName originFileName }
         commits { hash author title date }
-        events(limit: 50) {
-          id
-          totalCount
-          timestamp
-          usersAffected
-          payload { title }
+        dailyEventsPortion(limit: 50, release: $release) {
+          dailyEvents {
+            id
+            count
+            groupingTimestamp
+            affectedUsers
+            event {
+              id
+              originalEventId
+              originalTimestamp
+              timestamp
+              assignee { id name email image }
+              payload { title type }
+              marks { resolved starred ignored }
+            }
+          }
         }
       }
     }

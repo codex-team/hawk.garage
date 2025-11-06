@@ -65,7 +65,7 @@ import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import {
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
-import { debounce, groupByGroupingTimestamp } from '@/utils';
+import { debounce } from '@/utils';
 import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
@@ -195,18 +195,6 @@ export default {
       }
 
       return this.dailyEvents.length === 0;
-    },
-
-    /**
-     * Daily events grouped by grouping timestamp
-     * Based on data.dailyEvents
-     */
-    dailyEventsGrouped() {
-      if (this.dailyEvents.length) {
-        return groupByGroupingTimestamp(this.dailyEvents);
-      }
-
-      return {};
     },
 
     searchFieldPlaceholder() {

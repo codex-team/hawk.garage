@@ -39,25 +39,27 @@ export default {
       return this.$route.params.release;
     },
     events() {
-      return this.releaseDetails.events || [];
+      return this.releaseDetails.dailyEventsPortion.dailyEvents || [];
     },
     eventMap() {
       const map = {};
-      this.events.forEach(event => { map[event.id] = { marks: {}, ...event }; });
+
+      this.events.forEach(dailyEvent => { map[dailyEvent.event.id] = dailyEvent.event });
+
       return map;
     },
     dailyEventsCompatible() {
-      return this.events.map(event => ({
-        groupingTimestamp: this.getUtcMidnightSeconds(event.timestamp),
-        eventId: event.id,
-        count: event.totalCount,
-        affectedUsers: (event.affectedUsers != null ? event.affectedUsers : event.usersAffected) ?? null,
-        groupHash: event.id,
+      return this.events.map(dailyEvent => ({
+        groupingTimestamp: dailyEvent.groupingTimestamp,
+        eventId: dailyEvent.event.id,
+        count: dailyEvent.count,
+        affectedUsers: dailyEvent.affectedUsers,
       }));
     },
   },
   methods: {
     getProjectEventByIdCompat(projectId, eventId) {
+      console.log(eventId, this.eventMap[eventId]);
       return this.eventMap[eventId];
     },
     /**
@@ -74,7 +76,7 @@ export default {
         name: 'event-overview',
         params: {
           projectId: payload.projectId,
-          eventId: payload.eventId,
+          eventId: payload.originalEventId,
           repetitionId: payload.eventId,
         },
       });
