@@ -52,6 +52,9 @@ export default Vue.extend({
     Icon,
   },
   props: {
+    /**
+     * Items to display in the context list
+     */
     items: {
       type: Array as () => UiContextListItem[],
       default: () => [],

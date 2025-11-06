@@ -60,22 +60,39 @@ export default Vue.extend({
     UIContextList,
   },
   props: {
-    iconLeft: {
-      type: String,
-      default: null,
-    },
-    iconRight: {
-      type: String,
-      default: 'chevron-down',
-    },
+    /**
+     * Options to display in the select
+     */
     options: {
       type: Array as () => UiSelectOption[],
       default: () => [],
     },
+    /**
+     * Optional Icon to display on the left side of the select
+     */
+    iconLeft: {
+      type: String,
+      default: null,
+    },
+    /**
+     * Optional Icon to display on the right side of the select
+     */
+    iconRight: {
+      type: String,
+      default: 'chevron-down',
+    },
+
+    /**
+     * Placeholder will be displayed when no option is selected
+     */
     placeholder: {
       type: String,
       default: 'Select',
     },
+
+    /**
+     * Current input value
+     */
     value: {
       type: String,
       default: undefined,
@@ -83,14 +100,28 @@ export default Vue.extend({
   },
   data() {
     return {
+      /**
+       * Whether the select is open
+       */
       isOpen: false,
+
+      /**
+       * Current input value stored locally
+       */
       internalValue: this.value,
     };
   },
   computed: {
+    /**
+     * Current selected option matched by value
+     */
     selectedOption(): UiSelectOption | undefined {
       return this.options.find(option => option.value === this.internalValue);
     },
+
+    /**
+     * Converts options to context list items
+     */
     selectOptionsToContextListItems(): UiContextListItem[] {
       return this.options.map(option => ({
         icon: option.icon,
@@ -104,9 +135,17 @@ export default Vue.extend({
     this.internalValue = this.value;
   },
   methods: {
+    /**
+     * Closes the select
+     */
     close() {
       this.isOpen = false;
     },
+
+    /**
+     * Activates an option
+     * @param option - option to activate
+     */
     onOptionActivate(option: UiSelectOption) {
       this.internalValue = option.value;
       this.$emit('input', option.value);
