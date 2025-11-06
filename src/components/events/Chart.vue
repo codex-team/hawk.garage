@@ -302,18 +302,28 @@ export default Vue.extend({
         const p2 = pathPoints[i + 1];
         const p3 = i < pathPoints.length - 2 ? pathPoints[i + 2] : p2;
 
-        /* Calculate control points for cubic Bezier curve */
-        let cp1x = p1.x + (p2.x - p0.x) / 6;
-        let cp1y = p1.y + (p2.y - p0.y) / 6;
-        let cp2x = p2.x - (p3.x - p1.x) / 6;
-        let cp2y = p2.y - (p3.y - p1.y) / 6;
+        /* Check if both points in segment are at minimum (zero or near zero) */
+        const v1 = this.points[i].count;
+        const v2 = this.points[i + 1].count;
+        const isFlat = v1 === this.minValue && v2 === this.minValue;
 
-        /* Clamp control points to stay within chart bounds */
-        cp1y = Math.max(minY, Math.min(maxY, cp1y));
-        cp2y = Math.max(minY, Math.min(maxY, cp2y));
+        if (isFlat) {
+          /* Use linear interpolation for flat segments at minimum value */
+          path += ` L ${p2.x} ${p2.y}`;
+        } else {
+          /* Calculate control points for cubic Bezier curve */
+          let cp1x = p1.x + (p2.x - p0.x) / 6;
+          let cp1y = p1.y + (p2.y - p0.y) / 6;
+          let cp2x = p2.x - (p3.x - p1.x) / 6;
+          let cp2y = p2.y - (p3.y - p1.y) / 6;
 
-        /* Add cubic Bezier curve segment */
-        path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+          /* Clamp control points to stay within chart bounds */
+          cp1y = Math.max(minY, Math.min(maxY, cp1y));
+          cp2y = Math.max(minY, Math.min(maxY, cp2y));
+
+          /* Add cubic Bezier curve segment */
+          path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+        }
       }
 
       return path;
