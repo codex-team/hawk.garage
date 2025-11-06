@@ -137,12 +137,12 @@ export default Vue.extend({
       }));
     },
   },
-  mounted() {
+  mounted(): void {
     this.internalValue = this.value;
   },
   watch: {
     value: {
-      handler(newVal) {
+      handler(newVal: string): void {
         this.internalValue = newVal;
       },
     },
@@ -151,7 +151,7 @@ export default Vue.extend({
     /**
      * Closes the select
      */
-    close() {
+    close(): void {
       this.isOpen = false;
     },
 

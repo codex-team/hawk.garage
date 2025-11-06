@@ -293,7 +293,7 @@ export default Vue.extend({
         }
 
         &-decrease::before {
-          top: 50%;
+          top: 35%
         }
       }
     }

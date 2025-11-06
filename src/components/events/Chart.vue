@@ -15,19 +15,37 @@
         >
           <stop
             offset="0%"
-            style="stop-color:#ff4c4c;"
+            style="stop-color:#FF2E51;"
           />
           <stop
             offset="100%"
-            style="stop-color:rgba(61, 133, 210, 0.22);"
+            style="stop-color:#424565;"
+          />
+        </linearGradient>
+        <linearGradient
+          id="chartFill"
+          gradientTransform="rotate(90)"
+        >
+          <stop
+            offset="0%"
+            style="stop-color:rgba(255, 46, 81, 0.3);"
+          />
+          <stop
+            offset="100%"
+            style="stop-color:rgba(66, 69, 101, 0);"
           />
         </linearGradient>
       </defs>
       <path
+        class="chart__body-path-fill"
+        :fill="maxValue === minValue ? 'rgba(61, 133, 210, 0.05)' : 'url(#chartFill)'"
+        :d="smoothPathFill"
+      />
+      <path
         class="chart__body-path"
         fill="none"
         :stroke="maxValue === minValue ? 'rgba(61, 133, 210, 0.22)' : 'url(#chart)'"
-        stroke-width="2"
+        stroke-width="3"
         :d="smoothPath"
       />
     </svg>
@@ -203,7 +221,7 @@ export default Vue.extend({
         return 1;
       }
 
-      return (this.chartHeight) / (this.maxValue - this.minValue);
+      return this.chartHeight / (this.maxValue - this.minValue);
     },
 
     /**
@@ -218,9 +236,9 @@ export default Vue.extend({
      */
     maxValue(): number {
       /**
-       * We will increment max value for 20% for adding some offset from the top
+       * We will increment max value for 50% for adding some offset from the top
        */
-      const incrementForOffset = 1.2;
+      const incrementForOffset = 1.5;
 
       return Math.max(...this.points.map(day => day.count)) * incrementForOffset;
     },
@@ -242,7 +260,7 @@ export default Vue.extend({
 
       const currentValue = this.points[this.hoveredIndex].count;
 
-      return this.chartHeight - currentValue * this.kY;
+      return this.chartHeight - (currentValue - this.minValue) * this.kY;
     },
 
     /**
@@ -255,7 +273,7 @@ export default Vue.extend({
 
       if (this.points.length === 1) {
         const pointX = 0;
-        const pointY = this.chartHeight - this.points[0].count * this.kY;
+        const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
         return `M ${pointX} ${pointY}`;
       }
 
@@ -264,7 +282,7 @@ export default Vue.extend({
       this.points.forEach((day, index) => {
         const value = day.count;
         const pointX = index * this.stepX;
-        const pointY = this.chartHeight - value * this.kY;
+        const pointY = this.chartHeight - (value - this.minValue) * this.kY;
 
         pathPoints.push({ x: pointX, y: pointY });
       });
@@ -299,6 +317,36 @@ export default Vue.extend({
       }
 
       return path;
+    },
+
+    /**
+     * Smooth path with closed area for gradient fill
+     */
+    smoothPathFill(): string {
+      if (!this.points || !this.points.length) {
+        return '';
+      }
+
+      const path = this.smoothPath;
+
+      if (!path) {
+        return '';
+      }
+
+      if (this.points.length === 1) {
+        const pointX = 0;
+        const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
+        /* Close the path: line to bottom right, line to bottom left, close */
+        return `M ${pointX} ${pointY} L ${pointX} ${this.chartHeight} L ${pointX} ${this.chartHeight} Z`;
+      }
+
+      /* Get the last point coordinates from the path */
+      const lastIndex = this.points.length - 1;
+      const lastX = lastIndex * this.stepX;
+      const firstX = 0;
+
+      /* Close the path: line to bottom right, line to bottom left, close back to start */
+      return `${path} L ${lastX} ${this.chartHeight} L ${firstX} ${this.chartHeight} Z`;
     },
   },
   created() {
@@ -408,6 +456,12 @@ export default Vue.extend({
     &__body {
       flex-grow: 2;
 
+      &-path-fill {
+        stroke: none;
+        vector-effect: non-scaling-stroke;
+        shape-rendering: geometricPrecision;
+      }
+
       &-path {
         stroke-linecap: round;
         stroke-linejoin: round;
@@ -472,7 +526,7 @@ export default Vue.extend({
       &-tooltip {
         position: absolute;
         left: 50%;
-        bottom: -10px;
+        bottom: -12px;
         transform: translateX(-50%);
         z-index: 500;
         padding: 6px 8px 6px 7px;
