@@ -164,6 +164,7 @@ export default Vue.extend({
   --font-size: 12px;
 
   position: relative;
+  user-select: none;
 
   &__button {
     display: flex;

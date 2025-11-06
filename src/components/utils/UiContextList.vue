@@ -99,8 +99,9 @@ export default Vue.extend({
     }
 
     &--active {
-      font-weight: 600;
+      font-weight: 800;
       pointer-events: none;
+      opacity: 0.6;
     }
 
     .icon {

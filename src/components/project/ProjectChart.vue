@@ -9,9 +9,25 @@
         :options="groupingOptions"
         v-model="chartGrouping"
       />
+      <div class="project-chart__controls-today">
+        {{ $t('projects.chart.today') }}
+        <span class="project-chart__controls-today-count">
+          {{ todayCount | spacedNumber }}
+        </span>
+        <span
+          v-if="difference !== 0"
+          :class="{
+            'project-chart__controls-today-difference-increase': difference > 0,
+            'project-chart__controls-today-difference-decrease': difference < 0
+          }"
+        >
+          {{ Math.abs(difference) | spacedNumber }}
+        </span>
+      </div>
     </div>
     <Chart
       :points="chartData"
+      :detalization="chartGrouping"
     />
   </div>
 </template>
@@ -20,7 +36,8 @@
 import Vue from 'vue';
 import Chart from '../events/Chart.vue';
 import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes';
-import UiSelect from '../utils/UiSelect.vue';
+import UiSelect, { UiSelectOption } from '../utils/UiSelect.vue';
+import { ChartItem } from '@/types/chart';
 
 export default Vue.extend({
   name: 'ProjectChart',
@@ -34,7 +51,13 @@ export default Vue.extend({
       required: true,
     },
   },
-  data() {
+  data(): {
+    chartData: ChartItem[];
+    chartRange: string;
+    chartGrouping: string;
+    rangeOptions: UiSelectOption[];
+    groupingOptions: UiSelectOption[];
+  } {
     return {
       /**
        * Data for a chart
@@ -44,7 +67,7 @@ export default Vue.extend({
       /**
        * Chart range: 'hour', 'day', 'week', 'month'
        */
-      chartRange: 'day',
+      chartRange: 'week',
 
       /**
        * Chart grouping: 'minutes', 'hours', or 'days'
@@ -56,19 +79,19 @@ export default Vue.extend({
        */
       rangeOptions: [
         {
-          label: this.$t('projects.chart.lastHour'),
+          label: this.$t('projects.chart.lastHour') as string,
           value: 'hour',
         },
         {
-          label: this.$t('projects.chart.lastDay'),
+          label: this.$t('projects.chart.lastDay') as string,
           value: 'day',
         },
         {
-          label: this.$t('projects.chart.lastWeek'),
+          label: this.$t('projects.chart.lastWeek') as string,
           value: 'week',
         },
         {
-          label: this.$t('projects.chart.lastMonth'),
+          label: this.$t('projects.chart.lastMonth') as string,
           value: 'month',
         },
       ],
@@ -78,15 +101,15 @@ export default Vue.extend({
        */
       groupingOptions: [
         {
-          label: this.$t('projects.chart.byMinutes'),
+          label: this.$t('projects.chart.byMinutes') as string,
           value: 'minutes',
         },
         {
-          label: this.$t('projects.chart.byHours'),
+          label: this.$t('projects.chart.byHours') as string,
           value: 'hours',
         },
         {
-          label: this.$t('projects.chart.byDays'),
+          label: this.$t('projects.chart.byDays') as string,
           value: 'days',
         },
       ],
@@ -107,6 +130,17 @@ export default Vue.extend({
       handler(newVal) {
         this.fetchChartData();
       },
+    },
+  },
+  computed: {
+    todayCount(): number {
+      return this.chartData.slice(-1)[0]?.count || 0;
+    },
+    yesterdayCount(): number {
+      return this.chartData.slice(-2, -1)[0]?.count || 0;
+    },
+    difference(): number {
+      return this.todayCount - this.yesterdayCount;
     },
   },
   methods: {
@@ -174,8 +208,18 @@ export default Vue.extend({
     right: 14px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 4px;
     z-index: 2;
+
+    &-today {
+      padding: 6px 9px;
+      border-radius: 7px;
+      background-color: var(--color-bg-second);
+      font-size: 12px;
+      line-height: 12px;
+      font-weight: 500;
+      color: var(--color-text-second);
+    }
   }
 }
 </style>

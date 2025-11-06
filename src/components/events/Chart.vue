@@ -4,23 +4,6 @@
     @mousemove.passive="moveTooltip"
     @mouseleave.passive="hoveredIndex = -1"
   >
-    <div
-      v-if="points.length > 1"
-      class="chart__info"
-    >
-      <span class="chart__info-today"> today </span>
-      <span class="chart__info-highlight"> {{ todayCount | spacedNumber }} </span>
-
-      <span
-        v-if="difference !== 0"
-        :class="{
-          'chart__info-increase': difference > 0,
-          'chart__info-decrease': difference < 0
-        }"
-      >
-        {{ Math.abs(difference) | spacedNumber }}
-      </span>
-    </div>
     <svg
       ref="chart"
       class="chart__body"
@@ -58,29 +41,29 @@
         }"
       >
         <span
-          v-for="(day, index) in points"
-          :key="index"
+          v-for="(item, index) in visibleLegendPoints"
+          :key="item.index"
           class="chart__ox-item"
         >
-          {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
+          {{ formatTimestamp(item.point.timestamp * 1000) }}
         </span>
       </div>
     </div>
     <div
       v-if="hoveredIndex > 0 && hoveredIndex < points.length - 1"
-      :style="`left: ${pointerLeft}px;`"
+      :style="{ transform: `translateX(${pointerLeft}px)` }"
       class="chart__pointer"
     >
       <div
-        :style="`top: ${pointerTop}px`"
+        :style="{ transform: `translateY(${pointerTop}px)` }"
         class="chart__pointer-cursor"
       />
       <div
         class="chart__pointer-tooltip"
-        :style="`min-width: ${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px`"
+        :style="{ minWidth: `${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px` }"
       >
         <div class="chart__pointer-tooltip-date">
-          {{ points[hoveredIndex].timestamp * 1000 | prettyDateFromTimestamp }}
+          {{ formatTimestamp(points[hoveredIndex].timestamp * 1000) }}
         </div>
         <div class="chart__pointer-tooltip-number">
           <AnimatedCounter :value="points[hoveredIndex].count | spacedNumber" />
@@ -93,7 +76,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { debounce } from '@/utils';
+
+import { throttle } from '@/utils';
 import { ChartItem } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
 
@@ -110,6 +94,14 @@ export default Vue.extend({
       type: Array as () => ChartItem[],
       default: () => [] as ChartItem[],
     },
+
+    /**
+     * Detalization of the chart affects the legend and tooltip display
+     */
+    detalization: {
+      type: String as () => 'minutes' | 'hours' | 'days',
+      default: 'days',
+    }
   },
   data() {
     return {
@@ -137,11 +129,72 @@ export default Vue.extend({
     };
   },
   computed: {
+
+    /**
+     * Width of x-legend item
+     */
+    xLegendWidth(): number {
+      switch (this.detalization) {
+        case 'days':
+          return 50;
+        case 'hours':
+          return 75;
+        case 'minutes':
+          return 90;
+        default:
+          return 55;
+      }
+    },
+
     /**
      * Step for OX axis
      */
     stepX(): number {
       return this.chartWidth / (this.points.length - 1);
+    },
+
+    /**
+     * Calculate the step for displaying x-legend items to prevent overflow
+     * Returns how many items to skip between displayed items
+     */
+    visibleXLegendItems(): number {
+      if (!this.chartWidth || !this.points.length) {
+        return 1;
+      }
+
+      const maxItems = Math.floor(this.chartWidth / this.xLegendWidth);
+
+      if (maxItems >= this.points.length) {
+        return 1;
+      }
+
+      return Math.max(1, Math.ceil(this.points.length / maxItems));
+    },
+
+    /**
+     * Filtered points to display in x-legend based on visibleXLegendItems step
+     */
+    visibleLegendPoints(): Array<{ point: ChartItem; index: number }> {
+      const step = this.visibleXLegendItems;
+      const result: Array<{ point: ChartItem; index: number }> = [];
+
+      for (let i = 0; i < this.points.length; i = i + step) {
+        result.push({
+          point: this.points[i],
+          index: i,
+        });
+      }
+
+      /* Ensure the last point is always included */
+      const lastIndex = this.points.length - 1;
+      if (result.length > 0 && result[result.length - 1].index !== lastIndex) {
+        result.push({
+          point: this.points[lastIndex],
+          index: lastIndex,
+        });
+      }
+
+      return result;
     },
 
     /**
@@ -153,27 +206,6 @@ export default Vue.extend({
       }
 
       return (this.chartHeight) / (this.maxValue - this.minValue);
-    },
-
-    /**
-     * Number of errors for the current day
-     */
-    todayCount(): number {
-      return this.points.slice(-1)[0].count || 0;
-    },
-
-    /**
-     * Number of errors for the previous day
-     */
-    yesterdayCount(): number {
-      return this.points.slice(-2, -1)[0].count || 0;
-    },
-
-    /**
-     * Difference between current and previous number of errors
-     */
-    difference(): number {
-      return this.todayCount - this.yesterdayCount;
     },
 
     /**
@@ -237,7 +269,7 @@ export default Vue.extend({
     },
   },
   created() {
-    this.onResize = debounce(this.windowResized, 200);
+    this.onResize = throttle(this.windowResized, 200);
   },
   mounted() {
     /**
@@ -279,6 +311,32 @@ export default Vue.extend({
       const cursorX = event.clientX - chartX;
 
       this.hoveredIndex = Math.round(cursorX / this.stepX);
+    },
+
+    /**
+     * Formats timestamp based on detalization prop
+     *
+     * @param {number} timestamp - timestamp in milliseconds
+     * @returns {string} - formatted date string
+     */
+    formatTimestamp(timestamp: number): string {
+      const date = new Date(timestamp);
+
+      if (this.detalization === 'days') {
+        /* For days, show only day and month */
+        const day = date.getDate();
+        const month = date.getMonth();
+        return `${day} ${this.$t('common.shortMonths[' + month + ']')}`;
+      } else {
+        /* For hours and minutes, show day, month, hours:minutes */
+        const day = date.getDate();
+        const month = date.getMonth();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const paddedHours = hours.toString().padStart(2, '0');
+        const paddedMinutes = minutes.toString().padStart(2, '0');
+        return `${day} ${this.$t('common.shortMonths[' + month + ']')}, ${paddedHours}:${paddedMinutes}`;
+      }
     },
   },
 });
@@ -369,9 +427,11 @@ export default Vue.extend({
       &-item {
         flex: 1;
         color: var(--color-text-main);
-        font-size: 10px;
+        font-size: 11px;
         text-align: center;
         opacity: 0.3;
+        background-color: rgb(76, 32, 32);
+        box-shadow: inset 0 0 0 1px red;
 
         &:first-of-type,
         &:last-of-type {
@@ -383,17 +443,19 @@ export default Vue.extend({
     &__pointer {
       position: absolute;
       top: 0;
+      left: 0;
       z-index: 0;
       width: 3px;
       height: 100%;
       margin-left: -1.5px;
       background-color: rgba(25, 28, 37, 0.5);
-      transition: left 0.2s cubic-bezier(.53,.04,.57,1.22);
+      /* transition: transform 0.1s cubic-bezier(.53,.04,.57,1.22); */
       animation: pointer-in 200ms ease;
-      will-change: opacity, left;
+      will-change: opacity, transform;
 
       &-cursor {
         position: absolute;
+        top: 0;
         width: 5px;
         height: 5px;
         margin-top: -2.5px;
@@ -401,16 +463,16 @@ export default Vue.extend({
         background: var(--color-indicator-critical);
         border-radius: 50%;
         opacity: 1;
-        transition: 0.2s;
-        will-change: top;
+        /* transition: transform 0.2s; */
+        will-change: transform;
       }
 
       &-tooltip {
         position: absolute;
+        left: 50%;
         bottom: -10px;
-        left: -20px;
+        transform: translateX(-50%);
         z-index: 500;
-        margin-left: -2px;
         padding: 6px 8px 6px 7px;
         color: var(--color-text-main);
         font-size: 12px;
@@ -421,6 +483,7 @@ export default Vue.extend({
         border-radius: 4px;
         box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
         transition: min-width 150ms ease;
+        text-align: center;
 
         &-date {
           color: var(--color-text-second);
