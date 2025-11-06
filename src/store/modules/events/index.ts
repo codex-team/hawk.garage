@@ -267,7 +267,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.search - event searching regex string
      * @param {DailyEventsCursor|null} payload.nextCursor - pointer to the first daily event of the portion to fetch
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null }):
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null, release?: string }):
       Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
@@ -275,7 +275,8 @@ const module: Module<EventsModuleState, RootState> = {
         nextCursor,
         eventsSortOrder,
         this.getters.getProjectFilters(projectId),
-        search
+        search,
+        release
       );
 
       const dailyEvents = dailyEventsPortion.dailyEvents;

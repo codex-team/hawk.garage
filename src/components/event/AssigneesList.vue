@@ -82,6 +82,17 @@ export default {
       type: String,
       default: 'right',
     },
+
+    /**
+     * Function to obtain full event by id
+     * Signature: (projectId: string, eventId: string) => GroupedEvent
+     *
+     * @type {Function}
+     */
+    getProjectEventById: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
@@ -103,7 +114,7 @@ export default {
      * @returns {string} - assignee id or empty string
      */
     currentAssigneeId() {
-      const currentEvent = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+      const currentEvent = this.getProjectEventById(this.projectId, this.eventId);
 
       const assignee = currentEvent.assignee;
 

@@ -6,7 +6,7 @@
       :project-id="projectId"
       :is-loading="false"
       :no-more="true"
-      :get-project-event-by-id="getProjectEventByIdCompat"
+      :get-project-event-by-id="getProjectEventById"
       @showEventOverview="showEventOverviewPayload($event)"
     />
     <EmptyState
@@ -21,6 +21,7 @@
 <script>
 import EventsList from "@/components/project/EventsList.vue";
 import EmptyState from "@/components/utils/EmptyState.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "ReleaseEvents",
@@ -56,11 +57,14 @@ export default {
         affectedUsers: dailyEvent.affectedUsers,
       }));
     },
+
+    ...mapGetters([ 'getProjectEventById' ]),
   },
   methods: {
-    getProjectEventByIdCompat(projectId, eventId) {
-      return this.eventMap[eventId];
-    },
+    // getProjectEventByIdCompat(projectId, eventId) {
+    //   console.log(projectId, eventId, this.eventMap[eventId]);
+    //   return this.eventMap[eventId];
+    // },
     /**
      * Return UTC midnight in seconds from timestamp that may be ms or s
      */
