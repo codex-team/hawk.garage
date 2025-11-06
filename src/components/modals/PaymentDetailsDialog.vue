@@ -825,16 +825,4 @@ export default Vue.extend({
     }
   }
 }
-.payment-details__loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* width: 558px;
-  height: 200px; */
-  color: var(--color-text-second);
-}
-
-.payment-details__loading-text {
-  font-size: 16px;
-}
 </style>

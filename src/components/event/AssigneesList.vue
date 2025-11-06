@@ -124,7 +124,7 @@ export default {
       return this.users.filter(user => user.email.includes(this.searchText));
     },
 
-    ...mapGetters(['getProjectEventById']),
+    ...mapGetters([ 'getProjectEventById' ]),
   },
 
   /**

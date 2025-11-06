@@ -101,6 +101,12 @@ export default {
     SearchField,
     EmptyState,
   },
+  props: {
+    fallback: {
+      type: String,
+      default: 'simple',
+    },
+  },
   data() {
     return {
       /**
@@ -160,12 +166,6 @@ export default {
       assigneesAnchorEl: null,
     };
   },
-  props: {
-    fallback: {
-      type: String,
-      default: 'simple',
-    },
-  },
   created() {
     this.loadMoreEvents(true);
 
@@ -212,7 +212,7 @@ export default {
     release() {
       return this.$route.params.release || this.$route.query?.release;
     },
-    ...mapGetters([ 'getProjectEventById', 'getProjectSearch' ]),
+    ...mapGetters(['getProjectEventById', 'getProjectSearch']),
     /**
      * Whether there are items to display
      *
@@ -310,13 +310,14 @@ export default {
      */
     onAssigneeIconClick(eventId, nativeEvent) {
       const targetEl = nativeEvent && nativeEvent.target ? nativeEvent.target : null;
-      let anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
+      const anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
 
       if (!anchorEl) {
         return;
       }
 
       const boundingClientRect = anchorEl.getBoundingClientRect();
+
       this.assigneesAnchorEl = anchorEl;
 
       this.isAssigneesShowed = true;
@@ -344,6 +345,7 @@ export default {
 
       if (this.isAssigneesShowed) {
         this.isAssigneesShowed = false;
+
         return;
       }
 
@@ -364,6 +366,7 @@ export default {
         return;
       }
       const rect = this.assigneesAnchorEl.getBoundingClientRect();
+
       this.assigneesListPosition = {
         top: `${rect.top - 3}px`,
         left: `${rect.left}px`,

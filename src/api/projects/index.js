@@ -242,7 +242,8 @@ export async function fetchProjectReleases(projectId) {
  * @returns {Promise<ReleaseDetails>}
  */
 export async function fetchProjectReleaseDetails(projectId, release) {
-  const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId, release });
+  const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
+    release });
 
   if (response.errors?.length) {
     response.errors.forEach(console.error);

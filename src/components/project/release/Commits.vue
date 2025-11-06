@@ -25,7 +25,8 @@ import EmptyState from '../../utils/EmptyState.vue';
 
 export default Vue.extend({
   name: 'ReleaseCommits',
-  components: { CommitItem, EmptyState },
+  components: { CommitItem,
+    EmptyState },
   props: {
     releaseDetails: {
       type: Object,
@@ -33,18 +34,27 @@ export default Vue.extend({
     },
   },
   computed: {
-    projectId() { return this.$route.params.projectId; },
-    release() { return this.$route.params.release; },
+    projectId() {
+      return this.$route.params.projectId;
+    },
+    release() {
+      return this.$route.params.release;
+    },
     docLink() {
       const locale = (this.$i18n && this.$i18n.locale) || 'en';
+
       return String(locale).startsWith('ru')
         ? 'https://docs.hawk-tracker.ru/releases'
         : 'https://docs.hawk.so/releases';
     },
-    commits() { return this.releaseDetails.commits || []; },
+    commits() {
+      return this.releaseDetails.commits || [];
+    },
   },
   methods: {
-    short(hash) { return hash ? hash.slice(0, 7) : ''; },
+    short(hash) {
+      return hash ? hash.slice(0, 7) : '';
+    },
   },
 });
 </script>
@@ -54,19 +64,19 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin: 0 auto;
   max-width: var(--width-event-center-container);
+  margin: 0 auto;
 }
 
-.release-commits__empty {
-  color: var(--color-text-second); padding: 16px 0;
+.release-commits__empty { padding: 16px 0;
+  color: var(--color-text-second);
 }
 
 .release-commits__item {
   padding: 6px 0;
-  border-bottom: 1px solid var(--color-bg-second);
-  background: var(--color-bg-main);
   padding: 13px 15px;
+  background: var(--color-bg-main);
+  border-bottom: 1px solid var(--color-bg-second);
   border-radius: 10px;
 }
 

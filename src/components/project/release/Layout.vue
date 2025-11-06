@@ -6,81 +6,90 @@
     <div>
       <div class="release-layout__header">
         <div class="event-layout__container">
-        <span
-          v-if="releaseDetails.timestamp"
-          class="release-layout__date"
-        >
-          {{ releaseDetails.timestamp / 1000| prettyFullDate }}
-        </span>
-        <SkeletonBar
-          v-else
-          class="release-layout__date"
-          size="small"
-          width="140px"
-        />
-        <div
-          v-if="releaseDetails.timestamp"
-          class="breadcrumbs"
-        >
-          <router-link
-            v-if="workspace"
-            class="breadcrumbs__item"
-            :to="{ name: 'workspace', params: { workspaceId: workspace.id } }"
+          <span
+            v-if="releaseDetails.timestamp"
+            class="release-layout__date"
           >
-            <EntityImage
-              :id="workspace.id"
-              :image="workspace.image"
-              :name="workspace.name"
-              size="16"
-            />
-            {{ workspace.name }}
-          </router-link>
-          <router-link
-            v-if="project"
-            class="breadcrumbs__item"
-            :to="{ name: 'project-overview', params: { projectId } }"
+            {{ releaseDetails.timestamp / 1000| prettyFullDate }}
+          </span>
+          <SkeletonBar
+            v-else
+            class="release-layout__date"
+            size="small"
+            width="140px"
+          />
+          <div
+            v-if="releaseDetails.timestamp"
+            class="breadcrumbs"
           >
-            <EntityImage
-              :id="project.id"
-              :image="project.image"
-              :name="project.name"
-              size="16"
-            />
-            {{ nameWithoutBadges(project.name) || $t('projects.placeholder') }}
-            <ProjectBadge
-              v-for="(badge, index) in projectBadges(project.name)"
-              :key="index"
+            <router-link
+              v-if="workspace"
+              class="breadcrumbs__item"
+              :to="{ name: 'workspace', params: { workspaceId: workspace.id } }"
             >
-              {{ badge }}
-            </ProjectBadge>
-          </router-link>
-        </div>
-        <div
-          v-else
-          class="breadcrumbs"
-        >
-          <div class="breadcrumbs__item">
-            <SkeletonAvatar size="xxs" />
-            <SkeletonBar size="small" width="120px" />
+              <EntityImage
+                :id="workspace.id"
+                :image="workspace.image"
+                :name="workspace.name"
+                size="16"
+              />
+              {{ workspace.name }}
+            </router-link>
+            <router-link
+              v-if="project"
+              class="breadcrumbs__item"
+              :to="{ name: 'project-overview', params: { projectId } }"
+            >
+              <EntityImage
+                :id="project.id"
+                :image="project.image"
+                :name="project.name"
+                size="16"
+              />
+              {{ nameWithoutBadges(project.name) || $t('projects.placeholder') }}
+              <ProjectBadge
+                v-for="(badge, index) in projectBadges(project.name)"
+                :key="index"
+              >
+                {{ badge }}
+              </ProjectBadge>
+            </router-link>
           </div>
-          <div class="breadcrumbs__item">
-            <SkeletonAvatar size="xxs" />
-            <SkeletonBar size="small" width="160px" />
+          <div
+            v-else
+            class="breadcrumbs"
+          >
+            <div class="breadcrumbs__item">
+              <SkeletonAvatar size="xxs" />
+              <SkeletonBar
+                size="small"
+                width="120px"
+              />
+            </div>
+            <div class="breadcrumbs__item">
+              <SkeletonAvatar size="xxs" />
+              <SkeletonBar
+                size="small"
+                width="160px"
+              />
+            </div>
           </div>
-        </div>
-        <div
-          v-if="releaseDetails.timestamp"
-          class="release-layout__title"
-          :title="release"
-        >
-          {{ release }}
-        </div>
-        <div
-          v-else
-          class="release-layout__title release-layout__title--skeleton"
-        >
-          <SkeletonBar size="large" width="300px" />
-        </div>
+          <div
+            v-if="releaseDetails.timestamp"
+            class="release-layout__title"
+            :title="release"
+          >
+            {{ release }}
+          </div>
+          <div
+            v-else
+            class="release-layout__title release-layout__title--skeleton"
+          >
+            <SkeletonBar
+              size="large"
+              width="300px"
+            />
+          </div>
         </div>
         <TabBar
           class="release-layout__tab-bar"
@@ -88,11 +97,20 @@
           :active-item-index="activeTabIndex"
         />
       </div>
-      <div v-if="releaseDetails.timestamp" class="release-layout__content">
+      <div
+        v-if="releaseDetails.timestamp"
+        class="release-layout__content"
+      >
         <router-view :release-details="releaseDetails" />
       </div>
-      <div v-else class="release-layout__content release-layout__content--spinner">
-        <Spinner size="medium" width="100%" />
+      <div
+        v-else
+        class="release-layout__content release-layout__content--spinner"
+      >
+        <Spinner
+          size="medium"
+          width="100%"
+        />
       </div>
     </div>
   </PopupDialog>
@@ -127,7 +145,7 @@ export default Vue.extend({
   data(): {
     releaseDetails: ReleaseDetails;
     dataLoaded: boolean;
-  } {
+    } {
     return {
       releaseDetails: {
         timestamp: 0,
@@ -218,22 +236,22 @@ export default Vue.extend({
   padding: 25px 30px;
 }
 .release-layout__header {
+  margin: 0 auto;
   padding: 35px 20px 0 20px;
   color: var(--color-text-second);
   background-color: #121419;
-  margin: 0 auto;
 }
 
 .release-layout__header .event-layout__container {
-  margin: 0 auto;
   max-width: var(--width-event-center-container);
+  margin: 0 auto;
 }
 
 .breadcrumbs {
   display: flex;
   margin-bottom: 22px;
-  font-weight: 500;
   color: var(--color-text-second);
+  font-weight: 500;
   font-size: 14px;
 }
 .breadcrumbs a {
@@ -241,8 +259,8 @@ export default Vue.extend({
 }
 .breadcrumbs__item {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 .breadcrumbs__item:not(:last-of-type)::after {
   margin: 0 10px;
@@ -256,14 +274,14 @@ export default Vue.extend({
 }
 .release-layout__title {
   padding: 6px 0 16px;
-  padding-inline: 0;
+  overflow: hidden;
   color: var(--color-text-main);
   font-weight: 700;
   font-size: 18px;
   line-height: 1;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+  padding-inline: 0;
 
   &--skeleton {
     height: 34px;
@@ -271,8 +289,8 @@ export default Vue.extend({
 }
 
 .release-layout__tab-bar {
-  margin: 0 auto;
   max-width: var(--width-event-center-container);
+  margin: 0 auto;
 }
 .release-layout__date {
   float: right;
@@ -286,8 +304,8 @@ export default Vue.extend({
 
 .release-layout__content--spinner {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 100%;
   margin: 25px auto;
 }

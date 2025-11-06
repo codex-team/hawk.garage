@@ -1,4 +1,4 @@
-import type { DailyEvent, HawkEvent } from "./events";
+import type { DailyEvent, HawkEvent } from './events';
 
 /**
  * File attached to the release

@@ -1,7 +1,10 @@
 <template>
   <div class="commit-item">
     <div class="commit-item__left">
-      <div class="commit-item__left-title" :title="commit.title">
+      <div
+        class="commit-item__left-title"
+        :title="commit.title"
+      >
         {{ commit.title }}
       </div>
       <div class="commit-item__meta">
@@ -11,7 +14,10 @@
           :name="commit.author"
           size="16"
         />
-        <span class="commit-item__left-author" :title="commit.author">
+        <span
+          class="commit-item__left-author"
+          :title="commit.author"
+        >
           {{ commit.author }}
         </span>
         <span class="commit-item__left-relative-time">
@@ -21,7 +27,10 @@
       </div>
     </div>
     <div class="commit-item__right">
-      <div class="commit-item__right-hash-block" :title="commit.hash">
+      <div
+        class="commit-item__right-hash-block"
+        :title="commit.hash"
+      >
         <span class="commit-item__right-hash">{{ short(commit.hash) }}</span>
       </div>
     </div>
@@ -89,8 +98,8 @@ export default {
 
 .commit-item__meta {
   display: inline-flex;
-  align-items: center;
   gap: 6px;
+  align-items: center;
 }
 
 .commit-item__right {

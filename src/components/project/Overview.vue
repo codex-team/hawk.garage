@@ -109,9 +109,7 @@ export default {
    * Used to fetch events on component creation
    */
   async created() {
-
     try {
-
       // How many days will be displayed in the chart
       const twoWeeks = 14;
       const boundingDays = 2;

@@ -1,23 +1,40 @@
 <template>
   <div class="empty-state">
-    <div v-if="icon || $slots.icon" class="empty-state__icon">
+    <div
+      v-if="icon || $slots.icon"
+      class="empty-state__icon"
+    >
       <slot name="icon">
         <Icon :symbol="icon" />
       </slot>
     </div>
     <div class="empty-state__title">
-      <slot name="title">{{ title }}</slot>
+      <slot name="title">
+        {{ title }}
+      </slot>
     </div>
-    <div v-if="description || $slots.description" class="empty-state__desc">
-      <slot name="description">{{ description }}</slot>
+    <div
+      v-if="description || $slots.description"
+      class="empty-state__desc"
+    >
+      <slot name="description">
+        {{ description }}
+      </slot>
     </div>
-    <div v-if="actionHref && actionText" class="empty-state__action">
+    <div
+      v-if="actionHref && actionText"
+      class="empty-state__action"
+    >
       <a
         :href="actionHref"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <UiButton :content="actionText" small submit />
+        <UiButton
+          :content="actionText"
+          small
+          submit
+        />
       </a>
     </div>
   </div>
@@ -30,7 +47,8 @@ import Icon from './Icon.vue';
 
 export default Vue.extend({
   name: 'EmptyState',
-  components: { UiButton, Icon },
+  components: { UiButton,
+    Icon },
   props: {
     title: {
       type: String,
@@ -58,19 +76,19 @@ export default Vue.extend({
 
 <style>
 .empty-state {
-  text-align: center;
-  padding-block: 100px;
+  width: 100%;
   margin: 16px auto 0 auto;
+  text-align: center;
   background: var(--color-bg-main);
   border: 1px solid var(--color-bg-second);
   border-radius: 12px;
-  width: 100%;
+  padding-block: 100px;
 }
 
 .empty-state__icon {
+  margin-bottom: 8px;
   font-size: 28px;
   line-height: 1;
-  margin-bottom: 8px;
 }
 
 .empty-state__icon svg {
@@ -84,8 +102,8 @@ export default Vue.extend({
 }
 
 .empty-state__desc {
-  color: var(--color-text-second);
   margin-top: 4px;
+  color: var(--color-text-second);
 }
 
 .empty-state__action {

@@ -39,7 +39,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import DetailsBase from './DetailsBase.vue';
-import EntityImage from '../../utils/EntityImage.vue';
 import CommitItem from '../../utils/CommitItem.vue';
 import { ReleaseCommit } from '@/types/release';
 
@@ -47,7 +46,6 @@ export default Vue.extend({
   name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase,
-    EntityImage,
     CommitItem,
   },
   props: {

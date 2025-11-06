@@ -118,7 +118,8 @@ export default {
     openRelease(release) {
       this.$router.push({
         name: 'project-release',
-        params: { projectId: this.projectId, release },
+        params: { projectId: this.projectId,
+          release },
       });
     },
   },

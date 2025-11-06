@@ -1,7 +1,12 @@
 <template>
   <div class="release-files">
-    <div v-if="files.length > 0" class="release-files__toolbar">
-      <div class="release-files__count">{{ normalizedFiltered.length }} {{ $t('projects.releases.stats.files') }}</div>
+    <div
+      v-if="files.length > 0"
+      class="release-files__toolbar"
+    >
+      <div class="release-files__count">
+        {{ normalizedFiltered.length }} {{ $t('projects.releases.stats.files') }}
+      </div>
       <input
         v-model="search"
         class="release-files__search"
@@ -15,7 +20,10 @@
       class="release-files__item"
     >
       <div>
-        <span class="release-files__ext" :class="'release-files__ext--' + item.ext">
+        <span
+          class="release-files__ext"
+          :class="'release-files__ext--' + item.ext"
+        >
           {{ item.ext }}
         </span>
       </div>
@@ -41,7 +49,6 @@
       :action-href="docLink"
     />
   </div>
-
 </template>
 
 <script lang="ts">
@@ -59,6 +66,11 @@ export default Vue.extend({
       required: true,
     },
   },
+  data() {
+    return {
+      search: '',
+    };
+  },
   computed: {
     projectId(): string {
       return this.$route.params.projectId;
@@ -68,6 +80,7 @@ export default Vue.extend({
     },
     docLink(): string {
       const locale = (this.$i18n && this.$i18n.locale) || 'en';
+
       return String(locale).startsWith('ru')
         ? 'https://docs.hawk-tracker.ru/releases'
         : 'https://docs.hawk.so/releases';
@@ -120,16 +133,12 @@ export default Vue.extend({
         return this.normalized;
       }
       const q = this.search.toLowerCase();
+
       return this.normalized.filter(item =>
         (item.primaryFullPath && item.primaryFullPath.toLowerCase().includes(q))
         || (item.mapFullPath && item.mapFullPath.toLowerCase().includes(q))
       );
     },
-  },
-  data() {
-    return {
-      search: '',
-    };
   },
   methods: {
     formatBytes(bytes: number): string {
@@ -142,28 +151,40 @@ export default Vue.extend({
       const units = ['KB', 'MB', 'GB', 'TB'];
       let value = bytes / 1024;
       let unitIndex = 0;
+
       while (value >= 1024 && unitIndex < units.length - 1) {
         value = value / 1024;
         unitIndex++;
       }
       const rounded = value >= 10 ? Math.round(value) : Math.round(value * 10) / 10;
+
       return `${rounded} ${units[unitIndex]}`;
     },
     getExt(file: string): string {
       const base = this.getName(file);
       const parts = base.split('.');
-      if (parts.length < 2) return 'file';
+
+      if (parts.length < 2) {
+        return 'file';
+      }
+
       return parts?.pop()?.toLowerCase() || 'file';
     },
     getName(file: string): string {
-      if (typeof file !== 'string') return '';
+      if (typeof file !== 'string') {
+        return '';
+      }
       const slash = file.lastIndexOf('/')
         ;
+
       return slash >= 0 ? file.slice(slash + 1) : file;
     },
     getDir(file: string): string {
-      if (typeof file !== 'string') return '';
+      if (typeof file !== 'string') {
+        return '';
+      }
       const slash = file.lastIndexOf('/');
+
       return slash >= 0 ? file.slice(0, slash) : '';
     },
   },
@@ -172,15 +193,15 @@ export default Vue.extend({
 
 <style>
 .release-files {
-  padding-inline: 12px 0;
-  margin: 12px auto 0 auto;
   max-width: var(--width-event-center-container);
+  margin: 12px auto 0 auto;
+  padding-inline: 12px 0;
 }
 
 .release-files__toolbar {
   display: flex;
-  align-items: center;
   gap: 12px;
+  align-items: center;
   padding: 8px 0 12px;
 }
 
@@ -190,8 +211,8 @@ export default Vue.extend({
 }
 
 .release-files__search {
-  margin-left: auto;
   min-width: 180px;
+  margin-left: auto;
   padding: 6px 10px;
   color: var(--color-text-main);
   font-size: 14px;
@@ -204,8 +225,8 @@ export default Vue.extend({
 .release-files__item {
   display: grid;
   grid-template-columns: 40px auto 50px; /* ext | name | length */
-  align-items: start;
   gap: 4px;
+  align-items: start;
   padding: 8px 0;
   color: var(--color-text-main);
   font-size: 14px;
@@ -220,12 +241,12 @@ export default Vue.extend({
   font-weight: 700;
   font-size: 11px;
   line-height: 11px;
-  text-transform: uppercase;
   letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
   background: var(--color-bg-main);
   border: 1px solid var(--color-bg-second);
   border-radius: 6px;
-  text-align: center;
 }
 
 .release-files__name {
@@ -236,20 +257,20 @@ export default Vue.extend({
 
 .release-files__path {
   color: var(--color-text-second);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   white-space: normal;
   overflow-wrap: anywhere;
 }
 
 .release-files__length {
+  justify-self: end;
   color: var(--color-text-second);
   font-size: 12px;
   text-align: right;
-  justify-self: end;
 }
 
-.release-files__empty { color: var(--color-text-second); padding: 16px 0; }
+.release-files__empty { padding: 16px 0; color: var(--color-text-second); }
 
 /* Accent colors for common extensions */
 .release-files__ext--js, .release-files__ext--ts, .release-files__ext--tsx, .release-files__ext--jsx {
