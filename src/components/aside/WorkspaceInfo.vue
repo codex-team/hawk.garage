@@ -77,6 +77,7 @@ import { Plan } from '../../types/plan';
 import CircleProgress from '../utils/CircleProgress.vue';
 import EventsLimitIndicator from './EventsLimitIndicator.vue';
 import StatusBlock from '../utils/StatusBlock.vue';
+import { FETCH_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 
 export default Vue.extend({
   name: 'WorkspaceInfo',
@@ -107,7 +108,7 @@ export default Vue.extend({
     /**
      * @returns {boolean} - shows whether the current user is an admin for this workspace
      */
-    isAdmin():boolean {
+    isAdmin(): boolean {
       return this.$store.getters.isCurrentUserAdmin(this.workspace.id);
     },
     /**

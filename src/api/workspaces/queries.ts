@@ -23,8 +23,6 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
       isDebug
       isBlocked
       inviteHash
-      ...WorkspaceWithTeam
-      ...WorkspacePlan
       paidUntil
       projects {
         id
@@ -91,9 +89,7 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
     }
   }
 
-  ${WORKSPACE_FRAGMENT_WITH_TEAM}
-  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}
-  ${WORKSPACE_PLAN}
+  ${PROJECT_NOTIFICATIONS_RULE_FRAGMENT}  
   ${EVENT_BACKTRACE}
 `;
 
