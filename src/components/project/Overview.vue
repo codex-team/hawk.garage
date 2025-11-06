@@ -230,8 +230,6 @@ export default {
       }
 
       this.loadMoreEvents(true);
-
-      this.chartData = this.$store.state.projects.charts[this.projectId];
     } catch (error) {
       if (error instanceof NotFoundError) {
         notifier.show({
