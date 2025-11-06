@@ -71,6 +71,4 @@ export default {
 .release-commits__item:first-child {
   margin-top: 16px;
 }
-
-/* empty-state styles moved to shared component */
 </style>

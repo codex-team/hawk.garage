@@ -115,10 +115,7 @@ export default {
       }).format(new Date(tsSec * 1000));
     },
 
-    // removed custom offset function: local midnight grouping is simpler and consistent with UI
-
     openRelease(release) {
-      console.log('openRelease', this.projectId, release);
       this.$router.push({
         name: 'project-release',
         params: { projectId: this.projectId, release },

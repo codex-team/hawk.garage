@@ -59,7 +59,6 @@ export default {
   },
   methods: {
     getProjectEventByIdCompat(projectId, eventId) {
-      console.log(eventId, this.eventMap[eventId]);
       return this.eventMap[eventId];
     },
     /**
@@ -90,5 +89,4 @@ export default {
   margin: 0 auto;
   max-width: var(--width-event-center-container);
 }
-/* empty-state styles moved to shared component */
 </style>

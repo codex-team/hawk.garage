@@ -13,15 +13,25 @@
       v-for="(item, idx) in normalizedFiltered"
       :key="idx"
       class="release-files__item"
-      :title="item.primaryFullPath"
+
     >
-      <span class="release-files__ext" :class="'release-files__ext--' + item.ext">{{ item.ext }}</span>
-      <span class="release-files__name">{{ item.primaryName }}</span>
+      <div>
+        <span class="release-files__ext" :class="'release-files__ext--' + item.ext">
+          {{ item.ext }}
+        </span>
+      </div>
       <span
-        v-if="item.mapName"
-        class="release-files__map"
-        :title="item.mapFullPath"
-      >map: {{ item.mapName }}</span>
+        class="release-files__name"
+        :title="item.mapName"
+      >
+        {{ item.mapName }}
+      </span>
+      <span
+        v-if="item.length != null"
+        class="release-files__length"
+      >
+        {{ formatBytes(item.length) }}
+      </span>
     </div>
     <EmptyState
       v-if="!this.files.length"
@@ -58,27 +68,7 @@ export default {
     },
     files() { return this.releaseDetails.files || []; },
     normalized() {
-      // Normalize both string entries and object entries with mapFileName/originFileName
       return (this.files || []).map((entry) => {
-        if (typeof entry === 'string') {
-          const primaryFullPath = entry;
-          const primaryName = primaryFullPath;
-          const primaryDir = this.getDir(primaryFullPath);
-          const ext = this.getExt(primaryFullPath);
-          // If it's a .map, also compute derived origin name (best-effort)
-          const isMap = ext === 'map';
-          const originName = isMap ? primaryName.replace(/\.map$/,'') : null;
-          return {
-            primaryFullPath,
-            primaryName,
-            primaryDir,
-            ext: isMap ? (this.getExt(originName) || 'map') : ext,
-            mapName: isMap ? primaryName : null,
-            mapFullPath: isMap ? primaryFullPath : null,
-          };
-        }
-
-        // Object form: { mapFileName: string, originFileName: string }
         const mapFullPath = entry.mapFileName || '';
         const primaryFullPath = entry.originFileName || '';
         const primaryName = primaryFullPath;
@@ -93,6 +83,7 @@ export default {
           ext,
           mapName,
           mapFullPath,
+          length: entry.length,
         };
       });
     },
@@ -113,6 +104,23 @@ export default {
     };
   },
   methods: {
+    formatBytes(bytes) {
+      if (typeof bytes !== 'number' || isNaN(bytes)) {
+        return '—';
+      }
+      if (bytes < 1024) {
+        return `${bytes} B`;
+      }
+      const units = ['KB', 'MB', 'GB', 'TB'];
+      let value = bytes / 1024;
+      let unitIndex = 0;
+      while (value >= 1024 && unitIndex < units.length - 1) {
+        value = value / 1024;
+        unitIndex++;
+      }
+      const rounded = value >= 10 ? Math.round(value) : Math.round(value * 10) / 10;
+      return `${rounded} ${units[unitIndex]}`;
+    },
     getExt(file) {
       const base = this.getName(file);
       const parts = base.split('.');
@@ -151,7 +159,6 @@ export default {
 .release-files__count {
   color: var(--color-text-second);
   font-size: 14px;
-  margin-left: 11px
 }
 
 .release-files__search {
@@ -168,10 +175,10 @@ export default {
 
 .release-files__item {
   display: grid;
-  grid-template-columns: min-content 1fr 1fr; /* ext | name | path | map */
+  grid-template-columns: 40px auto 50px; /* ext | name | length */
   align-items: start;
-  gap: 6px 20px;
-  padding: 14px;
+  gap: 4px;
+  padding: 14px 0;
   color: var(--color-text-main);
   font-size: 14px;
   border-bottom: 1px solid var(--color-bg-second);
@@ -180,12 +187,13 @@ export default {
 
 .release-files__ext {
   display: inline-block;
-  min-width: 48px;
-  padding: 2px 6px;
-  color: var(--color-text-main);
+  padding: 3px 5px 2px;
+  color: #fff;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 11px;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
   background: var(--color-bg-main);
   border: 1px solid var(--color-bg-second);
   border-radius: 6px;
@@ -206,37 +214,33 @@ export default {
   overflow-wrap: anywhere;
 }
 
-.release-files__map {
-  margin-left: 12px;
-  padding: 2px 8px;
+.release-files__length {
   color: var(--color-text-main);
   font-size: 12px;
-  background: var(--color-bg-main);
-  border: 1px solid var(--color-bg-second);
-  border-radius: 8px;
+  text-align: right;
+  justify-self: end;
 }
 
 .release-files__empty { color: var(--color-text-second); padding: 16px 0; }
-/* empty-state styles moved to shared component */
 
 /* Accent colors for common extensions */
 .release-files__ext--js, .release-files__ext--ts, .release-files__ext--tsx, .release-files__ext--jsx {
-  background: rgba(255, 220, 0, 0.15);
+  background: rgb(106, 0, 255);
 }
 .release-files__ext--json, .release-files__ext--yml, .release-files__ext--yaml {
-  background: rgba(0, 170, 255, 0.12);
+  background: rgb(218, 157, 1);
 }
 .release-files__ext--md, .release-files__ext--mdx {
-  background: rgba(120, 120, 255, 0.12);
+  background: rgb(0, 183, 255);
 }
 .release-files__ext--vue, .release-files__ext--html {
-  background: rgba(0, 200, 120, 0.12);
+  background: rgb(0, 189, 114);
 }
 .release-files__ext--css, .release-files__ext--scss, .release-files__ext--less {
-  background: rgba(255, 140, 0, 0.12);
+  background: #ad3d97;
 }
 .release-files__ext--png, .release-files__ext--jpg, .release-files__ext--jpeg, .release-files__ext--gif, .release-files__ext--svg, .release-files__ext--webp {
-  background: rgba(180, 180, 180, 0.15);
+  background: rgb(88, 74, 245);
 }
 </style>
 

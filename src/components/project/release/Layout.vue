@@ -10,7 +10,7 @@
           v-if="releaseDetails.timestamp"
           class="release-layout__date"
         >
-          {{ releaseDetails.timestamp | prettyFullDate }}
+          {{ releaseDetails.timestamp / 1000| prettyFullDate }}
         </span>
         <SkeletonBar
           v-else
