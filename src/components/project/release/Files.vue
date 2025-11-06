@@ -13,7 +13,6 @@
       v-for="(item, idx) in normalizedFiltered"
       :key="idx"
       class="release-files__item"
-
     >
       <div>
         <span class="release-files__ext" :class="'release-files__ext--' + item.ext">
@@ -45,7 +44,7 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import EmptyState from '../../utils/EmptyState.vue';
 
 export default {

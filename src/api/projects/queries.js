@@ -257,17 +257,6 @@ export const QUERY_PROJECT_RELEASE_DETAILS = `
           dailyEvents {
             id
             count
-            groupingTimestamp
-            affectedUsers
-            event {
-              id
-              originalEventId
-              originalTimestamp
-              timestamp
-              assignee { id name email image }
-              payload { title type }
-              marks { resolved starred ignored }
-            }
           }
         }
       }

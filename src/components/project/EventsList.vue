@@ -142,6 +142,10 @@ export default {
        * Old window width
        */
       windowWidth: window.innerWidth,
+      /**
+       * Anchor element for assignees popup positioning
+       */
+      assigneesAnchorEl: null,
     };
   },
   created() {
@@ -264,20 +268,29 @@ export default {
      * @returns {void}
      */
     onAssigneeIconClick(eventId, nativeEvent) {
-      const boundingClientRect = nativeEvent.target
-        .closest('.event-item__assignee')
-        .getBoundingClientRect();
+      const targetEl = nativeEvent && nativeEvent.target ? nativeEvent.target : null;
+      let anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
+      if (!anchorEl) {
+        const itemEl = targetEl && targetEl.closest ? targetEl.closest('.event-item') : null;
+        anchorEl = itemEl && itemEl.querySelector ? itemEl.querySelector('.event-item__assignee') : null;
+      }
+      if (!anchorEl) {
+        return;
+      }
+      const boundingClientRect = anchorEl.getBoundingClientRect();
+      this.assigneesAnchorEl = anchorEl;
 
       this.isAssigneesShowed = true;
       this.assigneesEventId = eventId;
       this.assigneesListPosition = {
-        top: `${boundingClientRect.y - 3}px`,
-        left: `${boundingClientRect.x}px`,
+        top: `${boundingClientRect.top - 3}px`,
+        left: `${boundingClientRect.left}px`,
       };
       this.windowWidth = window.innerWidth;
       this.onResize = this.$options.methods.setAssigneesPosition.bind(this);
 
       window.addEventListener('resize', this.onResize);
+      window.addEventListener('scroll', this.onResize, true);
 
       // Keep emitting for backward compatibility if someone listens outside
       this.$emit('assigneeIconClick', { projectId: this.projectId, eventId, nativeEvent });
@@ -310,13 +323,14 @@ export default {
      * Set a new position when resizing the window
      */
     setAssigneesPosition() {
-      const widthDifferent = this.windowWidth - window.innerWidth;
-
+      if (!this.assigneesAnchorEl) {
+        return;
+      }
+      const rect = this.assigneesAnchorEl.getBoundingClientRect();
       this.assigneesListPosition = {
-        top: this.assigneesListPosition.top,
-        left: `${Number(this.assigneesListPosition.left.slice(0, -2)) - widthDifferent}px`,
+        top: `${rect.top - 3}px`,
+        left: `${rect.left}px`,
       };
-
       this.windowWidth = window.innerWidth;
     },
     /**
@@ -325,6 +339,7 @@ export default {
     hideAssigneesList() {
       this.isAssigneesShowed = false;
       window.removeEventListener('resize', this.onResize);
+      window.removeEventListener('scroll', this.onResize, true);
     },
   },
 };
@@ -375,7 +390,7 @@ export default {
     border-radius: 2px;
   }
   &__assignees-list {
-    position: absolute;
+    position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
   }
 }

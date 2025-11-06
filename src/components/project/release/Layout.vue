@@ -77,7 +77,7 @@
         </div>
         <div
           v-else
-          class="release-layout__title"
+          class="release-layout__title release-layout__title--skeleton"
         >
           <SkeletonBar size="large" width="300px" />
         </div>
@@ -98,7 +98,7 @@
   </PopupDialog>
 </template>
 
-<script>
+<script lang="ts">
 import TabBar from '@/components/utils/TabBar.vue';
 import PopupDialog from '@/components/utils/PopupDialog.vue';
 import { fetchProjectReleaseDetails } from '@/api/projects';
@@ -247,9 +247,14 @@ export default {
   color: var(--color-text-main);
   font-weight: 700;
   font-size: 18px;
+  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &--skeleton {
+    height: 34px;
+  }
 }
 
 .release-layout__tab-bar {

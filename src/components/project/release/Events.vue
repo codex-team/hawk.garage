@@ -2,12 +2,10 @@
   <div class="release-events">
     <EventsList
       v-if="events.length"
-      :events="dailyEventsCompatible"
       :project-id="projectId"
       :is-loading="false"
       :no-more="true"
       :get-project-event-by-id="getProjectEventById"
-      @showEventOverview="showEventOverviewPayload($event)"
     />
     <EmptyState
       v-else
@@ -18,10 +16,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import EventsList from "@/components/project/EventsList.vue";
 import EmptyState from "@/components/utils/EmptyState.vue";
 import { mapGetters } from "vuex";
+import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER } from "@/store/modules/events/actionTypes";
+import { EventsSortOrder } from "@/types/events";
 
 export default {
   name: "ReleaseEvents",
@@ -60,11 +60,17 @@ export default {
 
     ...mapGetters([ 'getProjectEventById' ]),
   },
+  created() {
+    this.$store.commit(SET_EVENTS_FILTERS, {
+      projectId: this.projectId,
+      filters: {},
+    });
+    this.$store.commit(SET_EVENTS_ORDER, {
+      projectId: this.projectId,
+      order: EventsSortOrder.ByDate,
+    });
+  },
   methods: {
-    // getProjectEventByIdCompat(projectId, eventId) {
-    //   console.log(projectId, eventId, this.eventMap[eventId]);
-    //   return this.eventMap[eventId];
-    // },
     /**
      * Return UTC midnight in seconds from timestamp that may be ms or s
      */
@@ -73,16 +79,6 @@ export default {
       const d = new Date(ms);
       const utcMs = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
       return Math.floor(utcMs / 1000);
-    },
-    showEventOverviewPayload(payload) {
-      this.$router.push({
-        name: 'event-overview',
-        params: {
-          projectId: payload.projectId,
-          eventId: payload.originalEventId,
-          repetitionId: payload.eventId,
-        },
-      });
     },
   },
 };

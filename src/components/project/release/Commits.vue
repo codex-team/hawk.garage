@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import CommitItem from '../../utils/CommitItem.vue';
 import EmptyState from '../../utils/EmptyState.vue';
 export default {
