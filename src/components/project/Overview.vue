@@ -7,62 +7,9 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <div class="project-overview__chart-container">
-        <div class="project-overview__chart-header">
-          <div class="project-overview__chart-range-controls">
-            <button
-              :class="['chart-range-btn', { 'chart-range-btn--active': chartRange === 'hour' }]"
-              @click="changeChartRange('hour')"
-            >
-              {{ $t('projects.chart.lastHour') }}
-            </button>
-            <button
-              :class="['chart-range-btn', { 'chart-range-btn--active': chartRange === 'day' }]"
-              @click="changeChartRange('day')"
-            >
-              {{ $t('projects.chart.lastDay') }}
-            </button>
-            <button
-              :class="['chart-range-btn', { 'chart-range-btn--active': chartRange === 'week' }]"
-              @click="changeChartRange('week')"
-            >
-              {{ $t('projects.chart.lastWeek') }}
-            </button>
-            <button
-              :class="['chart-range-btn', { 'chart-range-btn--active': chartRange === 'month' }]"
-              @click="changeChartRange('month')"
-            >
-              {{ $t('projects.chart.lastMonth') }}
-            </button>
-          </div>
-          <div class="project-overview__chart-grouping-controls">
-            <button
-              :class="['chart-period-btn', { 'chart-period-btn--active': chartGrouping === 'minutes', 'chart-period-btn--disabled': !isGroupingAvailable('minutes') }]"
-              :disabled="!isGroupingAvailable('minutes')"
-              @click="changeChartGrouping('minutes')"
-            >
-              {{ $t('projects.chart.byMinutes') }}
-            </button>
-            <button
-              :class="['chart-period-btn', { 'chart-period-btn--active': chartGrouping === 'hours', 'chart-period-btn--disabled': !isGroupingAvailable('hours') }]"
-              :disabled="!isGroupingAvailable('hours')"
-              @click="changeChartGrouping('hours')"
-            >
-              {{ $t('projects.chart.byHours') }}
-            </button>
-            <button
-              :class="['chart-period-btn', { 'chart-period-btn--active': chartGrouping === 'days', 'chart-period-btn--disabled': !isGroupingAvailable('days') }]"
-              :disabled="!isGroupingAvailable('days')"
-              @click="changeChartGrouping('days')"
-            >
-              {{ $t('projects.chart.byDays') }}
-            </button>
-          </div>
-        </div>
-        <Chart
-          :points="chartData"
-        />
-      </div>
+      <ProjectChart
+        :project-id="projectId"
+      />
       <FiltersBar
         @state-changed="reloadDailyEvents"
       />
@@ -125,6 +72,7 @@ import NotFoundError from '@/errors/404';
 import SearchField from '../forms/SearchField';
 import { getPlatform } from '@/utils';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
+import ProjectChart from './ProjectChart.vue';
 
 /**
  * Maximum length of the search query
@@ -137,7 +85,7 @@ export default {
     FiltersBar,
     EventsList,
     AssigneesList,
-    Chart,
+    ProjectChart,
     SearchField,
     BlockedWorkspaceBanner,
   },
@@ -162,21 +110,6 @@ export default {
        * Id of the event which assignees are showed
        */
       assigneesEventId: '',
-
-      /**
-       * Data for a chart
-       */
-      chartData: [],
-
-      /**
-       * Chart range: 'hour', 'day', 'week', 'month'
-       */
-      chartRange: 'day',
-
-      /**
-       * Chart grouping: 'minutes', 'hours', or 'days'
-       */
-      chartGrouping: 'hours',
 
       /**
        * Assignees list position in pixels
@@ -298,11 +231,6 @@ export default {
 
       this.loadMoreEvents(true);
 
-      // Fetch chart data with default settings (last day, hourly grouping)
-      if (!this.$store.state.projects.charts[this.projectId]) {
-        await this.fetchChartData();
-      }
-
       this.chartData = this.$store.state.projects.charts[this.projectId];
     } catch (error) {
       if (error instanceof NotFoundError) {
@@ -392,108 +320,6 @@ export default {
       }
 
       this.isLoadingEvents = false;
-    },
-
-    /**
-     * Check if grouping is available for current range
-     *
-     * @param {'minutes' | 'hours' | 'days'} grouping - grouping to check
-     * @returns {boolean}
-     */
-    isGroupingAvailable(grouping) {
-      // За час: только по минутам
-      if (this.chartRange === 'hour') {
-        return grouping === 'minutes';
-      }
-      // За день: только по минутам или часам
-      if (this.chartRange === 'day') {
-        return grouping === 'minutes' || grouping === 'hours';
-      }
-      // За неделю: только по часам или дням
-      if (this.chartRange === 'week') {
-        return grouping === 'hours' || grouping === 'days';
-      }
-      // За месяц: только по дням
-      if (this.chartRange === 'month') {
-        return grouping === 'days';
-      }
-      return true;
-    },
-
-    /**
-     * Change chart range (hour, day, week, month)
-     *
-     * @param {'hour' | 'day' | 'week' | 'month'} range - new range
-     */
-    async changeChartRange(range) {
-      this.chartRange = range;
-      
-      // Auto-adjust grouping to valid option for new range
-      if (!this.isGroupingAvailable(this.chartGrouping)) {
-        if (range === 'hour') {
-          this.chartGrouping = 'minutes';
-        } else if (range === 'day') {
-          this.chartGrouping = 'hours';
-        } else if (range === 'week') {
-          this.chartGrouping = 'days';
-        } else {
-          this.chartGrouping = 'days';
-        }
-      }
-      
-      await this.fetchChartData();
-    },
-
-    /**
-     * Change chart grouping (minutes, hours, days)
-     *
-     * @param {'minutes' | 'hours' | 'days'} grouping - new grouping
-     */
-    async changeChartGrouping(grouping) {
-      if (!this.isGroupingAvailable(grouping)) {
-        return;
-      }
-      this.chartGrouping = grouping;
-      await this.fetchChartData();
-    },
-
-    /**
-     * Fetch chart data based on current range and grouping settings
-     */
-    async fetchChartData() {
-      const now = new Date();
-      let startDate, endDate, groupBy;
-      
-      // Determine date range
-      if (this.chartRange === 'hour') {
-        startDate = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
-      } else if (this.chartRange === 'day') {
-        startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-      } else if (this.chartRange === 'week') {
-        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      } else {
-        // month
-        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
-      }
-      endDate = now.toISOString();
-      
-      // Determine grouping
-      if (this.chartGrouping === 'minutes') {
-        groupBy = 1;
-      } else if (this.chartGrouping === 'hours') {
-        groupBy = 60;
-      } else {
-        groupBy = 1440;
-      }
-      
-      await this.$store.dispatch(FETCH_CHART_DATA, {
-        projectId: this.projectId,
-        startDate,
-        endDate,
-        groupBy,
-      });
-      
-      this.chartData = this.$store.state.projects.charts[this.projectId];
     },
 
     /**
@@ -663,76 +489,6 @@ export default {
     margin: 40px 0 20px;
     background: var(--color-text-second);
     border-radius: 2px;
-  }
-
-  &__chart-container {
-    padding: 0 var(--layout-padding-inline);
-  }
-
-  &__chart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding-top: 20px;
-  }
-
-  &__chart-range-controls {
-    display: flex;
-    gap: 8px;
-  }
-
-  &__chart-grouping-controls {
-    display: flex;
-    gap: 8px;
-  }
-}
-
-.chart-range-btn {
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-main);
-  background: var(--color-bg-main);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: var(--color-bg-second);
-  }
-
-  &--active {
-    background: var(--color-bg-second);
-    color: var(--color-text-main);
-  }
-}
-
-.chart-period-btn {
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-main);
-  background: var(--color-bg-main);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background: var(--color-bg-second);
-  }
-
-  &--active {
-    background: var(--color-bg-second);
-    color: var(--color-text-main);
-  }
-
-  &--disabled,
-  &:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
   }
 }
 

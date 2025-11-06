@@ -95,6 +95,7 @@
   },
   "projects": {
     "chart": {
+      "now": "Сейчас",
       "byMinutes": "По минутам",
       "byHours": "По часам",
       "byDays": "По дням",
