@@ -99,6 +99,7 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import TabBar from '@/components/utils/TabBar.vue';
 import PopupDialog from '@/components/utils/PopupDialog.vue';
 import { fetchProjectReleaseDetails } from '@/api/projects';
@@ -109,9 +110,10 @@ import SkeletonBar from '@/components/utils/SkeletonBar.vue';
 import SkeletonAvatar from '@/components/utils/SkeletonAvatar.vue';
 import Spinner from '@/components/utils/Spinner.vue';
 import { ReleaseDetails } from '@/types/release';
+import { Project } from '@/store/modules/projects';
+import { Workspace } from '@/store/modules/workspaces';
 
-export default {
-  name: 'ReleaseLayout',
+export default Vue.extend({
   components: {
     TabBar,
     PopupDialog,
@@ -142,49 +144,53 @@ export default {
     };
   },
   computed: {
-    projectId() {
-      return this.$route.params.projectId;
+    projectId(): string {
+      return this.$route.params.projectId as string;
     },
-    release() {
-      return this.$route.params.release;
+    release(): string {
+      return this.$route.params.release as string;
     },
-    project() {
+    project(): Project {
       return this.$store.getters.getProjectById(this.projectId);
     },
-    workspace() {
+    workspace(): Workspace {
       return this.$store.getters.getWorkspaceByProjectId(this.projectId);
     },
-    tabs() {
+    tabs(): { title: string; routeName: string }[] {
       return [
-        { title: this.$t('projects.tabs.events'),
+        { title: this.$t('projects.tabs.events') as string,
           routeName: 'project-release-events' },
         {
-          title: this.$t('projects.releases.stats.files'),
+          title: this.$t('projects.releases.stats.files') as string,
           routeName: 'project-release-files',
         },
         {
-          title: this.$t('projects.releases.stats.commits'),
+          title: this.$t('projects.releases.stats.commits') as string,
           routeName: 'project-release-commits',
         },
       ];
     },
-    activeTabIndex() {
+    activeTabIndex(): number {
       const map = {
         'project-release-events': 0,
         'project-release-files': 1,
         'project-release-commits': 2,
       };
 
-      return map[this.$route.name] ?? 0;
+      return map[this.$route.name as string] ?? 0;
     },
   },
   async created() {
-    const details = await fetchProjectReleaseDetails(this.projectId, this.release);
+    const details: ReleaseDetails = await fetchProjectReleaseDetails(this.projectId, this.release);
+
     this.releaseDetails = {
-      timestamp: details?.timestamp || null,
+      timestamp: details?.timestamp || 0,
       dailyEventsPortion: details?.dailyEventsPortion || { dailyEvents: [] },
       files: details?.files || [],
       commits: details?.commits || [],
+      commitsCount: details?.commitsCount || 0,
+      filesCount: details?.filesCount || 0,
+      release: details?.release || '',
     };
 
     await this.$nextTick();
@@ -198,7 +204,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style>

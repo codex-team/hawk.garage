@@ -56,7 +56,6 @@
       :project-id="projectId"
       class="events-list__assignees-list"
       @hide="hideAssigneesList"
-      :get-project-event-by-id="getProjectEventById"
     />
   </div>
 </template>
@@ -289,6 +288,7 @@ export default {
       this.windowWidth = window.innerWidth;
       this.onResize = this.$options.methods.setAssigneesPosition.bind(this);
 
+      // TODO: Add throttle to the resize event
       window.addEventListener('resize', this.onResize);
       window.addEventListener('scroll', this.onResize, true);
 

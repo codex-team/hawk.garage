@@ -17,40 +17,44 @@
 </template>
 
 <script lang="ts">
+import Vue, { PropType } from 'vue';
 import EventsList from "@/components/project/EventsList.vue";
 import EmptyState from "@/components/utils/EmptyState.vue";
 import { mapGetters } from "vuex";
 import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER } from "@/store/modules/events/actionTypes";
-import { EventsSortOrder } from "@/types/events";
+import { DailyEvent, EventsSortOrder, HawkEvent, HawkEventDailyInfo } from "@/types/events";
+import { ReleaseDetails } from '@/types/release';
 
-export default {
+export default Vue.extend({
   name: "ReleaseEvents",
   components: { EventsList, EmptyState },
   props: {
     releaseDetails: {
-      type: Object,
+      type: Object as PropType<ReleaseDetails>,
       required: true,
     },
   },
   computed: {
-    projectId() {
+    projectId(): string {
       return this.$route.params.projectId;
     },
-    release() {
+    release(): string {
       return this.$route.params.release;
     },
-    events() {
+    events(): DailyEvent[] {
       return this.releaseDetails.dailyEventsPortion.dailyEvents || [];
     },
-    eventMap() {
-      const map = {};
+    eventMap(): Record<string, HawkEvent> {
+      const map: Record<string, HawkEvent> = {};
 
-      this.events.forEach(dailyEvent => { map[dailyEvent.event.id] = dailyEvent.event });
+      this.events.forEach((dailyEvent: DailyEvent) => {
+        map[dailyEvent.event.id] = dailyEvent.event
+      });
 
       return map;
     },
-    dailyEventsCompatible() {
-      return this.events.map(dailyEvent => ({
+    dailyEventsCompatible(): { groupingTimestamp: number; eventId: string; count: number; affectedUsers: number }[] {
+      return this.events.map((dailyEvent: DailyEvent) => ({
         groupingTimestamp: dailyEvent.groupingTimestamp,
         eventId: dailyEvent.event.id,
         count: dailyEvent.count,
@@ -81,7 +85,7 @@ export default {
       return Math.floor(utcMs / 1000);
     },
   },
-};
+});
 </script>
 
 <style>

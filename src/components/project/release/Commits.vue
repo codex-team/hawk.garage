@@ -19,9 +19,11 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import CommitItem from '../../utils/CommitItem.vue';
 import EmptyState from '../../utils/EmptyState.vue';
-export default {
+
+export default Vue.extend({
   name: 'ReleaseCommits',
   components: { CommitItem, EmptyState },
   props: {
@@ -44,7 +46,7 @@ export default {
   methods: {
     short(hash) { return hash ? hash.slice(0, 7) : ''; },
   },
-};
+});
 </script>
 
 <style>

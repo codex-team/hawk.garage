@@ -45,11 +45,12 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import { ReleaseDetails } from '@/types/release';
 import EmptyState from '../../utils/EmptyState.vue';
 import { PropType } from 'vue';
 
-export default {
+export default Vue.extend({
   name: 'ReleaseFiles',
   components: { EmptyState },
   props: {
@@ -86,8 +87,8 @@ export default {
       mapName: string | null;
       mapFullPath: string;
       length: number | null;
-    } {
-      return (this.files || []).map((entry) => {
+    }[] {
+      return (this.files || []).map((entry: { mapFileName: string; originFileName: string; length: number | null }) => {
         const mapFullPath = entry.mapFileName || '';
         const primaryFullPath = entry.originFileName || '';
         const primaryName = primaryFullPath;
@@ -166,7 +167,7 @@ export default {
       return slash >= 0 ? file.slice(0, slash) : '';
     },
   },
-};
+});
 </script>
 
 <style>

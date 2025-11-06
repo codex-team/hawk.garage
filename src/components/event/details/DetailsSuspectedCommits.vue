@@ -41,7 +41,7 @@ import Vue from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import CommitItem from '../../utils/CommitItem.vue';
-import { HawkEventCommit } from '@/types/events';
+import { ReleaseCommit } from '@/types/release';
 
 export default Vue.extend({
   name: 'DetailsSuspectedCommits',
@@ -55,7 +55,7 @@ export default Vue.extend({
      * Event commits to show
      */
     commits: {
-      type: Array as () => HawkEventCommit[],
+      type: Array as () => ReleaseCommit[],
       required: true,
     },
 
@@ -77,9 +77,9 @@ export default Vue.extend({
     /**
      * Displayed commits items
      *
-     * @returns { HawkEventCommit[] }
+     * @returns { ReleaseCommit[] }
      */
-    filteredCommits():HawkEventCommit[] {
+    filteredCommits():ReleaseCommit[] {
       return this.commits.length <= this.numberOfVisibleCommits ||
         this.isMoreCommitsShown
         ? this.commits

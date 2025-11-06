@@ -51,6 +51,7 @@
 <script>
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'AssigneesList',
@@ -81,17 +82,6 @@ export default {
     triangle: {
       type: String,
       default: 'right',
-    },
-
-    /**
-     * Function to obtain full event by id
-     * Signature: (projectId: string, eventId: string) => GroupedEvent
-     *
-     * @type {Function}
-     */
-    getProjectEventById: {
-      type: Function,
-      required: true,
     },
   },
   data() {
@@ -133,6 +123,8 @@ export default {
     filteredUsers() {
       return this.users.filter(user => user.email.includes(this.searchText));
     },
+
+    ...mapGetters(['getProjectEventById']),
   },
 
   /**
