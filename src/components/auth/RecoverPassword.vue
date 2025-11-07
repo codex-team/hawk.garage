@@ -87,11 +87,12 @@ export default defineComponent({
             emailPrefilled: email,
           },
         });
-      } catch (e) {
-        console.error(e);
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        console.error(err);
 
         notifier.show({
-          message: this.$i18n.t(e.message) as string,
+          message: this.$i18n.t(err.message) as string,
           style: 'error',
         });
       }

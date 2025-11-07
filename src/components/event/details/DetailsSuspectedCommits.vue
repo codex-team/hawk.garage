@@ -17,33 +17,7 @@
         "
         data-ripple
       >
-        <div class="details-suspected-commit__left">
-          <div class="details-suspected-commit__left-title">
-            {{ commit.title }}
-          </div>
-          <div>
-            <EntityImage
-              :id="commit.author.charCodeAt(0).toString(16)"
-              class="details-suspected-commit__left-image"
-              :name="commit.author"
-              size="16"
-            />
-            <span class="details-suspected-commit__left-author">
-              {{ commit.author }}
-            </span>
-            <span class="details-suspected-commit__left-relative-time">
-              {{ $t("event.suspectedCommits.committed") }}
-              {{ prettyRelativeTimeStr(commit.date.toISOString()) }}
-            </span>
-          </div>
-        </div>
-        <div class="details-suspected-commit__right">
-          <div class="details-suspected-commit__right-hash-block">
-            <span class="details-suspected-commit__right-hash">
-              {{ commit.hash.substr(0, 7) }}
-            </span>
-          </div>
-        </div>
+        <CommitItem :commit="commit" />
       </div>
     </template>
     <template #expandButton>
@@ -65,22 +39,22 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
-import EntityImage from '../../utils/EntityImage.vue';
-import { HawkEventCommit } from '@/types/events';
 import { prettyRelativeTimeStr } from '@/utils';
+import CommitItem from '../../utils/CommitItem.vue';
+import { ReleaseCommit } from '@/types/release';
 
 export default defineComponent({
   name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase,
-    EntityImage,
+    CommitItem,
   },
   props: {
     /**
      * Event commits to show
      */
     commits: {
-      type: Array as () => HawkEventCommit[],
+      type: Array as () => ReleaseCommit[],
       required: true,
     },
 
@@ -102,9 +76,9 @@ export default defineComponent({
     /**
      * Displayed commits items
      *
-     * @returns { HawkEventCommit[] }
+     * @returns { ReleaseCommit[] }
      */
-    filteredCommits(): HawkEventCommit[] {
+    filteredCommits(): ReleaseCommit[] {
       return this.commits.length <= this.numberOfVisibleCommits
         || this.isMoreCommitsShown
         ? this.commits

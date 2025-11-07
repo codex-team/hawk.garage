@@ -1,53 +1,79 @@
 <template>
   <div class="sidebar">
-    <EntityImage
-      :id="user.id"
-      class="sidebar__user-picture"
-      :name="user.email || 'H'"
-      :image="user.image"
-      size="36"
-      data-ripple
-      @click="$router.push('/account/general')"
-    />
-    <hr class="sidebar__delimiter">
-    <div class="sidebar__button-create-wrapper">
-      <div
-        class="sidebar__button-create"
-        @click="createWorkspaceButtonClicked"
-      >
-        <Icon symbol="plus" />
-      </div>
-    </div>
-    <hr class="sidebar__delimiter">
-    <div
-      :class="{'sidebar__workspaces-menu--scrolled': isWorkspaceMenuScrolled}"
-      class="sidebar__workspaces-menu"
-    >
-      <div
-        class="sidebar__scrollable"
-        @scroll.passive="activateScrollableGradient"
-      >
-        <transition
-          name="highlight-appearance"
-          appear
-        >
-          <div
-            v-show="currentWorkspace"
-            class="sidebar__workspace-highlight"
-            :style="{'top': highlightPosition}"
-          />
-        </transition>
-        <WorkspacesMenuItem
-          v-for="workspace in workspaces"
-          :key="workspace.id"
-          :workspace="workspace"
-          :active="currentWorkspace ? currentWorkspace.id === workspace.id : false"
-          class="sidebar__workspace-item"
-          data-ripple
-          @click="onWorkspaceItemClick(workspace)"
+    <template v-if="isLoading">
+      <SkeletonAvatar
+        size="medium"
+        class="sidebar__skeleton-user-picture"
+      />
+      <hr class="sidebar__delimiter">
+      <div class="sidebar__button-create-wrapper">
+        <SkeletonAvatar
+          size="medium"
+          class="sidebar__skeleton-button-create"
         />
       </div>
-    </div>
+      <hr class="sidebar__delimiter">
+      <div class="sidebar__workspaces-menu">
+        <div class="sidebar__scrollable">
+          <SkeletonAvatar
+            v-for="i in 3"
+            :key="`skeleton-${i}`"
+            size="medium"
+            class="sidebar__skeleton-workspace-item"
+          />
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <EntityImage
+        :id="user.id"
+        class="sidebar__user-picture"
+        :name="user.email || 'H'"
+        :image="user.image"
+        size="36"
+        data-ripple
+        @click="$router.push('/account/general')"
+      />
+      <hr class="sidebar__delimiter">
+      <div class="sidebar__button-create-wrapper">
+        <div
+          class="sidebar__button-create"
+          @click="createWorkspaceButtonClicked"
+        >
+          <Icon symbol="plus" />
+        </div>
+      </div>
+      <hr class="sidebar__delimiter">
+      <div
+        :class="{'sidebar__workspaces-menu--scrolled': isWorkspaceMenuScrolled}"
+        class="sidebar__workspaces-menu"
+      >
+        <div
+          class="sidebar__scrollable"
+          @scroll.passive="activateScrollableGradient"
+        >
+          <transition
+            name="highlight-appearance"
+            appear
+          >
+            <div
+              v-show="currentWorkspace"
+              class="sidebar__workspace-highlight"
+              :style="{'top': highlightPosition}"
+            />
+          </transition>
+          <WorkspacesMenuItem
+            v-for="workspace in workspaces"
+            :key="workspace.id"
+            :workspace="workspace"
+            :active="currentWorkspace ? currentWorkspace.id === workspace.id : false"
+            class="sidebar__workspace-item"
+            data-ripple
+            @click="onWorkspaceItemClick(workspace)"
+          />
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -58,6 +84,7 @@ import WorkspacesMenuItem from './WorkspacesMenuItem';
 import { SET_CURRENT_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import EntityImage from '../utils/EntityImage';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
+import SkeletonAvatar from '../utils/SkeletonAvatar';
 
 export default {
   name: 'Sidebar',
@@ -65,6 +92,18 @@ export default {
     EntityImage,
     WorkspacesMenuItem,
     Icon,
+    SkeletonAvatar,
+  },
+  props: {
+    /**
+     * Indicates whether sidebar data is loading
+     *
+     * @returns {boolean}
+     */
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -171,6 +210,15 @@ export default {
       margin-top: 20px;
       margin-bottom: 18px;
       cursor: pointer;
+    }
+
+    &__skeleton-user-picture {
+      margin-top: 20px;
+      margin-bottom: 18px;
+    }
+
+    &__skeleton-workspace-item {
+      margin: 0 20px 20px 20px;
     }
 
     &__button-create-wrapper {

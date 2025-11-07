@@ -79,11 +79,12 @@ export default defineComponent({
         onConfirm: async () => {
           try {
             await this.$store.dispatch(GENERATE_NEW_INTEGRATION_TOKEN, { projectId: this.project.id });
-          } catch (e) {
-            console.error(e);
+          } catch (error) {
+            const err = error instanceof Error ? error : new Error(String(error));
+            console.error(err);
 
             notifier.show({
-              message: this.$t(e.message) as string,
+              message: this.$t(err.message) as string,
               style: 'error',
             });
           }

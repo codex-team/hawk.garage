@@ -136,9 +136,10 @@ export default defineComponent({
           style: 'success',
           time: 5000,
         });
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 5000,
         });

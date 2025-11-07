@@ -51,13 +51,15 @@ export async function getEvent(projectId: string, eventId: string, originalEvent
  * @param sort - sort order for daily events
  * @param filters - filters for daily events
  * @param search - search string for daily events
+ * @param release - release identifier to filter events
  */
 export async function fetchDailyEventsPortion(
   projectId: string,
   nextCursor: DailyEventsCursor | null = null,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
-  search = ''
+  search = '',
+  release?: string
 ): Promise<DailyEventsPortion> {
   const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
     projectId,
@@ -65,6 +67,7 @@ export async function fetchDailyEventsPortion(
     sort,
     filters,
     search,
+    release,
   }, undefined, {
     /**
      * This request calls on the app start, so we don't want to break app if something goes wrong

@@ -156,10 +156,11 @@ export default defineComponent({
           } as NotificationsChannelSettings,
         } as UserNotificationsChannels);
       } catch (error) {
-        this.$sendToHawk(error);
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.$sendToHawk(err);
 
         notifier.show({
-          message: error.message,
+          message: err.message,
           style: 'error',
         });
       }
@@ -177,10 +178,11 @@ export default defineComponent({
           [type]: value,
         } as UserNotificationsReceiveTypesConfig);
       } catch (error) {
-        this.$sendToHawk(error);
+        const err = error instanceof Error ? error : new Error(String(error));
+        this.$sendToHawk(err);
 
         notifier.show({
-          message: error.message,
+          message: err.message,
           style: 'error',
         });
       }

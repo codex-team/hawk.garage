@@ -23,9 +23,10 @@ export const QUERY_PROJECT_DAILY_EVENTS = `
     $sort: EventsSortOrder
     $filters: EventsFiltersInput
     $search: String
+    $release: String
   ) {
     project(projectId: $projectId) {
-      dailyEventsPortion(sort: $sort, filters: $filters, search: $search, nextCursor: $cursor) {
+      dailyEventsPortion(sort: $sort, filters: $filters, search: $search, release: $release, nextCursor: $cursor) {
         nextCursor {
           groupingTimestampBoundary
           sortValueBoundary
@@ -43,7 +44,7 @@ export const QUERY_PROJECT_DAILY_EVENTS = `
       }
     }
   }
-  
+
   ${EVENT_FRAGMENT}
 `;
 

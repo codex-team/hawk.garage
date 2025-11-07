@@ -12,7 +12,6 @@ import {
   GET_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
-import Vue from 'vue';
 import type { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { filterBeautifiedAddons } from '@/utils';
@@ -254,18 +253,16 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.search - event searching regex string
      * @param payload.nextCursor - pointer to the first daily event of the portion to fetch
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string;
-      search: string;
-      nextCursor: DailyEventsCursor | null; }):
-      Promise<{ dailyEventsWithEventsLinked: DailyEventWithEventLinked[];
-        nextCursor: string | null; }> {
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null, release?: string }):
+      Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
         nextCursor,
         eventsSortOrder,
         this.getters.getProjectFilters(projectId),
-        search
+        search,
+        release
       );
 
       const dailyEvents = dailyEventsPortion.dailyEvents;

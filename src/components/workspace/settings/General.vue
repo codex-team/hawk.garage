@@ -34,7 +34,7 @@
         {{ $t('workspaces.settings.workspace.submit') }}
       </button>
     </form>
-       <hr class="delimiter">
+    <hr class="delimiter">
     <!--    <div class="workspace-settings__registered-info">-->
     <!--      {{ $t('workspaces.settings.workspace.created') }}-->
     <!--    </div>-->
@@ -152,9 +152,10 @@ export default defineComponent({
         });
 
         this.$emit('workspaceUpdated');
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 5000,
         });
@@ -209,8 +210,8 @@ export default defineComponent({
     }
 
     &-value {
-      margin-top: 10px;
       max-width: 400px;
+      margin-top: 10px;
       padding: 8px 10px;
 
       .code-block__button-wrapper {
@@ -218,7 +219,6 @@ export default defineComponent({
       }
     }
   }
-
 
 
 }

@@ -22,6 +22,11 @@
         class="event-overview__section"
         :cookies="event.payload.cookies"
       />
+      <DetailsUser
+        v-if="event.payload.user"
+        class="event-overview__section"
+        :payload-user="event.payload.user"
+      />
       <DetailsAddons
         v-if="getIntegrationAddons('vue')"
         class="event-overview__section"
@@ -83,6 +88,7 @@ import DetailsCookie from './details/DetailsCookie.vue';
 import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
+import DetailsUser from './details/DetailsUser.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
@@ -94,6 +100,7 @@ export default defineComponent({
     DetailsBacktrace,
     DetailsAddons,
     DetailsSuspectedCommits,
+    DetailsUser,
   },
   props: {
     /**

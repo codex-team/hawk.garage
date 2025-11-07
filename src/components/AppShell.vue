@@ -1,7 +1,9 @@
 <template>
   <div class="app-shell">
     <aside class="aside">
-      <Sidebar />
+      <Sidebar
+        :is-loading="initialDataLoading"
+      />
       <div class="aside__right-column">
         <WorkspaceInfo
           v-if="currentWorkspace"
@@ -29,6 +31,7 @@
           v-else-if="currentWorkspace"
           :workspace="currentWorkspace"
         />
+        <ProjectsMenuSkeleton v-else-if="initialDataLoading" />
       </div>
     </aside>
     <div class="app-shell__content">
@@ -58,6 +61,7 @@ import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
+import ProjectsMenuSkeleton from './aside/ProjectsMenuSkeleton';
 
 export default defineComponent({
   name: 'AppShell',
@@ -68,6 +72,7 @@ export default defineComponent({
     WorkspaceInfo,
     ProjectPlaceholder,
     EmptyProjectsList,
+    ProjectsMenuSkeleton,
   },
   props: {
     /**
@@ -85,6 +90,13 @@ export default defineComponent({
        */
       modalComponent: null,
       searchQuery: '',
+
+      /**
+       * Status of initial data loading
+       *
+       * @type {boolean}
+       */
+      initialDataLoading: false,
     };
   },
   computed: {
@@ -220,6 +232,7 @@ export default defineComponent({
    */
   async created() {
     try {
+      this.initialDataLoading = true;
       /**
        * Fetch user data
        */
@@ -247,8 +260,13 @@ export default defineComponent({
        */
       this.$store.dispatch(FETCH_CURRENT_USER);
     } catch (error) {
+      const originalMessage = error.message;
+
+      error.message = `Error on app initialization!: ${originalMessage}`;
+      this.$sendToHawk(error);
       console.error(error);
-      this.$sendToHawk(`Error on app initialization!: ${error.message}`);
+    } finally {
+      this.initialDataLoading = false;
     }
   },
   methods: {

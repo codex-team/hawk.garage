@@ -125,9 +125,10 @@ export default defineComponent({
             state: !this.member.isAdmin,
           });
         }
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 5000,
         });
@@ -152,9 +153,10 @@ export default defineComponent({
             userEmail: '',
           });
         }
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 5000,
         });

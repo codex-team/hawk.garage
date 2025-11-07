@@ -154,16 +154,17 @@ export default defineComponent({
           style: 'success',
           time: 5000,
         });
-      } catch (e) {
+      } catch (error) {
         /**
          * Vue18n does not support dot-notation in dict keys.
          * As a workaround, we remove dots from message and from keys in dictionaries.
          */
-        const dictKey = e.message.replaceAll('.', '');
+        const message = error instanceof Error ? error.message : String(error);
+        const dictKey = message.replaceAll('.', '');
         const errorTranslationExist = this.$te('settings.account.errors.' + dictKey);
 
         notifier.show({
-          message: errorTranslationExist ? this.$t('settings.account.errors.' + dictKey) as string : e.message,
+          message: errorTranslationExist ? this.$t('settings.account.errors.' + dictKey) as string : message,
           style: 'error',
           time: 5000,
         });

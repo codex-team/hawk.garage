@@ -63,6 +63,7 @@ export const EVENT_FRAGMENT = `
       user {
         id
         name
+        url
         photo
       }
       get

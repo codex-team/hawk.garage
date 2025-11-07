@@ -13,10 +13,12 @@ import {
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
   MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS,
   QUERY_CHART_DATA,
-  MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
+  MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
 } from './queries';
 import * as api from '../index.ts';
-import { QUERY_PROJECT_RELEASES } from './queries';
+import { ChartData } from '../../types/events';
+import { ReleaseDetails } from '../../types/release';
+import { QUERY_PROJECT_RELEASES, QUERY_PROJECT_RELEASE_DETAILS } from './queries';
 
 /**
  * Create project and returns its id
@@ -52,7 +54,8 @@ export async function updateProject(projectInfo) {
 export async function updateProjectRateLimits(id, rateLimitSettings) {
   const response = await api.call(
     MUTATION_UPDATE_PROJECT_RATE_LIMITS,
-    { id, rateLimitSettings },
+    { id,
+      rateLimitSettings },
     undefined,
     { allowErrors: true }
   );
@@ -229,6 +232,24 @@ export async function fetchProjectReleases(projectId) {
   }
 
   return response.data.project.releases;
+}
+
+/**
+ * Fetch specific release details
+ *
+ * @param {string} projectId
+ * @param {string} release
+ * @returns {Promise<ReleaseDetails>}
+ */
+export async function fetchProjectReleaseDetails(projectId, release) {
+  const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
+    release });
+
+  if (response.errors?.length) {
+    response.errors.forEach(console.error);
+  }
+
+  return response.data.project.releaseDetails;
 }
 
 /**
