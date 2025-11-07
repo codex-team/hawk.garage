@@ -186,25 +186,19 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  *
  * @param {string} projectId - project id
  * @param {string} originalEventId - id of the original event
- * @param {string} startDate - start date (ISO string or Unix timestamp in seconds)
- * @param {string} endDate - end date (ISO string or Unix timestamp in seconds)
- * @param {number} groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
+ * @param {number} days - how many days to fetch
  * @param {number} timezoneOffset - user's local timezone
  */
 export async function fetchChartData(
   projectId: string,
   originalEventId: string,
-  startDate: string,
-  endDate: string,
-  groupBy: number,
+  days: number,
   timezoneOffset: number
 ): Promise<EventChartItem[]> {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     originalEventId,
-    startDate,
-    endDate,
-    groupBy,
+    days,
     timezoneOffset,
   })).project.event.chartData;
 }

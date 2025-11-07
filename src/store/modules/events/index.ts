@@ -543,16 +543,14 @@ const module: Module<EventsModuleState, RootState> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
     async [GET_CHART_DATA](
       { commit, dispatch },
-      { projectId, eventId, originalEventId, startDate, endDate, groupBy }:
-        { projectId: string; eventId: string; originalEventId: string; startDate: string; endDate: string; groupBy: number }
+      { projectId, eventId, originalEventId, days }:
+        { projectId: string; eventId: string; originalEventId: string; days: number }
     ): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(
         projectId,
         originalEventId,
-        startDate,
-        endDate,
-        groupBy,
+        days,
         timezoneOffset
       );
 
