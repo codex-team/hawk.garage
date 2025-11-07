@@ -1,5 +1,13 @@
 <template>
   <div class="events-list">
+    <SearchField
+      v-model="searchQuery"
+      class="search-container"
+      skin="fancy"
+      :placeholder="searchFieldPlaceholder"
+      :is-c-m-d-k-enabled="true"
+      @input="debouncedSearch"
+    />
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -24,7 +32,7 @@
       <div
         v-if="!noMore && !isLoading"
         class="events-list__load-more"
-        @click="$emit('loadMore')"
+        @click="loadMoreEvents(false)"
       >
         <span>{{ $t('projects.loadMoreEvents') }}</span>
       </div>
@@ -36,16 +44,39 @@
       v-else
       class="events-list__no-events-placeholder"
     >
-      <div class="events-list__divider" />
-      {{ $t('projects.noEventsPlaceholder') }}
+      <EmptyState
+        v-if="fallback === 'fancy-release'"
+        icon="like"
+        :title="$t('projects.releases.empty.eventsTitle')"
+        :description="$t('projects.releases.empty.eventsDesc')"
+      />
+      <template v-else-if="fallback === 'simple'">
+        <div class="events-list__divider" />
+        {{ $t('projects.noEventsPlaceholder') }}
+      </template>
     </div>
+    <AssigneesList
+      v-if="isAssigneesShowed"
+      v-click-outside="hideAssigneesList"
+      :style="assigneesListPosition"
+      :event-id="assigneesEventId"
+      :project-id="projectId"
+      class="events-list__assignees-list"
+      @hide="hideAssigneesList"
+    />
   </div>
 </template>
 
 <script>
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
-import { groupByGroupingTimestamp } from '@/utils';
+import { groupByGroupingTimestamp, debounce } from '@/utils';
+import AssigneesList from '../event/AssigneesList';
+import { mapGetters } from 'vuex';
+import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
+import SearchField from '../forms/SearchField';
+import { getPlatform } from '@/utils';
+import EmptyState from '../utils/EmptyState.vue';
 
 /**
  * Events list component grouped by days.
@@ -66,63 +97,129 @@ export default {
   components: {
     EventItem,
     EventItemSkeleton,
+    AssigneesList,
+    SearchField,
+    EmptyState,
   },
   props: {
-    /**
-     * Raw (not grouped) daily events array
-     *
-     * @type {Array}
-     */
-    events: {
-      type: Array,
-      required: true,
-    },
-    /**
-     * Current project id
-     *
-     * @type {string}
-     */
-    projectId: {
+    fallback: {
       type: String,
-      required: true,
-    },
-    /**
-     * Loading state flag
-     *
-     * @type {boolean}
-     */
-    isLoading: {
-      type: Boolean,
-      default: false,
-    },
-    /**
-     * No more data to load flag
-     *
-     * @type {boolean}
-     */
-    noMore: {
-      type: Boolean,
-      default: false,
-    },
-    /**
-     * Function to obtain full event by id
-     * Signature: (projectId: string, eventId: string) => GroupedEvent
-     *
-     * @type {Function}
-     */
-    getProjectEventById: {
-      type: Function,
-      required: true,
+      default: 'simple',
     },
   },
+  data() {
+    return {
+      /**
+       * Pagination cursor for next dailyEvents portion
+       */
+      dailyEventsNextCursor: null,
+      /**
+       * Current search query (controlled input for SearchField)
+       */
+      searchQuery: (this.$store && this.$store.getters && this.$route)
+        ? (this.$store.getters.getProjectSearch(this.$route.params.projectId) || '')
+        : '',
+      /**
+       * Raw (not grouped by groupingTimestamp) dailyEvents list
+       */
+      dailyEvents: [],
+      /**
+       * Indicates whether items are loading or not.
+       */
+      isLoading: false,
+      /**
+       * Shows if there are no more events or there are
+       */
+      noMore: false,
+      /**
+       * Indicates whether assignees list is shown
+       */
+      isAssigneesShowed: false,
+      /**
+       * Debounced search handler
+       */
+      debouncedSearch: null,
+      /**
+       * Id of the event which assignees are shown
+       */
+      assigneesEventId: '',
+      /**
+       * Assignees list position in pixels
+       */
+      assigneesListPosition: {
+        top: 0,
+        left: 0,
+      },
+      /**
+       * Handler of window resize
+       */
+      onResize: () => {
+        // do nothing
+      },
+      /**
+       * Old window width
+       */
+      windowWidth: window.innerWidth,
+      /**
+       * Anchor element for assignees popup positioning
+       */
+      assigneesAnchorEl: null,
+    };
+  },
+  created() {
+    this.loadMoreEvents(true);
+
+    const SEARCH_MAX_LENGTH = 50;
+
+    this.debouncedSearch = debounce((query) => {
+      const sanitized = typeof query === 'string' ? query.slice(0, SEARCH_MAX_LENGTH) : '';
+
+      if (this.projectId) {
+        this.$store.commit('SET_PROJECT_SEARCH', {
+          projectId: this.projectId,
+          search: sanitized,
+        });
+      }
+
+      this.reloadDailyEvents();
+    }, 500);
+  },
+  beforeDestroy() {
+    this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
+  },
   computed: {
+    /**
+     * Placeholder for search input with CMD/Ctrl+K hint
+     */
+    searchFieldPlaceholder() {
+      return this.$t('forms.searchFieldWithCMDK', {
+        cmd: getPlatform() === 'macos' ? '⌘' : 'Ctrl',
+      });
+    },
+    /**
+     * Returns project id from the route
+     *
+     * @returns {string}
+     */
+    projectId() {
+      return this.$route.params.projectId;
+    },
+    /**
+     * Returns current release from the route (if any)
+     *
+     * @returns {string|undefined}
+     */
+    release() {
+      return this.$route.params.release || this.$route.query?.release;
+    },
+    ...mapGetters(['getProjectEventById', 'getProjectSearch']),
     /**
      * Whether there are items to display
      *
      * @returns {boolean}
      */
     hasItems() {
-      return Array.isArray(this.events) && this.events.length > 0;
+      return Array.isArray(this.dailyEvents) && this.dailyEvents.length > 0;
     },
     /**
      * Group events by the `groupingTimestamp` key
@@ -134,10 +231,11 @@ export default {
         return {};
       }
 
-      return groupByGroupingTimestamp(this.events);
+      return groupByGroupingTimestamp(this.dailyEvents);
     },
   },
   methods: {
+    // debouncedSearch инициализируется в created и используется как обработчик @input
     /**
      * Return midnight timestamp extracted from grouping key
      *
@@ -157,6 +255,53 @@ export default {
       return this.getProjectEventById(this.projectId, eventId);
     },
     /**
+     * Load older events to the list
+     *
+     * @param overwrite - determine whenever we need to overwrite this.dailyEvents
+     */
+    async loadMoreEvents(overwrite) {
+      if (this.isLoading === true) {
+        return;
+      }
+
+      if (this.noMore) {
+        return;
+      }
+
+      this.isLoading = true;
+      const search = this.getProjectSearch(this.projectId) || '';
+
+      const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+        projectId: this.projectId,
+        nextCursor: this.dailyEventsNextCursor,
+        search,
+        release: this.release,
+      });
+
+      this.dailyEventsNextCursor = nextCursor;
+      this.noMore = this.dailyEventsNextCursor === null;
+
+      if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
+        this.$emit('no-events');
+      }
+
+      if (overwrite) {
+        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
+      } else {
+        this.dailyEvents.push(...dailyEventsWithEventsLinked);
+      }
+
+      this.isLoading = false;
+    },
+    /**
+     * Reset pagination and reload list
+     */
+    reloadDailyEvents() {
+      this.dailyEventsNextCursor = null;
+      this.noMore = false;
+      this.loadMoreEvents(true);
+    },
+    /**
      * Handle assignee icon/avatar click and emit payload to parent
      *
      * @param {string} eventId
@@ -164,9 +309,29 @@ export default {
      * @returns {void}
      */
     onAssigneeIconClick(eventId, nativeEvent) {
-      this.$emit('assigneeIconClick', { projectId: this.projectId,
-        eventId,
-        nativeEvent });
+      const targetEl = nativeEvent && nativeEvent.target ? nativeEvent.target : null;
+      const anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
+
+      if (!anchorEl) {
+        return;
+      }
+
+      const boundingClientRect = anchorEl.getBoundingClientRect();
+
+      this.assigneesAnchorEl = anchorEl;
+
+      this.isAssigneesShowed = true;
+      this.assigneesEventId = eventId;
+      this.assigneesListPosition = {
+        top: `${boundingClientRect.top - 3}px`,
+        left: `${boundingClientRect.left}px`,
+      };
+      this.windowWidth = window.innerWidth;
+      this.onResize = this.setAssigneesPosition.bind(this);
+
+      // TODO: Add throttle to the resize event
+      window.addEventListener('resize', this.onResize);
+      window.addEventListener('scroll', this.onResize, true);
     },
     /**
      * Emit identifiers to open event overview
@@ -178,9 +343,43 @@ export default {
       const event = this.getEvent(eventId);
       const originalEventId = event.originalEventId;
 
-      this.$emit('showEventOverview', { projectId: this.projectId,
-        eventId,
-        originalEventId });
+      if (this.isAssigneesShowed) {
+        this.isAssigneesShowed = false;
+
+        return;
+      }
+
+      this.$router.push({
+        name: 'event-overview',
+        params: {
+          projectId: this.projectId,
+          eventId: originalEventId,
+          repetitionId: eventId,
+        },
+      });
+    },
+    /**
+     * Set a new position when resizing the window
+     */
+    setAssigneesPosition() {
+      if (!this.assigneesAnchorEl) {
+        return;
+      }
+      const rect = this.assigneesAnchorEl.getBoundingClientRect();
+
+      this.assigneesListPosition = {
+        top: `${rect.top - 3}px`,
+        left: `${rect.left}px`,
+      };
+      this.windowWidth = window.innerWidth;
+    },
+    /**
+     * Hide assignees popup
+     */
+    hideAssigneesList() {
+      this.isAssigneesShowed = false;
+      window.removeEventListener('resize', this.onResize);
+      window.removeEventListener('scroll', this.onResize, true);
     },
   },
 };
@@ -230,6 +429,13 @@ export default {
     background: var(--color-text-second);
     border-radius: 2px;
   }
+  &__assignees-list {
+    position: fixed;
+    transform: translateX(-100%) translate(-15px, -5px);
+  }
+}
+.search-container {
+  margin-top: 16px;
 }
 </style>
 
