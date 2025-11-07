@@ -20,12 +20,14 @@
         >
           <div class="release-row__left">
             <div class="release-row__time">
-              {{ formatTime(release.timestamp) }}
+              {{ release.timestamp | prettyTime }}
             </div>
-            <Badge
-              :content="release.newEventsCount"
-              :type="release.newEventsCount === 0 ? 'silent' : undefined"
-            />
+            <span>
+              <Badge
+                :content="release.newEventsCount"
+                :type="release.newEventsCount === 0 ? 'silent' : undefined"
+              />
+            </span>
             <div
               class="release-row__title"
               :title="release.release"
@@ -34,7 +36,7 @@
             </div>
           </div>
           <div class="release-row__right">
-            <div class="release-row__metric">
+            <div v-if="release.commitsCount > 0" class="release-row__metric">
               <span class="release-row__metric-label">{{ $t('projects.releases.stats.commits') }}</span>
               <span class="release-row__metric-value">{{ release.commitsCount }}</span>
             </div>
@@ -46,11 +48,47 @@
         </div>
       </div>
     </div>
+    <div v-else-if="isLoading" class="project-releases__loading">
+      <div
+        v-for="g in 2"
+        :key="`skeleton-group-${g}`"
+        class="project-releases__group"
+      >
+        <div class="project-releases__date">
+          <SkeletonBar width="38px" size="small" />
+        </div>
+        <div
+          v-for="i in 3"
+          :key="`skeleton-item-${g}-${i}`"
+          class="release-row release-row--skeleton"
+        >
+          <div class="release-row__left">
+            <SkeletonBar width="100%" size="medium" />
+            <SkeletonBar width="100%" size="medium" />
+            <SkeletonBar width="200px" size="medium" />
+          </div>
+          <div class="release-row__right">
+            <div class="release-row__metric">
+              <SkeletonBar width="80px" size="small" />
+            </div>
+            <div class="release-row__metric">
+              <SkeletonBar width="60px" size="small" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       v-else
       class="project-releases__empty"
     >
-      —
+      <EmptyState
+        icon="tag"
+        :title="$t('projects.releases.empty.releasesTitle')"
+        :description="$t('projects.releases.empty.releasesDesc')"
+        :action-text="$t('projects.releases.empty.learnMore')"
+        :action-href="docLink"
+      />
     </div>
     <router-view />
   </div>
@@ -59,15 +97,20 @@
 <script>
 import { fetchProjectReleases } from '@/api/projects';
 import Badge from '@/components/utils/Badge.vue';
+import EmptyState from '../utils/EmptyState.vue';
+import SkeletonBar from '../utils/SkeletonBar.vue';
 
 export default {
   name: 'ProjectReleases',
   components: {
     Badge,
+    EmptyState,
+    SkeletonBar,
   },
   data() {
     return {
       releases: [],
+      isLoading: false,
     };
   },
   computed: {
@@ -97,22 +140,31 @@ export default {
 
       return groups;
     },
+
+
+    docLink() {
+      const locale = (this.$i18n && this.$i18n.locale) || 'en';
+
+      return String(locale).startsWith('ru')
+        ? 'https://docs.hawk-tracker.ru/releases'
+        : 'https://docs.hawk.so/releases';
+    },
   },
   async created() {
-    const items = await fetchProjectReleases(this.projectId);
+    this.isLoading = true;
+    try {
+      const items = await fetchProjectReleases(this.projectId);
 
-    this.releases = (items || []).sort((a, b) => b.timestamp - a.timestamp);
+      this.releases = (items || []).sort((a, b) => b.timestamp - a.timestamp);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+    }
   },
   methods: {
     getDay(key) {
       return parseInt(key.replace('groupingTimestamp:', ''), 10);
-    },
-
-    formatTime(tsSec) {
-      return new Intl.DateTimeFormat(undefined, {
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(new Date(tsSec * 1000));
     },
 
     openRelease(release) {
@@ -129,14 +181,18 @@ export default {
 <style>
 .project-releases {
   padding-inline: var(--layout-padding-inline);
+
+  &__group {
+    margin-top: 25px;
+  }
+
+  &__date {
+    margin: 0 0 20px 11px;
+    color: var(--color-text-second);
+    font-size: 14px;
+  }
 }
 
-.project-releases__date {
-  margin-top: 18px;
-  margin-bottom: 8px;
-  color: var(--color-text-second);
-  font-size: 13px;
-}
 
 .release-row {
   display: flex;
@@ -155,9 +211,15 @@ export default {
   background-color: var(--color-bg-main);
 }
 
+.release-row.release-row--skeleton:hover {
+  background-color: unset;
+}
+
+
 .release-row__left {
-  display: flex;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: 30px 40px auto;
+  column-gap: 10px;
   align-items: center;
   min-width: 0;
 }
