@@ -160,8 +160,6 @@ export default Vue.extend({
      * @param option - option to activate
      */
     onOptionActivate(option: UiSelectOption): void {
-      console.log('onOptionActivate', option);
-
       this.internalValue = option.value;
       this.$emit('input', option.value);
       this.close();

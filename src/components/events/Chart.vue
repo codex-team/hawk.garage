@@ -66,7 +66,7 @@
       </div>
     </div>
     <div
-      v-if="hoveredIndex > 0 && hoveredIndex < points.length - 1"
+      v-if="hoveredIndex >= 0 && hoveredIndex < points.length"
       :style="{ transform: `translateX(${pointerLeft}px)` }"
       class="chart__pointer"
     >
@@ -76,6 +76,10 @@
       />
       <div
         class="chart__pointer-tooltip"
+        :class="{
+          'chart__pointer-tooltip--left': tooltipAlignment === 'left',
+          'chart__pointer-tooltip--right': tooltipAlignment === 'right'
+        }"
         :style="{ minWidth: `${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px` }"
       >
         <div class="chart__pointer-tooltip-date">
@@ -261,6 +265,25 @@ export default Vue.extend({
       const currentValue = this.points[this.hoveredIndex].count;
 
       return this.chartHeight - (currentValue - this.minValue) * this.kY;
+    },
+
+    /**
+     * Tooltip alignment class based on position to prevent overflow
+     */
+    tooltipAlignment(): string {
+      const estimatedTooltipWidth = 100;
+      const pointerX = this.hoveredIndex * this.stepX;
+
+      if (pointerX < estimatedTooltipWidth / 2) {
+        /* Near left edge - align tooltip to the left */
+        return 'left';
+      } else if (pointerX > this.chartWidth - estimatedTooltipWidth / 2) {
+        /* Near right edge - align tooltip to the right */
+        return 'right';
+      }
+
+      /* Default center alignment */
+      return 'center';
     },
 
     /**
@@ -536,7 +559,7 @@ export default Vue.extend({
       &-tooltip {
         position: absolute;
         left: 50%;
-        bottom: -12px;
+        bottom: -14px;
         transform: translateX(-50%);
         z-index: 500;
         padding: 6px 8px 6px 7px;
@@ -546,14 +569,26 @@ export default Vue.extend({
         letter-spacing: 0.2px;
         white-space: nowrap;
         background: #191C25;
-        border-radius: 4px;
+        border-radius: 7px;
         box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
         transition: min-width 150ms ease;
         text-align: center;
 
+        &--left {
+          left: 0;
+          transform: translateX(0);
+        }
+
+        &--right {
+          left: auto;
+          right: 0;
+          transform: translateX(0);
+        }
+
         &-date {
           color: var(--color-text-second);
-          font-size: 10px;
+          font-size: 11px;
+          margin-bottom: 2px;
         }
 
         &-number {

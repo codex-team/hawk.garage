@@ -71,7 +71,7 @@ export default Vue.extend({
       /**
        * Chart grouping: 'minutes', 'hours', or 'days'
        */
-      chartGrouping: 'hours',
+      chartGrouping: 'days',
 
       /**
        * Options for chart range
@@ -96,12 +96,16 @@ export default Vue.extend({
       ],
     };
   },
-  mounted() {
-    if (!this.$store.state.projects.charts[this.projectId]) {
-      void this.fetchChartData();
-    }
-  },
   watch: {
+    /**
+     * Refetch chart data when project id changes
+     */
+    projectId: {
+      immediate: true,
+      handler() {
+        void this.fetchChartData();
+      },
+    },
     chartRange: {
       handler(newVal) {
         /* Reset grouping if current grouping is disabled for new range */
@@ -220,7 +224,8 @@ export default Vue.extend({
         groupBy,
       });
 
-      this.chartData = this.$store.state.projects.charts[this.projectId];
+      /* Update local chartData from store */
+      this.chartData = this.$store.state.projects.charts[this.projectId] || [];
     },
     changeChartRange(range: string): void {
       this.chartRange = range;
@@ -258,7 +263,10 @@ export default Vue.extend({
       font-size: 12px;
       line-height: 12px;
       font-weight: 500;
-      color: var(--color-text-second);
+
+      &-count {
+        margin-left: 4px;
+      }
 
       &-difference {
         &-increase,
