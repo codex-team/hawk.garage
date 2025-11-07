@@ -56,7 +56,7 @@
         class="chart__ox-inner"
       >
         <span
-          v-for="(item, index) in visibleLegendPoints"
+          v-for="item in visibleLegendPoints"
           :key="item.index"
           class="chart__ox-item"
           :style="{ left: `${item.index * stepX}px`, transform: 'translateX(-50%)' }"
@@ -121,7 +121,7 @@ export default Vue.extend({
     detalization: {
       type: String as () => 'minutes' | 'hours' | 'days',
       default: 'days',
-    }
+    },
   },
   data() {
     return {
@@ -207,6 +207,7 @@ export default Vue.extend({
 
       /* Ensure the last point is always included */
       const lastIndex = this.points.length - 1;
+
       if (result.length > 0 && result[result.length - 1].index !== lastIndex) {
         result.push({
           point: this.points[lastIndex],
@@ -297,6 +298,7 @@ export default Vue.extend({
       if (this.points.length === 1) {
         const pointX = 0;
         const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
+
         return `M ${pointX} ${pointY}`;
       }
 
@@ -307,7 +309,8 @@ export default Vue.extend({
         const pointX = index * this.stepX;
         const pointY = this.chartHeight - (value - this.minValue) * this.kY;
 
-        pathPoints.push({ x: pointX, y: pointY });
+        pathPoints.push({ x: pointX,
+          y: pointY });
       });
 
       /* Start with move to first point */
@@ -335,9 +338,9 @@ export default Vue.extend({
           path += ` L ${p2.x} ${p2.y}`;
         } else {
           /* Calculate control points for cubic Bezier curve */
-          let cp1x = p1.x + (p2.x - p0.x) / 6;
+          const cp1x = p1.x + (p2.x - p0.x) / 6;
           let cp1y = p1.y + (p2.y - p0.y) / 6;
-          let cp2x = p2.x - (p3.x - p1.x) / 6;
+          const cp2x = p2.x - (p3.x - p1.x) / 6;
           let cp2y = p2.y - (p3.y - p1.y) / 6;
 
           /* Clamp control points to stay within chart bounds */
@@ -369,6 +372,7 @@ export default Vue.extend({
       if (this.points.length === 1) {
         const pointX = 0;
         const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
+
         /* Close the path: line to bottom right, line to bottom left, close */
         return `M ${pointX} ${pointY} L ${pointX} ${this.chartHeight} L ${pointX} ${this.chartHeight} Z`;
       }
@@ -440,6 +444,7 @@ export default Vue.extend({
         /* For days, show only day and month */
         const day = date.getDate();
         const month = date.getMonth();
+
         return `${day} ${this.$t('common.shortMonths[' + month + ']')}`;
       } else {
         /* For hours and minutes, show day, month, hours:minutes */
@@ -449,6 +454,7 @@ export default Vue.extend({
         const minutes = date.getMinutes();
         const paddedHours = hours.toString().padStart(2, '0');
         const paddedMinutes = minutes.toString().padStart(2, '0');
+
         return `${day} ${this.$t('common.shortMonths[' + month + ']')}, ${paddedHours}:${paddedMinutes}`;
       }
     },
@@ -519,8 +525,8 @@ export default Vue.extend({
         color: var(--color-text-main);
         font-size: 11px;
         text-align: center;
-        opacity: 0.3;
         transform-origin: center;
+        opacity: 0.3;
 
         &:first-of-type,
         &:last-of-type {
@@ -558,9 +564,8 @@ export default Vue.extend({
 
       &-tooltip {
         position: absolute;
-        left: 50%;
         bottom: -14px;
-        transform: translateX(-50%);
+        left: 50%;
         z-index: 500;
         padding: 6px 8px 6px 7px;
         color: var(--color-text-main);
@@ -568,11 +573,12 @@ export default Vue.extend({
         line-height: 1.4;
         letter-spacing: 0.2px;
         white-space: nowrap;
+        text-align: center;
         background: #191C25;
         border-radius: 7px;
         box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
+        transform: translateX(-50%);
         transition: min-width 150ms ease;
-        text-align: center;
 
         &--left {
           left: 0;
@@ -580,15 +586,15 @@ export default Vue.extend({
         }
 
         &--right {
-          left: auto;
           right: 0;
+          left: auto;
           transform: translateX(0);
         }
 
         &-date {
+          margin-bottom: 2px;
           color: var(--color-text-second);
           font-size: 11px;
-          margin-bottom: 2px;
         }
 
         &-number {

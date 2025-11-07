@@ -2,12 +2,12 @@
   <div class="project-chart">
     <div class="project-chart__controls">
       <UiSelect
-        :options="rangeOptions"
         v-model="chartRange"
+        :options="rangeOptions"
       />
       <UiSelect
-        :options="groupingOptions"
         v-model="chartGrouping"
+        :options="groupingOptions"
       />
       <div class="project-chart__controls-today">
         {{ $t('projects.chart.now') }}
@@ -56,7 +56,7 @@ export default Vue.extend({
     chartRange: string;
     chartGrouping: string;
     rangeOptions: UiSelectOption[];
-  } {
+    } {
     return {
       /**
        * Data for a chart
@@ -95,36 +95,6 @@ export default Vue.extend({
         },
       ],
     };
-  },
-  watch: {
-    /**
-     * Refetch chart data when project id changes
-     */
-    projectId: {
-      immediate: true,
-      handler() {
-        void this.fetchChartData();
-      },
-    },
-    chartRange: {
-      handler(newVal) {
-        /* Reset grouping if current grouping is disabled for new range */
-        const currentOption = this.groupingOptions.find(opt => opt.value === this.chartGrouping);
-        if (currentOption && currentOption.isDisabled) {
-          /* Set to first enabled option */
-          const enabledOption = this.groupingOptions.find(opt => !opt.isDisabled);
-          if (enabledOption) {
-            this.chartGrouping = enabledOption.value;
-          }
-        }
-        this.fetchChartData();
-      },
-    },
-    chartGrouping: {
-      handler(newVal) {
-        this.fetchChartData();
-      },
-    },
   },
   computed: {
     /**
@@ -185,6 +155,38 @@ export default Vue.extend({
     },
     difference(): number {
       return this.nowCount - this.preLastPointCounter;
+    },
+  },
+  watch: {
+    /**
+     * Refetch chart data when project id changes
+     */
+    projectId: {
+      immediate: true,
+      handler() {
+        void this.fetchChartData();
+      },
+    },
+    chartRange: {
+      handler(newVal) {
+        /* Reset grouping if current grouping is disabled for new range */
+        const currentOption = this.groupingOptions.find(opt => opt.value === this.chartGrouping);
+
+        if (currentOption && currentOption.isDisabled) {
+          /* Set to first enabled option */
+          const enabledOption = this.groupingOptions.find(opt => !opt.isDisabled);
+
+          if (enabledOption) {
+            this.chartGrouping = enabledOption.value;
+          }
+        }
+        this.fetchChartData();
+      },
+    },
+    chartGrouping: {
+      handler(newVal) {
+        this.fetchChartData();
+      },
     },
   },
   methods: {
@@ -251,18 +253,18 @@ export default Vue.extend({
     position: absolute;
     top: 14px;
     right: 14px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
     z-index: 2;
+    display: flex;
+    gap: 4px;
+    align-items: center;
 
     &-today {
       padding: 6px 9px;
-      border-radius: 7px;
-      background-color: var(--color-bg-second);
+      font-weight: 500;
       font-size: 12px;
       line-height: 12px;
-      font-weight: 500;
+      background-color: var(--color-bg-second);
+      border-radius: 7px;
 
       &-count {
         margin-left: 4px;
