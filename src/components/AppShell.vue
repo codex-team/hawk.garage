@@ -254,6 +254,7 @@ export default {
       this.$store.dispatch(FETCH_CURRENT_USER);
     } catch (error) {
       const originalMessage = error.message;
+
       error.message = `Error on app initialization!: ${originalMessage}`;
       this.$sendToHawk(error);
       console.error(error);

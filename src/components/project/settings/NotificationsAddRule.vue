@@ -346,9 +346,9 @@ export default Vue.extend({
        * The type of this.form (ProjectNotificationsAddRulePayload)
        * should not not contain rule id
        */
-      delete mergedRule.id;
+      const { id: _mergedRuleId, ...ruleWithoutId } = mergedRule;
 
-      this.form = mergedRule;
+      this.form = ruleWithoutId;
     }
   },
   methods: {
@@ -428,14 +428,15 @@ export default Vue.extend({
           style: 'success',
           time: 3000,
         });
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 10000,
         });
 
-        console.error(e);
+        console.error(error);
 
         this.isWaitingForResponse = false;
         (this.$refs.submitButton as unknown as UiButtonComponent).shake();
