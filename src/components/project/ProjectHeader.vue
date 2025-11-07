@@ -39,7 +39,10 @@
         class="project-header__row-skeleton"
       >
         <SkeletonAvatar size="small" />
-        <SkeletonBar width="100px" height="15px" />
+        <SkeletonBar
+          width="100px"
+          height="15px"
+        />
       </div>
       <UiButton
         v-if="project"
@@ -170,8 +173,8 @@ export default Vue.extend({
     }
     &-skeleton {
       display: flex;
-      align-items : center;
       gap: 10px;
+      align-items : center;
     }
   }
 

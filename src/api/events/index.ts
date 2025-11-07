@@ -51,13 +51,15 @@ export async function getEvent(projectId: string, eventId: string, originalEvent
  * @param sort - sort order for daily events
  * @param filters - filters for daily events
  * @param search - search string for daily events
+ * @param release - release identifier to filter events
  */
 export async function fetchDailyEventsPortion(
   projectId: string,
   nextCursor: DailyEventsCursor | null = null,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
-  search = ''
+  search = '',
+  release?: string
 ): Promise<DailyEventsPortion> {
   const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
     projectId,
@@ -65,6 +67,7 @@ export async function fetchDailyEventsPortion(
     sort,
     filters,
     search,
+    release,
   }, undefined, {
     /**
      * This request calls on the app start, so we don't want to break app if something goes wrong
@@ -183,25 +186,19 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  *
  * @param {string} projectId - project id
  * @param {string} originalEventId - id of the original event
- * @param {string} startDate - start date (ISO string or Unix timestamp in seconds)
- * @param {string} endDate - end date (ISO string or Unix timestamp in seconds)
- * @param {number} groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
+ * @param {number} days - how many days to fetch
  * @param {number} timezoneOffset - user's local timezone
  */
 export async function fetchChartData(
   projectId: string,
   originalEventId: string,
-  startDate: string,
-  endDate: string,
-  groupBy: number,
+  days: number,
   timezoneOffset: number
 ): Promise<EventChartItem[]> {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     originalEventId,
-    startDate,
-    endDate,
-    groupBy,
+    days,
     timezoneOffset,
   })).project.event.chartData;
 }

@@ -267,7 +267,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} payload.search - event searching regex string
      * @param {DailyEventsCursor|null} payload.nextCursor - pointer to the first daily event of the portion to fetch
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null }):
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release }: { projectId: string; search: string, nextCursor: DailyEventsCursor | null, release?: string }):
       Promise<{dailyEventsWithEventsLinked: DailyEventWithEventLinked[], nextCursor: string | null}> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
@@ -275,7 +275,8 @@ const module: Module<EventsModuleState, RootState> = {
         nextCursor,
         eventsSortOrder,
         this.getters.getProjectFilters(projectId),
-        search
+        search,
+        release
       );
 
       const dailyEvents = dailyEventsPortion.dailyEvents;
@@ -542,16 +543,14 @@ const module: Module<EventsModuleState, RootState> = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
     async [GET_CHART_DATA](
       { commit, dispatch },
-      { projectId, eventId, originalEventId, startDate, endDate, groupBy }:
-        { projectId: string; eventId: string; originalEventId: string; startDate: string; endDate: string; groupBy: number }
+      { projectId, eventId, originalEventId, days }:
+        { projectId: string; eventId: string; originalEventId: string; days: number }
     ): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(
         projectId,
         originalEventId,
-        startDate,
-        endDate,
-        groupBy,
+        days,
         timezoneOffset
       );
 

@@ -33,7 +33,7 @@
       :hidden="hidden"
       :disabled="disabled"
       @input="$emit('input', $event.target.value)"
-    />
+    >
   </fieldset>
 </template>
 

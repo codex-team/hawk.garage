@@ -71,9 +71,9 @@ export default Vue.extend({
 
   &__info {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 8px;
-    flex: 1;
   }
 
   &__name {

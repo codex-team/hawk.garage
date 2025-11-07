@@ -51,6 +51,7 @@
 <script>
 import EntityImage from '../utils/EntityImage';
 import Icon from '../utils/Icon';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'AssigneesList',
@@ -103,7 +104,7 @@ export default {
      * @returns {string} - assignee id or empty string
      */
     currentAssigneeId() {
-      const currentEvent = this.$store.getters.getProjectEventById(this.projectId, this.eventId);
+      const currentEvent = this.getProjectEventById(this.projectId, this.eventId);
 
       const assignee = currentEvent.assignee;
 
@@ -122,6 +123,8 @@ export default {
     filteredUsers() {
       return this.users.filter(user => user.email.includes(this.searchText));
     },
+
+    ...mapGetters([ 'getProjectEventById' ]),
   },
 
   /**

@@ -82,19 +82,15 @@ export default Vue.extend({
    * Used to fetch events on component creation
    */
   async created(): Promise<void> {
-    const now = new Date();
-    const startDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(); // 24 hours ago
-    const endDate = now.toISOString();
-    const groupBy = 60; // hourly grouping (60 minutes)
+    const twoWeeks = 14;
+    const boundingDays = 2;
 
     if (!this.event.chartData) {
       await this.$store.dispatch(GET_CHART_DATA, {
         projectId: this.projectId,
         eventId: this.event.id,
         originalEventId: this.event.originalEventId,
-        startDate,
-        endDate,
-        groupBy,
+        days: twoWeeks + boundingDays,
       });
     }
 
