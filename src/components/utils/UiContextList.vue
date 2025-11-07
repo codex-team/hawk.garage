@@ -72,27 +72,26 @@ export default Vue.extend({
   --radius: 7px;
   --item-radius: 5px;
   --font-size: 12px;
-
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--items-gap);
-  position: relative;
   padding: 2px;
-  border-radius: var(--radius);
   background-color: var(--color-bg-second);
+  border-radius: var(--radius);
 
   &__item {
     display: flex;
-    align-items: center;
     gap: var(--inner-gap);
+    align-items: center;
     padding: 6px 7px;
-    border-radius: var(--item-radius);
+    color: var(--color-text-main);
+    font-weight: 500;
     font-size: var(--font-size);
     line-height: var(--icon-size);
-    font-weight: 500;
-    color: var(--color-text-main);
-    cursor: pointer;
     white-space: nowrap;
+    border-radius: var(--item-radius);
+    cursor: pointer;
 
     &:hover {
       background-color: var(--color-bg-main);
