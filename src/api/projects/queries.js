@@ -205,8 +205,8 @@ export const MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS = `
 export const QUERY_CHART_DATA = `
   query ProjectChartData (
     $projectId: ID!,
-    $startDate: String!
-    $endDate: String!
+    $startDate: DateTime!
+    $endDate: DateTime!
     $groupBy: Int!
     $timezoneOffset: Int!
   ) {
