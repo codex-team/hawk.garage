@@ -38,13 +38,6 @@
     "vuex": "^4.1.0",
     "vuex-persistedstate": "^4.1.0"
   },
-  "license": "BUSL-1.1",
-  "lint-staged": {
-    "*.{js,vue}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  },
   "devDependencies": {
     "@types/node": "^24.6.2",
     "@types/postcss-nested-ancestors": "^3",
@@ -71,5 +64,12 @@
     "vite": "^7.1.9",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-eslint-parser": "^10.2.0"
+  },
+  "license": "BUSL-1.1",
+  "lint-staged": {
+    "*.{js,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   }
 }
