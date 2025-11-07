@@ -66,12 +66,12 @@ export default Vue.extend({
       /**
        * Chart range: 'hour', 'day', 'week', 'month'
        */
-      chartRange: 'week',
+      chartRange: 'day',
 
       /**
        * Chart grouping: 'minutes', 'hours', or 'days'
        */
-      chartGrouping: 'days',
+      chartGrouping: 'hours',
 
       /**
        * Options for chart range
