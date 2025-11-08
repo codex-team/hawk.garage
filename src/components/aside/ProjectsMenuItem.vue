@@ -160,7 +160,7 @@ export default {
       background: var(--color-bg-sidebar);
 
       &:hover {
-        background: color-mod(var(--color-bg-sidebar) lightness(+1%));
+        background: color-mod(var(--color-bg-sidebar) lightness(+11%));
       }
     }
 
