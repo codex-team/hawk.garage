@@ -143,7 +143,7 @@ import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
-import AiAnswerDialog from '../modals/AiAnswerDialog.vue';
+import AiSuggestionDialog from '../modals/AiSuggestionDialog.vue';
 
 export default Vue.extend({
   name: 'EventHeader',
