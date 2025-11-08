@@ -1,4 +1,4 @@
-import { NotificationsChannels } from './notifications';
+import type { NotificationsChannels } from './notifications';
 
 /**
  * This structure represents a settings of the user notifications
@@ -24,7 +24,7 @@ export interface UserNotifications {
  * }
  */
 export type UserNotificationsReceiveTypesConfig = {
-   [key in UserNotificationType]: boolean
+  [key in UserNotificationType]: boolean
 };
 
 /**
@@ -49,5 +49,5 @@ export enum UserNotificationType {
   /**
    * Only important messages from Hawk team
    */
-  SystemMessages = 'SystemMessages',
+  SystemMessages = 'SystemMessages'
 }

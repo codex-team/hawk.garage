@@ -3,11 +3,12 @@
   "version": "0.4.3",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "yarn lint:js && yarn lint:css",
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
     "lint:js": "eslint src/ --ext .js --ext .ts --ext .vue --fix",
+    "lint:e": "eslint src/ --ext .js --ext .ts --ext .vue --quiet --max-warnings=0",
     "serve:prod": "http-server ./dist --push-state -c-0",
     "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
@@ -28,6 +29,7 @@
     "codex-notifier": "^1.1.2",
     "cssnano": "^4.1.10",
     "dotenv": "^8.2.0",
+    "eslint-plugin-jsdoc": "^61.1.12",
     "highlight.js": "^10.4.1",
     "http-server": "^0.12.0",
     "lodash.clonedeep": "^4.5.0",
@@ -74,8 +76,8 @@
     "@vue/eslint-config-typescript": "^7.0.0",
     "babel-eslint": "^10.0.3",
     "cypress": "^8.3.0",
-    "eslint": "^7.24.0",
-    "eslint-config-codex": "^1.6.4",
+    "eslint": "^9.39.1",
+    "eslint-config-codex": "^2.0.3",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-vue": "^7.9.0",
     "get-graphql-schema": "^2.1.2",
@@ -84,7 +86,8 @@
     "stylelint": "^13.3.3",
     "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^3.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vue-eslint-parser": "^10.2.0"
   },
   "license": "BUSL-1.1",
   "lint-staged": {

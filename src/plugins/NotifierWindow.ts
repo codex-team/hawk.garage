@@ -1,6 +1,6 @@
-import { VueConstructor } from 'vue';
+import type { VueConstructor } from 'vue';
 import NotifierWindow from '@/components/utils/NotifierWindow/NotifierWindow.vue';
-import { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
+import type { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
 import i18n from '../i18n';
 
 /**
@@ -10,13 +10,11 @@ type NotifierWindowComponentType = InstanceType<typeof NotifierWindow>;
 
 /**
  * Plugin for using notifier window in components
- *
  * @example this.$notify.open({ description: 'Hi! Hawk' });
  */
 export default {
   /**
    * Install Vue plugin
-   *
    * @param Vue - vue constructor
    */
   install: (Vue: VueConstructor): void => {
@@ -32,11 +30,10 @@ export default {
     Vue.prototype.$notify = {
       /**
        * Open notifier window
-       *
        * @param options - notifier window options
        */
       open(options?: NotifierWindowOptions) {
-        (notifierContainer.$children[0] as NotifierWindowComponentType).open(
+        (notifierContainer.$children[0]).open(
           options
         );
       },
@@ -45,7 +42,7 @@ export default {
        * Close notifier window
        */
       close() {
-        (notifierContainer.$children[0] as NotifierWindowComponentType).close();
+        (notifierContainer.$children[0]).close();
       },
     };
   },

@@ -162,8 +162,8 @@ export default Vue.extend({
      */
     distinctAddonsKeys(): Set<string> {
       return new Set(
-        [ ...this.getDistinctKeysRepetitionsProperty('addons') ].filter(
-          (key) => key !== 'consoleOutput'
+        [...this.getDistinctKeysRepetitionsProperty('addons')].filter(
+          key => key !== 'consoleOutput'
         )
       );
     },
@@ -191,7 +191,7 @@ export default Vue.extend({
       let userSpecifiedSomewhere = false;
       let titleSpecifiedSomewhere = false;
 
-      this.repetitions.forEach(repetition => {
+      this.repetitions.forEach((repetition) => {
         if (repetition.payload.release) {
           releaseSpecifiedSomewhere = true;
         }
@@ -230,7 +230,7 @@ export default Vue.extend({
   mounted() {
     this.lockChromeSwipeNavigation(true);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.lockChromeSwipeNavigation(false);
   },
   methods: {
@@ -239,7 +239,7 @@ export default Vue.extend({
      *
      * @param property — event property to iterate its keys
      */
-    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons' ): Set<string> {
+    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons'): Set<string> {
       if (!this.repetitions.length) {
         return new Set();
       }
@@ -251,7 +251,7 @@ export default Vue.extend({
 
         Object
           .keys(repetition.payload[property])
-          .forEach(key => {
+          .forEach((key) => {
             keys.add(key);
           });
 

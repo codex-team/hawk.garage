@@ -25,8 +25,8 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
-          @onAssigneeIconClick="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
-          @showEventOverview="onShowEventOverview(dailyEventInfo.eventId)"
+          @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
+          @show-event-overview="onShowEventOverview(dailyEventInfo.eventId)"
         />
       </div>
       <div
@@ -184,7 +184,7 @@ export default {
       this.reloadDailyEvents();
     }, 500);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   computed: {
@@ -286,7 +286,7 @@ export default {
       }
 
       if (overwrite) {
-        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
+        this.dailyEvents = [...dailyEventsWithEventsLinked];
       } else {
         this.dailyEvents.push(...dailyEventsWithEventsLinked);
       }
@@ -438,5 +438,3 @@ export default {
   margin-top: 16px;
 }
 </style>
-
-

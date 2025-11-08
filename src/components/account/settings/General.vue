@@ -33,8 +33,8 @@
       />
       <ChangePasswordFieldset
         v-model="passwords"
+        v-model:show-inputs="showPasswordFieldset"
         class="account-settings__section"
-        :show-inputs.sync="showPasswordFieldset"
         @input="showSubmitButton = true"
       />
       <button

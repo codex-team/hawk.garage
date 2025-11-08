@@ -74,7 +74,7 @@ export default Vue.extend({
      * Workspaces in which current user is admin
      */
     workspaces(): Workspace[] {
-      return this.$store.state.workspaces.list.filter(workspace => {
+      return this.$store.state.workspaces.list.filter((workspace) => {
         return this.$store.getters.isCurrentUserAdmin(workspace.id);
       });
     },

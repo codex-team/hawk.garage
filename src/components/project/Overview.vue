@@ -145,7 +145,7 @@ export default {
     }
   },
 
-  destroyed() {
+  unmounted() {
     this.$store.commit('SET_PROJECT_SEARCH', {
       projectId: this.projectId,
       search: '',

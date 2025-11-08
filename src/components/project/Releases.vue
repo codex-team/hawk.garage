@@ -36,7 +36,10 @@
             </div>
           </div>
           <div class="release-row__right">
-            <div v-if="release.commitsCount > 0" class="release-row__metric">
+            <div
+              v-if="release.commitsCount > 0"
+              class="release-row__metric"
+            >
               <span class="release-row__metric-label">{{ $t('projects.releases.stats.commits') }}</span>
               <span class="release-row__metric-value">{{ release.commitsCount }}</span>
             </div>
@@ -48,14 +51,20 @@
         </div>
       </div>
     </div>
-    <div v-else-if="isLoading" class="project-releases__loading">
+    <div
+      v-else-if="isLoading"
+      class="project-releases__loading"
+    >
       <div
         v-for="g in 2"
         :key="`skeleton-group-${g}`"
         class="project-releases__group"
       >
         <div class="project-releases__date">
-          <SkeletonBar width="38px" size="small" />
+          <SkeletonBar
+            width="38px"
+            size="small"
+          />
         </div>
         <div
           v-for="i in 3"
@@ -63,16 +72,31 @@
           class="release-row release-row--skeleton"
         >
           <div class="release-row__left">
-            <SkeletonBar width="100%" size="medium" />
-            <SkeletonBar width="100%" size="medium" />
-            <SkeletonBar width="200px" size="medium" />
+            <SkeletonBar
+              width="100%"
+              size="medium"
+            />
+            <SkeletonBar
+              width="100%"
+              size="medium"
+            />
+            <SkeletonBar
+              width="200px"
+              size="medium"
+            />
           </div>
           <div class="release-row__right">
             <div class="release-row__metric">
-              <SkeletonBar width="80px" size="small" />
+              <SkeletonBar
+                width="80px"
+                size="small"
+              />
             </div>
             <div class="release-row__metric">
-              <SkeletonBar width="60px" size="small" />
+              <SkeletonBar
+                width="60px"
+                size="small"
+              />
             </div>
           </div>
         </div>
@@ -141,7 +165,6 @@ export default {
       return groups;
     },
 
-
     docLink() {
       const locale = (this.$i18n && this.$i18n.locale) || 'en';
 
@@ -193,7 +216,6 @@ export default {
   }
 }
 
-
 .release-row {
   display: flex;
   gap: 12px;
@@ -214,7 +236,6 @@ export default {
 .release-row.release-row--skeleton:hover {
   background-color: unset;
 }
-
 
 .release-row__left {
   display: grid;
@@ -271,5 +292,3 @@ export default {
   color: var(--color-text-second);
 }
 </style>
-
-

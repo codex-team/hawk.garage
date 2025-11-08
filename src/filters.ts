@@ -5,7 +5,6 @@ import { capitalize, pad, trim } from './utils';
 
 /**
  * Filter that add space after first digit in 4-digits number
- *
  * @param value - filter value
  */
 Vue.filter('spacedNumber', function (value: number): string {
@@ -28,7 +27,6 @@ Vue.filter('spacedNumber', function (value: number): string {
 
 /**
  * Filter that abbreviates numbers
- *
  * @param value - filter value
  */
 Vue.filter('abbreviateNumber', function (value: number): string {
@@ -43,7 +41,6 @@ Vue.filter('abbreviateNumber', function (value: number): string {
 
 /**
  * Return workspace name abbreviation (one or two symbols)
- *
  * @returns {string}
  */
 Vue.filter('abbreviation', function (value: string): string {
@@ -60,7 +57,6 @@ Vue.filter('abbreviation', function (value: string): string {
 
 /**
  * Returns prettifying time ('now' or time in hh:mm)
- *
  * @returns {string}
  */
 Vue.filter('prettyTime', function (value: number) {
@@ -69,7 +65,6 @@ Vue.filter('prettyTime', function (value: number) {
   const MS_PER_MINUTE = MS_PER_SECOND * SECONDS_PER_MINUTE;
   const date = new Date(value * MS_PER_SECOND);
   const currentDate = new Date();
-
 
   if ((currentDate.getTime() - date.getTime()) / (MS_PER_MINUTE) < 1) {
     return 'now';
@@ -83,13 +78,12 @@ Vue.filter('prettyTime', function (value: number) {
 
 /**
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
- *
  * @returns {string}
  */
 Vue.filter('prettyDateStr', function (value: string): string {
   const [day, month]: number[] = value
     .split('-')
-    .map((stringValue) => +stringValue);
+    .map(stringValue => +stringValue);
 
   const currentDate = new Date().getDate();
 
@@ -106,7 +100,6 @@ Vue.filter('prettyDateStr', function (value: string): string {
 
 /**
  * Returns prettified date from string
- *
  * @returns {string}
  */
 Vue.filter('prettyDate', function (value: number) {
@@ -118,17 +111,17 @@ Vue.filter('prettyDate', function (value: number) {
   const currentDate = new Date();
 
   if (
-    argumentDay === currentDate.getDate() &&
-    argumentMonth === currentDate.getMonth() &&
-    argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate()
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
   ) {
     return i18n.t('common.today').toString();
   }
 
   if (
-    argumentDay === currentDate.getDate() - 1 &&
-    argumentMonth === currentDate.getMonth() &&
-    argumentYear === currentDate.getFullYear()
+    argumentDay === currentDate.getDate() - 1
+    && argumentMonth === currentDate.getMonth()
+    && argumentYear === currentDate.getFullYear()
   ) {
     return i18n.t('common.yesterday').toString();
   }
@@ -138,7 +131,6 @@ Vue.filter('prettyDate', function (value: number) {
 
 /**
  * Returns prettified date ('29 aug, 14:30')
- *
  * @returns {string}
  */
 Vue.filter('prettyFullDate', function (value: number) {
@@ -155,7 +147,6 @@ Vue.filter('prettyFullDate', function (value: number) {
 
 /**
  * Returns prettifying date from timestamp
- *
  * @param {number} timestamp - timestamp
  */
 Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
@@ -169,7 +160,6 @@ Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
 /**
  * Accepts GraphQL DateTime string like '1992-10-09T00:00:00Z'
  * Return string like '2020, Oct 9 00:00'
- *
  * @param dateStr - string like '1992-10-09T00:00:00Z'
  * @param includeTime - pass true to include time to the result
  */
@@ -198,7 +188,6 @@ Vue.filter(
 
 /**
  * Convert US cents to dollars
- *
  * @returns {string}
  */
 Vue.filter('centsToDollars', function (value: number) {
@@ -210,7 +199,6 @@ Vue.filter('centsToDollars', function (value: number) {
 /**
  * Converts relative time into pretty string like '2021-05-20T15:40:51.000+00:00'.
  * Returns string like 'hours ago'.
- *
  * @param {string} date - date in string formate
  * @returns {string} relative time from today
  */
@@ -223,8 +211,8 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
   const SECONDS_PER_MINUTE = 60;
   const currentTime = new Date();
   const commitTime = new Date(date);
-  const diffInSeconds =
-    Math.abs(currentTime.valueOf() - commitTime.valueOf()) / MS_PER_SECOND;
+  const diffInSeconds
+    = Math.abs(currentTime.valueOf() - commitTime.valueOf()) / MS_PER_SECOND;
 
   const numberOfYears = Math.floor(diffInSeconds / SECONDS_PER_YEAR);
 
@@ -261,7 +249,6 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
 
 /**
  * Trims the string to max length and add ellipsis
- *
  * @returns {string}
  */
 Vue.filter('trim', function (value: string, maxLen: number) {

@@ -46,7 +46,7 @@ export default Vue.extend({
     argsList(): Record<string, string>[] {
       const list: Record<string, string>[] = [];
 
-      this.args.map( item => {
+      this.args.map((item) => {
         /**
          * Case when argument passed as string like '"name"="value"'
          */

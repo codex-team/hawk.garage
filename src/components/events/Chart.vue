@@ -223,7 +223,7 @@ export default Vue.extend({
         return '';
       }
 
-      const points : string[] = [];
+      const points: string[] = [];
 
       this.points.forEach((day, index) => {
         const value = day.count;
@@ -247,7 +247,7 @@ export default Vue.extend({
 
     window.addEventListener('resize', this.onResize);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {

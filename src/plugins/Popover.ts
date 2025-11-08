@@ -1,4 +1,4 @@
-import { VueConstructor } from 'vue';
+import type { VueConstructor } from 'vue';
 import Popover from '@/components/utils/Popover/Popover.vue';
 import i18n from '../i18n';
 import Router from '../router';
@@ -10,7 +10,6 @@ type PopoverComponentType = InstanceType<typeof Popover>;
 
 /**
  * Plugin for using popover in components
- *
  * @example this.$popover.open({
  * component: <any component>,
  * componentProps: <pass props>,
@@ -22,7 +21,6 @@ type PopoverComponentType = InstanceType<typeof Popover>;
 export default {
   /**
    * Install Vue plugin
-   *
    * @param Vue - vue constructor
    */
   install: (Vue: VueConstructor): void => {
@@ -30,7 +28,7 @@ export default {
     const notifierContainer = new Vue<PopoverComponentType>({
       i18n,
       router: Router,
-      render: (h) => h(Popover),
+      render: h => h(Popover),
     });
 
     document.body.appendChild(vueContainer);
@@ -39,11 +37,10 @@ export default {
     Vue.prototype.$popover = {
       /**
        * Open popover
-       *
        * @param options - popover options
        */
       open(options?) {
-        (notifierContainer.$children[0] as PopoverComponentType).open(
+        (notifierContainer.$children[0]).open(
           options
         );
       },
@@ -52,7 +49,7 @@ export default {
        * Close notifier window
        */
       close() {
-        (notifierContainer.$children[0] as PopoverComponentType).close();
+        (notifierContainer.$children[0]).close();
       },
     };
   },

@@ -73,7 +73,7 @@ const actions = {
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
-        workspace.projects.forEach(project => {
+        workspace.projects.forEach((project) => {
           project.workspaceId = workspace.id;
 
           const dailyEvents = project.dailyEventsPortion.dailyEvents;

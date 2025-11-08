@@ -1,6 +1,6 @@
 import mergeWith from 'lodash.mergewith';
-import { HawkEvent, HawkEventDailyInfo } from './types/events';
-import { DecodedIntegrationToken } from '@hawk.so/types';
+import type { HawkEvent, HawkEventDailyInfo } from './types/events';
+import type { DecodedIntegrationToken } from '@hawk.so/types';
 
 /**
  * @param currency
@@ -18,9 +18,8 @@ export function getCurrencySign(currency: string): string {
 
 /**
  * Returns entity color from predefined list
- *
- * @param {string} [id] - for id-base picking colors (hex string)
- * @returns {string} color
+ * @param [id] - for id-base picking colors (hex string)
+ * @returns color
  */
 export function getEntityColor(id: string): string {
   const colors = [
@@ -47,7 +46,6 @@ export function getEntityColor(id: string): string {
 
 /**
  * Group array of Objects by key
- *
  * @example
  *
  * const cars = [
@@ -67,11 +65,10 @@ export function getEntityColor(id: string): string {
  *     carsByColor: groupByColor(cars)
  *   }, null, 2)
  * );
- *
- * @param {string} key - key for grouping
+ * @param key - key for grouping
  */
-export const groupBy =
-  (key: string) =>
+export const groupBy
+  = (key: string) =>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (array: any[]): Record<string, unknown> => // array of objects to group
       array.reduce((objectsByKeyValue, obj) => {
@@ -94,9 +91,8 @@ export const groupBy =
 
 /**
  * Converts UTC midnight timestamp to local midnight timestamp
- *
- * @param {number} utcMidnight - midnight in UTC
- * @returns {number} midnight in local timezone
+ * @param utcMidnight - midnight in UTC
+ * @returns midnight in local timezone
  */
 function convertUtcMidnightToLocalMidnight(utcMidnight: number): number {
   const milliseconds = 1000;
@@ -113,9 +109,8 @@ function convertUtcMidnightToLocalMidnight(utcMidnight: number): number {
  * Group array of object by 'groupingTimestamp' field
  *
  * /!\ The  'groupingTimestamp' field is stored in UTC so we need to convert it to the local zone first.
- *
- * @param {object[]} items - array of object with the  'groupingTimestamp' field
- * @param {boolean} [convertMidnight] - need to convert utc midnight to local
+ * @param items - array of object with the  'groupingTimestamp' field
+ * @param [convertMidnight] - need to convert utc midnight to local
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function groupByGroupingTimestamp(items: object[], convertMidnight = true): Record<string, unknown> {
@@ -134,32 +129,27 @@ export function groupByGroupingTimestamp(items: object[], convertMidnight = true
 
 /**
  * Returns real type of passed variable
- *
  * @param obj - what to check
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function typeOf(obj: any): string {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return Object.prototype.toString.call(obj).match(/\s([a-zA-Z]+)/)![1].toLowerCase();
 }
 
 /**
  * Check if passed variable is an object
- *
  * @param item - what to check
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isObject(item: any): boolean {
   return item && typeOf(item) === 'object';
 }
 
 /**
  * Merge to objects recursively
- *
- * @param {object} target - where to merge
- * @param {object[]} sources - what to merge
- *
- * @returns {object}
+ * @param target - where to merge
+ * @param sources - what to merge
+ * @returns
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function deepMerge(target: object, ...sources: object[]): object {
@@ -182,9 +172,8 @@ export function deepMerge(target: object, ...sources: object[]): object {
 
 /**
  * Converts string in wrong language to the translited equal
- *
- * @param {string} string - string to transit
- * @returns {string}
+ * @param string - string to transit
+ * @returns
  */
 export function misTranslit(string: string): string {
   if (!string) {
@@ -193,62 +182,61 @@ export function misTranslit(string: string): string {
 
   string = string.toLowerCase();
 
-  /* eslint-disable quote-props */
   const map: { [key: string]: string } = {
-    'q': 'й',
-    'w': 'ц',
-    'e': 'у',
-    'r': 'к',
-    't': 'е',
-    'y': 'н',
-    'u': 'г',
-    'i': 'ш',
-    'o': 'щ',
-    'p': 'з',
-    'a': 'ф',
-    's': 'ы',
-    'd': 'в',
-    'f': 'а',
-    'g': 'п',
-    'h': 'р',
-    'j': 'о',
-    'k': 'л',
-    'l': 'д',
-    'z': 'я',
-    'x': 'ч',
-    'c': 'с',
-    'v': 'м',
-    'b': 'и',
-    'n': 'т',
-    'm': 'ь',
-    'й': 'q',
-    'ц': 'w',
-    'у': 'e',
-    'к': 'r',
-    'е': 't',
-    'н': 'y',
-    'г': 'u',
-    'ш': 'i',
-    'щ': 'o',
-    'з': 'p',
-    'ф': 'a',
-    'ы': 's',
-    'в': 'd',
-    'а': 'f',
-    'п': 'g',
-    'р': 'h',
-    'о': 'j',
-    'л': 'k',
-    'д': 'l',
-    'я': 'z',
-    'ч': 'x',
-    'с': 'c',
-    'м': 'v',
-    'и': 'b',
-    'т': 'n',
-    'ь': 'm',
-    'ю': '.',
-    'б': ',',
+    q: 'й',
+    w: 'ц',
+    e: 'у',
+    r: 'к',
+    t: 'е',
+    y: 'н',
+    u: 'г',
+    i: 'ш',
+    o: 'щ',
+    p: 'з',
+    a: 'ф',
+    s: 'ы',
+    d: 'в',
+    f: 'а',
+    g: 'п',
+    h: 'р',
+    j: 'о',
+    k: 'л',
+    l: 'д',
+    z: 'я',
+    x: 'ч',
+    c: 'с',
+    v: 'м',
+    b: 'и',
+    n: 'т',
+    m: 'ь',
+    й: 'q',
+    ц: 'w',
+    у: 'e',
+    к: 'r',
+    е: 't',
+    н: 'y',
+    г: 'u',
+    ш: 'i',
+    щ: 'o',
+    з: 'p',
+    ф: 'a',
+    ы: 's',
+    в: 'd',
+    а: 'f',
+    п: 'g',
+    р: 'h',
+    о: 'j',
+    л: 'k',
+    д: 'l',
+    я: 'z',
+    ч: 'x',
+    с: 'c',
+    м: 'v',
+    и: 'b',
+    т: 'n',
+    ь: 'm',
+    ю: '.',
+    б: ',',
     ' ': ' ',
   };
 
@@ -263,31 +251,32 @@ export function misTranslit(string: string): string {
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
- *
- * @param {string} string - string to encode
+ * @param string - string to encode
  * @returns escaped string
  */
 export function escape(string: string): string;
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
- *
- * @param {string} string - string to encode
- * @param {boolean} withCount - pass true if you need to know how many substitutions was
+ * @param string - string to encode
+ * @param withCount - pass true if you need to know how many substitutions was
  *                              replaced and total length of new chars added
  * @returns object with escaped string, count and length
  */
-export function escape(string: string, withCount: boolean): { value: string; count: number; length: number };
+export function escape(string: string, withCount: boolean): { value: string;
+  count: number;
+  length: number; };
 
 /**
  * Encodes HTML special characters (examples: &, <, >)
- *
- * @param {string} string - string to encode
- * @param {boolean} withCount - pass true if you need to know how many substitutions was
+ * @param string - string to encode
+ * @param withCount - pass true if you need to know how many substitutions was
  *                              replaced and total length of new chars added
- * @returns {string | {value, count, length}} escaped string or object with escaped string, count and length
+ * @returns escaped string or object with escaped string, count and length
  */
-export function escape(string: string, withCount = false): string | { value: string; count: number; length: number } {
+export function escape(string: string, withCount = false): string | { value: string;
+  count: number;
+  length: number; } {
   if (!string) {
     return '';
   }
@@ -314,21 +303,21 @@ export function escape(string: string, withCount = false): string | { value: str
     });
   }, string);
 
-  return !withCount ? replaced : {
-    value: replaced,
-    count,
-    length,
-  };
+  return !withCount
+    ? replaced
+    : {
+        value: replaced,
+        count,
+        length,
+      };
 }
 
 /**
  * Replace char at passed index to the new chars
- *
- * @param {string} string - source string
- * @param {number} index - char position
- * @param {string} replacement - charts to replace with
- *
- * @returns {string}
+ * @param string - source string
+ * @param index - char position
+ * @param replacement - charts to replace with
+ * @returns
  */
 export function strReplaceAt(string: string, index: number, replacement: string): string {
   const leftPart = string.substr(0, index);
@@ -339,12 +328,10 @@ export function strReplaceAt(string: string, index: number, replacement: string)
 
 /**
  * Return real offset by line number and column number of string
- *
- * @param {string} string - where to find
- * @param {number} line - searching line number
- * @param {number} column - searching column number
- *
- * @returns {number}
+ * @param string - where to find
+ * @param line - searching line number
+ * @param column - searching column number
+ * @returns
  */
 export function findOffsetByLineAndCol(string: string, line: number, column: number): number {
   let currentLine = 0;
@@ -371,11 +358,9 @@ export function findOffsetByLineAndCol(string: string, line: number, column: num
 /**
  * Debounce function in order to
  * time-consuming tasks don't run so often
- *
- * @param {Function} callback - function for debounce
- * @param {number} delay - debounce delay
- *
- * @returns {Function}
+ * @param callback - function for debounce
+ * @param delay - debounce delay
+ * @returns
  */
 export function debounce(callback: () => void, delay: number): () => void {
   let debounceTimer;
@@ -392,7 +377,6 @@ export function debounce(callback: () => void, delay: number): () => void {
 
 /**
  * Uppercase the first letter
- *
  * @param string - string to process
  */
 export function capitalize(string: string): string {
@@ -401,7 +385,6 @@ export function capitalize(string: string): string {
 
 /**
  * Add 0 to digit to get string like '09' or '-09'
- *
  * @param number - digit to process
  * @param length - how many chars should be (2 for '09', 3 for '009' etc)
  */
@@ -418,11 +401,9 @@ export function pad(number: number, length = 2): string {
   return sign + Array(length - numberLen + 1).join('0') + abs;
 }
 
-
 /**
  * Some addons have their beautified versions added on backend processing
  * — if so, show them instead of originals
- *
  * @param repetitions
  * @see https://github.com/codex-team/hawk.garage/issues/436
  */
@@ -431,7 +412,7 @@ export function filterBeautifiedAddons(repetitions: HawkEvent[]): void {
     userAgent: 'beautifiedUserAgent',
   };
 
-  repetitions.forEach(repetition => {
+  repetitions.forEach((repetition) => {
     Object.entries(addonsBeautified).forEach(([addonToRemove, _]) => {
       if (repetition.payload.addons && repetition.payload.addons[addonToRemove]) {
         delete repetition.payload.addons[addonToRemove];
@@ -442,7 +423,6 @@ export function filterBeautifiedAddons(repetitions: HawkEvent[]): void {
 
 /**
  * Trims the string
- *
  * @param value - what to trim
  * @param maxLen - how many chars to leave
  */
@@ -450,10 +430,8 @@ export function trim(value: string, maxLen: number): string {
   return value.length > maxLen ? value.substring(0, maxLen - 1) + '…' : value.substring(0, maxLen);
 }
 
-
 /**
  * Decode Hawk integration token
- *
  * @param token - stringified integration token
  */
 function decodeIntegrationToken(token: string): DecodedIntegrationToken {
@@ -467,7 +445,6 @@ function decodeIntegrationToken(token: string): DecodedIntegrationToken {
  *
  * So we can't use our integration token as is.
  * Instead, we will concatinate integrationId and secret and remove hyphens from their uuids.
- *
  * @param token - stringified integration token
  */
 function getHexIntegrationToken(token: string): string {
@@ -478,10 +455,8 @@ function getHexIntegrationToken(token: string): string {
   return `${removeHyphens(integrationId)}${removeHyphens(secret)}`;
 }
 
-
 /**
  * Returns Sentry DSN from integration token
- *
  * @param token - stringified integration token
  */
 export function getSentryDSN(token: string): string {
@@ -494,8 +469,7 @@ export function getSentryDSN(token: string): string {
 
 /**
  * Returns platform name
- *
- * @returns {string}
+ * @returns
  */
 export function getPlatform(): 'macos' | 'windows' | 'linux' {
   if (navigator.userAgent.includes('Mac')) {

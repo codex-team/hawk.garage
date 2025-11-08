@@ -1,4 +1,4 @@
-import { NavigationGuard } from 'vue-router';
+import type { NavigationGuard } from 'vue-router';
 import notifier from 'codex-notifier';
 import i18n from './i18n';
 import * as projectsApi from './api/projects';

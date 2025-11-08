@@ -33,7 +33,6 @@
           </ul>
         </div>
 
-
         <template v-else>
           <i18n
             tag="div"
@@ -100,7 +99,6 @@
             </div> -->
           </div>
         </template>
-
 
         <!--Card-->
         <!-- <CustomSelect
@@ -375,11 +373,11 @@ export default Vue.extend({
       const newCardOption: CustomSelectOption = {
         id: NEW_CARD_ID,
         value: NEW_CARD_ID,
-        name:  this.$t('billing.paymentDetails.newCard') as string,
+        name: this.$t('billing.paymentDetails.newCard') as string,
       };
 
       if (!cards) {
-        return [ newCardOption ];
+        return [newCardOption];
       }
 
       return [newCardOption, ...cards.map(cardToSelectOption)];
@@ -638,7 +636,7 @@ export default Vue.extend({
              * Refresh operations history
              */
             this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
-              ids: [ this.workspaceId ],
+              ids: [this.workspaceId],
             });
             this.$store.dispatch(RESET_MODAL_DIALOG);
           },

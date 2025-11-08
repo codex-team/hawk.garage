@@ -101,7 +101,9 @@ export default Vue.extend({
       mapFullPath: string;
       length: number | null;
     }[] {
-      return (this.files || []).map((entry: { mapFileName: string; originFileName: string; length: number | null }) => {
+      return (this.files || []).map((entry: { mapFileName: string;
+        originFileName: string;
+        length: number | null; }) => {
         const mapFullPath = entry.mapFileName || '';
         const primaryFullPath = entry.originFileName || '';
         const primaryName = primaryFullPath;
@@ -292,4 +294,3 @@ export default Vue.extend({
   background: rgb(88, 74, 245);
 }
 </style>
-

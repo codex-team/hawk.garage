@@ -52,7 +52,7 @@ export default Vue.extend({
       required: true,
     },
   },
-  data: function (): {chartData: EventChartItem[]} {
+  data: function (): { chartData: EventChartItem[] } {
     return {
       /**
        * Data for a chart

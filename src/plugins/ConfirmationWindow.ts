@@ -1,6 +1,6 @@
-import { VueConstructor } from 'vue';
+import type { VueConstructor } from 'vue';
 import ConfirmationWindow from '@/components/utils/ConfirmationWindow/ConfirmationWindow.vue';
-import { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
+import type { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
 import i18n from '../i18n';
 
 /**
@@ -10,13 +10,11 @@ type ConfirmationWindowComponentType = InstanceType<typeof ConfirmationWindow>;
 
 /**
  * Plugin for using confirmation window in components
- *
  * @example this.$confirm.open({ title: 'Confirmation window title' });
  */
 export default {
   /**
    * Install Vue plugin
-   *
    * @param Vue - vue constructor
    */
   install: (Vue: VueConstructor): void => {
@@ -32,18 +30,17 @@ export default {
     Vue.prototype.$confirm = {
       /**
        * Open confirmation window
-       *
        * @param options - confirmation window options
        */
       open(options?: ConfirmationWindowOptions) {
-        (confirmationContainer.$children[0] as ConfirmationWindowComponentType).open(options);
+        (confirmationContainer.$children[0]).open(options);
       },
 
       /**
        * Close confirmation window
        */
       close() {
-        (confirmationContainer.$children[0] as ConfirmationWindowComponentType).close();
+        (confirmationContainer.$children[0]).close();
       },
     };
   },

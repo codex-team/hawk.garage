@@ -2,7 +2,7 @@
   <DetailsBase
     class="details-suspected-commit"
     :expand-showed="commits.length > numberOfVisibleCommits"
-    @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
+    @expand-clicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
     <template #header>
       {{ $t("event.suspectedCommits.header") }}
@@ -67,7 +67,7 @@ export default Vue.extend({
       /**
        * Number of Visible Commits
        */
-      numberOfVisibleCommits : 1,
+      numberOfVisibleCommits: 1,
 
     };
   },
@@ -77,9 +77,9 @@ export default Vue.extend({
      *
      * @returns { ReleaseCommit[] }
      */
-    filteredCommits():ReleaseCommit[] {
-      return this.commits.length <= this.numberOfVisibleCommits ||
-        this.isMoreCommitsShown
+    filteredCommits(): ReleaseCommit[] {
+      return this.commits.length <= this.numberOfVisibleCommits
+        || this.isMoreCommitsShown
         ? this.commits
         : this.commits.slice(0, this.numberOfVisibleCommits);
     },

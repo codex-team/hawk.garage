@@ -248,7 +248,7 @@ const actions = {
    * @returns {Promise<Workspace>}
    */
   async [FETCH_WORKSPACE]({ commit }, id) {
-    const workspace = (await workspaceApi.getWorkspaces([ id ]))[0];
+    const workspace = (await workspaceApi.getWorkspaces([id]))[0];
 
     if (!workspace) {
       throw new Error('The workspace was not found');
@@ -399,7 +399,7 @@ const actions = {
   async [GET_BALANCE]({ commit }, { ids }) {
     const balances = (await workspaceApi.getBalance(ids)) || [];
 
-    balances.forEach(balanceWithId => {
+    balances.forEach((balanceWithId) => {
       commit(mutationTypes.UPDATE_BALANCE, {
         workspaceId: balanceWithId.id,
         balance: balanceWithId.balance,
@@ -550,14 +550,17 @@ const mutations = {
    * @param {WorkspacesModuleState} state - current state
    * @param {string} payload.workspaceId - id of workspace where user should be updated
    * @param {BusinessOperation} payload.businessOperation - business operation to add to operations history
+   * @param root0
+   * @param root0.workspaceId
+   * @param root0.businessOperation
    */
   [mutationTypes.UPDATE_BUSINESS_OPERATIONS](state, { workspaceId, businessOperation }) {
     const index = state.list.findIndex(w => w.id === workspaceId);
     const workspace = state.list[index];
-    let updatedPaymentsHistory = [ businessOperation ];
+    let updatedPaymentsHistory = [businessOperation];
 
     if (workspace.paymentsHistory) {
-      updatedPaymentsHistory = [ businessOperation ].concat(workspace.paymentsHistory);
+      updatedPaymentsHistory = [businessOperation].concat(workspace.paymentsHistory);
     }
 
     Vue.set(workspace, 'paymentsHistory', updatedPaymentsHistory);
@@ -569,6 +572,9 @@ const mutations = {
    * @param {WorkspacesModuleState} state - current state
    * @param {string} payload.workspaceId - id of workspace where user should be updated
    * @param {number} payload.amount - business operation to add to operations history
+   * @param root0
+   * @param root0.workspaceId
+   * @param root0.balance
    */
   [mutationTypes.UPDATE_BALANCE](state, { workspaceId, balance }) {
     const index = state.list.findIndex(w => w.id === workspaceId);
