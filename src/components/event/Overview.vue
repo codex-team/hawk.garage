@@ -4,23 +4,6 @@
       v-if="event"
       class="event-overview"
     >
-      <div class="event-overview__section">
-        <UiButton
-          :content="$t('event.ai.ask')"
-          icon="flash"
-          submit
-          @click="openAskAi"
-        />
-      </div>
-
-      <AiAnswerDialog
-        v-if="isAskAiOpen"
-        :project-id="projectId"
-        :event-id="event.id"
-        :original-event-id="event.originalEventId"
-        @close="isAskAiOpen = false"
-      />
-
       <DetailsSuspectedCommits
         v-if="
           event.release && event.release.commits && event.release.commits.length
@@ -122,8 +105,6 @@ import DetailsRelease from './details/DetailsRelease.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
-import UiButton from '../utils/UiButton.vue';
-import AiAnswerDialog from '../modals/AiAnswerDialog.vue';
 
 export default Vue.extend({
   name: 'EventOverview',
@@ -133,8 +114,6 @@ export default Vue.extend({
     DetailsAddons,
     DetailsSuspectedCommits,
     DetailsUser,
-    UiButton,
-    AiAnswerDialog,
     DetailsRelease,
   },
   props: {
@@ -163,7 +142,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      isAskAiOpen: false as boolean,
     };
   },
   computed: {
@@ -260,9 +238,6 @@ export default Vue.extend({
       return this.event.payload.addons[integrationName];
     },
 
-    async openAskAi() {
-      this.isAskAiOpen = true;
-    },
   },
 });
 </script>

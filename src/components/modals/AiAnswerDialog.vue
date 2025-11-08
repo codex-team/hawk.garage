@@ -44,7 +44,7 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import Spinner from '../utils/Spinner.vue';
 import CodeFragment from '../utils/CodeFragment';
 import * as eventsApi from '@/api/events';
-import { renderMarkdownAsync, splitTextAndCodeSegments } from '@/utils/markdown';
+import { getMarkdownRenderer, splitTextAndCodeSegments } from '@/utils/markdown';
 
 export default {
   name: 'AiAnswerDialog',
@@ -85,7 +85,8 @@ export default {
   },
   async created() {
     try {
-      const result = await eventsApi.fetchEventAskAi(this.projectId, this.eventId, this.originalEventId);
+      this.renderMarkdown = await getMarkdownRenderer();
+      const result = await eventsApi.fetchEventAiResponse(this.projectId, this.eventId, this.originalEventId);
 
       /**
        * API wrapper might return string or object depending on backend response/version.
@@ -98,12 +99,10 @@ export default {
       }
     } catch (e) {
       this.error = this.$t('event.ai.error');
+      console.error(e);
     } finally {
       this.loading = false;
     }
-  },
-  async mounted() {
-    this.renderMarkdown = await renderMarkdownAsync();
   },
 };
 </script>

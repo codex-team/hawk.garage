@@ -81,7 +81,7 @@ export function splitTextAndCodeSegments(source: string | undefined | null): Con
  * @todo use Abstract syntax tree (AST) instead of only string manipulation
  * @returns a function that renders a limited subset of Markdown to HTML
  */
-export async function renderMarkdownAsync(): Promise<(text: string) => string> {
+export async function getMarkdownRenderer(): Promise<(text: string) => string> {
   const marked = await import('marked');
 
   /**

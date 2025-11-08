@@ -84,6 +84,13 @@
           @click="markEvent('ignored')"
         />
         <UiButton
+          class="event-header__button event-header__button--ai"
+          :content="$t('event.ai.ask')"
+          icon="ai"
+          small
+          @click="isAskAiOpen = true"
+        />
+        <UiButton
           v-if="false"
           class="event-header__button"
           :content="$t('event.issue')"
@@ -91,6 +98,14 @@
           small
         />
       </div>
+      <AiAnswerDialog
+        v-if="isAskAiOpen"
+        class="event-header__dialog"
+        :project-id="projectId"
+        :event-id="event.id"
+        :original-event-id="event.originalEventId"
+        @close="isAskAiOpen = false"
+      />
       <div class="event-header__nav-bar">
         <TabBar
           :items="navigationItems"
@@ -128,6 +143,7 @@ import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
+import AiAnswerDialog from '../modals/AiAnswerDialog.vue';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -139,6 +155,7 @@ export default Vue.extend({
     AssigneeBar,
     EntityImage,
     ProjectBadge,
+    AiAnswerDialog,
   },
   mixins: [projectBadges],
   props: {
@@ -159,6 +176,7 @@ export default Vue.extend({
        * @type {boolean}
        */
       loading: !this.event,
+      isAskAiOpen: false as boolean,
     };
   },
   computed: {
@@ -370,9 +388,25 @@ export default Vue.extend({
       }
     }
 
+    &__button--ai {
+      color: color-mod(#a855f7 alpha(85%));
+      background-color: transparent;
+      border-color: #a855f7;
+
+      &:not(&--disabled):hover {
+        color: var(--color-text-ai);
+        background-color: transparent;
+        border-color: var(--color-border-ai);
+      }
+    }
+
     &__nav-bar, &__viewed-by {
       display: flex;
       justify-content: space-between;
+    }
+
+    &__dialog {
+      color: var(--color-text-main);
     }
   }
 </style>
