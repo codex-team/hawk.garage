@@ -450,10 +450,10 @@ const mutations = {
       const existingProject = state.list[index];
 
       // Should merge existing project with new project to avoid losing existing data
-      Vue.set(state.list, index, {
+      state.list[index] = {
         ...existingProject,
         ...project,
-      });
+      };
     }
   },
 

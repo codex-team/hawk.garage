@@ -30,7 +30,6 @@
 <script>
 import EventsList from './EventsList.vue';
 import Chart from '../events/Chart';
-import { mapGetters } from 'vuex';
 import {
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';

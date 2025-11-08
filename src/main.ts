@@ -1,7 +1,6 @@
 import './styles/base.css';
 import { createApp } from 'vue';
 import 'virtual:svg-icons-register';
-import VueCookies from 'vue-cookies';
 import ConfirmationWindow from './plugins/ConfirmationWindow';
 import Popover from './plugins/Popover';
 import App from './App.vue';
@@ -80,7 +79,6 @@ app.config.globalProperties.$sendToAmplitude = Analytics.track;
 app.config.globalProperties.$API_AUTH_GOOGLE = import.meta.env.VITE_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
 app.config.globalProperties.$API_AUTH_GITHUB = import.meta.env.VITE_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
 
-app.use(VueCookies);
 app.use(ConfirmationWindow);
 app.use(Popover);
 

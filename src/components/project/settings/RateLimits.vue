@@ -62,7 +62,7 @@ export default defineComponent({
 
       const isFree
         = workspace.plan.monthlyCharge === 0
-          || workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
+          || workspace.plan.id === import.meta.env.VUE_APP_FREE_PLAN_ID;
 
       return !isFree;
     },

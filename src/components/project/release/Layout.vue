@@ -10,7 +10,7 @@
             v-if="releaseDetails.timestamp"
             class="release-layout__date"
           >
-            {{ releaseDetails.timestamp / 1000| prettyFullDate }}
+            {{ formatReleaseDate(releaseDetails.timestamp) }}
           </span>
           <SkeletonBar
             v-else
@@ -130,6 +130,7 @@ import Spinner from '@/components/utils/Spinner.vue';
 import { ReleaseDetails } from '@/types/release';
 import { Project } from '@/store/modules/projects';
 import { Workspace } from '@/store/modules/workspaces';
+import { prettyFullDate } from '@/utils/filters';
 
 export default defineComponent({
   components: {
@@ -221,6 +222,15 @@ export default defineComponent({
         name: 'project-releases',
         params: { projectId: this.projectId },
       });
+    },
+    /**
+     * Format release timestamp for header display.
+     *
+     * @param {number} timestamp - milliseconds timestamp.
+     * @returns {string}
+     */
+    formatReleaseDate(timestamp: number): string {
+      return prettyFullDate(timestamp / 1000);
     },
   },
 });

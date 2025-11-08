@@ -15,7 +15,7 @@
         class="events-list__group"
       >
         <div class="events-list__date">
-          {{ getDay(date) | prettyDate }}
+          {{ formatGroupDate(date) }}
         </div>
         <EventItem
           v-for="(dailyEventInfo, index) in eventsByDate"
@@ -71,6 +71,7 @@
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
 import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
+import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
@@ -252,6 +253,15 @@ export default {
      */
     getEvent(eventId) {
       return this.getProjectEventById(this.projectId, eventId);
+    },
+    /**
+     * Format grouped date for displaying in headers.
+     *
+     * @param {string} date - grouping key like 'groupingTimestamp:1576011600'
+     * @returns {string}
+     */
+    formatGroupDate(date) {
+      return prettyDate(this.getDay(date));
     },
     /**
      * Load older events to the list

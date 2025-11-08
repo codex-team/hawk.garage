@@ -42,10 +42,10 @@ export default [
       'n/no-missing-import': 'warn',
       'n/no-unsupported-features/node-builtins': 'warn',
 
-      // Отключаем no-unused-vars в пользу @typescript-eslint/no-unused-vars
+      // Disable no-unused-vars in favor of @typescript-eslint/no-unused-vars
       'no-unused-vars': 'off',
 
-      // Используем правило для unused vars
+      // Use rule for unused vars
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -98,6 +98,7 @@ export default [
        */
       'jsdoc/require-returns': 'off',
       'jsdoc/require-param-type': 'off',
+      'no-unused-vars': 'off',
     },
   },
 ];
