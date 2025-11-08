@@ -1,12 +1,12 @@
 <template>
   <DetailsBase>
     <template #header>
-      Release
+      {{ $t("event.release") }}
     </template>
     <template #content>
       <div class="event-details__content-block">
         <div class="event-details__key">
-          Release
+          {{ $t("event.release") }}
         </div>
         <div class="event-details__value">
           <router-link

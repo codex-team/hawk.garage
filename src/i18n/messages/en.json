@@ -493,6 +493,7 @@
     "issue": "Create issue",
     "loading": "Loading...",
     "context": "Context",
+    "release": "Release",
     "viewedBy": {
       "assignee": "Assignee"
     },
