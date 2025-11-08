@@ -574,14 +574,18 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - id of the project to add
      * @param payload.eventsList - new list of events
      */
-    [MutationTypes.AddToEventsList](
-      state,
-      { projectId, eventsList }: { projectId: string;
-        eventsList: HawkEvent[]; }
-    ): void {
-      eventsList.forEach((event) => {
-        state.events[getEventsListKey(projectId, event.id)] = event;
-      });
+    [MutationTypes.AddToEventsList](state, { projectId, eventsList }: {
+      projectId: string;
+      eventsList: HawkEvent[];
+    }): void {
+      const additions = Object.fromEntries(eventsList.map((event) => {
+        return [getEventsListKey(projectId, event.id), event];
+      }));
+
+      state.events = {
+        ...state.events,
+        ...additions,
+      };
     },
 
     /**
