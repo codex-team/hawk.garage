@@ -151,7 +151,7 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
 /**
  * Fetch ask AI for an event
  * @param projectId - project event is related to
- * @param eventId - event to fetch ask AI for
+ * @param eventId - event to fetch AI suggestion for
  * @param originalEventId - id of the original event
  */
 export async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {

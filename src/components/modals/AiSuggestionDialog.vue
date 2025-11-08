@@ -86,13 +86,8 @@ export default {
   async created() {
     try {
       this.renderMarkdown = await getMarkdownRenderer();
-      const result = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
+      this.suggestion = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
 
-      /**
-       * API wrapper might return string or object depending on backend response/version.
-       * Support both cases here.
-       */
-      this.suggestion = result;
 
       if (!this.suggestion) {
         this.error = this.$t('event.ai.empty');
