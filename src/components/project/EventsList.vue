@@ -70,12 +70,11 @@
 <script>
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
-import { groupByGroupingTimestamp, debounce } from '@/utils';
+import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
-import { getPlatform } from '@/utils';
 import EmptyState from '../utils/EmptyState.vue';
 
 /**
@@ -184,7 +183,7 @@ export default {
       this.reloadDailyEvents();
     }, 500);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   computed: {
@@ -286,7 +285,7 @@ export default {
       }
 
       if (overwrite) {
-        this.dailyEvents = [ ...dailyEventsWithEventsLinked ];
+        this.dailyEvents = [...dailyEventsWithEventsLinked];
       } else {
         this.dailyEvents.push(...dailyEventsWithEventsLinked);
       }
@@ -438,5 +437,3 @@ export default {
   margin-top: 16px;
 }
 </style>
-
-

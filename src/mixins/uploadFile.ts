@@ -20,8 +20,7 @@ export const uploadFile = {
   methods: {
     /**
      * Creates file input and requests from user a file to upload
-     *
-     * @param {UploadFileOptions} options - uploading options
+     * @param options - uploading options
      */
     async uploadFile(options: UploadFileOptions = {}): Promise<FileList | null> {
       const input = document.createElement('input');
@@ -42,7 +41,7 @@ export const uploadFile = {
         input.setAttribute('accept', options.accept);
       }
 
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         /**
          * Input onChange callback
          */

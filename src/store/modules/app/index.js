@@ -38,7 +38,7 @@ export const Languages = {
  * @property {Themes} theme - name of the current theme
  * @property {Languages} language - app language
  */
-const state = {
+const appState = {
   theme: Themes.DARK,
   language: Languages.en,
 };
@@ -73,7 +73,7 @@ const actions = {
 
     const projects = workspaces.reduce((accumulator, workspace) => {
       if (workspace.projects) {
-        workspace.projects.forEach(project => {
+        workspace.projects.forEach((project) => {
           project.workspaceId = workspace.id;
 
           const dailyEvents = project.dailyEventsPortion.dailyEvents;
@@ -145,7 +145,7 @@ const mutations = {
 };
 
 export default {
-  state,
+  state: appState,
   actions,
   mutations,
 };

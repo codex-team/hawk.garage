@@ -124,5 +124,3 @@ export default {
   line-height: 14px;
 }
 </style>
-
-

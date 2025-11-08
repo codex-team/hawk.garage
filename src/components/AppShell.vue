@@ -125,7 +125,7 @@ export default {
      */
     projects() {
       let projectList = this.$store.state.projects.list
-        .map(project => {
+        .map((project) => {
           let latestEvent = null;
 
           if (project.latestEvent) {
@@ -151,7 +151,7 @@ export default {
 
         const searchRegexp = new RegExp(`${searchConditions.join('|')}`, 'gi');
 
-        projectList = projectList.filter(project => {
+        projectList = projectList.filter((project) => {
           return searchRegexp.test(project.name);
         });
       }

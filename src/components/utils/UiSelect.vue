@@ -190,7 +190,6 @@ export default Vue.extend({
     }
   }
 
-
   .ui-context-list {
     position: absolute;
     top: calc(100% + var(--popover-gap));

@@ -89,6 +89,7 @@ export default Vue.extend({
             await this.$store.dispatch(GENERATE_NEW_INTEGRATION_TOKEN, { projectId: this.project.id });
           } catch (error) {
             const err = error instanceof Error ? error : new Error(String(error));
+
             console.error(err);
 
             notifier.show({

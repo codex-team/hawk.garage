@@ -1,5 +1,5 @@
-import { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
-import { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
+import type { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
+import type { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -10,7 +10,6 @@ declare module 'vue/types/vue' {
     $confirm: {
       /**
        * Open confirmation window
-       *
        * @param options - confirmation window options
        */
       open: (options?: ConfirmationWindowOptions) => void;
@@ -23,7 +22,6 @@ declare module 'vue/types/vue' {
     $notify: {
       /**
        * Open notifier window
-       *
        * @param options - notifier window options
        */
       open: (options?: NotifierWindowOptions) => void;
@@ -32,11 +30,10 @@ declare module 'vue/types/vue' {
        * Close notifier window
        */
       close: () => void;
-    }
+    };
     $popover: {
       /**
        * Open popover
-       *
        * @param options - popover options
        */
       open: (options?) => void;

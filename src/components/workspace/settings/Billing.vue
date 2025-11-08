@@ -28,12 +28,12 @@ interface BillingComponentData {
   /**
    * List of payment operations
    */
-  paymentsHistory: BusinessOperation[],
+  paymentsHistory: BusinessOperation[];
 
   /**
    * Flag determines the loading state of the history
    */
-  isPaymentsHistoryLoading: boolean,
+  isPaymentsHistoryLoading: boolean;
 }
 
 export default Vue.extend({
@@ -52,13 +52,13 @@ export default Vue.extend({
    * @param next - this function must be called to resolve the hook.
    */
   beforeRouteEnter(to: Route, from: Route, next): void {
-    next(async vm => {
+    next(async (vm) => {
       const user = vm.$store.state.user.data;
 
-      const team = (vm as unknown as {workspace: Workspace}).workspace.team;
-      const userInTeam = (team.find(member => {
+      const team = (vm as unknown as { workspace: Workspace }).workspace.team;
+      const userInTeam = team.find((member) => {
         return 'user' in member && member.user.id === user.id;
-      }) as ConfirmedMember);
+      }) as ConfirmedMember;
 
       const { isAdmin } = userInTeam;
 
@@ -106,7 +106,7 @@ export default Vue.extend({
      * Load operations history
      */
     await this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
-      ids: [ this.workspace.id ],
+      ids: [this.workspace.id],
     });
 
     this.isPaymentsHistoryLoading = false;

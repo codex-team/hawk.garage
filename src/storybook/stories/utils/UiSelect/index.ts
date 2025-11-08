@@ -1,4 +1,5 @@
-import UiSelect, { UiSelectOption } from '@/components/utils/UiSelect.vue';
+import type { UiSelectOption } from '@/components/utils/UiSelect.vue';
+import UiSelect from '@/components/utils/UiSelect.vue';
 import { select, text, withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 

@@ -94,4 +94,3 @@ export interface ReleaseDetails {
    */
   dailyEventsPortion: ReleaseDailyEventsPortion;
 }
-
