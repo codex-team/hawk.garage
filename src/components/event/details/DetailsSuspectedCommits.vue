@@ -2,7 +2,7 @@
   <DetailsBase
     class="details-suspected-commit"
     :expand-showed="commits.length > numberOfVisibleCommits"
-    @expand-clicked="isMoreCommitsShown = !isMoreCommitsShown"
+    @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
     <template #header>
       {{ $t("event.suspectedCommits.header") }}
