@@ -84,7 +84,7 @@ export default [
       'n/no-missing-import': 'warn',
       'n/no-unsupported-features/node-builtins': 'warn',
       'n/no-extraneous-import': 'warn',
-      '@typescript-eslint/require-await': 'warn',
+      '@typescript-eslint/require-await': 'off',
       'no-console': 'warn',
     },
   },
