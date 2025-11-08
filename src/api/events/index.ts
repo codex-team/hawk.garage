@@ -161,7 +161,7 @@ export async function fetchEventAskAi(projectId: string, eventId: string, origin
     originalEventId,
   });
 
-  return response.data.project?.event?.askAi ?? '';
+  return response.data.project?.event?.aiResponse ?? '';
 }
 
 /**
