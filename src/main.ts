@@ -111,7 +111,7 @@ api.setupApiModuleHandlers({
     const key = 'errors.' + errorMessages.UNAUTHENTICATED;
 
     notifier.show({
-      message: i18n.t(key) as string,
+      message: i18n.global.t(key),
       style: 'error',
       time: 5000,
     });

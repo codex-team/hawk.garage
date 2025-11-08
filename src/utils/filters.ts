@@ -103,7 +103,7 @@ export function prettyDate(value: number): string {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.today') as string;
+    return i18n.global.t('common.today');
   }
 
   if (
@@ -111,7 +111,7 @@ export function prettyDate(value: number): string {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.yesterday') as string;
+    return i18n.global.t('common.yesterday');
   }
 
   return `${argumentDay} ${i18n.global.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
@@ -204,34 +204,34 @@ export function prettyRelativeTimeStr(date: string): string {
   const numberOfYears = Math.floor(diffInSeconds / SECONDS_PER_YEAR);
 
   if (numberOfYears) {
-    return i18n.tc('common.relativeTime.yearsAgo', numberOfYears, { numberOfYears: numberOfYears });
+    return i18n.global.tc('common.relativeTime.yearsAgo', numberOfYears, { numberOfYears: numberOfYears });
   }
 
   const numberOfMonths = Math.floor(diffInSeconds / SECONDS_PER_MONTH);
 
   if (numberOfMonths) {
-    return i18n.tc('common.relativeTime.monthsAgo', numberOfMonths, { numberOfMonths: numberOfMonths });
+    return i18n.global.tc('common.relativeTime.monthsAgo', numberOfMonths, { numberOfMonths: numberOfMonths });
   }
 
   const numberOfDays = Math.floor(diffInSeconds / SECONDS_PER_DAYS);
 
   if (numberOfDays) {
-    return i18n.tc('common.relativeTime.daysAgo', numberOfDays, { numberOfDays: numberOfDays });
+    return i18n.global.tc('common.relativeTime.daysAgo', numberOfDays, { numberOfDays: numberOfDays });
   }
 
   const numberOfHours = Math.floor(diffInSeconds / SECONDS_PER_HOURS);
 
   if (numberOfHours) {
-    return i18n.tc('common.relativeTime.hoursAgo', numberOfHours, { numberOfHours: numberOfHours });
+    return i18n.global.tc('common.relativeTime.hoursAgo', numberOfHours, { numberOfHours: numberOfHours });
   }
 
   const numberOfMinutes = Math.floor(diffInSeconds / SECONDS_PER_MINUTE);
 
   if (numberOfMinutes) {
-    return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });
+    return i18n.global.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });
   }
 
-  return i18n.t('common.relativeTime.secondsAgo').toString();
+  return i18n.global.t('common.relativeTime.secondsAgo').toString();
 }
 
 /**

@@ -33,7 +33,7 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   }
 
   notifier.show({
-    message: (isSuccessful ? i18n.t('workspaces.settings.team.joinNotification') : i18n.t('workspaces.settings.team.brokenLinkNotification')) as string,
+    message: (isSuccessful ? i18n.global.t('workspaces.settings.team.joinNotification') : i18n.global.t('workspaces.settings.team.brokenLinkNotification')),
     style: isSuccessful ? 'success' : 'error',
     time: 10000,
   });
