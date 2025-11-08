@@ -100,6 +100,10 @@ export const QUERY_CHART_DATA = `
   }
 `;
 
+// language=GraphQL
+/**
+ * Fetch AI suggestion for an event
+ */
 export const QUERY_EVENT_AI_SUGGESTION = `
   query EventAiSuggestion($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
     project(projectId: $projectId) {

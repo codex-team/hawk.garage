@@ -39,14 +39,15 @@
   </PopupDialog>
 </template>
 
-<script>
+<script lang="ts">
 import PopupDialog from '../utils/PopupDialog.vue';
 import Spinner from '../utils/Spinner.vue';
-import CodeFragment from '../utils/CodeFragment';
+import CodeFragment from '../utils/CodeFragment.vue';
 import * as eventsApi from '@/api/events';
 import { getMarkdownRenderer, splitTextAndCodeSegments } from '@/utils/markdown';
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
   name: 'AiSuggestionDialog',
   components: {
     PopupDialog,
@@ -72,6 +73,7 @@ export default {
       loading: true,
       suggestion: '',
       error: '',
+      renderMarkdown: (text: string) => text,
     };
   },
   computed: {
@@ -80,7 +82,7 @@ export default {
      * Code segments are fenced with ```lang ... ```
      */
     segments() {
-      return splitTextAndCodeSegments(this.suggestion);
+      return splitTextAndCodeSegments((this as unknown as { suggestion: string }).suggestion);
     },
   },
   async created() {
@@ -88,18 +90,17 @@ export default {
       this.renderMarkdown = await getMarkdownRenderer();
       this.suggestion = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
 
-
       if (!this.suggestion) {
-        this.error = this.$t('event.ai.empty');
+        this.error = this.$t('event.ai.empty') as string;
       }
     } catch (e) {
-      this.error = this.$t('event.ai.error');
+      this.error = this.$t('event.ai.error') as string;
       console.error(e);
     } finally {
       this.loading = false;
     }
   },
-};
+});
 </script>
 
 <style>
