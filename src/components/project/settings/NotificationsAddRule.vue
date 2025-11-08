@@ -65,7 +65,7 @@
                 v-if="option.id === receiveTypesEnum.SEEN_MORE"
                 class="grid-form__seen-more-description"
               >
-                <TextFieldset
+                <FormTextFieldset
                   v-model="selectedThreshold"
                   type="number"
                   :required="true"
