@@ -6,7 +6,6 @@
       skin="fancy"
       :placeholder="searchFieldPlaceholder"
       :is-c-m-d-k-enabled="true"
-      @input="debouncedSearch"
     />
     <template v-if="hasItems">
       <div
@@ -187,6 +186,7 @@ export default {
   beforeUnmount() {
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
+  // eslint-disable-next-line vue/order-in-components
   computed: {
     /**
      * Placeholder for search input with CMD/Ctrl+K hint
@@ -389,6 +389,12 @@ export default {
       this.isAssigneesShowed = false;
       window.removeEventListener('resize', this.onResize);
       window.removeEventListener('scroll', this.onResize, true);
+    },
+  },
+  // eslint-disable-next-line vue/order-in-components
+  watch: {
+    searchQuery(newVal) {
+      void this.debouncedSearch(newVal);
     },
   },
 };
