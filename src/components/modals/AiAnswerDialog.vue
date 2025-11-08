@@ -2,7 +2,7 @@
   <PopupDialog @close="$emit('close')">
     <div class="ai-answer-dialog">
       <div class="ai-answer-dialog__header">
-        {{ $t('event.ai.title') }}
+        {{ $t('event.ai.ask') }}
       </div>
       <div class="ai-answer-dialog__content">
         <Spinner v-if="loading" />
@@ -86,7 +86,7 @@ export default {
   async created() {
     try {
       this.renderMarkdown = await getMarkdownRenderer();
-      const result = await eventsApi.fetchEventAiResponse(this.projectId, this.eventId, this.originalEventId);
+      const result = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
 
       /**
        * API wrapper might return string or object depending on backend response/version.

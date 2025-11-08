@@ -154,14 +154,14 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param eventId - event to fetch ask AI for
  * @param originalEventId - id of the original event
  */
-export async function fetchEventAiResponse(projectId: string, eventId: string, originalEventId: string): Promise<string> {
+export async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {
   const response = await api.call(QUERY_EVENT_AI_RESPONSE, {
     projectId,
     eventId,
     originalEventId,
   });
 
-  return response.data.project?.event?.aiResponse ?? '';
+  return response.data.project?.event?.aiSuggestion ?? '';
 }
 
 /**

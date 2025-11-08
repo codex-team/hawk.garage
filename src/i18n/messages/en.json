@@ -85,8 +85,7 @@
       "getDSN": "Get a DSN",
       "hereIsDSN": "Here is your DSN. You can also found it in the project settings later.",
       "useDSN": "Use DSN in Sentry SDK",
-      "useDSNText": "All Sentry SDK in one way or another support the `dsn` parameter. Pass the received DSN to the Sentry SDK options.",
-      "askAi": "Ask AI"
+      "useDSNText": "All Sentry SDK in one way or another support the `dsn` parameter. Pass the received DSN to the Sentry SDK options."
     }
   },
   "forms": {
@@ -470,7 +469,6 @@
   "event": {
     "ai": {
       "ask": "Ask AI",
-      "title": "Ask AI",
       "empty": "Could not get an answer from AI",
       "error": "An error occurred while getting an AI answer"
     },

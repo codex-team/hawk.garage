@@ -104,7 +104,7 @@ export const QUERY_EVENT_AI_RESPONSE = `
   query EventAskAi($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
     project(projectId: $projectId) {
       event(eventId: $eventId, originalEventId: $originalEventId) {
-        aiResponse
+        aiSuggestion
       }
     }
   }

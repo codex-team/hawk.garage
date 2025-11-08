@@ -4,7 +4,6 @@
   --color-text-second: color-mod(var(--color-text-main) alpha(60%));
   --color-text-dark: var(--color-bg-main);
   --color-text-highlighted: #719dff;
-  --color-text-ai: #a855f7;
 
   /** Backgrounds */
   --color-bg-main: #242732;
@@ -17,6 +16,7 @@
   --color-bg-button-hover: #ecf2ff;
 
   --color-indicator-critical: #d94848;
+  --color-indicator-ai: #a855f7;
   --color-indicator-critical-dark: #C33A3A;
   /** Blue badges, submit buttons */
   --color-indicator-medium: #4979e4;
@@ -29,7 +29,6 @@
 
   --color-border-input: #1f2230;
   --color-border: rgba(219, 230, 255, 0.2);
-  --color-border-ai: #a855f7;
   --color-delimiter-line: color-mod(var(--color-text-main) alpha(10%));
 
   --font-monospace: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;

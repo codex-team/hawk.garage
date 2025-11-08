@@ -389,14 +389,14 @@ export default Vue.extend({
     }
 
     &__button--ai {
-      color: color-mod(#a855f7 alpha(85%));
+      color: color-mod(var(--color-indicator-ai) alpha(85%));
       background-color: transparent;
-      border-color: #a855f7;
+      border-color: var(--color-indicator-ai);
 
       &:not(&--disabled):hover {
-        color: var(--color-text-ai);
+        color: var(--color-indicator-ai);
         background-color: transparent;
-        border-color: var(--color-border-ai);
+        border-color: var(--color-indicator-ai);
       }
     }
 
