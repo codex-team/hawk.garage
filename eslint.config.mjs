@@ -131,6 +131,7 @@ export default [
       'vue/no-reserved-component-names': 'off',
       'vue/no-deprecated-props-default-this': 'off',
       'vue/require-slots-as-functions': 'off',
+      'vue/no-deprecated-destroyed-lifecycle': 'off',
       // Отключаем no-unused-vars в пользу @typescript-eslint/no-unused-vars
       'no-unused-vars': 'off',
     },

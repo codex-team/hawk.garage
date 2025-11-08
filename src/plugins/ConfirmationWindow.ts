@@ -19,7 +19,7 @@ export default {
    */
   install: (Vue: VueConstructor): void => {
     const vueContainer = document.createElement('div');
-    const confirmationContainer = new Vue<ConfirmationWindowComponentType>({
+    const confirmationContainer = new Vue({
       i18n,
       render: h => h(ConfirmationWindow),
     });
@@ -27,20 +27,30 @@ export default {
     document.body.appendChild(vueContainer);
     confirmationContainer.$mount(vueContainer);
 
+    const getConfirmationInstance = (): ConfirmationWindowComponentType => {
+      const [instance] = confirmationContainer.$children;
+
+      if (!instance) {
+        throw new Error('ConfirmationWindow instance is not mounted');
+      }
+
+      return instance as ConfirmationWindowComponentType;
+    };
+
     Vue.prototype.$confirm = {
       /**
        * Open confirmation window
        * @param options - confirmation window options
        */
       open(options?: ConfirmationWindowOptions) {
-        (confirmationContainer.$children[0]).open(options);
+        getConfirmationInstance().open(options);
       },
 
       /**
        * Close confirmation window
        */
       close() {
-        (confirmationContainer.$children[0]).close();
+        getConfirmationInstance().close();
       },
     };
   },

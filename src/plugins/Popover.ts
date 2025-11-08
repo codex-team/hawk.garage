@@ -25,7 +25,7 @@ export default {
    */
   install: (Vue: VueConstructor): void => {
     const vueContainer = document.createElement('div');
-    const notifierContainer = new Vue<PopoverComponentType>({
+    const notifierContainer = new Vue({
       i18n,
       router: Router,
       render: h => h(Popover),
@@ -34,22 +34,30 @@ export default {
     document.body.appendChild(vueContainer);
     notifierContainer.$mount(vueContainer);
 
+    const getPopoverInstance = (): PopoverComponentType => {
+      const [instance] = notifierContainer.$children;
+
+      if (!instance) {
+        throw new Error('Popover instance is not mounted');
+      }
+
+      return instance as PopoverComponentType;
+    };
+
     Vue.prototype.$popover = {
       /**
        * Open popover
        * @param options - popover options
        */
       open(options?) {
-        (notifierContainer.$children[0]).open(
-          options
-        );
+        getPopoverInstance().open(options);
       },
 
       /**
        * Close notifier window
        */
       close() {
-        (notifierContainer.$children[0]).close();
+        getPopoverInstance().close();
       },
     };
   },
