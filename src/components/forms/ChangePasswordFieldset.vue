@@ -61,18 +61,19 @@ export default {
       new: '',
     };
   },
-  mounted() {
-    this.data = this.value;
-  },
   methods: {
     oldPasswordInput(value) {
-      this.data.old = value;
-      this.$emit('update:modelValue', this.data);
+      this.$emit('update:modelValue', {
+        ...this.modelValue,
+        old: value,
+      });
     },
 
     newPasswordInput(value) {
-      this.data.new = value;
-      this.$emit('update:modelValue', this.data);
+      this.$emit('update:modelValue', {
+        ...this.modelValue,
+        new: value,
+      });
     },
   },
 };
