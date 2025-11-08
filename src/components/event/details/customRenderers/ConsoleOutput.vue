@@ -20,8 +20,8 @@
       </button>
     </div>
     <div
-      v-for="(log, index) in displayedLogs"
-      :key="`${log.timestamp}_${index}`"
+      v-for="(log, displayedIndex) in displayedLogs"
+      :key="getLogKey(log, displayedIndex)"
       class="log-entry"
       :class="logClass(log.method)"
     >
@@ -29,10 +29,10 @@
         <span
           v-if="log.stack && log.stack.length > 0"
           class="log-arrow"
-          @click="toggleStack(`${log.timestamp}_${index}`)"
+          @click="toggleStack(getLogKey(log, displayedIndex))"
         >
           <span
-            :class="{ rotated: expandedStack[`${log.timestamp}_${index}`] }"
+            :class="{ rotated: expandedStack[getLogKey(log, displayedIndex)] }"
           >▶</span>
         </span>
         <span
@@ -44,7 +44,7 @@
         </span>
       </div>
       <div
-        v-if="expandedStack[`${log.timestamp}_${index}`]"
+        v-if="expandedStack[getLogKey(log, displayedIndex)]"
         class="log-stack"
       >
         {{ formatStack(log.stack) }}
@@ -70,7 +70,7 @@ export default Vue.extend({
   name: 'ConsoleOutput',
   props: {
     value: {
-      type: [Object, Array] as PropType<Record<string, any> | any[]>,
+      type: [Object, Array] as PropType<ConsoleLogEvent[] | Record<string, ConsoleLogEvent>>,
       required: true,
     },
   },
@@ -82,6 +82,10 @@ export default Vue.extend({
   },
   computed: {
     logs(): ConsoleLogEvent[] {
+      // Handle both array and object formats for backward compatibility
+      if (Array.isArray(this.value)) {
+        return this.value;
+      }
       return Object.values(this.value);
     },
     displayedLogs(): ConsoleLogEvent[] {
@@ -93,6 +97,23 @@ export default Vue.extend({
     },
   },
   methods: {
+    /**
+     * Generates a unique key for a log entry based on its position in the original logs array.
+     * Uses the index from the original logs array, not from displayedLogs, to ensure
+     * stable keys that don't change when toggling "Show previous".
+     *
+     * @param {ConsoleLogEvent} log - The log entry
+     * @param {number} displayedIndex - The index in displayedLogs array
+     * @returns {string} Unique key for the log entry
+     */
+    getLogKey(log: ConsoleLogEvent, displayedIndex: number): string {
+      // Find the actual index in the original logs array
+      const actualIndex = this.logs.findIndex((l) => l === log);
+      // Use actual index if found, otherwise fallback to displayedIndex with message for uniqueness
+      const index = actualIndex !== -1 ? actualIndex : displayedIndex;
+      // Combine timestamp, message, and index for uniqueness
+      return `${log.timestamp}_${log.message}_${index}`;
+    },
     /**
      * Returns the CSS class name for styling console log entries based on log level
      *
