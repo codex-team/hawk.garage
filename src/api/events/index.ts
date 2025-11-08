@@ -7,7 +7,7 @@ import {
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
   QUERY_CHART_DATA,
-  QUERY_EVENT_AI_RESPONSE
+  QUERY_EVENT_AI_SUGGESTION
 } from './queries';
 import * as api from '@/api';
 import type {
@@ -155,7 +155,7 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param originalEventId - id of the original event
  */
 export async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {
-  const response = await api.call(QUERY_EVENT_AI_RESPONSE, {
+  const response = await api.call(QUERY_EVENT_AI_SUGGESTION, {
     projectId,
     eventId,
     originalEventId,

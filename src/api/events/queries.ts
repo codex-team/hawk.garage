@@ -100,7 +100,7 @@ export const QUERY_CHART_DATA = `
   }
 `;
 
-export const QUERY_EVENT_AI_RESPONSE = `
+export const QUERY_EVENT_AI_SUGGESTION = `
   query EventAiSuggestion($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
     project(projectId: $projectId) {
       event(eventId: $eventId, originalEventId: $originalEventId) {

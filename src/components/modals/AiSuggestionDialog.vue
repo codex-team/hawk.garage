@@ -1,26 +1,26 @@
 <template>
   <PopupDialog @close="$emit('close')">
-    <div class="ai-answer-dialog">
-      <div class="ai-answer-dialog__header">
+    <div class="ai-suggestion-dialog">
+      <div class="ai-suggestion-dialog__header">
         {{ $t('event.ai.ask') }}
       </div>
-      <div class="ai-answer-dialog__content">
+      <div class="ai-suggestion-dialog__content">
         <Spinner v-if="loading" />
         <div
           v-else-if="error"
-          class="ai-answer-dialog__error"
+          class="ai-suggestion-dialog__error"
         >
           {{ $t('event.ai.error') }}
         </div>
         <div
           v-else
-          class="ai-answer-dialog__answer"
+          class="ai-suggestion-dialog__suggestion"
         >
           <template v-for="(seg, idx) in segments">
             <CodeFragment
               v-if="seg.type === 'code'"
               :key="'code-' + idx"
-              class="ai-answer-dialog__code"
+              class="ai-suggestion-dialog__code"
               :lines="seg.lines"
               :lang="seg.lang || 'plaintext'"
               :lines-highlighted="[]"
@@ -29,7 +29,7 @@
             <div
               v-else
               :key="'text-' + idx"
-              class="ai-answer-dialog__text ai-answer-dialog__markdown"
+              class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
               v-html="renderMarkdown(seg.text)"
             />
           </template>
@@ -47,7 +47,7 @@ import * as eventsApi from '@/api/events';
 import { getMarkdownRenderer, splitTextAndCodeSegments } from '@/utils/markdown';
 
 export default {
-  name: 'AiAnswerDialog',
+  name: 'AiSuggestionDialog',
   components: {
     PopupDialog,
     Spinner,
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       loading: true,
-      answer: '',
+      suggestion: '',
       error: '',
     };
   },
@@ -80,7 +80,7 @@ export default {
      * Code segments are fenced with ```lang ... ```
      */
     segments() {
-      return splitTextAndCodeSegments(this.answer);
+      return splitTextAndCodeSegments(this.suggestion);
     },
   },
   async created() {
@@ -92,9 +92,9 @@ export default {
        * API wrapper might return string or object depending on backend response/version.
        * Support both cases here.
        */
-      this.answer = result;
+      this.suggestion = result;
 
-      if (!this.answer) {
+      if (!this.suggestion) {
         this.error = this.$t('event.ai.empty');
       }
     } catch (e) {
@@ -108,7 +108,7 @@ export default {
 </script>
 
 <style>
-.ai-answer-dialog {
+.ai-suggestion-dialog {
   max-width: 720px;
   padding: 20px;
 
@@ -122,7 +122,7 @@ export default {
     padding: 10px 0;
   }
 
-  &__answer {
+  &__suggestion {
     line-height: 1.6;
     white-space: pre-wrap;
   }

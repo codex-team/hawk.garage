@@ -88,7 +88,7 @@
           :content="$t('event.ai.ask')"
           icon="ai"
           small
-          @click="isAskAiOpen = true"
+          @click="isAiSuggestionOpen = true"
         />
         <UiButton
           v-if="false"
@@ -98,13 +98,13 @@
           small
         />
       </div>
-      <AiAnswerDialog
+      <AiSuggestionDialog
         v-if="isAiSuggestionOpen"
         class="event-header__dialog"
         :project-id="projectId"
         :event-id="event.id"
         :original-event-id="event.originalEventId"
-        @close="isAskAiOpen = false"
+        @close="isAiSuggestionOpen = false"
       />
       <div class="event-header__nav-bar">
         <TabBar
@@ -155,7 +155,7 @@ export default Vue.extend({
     AssigneeBar,
     EntityImage,
     ProjectBadge,
-    AiAnswerDialog,
+    AiSuggestionDialog,
   },
   mixins: [projectBadges],
   props: {
@@ -176,7 +176,7 @@ export default Vue.extend({
        * @type {boolean}
        */
       loading: !this.event,
-      isAskAiOpen: false as boolean,
+      isAiSuggestionOpen: false as boolean,
     };
   },
   computed: {
