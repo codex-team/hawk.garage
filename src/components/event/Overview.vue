@@ -132,6 +132,17 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    /**
+     * Current project id
+     */
+    projectId: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+    };
   },
   computed: {
     /**
@@ -226,6 +237,7 @@ export default Vue.extend({
 
       return this.event.payload.addons[integrationName];
     },
+
   },
 });
 </script>

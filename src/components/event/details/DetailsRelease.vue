@@ -70,5 +70,3 @@ export default Vue.extend({
   text-decoration: underline;
 }
 </style>
-
-

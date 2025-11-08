@@ -102,6 +102,20 @@ export const QUERY_CHART_DATA = `
 
 // language=GraphQL
 /**
+ * Fetch AI suggestion for an event
+ */
+export const QUERY_EVENT_AI_SUGGESTION = `
+  query EventAiSuggestion($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
+    project(projectId: $projectId) {
+      event(eventId: $eventId, originalEventId: $originalEventId) {
+        aiSuggestion
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
  * GraphQL Mutation to mark event as visited
  */
 export const MUTATION_VISIT_EVENT = `

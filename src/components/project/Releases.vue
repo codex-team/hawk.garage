@@ -240,9 +240,9 @@ export default {
 .release-row__left {
   display: grid;
   grid-template-columns: 30px 40px auto;
-  column-gap: 10px;
   align-items: center;
   min-width: 0;
+  column-gap: 10px;
 }
 
 .release-row__time {

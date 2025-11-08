@@ -6,7 +6,8 @@ import {
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  QUERY_EVENT_AI_SUGGESTION
 } from './queries';
 import * as api from '@/api';
 import type {
@@ -82,8 +83,10 @@ export async function fetchDailyEventsPortion(
     response.errors.forEach(e => console.error(e));
   }
 
-  return project?.dailyEventsPortion ?? { cursor: null,
-    dailyEventsPortion: [] };
+  return project?.dailyEventsPortion ?? {
+    cursor: null,
+    dailyEventsPortion: [],
+  };
 }
 
 /**
@@ -143,6 +146,22 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     eventId,
     mark,
   })).toggleEventMark;
+}
+
+/**
+ * Fetch AI suggestion for an event
+ * @param projectId - project event is related to
+ * @param eventId - event to fetch AI suggestion for
+ * @param originalEventId - id of the original event
+ */
+export async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {
+  const response = await api.call(QUERY_EVENT_AI_SUGGESTION, {
+    projectId,
+    eventId,
+    originalEventId,
+  });
+
+  return response.data.project?.event?.aiSuggestion ?? '';
 }
 
 /**
