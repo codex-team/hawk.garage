@@ -73,7 +73,7 @@
       <router-view
         v-if="workspace"
         :workspace="workspace"
-        @workspace-updated="updateWorkspace"
+        @workspaceUpdated="updateWorkspace"
       />
     </template>
   </SettingsWindow>
