@@ -102,6 +102,16 @@ export const QUERY_CHART_DATA = `
   }
 `;
 
+export const QUERY_EVENT_ASK_AI = `
+  query EventAskAi($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
+    project(projectId: $projectId) {
+      event(eventId: $eventId, originalEventId: $originalEventId) {
+        askAi
+      }
+    }
+  }
+`;
+
 // language=GraphQL
 /**
  * GraphQL Mutation to mark event as visited

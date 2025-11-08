@@ -19,6 +19,11 @@ export const FETCH_RECENT_EVENTS = 'FETCH_RECENT_EVENTS';
 export const FETCH_EVENT_REPETITIONS = 'FETCH_EVENT_REPETITIONS';
 
 /**
+ * Action for fetching ask AI for an event
+ */
+export const ASK_AI = '_ASK_AI';
+
+/**
  * Action that returns last event: original event merged with last repetition
  */
 export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';

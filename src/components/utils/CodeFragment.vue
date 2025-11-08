@@ -2,6 +2,10 @@
   <div
     ref="content"
     class="code-preview"
+    v-copyable="{
+      selector: copyable ? '.code-preview__content' : null,
+      callback: onCopy,
+    }"
   >
     <div class="code-preview__line-numbers">
       <span
@@ -17,6 +21,15 @@
         :class="{'current': isCurrentLine(row.line)}"
       />
     </div>
+    <div class="code-preview__button-wrapper">
+      <button
+        v-if="copyable"
+        class="button button--copy code-preview__copy-button"
+        type="button"
+      >
+        {{ $t('components.codeBlock.copy') }}
+      </button>
+    </div>
     <!-- eslint-disable vue/no-v-html -->
     <pre
       class="code-preview__content"
@@ -29,6 +42,7 @@
 <script>
 import hljs from 'highlight.js';
 import * as _ from './../../utils';
+import notifier from 'codex-notifier';
 
 /**
  * This component is using to render some code fragment, for example in stack trace description
@@ -86,6 +100,13 @@ export default {
     filename: {
       type: String,
       default: '',
+    },
+    /**
+     * Enable copy-to-clipboard UI and behavior
+     */
+    copyable: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -257,6 +278,17 @@ export default {
 
       return code;
     },
+
+    /**
+     * Show notification after successful copy
+     */
+    onCopy() {
+      notifier.show({
+        message: this.$t('common.copiedNotification'),
+        style: 'success',
+        time: 2000,
+      });
+    },
   },
 };
 </script>
@@ -279,6 +311,13 @@ export default {
       &::-webkit-scrollbar {
         display: none;
       }
+    }
+
+    &__button-wrapper {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
     }
 
     &__line-numbers {

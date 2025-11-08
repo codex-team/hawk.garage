@@ -6,7 +6,8 @@ import {
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  QUERY_EVENT_ASK_AI
 } from './queries';
 import * as api from '@/api';
 import {
@@ -82,8 +83,10 @@ export async function fetchDailyEventsPortion(
     response.errors.forEach(e => console.error(e));
   }
 
-  return project?.dailyEventsPortion ?? { cursor: null,
-    dailyEventsPortion: [] };
+  return project?.dailyEventsPortion ?? {
+    cursor: null,
+    dailyEventsPortion: []
+  };
 }
 
 /**
@@ -99,7 +102,7 @@ export async function fetchDailyEventsPortion(
  */
 export async function getRepetitionsPortion(
   projectId: string, originalEventId: string, limit: number, cursor?: string
-): Promise<APIResponse<{project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
+): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
   const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
     limit,
     projectId,
@@ -147,6 +150,23 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     eventId,
     mark,
   })).toggleEventMark;
+}
+
+/**
+ * Fetch ask AI for an event
+ *
+ * @param {string} projectId - project event is related to
+ * @param {string} eventId - event to fetch ask AI for
+ * @param {string} originalEventId - id of the original event
+ */
+export async function fetchEventAskAi(projectId: string, eventId: string, originalEventId: string): Promise<string> {
+  const response = await api.call(QUERY_EVENT_ASK_AI, {
+    projectId,
+    eventId,
+    originalEventId,
+  });
+
+  return response.data.project?.event?.askAi ?? '';
 }
 
 /**
