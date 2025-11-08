@@ -5,9 +5,9 @@
       class="n-rule__actions"
     >
       <UiSwitch
-        :value="rule.isEnabled"
+        :model-value="rule.isEnabled"
         :label="$t('projects.settings.notifications.ruleIsEnabled')"
-        @input="toggleEnabledState"
+        @update:model-value="toggleEnabledState"
       />
       <TooltipMenu
         class="n-rule__dots"
@@ -120,8 +120,13 @@ export default defineComponent({
      */
     notEmptyChannels(): ProjectNotificationsChannels {
       const result = {} as ProjectNotificationsChannels;
+      const channels = this.rule?.channels;
 
-      Object.entries(this.rule.channels as ProjectNotificationsChannels)
+      if (!channels) {
+        return result;
+      }
+
+      Object.entries(channels as ProjectNotificationsChannels)
         .filter(([, channel]) => channel ? channel.endpoint !== '' : false)
         .filter(([, channel]) => channel ? channel.isEnabled === true : false)
         .forEach(([name, channel]) => {

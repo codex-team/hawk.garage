@@ -12,7 +12,7 @@
     >
       <div
         class="radio-button-group__option"
-        @click="$emit('input', option.id)"
+        @click="select(option.id)"
       >
         <div
           v-if="option.image"
@@ -56,9 +56,9 @@
           :id="option.id"
           :name="name"
           :value="option.id"
-          :checked="option.id === value"
+          :checked="option.id === currentValue"
           class="radio-button-group__option-radio"
-          @input="$emit('input', option.id)"
+          @input="select(option.id)"
         />
       </div>
       <hr
@@ -121,9 +121,28 @@ export default defineComponent({
       type: Array as () => RadioButtonGroupItem[],
       required: true,
     },
+    modelValue: {
+      type: String,
+      default: undefined,
+    },
     value: {
       type: String,
-      required: true,
+      default: undefined,
+    },
+  },
+  computed: {
+    currentValue(): string | undefined {
+      if (this.modelValue !== undefined) {
+        return this.modelValue;
+      }
+
+      return this.value;
+    },
+  },
+  methods: {
+    select(optionId: string) {
+      this.$emit('update:modelValue', optionId);
+      this.$emit('input', optionId);
     },
   },
 });

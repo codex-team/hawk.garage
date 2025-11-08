@@ -285,10 +285,12 @@ const actions = {
   async [ADD_NOTIFICATIONS_RULE]({ commit }, payload) {
     const ruleCreated = await projectsApi.addProjectNotificationsRule(payload);
 
-    commit(mutationTypes.PUSH_NOTIFICATIONS_RULE, {
-      projectId: payload.projectId,
-      rule: ruleCreated,
-    });
+    if (ruleCreated && ruleCreated.data && ruleCreated.data.createProjectNotificationsRule) {
+      commit(mutationTypes.PUSH_NOTIFICATIONS_RULE, {
+        projectId: payload.projectId,
+        rule: ruleCreated.data.createProjectNotificationsRule,
+      });
+    }
   },
 
   /**

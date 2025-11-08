@@ -12,7 +12,7 @@
           <FormTextFieldset
             v-model="form.channels.telegram.endpoint"
             :label="$t('projects.settings.notifications.telegram')"
-            :description="$t('projects.settings.notifications.telegramDescription')"
+            :description="telegramDescription"
             :hidden="!form.channels.telegram.isEnabled"
             :is-invalid="!isChannelEndpointValid('telegram') && endpointShouldBeValidated.telegram"
             placeholder="https://notify.bot.codex.so/u/XXXXXXXXXXXX"
@@ -95,20 +95,18 @@
       <div class="grid-form__section-content">
         <section>
           <FormTextFieldset
-            :value="form.including ? form.including.join(','): ''"
+            v-model="includingText"
             :label="$t('projects.settings.notifications.includingWordsLabel')"
             :description="$t('projects.settings.notifications.includingWordsDescription')"
             placeholder="hawk tracker, editor"
-            @input="splitIncludingFilters"
           />
         </section>
         <section>
           <FormTextFieldset
-            :value="form.excluding ? form.excluding.join(','): ''"
+            v-model="excludingText"
             :label="$t('projects.settings.notifications.excludingWordsLabel')"
             :description="$t('projects.settings.notifications.excludingWordsDescription')"
             placeholder="chunk, unknown"
-            @input="splitExcludingFilters"
           />
         </section>
       </div>
@@ -287,6 +285,13 @@ export default defineComponent({
     };
   },
   computed: {
+    telegramDescription(): string {
+      const telegramLink = `<a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>`;
+
+      return this.$t('projects.settings.notifications.telegramDescription', {
+        telegramLink,
+      }) as string;
+    },
     /**
      * Text on submit button: Add or Update
      */
@@ -297,11 +302,47 @@ export default defineComponent({
 
       return this.$t('projects.settings.notifications.updateRuleSubmit') as string;
     },
+    includingText: {
+      get(): string {
+        if (!Array.isArray(this.form.including)) {
+          return '';
+        }
+
+        return this.form.including.join(', ');
+      },
+      set(value: string) {
+        const normalizedValue = typeof value === 'string' ? value : '';
+
+        this.form.including = normalizedValue.split(',').flatMap((item) => {
+          item = item.trim();
+
+          return item !== '' ? item : [];
+        });
+      },
+    },
+    excludingText: {
+      get(): string {
+        if (!Array.isArray(this.form.excluding)) {
+          return '';
+        }
+
+        return this.form.excluding.join(', ');
+      },
+      set(value: string) {
+        const normalizedValue = typeof value === 'string' ? value : '';
+
+        this.form.excluding = normalizedValue.split(',').flatMap((item) => {
+          item = item.trim();
+
+          return item !== '' ? item : [];
+        });
+      },
+    },
   },
   watch: {
     selectedThreshold: {
       handler: function (value: string): void {
-        this.$set(this.form, 'threshold', parseInt(value));
+        this.form.threshold = parseInt(value);
       },
     },
     selectedThresholdPeriod: {
@@ -309,7 +350,7 @@ export default defineComponent({
         if (!value) {
           return;
         }
-        this.$set(this.form, 'thresholdPeriod', thresholdPeriodToMilliseconds.get(value.id));
+        this.form.thresholdPeriod = thresholdPeriodToMilliseconds.get(value.id);
       },
     },
   },
@@ -350,32 +391,6 @@ export default defineComponent({
     }
   },
   methods: {
-    /**
-     * Fill 'including' property with array from splitted input string
-     *
-     * @param value - user input string with commas
-     */
-    splitIncludingFilters(value: string): void {
-      this.form.including = value.split(',').flatMap((item) => {
-        item = item.trim();
-
-        return item !== '' ? item : [];
-      });
-    },
-
-    /**
-     * Fill 'excluding' property with array from splitted input string
-     *
-     * @param value - user input string with commas
-     */
-    splitExcludingFilters(value: string): void {
-      this.form.excluding = value.split(',').flatMap((item) => {
-        item = item.trim();
-
-        return item !== '' ? item : [];
-      });
-    },
-
     /**
      * Saves form
      */

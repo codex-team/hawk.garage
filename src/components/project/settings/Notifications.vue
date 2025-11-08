@@ -30,6 +30,7 @@
       <div class="modal-form__section-title">
         {{ $t('projects.settings.notifications.rulesList') }}
       </div>
+
       <Rule
         v-for="rule in rules"
         :key="rule.id"
