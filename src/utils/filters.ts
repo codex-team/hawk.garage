@@ -75,11 +75,11 @@ export function prettyDateStr(value: string): string {
   const currentDate = new Date().getDate();
 
   if (+day === currentDate) {
-    return i18n.t('common.today').toString();
+    return i18n.t('common.today') as string;
   }
 
   if (+day === currentDate - 1) {
-    return i18n.t('common.yesterday').toString();
+    return i18n.t('common.yesterday') as string;
   }
 
   return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
@@ -103,7 +103,7 @@ export function prettyDate(value: number): string {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.today').toString();
+    return i18n.t('common.today') as string;
   }
 
   if (
@@ -111,7 +111,7 @@ export function prettyDate(value: number): string {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.yesterday').toString();
+    return i18n.t('common.yesterday') as string;
   }
 
   return `${argumentDay} ${i18n.global.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;

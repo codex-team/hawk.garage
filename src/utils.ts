@@ -497,5 +497,53 @@ export function abbreviateNumber(value: number): string {
   return shortNumber(value);
 }
 
+/**
+ * Set a cookie
+ * @param name - name of the cookie
+ * @param value - value of the cookie
+ * @param days - number of days to expire the cookie
+ */
+export function setCookie(name: string, value: string, days: number): void {
+  const date = new Date();
+
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+  const expires = `expires=${date.toUTCString()}`;
+
+  document.cookie = `${name}=${value};${expires};path=/`;
+}
+
+/**
+ * Get a cookie
+ * @param cname - name of the cookie
+ * @returns value of the cookie
+ */
+export function getCookie(cname: string): string {
+  let name = cname + '=';
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+
+  return '';
+}
+/**
+ * Remove a cookie
+ * @param name - name of the cookie
+ */
+export function removeCookie(name: string): void {
+  setCookie(name, '', -1);
+}
+
 // Export filter utilities
 export * from './utils/filters';

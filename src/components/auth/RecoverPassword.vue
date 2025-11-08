@@ -89,6 +89,7 @@ export default defineComponent({
         });
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
+
         console.error(err);
 
         notifier.show({

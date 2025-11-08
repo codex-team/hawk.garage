@@ -19,6 +19,7 @@ import FormComponent from './Form';
 import { LOGIN, SET_TOKENS } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
+import { getCookie, removeCookie } from '../../utils';
 
 export default {
   name: 'Login',
@@ -80,11 +81,11 @@ export default {
           refreshToken: this.$route.query.refresh_token,
         });
 
-        const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
+        const afterAuthRedirect = getCookie('afterAuthRedirect');
 
         this.$router.push(afterAuthRedirect || '/');
 
-        this.$cookies.remove('afterAuthRedirect');
+        removeCookie('afterAuthRedirect');
       } catch (e) {
         notifier.show({
           message: this.$i18n.t(e.message),
@@ -114,11 +115,11 @@ export default {
           password,
         });
 
-        const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
+        const afterAuthRedirect = getCookie('afterAuthRedirect');
 
         this.$router.push(afterAuthRedirect || '/');
 
-        this.$cookies.remove('afterAuthRedirect');
+        removeCookie('afterAuthRedirect');
       } catch (e) {
         console.error(e);
 

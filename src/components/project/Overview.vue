@@ -39,11 +39,6 @@ import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
 
-/**
- * Maximum length of the search query
- */
-const SEARCH_MAX_LENGTH = 50;
-
 export default {
   name: 'ProjectOverview',
   components: {
@@ -142,13 +137,10 @@ export default {
     }
   },
 
+  /**
+   * Clear search query when component is unmounted
+   */
   unmounted() {
-    this.$store.commit('SET_PROJECT_SEARCH', {
-      projectId: this.projectId,
-      search: '',
-    });
-
-    /** Clear search query when component is unmounted */
     this.$store.commit('SET_PROJECT_SEARCH', {
       projectId: this.projectId,
       search: '',

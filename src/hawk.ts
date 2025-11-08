@@ -57,7 +57,7 @@ export function useErrorTracker(): {
 
   /**
    * Method for manual error sending
-   * @param args - args to track
+   * @param args - arguments forwarded to Hawk catcher
    */
   function track(...args: Parameters<HawkCatcher['send']>): void {
     if (hawk) {

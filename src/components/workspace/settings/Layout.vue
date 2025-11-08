@@ -138,6 +138,7 @@ export default defineComponent({
         this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
+
         notifier.show({
           message: this.$i18n.t(`workspaces.errors.${message}`) as string,
           style: 'error',

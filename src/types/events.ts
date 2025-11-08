@@ -1,7 +1,7 @@
 import type { User } from '@/types/user';
 import type { EventChartItem } from '@/types/chart';
-import { ReleaseCommit } from './release';
-import { EventAddons, AffectedUser } from '@hawk.so/types';
+import type { ReleaseCommit } from './release';
+import type { EventAddons, AffectedUser } from '@hawk.so/types';
 
 /**
  * Event marks enum
@@ -320,7 +320,6 @@ export interface HawkEventRelease {
    */
   commits: ReleaseCommit[];
 }
-
 
 /**
  * Daily evetns pagination cursor

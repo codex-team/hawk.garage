@@ -190,7 +190,6 @@ export default defineComponent({
     }
   }
 
-
   .ui-context-list {
     position: absolute;
     top: calc(100% + var(--popover-gap));

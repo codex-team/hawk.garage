@@ -428,6 +428,7 @@ export default defineComponent({
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
+
         notifier.show({
           message,
           style: 'error',

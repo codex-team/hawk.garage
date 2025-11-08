@@ -11,8 +11,10 @@
 
 <script lang="ts">
 import * as api from './api/';
+import eventBus from './eventBus';
 import { setLanguage } from './i18n';
 import { defineComponent } from 'vue';
+import { NotifierButtonType } from './components/utils/NotifierWindow/types';
 import FeedbackButton from './components/utils/FeedbackButton.vue';
 
 export default defineComponent({
@@ -56,6 +58,23 @@ export default defineComponent({
         setLanguage(newLang);
       }
     );
+
+    /**
+     * Connect to the event bus
+     */
+    eventBus.$on('serviceWorkerUpdated', () => {
+      this.$notify.open({
+        description: this.$t('components.newVersionWindow.message') as string,
+        notifierButtons: [{
+          text: this.$t('components.newVersionWindow.refresh') as string,
+          type: NotifierButtonType.SUBMIT,
+          onClick: () => {
+            window.location.reload();
+          },
+        }],
+      });
+    });
+
   },
 
   /**

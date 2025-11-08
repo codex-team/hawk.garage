@@ -85,7 +85,7 @@ export default defineComponent({
     SkeletonAvatar,
     SkeletonBar,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   props: {
     project: {
       type: Object as PropType<Project | null>,

@@ -157,6 +157,7 @@ export default defineComponent({
         } as UserNotificationsChannels);
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
+
         this.$sendToHawk(err);
 
         notifier.show({
@@ -179,6 +180,7 @@ export default defineComponent({
         } as UserNotificationsReceiveTypesConfig);
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
+
         this.$sendToHawk(err);
 
         notifier.show({

@@ -20,7 +20,39 @@ import { defineComponent, Component, markRaw } from 'vue';
 
 export default defineComponent({
   name: 'Popover',
-  data() {
+  data(): {
+    /**
+     * Is popover open.
+     */
+    isOpened: boolean;
+
+    /**
+     * Is Mouse on popover.
+     */
+    isMouseOver: boolean;
+
+    /**
+     * Popover child component need be display.
+     */
+    popoverComponent?: Component;
+
+    /**
+     * Popover child component props.
+     */
+    popoverComponentProps?: Record<string, unknown>;
+
+    /**
+     * Popover position props.
+     */
+    popoverProps: {
+      showBelowElement?: Element;
+    };
+
+    /**
+     * Provides some delay between mouse leave and hiding
+     */
+    hidingDelay?: ReturnType<typeof setTimeout>;
+  } {
     return {
       /**
        * Is popover open.

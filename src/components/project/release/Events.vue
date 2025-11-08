@@ -29,7 +29,7 @@ export default defineComponent({
       return this.$route.params.release;
     },
 
-    ...mapGetters([ 'getProjectEventById' ]),
+    ...mapGetters(['getProjectEventById']),
   },
   created() {
     this.$store.commit(SET_EVENTS_FILTERS, {

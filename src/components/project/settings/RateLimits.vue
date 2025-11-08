@@ -60,9 +60,9 @@ export default defineComponent({
         return false;
       }
 
-      const isFree =
-        workspace.plan.monthlyCharge === 0 ||
-        workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
+      const isFree
+        = workspace.plan.monthlyCharge === 0
+          || workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
 
       return !isFree;
     },

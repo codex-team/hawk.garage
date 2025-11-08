@@ -52,10 +52,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { ReleaseDetails } from '@/types/release';
 import EmptyState from '../../utils/EmptyState.vue';
-import { PropType } from 'vue';
 
 export default defineComponent({
   name: 'ReleaseFiles',
@@ -101,7 +100,9 @@ export default defineComponent({
       mapFullPath: string;
       length: number | null;
     }[] {
-      return (this.files || []).map((entry: { mapFileName: string; originFileName: string; length: number | null }) => {
+      return (this.files || []).map((entry: { mapFileName: string;
+        originFileName: string;
+        length: number | null; }) => {
         const mapFullPath = entry.mapFileName || '';
         const primaryFullPath = entry.originFileName || '';
         const primaryName = primaryFullPath;
@@ -292,4 +293,3 @@ export default defineComponent({
   background: rgb(88, 74, 245);
 }
 </style>
-

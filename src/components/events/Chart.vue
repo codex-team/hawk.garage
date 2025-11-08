@@ -98,6 +98,13 @@ import { spacedNumber, prettyDateFromTimestamp } from '@/utils/filters';
 import { ChartItem } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
 
+type ChartData = {
+  chartWidth: number;
+  chartHeight: number;
+  onResize: () => void;
+  hoveredIndex: number;
+};
+
 export default defineComponent({
   name: 'Chart',
   components: {
@@ -112,7 +119,7 @@ export default defineComponent({
       default: () => [] as ChartItem[],
     },
   },
-  data() {
+  data(): ChartData {
     return {
       /**
        * Chart SVG clientWidth
@@ -128,7 +135,9 @@ export default defineComponent({
        * Handler of window resize
        */
       onResize: (): void => {
-        // do nothing
+        /**
+         * noop placeholder, will be replaced in created lifecycle
+         */
       },
 
       /**
@@ -142,6 +151,10 @@ export default defineComponent({
      * Step for OX axis
      */
     stepX(): number {
+      if (this.points.length <= 1) {
+        return 0;
+      }
+
       return this.chartWidth / (this.points.length - 1);
     },
 
@@ -160,14 +173,34 @@ export default defineComponent({
      * Number of errors for the current day
      */
     todayCount(): number {
-      return this.points.slice(-1)[0].count || 0;
+      if (this.points.length === 0) {
+        return 0;
+      }
+
+      const lastPoint = this.points[this.points.length - 1];
+
+      if (!lastPoint) {
+        return 0;
+      }
+
+      return lastPoint.count ?? 0;
     },
 
     /**
      * Number of errors for the previous day
      */
     yesterdayCount(): number {
-      return this.points.slice(-2, -1)[0].count || 0;
+      if (this.points.length < 2) {
+        return 0;
+      }
+
+      const previousPoint = this.points[this.points.length - 2];
+
+      if (!previousPoint) {
+        return 0;
+      }
+
+      return previousPoint.count ?? 0;
     },
 
     /**
@@ -181,6 +214,10 @@ export default defineComponent({
      * Minimum number errors per day
      */
     minValue(): number {
+      if (this.points.length === 0) {
+        return 0;
+      }
+
       return Math.min(...this.points.map(day => day.count));
     },
 
@@ -188,6 +225,10 @@ export default defineComponent({
      * Maximum number errors per day
      */
     maxValue(): number {
+      if (this.points.length === 0) {
+        return 0;
+      }
+
       /**
        * We will increment max value for 20% for adding some offset from the top
        */
@@ -211,7 +252,13 @@ export default defineComponent({
         return 0;
       }
 
-      const currentValue = this.points[this.hoveredIndex].count;
+      const point = this.points[this.hoveredIndex];
+
+      if (!point) {
+        return 0;
+      }
+
+      const currentValue = point.count ?? 0;
 
       return this.chartHeight - currentValue * this.kY;
     },
@@ -298,6 +345,13 @@ export default defineComponent({
       const strokeWidth = 2;
       const svg = this.$refs.chart as SVGElement;
 
+      if (!svg) {
+        this.chartWidth = 0;
+        this.chartHeight = 0;
+
+        return;
+      }
+
       this.chartWidth = svg.clientWidth;
       this.chartHeight = svg.clientHeight - strokeWidth;
     },
@@ -314,11 +368,26 @@ export default defineComponent({
      *
      * @param {MouseEvent} event - mousemove
      */
-    moveTooltip(event): void {
+    moveTooltip(event: MouseEvent): void {
+      if (this.points.length === 0) {
+        this.hoveredIndex = -1;
+
+        return;
+      }
+
+      if (this.stepX === 0) {
+        this.hoveredIndex = -1;
+
+        return;
+      }
+
       const chartX = this.$el.getBoundingClientRect().left;
       const cursorX = event.clientX - chartX;
 
-      this.hoveredIndex = Math.round(cursorX / this.stepX);
+      const newIndex = Math.round(cursorX / this.stepX);
+      const clampedIndex = Math.max(0, Math.min(this.points.length - 1, newIndex));
+
+      this.hoveredIndex = clampedIndex;
     },
   },
 });

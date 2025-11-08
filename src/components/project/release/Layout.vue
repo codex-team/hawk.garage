@@ -141,11 +141,11 @@ export default defineComponent({
     SkeletonAvatar,
     Spinner,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   data(): {
     releaseDetails: ReleaseDetails;
     dataLoaded: boolean;
-    } {
+  } {
     return {
       releaseDetails: {
         timestamp: 0,
@@ -174,7 +174,8 @@ export default defineComponent({
     workspace(): Workspace {
       return this.$store.getters.getWorkspaceByProjectId(this.projectId);
     },
-    tabs(): { title: string; routeName: string }[] {
+    tabs(): { title: string;
+      routeName: string; }[] {
       return [
         { title: this.$t('projects.tabs.events') as string,
           routeName: 'project-release-events' },

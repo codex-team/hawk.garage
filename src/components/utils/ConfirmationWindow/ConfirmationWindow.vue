@@ -37,6 +37,9 @@ import PopupDialog from '../PopupDialog.vue';
 import UiButton from '../UiButton.vue';
 import { ActionType, ConfirmationWindowOptions } from './types';
 
+/**
+ * @see ./README.md
+ */
 export default defineComponent({
   name: 'ConfirmationWindow',
   components: {
