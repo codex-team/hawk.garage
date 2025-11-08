@@ -99,7 +99,7 @@
         />
       </div>
       <AiAnswerDialog
-        v-if="isAskAiOpen"
+        v-if="isAiSuggestionOpen"
         class="event-header__dialog"
         :project-id="projectId"
         :event-id="event.id"
