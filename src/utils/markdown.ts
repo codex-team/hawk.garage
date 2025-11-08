@@ -72,6 +72,7 @@ export function splitTextAndCodeSegments(source: string | undefined | null): Con
  * Safely render a limited subset of Markdown to HTML.
  * Supports: headings, hr, blockquotes, ul/ol lists, links, bold/italic/strike, inline code.
  * Code fences should be handled separately by consumer (e.g., CodeFragment).
+ * @todo use Abstract syntax tree (AST) instead of only string manipulation
  *
  * @param text - raw markdown text
  * @returns HTML string safe to inject with v-html
