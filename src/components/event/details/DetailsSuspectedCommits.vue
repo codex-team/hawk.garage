@@ -29,8 +29,6 @@
             { numberOfCommits: commits.length - numberOfVisibleCommits }
           )
       }}
-
-      -
     </template>
   </DetailsBase>
 </template>

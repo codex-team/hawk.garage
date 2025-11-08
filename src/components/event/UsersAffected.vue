@@ -37,16 +37,6 @@ export default defineComponent({
       required: true,
     },
   },
-  data: function () {
-    return {
-      groupedRepetitions: new Map(),
-    };
-  },
-  computed: {
-    originalEvent(): HawkEvent {
-      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
-    },
-  },
 });
 </script>
 
