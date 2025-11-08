@@ -36,8 +36,8 @@
         :rule="rule"
         :project-id="project.id"
         :enable-editing="userCanEdit"
-        @edit-clicked="editRule"
-        @remove-clicked="removeRule"
+        @editClicked="editRule"
+        @removeClicked="removeRule"
       />
     </section>
   </div>
