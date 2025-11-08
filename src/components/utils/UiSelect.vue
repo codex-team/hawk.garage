@@ -22,7 +22,7 @@
     <UIContextList
       v-show="isOpen"
       :items="selectOptionsToContextListItems"
-      />
+    />
   </div>
 </template>
 
@@ -144,6 +144,7 @@ export default Vue.extend({
 
     /**
      * Activates an option
+     *
      * @param option - option to activate
      */
     onOptionActivate(option: UiSelectOption) {
@@ -167,17 +168,17 @@ export default Vue.extend({
 
   &__button {
     display: flex;
-    align-items: center;
     gap: var(--inner-gap);
+    align-items: center;
     padding: 6px 9px;
-    border-radius: var(--radius);
-    background-color: var(--color-bg-second);
+    color: var(--color-text-main);
+    font-weight: 500;
     font-size: var(--font-size);
     line-height: var(--icon-size);
-    font-weight: 500;
-    color: var(--color-text-main);
-    cursor: pointer;
     white-space: nowrap;
+    background-color: var(--color-bg-second);
+    border-radius: var(--radius);
+    cursor: pointer;
 
     &:hover {
       background-color: color-mod(var(--color-bg-second) blend(white 2%));
@@ -188,7 +189,6 @@ export default Vue.extend({
       height: var(--icon-size);
     }
   }
-
 
   .ui-context-list {
     position: absolute;

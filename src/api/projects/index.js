@@ -13,12 +13,11 @@ import {
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
   MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS,
   QUERY_CHART_DATA,
-  MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
+  MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
+  QUERY_PROJECT_RELEASES,
+  QUERY_PROJECT_RELEASE_DETAILS
 } from './queries';
 import * as api from '../index.ts';
-import { ChartData } from '../../types/events';
-import { ReleaseDetails } from '../../types/release';
-import { QUERY_PROJECT_RELEASES, QUERY_PROJECT_RELEASE_DETAILS } from './queries';
 
 /**
  * Create project and returns its id

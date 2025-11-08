@@ -1,4 +1,4 @@
-import { UserNotifications } from './user-notifications';
+import type { UserNotifications } from './user-notifications';
 
 /**
  * Represents current authenticated user

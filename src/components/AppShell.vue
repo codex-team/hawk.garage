@@ -125,7 +125,7 @@ export default {
      */
     projects() {
       let projectList = this.$store.state.projects.list
-        .map(project => {
+        .map((project) => {
           let latestEvent = null;
 
           if (project.latestEvent) {
@@ -151,7 +151,7 @@ export default {
 
         const searchRegexp = new RegExp(`${searchConditions.join('|')}`, 'gi');
 
-        projectList = projectList.filter(project => {
+        projectList = projectList.filter((project) => {
           return searchRegexp.test(project.name);
         });
       }
@@ -254,6 +254,7 @@ export default {
       this.$store.dispatch(FETCH_CURRENT_USER);
     } catch (error) {
       const originalMessage = error.message;
+
       error.message = `Error on app initialization!: ${originalMessage}`;
       this.$sendToHawk(error);
       console.error(error);

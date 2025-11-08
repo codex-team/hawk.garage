@@ -110,5 +110,3 @@ export default Vue.extend({
   margin-top: 14px;
 }
 </style>
-
-

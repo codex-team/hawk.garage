@@ -92,8 +92,8 @@ export default Vue.extend({
      * @param options - options for displaying
      */
     open(options?: NotifierWindowOptions) {
-      this.description = options && options.description || '';
-      this.notifierButtons = options && options.notifierButtons || [];
+      this.description = (options && options.description) || '';
+      this.notifierButtons = (options && options.notifierButtons) || [];
       this.isOpened = true;
     },
     /**

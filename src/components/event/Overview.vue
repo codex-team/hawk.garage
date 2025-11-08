@@ -73,6 +73,13 @@
         title="FastAPI"
       />
       <DetailsAddons
+        v-if="getIntegrationAddons('django')"
+        class="event-overview__section"
+        :addons="getIntegrationAddons('django')"
+        icon="django"
+        title="Django"
+      />
+      <DetailsAddons
         v-if="hasContext"
         class="event-overview__section"
         :addons="event.payload.context"
@@ -82,6 +89,11 @@
         v-if="addonsFiltered"
         class="event-overview__section"
         :addons="addonsFiltered"
+      />
+      <DetailsRelease
+        v-if="event.payload.release"
+        class="event-overview__section"
+        :release="event.payload.release"
       />
       <div
         v-if="isNoAdditionalInformation"
@@ -106,6 +118,7 @@ import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
 import DetailsUser from './details/DetailsUser.vue';
+import DetailsRelease from './details/DetailsRelease.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
@@ -122,6 +135,7 @@ export default Vue.extend({
     DetailsUser,
     UiButton,
     AiAnswerDialog,
+    DetailsRelease,
   },
   props: {
     /**
@@ -169,12 +183,12 @@ export default Vue.extend({
      *
      * @returns {object}
      */
-    addonsFiltered(): {[key: string]: string} | null {
+    addonsFiltered(): { [key: string]: string } | null {
       if (!this.hasAddons) {
         return null;
       }
 
-      const integrationToFilter = ['vue', 'nuxt', 'flask', 'fastapi'];
+      const integrationToFilter = ['vue', 'nuxt', 'flask', 'fastapi', 'django'];
       const filteredAddons = {};
 
       Object.entries(this.event.payload.addons).forEach(([name, value]) => {

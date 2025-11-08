@@ -188,7 +188,7 @@ export default {
          * We supposed to highlight each line separately because the code can be trimmed.
          * This looks more suitable than incorrect highlighting of a whole block;
          */
-        this.$refs.content.querySelectorAll('pre').forEach(el => {
+        this.$refs.content.querySelectorAll('pre').forEach((el) => {
           hljs.highlightBlock(el);
         });
       });

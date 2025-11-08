@@ -65,7 +65,7 @@
                 v-if="option.id === receiveTypesEnum.SEEN_MORE"
                 class="grid-form__seen-more-description"
               >
-                <TextFieldset
+                <FormTextFieldset
                   v-model="selectedThreshold"
                   type="number"
                   :required="true"
@@ -142,7 +142,6 @@ import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modul
 import notifier from 'codex-notifier';
 import CustomSelect from '@/components/forms/CustomSelect.vue';
 import CustomSelectOption from '@/types/customSelectOption';
-import TextFieldset from './../../forms/TextFieldset.vue';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -152,7 +151,6 @@ export default Vue.extend({
     UiCheckbox,
     CustomSelect,
     UiButton,
-    TextFieldset,
   },
   props: {
     /**
@@ -172,14 +170,14 @@ export default Vue.extend({
     },
   },
   data(): {
-    form: ProjectNotificationsAddRulePayload,
-    receiveTypes: RadioButtonGroupItem[],
-    isFormInvalid: boolean,
-    isWaitingForResponse: boolean,
-    seenMoreThresholdPeriod: CustomSelectOption[],
-    receiveTypesEnum: typeof ReceiveTypes,
-    selectedThreshold: string,
-    selectedThresholdPeriod: CustomSelectOption,
+    form: ProjectNotificationsAddRulePayload;
+    receiveTypes: RadioButtonGroupItem[];
+    isFormInvalid: boolean;
+    isWaitingForResponse: boolean;
+    seenMoreThresholdPeriod: CustomSelectOption[];
+    receiveTypesEnum: typeof ReceiveTypes;
+    selectedThreshold: string;
+    selectedThresholdPeriod: CustomSelectOption;
     /**
      * Object that represents displaying of the validation state of each endpoint
      */
@@ -187,19 +185,19 @@ export default Vue.extend({
       /**
        * Flag that represents, if validation state of the telegram endpoint should be displayed in textfield state
        */
-      telegram: boolean,
+      telegram: boolean;
 
       /**
        * Flag that represents, if validation state of the slack endpoint should be displayed in textfield state
        */
-      slack: boolean,
+      slack: boolean;
 
       /**
        * Flag that represents, if validation state of the email endpoint should be displayed in textfield state
        */
-      email: boolean,
-    },
-    } {
+      email: boolean;
+    };
+  } {
     const selectedThreshold = '100';
     const selectedThresholdPeriod: CustomSelectOption = {
       id: 'hour',
@@ -234,7 +232,7 @@ export default Vue.extend({
         excluding: [],
       },
       receiveTypesEnum: ReceiveTypes,
-      seenMoreThresholdPeriod: [ {
+      seenMoreThresholdPeriod: [{
         id: 'minute',
         value: 'minute',
         name: this.$t('common.minute') as string,
@@ -253,7 +251,7 @@ export default Vue.extend({
         id: 'week',
         value: 'week',
         name: this.$t('common.week') as string,
-      } ],
+      }],
       /**
        * Available options of 'What to receive'
        */
@@ -346,9 +344,9 @@ export default Vue.extend({
        * The type of this.form (ProjectNotificationsAddRulePayload)
        * should not not contain rule id
        */
-      delete mergedRule.id;
+      const { id: _mergedRuleId, ...ruleWithoutId } = mergedRule;
 
-      this.form = mergedRule;
+      this.form = ruleWithoutId;
     }
   },
   methods: {
@@ -428,14 +426,16 @@ export default Vue.extend({
           style: 'success',
           time: 3000,
         });
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 10000,
         });
 
-        console.error(e);
+        console.error(error);
 
         this.isWaitingForResponse = false;
         (this.$refs.submitButton as unknown as UiButtonComponent).shake();

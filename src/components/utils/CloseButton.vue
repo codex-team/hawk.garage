@@ -31,7 +31,7 @@ export default {
 
     window.onkeyup = this.onEscapeKeyUp;
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.onkeyup = this.oldKeyup;
   },
   methods: {
