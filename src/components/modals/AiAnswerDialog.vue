@@ -44,7 +44,7 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import Spinner from '../utils/Spinner.vue';
 import CodeFragment from '../utils/CodeFragment';
 import * as eventsApi from '@/api/events';
-import { renderMarkdown, splitTextAndCodeSegments } from '@/utils';
+import { renderMarkdownAsync, splitTextAndCodeSegments } from '@/utils/markdown';
 
 export default {
   name: 'AiAnswerDialog',
@@ -101,8 +101,8 @@ export default {
       this.loading = false;
     }
   },
-  methods: {
-    renderMarkdown,
+  async mounted() {
+    this.renderMarkdown = await renderMarkdownAsync();
   },
 };
 </script>
