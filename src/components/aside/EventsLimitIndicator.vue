@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="events-limit-indicator__tooltip-dialog">
     <div class="events-limit-indicator__info-section">
       <div class="events-limit-indicator__label">
