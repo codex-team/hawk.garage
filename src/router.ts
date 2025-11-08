@@ -294,7 +294,7 @@ router.beforeEach((to, from, next) => {
     /**
      * Track event
      */
-    Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
+    void Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
   } catch (e) {
     console.error(e);
   }

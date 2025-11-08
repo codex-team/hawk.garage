@@ -164,7 +164,7 @@ export default Vue.extend({
       try {
         await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
         this.$router.push({ name: 'home' });
-      } catch (e) {
+      } catch {
         notifier.show({
           message: this.$i18n.t('workspaces.settings.leaveError').toString(),
           style: 'error',

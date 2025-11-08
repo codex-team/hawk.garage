@@ -62,7 +62,7 @@ Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
  * Enable analytics via Amplitude.com
  */
 if (process.env.VUE_APP_AMPLITUDE_TOKEN) {
-  Analytics.init(process.env.VUE_APP_AMPLITUDE_TOKEN);
+  void Analytics.init(process.env.VUE_APP_AMPLITUDE_TOKEN);
 }
 
 /**
@@ -105,7 +105,7 @@ api.setupApiModuleHandlers({
    * If user refresh token is invalid then log out user
    */
   onAuthError: debounce(() => {
-    store.dispatch(RESET_STORE);
+    void store.dispatch(RESET_STORE);
 
     const key = 'errors.' + errorMessages.UNAUTHENTICATED;
 

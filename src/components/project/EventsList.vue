@@ -70,12 +70,11 @@
 <script>
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
-import { groupByGroupingTimestamp, debounce } from '@/utils';
+import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
-import { getPlatform } from '@/utils';
 import EmptyState from '../utils/EmptyState.vue';
 
 /**

@@ -142,7 +142,6 @@ import { ADD_NOTIFICATIONS_RULE, UPDATE_NOTIFICATIONS_RULE } from '@/store/modul
 import notifier from 'codex-notifier';
 import CustomSelect from '@/components/forms/CustomSelect.vue';
 import CustomSelectOption from '@/types/customSelectOption';
-import TextFieldset from './../../forms/TextFieldset.vue';
 
 export default Vue.extend({
   name: 'ProjectSettingsNotificationsAddRule',
@@ -152,7 +151,6 @@ export default Vue.extend({
     UiCheckbox,
     CustomSelect,
     UiButton,
-    TextFieldset,
   },
   props: {
     /**

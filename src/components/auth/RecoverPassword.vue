@@ -73,7 +73,6 @@ export default Vue.extend({
     /**
      * Method recover user's password by email from form
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
     async recoverPassword(): Promise<void> {
       const emailField = this.fields.find(field => field.name === 'email');
       const email = emailField ? emailField.value : '';

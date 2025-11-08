@@ -38,7 +38,7 @@ import UiButton from '../UiButton.vue';
 import { ActionType, ConfirmationWindowOptions } from './types';
 
 /**
- * @link './README.md'
+ * @see ./README.md
  */
 export default Vue.extend({
   name: 'ConfirmationWindow',
@@ -98,13 +98,13 @@ export default Vue.extend({
      * @param options - options for displaying
      */
     open(options?: ConfirmationWindowOptions) {
-      this.title = options && options.title || this.$i18n.t('components.confirmationWindow.title').toString();
-      this.description = options && options.description || '';
-      this.continueButtonText = options && options.continueButtonText || this.$i18n.t('components.confirmationWindow.continue').toString();
-      this.onConfirm = options && options.onConfirm || (() => {
+      this.title = (options && options.title) || this.$i18n.t('components.confirmationWindow.title').toString();
+      this.description = (options && options.description) || '';
+      this.continueButtonText = (options && options.continueButtonText) || this.$i18n.t('components.confirmationWindow.continue').toString();
+      this.onConfirm = (options && options.onConfirm) || (() => {
         // do nothing
       });
-      this.actionType = options && options.actionType || ActionType.SUBMIT;
+      this.actionType = (options && options.actionType) || ActionType.SUBMIT;
       this.isOpened = true;
     },
 

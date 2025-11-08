@@ -224,7 +224,6 @@ import notifier from 'codex-notifier';
 // import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
-import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';

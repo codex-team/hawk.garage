@@ -88,14 +88,14 @@ Vue.filter('prettyDateStr', function (value: string): string {
   const currentDate = new Date().getDate();
 
   if (+day === currentDate) {
-    return i18n.t('common.today').toString();
+    return i18n.t('common.today') as string;
   }
 
   if (+day === currentDate - 1) {
-    return i18n.t('common.yesterday').toString();
+    return i18n.t('common.yesterday') as string;
   }
 
-  return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
+  return `${day} ${i18n.t('common.months[' + (month - 1) + ']') as string}`;
 });
 
 /**
@@ -115,7 +115,7 @@ Vue.filter('prettyDate', function (value: number) {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.today').toString();
+    return i18n.t('common.today') as string;
   }
 
   if (
@@ -123,10 +123,10 @@ Vue.filter('prettyDate', function (value: number) {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.yesterday').toString();
+    return i18n.t('common.yesterday') as string;
   }
 
-  return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
+  return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']') as string} ${argumentYear}`;
 });
 
 /**
@@ -142,7 +142,7 @@ Vue.filter('prettyFullDate', function (value: number) {
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  return `${day} ${i18n.t(`common.shortMonths[${month}]`)}, ${pad(hours)}:${pad(minutes)}`;
+  return `${day} ${i18n.t(`common.shortMonths[${month}]`) as string}, ${pad(hours)}:${pad(minutes)}`;
 });
 
 /**
@@ -154,7 +154,7 @@ Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
   const day = date.getDate();
   const month = date.getMonth();
 
-  return `${day} ${i18n.t('common.shortMonths[' + month + ']')}`;
+  return `${day} ${i18n.t('common.shortMonths[' + month + ']') as string}`;
 });
 
 /**
@@ -173,7 +173,7 @@ Vue.filter(
     const year = date.getFullYear();
     const isSameYear = now.getFullYear() === year;
     const monthStr = capitalize(
-      i18n.t('common.shortMonths[' + month + ']').toString()
+      i18n.t('common.shortMonths[' + month + ']') as string
     );
 
     let result = `${isSameYear ? '' : year + ', '}${monthStr} ${day}`;
@@ -244,7 +244,7 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
     return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });
   }
 
-  return i18n.t('common.relativeTime.secondsAgo').toString();
+  return i18n.t('common.relativeTime.secondsAgo') as string;
 });
 
 /**

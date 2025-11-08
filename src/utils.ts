@@ -112,7 +112,6 @@ function convertUtcMidnightToLocalMidnight(utcMidnight: number): number {
  * @param items - array of object with the  'groupingTimestamp' field
  * @param [convertMidnight] - need to convert utc midnight to local
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function groupByGroupingTimestamp(items: object[], convertMidnight = true): Record<string, unknown> {
   if (!convertMidnight) {
     return groupBy('groupingTimestamp')(items);
@@ -151,7 +150,6 @@ export function isObject(item: any): boolean {
  * @param sources - what to merge
  * @returns
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function deepMerge(target: object, ...sources: object[]): object {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return mergeWith({}, target, ...sources, function (_subject: any, _target: any) {

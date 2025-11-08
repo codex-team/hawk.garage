@@ -89,7 +89,6 @@ export async function fetchDailyEventsPortion(
 /**
  * Fetches event's repetitions portion from project
  * @param projectId - project's identifier
- * @param eventId - event's identifier
  * @param originalEventId - id of the original event
  * @param limit - the number of repetitions
  * @param cursor - the cursor to fetch the next page of repetitions

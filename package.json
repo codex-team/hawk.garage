@@ -8,7 +8,7 @@
     "lint": "yarn lint:js && yarn lint:css",
     "lint:css": "stylelint \"src/**/*{.css,.vue}\" --fix",
     "lint:js": "eslint src/ --ext .js --ext .ts --ext .vue --fix",
-    "lint:e": "eslint src/ --ext .js --ext .ts --ext .vue --quiet --max-warnings=0",
+    "lint:errors": "eslint src/ --ext .js --ext .ts --ext .vue --quiet",
     "serve:prod": "http-server ./dist --push-state -c-0",
     "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
