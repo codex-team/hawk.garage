@@ -14,7 +14,7 @@
     </div>
     <div class="tariff-plan__footer">
       <div class="tariff-plan__price">
-        {{ price === 0 ? $t('common.free') : `${spacedNumber(price)}${$tc('common.moneyPerMonth', currencySign, { currency: currencySign })}` }}
+        {{ price === 0 ? $t('common.free') : `${spacedNumber(price)}${$t('common.moneyPerMonth', { currency: currencySign })}` }}
       </div>
 
       <UiButton

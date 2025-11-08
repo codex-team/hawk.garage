@@ -12,7 +12,7 @@
         <!-- eslint-disable vue/no-v-html -->
         <p
           class="choose-plan__description"
-          v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
+          v-html="chooseTariffPlanDescription"
         />
 
         <div
@@ -106,6 +106,19 @@ export default defineComponent({
     };
   },
   computed: {
+    /**
+     * Description with injected links
+     *
+     * @returns {string}
+     */
+    chooseTariffPlanDescription(): string {
+      const emailLink = `<a href="mailto:team@hawk.so">team@hawk.so</a>`;
+
+      return this.$t('workspaces.chooseTariffPlanDialog.description', {
+        featuresUrl: '#',
+        emailLink,
+      }) as string;
+    },
     /**
      * Available plans list
      */

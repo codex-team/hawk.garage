@@ -24,14 +24,13 @@
       {{
         isMoreCommitsShown
           ? $t("event.suspectedCommits.hide")
-          : $tc(
+          : $t(
             "event.suspectedCommits.moreRelease",
-            commits.length - numberOfVisibleCommits,
-            {
-              numberOfCommits: commits.length - numberOfVisibleCommits,
-            }
+            { numberOfCommits: commits.length - numberOfVisibleCommits }
           )
       }}
+
+      -
     </template>
   </DetailsBase>
 </template>
@@ -39,7 +38,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
-import { prettyRelativeTimeStr } from '@/utils';
 import CommitItem from '../../utils/CommitItem.vue';
 import { ReleaseCommit } from '@/types/release';
 
@@ -84,9 +82,6 @@ export default defineComponent({
         ? this.commits
         : this.commits.slice(0, this.numberOfVisibleCommits);
     },
-  },
-  methods: {
-    prettyRelativeTimeStr,
   },
 });
 </script>

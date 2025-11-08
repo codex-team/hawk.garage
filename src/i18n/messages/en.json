@@ -296,7 +296,7 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Choose a plan",
-      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you have questions on plans, please contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "All plans includes all available features. If you have questions on plans, please contact us by {emailLink}",
       "onSuccess": "Workspace plan has been successfully changed",
       "onError": "Unable to change workspace plan due to an error, please try again later",
       "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",

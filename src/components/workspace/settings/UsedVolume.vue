@@ -10,7 +10,7 @@
     <div class="events-limit-indicator__events">
       {{ eventsCount }} /
       {{ plan.eventsLimit }}
-      {{ $tc("billing.volumeEvents", eventsCount) }}
+      {{ $t("billing.volumeEvents", { count: eventsCount }) }}
     </div>
     <ProgressBar
       :max="plan.eventsLimit || 0"

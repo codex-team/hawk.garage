@@ -296,7 +296,7 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Выберите план",
-      "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;<a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;{emailLink}",
       "onSuccess": "Тарифный план был успешно изменён",
       "onError": "Произошла ошибка, пожалуйста попробуйте ещё раз немного позже",
       "confirmSetToFreePlanDescription": "Старый план будет отменён. Неиспользованные ошибки и время не будут возвращены.",
@@ -576,11 +576,11 @@
     ],
     "relativeTime": {
       "secondsAgo": "несколько секунд назад",
-      "minutesAgo": " | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
-      "hoursAgo": " | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
-      "daysAgo": " | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
-      "monthsAgo": " | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
-      "yearsAgo": " | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
+      "minutesAgo": "только что | {numberOfMinutes} минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
+      "hoursAgo": "совсем недавно | {numberOfHours} час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
+      "daysAgo": "вчера | {numberOfDays} дней назад | {numberOfDays} дней назад",
+      "monthsAgo": "в этом месяце | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
+      "yearsAgo": "в этом году | год назад | {numberOfYears} года назад | {numberOfYears} лет назад"
     },
     "readMore": "Подробнее"
   },
