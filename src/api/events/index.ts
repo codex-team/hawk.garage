@@ -85,7 +85,7 @@ export async function fetchDailyEventsPortion(
 
   return project?.dailyEventsPortion ?? {
     cursor: null,
-    dailyEventsPortion: []
+    dailyEventsPortion: [],
   };
 }
 
@@ -150,10 +150,9 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
 
 /**
  * Fetch ask AI for an event
- *
- * @param {string} projectId - project event is related to
- * @param {string} eventId - event to fetch ask AI for
- * @param {string} originalEventId - id of the original event
+ * @param projectId - project event is related to
+ * @param eventId - event to fetch ask AI for
+ * @param originalEventId - id of the original event
  */
 export async function fetchEventAskAi(projectId: string, eventId: string, originalEventId: string): Promise<string> {
   const response = await api.call(QUERY_EVENT_ASK_AI, {

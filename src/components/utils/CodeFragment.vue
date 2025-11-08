@@ -1,11 +1,11 @@
 <template>
   <div
     ref="content"
-    class="code-preview"
     v-copyable="{
       selector: copyable ? '.code-preview__content' : null,
       callback: onCopy,
     }"
+    class="code-preview"
   >
     <div class="code-preview__line-numbers">
       <span

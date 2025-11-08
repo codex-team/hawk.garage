@@ -19,8 +19,8 @@
           <template v-for="(seg, idx) in segments">
             <CodeFragment
               v-if="seg.type === 'code'"
-              class="ai-answer-dialog__code"
               :key="'code-' + idx"
+              class="ai-answer-dialog__code"
               :lines="seg.lines"
               :lang="seg.lang || 'plaintext'"
               :lines-highlighted="[]"
@@ -28,8 +28,8 @@
             />
             <div
               v-else
-              class="ai-answer-dialog__text ai-answer-dialog__markdown"
               :key="'text-' + idx"
+              class="ai-answer-dialog__text ai-answer-dialog__markdown"
               v-html="renderMarkdown(seg.text)"
             />
           </template>
@@ -86,6 +86,7 @@ export default {
   async created() {
     try {
       const result = await eventsApi.fetchEventAskAi(this.projectId, this.eventId, this.originalEventId);
+
       /**
        * API wrapper might return string or object depending on backend response/version.
        * Support both cases here.
@@ -123,8 +124,8 @@ export default {
   }
 
   &__answer {
-    white-space: pre-wrap;
     line-height: 1.6;
+    white-space: pre-wrap;
   }
 
   &__text {
@@ -157,8 +158,8 @@ export default {
 
     code {
       padding: 1px 4px;
-      font-family: var(--font-monospace);
       font-size: 90%;
+      font-family: var(--font-monospace);
       background: var(--color-bg-code-fragment);
       border-radius: 3px;
     }
@@ -178,5 +179,3 @@ export default {
   }
 }
 </style>
-
-
