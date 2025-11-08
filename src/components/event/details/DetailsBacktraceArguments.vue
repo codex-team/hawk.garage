@@ -5,27 +5,33 @@
       :key="`row:${row}`"
       class="args__row"
     >
-      <template
-        v-for="([key, value], col) in Object.entries(item)"
-        :key="`row:${row}:col:${col}:key`"
+      <td
+        v-for="(cell, col) in item"
+        :key="`row:${row}:col:${col}`"
+        :class="cell.className"
       >
-        <td
-          class="args__key"
-        >
-          {{ key }}
-        </td>
-        <td
-          class="args__value"
-        >
-          {{ value }}
-        </td>
-      </template>
+        {{ cell.value }}
+      </td>
     </tr>
   </table>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+
+/**
+ * Describes a cell to render in the arguments table.
+ */
+interface ArgsCell {
+  /**
+   * CSS class applied to the cell.
+   */
+  className: 'args__key' | 'args__value';
+  /**
+   * Display string for the cell.
+   */
+  value: string;
+}
 
 export default Vue.extend({
   name: 'DetailsBacktraceArguments',
@@ -40,12 +46,13 @@ export default Vue.extend({
   },
   computed: {
     /**
-     * Transforms string-like format of args to object-like
+     * Transforms string-like format of args to the list of table cells
      */
-    argsList(): Record<string, string>[] {
-      const list: Record<string, string>[] = [];
+    argsList(): ArgsCell[][] {
+      const list: ArgsCell[][] = [];
+      const args = this.args;
 
-      this.args.map((item) => {
+      args.forEach((item) => {
         /**
          * Case when argument passed as string like '"name"="value"'
          */
@@ -53,13 +60,19 @@ export default Vue.extend({
           /**
            * Split 'name=value' to ['name', 'value']
            */
-          const pair = item.split('=');
+          const [rawKey, ...rawValueParts] = item.split('=');
+          const rawValue = rawValueParts.join('=');
 
-          list.push({
-            [pair[0]]: pair[1],
-          });
-        } else {
-          console.warn('Unsupported args format:', item);
+          list.push([
+            {
+              className: 'args__key',
+              value: rawKey,
+            },
+            {
+              className: 'args__value',
+              value: rawValue,
+            },
+          ]);
         }
       });
 

@@ -132,6 +132,7 @@ export default [
       'vue/no-deprecated-props-default-this': 'off',
       'vue/require-slots-as-functions': 'off',
       'vue/no-deprecated-destroyed-lifecycle': 'off',
+      'vue/v-on-event-hyphenation': 'off',
       // Отключаем no-unused-vars в пользу @typescript-eslint/no-unused-vars
       'no-unused-vars': 'off',
     },
