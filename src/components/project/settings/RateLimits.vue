@@ -24,13 +24,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import RateLimitsForm from '../../forms/RateLimitsForm.vue';
 import { Project, ProjectRateLimitSettings } from '../../../types/project';
 import { UPDATE_PROJECT_RATE_LIMITS } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RateLimits',
   components: {
     RateLimitsForm,

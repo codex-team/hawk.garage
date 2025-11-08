@@ -16,8 +16,6 @@ import {
   MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
 } from './queries';
 import * as api from '../index.ts';
-import { ChartData } from '../../types/events';
-import { ReleaseDetails } from '../../types/release';
 import { QUERY_PROJECT_RELEASES, QUERY_PROJECT_RELEASE_DETAILS } from './queries';
 
 /**
@@ -208,7 +206,7 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @param {string} projectId - id of the project to fetch recent errors
  * @param {number} days - fow how many days we need to get counters
  * @param {number} timezoneOffset - user's local timezone offset
- * @returns {Promise<ChartData[] | null>}
+ * @returns {Promise<ProjectChartData[] | null>}
  */
 export async function fetchChartData(projectId, days, timezoneOffset) {
   return (await api.callOld(QUERY_CHART_DATA, {

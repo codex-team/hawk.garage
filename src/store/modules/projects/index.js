@@ -85,7 +85,7 @@ function initialState() {
     /**
      * Chart data for every project
      *
-     * @type {object<string, ChartData[]>}
+     * @type {object<string, ProjectChartData[]>}
      */
     charts: {},
   };

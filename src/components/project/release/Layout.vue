@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import TabBar from '@/components/utils/TabBar.vue';
 import PopupDialog from '@/components/utils/PopupDialog.vue';
 import { fetchProjectReleaseDetails } from '@/api/projects';
@@ -131,7 +131,7 @@ import { ReleaseDetails } from '@/types/release';
 import { Project } from '@/store/modules/projects';
 import { Workspace } from '@/store/modules/workspaces';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     TabBar,
     PopupDialog,

@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 import UIContextList, { UiContextListItem } from './UiContextList.vue';
 
@@ -54,7 +54,7 @@ export interface UiSelectOption {
  * @todo support closing by click outside @see https://vueuse.org/core/onClickOutside/
  */
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Icon,
     UIContextList,

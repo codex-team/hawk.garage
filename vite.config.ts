@@ -80,7 +80,7 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3000,
+    port: 8080,
     headers: {
       'Cache-Control': 'private, no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
     }

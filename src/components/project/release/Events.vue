@@ -5,14 +5,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import EventsList from '@/components/project/EventsList.vue';
 import { mapGetters } from 'vuex';
 import { SET_EVENTS_FILTERS, SET_EVENTS_ORDER } from '@/store/modules/events/actionTypes';
 import { EventsSortOrder } from '@/types/events';
 import { ReleaseDetails } from '@/types/release';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ReleaseEvents',
   components: { EventsList },
   props: {

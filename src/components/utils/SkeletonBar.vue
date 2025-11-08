@@ -7,14 +7,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 type SkeletonBarSize = 'small' | 'medium' | 'large';
 
 /**
  * Reusable skeleton bar component with animated gradient
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'SkeletonBar',
   props: {
     /**
@@ -56,7 +56,9 @@ export default Vue.extend({
 </script>
 
 <style>
-.skeleton-bar {
+  @import "../../styles/custom-properties.css";
+
+  .skeleton-bar {
   @mixin skeleton-base;
   border-radius: 9px;
 
