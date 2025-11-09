@@ -22,7 +22,7 @@ const buildRevision = Date.now();
  * Connect plugin of errors tracking system
  * It will send source-maps after build
  */
-const hawkToken = process.env.VUE_APP_HAWK_TOKEN;
+const hawkToken = process.env.VITE_HAWK_TOKEN;
 
 if (hawkToken) {
   plugins.push(new HawkWebpackPlugin({

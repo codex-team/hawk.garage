@@ -188,7 +188,6 @@ export function centsToDollars(value: number): number {
  * Returns string like 'hours ago'.
  * @param date - date in string formate
  * @returns relative time from today
- *
  * @todo debug and rewrite
  */
 export function prettyRelativeTimeStr(date: string): string {
