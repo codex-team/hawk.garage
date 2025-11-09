@@ -86,7 +86,7 @@ export default defineComponent({
   data() {
     return {
       /**
-       * Current opened modal window - используем markRaw для избежания реактивности
+       * Current opened modal window
        */
       modalComponent: null,
       searchQuery: '',
@@ -186,6 +186,9 @@ export default defineComponent({
 
       import(`./modals/${componentName}.vue`)
         .then((module) => {
+          /**
+           * Mark the modal component as raw to avoid reactivity
+           */
           this.modalComponent = markRaw(module.default);
         })
         .catch((error) => {
