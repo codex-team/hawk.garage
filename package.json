@@ -25,6 +25,7 @@
     "cssnano": "^7.1.1",
     "fast-glob": "^3.3.3",
     "highlight.js": "^11.11.1",
+    "http-server": "^14.1.1",
     "install": "^0.13.0",
     "lodash.mergewith": "^4.6.2",
     "normalize.css": "^8.0.1",
