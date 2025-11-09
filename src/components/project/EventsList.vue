@@ -235,7 +235,6 @@ export default {
     },
   },
   methods: {
-    // debouncedSearch инициализируется в created и используется как обработчик @input
     /**
      * Return midnight timestamp extracted from grouping key
      *

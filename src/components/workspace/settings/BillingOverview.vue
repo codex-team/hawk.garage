@@ -4,8 +4,8 @@
       v-if="!isFreePlan"
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
-      :value="isAutoPayOn"
-      @input="onAutoPayInput"
+      :model-value="isAutoPayOn"
+      @update:model-value="onAutoPayInput"
     />
     <div class="clearfix billing-card__workspace">
       <EntityImage

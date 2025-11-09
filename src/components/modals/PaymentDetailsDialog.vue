@@ -189,7 +189,7 @@
 
           {{ $t('billing.paymentDetails.invoice.description') }}
           <a
-            :href="`mailto:team@hawk.so?subject=${encodeURIComponent($t('billing.paymentDetails.invoice.emailSubject', { workspaceName: workspace.name, workspaceId: workspace.id, planName: plan.name }))}`"
+            :href="invoiceEmailHref"
             target="_blank"
             class="payment-details__invoice-email"
           >
@@ -407,6 +407,19 @@ export default defineComponent({
      */
     payButtonText(): string {
       return this.$t('billing.paymentDetails.goToPaymentService').toString();
+    },
+
+    invoiceEmailHref(): string {
+      const workspaceName = this.workspace?.name ?? '';
+      const workspaceId = this.workspace?.id ?? '';
+      const planName = this.plan?.name ?? '';
+      const subject = this.$t('billing.paymentDetails.invoice.emailSubject', {
+        workspaceName,
+        workspaceId,
+        planName,
+      });
+
+      return `mailto:team@hawk.so?subject=${encodeURIComponent(subject as string)}`;
     },
 
     /**
