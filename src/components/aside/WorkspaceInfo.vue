@@ -46,7 +46,7 @@
         <CircleProgress
           ref="events-count-circle"
           :current="eventsCount"
-          :max="plan.eventsLimit || 0"
+          :max="planEventsLimit"
         />
       </router-link>
     </div>
@@ -106,8 +106,16 @@ export default defineComponent({
      *
      * @returns {Plan} - return the plan of the
      */
-    plan(): Plan {
+    plan(): Plan | undefined {
       return this.workspace.plan;
+    },
+    /**
+     * Returns workspace events limit or zero if plan is not available
+     *
+     * @returns {number} - events limit defined by current plan
+     */
+    planEventsLimit(): number {
+      return this.plan?.eventsLimit ?? 0;
     },
     /**
      * Total number of used events since the last charge date
