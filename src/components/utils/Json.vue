@@ -12,10 +12,18 @@
 </template>
 
 <script lang="ts">
-import VueJsonPretty from 'vue-json-pretty';
-import 'vue-json-pretty/lib/styles.css';
+import { defineAsyncComponent, defineComponent } from 'vue';
 
-export default {
+const VueJsonPretty = defineAsyncComponent(async () => {
+  const [{ default: component }] = await Promise.all([
+    import('vue-json-pretty'),
+    import('vue-json-pretty/lib/styles.css'),
+  ]);
+
+  return component;
+});
+
+export default defineComponent({
   name: 'Json',
   components: {
     VueJsonPretty,
@@ -29,15 +37,15 @@ export default {
       required: true,
     },
   },
-};
+});
 </script>
 
 <style>
-  .json-viewer-theme {
+body  .json-viewer-theme {
     width: 100%;
     padding: 10px 15px;
     overflow: auto;
-    color: #525252;
+    color: var(--color-text-second);
     font-size: 12px;
     font-family: var(--font-monospace);
     white-space: nowrap;
@@ -89,23 +97,42 @@ export default {
       }
     }
 
+    .vjs-tree-node.dark:hover {
+      background-color: var(--color-bg-third);
+    }
+
     .vjs-key {
       margin-right: 3px;
-      color: #f600cc;
+
+      color: #fa80fa;
     }
-    .vjs-boolean { color: #d6ec38 }
-    .vjs-function { color: #067bca }
-    .vjs-number { color: #75EA52 }
-    .vjs-undefined { color: #e08331 }
-    .vjs-string {
+    .vjs-value-boolean {
+      color: #70b5ff;
+    }
+    .vjs-function {
+      color: #27a4ef;
+    }
+    .vjs-value-number {
+      color: #ff9e65;
+      color: #82f0a5;
+
+    }
+    .vjs-undefined {
+      color: #f5d50e;
+    }
+    .vjs-string,
+    .vjs-value-string {
       display: inline-flex;
-      color: #279fff;
+      color: #bd7ffb;
       white-space: normal;
       word-break: break-word;
     }
     .vjs-code {
       padding: 0;
       overflow: visible
+    }
+    .vjs-tree-brackets {
+      color: var(--color-text-second);
     }
 
     .vjs-object,

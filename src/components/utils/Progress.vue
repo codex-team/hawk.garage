@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div class="progress">
     <div
       class="progress__bar"

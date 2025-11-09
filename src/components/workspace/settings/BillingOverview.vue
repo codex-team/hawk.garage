@@ -65,7 +65,7 @@
           <div class="billing-card__events">
             {{ validTillText }}
           </div>
-          <Progress
+          <ProgressBar
             :max="progressMaxDate"
             :current="progressCurrentDate"
             :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
@@ -472,7 +472,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="postcss">
+<style>
   @import url('./../../../styles/custom-properties.css');
 
   .billing-card {
@@ -568,7 +568,7 @@ export default defineComponent({
       width: 160px;
       height: 5px;
       margin-top: 7px;
-      background-color: color-mod(var(--color-border-base) alpha(25%));
+      background-color: var(--color-bg-third);
     }
 
     &__buttons {
