@@ -21,7 +21,7 @@ export default {
     /**
      * V-Model value
      */
-    value: {
+    modelValue: {
       type: [String, File],
       default: null,
     },
@@ -33,7 +33,7 @@ export default {
     imageSrc: null,
   }),
   mounted() {
-    if (!this.value) {
+    if (!this.modelValue) {
       this.imageSrc = null;
 
       return;
@@ -41,10 +41,10 @@ export default {
 
     const img = new Image();
 
-    img.src = this.value;
+    img.src = this.modelValue;
 
     img.onload = () => {
-      this.imageSrc = this.value;
+      this.imageSrc = this.modelValue;
     };
 
     img.onerror = () => {
@@ -57,7 +57,7 @@ export default {
 
       this.useTempImage(files[0]);
 
-      this.$emit('input', files[0]);
+      this.$emit('update:modelValue', files[0]);
     },
     useTempImage(file) {
       this.imageSrc = URL.createObjectURL(file);

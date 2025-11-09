@@ -9,7 +9,7 @@
       class="chart__info"
     >
       <span class="chart__info-today"> today </span>
-      <span class="chart__info-highlight"> {{ todayCount | spacedNumber }} </span>
+      <span class="chart__info-highlight"> {{ formattedTodayCount }} </span>
 
       <span
         v-if="difference !== 0"
@@ -18,7 +18,7 @@
           'chart__info-decrease': difference < 0
         }"
       >
-        {{ Math.abs(difference) | spacedNumber }}
+        {{ formattedDifference }}
       </span>
     </div>
     <svg
@@ -62,7 +62,7 @@
           :key="index"
           class="chart__ox-item"
         >
-          {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
+          {{ formattedDates[index] }}
         </span>
       </div>
     </div>
@@ -80,10 +80,10 @@
         :style="`min-width: ${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px`"
       >
         <div class="chart__pointer-tooltip-date">
-          {{ points[hoveredIndex].timestamp * 1000 | prettyDateFromTimestamp }}
+          {{ formatDateByIndex(hoveredIndex) }}
         </div>
         <div class="chart__pointer-tooltip-number">
-          <AnimatedCounter :value="points[hoveredIndex].count | spacedNumber" />
+          <AnimatedCounter :value="formatCountByIndex(hoveredIndex)" />
           events
         </div>
       </div>
@@ -92,8 +92,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { debounce } from '@/utils';
+import { spacedNumber, prettyDateFromTimestamp } from '@/utils/filters';
 import { ChartItem } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
 
@@ -104,7 +105,7 @@ type ChartData = {
   hoveredIndex: number;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: 'Chart',
   components: {
     AnimatedCounter,
@@ -282,6 +283,45 @@ export default Vue.extend({
 
       return points.join(', ');
     },
+
+    /**
+     * Computed property that returns formatted today count with spaces
+     */
+    formattedTodayCount(): string {
+      return spacedNumber(this.todayCount);
+    },
+
+    /**
+     * Computed property that returns formatted difference with spaces
+     */
+    formattedDifference(): string {
+      return spacedNumber(Math.abs(this.difference));
+    },
+
+    /**
+     * Computed property that returns a function to format count by index
+     */
+    formatCountByIndex() {
+      return (index: number) => {
+        return spacedNumber(this.points[index]?.count || 0);
+      };
+    },
+
+    /**
+     * Computed property that returns a function to format date by index
+     */
+    formatDateByIndex() {
+      return (index: number) => {
+        return prettyDateFromTimestamp(this.points[index]?.timestamp * 1000 || 0);
+      };
+    },
+
+    /**
+     * Computed property that returns array of formatted dates for all points
+     */
+    formattedDates(): string[] {
+      return this.points.map(day => prettyDateFromTimestamp(day.timestamp * 1000));
+    },
   },
   created() {
     this.onResize = debounce(this.windowResized, 200);
@@ -294,7 +334,7 @@ export default Vue.extend({
 
     window.addEventListener('resize', this.onResize);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {

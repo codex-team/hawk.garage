@@ -30,21 +30,22 @@
       <div class="modal-form__section-title">
         {{ $t('projects.settings.notifications.rulesList') }}
       </div>
+
       <Rule
         v-for="rule in rules"
         :key="rule.id"
         :rule="rule"
         :project-id="project.id"
         :enable-editing="userCanEdit"
-        @editClicked="editRule"
-        @removeClicked="removeRule"
+        @edit-clicked="editRule"
+        @remove-clicked="removeRule"
       />
     </section>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import AddRule from './NotificationsAddRule.vue';
 import Rule from './NotificationsRule.vue';
 import { ProjectNotificationsRule } from '@/types/project-notifications';
@@ -52,7 +53,7 @@ import UiButton from '@/components/utils/UiButton.vue';
 import { Project } from '@/types/project';
 import { Member, Workspace, ConfirmedMember } from '@/types/workspaces';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsNotifications',
   components: {
     AddRule,
@@ -178,14 +179,14 @@ export default Vue.extend({
 <style src="../../../styles/settings-window-page.css"></style>
 
 <style>
-  @import url('../../../styles/custom-properties.css');
+  @import '../../../styles/custom-properties.css';
 
   .modal-form {
     &__section {
       margin-bottom: 50px;
 
       &-title {
-        @apply --ui-label;
+        @mixin ui-label;
         margin-bottom: 15px;
 
         & + .n-rule {

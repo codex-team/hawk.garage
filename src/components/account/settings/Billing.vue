@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import BillingWorkspace from '../../workspace/settings/BillingOverview.vue';
 import BillingHistory from '../../utils/billing/History.vue';
 import Card from '../../utils/billing/BankCard.vue';
@@ -53,7 +53,7 @@ import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { User } from '@/types/user';
 import { Workspace } from '@/types/workspaces';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'AccountBilling',
   components: {
     BillingWorkspace,
@@ -101,7 +101,7 @@ export default Vue.extend({
 <style src="../../../styles/settings-window-page.css"></style>
 
 <style>
-  @import url('./../../../styles/custom-properties.css');
+  @import '../../../styles/custom-properties.css';
 
   .account-billing {
     &__section {
@@ -110,7 +110,7 @@ export default Vue.extend({
     }
 
     &__label {
-      @apply --ui-label;
+      @mixin ui-label;
       display: block;
       margin-bottom: 15px;
     }

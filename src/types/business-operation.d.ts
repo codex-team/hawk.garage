@@ -2,10 +2,10 @@
  * Operation is the record of the transaction with our custom metadata added by Billing
  * (for example, we can add userId, promoId and other fields)
  */
-import type { Workspace } from './workspaces';
-import type { User } from './user';
-import type { BusinessOperationType } from './business-operation-type';
-import type { BusinessOperationStatus } from './business-operation-status';
+import type { Workspace } from './workspaces.ts';
+import type { User } from './user.ts';
+import type { BusinessOperationType } from './business-operation-type.ts';
+import type { BusinessOperationStatus } from './business-operation-status.ts';
 
 /**
  * Business operation payload type for `DepositByUser` operation type

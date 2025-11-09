@@ -73,14 +73,14 @@
       <router-view
         v-if="workspace"
         :workspace="workspace"
-        @workspaceUpdated="updateWorkspace"
+        @workspace-updated="updateWorkspace"
       />
     </template>
   </SettingsWindow>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
@@ -89,7 +89,7 @@ import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/act
 import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'WorkspaceSettingsLayout',
   components: {
     SettingsWindow,

@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import PopupDialog from '../PopupDialog.vue';
 import UiButton from '../UiButton.vue';
 import { ActionType, ConfirmationWindowOptions } from './types';
@@ -40,7 +40,7 @@ import { ActionType, ConfirmationWindowOptions } from './types';
 /**
  * @see ./README.md
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'ConfirmationWindow',
   components: {
     PopupDialog,

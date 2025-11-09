@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 interface ConsoleLogEvent {
   method: string;
@@ -66,7 +66,7 @@ interface ConsoleLogEvent {
   styles?: string[];
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ConsoleOutput',
   props: {
     value: {

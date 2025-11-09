@@ -10,9 +10,9 @@
     <div class="events-limit-indicator__events">
       {{ eventsCount }} /
       {{ plan.eventsLimit }}
-      {{ $tc("billing.volumeEvents", eventsCount) }}
+      {{ $t("billing.volumeEvents", { count: eventsCount }) }}
     </div>
-    <Progress
+    <ProgressBar
       :max="plan.eventsLimit || 0"
       :current="eventsCount"
       :color="
@@ -34,14 +34,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Progress from '../../utils/Progress.vue';
+import { defineComponent } from 'vue';
+import ProgressBar from '../../utils/Progress.vue';
 import { Plan } from '../../../types/plan';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'WorkspaceSettingsUsedVolume',
   components: {
-    Progress,
+    ProgressBar,
   },
   props: {
     /**

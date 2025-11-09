@@ -1,14 +1,14 @@
 <template>
-  <nobr>
+  <span class="window-dimensions">
     {{ value.innerWidth }} × {{ value.innerHeight }}
-  </nobr>
+  </span>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { WindowData } from '@hawk.so/types';
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     /**
      * Addon value
@@ -20,3 +20,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+.window-dimensions {
+  white-space: nowrap;
+}
+</style>

@@ -41,14 +41,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from './EntityImage.vue';
 import Icon from './Icon.vue';
 import AssigneesList from '../event/AssigneesList.vue';
 
 import { HawkEvent } from '@/types/events';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'AssigneeBar',
   components: {
     EntityImage,

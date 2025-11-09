@@ -4,7 +4,7 @@
     class="event-badge"
   >
     <span class="event-badge__count">
-      {{ eventCount | abbreviateNumber }}
+      {{ abbreviatedEventCount }}
     </span>
     <div
       v-if="affectedUsersCount !== null && affectedUsersCount > 0"
@@ -14,13 +14,14 @@
         symbol="user-small"
         class="event-badge__affected-users-icon"
       />
-      {{ affectedUsersCount | abbreviateNumber }}
+      {{ abbreviatedAffectedUsersCount }}
     </div>
   </div>
 </template>
 
 <script>
 import Icon from '../utils/Icon.vue';
+import { abbreviateNumber } from '../../utils';
 
 export default {
   name: 'EventBadge',
@@ -50,6 +51,14 @@ export default {
     isVisited: {
       type: Boolean,
       default: false,
+    },
+  },
+  computed: {
+    abbreviatedEventCount() {
+      return abbreviateNumber(this.eventCount);
+    },
+    abbreviatedAffectedUsersCount() {
+      return this.affectedUsersCount !== null ? abbreviateNumber(this.affectedUsersCount) : '';
     },
   },
 };

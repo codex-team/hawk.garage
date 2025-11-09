@@ -1,4 +1,4 @@
-import type { NotificationsChannels } from './notifications';
+import type { NotificationsChannels } from './notifications.d.ts';
 
 /**
  * This structure represents a settings of the user notifications

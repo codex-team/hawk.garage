@@ -21,13 +21,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import UiButton from '../utils/UiButton.vue';
 import Placeholder from './ProjectPlaceholder.vue';
 import { Workspace } from '../../types/workspaces';
 import { SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EmptyProjectsList',
   components: {
     UiButton,

@@ -10,20 +10,12 @@
       class="projects-integrations-settings-page__token"
       :token="project.token"
     />
-    <i18n
-      path="projects.settings.integrations.revokeText"
-      tag="div"
+
+    <div
       class="projects-integrations-settings-page__revoke-container"
-    >
-      <template #revoke>
-        <span
-          class="projects-integrations-settings-page__revoke-button"
-          @click="revokeIntegrationToken()"
-        >
-          {{ $t('projects.settings.integrations.revoke') }}
-        </span>
-      </template>
-    </i18n>
+      @click="revokeIntegrationToken()"
+      v-html="$t('projects.settings.integrations.revokeText')"
+    />
     <br>
     <br>
     <br>
@@ -48,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { Project } from '../../../types/project';
 import TokenBlock from '../TokenBlock.vue';
 import { ActionType } from '../../utils/ConfirmationWindow/types';
@@ -56,7 +48,7 @@ import { GENERATE_NEW_INTEGRATION_TOKEN } from '@/store/modules/projects/actionT
 import notifier from 'codex-notifier';
 import { getSentryDSN } from '../../../utils';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectIntegrationsSettings',
   components: {
     TokenBlock,

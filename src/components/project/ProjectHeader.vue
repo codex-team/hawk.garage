@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import EntityImage from '../utils/EntityImage.vue';
 import ProjectBadge from './ProjectBadge.vue';
 import { projectBadges } from '../../mixins/projectBadges';
@@ -74,7 +74,7 @@ import SkeletonAvatar from '../utils/SkeletonAvatar.vue';
 import SkeletonBar from '../utils/SkeletonBar.vue';
 import { Workspace } from '@/types/workspaces';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectHeader',
   components: {
     ProjectBadge,

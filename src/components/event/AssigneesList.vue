@@ -241,7 +241,7 @@ export default {
     overflow-y: scroll;
     border-bottom-right-radius: inherit;
     border-bottom-left-radius: inherit;
-    @apply --hide-scrollbar;
+    @mixin hide-scrollbar;
 
     &__image {
       margin-right: 7px;

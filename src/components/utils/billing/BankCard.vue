@@ -14,11 +14,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from '../Icon.vue';
 import { BankCard } from '../../../types/bankCard';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'BankCard',
   components: {
     Icon,

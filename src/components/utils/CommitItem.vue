@@ -22,7 +22,7 @@
         </span>
         <span class="commit-item__left-relative-time">
           {{ $t('event.suspectedCommits.committed') }}
-          {{ commit.date | prettyRelativeTimeStr }}
+          {{ formatRelativeTime(commit.date) }}
         </span>
       </div>
     </div>
@@ -39,6 +39,7 @@
 
 <script>
 import EntityImage from './EntityImage.vue';
+import { prettyRelativeTimeStr } from '@/utils/filters';
 
 export default {
   name: 'CommitItem',
@@ -52,6 +53,9 @@ export default {
   methods: {
     short(hash) {
       return hash ? hash.slice(0, 7) : '';
+    },
+    formatRelativeTime(value) {
+      return prettyRelativeTimeStr(value);
     },
   },
 };

@@ -10,7 +10,7 @@
         class="project-releases__group"
       >
         <div class="project-releases__date">
-          {{ getDay(key) | prettyDate }}
+          {{ formatGroupDate(key) }}
         </div>
         <div
           v-for="release in items"
@@ -20,7 +20,7 @@
         >
           <div class="release-row__left">
             <div class="release-row__time">
-              {{ release.timestamp | prettyTime }}
+              {{ formatReleaseTime(release.timestamp) }}
             </div>
             <span>
               <Badge
@@ -120,6 +120,7 @@
 
 <script>
 import { fetchProjectReleases } from '@/api/projects';
+import { prettyDate, prettyTime } from '@/utils/filters';
 import Badge from '@/components/utils/Badge.vue';
 import EmptyState from '../utils/EmptyState.vue';
 import SkeletonBar from '../utils/SkeletonBar.vue';
@@ -188,6 +189,26 @@ export default {
   methods: {
     getDay(key) {
       return parseInt(key.replace('groupingTimestamp:', ''), 10);
+    },
+
+    /**
+     * Format grouped date for rendering.
+     *
+     * @param {string} key - grouping key like 'groupingTimestamp:1576011600'
+     * @returns {string}
+     */
+    formatGroupDate(key) {
+      return prettyDate(this.getDay(key));
+    },
+
+    /**
+     * Format release timestamp for display.
+     *
+     * @param {number} timestamp
+     * @returns {string}
+     */
+    formatReleaseTime(timestamp) {
+      return prettyTime(timestamp);
     },
 
     openRelease(release) {

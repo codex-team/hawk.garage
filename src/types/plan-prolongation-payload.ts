@@ -1,4 +1,4 @@
-import type PaymentData from './paymentData';
+import type PaymentData from './paymentData.ts';
 
 /**
  * Data to be sent with pay event to and back from payments server

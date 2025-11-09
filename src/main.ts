@@ -1,19 +1,15 @@
 import './styles/base.css';
-import Vue from 'vue';
-import VueCookies from 'vue-cookies';
+import { createApp } from 'vue';
+import 'virtual:svg-icons-register';
 import ConfirmationWindow from './plugins/ConfirmationWindow';
-import NotifierWindow from './plugins/NotifierWindow';
 import Popover from './plugins/Popover';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import './filters';
-import './directives';
-import i18n from './i18n';
+import { i18n } from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-import UniqueId from 'vue-unique-id';
 
 const DEBOUNCE_TIMEOUT = 1000;
 
@@ -26,15 +22,23 @@ import { useErrorTracker } from './hawk';
 import notifier from 'codex-notifier';
 import { errorMessages } from './api/const';
 import { debounce } from './utils';
+import setupDirectives from './directives';
 
 const { init: initHawk, track } = useErrorTracker();
+
+const app = createApp(App);
+
+app.use(router);
+app.use(store);
+app.use(i18n);
+app.mount('#app');
 
 /**
  * Enable errors tracking via Hawk.so
  */
-if (process.env.VUE_APP_HAWK_TOKEN) {
+if (import.meta.env.VITE_HAWK_TOKEN) {
   const options: ErrorTrackerInitialOptions = {
-    vue: Vue,
+    vue: app,
   };
 
   if (store.state.user && store.state.user.data && Object.keys(store.state.user.data).length) {
@@ -54,32 +58,29 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
  * @param error - error to send
  * @example this.$sendToHawk(new Error('Some error'));
  */
-Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
+app.config.globalProperties.$sendToHawk = function sendToHawk(error: Error): void {
   track(error);
 };
 
 /**
  * Enable analytics via Amplitude.com
  */
-if (process.env.VUE_APP_AMPLITUDE_TOKEN) {
-  void Analytics.init(process.env.VUE_APP_AMPLITUDE_TOKEN);
+if (import.meta.env.VITE_AMPLITUDE_TOKEN) {
+  void Analytics.init(import.meta.env.VITE_AMPLITUDE_TOKEN);
 }
+
+setupDirectives(app);
 
 /**
  * Vue wrapper for sending analytics events
  */
-Vue.prototype.$sendToAmplitude = Analytics.track;
+app.config.globalProperties.$sendToAmplitude = Analytics.track;
 
-Vue.config.devtools = process.env.NODE_ENV !== 'production';
+app.config.globalProperties.$API_AUTH_GOOGLE = import.meta.env.VITE_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
+app.config.globalProperties.$API_AUTH_GITHUB = import.meta.env.VITE_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
 
-Vue.prototype.$API_AUTH_GOOGLE = process.env.VUE_APP_API_AUTH_GOOGLE || 'http://localhost:3000/auth/google';
-Vue.prototype.$API_AUTH_GITHUB = process.env.VUE_APP_API_AUTH_GITHUB || 'http://localhost:3000/auth/github';
-
-Vue.use(VueCookies);
-Vue.use(UniqueId);
-Vue.use(ConfirmationWindow);
-Vue.use(NotifierWindow);
-Vue.use(Popover);
+app.use(ConfirmationWindow);
+app.use(Popover);
 
 /**
  * Configure API
@@ -110,17 +111,9 @@ api.setupApiModuleHandlers({
     const key = 'errors.' + errorMessages.UNAUTHENTICATED;
 
     notifier.show({
-      message: i18n.t(key) as string,
+      message: i18n.global.t(key),
       style: 'error',
       time: 5000,
     });
   }, DEBOUNCE_TIMEOUT),
 });
-
-new Vue({
-  router,
-  store,
-  i18n,
-
-  render: h => h(App),
-}).$mount('#app');

@@ -10,7 +10,7 @@
   >
     <EventMark :mark="mark" />
     <div class="event-item__time">
-      {{ lastOccurrenceTimestamp | prettyTime }}
+      {{ formattedTime }}
     </div>
     <div class="event-item__badge-container">
       <EventBadge
@@ -29,7 +29,7 @@
       v-if="!event.assignee"
       symbol="assignee"
       class="event-item__assignee event-item__assignee--icon"
-      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+      @click.stop="$emit('onAssigneeIconClick', $event)"
     />
     <EntityImage
       v-else
@@ -39,7 +39,7 @@
       :name="event.assignee.name || event.assignee.email"
       :title="event.assignee.name || event.assignee.email"
       size="20"
-      @click.native.stop="$emit('onAssigneeIconClick', $event)"
+      @click.stop="$emit('onAssigneeIconClick', $event)"
     />
   </div>
 </template>
@@ -49,6 +49,7 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
+import { prettyTime } from '@/utils/filters';
 import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscriptionExpiry';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 
@@ -174,9 +175,13 @@ export default {
     isEventBlurred() {
       return this.isEventAfterExpiry && this.isWorkspaceBlocked;
     },
-  },
-  beforeUnmount() {
-    this.$root.$off('workspacePlanChanged');
+
+    /**
+     * Computed property that returns formatted time for last occurrence
+     */
+    formattedTime() {
+      return prettyTime(this.lastOccurrenceTimestamp);
+    },
   },
   methods: {
     /**

@@ -12,11 +12,11 @@
       </div>
       <div class="events-limit-indicator__info-bar">
         <div class="events-limit-indicator__events">
-          {{ eventsCount || 0 | abbreviateNumber }} /
-          {{ plan.eventsLimit || 0 | abbreviateNumber }}
-          {{ $tc("billing.volumeEvents", eventsCount) }}
+          {{ abbreviatedEventsCount }} /
+          {{ abbreviatedEventsLimit }}
+          {{ $t("billing.volumeEvents", { count: eventsCount }) }}
         </div>
-        <Progress
+        <ProgressBar
           :max="plan.eventsLimit || 0"
           :current="eventsCount"
           :color="
@@ -32,16 +32,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 // import PositiveButton from '../utils/PostivieButton.vue';
 import { Plan } from '../../types/plan';
-import Progress from '../utils/Progress.vue';
+import ProgressBar from '../utils/Progress.vue';
+import { abbreviateNumber } from '../../utils';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventsLimitIndicator',
   components: {
     // PositiveButton,
-    Progress,
+    ProgressBar,
   },
   props: {
     /**
@@ -95,6 +96,22 @@ export default Vue.extend({
     eventsCount(): number {
       return this.workspace.billingPeriodEventsCount || 0;
     },
+    /**
+     * Abbreviated events count
+     *
+     * @returns {string} - abbreviated events count
+     */
+    abbreviatedEventsCount(): string {
+      return abbreviateNumber(this.eventsCount || 0);
+    },
+    /**
+     * Abbreviated events limit
+     *
+     * @returns {string} - abbreviated events limit
+     */
+    abbreviatedEventsLimit(): string {
+      return abbreviateNumber(this.plan.eventsLimit || 0);
+    },
   },
   methods: {
     /**
@@ -108,7 +125,8 @@ export default Vue.extend({
 </script>
 
 <style lang="postcss">
-@import url("./../../styles/custom-properties.css");
+@import './../../styles/custom-properties.css';
+
 .events-limit-indicator {
   &__info {
     margin-top: 20px;
@@ -124,7 +142,7 @@ export default Vue.extend({
   }
 
   &__label {
-    @apply --ui-label;
+    @mixin ui-label;
     display: flex;
     justify-content: space-between;
 

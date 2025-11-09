@@ -2,7 +2,7 @@
   <DetailsBase
     class="details-suspected-commit"
     :expand-showed="commits.length > numberOfVisibleCommits"
-    @expandClicked="isMoreCommitsShown = !isMoreCommitsShown"
+    @expand-clicked="isMoreCommitsShown = !isMoreCommitsShown"
   >
     <template #header>
       {{ $t("event.suspectedCommits.header") }}
@@ -24,12 +24,9 @@
       {{
         isMoreCommitsShown
           ? $t("event.suspectedCommits.hide")
-          : $tc(
+          : $t(
             "event.suspectedCommits.moreRelease",
-            commits.length - numberOfVisibleCommits,
-            {
-              numberOfCommits: commits.length - numberOfVisibleCommits,
-            }
+            { numberOfCommits: commits.length - numberOfVisibleCommits }
           )
       }}
     </template>
@@ -37,12 +34,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import CommitItem from '../../utils/CommitItem.vue';
 import { ReleaseCommit } from '@/types/release';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'DetailsSuspectedCommits',
   components: {
     DetailsBase,

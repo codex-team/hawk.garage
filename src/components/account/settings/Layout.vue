@@ -65,13 +65,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '@/components/utils/Icon.vue';
 import { RESET_STORE } from '@/store/methodsTypes';
 import { User } from '@/types/user';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'AccountSettingsLayout',
   components: {
     SettingsWindow,

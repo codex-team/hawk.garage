@@ -48,7 +48,7 @@ export default {
     &__header {
       margin-bottom: 30px;
 
-      @apply --clearfix;
+      @mixin clearfix;
     }
 
     &__logo {

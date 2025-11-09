@@ -1,62 +1,58 @@
-:root {
-  --hide-scrollbar: {
-
-    /* Chrome, Safari, newer versions of Opera */
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    overflow: -moz-scrollbars-none; /* Firefox */
-    scrollbar-width: none; /* newer versions of Firefox */
-    -ms-overflow-style: none; /* IE 10+ */
-  };
-
-
-  --clearfix: {
-    &::after {
-      display: table;
-      clear: both;
-      content: "";
-    }
-  };
-
-  --ui-label: {
-    color: var(--color-text-second);
-    font-weight: bold;
-    font-size: 12px;
-    letter-spacing: 0.15px;
-    text-transform: uppercase;
+@define-mixin hide-scrollbar {
+  /* Chrome, Safari, newer versions of Opera */
+  &::-webkit-scrollbar {
+    display: none;
   }
+  overflow: -moz-scrollbars-none; /* Firefox */
+  scrollbar-width: none; /* newer versions of Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
 
-  --font-small: {
-    font-size: 13px;
-    line-height: 20px;
-    letter-spacing: 0.16px;
+@define-mixin clearfix {
+  &::after {
+    display: table;
+    clear: both;
+    content: "";
   }
+}
 
-  --shaking: {
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-  }
+@define-mixin ui-label {
+  color: var(--color-text-second);
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.15px;
+  text-transform: uppercase;
+}
 
-  --empty-placeholder: {
-    padding: 80px 0;
-    color: var(--color-text-second);
-    text-align: center;
-  }
+@define-mixin font-small {
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.16px;
+}
 
-  --skeleton-base: {
-    background-color: var(--color-bg-third);
-    background-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--color-bg-second) 50%,
-      transparent 100%
-    );
-    background-size: 200% 100%;
-    animation: skeleton-shimmer 1.5s infinite;
-  }
+@define-mixin shaking {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@define-mixin empty-placeholder {
+  padding: 80px 0;
+  color: var(--color-text-second);
+  text-align: center;
+}
+
+@define-mixin skeleton-base {
+  background-color: var(--color-bg-third);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-bg-second) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
 }
 
 @keyframes shake {
@@ -86,3 +82,4 @@
     background-position: 200% 0;
   }
 }
+

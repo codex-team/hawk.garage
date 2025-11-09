@@ -69,7 +69,7 @@ export default {
       padding: 50px;
       overflow-y: auto;
       background-color: rgba(0, 0, 0, .6);
-      @apply --hide-scrollbar;
+      @mixin hide-scrollbar;
     }
 
     &__wrapper {

@@ -1,4 +1,4 @@
-import type { UserNotifications } from './user-notifications';
+import type { UserNotifications } from './user-notifications.ts';
 
 /**
  * Represents current authenticated user

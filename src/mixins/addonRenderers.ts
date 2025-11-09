@@ -1,10 +1,10 @@
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { isObject } from '../utils';
 
 /**
  * Useful methods for rendering event addons
  */
-export default Vue.extend({
+export default defineComponent({
   data(): {
     customRendererNamePrefix: string;
   } {

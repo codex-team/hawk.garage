@@ -1,7 +1,7 @@
 <template>
   <div
     class="ui-switch"
-    :class="{'ui-switch--checked': value}"
+    :class="{'ui-switch--checked': modelValue}"
     @click="clicked"
   >
     <div class="ui-switch__slider" />
@@ -15,23 +15,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UiSwitch',
   props: {
     label: {
       type: String,
       default: undefined,
     },
-    value: {
+    modelValue: {
       type: Boolean,
       default: false,
     },
   },
   methods: {
     clicked() {
-      this.$emit('input', !this.value);
+      this.$emit('update:modelValue', !this.modelValue);
     },
   },
 });

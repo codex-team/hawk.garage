@@ -1,15 +1,15 @@
-import Vue from 'vue';
 import notifier from 'codex-notifier';
 import store from './store';
 import { CONFIRM_INVITE, JOIN_BY_INVITE_LINK } from './store/modules/workspaces/actionTypes';
-import i18n from './i18n';
+import { i18n } from './i18n';
 import type { NavigationGuard } from 'vue-router';
+import { setCookie } from './utils';
 
 const invitesHandler: NavigationGuard = async function (to, from, next) {
   const { workspaceId, inviteHash } = to.params;
 
   if (!store.getters.isAuthenticated) {
-    Vue.$cookies.set('afterAuthRedirect', to.path, '1d');
+    setCookie('afterAuthRedirect', to.path, 1);
     next('/login');
 
     return;
@@ -33,7 +33,7 @@ const invitesHandler: NavigationGuard = async function (to, from, next) {
   }
 
   notifier.show({
-    message: (isSuccessful ? i18n.t('workspaces.settings.team.joinNotification') : i18n.t('workspaces.settings.team.brokenLinkNotification')) as string,
+    message: (isSuccessful ? i18n.global.t('workspaces.settings.team.joinNotification') : i18n.global.t('workspaces.settings.team.brokenLinkNotification')),
     style: isSuccessful ? 'success' : 'error',
     time: 10000,
   });

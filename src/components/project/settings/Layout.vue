@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '@/components/utils/Icon.vue';
 import { Project } from '../../../types/project';
@@ -80,7 +80,7 @@ import { REMOVE_PROJECT } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../../utils/ConfirmationWindow/types';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsWindow',
   components: {
     SettingsWindow,

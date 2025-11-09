@@ -1,5 +1,7 @@
 @import "normalize.css";
 @import "variables.css";
+@import "custom-properties.css";
+@import "fonts.css";
 @import "code-highlighting.css";
 @import "ripple-effect.css";
 
@@ -14,8 +16,7 @@ body {
   display: flex;
   align-items: stretch;
   box-sizing: border-box;
-  min-height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
   color: var(--color-text-main);
   font-size: 15px;
   font-family: Roboto, system-ui, sans-serif;

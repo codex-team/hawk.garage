@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 
 /**
@@ -47,7 +47,7 @@ export interface UiContextListItem {
   icon?: string;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Icon,
   },

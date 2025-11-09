@@ -47,11 +47,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import TextFieldset from './TextFieldset.vue';
 import { ProjectRateLimitSettings } from '@/types/project';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RateLimitsForm',
   components: {
     TextFieldset,

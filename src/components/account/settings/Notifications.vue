@@ -51,9 +51,9 @@
         </div>
         <div class="settings-field__input">
           <UiCheckbox
-            :value="getChannelState(channelName)"
+            :model-value="getChannelState(channelName)"
             :disabled="isChannelUnavailable(channelName) || !user.email"
-            @input="channelChanged(channelName, $event)"
+            @update:model-value="channelChanged(channelName, $event)"
           />
         </div>
       </div>
@@ -75,9 +75,9 @@
         </div>
         <div class="settings-field__input">
           <UiCheckbox
-            :value="user.notifications.whatToReceive[action]"
+            :model-value="user.notifications.whatToReceive[action]"
             :disabled="action === 'SystemMessages'"
-            @input="whatToReceiveChanged(action, $event)"
+            @update:model-value="whatToReceiveChanged(action, $event)"
           />
         </div>
       </div>
@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { User } from '../../../types/user';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
 import {
@@ -103,7 +103,7 @@ import { NotificationsChannelSettings } from '../../../types/notifications';
 import notifier from 'codex-notifier';
 import Icon from './../../utils/Icon.vue';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     UiCheckbox,
     Icon,
@@ -241,13 +241,13 @@ export default Vue.extend({
 </script>
 
 <style>
-  @import url('../../../styles/custom-properties.css');
+@import '../../../styles/custom-properties.css';
 
   .acc-notifies {
     max-width: var(--width-popup-form-container);
 
     h3 {
-      @apply --ui-label;
+      @mixin ui-label;
     }
 
     section {
@@ -286,7 +286,7 @@ export default Vue.extend({
     }
 
     &__description {
-      @apply --font-small;
+      @mixin font-small;
       flex-grow: 2;
       color: var(--color-text-second);
     }

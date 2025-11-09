@@ -11,8 +11,8 @@
       ref="input"
       class="form-search-field__input"
       type="text"
-      :placeholder="placeholder"
-      :value="value"
+      :placeholder="placeholderText"
+      :value="modelValue"
       @input="onChange"
     >
     <div
@@ -37,15 +37,13 @@ export default {
     Icon,
   },
   props: {
-    value: {
+    modelValue: {
       type: String,
       default: '',
     },
     placeholder: {
       type: String,
-      default() {
-        return this.$t('forms.searchField');
-      },
+      default: null,
     },
     skin: {
       type: String,
@@ -61,8 +59,13 @@ export default {
   },
   data() {
     return {
-      inputValue: this.value,
+      inputValue: this.modelValue,
     };
+  },
+  computed: {
+    placeholderText() {
+      return this.placeholder || this.$t('forms.searchField');
+    },
   },
   created() {
     if (this.isCMDKEnabled) {
@@ -77,11 +80,11 @@ export default {
   methods: {
     onChange(event) {
       this.inputValue = event.target.value;
-      this.$emit('input', event.target.value);
+      this.$emit('update:modelValue', event.target.value);
     },
     clearInput() {
       this.inputValue = '';
-      this.$emit('input', '');
+      this.$emit('update:modelValue', '');
       this.$refs.input.focus();
     },
     handleKeyDown(event) {

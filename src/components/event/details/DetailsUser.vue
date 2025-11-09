@@ -53,13 +53,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import DetailsBase from './DetailsBase.vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import Icon from '../../utils/Icon.vue';
 import { AffectedUser } from '@hawk.so/types';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'DetailsUser',
   components: {
     DetailsBase,

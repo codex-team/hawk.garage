@@ -30,7 +30,6 @@
 <script>
 import EventsList from './EventsList.vue';
 import Chart from '../events/Chart';
-import { mapGetters } from 'vuex';
 import {
   FETCH_CHART_DATA
 } from '../../store/modules/projects/actionTypes';
@@ -94,9 +93,6 @@ export default {
     isWorkspaceBlocked() {
       return this.workspace?.isBlocked;
     },
-
-    ...mapGetters([]),
-
   },
 
   /**
@@ -172,7 +168,7 @@ export default {
 </script>
 
 <style>
-@import '../../styles/custom-properties.css';
+  @import '../../styles/custom-properties.css';
 
 .project-overview {
   display: flex;
@@ -183,7 +179,7 @@ export default {
   &__content {
     align-self: stretch;
     overflow-y: auto;
-    @apply --hide-scrollbar;
+    @mixin hide-scrollbar;
   }
 
   &__events {

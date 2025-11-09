@@ -1,5 +1,5 @@
 <template>
-  <comment
+  <component
     :is="href ? 'a' : 'button'"
     class="ui-button"
     :class="{
@@ -17,7 +17,6 @@
     :disabled="disabled"
     :href="href || null"
     data-ripple
-    @click="$emit('click', $event)"
   >
     <Icon
       v-if="icon"
@@ -28,11 +27,11 @@
     <span class="ui-button-text">
       {{ content }}
     </span>
-  </comment>
+  </component>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 
 /**
@@ -44,7 +43,7 @@ export interface UiButtonComponent {
   shake: () => void;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UiButton',
   components: {
     Icon,
@@ -164,6 +163,10 @@ export default Vue.extend({
 <style>
 @import '../../styles/custom-properties.css';
 
+$loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
+$submitLoaderColor: color-mod(var(--color-indicator-medium) blend(black 12%));
+$loaderSize: 56px;
+
 .ui-button {
   display: inline-flex;
   align-items: center;
@@ -190,7 +193,7 @@ export default Vue.extend({
   }
 
   &--shaking {
-    @apply --shaking;
+    @mixin shaking;
   }
 
   &--submit {
@@ -239,10 +242,6 @@ export default Vue.extend({
       background-color: var(--color-bg-second);
     }
   }
-
-  $loaderColor: color-mod(var(--color-bg-sidebar) alpha(30%));
-  $submitLoaderColor: color-mod(var(--color-indicator-medium) blend(black 12%));
-  $loaderSize: 56px;
 
   &--loading,
   &--submit&--loading {

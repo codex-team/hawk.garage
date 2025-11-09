@@ -21,35 +21,35 @@ jobs:
         if: endsWith(github.ref, '/stage')
         uses: SpicyPizza/create-envfile@v1
         with:
-          envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
-          envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
-          envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
-          envkey_VUE_APP_API_ENDPOINT: "https://api-staging.hawk.so"
-          envkey_VUE_APP_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
-          # envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_STAGE }}
-          # envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_STAGE }}
-          # envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
-          # envkey_VUE_APP_API_ENDPOINT: "https://api.stage.hawk.so"
+          envkey_VITE_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
+          envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
+          envkey_VITE_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
+          envkey_VITE_API_ENDPOINT: "https://api-staging.hawk.so"
+          envkey_VITE_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
+          # envkey_VITE_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_STAGE }}
+          # envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_STAGE }}
+          # envkey_VITE_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
+          # envkey_VITE_API_ENDPOINT: "https://api.stage.hawk.so"
 
       - name: Make prod envfile
         if: endsWith(github.ref, '/prod')
         uses: SpicyPizza/create-envfile@v1
         with:
-          envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
-          envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
-          envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
-          envkey_VUE_APP_API_ENDPOINT: "https://api.hawk.so"
-          envkey_VUE_APP_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
+          envkey_VITE_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
+          envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
+          envkey_VITE_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
+          envkey_VITE_API_ENDPOINT: "https://api.hawk.so"
+          envkey_VITE_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
 
       - name: Make prod envfile
         if: endsWith(github.ref, '/prod-ru')
         uses: SpicyPizza/create-envfile@v1
         with:
-          envkey_VUE_APP_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
-          envkey_VUE_APP_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
-          envkey_VUE_APP_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
-          envkey_VUE_APP_API_ENDPOINT: "https://api.hawk-tracker.ru"
-          envkey_VUE_APP_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
+          envkey_VITE_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_PROD }}
+          envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
+          envkey_VITE_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
+          envkey_VITE_API_ENDPOINT: "https://api.hawk-tracker.ru"
+          envkey_VITE_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

@@ -12,7 +12,7 @@
     >
       <div
         class="radio-button-group__option"
-        @click="$emit('input', option.id)"
+        @click="select(option.id)"
       >
         <div
           v-if="option.image"
@@ -56,9 +56,9 @@
           :id="option.id"
           :name="name"
           :value="option.id"
-          :checked="option.id === value"
+          :checked="option.id === currentValue"
           class="radio-button-group__option-radio"
-          @input="$emit('input', option.id)"
+          @input="select(option.id)"
         />
       </div>
       <hr
@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import UiRadio from './UiRadio.vue';
 
 /**
@@ -103,7 +103,7 @@ export interface RadioButtonGroupItem {
   description?: string;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RadioButtonGroup',
   components: {
     UiRadio,
@@ -121,16 +121,35 @@ export default Vue.extend({
       type: Array as () => RadioButtonGroupItem[],
       required: true,
     },
+    modelValue: {
+      type: String,
+      default: undefined,
+    },
     value: {
       type: String,
-      required: true,
+      default: undefined,
+    },
+  },
+  computed: {
+    currentValue(): string | undefined {
+      if (this.modelValue !== undefined) {
+        return this.modelValue;
+      }
+
+      return this.value;
+    },
+  },
+  methods: {
+    select(optionId: string) {
+      this.$emit('update:modelValue', optionId);
+      this.$emit('input', optionId);
     },
   },
 });
 </script>
 
 <style>
-  @import url('./../../styles/custom-properties.css');
+  @import './../../styles/custom-properties.css';
 
   .radio-button-group{
     &__option {
@@ -159,7 +178,7 @@ export default Vue.extend({
       }
 
       &-label {
-        @apply --ui-label;
+        @mixin ui-label;
         margin-bottom: 7px;
       }
 

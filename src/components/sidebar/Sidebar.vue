@@ -32,7 +32,7 @@
         :image="user.image"
         size="36"
         data-ripple
-        @click.native="$router.push('/account/general')"
+        @click="$router.push('/account/general')"
       />
       <hr class="sidebar__delimiter">
       <div class="sidebar__button-create-wrapper">
@@ -69,7 +69,7 @@
             :active="currentWorkspace ? currentWorkspace.id === workspace.id : false"
             class="sidebar__workspace-item"
             data-ripple
-            @click.native="onWorkspaceItemClick(workspace)"
+            @click="onWorkspaceItemClick(workspace)"
           />
         </div>
       </div>
@@ -288,7 +288,7 @@ export default {
     }
 
     &__scrollable {
-      @apply --hide-scrollbar;
+      @mixin hide-scrollbar;
       position: relative;
       max-height: 100%;
       padding-top: 20px;

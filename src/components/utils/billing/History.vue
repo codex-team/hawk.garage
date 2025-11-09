@@ -16,7 +16,7 @@
         class="billing-history__row"
       >
         <div class="billing-history__date">
-          {{ operation.dtCreated | prettyDateFromDateTimeString }}
+          {{ getFormattedDate(operation.dtCreated) }}
         </div>
         <div class="billing-history__user">
           <EntityImage
@@ -52,14 +52,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from './../EntityImage.vue';
 import { BusinessOperationType } from '@/types/business-operation-type';
-import i18n from './../../../i18n';
+import { i18n } from './../../../i18n';
 import { BusinessOperation } from '@/types/business-operation';
 import { getCurrencySign } from '@/utils';
+import { prettyDateFromDateTimeString } from '@/utils/filters';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'BillingHistory',
   components: {
     EntityImage,
@@ -102,6 +103,17 @@ export default Vue.extend({
     },
   },
   methods: {
+    /**
+     * Format date using prettyDateFromDateTimeString function
+     *
+     * @param dateValue
+     */
+    getFormattedDate(dateValue: number | string): string {
+      const dateString = typeof dateValue === 'number' ? new Date(dateValue).toISOString() : dateValue;
+
+      return prettyDateFromDateTimeString(dateString);
+    },
+
     getAmountString(amount: number, currency: string): string {
       return (amount / 100) + getCurrencySign(currency);
     },
@@ -125,16 +137,14 @@ export default Vue.extend({
     getDescription(operation: BusinessOperation): string {
       switch (operation.type) {
         case BusinessOperationType.WorkspacePlanPurchase: {
-          // const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
-
-          return i18n.t('billing.operations.chargeForPlan').toString();
+          return i18n.global.t('billing.operations.chargeForPlan').toString();
         }
 
         case BusinessOperationType.CardLinkCharge:
-          return i18n.t('billing.operations.cardLinkingChange').toString();
+          return i18n.global.t('billing.operations.cardLinkingChange').toString();
 
         case BusinessOperationType.CardLinkRefund:
-          return i18n.t('billing.operations.cardLinkingRefund').toString();
+          return i18n.global.t('billing.operations.cardLinkingRefund').toString();
 
         default:
           return operation.type;
@@ -151,7 +161,7 @@ export default Vue.extend({
     max-width: var(--width-popup-form-container);
 
     &__header {
-      @apply --ui-label;
+      @mixin ui-label;
     }
 
     &__tab {
@@ -238,7 +248,7 @@ export default Vue.extend({
     }
 
     &__empty {
-      @apply --font-small;
+      @mixin font-small;
 
       margin-top: 15px;
     }

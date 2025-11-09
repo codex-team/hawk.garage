@@ -3,11 +3,12 @@
     class="badge"
     :class="'badge--' + type"
   >
-    {{ content | abbreviateNumber }}
+    {{ abbreviatedContent }}
   </span>
 </template>
 
 <script>
+import { abbreviateNumber } from '../../utils';
 
 export default {
   name: 'Badge',
@@ -26,6 +27,11 @@ export default {
     type: {
       type: String,
       default: 'default',
+    },
+  },
+  computed: {
+    abbreviatedContent() {
+      return abbreviateNumber(this.content);
     },
   },
 };

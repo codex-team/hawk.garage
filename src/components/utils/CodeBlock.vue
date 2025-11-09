@@ -68,8 +68,11 @@ export default {
      * @returns {boolean}
      */
     isSingleLine() {
-      const hasLineBreak = this.$slots.default[0].text.includes('\n') === true;
-      const hasBr = this.$slots.default[0].text.includes('<br>') === true;
+      const defaultSlot = this.$slots.default?.();
+      const firstNode = defaultSlot?.[0];
+      const text = firstNode?.children || firstNode?.text || '';
+      const hasLineBreak = text.includes('\n') === true;
+      const hasBr = text.includes('<br>') === true;
 
       return !hasLineBreak && !hasBr;
     },
@@ -112,12 +115,12 @@ export default {
     position: relative;
     width: 100%;
     line-height: 1.5em;
-    @apply --hide-scrollbar;
+    @mixin hide-scrollbar;
   }
 
   &--one-line {
     ^&__content {
-      @apply --hide-scrollbar;
+      @mixin hide-scrollbar;
       max-width: 93%;
       overflow: hidden;
       white-space: nowrap;

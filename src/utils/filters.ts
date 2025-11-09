@@ -1,13 +1,11 @@
-import Vue from 'vue';
-import i18n from './i18n';
-import shortNumber from 'short-number';
-import { capitalize, pad, trim } from './utils';
+import { i18n } from '../i18n';
+import { capitalize, pad, trim } from '../utils';
 
 /**
  * Filter that add space after first digit in 4-digits number
  * @param value - filter value
  */
-Vue.filter('spacedNumber', function (value: number): string {
+export function spacedNumber(value: number): string {
   const count = value.toString();
   const thousandRank = 3;
   const negativeThousandRank = -3;
@@ -23,27 +21,14 @@ Vue.filter('spacedNumber', function (value: number): string {
   }
 
   return result.trim();
-});
-
-/**
- * Filter that abbreviates numbers
- * @param value - filter value
- */
-Vue.filter('abbreviateNumber', function (value: number): string {
-  const maxNumberWithoutAbbreviation = 9999;
-
-  if (value < maxNumberWithoutAbbreviation) {
-    return value.toString();
-  }
-
-  return shortNumber(value);
-});
+}
 
 /**
  * Return workspace name abbreviation (one or two symbols)
- * @returns {string}
+ * @param value
+ * @returns
  */
-Vue.filter('abbreviation', function (value: string): string {
+export function abbreviation(value: string): string {
   if (!value) {
     return '';
   }
@@ -53,13 +38,14 @@ Vue.filter('abbreviation', function (value: string): string {
   return (
     words.length === 1 ? words[0][0] : words[0][0] + words[1][0]
   ).toUpperCase();
-});
+}
 
 /**
  * Returns prettifying time ('now' or time in hh:mm)
- * @returns {string}
+ * @param value
+ * @returns
  */
-Vue.filter('prettyTime', function (value: number) {
+export function prettyTime(value: number): string {
   const MS_PER_SECOND = 1000;
   const SECONDS_PER_MINUTE = 60;
   const MS_PER_MINUTE = MS_PER_SECOND * SECONDS_PER_MINUTE;
@@ -74,13 +60,14 @@ Vue.filter('prettyTime', function (value: number) {
   const formattedMinutes = pad(minutes);
 
   return `${date.getHours()}:${formattedMinutes}`;
-});
+}
 
 /**
  * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
- * @returns {string}
+ * @param value
+ * @returns
  */
-Vue.filter('prettyDateStr', function (value: string): string {
+export function prettyDateStr(value: string): string {
   const [day, month]: number[] = value
     .split('-')
     .map(stringValue => +stringValue);
@@ -95,14 +82,15 @@ Vue.filter('prettyDateStr', function (value: string): string {
     return i18n.t('common.yesterday') as string;
   }
 
-  return `${day} ${i18n.t('common.months[' + (month - 1) + ']') as string}`;
-});
+  return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
+}
 
 /**
  * Returns prettified date from string
- * @returns {string}
+ * @param value
+ * @returns
  */
-Vue.filter('prettyDate', function (value: number) {
+export function prettyDate(value: number): string {
   const MS_PER_SECOND = 1000;
   const argumentDate = new Date(value * MS_PER_SECOND);
   const argumentDay = argumentDate.getDate();
@@ -115,7 +103,7 @@ Vue.filter('prettyDate', function (value: number) {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.today') as string;
+    return i18n.global.t('common.today');
   }
 
   if (
@@ -123,17 +111,18 @@ Vue.filter('prettyDate', function (value: number) {
     && argumentMonth === currentDate.getMonth()
     && argumentYear === currentDate.getFullYear()
   ) {
-    return i18n.t('common.yesterday') as string;
+    return i18n.global.t('common.yesterday');
   }
 
-  return `${argumentDay} ${i18n.t('common.months[' + argumentMonth + ']') as string} ${argumentYear}`;
-});
+  return `${argumentDay} ${i18n.global.t('common.months[' + argumentMonth + ']')} ${argumentYear}`;
+}
 
 /**
  * Returns prettified date ('29 aug, 14:30')
- * @returns {string}
+ * @param value
+ * @returns
  */
-Vue.filter('prettyFullDate', function (value: number) {
+export function prettyFullDate(value: number): string {
   const MS_PER_SECOND = 1000;
   const date = new Date(value * MS_PER_SECOND);
 
@@ -142,20 +131,20 @@ Vue.filter('prettyFullDate', function (value: number) {
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  return `${day} ${i18n.t(`common.shortMonths[${month}]`) as string}, ${pad(hours)}:${pad(minutes)}`;
-});
+  return `${day} ${i18n.global.t(`common.shortMonths[${month}]`)}, ${pad(hours)}:${pad(minutes)}`;
+}
 
 /**
  * Returns prettifying date from timestamp
- * @param {number} timestamp - timestamp
+ * @param timestamp - timestamp
  */
-Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
+export function prettyDateFromTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
   const day = date.getDate();
   const month = date.getMonth();
 
-  return `${day} ${i18n.t('common.shortMonths[' + month + ']') as string}`;
-});
+  return `${day} ${i18n.global.t('common.shortMonths[' + month + ']')}`;
+}
 
 /**
  * Accepts GraphQL DateTime string like '1992-10-09T00:00:00Z'
@@ -163,46 +152,45 @@ Vue.filter('prettyDateFromTimestamp', function (timestamp: number): string {
  * @param dateStr - string like '1992-10-09T00:00:00Z'
  * @param includeTime - pass true to include time to the result
  */
-Vue.filter(
-  'prettyDateFromDateTimeString',
-  function (dateStr: string, includeTime = true): string {
-    const date = new Date(dateStr);
-    const now = new Date();
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    const isSameYear = now.getFullYear() === year;
-    const monthStr = capitalize(
-      i18n.t('common.shortMonths[' + month + ']') as string
-    );
+export function prettyDateFromDateTimeString(dateStr: string, includeTime = true): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  const isSameYear = now.getFullYear() === year;
+  const monthStr = capitalize(
+    i18n.global.t('common.shortMonths[' + month + ']').toString()
+  );
 
-    let result = `${isSameYear ? '' : year + ', '}${monthStr} ${day}`;
+  let result = `${isSameYear ? '' : year + ', '}${monthStr} ${day}`;
 
-    if (includeTime) {
-      result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    }
-
-    return result;
+  if (includeTime) {
+    result += ` ${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
-);
+
+  return result;
+}
 
 /**
  * Convert US cents to dollars
- * @returns {string}
+ * @param value
+ * @returns
  */
-Vue.filter('centsToDollars', function (value: number) {
+export function centsToDollars(value: number): number {
   const CENTS_PER_DOLLAR = 100;
 
   return value / CENTS_PER_DOLLAR;
-});
+}
 
 /**
  * Converts relative time into pretty string like '2021-05-20T15:40:51.000+00:00'.
  * Returns string like 'hours ago'.
- * @param {string} date - date in string formate
- * @returns {string} relative time from today
+ * @param date - date in string formate
+ * @returns relative time from today
+ * @todo debug and rewrite
  */
-Vue.filter('prettyRelativeTimeStr', function (date: string): string {
+export function prettyRelativeTimeStr(date: string): string {
   const MS_PER_SECOND = 1000;
   const SECONDS_PER_YEAR = 31536000;
   const SECONDS_PER_MONTH = 2592000;
@@ -217,40 +205,42 @@ Vue.filter('prettyRelativeTimeStr', function (date: string): string {
   const numberOfYears = Math.floor(diffInSeconds / SECONDS_PER_YEAR);
 
   if (numberOfYears) {
-    return i18n.tc('common.relativeTime.yearsAgo', numberOfYears, { numberOfYears: numberOfYears });
+    return i18n.global.t('common.relativeTime.yearsAgo', { numberOfYears });
   }
 
   const numberOfMonths = Math.floor(diffInSeconds / SECONDS_PER_MONTH);
 
   if (numberOfMonths) {
-    return i18n.tc('common.relativeTime.monthsAgo', numberOfMonths, { numberOfMonths: numberOfMonths });
+    return i18n.global.t('common.relativeTime.monthsAgo', { numberOfMonths });
   }
 
   const numberOfDays = Math.floor(diffInSeconds / SECONDS_PER_DAYS);
 
   if (numberOfDays) {
-    return i18n.tc('common.relativeTime.daysAgo', numberOfDays, { numberOfDays: numberOfDays });
+    return i18n.global.t('common.relativeTime.daysAgo', { numberOfDays });
   }
 
   const numberOfHours = Math.floor(diffInSeconds / SECONDS_PER_HOURS);
 
   if (numberOfHours) {
-    return i18n.tc('common.relativeTime.hoursAgo', numberOfHours, { numberOfHours: numberOfHours });
+    return i18n.global.t('common.relativeTime.hoursAgo', { numberOfHours });
   }
 
   const numberOfMinutes = Math.floor(diffInSeconds / SECONDS_PER_MINUTE);
 
   if (numberOfMinutes) {
-    return i18n.tc('common.relativeTime.minutesAgo', numberOfMinutes, { numberOfMinutes: numberOfMinutes });
+    return i18n.global.t('common.relativeTime.minutesAgo', { numberOfMinutes });
   }
 
-  return i18n.t('common.relativeTime.secondsAgo') as string;
-});
+  return i18n.global.t('common.relativeTime.secondsAgo').toString();
+}
 
 /**
  * Trims the string to max length and add ellipsis
- * @returns {string}
+ * @param value
+ * @param maxLen
+ * @returns
  */
-Vue.filter('trim', function (value: string, maxLen: number) {
+export function trimString(value: string, maxLen: number): string {
   return trim(value, maxLen);
-});
+}

@@ -10,11 +10,11 @@
       {{ name }}
     </h4>
     <div class="tariff-plan__limit">
-      {{ limit | spacedNumber }} <span class="tariff-plan__limit-text">{{ $t('common.eventsPerMonth') }}</span>
+      {{ spacedNumber(limit) }} <span class="tariff-plan__limit-text">{{ $t('common.eventsPerMonth') }}</span>
     </div>
     <div class="tariff-plan__footer">
       <div class="tariff-plan__price">
-        {{ price === 0 ? $t('common.free') : `${$options.filters.spacedNumber(price)}${$tc('common.moneyPerMonth', currencySign, { currency: currencySign })}` }}
+        {{ price === 0 ? $t('common.free') : `${spacedNumber(price)}${$t('common.moneyPerMonth', { currency: currencySign })}` }}
       </div>
 
       <UiButton
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getCurrencySign } from '@/utils';
+import { getCurrencySign, spacedNumber } from '@/utils';
 import UiButton from './UiButton';
 
 export default {
@@ -90,6 +90,9 @@ export default {
     currencySign() {
       return getCurrencySign(this.currency);
     },
+  },
+  methods: {
+    spacedNumber,
   },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <DetailsBase
     :expand-showed="uninterestedCookies.length"
-    @expandClicked="isUninterestedShown = !isUninterestedShown"
+    @expand-clicked="isUninterestedShown = !isUninterestedShown"
   >
     <template #header>
       COOKIES

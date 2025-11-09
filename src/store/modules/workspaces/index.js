@@ -21,7 +21,6 @@ import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
-import Vue from 'vue';
 import { isPendingMember } from '@/store/modules/workspaces/helpers';
 
 /**
@@ -266,7 +265,9 @@ const actions = {
    * @returns {Promise<boolean>}
    */
   async [UPDATE_WORKSPACE]({ commit }, workspace) {
-    const isSaved = await workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
+    const response = await workspaceApi.updateWorkspace(workspace.id, workspace.name, workspace.description, workspace.image);
+
+    const isSaved = response.data && response.data.updateWorkspace;
 
     if (isSaved) {
       commit(mutationTypes.SET_WORKSPACE, workspace);
@@ -513,7 +514,7 @@ const mutations = {
    * @param {Array<Workspace>} newList - new list of workspaces
    */
   [mutationTypes.SET_WORKSPACES_LIST](state, newList) {
-    Vue.set(state, 'list', newList);
+    state.list = newList;
   },
 
   /**
@@ -562,7 +563,7 @@ const mutations = {
       updatedPaymentsHistory = [businessOperation].concat(workspace.paymentsHistory);
     }
 
-    Vue.set(workspace, 'paymentsHistory', updatedPaymentsHistory);
+    workspace.paymentsHistory = updatedPaymentsHistory;
   },
 
   /**
@@ -579,7 +580,7 @@ const mutations = {
     const index = state.list.findIndex(w => w.id === workspaceId);
     const workspace = state.list[index];
 
-    Vue.set(workspace, 'balance', balance);
+    workspace.balance = balance;
   },
 
   /**
@@ -667,7 +668,7 @@ const mutations = {
         const index = state.list.findIndex(w => w.id === workspaceId);
         const workspace = state.list[index];
 
-        Vue.set(workspace, 'paymentsHistory', operationsOfWorkspace);
+        workspace.paymentsHistory = operationsOfWorkspace;
 
         state.list = [
           ...state.list.slice(0, index),
@@ -687,7 +688,7 @@ const mutations = {
   [mutationTypes.PUSH_BUSINESS_OPERATION](state, operation) {
     const workspace = state.list.find(w => w.id === operation.payload.workspace.id);
 
-    Vue.set(workspace, 'paymentsHistory', [operation, ...workspace.paymentsHistory]);
+    workspace.paymentsHistory = [operation, ...workspace.paymentsHistory];
   },
 
   /**
@@ -701,8 +702,8 @@ const mutations = {
     const index = state.list.findIndex(w => w.id === workspaceId);
     const workspace = state.list[index];
 
-    Vue.set(workspace, 'plan', plan);
-    Vue.set(workspace, 'lastChargeDate', lastChargeDate);
+    workspace.plan = plan;
+    workspace.lastChargeDate = lastChargeDate;
 
     state.list = [
       ...state.list.slice(0, index),
@@ -728,7 +729,7 @@ const mutations = {
 
     console.log('workspace', workspace);
 
-    Vue.set(workspace, 'subscriptionId', subscriptionId);
+    workspace.subscriptionId = subscriptionId;
 
     state.list = [
       ...state.list.slice(0, index),
