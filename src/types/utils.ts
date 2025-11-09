@@ -1,6 +1,5 @@
 /**
  * Type for Object.entries(someObj)
- *
  * @example type JavaScriptAddonsEntries = Entries<JavaScriptAddons>;
  */
 export type Entries<T> = {
@@ -9,7 +8,6 @@ export type Entries<T> = {
 
 /**
  * List types of object values
- *
  * @example
  * type Foo = { a: string, b: number };
  * type ValueOfFoo = ValueOf<Foo>; // string | number

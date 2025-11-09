@@ -85,7 +85,7 @@ export default Vue.extend({
     SkeletonAvatar,
     SkeletonBar,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   props: {
     project: {
       type: Object as PropType<Project | null>,

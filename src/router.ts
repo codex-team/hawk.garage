@@ -11,7 +11,6 @@ Vue.use(Router);
 /**
  * Disable return-type rule to leave router 'component' imports with short syntax
  */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 const router = new Router({
   mode: 'history',
@@ -295,7 +294,7 @@ router.beforeEach((to, from, next) => {
     /**
      * Track event
      */
-    Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
+    void Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
   } catch (e) {
     console.error(e);
   }

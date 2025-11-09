@@ -20,7 +20,7 @@ export interface Plan {
   /**
    * Plan monthly charge currency
    */
-  monthlyChargeCurrency: 'USD' | 'RUB'
+  monthlyChargeCurrency: 'USD' | 'RUB';
 
   /**
    * Plan events limit

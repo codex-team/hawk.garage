@@ -21,7 +21,8 @@ const DEBOUNCE_TIMEOUT = 1000;
  * Integrations
  */
 import { Analytics } from './analytics';
-import { useErrorTracker, ErrorTrackerInitialOptions } from './hawk';
+import type { ErrorTrackerInitialOptions } from './hawk';
+import { useErrorTracker } from './hawk';
 import notifier from 'codex-notifier';
 import { errorMessages } from './api/const';
 import { debounce } from './utils';
@@ -48,11 +49,9 @@ if (process.env.VUE_APP_HAWK_TOKEN) {
   initHawk(options);
 }
 
-
 /**
  * Sends error to the Hawk
- *
- * @param {Error} error - error to send
+ * @param error - error to send
  * @example this.$sendToHawk(new Error('Some error'));
  */
 Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
@@ -63,7 +62,7 @@ Vue.prototype.$sendToHawk = function sendToHawk(error: Error): void {
  * Enable analytics via Amplitude.com
  */
 if (process.env.VUE_APP_AMPLITUDE_TOKEN) {
-  Analytics.init(process.env.VUE_APP_AMPLITUDE_TOKEN);
+  void Analytics.init(process.env.VUE_APP_AMPLITUDE_TOKEN);
 }
 
 /**
@@ -106,7 +105,7 @@ api.setupApiModuleHandlers({
    * If user refresh token is invalid then log out user
    */
   onAuthError: debounce(() => {
-    store.dispatch(RESET_STORE);
+    void store.dispatch(RESET_STORE);
 
     const key = 'errors.' + errorMessages.UNAUTHENTICATED;
 
@@ -122,6 +121,6 @@ new Vue({
   router,
   store,
   i18n,
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  render: (h) => h(App),
+
+  render: h => h(App),
 }).$mount('#app');

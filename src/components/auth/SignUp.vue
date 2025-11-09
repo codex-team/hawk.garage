@@ -22,7 +22,7 @@ export default {
   components: {
     Form,
   },
-  mixins: [ offlineErrorMessage ],
+  mixins: [offlineErrorMessage],
   data() {
     return {
       fields: [

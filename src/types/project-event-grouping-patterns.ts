@@ -1,4 +1,3 @@
-
 /**
  * Project event grouping pattern object
  */
@@ -6,12 +5,12 @@ export type ProjectEventGroupingPattern = {
   /**
    * Id of the project event grouping pattern object
    */
-  id: string,
+  id: string;
 
   /**
    * Pattern string of the project event grouping pattern
    */
-  pattern: string,
+  pattern: string;
 };
 
 /**
@@ -21,12 +20,12 @@ export type AddProjectEventGroupingPatternPayload = {
   /**
    * Id of the project
    */
-  projectId: string,
+  projectId: string;
 
   /**
    * Pattern string of the project event grouping pattern
    */
-  pattern: string,
+  pattern: string;
 };
 
 /**
@@ -36,7 +35,7 @@ export type UpdateProjectEventGroupingPatternPayload = ProjectEventGroupingPatte
   /**
    * Id of the project
    */
-  projectId: string,
+  projectId: string;
 };
 
 /**
@@ -46,11 +45,10 @@ export type RemoveProjectEventGroupingPatternPayload = {
   /**
    * Id of the project
    */
-  projectId: string,
+  projectId: string;
 
   /**
    * Id of the project event grouping pattern object
    */
-  id: string,
+  id: string;
 };
-

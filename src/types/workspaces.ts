@@ -1,5 +1,5 @@
-import { User } from '@/types/user';
-import { Plan } from './plan';
+import type { User } from '@/types/user';
+import type { Plan } from './plan';
 
 /**
  * Workspace representation

@@ -123,6 +123,7 @@ module.exports = {
   //   }
   // },
   assetsDir: 'static',
+  transpileDependencies: ['marked'],
   pluginOptions: {
     storybook: {
       allowedPlugins: ['define', 'svg-sprite'],

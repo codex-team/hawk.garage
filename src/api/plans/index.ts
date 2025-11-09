@@ -1,7 +1,7 @@
 import * as api from '@/api';
 import { QUERY_PLANS } from './queries';
 
-import { Plan } from '@/types/plan';
+import type { Plan } from '@/types/plan';
 
 /**
  * Fetch all available plans

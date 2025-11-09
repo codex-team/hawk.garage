@@ -1,9 +1,8 @@
 /**
  * Check if event was received after subscription expiration
- *
  * @param eventTimestamp - { number } event timestamp
  * @param workspaceLastChargeDate - { Date } workspace last charge date
- * @returns {boolean} - true if event is after subscription expiry
+ * @returns - true if event is after subscription expiry
  */
 export function isEventAfterSubscriptionExpiry(
   eventTimestamp: number,

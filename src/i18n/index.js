@@ -38,11 +38,11 @@ const i18n = new VueI18n({
     ru: messages,
   },
   pluralizationRules: {
-    'ru': russianPluralization,
+    ru: russianPluralization,
   },
 });
 
-const loadedLanguages = [ 'ru' ];
+const loadedLanguages = ['ru'];
 
 /**
  * Sets new i18n plugin locale

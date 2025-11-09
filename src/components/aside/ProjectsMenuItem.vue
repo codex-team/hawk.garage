@@ -60,7 +60,7 @@ export default {
     EntityImage,
     Icon,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   props: {
     projectId: {
       type: String,

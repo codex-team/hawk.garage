@@ -45,7 +45,6 @@
         </router-link>
       </div>
 
-
       <div class="event-header__type">
         {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
       </div>
@@ -85,6 +84,13 @@
           @click="markEvent('ignored')"
         />
         <UiButton
+          class="event-header__button event-header__button--ai"
+          :content="$t('event.ai.ask')"
+          icon="ai"
+          small
+          @click="isAiSuggestionOpen = true"
+        />
+        <UiButton
           v-if="false"
           class="event-header__button"
           :content="$t('event.issue')"
@@ -92,6 +98,14 @@
           small
         />
       </div>
+      <AiSuggestionDialog
+        v-if="isAiSuggestionOpen"
+        class="event-header__dialog"
+        :project-id="projectId"
+        :event-id="event.id"
+        :original-event-id="event.originalEventId"
+        @close="isAiSuggestionOpen = false"
+      />
       <div class="event-header__nav-bar">
         <TabBar
           :items="navigationItems"
@@ -129,6 +143,7 @@ import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
+import AiSuggestionDialog from '../modals/AiSuggestionDialog.vue';
 
 export default Vue.extend({
   name: 'EventHeader',
@@ -140,8 +155,9 @@ export default Vue.extend({
     AssigneeBar,
     EntityImage,
     ProjectBadge,
+    AiSuggestionDialog,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   props: {
     /**
      * Original (first) event data
@@ -160,6 +176,7 @@ export default Vue.extend({
        * @type {boolean}
        */
       loading: !this.event,
+      isAiSuggestionOpen: false as boolean,
     };
   },
   computed: {
@@ -175,7 +192,7 @@ export default Vue.extend({
       }
 
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
-      const addons: {url?: string} = (this.event.payload.addons as JavaScriptAddons);
+      const addons: { url?: string } = this.event.payload.addons as JavaScriptAddons;
       const url: string = (addons && addons.url) || '';
 
       if (!trace) {
@@ -212,11 +229,13 @@ export default Vue.extend({
           title: this.$i18n.t('event.navigation.daily') as string,
           routeName: 'event-daily',
         },
-        ...(showAffectedUsers ? [ {
-          title: this.$i18n.t('event.navigation.usersAffected') as string,
-          routeName: 'event-affected',
-          badge: this.event.usersAffected,
-        } ] : []),
+        ...(showAffectedUsers
+          ? [{
+              title: this.$i18n.t('event.navigation.usersAffected') as string,
+              routeName: 'event-affected',
+              badge: this.event.usersAffected,
+            }]
+          : []),
       ];
     },
 
@@ -369,9 +388,25 @@ export default Vue.extend({
       }
     }
 
+    &__button--ai {
+      color: color-mod(var(--color-indicator-ai) alpha(85%));
+      background-color: transparent;
+      border-color: var(--color-indicator-ai);
+
+      &:not(&--disabled):hover {
+        color: var(--color-indicator-ai);
+        background-color: transparent;
+        border-color: var(--color-indicator-ai);
+      }
+    }
+
     &__nav-bar, &__viewed-by {
       display: flex;
       justify-content: space-between;
+    }
+
+    &__dialog {
+      color: var(--color-text-main);
     }
   }
 </style>

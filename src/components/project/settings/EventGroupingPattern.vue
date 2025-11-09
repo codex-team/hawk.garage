@@ -66,12 +66,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import UiButton from '@/components/utils/UiButton.vue';
-import FormTextFieldset from '../../forms/TextFieldset.vue';
 import { ProjectEventGroupingPattern } from '@/types/project-event-grouping-patterns';
 import { Project } from '@/types/project';
 import { Workspace, ConfirmedMember, Member } from '@/types/workspaces';
-import {
-  ADD_EVENT_GROUPING_PATTERN,
+import { ADD_EVENT_GROUPING_PATTERN,
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
@@ -252,7 +250,7 @@ export default Vue.extend({
         new RegExp(pattern);
 
         return safe(pattern);
-      } catch (error) {
+      } catch {
         return false;
       }
     },

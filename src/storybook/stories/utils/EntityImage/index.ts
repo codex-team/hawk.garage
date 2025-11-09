@@ -4,7 +4,6 @@ import EntityImage from '@/components/utils/EntityImage.vue';
 import { withKnobs, number, text, array } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 
-
 export default {
   title: 'Utils/EntityImage',
   component: EntityImage,
@@ -144,7 +143,9 @@ export const WithPhotos = (): unknown => ({
     },
     users: {
       type: Array,
-      default: (): Array<{id; name; image}> => {
+      default: (): Array<{ id;
+        name;
+        image; }> => {
         return [
           {
             id: 'user1',

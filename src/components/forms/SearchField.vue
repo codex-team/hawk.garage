@@ -69,7 +69,7 @@ export default {
       document.addEventListener('keydown', this.handleKeyDown);
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.isCMDKEnabled) {
       document.removeEventListener('keydown', this.handleKeyDown);
     }

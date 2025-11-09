@@ -5,12 +5,12 @@ export enum ActionType {
   /**
    * Submit action
    */
-  SUBMIT='SUBMIT',
+  SUBMIT = 'SUBMIT',
 
   /**
    * Deletion action
    */
-  DELETION='DELETION'
+  DELETION = 'DELETION'
 }
 
 /**

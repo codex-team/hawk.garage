@@ -5,7 +5,6 @@ import { withKnobs, number } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 import mdx from './docs.mdx';
 
-
 export default {
   title: 'Utils/Badge',
   component: Badge,

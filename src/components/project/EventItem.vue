@@ -175,7 +175,7 @@ export default {
       return this.isEventAfterExpiry && this.isWorkspaceBlocked;
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$root.$off('workspacePlanChanged');
   },
   methods: {

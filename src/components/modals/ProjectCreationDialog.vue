@@ -71,7 +71,7 @@ export default {
      * @returns {Array<Workspace>} - registered workspaces with permission check
      */
     workspaces() {
-      const workspaces = this.$store.state.workspaces.list.filter(workspace => {
+      const workspaces = this.$store.state.workspaces.list.filter((workspace) => {
         return this.$store.getters.isCurrentUserAdmin(workspace.id);
       });
 

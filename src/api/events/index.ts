@@ -6,28 +6,30 @@ import {
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  QUERY_EVENT_AI_SUGGESTION
 } from './queries';
 import * as api from '@/api';
-import {
+import type {
   DailyEventsCursor,
   DailyEventsPortion,
   EventMark,
   EventsFilters,
-  EventsSortOrder,
   HawkEvent
 } from '@/types/events';
-import { User } from '@/types/user';
-import { EventChartItem } from '@/types/chart';
-import { APIResponse } from '../../types/api';
+import {
+  EventsSortOrder
+} from '@/types/events';
+import type { User } from '@/types/user';
+import type { EventChartItem } from '@/types/chart';
+import type { APIResponse } from '../../types/api';
 
 /**
  * Get specific event
- *
- * @param {string} projectId - event's project
- * @param {string} eventId - id of the event
- * @param {string} originalEventId - id of the original event
- * @returns {Promise<HawkEvent|null>}
+ * @param projectId - event's project
+ * @param eventId - id of the event
+ * @param originalEventId - id of the original event
+ * @returns
  */
 export async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
   const project = await (await api.callOld(QUERY_EVENT, {
@@ -45,7 +47,6 @@ export async function getEvent(projectId: string, eventId: string, originalEvent
 
 /**
  * Returns portion (list) of daily events with pointer to the first daily event of the next portion
- *
  * @param projectId - id of the project
  * @param nextCursor - pointer to the next portion of daily events
  * @param sort - sort order for daily events
@@ -82,24 +83,24 @@ export async function fetchDailyEventsPortion(
     response.errors.forEach(e => console.error(e));
   }
 
-  return project?.dailyEventsPortion ?? { cursor: null,
-    dailyEventsPortion: [] };
+  return project?.dailyEventsPortion ?? {
+    cursor: null,
+    dailyEventsPortion: [],
+  };
 }
 
 /**
  * Fetches event's repetitions portion from project
- *
- * @param {string} projectId - project's identifier
- * @param {string} eventId - event's identifier
- * @param {string} originalEventId - id of the original event
- * @param {number} limit - the number of repetitions
- * @param {string} cursor - the cursor to fetch the next page of repetitions
- *
- * @returns {Promise<Event[]>}
+ * @param projectId - project's identifier
+ * @param originalEventId - id of the original event
+ * @param limit - the number of repetitions
+ * @param cursor - the cursor to fetch the next page of repetitions
+ * @returns
  */
 export async function getRepetitionsPortion(
   projectId: string, originalEventId: string, limit: number, cursor?: string
-): Promise<APIResponse<{project: { event: { repetitionsPortion: { repetitions: HawkEvent[], nextCursor?: string } } } }>> {
+): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[];
+  nextCursor?: string; }; }; }; }>> {
   const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
     limit,
     projectId,
@@ -122,10 +123,9 @@ export async function getRepetitionsPortion(
 
 /**
  * Mark event as visited for current user
- *
- * @param {string} projectId - project event related to
- * @param {string} originalEventId — original event id of the visited one
- * @returns {Promise<boolean>}
+ * @param projectId - project event related to
+ * @param originalEventId — original event id of the visited one
+ * @returns
  */
 export async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
   return (await api.callOld(MUTATION_VISIT_EVENT, {
@@ -136,10 +136,9 @@ export async function visitEvent(projectId: string, originalEventId: string): Pr
 
 /**
  * Set or unset mark to event
- *
- * @param {string} projectId - project event is related to
- * @param {string} eventId — event Id
- * @param {string} mark — mark to set
+ * @param projectId - project event is related to
+ * @param eventId — event Id
+ * @param mark — mark to set
  */
 export async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
   return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
@@ -150,13 +149,29 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
 }
 
 /**
- * Update assignee
- *
- * @param {string} projectId - project id
- * @param {string} eventId - original event id
- * @param {string} assignee - user id to assign
+ * Fetch AI suggestion for an event
+ * @param projectId - project event is related to
+ * @param eventId - event to fetch AI suggestion for
+ * @param originalEventId - id of the original event
  */
-export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean; record: User }> {
+export async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {
+  const response = await api.call(QUERY_EVENT_AI_SUGGESTION, {
+    projectId,
+    eventId,
+    originalEventId,
+  });
+
+  return response.data.project?.event?.aiSuggestion ?? '';
+}
+
+/**
+ * Update assignee
+ * @param projectId - project id
+ * @param eventId - original event id
+ * @param assignee - user id to assign
+ */
+export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean;
+  record: User; }> {
   return (await api.callOld(MUTATION_UPDATE_EVENT_ASSIGNEE, {
     input: {
       projectId,
@@ -168,9 +183,8 @@ export async function updateAssignee(projectId: string, eventId: string, assigne
 
 /**
  * Remove assignee
- *
- * @param {string} projectId - project id
- * @param {string} eventId - event id
+ * @param projectId - project id
+ * @param eventId - event id
  */
 export async function removeAssignee(projectId: string, eventId: string): Promise<{ success: boolean }> {
   return (await api.callOld(MUTATION_REMOVE_EVENT_ASSIGNEE, {
@@ -183,11 +197,10 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
 
 /**
  * Fetch data for chart
- *
- * @param {string} projectId - project id
- * @param {string} originalEventId - id of the original event
- * @param {number} days - how many days to fetch
- * @param {number} timezoneOffset - user's local timezone
+ * @param projectId - project id
+ * @param originalEventId - id of the original event
+ * @param days - how many days we need to fetchfor displaying in chart
+ * @param timezoneOffset - user's local timezone
  */
 export async function fetchChartData(
   projectId: string,

@@ -25,7 +25,7 @@ export default {
   components: {
     Form,
   },
-  mixins: [ offlineErrorMessage ],
+  mixins: [offlineErrorMessage],
   props: {
     /**
      * Success message text
@@ -71,8 +71,8 @@ export default {
   },
   async mounted() {
     if (
-      this.$route.query.access_token &&
-      this.$route.query.refresh_token
+      this.$route.query.access_token
+      && this.$route.query.refresh_token
     ) {
       try {
         await this.$store.dispatch(SET_TOKENS, {

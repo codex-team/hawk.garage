@@ -51,8 +51,6 @@ export const QUERY_PROJECT_DAILY_EVENTS = `
 // language=GraphQL
 /**
  * GraphQL query for latest repetitions
- *
- * @type {string}
  */
 export const QUERY_EVENT_REPETITIONS_PORTION = `
   query LatestRepetitions(
@@ -97,6 +95,20 @@ export const QUERY_CHART_DATA = `
           timestamp
           count
         }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Fetch AI suggestion for an event
+ */
+export const QUERY_EVENT_AI_SUGGESTION = `
+  query EventAiSuggestion($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
+    project(projectId: $projectId) {
+      event(eventId: $eventId, originalEventId: $originalEventId) {
+        aiSuggestion
       }
     }
   }

@@ -56,7 +56,7 @@ import Vue from 'vue';
 import EntityImage from './../EntityImage.vue';
 import { BusinessOperationType } from '@/types/business-operation-type';
 import i18n from './../../../i18n';
-import { BusinessOperation, PayloadOfWorkspacePlanPurchase } from '@/types/business-operation';
+import { BusinessOperation } from '@/types/business-operation';
 import { getCurrencySign } from '@/utils';
 
 export default Vue.extend({
@@ -125,7 +125,7 @@ export default Vue.extend({
     getDescription(operation: BusinessOperation): string {
       switch (operation.type) {
         case BusinessOperationType.WorkspacePlanPurchase: {
-          const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
+          // const payload = operation.payload as PayloadOfWorkspacePlanPurchase;
 
           return i18n.t('billing.operations.chargeForPlan').toString();
         }

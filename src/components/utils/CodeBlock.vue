@@ -39,7 +39,6 @@ import php from 'highlight.js/lib/languages/php';
 import typescript from 'highlight.js/lib/languages/typescript';
 import javascript from 'highlight.js/lib/languages/javascript';
 
-
 hljs.registerLanguage('shell', shell);
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('typescript', typescript);

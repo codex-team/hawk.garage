@@ -257,7 +257,7 @@ export default Vue.extend({
      */
     buttons(): Omit<Button, 'style'>[] {
       if (this.isFreePlan) {
-        return [ this.incrementEventsLimitWithPrice ];
+        return [this.incrementEventsLimitWithPrice];
       }
 
       if (this.isBLocked) {
@@ -282,7 +282,7 @@ export default Vue.extend({
       }
 
       if (this.isAutoPayOn) {
-        return [ this.incrementEventsLimit ];
+        return [this.incrementEventsLimit];
       }
 
       return [];

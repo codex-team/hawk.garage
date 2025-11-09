@@ -16,7 +16,7 @@ import { uploadFile } from '../../mixins/uploadFile';
 
 export default {
   name: 'FormImageUploader',
-  mixins: [ uploadFile ],
+  mixins: [uploadFile],
   props: {
     /**
      * V-Model value

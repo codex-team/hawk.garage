@@ -1,21 +1,26 @@
 # build stage
-FROM node:16.19.0-alpine3.17 as build-stage
+FROM node:22-alpine as build-stage
 
 WORKDIR /app
+
+# Enable corepack for yarn version management
+RUN corepack enable
 
 COPY package.json yarn.lock ./
 
-
-RUN yarn install --prod
+RUN yarn config set nodeLinker node-modules && yarn install
 
 COPY . .
 
-RUN yarn build
+RUN yarn run build
 
 # production stage
-FROM node:16.19.0-alpine3.17
+FROM node:22-alpine
 
 WORKDIR /app
+
+# Enable corepack for yarn version management
+RUN corepack enable
 
 RUN yarn global add http-server spa-http-server
 

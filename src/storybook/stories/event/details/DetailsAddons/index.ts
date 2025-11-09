@@ -1,12 +1,12 @@
 import DetailsAddons from '@/components/event/details/DetailsAddons.vue';
 import { withKnobs, text } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
-import { EventAddons } from '@hawk.so/types';
-import { PropType } from 'vue';
+import type { EventAddons } from '@hawk.so/types';
+import type { PropType } from 'vue';
 
 export default {
   title: 'Event/Details/JavaScript',
-  component: [ DetailsAddons ],
+  component: [DetailsAddons],
   decorators: [withKnobs, centered],
 };
 

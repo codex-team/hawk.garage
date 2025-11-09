@@ -1,6 +1,6 @@
-import { VueConstructor } from 'vue';
+import type { VueConstructor } from 'vue';
 import NotifierWindow from '@/components/utils/NotifierWindow/NotifierWindow.vue';
-import { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
+import type { NotifierWindowOptions } from '../components/utils/NotifierWindow/types';
 import i18n from '../i18n';
 
 /**
@@ -10,18 +10,16 @@ type NotifierWindowComponentType = InstanceType<typeof NotifierWindow>;
 
 /**
  * Plugin for using notifier window in components
- *
  * @example this.$notify.open({ description: 'Hi! Hawk' });
  */
 export default {
   /**
    * Install Vue plugin
-   *
    * @param Vue - vue constructor
    */
   install: (Vue: VueConstructor): void => {
     const vueContainer = document.createElement('div');
-    const notifierContainer = new Vue<NotifierWindowComponentType>({
+    const notifierContainer = new Vue({
       i18n,
       render: h => h(NotifierWindow),
     });
@@ -29,23 +27,30 @@ export default {
     document.body.appendChild(vueContainer);
     notifierContainer.$mount(vueContainer);
 
+    const getNotifierInstance = (): NotifierWindowComponentType => {
+      const [instance] = notifierContainer.$children;
+
+      if (!instance) {
+        throw new Error('NotifierWindow instance is not mounted');
+      }
+
+      return instance as NotifierWindowComponentType;
+    };
+
     Vue.prototype.$notify = {
       /**
        * Open notifier window
-       *
        * @param options - notifier window options
        */
       open(options?: NotifierWindowOptions) {
-        (notifierContainer.$children[0] as NotifierWindowComponentType).open(
-          options
-        );
+        getNotifierInstance().open(options);
       },
 
       /**
        * Close notifier window
        */
       close() {
-        (notifierContainer.$children[0] as NotifierWindowComponentType).close();
+        getNotifierInstance().close();
       },
     };
   },

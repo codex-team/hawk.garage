@@ -69,9 +69,9 @@ export default Vue.extend({
     },
   },
   data(): {
-    addRuleOpened: boolean,
-    ruleUnderEditingId?: string,
-    } {
+    addRuleOpened: boolean;
+    ruleUnderEditingId?: string;
+  } {
     return {
       /**
        * Flag indicates Add Rule form opening state
@@ -108,7 +108,7 @@ export default Vue.extend({
         return undefined;
       }
 
-      return this.rules.find((rule) => rule.id === this.ruleUnderEditingId);
+      return this.rules.find(rule => rule.id === this.ruleUnderEditingId);
     },
 
     /**

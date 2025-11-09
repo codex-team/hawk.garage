@@ -49,15 +49,13 @@ interface FiltersBarData {
    * Each property contains events filters combination to fit the condition
    */
   filtersOptions: {
-    all: EventsFilters,
-    starred: EventsFilters,
-    resolved: EventsFilters,
-    unresolved: EventsFilters,
-    ignored: EventsFilters
-  },
-  sortOptions: {
-    [K in EventsSortOrder]: string
-  },
+    all: EventsFilters;
+    starred: EventsFilters;
+    resolved: EventsFilters;
+    unresolved: EventsFilters;
+    ignored: EventsFilters;
+  };
+  sortOptions: Record<EventsSortOrder, string>;
   selectedOrder: EventsSortOrder;
   isLoading: boolean;
 }

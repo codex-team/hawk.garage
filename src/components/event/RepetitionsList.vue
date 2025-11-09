@@ -114,7 +114,6 @@ import { HawkEvent } from '../../types/events';
 import { isObject, trim } from '../../utils';
 
 export default Vue.extend({
-  name: 'RepetitionsTable',
   components: {
     EntityImage,
     CustomRendererBeautifiedUserAgent,
@@ -144,7 +143,7 @@ export default Vue.extend({
      * Project that owns the Event
      */
     projectId: {
-      type: String,
+      type: String as PropType<string>,
       required: true,
     },
 
@@ -152,7 +151,7 @@ export default Vue.extend({
      * Day in which repetitions happened
      */
     date: {
-      type: String,
+      type: String as PropType<string>,
       required: true,
     },
   },
@@ -162,8 +161,8 @@ export default Vue.extend({
      */
     distinctAddonsKeys(): Set<string> {
       return new Set(
-        [ ...this.getDistinctKeysRepetitionsProperty('addons') ].filter(
-          (key) => key !== 'consoleOutput'
+        [...this.getDistinctKeysRepetitionsProperty('addons') as Set<string>].filter(
+          key => key !== 'consoleOutput'
         )
       );
     },
@@ -172,13 +171,17 @@ export default Vue.extend({
      * Unique context keys
      */
     distinctContextKeys(): Set<string> {
-      return this.getDistinctKeysRepetitionsProperty('context');
+      return this.getDistinctKeysRepetitionsProperty('context') as Set<string>;
     },
 
     /**
      * All table columns list
      */
     columns(): string[] {
+      if (!this.repetitions.length) {
+        return [];
+      }
+
       const cols: string[] = [];
 
       if (!this.repetitions.length) {
@@ -191,7 +194,7 @@ export default Vue.extend({
       let userSpecifiedSomewhere = false;
       let titleSpecifiedSomewhere = false;
 
-      this.repetitions.forEach(repetition => {
+      this.repetitions.forEach((repetition) => {
         if (repetition.payload.release) {
           releaseSpecifiedSomewhere = true;
         }
@@ -227,10 +230,10 @@ export default Vue.extend({
       return cols;
     },
   },
-  mounted() {
+  mounted(): void {
     this.lockChromeSwipeNavigation(true);
   },
-  beforeDestroy() {
+  beforeDestroy(): void {
     this.lockChromeSwipeNavigation(false);
   },
   methods: {
@@ -239,7 +242,7 @@ export default Vue.extend({
      *
      * @param property — event property to iterate its keys
      */
-    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons' ): Set<string> {
+    getDistinctKeysRepetitionsProperty(property: 'context' | 'addons'): Set<string> {
       if (!this.repetitions.length) {
         return new Set();
       }
@@ -251,7 +254,7 @@ export default Vue.extend({
 
         Object
           .keys(repetition.payload[property])
-          .forEach(key => {
+          .forEach((key) => {
             keys.add(key);
           });
 
@@ -290,7 +293,7 @@ export default Vue.extend({
      * @param value - what to trim
      * @param maxLen - how many chars to leave
      */
-    trim(value: unknown, maxLen: number) {
+    trim(value: unknown, maxLen: number): string {
       if (isObject(value)) {
         value = JSON.stringify(value);
       }

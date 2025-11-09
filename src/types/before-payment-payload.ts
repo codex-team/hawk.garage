@@ -1,7 +1,7 @@
 /**
  * Data declaration before card charge
  */
-import { Plan } from './plan';
+import type { Plan } from './plan';
 
 export interface BeforePaymentPayload {
   /**

@@ -1,11 +1,10 @@
 import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
-import { BusinessOperation } from '../../types/business-operation';
+import type { BusinessOperation } from '../../types/business-operation';
 import { BeforePaymentPayload } from '@/types/before-payment-payload';
 
 /**
  * Request business operations list for passed workspaces
- *
  * @param ids - ids of workspaces
  */
 export async function getBusinessOperations(ids: string[]): Promise<BusinessOperation[]> {
@@ -34,7 +33,6 @@ export interface PayWithCardInput {
 
 /**
  * Process payment via saved card
- *
  * @param input - data for payment processing
  */
 export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
@@ -43,7 +41,6 @@ export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
 
 /**
  * Prepare payment data (compose payment)
- *
  * @param workspaceId - id of workspace
  * @param tariffPlanId - id of plan
  * @param shouldSaveCard - whether to save the card

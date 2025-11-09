@@ -5,7 +5,6 @@ export const projectBadges = {
   methods: {
     /**
      * Returns parsed badges from project name
-     *
      * @param name - full project name
      */
     projectBadges(name: string): string[] | null {
@@ -18,7 +17,6 @@ export const projectBadges = {
 
     /**
      * Returns project name without badges
-     *
      * @param name - full project name
      */
     nameWithoutBadges(name: string): string {

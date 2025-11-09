@@ -24,35 +24,35 @@ export default Vue.extend({
     /**
      * Is popover open.
      */
-    isOpened: boolean,
+    isOpened: boolean;
 
     /**
      * Is Mouse on popover.
      */
-    isMouseOver: boolean,
+    isMouseOver: boolean;
 
     /**
      * Popover child component need be display.
      */
-    popoverComponent?: Component,
+    popoverComponent?: Component;
 
     /**
      * Popover child component props.
      */
-    popoverComponentProps?: Record<string, unknown>,
+    popoverComponentProps?: Record<string, unknown>;
 
     /**
      * Popover position props.
      */
     popoverProps: {
-      showBelowElement?: Element,
-    },
+      showBelowElement?: Element;
+    };
 
     /**
      * Provides some delay between mouse leave and hiding
      */
-    hidingDelay?: ReturnType<typeof setTimeout>,
-    } {
+    hidingDelay?: ReturnType<typeof setTimeout>;
+  } {
     return {
       /**
        * Is popover open.
@@ -80,11 +80,11 @@ export default Vue.extend({
       hidingDelay: undefined,
     };
   },
-  computed:{
+  computed: {
     /**
      * Style Sheet for positioning the popover w.r.t. Body tag.
      */
-    popoverPositionStyle(): Record<string, string|number> {
+    popoverPositionStyle(): Record<string, string | number> {
       if (!this.popoverProps.showBelowElement) {
         return {
           display: 'none',
@@ -101,7 +101,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    // eslint-disable-next-line jsdoc/require-param
+
     /**
      *
      * Open Popover.

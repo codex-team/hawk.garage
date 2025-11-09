@@ -1,8 +1,8 @@
 /**
  * Common API response format
  */
-import { Maybe } from './utils';
-import { ASTNode } from 'vue-template-compiler';
+import type { Maybe } from './utils';
+import type { ASTNode } from 'vue-template-compiler';
 
 /**
  * Proposed format of GraphQL response data
@@ -31,21 +31,21 @@ export interface APIResponse<T = unknown> {
   /**
    * List of GraphQL errors
    */
-  errors: APIError[]
+  errors: APIError[];
 }
 
 /**
  * GraphQL error format
  */
 export interface APIError {
-  message: string,
-  nodes?: ReadonlyArray<ASTNode> | ASTNode | undefined,
-  source?: Maybe<Source>,
-  positions?: Maybe<ReadonlyArray<number>>,
-  path?: Maybe<ReadonlyArray<string | number>>,
-  originalError?: Maybe<Error>,
+  message: string;
+  nodes?: ReadonlyArray<ASTNode> | ASTNode | undefined;
+  source?: Maybe<Source>;
+  positions?: Maybe<ReadonlyArray<number>>;
+  path?: Maybe<ReadonlyArray<string | number>>;
+  originalError?: Maybe<Error>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  extensions?: Maybe<{ [key: string]: any }>,
+  extensions?: Maybe<{ [key: string]: any }>;
 }
 
 /**

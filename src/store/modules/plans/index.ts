@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import { Plan } from '@/types/plan';
+import type { Plan } from '@/types/plan';
 import { FETCH_PLANS } from './actionTypes';
 import * as plansApi from '@/api/plans';
-import { ActionContext } from 'vuex';
-import { RootState } from '../../index';
+import type { ActionContext } from 'vuex';
+import type { RootState } from '../../index';
 
 enum MutationType {
   SetPlans = 'SET_PLANS' // set plans to store
@@ -29,7 +29,6 @@ function initialState(): PlansModuleState {
 const getters = {
   /**
    * Returns tariff plan by id
-   *
    * @param state - module state
    */
   getPlanById: (state: PlansModuleState) => (id: string): Plan | undefined => {
@@ -40,10 +39,9 @@ const getters = {
 const actions = {
   /**
    * Fetch and set tariff plans
-   *
    * @param commit - VueX commit method
    */
-  async [FETCH_PLANS]({ commit } : ActionContext<PlansModuleState, RootState>): Promise<void> {
+  async [FETCH_PLANS]({ commit }: ActionContext<PlansModuleState, RootState>): Promise<void> {
     const plans = await plansApi.getPlans();
 
     commit(MutationType.SetPlans, plans);
@@ -53,7 +51,6 @@ const actions = {
 const mutations = {
   /**
    * Set plans to store
-   *
    * @param state - module state
    * @param plans - plans to set
    */
