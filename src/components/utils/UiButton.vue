@@ -1,5 +1,5 @@
 <template>
-  <comment
+  <component
     :is="href ? 'a' : 'button'"
     class="ui-button"
     :class="{
@@ -17,7 +17,6 @@
     :disabled="disabled"
     :href="href || null"
     data-ripple
-    @click="$emit('click', $event)"
   >
     <Icon
       v-if="icon"
@@ -28,7 +27,7 @@
     <span class="ui-button-text">
       {{ content }}
     </span>
-  </comment>
+  </component>
 </template>
 
 <script lang="ts">
