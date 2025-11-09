@@ -239,52 +239,7 @@ export default Vue.extend({
         return 1;
       }
 
-<<<<<<< HEAD
       return this.chartHeight / (this.maxValue - this.minValue);
-=======
-      return (this.chartHeight) / (this.maxValue - this.minValue);
-    },
-
-    /**
-     * Number of errors for the current day
-     */
-    todayCount(): number {
-      if (this.points.length === 0) {
-        return 0;
-      }
-
-      const lastPoint = this.points[this.points.length - 1];
-
-      if (!lastPoint) {
-        return 0;
-      }
-
-      return lastPoint.count ?? 0;
-    },
-
-    /**
-     * Number of errors for the previous day
-     */
-    yesterdayCount(): number {
-      if (this.points.length < 2) {
-        return 0;
-      }
-
-      const previousPoint = this.points[this.points.length - 2];
-
-      if (!previousPoint) {
-        return 0;
-      }
-
-      return previousPoint.count ?? 0;
-    },
-
-    /**
-     * Difference between current and previous number of errors
-     */
-    difference(): number {
-      return this.todayCount - this.yesterdayCount;
->>>>>>> e038b4c88fa5aef686657489fa3cfb0d058126a1
     },
 
     /**
@@ -367,18 +322,8 @@ export default Vue.extend({
         return '';
       }
 
-<<<<<<< HEAD
-      if (this.points.length === 1) {
-        const pointX = 0;
-        const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
 
-        return `M ${pointX} ${pointY}`;
-      }
-
-      const pathPoints: Array<{ x: number; y: number }> = [];
-=======
       const points: string[] = [];
->>>>>>> e038b4c88fa5aef686657489fa3cfb0d058126a1
 
       this.points.forEach((day, index) => {
         const value = day.count;
