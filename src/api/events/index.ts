@@ -178,12 +178,18 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
 
 /**
  * Fetch data for chart
- * @param projectId - project id
- * @param originalEventId - id of the original event
- * @param days - how many days we need to fetchfor displaying in chart
- * @param timezoneOffset - user's local timezone
+ *
+ * @param {string} projectId - project id
+ * @param {string} originalEventId - id of the original event
+ * @param {number} days - how many days we need to fetchfor displaying in chart
+ * @param {number} timezoneOffset - user's local timezone
  */
-export async function fetchChartData(projectId: string, originalEventId: string, days: number, timezoneOffset: number): Promise<EventChartItem[]> {
+export async function fetchChartData(
+  projectId: string,
+  originalEventId: string,
+  days: number,
+  timezoneOffset: number
+): Promise<EventChartItem[]> {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     originalEventId,

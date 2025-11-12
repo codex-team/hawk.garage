@@ -374,6 +374,49 @@ export function debounce(callback: () => void, delay: number): () => void {
 }
 
 /**
+ * Throttle function to limit the rate at which a function can be called.
+ * Executes the callback immediately, then waits for the delay period before
+ * allowing the next execution.
+ *
+ * @param {Function} callback - function to throttle
+ * @param {number} delay - throttle delay in milliseconds
+ *
+ * @returns {Function}
+ */
+export function throttle(callback: () => void, delay: number): () => void {
+  let lastExecTime = 0;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return function (...args): void {
+    const currentTime = Date.now();
+    const timeSinceLastExec = currentTime - lastExecTime;
+
+    if (timeSinceLastExec >= delay) {
+      /* Execute immediately if enough time has passed */
+      lastExecTime = currentTime;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      callback.apply(this, args);
+    } else {
+      /* Schedule execution for the remaining time */
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+
+      const remainingTime = delay - timeSinceLastExec;
+
+      timeoutId = setTimeout(() => {
+        lastExecTime = Date.now();
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        callback.apply(this, args);
+        timeoutId = null;
+      }, remainingTime);
+    }
+  };
+}
+
+/**
  * Uppercase the first letter
  * @param string - string to process
  */

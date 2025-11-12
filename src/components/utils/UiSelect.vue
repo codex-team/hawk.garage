@@ -49,6 +49,11 @@ export interface UiSelectOption {
    * Optional Icon to display in the select
    */
   icon?: string;
+
+  /**
+   * Whether the option is disabled
+   */
+  isDisabled?: boolean;
 }
 /**
  * @todo support closing by click outside @see https://vueuse.org/core/onClickOutside/
@@ -127,18 +132,26 @@ export default Vue.extend({
         icon: option.icon,
         label: option.label,
         isActive: option.value === this.internalValue,
+        isDisabled: option.isDisabled,
         onActivate: () => this.onOptionActivate(option),
       }));
     },
   },
-  mounted() {
+  watch: {
+    value: {
+      handler(newVal: string): void {
+        this.internalValue = newVal;
+      },
+    },
+  },
+  mounted(): void {
     this.internalValue = this.value;
   },
   methods: {
     /**
      * Closes the select
      */
-    close() {
+    close(): void {
       this.isOpen = false;
     },
 
@@ -147,7 +160,7 @@ export default Vue.extend({
      *
      * @param option - option to activate
      */
-    onOptionActivate(option: UiSelectOption) {
+    onOptionActivate(option: UiSelectOption): void {
       this.internalValue = option.value;
       this.$emit('input', option.value);
       this.close();
@@ -165,6 +178,7 @@ export default Vue.extend({
   --font-size: 12px;
 
   position: relative;
+  user-select: none;
 
   &__button {
     display: flex;

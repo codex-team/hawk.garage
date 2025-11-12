@@ -7,8 +7,8 @@
       infinite-scroll-distance="300"
       class="project-overview__content"
     >
-      <Chart
-        :points="chartData"
+      <ProjectChart
+        :project-id="projectId"
       />
       <FiltersBar
         @state-changed="reloadDailyEvents"
@@ -38,22 +38,18 @@ import FiltersBar from './FiltersBar';
 import notifier from 'codex-notifier';
 import NotFoundError from '@/errors/404';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
+import ProjectChart from './ProjectChart.vue';
 
 export default {
   name: 'ProjectOverview',
   components: {
     FiltersBar,
     EventsList,
-    Chart,
+    ProjectChart,
     BlockedWorkspaceBanner,
   },
   data() {
     return {
-      /**
-       * Data for a chart
-       */
-      chartData: [],
-
     };
   },
   computed: {
@@ -104,40 +100,32 @@ export default {
    * Used to fetch events on component creation
    */
   async created() {
-    try {
-      // How many days will be displayed in the chart
-      const twoWeeks = 14;
-      const boundingDays = 2;
+    /**
+     * @todo handle 404 error
+     */
+    // try {
 
-      if (!this.$store.state.projects.charts[this.projectId]) {
-        await this.$store.dispatch(FETCH_CHART_DATA, {
-          projectId: this.projectId,
-          days: twoWeeks + boundingDays,
-        });
-      }
+    // } catch (error) {
+    //   if (error instanceof NotFoundError) {
+    //     notifier.show({
+    //       message: this.$t('projects.notFound'),
+    //       style: 'error',
+    //       time: 5000,
+    //     });
 
-      this.chartData = this.$store.state.projects.charts[this.projectId];
-    } catch (error) {
-      if (error instanceof NotFoundError) {
-        notifier.show({
-          message: this.$t('projects.notFound'),
-          style: 'error',
-          time: 5000,
-        });
+    //     /**
+    //      * @todo Make 404 page and Redirect to it
+    //      */
+    //     this.$router.push('/');
 
-        /**
-         * @todo Make 404 page and Redirect to it
-         */
-        this.$router.push('/');
+    //     return;
+    //   }
 
-        return;
-      }
-
-      /**
-       * In case of not-404 error, throw it down
-       */
-      throw error;
-    }
+    //   /**
+    //    * In case of not-404 error, throw it down
+    //    */
+    //   throw error;
+    // }
   },
 
   /**
