@@ -520,7 +520,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param {string} project.endDate - end date
      * @param {number} project.groupBy - grouping interval in minutes
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unused-vars-experimental
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async [GET_CHART_DATA](
       { commit, dispatch },
       { projectId, eventId, originalEventId, days }:

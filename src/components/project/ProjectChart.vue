@@ -35,9 +35,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Chart from '../events/Chart.vue';
-import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes';
 import UiSelect, { UiSelectOption } from '../utils/UiSelect.vue';
-import { ChartItem } from '@/types/chart';
+import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes.js';
+import { ChartItem } from '../../types/chart';
 
 export default Vue.extend({
   name: 'ProjectChart',
@@ -51,11 +51,16 @@ export default Vue.extend({
       required: true,
     },
   },
+  /**
+   * Component state
+   *
+   * @returns {{ chartData: ChartItem[]; chartRange: string; chartGrouping: string; rangeOptions: UiSelectOption[] }}
+   */
   data(): {
-    chartData: ChartItem[];
-    chartRange: string;
-    chartGrouping: string;
-    rangeOptions: UiSelectOption[];
+      chartData: ChartItem[];
+      chartRange: string;
+      chartGrouping: string;
+      rangeOptions: UiSelectOption[];
     } {
     return {
       /**
@@ -195,7 +200,9 @@ export default Vue.extend({
      */
     async fetchChartData(): Promise<void> {
       const now = new Date();
-      let startDate, endDate, groupBy;
+      let startDate: string;
+      const endDate = now.toISOString();
+      let groupBy: number;
 
       // Determine date range
       if (this.chartRange === 'hour') {
@@ -208,8 +215,6 @@ export default Vue.extend({
         // month
         startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
       }
-      endDate = now.toISOString();
-
       // Determine grouping
       if (this.chartGrouping === 'minutes') {
         groupBy = 1;
@@ -229,15 +234,38 @@ export default Vue.extend({
       /* Update local chartData from store */
       this.chartData = this.$store.state.projects.charts[this.projectId] || [];
     },
+    /**
+     * Update currently selected range
+     *
+     * @param range - new range value
+     */
     changeChartRange(range: string): void {
       this.chartRange = range;
     },
+
+    /**
+     * Update currently selected grouping
+     *
+     * @param grouping - new grouping value
+     */
     changeChartGrouping(grouping: string): void {
       this.chartGrouping = grouping;
     },
+
+    /**
+     * Determines if a grouping option is available (placeholder for future constraints)
+     *
+     * @param grouping - grouping value
+     */
     isGroupingAvailable(grouping: string): boolean {
       return true;
     },
+
+    /**
+     * Determines if a range option is available (placeholder for future constraints)
+     *
+     * @param range - range value
+     */
     isRangeAvailable(range: string): boolean {
       return true;
     },
