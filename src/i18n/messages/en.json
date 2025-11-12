@@ -94,6 +94,16 @@
     "searchFieldWithCMDK": "{cmd}+K to search"
   },
   "projects": {
+    "chart": {
+      "now": "Now",
+      "byMinutes": "By minutes",
+      "byHours": "By hours",
+      "byDays": "By days",
+      "lastHour": "Last hour",
+      "lastDay": "Last day",
+      "lastWeek": "Last week",
+      "lastMonth": "Last month"
+    },
     "filters": {
       "filtersOptions": {
         "all": "All",
@@ -493,6 +503,7 @@
     "issue": "Create issue",
     "loading": "Loading...",
     "context": "Context",
+    "release": "Release",
     "viewedBy": {
       "assignee": "Assignee"
     },

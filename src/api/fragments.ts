@@ -88,7 +88,6 @@ export const EVENT_FRAGMENT = `
   ${EVENT_BACKTRACE}
 `;
 
-
 // language=GraphQL
 /**
  * Fragment for fetching workspace with full team

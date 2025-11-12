@@ -154,6 +154,7 @@ export default Vue.extend({
         this.$emit('workspaceUpdated');
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
+
         notifier.show({
           message,
           style: 'error',
@@ -219,7 +220,6 @@ export default Vue.extend({
       }
     }
   }
-
 
 }
 </style>

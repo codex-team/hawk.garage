@@ -13,12 +13,11 @@ import {
   MUTATION_TOGGLE_ENABLED_STATE_OF_A_PROJECT_NOTIFY_RULE,
   MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS,
   QUERY_CHART_DATA,
-  MUTATION_GENERATE_NEW_INTEGRATION_TOKEN
+  MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
+  QUERY_PROJECT_RELEASES,
+  QUERY_PROJECT_RELEASE_DETAILS
 } from './queries';
 import * as api from '../index.ts';
-import { ChartData } from '../../types/events';
-import { ReleaseDetails } from '../../types/release';
-import { QUERY_PROJECT_RELEASES, QUERY_PROJECT_RELEASE_DETAILS } from './queries';
 
 /**
  * Create project and returns its id
@@ -206,14 +205,18 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * Fetch data for chart
  *
  * @param {string} projectId - id of the project to fetch recent errors
- * @param {number} days - fow how many days we need to get counters
+ * @param {string} startDate - start date (ISO string or Unix timestamp in seconds)
+ * @param {string} endDate - end date (ISO string or Unix timestamp in seconds)
+ * @param {number} groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
  * @param {number} timezoneOffset - user's local timezone offset
  * @returns {Promise<ChartData[] | null>}
  */
-export async function fetchChartData(projectId, days, timezoneOffset) {
+export async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
-    days,
+    startDate,
+    endDate,
+    groupBy,
     timezoneOffset,
   })).project.chartData;
 }

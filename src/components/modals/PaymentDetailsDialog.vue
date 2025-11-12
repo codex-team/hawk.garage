@@ -33,7 +33,6 @@
           </ul>
         </div>
 
-
         <template v-else>
           <i18n
             tag="div"
@@ -100,7 +99,6 @@
             </div> -->
           </div>
         </template>
-
 
         <!--Card-->
         <!-- <CustomSelect
@@ -226,7 +224,6 @@ import notifier from 'codex-notifier';
 // import { API_ENDPOINT } from '../../api';
 import { BeforePaymentPayload } from '../../types/before-payment-payload';
 import { PlanProlongationPayload } from '../../types/plan-prolongation-payload';
-import { FETCH_BANK_CARDS } from '@/store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
@@ -375,11 +372,11 @@ export default Vue.extend({
       const newCardOption: CustomSelectOption = {
         id: NEW_CARD_ID,
         value: NEW_CARD_ID,
-        name:  this.$t('billing.paymentDetails.newCard') as string,
+        name: this.$t('billing.paymentDetails.newCard') as string,
       };
 
       if (!cards) {
-        return [ newCardOption ];
+        return [newCardOption];
       }
 
       return [newCardOption, ...cards.map(cardToSelectOption)];
@@ -638,7 +635,7 @@ export default Vue.extend({
              * Refresh operations history
              */
             this.$store.dispatch(GET_BUSINESS_OPERATIONS, {
-              ids: [ this.workspaceId ],
+              ids: [this.workspaceId],
             });
             this.$store.dispatch(RESET_MODAL_DIALOG);
           },

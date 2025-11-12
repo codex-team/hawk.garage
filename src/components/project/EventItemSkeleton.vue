@@ -44,7 +44,6 @@ export default {
     margin: 10px 0;
     padding-block: 10px;
 
-
     &__time {
       min-width: 26px;
       margin-left: 40px;

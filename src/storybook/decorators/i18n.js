@@ -14,7 +14,7 @@ export default (story, context) => ({
   created() {
     this.$store.watch(
       state => state.app.language,
-      newLang => {
+      (newLang) => {
         loadLanguageAsync(newLang);
       }
     );

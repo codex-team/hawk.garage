@@ -34,24 +34,25 @@ export default Vue.extend({
      * Fields for reset password form
      */
     fields: {
-      autoComplete: string,
-      label: VueI18n.TranslateResult,
-      name: string,
-      value: string,
-      placeholder: string,
-      type: string
-    }[],
+      autoComplete: string;
+      label: VueI18n.TranslateResult;
+      name: string;
+      value: string;
+      placeholder: string;
+      type: string;
+    }[];
 
     /**
      * Text for submit button in reset password form
      */
-    submitText: VueI18n.TranslateResult,
+    submitText: VueI18n.TranslateResult;
 
     /**
      * Field for displaying errors
      */
-    message: {text: any, type: string} | null
-    } {
+    message: { text: any;
+      type: string; } | null;
+  } {
     return {
       fields: [
         {
@@ -72,7 +73,6 @@ export default Vue.extend({
     /**
      * Method recover user's password by email from form
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
     async recoverPassword(): Promise<void> {
       const emailField = this.fields.find(field => field.name === 'email');
       const email = emailField ? emailField.value : '';
@@ -89,6 +89,7 @@ export default Vue.extend({
         });
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
+
         console.error(err);
 
         notifier.show({

@@ -1,22 +1,19 @@
 /**
  * Prepares FormData object for requests with files
- *
- * @param {string} request - request to send
- * @param {object} [variables] - request variables
- * @param {object} [files] - files to upload
- *
- * @returns {FormData}
+ * @param request - request to send
+ * @param [variables] - request variables
+ * @param [files] - files to upload
+ * @returns
  */
 export function prepareFormData(
   request: string,
   variables: Record<string, unknown> | undefined,
-  files: {[name: string]: File | undefined}
+  files: { [name: string]: File | undefined }
 ): FormData {
   Object
     .keys(files)
-    .forEach(name => {
+    .forEach((name) => {
       if (variables) {
-        // eslint-disable-next-line
         variables[name] = null;
       }
     });
@@ -26,12 +23,12 @@ export function prepareFormData(
     variables,
   };
 
-  const map: {[name: string]: string[]} = {};
+  const map: { [name: string]: string[] } = {};
 
   Object
     .keys(files)
-    .forEach(name => {
-      map[name] = [ `variables.${name}` ];
+    .forEach((name) => {
+      map[name] = [`variables.${name}`];
     });
 
   const formData = new FormData();
@@ -42,7 +39,6 @@ export function prepareFormData(
   Object
     .entries(files)
     .forEach(([name, file]) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       formData.append(name, file!, file!.name);
     });
 

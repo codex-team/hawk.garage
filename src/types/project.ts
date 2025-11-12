@@ -1,6 +1,6 @@
-import { User } from './user';
-import { ProjectNotificationsRule } from './project-notifications';
-import { ProjectEventGroupingPattern } from './project-event-grouping-patterns';
+import type { User } from './user';
+import type { ProjectNotificationsRule } from './project-notifications';
+import type { ProjectEventGroupingPattern } from './project-event-grouping-patterns';
 
 /**
  * Rate limits configuration for a project

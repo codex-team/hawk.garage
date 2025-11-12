@@ -4,23 +4,6 @@
     @mousemove.passive="moveTooltip"
     @mouseleave.passive="hoveredIndex = -1"
   >
-    <div
-      v-if="points.length > 1"
-      class="chart__info"
-    >
-      <span class="chart__info-today"> today </span>
-      <span class="chart__info-highlight"> {{ todayCount | spacedNumber }} </span>
-
-      <span
-        v-if="difference !== 0"
-        :class="{
-          'chart__info-increase': difference > 0,
-          'chart__info-decrease': difference < 0
-        }"
-      >
-        {{ Math.abs(difference) | spacedNumber }}
-      </span>
-    </div>
     <svg
       ref="chart"
       class="chart__body"
@@ -32,20 +15,38 @@
         >
           <stop
             offset="0%"
-            style="stop-color:#ff4c4c;"
+            style="stop-color:#FF2E51;"
           />
           <stop
             offset="100%"
-            style="stop-color:rgba(61, 133, 210, 0.22);"
+            style="stop-color:#424565;"
+          />
+        </linearGradient>
+        <linearGradient
+          id="chartFill"
+          gradientTransform="rotate(90)"
+        >
+          <stop
+            offset="0%"
+            style="stop-color:rgba(255, 46, 81, 0.3);"
+          />
+          <stop
+            offset="100%"
+            style="stop-color:rgba(66, 69, 101, 0);"
           />
         </linearGradient>
       </defs>
-      <polyline
-        class="chart__body-polyline"
+      <path
+        class="chart__body-path-fill"
+        :fill="maxValue === minValue ? 'rgba(61, 133, 210, 0.05)' : 'url(#chartFill)'"
+        :d="smoothPathFill"
+      />
+      <path
+        class="chart__body-path"
         fill="none"
         :stroke="maxValue === minValue ? 'rgba(61, 133, 210, 0.22)' : 'url(#chart)'"
-        stroke-width="2"
-        :points="polylinePoints"
+        stroke-width="3"
+        :d="smoothPath"
       />
     </svg>
     <div
@@ -53,34 +54,36 @@
     >
       <div
         class="chart__ox-inner"
-        :style="{
-          margin: `0 ${stepX / 2}px`
-        }"
       >
         <span
-          v-for="(day, index) in points"
-          :key="index"
+          v-for="item in visibleLegendPoints"
+          :key="item.index"
           class="chart__ox-item"
+          :style="{ left: `${item.index * stepX}px`, transform: 'translateX(-50%)' }"
         >
-          {{ day.timestamp * 1000 | prettyDateFromTimestamp }}
+          {{ formatTimestamp(item.point.timestamp * 1000) }}
         </span>
       </div>
     </div>
     <div
-      v-if="hoveredIndex > 0 && hoveredIndex < points.length - 1"
-      :style="`left: ${pointerLeft}px;`"
+      v-if="hoveredIndex >= 0 && hoveredIndex < points.length"
+      :style="{ transform: `translateX(${pointerLeft}px)` }"
       class="chart__pointer"
     >
       <div
-        :style="`top: ${pointerTop}px`"
+        :style="{ transform: `translateY(${pointerTop}px)` }"
         class="chart__pointer-cursor"
       />
       <div
         class="chart__pointer-tooltip"
-        :style="`min-width: ${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px`"
+        :class="{
+          'chart__pointer-tooltip--left': tooltipAlignment === 'left',
+          'chart__pointer-tooltip--right': tooltipAlignment === 'right'
+        }"
+        :style="{ minWidth: `${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px` }"
       >
         <div class="chart__pointer-tooltip-date">
-          {{ points[hoveredIndex].timestamp * 1000 | prettyDateFromTimestamp }}
+          {{ formatTimestamp(points[hoveredIndex].timestamp * 1000) }}
         </div>
         <div class="chart__pointer-tooltip-number">
           <AnimatedCounter :value="points[hoveredIndex].count | spacedNumber" />
@@ -93,9 +96,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { debounce } from '@/utils';
+
+import { throttle } from '@/utils';
 import { ChartItem } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
+
+type ChartData = {
+  chartWidth: number;
+  chartHeight: number;
+  onResize: () => void;
+  hoveredIndex: number;
+};
 
 export default Vue.extend({
   name: 'Chart',
@@ -110,8 +121,16 @@ export default Vue.extend({
       type: Array as () => ChartItem[],
       default: () => [] as ChartItem[],
     },
+
+    /**
+     * Detalization of the chart affects the legend and tooltip display
+     */
+    detalization: {
+      type: String as () => 'minutes' | 'hours' | 'days',
+      default: 'days',
+    },
   },
-  data() {
+  data(): ChartData {
     return {
       /**
        * Chart SVG clientWidth
@@ -127,7 +146,9 @@ export default Vue.extend({
        * Handler of window resize
        */
       onResize: (): void => {
-        // do nothing
+        /**
+         * noop placeholder, will be replaced in created lifecycle
+         */
       },
 
       /**
@@ -137,11 +158,77 @@ export default Vue.extend({
     };
   },
   computed: {
+
+    /**
+     * Width of x-legend item
+     */
+    xLegendWidth(): number {
+      switch (this.detalization) {
+        case 'days':
+          return 50;
+        case 'hours':
+          return 75;
+        case 'minutes':
+          return 90;
+        default:
+          return 55;
+      }
+    },
+
     /**
      * Step for OX axis
      */
     stepX(): number {
+      if (this.points.length <= 1) {
+        return 0;
+      }
+
       return this.chartWidth / (this.points.length - 1);
+    },
+
+    /**
+     * Calculate the step for displaying x-legend items to prevent overflow
+     * Returns how many items to skip between displayed items
+     */
+    visibleXLegendItems(): number {
+      if (!this.chartWidth || !this.points.length) {
+        return 1;
+      }
+
+      const maxItems = Math.floor(this.chartWidth / this.xLegendWidth);
+
+      if (maxItems >= this.points.length) {
+        return 1;
+      }
+
+      return Math.max(1, Math.ceil(this.points.length / maxItems));
+    },
+
+    /**
+     * Filtered points to display in x-legend based on visibleXLegendItems step
+     */
+    visibleLegendPoints(): Array<{ point: ChartItem; index: number }> {
+      const step = this.visibleXLegendItems;
+      const result: Array<{ point: ChartItem; index: number }> = [];
+
+      for (let i = 0; i < this.points.length; i = i + step) {
+        result.push({
+          point: this.points[i],
+          index: i,
+        });
+      }
+
+      /* Ensure the last point is always included */
+      const lastIndex = this.points.length - 1;
+
+      if (result.length > 0 && result[result.length - 1].index !== lastIndex) {
+        result.push({
+          point: this.points[lastIndex],
+          index: lastIndex,
+        });
+      }
+
+      return result;
     },
 
     /**
@@ -152,34 +239,17 @@ export default Vue.extend({
         return 1;
       }
 
-      return (this.chartHeight) / (this.maxValue - this.minValue);
-    },
-
-    /**
-     * Number of errors for the current day
-     */
-    todayCount(): number {
-      return this.points.slice(-1)[0].count || 0;
-    },
-
-    /**
-     * Number of errors for the previous day
-     */
-    yesterdayCount(): number {
-      return this.points.slice(-2, -1)[0].count || 0;
-    },
-
-    /**
-     * Difference between current and previous number of errors
-     */
-    difference(): number {
-      return this.todayCount - this.yesterdayCount;
+      return this.chartHeight / (this.maxValue - this.minValue);
     },
 
     /**
      * Minimum number errors per day
      */
     minValue(): number {
+      if (this.points.length === 0) {
+        return 0;
+      }
+
       return Math.min(...this.points.map(day => day.count));
     },
 
@@ -187,10 +257,14 @@ export default Vue.extend({
      * Maximum number errors per day
      */
     maxValue(): number {
+      if (this.points.length === 0) {
+        return 0;
+      }
+
       /**
-       * We will increment max value for 20% for adding some offset from the top
+       * We will increment max value for 50% for adding some offset from the top
        */
-      const incrementForOffset = 1.2;
+      const incrementForOffset = 1.5;
 
       return Math.max(...this.points.map(day => day.count)) * incrementForOffset;
     },
@@ -210,34 +284,137 @@ export default Vue.extend({
         return 0;
       }
 
-      const currentValue = this.points[this.hoveredIndex].count;
+      const point = this.points[this.hoveredIndex];
 
-      return this.chartHeight - currentValue * this.kY;
+      if (!point) {
+        return 0;
+      }
+
+      const currentValue = point.count ?? 0;
+
+      return this.chartHeight - (currentValue - this.minValue) * this.kY;
     },
 
     /**
-     * Points for SVG <polyline>
+     * Tooltip alignment class based on position to prevent overflow
      */
-    polylinePoints(): string {
+    tooltipAlignment(): string {
+      const estimatedTooltipWidth = 100;
+      const pointerX = this.hoveredIndex * this.stepX;
+
+      if (pointerX < estimatedTooltipWidth / 2) {
+        /* Near left edge - align tooltip to the left */
+        return 'left';
+      } else if (pointerX > this.chartWidth - estimatedTooltipWidth / 2) {
+        /* Near right edge - align tooltip to the right */
+        return 'right';
+      }
+
+      /* Default center alignment */
+      return 'center';
+    },
+
+    /**
+     * Smooth path using cubic Bezier curves for SVG <path>
+     */
+    smoothPath(): string {
       if (!this.points || !this.points.length) {
         return '';
       }
 
-      const points : string[] = [];
+      if (this.points.length === 1) {
+        const pointX = 0;
+        const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
+
+        return `M ${pointX} ${pointY}`;
+      }
+
+      const pathPoints: Array<{ x: number; y: number }> = [];
 
       this.points.forEach((day, index) => {
         const value = day.count;
         const pointX = index * this.stepX;
-        const pointY = this.chartHeight - value * this.kY;
+        const pointY = this.chartHeight - (value - this.minValue) * this.kY;
 
-        points.push(pointX + ' ' + pointY);
+        pathPoints.push({ x: pointX,
+          y: pointY });
       });
 
-      return points.join(', ');
+      /* Start with move to first point */
+      let path = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
+
+      /* Vertical margins to prevent curve from going outside chart area */
+      const verticalMargin = 2;
+      const minY = verticalMargin;
+      const maxY = this.chartHeight - verticalMargin;
+
+      /* Generate smooth curves between points */
+      for (let i = 0; i < pathPoints.length - 1; i++) {
+        const p0 = i > 0 ? pathPoints[i - 1] : pathPoints[i];
+        const p1 = pathPoints[i];
+        const p2 = pathPoints[i + 1];
+        const p3 = i < pathPoints.length - 2 ? pathPoints[i + 2] : p2;
+
+        /* Check if both points in segment are at minimum (zero or near zero) */
+        const v1 = this.points[i].count;
+        const v2 = this.points[i + 1].count;
+        const isFlat = v1 === this.minValue && v2 === this.minValue;
+
+        if (isFlat) {
+          /* Use linear interpolation for flat segments at minimum value */
+          path += ` L ${p2.x} ${p2.y}`;
+        } else {
+          /* Calculate control points for cubic Bezier curve */
+          const cp1x = p1.x + (p2.x - p0.x) / 6;
+          let cp1y = p1.y + (p2.y - p0.y) / 6;
+          const cp2x = p2.x - (p3.x - p1.x) / 6;
+          let cp2y = p2.y - (p3.y - p1.y) / 6;
+
+          /* Clamp control points to stay within chart bounds */
+          cp1y = Math.max(minY, Math.min(maxY, cp1y));
+          cp2y = Math.max(minY, Math.min(maxY, cp2y));
+
+          /* Add cubic Bezier curve segment */
+          path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+        }
+      }
+
+      return path;
+    },
+
+    /**
+     * Smooth path with closed area for gradient fill
+     */
+    smoothPathFill(): string {
+      if (!this.points || !this.points.length) {
+        return '';
+      }
+
+      const path = this.smoothPath;
+
+      if (!path) {
+        return '';
+      }
+
+      if (this.points.length === 1) {
+        const pointX = 0;
+        const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
+
+        /* Close the path: line to bottom right, line to bottom left, close */
+        return `M ${pointX} ${pointY} L ${pointX} ${this.chartHeight} L ${pointX} ${this.chartHeight} Z`;
+      }
+
+      /* Get the last point coordinates from the path */
+      const lastIndex = this.points.length - 1;
+      const lastX = lastIndex * this.stepX;
+      const firstX = 0;
+
+      /* Close the path: line to bottom right, line to bottom left, close back to start */
+      return `${path} L ${lastX} ${this.chartHeight} L ${firstX} ${this.chartHeight} Z`;
     },
   },
   created() {
-    this.onResize = debounce(this.windowResized, 200);
+    this.onResize = throttle(this.windowResized, 200);
   },
   mounted() {
     /**
@@ -258,6 +435,13 @@ export default Vue.extend({
       const strokeWidth = 2;
       const svg = this.$refs.chart as SVGElement;
 
+      if (!svg) {
+        this.chartWidth = 0;
+        this.chartHeight = 0;
+
+        return;
+      }
+
       this.chartWidth = svg.clientWidth;
       this.chartHeight = svg.clientHeight - strokeWidth;
     },
@@ -274,11 +458,54 @@ export default Vue.extend({
      *
      * @param {MouseEvent} event - mousemove
      */
-    moveTooltip(event): void {
+    moveTooltip(event: MouseEvent): void {
+      if (this.points.length === 0) {
+        this.hoveredIndex = -1;
+
+        return;
+      }
+
+      if (this.stepX === 0) {
+        this.hoveredIndex = -1;
+
+        return;
+      }
+
       const chartX = this.$el.getBoundingClientRect().left;
       const cursorX = event.clientX - chartX;
 
-      this.hoveredIndex = Math.round(cursorX / this.stepX);
+      const newIndex = Math.round(cursorX / this.stepX);
+      const clampedIndex = Math.max(0, Math.min(this.points.length - 1, newIndex));
+
+      this.hoveredIndex = clampedIndex;
+    },
+
+    /**
+     * Formats timestamp based on detalization prop
+     *
+     * @param {number} timestamp - timestamp in milliseconds
+     * @returns {string} - formatted date string
+     */
+    formatTimestamp(timestamp: number): string {
+      const date = new Date(timestamp);
+
+      if (this.detalization === 'days') {
+        /* For days, show only day and month */
+        const day = date.getDate();
+        const month = date.getMonth();
+
+        return `${day} ${this.$t('common.shortMonths[' + month + ']')}`;
+      } else {
+        /* For hours and minutes, show day, month, hours:minutes */
+        const day = date.getDate();
+        const month = date.getMonth();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const paddedHours = hours.toString().padStart(2, '0');
+        const paddedMinutes = minutes.toString().padStart(2, '0');
+
+        return `${day} ${this.$t('common.shortMonths[' + month + ']')}, ${paddedHours}:${paddedMinutes}`;
+      }
     },
   },
 });
@@ -312,44 +539,18 @@ export default Vue.extend({
         margin-left: 6px;
         font-weight: bold;
       }
-
-      &-increase,
-      &-decrease {
-        position: relative;
-        margin-left: 32px;
-        color: #f15454;
-        font-weight: bold;
-        font-size: 13px;
-      }
-
-      &-increase {
-        color: #f15454;
-      }
-
-      &-decrease {
-        color: #2ccf6c;
-      }
-
-      &-increase::before,
-      &-decrease::before {
-        position: absolute;
-        top: 4px;
-        left: -18px;
-        border: 5.5px solid transparent;
-        border-top: 9px solid #2ccf6c;
-        content: '';
-      }
-
-      &-increase::before {
-        border-top-color: #f15454;
-        transform: rotate(180deg) translateY(7px);
-      }
     }
 
     &__body {
       flex-grow: 2;
 
-      polyline {
+      &-path-fill {
+        stroke: none;
+        vector-effect: non-scaling-stroke;
+        shape-rendering: geometricPrecision;
+      }
+
+      &-path {
         stroke-linecap: round;
         stroke-linejoin: round;
         vector-effect: non-scaling-stroke;
@@ -362,15 +563,18 @@ export default Vue.extend({
       padding: 15px 0;
 
       &-inner {
-        display: flex;
-        justify-content: space-between;
+        position: relative;
+        width: 100%;
+        height: 100%;
       }
 
       &-item {
-        flex: 1;
+        position: absolute;
+        left: 0;
         color: var(--color-text-main);
-        font-size: 10px;
+        font-size: 11px;
         text-align: center;
+        transform-origin: center;
         opacity: 0.3;
 
         &:first-of-type,
@@ -383,17 +587,19 @@ export default Vue.extend({
     &__pointer {
       position: absolute;
       top: 0;
+      left: 0;
       z-index: 0;
       width: 3px;
       height: 100%;
       margin-left: -1.5px;
       background-color: rgba(25, 28, 37, 0.5);
-      transition: left 0.2s cubic-bezier(.53,.04,.57,1.22);
+      /* transition: transform 0.1s cubic-bezier(.53,.04,.57,1.22); */
       animation: pointer-in 200ms ease;
-      will-change: opacity, left;
+      will-change: opacity, transform;
 
       &-cursor {
         position: absolute;
+        top: 0;
         width: 5px;
         height: 5px;
         margin-top: -2.5px;
@@ -401,30 +607,43 @@ export default Vue.extend({
         background: var(--color-indicator-critical);
         border-radius: 50%;
         opacity: 1;
-        transition: 0.2s;
-        will-change: top;
+        /* transition: transform 0.2s; */
+        will-change: transform;
       }
 
       &-tooltip {
         position: absolute;
-        bottom: -10px;
-        left: -20px;
+        bottom: -14px;
+        left: 50%;
         z-index: 500;
-        margin-left: -2px;
         padding: 6px 8px 6px 7px;
         color: var(--color-text-main);
         font-size: 12px;
         line-height: 1.4;
         letter-spacing: 0.2px;
         white-space: nowrap;
+        text-align: center;
         background: #191C25;
-        border-radius: 4px;
+        border-radius: 7px;
         box-shadow: 0 7px 12px 0 rgba(0, 0, 0, 0.12);
+        transform: translateX(-50%);
         transition: min-width 150ms ease;
 
+        &--left {
+          left: 0;
+          transform: translateX(0);
+        }
+
+        &--right {
+          right: 0;
+          left: auto;
+          transform: translateX(0);
+        }
+
         &-date {
+          margin-bottom: 2px;
           color: var(--color-text-second);
-          font-size: 10px;
+          font-size: 11px;
         }
 
         &-number {

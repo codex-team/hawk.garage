@@ -45,7 +45,6 @@
         </router-link>
       </div>
 
-
       <div class="event-header__type">
         {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
       </div>
@@ -141,7 +140,7 @@ export default Vue.extend({
     EntityImage,
     ProjectBadge,
   },
-  mixins: [ projectBadges ],
+  mixins: [projectBadges],
   props: {
     /**
      * Original (first) event data
@@ -175,7 +174,7 @@ export default Vue.extend({
       }
 
       const trace: HawkEventBacktraceFrame[] = this.event.payload.backtrace;
-      const addons: {url?: string} = (this.event.payload.addons as JavaScriptAddons);
+      const addons: { url?: string } = this.event.payload.addons as JavaScriptAddons;
       const url: string = (addons && addons.url) || '';
 
       if (!trace) {
@@ -212,11 +211,13 @@ export default Vue.extend({
           title: this.$i18n.t('event.navigation.daily') as string,
           routeName: 'event-daily',
         },
-        ...(showAffectedUsers ? [ {
-          title: this.$i18n.t('event.navigation.usersAffected') as string,
-          routeName: 'event-affected',
-          badge: this.event.usersAffected,
-        } ] : []),
+        ...(showAffectedUsers
+          ? [{
+              title: this.$i18n.t('event.navigation.usersAffected') as string,
+              routeName: 'event-affected',
+              badge: this.event.usersAffected,
+            }]
+          : []),
       ];
     },
 

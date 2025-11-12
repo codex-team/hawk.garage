@@ -85,7 +85,7 @@ import EntityImage from '../../utils/EntityImage.vue';
 import SettingsWindow from '../../settings/Window.vue';
 import Icon from '../../utils/Icon.vue';
 import { FETCH_WORKSPACE, LEAVE_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
-// eslint-disable-next-line no-unused-vars
+
 import { Workspace } from '@/types/workspaces';
 import notifier from 'codex-notifier';
 
@@ -138,6 +138,7 @@ export default Vue.extend({
         this.workspace = await this.$store.dispatch(FETCH_WORKSPACE, workspaceId);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
+
         notifier.show({
           message: this.$i18n.t(`workspaces.errors.${message}`) as string,
           style: 'error',
@@ -163,7 +164,7 @@ export default Vue.extend({
       try {
         await this.$store.dispatch(LEAVE_WORKSPACE, this.workspace!.id);
         this.$router.push({ name: 'home' });
-      } catch (e) {
+      } catch {
         notifier.show({
           message: this.$i18n.t('workspaces.settings.leaveError').toString(),
           style: 'error',
