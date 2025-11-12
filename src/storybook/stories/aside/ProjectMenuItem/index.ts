@@ -26,7 +26,7 @@ store.commit(mutationTypes.ADD_PROJECT, {
   unreadCount: 0,
 });
 
-router.push(`/projects/${projectId1}`);
+void router.push(`/projects/${projectId1}`);
 
 export default {
   component: ProjectsMenuItem,

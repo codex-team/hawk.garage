@@ -40,7 +40,7 @@ export default Vue.extend({
      */
     this.$store.watch(
       state => state.user.accessToken,
-      accessToken => {
+      (accessToken) => {
         if (!accessToken) {
           this.$router.push('/login');
         }
@@ -54,7 +54,7 @@ export default Vue.extend({
     loadLanguageAsync(this.$store.state.app.language);
     this.$store.watch(
       state => state.app.language,
-      newLang => {
+      (newLang) => {
         loadLanguageAsync(newLang);
       }
     );
@@ -65,13 +65,13 @@ export default Vue.extend({
     eventBus.$on('serviceWorkerUpdated', () => {
       this.$notify.open({
         description: this.$t('components.newVersionWindow.message') as string,
-        notifierButtons: [ {
+        notifierButtons: [{
           text: this.$t('components.newVersionWindow.refresh') as string,
           type: NotifierButtonType.SUBMIT,
           onClick: () => {
             window.location.reload();
           },
-        } ],
+        }],
       });
     });
   },

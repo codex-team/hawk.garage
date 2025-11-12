@@ -101,6 +101,13 @@ import { throttle } from '@/utils';
 import { ChartItem } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
 
+type ChartData = {
+  chartWidth: number;
+  chartHeight: number;
+  onResize: () => void;
+  hoveredIndex: number;
+};
+
 export default Vue.extend({
   name: 'Chart',
   components: {
@@ -123,7 +130,7 @@ export default Vue.extend({
       default: 'days',
     },
   },
-  data() {
+  data(): ChartData {
     return {
       /**
        * Chart SVG clientWidth
@@ -139,7 +146,9 @@ export default Vue.extend({
        * Handler of window resize
        */
       onResize: (): void => {
-        // do nothing
+        /**
+         * noop placeholder, will be replaced in created lifecycle
+         */
       },
 
       /**
@@ -170,6 +179,10 @@ export default Vue.extend({
      * Step for OX axis
      */
     stepX(): number {
+      if (this.points.length <= 1) {
+        return 0;
+      }
+
       return this.chartWidth / (this.points.length - 1);
     },
 
@@ -233,6 +246,10 @@ export default Vue.extend({
      * Minimum number errors per day
      */
     minValue(): number {
+      if (this.points.length === 0) {
+        return 0;
+      }
+
       return Math.min(...this.points.map(day => day.count));
     },
 
@@ -240,6 +257,10 @@ export default Vue.extend({
      * Maximum number errors per day
      */
     maxValue(): number {
+      if (this.points.length === 0) {
+        return 0;
+      }
+
       /**
        * We will increment max value for 50% for adding some offset from the top
        */
@@ -263,7 +284,13 @@ export default Vue.extend({
         return 0;
       }
 
-      const currentValue = this.points[this.hoveredIndex].count;
+      const point = this.points[this.hoveredIndex];
+
+      if (!point) {
+        return 0;
+      }
+
+      const currentValue = point.count ?? 0;
 
       return this.chartHeight - (currentValue - this.minValue) * this.kY;
     },
@@ -408,6 +435,13 @@ export default Vue.extend({
       const strokeWidth = 2;
       const svg = this.$refs.chart as SVGElement;
 
+      if (!svg) {
+        this.chartWidth = 0;
+        this.chartHeight = 0;
+
+        return;
+      }
+
       this.chartWidth = svg.clientWidth;
       this.chartHeight = svg.clientHeight - strokeWidth;
     },
@@ -424,11 +458,26 @@ export default Vue.extend({
      *
      * @param {MouseEvent} event - mousemove
      */
-    moveTooltip(event): void {
+    moveTooltip(event: MouseEvent): void {
+      if (this.points.length === 0) {
+        this.hoveredIndex = -1;
+
+        return;
+      }
+
+      if (this.stepX === 0) {
+        this.hoveredIndex = -1;
+
+        return;
+      }
+
       const chartX = this.$el.getBoundingClientRect().left;
       const cursorX = event.clientX - chartX;
 
-      this.hoveredIndex = Math.round(cursorX / this.stepX);
+      const newIndex = Math.round(cursorX / this.stepX);
+      const clampedIndex = Math.max(0, Math.min(this.points.length - 1, newIndex));
+
+      this.hoveredIndex = clampedIndex;
     },
 
     /**

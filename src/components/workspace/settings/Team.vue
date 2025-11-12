@@ -66,7 +66,7 @@ import Vue from 'vue';
 import notifier from 'codex-notifier';
 import { INVITE_TO_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import TeamMember from './TeamMember.vue';
-// eslint-disable-next-line no-unused-vars
+
 import { Workspace, Member } from '@/types/workspaces';
 
 export default Vue.extend({
@@ -155,11 +155,12 @@ export default Vue.extend({
         });
 
         this.userEmail = '';
-      } catch (e) {
-        const errorTranslationExist = this.$te('workspaces.settings.team.errors.' + e.message);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        const errorTranslationExist = this.$te('workspaces.settings.team.errors.' + message);
 
         notifier.show({
-          message: errorTranslationExist ? this.$t('workspaces.settings.team.errors.' + e.message) as string : e.message,
+          message: errorTranslationExist ? this.$t('workspaces.settings.team.errors.' + message) as string : message,
           style: 'error',
           time: 5000,
         });

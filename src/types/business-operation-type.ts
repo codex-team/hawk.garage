@@ -20,5 +20,5 @@ export enum BusinessOperationType {
   /**
    * Refund the money that were charged to link a card
    */
-  CardLinkRefund = 'CARD_LINK_REFUND',
+  CardLinkRefund = 'CARD_LINK_REFUND'
 }

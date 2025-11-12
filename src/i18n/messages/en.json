@@ -240,6 +240,8 @@
         "files": "Files"
       },
       "empty": {
+        "releasesTitle": "No releases found",
+        "releasesDesc": "Releases sent to Hawk will appear here",
         "eventsTitle": "No errors found in this release",
         "eventsDesc": "Events captured within this release will appear here",
         "commitsTitle": "No commits",
@@ -501,6 +503,7 @@
     "issue": "Create issue",
     "loading": "Loading...",
     "context": "Context",
+    "release": "Release",
     "viewedBy": {
       "assignee": "Assignee"
     },

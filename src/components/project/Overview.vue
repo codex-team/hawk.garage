@@ -40,11 +40,6 @@ import NotFoundError from '@/errors/404';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
 import ProjectChart from './ProjectChart.vue';
 
-/**
- * Maximum length of the search query
- */
-const SEARCH_MAX_LENGTH = 50;
-
 export default {
   name: 'ProjectOverview',
   components: {
@@ -133,15 +128,10 @@ export default {
     // }
   },
 
-  destroyed() {
-    this.$store.commit('SET_PROJECT_SEARCH', {
-      projectId: this.projectId,
-      search: '',
-    });
-  },
-
+  /**
+   * Clear search query when component is unmounted
+   */
   unmounted() {
-    /** Clear search query when component is unmounted */
     this.$store.commit('SET_PROJECT_SEARCH', {
       projectId: this.projectId,
       search: '',

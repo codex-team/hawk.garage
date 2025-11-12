@@ -41,11 +41,10 @@ import Vue from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
 import TooltipMenu, { TooltipMenuItem } from '../../utils/TooltipMenu.vue';
 import { GRANT_ADMIN_PERMISSIONS, REMOVE_USER_FROM_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
-// eslint-disable-next-line no-unused-vars
+
 import { Member } from '@/types/workspaces';
 import { isPendingMember } from '@/store/modules/workspaces/helpers';
 import notifier from 'codex-notifier';
-// eslint-disable-next-line no-unused-vars
 
 export default Vue.extend({
   name: 'TeamMember',
@@ -101,7 +100,8 @@ export default Vue.extend({
       if (!isPendingMember(this.member)) {
         options.push({
           title: (this.member.isAdmin
-            ? this.$t('workspaces.settings.team.withdrawPermissions') : this.$t('workspaces.settings.team.grantAdmin')) as string,
+            ? this.$t('workspaces.settings.team.withdrawPermissions')
+            : this.$t('workspaces.settings.team.grantAdmin')) as string,
           onClick: this.toggleAdminPermissions,
         });
       }
@@ -125,9 +125,11 @@ export default Vue.extend({
             state: !this.member.isAdmin,
           });
         }
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 5000,
         });
@@ -152,9 +154,11 @@ export default Vue.extend({
             userEmail: '',
           });
         }
-      } catch (e) {
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+
         notifier.show({
-          message: e.message,
+          message,
           style: 'error',
           time: 5000,
         });

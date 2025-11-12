@@ -4,7 +4,7 @@ import { radios, text, withKnobs } from '@storybook/addon-knobs';
 import centered from '@/storybook/decorators/centered';
 import mdx from './docs.mdx';
 import { ActionType } from '../../../../components/utils/ConfirmationWindow/types';
-import { PropType } from 'vue';
+import type { PropType } from 'vue';
 
 export default {
   title: 'Utils/ConfirmationWindow',
