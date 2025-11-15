@@ -3,13 +3,13 @@
     <div class="settings-window-page__title">
       {{ $t('projects.settings.rateLimits.title') }}
     </div>
-    <div class="project-settings__description">
+    <div v-if="isRateLimitsAvailable" class="project-settings__description">
       {{ $t('projects.settings.rateLimits.description') }}
     </div>
     <RateLimitsForm
+      v-if="isRateLimitsAvailable"
       :key="project.id"
       :value="project.rateLimitSettings"
-      :disabled="!isRateLimitsAvailable"
       @submit="handleSubmit"
       @clear="handleClear"
     />
@@ -17,7 +17,18 @@
       v-if="!isRateLimitsAvailable"
       class="project-settings__paid-only-message"
     >
-      {{ $t('projects.settings.rateLimits.paidOnlyMessage') }}
+      <div class="project-settings__paid-only-text">
+        {{ $t('projects.settings.rateLimits.paidOnlyMessage') }}
+      </div>
+      <div class="project-settings__paid-only-upgrade">
+        {{ $t('projects.settings.rateLimits.paidOnlyUpgrade') }}
+      </div>
+      <UiButton
+        :content="$t('projects.settings.rateLimits.upgradeButton')"
+        submit
+        class="project-settings__upgrade-button"
+        @click="openChooseTariffPlan"
+      />
     </div>
   </div>
 </template>
@@ -25,14 +36,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import RateLimitsForm from '../../forms/RateLimitsForm.vue';
+import UiButton from '../../utils/UiButton.vue';
 import { Project, ProjectRateLimitSettings } from '../../../types/project';
 import { UPDATE_PROJECT_RATE_LIMITS } from '@/store/modules/projects/actionTypes';
+import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
+import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import notifier from 'codex-notifier';
 
 export default Vue.extend({
   name: 'RateLimits',
   components: {
     RateLimitsForm,
+    UiButton,
   },
   props: {
     /**
@@ -65,8 +80,36 @@ export default Vue.extend({
 
       return !isFree;
     },
+
+    /**
+     * Get workspace for the current project
+     */
+    workspace() {
+      if (!this.project) {
+        return null;
+      }
+
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
   },
   methods: {
+    /**
+     * Open tariff plan selection dialog
+     */
+    openChooseTariffPlan(): void {
+      if (!this.workspace) {
+        return;
+      }
+
+      this.$store.dispatch(FETCH_PLANS).then(() => {
+        this.$store.dispatch(SET_MODAL_DIALOG, {
+          component: 'ChooseTariffPlanPopup',
+          data: {
+            workspaceId: this.workspace.id,
+          },
+        });
+      });
+    },
     /**
      * Handle form submit from RateLimitsForm component
      *
@@ -158,13 +201,27 @@ export default Vue.extend({
   }
 
   &__paid-only-message {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 28px;
     color: var(--color-text-main);
     font-weight: 400;
     font-size: 13px;
     line-height: 19px;
     background-color: var(--color-bg-second);
     border-radius: 8px;
+  }
+
+  &__paid-only-text {
+    margin-bottom: 12px;
+  }
+
+  &__paid-only-upgrade {
+    margin-bottom: 20px;
+  }
+
+  &__upgrade-button {
+    align-self: flex-start;
   }
 
   &__section,

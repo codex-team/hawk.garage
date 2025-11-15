@@ -1,5 +1,5 @@
 <template>
-  <fieldset class="form-fieldset" :class="{ 'form-fieldset--invalid': isInvalid }">
+  <fieldset class="form-fieldset form-fieldset__width" :class="{ 'form-fieldset--invalid': isInvalid }">
     <label
       class="label form-fieldset__label"
       :for="name"
@@ -130,10 +130,13 @@ export default {
 
 <style>
   .form-fieldset {
-    min-width: 160px;
     margin: 0;
     padding: 0;
     border: none;
+
+    &__width {
+      min-width: 170px;
+    }
 
     &__label {
       margin-bottom: 10px;

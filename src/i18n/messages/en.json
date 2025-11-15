@@ -217,7 +217,7 @@
       },
       "rateLimits": {
         "title": "Rate Limits",
-        "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
+        "description": "Protect your budget from unexpected traffic spikes. Set automatic limits to block events when they exceed your threshold, preventing overspending and keeping your costs predictable.",
         "threshold": "No more than",
         "thresholdPlaceholder": "Number of events",
         "period": "For period (seconds)",
@@ -226,7 +226,9 @@
         "clear": "Clear",
         "updatedMessage": "Rate limits updated successfully",
         "clearedMessage": "Rate limits cleared successfully",
-        "paidOnlyMessage": "Rate limits are available only for paid plans"
+        "paidOnlyMessage": "Rate limits allow you to protect against error spikes that can cause your workspace to prematurely exhaust its event limit. Set the maximum number of events that Hawk should accept per unit of time. Events exceeding the limit will not be processed and captured.",
+        "paidOnlyUpgrade": "This feature is available only for paid plans.",
+        "upgradeButton": "Upgrade plan"
       }
     },
     "notFound": "Project not found",
