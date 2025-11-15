@@ -22,6 +22,11 @@
       @paste="handlePaste"
       ref="input"
     >
+    <div
+      class="form-fieldset__error-message"
+    >
+      {{ errorMessage }}
+    </div>
   </fieldset>
 </template>
 
@@ -93,12 +98,38 @@ export default {
   data() {
     return {
       isInvalid: false,
+      validationError: null,
     };
+  },
+  computed: {
+    errorMessage() {
+      if (!this.isInvalid || !this.validationError) {
+        return null;
+      }
+
+      if (this.validationError === 'min') {
+        return this.$t('forms.numberInput.minError', { min: this.min });
+      }
+
+      if (this.validationError === 'max') {
+        return this.$t('forms.numberInput.maxError', { max: this.max });
+      }
+
+      return null;
+    },
   },
   methods: {
     updateInvalidState(value) {
-      this.isInvalid = (this.min !== null && value < this.min) ||
-                       (this.max !== null && value > this.max);
+      if (this.min && value < this.min) {
+        this.isInvalid = true;
+        this.validationError = 'min';
+      } else if (this.max && value > this.max) {
+        this.isInvalid = true;
+        this.validationError = 'max';
+      } else {
+        this.isInvalid = false;
+        this.validationError = null;
+      }
     },
     handleInput(event) {
       this.$emit('input', event.target.value);
@@ -135,7 +166,7 @@ export default {
     border: none;
 
     &__width {
-      min-width: 170px;
+      min-width: 212px;
     }
 
     &__label {
@@ -145,6 +176,13 @@ export default {
     &--invalid &__input {
       border-color: var(--color-indicator-critical);
       box-shadow: 0 1px 10px color-mod(var(--color-indicator-critical) alpha(35%));
+    }
+
+    &__error-message {
+      height: 20px;
+      color: var(--color-indicator-critical);
+      font-size: 13px;
+      line-height: 20px;
     }
   }
 </style>

@@ -91,7 +91,11 @@
   "forms": {
     "imageUploader": "ЗАГР. ФОТО",
     "searchField": "Поиск",
-    "searchFieldWithCMDK": "{cmd}+K для поиска"
+    "searchFieldWithCMDK": "{cmd}+K для поиска",
+    "numberInput": {
+      "minError": "Значение должно быть не менее {min}",
+      "maxError": "Значение должно быть не более {max}"
+    }
   },
   "projects": {
     "chart": {

@@ -188,7 +188,7 @@ export default Vue.extend({
   &__fields {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     .form-fieldset__label {
       font-weight: 400;
@@ -207,7 +207,7 @@ export default Vue.extend({
   }
 
   &__submit-button {
-    margin: 0 10px 20px 0;
+    margin-right: 10px;
 
     &:disabled {
       cursor: not-allowed;
@@ -216,7 +216,6 @@ export default Vue.extend({
   }
 
   &__clear-button {
-    margin: 0 0 20px 0;
     background-color: var(--color-indicator-critical);
 
     &:hover {
@@ -227,12 +226,6 @@ export default Vue.extend({
       cursor: not-allowed;
       opacity: 0.5;
     }
-  }
-
-  &__error-message {
-    margin-bottom: 20px;
-    color: var(--color-indicator-critical);
-    font-size: 13px;
   }
 }
 </style>

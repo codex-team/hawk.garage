@@ -91,7 +91,11 @@
   "forms": {
     "imageUploader": "UPLOAD LOGO",
     "searchField": "Search",
-    "searchFieldWithCMDK": "{cmd}+K to search"
+    "searchFieldWithCMDK": "{cmd}+K to search",
+    "numberInput": {
+      "minError": "Value must be at least {min}",
+      "maxError": "Value must be at most {max}"
+    }
   },
   "projects": {
     "chart": {
