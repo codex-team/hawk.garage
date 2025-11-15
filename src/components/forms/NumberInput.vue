@@ -1,43 +1,113 @@
 <template>
-  <input
-    type="number"
-    :value="value"
-    @input="handleInput"
-    @beforeinput="handleBeforeInput"
-    @paste="handlePaste"
-    ref="input"
-  />
+  <fieldset class="form-fieldset" :class="{ 'form-fieldset--invalid': isInvalid }">
+    <label
+      class="label form-fieldset__label"
+      :for="name"
+    >
+      {{ label }}
+    </label>
+    <input
+      :id="name"
+      class="input form-fieldset__input"
+      type="number"
+      :name="name"
+      :value="value"
+      :min="min"
+      :max="max"
+      :placeholder="placeholder"
+      :required="required"
+      :disabled="disabled"
+      @input="handleInput"
+      @beforeinput="handleBeforeInput"
+      @paste="handlePaste"
+      ref="input"
+    >
+  </fieldset>
 </template>
 
 <script>
 export default {
   name: 'NumberInput',
   props: {
-    value: {
-      type: Number,
-      default: 0,
+    /**
+     * Name of input
+     */
+    name: {
+      type: String,
+      default: null,
     },
-    // max: {
-    //   type: Number,
-    //   default: Infinity,
-    // },
-    // min: {
-    //   type: Number,
-    //   default: 0,
-    // },
+
+    /**
+     * Label for input
+     */
+    label: {
+      type: String,
+      default: null,
+    },
+
+    /**
+     * Placeholder shown on input
+     */
+    placeholder: {
+      type: String,
+      default: null,
+    },
+
+    /**
+     * Value for v-model
+     */
+    value: {
+      type: [String, Number],
+      default: null,
+    },
+
+    /**
+     * Is the input required to fill
+     */
+    required: Boolean,
+
+    /**
+     * Disable input field
+     */
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Minimum value for number type
+     */
+    min: {
+      type: Number,
+      default: null,
+    },
+
+    /**
+     * Maximum value for number type
+     */
+    max: {
+      type: Number,
+      default: null,
+    },
+  },
+  data() {
+    return {
+      isInvalid: false,
+    };
   },
   methods: {
+    updateInvalidState(value) {
+      this.isInvalid = (this.min !== null && value < this.min) ||
+                       (this.max !== null && value > this.max);
+    },
     handleInput(event) {
       this.$emit('input', event.target.value);
+      this.updateInvalidState(event.target.value);
     },
     handleBeforeInput(event) {
-      if (event.data.match(/[^0-9]/)) {
+      if (event.data && event.data.match(/[^0-9]/)) {
         event.preventDefault();
       }
-
-      // const currentValue = this.value;
-
-      // this.$emit('input', newValue);
     },
     handlePaste(event) {
       const clipboardData = event.clipboardData || window.clipboardData;
@@ -48,19 +118,30 @@ export default {
        * and set the value to the input
        */
       const numericData = pastedData.replace(/[^0-9]/g, '');
-      const currentValue = this.value;
-      const newValue = currentValue + numericData;
 
-      /**
-       * Set the value to the input
-       */
-      this.$emit('input', newValue);
+      if (numericData) {
+        this.$emit('input', numericData);
+      }
       event.preventDefault();
     },
   },
 }
 </script>
 
-<style scoped>
+<style>
+  .form-fieldset {
+    min-width: 160px;
+    margin: 0;
+    padding: 0;
+    border: none;
 
+    &__label {
+      margin-bottom: 10px;
+    }
+
+    &--invalid &__input {
+      border-color: var(--color-indicator-critical);
+      box-shadow: 0 1px 10px color-mod(var(--color-indicator-critical) alpha(35%));
+    }
+  }
 </style>

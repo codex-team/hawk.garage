@@ -10,7 +10,6 @@
       :key="project.id"
       :value="project.rateLimitSettings"
       :disabled="!isRateLimitsAvailable"
-      :max-threshold="maxThreshold"
       @submit="handleSubmit"
       @clear="handleClear"
     />
@@ -65,15 +64,6 @@ export default Vue.extend({
           || workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
 
       return !isFree;
-    },
-
-    /**
-     * Get workspace plan events limit
-     */
-    maxThreshold(): number {
-      const workspace = this.$store.getters.getWorkspaceByProjectId(this.project.id);
-
-      return workspace?.plan?.eventsLimit || 1000000000;
     },
   },
   methods: {

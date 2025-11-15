@@ -4,22 +4,20 @@
     @submit.prevent="handleSubmit"
   >
     <div class="rate-limits-form__fields">
-      <TextFieldset
+      <NumberInput
         v-model="currentThreshold"
-        type="number"
+        :placeholder="$t('projects.settings.rateLimits.thresholdPlaceholder')"
         :required="true"
         :disabled="disabled"
-        :is-invalid="!isThresholdValid"
         :min="1"
         :max="maxThreshold"
         :label="$t('projects.settings.rateLimits.threshold')"
       />
-      <TextFieldset
+      <NumberInput
         v-model="currentPeriod"
-        type="number"
+        :placeholder="$t('projects.settings.rateLimits.periodPlaceholder')"
         :required="true"
         :disabled="disabled"
-        :is-invalid="!isPeriodValid"
         :min="60"
         :max="2678400"
         :label="$t('projects.settings.rateLimits.period')"
@@ -48,13 +46,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import TextFieldset from './TextFieldset.vue';
+import NumberInput from './NumberInput.vue';
 import { ProjectRateLimitSettings } from '@/types/project';
 
 export default Vue.extend({
   name: 'RateLimitsForm',
   components: {
-    TextFieldset,
+    NumberInput,
   },
   props: {
     /**
@@ -128,9 +126,8 @@ export default Vue.extend({
   watch: {
     value: {
       handler() {
-        // Default: maxThreshold events per hour (3600 seconds in an hour)
-        this.currentThreshold = this.value?.N?.toString() || this.maxThreshold.toString();
-        this.currentPeriod = this.value?.T?.toString() || '3600';
+        this.currentThreshold = this.value?.N?.toString() || '';
+        this.currentPeriod = this.value?.T?.toString() || '';
       },
       immediate: true,
     },
