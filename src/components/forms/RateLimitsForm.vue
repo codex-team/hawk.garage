@@ -33,9 +33,10 @@
         {{ $t('projects.settings.rateLimits.submit') }}
       </button>
       <button
+        v-if="value"
         class="button button--submit rate-limits-form__clear-button"
         type="button"
-        :disabled="disabled || !value"
+        :disabled="disabled"
         @click="handleClear"
       >
         {{ $t('projects.settings.rateLimits.clear') }}
