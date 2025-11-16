@@ -138,7 +138,7 @@ export default Vue.extend({
     periodHumanReadable(): string | null {
       const s = String(this.currentPeriod).trim();
       let seconds = Number.parseInt(s, 10);
-      if (Number.isNaN(seconds)) seconds = 0;
+      if (Number.isNaN(seconds)) return null;
 
       const days = Math.floor(seconds / 86400);
       const hours = Math.floor((seconds % 86400) / 3600);
