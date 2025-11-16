@@ -13,15 +13,23 @@
         :max="maxThreshold"
         :label="$t('projects.settings.rateLimits.threshold')"
       />
-      <NumberInput
-        v-model="currentPeriod"
-        :placeholder="$t('projects.settings.rateLimits.periodPlaceholder')"
-        :required="true"
-        :disabled="disabled"
-        :min="60"
-        :max="2678400"
-        :label="$t('projects.settings.rateLimits.period')"
-      />
+      <div class="rate-limits-form__period-wrapper">
+        <NumberInput
+          v-model="currentPeriod"
+          :placeholder="$t('projects.settings.rateLimits.periodPlaceholder')"
+          :required="true"
+          :disabled="disabled"
+          :min="60"
+          :max="2678400"
+          :label="$t('projects.settings.rateLimits.period')"
+        />
+        <div
+          v-if="periodHumanReadable"
+          class="rate-limits-form__period-hint"
+        >
+          {{ periodHumanReadable }}
+        </div>
+      </div>
     </div>
 
     <div class="rate-limits-form__submit-area">
@@ -123,6 +131,52 @@ export default Vue.extend({
 
       return currentN !== originalN || currentT !== originalT;
     },
+
+    /**
+     * Convert seconds to human-readable format (days, hours, minutes)
+     */
+    periodHumanReadable(): string | null {
+      const periodStr = this.currentPeriod.toString().trim();
+      if (!periodStr) {
+        return null;
+      }
+
+      const seconds = Number.parseInt(periodStr, 10);
+      if (Number.isNaN(seconds) || seconds < 60) {
+        return null;
+      }
+
+      const days = Math.floor(seconds / 86400);
+      const hours = Math.floor((seconds % 86400) / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+
+      const parts: string[] = [];
+
+      if (days > 0) {
+        parts.push(`${days}${this.$t('projects.settings.rateLimits.timeUnits.d')}`);
+      }
+
+      if (hours > 0) {
+        parts.push(`${hours}${this.$t('projects.settings.rateLimits.timeUnits.h')}`);
+      }
+
+      if (minutes > 0 && days === 0) {
+        // Show minutes only if less than a day
+        parts.push(`${minutes}${this.$t('projects.settings.rateLimits.timeUnits.m')}`);
+      }
+
+      if (remainingSeconds > 0 && days === 0 && hours === 0) {
+        // Show seconds only if less than an hour
+        parts.push(`${remainingSeconds}${this.$t('projects.settings.rateLimits.timeUnits.s')}`);
+      }
+
+      if (parts.length === 0) {
+        return null;
+      }
+
+      return parts.join(' ');
+    },
   },
   watch: {
     value: {
@@ -200,6 +254,18 @@ export default Vue.extend({
       cursor: not-allowed;
       opacity: 0.5;
     }
+  }
+
+  &__period-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__period-hint {
+    margin-top: 5px;
+    color: var(--color-text-second);
+    font-size: 12px;
+    line-height: 1.4;
   }
 
   &__submit-area {

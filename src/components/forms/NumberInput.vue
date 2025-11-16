@@ -152,6 +152,7 @@ export default {
 
       if (numericData) {
         this.$emit('input', numericData);
+        this.updateInvalidState(numericData);
       }
       event.preventDefault();
     },
@@ -179,7 +180,6 @@ export default {
     }
 
     &__error-message {
-      height: 20px;
       color: var(--color-indicator-critical);
       font-size: 13px;
       line-height: 20px;
