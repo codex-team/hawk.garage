@@ -136,47 +136,20 @@ export default Vue.extend({
      * Convert seconds to human-readable format (days, hours, minutes)
      */
     periodHumanReadable(): string | null {
-      const periodStr = this.currentPeriod.toString().trim();
-      if (!periodStr) {
-        return null;
-      }
-
-      const seconds = Number.parseInt(periodStr, 10);
-      if (Number.isNaN(seconds) || seconds < 60) {
-        return null;
-      }
+      const s = String(this.currentPeriod).trim();
+      let seconds = Number.parseInt(s, 10);
+      if (Number.isNaN(seconds)) seconds = 0;
 
       const days = Math.floor(seconds / 86400);
       const hours = Math.floor((seconds % 86400) / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
-      const remainingSeconds = seconds % 60;
+      const secs = seconds % 60;
 
-      const parts: string[] = [];
-
-      if (days > 0) {
-        parts.push(`${days}${this.$t('projects.settings.rateLimits.timeUnits.d')}`);
-      }
-
-      if (hours > 0) {
-        parts.push(`${hours}${this.$t('projects.settings.rateLimits.timeUnits.h')}`);
-      }
-
-      if (minutes > 0 && days === 0) {
-        // Show minutes only if less than a day
-        parts.push(`${minutes}${this.$t('projects.settings.rateLimits.timeUnits.m')}`);
-      }
-
-      if (remainingSeconds > 0 && days === 0 && hours === 0) {
-        // Show seconds only if less than an hour
-        parts.push(`${remainingSeconds}${this.$t('projects.settings.rateLimits.timeUnits.s')}`);
-      }
-
-      if (parts.length === 0) {
-        return null;
-      }
-
-      return parts.join(' ');
-    },
+      return `${this.$t('common.timeUnits.d', { days })}
+        ${this.$t('common.timeUnits.h', { hours })}
+        ${this.$t('common.timeUnits.m', { minutes })}
+        ${this.$t('common.timeUnits.s', { seconds: secs })}`.trim();
+      },
   },
   watch: {
     value: {

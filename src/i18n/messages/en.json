@@ -232,13 +232,7 @@
         "clearedMessage": "Rate limits cleared successfully",
         "paidOnlyMessage": "Rate limits allow you to protect against error spikes that can cause your workspace to prematurely exhaust its event limit. Set the maximum number of events that Hawk should accept per unit of time. Events exceeding the limit will not be processed and captured.",
         "paidOnlyUpgrade": "This feature is available only for paid plans.",
-        "upgradeButton": "Upgrade plan",
-        "timeUnits": {
-          "d": "d",
-          "h": "h",
-          "m": "m",
-          "s": "s"
-        }
+        "upgradeButton": "Upgrade plan"
       }
     },
     "notFound": "Project not found",
@@ -570,6 +564,12 @@
     "hour": "hour",
     "day": "day",
     "week": "week",
+    "timeUnits": {
+      "d": "{days}d",
+      "h": "{hours}h",
+      "m": "{minutes}m",
+      "s": "{seconds}s"
+    },
     "today": "Today",
     "yesterday": "Yesterday",
     "months": [
