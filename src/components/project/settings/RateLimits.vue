@@ -191,24 +191,24 @@ export default Vue.extend({
   }
 
   &__description {
-    width: 85%;
+    max-width: 520px;
     margin-bottom: 20px;
     color: var(--color-text-main);
     font-weight: 400;
-    font-size: 13px;
-    line-height: 19px;
+    font-size: 14px;
+    line-height: 20px;
     opacity: 0.6;
   }
 
   &__paid-only-message {
     display: flex;
     flex-direction: column;
-    width: 85%;
+    max-width: 520px;
     margin-top: 28px;
     color: var(--color-text-main);
     font-weight: 400;
-    font-size: 13px;
-    line-height: 19px;
+    font-size: 14px;
+    line-height: 20px;
     background-color: var(--color-bg-second);
     border-radius: 8px;
   }
