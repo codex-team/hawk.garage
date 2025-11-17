@@ -227,7 +227,7 @@
         "period": "For period (seconds)",
         "periodPlaceholder": "Period (seconds)",
         "submit": "Save",
-        "clear": "Clear",
+        "reset": "Reset rate limits",
         "updatedMessage": "Rate limits updated successfully",
         "clearedMessage": "Rate limits cleared successfully",
         "paidOnlyMessage": "Rate limits allow you to protect against error spikes that can cause your workspace to prematurely exhaust its event limit. Set the maximum number of events that Hawk should accept per unit of time. Events exceeding the limit will not be processed and captured.",
