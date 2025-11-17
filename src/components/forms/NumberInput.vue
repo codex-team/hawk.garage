@@ -167,11 +167,20 @@ export default {
     border: none;
 
     &__width {
-      min-width: 212px;
+      min-width: 180px;
     }
 
     &__label {
       margin-bottom: 10px;
+    }
+
+    &__input::-webkit-outer-spin-button,
+    &__input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    &__input {
+      -moz-appearance: textfield;
     }
 
     &--invalid &__input {
@@ -180,6 +189,7 @@ export default {
     }
 
     &__error-message {
+      max-width: 180px;
       color: var(--color-indicator-critical);
       font-size: 13px;
       line-height: 20px;
