@@ -26,8 +26,6 @@
       :type="type || 'text'"
       :name="name"
       :value="value"
-      :min="min"
-      :max="max"
       :placeholder="placeholder"
       :required="required"
       :hidden="hidden"
@@ -125,22 +123,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
-    },
-
-    /**
-     * Minimum value for number type
-     */
-    min: {
-      type: Number,
-      default: null,
-    },
-
-    /**
-     * Maximum value for number type
-     */
-    max: {
-      type: Number,
-      default: null,
     },
   },
 };
