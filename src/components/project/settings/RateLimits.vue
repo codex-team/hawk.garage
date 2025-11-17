@@ -203,6 +203,7 @@ export default Vue.extend({
   &__paid-only-message {
     display: flex;
     flex-direction: column;
+    width: 85%;
     margin-top: 28px;
     color: var(--color-text-main);
     font-weight: 400;
