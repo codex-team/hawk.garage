@@ -31,7 +31,6 @@
         </div>
       </div>
     </div>
-
     <div class="rate-limits-form__submit-area">
       <button
         class="button button--submit rate-limits-form__submit-button"
@@ -40,16 +39,16 @@
       >
         {{ $t('projects.settings.rateLimits.submit') }}
       </button>
-      <button
+    </div>
+    <button
         v-if="value"
         class="button button--submit rate-limits-form__clear-button"
         type="button"
         :disabled="disabled"
         @click="handleClear"
       >
-        {{ $t('projects.settings.rateLimits.clear') }}
+        {{ $t('projects.settings.rateLimits.reset') }}
       </button>
-    </div>
   </form>
 </template>
 
@@ -245,16 +244,13 @@ export default Vue.extend({
     flex-basis: 100%;
   }
 
-  &__submit-button {
-    margin-right: 10px;
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+  &__submit-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   &__clear-button {
+    margin-top: 40px;
     background-color: var(--color-indicator-critical);
 
     &:hover {
