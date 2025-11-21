@@ -13,6 +13,11 @@ export interface NotificationsChannels {
   slack?: NotificationsChannelSettings;
 
   /**
+   * Alerts through the Loop
+   */
+  loop?: NotificationsChannelSettings;
+
+  /**
    * Alerts through the Telegram
    */
   telegram?: NotificationsChannelSettings;

@@ -176,6 +176,8 @@
         "emailDescription": "Не более одного письма в 10 минут",
         "slack": "Slack",
         "slackDescription": "Уведомления через Webhook App",
+        "loop": "Loop",
+        "loopDescription": "Уведомления через Loop Webhook",
         "telegram": "Telegram",
         "telegramDescription": "Уведомления через <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
         "receiveNewLabel": "Только новые события",
