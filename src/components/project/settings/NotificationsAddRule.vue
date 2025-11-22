@@ -500,10 +500,10 @@ export default Vue.extend({
      * Validate saved form fields and return valid-status
      */
     validateForm(): boolean {
-      this.endpointShouldBeValidated.telegram = !!this.form.channels.telegram && this.form.channels.telegram.isEnabled;
-      this.endpointShouldBeValidated.slack = !!this.form.channels.slack && this.form.channels.slack.isEnabled;
-      this.endpointShouldBeValidated.loop = !!this.form.channels.loop && this.form.channels.loop.isEnabled;
-      this.endpointShouldBeValidated.email = !!this.form.channels.email && this.form.channels.email.isEnabled;
+      this.endpointShouldBeValidated.telegram = this.form.channels.telegram!.isEnabled;
+      this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
+      this.endpointShouldBeValidated.loop = this.form.channels.loop!.isEnabled;
+      this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
 
       let allChannelsValid = true;
 
