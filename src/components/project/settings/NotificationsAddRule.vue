@@ -372,8 +372,29 @@ export default Vue.extend({
       this.form = ruleWithoutId;
 
       /**
-       * Backend may not return loop channel, but UI expects it to exist
+       * Backend may not return some channels, but UI expects them to exist
        */
+      if (!this.form.channels.telegram) {
+        this.$set(this.form.channels, 'telegram', {
+          endpoint: '',
+          isEnabled: true,
+        });
+      }
+
+      if (!this.form.channels.email) {
+        this.$set(this.form.channels, 'email', {
+          endpoint: '',
+          isEnabled: false,
+        });
+      }
+
+      if (!this.form.channels.slack) {
+        this.$set(this.form.channels, 'slack', {
+          endpoint: '',
+          isEnabled: false,
+        });
+      }
+
       if (!this.form.channels.loop) {
         this.$set(this.form.channels, 'loop', {
           endpoint: '',
@@ -479,10 +500,10 @@ export default Vue.extend({
      * Validate saved form fields and return valid-status
      */
     validateForm(): boolean {
-      this.endpointShouldBeValidated.telegram = this.form.channels.telegram!.isEnabled;
-      this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
+      this.endpointShouldBeValidated.telegram = !!this.form.channels.telegram && this.form.channels.telegram.isEnabled;
+      this.endpointShouldBeValidated.slack = !!this.form.channels.slack && this.form.channels.slack.isEnabled;
       this.endpointShouldBeValidated.loop = !!this.form.channels.loop && this.form.channels.loop.isEnabled;
-      this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
+      this.endpointShouldBeValidated.email = !!this.form.channels.email && this.form.channels.email.isEnabled;
 
       let allChannelsValid = true;
 
