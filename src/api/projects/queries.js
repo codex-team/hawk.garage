@@ -217,8 +217,11 @@ export const QUERY_CHART_DATA = `
         groupBy: $groupBy,
         timezoneOffset: $timezoneOffset
       ) {
-        timestamp
-        count
+        label
+        data {
+          timestamp
+          count
+        }
       }
     }
   }

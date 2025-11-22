@@ -20,7 +20,7 @@ import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem } from '@/types/chart';
+import type { EventChartItem, ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
 
 /**
@@ -190,10 +190,17 @@ export async function fetchChartData(
   days: number,
   timezoneOffset: number
 ): Promise<EventChartItem[]> {
-  return (await api.callOld(QUERY_CHART_DATA, {
+  const chartLines: ChartLine[] = (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     originalEventId,
     days,
     timezoneOffset,
   })).project.event.chartData;
+
+  /**
+   * Extract the "accepted" series data, or use the first series if "accepted" is not found
+   */
+  const acceptedSeries = chartLines.find(line => line.label === 'accepted') || chartLines[0];
+
+  return acceptedSeries?.data || [];
 }

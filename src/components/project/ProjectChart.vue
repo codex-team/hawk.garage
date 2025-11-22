@@ -26,7 +26,7 @@
       </div>
     </div>
     <Chart
-      :points="chartData"
+      :points="firstLineWithMockedCount"
       :detalization="chartGrouping"
     />
   </div>
@@ -37,7 +37,7 @@ import Vue from 'vue';
 import Chart from '../events/Chart.vue';
 import UiSelect, { UiSelectOption } from '../utils/UiSelect.vue';
 import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes.js';
-import { ChartItem } from '../../types/chart';
+import { ChartItem, ChartLine } from '../../types/chart';
 
 export default Vue.extend({
   name: 'ProjectChart',
@@ -57,7 +57,7 @@ export default Vue.extend({
    * @returns {{ chartData: ChartItem[]; chartRange: string; chartGrouping: string; rangeOptions: UiSelectOption[] }}
    */
   data(): {
-      chartData: ChartItem[];
+      chartData: ChartLine[];
       chartRange: string;
       chartGrouping: string;
       rangeOptions: UiSelectOption[];
@@ -153,13 +153,22 @@ export default Vue.extend({
     },
 
     nowCount(): number {
-      return this.chartData.slice(-1)[0]?.count || 0;
+      return this.firstLine.slice(-1)[0]?.count || 0;
     },
     preLastPointCounter(): number {
-      return this.chartData.slice(-2, -1)[0]?.count || 0;
+      return this.firstLine.slice(-2, -1)[0]?.count || 0;
     },
     difference(): number {
       return this.nowCount - this.preLastPointCounter;
+    },
+    firstLine(): ChartItem[] {
+      return this.chartData[0]?.data || [];
+    },
+    firstLineWithMockedCount(): ChartItem[] {
+      return this.firstLine.map(item => ({
+        ...item,
+        count: Math.floor(Math.random() * 100),
+      }));
     },
   },
   watch: {

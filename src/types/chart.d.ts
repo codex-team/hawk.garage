@@ -28,3 +28,18 @@ export interface ChartItem {
    */
   count: number;
 }
+
+/**
+ * Chart line with label and data points
+ */
+export interface ChartLine {
+  /**
+   * Series label (e.g., "accepted", "rate-limited")
+   */
+  label: string;
+
+  /**
+   * Data points for the series
+   */
+  data: ChartItem[];
+}
