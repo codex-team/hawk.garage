@@ -26,7 +26,7 @@
       </div>
     </div>
     <Chart
-      :points="firstLineWithMockedCount"
+      :lines="chartData"
       :detalization="chartGrouping"
     />
   </div>
@@ -152,23 +152,26 @@ export default Vue.extend({
       }
     },
 
+    acceptedEventsChart(): ChartLine[] {
+      return this.chartData.find(line => line.label === 'accepted');
+    },
+
+    acceptedEventsChartData(): ChartLine[] {
+      if (!this.acceptedEventsChart) {
+        return [];
+      }
+
+      return this.acceptedEventsChart.data;
+    },
+
     nowCount(): number {
-      return this.firstLine.slice(-1)[0]?.count || 0;
+      return this.acceptedEventsChartData.slice(-1)[0]?.count || 0;
     },
     preLastPointCounter(): number {
-      return this.firstLine.slice(-2, -1)[0]?.count || 0;
+      return this.acceptedEventsChartData.slice(-2, -1)[0]?.count || 0;
     },
     difference(): number {
       return this.nowCount - this.preLastPointCounter;
-    },
-    firstLine(): ChartItem[] {
-      return this.chartData[0]?.data || [];
-    },
-    firstLineWithMockedCount(): ChartItem[] {
-      return this.firstLine.map(item => ({
-        ...item,
-        count: Math.floor(Math.random() * 100),
-      }));
     },
   },
   watch: {
@@ -241,7 +244,19 @@ export default Vue.extend({
       });
 
       /* Update local chartData from store */
-      this.chartData = this.$store.state.projects.charts[this.projectId] || [];
+      const rawChartData = this.$store.state.projects.charts[this.projectId] || [];
+
+      /* Sort chartData: line with "accepted" label should be first */
+      this.chartData = rawChartData.sort((a, b) => {
+        if (a.label === 'accepted' && b.label !== 'accepted') {
+          return -1;
+        }
+        if (a.label !== 'accepted' && b.label === 'accepted') {
+          return 1;
+        }
+
+        return 0;
+      });
     },
     /**
      * Update currently selected range

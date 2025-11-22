@@ -9,12 +9,16 @@
       class="chart__body"
     >
       <ChartLine
-        :points="points"
+        v-for="(line, index) in lines"
+        :key="`chart-line-${index}`"
+        :colors="chartColors[index]"
+        :points="line.data"
         :chart-width="chartWidth"
         :chart-height="chartHeight"
         :min-value="minValue"
         :max-value="maxValue"
         :step-x="stepX"
+        :label="line.label"
       />
     </svg>
     <div
@@ -34,7 +38,7 @@
       </div>
     </div>
     <div
-      v-if="hoveredIndex >= 0 && hoveredIndex < points.length"
+      v-if="hoveredIndex >= 0 && hoveredIndex < firstLineData.length"
       :style="{ transform: `translateX(${pointerLeft}px)` }"
       class="chart__pointer"
     >
@@ -48,13 +52,13 @@
           'chart__pointer-tooltip--left': tooltipAlignment === 'left',
           'chart__pointer-tooltip--right': tooltipAlignment === 'right'
         }"
-        :style="{ minWidth: `${(String(points[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px` }"
+        :style="{ minWidth: `${(String(firstLineData[hoveredIndex].count).length + ' events'.length) * 6.4 + 12}px` }"
       >
         <div class="chart__pointer-tooltip-date">
-          {{ formatTimestamp(points[hoveredIndex].timestamp * 1000) }}
+          {{ formatTimestamp(firstLineData[hoveredIndex].timestamp * 1000) }}
         </div>
         <div class="chart__pointer-tooltip-number">
-          <AnimatedCounter :value="points[hoveredIndex].count | spacedNumber" />
+          <AnimatedCounter :value="firstLineData[hoveredIndex].count | spacedNumber" />
           events
         </div>
       </div>
@@ -66,15 +70,16 @@
 import Vue from 'vue';
 
 import { throttle } from '@/utils';
-import { ChartItem } from '../../types/chart';
+import { ChartItem, ChartLine as ChartLineInterface } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
-import ChartLine from './ChartLine.vue';
+import ChartLine, { type ChartLineColors } from './ChartLine.vue';
 
 type ChartData = {
   chartWidth: number;
   chartHeight: number;
   onResize: () => void;
   hoveredIndex: number;
+  chartColors: ChartLineColors[];
 };
 
 export default Vue.extend({
@@ -87,9 +92,14 @@ export default Vue.extend({
     /**
      * List of points for displaying on the chart
      */
-    points: {
-      type: Array as () => ChartItem[],
-      default: () => [] as ChartItem[],
+    // points: {
+    //   type: Array as () => ChartItem[],
+    //   default: () => [] as ChartItem[],
+    // },
+
+    lines: {
+      type: Array as () => ChartLineInterface[],
+      default: () => [] as ChartLineInterface[],
     },
 
     /**
@@ -125,6 +135,24 @@ export default Vue.extend({
        * Hovered point index
        */
       hoveredIndex: -1,
+
+      /**
+       * Colors set for several chart lines
+       */
+      chartColors: [
+        {
+          strokeStart: '#FF2E51',
+          strokeEnd: '#424565',
+          fillStart: 'rgba(255, 46, 81, 0.3)',
+          fillEnd: 'rgba(66, 69, 101, 0)',
+        },
+        {
+          strokeStart: '#4B5A79',
+          strokeEnd: '#474855',
+          fillStart: 'rgba(63, 136, 255, 0.08)',
+          fillEnd: 'rgba(66, 78, 93, 0.05)',
+        },
+      ]
     };
   },
   computed: {
@@ -145,15 +173,27 @@ export default Vue.extend({
       }
     },
 
+    firstLine(): ChartLineInterface {
+      return this.lines[0];
+    },
+
+    firstLineData(): ChartItem[] {
+      if (!this.firstLine) {
+        return [];
+      }
+
+      return this.firstLine.data;
+    },
+
     /**
      * Step for OX axis
      */
     stepX(): number {
-      if (this.points.length <= 1) {
+      if (this.firstLineData.length <= 1) {
         return 0;
       }
 
-      return this.chartWidth / (this.points.length - 1);
+      return this.chartWidth / (this.firstLineData.length - 1);
     },
 
     /**
@@ -161,17 +201,17 @@ export default Vue.extend({
      * Returns how many items to skip between displayed items
      */
     visibleXLegendItems(): number {
-      if (!this.chartWidth || !this.points.length) {
+      if (!this.chartWidth || !this.firstLineData.length) {
         return 1;
       }
 
       const maxItems = Math.floor(this.chartWidth / this.xLegendWidth);
 
-      if (maxItems >= this.points.length) {
+      if (maxItems >= this.firstLineData.length) {
         return 1;
       }
 
-      return Math.max(1, Math.ceil(this.points.length / maxItems));
+      return Math.max(1, Math.ceil(this.firstLineData.length / maxItems));
     },
 
     /**
@@ -181,19 +221,19 @@ export default Vue.extend({
       const step = this.visibleXLegendItems;
       const result: Array<{ point: ChartItem; index: number }> = [];
 
-      for (let i = 0; i < this.points.length; i = i + step) {
+      for (let i = 0; i < this.firstLineData.length; i = i + step) {
         result.push({
-          point: this.points[i],
+          point: this.firstLineData[i],
           index: i,
         });
       }
 
       /* Ensure the last point is always included */
-      const lastIndex = this.points.length - 1;
+      const lastIndex = this.firstLineData.length - 1;
 
       if (result.length > 0 && result[result.length - 1].index !== lastIndex) {
         result.push({
-          point: this.points[lastIndex],
+          point: this.firstLineData[lastIndex],
           index: lastIndex,
         });
       }
@@ -213,21 +253,47 @@ export default Vue.extend({
     },
 
     /**
-     * Minimum number errors per day
+     * Minimum number errors per day across all lines
      */
     minValue(): number {
-      if (this.points.length === 0) {
+      if (this.lines.length === 0) {
         return 0;
       }
 
-      return Math.min(...this.points.map(day => day.count));
+      /* Collect all count values from all lines */
+      const allCounts: number[] = [];
+
+      for (const line of this.lines) {
+        if (line.data && line.data.length > 0) {
+          allCounts.push(...line.data.map(item => item.count));
+        }
+      }
+
+      if (allCounts.length === 0) {
+        return 0;
+      }
+
+      return Math.min(...allCounts);
     },
 
     /**
-     * Maximum number errors per day
+     * Maximum number errors per day across all lines
      */
     maxValue(): number {
-      if (this.points.length === 0) {
+      if (this.lines.length === 0) {
+        return 0;
+      }
+
+      /* Collect all count values from all lines */
+      const allCounts: number[] = [];
+
+      for (const line of this.lines) {
+        if (line.data && line.data.length > 0) {
+          allCounts.push(...line.data.map(item => item.count));
+        }
+      }
+
+      if (allCounts.length === 0) {
         return 0;
       }
 
@@ -236,7 +302,7 @@ export default Vue.extend({
        */
       const incrementForOffset = 1.5;
 
-      return Math.max(...this.points.map(day => day.count)) * incrementForOffset;
+      return Math.max(...allCounts) * incrementForOffset;
     },
 
     /**
@@ -254,7 +320,7 @@ export default Vue.extend({
         return 0;
       }
 
-      const point = this.points[this.hoveredIndex];
+      const point = this.firstLineData[this.hoveredIndex];
 
       if (!point) {
         return 0;
@@ -330,7 +396,7 @@ export default Vue.extend({
      * @param {MouseEvent} event - mousemove
      */
     moveTooltip(event: MouseEvent): void {
-      if (this.points.length === 0) {
+      if (this.firstLineData.length === 0) {
         this.hoveredIndex = -1;
 
         return;
@@ -346,7 +412,7 @@ export default Vue.extend({
       const cursorX = event.clientX - chartX;
 
       const newIndex = Math.round(cursorX / this.stepX);
-      const clampedIndex = Math.max(0, Math.min(this.points.length - 1, newIndex));
+      const clampedIndex = Math.max(0, Math.min(this.firstLineData.length - 1, newIndex));
 
       this.hoveredIndex = clampedIndex;
     },

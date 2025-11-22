@@ -1,5 +1,6 @@
 <template>
   <g>
+    {{ label }}
     <defs>
       <linearGradient
         :id="gradientId"
@@ -76,6 +77,14 @@ export default Vue.extend({
     points: {
       type: Array as () => ChartItem[],
       default: () => [] as ChartItem[],
+    },
+
+    /**
+     * Label for the chart line
+     */
+    label: {
+      type: String,
+      default: '',
     },
 
     /**
