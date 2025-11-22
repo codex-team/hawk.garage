@@ -370,6 +370,16 @@ export default Vue.extend({
       const { id: _mergedRuleId, ...ruleWithoutId } = mergedRule;
 
       this.form = ruleWithoutId;
+
+      /**
+       * Backend may not return loop channel, but UI expects it to exist
+       */
+      if (!this.form.channels.loop) {
+        this.$set(this.form.channels, 'loop', {
+          endpoint: '',
+          isEnabled: false,
+        });
+      }
     }
   },
   methods: {
@@ -471,7 +481,7 @@ export default Vue.extend({
     validateForm(): boolean {
       this.endpointShouldBeValidated.telegram = this.form.channels.telegram!.isEnabled;
       this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
-      this.endpointShouldBeValidated.loop = this.form.channels.loop!.isEnabled;
+      this.endpointShouldBeValidated.loop = !!this.form.channels.loop && this.form.channels.loop.isEnabled;
       this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
 
       let allChannelsValid = true;
@@ -517,8 +527,8 @@ export default Vue.extend({
 
           return true;
 
-        case (channelName === 'loop' && this.form.channels.loop!.isEnabled):
-          if (!/^https:\/\/.+\/hooks\/.+$/.test(this.form.channels.loop!.endpoint)) {
+        case (channelName === 'loop' && this.form.channels.loop?.isEnabled):
+          if (!/^https:\/\/.+\/hooks\/.+$/.test(this.form.channels.loop?.endpoint || '')) {
             return false;
           }
 
