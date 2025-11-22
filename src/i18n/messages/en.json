@@ -176,6 +176,8 @@
         "emailDescription": "Max frequency is 1 alert in 10 min",
         "slack": "Slack",
         "slackDescription": "Alerts through the Webhook App",
+        "loop": "Loop",
+        "loopDescription": "Alerts through the Loop Webhook",
         "telegram": "Telegram",
         "telegramDescription": "Alerts through the <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
         "receiveNewLabel": "Only new events",
