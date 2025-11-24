@@ -11,8 +11,8 @@
       <ChartLine
         v-for="(line, index) in lines"
         :key="`chart-line-${index}`"
-        :colors="chartColors[index]"
         :points="line.data"
+        :color="line.color"
         :chart-width="chartWidth"
         :chart-height="chartHeight"
         :min-value="minValue"
@@ -43,8 +43,14 @@
       class="chart__pointer"
     >
       <div
-        :style="{ transform: `translateY(${pointerTop}px)` }"
+        v-for="(line, index) in lines"
+        :key="`cursor-${line.label}-${index}`"
+        :style="{
+          transform: `translateY(${getLinePointerTop(line.data)}px)`,
+          backgroundColor: getCursorColor(line)
+        }"
         class="chart__pointer-cursor"
+        :class="`chart__pointer-cursor--${line.label}`"
       />
       <div
         class="chart__pointer-tooltip"
@@ -57,9 +63,17 @@
         <div class="chart__pointer-tooltip-date">
           {{ formatTimestamp(firstLineData[hoveredIndex].timestamp * 1000) }}
         </div>
-        <div class="chart__pointer-tooltip-number">
-          <AnimatedCounter :value="firstLineData[hoveredIndex].count | spacedNumber" />
-          events
+        <div
+          v-for="(line, index) in lines"
+          :key="`tooltip-line-${line.label}-${index}`"
+          class="chart__pointer-tooltip-number"
+        >
+          <AnimatedCounter :value="(getLineValueAtHoveredIndex(line, hoveredIndex)) | spacedNumber" />
+          {{ line.label }}
+          <span
+            class="chart__pointer-tooltip-dot"
+            :style="{ backgroundColor: getCursorColor(line) }"
+          />
         </div>
       </div>
     </div>
@@ -72,14 +86,13 @@ import Vue from 'vue';
 import { throttle } from '@/utils';
 import { ChartItem, ChartLine as ChartLineInterface } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
-import ChartLine, { type ChartLineColors } from './ChartLine.vue';
+import ChartLine, { type ChartLineColors, chartColors } from './ChartLine.vue';
 
 type ChartData = {
   chartWidth: number;
   chartHeight: number;
   onResize: () => void;
   hoveredIndex: number;
-  chartColors: ChartLineColors[];
 };
 
 export default Vue.extend({
@@ -135,24 +148,6 @@ export default Vue.extend({
        * Hovered point index
        */
       hoveredIndex: -1,
-
-      /**
-       * Colors set for several chart lines
-       */
-      chartColors: [
-        {
-          strokeStart: '#FF2E51',
-          strokeEnd: '#424565',
-          fillStart: 'rgba(255, 46, 81, 0.3)',
-          fillEnd: 'rgba(66, 69, 101, 0)',
-        },
-        {
-          strokeStart: '#4B5A79',
-          strokeEnd: '#474855',
-          fillStart: 'rgba(63, 136, 255, 0.08)',
-          fillEnd: 'rgba(66, 78, 93, 0.05)',
-        },
-      ]
     };
   },
   computed: {
@@ -312,24 +307,6 @@ export default Vue.extend({
       return this.hoveredIndex * this.stepX;
     },
 
-    /**
-     * Top coordinate of hover pointer cursor
-     */
-    pointerTop(): number {
-      if (this.hoveredIndex === -1) {
-        return 0;
-      }
-
-      const point = this.firstLineData[this.hoveredIndex];
-
-      if (!point) {
-        return 0;
-      }
-
-      const currentValue = point.count ?? 0;
-
-      return this.chartHeight - (currentValue - this.minValue) * this.kY;
-    },
 
     /**
      * Tooltip alignment class based on position to prevent overflow
@@ -418,6 +395,78 @@ export default Vue.extend({
     },
 
     /**
+     * Get the Y coordinate for a line's pointer cursor at the hovered index
+     *
+     * @param {ChartItem[]} lineData - data points for the line
+     * @param {number} lineIndex - index of the line
+     * @returns {number} - Y coordinate for the cursor
+     */
+    getLinePointerTop(lineData: ChartItem[]): number {
+      if (this.hoveredIndex === -1 || !lineData || lineData.length === 0) {
+        return 0;
+      }
+
+      const point = lineData[this.hoveredIndex];
+
+      if (!point) {
+        return 0;
+      }
+
+      const currentValue = point.count ?? 0;
+
+      return this.chartHeight - (currentValue - this.minValue) * this.kY;
+    },
+
+    /**
+     * Get the value for a line at the hovered index
+     *
+     * @param {ChartLineInterface} line - the chart line
+     * @param {number} index - hovered index
+     * @returns {number} - the count value at that index
+     */
+    getLineValueAtHoveredIndex(line: ChartLineInterface, index: number): number {
+      if (!line || !line.data || index < 0 || index >= line.data.length) {
+        return 0;
+      }
+
+      const point = line.data[index];
+
+      if (!point) {
+        return 0;
+      }
+
+      return point.count || 0;
+    },
+
+    /**
+     * Return colors set for a particular chart line
+     *
+     * @param {ChartLineInterface} line - the chart line
+     */
+    getLineColor(line: ChartLineInterface): ChartLineColors {
+      const colorName = line.color ?? 'red';
+
+      const color = chartColors.find(c => c.name === colorName);
+
+      if (!color) {
+        throw new Error(`Color ${colorName} not found in chartColors`);
+      }
+
+      return color;
+    },
+
+    /**
+     * Cursor is a pointer on the chart line appearing when hovering over it
+     *
+     * @param {ChartLineInterface} line - the chart line
+     */
+    getCursorColor(line: ChartLineInterface): string {
+      const color = this.getLineColor(line);
+
+      return color.pointerColor;
+    },
+
+    /**
      * Formats timestamp based on detalization prop
      *
      * @param {number} timestamp - timestamp in milliseconds
@@ -457,6 +506,10 @@ export default Vue.extend({
     background-color: var(--color-bg-darken);
     border-radius: 3px;
 
+    --legend-height: 40px;
+    --legend-line-height: 11px;
+    --legend-block-padding: 15px;
+
     &__info {
       position: absolute;
       top: 15px;
@@ -483,8 +536,8 @@ export default Vue.extend({
     }
 
     &__ox {
-      height: 40px;
-      padding: 15px 0;
+      height: var(--legend-height);
+      padding-block: var(--legend-block-padding);
 
       &-inner {
         position: relative;
@@ -497,6 +550,7 @@ export default Vue.extend({
         left: 0;
         color: var(--color-text-main);
         font-size: 11px;
+        line-height: var(--legend-line-height);
         text-align: center;
         transform-origin: center;
         opacity: 0.3;
@@ -524,11 +578,10 @@ export default Vue.extend({
       &-cursor {
         position: absolute;
         top: 0;
-        width: 5px;
-        height: 5px;
-        margin-top: -2.5px;
-        margin-left: -1px;
-        background: var(--color-indicator-critical);
+        width: 7px;
+        height: 7px;
+        margin-top: -3.5px;
+        margin-left: -2px;
         border-radius: 50%;
         opacity: 1;
         /* transition: transform 0.2s; */
@@ -536,11 +589,14 @@ export default Vue.extend({
       }
 
       &-tooltip {
+        --tooltip-block-padding: 6px;
+
         position: absolute;
-        bottom: -14px;
+        top: calc(100% - var(--legend-height) + var(--legend-block-padding) - var(--tooltip-block-padding) - 1px);
         left: 50%;
         z-index: 500;
-        padding: 6px 8px 6px 7px;
+        padding-block: var(--tooltip-block-padding);
+        padding-inline: 8px;
         color: var(--color-text-main);
         font-size: 12px;
         line-height: 1.4;
@@ -572,6 +628,16 @@ export default Vue.extend({
 
         &-number {
           font-weight: 500;
+        }
+
+        &-dot {
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          vertical-align: middle;
+          margin-left: 2px;
+          margin-top: -1px;
         }
       }
     }

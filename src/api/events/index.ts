@@ -189,7 +189,7 @@ export async function fetchChartData(
   originalEventId: string,
   days: number,
   timezoneOffset: number
-): Promise<EventChartItem[]> {
+): Promise<ChartLine[]> {
   const chartLines: ChartLine[] = (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     originalEventId,
@@ -197,10 +197,5 @@ export async function fetchChartData(
     timezoneOffset,
   })).project.event.chartData;
 
-  /**
-   * Extract the "accepted" series data, or use the first series if "accepted" is not found
-   */
-  const acceptedSeries = chartLines.find(line => line.label === 'accepted') || chartLines[0];
-
-  return acceptedSeries?.data || [];
+  return chartLines;
 }

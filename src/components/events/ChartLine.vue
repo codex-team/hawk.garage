@@ -1,6 +1,5 @@
 <template>
-  <g>
-    {{ label }}
+  <g :data-label="label">
     <defs>
       <linearGradient
         :id="gradientId"
@@ -8,11 +7,11 @@
       >
         <stop
           offset="0%"
-          :style="{ 'stop-color': colors.strokeStart }"
+          :style="{ 'stop-color': colorSet.strokeStart }"
         />
         <stop
           offset="100%"
-          :style="`stop-color:${colors.strokeEnd};`"
+          :style="`stop-color:${colorSet.strokeEnd};`"
         />
       </linearGradient>
       <linearGradient
@@ -21,11 +20,11 @@
       >
         <stop
           offset="0%"
-          :style="`stop-color:${colors.fillStart};`"
+          :style="`stop-color:${colorSet.fillStart};`"
         />
         <stop
           offset="100%"
-          :style="`stop-color:${colors.fillEnd};`"
+          :style="`stop-color:${colorSet.fillEnd};`"
         />
       </linearGradient>
     </defs>
@@ -46,10 +45,16 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { ChartItem, ChartLineColor } from '../../types/chart';
 
-import { ChartItem } from '../../types/chart';
-
+/**
+ * A particular color params
+ */
 export interface ChartLineColors {
+  /**
+   * Name of the color
+   */
+  name: ChartLineColor;
   /**
    * Starting color for stroke gradient (top)
    */
@@ -66,7 +71,34 @@ export interface ChartLineColors {
    * Ending color for fill gradient (bottom, usually transparent)
    */
   fillEnd: string;
+
+  /**
+   * Pointer + legend color
+   */
+  pointerColor: string;
 }
+
+/**
+ * Colors set for several chart lines
+ */
+export const chartColors: ChartLineColors[] = [
+  {
+    name: ChartLineColor.LightGrey,
+    strokeStart: 'rgba(75, 90, 121, 0.33)',
+    strokeEnd: 'rgba(71, 72, 85, 0.16)',
+    fillStart: 'rgba(63, 136, 255, 0.01)',
+    fillEnd: 'rgba(66, 78, 93, 0.05)',
+    pointerColor: '#717289',
+  },
+  {
+    name: ChartLineColor.Red,
+    strokeStart: '#FF2E51',
+    strokeEnd: '#424565',
+    fillStart: 'rgba(255, 46, 81, 0.3)',
+    fillEnd: 'rgba(66, 69, 101, 0)',
+    pointerColor: '#FF2E51',
+  },
+];
 
 export default Vue.extend({
   name: 'ChartLine',
@@ -85,6 +117,14 @@ export default Vue.extend({
     label: {
       type: String,
       default: '',
+    },
+
+    /**
+     * Name of the color for the chart line
+     */
+    color: {
+      type: String as () => ChartLineColor,
+      default: ChartLineColor.Red,
     },
 
     /**
@@ -125,19 +165,6 @@ export default Vue.extend({
     stepX: {
       type: Number,
       default: 0,
-    },
-
-    /**
-     * Custom colors for the chart line
-     */
-    colors: {
-      type: Object as () => ChartLineColors,
-      default: (): ChartLineColors => ({
-        strokeStart: '#FF2E51',
-        strokeEnd: '#424565',
-        fillStart: 'rgba(255, 46, 81, 0.3)',
-        fillEnd: 'rgba(66, 69, 101, 0)',
-      }),
     },
   },
   data() {
@@ -261,6 +288,13 @@ export default Vue.extend({
 
       /* Close the path: line to bottom right, line to bottom left, close back to start */
       return `${path} L ${lastX} ${this.chartHeight} L ${firstX} ${this.chartHeight} Z`;
+    },
+
+    /**
+     * Color for the chart line
+     */
+    colorSet(): ChartLineColors {
+      return chartColors.find(c => c.name === this.color) as ChartLineColors;
     },
   },
 });

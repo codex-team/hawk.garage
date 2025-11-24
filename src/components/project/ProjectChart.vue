@@ -37,7 +37,7 @@ import Vue from 'vue';
 import Chart from '../events/Chart.vue';
 import UiSelect, { UiSelectOption } from '../utils/UiSelect.vue';
 import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes.js';
-import { ChartItem, ChartLine } from '../../types/chart';
+import { ChartLine, ChartLineColor } from '@/types/chart';
 
 export default Vue.extend({
   name: 'ProjectChart',
@@ -152,11 +152,11 @@ export default Vue.extend({
       }
     },
 
-    acceptedEventsChart(): ChartLine[] {
-      return this.chartData.find(line => line.label === 'accepted');
+    acceptedEventsChart(): ChartLine {
+      return this.chartData.find(line => line.label === 'accepted') as ChartLine;
     },
 
-    acceptedEventsChartData(): ChartLine[] {
+    acceptedEventsChartData(): ChartLine['data'] {
       if (!this.acceptedEventsChart) {
         return [];
       }
@@ -246,17 +246,10 @@ export default Vue.extend({
       /* Update local chartData from store */
       const rawChartData = this.$store.state.projects.charts[this.projectId] || [];
 
-      /* Sort chartData: line with "accepted" label should be first */
-      this.chartData = rawChartData.sort((a, b) => {
-        if (a.label === 'accepted' && b.label !== 'accepted') {
-          return -1;
-        }
-        if (a.label !== 'accepted' && b.label === 'accepted') {
-          return 1;
-        }
-
-        return 0;
-      });
+      this.chartData = rawChartData.map(line => ({
+        ...line,
+        color: line.label === 'accepted' ? ChartLineColor.Red : ChartLineColor.LightGrey,
+      }));
     },
     /**
      * Update currently selected range

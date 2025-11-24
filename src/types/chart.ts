@@ -42,4 +42,24 @@ export interface ChartLine {
    * Data points for the series
    */
   data: ChartItem[];
+
+  /**
+   * Name of the color for the line stroke and fill.
+   */
+  color?: ChartLineColor;
+}
+
+/**
+ * Name of the color for the chart line stroke and fill.
+ */
+export enum ChartLineColor {
+  /**
+   * Accent color for primary line
+   */
+  Red = 'red',
+
+  /**
+   * Accent color for secondary line
+   */
+  LightGrey = 'light-grey'
 }
