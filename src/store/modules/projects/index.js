@@ -408,13 +408,6 @@ const actions = {
       timezoneOffset
     );
 
-    chartData.forEach(line => {
-      line.data = line.data.map(item => ({
-        ...item,
-        count: Math.floor(Math.random() * 100),
-      }));
-    });
-
     commit(mutationTypes.ADD_CHART_DATA, {
       projectId,
       data: chartData,

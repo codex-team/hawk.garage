@@ -103,13 +103,8 @@ export default Vue.extend({
   },
   props: {
     /**
-     * List of points for displaying on the chart
+     * List of lines for displaying on the chart
      */
-    // points: {
-    //   type: Array as () => ChartItem[],
-    //   default: () => [] as ChartItem[],
-    // },
-
     lines: {
       type: Array as () => ChartLineInterface[],
       default: () => [] as ChartLineInterface[],
@@ -306,7 +301,6 @@ export default Vue.extend({
     pointerLeft(): number {
       return this.hoveredIndex * this.stepX;
     },
-
 
     /**
      * Tooltip alignment class based on position to prevent overflow
