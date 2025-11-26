@@ -15,8 +15,8 @@
         :color="line.color"
         :chart-width="chartWidth"
         :chart-height="chartHeight"
-        :min-value="minValue"
-        :max-value="maxValue"
+        :min-value="getLineMinValue(line)"
+        :max-value="getLineMaxValue(line)"
         :step-x="stepX"
         :label="line.label"
       />
@@ -42,16 +42,20 @@
       :style="{ transform: `translateX(${pointerLeft}px)` }"
       class="chart__pointer"
     >
-      <div
+      <template
         v-for="(line, index) in lines"
-        :key="`cursor-${line.label}-${index}`"
-        :style="{
-          transform: `translateY(${getLinePointerTop(line.data)}px)`,
-          backgroundColor: getCursorColor(line)
-        }"
-        class="chart__pointer-cursor"
-        :class="`chart__pointer-cursor--${line.label}`"
-      />
+      >
+        <div
+          v-if="!isLineAllZeros(line)"
+          :key="`cursor-${line.label}-${index}`"
+          :style="{
+            transform: `translateY(${getLinePointerTop(line.data)}px)`,
+            backgroundColor: getCursorColor(line)
+          }"
+          class="chart__pointer-cursor"
+          :class="`chart__pointer-cursor--${line.label}`"
+        />
+      </template>
       <div
         class="chart__pointer-tooltip"
         :class="{
@@ -63,18 +67,22 @@
         <div class="chart__pointer-tooltip-date">
           {{ formatTimestamp(firstLineData[hoveredIndex].timestamp * 1000) }}
         </div>
-        <div
+        <template
           v-for="(line, index) in lines"
-          :key="`tooltip-line-${line.label}-${index}`"
-          class="chart__pointer-tooltip-number"
         >
-          <AnimatedCounter :value="(getLineValueAtHoveredIndex(line, hoveredIndex)) | spacedNumber" />
-          {{ line.label }}
-          <span
-            class="chart__pointer-tooltip-dot"
-            :style="{ backgroundColor: getCursorColor(line) }"
-          />
-        </div>
+          <div
+            v-if="!isLineAllZeros(line)"
+            :key="`tooltip-line-${line.label}-${index}`"
+            class="chart__pointer-tooltip-number"
+          >
+            <AnimatedCounter :value="(getLineValueAtHoveredIndex(line, hoveredIndex)) | spacedNumber" />
+            {{ line.label }}
+            <span
+              class="chart__pointer-tooltip-dot"
+              :style="{ backgroundColor: getCursorColor(line) }"
+            />
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -240,68 +248,6 @@ export default Vue.extend({
     },
 
     /**
-     * The ratio of the maximum value and the height of the graph
-     */
-    kY(): number {
-      if (this.maxValue === this.minValue) {
-        return 1;
-      }
-
-      return this.chartHeight / (this.maxValue - this.minValue);
-    },
-
-    /**
-     * Minimum number errors per day across all lines
-     */
-    minValue(): number {
-      if (this.lines.length === 0) {
-        return 0;
-      }
-
-      let min = Infinity;
-
-      for (const line of this.lines) {
-        if (line.data && line.data.length > 0) {
-          for (const item of line.data) {
-            if (item.count < min) {
-              min = item.count;
-            }
-          }
-        }
-      }
-
-      return min === Infinity ? 0 : min;
-    },
-
-    /**
-     * Maximum number errors per day across all lines
-     */
-    maxValue(): number {
-      if (this.lines.length === 0) {
-        return 0;
-      }
-
-      let max = 0;
-
-      for (const line of this.lines) {
-        if (line.data && line.data.length > 0) {
-          for (const item of line.data) {
-            if (item.count > max) {
-              max = item.count;
-            }
-          }
-        }
-      }
-
-      /**
-       * We will increment max value for 50% for adding some offset from the top
-       */
-      const incrementForOffset = 1.5;
-
-      return max * incrementForOffset;
-    },
-
-    /**
      * Left coordinate of hover pointer
      */
     pointerLeft(): number {
@@ -411,9 +357,22 @@ export default Vue.extend({
         return 0;
       }
 
+      /* Find the line that corresponds to this data */
+      const line = this.lines.find(l => l.data === lineData);
+
+      if (!line) {
+        return 0;
+      }
+
+      const lineMinValue = this.getLineMinValue(line);
+      const lineMaxValue = this.getLineMaxValue(line);
+      const lineKY = lineMaxValue === lineMinValue
+        ? 1
+        : this.chartHeight / (lineMaxValue - lineMinValue);
+
       const currentValue = point.count ?? 0;
 
-      return this.chartHeight - (currentValue - this.minValue) * this.kY;
+      return this.chartHeight - (currentValue - lineMinValue) * lineKY;
     },
 
     /**
@@ -463,6 +422,75 @@ export default Vue.extend({
       const color = this.getLineColor(line);
 
       return color.pointerColor;
+    },
+
+    /**
+     * Get minimum value for a specific line
+     *
+     * @param line - the chart line
+     * @returns minimum value for the line
+     */
+    getLineMinValue(line: ChartLineInterface): number {
+      if (!line || !line.data || line.data.length === 0) {
+        return 0;
+      }
+
+      let min = Infinity;
+
+      for (const item of line.data) {
+        if (item.count < min) {
+          min = item.count;
+        }
+      }
+
+      return min === Infinity ? 0 : min;
+    },
+
+    /**
+     * Check if all data counters of a line are 0
+     *
+     * @param line - the chart line
+     * @returns true if all values are 0, false otherwise
+     */
+    isLineAllZeros(line: ChartLineInterface): boolean {
+      if (!line || !line.data || line.data.length === 0) {
+        return true;
+      }
+
+      for (const item of line.data) {
+        if (item.count !== 0) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+
+    /**
+     * Get maximum value for a specific line
+     *
+     * @param line - the chart line
+     * @returns maximum value for the line (with 50% offset)
+     */
+    getLineMaxValue(line: ChartLineInterface): number {
+      if (!line || !line.data || line.data.length === 0) {
+        return 0;
+      }
+
+      let max = 0;
+
+      for (const item of line.data) {
+        if (item.count > max) {
+          max = item.count;
+        }
+      }
+
+      /**
+       * We will increment max value for 50% for adding some offset from the top
+       */
+      const incrementForOffset = 1.5;
+
+      return max * incrementForOffset;
     },
 
     /**
