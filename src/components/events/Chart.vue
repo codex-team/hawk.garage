@@ -49,7 +49,7 @@
           v-if="!isLineAllZeros(line)"
           :key="`cursor-${line.label}-${index}`"
           :style="{
-            transform: `translateY(${getLinePointerTop(line.data)}px)`,
+            transform: `translateY(${getLinePointerTop(line)}px)`,
             backgroundColor: getCursorColor(line)
           }"
           class="chart__pointer-cursor"
@@ -343,24 +343,17 @@ export default Vue.extend({
     /**
      * Get the Y coordinate for a line's pointer cursor at the hovered index
      *
-     * @param lineData - data points for the line
+     * @param line - the chart line
      * @returns Y coordinate for the cursor
      */
-    getLinePointerTop(lineData: ChartItem[]): number {
-      if (this.hoveredIndex === -1 || !lineData || lineData.length === 0) {
+    getLinePointerTop(line: ChartLineInterface): number {
+      if (this.hoveredIndex === -1 || !line || !line.data || line.data.length === 0) {
         return 0;
       }
 
-      const point = lineData[this.hoveredIndex];
+      const point = line.data[this.hoveredIndex];
 
       if (!point) {
-        return 0;
-      }
-
-      /* Find the line that corresponds to this data */
-      const line = this.lines.find(l => l.data === lineData);
-
-      if (!line) {
         return 0;
       }
 
