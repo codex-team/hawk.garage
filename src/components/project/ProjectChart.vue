@@ -26,7 +26,7 @@
       </div>
     </div>
     <Chart
-      :points="chartData"
+      :lines="chartData"
       :detalization="chartGrouping"
     />
   </div>
@@ -37,7 +37,7 @@ import Vue from 'vue';
 import Chart from '../events/Chart.vue';
 import UiSelect, { UiSelectOption } from '../utils/UiSelect.vue';
 import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes.js';
-import { ChartItem } from '../../types/chart';
+import { ChartLine, ChartLineColor } from '@/types/chart';
 
 export default Vue.extend({
   name: 'ProjectChart',
@@ -57,7 +57,7 @@ export default Vue.extend({
    * @returns {{ chartData: ChartItem[]; chartRange: string; chartGrouping: string; rangeOptions: UiSelectOption[] }}
    */
   data(): {
-      chartData: ChartItem[];
+      chartData: ChartLine[];
       chartRange: string;
       chartGrouping: string;
       rangeOptions: UiSelectOption[];
@@ -152,11 +152,23 @@ export default Vue.extend({
       }
     },
 
+    acceptedEventsChart(): ChartLine {
+      return this.chartData.find(line => line.label === 'accepted') as ChartLine;
+    },
+
+    acceptedEventsChartData(): ChartLine['data'] {
+      if (!this.acceptedEventsChart) {
+        return [];
+      }
+
+      return this.acceptedEventsChart.data;
+    },
+
     nowCount(): number {
-      return this.chartData.slice(-1)[0]?.count || 0;
+      return this.acceptedEventsChartData.slice(-1)[0]?.count || 0;
     },
     preLastPointCounter(): number {
-      return this.chartData.slice(-2, -1)[0]?.count || 0;
+      return this.acceptedEventsChartData.slice(-2, -1)[0]?.count || 0;
     },
     difference(): number {
       return this.nowCount - this.preLastPointCounter;
@@ -232,7 +244,12 @@ export default Vue.extend({
       });
 
       /* Update local chartData from store */
-      this.chartData = this.$store.state.projects.charts[this.projectId] || [];
+      const rawChartData = this.$store.state.projects.charts[this.projectId] || [];
+
+      this.chartData = rawChartData.map(line => ({
+        ...line,
+        color: line.label === 'accepted' ? ChartLineColor.Red : ChartLineColor.LightGrey,
+      }));
     },
     /**
      * Update currently selected range

@@ -18,7 +18,7 @@
       <div class="event-daily__label">
         {{ $t('event.daily.lastTwoWeeks') }}
       </div>
-      <Chart :points="chartData" />
+      <Chart :lines="chartData" />
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ import Vue from 'vue';
 import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { HawkEvent } from '../../types/events';
-import { EventChartItem } from '../../types/chart';
+import { ChartLine } from '@/types/chart';
 
 export default Vue.extend({
   name: 'EventDaily',
@@ -52,7 +52,9 @@ export default Vue.extend({
       required: true,
     },
   },
-  data: function (): { chartData: EventChartItem[] } {
+  data: function (): {
+    chartData: ChartLine[]
+  } {
     return {
       /**
        * Data for a chart
