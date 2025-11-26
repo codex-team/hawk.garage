@@ -163,10 +163,18 @@ export default Vue.extend({
       }
     },
 
+    /**
+     * First line of the chart.
+     * Used for calculating stepX
+     */
     firstLine(): ChartLineInterface {
       return this.lines[0];
     },
 
+    /**
+     * Data of the first line of the chart.
+     * Used for calculating stepX (and other common properties across all lines)
+     */
     firstLineData(): ChartItem[] {
       if (!this.firstLine) {
         return [];
@@ -250,20 +258,19 @@ export default Vue.extend({
         return 0;
       }
 
-      /* Collect all count values from all lines */
-      const allCounts: number[] = [];
+      let min = Infinity;
 
       for (const line of this.lines) {
         if (line.data && line.data.length > 0) {
-          allCounts.push(...line.data.map(item => item.count));
+          for (const item of line.data) {
+            if (item.count < min) {
+              min = item.count;
+            }
+          }
         }
       }
 
-      if (allCounts.length === 0) {
-        return 0;
-      }
-
-      return Math.min(...allCounts);
+      return min === Infinity ? 0 : min;
     },
 
     /**
@@ -274,16 +281,19 @@ export default Vue.extend({
         return 0;
       }
 
-      /* Collect all count values from all lines */
-      const allCounts: number[] = [];
+      let max = -Infinity;
 
       for (const line of this.lines) {
         if (line.data && line.data.length > 0) {
-          allCounts.push(...line.data.map(item => item.count));
+          for (const item of line.data) {
+            if (item.count > max) {
+              max = item.count;
+            }
+          }
         }
       }
 
-      if (allCounts.length === 0) {
+      if (max === -Infinity) {
         return 0;
       }
 
@@ -292,7 +302,7 @@ export default Vue.extend({
        */
       const incrementForOffset = 1.5;
 
-      return Math.max(...allCounts) * incrementForOffset;
+      return max * incrementForOffset;
     },
 
     /**
@@ -364,7 +374,7 @@ export default Vue.extend({
     /**
      * Moves tooltip to the hovered point
      *
-     * @param {MouseEvent} event - mousemove
+     * @param event - mousemove
      */
     moveTooltip(event: MouseEvent): void {
       if (this.firstLineData.length === 0) {
@@ -391,9 +401,8 @@ export default Vue.extend({
     /**
      * Get the Y coordinate for a line's pointer cursor at the hovered index
      *
-     * @param {ChartItem[]} lineData - data points for the line
-     * @param {number} lineIndex - index of the line
-     * @returns {number} - Y coordinate for the cursor
+     * @param lineData - data points for the line
+     * @returns Y coordinate for the cursor
      */
     getLinePointerTop(lineData: ChartItem[]): number {
       if (this.hoveredIndex === -1 || !lineData || lineData.length === 0) {
@@ -414,9 +423,9 @@ export default Vue.extend({
     /**
      * Get the value for a line at the hovered index
      *
-     * @param {ChartLineInterface} line - the chart line
-     * @param {number} index - hovered index
-     * @returns {number} - the count value at that index
+     * @param line - the chart line
+     * @param index - hovered index
+     * @returns the count value at that index
      */
     getLineValueAtHoveredIndex(line: ChartLineInterface, index: number): number {
       if (!line || !line.data || index < 0 || index >= line.data.length) {
@@ -435,7 +444,7 @@ export default Vue.extend({
     /**
      * Return colors set for a particular chart line
      *
-     * @param {ChartLineInterface} line - the chart line
+     * @param line - the chart line
      */
     getLineColor(line: ChartLineInterface): ChartLineColors {
       const colorName = line.color ?? 'red';
@@ -452,7 +461,7 @@ export default Vue.extend({
     /**
      * Cursor is a pointer on the chart line appearing when hovering over it
      *
-     * @param {ChartLineInterface} line - the chart line
+     * @param line - the chart line
      */
     getCursorColor(line: ChartLineInterface): string {
       const color = this.getLineColor(line);
@@ -463,8 +472,8 @@ export default Vue.extend({
     /**
      * Formats timestamp based on detalization prop
      *
-     * @param {number} timestamp - timestamp in milliseconds
-     * @returns {string} - formatted date string
+     * @param timestamp - timestamp in milliseconds
+     * @returns formatted date string
      */
     formatTimestamp(timestamp: number): string {
       const date = new Date(timestamp);
