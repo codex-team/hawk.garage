@@ -20,7 +20,7 @@ import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem } from '@/types/chart';
+import type { EventChartItem, ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
 
 /**
@@ -177,19 +177,18 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
 }
 
 /**
- * Fetch data for chart
- *
- * @param {string} projectId - project id
- * @param {string} originalEventId - id of the original event
- * @param {number} days - how many days we need to fetchfor displaying in chart
- * @param {number} timezoneOffset - user's local timezone
+ * Fetch data for event daily chart
+ * @param projectId - id of the project owning the event
+ * @param originalEventId - id of the original event
+ * @param days - how many days we need to fetch for displaying in chart
+ * @param timezoneOffset - user's local timezone
  */
 export async function fetchChartData(
   projectId: string,
   originalEventId: string,
   days: number,
   timezoneOffset: number
-): Promise<EventChartItem[]> {
+): Promise<ChartLine[]> {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
     originalEventId,
