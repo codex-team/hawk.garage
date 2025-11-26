@@ -281,7 +281,7 @@ export default Vue.extend({
         return 0;
       }
 
-      let max = -Infinity;
+      let max = 0;
 
       for (const line of this.lines) {
         if (line.data && line.data.length > 0) {
@@ -291,10 +291,6 @@ export default Vue.extend({
             }
           }
         }
-      }
-
-      if (max === -Infinity) {
-        return 0;
       }
 
       /**
