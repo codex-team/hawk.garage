@@ -82,7 +82,7 @@ const actions = {
            * From fetching initial data we've got project with one daily event (latest one)
            * We should save it's id to the projects state and save event to the events state
            */
-          if (dailyEvents.length) {
+          if (dailyEvents.length && dailyEvents[0].event) {
             project.latestEvent = dailyEvents[0];
 
             /**

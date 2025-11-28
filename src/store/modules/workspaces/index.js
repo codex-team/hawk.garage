@@ -23,6 +23,9 @@ import * as workspaceApi from '../../../api/workspaces/index.ts';
 import * as billingApi from '../../../api/billing';
 import Vue from 'vue';
 import { isPendingMember } from '@/store/modules/workspaces/helpers';
+import { useErrorTracker } from '../../../hawk.ts';
+
+const { track } = useErrorTracker();
 
 /**
  * Mutations enum for this module
@@ -127,6 +130,49 @@ const workspacesGetters = {
      */
     (workspaceId) => {
       const workspace = getters.getWorkspaceById(workspaceId);
+
+      if (!workspace) {
+        track(new Error(`Workspace with id "${workspaceId}" not found`), {
+          'Workspace ID': workspaceId,
+          'Available Workspace IDs': state.list.map(w => w.id),
+          'Current Workspace': state.current?.id,
+          'User State': rootState.user,
+        });
+
+        return false;
+      }
+
+      if (!workspace.team) {
+        track(new Error(`Workspace "${workspaceId}" has no team property`), {
+          'Workspace ID': workspaceId,
+          'Workspace Data': workspace,
+          'User State': rootState.user,
+        });
+
+        return false;
+      }
+
+      if (!rootState.user) {
+        track(new Error('User state is not initialized'), {
+          'Workspace ID': workspaceId,
+          'Workspace Data': workspace,
+          'Root State User': rootState.user,
+        });
+
+        return false;
+      }
+
+      if (!rootState.user.data) {
+        track(new Error('User data is not loaded'), {
+          'Workspace ID': workspaceId,
+          'Workspace Data': workspace,
+          'User State': rootState.user,
+          'User Data': rootState.user.data,
+        });
+
+        return false;
+      }
+
       const userId = rootState.user.data.id;
 
       return workspace.team.some(member => member.user && member.user.id === userId && member.isAdmin);
