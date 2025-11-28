@@ -6,6 +6,9 @@ import * as workspacesApi from '../../../api/workspaces/index.ts';
 import { SET_WORKSPACES_LIST } from '../workspaces/actionTypes';
 import { SET_PROJECTS_LIST } from '../projects/actionTypes';
 import { INIT_EVENTS_MODULE } from '../events/actionTypes';
+import { useErrorTracker } from '../../../hawk.ts';
+
+const { track } = useErrorTracker();
 
 /**
  * Mutations enum for this module
@@ -76,22 +79,33 @@ const actions = {
         workspace.projects.forEach((project) => {
           project.workspaceId = workspace.id;
 
-          const dailyEvents = project.dailyEventsPortion.dailyEvents;
+          const dailyEvents = project.dailyEventsPortion?.dailyEvents;
 
           /**
            * From fetching initial data we've got project with one daily event (latest one)
            * We should save it's id to the projects state and save event to the events state
            */
-          if (dailyEvents.length) {
+          if (dailyEvents && dailyEvents.length && dailyEvents[0]?.event) {
             project.latestEvent = dailyEvents[0];
 
             /**
              * Remove event and store only eventId.
              * Event itself is stored in the events state
              */
-            project.latestEvent.eventId = project.latestEvent.event.id;
-            events[project.id + ':' + project.latestEvent.eventId] = dailyEvents[0].event;
-            delete project.latestEvent.event;
+            if (project.latestEvent.event && project.latestEvent.event.id) {
+              project.latestEvent.eventId = project.latestEvent.event.id;
+              events[project.id + ':' + project.latestEvent.eventId] = dailyEvents[0].event;
+              delete project.latestEvent.event;
+            } else {
+              track(new Error('dailyEvents[0].event is missing or has no id'), {
+                'Project ID': project.id,
+                'Project Data': project,
+                'Daily Events': dailyEvents,
+                'First Daily Event': dailyEvents[0],
+              });
+
+              project.latestEvent = null;
+            }
           } else {
             project.latestEvent = null;
           }
