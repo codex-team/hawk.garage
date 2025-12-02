@@ -61,6 +61,7 @@ export default {
     EntityImage,
     Icon,
   },
+  emits: ['update:modelValue'],
   props: {
     options: {
       type: Array,
@@ -157,13 +158,13 @@ export default {
         transition: none;
       }
 
-      &.options-appear-enter,
+      &.options-appear-enter-from,
       &.options-appear-leave-to {
         transform: translateY(-10px);
       }
 
       &.options-appear-enter-to,
-      &.options-appear-leave {
+      &.options-appear-leave-from {
         transform: none;
       }
     }
