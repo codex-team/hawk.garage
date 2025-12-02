@@ -40,6 +40,7 @@
     </div>
     <component
       :is="modalComponent"
+      v-if="modalComponent"
       v-bind="modalDialogData"
       @close="onModalClose"
     />
