@@ -137,16 +137,19 @@ export default defineComponent({
     /** Override Popup Dialog animation */
 
     &.popup-dialog-animation {
-      &-enter-active {
+      &-enter-active,
+      &-appear-active {
         transition: all 100ms ease;
       }
 
-      &-enter {
+      &-enter-from,
+      &-appear-from {
         transform: scale(1.02);
         opacity: 1;
       }
 
-      &-enter-to {
+      &-enter-to,
+      &-appear-to {
         transform: none;
       }
 

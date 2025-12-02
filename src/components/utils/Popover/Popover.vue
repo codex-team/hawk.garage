@@ -195,14 +195,14 @@ export default defineComponent({
   transition: transform 150ms cubic-bezier(0.29, 0.97, 0.82, 1.43), opacity 150ms ease;
 }
 
-.popover-appearing-enter,
+.popover-appearing-enter-from,
 .popover-appearing-leave-to {
   transform: var(--transform-offset) scale(1.05) translateY(6px);
   opacity: 0;
 }
 
 .popover-appearing-enter-to,
-.popover-appearing-leave {
+.popover-appearing-leave-from {
   transform: var(--transform-offset);
   opacity: 1;
 }
