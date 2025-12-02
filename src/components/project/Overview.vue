@@ -29,13 +29,7 @@
 
 <script>
 import EventsList from './EventsList.vue';
-import Chart from '../events/Chart';
-import {
-  FETCH_CHART_DATA
-} from '../../store/modules/projects/actionTypes';
 import FiltersBar from './FiltersBar';
-import notifier from 'codex-notifier';
-import NotFoundError from '@/errors/404';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
 import ProjectChart from './ProjectChart.vue';
 
