@@ -4,7 +4,7 @@
       v-if="project"
       v-infinite-scroll="() => loadMoreEvents(false)"
       :infinite-scroll-disabled="false"
-      infinite-scroll-distance="300"
+      infinite-scroll-distance="500"
       class="project-overview__content"
     >
       <ProjectChart
