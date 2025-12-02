@@ -165,7 +165,7 @@ export default defineComponent({
      * @param {string} logKey - The unique identifier for the log entry
      */
     toggleStack(logKey: string) {
-      this.$set(this.expandedStack, logKey, !this.expandedStack[logKey]);
+      this.expandedStack[logKey] = !this.expandedStack[logKey];
     },
     /**
      * Sanitizes a string by replacing special HTML characters with their entities
