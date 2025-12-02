@@ -125,10 +125,6 @@ export default defineComponent({
       type: String,
       default: undefined,
     },
-    value: {
-      type: String,
-      default: undefined,
-    },
   },
   computed: {
     currentValue(): string | undefined {
@@ -136,13 +132,12 @@ export default defineComponent({
         return this.modelValue;
       }
 
-      return this.value;
+      return this.modelValue;
     },
   },
   methods: {
     select(optionId: string) {
       this.$emit('update:modelValue', optionId);
-      this.$emit('input', optionId);
     },
   },
 });

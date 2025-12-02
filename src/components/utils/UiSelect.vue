@@ -98,7 +98,7 @@ export default defineComponent({
     /**
      * Current input value
      */
-    value: {
+    modelValue: {
       type: String,
       default: undefined,
     },
@@ -113,7 +113,7 @@ export default defineComponent({
       /**
        * Current input value stored locally
        */
-      internalValue: this.value,
+      internalValue: this.modelValue,
     };
   },
   computed: {
@@ -138,14 +138,14 @@ export default defineComponent({
     },
   },
   watch: {
-    value: {
+    modelValue: {
       handler(newVal: string): void {
         this.internalValue = newVal;
       },
     },
   },
   mounted(): void {
-    this.internalValue = this.value;
+    this.internalValue = this.modelValue;
   },
   methods: {
     /**
@@ -161,8 +161,9 @@ export default defineComponent({
      * @param option - option to activate
      */
     onOptionActivate(option: UiSelectOption): void {
+      console.log('onOptionActivate', option);
       this.internalValue = option.value;
-      this.$emit('input', option.value);
+      this.$emit('update:modelValue', option.value);
       this.close();
     },
   },

@@ -2,11 +2,11 @@
   <div class="ui-radio">
     <input
       :id="id"
-      :value="value"
+      :value="modelValue"
       :checked="checked"
       :name="name"
       type="radio"
-      @input="$emit('input', value)"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement)?.value)"
     >
     <Icon symbol="tick" />
   </div>
@@ -41,7 +41,7 @@ export default defineComponent({
     /**
      * Value binded with v-model
      */
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },

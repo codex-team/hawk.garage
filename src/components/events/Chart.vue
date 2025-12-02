@@ -75,7 +75,7 @@
             :key="`tooltip-line-${line.label}-${index}`"
             class="chart__pointer-tooltip-number"
           >
-            <AnimatedCounter :value="spacedNumber(getLineValueAtHoveredIndex(line, hoveredIndex))" />
+            <AnimatedCounter :value="formatSpacedNumber(getLineValueAtHoveredIndex(line, hoveredIndex))" />
             {{ line.label }}
             <span
               class="chart__pointer-tooltip-dot"
@@ -223,9 +223,15 @@ export default defineComponent({
     /**
      * Filtered points to display in x-legend based on visibleXLegendItems step
      */
-    visibleLegendPoints(): Array<{ point: ChartItem; index: number }> {
+    visibleLegendPoints(): Array<{
+      point: ChartItem;
+      index: number;
+    }> {
       const step = this.visibleXLegendItems;
-      const result: Array<{ point: ChartItem; index: number }> = [];
+      const result: Array<{
+        point: ChartItem;
+        index: number;
+      }> = [];
 
       for (let i = 0; i < this.firstLineData.length; i = i + step) {
         result.push({
@@ -551,6 +557,16 @@ export default defineComponent({
 
         return `${day} ${this.$t('common.shortMonths[' + month + ']')}, ${paddedHours}:${paddedMinutes}`;
       }
+    },
+
+    /**
+     * Formats number with spaces
+     *
+     * @param value - number value
+     * @returns formatted number
+     */
+    formatSpacedNumber(value: number): string {
+      return spacedNumber(value);
     },
   },
 });

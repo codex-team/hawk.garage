@@ -54,7 +54,10 @@ export default defineComponent({
     },
   },
   data: function (): {
-    chartData: ChartLine[]
+    /**
+     * Set of lines for a chart
+     */
+    chartData: ChartLine[];
   } {
     return {
       /**

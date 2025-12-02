@@ -378,11 +378,9 @@ export function debounce(callback: () => void, delay: number): () => void {
  * Throttle function to limit the rate at which a function can be called.
  * Executes the callback immediately, then waits for the delay period before
  * allowing the next execution.
- *
- * @param {Function} callback - function to throttle
- * @param {number} delay - throttle delay in milliseconds
- *
- * @returns {Function}
+ * @param callback - function to throttle
+ * @param delay - throttle delay in milliseconds
+ * @returns
  */
 export function throttle(callback: () => void, delay: number): () => void {
   let lastExecTime = 0;

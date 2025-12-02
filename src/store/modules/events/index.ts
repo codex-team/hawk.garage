@@ -507,23 +507,25 @@ const module: Module<EventsModuleState, RootState> = {
 
     /**
      * Get chart data for an event for a specified period
-     *
-     * @param {object} context - vuex action context
-     * @param {Function} context.commit - VueX commit method
-     * @param {Function} context.dispatch - Vuex dispatch method
-     *
-     * @param {object} project - object of project data
-     * @param {string} project.projectId - project's id
-     * @param {string} project.eventId - event's id
-     * @param {string} project.startDate - start date
-     * @param {string} project.endDate - end date
-     * @param {number} project.groupBy - grouping interval in minutes
+     * @param context - vuex action context
+     * @param context.commit - VueX commit method
+     * @param context.dispatch - Vuex dispatch method
+     * @param project - object of project data
+     * @param project.projectId - project's id
+     * @param project.eventId - event's id
+     * @param project.startDate - start date
+     * @param project.endDate - end date
+     * @param project.groupBy - grouping interval in minutes
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async [GET_CHART_DATA](
       { commit, dispatch },
       { projectId, eventId, originalEventId, days }:
-        { projectId: string; eventId: string; originalEventId: string; days: number }
+        {
+          projectId: string;
+          eventId: string;
+          originalEventId: string;
+          days: number;
+        }
     ): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
       const chartData = await eventsApi.fetchChartData(

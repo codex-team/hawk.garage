@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { ChartItem, ChartLineColor } from '../../types/chart';
 
 /**
@@ -100,7 +100,7 @@ export const chartColors: ChartLineColors[] = [
   },
 ];
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ChartLine',
   props: {
     /**
@@ -171,8 +171,12 @@ export default Vue.extend({
     /**
      * Unique ID for gradient definitions to avoid conflicts when multiple ChartLine components are used
      */
-    const gradientId = `chart-gradient-${Math.random().toString(36).substr(2, 9)}`;
-    const fillGradientId = `chart-fill-gradient-${Math.random().toString(36).substr(2, 9)}`;
+    const gradientId = `chart-gradient-${Math.random()
+      .toString(36)
+      .substring(2, 9)}`;
+    const fillGradientId = `chart-fill-gradient-${Math.random()
+      .toString(36)
+      .substring(2, 9)}`;
 
     return {
       gradientId,
@@ -206,7 +210,10 @@ export default Vue.extend({
         return `M ${pointX} ${pointY}`;
       }
 
-      const pathPoints: Array<{ x: number; y: number }> = [];
+      const pathPoints: Array<{
+        x: number;
+        y: number;
+      }> = [];
 
       this.points.forEach((day, index) => {
         const value = day.count;

@@ -23,10 +23,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'DetailsRelease',
   components: {
     DetailsBase,
@@ -70,5 +70,3 @@ export default Vue.extend({
   text-decoration: underline;
 }
 </style>
-
-
