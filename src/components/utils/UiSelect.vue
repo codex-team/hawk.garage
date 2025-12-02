@@ -161,7 +161,6 @@ export default defineComponent({
      * @param option - option to activate
      */
     onOptionActivate(option: UiSelectOption): void {
-      console.log('onOptionActivate', option);
       this.internalValue = option.value;
       this.$emit('update:modelValue', option.value);
       this.close();
