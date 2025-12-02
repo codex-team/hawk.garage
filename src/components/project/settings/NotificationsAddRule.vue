@@ -401,7 +401,7 @@ export default defineComponent({
         this.$data.selectedThreshold = this.rule.threshold.toString();
       }
       this.$data.selectedThresholdPeriod = this.seenMoreThresholdPeriod.find((option) => {
-        return option.id === millisecondsToThresholdPeriod.get(this.rule.thresholdPeriod ?? 3600000);
+        return option.id === millisecondsToThresholdPeriod.get(this.rule?.thresholdPeriod ?? 3600000);
       }) as CustomSelectOption;
 
       /**
@@ -416,31 +416,31 @@ export default defineComponent({
        * Backend may not return some channels, but UI expects them to exist
        */
       if (!this.form.channels.telegram) {
-        this.$set(this.form.channels, 'telegram', {
+        this.form.channels.telegram = {
           endpoint: '',
           isEnabled: true,
-        });
+        };
       }
 
       if (!this.form.channels.email) {
-        this.$set(this.form.channels, 'email', {
+        this.form.channels.email = {
           endpoint: '',
           isEnabled: false,
-        });
+        };
       }
 
       if (!this.form.channels.slack) {
-        this.$set(this.form.channels, 'slack', {
+        this.form.channels.slack = {
           endpoint: '',
           isEnabled: false,
-        });
+        };
       }
 
       if (!this.form.channels.loop) {
-        this.$set(this.form.channels, 'loop', {
+        this.form.channels.loop = {
           endpoint: '',
           isEnabled: false,
-        });
+        };
       }
     }
   },
