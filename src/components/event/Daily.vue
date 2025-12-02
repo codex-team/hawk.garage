@@ -18,7 +18,7 @@
       <div class="event-daily__label">
         {{ $t('event.daily.lastTwoWeeks') }}
       </div>
-      <Chart :points="chartData" />
+      <Chart :lines="chartData" />
     </div>
   </div>
 </template>
@@ -28,8 +28,8 @@ import { defineComponent } from 'vue';
 import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { HawkEvent } from '../../types/events';
-import { EventChartItem } from '../../types/chart';
 import { prettyFullDate } from '../../utils/filters';
+import { ChartLine } from '@/types/chart';
 
 export default defineComponent({
   name: 'EventDaily',
@@ -53,7 +53,9 @@ export default defineComponent({
       required: true,
     },
   },
-  data: function (): { chartData: EventChartItem[] } {
+  data: function (): {
+    chartData: ChartLine[]
+  } {
     return {
       /**
        * Data for a chart

@@ -47,6 +47,19 @@
             v-model="form.channels.slack.isEnabled"
           />
         </section>
+        <section>
+          <FormTextFieldset
+            v-model="form.channels.loop.endpoint"
+            :label="$t('projects.settings.notifications.loop')"
+            :description="$t('projects.settings.notifications.loopDescription')"
+            :hidden="!form.channels.loop.isEnabled"
+            :is-invalid="!isChannelEndpointValid('loop') && endpointShouldBeValidated.loop"
+            placeholder="Webhook App endpoint"
+          />
+          <UiCheckbox
+            v-model="form.channels.loop.isEnabled"
+          />
+        </section>
       </div>
     </section>
     <section class="grid-form__section">
@@ -191,6 +204,11 @@ export default defineComponent({
       slack: boolean;
 
       /**
+       * Flag that represents, if validation state of the loop endpoint should be displayed in textfield state
+       */
+      loop: boolean;
+
+      /**
        * Flag that represents, if validation state of the email endpoint should be displayed in textfield state
        */
       email: boolean;
@@ -219,6 +237,10 @@ export default defineComponent({
             isEnabled: false,
           },
           slack: {
+            endpoint: '',
+            isEnabled: false,
+          },
+          loop: {
             endpoint: '',
             isEnabled: false,
           },
@@ -280,6 +302,7 @@ export default defineComponent({
       endpointShouldBeValidated: {
         telegram: false,
         slack: false,
+        loop: false,
         email: false,
       },
     };
@@ -388,6 +411,37 @@ export default defineComponent({
       const { id: _mergedRuleId, ...ruleWithoutId } = mergedRule;
 
       this.form = ruleWithoutId;
+
+      /**
+       * Backend may not return some channels, but UI expects them to exist
+       */
+      if (!this.form.channels.telegram) {
+        this.$set(this.form.channels, 'telegram', {
+          endpoint: '',
+          isEnabled: true,
+        });
+      }
+
+      if (!this.form.channels.email) {
+        this.$set(this.form.channels, 'email', {
+          endpoint: '',
+          isEnabled: false,
+        });
+      }
+
+      if (!this.form.channels.slack) {
+        this.$set(this.form.channels, 'slack', {
+          endpoint: '',
+          isEnabled: false,
+        });
+      }
+
+      if (!this.form.channels.loop) {
+        this.$set(this.form.channels, 'loop', {
+          endpoint: '',
+          isEnabled: false,
+        });
+      }
     }
   },
   methods: {
@@ -463,6 +517,7 @@ export default defineComponent({
     validateForm(): boolean {
       this.endpointShouldBeValidated.telegram = this.form.channels.telegram!.isEnabled;
       this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
+      this.endpointShouldBeValidated.loop = this.form.channels.loop!.isEnabled;
       this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
 
       const allChannelsValid = true;
@@ -492,6 +547,13 @@ export default defineComponent({
 
         case (channelName === 'slack' && this.form.channels.slack!.isEnabled):
           if (!/^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9]+\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(this.form.channels.slack!.endpoint)) {
+            return false;
+          }
+
+          return true;
+
+        case (channelName === 'loop' && this.form.channels.loop?.isEnabled):
+          if (!/^https:\/\/.+\/hooks\/.+$/.test(this.form.channels.loop?.endpoint || '')) {
             return false;
           }
 

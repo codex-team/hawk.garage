@@ -73,6 +73,11 @@
         class="event-overview__section"
         :addons="addonsFiltered"
       />
+      <DetailsRelease
+        v-if="event.payload.release"
+        class="event-overview__section"
+        :release="event.payload.release"
+      />
       <div
         v-if="isNoAdditionalInformation"
         class="empty-event-label"
@@ -96,6 +101,7 @@ import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
 import DetailsUser from './details/DetailsUser.vue';
+import DetailsRelease from './details/DetailsRelease.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
@@ -108,6 +114,7 @@ export default defineComponent({
     DetailsAddons,
     DetailsSuspectedCommits,
     DetailsUser,
+    DetailsRelease,
   },
   props: {
     /**

@@ -205,13 +205,23 @@ export const MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS = `
 export const QUERY_CHART_DATA = `
   query ProjectChartData (
     $projectId: ID!,
-    $days: Int!
+    $startDate: DateTime!
+    $endDate: DateTime!
+    $groupBy: Int!
     $timezoneOffset: Int!
   ) {
     project(projectId: $projectId) {
-      chartData(days: $days, timezoneOffset: $timezoneOffset) {
-        timestamp
-        count
+      chartData(
+        startDate: $startDate,
+        endDate: $endDate,
+        groupBy: $groupBy,
+        timezoneOffset: $timezoneOffset
+      ) {
+        label
+        data {
+          timestamp
+          count
+        }
       }
     }
   }

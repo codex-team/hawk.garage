@@ -25,8 +25,6 @@
       class="input form-fieldset__input"
       :type="type || 'text'"
       :name="name"
-      :min="min"
-      :max="max"
       :value="modelValue"
       :placeholder="placeholder"
       :required="required"
@@ -125,22 +123,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
-    },
-
-    /**
-     * Minimum value for number type
-     */
-    min: {
-      type: Number,
-      default: null,
-    },
-
-    /**
-     * Maximum value for number type
-     */
-    max: {
-      type: Number,
-      default: null,
     },
   },
 };

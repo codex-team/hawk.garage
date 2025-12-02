@@ -91,9 +91,23 @@
   "forms": {
     "imageUploader": "UPLOAD LOGO",
     "searchField": "Search",
-    "searchFieldWithCMDK": "{cmd}+K to search"
+    "searchFieldWithCMDK": "{cmd}+K to search",
+    "numberInput": {
+      "minError": "Value must be at least {min}",
+      "maxError": "Value must be at most {max}"
+    }
   },
   "projects": {
+    "chart": {
+      "now": "Now",
+      "byMinutes": "By minutes",
+      "byHours": "By hours",
+      "byDays": "By days",
+      "lastHour": "Last hour",
+      "lastDay": "Last day",
+      "lastWeek": "Last week",
+      "lastMonth": "Last month"
+    },
     "filters": {
       "filtersOptions": {
         "all": "All",
@@ -161,6 +175,8 @@
         "emailDescription": "Max frequency is 1 alert in 10 min",
         "slack": "Slack",
         "slackDescription": "Alerts through the Webhook App",
+        "loop": "Loop",
+        "loopDescription": "Alerts through the Loop Webhook",
         "telegram": "Telegram",
         "telegramDescription": "Alerts through the {telegramLink}",
         "receiveNewLabel": "Only new events",
@@ -206,14 +222,18 @@
       },
       "rateLimits": {
         "title": "Rate Limits",
-        "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
+        "description": "Protect your budget from unexpected traffic spikes. Set automatic limits to block events when they exceed your threshold, preventing overspending and keeping your costs predictable.",
         "threshold": "No more than",
-        "period": "for period (seconds)",
+        "thresholdPlaceholder": "Number of events",
+        "period": "For period (seconds)",
+        "periodPlaceholder": "Period (seconds)",
         "submit": "Save",
-        "clear": "Clear",
+        "reset": "Reset rate limits",
         "updatedMessage": "Rate limits updated successfully",
         "clearedMessage": "Rate limits cleared successfully",
-        "paidOnlyMessage": "Rate limits are available only for paid plans"
+        "paidOnlyMessage": "Rate limits allow you to protect against error spikes that can cause your workspace to prematurely exhaust its event limit. Set the maximum number of events that Hawk should accept per unit of time. Events exceeding the limit will not be processed and captured.",
+        "paidOnlyUpgrade": "This feature is available only for paid plans.",
+        "upgradeButton": "Upgrade plan"
       }
     },
     "notFound": "Project not found",
@@ -492,6 +512,7 @@
     "issue": "Create issue",
     "loading": "Loading...",
     "context": "Context",
+    "release": "Release",
     "viewedBy": {
       "assignee": "Assignee"
     },
@@ -544,6 +565,12 @@
     "hour": "hour",
     "day": "day",
     "week": "week",
+    "timeUnits": {
+      "d": "{days}d",
+      "h": "{hours}h",
+      "m": "{minutes}m",
+      "s": "{seconds}s"
+    },
     "today": "Today",
     "yesterday": "Yesterday",
     "months": [

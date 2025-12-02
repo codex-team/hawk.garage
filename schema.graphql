@@ -16,8 +16,8 @@ directive @validate(notEmpty: Boolean, isEmail: Boolean) on ARGUMENT_DEFINITION
 """Directive for automatically image uploading"""
 directive @uploadImage on ARGUMENT_DEFINITION
 
-"""Access to the field only to authorized users"""
-directive @requireAuth on FIELD_DEFINITION
+"""Allow access to the field to anonymous users"""
+directive @allowAnon on FIELD_DEFINITION
 
 """Access to the field only for admins"""
 directive @requireAdmin on FIELD_DEFINITION
@@ -161,6 +161,15 @@ type ChartDataItem {
 
   """Amount of events"""
   count: Int
+}
+
+"""Chart line definition"""
+type ChartLine {
+  """Series label (e.g., events-accepted)"""
+  label: String!
+
+  """Data points for the series"""
+  data: [ChartDataItem!]!
 }
 
 """Release commit"""
@@ -386,6 +395,9 @@ type Event {
   """Event repetitions portion"""
   repetitionsPortion(cursor: String = null, limit: Int = 10): RepetitionsPortion!
 
+  """AI suggestion for the event"""
+  aiSuggestion: String
+
   """Array of users who visited event"""
   visitedBy: [User!]
 
@@ -395,14 +407,14 @@ type Event {
   """How many users catch this error"""
   usersAffected: Int
 
-  """Return graph of the error rate for the last few days"""
+  """Return graph of the error rate for the specified period"""
   chartData(
     """How many days we need to fetch for displaying in a chart"""
     days: Int! = 0
 
     """User's local timezone offset in minutes"""
     timezoneOffset: Int! = 0
-  ): [ChartDataItem!]!
+  ): [ChartLine!]!
 }
 
 """Event backtrace representation"""
@@ -645,6 +657,18 @@ type Mutation {
 
     """Project image"""
     image: Upload
+
+    """Rate limits configuration"""
+    rateLimitSettings: RateLimitSettingsInput
+  ): Project!
+
+  """Update project rate limits settings"""
+  updateProjectRateLimits(
+    """What project to update"""
+    id: ID!
+
+    """Rate limits configuration. Pass null to remove rate limits."""
+    rateLimitSettings: RateLimitSettingsInput
   ): Project!
 
   """Generates new project integration token by id"""
@@ -1084,16 +1108,25 @@ type Project {
 
     """Search query"""
     search: String
+
+    """Release label to filter events by payload.release"""
+    release: String
   ): DailyEventsPortion
 
   """Return events that occurred after a certain timestamp"""
   chartData(
-    """How many days we need to fetch for displaying in a chart"""
-    days: Int! = 0
+    """Start date (ISO 8601 DateTime string)"""
+    startDate: DateTime!
+
+    """End date (ISO 8601 DateTime string)"""
+    endDate: DateTime!
+
+    """Grouping interval in minutes (1=minute, 60=hour, 1440=day)"""
+    groupBy: Int! = 60
 
     """User's local timezone offset in minutes"""
     timezoneOffset: Int! = 0
-  ): [ChartDataItem]
+  ): [ChartLine!]!
 
   """Returns number of unread events"""
   unreadCount: Int!
@@ -1103,6 +1136,17 @@ type Project {
 
   """Event grouping patterns"""
   eventGroupingPatterns: [ProjectEventGroupingPattern]
+
+  """Rate limits configuration"""
+  rateLimitSettings: RateLimitSettings
+
+  """
+  List of releases with unique events count, commits count and files count
+  """
+  releases: [ProjectRelease!]!
+
+  """Detailed info for a specific release"""
+  releaseDetails(release: String!): ProjectReleaseDetails!
 }
 
 """Project event grouping settings"""
@@ -1160,6 +1204,45 @@ type ProjectNotificationsRule {
   thresholdPeriod: Int
 }
 
+"""Aggregated release info for project events"""
+type ProjectRelease {
+  """Release identifier"""
+  release: String!
+
+  """First occurrence timestamp"""
+  timestamp: Float!
+
+  """Number of new events introduced in this release"""
+  newEventsCount: Int!
+
+  """Number of commits in this release"""
+  commitsCount: Int!
+
+  """Number of files in this release"""
+  filesCount: Int!
+}
+
+"""Detailed info for a specific release"""
+type ProjectReleaseDetails {
+  """Release identifier"""
+  release: String!
+
+  """Number of commits in this release"""
+  commitsCount: Int!
+
+  """Number of files in this release"""
+  filesCount: Int!
+
+  """Release creation timestamp"""
+  timestamp: Float!
+
+  """Commits (from releases collection)"""
+  commits: [Commit!]
+
+  """Changed files (from releases collection)"""
+  files: [SourceMapDataExtended!]
+}
+
 """API queries"""
 type Query {
   """Healthcheck endpoint"""
@@ -1196,6 +1279,24 @@ type Query {
   plans: [Plan!]!
 }
 
+"""Rate limits configuration"""
+type RateLimitSettings {
+  """Rate limit threshold (N events)"""
+  N: Int!
+
+  """Rate limit period in seconds (T seconds)"""
+  T: Int!
+}
+
+"""Rate limits configuration input"""
+input RateLimitSettingsInput {
+  """Rate limit threshold (N events)"""
+  N: Int!
+
+  """Rate limit period in seconds (T seconds)"""
+  T: Int!
+}
+
 """What events to receive"""
 enum ReceiveTypes {
   """Receive only new events"""
@@ -1220,7 +1321,7 @@ type Release {
   releaseName: String!
 
   """Release commits"""
-  commits: [Commit!]!
+  commits: [Commit!]
 }
 
 input RemoveAssigneeInput {
@@ -1258,6 +1359,21 @@ type SourceCodeLine {
 
   """Line's content"""
   content: String
+}
+
+"""Source map file information"""
+type SourceMapDataExtended {
+  """Name of source-map file"""
+  mapFileName: String!
+
+  """Bundle or chunk name"""
+  originFileName: String!
+
+  """File size in bytes (from releases-js.files)"""
+  length: Int
+
+  """Upload date (from releases-js.files)"""
+  uploadDate: DateTime
 }
 
 type Subscription {
@@ -1479,6 +1595,9 @@ type Workspace {
 
   """ True if workspace is blocked """
   isBlocked: Boolean
+
+  """For prepaid workspaces, date until which the workspace is paid"""
+  paidUntil: DateTime
 
   """Workspace projects array"""
   projects(
