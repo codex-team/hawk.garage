@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
 import fs from 'fs'
+import hawkVitePlugin from '@hawk.so/vite-plugin'
 
 // Parse .env
 import dotenv from 'dotenv'
@@ -18,23 +19,37 @@ const iconsAvailable = fs
   .filter(item => item.name.includes('.svg'))
   .map(item => item.name.replace('.svg', ''))
 
-export default defineConfig({
-  plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          // Enable support for legacy components
-          compatConfig: {
-            MODE: 2
-          }
+const plugins = [
+  vue({
+    template: {
+      compilerOptions: {
+        // Enable support for legacy components
+        compatConfig: {
+          MODE: 2
         }
       }
-    }),
-    createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/assets/sprite-icons')],
-      symbolId: 'icon-[name]',
-    })
-  ],
+    }
+  }),
+  createSvgIconsPlugin({
+    iconDirs: [path.resolve(process.cwd(), 'src/assets/sprite-icons')],
+    symbolId: 'icon-[name]',
+  }),
+];
+
+/**
+ * Connect plugin of errors tracking system
+ * It will send source-maps after build
+ */
+const hawkToken = process.env.VITE_HAWK_TOKEN;
+
+if (hawkToken) {
+  plugins.push(hawkVitePlugin({
+    token: hawkToken
+  }));
+}
+
+export default defineConfig({
+  plugins,
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
