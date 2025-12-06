@@ -3,8 +3,8 @@
     :name="formData.name"
     :label="formData.label"
     :options="formData.options"
-    :value="language"
-    @input="changeLanguage"
+    :model-value="language"
+    @update:model-value="changeLanguage"
   />
 </template>
 
