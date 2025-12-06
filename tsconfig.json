@@ -1,3 +1,8 @@
 {
-  "extends": "./config/tsconfig/base"
+  "extends": "./config/tsconfig/base",
+  "include": [
+    "src/**/*",
+    "cypress/**/*",
+    "cypress.config.ts"
+  ]
 }

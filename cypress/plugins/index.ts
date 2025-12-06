@@ -13,10 +13,13 @@
 // the project's config changing)
 
 /**
- * @type {Cypress.PluginConfig}
+ * Cypress plugin configuration function
+ * @param on - Cypress plugin events
+ * @param config - Cypress plugin config options
+ * @returns Cypress plugin config options
  */
-// eslint-disable-next-line no-unused-vars
-module.exports = (on, config) => {
+export default function (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions): Cypress.PluginConfigOptions {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+  return config;
 }

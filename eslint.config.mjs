@@ -101,4 +101,12 @@ export default [
       'no-unused-vars': 'off',
     },
   },
+  {
+    files: ['cypress.config.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+      },
+    },
+  },
 ];
