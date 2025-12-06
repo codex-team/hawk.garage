@@ -5,7 +5,7 @@
       :fields="fields"
       :submit-text="submitText"
       :message="message"
-      @submit="recoverPassword"
+      @form-submit="recoverPassword"
     />
   </div>
 </template>
@@ -82,8 +82,8 @@ export default defineComponent({
 
         this.$router.push({
           name: 'login',
-          params: {
-            successMessage: this.$t('authPages.recoverPasswordSuccessMessage') as string,
+          query: {
+            success: 'recover',
             emailPrefilled: email,
           },
         });
@@ -93,7 +93,7 @@ export default defineComponent({
         console.error(err);
 
         notifier.show({
-          message: this.$i18n.t(err.message) as string,
+          message: this.$t(`authPages.errors.${err.message}`),
           style: 'error',
         });
       }

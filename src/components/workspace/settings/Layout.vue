@@ -140,7 +140,7 @@ export default defineComponent({
         const message = error instanceof Error ? error.message : String(error);
 
         notifier.show({
-          message: this.$i18n.t(`workspaces.errors.${message}`) as string,
+          message: this.$t(`workspaces.errors.${message}`) as string,
           style: 'error',
           time: 5000,
         });
@@ -166,7 +166,7 @@ export default defineComponent({
         this.$router.push({ name: 'home' });
       } catch {
         notifier.show({
-          message: this.$i18n.t('workspaces.settings.leaveError').toString(),
+          message: this.$t('workspaces.settings.leaveError').toString(),
           style: 'error',
           time: 10000,
         });

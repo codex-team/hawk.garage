@@ -6,7 +6,7 @@
       :hidden-fields="hiddenFields"
       :submit-text="submitText"
       :message="message"
-      @submit="signUp"
+      @form-submit="signUp"
     />
   </div>
 </template>
@@ -100,8 +100,8 @@ export default {
 
         this.$router.push({
           name: 'login',
-          params: {
-            successMessage: this.$t('authPages.signupSuccessMessage'),
+          query: {
+            success: 'signup',
             emailPrefilled: email,
           },
         });
@@ -109,7 +109,7 @@ export default {
         console.error(e);
 
         notifier.show({
-          message: this.$i18n.t(e.message),
+          message: this.$t(`authPages.errors.${e.message}`),
           style: 'error',
         });
       }

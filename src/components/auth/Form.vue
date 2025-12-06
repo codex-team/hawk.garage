@@ -26,7 +26,7 @@
       <div class="auth-form__picture" />
       <form
         class="auth-form__fields-container"
-        @submit.prevent="$emit('submit')"
+        @submit.prevent="$emit('form-submit')"
       >
         <div class="auth-form__links">
           <router-link to="/login">
@@ -128,6 +128,7 @@ export default {
       default: '',
     },
   },
+  emits: ['form-submit'],
 };
 </script>
 

@@ -9,7 +9,7 @@
       :alt-link="altLink"
       :alt-text="altText"
       :success-message="successMessage"
-      @submit="login"
+      @form-submit="login"
     />
   </div>
 </template>
@@ -29,9 +29,9 @@ export default {
   mixins: [offlineErrorMessage],
   props: {
     /**
-     * Success message text
+     * Success flag to determine which success message to show
      */
-    successMessage: {
+    success: {
       type: String,
       default: '',
     },
@@ -70,6 +70,22 @@ export default {
       message: null,
     };
   },
+  computed: {
+    /**
+     * Get success message based on success flag
+     */
+    successMessage() {
+      if (this.success === 'signup') {
+        return this.$t('authPages.signupSuccessMessage');
+      }
+
+      if (this.success === 'recover') {
+        return this.$t('authPages.recoverPasswordSuccessMessage');
+      }
+
+      return '';
+    },
+  },
   async mounted() {
     if (
       this.$route.query.access_token
@@ -88,7 +104,7 @@ export default {
         removeCookie('afterAuthRedirect');
       } catch (e) {
         notifier.show({
-          message: this.$i18n.t(e.message),
+          message: this.$t(`authPages.errors.${e.message}`),
           style: 'error',
         });
       }
@@ -124,7 +140,7 @@ export default {
         console.error(e);
 
         notifier.show({
-          message: this.$i18n.t(`authPages.errors.${e.message}`),
+          message: this.$t(`authPages.errors.${e.message}`),
           style: 'error',
         });
       }
