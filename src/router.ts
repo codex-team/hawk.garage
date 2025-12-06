@@ -113,7 +113,17 @@ const router = createRouter({
                   path: 'event/:eventId/:repetitionId?',
                   name: 'event',
                   component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue'),
-                  redirect: 'event/:eventId/:repetitionId?/overview',
+                  redirect: (to) => {
+                    const projectId = to.params.projectId as string;
+                    const eventId = to.params.eventId as string;
+                    const repetitionId = to.params.repetitionId as string | undefined;
+
+                    if (repetitionId !== undefined && repetitionId !== '') {
+                      return `/project/${projectId}/event/${eventId}/${repetitionId}/overview`;
+                    }
+
+                    return `/project/${projectId}/event/${eventId}/${eventId}/overview`;
+                  },
                   children: [
                     {
                       path: 'overview',
