@@ -159,7 +159,7 @@ export default defineComponent({
        * `Increment Event Limit` button
        */
       incrementEventsLimit: {
-        label: this.$i18n.t('billing.buttons.incrementEventsLimit') as string,
+        label: this.$t('billing.buttons.incrementEventsLimit') as string,
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'ChooseTariffPlanPopup',
@@ -173,7 +173,7 @@ export default defineComponent({
        * `Enable Auto Payment` button
        */
       enableAutoPayment: {
-        label: this.$i18n.t('billing.buttons.enableAutoPayment') as string,
+        label: this.$t('billing.buttons.enableAutoPayment') as string,
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'PaymentDetailsDialog',
@@ -189,7 +189,7 @@ export default defineComponent({
        * `Prolongate Current Plan` button
        */
       prolongateCurrentPlan: {
-        label: this.$i18n.t('billing.buttons.prolongateCurrentPlan') as string,
+        label: this.$t('billing.buttons.prolongateCurrentPlan') as string,
         onClick: () => {
           this.$store.dispatch(SET_MODAL_DIALOG, {
             component: 'PaymentDetailsDialog',
@@ -228,7 +228,7 @@ export default defineComponent({
      */
     incrementEventsLimitWithPrice(): Omit<Button, 'style'> {
       return {
-        label: this.$i18n.t('billing.buttons.incrementEventsLimitWithPrice', {
+        label: this.$t('billing.buttons.incrementEventsLimitWithPrice', {
           price: this.minPlanPrice + ' ' + this.planCurrencySign,
         }) as string,
         onClick: () => {
@@ -427,13 +427,13 @@ export default defineComponent({
         });
 
         notifier.show({
-          message: this.$i18n.t('billing.autoProlongation.cancelSuccessMessage') as string,
+          message: this.$t('billing.autoProlongation.cancelSuccessMessage') as string,
           style: 'success',
           time: 5000,
         });
       } catch {
         notifier.show({
-          message: this.$i18n.t('billing.autoProlongation.cancelErrorMessage') as string,
+          message: this.$t('billing.autoProlongation.cancelErrorMessage') as string,
           style: 'error',
           time: 5000,
         });
@@ -450,7 +450,7 @@ export default defineComponent({
       if (!value) {
         this.$confirm.open({
           actionType: ActionType.SUBMIT,
-          description: this.$i18n.t('workspaces.settings.billing.cancelSubscriptionText').toString(),
+          description: this.$t('workspaces.settings.billing.cancelSubscriptionText').toString(),
           onConfirm: async () => {
             await this.cancelSubscription();
           },

@@ -554,12 +554,12 @@ export default defineComponent({
 
         if (operation.status === BusinessOperationStatus.Rejected) {
           notifier.show({
-            message: this.$i18n.t('billing.widget.notifications.error') as string,
+            message: this.$t('billing.widget.notifications.error') as string,
             style: 'error',
           });
         } else {
           notifier.show({
-            message: this.$i18n.t('billing.widget.notifications.success') as string,
+            message: this.$t('billing.widget.notifications.success') as string,
             style: 'success',
           });
         }
@@ -570,7 +570,7 @@ export default defineComponent({
         }
 
         notifier.show({
-          message: this.$i18n.t('billing.widget.notifications.error') as string,
+          message: this.$t('billing.widget.notifications.error') as string,
           style: 'error',
         });
       }
@@ -632,7 +632,7 @@ export default defineComponent({
         {
           onSuccess: () => {
             notifier.show({
-              message: this.$i18n.t('billing.widget.notifications.success') as string,
+              message: this.$t('billing.widget.notifications.success') as string,
               style: 'success',
             });
 
@@ -640,7 +640,7 @@ export default defineComponent({
           },
           onFail: () => {
             notifier.show({
-              message: this.$i18n.t('billing.widget.notifications.error') as string,
+              message: this.$t('billing.widget.notifications.error') as string,
               style: 'error',
             });
           },

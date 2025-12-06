@@ -44,8 +44,8 @@ export default defineComponent({
       /**
        * Check for translation existence
        */
-      if (this.$i18n.te(dictKey)) {
-        return this.$i18n.t(dictKey) as string;
+      if (this.$te(dictKey)) {
+        return this.$t(dictKey);
       }
 
       return name;

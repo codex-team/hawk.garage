@@ -63,29 +63,6 @@ export function prettyTime(value: number): string {
 }
 
 /**
- * Returns prettifying date ('Today', 'Yesterday' or time like '7 may')
- * @param value
- * @returns
- */
-export function prettyDateStr(value: string): string {
-  const [day, month]: number[] = value
-    .split('-')
-    .map(stringValue => +stringValue);
-
-  const currentDate = new Date().getDate();
-
-  if (+day === currentDate) {
-    return i18n.t('common.today') as string;
-  }
-
-  if (+day === currentDate - 1) {
-    return i18n.t('common.yesterday') as string;
-  }
-
-  return `${day} ${i18n.t('common.months[' + (month - 1) + ']')}`;
-}
-
-/**
  * Returns prettified date from string
  * @param value
  * @returns
