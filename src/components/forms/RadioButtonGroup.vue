@@ -55,10 +55,10 @@
         <UiRadio
           :id="option.id"
           :name="name"
-          :value="option.id"
+          :model-value="option.id"
           :checked="option.id === currentValue"
           class="radio-button-group__option-radio"
-          @input="select(option.id)"
+          @update:model-value="select(option.id)"
         />
       </div>
       <hr
