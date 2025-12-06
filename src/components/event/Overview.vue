@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import DetailsCookie from './details/DetailsCookie.vue';
 import DetailsBacktrace from './details/DetailsBacktrace.vue';
 import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
@@ -106,7 +106,7 @@ import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventOverview',
   components: {
     DetailsCookie,
@@ -231,7 +231,7 @@ export default Vue.extend({
 </script>
 
 <style>
-@import "./../../styles/custom-properties.css";
+@import '../../styles/custom-properties.css';
 
 .event-overview {
   &__section {
@@ -250,6 +250,6 @@ export default Vue.extend({
 }
 
 .empty-event-label {
-  @apply --empty-placeholder;
+  @mixin empty-placeholder;
 }
 </style>

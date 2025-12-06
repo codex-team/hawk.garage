@@ -4,8 +4,8 @@
       v-if="!isFreePlan"
       class="billing-card__switch"
       :label="$t('billing.autoPay')"
-      :value="isAutoPayOn"
-      @input="onAutoPayInput"
+      :model-value="isAutoPayOn"
+      @update:model-value="onAutoPayInput"
     />
     <div class="clearfix billing-card__workspace">
       <EntityImage
@@ -63,9 +63,9 @@
           class="billing-card__info-bar"
         >
           <div class="billing-card__events">
-            {{ isSubExpired && !isAutoPayOn? $t('billing.expired') : '' }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+            {{ validTillText }}
           </div>
-          <Progress
+          <ProgressBar
             :max="progressMaxDate"
             :current="progressCurrentDate"
             :color="isAutoPayOn ? 'rgba(219, 230, 255, 0.6)' : (progressCurrentDate / progressMaxDate) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
@@ -86,9 +86,9 @@
         </div>
         <div class="billing-card__info-bar">
           <div class="billing-card__events">
-            {{ eventsCount || 0 | spacedNumber }} / {{ plan.eventsLimit || 0 | spacedNumber }} {{ $tc('billing.volumeEvents', eventsCount) }}
+            {{ volumeEventsText }}
           </div>
-          <Progress
+          <ProgressBar
             :max="plan.eventsLimit || 0"
             :current="eventsCount"
             :color="(eventsCount / (plan.eventsLimit || eventsCount)) > 0.8 ? '#d94848' : 'rgba(219, 230, 255, 0.6)'"
@@ -112,15 +112,15 @@
       v-if="!isFreePlan && isAutoPayOn"
       class="billing-card__autopay-is-on"
     >
-      {{ $t('billing.autoPayIsOn') }} {{ subExpiredDate | prettyDateFromDateTimeString }}
+      {{ autoPayIsOnText }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from '../../utils/EntityImage.vue';
-import Progress from '../../utils/Progress.vue';
+import ProgressBar from '../../utils/Progress.vue';
 import UiSwitch from '../../forms/UiSwitch.vue';
 import StatusBlock from '../../utils/StatusBlock.vue';
 import { SET_MODAL_DIALOG } from '../../../store/modules/modalDialog/actionTypes';
@@ -134,12 +134,13 @@ import { CANCEL_SUBSCRIPTION } from '../../../store/modules/workspaces/actionTyp
 import { FETCH_PLANS } from '../../../store/modules/plans/actionTypes';
 import { getCurrencySign } from '@/utils';
 import { ActionType } from '@/components/utils/ConfirmationWindow/types';
+import { prettyDateFromDateTimeString, spacedNumber } from '@/utils/filters';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'BillingOverview',
   components: {
     UiSwitch,
-    Progress,
+    ProgressBar,
     EntityImage,
     UiButton,
     StatusBlock,
@@ -340,7 +341,7 @@ export default Vue.extend({
      * Return true if workspace plan is `Startup`
      */
     isFreePlan(): boolean {
-      return this.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
+      return this.plan.id === import.meta.env.VITE_FREE_PLAN_ID;
     },
 
     /**
@@ -348,6 +349,37 @@ export default Vue.extend({
      */
     isBLocked(): boolean {
       return this.workspace.isBlocked;
+    },
+
+    /**
+     * Return formatted text for valid till section
+     */
+    validTillText(): string {
+      const expiredText = this.isSubExpired && !this.isAutoPayOn ? this.$t('billing.expired') : '';
+      const dateText = prettyDateFromDateTimeString(this.subExpiredDate.toISOString());
+
+      return `${expiredText} ${dateText}`.trim();
+    },
+
+    /**
+     * Return formatted text for auto pay is on section
+     */
+    autoPayIsOnText(): string {
+      const autoPayText = this.$t('billing.autoPayIsOn');
+      const dateText = prettyDateFromDateTimeString(this.subExpiredDate.toISOString());
+
+      return `${autoPayText} ${dateText}`;
+    },
+
+    /**
+     * Return formatted text for volume events section
+     */
+    volumeEventsText(): string {
+      const currentEvents = spacedNumber(this.eventsCount || 0);
+      const limitEvents = spacedNumber(this.plan.eventsLimit || 0);
+      const eventsText = this.$t('billing.volumeEvents', { count: this.eventsCount });
+
+      return `${currentEvents} / ${limitEvents} ${eventsText}`;
     },
   },
   /**
@@ -440,7 +472,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="postcss">
+<style>
   @import url('./../../../styles/custom-properties.css');
 
   .billing-card {
@@ -491,7 +523,7 @@ export default Vue.extend({
     }
 
     &__label {
-      @apply --ui-label;
+      @mixin ui-label;
       display: inline-block;
       margin-right: 13px;
       margin-bottom: 15px;
@@ -536,7 +568,7 @@ export default Vue.extend({
       width: 160px;
       height: 5px;
       margin-top: 7px;
-      background-color: color-mod(var(--color-border) alpha(25%));
+      background-color: var(--color-bg-third);
     }
 
     &__buttons {
@@ -576,7 +608,7 @@ export default Vue.extend({
     &__autopay-is-on {
       height: 14px;
       margin: 20px 166px 0 0;
-      color: color-mod(var(--color-border) alpha(60%));
+      color: color-mod(var(--color-border-base) alpha(60%));
       font-size: 12px;
       letter-spacing: 0.15px;
     }

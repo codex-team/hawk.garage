@@ -25,6 +25,7 @@ export default {
   components: {
     CloseButton,
   },
+  emits: ['close'],
 };
 </script>
 
@@ -40,16 +41,22 @@ export default {
     align-content: stretch;
     align-items: stretch;
 
-    &-enter-active, &-leave-active {
+    &-enter-active,
+    &-leave-active,
+    &-appear-active {
       transition: all 150ms ease-in;
     }
 
-    &-enter, &-leave-to {
+    &-enter-from,
+    &-leave-to,
+    &-appear-from {
       transform: scale(1.05);
       opacity: 0;
     }
 
-    &-enter-to, &-leave {
+    &-enter-to,
+    &-leave-from,
+    &-appear-to {
       transform: none;
       opacity: 1;
     }

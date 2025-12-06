@@ -17,10 +17,11 @@
           <label class="label account-settings__label">{{ $t('settings.account.profileImage') }}</label>
           <FormImageUploader
             v-model="image"
-            @input="showSubmitButton = true"
+            @update:model-value="showSubmitButton = true"
           />
         </section>
       </div>
+
       <FormTextFieldset
         v-model="email"
         auto-complete="email"
@@ -52,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FormTextFieldset from '../../forms/TextFieldset.vue';
 import FormImageUploader from '../../forms/ImageUploader.vue';
 import ChangePasswordFieldset from '../../forms/ChangePasswordFieldset.vue';
@@ -85,7 +86,7 @@ interface UpdateAccountPayload {
   image?: File;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'AccountSettings',
   components: {
     ChangePasswordFieldset,

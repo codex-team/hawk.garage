@@ -49,6 +49,11 @@ import GuideStepBlock from '../../GuideStepBlock';
 import GuideHeader from '../../GuidePageHeader';
 import TokenBlock from '../../../project/TokenBlock';
 import UiButton from '../../../utils/UiButton';
+import phpImage from '../../../../assets/catalog/php.svg';
+import nodejsImage from '../../../../assets/catalog/nodejs.svg';
+import pythonImage from '../../../../assets/catalog/python.svg';
+import goImage from '../../../../assets/catalog/go/go@3x.jpg';
+import kotlinImage from '../../../../assets/catalog/kotlin/kotlin@3x.jpg';
 
 export default {
   name: 'SetupPhpCatcher',
@@ -64,7 +69,7 @@ export default {
         {
           route: 'php',
           name: 'PHP',
-          cover: require('../../../../assets/catalog/php.svg'),
+          cover: phpImage,
           description: this.$t('components.catalog.catchers.php'),
           repoUrl: 'https://github.com/codex-team/hawk.php',
           readmeUrl: 'https://github.com/codex-team/hawk.php/blob/master/README.md',
@@ -72,7 +77,7 @@ export default {
         {
           route: 'nodejs',
           name: 'Node.js',
-          cover: require('../../../../assets/catalog/nodejs.svg'),
+          cover: nodejsImage,
           description: this.$t('components.catalog.catchers.nodejs'),
           repoUrl: 'https://github.com/codex-team/hawk.nodejs',
           readmeUrl: 'https://github.com/codex-team/hawk.nodejs/blob/master/README.md',
@@ -80,7 +85,7 @@ export default {
         {
           route: 'python',
           name: 'Python',
-          cover: require('../../../../assets/catalog/python.svg'),
+          cover: pythonImage,
           description: this.$t('components.catalog.catchers.python'),
           repoUrl: 'https://github.com/codex-team/hawk.python',
           readmeUrl: 'https://github.com/codex-team/hawk.python/blob/master/README.md',
@@ -88,7 +93,7 @@ export default {
         {
           route: 'go',
           name: 'Go',
-          cover: require('../../../../assets/catalog/go/go@3x.jpg'),
+          cover: goImage,
           description: this.$t('components.catalog.catchers.go'),
           repoUrl: 'https://github.com/codex-team/hawk.go',
           readmeUrl: 'https://github.com/codex-team/hawk.go/blob/master/README.md',
@@ -96,7 +101,7 @@ export default {
         {
           route: 'kotlin',
           name: 'Kotlin',
-          cover: require('../../../../assets/catalog/kotlin/kotlin@3x.jpg'),
+          cover: kotlinImage,
           description: this.$t('components.catalog.catchers.kotlin'),
           repoUrl: 'https://github.com/codex-team/hawk.kotlin',
           readmeUrl: 'https://github.com/codex-team/hawk.kotlin/blob/master/README.md',

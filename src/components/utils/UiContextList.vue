@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 
 /**
@@ -53,7 +53,7 @@ export interface UiContextListItem {
   isDisabled?: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Icon,
   },

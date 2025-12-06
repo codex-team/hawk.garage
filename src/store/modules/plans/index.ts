@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import type { Plan } from '@/types/plan';
 import { FETCH_PLANS } from './actionTypes';
 import * as plansApi from '@/api/plans';
@@ -55,7 +54,7 @@ const mutations = {
    * @param plans - plans to set
    */
   [MutationType.SetPlans](state: PlansModuleState, plans: Plan[]): void {
-    Vue.set(state, 'list', plans);
+    state.list = plans;
   },
 };
 

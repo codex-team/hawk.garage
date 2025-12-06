@@ -32,14 +32,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EventHeader from './EventHeader.vue';
 import { HawkEvent } from '@/types/events';
 import { FETCH_EVENT, VISIT_EVENT } from '@/store/modules/events/actionTypes';
 import { mapGetters } from 'vuex';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventLayout',
   components: {
     PopupDialog,
@@ -137,16 +137,19 @@ export default Vue.extend({
     /** Override Popup Dialog animation */
 
     &.popup-dialog-animation {
-      &-enter-active {
+      &-enter-active,
+      &-appear-active {
         transition: all 100ms ease;
       }
 
-      &-enter {
+      &-enter-from,
+      &-appear-from {
         transform: scale(1.02);
         opacity: 1;
       }
 
-      &-enter-to {
+      &-enter-to,
+      &-appear-to {
         transform: none;
       }
 
@@ -173,6 +176,6 @@ export default Vue.extend({
   }
 
   .empty-event {
-    @apply --empty-placeholder;
+    @mixin empty-placeholder;
   }
 </style>

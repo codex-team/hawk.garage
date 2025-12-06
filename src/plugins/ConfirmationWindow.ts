@@ -1,12 +1,14 @@
-import type { VueConstructor } from 'vue';
+import type { App, ComponentPublicInstance } from 'vue';
+import { createApp } from 'vue';
 import ConfirmationWindow from '@/components/utils/ConfirmationWindow/ConfirmationWindow.vue';
 import type { ConfirmationWindowOptions } from '../components/utils/ConfirmationWindow/types';
-import i18n from '../i18n';
+import { i18n } from '../i18n';
+import Router from '../router';
 
 /**
  * Type of confirmation window component
  */
-type ConfirmationWindowComponentType = InstanceType<typeof ConfirmationWindow>;
+type ConfirmationWindowComponentType = ComponentPublicInstance<typeof ConfirmationWindow>;
 
 /**
  * Plugin for using confirmation window in components
@@ -15,42 +17,34 @@ type ConfirmationWindowComponentType = InstanceType<typeof ConfirmationWindow>;
 export default {
   /**
    * Install Vue plugin
-   * @param Vue - vue constructor
+   * @param app - Vue 3 app instance
    */
-  install: (Vue: VueConstructor): void => {
+  install: (app: App): void => {
     const vueContainer = document.createElement('div');
-    const confirmationContainer = new Vue({
-      i18n,
-      render: h => h(ConfirmationWindow),
-    });
+    const confirmationApp = createApp(ConfirmationWindow);
+
+    // Подключаем i18n и router к приложению confirmation window
+    confirmationApp.use(i18n);
+    confirmationApp.use(Router);
 
     document.body.appendChild(vueContainer);
-    confirmationContainer.$mount(vueContainer);
+    const confirmationInstance = confirmationApp.mount(vueContainer) as ConfirmationWindowComponentType;
 
-    const getConfirmationInstance = (): ConfirmationWindowComponentType => {
-      const [instance] = confirmationContainer.$children;
-
-      if (!instance) {
-        throw new Error('ConfirmationWindow instance is not mounted');
-      }
-
-      return instance as ConfirmationWindowComponentType;
-    };
-
-    Vue.prototype.$confirm = {
+    // Добавляем глобальное свойство для доступа к confirmation window
+    app.config.globalProperties.$confirm = {
       /**
        * Open confirmation window
        * @param options - confirmation window options
        */
       open(options?: ConfirmationWindowOptions) {
-        getConfirmationInstance().open(options);
+        confirmationInstance.open(options);
       },
 
       /**
        * Close confirmation window
        */
       close() {
-        getConfirmationInstance().close();
+        confirmationInstance.close();
       },
     };
   },

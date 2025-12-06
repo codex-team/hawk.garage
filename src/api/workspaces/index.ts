@@ -123,12 +123,12 @@ export async function getBalance(ids: string[]): Promise<Workspace> {
  * @param description - new description
  * @param image - logo image file
  */
-export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<boolean> {
-  return (await api.callOld(MUTATION_UPDATE_WORKSPACE, {
+export async function updateWorkspace(id: string, name: string, description: string, image?: File): Promise<APIResponse<{ updateWorkspace: boolean }>> {
+  return api.call(MUTATION_UPDATE_WORKSPACE, {
     id,
     name,
     description,
-  }, { image })).updateWorkspace;
+  }, { image });
 }
 
 /**

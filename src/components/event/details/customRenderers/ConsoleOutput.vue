@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 interface ConsoleLogEvent {
   method: string;
@@ -66,7 +66,7 @@ interface ConsoleLogEvent {
   styles?: string[];
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ConsoleOutput',
   props: {
     value: {
@@ -86,6 +86,7 @@ export default Vue.extend({
       if (Array.isArray(this.value)) {
         return this.value;
       }
+
       return Object.values(this.value);
     },
     displayedLogs(): ConsoleLogEvent[] {
@@ -108,9 +109,10 @@ export default Vue.extend({
      */
     getLogKey(log: ConsoleLogEvent, displayedIndex: number): string {
       // Find the actual index in the original logs array
-      const actualIndex = this.logs.findIndex((l) => l === log);
+      const actualIndex = this.logs.findIndex(l => l === log);
       // Use actual index if found, otherwise fallback to displayedIndex with message for uniqueness
       const index = actualIndex !== -1 ? actualIndex : displayedIndex;
+
       // Combine timestamp, message, and index for uniqueness
       return `${log.timestamp}_${log.message}_${index}`;
     },
@@ -163,7 +165,7 @@ export default Vue.extend({
      * @param {string} logKey - The unique identifier for the log entry
      */
     toggleStack(logKey: string) {
-      this.$set(this.expandedStack, logKey, !this.expandedStack[logKey]);
+      this.expandedStack[logKey] = !this.expandedStack[logKey];
     },
     /**
      * Sanitizes a string by replacing special HTML characters with their entities

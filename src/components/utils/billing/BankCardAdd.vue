@@ -9,13 +9,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from '../Icon.vue';
 
 /**
  * "Add a new card" button component
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'BankCardAdd',
   components: {
     Icon,

@@ -20,7 +20,7 @@
   },
   "layout": {
     "aside": {
-      "emptyProjectsList": "You haven't any integrations here.",
+      "emptyProjectsList": "You don't have any integrations here.",
       "createFirstProjectLabel": "Let’s create the new one.",
       "createFirstProjectButton": "Create a project"
     }
@@ -149,8 +149,7 @@
       "integrations": {
         "title": "Integrations",
         "projectTokenLabel": "Your Integration token for",
-        "revokeText": "You can {revoke} this token and get the new one.",
-        "revoke": "Revoke",
+        "revokeText": "You can <span class='projects-integrations-settings-page__revoke-button'>Revoke</span> this token and get the new one.",
         "revokeConfirmation": {
           "title": "Revoke integration token?",
           "description": "After this action, Hawk will stop accepting events with the old integration token. You will need to replace it with a new one in your project."
@@ -179,7 +178,7 @@
         "loop": "Loop",
         "loopDescription": "Alerts through the Loop Webhook",
         "telegram": "Telegram",
-        "telegramDescription": "Alerts through the <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
+        "telegramDescription": "Alerts through the {telegramLink}",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Frequency based",
@@ -317,7 +316,7 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Choose a plan",
-      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you have questions on plans, please contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "All plans includes all available features. If you have questions on plans, please contact us by {emailLink}",
       "onSuccess": "Workspace plan has been successfully changed",
       "onError": "Unable to change workspace plan due to an error, please try again later",
       "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",

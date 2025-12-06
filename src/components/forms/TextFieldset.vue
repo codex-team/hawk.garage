@@ -25,13 +25,13 @@
       class="input form-fieldset__input"
       :type="type || 'text'"
       :name="name"
-      :value="value"
+      :value="modelValue"
       :placeholder="placeholder"
       :required="required"
       :hidden="hidden"
       :disabled="disabled"
-      @input="$emit('input', $event.target.value)"
-    >
+      @input="$emit('update:modelValue', $event.target.value)"
+    />
   </fieldset>
 </template>
 
@@ -74,7 +74,7 @@ export default {
     /**
      * Value for v-model
      */
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },

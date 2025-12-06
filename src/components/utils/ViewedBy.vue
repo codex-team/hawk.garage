@@ -24,12 +24,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import EntityImage from './EntityImage.vue';
 import Icon from './Icon.vue';
 import { User } from '@/types/user';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ViewedBy',
   components: {
     EntityImage,

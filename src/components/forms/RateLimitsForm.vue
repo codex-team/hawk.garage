@@ -41,23 +41,24 @@
       </button>
     </div>
     <button
-        v-if="value"
-        class="button button--submit rate-limits-form__clear-button"
-        type="button"
-        :disabled="disabled"
-        @click="handleClear"
-      >
-        {{ $t('projects.settings.rateLimits.reset') }}
-      </button>
+      v-if="value"
+      class="button button--submit rate-limits-form__clear-button"
+      type="button"
+      :disabled="disabled"
+      @click="handleClear"
+    >
+      {{ $t('projects.settings.rateLimits.reset') }}
+    </button>
   </form>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+
+import { defineComponent } from 'vue';
 import NumberInput from './NumberInput.vue';
 import { ProjectRateLimitSettings } from '@/types/project';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RateLimitsForm',
   components: {
     NumberInput,
@@ -136,8 +137,11 @@ export default Vue.extend({
      */
     periodHumanReadable(): string | null {
       const s = String(this.currentPeriod).trim();
-      let seconds = Number.parseInt(s, 10);
-      if (Number.isNaN(seconds)) return null;
+      const seconds = Number.parseInt(s, 10);
+
+      if (Number.isNaN(seconds)) {
+        return null;
+      }
 
       const days = Math.floor(seconds / 86400);
       const hours = Math.floor((seconds % 86400) / 3600);
@@ -148,7 +152,7 @@ export default Vue.extend({
         ${this.$t('common.timeUnits.h', { hours })}
         ${this.$t('common.timeUnits.m', { minutes })}
         ${this.$t('common.timeUnits.s', { seconds: secs })}`.trim();
-      },
+    },
   },
   watch: {
     value: {

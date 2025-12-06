@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import RateLimitsForm from '../../forms/RateLimitsForm.vue';
 import UiButton from '../../utils/UiButton.vue';
 import { Project, ProjectRateLimitSettings } from '../../../types/project';
@@ -43,7 +43,7 @@ import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
 import notifier from 'codex-notifier';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RateLimits',
   components: {
     RateLimitsForm,
@@ -76,7 +76,7 @@ export default Vue.extend({
 
       const isFree
         = workspace.plan.monthlyCharge === 0
-          || workspace.plan.id === process.env.VUE_APP_FREE_PLAN_ID;
+          || workspace.plan.id === import.meta.env.VUE_APP_FREE_PLAN_ID;
 
       return !isFree;
     },

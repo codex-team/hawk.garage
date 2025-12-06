@@ -5,7 +5,7 @@
         v-if="!loading"
         class="event-header__date"
       >
-        {{ event.timestamp | prettyFullDate }}
+        {{ formattedFullDate }}
       </span>
 
       <div
@@ -50,7 +50,7 @@
       </div>
 
       <h1 class="event-header__title">
-        {{ (!loading) ? event.payload.title : $t('event.loading') | trim(300) }}
+        {{ trimmedTitle }}
       </h1>
       <Filepath
         class="event-header__location"
@@ -113,7 +113,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
+import { prettyFullDate, trimString } from '@/utils/filters';
 import TabBar, { TabInfo } from '../utils/TabBar.vue';
 import ViewedBy from '../utils/ViewedBy.vue';
 import UiButton from '../utils/UiButton.vue';
@@ -129,7 +130,7 @@ import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventHeader',
   components: {
     TabBar,
@@ -249,6 +250,22 @@ export default Vue.extend({
      */
     workspace(): Workspace {
       return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    },
+
+    /**
+     * Computed property that returns formatted full date for event timestamp
+     */
+    formattedFullDate(): string {
+      return prettyFullDate(this.event.timestamp);
+    },
+
+    /**
+     * Computed property that returns trimmed title or loading text
+     */
+    trimmedTitle(): string {
+      const text = !this.loading ? this.event.payload.title : this.$t('event.loading');
+
+      return trimString(text, 300);
     },
 
   },

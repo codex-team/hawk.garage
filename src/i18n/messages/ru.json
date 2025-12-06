@@ -48,7 +48,7 @@
       "refresh": "Обновить"
     },
     "feedbackButton": {
-      "message": "Оставить отзыв"
+      "message": "Поддержка"
     },
     "consoleOutput": {
       "show_previous": "Показать предыдущие",
@@ -149,8 +149,7 @@
       "integrations": {
         "title": "Интеграции",
         "projectTokenLabel": "Интеграционный токен для проекта",
-        "revokeText": "Вы можете {revoke} этот токен и получить новый.",
-        "revoke": "Отозвать",
+        "revokeText": "Вы можете <span class='projects-integrations-settings-page__revoke-button'>Отозвать</span> этот токен и получить новый.",
         "revokeConfirmation": {
           "title": "Отозвать интеграционный токен?",
           "description": "После этого действия Хоук перестанет принимать ивенты со старым интеграционным токеном. Вам будет необходимо заменить его на новый в вашем проекте."
@@ -179,7 +178,7 @@
         "loop": "Loop",
         "loopDescription": "Уведомления через Loop Webhook",
         "telegram": "Telegram",
-        "telegramDescription": "Уведомления через <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
+        "telegramDescription": "Уведомления через {telegramLink}",
         "receiveNewLabel": "Только новые события",
         "receiveNewDescription": "При первом получении",
         "receiveSeenMoreLabel": "По частоте появления",
@@ -317,7 +316,7 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Выберите план",
-      "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;<a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;{emailLink}",
       "onSuccess": "Тарифный план был успешно изменён",
       "onError": "Произошла ошибка, пожалуйста попробуйте ещё раз немного позже",
       "confirmSetToFreePlanDescription": "Старый план будет отменён. Неиспользованные ошибки и время не будут возвращены.",
@@ -492,14 +491,14 @@
       "since": "Начиная с",
       "title": "Повторы",
       "times": "Ни разу | {n} раз | {n} раза | {n} раз",
-      "days": " | {n} день | {n} дня | {n} дней"
+      "days": "Ни разу | {n} день | {n} дня | {n} дней"
     },
     "daily": {
       "lastTwoWeeks": "За последние две недели"
     },
     "usersAffected": {
       "total": "Всего",
-      "users": "{n} пользователь | {n} пользователя | {n} пользователей"
+      "users": "{n} пользователей | {n} пользователь | {n} пользователя | {n} пользователей"
     },
     "navigation": {
       "overview": "Обзор",
@@ -604,11 +603,11 @@
     ],
     "relativeTime": {
       "secondsAgo": "несколько секунд назад",
-      "minutesAgo": " | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
-      "hoursAgo": " | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
-      "daysAgo": " | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
-      "monthsAgo": " | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
-      "yearsAgo": " | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
+      "minutesAgo": "только что | {numberOfMinutes} минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
+      "hoursAgo": "совсем недавно | {numberOfHours} час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
+      "daysAgo": "вчера | {numberOfDays} дней назад | {numberOfDays} дней назад",
+      "monthsAgo": "в этом месяце | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
+      "yearsAgo": "в этом году | год назад | {numberOfYears} года назад | {numberOfYears} лет назад"
     },
     "readMore": "Подробнее"
   },

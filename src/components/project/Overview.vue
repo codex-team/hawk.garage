@@ -4,7 +4,7 @@
       v-if="project"
       v-infinite-scroll="() => loadMoreEvents(false)"
       :infinite-scroll-disabled="false"
-      infinite-scroll-distance="300"
+      infinite-scroll-distance="500"
       class="project-overview__content"
     >
       <ProjectChart
@@ -29,14 +29,7 @@
 
 <script>
 import EventsList from './EventsList.vue';
-import Chart from '../events/Chart';
-import { mapGetters } from 'vuex';
-import {
-  FETCH_CHART_DATA
-} from '../../store/modules/projects/actionTypes';
 import FiltersBar from './FiltersBar';
-import notifier from 'codex-notifier';
-import NotFoundError from '@/errors/404';
 import BlockedWorkspaceBanner from '../utils/BlockedWorkspaceBanner.vue';
 import ProjectChart from './ProjectChart.vue';
 
@@ -90,9 +83,6 @@ export default {
     isWorkspaceBlocked() {
       return this.workspace?.isBlocked;
     },
-
-    ...mapGetters([]),
-
   },
 
   /**
@@ -160,7 +150,7 @@ export default {
 </script>
 
 <style>
-@import '../../styles/custom-properties.css';
+  @import '../../styles/custom-properties.css';
 
 .project-overview {
   display: flex;
@@ -171,7 +161,7 @@ export default {
   &__content {
     align-self: stretch;
     overflow-y: auto;
-    @apply --hide-scrollbar;
+    @mixin hide-scrollbar;
   }
 
   &__events {

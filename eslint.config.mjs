@@ -36,22 +36,16 @@ export default [
       '@typescript-eslint/strict-boolean-expressions': 'warn',
       '@typescript-eslint/no-empty-object-type': 'warn',
       '@typescript-eslint/no-redundant-type-constituents': 'warn',
-      '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/require-await': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
 
       'n/no-missing-import': 'warn',
       'n/no-unsupported-features/node-builtins': 'warn',
 
-      /**
-       * @todo remove after migration to Vue and Vite
-       */
-      'n/prefer-global/process': 'off',
-      'n/prefer-global/buffer': 'off',
-
-      // Отключаем no-unused-vars в пользу @typescript-eslint/no-unused-vars
+      // Disable no-unused-vars in favor of @typescript-eslint/no-unused-vars
       'no-unused-vars': 'off',
 
-      // Используем правило для unused vars
+      // Use rule for unused vars
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -92,27 +86,10 @@ export default [
       'n/no-extraneous-import': 'warn',
       '@typescript-eslint/require-await': 'off',
       'no-console': 'warn',
-
-      /**
-       * @todo remove after migration to Vite
-       */
-      'n/prefer-global/process': 'off',
-      'n/prefer-global/buffer': 'off',
     },
   },
   {
     files: ['**/*.vue'],
-
-    /**
-     * @todo remove after migration to Vite
-     */
-    languageOptions: {
-      globals: {
-        require: 'readonly',
-        process: 'readonly',
-        Buffer: 'readonly',
-      },
-    },
     rules: {
       /**
        * Vue files should be written on ts so
@@ -121,19 +98,6 @@ export default [
        */
       'jsdoc/require-returns': 'off',
       'jsdoc/require-param-type': 'off',
-      '@typescript-eslint/require-await': 'off',
-
-      /**
-       * @todo remove after migration to Vue3
-       */
-      'vue/no-deprecated-filter': 'off',
-      'vue/no-deprecated-v-on-native-modifier': 'off',
-      'vue/no-reserved-component-names': 'off',
-      'vue/no-deprecated-props-default-this': 'off',
-      'vue/require-slots-as-functions': 'off',
-      'vue/no-deprecated-destroyed-lifecycle': 'off',
-      'vue/v-on-event-hyphenation': 'off',
-      // Отключаем no-unused-vars в пользу @typescript-eslint/no-unused-vars
       'no-unused-vars': 'off',
     },
   },
