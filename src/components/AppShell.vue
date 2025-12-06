@@ -24,7 +24,7 @@
             :key="project.id"
             :search-query="searchQuery"
             :project-id="project.id"
-            @click.native="onProjectMenuItemClick(project)"
+            @click="onProjectMenuItemClick(project)"
           />
         </div>
         <EmptyProjectsList
@@ -40,6 +40,7 @@
     </div>
     <component
       :is="modalComponent"
+      v-if="modalComponent"
       v-bind="modalDialogData"
       @close="onModalClose"
     />
@@ -47,7 +48,7 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import { defineComponent, markRaw } from 'vue';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
@@ -61,10 +62,9 @@ import { FETCH_CURRENT_USER } from '../store/modules/user/actionTypes';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDialog/actionTypes';
 import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
-
 import ProjectsMenuSkeleton from './aside/ProjectsMenuSkeleton';
 
-export default {
+export default defineComponent({
   name: 'AppShell',
   components: {
     Sidebar,
@@ -185,7 +185,18 @@ export default {
         return;
       }
 
-      this.modalComponent = Vue.component(componentName, () => import(/* webpackChunkName: 'modals' */ `./modals/${componentName}`));
+      import(`./modals/${componentName}.vue`)
+        .then((module) => {
+          /**
+           * Mark the modal component as raw to avoid reactivity
+           */
+          this.modalComponent = markRaw(module.default);
+        })
+        .catch((error) => {
+          console.error(`Failed to load modal component: ${componentName}`, error);
+
+          this.modalComponent = null;
+        });
     },
     /**
      * When the workspace changes user goes to the '/' or 'workspace/:workspaceId' routes
@@ -303,7 +314,7 @@ export default {
       this.$store.dispatch(SET_MODAL_DIALOG, { component: 'WorkspaceCreationDialog' });
     },
   },
-};
+});
 
 </script>
 
@@ -328,7 +339,7 @@ export default {
     background-color: var(--color-bg-main);
 
     &__right-column {
-      @apply --hide-scrollbar;
+      @mixin hide-scrollbar;
       width: 342px;
       overflow-y: auto;
     }

@@ -16,9 +16,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { Component } from 'vue';
+import { defineComponent, Component, markRaw } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'Popover',
   data(): {
     /**
@@ -65,19 +65,21 @@ export default Vue.extend({
       /**
        * Popover child component need be display.
        */
-      popoverComponent: undefined,
+      popoverComponent: undefined as Component | undefined,
       /**
        * Popover child component props.
        */
-      popoverComponentProps: undefined,
+      popoverComponentProps: undefined as Record<string, unknown> | undefined,
       /**
        * Popover position props.
        */
       popoverProps: {
-        showBelowElement: undefined,
+        showBelowElement: undefined as Element | undefined,
       },
-
-      hidingDelay: undefined,
+      /**
+       * Provides some delay between mouse leave and hiding
+       */
+      hidingDelay: undefined as ReturnType<typeof setTimeout> | undefined,
     };
   },
   computed: {
@@ -119,7 +121,7 @@ export default Vue.extend({
         return;
       }
 
-      this.popoverComponent = options.component;
+      this.popoverComponent = markRaw(options.component);
       this.popoverComponentProps = options.componentProps;
       this.popoverProps = options.popoverProps;
       this.isOpened = true;
@@ -193,14 +195,14 @@ export default Vue.extend({
   transition: transform 150ms cubic-bezier(0.29, 0.97, 0.82, 1.43), opacity 150ms ease;
 }
 
-.popover-appearing-enter,
+.popover-appearing-enter-from,
 .popover-appearing-leave-to {
   transform: var(--transform-offset) scale(1.05) translateY(6px);
   opacity: 0;
 }
 
 .popover-appearing-enter-to,
-.popover-appearing-leave {
+.popover-appearing-leave-from {
   transform: var(--transform-offset);
   opacity: 1;
 }

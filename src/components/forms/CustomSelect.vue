@@ -12,14 +12,14 @@
       class="input custom-select__select"
     >
       <EntityImage
-        v-if="needImage"
-        :id="value.id || '1'"
+        v-if="needImage && currentValue && currentValue.id"
+        :id="currentValue.id || '1'"
         class="custom-select__option-image"
-        :image="value.image"
-        :name="value.name"
+        :image="currentValue.image"
+        :name="currentValue.name"
         size="28"
       />
-      {{ value.name }}
+      {{ currentValue?.name }}
       <Icon
         class="custom-select__expand-icon"
         symbol="arrow-down"
@@ -34,7 +34,7 @@
           v-for="option in filteredOption"
           :key="option.id"
           class="custom-select__option"
-          @click="$emit('input', option)"
+          @click="$emit('update:modelValue', option)"
         >
           <EntityImage
             v-if="needImage"
@@ -61,14 +61,15 @@ export default {
     EntityImage,
     Icon,
   },
+  emits: ['update:modelValue'],
   props: {
     options: {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       type: Object,
-      default: () => ({}),
+      default: () => null,
     },
     label: {
       type: String,
@@ -85,8 +86,13 @@ export default {
     };
   },
   computed: {
+    currentValue() {
+      return this.modelValue ?? {};
+    },
     filteredOption() {
-      return this.options.filter(opt => opt.id !== this.value.id);
+      const currentId = this.currentValue && this.currentValue.id;
+
+      return this.options.filter(opt => opt.id !== currentId);
     },
   },
   methods: {
@@ -152,13 +158,13 @@ export default {
         transition: none;
       }
 
-      &.options-appear-enter,
+      &.options-appear-enter-from,
       &.options-appear-leave-to {
         transform: translateY(-10px);
       }
 
       &.options-appear-enter-to,
-      &.options-appear-leave {
+      &.options-appear-leave-from {
         transform: none;
       }
     }

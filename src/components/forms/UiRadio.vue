@@ -2,21 +2,21 @@
   <div class="ui-radio">
     <input
       :id="id"
-      :value="value"
+      :value="modelValue"
       :checked="checked"
       :name="name"
       type="radio"
-      @input="$emit('input', value)"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement)?.value)"
     >
     <Icon symbol="tick" />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from '../utils/Icon.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UiRadio',
   components: {
     Icon,
@@ -41,7 +41,7 @@ export default Vue.extend({
     /**
      * Value binded with v-model
      */
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },

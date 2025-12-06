@@ -19,12 +19,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import UiButton from '../utils/UiButton.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { FETCH_PLANS } from '@/store/modules/plans/actionTypes';
-export default Vue.extend({
+export default defineComponent({
   name: 'EventLimitModal',
   components: {
     PopupDialog,

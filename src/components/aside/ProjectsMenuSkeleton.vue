@@ -26,14 +26,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import SkeletonAvatar from '../utils/SkeletonAvatar.vue';
 import SkeletonBar from '../utils/SkeletonBar.vue';
 
 /**
  * Skeleton loader for projects menu items
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectsMenuSkeleton',
   components: {
     SkeletonAvatar,

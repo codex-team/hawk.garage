@@ -5,12 +5,12 @@
         {{ $t('event.repetitions.since') }}
       </div>
       <div class="event-daily__since">
-        {{ event.originalTimestamp | prettyFullDate }}
+        {{ formattedDate }}
         <span
           v-if="daysRepeating > 1"
           class="event-daily__since-days"
         >
-          — {{ $tc('event.repetitions.days', daysRepeating) }}
+          — {{ $t('event.repetitions.days', { n: daysRepeating }) }}
         </span>
       </div>
     </div>
@@ -24,13 +24,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Chart from '../events/Chart.vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { HawkEvent } from '../../types/events';
+import { prettyFullDate } from '../../utils/filters';
 import { ChartLine } from '@/types/chart';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'EventDaily',
   components: {
     Chart,
@@ -53,7 +54,10 @@ export default Vue.extend({
     },
   },
   data: function (): {
-    chartData: ChartLine[]
+    /**
+     * Set of lines for a chart
+     */
+    chartData: ChartLine[];
   } {
     return {
       /**
@@ -63,6 +67,17 @@ export default Vue.extend({
     };
   },
   computed: {
+    /**
+     * Return formatted date using prettyFullDate utility
+     */
+    formattedDate(): string {
+      if (!this.event?.originalTimestamp) {
+        return '';
+      }
+
+      return prettyFullDate(this.event.originalTimestamp);
+    },
+
     /**
      * Return concrete date
      */

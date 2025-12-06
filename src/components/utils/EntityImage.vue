@@ -10,13 +10,13 @@
       <Icon symbol="user-placeholder" />
     </template>
     <template v-else>
-      {{ !isImageShowing ? $options.filters.abbreviation(name) : '' }}
+      {{ !isImageShowing ? nameAbbreviation : '' }}
     </template>
   </div>
 </template>
 
 <script>
-import { getEntityColor } from '../../utils';
+import { abbreviation, getEntityColor } from '../../utils';
 import Icon from './Icon';
 
 export default {
@@ -138,6 +138,15 @@ export default {
      */
     radius() {
       return this.size / 3.6;
+    },
+
+    /**
+     * Abbreviation of the entity name
+     *
+     * @returns {string}
+     */
+    nameAbbreviation() {
+      return this.name ? abbreviation(this.name) : '';
     },
   },
   watch: {

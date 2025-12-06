@@ -8,7 +8,7 @@
   >
     <input
       :id="id"
-      :checked="value"
+      :checked="modelValue"
       :name="name"
       type="checkbox"
       :disabled="disabled"
@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from '../utils/Icon.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UiCheckbox',
   components: {
     Icon,
@@ -46,7 +46,7 @@ export default Vue.extend({
     /**
      * Value binded with v-model
      */
-    value: {
+    modelValue: {
       type: Boolean,
       default: null,
     },
@@ -73,7 +73,7 @@ export default Vue.extend({
         return;
       }
 
-      this.$emit('input', !this.value);
+      this.$emit('update:modelValue', !this.modelValue);
     },
   },
 });

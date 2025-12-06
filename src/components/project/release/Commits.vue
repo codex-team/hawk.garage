@@ -19,11 +19,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import CommitItem from '../../utils/CommitItem.vue';
 import EmptyState from '../../utils/EmptyState.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ReleaseCommits',
   components: { CommitItem,
     EmptyState },

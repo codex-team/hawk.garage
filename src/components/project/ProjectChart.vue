@@ -12,7 +12,7 @@
       <div class="project-chart__controls-today">
         {{ $t('projects.chart.now') }}
         <span class="project-chart__controls-today-count">
-          {{ nowCount | spacedNumber }}
+          {{ spacedNumber(nowCount) }}
         </span>
         <span
           v-if="difference !== 0"
@@ -21,7 +21,7 @@
             'project-chart__controls-today-difference-decrease': difference < 0
           }"
         >
-          {{ Math.abs(difference) | spacedNumber }}
+          {{ spacedNumber(Math.abs(difference)) }}
         </span>
       </div>
     </div>
@@ -33,13 +33,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Chart from '../events/Chart.vue';
 import UiSelect, { UiSelectOption } from '../utils/UiSelect.vue';
 import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes.js';
 import { ChartLine, ChartLineColor } from '@/types/chart';
+import { spacedNumber as spacedNumberFilter } from '@/utils/filters';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectChart',
   components: {
     Chart,
@@ -57,11 +58,11 @@ export default Vue.extend({
    * @returns {{ chartData: ChartItem[]; chartRange: string; chartGrouping: string; rangeOptions: UiSelectOption[] }}
    */
   data(): {
-      chartData: ChartLine[];
-      chartRange: string;
-      chartGrouping: string;
-      rangeOptions: UiSelectOption[];
-    } {
+    chartData: ChartLine[];
+    chartRange: string;
+    chartGrouping: string;
+    rangeOptions: UiSelectOption[];
+  } {
     return {
       /**
        * Data for a chart
@@ -285,6 +286,16 @@ export default Vue.extend({
      */
     isRangeAvailable(range: string): boolean {
       return true;
+    },
+
+    /**
+     * Filter to format number with spaces
+     *
+     * @param value - number value
+     * @returns formatted number
+     */
+    spacedNumber(value: number): string {
+      return spacedNumberFilter(value);
     },
   },
 });

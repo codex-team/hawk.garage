@@ -6,14 +6,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 type SkeletonAvatarSize = 'xxs' | 'small' | 'medium' | 'large';
 
 /**
  * Reusable skeleton avatar component with animated gradient
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'SkeletonAvatar',
   props: {
     /**
@@ -31,10 +31,10 @@ export default Vue.extend({
 </script>
 
 <style>
-@import '../../styles/custom-properties.css';
+  @import "../../styles/custom-properties.css";
 
-.skeleton-avatar {
-  @apply --skeleton-base;
+  .skeleton-avatar {
+  @mixin skeleton-base;
 
   --size: 26px;
   width: var(--size);

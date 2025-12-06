@@ -75,7 +75,7 @@
             :key="`tooltip-line-${line.label}-${index}`"
             class="chart__pointer-tooltip-number"
           >
-            <AnimatedCounter :value="(getLineValueAtHoveredIndex(line, hoveredIndex)) | spacedNumber" />
+            <AnimatedCounter :value="formatSpacedNumber(getLineValueAtHoveredIndex(line, hoveredIndex))" />
             {{ line.label }}
             <span
               class="chart__pointer-tooltip-dot"
@@ -89,8 +89,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-
+import { defineComponent } from 'vue';
+import { spacedNumber, prettyDateFromTimestamp } from '@/utils/filters';
 import { throttle } from '@/utils';
 import { ChartItem, ChartLine as ChartLineInterface } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
@@ -103,7 +103,7 @@ type ChartData = {
   hoveredIndex: number;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: 'Chart',
   components: {
     AnimatedCounter,
@@ -223,9 +223,15 @@ export default Vue.extend({
     /**
      * Filtered points to display in x-legend based on visibleXLegendItems step
      */
-    visibleLegendPoints(): Array<{ point: ChartItem; index: number }> {
+    visibleLegendPoints(): Array<{
+      point: ChartItem;
+      index: number;
+    }> {
       const step = this.visibleXLegendItems;
-      const result: Array<{ point: ChartItem; index: number }> = [];
+      const result: Array<{
+        point: ChartItem;
+        index: number;
+      }> = [];
 
       for (let i = 0; i < this.firstLineData.length; i = i + step) {
         result.push({
@@ -272,6 +278,45 @@ export default Vue.extend({
       /* Default center alignment */
       return 'center';
     },
+
+    /**
+     * Computed property that returns formatted today count with spaces
+     */
+    formattedTodayCount(): string {
+      return spacedNumber(this.todayCount);
+    },
+
+    /**
+     * Computed property that returns formatted difference with spaces
+     */
+    formattedDifference(): string {
+      return spacedNumber(Math.abs(this.difference));
+    },
+
+    /**
+     * Computed property that returns a function to format count by index
+     */
+    formatCountByIndex() {
+      return (index: number) => {
+        return spacedNumber(this.points[index]?.count || 0);
+      };
+    },
+
+    /**
+     * Computed property that returns a function to format date by index
+     */
+    formatDateByIndex() {
+      return (index: number) => {
+        return prettyDateFromTimestamp(this.points[index]?.timestamp * 1000 || 0);
+      };
+    },
+
+    /**
+     * Computed property that returns array of formatted dates for all points
+     */
+    formattedDates(): string[] {
+      return this.points.map(day => prettyDateFromTimestamp(day.timestamp * 1000));
+    },
   },
   created() {
     this.onResize = throttle(this.windowResized, 200);
@@ -284,7 +329,7 @@ export default Vue.extend({
 
     window.addEventListener('resize', this.onResize);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {
@@ -512,6 +557,16 @@ export default Vue.extend({
 
         return `${day} ${this.$t('common.shortMonths[' + month + ']')}, ${paddedHours}:${paddedMinutes}`;
       }
+    },
+
+    /**
+     * Formats number with spaces
+     *
+     * @param value - number value
+     * @returns formatted number
+     */
+    formatSpacedNumber(value: number): string {
+      return spacedNumber(value);
     },
   },
 });

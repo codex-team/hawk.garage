@@ -17,10 +17,7 @@
         </span>
         <router-link
           v-if="workspace.isBlocked"
-          :to="{
-            name: 'workspace-settings-billing',
-            params: { workspaceId: workspace.id },
-          }"
+          :to="{ name: 'workspace-settings-billing', params: { workspaceId: workspace.id } }"
           class="workspace-info__blocked-link"
         >
           <StatusBlock
@@ -32,10 +29,7 @@
       </div>
       <router-link
         class="workspace-info__settings-link"
-        :to="{
-          name: 'workspace-settings',
-          params: { workspaceId: workspace.id },
-        }"
+        :to="{ name: 'workspace-settings', params: { workspaceId: workspace.id } }"
       >
         {{ $t("workspaces.settings.label") }}
       </router-link>
@@ -47,15 +41,12 @@
     >
       <router-link
         v-if="isAdmin"
-        :to="{
-          name: 'workspace-settings-billing',
-          params: { workspaceId: workspace.id },
-        }"
+        :to="{ name: 'workspace-settings-billing', params: { workspaceId: workspace.id } }"
       >
         <CircleProgress
           ref="events-count-circle"
           :current="eventsCount"
-          :max="plan.eventsLimit || 0"
+          :max="planEventsLimit"
         />
       </router-link>
     </div>
@@ -63,13 +54,13 @@
       v-if="isAdmin"
       class="workspace-info__project-creation-button"
       symbol="plus"
-      @click.native="createProjectButtonClicked"
+      @click="createProjectButtonClicked"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from '../utils/Icon.vue';
 import EntityImage from '../utils/EntityImage.vue';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
@@ -78,7 +69,7 @@ import CircleProgress from '../utils/CircleProgress.vue';
 import EventsLimitIndicator from './EventsLimitIndicator.vue';
 import StatusBlock from '../utils/StatusBlock.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'WorkspaceInfo',
   components: {
     EntityImage,
@@ -115,8 +106,16 @@ export default Vue.extend({
      *
      * @returns {Plan} - return the plan of the
      */
-    plan(): Plan {
+    plan(): Plan | undefined {
       return this.workspace.plan;
+    },
+    /**
+     * Returns workspace events limit or zero if plan is not available
+     *
+     * @returns {number} - events limit defined by current plan
+     */
+    planEventsLimit(): number {
+      return this.plan?.eventsLimit ?? 0;
     },
     /**
      * Total number of used events since the last charge date
@@ -143,7 +142,7 @@ export default Vue.extend({
           isCurrentUserAdmin: this.isAdmin,
         },
         popoverProps: {
-          showBelowElement: (this.$refs['events-count-circle'] as Vue).$el,
+          showBelowElement: this.$refs['events-count-circle'].$el,
         },
       });
     },

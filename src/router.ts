@@ -1,19 +1,16 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
 import AppShell from './components/AppShell.vue';
 
-Vue.use(Router);
-
 /**
  * Disable return-type rule to leave router 'component' imports with short syntax
  */
 
-const router = new Router({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -70,7 +67,7 @@ const router = new Router({
           path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
-          redirect: 'workspace/:workspaceId/settings/general',
+          redirect: to => `/workspace/${to.params.workspaceId.toString()}/settings/general`,
           children: [
             {
               path: 'general',

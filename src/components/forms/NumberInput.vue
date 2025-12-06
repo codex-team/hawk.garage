@@ -11,7 +11,7 @@
       class="input form-fieldset__input"
       type="number"
       :name="name"
-      :value="value"
+      :value="modelValue"
       :min="min"
       :max="max"
       :placeholder="placeholder"
@@ -61,7 +61,7 @@ export default {
     /**
      * Value for v-model
      */
-    value: {
+    modelValue: {
       type: [String, Number],
       default: null,
     },
@@ -132,7 +132,7 @@ export default {
       }
     },
     handleInput(event) {
-      this.$emit('input', event.target.value);
+      this.$emit('update:modelValue', event.target.value);
       this.updateInvalidState(event.target.value);
     },
     handleBeforeInput(event) {
@@ -151,13 +151,13 @@ export default {
       const numericData = pastedData.replace(/[^0-9]/g, '');
 
       if (numericData) {
-        this.$emit('input', numericData);
+        this.$emit('update:modelValue', numericData);
         this.updateInvalidState(numericData);
       }
       event.preventDefault();
     },
   },
-}
+};
 </script>
 
 <style>

@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 import UIContextList, { UiContextListItem } from './UiContextList.vue';
 
@@ -59,7 +59,7 @@ export interface UiSelectOption {
  * @todo support closing by click outside @see https://vueuse.org/core/onClickOutside/
  */
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Icon,
     UIContextList,
@@ -98,7 +98,7 @@ export default Vue.extend({
     /**
      * Current input value
      */
-    value: {
+    modelValue: {
       type: String,
       default: undefined,
     },
@@ -113,7 +113,7 @@ export default Vue.extend({
       /**
        * Current input value stored locally
        */
-      internalValue: this.value,
+      internalValue: this.modelValue,
     };
   },
   computed: {
@@ -138,14 +138,14 @@ export default Vue.extend({
     },
   },
   watch: {
-    value: {
+    modelValue: {
       handler(newVal: string): void {
         this.internalValue = newVal;
       },
     },
   },
   mounted(): void {
-    this.internalValue = this.value;
+    this.internalValue = this.modelValue;
   },
   methods: {
     /**
@@ -162,7 +162,7 @@ export default Vue.extend({
      */
     onOptionActivate(option: UiSelectOption): void {
       this.internalValue = option.value;
-      this.$emit('input', option.value);
+      this.$emit('update:modelValue', option.value);
       this.close();
     },
   },

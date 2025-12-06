@@ -25,11 +25,11 @@
           v-if="paymentData && paymentData.isCardLinkOperation"
           class="payment-details__description"
         >
-          <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ nextPaymentDateInSeconds | prettyFullDate(false) }}</p>
+          <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ prettyFullDate(nextPaymentDateInSeconds) }}</p>
           <p>💳 {{ $t('billing.cardLinking.howItWorks') }}</p>
           <ul>
             <li>– {{ $t('billing.cardLinking.step1') }}</li>
-            <li>– {{ $t('billing.cardLinking.step2', { date: $options.filters.prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
+            <li>– {{ $t('billing.cardLinking.step2', { date: prettyFullDate(nextPaymentDateInSeconds) }) }}</li>
           </ul>
         </div>
 
@@ -189,7 +189,7 @@
 
           {{ $t('billing.paymentDetails.invoice.description') }}
           <a
-            :href="`mailto:team@hawk.so?subject=${encodeURIComponent($t('billing.paymentDetails.invoice.emailSubject', { workspaceName: workspace.name, workspaceId: workspace.id, planName: plan.name }))}`"
+            :href="invoiceEmailHref"
             target="_blank"
             class="payment-details__invoice-email"
           >
@@ -209,7 +209,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
@@ -232,7 +232,7 @@ import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
-import { getCurrencySign } from '@/utils';
+import { getCurrencySign, prettyFullDate } from '@/utils';
 
 /**
  * Id for the 'New card' option in select
@@ -258,7 +258,7 @@ function cardToSelectOption(card: BankCard): CustomSelectOption {
   };
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'PaymentDetailsDialog',
   components: {
     Icon,
@@ -409,6 +409,19 @@ export default Vue.extend({
       return this.$t('billing.paymentDetails.goToPaymentService').toString();
     },
 
+    invoiceEmailHref(): string {
+      const workspaceName = this.workspace?.name ?? '';
+      const workspaceId = this.workspace?.id ?? '';
+      const planName = this.plan?.name ?? '';
+      const subject = this.$t('billing.paymentDetails.invoice.emailSubject', {
+        workspaceName,
+        workspaceId,
+        planName,
+      });
+
+      return `mailto:team@hawk.so?subject=${encodeURIComponent(subject as string)}`;
+    },
+
     /**
      * Next payment date in seconds
      */
@@ -486,6 +499,7 @@ export default Vue.extend({
     }
   },
   methods: {
+    prettyFullDate,
     /**
      * Open service payment
      */
@@ -596,7 +610,7 @@ export default Vue.extend({
 
       widget.pay(method,
         {
-          publicId: process.env.VUE_APP_CLOUDPAYMENTS_PUBLIC_ID,
+          publicId: import.meta.env.VITE_CLOUDPAYMENTS_PUBLIC_ID,
           description: this.$t(titleKey, {
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,

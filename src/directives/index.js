@@ -1,9 +1,21 @@
-import Vue from 'vue';
-
 import clickOutside from './clickOutside';
 import copyable from './copyable';
-import infiniteScroll from 'vue-infinite-scroll';
-Vue.use(infiniteScroll);
+import infiniteScroll from './infiniteScroll';
 
-Vue.directive('click-outside', clickOutside);
-Vue.directive('copyable', copyable);
+/**
+ * Setup custom directives
+ *
+ * @param {App} app - Vue application instance
+ */
+export default function setupDirectives(app) {
+  /**
+   * Register infinite scroll directive (Vue 3 compatible)
+   */
+  app.directive('infinite-scroll', infiniteScroll);
+
+  /**
+   * Register click outside directive
+   */
+  app.directive('click-outside', clickOutside);
+  app.directive('copyable', copyable);
+}

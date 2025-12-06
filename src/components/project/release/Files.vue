@@ -52,11 +52,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { ReleaseDetails } from '@/types/release';
 import EmptyState from '../../utils/EmptyState.vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ReleaseFiles',
   components: { EmptyState },
   props: {

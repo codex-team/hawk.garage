@@ -5,9 +5,9 @@
       class="n-rule__actions"
     >
       <UiSwitch
-        :value="rule.isEnabled"
+        :model-value="rule.isEnabled"
         :label="$t('projects.settings.notifications.ruleIsEnabled')"
-        @input="toggleEnabledState"
+        @update:model-value="toggleEnabledState"
       />
       <TooltipMenu
         class="n-rule__dots"
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import {
   ProjectNotificationsChannels,
   ProjectNotificationsRule,
@@ -81,7 +81,7 @@ import UiSwitch from '@/components/forms/UiSwitch.vue';
 import { ProjectNotificationRulePointer } from '../../../types/project-notifications-mutations';
 import { TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE } from '../../../store/modules/projects/actionTypes';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsNotificationsRule',
   components: {
     StatusBlock,
@@ -120,10 +120,15 @@ export default Vue.extend({
      */
     notEmptyChannels(): ProjectNotificationsChannels {
       const result = {} as ProjectNotificationsChannels;
+      const channels = this.rule?.channels;
 
-      Object.entries(this.rule.channels as ProjectNotificationsChannels)
-        .filter(([_name, channel]) => channel ? channel.endpoint !== '' : false)
-        .filter(([_name, channel]) => channel ? channel.isEnabled === true : false)
+      if (!channels) {
+        return result;
+      }
+
+      Object.entries(channels as ProjectNotificationsChannels)
+        .filter(([, channel]) => channel ? channel.endpoint !== '' : false)
+        .filter(([, channel]) => channel ? channel.isEnabled === true : false)
         .forEach(([name, channel]) => {
           result[name] = channel;
         });
@@ -181,10 +186,10 @@ export default Vue.extend({
 </script>
 
 <style>
-  @import url('../../../styles/custom-properties.css');
+  @import '../../../styles/custom-properties.css';
 
   .n-rule {
-    @apply --font-small;
+    @mixin font-small;
     max-width: var(--width-popup-form-container);
 
     padding: 20px 0;
