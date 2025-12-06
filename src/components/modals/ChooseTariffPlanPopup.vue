@@ -146,7 +146,7 @@ export default defineComponent({
       if (this.selectedPlan.monthlyCharge === 0) {
         this.$confirm.open({
           actionType: ActionType.SUBMIT,
-          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToFreePlanDescription').toString(),
+          description: this.$t('workspaces.chooseTariffPlanDialog.confirmSetToFreePlanDescription').toString(),
           onConfirm: async () => {
             const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
               workspaceId: this.workspaceId,
@@ -197,7 +197,7 @@ export default defineComponent({
       if (!this.workspace.isBlocked) {
         this.$confirm.open({
           actionType: ActionType.SUBMIT,
-          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          description: this.$t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
           onConfirm: async () => {
             await this.$store.dispatch(SET_MODAL_DIALOG, {
               component: 'PaymentDetailsDialog',

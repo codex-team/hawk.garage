@@ -200,21 +200,21 @@ export default defineComponent({
 
       return [
         {
-          title: this.$i18n.t('event.navigation.overview') as string,
+          title: this.$t('event.navigation.overview') as string,
           routeName: 'event-overview',
         },
         {
-          title: this.$i18n.t('event.navigation.repetitions') as string,
+          title: this.$t('event.navigation.repetitions') as string,
           routeName: 'event-repetitions',
           badge: !this.loading ? this.event.totalCount : 0,
         },
         {
-          title: this.$i18n.t('event.navigation.daily') as string,
+          title: this.$t('event.navigation.daily') as string,
           routeName: 'event-daily',
         },
         ...(showAffectedUsers
           ? [{
-              title: this.$i18n.t('event.navigation.usersAffected') as string,
+              title: this.$t('event.navigation.usersAffected') as string,
               routeName: 'event-affected',
               badge: this.event.usersAffected,
             }]
