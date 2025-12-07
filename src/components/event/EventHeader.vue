@@ -406,14 +406,14 @@ export default defineComponent({
     }
 
     &__button--ai {
-      color: color-mod(var(--color-indicator-ai) alpha(85%));
+      color: var(--color-indicator-ai);
       background-color: transparent;
-      border-color: var(--color-indicator-ai);
+      border-color: color-mod(var(--color-indicator-ai) alpha(20%));
 
       &:not(&--disabled):hover {
-        color: var(--color-indicator-ai);
+        color: color-mod(var(--color-indicator-ai) lightness(75%));
         background-color: transparent;
-        border-color: var(--color-indicator-ai);
+        border-color: color-mod(var(--color-indicator-ai) alpha(26%));
       }
     }
 
