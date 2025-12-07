@@ -117,12 +117,12 @@ export default defineComponent({
         onConfirm: async () => {
           try {
             await this.$store.dispatch(REMOVE_PROJECT, this.project!.id);
-            await this.$router.push({ name: 'home' });
             notifier.show({
               message: this.$t('projects.settings.removeSuccess').toString(),
               style: 'success',
               time: 10000,
             });
+            await this.$router.push({ name: 'home' });
           } catch {
             notifier.show({
               message: this.$t('projects.settings.removeError').toString(),
