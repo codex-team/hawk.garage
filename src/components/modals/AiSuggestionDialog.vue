@@ -45,9 +45,9 @@ import Spinner from '../utils/Spinner.vue';
 import CodeFragment from '../utils/CodeFragment.vue';
 import * as eventsApi from '@/api/events';
 import { getMarkdownRenderer, splitTextAndCodeSegments } from '@/utils/markdown';
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'AiSuggestionDialog',
   components: {
     PopupDialog,
