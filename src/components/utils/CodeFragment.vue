@@ -226,7 +226,7 @@ export default {
      * @returns {boolean}
      */
     isTypeScriptScope() {
-      return this.filename.split('.').pop() === 'ts';
+      return this.filename?.split('.').pop() === 'ts';
     },
 
     /**

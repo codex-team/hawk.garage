@@ -1,18 +1,18 @@
 <template>
   <div class="auth-page">
-    <Form
+    <FormComponent
       class="auth-page__form"
       :fields="fields"
       :hidden-fields="hiddenFields"
       :submit-text="submitText"
       :message="message"
-      @submit="signUp"
+      @form-submit="signUp"
     />
   </div>
 </template>
 
 <script>
-import Form from './Form';
+import FormComponent from './Form';
 import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
@@ -20,7 +20,7 @@ import { validateUtmParams } from '../utils/utm/utm';
 
 export default {
   components: {
-    Form,
+    FormComponent,
   },
   mixins: [offlineErrorMessage],
   data() {
@@ -100,8 +100,8 @@ export default {
 
         this.$router.push({
           name: 'login',
-          params: {
-            successMessage: this.$t('authPages.signupSuccessMessage'),
+          query: {
+            success: 'signup',
             emailPrefilled: email,
           },
         });
@@ -109,7 +109,7 @@ export default {
         console.error(e);
 
         notifier.show({
-          message: this.$i18n.t(e.message),
+          message: this.$t(`authPages.errors.${e.message}`),
           style: 'error',
         });
       }

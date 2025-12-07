@@ -12,7 +12,6 @@ import {
   GET_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
-import Vue from 'vue';
 import type { Module } from 'vuex';
 import * as eventsApi from '../../../api/events';
 import { filterBeautifiedAddons } from '@/utils';
@@ -507,22 +506,34 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Get chart data for an event for a few days
+     * Get chart data for an event for a specified period
      * @param context - vuex action context
      * @param context.commit - VueX commit method
      * @param context.dispatch - Vuex dispatch method
      * @param project - object of project data
      * @param project.projectId - project's id
      * @param project.eventId - event's id
-     * @param project.days - number of a "few" days
+     * @param project.startDate - start date
+     * @param project.endDate - end date
+     * @param project.groupBy - grouping interval in minutes
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async [GET_CHART_DATA]({ commit, dispatch }, { projectId, eventId, originalEventId, days }: { projectId: string;
-      eventId: string;
-      originalEventId: string;
-      days: number; }): Promise<void> {
+    async [GET_CHART_DATA](
+      { commit, dispatch },
+      { projectId, eventId, originalEventId, days }:
+        {
+          projectId: string;
+          eventId: string;
+          originalEventId: string;
+          days: number;
+        }
+    ): Promise<void> {
       const timezoneOffset = (new Date()).getTimezoneOffset();
-      const chartData = await eventsApi.fetchChartData(projectId, originalEventId, days, timezoneOffset);
+      const chartData = await eventsApi.fetchChartData(
+        projectId,
+        originalEventId,
+        days,
+        timezoneOffset
+      );
 
       commit(MutationTypes.SaveChartData, {
         projectId,
@@ -538,7 +549,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param eventsMap - new list of events
      */
     [MutationTypes.SetEventsList](state, eventsMap: EventsMap): void {
-      Vue.set(state, 'events', eventsMap);
+      state.events = eventsMap;
     },
 
     /**
@@ -564,7 +575,7 @@ const module: Module<EventsModuleState, RootState> = {
           return;
         }
 
-        Vue.set(currentEvent, 'assignee', assignee);
+        currentEvent.assignee = assignee;
       });
     },
 
@@ -575,14 +586,18 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - id of the project to add
      * @param payload.eventsList - new list of events
      */
-    [MutationTypes.AddToEventsList](
-      state,
-      { projectId, eventsList }: { projectId: string;
-        eventsList: HawkEvent[]; }
-    ): void {
-      eventsList.forEach((event) => {
-        Vue.set(state.events, getEventsListKey(projectId, event.id), event);
-      });
+    [MutationTypes.AddToEventsList](state, { projectId, eventsList }: {
+      projectId: string;
+      eventsList: HawkEvent[];
+    }): void {
+      const additions = Object.fromEntries(eventsList.map((event) => {
+        return [getEventsListKey(projectId, event.id), event];
+      }));
+
+      state.events = {
+        ...state.events,
+        ...additions,
+      };
     },
 
     /**
@@ -598,9 +613,9 @@ const module: Module<EventsModuleState, RootState> = {
       if (state.events[key]) {
         const obj = Object.assign({}, state.events[key], event);
 
-        Vue.set(state.events, key, obj);
+        state.events[key] = obj;
       } else {
-        Vue.set(state.events, key, event);
+        state.events[key] = event;
       }
     },
 
@@ -627,7 +642,7 @@ const module: Module<EventsModuleState, RootState> = {
         // Append user once (preserve existing values)
         const visitedBy = Array.from(new Set([...(event.visitedBy || []), user]));
 
-        Vue.set(event, 'visitedBy', visitedBy);
+        event.visitedBy = visitedBy;
       });
     },
 
@@ -652,7 +667,7 @@ const module: Module<EventsModuleState, RootState> = {
         }
 
         // Toggle the mark
-        Vue.set(event.marks, mark, !event.marks[mark]);
+        event.marks[mark] = !event.marks[mark];
       });
     },
 
@@ -666,10 +681,10 @@ const module: Module<EventsModuleState, RootState> = {
     [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder;
       projectId: string; }): void {
       if (!state.filters[projectId]) {
-        Vue.set(state.filters, projectId, {});
+        state.filters[projectId] = {};
       }
 
-      Vue.set(state.filters[projectId], 'order', order);
+      state.filters[projectId].order = order;
     },
 
     /**
@@ -682,10 +697,10 @@ const module: Module<EventsModuleState, RootState> = {
     [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters;
       projectId: string; }): void {
       if (!state.filters[projectId]) {
-        Vue.set(state.filters, projectId, {});
+        state.filters[projectId] = {};
       }
 
-      Vue.set(state.filters[projectId], 'filters', filters);
+      state.filters[projectId].filters = filters;
     },
 
     /**
@@ -702,7 +717,7 @@ const module: Module<EventsModuleState, RootState> = {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.events[key];
 
-      Vue.set(state.events[key], 'chartData', data);
+      state.events[key].chartData = data;
     },
 
     /**
@@ -722,7 +737,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.SetProjectSearch](state: EventsModuleState, { projectId, search }: { projectId: string;
       search: string; }): void {
-      Vue.set(state.search, projectId, search);
+      state.search[projectId] = search;
     },
   },
 };

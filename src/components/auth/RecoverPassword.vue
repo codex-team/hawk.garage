@@ -1,18 +1,18 @@
 <template>
   <div class="auth-page">
-    <Form
+    <FormComponent
       class="auth-page__form"
       :fields="fields"
       :submit-text="submitText"
       :message="message"
-      @submit="recoverPassword"
+      @form-submit="recoverPassword"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Form from './Form.vue';
+import { defineComponent } from 'vue';
+import FormComponent from './Form.vue';
 import VueI18n from 'vue-i18n';
 import { RECOVER_PASSWORD } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
@@ -21,10 +21,10 @@ import notifier from 'codex-notifier';
 /**
  * Class implements reset password form component
  */
-export default Vue.extend({
+export default defineComponent({
   name: 'RecoverPassword',
   components: {
-    Form,
+    FormComponent,
   },
   mixins: [
     offlineErrorMessage,
@@ -82,8 +82,8 @@ export default Vue.extend({
 
         this.$router.push({
           name: 'login',
-          params: {
-            successMessage: this.$t('authPages.recoverPasswordSuccessMessage') as string,
+          query: {
+            success: 'recover',
             emailPrefilled: email,
           },
         });
@@ -93,7 +93,7 @@ export default Vue.extend({
         console.error(err);
 
         notifier.show({
-          message: this.$i18n.t(err.message) as string,
+          message: this.$t(`authPages.errors.${err.message}`),
           style: 'error',
         });
       }

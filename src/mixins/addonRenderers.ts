@@ -1,10 +1,10 @@
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { isObject } from '../utils';
 
 /**
  * Useful methods for rendering event addons
  */
-export default Vue.extend({
+export default defineComponent({
   data(): {
     customRendererNamePrefix: string;
   } {
@@ -44,8 +44,8 @@ export default Vue.extend({
       /**
        * Check for translation existence
        */
-      if (this.$i18n.te(dictKey)) {
-        return this.$i18n.t(dictKey) as string;
+      if (this.$te(dictKey)) {
+        return this.$t(dictKey);
       }
 
       return name;

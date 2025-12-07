@@ -1,4 +1,5 @@
 import mergeWith from 'lodash.mergewith';
+import shortNumber from 'short-number';
 import type { HawkEvent, HawkEventDailyInfo } from './types/events';
 import type { DecodedIntegrationToken } from '@hawk.so/types';
 
@@ -374,6 +375,47 @@ export function debounce(callback: () => void, delay: number): () => void {
 }
 
 /**
+ * Throttle function to limit the rate at which a function can be called.
+ * Executes the callback immediately, then waits for the delay period before
+ * allowing the next execution.
+ * @param callback - function to throttle
+ * @param delay - throttle delay in milliseconds
+ * @returns
+ */
+export function throttle(callback: () => void, delay: number): () => void {
+  let lastExecTime = 0;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  return function (...args): void {
+    const currentTime = Date.now();
+    const timeSinceLastExec = currentTime - lastExecTime;
+
+    if (timeSinceLastExec >= delay) {
+      /* Execute immediately if enough time has passed */
+      lastExecTime = currentTime;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      callback.apply(this, args);
+    } else {
+      /* Schedule execution for the remaining time */
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+
+      const remainingTime = delay - timeSinceLastExec;
+
+      timeoutId = setTimeout(() => {
+        lastExecTime = Date.now();
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        callback.apply(this, args);
+        timeoutId = null;
+      }, remainingTime);
+    }
+  };
+}
+
+/**
  * Uppercase the first letter
  * @param string - string to process
  */
@@ -433,7 +475,7 @@ export function trim(value: string, maxLen: number): string {
  * @param token - stringified integration token
  */
 function decodeIntegrationToken(token: string): DecodedIntegrationToken {
-  return JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+  return JSON.parse(atob(token));
 }
 
 /**
@@ -480,3 +522,69 @@ export function getPlatform(): 'macos' | 'windows' | 'linux' {
 
   return 'linux';
 }
+
+/**
+ * Abbreviates numbers (e.g., 1000 -> 1K, 1000000 -> 1M)
+ * @param value - number to abbreviate
+ * @returns abbreviated number
+ */
+export function abbreviateNumber(value: number): string {
+  const maxNumberWithoutAbbreviation = 9999;
+
+  if (value < maxNumberWithoutAbbreviation) {
+    return value.toString();
+  }
+
+  return shortNumber(value);
+}
+
+/**
+ * Set a cookie
+ * @param name - name of the cookie
+ * @param value - value of the cookie
+ * @param days - number of days to expire the cookie
+ */
+export function setCookie(name: string, value: string, days: number): void {
+  const date = new Date();
+
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+  const expires = `expires=${date.toUTCString()}`;
+
+  document.cookie = `${name}=${value};${expires};path=/`;
+}
+
+/**
+ * Get a cookie
+ * @param cname - name of the cookie
+ * @returns value of the cookie
+ */
+export function getCookie(cname: string): string {
+  let name = cname + '=';
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+
+  return '';
+}
+/**
+ * Remove a cookie
+ * @param name - name of the cookie
+ */
+export function removeCookie(name: string): void {
+  setCookie(name, '', -1);
+}
+
+// Export filter utilities
+export * from './utils/filters';

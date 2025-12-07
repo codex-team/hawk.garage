@@ -25,15 +25,13 @@
       class="input form-fieldset__input"
       :type="type || 'text'"
       :name="name"
-      :value="value"
-      :min="min"
-      :max="max"
+      :value="modelValue"
       :placeholder="placeholder"
       :required="required"
       :hidden="hidden"
       :disabled="disabled"
-      @input="$emit('input', $event.target.value)"
-    >
+      @input="$emit('update:modelValue', $event.target.value)"
+    />
   </fieldset>
 </template>
 
@@ -76,7 +74,7 @@ export default {
     /**
      * Value for v-model
      */
-    value: {
+    modelValue: {
       type: String,
       default: null,
     },
@@ -125,22 +123,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
-    },
-
-    /**
-     * Minimum value for number type
-     */
-    min: {
-      type: Number,
-      default: null,
-    },
-
-    /**
-     * Maximum value for number type
-     */
-    max: {
-      type: Number,
-      default: null,
     },
   },
 };

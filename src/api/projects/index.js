@@ -109,12 +109,12 @@ export async function updateLastProjectVisit(projectId) {
  * Send request for creation new project notifications rule
  *
  * @param {ProjectNotificationsAddRulePayload} payload - add rule payload
- * @returns {Promise<ProjectNotificationsRule>}
+ * @returns {Promise<APIResponse<ProjectNotificationsRule>>}
  */
 export async function addProjectNotificationsRule(payload) {
-  return (await api.callOld(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
+  return (await api.call(MUTATION_CREATE_PROJECT_NOTIFY_RULE, {
     input: payload,
-  })).createProjectNotificationsRule;
+  }));
 }
 
 /**
@@ -205,14 +205,18 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * Fetch data for chart
  *
  * @param {string} projectId - id of the project to fetch recent errors
- * @param {number} days - fow how many days we need to get counters
+ * @param {string} startDate - start date (ISO string or Unix timestamp in seconds)
+ * @param {string} endDate - end date (ISO string or Unix timestamp in seconds)
+ * @param {number} groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
  * @param {number} timezoneOffset - user's local timezone offset
  * @returns {Promise<ChartData[] | null>}
  */
-export async function fetchChartData(projectId, days, timezoneOffset) {
+export async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
   return (await api.callOld(QUERY_CHART_DATA, {
     projectId,
-    days,
+    startDate,
+    endDate,
+    groupBy,
     timezoneOffset,
   })).project.chartData;
 }

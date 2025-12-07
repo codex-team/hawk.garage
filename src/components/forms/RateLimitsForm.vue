@@ -4,28 +4,33 @@
     @submit.prevent="handleSubmit"
   >
     <div class="rate-limits-form__fields">
-      <TextFieldset
+      <NumberInput
         v-model="currentThreshold"
-        type="number"
+        :placeholder="$t('projects.settings.rateLimits.thresholdPlaceholder')"
         :required="true"
         :disabled="disabled"
-        :is-invalid="!isThresholdValid"
         :min="1"
         :max="maxThreshold"
         :label="$t('projects.settings.rateLimits.threshold')"
       />
-      <TextFieldset
-        v-model="currentPeriod"
-        type="number"
-        :required="true"
-        :disabled="disabled"
-        :is-invalid="!isPeriodValid"
-        :min="60"
-        :max="2678400"
-        :label="$t('projects.settings.rateLimits.period')"
-      />
+      <div class="rate-limits-form__period-wrapper">
+        <NumberInput
+          v-model="currentPeriod"
+          :placeholder="$t('projects.settings.rateLimits.periodPlaceholder')"
+          :required="true"
+          :disabled="disabled"
+          :min="60"
+          :max="2678400"
+          :label="$t('projects.settings.rateLimits.period')"
+        />
+        <div
+          v-if="periodHumanReadable"
+          class="rate-limits-form__period-hint"
+        >
+          {{ periodHumanReadable }}
+        </div>
+      </div>
     </div>
-
     <div class="rate-limits-form__submit-area">
       <button
         class="button button--submit rate-limits-form__submit-button"
@@ -34,27 +39,29 @@
       >
         {{ $t('projects.settings.rateLimits.submit') }}
       </button>
-      <button
-        class="button button--submit rate-limits-form__clear-button"
-        type="button"
-        :disabled="disabled || !value"
-        @click="handleClear"
-      >
-        {{ $t('projects.settings.rateLimits.clear') }}
-      </button>
     </div>
+    <button
+      v-if="value"
+      class="button button--submit rate-limits-form__clear-button"
+      type="button"
+      :disabled="disabled"
+      @click="handleClear"
+    >
+      {{ $t('projects.settings.rateLimits.reset') }}
+    </button>
   </form>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import TextFieldset from './TextFieldset.vue';
+
+import { defineComponent } from 'vue';
+import NumberInput from './NumberInput.vue';
 import { ProjectRateLimitSettings } from '@/types/project';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'RateLimitsForm',
   components: {
-    TextFieldset,
+    NumberInput,
   },
   props: {
     /**
@@ -124,13 +131,34 @@ export default Vue.extend({
 
       return currentN !== originalN || currentT !== originalT;
     },
+
+    /**
+     * Convert seconds to human-readable format (days, hours, minutes)
+     */
+    periodHumanReadable(): string | null {
+      const s = String(this.currentPeriod).trim();
+      const seconds = Number.parseInt(s, 10);
+
+      if (Number.isNaN(seconds)) {
+        return null;
+      }
+
+      const days = Math.floor(seconds / 86400);
+      const hours = Math.floor((seconds % 86400) / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+
+      return `${this.$t('common.timeUnits.d', { days })}
+        ${this.$t('common.timeUnits.h', { hours })}
+        ${this.$t('common.timeUnits.m', { minutes })}
+        ${this.$t('common.timeUnits.s', { seconds: secs })}`.trim();
+    },
   },
   watch: {
     value: {
       handler() {
-        // Default: maxThreshold events per hour (3600 seconds in an hour)
-        this.currentThreshold = this.value?.N?.toString() || this.maxThreshold.toString();
-        this.currentPeriod = this.value?.T?.toString() || '3600';
+        this.currentThreshold = this.value?.N?.toString() || '';
+        this.currentPeriod = this.value?.T?.toString() || '';
       },
       immediate: true,
     },
@@ -190,7 +218,7 @@ export default Vue.extend({
   &__fields {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     .form-fieldset__label {
       font-weight: 400;
@@ -204,21 +232,29 @@ export default Vue.extend({
     }
   }
 
+  &__period-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__period-hint {
+    margin-top: 5px;
+    color: var(--color-text-second);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
   &__submit-area {
     flex-basis: 100%;
   }
 
-  &__submit-button {
-    margin: 0 10px 20px 0;
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+  &__submit-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   &__clear-button {
-    margin: 0 0 20px 0;
+    margin-top: 40px;
     background-color: var(--color-indicator-critical);
 
     &:hover {
@@ -229,12 +265,6 @@ export default Vue.extend({
       cursor: not-allowed;
       opacity: 0.5;
     }
-  }
-
-  &__error-message {
-    margin-bottom: 20px;
-    color: var(--color-indicator-critical);
-    font-size: 13px;
   }
 }
 </style>

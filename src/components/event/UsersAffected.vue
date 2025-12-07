@@ -8,17 +8,17 @@
         v-if="event"
         class="event-users-affected__affected"
       >
-        {{ $tc('event.usersAffected.users', event.usersAffected) }}
+        {{ $t('event.usersAffected.users', { n: event.usersAffected }) }}
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import { HawkEvent } from '@/types/events';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'UsersAffectedOverview',
   props: {
     /**
@@ -35,16 +35,6 @@ export default Vue.extend({
     projectId: {
       type: String,
       required: true,
-    },
-  },
-  data: function () {
-    return {
-      groupedRepetitions: new Map(),
-    };
-  },
-  computed: {
-    originalEvent(): HawkEvent {
-      return this.$store.getters.getProjectEventById(this.projectId, this.event.id);
     },
   },
 });

@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import UiButton from '@/components/utils/UiButton.vue';
 import { ProjectEventGroupingPattern } from '@/types/project-event-grouping-patterns';
 import { Project } from '@/types/project';
@@ -75,7 +75,7 @@ import { ADD_EVENT_GROUPING_PATTERN,
 import notifier from 'codex-notifier';
 import safe from 'safe-regex';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsPatterns',
   components: {
     UiButton,
@@ -259,7 +259,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-@import url('../../../styles/custom-properties.css');
 
 .patterns {
   display: flex;

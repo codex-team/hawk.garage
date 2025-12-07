@@ -1,5 +1,5 @@
 import type { User } from '@/types/user';
-import type { EventChartItem } from '@/types/chart';
+import type { ChartLine, EventChartItem } from '@/types/chart';
 import type { ReleaseCommit } from './release';
 import type { EventAddons, AffectedUser } from '@hawk.so/types';
 
@@ -128,7 +128,7 @@ export interface HawkEvent {
   /**
    * Event chart data for a few days
    */
-  chartData?: EventChartItem[];
+  chartData?: ChartLine[];
 
   /**
    * Event release

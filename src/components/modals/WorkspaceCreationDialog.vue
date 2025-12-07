@@ -90,7 +90,7 @@ export default {
         const dictKey = 'errors.' + e.message;
 
         notifier.show({
-          message: this.$i18n.te(dictKey) ? this.$i18n.t(dictKey) : e.message,
+          message: this.$te(dictKey) ? this.$t(dictKey) : e.message,
           style: 'error',
         });
       }

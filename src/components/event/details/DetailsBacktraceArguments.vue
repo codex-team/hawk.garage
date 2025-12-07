@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 /**
  * Describes a cell to render in the arguments table.
@@ -33,7 +33,7 @@ interface ArgsCell {
   value: string;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'DetailsBacktraceArguments',
   props: {
     /**

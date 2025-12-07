@@ -92,8 +92,11 @@ export const QUERY_CHART_DATA = `
           days: $days,
           timezoneOffset: $timezoneOffset
         ) {
-          timestamp
-          count
+          label
+          data {
+            timestamp
+            count
+          }
         }
       }
     }

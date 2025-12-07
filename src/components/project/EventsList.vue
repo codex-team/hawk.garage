@@ -6,7 +6,6 @@
       skin="fancy"
       :placeholder="searchFieldPlaceholder"
       :is-c-m-d-k-enabled="true"
-      @input="debouncedSearch"
     />
     <template v-if="hasItems">
       <div
@@ -15,7 +14,7 @@
         class="events-list__group"
       >
         <div class="events-list__date">
-          {{ getDay(date) | prettyDate }}
+          {{ formatGroupDate(date) }}
         </div>
         <EventItem
           v-for="(dailyEventInfo, index) in eventsByDate"
@@ -71,6 +70,7 @@
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
 import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
+import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
@@ -186,6 +186,7 @@ export default {
   beforeUnmount() {
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
+  // eslint-disable-next-line vue/order-in-components
   computed: {
     /**
      * Placeholder for search input with CMD/Ctrl+K hint
@@ -234,7 +235,6 @@ export default {
     },
   },
   methods: {
-    // debouncedSearch инициализируется в created и используется как обработчик @input
     /**
      * Return midnight timestamp extracted from grouping key
      *
@@ -252,6 +252,15 @@ export default {
      */
     getEvent(eventId) {
       return this.getProjectEventById(this.projectId, eventId);
+    },
+    /**
+     * Format grouped date for displaying in headers.
+     *
+     * @param {string} date - grouping key like 'groupingTimestamp:1576011600'
+     * @returns {string}
+     */
+    formatGroupDate(date) {
+      return prettyDate(this.getDay(date));
     },
     /**
      * Load older events to the list
@@ -379,6 +388,12 @@ export default {
       this.isAssigneesShowed = false;
       window.removeEventListener('resize', this.onResize);
       window.removeEventListener('scroll', this.onResize, true);
+    },
+  },
+  // eslint-disable-next-line vue/order-in-components
+  watch: {
+    searchQuery(newVal) {
+      void this.debouncedSearch(newVal);
     },
   },
 };

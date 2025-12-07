@@ -1,19 +1,16 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
 import AppShell from './components/AppShell.vue';
 
-Vue.use(Router);
-
 /**
  * Disable return-type rule to leave router 'component' imports with short syntax
  */
 
-const router = new Router({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
@@ -70,7 +67,7 @@ const router = new Router({
           path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
           component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
-          redirect: 'workspace/:workspaceId/settings/general',
+          redirect: to => `/workspace/${to.params.workspaceId.toString()}/settings/general`,
           children: [
             {
               path: 'general',
@@ -116,7 +113,17 @@ const router = new Router({
                   path: 'event/:eventId/:repetitionId?',
                   name: 'event',
                   component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue'),
-                  redirect: 'event/:eventId/:repetitionId?/overview',
+                  redirect: (to) => {
+                    const projectId = to.params.projectId as string;
+                    const eventId = to.params.eventId as string;
+                    const repetitionId = to.params.repetitionId as string | undefined;
+
+                    if (repetitionId !== undefined && repetitionId !== '') {
+                      return `/project/${projectId}/event/${eventId}/${repetitionId}/overview`;
+                    }
+
+                    return `/project/${projectId}/event/${eventId}/${eventId}/overview`;
+                  },
                   children: [
                     {
                       path: 'overview',
@@ -235,8 +242,8 @@ const router = new Router({
       name: 'login',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue'),
       props: route => ({
-        successMessage: route.params.successMessage,
-        emailPrefilled: route.params.emailPrefilled,
+        success: route.query.success as string | undefined,
+        emailPrefilled: route.query.emailPrefilled as string | undefined,
       }),
     },
     {

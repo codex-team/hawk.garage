@@ -134,6 +134,10 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
         endpoint
         isEnabled
       }
+      loop {
+        endpoint
+        isEnabled
+      }
       telegram {
         endpoint
         isEnabled

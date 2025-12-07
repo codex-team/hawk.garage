@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page">
-    <Form
+    <FormComponent
       ref="form"
       class="auth-page__form"
       :fields="fields"
@@ -9,28 +9,29 @@
       :alt-link="altLink"
       :alt-text="altText"
       :success-message="successMessage"
-      @submit="login"
+      @form-submit="login"
     />
   </div>
 </template>
 
 <script>
-import Form from './Form';
+import FormComponent from './Form';
 import { LOGIN, SET_TOKENS } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
+import { getCookie, removeCookie } from '../../utils';
 
 export default {
   name: 'Login',
   components: {
-    Form,
+    FormComponent,
   },
   mixins: [offlineErrorMessage],
   props: {
     /**
-     * Success message text
+     * Success flag to determine which success message to show
      */
-    successMessage: {
+    success: {
       type: String,
       default: '',
     },
@@ -69,6 +70,22 @@ export default {
       message: null,
     };
   },
+  computed: {
+    /**
+     * Get success message based on success flag
+     */
+    successMessage() {
+      if (this.success === 'signup') {
+        return this.$t('authPages.signupSuccessMessage');
+      }
+
+      if (this.success === 'recover') {
+        return this.$t('authPages.recoverPasswordSuccessMessage');
+      }
+
+      return '';
+    },
+  },
   async mounted() {
     if (
       this.$route.query.access_token
@@ -80,14 +97,14 @@ export default {
           refreshToken: this.$route.query.refresh_token,
         });
 
-        const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
+        const afterAuthRedirect = getCookie('afterAuthRedirect');
 
         this.$router.push(afterAuthRedirect || '/');
 
-        this.$cookies.remove('afterAuthRedirect');
+        removeCookie('afterAuthRedirect');
       } catch (e) {
         notifier.show({
-          message: this.$i18n.t(e.message),
+          message: this.$t(`authPages.errors.${e.message}`),
           style: 'error',
         });
       }
@@ -114,16 +131,16 @@ export default {
           password,
         });
 
-        const afterAuthRedirect = this.$cookies.get('afterAuthRedirect');
+        const afterAuthRedirect = getCookie('afterAuthRedirect');
 
         this.$router.push(afterAuthRedirect || '/');
 
-        this.$cookies.remove('afterAuthRedirect');
+        removeCookie('afterAuthRedirect');
       } catch (e) {
         console.error(e);
 
         notifier.show({
-          message: this.$i18n.t(`authPages.errors.${e.message}`),
+          message: this.$t(`authPages.errors.${e.message}`),
           style: 'error',
         });
       }

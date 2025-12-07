@@ -48,7 +48,7 @@
       "refresh": "Обновить"
     },
     "feedbackButton": {
-      "message": "Оставить отзыв"
+      "message": "Поддержка"
     },
     "consoleOutput": {
       "show_previous": "Показать предыдущие",
@@ -91,9 +91,23 @@
   "forms": {
     "imageUploader": "ЗАГР. ФОТО",
     "searchField": "Поиск",
-    "searchFieldWithCMDK": "{cmd}+K для поиска"
+    "searchFieldWithCMDK": "{cmd}+K для поиска",
+    "numberInput": {
+      "minError": "Значение должно быть не менее {min}",
+      "maxError": "Значение должно быть не более {max}"
+    }
   },
   "projects": {
+    "chart": {
+      "now": "Сейчас",
+      "byMinutes": "По минутам",
+      "byHours": "По часам",
+      "byDays": "По дням",
+      "lastHour": "За час",
+      "lastDay": "За день",
+      "lastWeek": "За неделю",
+      "lastMonth": "За месяц"
+    },
     "filters": {
       "filtersOptions": {
         "all": "Все",
@@ -135,8 +149,7 @@
       "integrations": {
         "title": "Интеграции",
         "projectTokenLabel": "Интеграционный токен для проекта",
-        "revokeText": "Вы можете {revoke} этот токен и получить новый.",
-        "revoke": "Отозвать",
+        "revokeText": "Вы можете <span class='projects-integrations-settings-page__revoke-button'>Отозвать</span> этот токен и получить новый.",
         "revokeConfirmation": {
           "title": "Отозвать интеграционный токен?",
           "description": "После этого действия Хоук перестанет принимать ивенты со старым интеграционным токеном. Вам будет необходимо заменить его на новый в вашем проекте."
@@ -162,8 +175,10 @@
         "emailDescription": "Не более одного письма в 10 минут",
         "slack": "Slack",
         "slackDescription": "Уведомления через Webhook App",
+        "loop": "Loop",
+        "loopDescription": "Уведомления через Loop Webhook",
         "telegram": "Telegram",
-        "telegramDescription": "Уведомления через <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
+        "telegramDescription": "Уведомления через {telegramLink}",
         "receiveNewLabel": "Только новые события",
         "receiveNewDescription": "При первом получении",
         "receiveSeenMoreLabel": "По частоте появления",
@@ -207,14 +222,18 @@
       },
       "rateLimits": {
         "title": "Рейт Лимиты",
-        "description": "Рейт лимиты позволяют избегать спайков трафика и экономят ваш бюджет, автоматически блокируя события, превышающие указанный порог.",
+        "description": "Защитите свой бюджет от неожиданных всплесков трафика. Установите автоматические лимиты для блокировки событий при превышении порога, предотвращая перерасход и делая ваши расходы предсказуемыми.",
         "threshold": "Не более",
-        "period": "за период (секунды)",
+        "thresholdPlaceholder": "Количество событий",
+        "period": "За период (секунды)",
+        "periodPlaceholder": "Период (секунды)",
         "submit": "Сохранить",
-        "clear": "Очистить",
+        "reset": "Сбросить рейт лимиты",
         "updatedMessage": "Настройки рейт лимитов успешно обновлены",
         "clearedMessage": "Рейт лимиты успешно очищены",
-        "paidOnlyMessage": "Рейт лимиты доступны только для платных тарифов"
+        "paidOnlyMessage": "Рейт-лимиты позволяют защититься от всплесков ошибок, из-за которых воркспейс может преждевременно потратить свой лимит событий. Установите максимальное количество событий, которое Хоук должен принимать за единицу времени. События сверх лимита не будут обработаны и захвачены.",
+        "paidOnlyUpgrade": "Эта функция доступна только для платных планов.",
+        "upgradeButton": "Перейти на платный план"
       }
     },
     "notFound": "Проект не найден",
@@ -297,7 +316,7 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Выберите план",
-      "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;<a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;{emailLink}",
       "onSuccess": "Тарифный план был успешно изменён",
       "onError": "Произошла ошибка, пожалуйста попробуйте ещё раз немного позже",
       "confirmSetToFreePlanDescription": "Старый план будет отменён. Неиспользованные ошибки и время не будут возвращены.",
@@ -472,14 +491,14 @@
       "since": "Начиная с",
       "title": "Повторы",
       "times": "Ни разу | {n} раз | {n} раза | {n} раз",
-      "days": " | {n} день | {n} дня | {n} дней"
+      "days": "Ни разу | {n} день | {n} дня | {n} дней"
     },
     "daily": {
       "lastTwoWeeks": "За последние две недели"
     },
     "usersAffected": {
       "total": "Всего",
-      "users": "{n} пользователь | {n} пользователя | {n} пользователей"
+      "users": "{n} пользователей | {n} пользователь | {n} пользователя | {n} пользователей"
     },
     "navigation": {
       "overview": "Обзор",
@@ -551,6 +570,12 @@
     "hour": "час",
     "day": "день",
     "week": "неделю",
+    "timeUnits": {
+      "d": "{days}д",
+      "h": "{hours}ч",
+      "m": "{minutes}м",
+      "s": "{seconds}с"
+    },
     "today": "Сегодня",
     "yesterday": "Вчера",
     "months": [
@@ -583,11 +608,11 @@
     ],
     "relativeTime": {
       "secondsAgo": "несколько секунд назад",
-      "minutesAgo": " | минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
-      "hoursAgo": " | час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
-      "daysAgo": " | вчера | {numberOfDays} дня назад | {numberOfDays} дней назад",
-      "monthsAgo": " | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
-      "yearsAgo": " | месяцев назад | {numberOfYears} года назад | {numberOfYears} лет назад"
+      "minutesAgo": "только что | {numberOfMinutes} минуту назад | {numberOfMinutes} минуты назад | {numberOfMinutes} минут назад",
+      "hoursAgo": "совсем недавно | {numberOfHours} час назад | {numberOfHours} часа назад | {numberOfHours} часов назад",
+      "daysAgo": "вчера | {numberOfDays} дней назад | {numberOfDays} дней назад",
+      "monthsAgo": "в этом месяце | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
+      "yearsAgo": "в этом году | год назад | {numberOfYears} года назад | {numberOfYears} лет назад"
     },
     "readMore": "Подробнее"
   },

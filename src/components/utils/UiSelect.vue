@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import Icon from './Icon.vue';
 import UIContextList, { UiContextListItem } from './UiContextList.vue';
 
@@ -49,12 +49,17 @@ export interface UiSelectOption {
    * Optional Icon to display in the select
    */
   icon?: string;
+
+  /**
+   * Whether the option is disabled
+   */
+  isDisabled?: boolean;
 }
 /**
  * @todo support closing by click outside @see https://vueuse.org/core/onClickOutside/
  */
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     Icon,
     UIContextList,
@@ -93,7 +98,7 @@ export default Vue.extend({
     /**
      * Current input value
      */
-    value: {
+    modelValue: {
       type: String,
       default: undefined,
     },
@@ -108,7 +113,7 @@ export default Vue.extend({
       /**
        * Current input value stored locally
        */
-      internalValue: this.value,
+      internalValue: this.modelValue,
     };
   },
   computed: {
@@ -127,18 +132,26 @@ export default Vue.extend({
         icon: option.icon,
         label: option.label,
         isActive: option.value === this.internalValue,
+        isDisabled: option.isDisabled,
         onActivate: () => this.onOptionActivate(option),
       }));
     },
   },
-  mounted() {
-    this.internalValue = this.value;
+  watch: {
+    modelValue: {
+      handler(newVal: string): void {
+        this.internalValue = newVal;
+      },
+    },
+  },
+  mounted(): void {
+    this.internalValue = this.modelValue;
   },
   methods: {
     /**
      * Closes the select
      */
-    close() {
+    close(): void {
       this.isOpen = false;
     },
 
@@ -147,9 +160,9 @@ export default Vue.extend({
      *
      * @param option - option to activate
      */
-    onOptionActivate(option: UiSelectOption) {
+    onOptionActivate(option: UiSelectOption): void {
       this.internalValue = option.value;
-      this.$emit('input', option.value);
+      this.$emit('update:modelValue', option.value);
       this.close();
     },
   },
@@ -165,6 +178,7 @@ export default Vue.extend({
   --font-size: 12px;
 
   position: relative;
+  user-select: none;
 
   &__button {
     display: flex;

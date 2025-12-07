@@ -104,7 +104,7 @@ export default {
         /**
          * Open created Project page
          */
-        this.$router.push(`/project/${project.id}`);
+        this.$router.push(`/project/${project.id}/add-catcher`);
       } catch (e) {
         console.error(e);
 

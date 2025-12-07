@@ -1,4 +1,4 @@
-import type { NotificationsChannels } from './notifications';
+import type { NotificationsChannels } from './notifications.d.ts';
 
 /**
  * This structure represents a single rule of notifications settings
@@ -53,7 +53,7 @@ export interface ProjectNotificationsRule {
 /**
  * Available channels of the project notifications
  */
-export type ProjectNotificationsChannels = Pick<NotificationsChannels, 'email' | 'telegram' | 'slack'>;
+export type ProjectNotificationsChannels = Pick<NotificationsChannels, 'email' | 'telegram' | 'slack' | 'loop'>;
 
 /**
  * Available options of 'What to receive'

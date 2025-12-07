@@ -23,14 +23,12 @@ export default {
 
   computed: {
     /**
-     * Require sprite icon & return id selector string
+     * Return icon id selector string for vite-plugin-svg-icons
      *
      * @returns {string}
      */
     iconId() {
-      require(`../../assets/sprite-icons/${this.symbol}.svg`);
-
-      return `#${this.symbol}`;
+      return `#icon-${this.symbol}`;
     },
 
     /**

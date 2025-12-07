@@ -20,7 +20,7 @@
   },
   "layout": {
     "aside": {
-      "emptyProjectsList": "You haven't any integrations here.",
+      "emptyProjectsList": "You don't have any integrations here.",
       "createFirstProjectLabel": "Let’s create the new one.",
       "createFirstProjectButton": "Create a project"
     }
@@ -91,9 +91,23 @@
   "forms": {
     "imageUploader": "UPLOAD LOGO",
     "searchField": "Search",
-    "searchFieldWithCMDK": "{cmd}+K to search"
+    "searchFieldWithCMDK": "{cmd}+K to search",
+    "numberInput": {
+      "minError": "Value must be at least {min}",
+      "maxError": "Value must be at most {max}"
+    }
   },
   "projects": {
+    "chart": {
+      "now": "Now",
+      "byMinutes": "By minutes",
+      "byHours": "By hours",
+      "byDays": "By days",
+      "lastHour": "Last hour",
+      "lastDay": "Last day",
+      "lastWeek": "Last week",
+      "lastMonth": "Last month"
+    },
     "filters": {
       "filtersOptions": {
         "all": "All",
@@ -135,8 +149,7 @@
       "integrations": {
         "title": "Integrations",
         "projectTokenLabel": "Your Integration token for",
-        "revokeText": "You can {revoke} this token and get the new one.",
-        "revoke": "Revoke",
+        "revokeText": "You can <span class='projects-integrations-settings-page__revoke-button'>Revoke</span> this token and get the new one.",
         "revokeConfirmation": {
           "title": "Revoke integration token?",
           "description": "After this action, Hawk will stop accepting events with the old integration token. You will need to replace it with a new one in your project."
@@ -162,8 +175,10 @@
         "emailDescription": "Max frequency is 1 alert in 10 min",
         "slack": "Slack",
         "slackDescription": "Alerts through the Webhook App",
+        "loop": "Loop",
+        "loopDescription": "Alerts through the Loop Webhook",
         "telegram": "Telegram",
-        "telegramDescription": "Alerts through the <a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>",
+        "telegramDescription": "Alerts through the {telegramLink}",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Frequency based",
@@ -207,14 +222,18 @@
       },
       "rateLimits": {
         "title": "Rate Limits",
-        "description": "Rate limits help prevent traffic spikes and save your budget by automatically blocking events that exceed the specified threshold.",
+        "description": "Protect your budget from unexpected traffic spikes. Set automatic limits to block events when they exceed your threshold, preventing overspending and keeping your costs predictable.",
         "threshold": "No more than",
-        "period": "for period (seconds)",
+        "thresholdPlaceholder": "Number of events",
+        "period": "For period (seconds)",
+        "periodPlaceholder": "Period (seconds)",
         "submit": "Save",
-        "clear": "Clear",
+        "reset": "Reset rate limits",
         "updatedMessage": "Rate limits updated successfully",
         "clearedMessage": "Rate limits cleared successfully",
-        "paidOnlyMessage": "Rate limits are available only for paid plans"
+        "paidOnlyMessage": "Rate limits allow you to protect against error spikes that can cause your workspace to prematurely exhaust its event limit. Set the maximum number of events that Hawk should accept per unit of time. Events exceeding the limit will not be processed and captured.",
+        "paidOnlyUpgrade": "This feature is available only for paid plans.",
+        "upgradeButton": "Upgrade plan"
       }
     },
     "notFound": "Project not found",
@@ -297,7 +316,7 @@
   "workspaces": {
     "chooseTariffPlanDialog": {
       "title": "Choose a plan",
-      "description": "All plans includes all available <a href=\"{featuresUrl}\">features</a>. If you have questions on plans, please contact us by <a href=\"mailto:team@hawk.so\">team@hawk.so</a>",
+      "description": "All plans includes all available features. If you have questions on plans, please contact us by {emailLink}",
       "onSuccess": "Workspace plan has been successfully changed",
       "onError": "Unable to change workspace plan due to an error, please try again later",
       "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
@@ -551,6 +570,12 @@
     "hour": "hour",
     "day": "day",
     "week": "week",
+    "timeUnits": {
+      "d": "{days}d",
+      "h": "{hours}h",
+      "m": "{minutes}m",
+      "s": "{seconds}s"
+    },
     "today": "Today",
     "yesterday": "Yesterday",
     "months": [

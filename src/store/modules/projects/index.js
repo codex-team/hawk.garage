@@ -18,7 +18,6 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
-import Vue from 'vue';
 
 /**
  * Mutations enum for this module
@@ -86,7 +85,7 @@ function initialState() {
     /**
      * Chart data for every project
      *
-     * @type {object<string, ChartData[]>}
+     * @type {object<string, ProjectChartData[]>}
      */
     charts: {},
   };
@@ -286,10 +285,12 @@ const actions = {
   async [ADD_NOTIFICATIONS_RULE]({ commit }, payload) {
     const ruleCreated = await projectsApi.addProjectNotificationsRule(payload);
 
-    commit(mutationTypes.PUSH_NOTIFICATIONS_RULE, {
-      projectId: payload.projectId,
-      rule: ruleCreated,
-    });
+    if (ruleCreated && ruleCreated.data && ruleCreated.data.createProjectNotificationsRule) {
+      commit(mutationTypes.PUSH_NOTIFICATIONS_RULE, {
+        projectId: payload.projectId,
+        rule: ruleCreated.data.createProjectNotificationsRule,
+      });
+    }
   },
 
   /**
@@ -386,19 +387,27 @@ const actions = {
   },
 
   /**
-   * Get events counters for the last N days at the specific project
+   * Get events counters for a specified period at the specific project
    *
    * @param {object} context - vuex action context
    * @param {Function} context.commit - standard Vuex commit function
    *
    * @param {object} payload - vuex action payload
    * @param {string} payload.projectId - id of the project to fetch data
-   * @param {number} payload.days - how many days we need to fetch for displaying in a chart
+   * @param {string} payload.startDate - start date (ISO string or Unix timestamp)
+   * @param {string} payload.endDate - end date (ISO string or Unix timestamp)
+   * @param {number} payload.groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
    * @returns {Promise<void>}
    */
-  async [FETCH_CHART_DATA]({ commit }, { projectId, days }) {
+  async [FETCH_CHART_DATA]({ commit }, { projectId, startDate, endDate, groupBy }) {
     const timezoneOffset = (new Date()).getTimezoneOffset();
-    const chartData = await projectsApi.fetchChartData(projectId, days, timezoneOffset);
+    const chartData = await projectsApi.fetchChartData(
+      projectId,
+      startDate,
+      endDate,
+      groupBy,
+      timezoneOffset
+    );
 
     commit(mutationTypes.ADD_CHART_DATA, {
       projectId,
@@ -415,7 +424,7 @@ const mutations = {
    * @param {Array<Project>} newList - new list of projects
    */
   [mutationTypes.SET_PROJECTS_LIST](state, newList) {
-    Vue.set(state, 'list', newList);
+    state.list = newList;
   },
 
   /**
@@ -451,10 +460,10 @@ const mutations = {
       const existingProject = state.list[index];
 
       // Should merge existing project with new project to avoid losing existing data
-      Vue.set(state.list, index, {
+      state.list[index] = {
         ...existingProject,
         ...project,
-      });
+      };
     }
   },
 
@@ -473,7 +482,7 @@ const mutations = {
   }) {
     const project = state.list.find(_project => _project.id === projectId);
 
-    Vue.set(project, key, value);
+    project[key] = value;
   },
 
   /**
@@ -498,7 +507,7 @@ const mutations = {
   [mutationTypes.SET_EVENTS_LIST_BY_DATE](state, { projectId, eventsListByDate }) {
     const project = state.list.find(_project => _project.id === projectId);
 
-    Vue.set(project, 'eventsListByDate', eventsListByDate);
+    project.eventsListByDate = eventsListByDate;
   },
 
   /**
@@ -515,7 +524,7 @@ const mutations = {
       return;
     }
 
-    Vue.set(project, 'unreadCount', 0);
+    project.unreadCount = 0;
   },
 
   /**
@@ -561,7 +570,7 @@ const mutations = {
     const project = state.list.find(_project => _project.id === projectId);
     const existedRuleIndex = project.notifications.findIndex(r => r.id === rule.id);
 
-    Vue.set(project.notifications, existedRuleIndex, rule);
+    project.notifications[existedRuleIndex] = rule;
   },
 
   /**
@@ -580,7 +589,7 @@ const mutations = {
     const existedRuleIndex = project.notifications.findIndex(r => r.id === ruleId);
 
     if (existedRuleIndex !== -1) {
-      Vue.delete(project.notifications, existedRuleIndex);
+      project.notifications.splice(existedRuleIndex, 1);
     }
   },
 
@@ -619,7 +628,7 @@ const mutations = {
 
     const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPattern.id);
 
-    Vue.set(project.eventGroupingPatterns, existedPatternIndex, eventGroupingPattern);
+    project.eventGroupingPatterns[existedPatternIndex] = eventGroupingPattern;
   },
 
   /**
@@ -637,7 +646,7 @@ const mutations = {
 
     const existedPatternIndex = project.eventGroupingPatterns.findIndex(p => p.id === eventGroupingPatternId);
 
-    Vue.delete(project.eventGroupingPatterns, existedPatternIndex);
+    project.eventGroupingPatterns.splice(existedPatternIndex, 1);
   },
 
   /**

@@ -12,7 +12,7 @@
         <!-- eslint-disable vue/no-v-html -->
         <p
           class="choose-plan__description"
-          v-html="$t('workspaces.chooseTariffPlanDialog.description', {featuresURL: '#'})"
+          v-html="chooseTariffPlanDescription"
         />
 
         <div
@@ -31,7 +31,7 @@
             :selected="plan.id === selectedPlan.id"
             :is-current-plan="plan.id === workspace.plan.id"
             :horizontal="plans.length > 3"
-            @click.native="proceedWithPlan(plan.id)"
+            @click="proceedWithPlan(plan.id)"
           />
 
           <div class="choose-plan__premium-card">
@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
@@ -74,7 +74,7 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalD
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ChooseTariffPlanPopup',
   components: {
     TariffPlan,
@@ -107,6 +107,19 @@ export default Vue.extend({
   },
   computed: {
     /**
+     * Description with injected links
+     *
+     * @returns {string}
+     */
+    chooseTariffPlanDescription(): string {
+      const emailLink = `<a href="mailto:team@hawk.so">team@hawk.so</a>`;
+
+      return this.$t('workspaces.chooseTariffPlanDialog.description', {
+        featuresUrl: '#',
+        emailLink,
+      }) as string;
+    },
+    /**
      * Available plans list
      */
     plans(): Plan[] {
@@ -133,7 +146,7 @@ export default Vue.extend({
       if (this.selectedPlan.monthlyCharge === 0) {
         this.$confirm.open({
           actionType: ActionType.SUBMIT,
-          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToFreePlanDescription').toString(),
+          description: this.$t('workspaces.chooseTariffPlanDialog.confirmSetToFreePlanDescription').toString(),
           onConfirm: async () => {
             const result = await this.$store.dispatch('CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN', {
               workspaceId: this.workspaceId,
@@ -184,7 +197,7 @@ export default Vue.extend({
       if (!this.workspace.isBlocked) {
         this.$confirm.open({
           actionType: ActionType.SUBMIT,
-          description: this.$i18n.t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
+          description: this.$t('workspaces.chooseTariffPlanDialog.confirmSetToPaidPlanDescription').toString(),
           onConfirm: async () => {
             await this.$store.dispatch(SET_MODAL_DIALOG, {
               component: 'PaymentDetailsDialog',

@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import { defineComponent, PropType } from 'vue';
 
 interface ConsoleLogEvent {
   method: string;
@@ -66,7 +66,7 @@ interface ConsoleLogEvent {
   styles?: string[];
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ConsoleOutput',
   props: {
     value: {
@@ -165,7 +165,7 @@ export default Vue.extend({
      * @param {string} logKey - The unique identifier for the log entry
      */
     toggleStack(logKey: string) {
-      this.$set(this.expandedStack, logKey, !this.expandedStack[logKey]);
+      this.expandedStack[logKey] = !this.expandedStack[logKey];
     },
     /**
      * Sanitizes a string by replacing special HTML characters with their entities

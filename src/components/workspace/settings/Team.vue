@@ -62,14 +62,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import notifier from 'codex-notifier';
 import { INVITE_TO_WORKSPACE } from '@/store/modules/workspaces/actionTypes';
 import TeamMember from './TeamMember.vue';
 
 import { Workspace, Member } from '@/types/workspaces';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'WorkspaceSettingsTeam',
   components: { TeamMember },
   props: {

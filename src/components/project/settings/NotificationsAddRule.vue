@@ -12,7 +12,7 @@
           <FormTextFieldset
             v-model="form.channels.telegram.endpoint"
             :label="$t('projects.settings.notifications.telegram')"
-            :description="$t('projects.settings.notifications.telegramDescription')"
+            :description="telegramDescription"
             :hidden="!form.channels.telegram.isEnabled"
             :is-invalid="!isChannelEndpointValid('telegram') && endpointShouldBeValidated.telegram"
             placeholder="https://notify.bot.codex.so/u/XXXXXXXXXXXX"
@@ -45,6 +45,19 @@
           />
           <UiCheckbox
             v-model="form.channels.slack.isEnabled"
+          />
+        </section>
+        <section>
+          <FormTextFieldset
+            v-model="form.channels.loop.endpoint"
+            :label="$t('projects.settings.notifications.loop')"
+            :description="$t('projects.settings.notifications.loopDescription')"
+            :hidden="!form.channels.loop.isEnabled"
+            :is-invalid="!isChannelEndpointValid('loop') && endpointShouldBeValidated.loop"
+            placeholder="Webhook App endpoint"
+          />
+          <UiCheckbox
+            v-model="form.channels.loop.isEnabled"
           />
         </section>
       </div>
@@ -95,20 +108,18 @@
       <div class="grid-form__section-content">
         <section>
           <FormTextFieldset
-            :value="form.including ? form.including.join(','): ''"
+            v-model="includingText"
             :label="$t('projects.settings.notifications.includingWordsLabel')"
             :description="$t('projects.settings.notifications.includingWordsDescription')"
             placeholder="hawk tracker, editor"
-            @input="splitIncludingFilters"
           />
         </section>
         <section>
           <FormTextFieldset
-            :value="form.excluding ? form.excluding.join(','): ''"
+            v-model="excludingText"
             :label="$t('projects.settings.notifications.excludingWordsLabel')"
             :description="$t('projects.settings.notifications.excludingWordsDescription')"
             placeholder="chunk, unknown"
-            @input="splitExcludingFilters"
           />
         </section>
       </div>
@@ -127,7 +138,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import FormTextFieldset from './../../forms/TextFieldset.vue';
 import RadioButtonGroup, { RadioButtonGroupItem } from './../../forms/RadioButtonGroup.vue';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
@@ -143,7 +154,7 @@ import notifier from 'codex-notifier';
 import CustomSelect from '@/components/forms/CustomSelect.vue';
 import CustomSelectOption from '@/types/customSelectOption';
 
-export default Vue.extend({
+export default defineComponent({
   name: 'ProjectSettingsNotificationsAddRule',
   components: {
     FormTextFieldset,
@@ -193,6 +204,11 @@ export default Vue.extend({
       slack: boolean;
 
       /**
+       * Flag that represents, if validation state of the loop endpoint should be displayed in textfield state
+       */
+      loop: boolean;
+
+      /**
        * Flag that represents, if validation state of the email endpoint should be displayed in textfield state
        */
       email: boolean;
@@ -221,6 +237,10 @@ export default Vue.extend({
             isEnabled: false,
           },
           slack: {
+            endpoint: '',
+            isEnabled: false,
+          },
+          loop: {
             endpoint: '',
             isEnabled: false,
           },
@@ -282,11 +302,19 @@ export default Vue.extend({
       endpointShouldBeValidated: {
         telegram: false,
         slack: false,
+        loop: false,
         email: false,
       },
     };
   },
   computed: {
+    telegramDescription(): string {
+      const telegramLink = `<a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>`;
+
+      return this.$t('projects.settings.notifications.telegramDescription', {
+        telegramLink,
+      }) as string;
+    },
     /**
      * Text on submit button: Add or Update
      */
@@ -297,11 +325,47 @@ export default Vue.extend({
 
       return this.$t('projects.settings.notifications.updateRuleSubmit') as string;
     },
+    includingText: {
+      get(): string {
+        if (!Array.isArray(this.form.including)) {
+          return '';
+        }
+
+        return this.form.including.join(', ');
+      },
+      set(value: string) {
+        const normalizedValue = typeof value === 'string' ? value : '';
+
+        this.form.including = normalizedValue.split(',').flatMap((item) => {
+          item = item.trim();
+
+          return item !== '' ? item : [];
+        });
+      },
+    },
+    excludingText: {
+      get(): string {
+        if (!Array.isArray(this.form.excluding)) {
+          return '';
+        }
+
+        return this.form.excluding.join(', ');
+      },
+      set(value: string) {
+        const normalizedValue = typeof value === 'string' ? value : '';
+
+        this.form.excluding = normalizedValue.split(',').flatMap((item) => {
+          item = item.trim();
+
+          return item !== '' ? item : [];
+        });
+      },
+    },
   },
   watch: {
     selectedThreshold: {
       handler: function (value: string): void {
-        this.$set(this.form, 'threshold', parseInt(value));
+        this.form.threshold = parseInt(value);
       },
     },
     selectedThresholdPeriod: {
@@ -309,7 +373,7 @@ export default Vue.extend({
         if (!value) {
           return;
         }
-        this.$set(this.form, 'thresholdPeriod', thresholdPeriodToMilliseconds.get(value.id));
+        this.form.thresholdPeriod = thresholdPeriodToMilliseconds.get(value.id);
       },
     },
   },
@@ -337,7 +401,7 @@ export default Vue.extend({
         this.$data.selectedThreshold = this.rule.threshold.toString();
       }
       this.$data.selectedThresholdPeriod = this.seenMoreThresholdPeriod.find((option) => {
-        return option.id === millisecondsToThresholdPeriod.get(this.rule.thresholdPeriod ?? 3600000);
+        return option.id === millisecondsToThresholdPeriod.get(this.rule?.thresholdPeriod ?? 3600000);
       }) as CustomSelectOption;
 
       /**
@@ -347,35 +411,40 @@ export default Vue.extend({
       const { id: _mergedRuleId, ...ruleWithoutId } = mergedRule;
 
       this.form = ruleWithoutId;
+
+      /**
+       * Backend may not return some channels, but UI expects them to exist
+       */
+      if (!this.form.channels.telegram) {
+        this.form.channels.telegram = {
+          endpoint: '',
+          isEnabled: true,
+        };
+      }
+
+      if (!this.form.channels.email) {
+        this.form.channels.email = {
+          endpoint: '',
+          isEnabled: false,
+        };
+      }
+
+      if (!this.form.channels.slack) {
+        this.form.channels.slack = {
+          endpoint: '',
+          isEnabled: false,
+        };
+      }
+
+      if (!this.form.channels.loop) {
+        this.form.channels.loop = {
+          endpoint: '',
+          isEnabled: false,
+        };
+      }
     }
   },
   methods: {
-    /**
-     * Fill 'including' property with array from splitted input string
-     *
-     * @param value - user input string with commas
-     */
-    splitIncludingFilters(value: string): void {
-      this.form.including = value.split(',').flatMap((item) => {
-        item = item.trim();
-
-        return item !== '' ? item : [];
-      });
-    },
-
-    /**
-     * Fill 'excluding' property with array from splitted input string
-     *
-     * @param value - user input string with commas
-     */
-    splitExcludingFilters(value: string): void {
-      this.form.excluding = value.split(',').flatMap((item) => {
-        item = item.trim();
-
-        return item !== '' ? item : [];
-      });
-    },
-
     /**
      * Saves form
      */
@@ -448,18 +517,10 @@ export default Vue.extend({
     validateForm(): boolean {
       this.endpointShouldBeValidated.telegram = this.form.channels.telegram!.isEnabled;
       this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
+      this.endpointShouldBeValidated.loop = this.form.channels.loop!.isEnabled;
       this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
 
-      let allChannelsValid = true;
-
-      /**
-       * Check channels
-       */
-      const notEmptyChannels = Object.keys(this.form.channels).forEach((channelName: string) => {
-        if (!this.isChannelEndpointValid(channelName)) {
-          allChannelsValid = false;
-        }
-      });
+      const allChannelsValid = true;
 
       const isThresholdInvalid = !/^[1-9]\d*$/.test(this.selectedThreshold);
 
@@ -476,8 +537,6 @@ export default Vue.extend({
      * @param channelName - key of this.form.channels object
      */
     isChannelEndpointValid(channelName: string): boolean {
-      const channel = this.form.channels[channelName];
-
       switch (true) {
         case (channelName === 'email' && this.form.channels.email!.isEnabled):
           if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.form.channels.email!.endpoint)) {
@@ -488,6 +547,13 @@ export default Vue.extend({
 
         case (channelName === 'slack' && this.form.channels.slack!.isEnabled):
           if (!/^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9]+\/[A-Za-z0-9]+\/[A-Za-z0-9]+$/.test(this.form.channels.slack!.endpoint)) {
+            return false;
+          }
+
+          return true;
+
+        case (channelName === 'loop' && this.form.channels.loop?.isEnabled):
+          if (!/^https:\/\/.+\/hooks\/.+$/.test(this.form.channels.loop?.endpoint || '')) {
             return false;
           }
 
