@@ -2,9 +2,7 @@
   <div class="guide-page">
     <GuideHeader
       class="guide-page__header"
-      :background-image="
-        require('../../../../assets/catalog/sentry.svg')
-      "
+      :background-image="sentryImage"
       catcher-name="Sentry"
       :badge="'external'"
       :description="$t('components.catalog.migrationFromSentryDescription')"
@@ -28,6 +26,7 @@
               {{ $t('projects.settings.integrations.sentryDSNTextNoToken') }}
             </p>
             <UiButton
+              v-if="project"
               :href="`/project/${project.id}/settings/integrations`"
               :content="$t('projects.settings.general.title')"
             />
@@ -55,6 +54,7 @@ import GuideHeader from '../../GuidePageHeader';
 import TokenBlock from '../../../project/TokenBlock';
 import { getSentryDSN } from '../../../../utils';
 import UiButton from '../../../utils/UiButton';
+import sentryImage from '../../../../assets/catalog/sentry.svg';
 
 export default {
   name: 'SetupJavascriptCatcher',
@@ -66,6 +66,7 @@ export default {
   },
   data() {
     return {
+      sentryImage,
       repoUrl: 'https://github.com/codex-team/hawk.javascript',
       readmeUrl: 'https://github.com/codex-team/hawk.javascript/blob/master/README.md',
     };
