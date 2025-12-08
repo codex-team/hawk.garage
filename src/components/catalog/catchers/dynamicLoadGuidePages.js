@@ -1,6 +1,6 @@
-let component;
+import { h, defineComponent, markRaw } from 'vue';
 
-export default {
+export default defineComponent({
   /**
    * Vue router navigation guard. Using for fetching instruction page
    *
@@ -20,8 +20,25 @@ export default {
       view = to.params.page;
     }
 
-    component = (await import(/* webpackChunkName: 'catcher-instructions-[request]' */ './guides/' + view)).default;
-    next();
+    const loadedComponent = (await import(/* webpackChunkName: 'catcher-instructions-[request]' */ './guides/' + view)).default;
+
+    next((vm) => {
+      /**
+       * Mark component as raw to avoid unnecessary reactivity overhead
+       */
+      vm.component = markRaw(loadedComponent);
+    });
   },
-  render: h => h(component),
-};
+  data() {
+    return {
+      component: null,
+    };
+  },
+  render() {
+    if (this.component) {
+      return h(this.component);
+    }
+
+    return null;
+  },
+});
