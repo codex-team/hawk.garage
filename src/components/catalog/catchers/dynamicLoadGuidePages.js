@@ -1,4 +1,16 @@
 import { h, defineComponent, markRaw } from 'vue';
+import commonGuide from './guides/common.vue';
+import javascriptGuide from './guides/javascript.vue';
+import sentryGuide from './guides/sentry.vue';
+
+/**
+ * Map of guide components by route parameter
+ */
+const guideComponents = {
+  common: commonGuide,
+  javascript: javascriptGuide,
+  sentry: sentryGuide,
+};
 
 export default defineComponent({
   /**
@@ -8,19 +20,14 @@ export default defineComponent({
    * @param {Route} _from - the route from which the user goes
    * @param {Function} next - next router guard
    */
-  async beforeRouteEnter(to, _from, next) {
+  beforeRouteEnter(to, _from, next) {
     const hasSeparatePage = [
       'javascript',
       'sentry',
     ];
 
-    let view = 'common';
-
-    if (hasSeparatePage.includes(to.params.page)) {
-      view = to.params.page;
-    }
-
-    const loadedComponent = (await import(/* webpackChunkName: 'catcher-instructions-[request]' */ './guides/' + view)).default;
+    const view = hasSeparatePage.includes(to.params.page) ? to.params.page : 'common';
+    const loadedComponent = guideComponents[view] || guideComponents.common;
 
     next((vm) => {
       /**
