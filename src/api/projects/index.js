@@ -225,21 +225,7 @@ export async function fetchChartData(projectId, startDate, endDate, groupBy, tim
     allowErrors: true,
   });
 
-  /**
-   * Log errors if present (errors will be handled in store/component)
-   */
-  if (response.errors?.length) {
-    response.errors.forEach(console.error);
-  }
-
-  /**
-   * Throw error if project is null (e.g., project not found)
-   */
-  if (!response?.data?.project) {
-    throw new Error('Project not found');
-  }
-
-  return response.data.project.chartData || [];
+  return response;
 }
 
 /**
