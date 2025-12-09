@@ -1,9 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { defineComponent } from 'vue';
 import store from './store';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
 import AppShell from './components/AppShell.vue';
+import invitesHandler from './invitesHandler';
+import unsubscribeHandler from './unsubscribeHandler';
+
+/**
+ * Empty component for routes that only use beforeEnter guards
+ */
+const EmptyComponent = defineComponent({
+  render: () => null,
+});
 
 /**
  * Disable return-type rule to leave router 'component' imports with short syntax
@@ -248,11 +258,13 @@ const router = createRouter({
     },
     {
       path: '/join/:inviteHash',
-      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next),
+      component: EmptyComponent,
+      beforeEnter: invitesHandler,
     },
     {
       path: '/join/:workspaceId/:inviteHash',
-      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'invites-handler' */'./invitesHandler')).default(to, from, next),
+      component: EmptyComponent,
+      beforeEnter: invitesHandler,
     },
     {
       path: '/recover',
@@ -261,7 +273,8 @@ const router = createRouter({
     },
     {
       path: '/unsubscribe/:projectId/:ruleId',
-      beforeEnter: async (to, from, next) => (await import(/* webpackChunkName: 'unsubscribe-handler' */'./unsubscribeHandler')).default(to, from, next),
+      component: EmptyComponent,
+      beforeEnter: unsubscribeHandler,
     },
   ],
 });

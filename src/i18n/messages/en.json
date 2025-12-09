@@ -11,6 +11,7 @@
     "signUpSubmitText": "Register",
     "recoverPasswordSuccessMessage": "New password is sent to your email",
     "signupSuccessMessage": "The password is sent to your email",
+    "inviteHelper": "You are invited to join a workspace. Please login or sign up to continue.",
     "errors": {
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",
