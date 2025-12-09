@@ -13,7 +13,7 @@
             {{ formatReleaseDate(releaseDetails.timestamp) }}
           </span>
           <SkeletonBar
-            v-else
+            v-else-if="!error && !dataLoaded"
             class="release-layout__date"
             size="small"
             width="140px"
