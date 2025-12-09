@@ -406,56 +406,34 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [FETCH_CHART_DATA]({ commit }, { projectId, startDate, endDate, groupBy }) {
-    try {
-      const timezoneOffset = (new Date()).getTimezoneOffset();
-      const response = await projectsApi.fetchChartData(
-        projectId,
-        startDate,
-        endDate,
-        groupBy,
-        timezoneOffset
-      );
+    const timezoneOffset = (new Date()).getTimezoneOffset();
+    const response = await projectsApi.fetchChartData(
+      projectId,
+      startDate,
+      endDate,
+      groupBy,
+      timezoneOffset
+    );
 
-      if (response.errors?.length) {
-        response.errors.forEach((apiError) => {
-          track(new Error(apiError.message), {
-            projectId,
-            startDate,
-            endDate,
-            groupBy,
-            timezoneOffset,
-            errorDetails: apiError,
-          });
+    if (response.errors?.length) {
+      response.errors.forEach((apiError) => {
+        track(new Error(apiError.message), {
+          projectId,
+          startDate,
+          endDate,
+          groupBy,
+          timezoneOffset,
+          errorDetails: apiError,
         });
-      }
-
-      const chartData = response.data?.project?.chartData || [];
-
-      commit(mutationTypes.ADD_CHART_DATA, {
-        projectId,
-        data: chartData,
-      });
-    } catch (error) {
-      console.error('Error fetching chart data:', error);
-
-      /**
-       * Send error to Hawk
-       */
-      track(error instanceof Error ? error : new Error(String(error)), {
-        projectId,
-        startDate,
-        endDate,
-        groupBy,
-      });
-
-      /**
-       * Commit empty array on error to prevent chart from breaking
-       */
-      commit(mutationTypes.ADD_CHART_DATA, {
-        projectId,
-        data: [],
       });
     }
+
+    const chartData = response.data?.project?.chartData || [];
+
+    commit(mutationTypes.ADD_CHART_DATA, {
+      projectId,
+      data: chartData,
+    });
   },
 };
 
