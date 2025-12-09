@@ -18,6 +18,12 @@ import {
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
+import { useErrorTracker } from '../../../hawk.ts';
+
+/**
+ * Error tracking composable
+ */
+const { track } = useErrorTracker();
 
 /**
  * Mutations enum for this module
@@ -401,13 +407,28 @@ const actions = {
    */
   async [FETCH_CHART_DATA]({ commit }, { projectId, startDate, endDate, groupBy }) {
     const timezoneOffset = (new Date()).getTimezoneOffset();
-    const chartData = await projectsApi.fetchChartData(
+    const response = await projectsApi.fetchChartData(
       projectId,
       startDate,
       endDate,
       groupBy,
       timezoneOffset
     );
+
+    if (response.errors?.length) {
+      response.errors.forEach((apiError) => {
+        track(new Error(apiError.message), {
+          projectId,
+          startDate,
+          endDate,
+          groupBy,
+          timezoneOffset,
+          errorDetails: apiError,
+        });
+      });
+    }
+
+    const chartData = response.data?.project?.chartData || [];
 
     commit(mutationTypes.ADD_CHART_DATA, {
       projectId,
