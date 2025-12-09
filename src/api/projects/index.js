@@ -18,7 +18,6 @@ import {
   QUERY_PROJECT_RELEASE_DETAILS
 } from './queries';
 import * as api from '../index.ts';
-import ProjectNotFoundError from '../../errors/projectNotFound.ts';
 
 /**
  * Create project and returns its id
@@ -237,7 +236,7 @@ export async function fetchChartData(projectId, startDate, endDate, groupBy, tim
    * Throw error if project is null (e.g., project not found)
    */
   if (!response?.data?.project) {
-    throw new ProjectNotFoundError();
+    throw new Error('Project not found');
   }
 
   return response.data.project.chartData || [];
