@@ -243,6 +243,8 @@
     },
     "releases": {
       "noNewEvents": "No new events",
+      "notFound": "Release not found",
+      "loadError": "Error loading release details",
       "stats": {
         "newEvents": "New events",
         "commits": "Commits",

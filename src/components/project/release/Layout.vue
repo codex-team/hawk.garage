@@ -18,10 +18,7 @@
             size="small"
             width="140px"
           />
-          <div
-            v-if="releaseDetails.timestamp"
-            class="breadcrumbs"
-          >
+          <div class="breadcrumbs">
             <router-link
               v-if="workspace"
               class="breadcrumbs__item"
@@ -56,39 +53,10 @@
             </router-link>
           </div>
           <div
-            v-else
-            class="breadcrumbs"
-          >
-            <div class="breadcrumbs__item">
-              <SkeletonAvatar size="xxs" />
-              <SkeletonBar
-                size="small"
-                width="120px"
-              />
-            </div>
-            <div class="breadcrumbs__item">
-              <SkeletonAvatar size="xxs" />
-              <SkeletonBar
-                size="small"
-                width="160px"
-              />
-            </div>
-          </div>
-          <div
-            v-if="releaseDetails.timestamp"
             class="release-layout__title"
             :title="release"
           >
             {{ release }}
-          </div>
-          <div
-            v-else
-            class="release-layout__title release-layout__title--skeleton"
-          >
-            <SkeletonBar
-              size="large"
-              width="300px"
-            />
           </div>
         </div>
         <TabBar
@@ -98,7 +66,15 @@
         />
       </div>
       <div
-        v-if="releaseDetails.timestamp"
+        v-if="error"
+        class="release-layout__content"
+      >
+        <div class="empty-event">
+          {{ error }}
+        </div>
+      </div>
+      <div
+        v-else-if="releaseDetails.timestamp"
         class="release-layout__content"
       >
         <router-view :release-details="releaseDetails" />
@@ -125,7 +101,6 @@ import EntityImage from '@/components/utils/EntityImage.vue';
 import ProjectBadge from '@/components/project/ProjectBadge.vue';
 import { projectBadges } from '@/mixins/projectBadges';
 import SkeletonBar from '@/components/utils/SkeletonBar.vue';
-import SkeletonAvatar from '@/components/utils/SkeletonAvatar.vue';
 import Spinner from '@/components/utils/Spinner.vue';
 import { ReleaseDetails } from '@/types/release';
 import { Project } from '@/store/modules/projects';
@@ -139,13 +114,13 @@ export default defineComponent({
     EntityImage,
     ProjectBadge,
     SkeletonBar,
-    SkeletonAvatar,
     Spinner,
   },
   mixins: [projectBadges],
   data(): {
     releaseDetails: ReleaseDetails;
     dataLoaded: boolean;
+    error: string | null;
   } {
     return {
       releaseDetails: {
@@ -160,6 +135,7 @@ export default defineComponent({
         release: '',
       },
       dataLoaded: false,
+      error: null,
     };
   },
   computed: {
@@ -201,20 +177,42 @@ export default defineComponent({
     },
   },
   async created() {
-    const details: ReleaseDetails = await fetchProjectReleaseDetails(this.projectId, this.release);
+    try {
+      const details: ReleaseDetails = await fetchProjectReleaseDetails(this.projectId, this.release);
 
-    this.releaseDetails = {
-      timestamp: details?.timestamp || 0,
-      dailyEventsPortion: details?.dailyEventsPortion || { dailyEvents: [] },
-      files: details?.files || [],
-      commits: details?.commits || [],
-      commitsCount: details?.commitsCount || 0,
-      filesCount: details?.filesCount || 0,
-      release: details?.release || '',
-    };
+      this.releaseDetails = {
+        timestamp: details?.timestamp || 0,
+        dailyEventsPortion: details?.dailyEventsPortion || { dailyEvents: [] },
+        files: details?.files || [],
+        commits: details?.commits || [],
+        commitsCount: details?.commitsCount || 0,
+        filesCount: details?.filesCount || 0,
+        release: details?.release || '',
+      };
 
-    await this.$nextTick();
-    this.dataLoaded = true;
+      await this.$nextTick();
+      this.dataLoaded = true;
+    } catch (error) {
+      console.error(error);
+
+      /**
+       * Determine error message based on error type
+       */
+      const isNotFoundError = error instanceof Error && (
+        error.message.toLowerCase().includes('not found')
+        || error.name === 'NOT_FOUND'
+        || error.message.toLowerCase().includes('release not found')
+      );
+
+      /**
+       * Set error message to display in the content area
+       */
+      this.error = isNotFoundError
+        ? this.$t('projects.releases.notFound').toString()
+        : this.$t('projects.releases.loadError').toString();
+
+      this.dataLoaded = true;
+    }
   },
   methods: {
     close() {
@@ -237,6 +235,8 @@ export default defineComponent({
 </script>
 
 <style>
+@import "./../../../styles/custom-properties.css";
+
 .release-layout {
   display: flex;
   flex-direction: column;
@@ -319,6 +319,10 @@ export default defineComponent({
   justify-content: center;
   height: 100%;
   margin: 25px auto;
+}
+
+.empty-event {
+  @mixin empty-placeholder;
 }
 
 </style>
