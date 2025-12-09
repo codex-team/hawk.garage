@@ -8,6 +8,12 @@
         Time for quality
       </div>
     </div>
+    <div
+      v-if="helperText"
+      class="auth-form__helper-text"
+    >
+      {{ helperText }}
+    </div>
     <!--    <div class="auth-form__social-block">-->
     <!--      <a-->
     <!--        class="auth-form__github-button"-->
@@ -105,6 +111,10 @@ export default {
     submitText: {
       type: String,
       required: true,
+    },
+    helperText: {
+      type: String,
+      default: null,
     },
     message: {
       type: Object,
@@ -311,6 +321,18 @@ export default {
     &:hover {
       color: var(--color-text-main);
     }
+  }
+
+  &__helper-text {
+    margin-bottom: 20px;
+    color: var(--color-text-main);
+    font-size: 16px;
+    background: var(--color-bg-second);
+    border: solid 1px #343949;
+    border-radius: 7px;
+    box-shadow: 0 10px 11px -10px rgba(13, 15, 26, 0.49);
+    padding: 20px;
+    line-height: 1.45;
   }
 }
 </style>
