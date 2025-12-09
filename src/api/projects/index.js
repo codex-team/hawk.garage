@@ -18,6 +18,7 @@ import {
   QUERY_PROJECT_RELEASE_DETAILS
 } from './queries';
 import * as api from '../index.ts';
+import ProjectNotFoundError from '../../errors/projectNotFound.ts';
 
 /**
  * Create project and returns its id
@@ -212,13 +213,34 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @returns {Promise<ChartData[] | null>}
  */
 export async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
-  return (await api.callOld(QUERY_CHART_DATA, {
+  const response = await api.call(QUERY_CHART_DATA, {
     projectId,
     startDate,
     endDate,
     groupBy,
     timezoneOffset,
-  })).project.chartData;
+  }, undefined, {
+    /**
+     * Allow errors to be returned in response for handling in store/component
+     */
+    allowErrors: true,
+  });
+
+  /**
+   * Log errors if present (errors will be handled in store/component)
+   */
+  if (response.errors?.length) {
+    response.errors.forEach(console.error);
+  }
+
+  /**
+   * Throw error if project is null (e.g., project not found)
+   */
+  if (!response?.data?.project) {
+    throw new ProjectNotFoundError();
+  }
+
+  return response.data.project.chartData || [];
 }
 
 /**

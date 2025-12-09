@@ -400,19 +400,31 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [FETCH_CHART_DATA]({ commit }, { projectId, startDate, endDate, groupBy }) {
-    const timezoneOffset = (new Date()).getTimezoneOffset();
-    const chartData = await projectsApi.fetchChartData(
-      projectId,
-      startDate,
-      endDate,
-      groupBy,
-      timezoneOffset
-    );
+    try {
+      const timezoneOffset = (new Date()).getTimezoneOffset();
+      const chartData = await projectsApi.fetchChartData(
+        projectId,
+        startDate,
+        endDate,
+        groupBy,
+        timezoneOffset
+      );
 
-    commit(mutationTypes.ADD_CHART_DATA, {
-      projectId,
-      data: chartData,
-    });
+      commit(mutationTypes.ADD_CHART_DATA, {
+        projectId,
+        data: chartData,
+      });
+    } catch (error) {
+      console.error('Error fetching chart data:', error);
+
+      /**
+       * Commit empty array on error to prevent chart from breaking
+       */
+      commit(mutationTypes.ADD_CHART_DATA, {
+        projectId,
+        data: [],
+      });
+    }
   },
 };
 
