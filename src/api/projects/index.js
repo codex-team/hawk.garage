@@ -256,7 +256,14 @@ export async function fetchProjectReleaseDetails(projectId, release) {
     release });
 
   if (response.errors?.length) {
-    response.errors.forEach(console.error);
+    /**
+     * Throw error if release not found or other API errors
+     */
+    const error = new Error(response.errors[0].message);
+
+    error.name = response.errors[0].extensions?.code || 'API_ERROR';
+
+    throw error;
   }
 
   return response.data.project.releaseDetails;
