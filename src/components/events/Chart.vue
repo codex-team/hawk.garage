@@ -89,14 +89,15 @@
 </template>
 
 <script setup lang="ts">
-import { chartColors } from '@/constants/charts';
 import { throttle } from '@/utils';
-import { prettyDateFromTimestamp, spacedNumber } from '@/utils/filters';
+import { spacedNumber } from '@/utils/filters';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { ChartItem, type ChartLineColors, ChartLine as ChartLineInterface } from '../../types/chart';
+import { ChartItem, ChartLine as ChartLineInterface } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
 import ChartLine from './ChartLine.vue';
+import { chartColors } from './colors.const';
+import { type ChartLineColors } from './types.chart';
 
 interface Props {
   /**
@@ -123,7 +124,7 @@ const { t } = useI18n();
 const chartWidth = ref(0);
 
 /**
- * Chart SVG clientWidth
+ * Chart SVG clientHeight
  */
 const chartHeight = ref(0);
 
@@ -259,45 +260,6 @@ const tooltipAlignment = computed((): string => {
 
   /* Default center alignment */
   return 'center';
-});
-
-/**
- * Computed property that returns formatted today count with spaces
- */
-const formattedTodayCount = computed((): string => {
-  return spacedNumber((props as any).todayCount);
-});
-
-/**
- * Computed property that returns formatted difference with spaces
- */
-const formattedDifference = computed((): string => {
-  return spacedNumber(Math.abs((props as any).difference));
-});
-
-/**
- * Computed property that returns a function to format count by index
- */
-const formatCountByIndex = computed(() => {
-  return (index: number) => {
-    return spacedNumber((props as any).points[index]?.count || 0);
-  };
-});
-
-/**
- * Computed property that returns a function to format date by index
- */
-const formatDateByIndex = computed(() => {
-  return (index: number) => {
-    return prettyDateFromTimestamp((props as any).points[index]?.timestamp * 1000 || 0);
-  };
-});
-
-/**
- * Computed property that returns array of formatted dates for all points
- */
-const formattedDates = computed((): string[] => {
-  return ((props as any).points || []).map((day: any) => prettyDateFromTimestamp(day.timestamp * 1000));
 });
 
 /**

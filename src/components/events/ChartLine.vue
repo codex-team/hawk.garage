@@ -44,11 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { chartColors } from '@/constants/charts';
 import { computed } from 'vue';
-import { ChartItem, ChartLineColor, type ChartLineColors } from '../../types/chart';
-
-
+import { ChartItem, ChartLineColor } from '../../types/chart';
+import { chartColors } from './colors.const';
+import { type ChartLineColors } from './types.chart';
 
 interface Props {
   /**

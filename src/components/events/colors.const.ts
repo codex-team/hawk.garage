@@ -1,4 +1,5 @@
-import { ChartLineColor, type ChartLineColors } from '@/types/chart';
+import { ChartLineColor } from '@/types/chart';
+import type { ChartLineColors } from './types.chart';
 
 /**
  * Colors set for several chart lines
