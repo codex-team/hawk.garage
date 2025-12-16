@@ -43,267 +43,192 @@
   </g>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 import { ChartItem, ChartLineColor } from '../../types/chart';
+import { chartColors } from './colors.const';
+import { type ChartLineColors } from './types.chart';
 
-/**
- * A particular color params
- */
-export interface ChartLineColors {
+interface Props {
   /**
-   * Name of the color
+   * List of points for displaying on the chart
    */
-  name: ChartLineColor;
-  /**
-   * Starting color for stroke gradient (top)
-   */
-  strokeStart: string;
-  /**
-   * Ending color for stroke gradient (bottom)
-   */
-  strokeEnd: string;
-  /**
-   * Starting color for fill gradient (top, with opacity)
-   */
-  fillStart: string;
-  /**
-   * Ending color for fill gradient (bottom, usually transparent)
-   */
-  fillEnd: string;
+  points?: ChartItem[];
 
   /**
-   * Pointer + legend color
+   * Label for the chart line
    */
-  pointerColor: string;
+  label?: string;
+
+  /**
+   * Name of the color for the chart line
+   */
+  color?: ChartLineColor;
+
+  /**
+   * Chart SVG clientWidth
+   */
+  chartWidth?: number;
+
+  /**
+   * Chart SVG clientHeight
+   */
+  chartHeight?: number;
+
+  /**
+   * Minimum value for scaling
+   */
+  minValue?: number;
+
+  /**
+   * Maximum value for scaling
+   */
+  maxValue?: number;
+
+  /**
+   * Step for OX axis
+   */
+  stepX?: number;
 }
 
+const props = withDefaults(defineProps<Props>(), {
+  points: () => [] as ChartItem[],
+  label: '',
+  color: ChartLineColor.Red,
+  chartWidth: 0,
+  chartHeight: 0,
+  minValue: 0,
+  maxValue: 0,
+  stepX: 0,
+});
+
 /**
- * Colors set for several chart lines
+ * Unique ID for gradient definitions to avoid conflicts when multiple ChartLine components are used
  */
-export const chartColors: ChartLineColors[] = [
-  {
-    name: ChartLineColor.LightGrey,
-    strokeStart: 'rgba(75, 90, 121, 0.33)',
-    strokeEnd: 'rgba(71, 72, 85, 0.16)',
-    fillStart: 'rgba(63, 136, 255, 0.01)',
-    fillEnd: 'rgba(66, 78, 93, 0.05)',
-    pointerColor: '#717289',
-  },
-  {
-    name: ChartLineColor.Red,
-    strokeStart: '#FF2E51',
-    strokeEnd: '#424565',
-    fillStart: 'rgba(255, 46, 81, 0.3)',
-    fillEnd: 'rgba(66, 69, 101, 0)',
-    pointerColor: '#FF2E51',
-  },
-];
+const gradientId = `chart-gradient-${Math.random()
+  .toString(36)
+  .substring(2, 9)}`;
+const fillGradientId = `chart-fill-gradient-${Math.random()
+  .toString(36)
+  .substring(2, 9)}`;
 
-export default defineComponent({
-  name: 'ChartLine',
-  props: {
-    /**
-     * List of points for displaying on the chart
-     */
-    points: {
-      type: Array as () => ChartItem[],
-      default: () => [] as ChartItem[],
-    },
+/**
+ * The ratio of the maximum value and the height of the graph
+ */
+const kY = computed((): number => {
+  if (props.maxValue === props.minValue) {
+    return 1;
+  }
 
-    /**
-     * Label for the chart line
-     */
-    label: {
-      type: String,
-      default: '',
-    },
+  return props.chartHeight / (props.maxValue - props.minValue);
+});
 
-    /**
-     * Name of the color for the chart line
-     */
-    color: {
-      type: String as () => ChartLineColor,
-      default: ChartLineColor.Red,
-    },
+/**
+ * Smooth path using cubic Bezier curves for SVG <path>
+ */
+const smoothPath = computed((): string => {
+  if (!props.points || !props.points.length) {
+    return '';
+  }
 
-    /**
-     * Chart SVG clientWidth
-     */
-    chartWidth: {
-      type: Number,
-      default: 0,
-    },
+  if (props.points.length === 1) {
+    const pointX = 0;
+    const pointY = props.chartHeight - (props.points[0].count - props.minValue) * kY.value;
 
-    /**
-     * Chart SVG clientHeight
-     */
-    chartHeight: {
-      type: Number,
-      default: 0,
-    },
+    return `M ${pointX} ${pointY}`;
+  }
 
-    /**
-     * Minimum value for scaling
-     */
-    minValue: {
-      type: Number,
-      default: 0,
-    },
+  const pathPoints: Array<{
+    x: number;
+    y: number;
+  }> = [];
 
-    /**
-     * Maximum value for scaling
-     */
-    maxValue: {
-      type: Number,
-      default: 0,
-    },
+  props.points.forEach((day, index) => {
+    const value = day.count;
+    const pointX = index * props.stepX;
+    const pointY = props.chartHeight - (value - props.minValue) * kY.value;
 
-    /**
-     * Step for OX axis
-     */
-    stepX: {
-      type: Number,
-      default: 0,
-    },
-  },
-  data() {
-    /**
-     * Unique ID for gradient definitions to avoid conflicts when multiple ChartLine components are used
-     */
-    const gradientId = `chart-gradient-${Math.random()
-      .toString(36)
-      .substring(2, 9)}`;
-    const fillGradientId = `chart-fill-gradient-${Math.random()
-      .toString(36)
-      .substring(2, 9)}`;
+    pathPoints.push({ x: pointX, y: pointY });
+  });
 
-    return {
-      gradientId,
-      fillGradientId,
-    };
-  },
-  computed: {
-    /**
-     * The ratio of the maximum value and the height of the graph
-     */
-    kY(): number {
-      if (this.maxValue === this.minValue) {
-        return 1;
-      }
+  /* Start with move to first point */
+  let path = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
 
-      return this.chartHeight / (this.maxValue - this.minValue);
-    },
+  /* Vertical margins to prevent curve from going outside chart area */
+  const verticalMargin = 2;
+  const minY = verticalMargin;
+  const maxY = props.chartHeight - verticalMargin;
 
-    /**
-     * Smooth path using cubic Bezier curves for SVG <path>
-     */
-    smoothPath(): string {
-      if (!this.points || !this.points.length) {
-        return '';
-      }
+  /* Generate smooth curves between points */
+  for (let i = 0; i < pathPoints.length - 1; i++) {
+    const p0 = i > 0 ? pathPoints[i - 1] : pathPoints[i];
+    const p1 = pathPoints[i];
+    const p2 = pathPoints[i + 1];
+    const p3 = i < pathPoints.length - 2 ? pathPoints[i + 2] : p2;
 
-      if (this.points.length === 1) {
-        const pointX = 0;
-        const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
+    /* Check if both points in segment are at minimum (zero or near zero) */
+    const v1 = props.points[i].count;
+    const v2 = props.points[i + 1].count;
+    const isFlat = v1 === props.minValue && v2 === props.minValue;
 
-        return `M ${pointX} ${pointY}`;
-      }
+    if (isFlat) {
+      /* Use linear interpolation for flat segments at minimum value */
+      path += ` L ${p2.x} ${p2.y}`;
+    } else {
+      /* Calculate control points for cubic Bezier curve */
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      let cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      let cp2y = p2.y - (p3.y - p1.y) / 6;
 
-      const pathPoints: Array<{
-        x: number;
-        y: number;
-      }> = [];
+      /* Clamp control points to stay within chart bounds */
+      cp1y = Math.max(minY, Math.min(maxY, cp1y));
+      cp2y = Math.max(minY, Math.min(maxY, cp2y));
 
-      this.points.forEach((day, index) => {
-        const value = day.count;
-        const pointX = index * this.stepX;
-        const pointY = this.chartHeight - (value - this.minValue) * this.kY;
+      /* Add cubic Bezier curve segment */
+      path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+    }
+  }
 
-        pathPoints.push({ x: pointX,
-          y: pointY });
-      });
+  return path;
+});
 
-      /* Start with move to first point */
-      let path = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
+/**
+ * Smooth path with closed area for gradient fill
+ */
+const smoothPathFill = computed((): string => {
+  if (!props.points || !props.points.length) {
+    return '';
+  }
 
-      /* Vertical margins to prevent curve from going outside chart area */
-      const verticalMargin = 2;
-      const minY = verticalMargin;
-      const maxY = this.chartHeight - verticalMargin;
+  const path = smoothPath.value;
 
-      /* Generate smooth curves between points */
-      for (let i = 0; i < pathPoints.length - 1; i++) {
-        const p0 = i > 0 ? pathPoints[i - 1] : pathPoints[i];
-        const p1 = pathPoints[i];
-        const p2 = pathPoints[i + 1];
-        const p3 = i < pathPoints.length - 2 ? pathPoints[i + 2] : p2;
+  if (!path) {
+    return '';
+  }
 
-        /* Check if both points in segment are at minimum (zero or near zero) */
-        const v1 = this.points[i].count;
-        const v2 = this.points[i + 1].count;
-        const isFlat = v1 === this.minValue && v2 === this.minValue;
+  if (props.points.length === 1) {
+    const pointX = 0;
+    const pointY = props.chartHeight - (props.points[0].count - props.minValue) * kY.value;
 
-        if (isFlat) {
-          /* Use linear interpolation for flat segments at minimum value */
-          path += ` L ${p2.x} ${p2.y}`;
-        } else {
-          /* Calculate control points for cubic Bezier curve */
-          const cp1x = p1.x + (p2.x - p0.x) / 6;
-          let cp1y = p1.y + (p2.y - p0.y) / 6;
-          const cp2x = p2.x - (p3.x - p1.x) / 6;
-          let cp2y = p2.y - (p3.y - p1.y) / 6;
+    /* Close the path: line to bottom right, line to bottom left, close */
+    return `M ${pointX} ${pointY} L ${pointX} ${props.chartHeight} L ${pointX} ${props.chartHeight} Z`;
+  }
 
-          /* Clamp control points to stay within chart bounds */
-          cp1y = Math.max(minY, Math.min(maxY, cp1y));
-          cp2y = Math.max(minY, Math.min(maxY, cp2y));
+  /* Get the last point coordinates from the path */
+  const lastIndex = props.points.length - 1;
+  const lastX = lastIndex * props.stepX;
+  const firstX = 0;
 
-          /* Add cubic Bezier curve segment */
-          path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
-        }
-      }
+  /* Close the path: line to bottom right, line to bottom left, close back to start */
+  return `${path} L ${lastX} ${props.chartHeight} L ${firstX} ${props.chartHeight} Z`;
+});
 
-      return path;
-    },
-
-    /**
-     * Smooth path with closed area for gradient fill
-     */
-    smoothPathFill(): string {
-      if (!this.points || !this.points.length) {
-        return '';
-      }
-
-      const path = this.smoothPath;
-
-      if (!path) {
-        return '';
-      }
-
-      if (this.points.length === 1) {
-        const pointX = 0;
-        const pointY = this.chartHeight - (this.points[0].count - this.minValue) * this.kY;
-
-        /* Close the path: line to bottom right, line to bottom left, close */
-        return `M ${pointX} ${pointY} L ${pointX} ${this.chartHeight} L ${pointX} ${this.chartHeight} Z`;
-      }
-
-      /* Get the last point coordinates from the path */
-      const lastIndex = this.points.length - 1;
-      const lastX = lastIndex * this.stepX;
-      const firstX = 0;
-
-      /* Close the path: line to bottom right, line to bottom left, close back to start */
-      return `${path} L ${lastX} ${this.chartHeight} L ${firstX} ${this.chartHeight} Z`;
-    },
-
-    /**
-     * Color for the chart line
-     */
-    colorSet(): ChartLineColors {
-      return chartColors.find(c => c.name === this.color) as ChartLineColors;
-    },
-  },
+/**
+ * Color for the chart line
+ */
+const colorSet = computed((): ChartLineColors => {
+  return chartColors.find(c => c.name === props.color) as ChartLineColors;
 });
 </script>
 
