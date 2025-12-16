@@ -15,46 +15,36 @@
   </span>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
 
-export default defineComponent({
-  props: {
-    /**
-     * Passed value for animating
-     */
-    value: {
-      type: [String, Number],
-      required: true,
-    },
-  },
-  data() {
-    return {
-      /**
-       * Previous value to jump out
-       */
-      prevValue: 0 as string | number | null,
+interface Props {
+  /**
+   * Passed value for animating
+   */
+  value: string | number;
+}
 
-      /**
-       * Current value to jump in
-       */
-      curValue: 0 as string | number | null,
-    };
-  },
-  watch: {
-    value(newValue, oldValue) {
-      this.prevValue = null;
-      this.curValue = null;
+const props = defineProps<Props>();
 
-      setTimeout(() => {
-        this.prevValue = oldValue;
-        this.curValue = newValue;
-      }, 10);
-    },
-  },
-  created(): void {
-    this.curValue = this.value;
-  },
+/**
+ * Previous value to jump out
+ */
+const prevValue = ref<string | number | null>(null);
+
+/**
+ * Current value to jump in
+ */
+const curValue = ref<string | number | null>(props.value);
+
+watch(() => props.value, (newValue, oldValue) => {
+  prevValue.value = null;
+  curValue.value = null;
+
+  setTimeout(() => {
+    prevValue.value = oldValue;
+    curValue.value = newValue;
+  }, 10);
 });
 </script>
 
