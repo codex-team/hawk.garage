@@ -2,9 +2,7 @@
   <div class="guide-page">
     <GuideHeader
       class="guide-page__header"
-      :background-image="
-        require('../../../../assets/catalog/javascript/js@3x.jpg')
-      "
+      :background-image="jsImage"
       :github-link="repoUrl"
       catcher-name="JavaScript"
       :description="$t('components.catalog.catchers.js')"
@@ -20,7 +18,10 @@
         </template>
         <template #content>
           {{ $t('components.catalog.hereIsToken') }}
-          <TokenBlock :token="project.token" />
+          <TokenBlock
+            v-if="project"
+            :token="project.token"
+          />
         </template>
       </GuideStepBlock>
       <GuideStepBlock
@@ -73,7 +74,7 @@
                 <br>
                 const hawk = new HawkCatcher({
                 <br>
-                &nbsp;&nbsp;token: '{{ project.token }}'
+                &nbsp;&nbsp;token: '{{ project?.token || "" }}'
                 <br>
                 });
               </CodeBlock>
@@ -177,6 +178,7 @@ import GuideHeader from '../../GuidePageHeader';
 import TokenBlock from '../../../project/TokenBlock';
 import CodeBlock from '../../../utils/CodeBlock';
 import UiButton from '../../../utils/UiButton';
+import jsImage from '../../../../assets/catalog/javascript/js@3x.jpg';
 
 export default {
   name: 'SetupJavascriptCatcher',
@@ -190,6 +192,7 @@ export default {
   },
   data() {
     return {
+      jsImage,
       repoUrl: 'https://github.com/codex-team/hawk.javascript',
       readmeUrl: 'https://github.com/codex-team/hawk.javascript/blob/master/README.md',
     };

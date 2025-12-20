@@ -9,6 +9,7 @@
       :alt-link="altLink"
       :alt-text="altText"
       :success-message="successMessage"
+      :helper-text="isVisitedByInvite ? $t('authPages.inviteHelper') : null"
       @form-submit="login"
     />
   </div>
@@ -85,30 +86,43 @@ export default {
 
       return '';
     },
+
+    /**
+     * True when user was redirected to login page by invite
+     * Used to show Invite helper above the form
+     */
+    isVisitedByInvite() {
+      return getCookie('afterAuthRedirect') !== '';
+    },
   },
   async mounted() {
-    if (
-      this.$route.query.access_token
-      && this.$route.query.refresh_token
-    ) {
-      try {
-        await this.$store.dispatch(SET_TOKENS, {
-          accessToken: this.$route.query.access_token,
-          refreshToken: this.$route.query.refresh_token,
-        });
+    /**
+     * OAuth code
+     * It is not used at the moment
+     * See https://github.com/codex-team/hawk.garage/pull/101
+     */
+    // if (
+    //   this.$route.query.access_token
+    //   && this.$route.query.refresh_token
+    // ) {
+    //   try {
+    //     await this.$store.dispatch(SET_TOKENS, {
+    //       accessToken: this.$route.query.access_token,
+    //       refreshToken: this.$route.query.refresh_token,
+    //     });
 
-        const afterAuthRedirect = getCookie('afterAuthRedirect');
+    //     const afterAuthRedirect = getCookie('afterAuthRedirect');
 
-        this.$router.push(afterAuthRedirect || '/');
+    //     this.$router.push(afterAuthRedirect || '/');
 
-        removeCookie('afterAuthRedirect');
-      } catch (e) {
-        notifier.show({
-          message: this.$t(`authPages.errors.${e.message}`),
-          style: 'error',
-        });
-      }
-    }
+    //     removeCookie('afterAuthRedirect');
+    //   } catch (e) {
+    //     notifier.show({
+    //       message: this.$t(`authPages.errors.${e.message}`),
+    //       style: 'error',
+    //     });
+    //   }
+    // }
 
     /**
      * If email is prefilled, set focus to the password

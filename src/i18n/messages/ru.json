@@ -11,6 +11,7 @@
     "signUpSubmitText": "Зарегистрироваться",
     "recoverPasswordSuccessMessage": "Новый пароль отправлен на вашу почту",
     "signupSuccessMessage": "Пароль отправлен на указанную почту",
+    "inviteHelper": "Вы приглашены в воркспейс. Войдите или зарегистрируйтесь, чтобы продолжить.",
     "errors": {
       "Wrong email or password": "Неправильный email или пароль",
       "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",
@@ -243,6 +244,8 @@
     },
     "releases": {
       "noNewEvents": "Нет новых событий",
+      "notFound": "Релиз не найден",
+      "loadError": "Ошибка загрузки деталей релиза",
       "stats": {
         "newEvents": "Новые события",
         "commits": "Коммиты",

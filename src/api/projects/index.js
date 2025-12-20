@@ -202,23 +202,30 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
 }
 
 /**
- * Fetch data for chart
+ * Loads "accepted" and "rate-limited" chart data for a project
  *
- * @param {string} projectId - id of the project to fetch recent errors
+ * @param {string} projectId - id of the project to load chart data for
  * @param {string} startDate - start date (ISO string or Unix timestamp in seconds)
  * @param {string} endDate - end date (ISO string or Unix timestamp in seconds)
  * @param {number} groupBy - grouping interval in minutes (1=minute, 60=hour, 1440=day)
  * @param {number} timezoneOffset - user's local timezone offset
- * @returns {Promise<ChartData[] | null>}
+ * @returns {Promise<APIResponse<{project: {chartData: ChartData[]}}>>}
  */
 export async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
-  return (await api.callOld(QUERY_CHART_DATA, {
+  const response = await api.call(QUERY_CHART_DATA, {
     projectId,
     startDate,
     endDate,
     groupBy,
     timezoneOffset,
-  })).project.chartData;
+  }, undefined, {
+    /**
+     * Allow errors to be returned in response for handling in store/component
+     */
+    allowErrors: true,
+  });
+
+  return response;
 }
 
 /**
@@ -249,7 +256,14 @@ export async function fetchProjectReleaseDetails(projectId, release) {
     release });
 
   if (response.errors?.length) {
-    response.errors.forEach(console.error);
+    /**
+     * Throw error if release not found or other API errors
+     */
+    const error = new Error(response.errors[0].message);
+
+    error.name = response.errors[0].extensions?.code || 'API_ERROR';
+
+    throw error;
   }
 
   return response.data.project.releaseDetails;

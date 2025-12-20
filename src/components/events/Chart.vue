@@ -88,489 +88,435 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import { spacedNumber, prettyDateFromTimestamp } from '@/utils/filters';
+<script setup lang="ts">
 import { throttle } from '@/utils';
+import { spacedNumber } from '@/utils/filters';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ChartItem, ChartLine as ChartLineInterface } from '../../types/chart';
 import AnimatedCounter from './../utils/AnimatedCounter.vue';
-import ChartLine, { type ChartLineColors, chartColors } from './ChartLine.vue';
-
-type ChartData = {
-  chartWidth: number;
-  chartHeight: number;
-  onResize: () => void;
-  hoveredIndex: number;
-};
-
-export default defineComponent({
-  name: 'Chart',
-  components: {
-    AnimatedCounter,
-    ChartLine,
-  },
-  props: {
-    /**
-     * List of lines for displaying on the chart
-     */
-    lines: {
-      type: Array as () => ChartLineInterface[],
-      default: () => [] as ChartLineInterface[],
-    },
-
-    /**
-     * Detalization of the chart affects the legend and tooltip display
-     */
-    detalization: {
-      type: String as () => 'minutes' | 'hours' | 'days',
-      default: 'days',
-    },
-  },
-  data(): ChartData {
-    return {
-      /**
-       * Chart SVG clientWidth
-       */
-      chartWidth: 0,
-
-      /**
-       * Chart SVG clientWidth
-       */
-      chartHeight: 0,
-
-      /**
-       * Handler of window resize
-       */
-      onResize: (): void => {
-        /**
-         * noop placeholder, will be replaced in created lifecycle
-         */
-      },
-
-      /**
-       * Hovered point index
-       */
-      hoveredIndex: -1,
-    };
-  },
-  computed: {
-
-    /**
-     * Width of x-legend item
-     */
-    xLegendWidth(): number {
-      switch (this.detalization) {
-        case 'days':
-          return 50;
-        case 'hours':
-          return 75;
-        case 'minutes':
-          return 90;
-        default:
-          return 55;
-      }
-    },
-
-    /**
-     * First line of the chart.
-     * Used for calculating stepX
-     */
-    firstLine(): ChartLineInterface {
-      return this.lines[0];
-    },
-
-    /**
-     * Data of the first line of the chart.
-     * Used for calculating stepX (and other common properties across all lines)
-     */
-    firstLineData(): ChartItem[] {
-      if (!this.firstLine) {
-        return [];
-      }
-
-      return this.firstLine.data;
-    },
-
-    /**
-     * Step for OX axis
-     */
-    stepX(): number {
-      if (this.firstLineData.length <= 1) {
-        return 0;
-      }
-
-      return this.chartWidth / (this.firstLineData.length - 1);
-    },
-
-    /**
-     * Calculate the step for displaying x-legend items to prevent overflow
-     * Returns how many items to skip between displayed items
-     */
-    visibleXLegendItems(): number {
-      if (!this.chartWidth || !this.firstLineData.length) {
-        return 1;
-      }
-
-      const maxItems = Math.floor(this.chartWidth / this.xLegendWidth);
-
-      if (maxItems >= this.firstLineData.length) {
-        return 1;
-      }
-
-      return Math.max(1, Math.ceil(this.firstLineData.length / maxItems));
-    },
-
-    /**
-     * Filtered points to display in x-legend based on visibleXLegendItems step
-     */
-    visibleLegendPoints(): Array<{
-      point: ChartItem;
-      index: number;
-    }> {
-      const step = this.visibleXLegendItems;
-      const result: Array<{
-        point: ChartItem;
-        index: number;
-      }> = [];
-
-      for (let i = 0; i < this.firstLineData.length; i = i + step) {
-        result.push({
-          point: this.firstLineData[i],
-          index: i,
-        });
-      }
-
-      /* Ensure the last point is always included */
-      const lastIndex = this.firstLineData.length - 1;
-
-      if (result.length > 0 && result[result.length - 1].index !== lastIndex) {
-        result.push({
-          point: this.firstLineData[lastIndex],
-          index: lastIndex,
-        });
-      }
-
-      return result;
-    },
-
-    /**
-     * Left coordinate of hover pointer
-     */
-    pointerLeft(): number {
-      return this.hoveredIndex * this.stepX;
-    },
-
-    /**
-     * Tooltip alignment class based on position to prevent overflow
-     */
-    tooltipAlignment(): string {
-      const estimatedTooltipWidth = 100;
-      const pointerX = this.hoveredIndex * this.stepX;
-
-      if (pointerX < estimatedTooltipWidth / 2) {
-        /* Near left edge - align tooltip to the left */
-        return 'left';
-      } else if (pointerX > this.chartWidth - estimatedTooltipWidth / 2) {
-        /* Near right edge - align tooltip to the right */
-        return 'right';
-      }
-
-      /* Default center alignment */
-      return 'center';
-    },
-
-    /**
-     * Computed property that returns formatted today count with spaces
-     */
-    formattedTodayCount(): string {
-      return spacedNumber(this.todayCount);
-    },
-
-    /**
-     * Computed property that returns formatted difference with spaces
-     */
-    formattedDifference(): string {
-      return spacedNumber(Math.abs(this.difference));
-    },
-
-    /**
-     * Computed property that returns a function to format count by index
-     */
-    formatCountByIndex() {
-      return (index: number) => {
-        return spacedNumber(this.points[index]?.count || 0);
-      };
-    },
-
-    /**
-     * Computed property that returns a function to format date by index
-     */
-    formatDateByIndex() {
-      return (index: number) => {
-        return prettyDateFromTimestamp(this.points[index]?.timestamp * 1000 || 0);
-      };
-    },
-
-    /**
-     * Computed property that returns array of formatted dates for all points
-     */
-    formattedDates(): string[] {
-      return this.points.map(day => prettyDateFromTimestamp(day.timestamp * 1000));
-    },
-  },
-  created() {
-    this.onResize = throttle(this.windowResized, 200);
-  },
-  mounted() {
-    /**
-     * Cache wrapper width
-     */
-    this.computeWrapperSize();
-
-    window.addEventListener('resize', this.onResize);
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.onResize);
-  },
-  methods: {
-    /**
-     * Compute and save chart wrapper width
-     */
-    computeWrapperSize(): void {
-      const strokeWidth = 2;
-      const svg = this.$refs.chart as SVGElement;
-
-      if (!svg) {
-        this.chartWidth = 0;
-        this.chartHeight = 0;
-
-        return;
-      }
-
-      this.chartWidth = svg.clientWidth;
-      this.chartHeight = svg.clientHeight - strokeWidth;
-    },
-
-    /**
-     * Handler for window resize
-     */
-    windowResized(): void {
-      this.computeWrapperSize();
-    },
-
-    /**
-     * Moves tooltip to the hovered point
-     *
-     * @param event - mousemove
-     */
-    moveTooltip(event: MouseEvent): void {
-      if (this.firstLineData.length === 0) {
-        this.hoveredIndex = -1;
-
-        return;
-      }
-
-      if (this.stepX === 0) {
-        this.hoveredIndex = -1;
-
-        return;
-      }
-
-      const chartX = this.$el.getBoundingClientRect().left;
-      const cursorX = event.clientX - chartX;
-
-      const newIndex = Math.round(cursorX / this.stepX);
-      const clampedIndex = Math.max(0, Math.min(this.firstLineData.length - 1, newIndex));
-
-      this.hoveredIndex = clampedIndex;
-    },
-
-    /**
-     * Get the Y coordinate for a line's pointer cursor at the hovered index
-     *
-     * @param line - the chart line
-     * @returns Y coordinate for the cursor
-     */
-    getLinePointerTop(line: ChartLineInterface): number {
-      if (this.hoveredIndex === -1 || !line || !line.data || line.data.length === 0) {
-        return 0;
-      }
-
-      const point = line.data[this.hoveredIndex];
-
-      if (!point) {
-        return 0;
-      }
-
-      const lineMinValue = this.getLineMinValue(line);
-      const lineMaxValue = this.getLineMaxValue(line);
-      const lineKY = lineMaxValue === lineMinValue
-        ? 1
-        : this.chartHeight / (lineMaxValue - lineMinValue);
-
-      const currentValue = point.count ?? 0;
-
-      return this.chartHeight - (currentValue - lineMinValue) * lineKY;
-    },
-
-    /**
-     * Get the value for a line at the hovered index
-     *
-     * @param line - the chart line
-     * @param index - hovered index
-     * @returns the count value at that index
-     */
-    getLineValueAtHoveredIndex(line: ChartLineInterface, index: number): number {
-      if (!line || !line.data || index < 0 || index >= line.data.length) {
-        return 0;
-      }
-
-      const point = line.data[index];
-
-      if (!point) {
-        return 0;
-      }
-
-      return point.count || 0;
-    },
-
-    /**
-     * Return colors set for a particular chart line
-     *
-     * @param line - the chart line
-     */
-    getLineColor(line: ChartLineInterface): ChartLineColors {
-      const colorName = line.color ?? 'red';
-
-      const color = chartColors.find(c => c.name === colorName);
-
-      if (!color) {
-        throw new Error(`Color ${colorName} not found in chartColors`);
-      }
-
-      return color;
-    },
-
-    /**
-     * Cursor is a pointer on the chart line appearing when hovering over it
-     *
-     * @param line - the chart line
-     */
-    getCursorColor(line: ChartLineInterface): string {
-      const color = this.getLineColor(line);
-
-      return color.pointerColor;
-    },
-
-    /**
-     * Get minimum value for a specific line
-     *
-     * @param line - the chart line
-     * @returns minimum value for the line
-     */
-    getLineMinValue(line: ChartLineInterface): number {
-      if (!line || !line.data || line.data.length === 0) {
-        return 0;
-      }
-
-      let min = Infinity;
-
-      for (const item of line.data) {
-        if (item.count < min) {
-          min = item.count;
-        }
-      }
-
-      return min === Infinity ? 0 : min;
-    },
-
-    /**
-     * Check if all data counters of a line are 0
-     *
-     * @param line - the chart line
-     * @returns true if all values are 0, false otherwise
-     */
-    isLineAllZeros(line: ChartLineInterface): boolean {
-      if (!line || !line.data || line.data.length === 0) {
-        return true;
-      }
-
-      for (const item of line.data) {
-        if (item.count !== 0) {
-          return false;
-        }
-      }
-
-      return true;
-    },
-
-    /**
-     * Get maximum value for a specific line
-     *
-     * @param line - the chart line
-     * @returns maximum value for the line (with 50% offset)
-     */
-    getLineMaxValue(line: ChartLineInterface): number {
-      if (!line || !line.data || line.data.length === 0) {
-        return 0;
-      }
-
-      let max = 0;
-
-      for (const item of line.data) {
-        if (item.count > max) {
-          max = item.count;
-        }
-      }
-
-      /**
-       * We will increment max value for 50% for adding some offset from the top
-       */
-      const incrementForOffset = 1.5;
-
-      return max * incrementForOffset;
-    },
-
-    /**
-     * Formats timestamp based on detalization prop
-     *
-     * @param timestamp - timestamp in milliseconds
-     * @returns formatted date string
-     */
-    formatTimestamp(timestamp: number): string {
-      const date = new Date(timestamp);
-
-      if (this.detalization === 'days') {
-        /* For days, show only day and month */
-        const day = date.getDate();
-        const month = date.getMonth();
-
-        return `${day} ${this.$t('common.shortMonths[' + month + ']')}`;
-      } else {
-        /* For hours and minutes, show day, month, hours:minutes */
-        const day = date.getDate();
-        const month = date.getMonth();
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const paddedHours = hours.toString().padStart(2, '0');
-        const paddedMinutes = minutes.toString().padStart(2, '0');
-
-        return `${day} ${this.$t('common.shortMonths[' + month + ']')}, ${paddedHours}:${paddedMinutes}`;
-      }
-    },
-
-    /**
-     * Formats number with spaces
-     *
-     * @param value - number value
-     * @returns formatted number
-     */
-    formatSpacedNumber(value: number): string {
-      return spacedNumber(value);
-    },
-  },
+import ChartLine from './ChartLine.vue';
+import { chartColors } from './colors.const';
+import { type ChartLineColors } from './types.chart';
+
+interface Props {
+  /**
+   * List of lines for displaying on the chart
+   */
+  lines?: ChartLineInterface[];
+
+  /**
+   * Detalization of the chart affects the legend and tooltip display
+   */
+  detalization?: 'minutes' | 'hours' | 'days';
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  lines: () => [] as ChartLineInterface[],
+  detalization: 'days',
+});
+
+const { t } = useI18n();
+
+/**
+ * Chart SVG clientWidth
+ */
+const chartWidth = ref(0);
+
+/**
+ * Chart SVG clientHeight
+ */
+const chartHeight = ref(0);
+
+/**
+ * Hovered point index
+ */
+const hoveredIndex = ref(-1);
+
+/**
+ * Chart SVG element ref
+ */
+const chart = ref<SVGElement | null>(null);
+
+/**
+ * Width of x-legend item
+ */
+const xLegendWidth = computed((): number => {
+  switch (props.detalization) {
+    case 'days':
+      return 50;
+    case 'hours':
+      return 75;
+    case 'minutes':
+      return 90;
+    default:
+      return 55;
+  }
+});
+
+/**
+ * First line of the chart.
+ * Used for calculating stepX
+ */
+const firstLine = computed((): ChartLineInterface => {
+  return props.lines[0];
+});
+
+/**
+ * Data of the first line of the chart.
+ * Used for calculating stepX (and other common properties across all lines)
+ */
+const firstLineData = computed((): ChartItem[] => {
+  if (!firstLine.value) {
+    return [];
+  }
+
+  return firstLine.value.data;
+});
+
+/**
+ * Step for OX axis
+ */
+const stepX = computed((): number => {
+  if (firstLineData.value.length <= 1) {
+    return 0;
+  }
+
+  return chartWidth.value / (firstLineData.value.length - 1);
+});
+
+/**
+ * Calculate the step for displaying x-legend items to prevent overflow
+ * Returns how many items to skip between displayed items
+ */
+const visibleXLegendItems = computed((): number => {
+  if (!chartWidth.value || !firstLineData.value.length) {
+    return 1;
+  }
+
+  const maxItems = Math.floor(chartWidth.value / xLegendWidth.value);
+
+  if (maxItems >= firstLineData.value.length) {
+    return 1;
+  }
+
+  return Math.max(1, Math.ceil(firstLineData.value.length / maxItems));
+});
+
+/**
+ * Filtered points to display in x-legend based on visibleXLegendItems step
+ */
+const visibleLegendPoints = computed((): Array<{
+  point: ChartItem;
+  index: number;
+}> => {
+  const step = visibleXLegendItems.value;
+  const result: Array<{
+    point: ChartItem;
+    index: number;
+  }> = [];
+
+  for (let i = 0; i < firstLineData.value.length; i = i + step) {
+    result.push({
+      point: firstLineData.value[i],
+      index: i,
+    });
+  }
+
+  /* Ensure the last point is always included */
+  const lastIndex = firstLineData.value.length - 1;
+
+  if (result.length > 0 && result[result.length - 1].index !== lastIndex) {
+    result.push({
+      point: firstLineData.value[lastIndex],
+      index: lastIndex,
+    });
+  }
+
+  return result;
+});
+
+/**
+ * Left coordinate of hover pointer
+ */
+const pointerLeft = computed((): number => {
+  return hoveredIndex.value * stepX.value;
+});
+
+/**
+ * Tooltip alignment class based on position to prevent overflow
+ */
+const tooltipAlignment = computed((): string => {
+  const estimatedTooltipWidth = 100;
+  const pointerX = hoveredIndex.value * stepX.value;
+
+  if (pointerX < estimatedTooltipWidth / 2) {
+    /* Near left edge - align tooltip to the left */
+    return 'left';
+  } else if (pointerX > chartWidth.value - estimatedTooltipWidth / 2) {
+    /* Near right edge - align tooltip to the right */
+    return 'right';
+  }
+
+  /* Default center alignment */
+  return 'center';
+});
+
+/**
+ * Compute and save chart wrapper width
+ */
+function computeWrapperSize(): void {
+  const strokeWidth = 2;
+  const svg = chart.value as SVGElement;
+
+  if (!svg) {
+    chartWidth.value = 0;
+    chartHeight.value = 0;
+
+    return;
+  }
+
+  chartWidth.value = svg.clientWidth;
+  chartHeight.value = svg.clientHeight - strokeWidth;
+}
+
+/**
+ * Handler for window resize
+ */
+function windowResized(): void {
+  computeWrapperSize();
+}
+
+/**
+ * Handler of window resize
+ */
+const onResize = throttle(windowResized, 200);
+
+/**
+ * Moves tooltip to the hovered point
+ *
+ * @param event - mousemove
+ */
+function moveTooltip(event: MouseEvent): void {
+  if (firstLineData.value.length === 0) {
+    hoveredIndex.value = -1;
+
+    return;
+  }
+
+  if (stepX.value === 0) {
+    hoveredIndex.value = -1;
+
+    return;
+  }
+
+  const chartX = (event.currentTarget as HTMLElement).getBoundingClientRect().left;
+  const cursorX = event.clientX - chartX;
+
+  const newIndex = Math.round(cursorX / stepX.value);
+  const clampedIndex = Math.max(0, Math.min(firstLineData.value.length - 1, newIndex));
+
+  hoveredIndex.value = clampedIndex;
+}
+
+/**
+ * Get the Y coordinate for a line's pointer cursor at the hovered index
+ *
+ * @param line - the chart line
+ * @returns Y coordinate for the cursor
+ */
+function getLinePointerTop(line: ChartLineInterface): number {
+  if (hoveredIndex.value === -1 || !line || !line.data || line.data.length === 0) {
+    return 0;
+  }
+
+  const point = line.data[hoveredIndex.value];
+
+  if (!point) {
+    return 0;
+  }
+
+  const lineMinValue = getLineMinValue(line);
+  const lineMaxValue = getLineMaxValue(line);
+  const lineKY = lineMaxValue === lineMinValue
+    ? 1
+    : chartHeight.value / (lineMaxValue - lineMinValue);
+
+  const currentValue = point.count ?? 0;
+
+  return chartHeight.value - (currentValue - lineMinValue) * lineKY;
+}
+
+/**
+ * Get the value for a line at the hovered index
+ *
+ * @param line - the chart line
+ * @param index - hovered index
+ * @returns the count value at that index
+ */
+function getLineValueAtHoveredIndex(line: ChartLineInterface, index: number): number {
+  if (!line || !line.data || index < 0 || index >= line.data.length) {
+    return 0;
+  }
+
+  const point = line.data[index];
+
+  if (!point) {
+    return 0;
+  }
+
+  return point.count || 0;
+}
+
+/**
+ * Return colors set for a particular chart line
+ *
+ * @param line - the chart line
+ */
+function getLineColor(line: ChartLineInterface): ChartLineColors {
+  const colorName = line.color ?? 'red';
+
+  const color = chartColors.find(c => c.name === colorName);
+
+  if (!color) {
+    throw new Error(`Color ${colorName} not found in chartColors`);
+  }
+
+  return color;
+}
+
+/**
+ * Cursor is a pointer on the chart line appearing when hovering over it
+ *
+ * @param line - the chart line
+ */
+function getCursorColor(line: ChartLineInterface): string {
+  const color = getLineColor(line);
+
+  return color.pointerColor;
+}
+
+/**
+ * Get minimum value for a specific line
+ *
+ * @param line - the chart line
+ * @returns minimum value for the line
+ */
+function getLineMinValue(line: ChartLineInterface): number {
+  if (!line || !line.data || line.data.length === 0) {
+    return 0;
+  }
+
+  let min = Infinity;
+
+  for (const item of line.data) {
+    if (item.count < min) {
+      min = item.count;
+    }
+  }
+
+  return min === Infinity ? 0 : min;
+}
+
+/**
+ * Check if all data counters of a line are 0
+ *
+ * @param line - the chart line
+ * @returns true if all values are 0, false otherwise
+ */
+function isLineAllZeros(line: ChartLineInterface): boolean {
+  if (!line || !line.data || line.data.length === 0) {
+    return true;
+  }
+
+  for (const item of line.data) {
+    if (item.count !== 0) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Get maximum value for a specific line
+ *
+ * @param line - the chart line
+ * @returns maximum value for the line (with 50% offset)
+ */
+function getLineMaxValue(line: ChartLineInterface): number {
+  if (!line || !line.data || line.data.length === 0) {
+    return 0;
+  }
+
+  let max = 0;
+
+  for (const item of line.data) {
+    if (item.count > max) {
+      max = item.count;
+    }
+  }
+
+  /**
+   * We will increment max value for 50% for adding some offset from the top
+   */
+  const incrementForOffset = 1.5;
+
+  return max * incrementForOffset;
+}
+
+/**
+ * Formats timestamp based on detalization prop
+ *
+ * @param timestamp - timestamp in milliseconds
+ * @returns formatted date string
+ */
+function formatTimestamp(timestamp: number): string {
+  const date = new Date(timestamp);
+
+  if (props.detalization === 'days') {
+    /* For days, show only day and month */
+    const day = date.getDate();
+    const month = date.getMonth();
+
+    return `${day} ${t('common.shortMonths[' + month + ']')}`;
+  } else {
+    /* For hours and minutes, show day, month, hours:minutes */
+    const day = date.getDate();
+    const month = date.getMonth();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${day} ${t('common.shortMonths[' + month + ']')}, ${paddedHours}:${paddedMinutes}`;
+  }
+}
+
+/**
+ * Formats number with spaces
+ *
+ * @param value - number value
+ * @returns formatted number
+ */
+function formatSpacedNumber(value: number): string {
+  return spacedNumber(value);
+}
+
+onMounted(() => {
+  /**
+   * Cache wrapper width
+   */
+  computeWrapperSize();
+
+  window.addEventListener('resize', onResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize);
 });
 </script>
+
 <style>
   .chart {
     position: relative;

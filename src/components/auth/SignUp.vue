@@ -6,6 +6,7 @@
       :hidden-fields="hiddenFields"
       :submit-text="submitText"
       :message="message"
+      :helper-text="isVisitedByInvite ? $t('authPages.inviteHelper') : null"
       @form-submit="signUp"
     />
   </div>
@@ -17,6 +18,8 @@ import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
 import { validateUtmParams } from '../utils/utm/utm';
+import { getCookie } from '../../utils';
+
 
 export default {
   components: {
@@ -83,6 +86,14 @@ export default {
       });
 
       return Object.keys(utmData).length > 0 ? utmData : undefined;
+    },
+
+    /**
+     * True when user was redirected to login page by invite
+     * Used to show Invite helper above the form
+     */
+    isVisitedByInvite() {
+      return getCookie('afterAuthRedirect') !== '';
     },
   },
   methods: {
