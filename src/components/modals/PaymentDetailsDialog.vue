@@ -233,6 +233,7 @@ import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 import { getCurrencySign, prettyFullDate } from '@/utils';
+import { i18n } from '../../i18n';
 
 /**
  * Id for the 'New card' option in select
@@ -632,7 +633,7 @@ export default defineComponent({
         {
           onSuccess: () => {
             notifier.show({
-              message: this.$t('billing.widget.notifications.success') as string,
+              message: i18n.global.t('billing.widget.notifications.success') as string,
               style: 'success',
             });
 
@@ -640,7 +641,7 @@ export default defineComponent({
           },
           onFail: () => {
             notifier.show({
-              message: this.$t('billing.widget.notifications.error') as string,
+              message: i18n.global.t('billing.widget.notifications.error') as string,
               style: 'error',
             });
           },
