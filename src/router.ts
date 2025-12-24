@@ -123,16 +123,79 @@ const router = createRouter({
                   path: 'event/:eventId/:repetitionId?',
                   name: 'event',
                   component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue'),
-                  redirect: (to) => {
-                    const projectId = to.params.projectId as string;
-                    const eventId = to.params.eventId as string;
-                    const repetitionId = to.params.repetitionId as string | undefined;
+                  // eslint-disable-next-line jsdoc/require-param
+                  /**
+                   * Support old-style event urls:
+                   *  - without repetitionId
+                   *  - without tab
+                   */
+                  beforeEnter: (to, from, next) => {
+                    /**
+                     * Normalize path by removing trailing slashes
+                     */
+                    const normalizedPath = to.path.replace(/\/+$/, '');
 
-                    if (repetitionId !== undefined && repetitionId !== '') {
-                      return `/project/${projectId}/event/${eventId}/${repetitionId}/overview`;
+                    /**
+                     * Match the event route path pattern:
+                     * /project/:projectId/event/:eventId[/:repetitionId][/:tab]
+                     */
+                    const pathMatch = normalizedPath.match(
+                      /^\/project\/([^/]+)\/event\/([^/]+)(?:\/([^/]+))?(?:\/([^/]+))?$/
+                    );
+
+                    if (!pathMatch) {
+                      next();
+
+                      return;
                     }
 
-                    return `/project/${projectId}/event/${eventId}/${eventId}/overview`;
+                    const projectId = pathMatch[1];
+                    const eventId = pathMatch[2];
+                    const segment3 = pathMatch[3];
+                    const segment4 = pathMatch[4];
+                    const knownTabs = new Set(['overview', 'repetitions', 'daily', 'affected']);
+
+                    /**
+                     * Determine if segment3 is a tab name or a repetitionId
+                     */
+                    const isSegment3Tab = segment3 !== undefined && knownTabs.has(segment3);
+
+                    /**
+                     * Legacy format: /project/:projectId/event/:eventId/:tab
+                     * segment3 is a tab, segment4 is undefined
+                     */
+                    if (isSegment3Tab && segment4 === undefined) {
+                      next(`/project/${projectId}/event/${eventId}/${eventId}/${segment3}`);
+
+                      return;
+                    }
+
+                    /**
+                     * Normal format: /project/:projectId/event/:eventId/:repetitionId/:tab
+                     * segment3 is repetitionId, segment4 is tab
+                     */
+                    if (segment3 !== undefined && !isSegment3Tab && segment4 !== undefined) {
+                      /**
+                       * Already in correct format, continue
+                       */
+                      next();
+
+                      return;
+                    }
+
+                    /**
+                     * Missing tab: /project/:projectId/event/:eventId[/:repetitionId]
+                     * Redirect to overview
+                     */
+                    if (segment4 === undefined) {
+                      const repetitionId = segment3 && !isSegment3Tab ? segment3 : eventId;
+
+                      next(`/project/${projectId}/event/${eventId}/${repetitionId}/overview`);
+
+                      return;
+                    }
+
+                    next();
                   },
                   children: [
                     {
