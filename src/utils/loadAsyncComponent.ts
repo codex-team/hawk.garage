@@ -124,11 +124,7 @@ export function loadAsyncComponent<T extends Component = Component>(
             );
             reloadPage();
 
-            // Return a promise that never resolves to prevent further errors
-            // The page will reload before this matters
-            return new Promise(() => {
-              // Never resolves
-            });
+            throw error;
           }
 
           // If we've already reloaded once and still getting errors, it's a real problem
