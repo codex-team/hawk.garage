@@ -1,0 +1,27 @@
+name: PR Assistant
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: write
+
+jobs:
+  pr-assistant:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CODEX_ASSISTANT_APP_ID }}
+          private-key: ${{ secrets.CODEX_ASSISTANT_PRIVATE_KEY }}
+
+      - uses: codex-team/action-pr-assistant@master
+        with:
+          check: description
+          mode: draft
+          token: ${{ steps.app-token.outputs.token }}
