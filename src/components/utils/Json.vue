@@ -12,10 +12,11 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
+import { createAsyncComponent } from '../../utils';
 
-const VueJsonPretty = defineAsyncComponent(async () => {
-  const [{ default: component }] = await Promise.all([
+const VueJsonPretty = createAsyncComponent(async () => {
+  const [component] = await Promise.all([
     import('vue-json-pretty'),
     import('vue-json-pretty/lib/styles.css'),
   ]);
