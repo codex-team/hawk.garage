@@ -10,10 +10,12 @@ import {
   QUERY_WORKSPACES,
   QUERY_BALANCE,
   MUTATION_CHANGE_WORKSPACE_PLAN_TO_DEFAULT,
-  MUTATION_CANCEL_SUBSCRIPTION, MUTATION_JOIN_BY_INVITE_LINK
+  MUTATION_CANCEL_SUBSCRIPTION,
+  MUTATION_JOIN_BY_INVITE_LINK,
+  QUERY_SSO_WORKSPACE
 } from './queries';
 import * as api from '../index';
-import type { Workspace } from '@/types/workspaces';
+import type { Workspace, WorkspacePreview } from '@/types/workspaces';
 import type { APIResponse, APIResponseData } from '@/types/api';
 
 interface CreateWorkspaceInput {
@@ -104,7 +106,7 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * @param ids – id of fetching workspaces
  * @returns
  */
-export async function getWorkspaces(ids: string): Promise<Workspace[]> {
+export async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
 }
 
@@ -192,4 +194,14 @@ export async function cancelSubscription(workspaceId: string): Promise<Pick<Work
       workspaceId,
     },
   })).workspace.cancelSubscription.record;
+}
+
+/**
+ * Get workspace public info by ID for SSO login page
+ * Available without authentication, returns only if SSO is enabled
+ * @param id - identifier of workspace with sso enabled
+ * @returns Workspace public info (id, name, image) or null if not found or SSO not enabled
+ */
+export async function getSsoWorkspace(id: string): Promise<APIResponse<{ ssoWorkspace: WorkspacePreview }>> {
+  return api.call<{ ssoWorkspace: WorkspacePreview }>(QUERY_SSO_WORKSPACE, { id });
 }

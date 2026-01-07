@@ -97,3 +97,10 @@ export interface PendingMember {
  * Represents both member types in workspace team
  */
 export type Member = ConfirmedMember | PendingMember;
+
+/**
+ * Workspace preview with basic public info
+ * Contains only basic fields: id, name, image
+ * Used for public-facing features like SSO login page
+ */
+export type WorkspacePreview = Pick<Workspace, 'id' | 'name' | 'image'> | null;

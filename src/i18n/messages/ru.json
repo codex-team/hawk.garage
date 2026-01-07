@@ -17,7 +17,6 @@
       "title": "Вход через SSO",
       "workspaceId": "ID воркспейса",
       "workspaceIdPlaceholder": "Введите ID воркспейса",
-      "workspaceLabel": "Воркспейс",
       "workspaceIdRequired": "Необходимо указать ID воркспейса",
       "backToLogin": "Вход через email"
     },

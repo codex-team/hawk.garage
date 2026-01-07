@@ -264,3 +264,18 @@ export const MUTATION_CANCEL_SUBSCRIPTION = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Query for getting workspace public info by ID for SSO login page
+ * Available without authentication, returns only if SSO is enabled
+ */
+export const QUERY_SSO_WORKSPACE = `
+  query ssoWorkspace($id: ID!) {
+    ssoWorkspace(id: $id) {
+      id
+      name
+      image
+    }
+  }
+`;

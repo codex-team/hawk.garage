@@ -17,7 +17,6 @@
       "title": "Single Sign-On",
       "workspaceId": "Workspace ID",
       "workspaceIdPlaceholder": "Enter workspace ID",
-      "workspaceLabel": "Workspace",
       "workspaceIdRequired": "Workspace ID is required",
       "backToLogin": "Login via email"
     },
