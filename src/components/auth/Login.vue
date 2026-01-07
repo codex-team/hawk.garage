@@ -11,7 +11,18 @@
       :success-message="successMessage"
       :helper-text="isVisitedByInvite ? $t('authPages.inviteHelper') : null"
       @form-submit="login"
-    />
+    >
+      <template #after-action>
+        <div class="auth-page__sso-section">
+          <router-link
+            to="/login/sso"
+            class="auth-page__sso-link"
+          >
+            {{ $t('authPages.continueWithSso') }}
+          </router-link>
+        </div>
+      </template>
+    </FormComponent>
   </div>
 </template>
 
@@ -164,3 +175,22 @@ export default {
 </script>
 
 <style src="../../styles/auth-page.css"></style>
+
+<style scoped>
+.auth-page {
+  &__sso-section {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  &__sso-link {
+    color: var(--color-text-second);
+    font-size: 13px;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-text-main);
+    }
+  }
+}
+</style>

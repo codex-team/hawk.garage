@@ -12,6 +12,15 @@
     "recoverPasswordSuccessMessage": "Новый пароль отправлен на вашу почту",
     "signupSuccessMessage": "Пароль отправлен на указанную почту",
     "inviteHelper": "Вы приглашены в воркспейс. Войдите или зарегистрируйтесь, чтобы продолжить.",
+    "continueWithSso": "Войти через SSO",
+    "ssoLogin": {
+      "title": "Вход через SSO",
+      "workspaceId": "ID воркспейса",
+      "workspaceIdPlaceholder": "Введите ID воркспейса",
+      "workspaceLabel": "Воркспейс",
+      "workspaceIdRequired": "Необходимо указать ID воркспейса",
+      "backToLogin": "Вход через email"
+    },
     "errors": {
       "Wrong email or password": "Неправильный email или пароль",
       "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",

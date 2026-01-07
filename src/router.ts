@@ -320,6 +320,14 @@ const router = createRouter({
       }),
     },
     {
+      path: '/login/sso/:workspaceId?',
+      name: 'sso-login',
+      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/SsoLogin.vue'),
+      props: route => ({
+        workspaceId: route.params.workspaceId,
+      }),
+    },
+    {
       path: '/join/:inviteHash',
       component: EmptyComponent,
       beforeEnter: invitesHandler,
