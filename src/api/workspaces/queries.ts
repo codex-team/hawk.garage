@@ -279,3 +279,45 @@ export const QUERY_SSO_WORKSPACE = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Query for getting SSO settings for workspace
+ * Admin only
+ */
+export const QUERY_SSO_SETTINGS = `
+  query getSsoSettings($workspaceId: ID!) {
+    workspaces(ids: [$workspaceId]) {
+      id
+      sso {
+        enabled
+        enforced
+        type
+        saml {
+          idpEntityId
+          ssoUrl
+          x509Cert
+          nameIdFormat
+          attributeMapping {
+            email
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for updating SSO settings for workspace
+ * Admin only
+ */
+export const MUTATION_UPDATE_SSO_SETTINGS = `
+  mutation updateWorkspaceSso(
+    $workspaceId: ID!
+    $config: WorkspaceSsoConfigInput!
+  ) {
+    updateWorkspaceSso(workspaceId: $workspaceId, config: $config)
+  }
+`;

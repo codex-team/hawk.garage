@@ -377,6 +377,34 @@
           "User is already invited to this workspace": "Пользователь уже приглашен"
         }
       },
+      "sso": {
+        "title": "Настройки SSO",
+        "description": "SSO (Single Sign-On) позволяет вашей команде входить в Hawk через корпоративную систему идентификации. Пользователи смогут авторизоваться используя свои рабочие учетные данные без необходимости создавать отдельный пароль.",
+        "enable": "Включить SSO",
+        "enforce": "Вход только по SSO (отключить вход через email)",
+        "entityId": "IdP Entity ID",
+        "ssoUrl": "SSO URL",
+        "certificate": "X.509 Сертификат (PEM формат)",
+        "nameIdFormat": "Формат NameID",
+        "attributeMapping": {
+          "email": "Имя атрибута Email",
+          "emailPlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+          "name": "Имя атрибута Name",
+          "namePlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        },
+        "spInfo": {
+          "title": "Информация о Service Provider (SP)",
+          "description": "Предоставьте эти данные администратору вашей системы IdP (Identity Provider) для настройки интеграции SAML. Эти значения понадобятся для корректной работы SSO между вашим IdP и Hawk.",
+          "entityId": "SP Entity ID",
+          "acsUrl": "ACS URL"
+        },
+        "save": "Сохранить",
+        "saved": "Настройки SSO успешно сохранены",
+        "errors": {
+          "Workspace not found": "Workspace не найден",
+          "SAML configuration is required when SSO is enabled": "Конфигурация SAML обязательна при включении SSO"
+        }
+      },
       "volume": {
         "title": "Используемый объем",
         "description_1": "Ваш тариф включает %{msg} событий в месяц.",

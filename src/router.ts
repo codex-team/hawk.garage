@@ -100,6 +100,12 @@ const router = createRouter({
               name: 'workspace-settings-billing',
               component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/Billing.vue'),
             },
+            {
+              path: 'sso',
+              name: 'workspace-settings-sso',
+              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Sso.vue'),
+              props: true,
+            },
           ],
         },
 
