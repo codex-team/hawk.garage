@@ -423,6 +423,7 @@ onMounted(async () => {
     color: var(--color-text-second);
     font-size: 14px;
     line-height: 1.6em;
+    max-width: 500px;
   }
 
   &__section {
