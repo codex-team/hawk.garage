@@ -24,7 +24,8 @@
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",
       "Wrong email format": "Wrong email format",
-      "Network Error": "Server is not available. Check your internet connection."
+      "Network Error": "Server is not available. Check your internet connection.",
+      "This workspace requires SSO login. Please use SSO to sign in.": "This workspace requires SSO login. Please use SSO to sign in."
     }
   },
   "layout": {
