@@ -164,8 +164,24 @@ export default {
       } catch (e) {
         console.error(e);
 
+        let errorMessage = this.$t(`authPages.errors.${e.message}`);
+
+        /**
+         * Handle SSO enforcement error with workspace name
+         */
+        if (e.message === 'SSO_REQUIRED' && e.extensions?.workspaceName) {
+          const workspaceId = e.extensions.workspaceId;
+          const workspaceName = e.extensions.workspaceName;
+          const ssoLink = `/login/sso/${workspaceId}`;
+
+          errorMessage = this.$t('authPages.errors.SSO_REQUIRED', {
+            workspace: workspaceName,
+            link: ssoLink,
+          });
+        }
+
         notifier.show({
-          message: this.$t(`authPages.errors.${e.message}`),
+          message: errorMessage,
           style: 'error',
         });
       }

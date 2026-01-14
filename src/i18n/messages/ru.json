@@ -25,7 +25,7 @@
       "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",
       "Wrong email format": "Некорректный формат почты",
       "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету.",
-      "This workspace requires SSO login. Please use SSO to sign in.": "Для этого воркспейса требуется вход через SSO. Пожалуйста, используйте SSO для входа."
+      "SSO_REQUIRED": "Воркспейс \"{workspace}\" требует вход только через SSO. <a href=\"{link}\">Войти через SSO →</a>"
     }
   },
   "layout": {

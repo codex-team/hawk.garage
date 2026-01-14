@@ -234,7 +234,17 @@ export async function call<T = any>(
    */
   if (response.errors && response.errors.length && allowErrors === false) {
     response.errors.forEach((error) => {
-      throw new Error(error.message);
+      const err = new Error(error.message) as Error & { extensions?: Record<string, unknown> };
+
+      /**
+       * Preserve extensions from GraphQL error
+       * (e.g., for SSO enforcement, see /api/src/resolvers/user.ts@login)
+       */
+      if (error.extensions) {
+        err.extensions = error.extensions as Record<string, unknown>;
+      }
+
+      throw err;
     });
   }
 

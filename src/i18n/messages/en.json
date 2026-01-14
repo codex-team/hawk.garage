@@ -25,7 +25,7 @@
       "User with this email already registered": "User with this email already registered",
       "Wrong email format": "Wrong email format",
       "Network Error": "Server is not available. Check your internet connection.",
-      "This workspace requires SSO login. Please use SSO to sign in.": "This workspace requires SSO login. Please use SSO to sign in."
+      "SSO_REQUIRED": "Workspace \"{workspace}\" requires SSO login. <a href=\"{link}\">Sign in with SSO →</a>"
     }
   },
   "layout": {

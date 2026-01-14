@@ -182,9 +182,17 @@ onMounted(async () => {
         refreshToken: route.query.refresh_token,
       });
 
+      /**
+       * Determine redirect URL:
+       * 1. Use returnUrl from query params (provided by API after SSO)
+       * 2. Fall back to afterAuthRedirect cookie (for manual login flow)
+       * 3. Fall back to root (/)
+       */
+      const returnUrl = route.query.returnUrl as string | undefined;
       const afterAuthRedirect = getCookie('afterAuthRedirect');
+      const redirectTo = returnUrl || afterAuthRedirect || '/';
 
-      router.push(afterAuthRedirect || '/');
+      router.push(redirectTo);
 
       removeCookie('afterAuthRedirect');
     } catch (e: unknown) {
