@@ -27,6 +27,11 @@
         class="event-overview__section"
         :payload-user="event.payload.user"
       />
+      <DetailsBreadcrumbs
+        v-if="hasBreadcrumbs"
+        class="event-overview__section"
+        :breadcrumbs="event.payload.breadcrumbs || []"
+      />
       <DetailsAddons
         v-if="getIntegrationAddons('vue')"
         class="event-overview__section"
@@ -102,6 +107,7 @@ import DetailsSuspectedCommits from './details/DetailsSuspectedCommits.vue';
 import DetailsAddons from './details/DetailsAddons.vue';
 import DetailsUser from './details/DetailsUser.vue';
 import DetailsRelease from './details/DetailsRelease.vue';
+import DetailsBreadcrumbs from './details/breadcrumbs/DetailsBreadcrumbs.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
@@ -115,6 +121,7 @@ export default defineComponent({
     DetailsSuspectedCommits,
     DetailsUser,
     DetailsRelease,
+    DetailsBreadcrumbs,
   },
   props: {
     /**
@@ -195,6 +202,15 @@ export default defineComponent({
     },
 
     /**
+     * Return true if event has breadcrumbs
+     *
+     * @returns {boolean}
+     */
+    hasBreadcrumbs(): boolean {
+      return this.event.payload.breadcrumbs && this.event.payload.breadcrumbs.length > 0;
+    },
+
+    /**
      * Returns true if the event has no backtrace, context and addons
      *
      * @returns {boolean}
@@ -203,8 +219,9 @@ export default defineComponent({
       const noBacktrace = !this.hasBacktrace;
       const noAddons = !this.hasAddons;
       const noContext = !this.hasContext;
+      const noBreadcrumbs = !this.hasBreadcrumbs;
 
-      return noBacktrace && noAddons && noContext;
+      return noBacktrace && noAddons && noContext && noBreadcrumbs;
     },
   },
   methods: {
