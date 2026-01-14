@@ -13,7 +13,7 @@
 
         <div
           v-if="hasMore"
-          class="event-details__expand breadcrumbs__expand"
+          class="event-details__expand"
           @click="toggleShowAll"
         >
           <svg
@@ -47,7 +47,6 @@ const props = defineProps<Props>();
 const showAll = ref(false);
 const INITIAL_LIMIT = 5;
 
-// Сортируем breadcrumbs по timestamp в порядке убывания (сверху последние)
 const sortedBreadcrumbs = computed(() => {
   return [...props.breadcrumbs].sort((a, b) => b.timestamp - a.timestamp);
 });
@@ -73,10 +72,6 @@ const toggleShowAll = () => {
 .breadcrumbs {
   position: relative;
   border-radius: 10px;
-
-  &__expand {
-    margin-left: 5px;
-  }
 
   &__expand-icon {
     width: 15px;

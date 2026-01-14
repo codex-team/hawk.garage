@@ -5,52 +5,68 @@
   >
     <svg
       v-if="type === 'error'"
-      viewBox="0 0 16 16"
+      viewBox="0 0 24 24"
       class="breadcrumb-icon__svg"
     >
       <path
         fill="currentColor"
-        d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 10.5a1 1 0 110-2 1 1 0 010 2zm.88-3.83v.58a.88.88 0 11-1.76 0v-.88a.88.88 0 01.88-.88c.48 0 .88.4.88.88v.3z"
+        d="M12 17q.425 0 .713-.288T13 16t-.288-.712T12 15t-.712.288T11 16t.288.713T12 17m-1-4h2V7h-2zm1 9q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"
       />
     </svg>
     <svg
       v-else-if="type === 'navigation'"
-      viewBox="0 0 16 16"
+      viewBox="0 0 512 512"
       class="breadcrumb-icon__svg"
     >
       <path
         fill="currentColor"
-        d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 10a1 1 0 110-2 1 1 0 010 2zm0-9a3 3 0 00-3 3v1a1 1 0 102 0V6a1 1 0 112 0v1a1 1 0 102 0V6a3 3 0 00-3-3z"
+        fill-rule="evenodd"
+        d="M256 42.667c117.821 0 213.334 95.513 213.334 213.333c0 117.821-95.513 213.334-213.334 213.334c-117.82 0-213.333-95.513-213.333-213.334C42.667 138.18 138.18 42.667 256 42.667m21.335 43.987L277.334 128h-42.667l-.002-41.346c-77.198 9.628-138.383 70.813-148.01 148.011l41.345.002v42.667H86.654c9.627 77.199 70.813 138.385 148.011 148.012l.002-41.346h42.667v41.346c77.2-9.627 138.385-70.813 148.012-148.011L384 277.334v-42.667h41.346c-9.626-77.2-70.813-138.386-148.011-148.013m85.332 62.68L288 288l-138.666 74.667L224 224zM256 234.667c-11.782 0-21.333 9.551-21.333 21.333s9.551 21.334 21.333 21.334s21.334-9.552 21.334-21.334s-9.552-21.333-21.334-21.333"
       />
     </svg>
     <svg
       v-else-if="type === 'ui'"
-      viewBox="0 0 16 16"
+      viewBox="0 0 24 24"
       class="breadcrumb-icon__svg"
     >
-      <path
-        fill="currentColor"
-        d="M1 3l2.5-2.5L5 2l8 8-1.5 1.5L3 3zm13.5 8.5L13 13l-8-8 1.5-1.5L15 12l-.5 2.5z"
-      />
+      <g fill="none">
+        <path
+          d="M12.756 11.519V7.565a1.756 1.756 0 0 0-3.512 0v8.785l-3.362-.748a.88.88 0 0 0-.922.37l-.544.817l3.862 5.024c.332.432.847.686 1.393.686h7.085c.756 0 1.428-.484 1.667-1.202l1.782-5.35a1.76 1.76 0 0 0-.78-2.073l-3.626-2.115a1.76 1.76 0 0 0-.885-.24z"
+        />
+        <path
+          stroke="currentColor"
+          stroke-linecap="square"
+          stroke-width="2"
+          d="M9.244 16.351V7.566a1.756 1.756 0 0 1 3.512 0v3.954h2.158a1.76 1.76 0 0 1 .885.24l3.625 2.115a1.76 1.76 0 0 1 .781 2.073l-1.782 5.35a1.76 1.76 0 0 1-1.667 1.202H9.671c-.546 0-1.06-.254-1.393-.686L4.416 16.79l.544-.816a.88.88 0 0 1 .922-.37zM6 5.499l-1-1m11 1l1-1m-6-1.585V1.5"
+        />
+      </g>
     </svg>
     <svg
       v-else-if="type === 'request'"
-      viewBox="0 0 16 16"
+      viewBox="0 0 32 32"
       class="breadcrumb-icon__svg"
     >
       <path
         fill="currentColor"
-        d="M8 1a7 7 0 100 14A7 7 0 008 1zm3 8H5V7h6v2z"
+        d="m16 13l-5 5l1.41 1.41L15 16.83V28H6v2h9a2 2 0 0 0 2-2V16.83l2.59 2.58L21 18Z"
+      />
+      <path
+        fill="currentColor"
+        d="M23.5 22H23v-2h.5a4.498 4.498 0 0 0 .356-8.981l-.815-.064l-.099-.812a6.994 6.994 0 0 0-13.883 0l-.1.812l-.815.064A4.498 4.498 0 0 0 8.5 20H9v2h-.5A6.497 6.497 0 0 1 7.2 9.136a8.994 8.994 0 0 1 17.6 0A6.497 6.497 0 0 1 23.5 22"
       />
     </svg>
     <svg
       v-else-if="type === 'logic'"
-      viewBox="0 0 16 16"
+      viewBox="0 0 24 24"
       class="breadcrumb-icon__svg"
     >
       <path
-        fill="currentColor"
-        d="M8 2a6 6 0 100 12A6 6 0 008 2zM5.5 6a1 1 0 112 0 1 1 0 01-2 0zm5 0a1 1 0 11-2 0 1 1 0 012 0zM8 11a3 3 0 01-2.8-2h1.6a1.4 1.4 0 002.4 0h1.6A3 3 0 018 11z"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M22 12h-5M2 9h5m-5 6h5M9 5c6 0 8 3.5 8 7s-2 7-8 7H7V5z"
       />
     </svg>
     <svg
@@ -80,17 +96,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const iconClass = computed(() => {
-  const classes: string[] = [];
-
-  // Приоритет отдаем level для цвета
-  if (props.level) {
-    classes.push(`breadcrumb-icon--level-${props.level}`);
-  } else {
-    // Fallback на type для цвета
-    classes.push(`breadcrumb-icon--type-${props.type || 'default'}`);
-  }
-
-  return classes.join(' ');
+  return `breadcrumb-icon--type-${props.type || 'default'}`;
 });
 </script>
 
@@ -104,57 +110,34 @@ const iconClass = computed(() => {
   border-radius: 50%;
   flex-shrink: 0;
 
-  /* Цвета по level (приоритет) */
-  &--level-fatal,
-  &--level-error {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-  }
-
-  &--level-warning {
-    background-color: rgba(251, 146, 60, 0.1);
-    color: #fb923c;
-  }
-
-  &--level-info {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-  }
-
-  &--level-debug {
-    background-color: rgba(148, 163, 184, 0.1);
-    color: #94a3b8;
-  }
-
-  /* Цвета по type (fallback) */
   &--type-error {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
+    background-color: rgba(217, 72, 72, 0.1);
+    color: var(--color-indicator-critical);
   }
 
   &--type-navigation {
-    background-color: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
+    background-color: rgba(230, 167, 0, 0.1);
+    color: var(--color-indicator-warning);
   }
 
   &--type-ui {
-    background-color: rgba(168, 85, 247, 0.1);
-    color: #a855f7;
+    background-color: rgba(73, 121, 228, 0.1);
+    color: var(--color-indicator-medium);
   }
 
   &--type-request {
-    background-color: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
+    background-color: rgba(0, 224, 100, 0.1);
+    color: var(--color-indicator-positive);
   }
 
   &--type-logic {
-    background-color: rgba(99, 102, 241, 0.1);
-    color: #6366f1;
+    background-color: rgba(80, 99, 140, 0.1);
+    color: var(--color-indicator-low);
   }
 
   &--type-default {
-    background-color: rgba(148, 163, 184, 0.1);
-    color: #94a3b8;
+    background-color: rgba(113, 157, 255, 0.1);
+    color: var(--color-text-highlighted);
   }
 
   &__svg {

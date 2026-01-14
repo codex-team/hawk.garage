@@ -189,19 +189,19 @@ const formatTime = (timestamp: number): string => {
 
     &--fatal,
     &--error {
-      color: #ef4444;
+      color: var(--color-indicator-critical);
     }
 
     &--warning {
-      color: #fb923c;
+      color: var(--color-indicator-warning);
     }
 
     &--info {
-      color: #3b82f6;
+      color: var(--color-indicator-medium);
     }
 
     &--debug {
-      color: #94a3b8;
+      color: var(--color-indicator-low);
     }
   }
 
@@ -265,7 +265,6 @@ const formatTime = (timestamp: number): string => {
     word-wrap: break-word;
     overflow-wrap: break-word;
 
-    /* Ограничиваем вложенные элементы */
     * {
       max-width: 100%;
       box-sizing: border-box;
@@ -273,7 +272,6 @@ const formatTime = (timestamp: number): string => {
       overflow-wrap: break-word;
     }
 
-    /* Ограничиваем таблицы и другие широкие элементы */
     table, pre, code {
       max-width: 100%;
       overflow-x: auto;
