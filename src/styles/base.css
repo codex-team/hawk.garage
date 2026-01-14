@@ -273,3 +273,19 @@ body .cdx-notify {
     transform: scale(1);
   }
 }
+
+:root {
+  --base--bg-primary: var(--color-bg-darken);
+  --base--bg-secondary: var(--color-bg-darken);
+  --base--bg-secondary-hover: var(--color-bg-hover);
+  --base--border: var(--color-border);
+  --base--text: var(--color-text-main);
+  --base--text-secondary: var(--color-text-second,);
+  --base--solid: #000;
+  --base--text-solid-foreground: #fff;
+
+  --accent--solid: var(--color-accent);
+  --accent--solid-hover: var(--color-accent-hover);
+  --accent--bg-secondary: var(--color-accent-bg);
+  --accent--text-solid-foreground: #fff;
+}
