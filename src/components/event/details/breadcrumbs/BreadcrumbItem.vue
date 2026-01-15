@@ -326,8 +326,8 @@ const formatTime = (timestamp: number): string => {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding-top: 4px;
-    padding-right: 8px;
+    padding-top: 6px;
+    padding-right: 6px;
     min-width: 0;
     box-sizing: border-box;
   }
@@ -377,6 +377,7 @@ body .breadcrumb-item__data-content .json-viewer-theme {
   padding-top: 0 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  padding-bottom: 20px !important;
 }
 
 /* Remove hover for JSON viewer, as like in code-preview */
