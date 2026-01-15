@@ -18,7 +18,11 @@
       viewBox="0 0 24 24"
       class="breadcrumb-icon__svg"
     >
-      <g fill="none" stroke="currentColor" stroke-width="1.5">
+      <g
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+      >
         <path
           d="M6.142 6.142C8.904 3.381 10.284 2 12 2s3.096 1.38 5.858 4.142S22 10.284 22 12s-1.38 3.096-4.142 5.858S13.716 22 12 22s-3.096-1.38-5.858-4.142S2 13.716 2 12s1.38-3.096 4.142-5.858Z"
         />
@@ -93,8 +97,17 @@
 import { computed } from 'vue';
 import type { BreadcrumbType, BreadcrumbLevel } from '@hawk.so/types';
 
+/**
+ * Props for BreadcrumbIcon component
+ */
 interface Props {
+  /**
+   * Breadcrumb type to determine icon
+   */
   type?: BreadcrumbType;
+  /**
+   * Breadcrumb level (currently not used)
+   */
   level?: BreadcrumbLevel;
 }
 
