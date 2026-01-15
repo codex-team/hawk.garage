@@ -24,8 +24,8 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
-          @onAssigneeIconClick="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
-          @showEventOverview="onShowEventOverview(dailyEventInfo.eventId)"
+          @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
+          @show-event-overview="onShowEventOverview(dailyEventInfo.eventId)"
         />
       </div>
       <div
