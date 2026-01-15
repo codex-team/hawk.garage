@@ -10,4 +10,4 @@ RUN yarn
 
 COPY . .
 
-CMD ["yarn", "serve"]
+CMD ["yarn", "dev"]
