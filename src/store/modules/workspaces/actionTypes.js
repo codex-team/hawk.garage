@@ -82,3 +82,13 @@ export const PAY_WITH_CARD = 'PAY_WITH_CARD';
  * Prepare payment data
  */
 export const COMPOSE_PAYMENT = 'COMPOSE_PAYMENT';
+
+/**
+ * Fetch SSO settings for workspace (admin only)
+ */
+export const FETCH_WORKSPACE_SSO_SETTINGS = 'FETCH_WORKSPACE_SSO_SETTINGS';
+
+/**
+ * Update SSO settings for workspace (admin only)
+ */
+export const UPDATE_WORKSPACE_SSO = 'UPDATE_WORKSPACE_SSO';

@@ -3,7 +3,10 @@
     <div class="settings-window-page__title">
       {{ $t('projects.settings.rateLimits.title') }}
     </div>
-    <div v-if="isRateLimitsAvailable" class="project-settings__description">
+    <div
+      v-if="isRateLimitsAvailable"
+      class="project-settings__description"
+    >
       {{ $t('projects.settings.rateLimits.description') }}
     </div>
     <RateLimitsForm

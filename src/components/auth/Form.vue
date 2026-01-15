@@ -34,14 +34,16 @@
         class="auth-form__fields-container"
         @submit.prevent="$emit('form-submit')"
       >
-        <div class="auth-form__links">
-          <router-link to="/login">
-            {{ $t('authPages.login') }}
-          </router-link>
-          <router-link to="/sign-up">
-            {{ $t('authPages.signUp') }}
-          </router-link>
-        </div>
+        <slot name="heading">
+          <div class="auth-form__links">
+            <router-link to="/login">
+              {{ $t('authPages.login') }}
+            </router-link>
+            <router-link to="/sign-up">
+              {{ $t('authPages.signUp') }}
+            </router-link>
+          </div>
+        </slot>
         <hr class="auth-form__delimiter">
         <div
           v-if="message"
@@ -49,6 +51,7 @@
         >
           {{ message.text }}
         </div>
+        <slot name="before-fields" />
         <TextFieldset
           v-for="(field, index) in fields"
           :key="index"
@@ -86,6 +89,7 @@
         </div>
       </form>
     </div>
+    <slot name="after-action" />
   </div>
 </template>
 
@@ -334,5 +338,6 @@ export default {
     padding: 20px;
     line-height: 1.45;
   }
+
 }
 </style>
