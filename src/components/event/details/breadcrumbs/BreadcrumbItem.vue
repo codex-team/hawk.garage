@@ -290,7 +290,7 @@ const formatTime = (timestamp: number): string => {
     display: flex;
     color: var(--color-text-second);
     font-size: 12px;
-    line-height: 1.5em;
+    line-height: 1.4em;
     margin-left: 28px;
     padding-right: 30px;
     min-width: 0;
