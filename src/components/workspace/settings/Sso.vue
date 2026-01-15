@@ -192,7 +192,11 @@ const { t } = useI18n();
  */
 const ssoConfig = ref<WorkspaceSsoConfigInput>({
   enabled: false,
-  enforced: true,
+  /**
+   * we don't set it as 'true' to allow admins to test SSO setup
+   * and prevent to get locked out in case of incorrect SSO setup
+   */
+  enforced: false,
   saml: {
     idpEntityId: '',
     ssoUrl: '',
@@ -298,7 +302,7 @@ async function onEnabledChange(value: boolean): Promise<void> {
   /**
    * If SSO is being enabled and configuration is already filled, save immediately
    */
-  if (value && isSsoConfigFilled()) {
+  if (isSsoConfigFilled()) {
     await save();
   }
 }

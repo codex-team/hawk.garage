@@ -494,11 +494,11 @@ const actions = {
   /**
    * Fetch SSO settings for workspace (admin only)
    *
-   * @param {Function} commit - standard Vuex commit function
+   * @param {object} _context - Vuex action context
    * @param {string} workspaceId - id of workspace to get SSO settings
    * @returns {Promise<object|null>} - SSO configuration or null if not configured
    */
-  async [FETCH_WORKSPACE_SSO_SETTINGS]({ commit }, workspaceId) {
+  async [FETCH_WORKSPACE_SSO_SETTINGS](_context, workspaceId) {
     const response = await workspaceApi.getSsoSettings(workspaceId);
 
     if (response.data && response.data.workspaces && response.data.workspaces.length > 0) {
@@ -515,13 +515,13 @@ const actions = {
   /**
    * Update SSO settings for workspace (admin only)
    *
-   * @param {Function} commit - standard Vuex commit function
+   * @param {object} _context - Vuex action context
    * @param {object} payload - action payload
    * @param {string} payload.workspaceId - id of workspace to update SSO settings
    * @param {object} payload.config - SSO configuration to save
    * @returns {Promise<boolean>} - true if successful
    */
-  async [UPDATE_WORKSPACE_SSO]({ commit }, { workspaceId, config }) {
+  async [UPDATE_WORKSPACE_SSO](_context, { workspaceId, config }) {
     const response = await workspaceApi.updateSsoSettings(workspaceId, config);
 
     return response.data && response.data.updateWorkspaceSso === true;

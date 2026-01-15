@@ -61,7 +61,6 @@ export default {
     EntityImage,
     Icon,
   },
-  emits: ['update:modelValue'],
   props: {
     options: {
       type: Array,
@@ -80,6 +79,7 @@ export default {
       default: true,
     },
   },
+  emits: ['update:modelValue'],
   data() {
     return {
       isOpened: false,

@@ -395,7 +395,7 @@
         },
         "spInfo": {
           "title": "Service Provider (SP) Information",
-          "description": "Provide these details to your IdP (Identity Provider) system administrator to configure SAML integration. These values are required for SSO to work correctly between your IdP and Hawk.",
+          "description": "Provide these details to your IdP (Identity Provider) system administrator to configure SAML integration.",
           "entityId": "SP Entity ID",
           "acsUrl": "ACS URL"
         },

@@ -14,14 +14,14 @@ import {
   MUTATION_JOIN_BY_INVITE_LINK,
   QUERY_SSO_WORKSPACE,
   QUERY_SSO_SETTINGS,
-  MUTATION_UPDATE_SSO_SETTINGS,
+  MUTATION_UPDATE_SSO_SETTINGS
 } from './queries';
 import * as api from '../index';
 import type {
   Workspace,
   WorkspacePreview,
   WorkspaceSsoConfig,
-  WorkspaceSsoConfigInput,
+  WorkspaceSsoConfigInput
 } from '@/types/workspaces';
 import type { APIResponse, APIResponseData } from '@/types/api';
 
@@ -218,7 +218,8 @@ export async function getSsoWorkspace(id: string): Promise<APIResponse<{ ssoWork
  * @param workspaceId - identifier of workspace
  * @returns SSO configuration or null if not configured
  */
-export async function getSsoSettings(workspaceId: string): Promise<APIResponse<{ workspaces: Array<{ id: string; sso: WorkspaceSsoConfig | null }> }>> {
+export async function getSsoSettings(workspaceId: string): Promise<APIResponse<{ workspaces: Array<{ id: string;
+  sso: WorkspaceSsoConfig | null; }>; }>> {
   return api.call<{
     workspaces: Array<{
       id: string;
@@ -234,5 +235,6 @@ export async function getSsoSettings(workspaceId: string): Promise<APIResponse<{
  * @returns true if successful
  */
 export async function updateSsoSettings(workspaceId: string, config: WorkspaceSsoConfigInput): Promise<APIResponse<{ updateWorkspaceSso: boolean }>> {
-  return api.call<{ updateWorkspaceSso: boolean }>(MUTATION_UPDATE_SSO_SETTINGS, { workspaceId, config });
+  return api.call<{ updateWorkspaceSso: boolean }>(MUTATION_UPDATE_SSO_SETTINGS, { workspaceId,
+    config });
 }
