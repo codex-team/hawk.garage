@@ -16,12 +16,15 @@
         />
         <span
           class="breadcrumb-item__type"
-          :class="`breadcrumb-item__type--${breadcrumb.level || 'info'}`"
+          :class="`breadcrumb-item__type--${breadcrumb.type || 'default'}`"
         >
-          {{ formatType(breadcrumb.type) }}
+          {{ t(`event.breadcrumbs.types.${formatType(breadcrumb.type)}`) }}
         </span>
-        <span v-if="breadcrumb.message" class="breadcrumb-item__separator">-</span>
-        <span v-if="breadcrumb.message" class="breadcrumb-item__message-inline">
+        <span v-if="breadcrumb.message">-</span>
+        <span
+          v-if="breadcrumb.message"
+          class="breadcrumb-item__message-inline"
+        >
           {{ breadcrumb.message }}
         </span>
       </div>
@@ -32,7 +35,10 @@
         >
           {{ breadcrumb.category }}
         </span>
-        <span v-if="breadcrumb.category" class="breadcrumb-item__meta-separator">/</span>
+        <span
+          v-if="breadcrumb.category"
+          class="breadcrumb-item__meta-separator"
+        >/</span>
         <span class="breadcrumb-item__meta-time">
           {{ formatTime(breadcrumb.timestamp) }}
         </span>
@@ -57,12 +63,21 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Breadcrumb } from '@hawk.so/types';
 import BreadcrumbIcon from './BreadcrumbIcon.vue';
 import Json from '../../../utils/Json.vue';
 import Icon from '../../../utils/Icon.vue';
 
+const { t } = useI18n();
+
+/**
+ * Props for BreadcrumbItem component
+ */
 interface Props {
+  /**
+   * Breadcrumb data to display
+   */
   breadcrumb: Breadcrumb;
 }
 
@@ -82,19 +97,10 @@ const toggleExpanded = () => {
 
 const formatType = (type?: string): string => {
   if (!type) {
-    return 'Event';
+    return 'default';
   }
 
-  const typeMap: Record<string, string> = {
-    default: 'Event',
-    request: 'Request',
-    ui: 'UI Click',
-    navigation: 'Navigation',
-    logic: 'Logic',
-    error: 'Exception',
-  };
-
-  return typeMap[type] || type.charAt(0).toUpperCase() + type.slice(1);
+  return type;
 };
 
 const formatTime = (timestamp: number): string => {
@@ -167,6 +173,7 @@ const formatTime = (timestamp: number): string => {
   }
 
   &__method {
+    position: relative;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -180,34 +187,37 @@ const formatTime = (timestamp: number): string => {
   }
 
   &__icon {
-    flex-shrink: 0;
-    margin-left: -28px;
+    position: absolute;
+    left: -28px;
+    top: 0;
   }
 
   &__type {
     font-weight: 600;
 
-    &--fatal,
     &--error {
       color: var(--color-indicator-critical);
     }
 
-    &--warning {
+    &--navigation {
       color: var(--color-indicator-warning);
     }
 
-    &--info {
-      color: var(--color-indicator-medium);
+    &--ui {
+      color: #a855f7;
     }
 
-    &--debug {
-      color: var(--color-indicator-low);
+    &--request {
+      color: var(--color-indicator-positive);
     }
-  }
 
-  &__separator {
-    color: var(--color-text-second);
-    margin: 0 4px;
+    &--logic {
+      color: var(--color-text-highlighted);
+    }
+
+    &--default {
+      color: #94a3b8;
+    }
   }
 
   &__message-inline {
@@ -221,6 +231,7 @@ const formatTime = (timestamp: number): string => {
     display: flex;
     color: var(--color-text-second);
     font-size: 12px;
+    line-height: 1.5em;
     margin-left: 28px;
     padding-right: 30px;
     min-width: 0;
@@ -232,16 +243,10 @@ const formatTime = (timestamp: number): string => {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      font-family: var(--font-monospace);
     }
 
     &-separator {
       margin: 0 4px;
-      font-family: var(--font-monospace);
-    }
-
-    &-time {
-      font-family: var(--font-monospace);
     }
   }
 

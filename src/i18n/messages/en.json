@@ -543,6 +543,19 @@
       "noname": "No name",
       "viewProfile": "View profile"
     },
+    "breadcrumbs": {
+      "title": "Breadcrumbs",
+      "showLess": "Show Less",
+      "viewAll": "View All",
+      "types": {
+        "default": "Event",
+        "request": "Request",
+        "ui": "UI Click",
+        "navigation": "Navigation",
+        "logic": "Logic",
+        "error": "Exception"
+      }
+    },
     "limit": {
       "title": "Event Hidden",
       "description": "We received this event but have hidden it because your subscription has expired.",

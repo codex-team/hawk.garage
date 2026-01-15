@@ -1,7 +1,7 @@
 <template>
   <DetailsBase>
     <template #header>
-      Breadcrumbs
+      {{ $t('event.breadcrumbs.title') }}
     </template>
     <template #content>
       <div class="breadcrumbs">
@@ -16,16 +16,12 @@
           class="event-details__expand"
           @click="toggleShowAll"
         >
-          <svg
-            viewBox="0 0 16 16"
+          <Icon
             class="breadcrumbs__expand-icon"
-          >
-            <path
-              fill="currentColor"
-              d="M3 6h2v2H3V6zm0 4h2v2H3v-2zM7 6h2v2H7V6zm0 4h2v2H7v-2zm4-4h2v2h-2V6zm0 4h2v2h-2v-2z"
-            />
-          </svg>
-          {{ showAll ? 'Show Less' : 'View All' }}
+            symbol="arrow-down"
+            :class="{ 'breadcrumbs__expand-icon--opened': showAll }"
+          />
+          {{ showAll ? $t('event.breadcrumbs.showLess') : $t('event.breadcrumbs.viewAll') }}
         </div>
       </div>
     </template>
@@ -37,8 +33,15 @@ import { ref, computed } from 'vue';
 import type { Breadcrumb } from '@hawk.so/types';
 import DetailsBase from '../DetailsBase.vue';
 import BreadcrumbItem from './BreadcrumbItem.vue';
+import Icon from '../../../utils/Icon.vue';
 
+/**
+ * Props for DetailsBreadcrumbs component
+ */
 interface Props {
+  /**
+   * Array of breadcrumbs to display
+   */
   breadcrumbs: Breadcrumb[];
 }
 
@@ -74,9 +77,15 @@ const toggleShowAll = () => {
   border-radius: 10px;
 
   &__expand-icon {
-    width: 15px;
-    height: 15px;
-    margin-right: 5px;
+    width: 12px;
+    height: 12px;
+    margin-right: 10px;
+    margin-left: 5px;
+    transition: transform 0.2s;
+
+    &--opened {
+      transform: rotate(180deg);
+    }
   }
 }
 </style>

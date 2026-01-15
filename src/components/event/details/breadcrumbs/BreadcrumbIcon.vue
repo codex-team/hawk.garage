@@ -15,14 +15,19 @@
     </svg>
     <svg
       v-else-if="type === 'navigation'"
-      viewBox="0 0 512 512"
+      viewBox="0 0 24 24"
       class="breadcrumb-icon__svg"
     >
-      <path
-        fill="currentColor"
-        fill-rule="evenodd"
-        d="M256 42.667c117.821 0 213.334 95.513 213.334 213.333c0 117.821-95.513 213.334-213.334 213.334c-117.82 0-213.333-95.513-213.333-213.334C42.667 138.18 138.18 42.667 256 42.667m21.335 43.987L277.334 128h-42.667l-.002-41.346c-77.198 9.628-138.383 70.813-148.01 148.011l41.345.002v42.667H86.654c9.627 77.199 70.813 138.385 148.011 148.012l.002-41.346h42.667v41.346c77.2-9.627 138.385-70.813 148.012-148.011L384 277.334v-42.667h41.346c-9.626-77.2-70.813-138.386-148.011-148.013m85.332 62.68L288 288l-138.666 74.667L224 224zM256 234.667c-11.782 0-21.333 9.551-21.333 21.333s9.551 21.334 21.333 21.334s21.334-9.552 21.334-21.334s-9.552-21.333-21.334-21.333"
-      />
+      <g fill="none" stroke="currentColor" stroke-width="1.5">
+        <path
+          d="M6.142 6.142C8.904 3.381 10.284 2 12 2s3.096 1.38 5.858 4.142S22 10.284 22 12s-1.38 3.096-4.142 5.858S13.716 22 12 22s-3.096-1.38-5.858-4.142S2 13.716 2 12s1.38-3.096 4.142-5.858Z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M16 11.5L13.333 9M16 11.5L13.333 14M16 11.5h-5.333C9.777 11.5 8 12 8 14"
+        />
+      </g>
     </svg>
     <svg
       v-else-if="type === 'ui'"
@@ -102,11 +107,12 @@ const iconClass = computed(() => {
 
 <style scoped>
 .breadcrumb-icon {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   flex-shrink: 0;
 
@@ -121,8 +127,8 @@ const iconClass = computed(() => {
   }
 
   &--type-ui {
-    background-color: rgba(73, 121, 228, 0.1);
-    color: var(--color-indicator-medium);
+    background-color: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
   }
 
   &--type-request {
@@ -131,18 +137,18 @@ const iconClass = computed(() => {
   }
 
   &--type-logic {
-    background-color: rgba(80, 99, 140, 0.1);
-    color: var(--color-indicator-low);
-  }
-
-  &--type-default {
     background-color: rgba(113, 157, 255, 0.1);
     color: var(--color-text-highlighted);
   }
 
+  &--type-default {
+    background-color: rgba(148, 163, 184, 0.1);
+    color: #94a3b8;
+  }
+
   &__svg {
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
   }
 }
 </style>
