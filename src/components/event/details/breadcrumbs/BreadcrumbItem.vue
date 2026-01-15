@@ -24,6 +24,7 @@
         <span
           v-if="breadcrumb.message"
           class="breadcrumb-item__message-inline"
+          :title="breadcrumb.message"
         >
           {{ breadcrumb.message }}
         </span>
@@ -54,8 +55,16 @@
       v-show="isExpanded && hasData"
       class="breadcrumb-item__data-wrapper"
     >
+      <div class="breadcrumb-item__data-header">
+        <Icon
+          symbol="copy"
+          class="breadcrumb-item__copy-button"
+          :class="{ 'breadcrumb-item__copy-button--copied': isCopied }"
+          @click="copyBreadcrumb"
+        />
+      </div>
       <div class="breadcrumb-item__data-content">
-        <Json :value="breadcrumb.data || {}" />
+        <Json :value="expandedData" />
       </div>
     </div>
   </div>
@@ -84,15 +93,64 @@ interface Props {
 const props = defineProps<Props>();
 
 const isExpanded = ref(false);
+const isCopied = ref(false);
 
 const hasData = computed(() => {
   return props.breadcrumb.data && Object.keys(props.breadcrumb.data).length > 0;
+});
+
+const expandedData = computed(() => {
+  const data = { ...props.breadcrumb.data };
+
+  if (props.breadcrumb.message) {
+    return {
+      message: props.breadcrumb.message,
+      ...data,
+    };
+  }
+
+  return data;
 });
 
 const toggleExpanded = () => {
   if (hasData.value) {
     isExpanded.value = !isExpanded.value;
   }
+};
+
+const copyBreadcrumb = async () => {
+  try {
+    const breadcrumbJson = JSON.stringify(props.breadcrumb, null, 2);
+
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      await navigator.clipboard.writeText(breadcrumbJson);
+    } else {
+      /**
+       * Fallback for older browsers
+       */
+      const textArea = document.createElement('textarea');
+
+      textArea.value = breadcrumbJson;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand('copy');
+      } catch (err) {}
+
+      document.body.removeChild(textArea);
+    }
+
+    isCopied.value = true;
+    setTimeout(() => {
+      isCopied.value = false;
+    }, 2000);
+  } catch (error) {}
 };
 
 const formatType = (type?: string): string => {
@@ -176,7 +234,6 @@ const formatTime = (timestamp: number): string => {
     position: relative;
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: 8px;
     margin-top: 1px;
     margin-left: 28px;
@@ -200,7 +257,7 @@ const formatTime = (timestamp: number): string => {
     }
 
     &--navigation {
-      color: var(--color-indicator-warning);
+      color: var(--color-indicator-positive);
     }
 
     &--ui {
@@ -208,7 +265,7 @@ const formatTime = (timestamp: number): string => {
     }
 
     &--request {
-      color: var(--color-indicator-positive);
+      color: var(--color-indicator-warning);
     }
 
     &--logic {
@@ -222,9 +279,11 @@ const formatTime = (timestamp: number): string => {
 
   &__message-inline {
     color: var(--color-text-main);
-    word-break: break-word;
     flex: 1;
     min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   &__meta {
@@ -251,18 +310,46 @@ const formatTime = (timestamp: number): string => {
   }
 
   &__data-wrapper {
-    width: 100%;
+    width: calc(100% - 28px);
     min-width: 0;
+    max-width: calc(100% - 28px);
     box-sizing: border-box;
     overflow: hidden;
+    margin-top: 8px;
+    margin-left: 28px;
+    background: var(--color-bg-code-fragment);
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  &__data-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 4px;
+    padding-right: 8px;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  &__copy-button {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    color: var(--color-text-second);
+    transition: color 0.2s;
+    flex-shrink: 0;
+
+    &:hover {
+      color: var(--color-text-main);
+    }
+
+    &--copied {
+      color: var(--color-indicator-positive) !important;
+    }
   }
 
   &__data-content {
-    margin-top: 8px;
-    margin-left: 28px;
-    padding-right: 30px;
-    width: calc(100% - 28px);
-    max-width: calc(100% - 28px);
     box-sizing: border-box;
     overflow-x: auto;
     overflow-y: visible;
@@ -283,5 +370,16 @@ const formatTime = (timestamp: number): string => {
       display: block;
     }
   }
+}
+
+/* Local override for JSON viewer in breadcrumbs */
+body .breadcrumb-item__data-content .json-viewer-theme {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Remove hover for JSON viewer, as like in code-preview */
+body .breadcrumb-item__data-content .vjs-tree-node.dark:hover {
+  background-color: transparent !important;
 }
 </style>

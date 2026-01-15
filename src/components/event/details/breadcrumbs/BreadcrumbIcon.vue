@@ -135,8 +135,8 @@ const iconClass = computed(() => {
   }
 
   &--type-navigation {
-    background-color: rgba(230, 167, 0, 0.1);
-    color: var(--color-indicator-warning);
+    background-color: rgba(0, 224, 100, 0.1);
+    color: var(--color-indicator-positive);
   }
 
   &--type-ui {
@@ -145,8 +145,8 @@ const iconClass = computed(() => {
   }
 
   &--type-request {
-    background-color: rgba(0, 224, 100, 0.1);
-    color: var(--color-indicator-positive);
+    background-color: rgba(230, 167, 0, 0.1);
+    color: var(--color-indicator-warning);
   }
 
   &--type-logic {
