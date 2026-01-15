@@ -374,6 +374,7 @@ const formatTime = (timestamp: number): string => {
 
 /* Local override for JSON viewer in breadcrumbs */
 body .breadcrumb-item__data-content .json-viewer-theme {
+  padding-top: 0 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
