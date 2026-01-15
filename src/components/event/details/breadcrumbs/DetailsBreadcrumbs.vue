@@ -48,7 +48,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const showAll = ref(false);
-const INITIAL_LIMIT = 5;
+const INITIAL_LIMIT = 3;
 
 const sortedBreadcrumbs = computed(() => {
   return [...props.breadcrumbs].sort((a, b) => b.timestamp - a.timestamp);
