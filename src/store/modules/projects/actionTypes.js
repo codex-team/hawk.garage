@@ -77,3 +77,8 @@ export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
  * Send request to update project rate limits settings
  */
 export const UPDATE_PROJECT_RATE_LIMITS = 'UPDATE_PROJECT_RATE_LIMITS';
+
+/**
+ * Send request to disconnect task manager integration
+ */
+export const DISCONNECT_TASK_MANAGER = 'DISCONNECT_TASK_MANAGER';

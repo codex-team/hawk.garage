@@ -14,7 +14,8 @@ import {
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN,
   FETCH_CHART_DATA,
-  GENERATE_NEW_INTEGRATION_TOKEN
+  GENERATE_NEW_INTEGRATION_TOKEN,
+  DISCONNECT_TASK_MANAGER
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -243,6 +244,24 @@ const actions = {
         value: token,
       });
     }
+  },
+
+  /**
+   * Disconnect task manager integration from project
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {object} payload - action payload
+   * @param {string} payload.projectId - project id
+   * @returns {Promise<void>}
+   */
+  async [DISCONNECT_TASK_MANAGER]({ commit }, { projectId }) {
+    const updatedProject = await projectsApi.disconnectTaskManager(projectId);
+
+    commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+      projectId,
+      key: 'taskManager',
+      value: updatedProject.taskManager,
+    });
   },
 
   /**

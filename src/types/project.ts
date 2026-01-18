@@ -1,6 +1,7 @@
 import type { User } from './user';
 import type { ProjectNotificationsRule } from './project-notifications';
 import type { ProjectEventGroupingPattern } from './project-event-grouping-patterns';
+import type { ProjectTaskManagerConfig } from '@hawk.so/types';
 
 /**
  * Rate limits configuration for a project
@@ -75,4 +76,9 @@ export interface Project {
    * Rate limits configuration
    */
   rateLimitSettings?: ProjectRateLimitSettings;
+
+  /**
+   * Task Manager configuration
+   */
+  taskManager?: ProjectTaskManagerConfig;
 }

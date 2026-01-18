@@ -15,7 +15,8 @@ import {
   QUERY_CHART_DATA,
   MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
   QUERY_PROJECT_RELEASES,
-  QUERY_PROJECT_RELEASE_DETAILS
+  QUERY_PROJECT_RELEASE_DETAILS,
+  MUTATION_DISCONNECT_TASK_MANAGER
 } from './queries';
 import * as api from '../index.ts';
 
@@ -278,4 +279,20 @@ export async function unsubscribeFromNotifications(payload) {
   return (await api.call(MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS, {
     input: payload,
   })).unsubscribeFromNotifications;
+}
+
+/**
+ * Disconnect task manager integration from project
+ *
+ * @param {string} projectId - project id
+ * @returns {Promise<Project>}
+ */
+export async function disconnectTaskManager(projectId) {
+  const response = await api.call(MUTATION_DISCONNECT_TASK_MANAGER, { projectId });
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
+  }
+
+  return response.data.disconnectTaskManager;
 }

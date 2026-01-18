@@ -267,3 +267,28 @@ export const QUERY_PROJECT_RELEASE_DETAILS = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Mutation for disconnecting task manager integration
+ */
+export const MUTATION_DISCONNECT_TASK_MANAGER = `
+  mutation disconnectTaskManager($projectId: ID!) {
+    disconnectTaskManager(projectId: $projectId) {
+      id
+      taskManager {
+        type
+        autoTaskEnabled
+        taskThresholdTotalCount
+        assignAgent
+        connectedAt
+        updatedAt
+        config {
+          installationId
+          repoId
+          repoFullName
+        }
+      }
+    }
+  }
+`;
