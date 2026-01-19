@@ -30,7 +30,7 @@
       <DetailsBreadcrumbs
         v-if="hasBreadcrumbs"
         class="event-overview__section"
-        :breadcrumbs="event.payload.breadcrumbs || []"
+        :breadcrumbs="event.payload.breadcrumbs"
       />
       <DetailsAddons
         v-if="getIntegrationAddons('vue')"
