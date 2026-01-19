@@ -77,6 +77,7 @@ import type { Breadcrumb } from '@hawk.so/types';
 import BreadcrumbIcon from './BreadcrumbIcon.vue';
 import Json from '../../../utils/Json.vue';
 import Icon from '../../../utils/Icon.vue';
+import notifier from 'codex-notifier';
 
 const { t } = useI18n();
 
@@ -140,8 +141,15 @@ const copyBreadcrumb = async () => {
       textArea.select();
 
       try {
-        document.execCommand('copy');
-      } catch (err) {}
+        const successful = document.execCommand('copy');
+
+        if (!successful) {
+          throw new Error('Copy command was unsuccessful');
+        }
+      } catch (err) {
+        document.body.removeChild(textArea);
+        throw err;
+      }
 
       document.body.removeChild(textArea);
     }
@@ -150,7 +158,16 @@ const copyBreadcrumb = async () => {
     setTimeout(() => {
       isCopied.value = false;
     }, 2000);
-  } catch (error) {}
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to copy breadcrumb:', error);
+
+    notifier.show({
+      message: t('event.breadcrumbs.copyError'),
+      style: 'error',
+      time: 3000,
+    });
+  }
 };
 
 const formatType = (type?: string): string => {

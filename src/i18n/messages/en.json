@@ -547,6 +547,7 @@
       "title": "Breadcrumbs",
       "showLess": "Show Less",
       "viewAll": "View All",
+      "copyError": "Failed to copy breadcrumb",
       "types": {
         "default": "Event",
         "request": "Request",
