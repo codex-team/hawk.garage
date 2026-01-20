@@ -20,7 +20,6 @@
         >
           {{ t(`event.breadcrumbs.types.${formatType(breadcrumb.type)}`) }}
         </span>
-        <span v-if="breadcrumb.message">-</span>
         <span
           v-if="breadcrumb.message"
           class="breadcrumb-item__message-inline"
