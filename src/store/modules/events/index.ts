@@ -568,13 +568,11 @@ const module: Module<EventsModuleState, RootState> = {
      * Get affected users chart data for an event for a specified period
      * @param context - vuex action context
      * @param context.commit - VueX commit method
-     * @param context.dispatch - Vuex dispatch method
-     * @param project - object of project data
-     * @param project.projectId - project's id
-     * @param project.eventId - event's id
-     * @param project.startDate - start date
-     * @param project.endDate - end date
-     * @param project.groupBy - grouping interval in minutes
+     * @param payload - object of payload data
+     * @param payload.projectId - project's id
+     * @param payload.eventId - event's id
+     * @param payload.originalEventId - original event's id
+     * @param payload.days - number of days to fetch chart data for
      */
     async [GET_AFFECTED_USERS_CHART_DATA](
       { commit },
