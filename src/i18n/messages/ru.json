@@ -545,9 +545,6 @@
     },
     "breadcrumbs": {
       "title": "Хлебные крошки",
-      "showLess": "Скрыть",
-      "viewAll": "Показать все",
-      "copyError": "Не удалось скопировать хлебную крошку",
       "types": {
         "default": "Событие",
         "request": "Запрос",
@@ -571,6 +568,8 @@
     "threshold": "Встречалось больше",
     "thresholdPeriod": "раз за",
     "copiedNotification": "Скопировано!",
+    "showLess": "Скрыть",
+    "viewAll": "Показать все",
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
     "selected": "Выбрано",

@@ -38,7 +38,7 @@
         <span
           v-if="breadcrumb.category"
           class="breadcrumb-item__meta-separator"
-        >/</span>
+        />
         <span class="breadcrumb-item__meta-time">
           {{ formatTime(breadcrumb.timestamp) }}
         </span>
@@ -55,12 +55,21 @@
       class="breadcrumb-item__data-wrapper"
     >
       <div class="breadcrumb-item__data-header">
-        <Icon
-          symbol="copy"
-          class="breadcrumb-item__copy-button"
-          :class="{ 'breadcrumb-item__copy-button--copied': isCopied }"
-          @click="copyBreadcrumb"
-        />
+        <div
+          v-copyable="{
+            selector: '.breadcrumb-item__json-content',
+            callback: onBreadcrumbCopied,
+          }"
+        >
+          <Icon
+            symbol="copy"
+            class="breadcrumb-item__copy-button"
+            :class="{ 'breadcrumb-item__copy-button--copied': isCopied }"
+          />
+          <div class="breadcrumb-item__json-content">
+            {{ breadcrumbJson }}
+          </div>
+        </div>
       </div>
       <div class="breadcrumb-item__data-content">
         <Json :value="expandedData" />
@@ -77,6 +86,7 @@ import BreadcrumbIcon from './BreadcrumbIcon.vue';
 import Json from '../../../utils/Json.vue';
 import Icon from '../../../utils/Icon.vue';
 import notifier from 'codex-notifier';
+import { prettyDateFromDateTimeString } from '@/utils/filters';
 
 const { t } = useI18n();
 
@@ -92,13 +102,30 @@ interface Props {
 
 const props = defineProps<Props>();
 
+/**
+ * Whether the breadcrumb data section is expanded
+ */
 const isExpanded = ref(false);
+
+/**
+ * Whether the breadcrumb was successfully copied to clipboard
+ */
 const isCopied = ref(false);
 
+/**
+ * Checks if breadcrumb has data to display
+ *
+ * @returns {boolean} True if breadcrumb has data, false otherwise
+ */
 const hasData = computed(() => {
   return props.breadcrumb.data && Object.keys(props.breadcrumb.data).length > 0;
 });
 
+/**
+ * Expanded breadcrumb data including message if present
+ *
+ * @returns {Record<string, unknown>} Breadcrumb data with optional message field
+ */
 const expandedData = computed(() => {
   const data = { ...props.breadcrumb.data };
 
@@ -112,63 +139,50 @@ const expandedData = computed(() => {
   return data;
 });
 
+/**
+ * JSON string representation of breadcrumb for copying
+ *
+ * @returns {string} Formatted JSON string
+ */
+const breadcrumbJson = computed(() => {
+  return JSON.stringify(props.breadcrumb, null, 2);
+});
+
+/**
+ * Toggles the expanded state of breadcrumb data section
+ */
 const toggleExpanded = () => {
   if (hasData.value) {
     isExpanded.value = !isExpanded.value;
   }
 };
 
-const copyBreadcrumb = async () => {
-  try {
-    const breadcrumbJson = JSON.stringify(props.breadcrumb, null, 2);
-
-    // eslint-disable-next-line n/no-unsupported-features/node-builtins
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      // eslint-disable-next-line n/no-unsupported-features/node-builtins
-      await navigator.clipboard.writeText(breadcrumbJson);
-    } else {
-      /**
-       * Fallback for older browsers
-       */
-      const textArea = document.createElement('textarea');
-
-      textArea.value = breadcrumbJson;
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-
-      try {
-        const successful = document.execCommand('copy');
-
-        if (!successful) {
-          throw new Error('Copy command was unsuccessful');
-        }
-      } catch (err) {
-        document.body.removeChild(textArea);
-        throw err;
-      }
-
-      document.body.removeChild(textArea);
-    }
-
+/**
+ * Callback for copyable directive when breadcrumb is copied
+ *
+ * @param {string} copiedText - Text that was copied to clipboard
+ */
+const onBreadcrumbCopied = (copiedText: string) => {
+  if (copiedText) {
     isCopied.value = true;
     setTimeout(() => {
       isCopied.value = false;
     }, 2000);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to copy breadcrumb:', error);
 
     notifier.show({
-      message: t('event.breadcrumbs.copyError'),
-      style: 'error',
-      time: 3000,
+      message: t('common.copiedNotification'),
+      style: 'success',
+      time: 2000,
     });
   }
 };
 
+/**
+ * Formats breadcrumb type for display
+ *
+ * @param {string | undefined} type - Breadcrumb type
+ * @returns {string} Formatted type or 'default' if type is not provided
+ */
 const formatType = (type?: string): string => {
   if (!type) {
     return 'default';
@@ -177,26 +191,40 @@ const formatType = (type?: string): string => {
   return type;
 };
 
+/**
+ * Formats timestamp to date and time string with milliseconds
+ * Uses prettyDateFromDateTimeString and adds seconds and milliseconds
+ *
+ * @param {number} timestamp - Unix timestamp in milliseconds
+ * @returns {string} Formatted date and time string (e.g., "15 Feb, 12:21:12.120")
+ */
 const formatTime = (timestamp: number): string => {
   const date = new Date(timestamp);
-  const hours = date
-    .getHours()
+  const dateStr = date.toISOString();
+  let baseFormat = prettyDateFromDateTimeString(dateStr, true);
+
+  /**
+   * prettyDateFromDateTimeString returns format like "15 Feb 12:21" or "2020, 15 Feb 12:21"
+   * We need format "15 Feb, 12:21:12.120" - add comma after month if not present
+   */
+  if (!baseFormat.includes(',')) {
+    /**
+     * Add comma after month (e.g., "15 Feb" -> "15 Feb,")
+     */
+    baseFormat = baseFormat.replace(/(\w{3} \d{1,2}) /, '$1, ');
+  }
+
+  const seconds = date.getSeconds()
     .toString()
     .padStart(2, '0');
-  const minutes = date
-    .getMinutes()
-    .toString()
-    .padStart(2, '0');
-  const seconds = date
-    .getSeconds()
-    .toString()
-    .padStart(2, '0');
-  const milliseconds = date
-    .getMilliseconds()
+  const milliseconds = date.getMilliseconds()
     .toString()
     .padStart(3, '0');
 
-  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+  /**
+   * Replace the time part (HH:MM) with full time (HH:MM:SS.mmm)
+   */
+  return baseFormat.replace(/(\d{2}:\d{2})$/, `$1:${seconds}.${milliseconds}`);
 };
 </script>
 
@@ -322,6 +350,10 @@ const formatTime = (timestamp: number): string => {
 
     &-separator {
       margin: 0 4px;
+
+      &::before {
+        content: '/';
+      }
     }
   }
 
@@ -339,11 +371,12 @@ const formatTime = (timestamp: number): string => {
   }
 
   &__data-header {
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding-top: 6px;
-    padding-right: 6px;
+    padding-right: 4px;
     min-width: 0;
     box-sizing: border-box;
   }
@@ -363,6 +396,12 @@ const formatTime = (timestamp: number): string => {
     &--copied {
       color: var(--color-indicator-positive) !important;
     }
+  }
+
+  &__json-content {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
   }
 
   &__data-content {

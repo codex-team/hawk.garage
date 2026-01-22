@@ -545,9 +545,6 @@
     },
     "breadcrumbs": {
       "title": "Breadcrumbs",
-      "showLess": "Show Less",
-      "viewAll": "View All",
-      "copyError": "Failed to copy breadcrumb",
       "types": {
         "default": "Event",
         "request": "Request",
@@ -571,6 +568,8 @@
     "threshold": "Seen more than",
     "thresholdPeriod": "in the last",
     "copiedNotification": "Copied!",
+    "showLess": "Show Less",
+    "viewAll": "View All",
     "free": "FREE",
     "select": "Select",
     "selected": "Selected",

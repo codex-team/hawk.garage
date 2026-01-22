@@ -21,7 +21,7 @@
             symbol="arrow-down"
             :class="{ 'breadcrumbs__expand-icon--opened': showAll }"
           />
-          {{ showAll ? $t('event.breadcrumbs.showLess') : $t('event.breadcrumbs.viewAll') }}
+          {{ showAll ? $t('common.showLess') : $t('common.viewAll') }}
         </div>
       </div>
     </template>
