@@ -18,6 +18,19 @@ export const MUTATION_CREATE_PROJECT = `
       notifications {
         ...ProjectNotificationsRule
       }
+      taskManager {
+        type
+        autoTaskEnabled
+        taskThresholdTotalCount
+        assignAgent
+        connectedAt
+        updatedAt
+        config {
+          installationId
+          repoId
+          repoFullName
+        }
+      }
     }
   }
 

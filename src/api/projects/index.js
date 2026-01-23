@@ -296,3 +296,33 @@ export async function disconnectTaskManager(projectId) {
 
   return response.data.disconnectTaskManager;
 }
+
+/**
+ * Get list of GitHub repositories for project
+ *
+ * @param {string} projectId - project id
+ * @returns {Promise<{repositories: Array<{id: string, name: string, fullName: string, private: boolean, htmlUrl: string, updatedAt: string, language: string | null}>}>}
+ */
+export async function getGitHubRepositories(projectId) {
+  return api.callRest(`/integration/github/repositories?projectId=${projectId}`, {
+    method: 'GET',
+  });
+}
+
+/**
+ * Update GitHub repository selection for project
+ *
+ * @param {string} projectId - project id
+ * @param {string} repoId - repository ID
+ * @param {string} repoFullName - repository full name (owner/repo)
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
+export async function updateGitHubRepository(projectId, repoId, repoFullName) {
+  return api.callRest(`/integration/github/repository?projectId=${projectId}`, {
+    method: 'PUT',
+    body: {
+      repoId,
+      repoFullName,
+    },
+  });
+}

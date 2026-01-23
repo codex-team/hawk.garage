@@ -31,14 +31,59 @@
         v-else
         class="task-manager-integration-settings-page__connected-section"
       >
-        <div class="task-manager-integration-settings-page__connected-info">
-          {{ t('projects.settings.taskManager.githubRepository.connectedTo') }}
-          <b>{{ connectedRepoFullName }}</b>
+        <!-- Repository Picker (shown when no repository is selected) -->
+        <div
+          v-if="!connectedRepoFullName"
+          class="task-manager-integration-settings-page__repo-picker"
+        >
+          <CustomSelect
+            v-if="repositories.length > 0"
+            :options="repositoryOptions"
+            :model-value="selectedRepository || undefined"
+            :label="t('projects.settings.taskManager.githubRepository.selectRepositoryLabel')"
+            :need-image="false"
+            :placeholder="t('projects.settings.taskManager.githubRepository.selectRepositoryPlaceholder')"
+            @update:model-value="onRepositorySelected"
+          />
+          <div
+            v-else-if="isLoadingRepositories"
+            class="task-manager-integration-settings-page__loading"
+          >
+            {{ t('projects.settings.taskManager.githubRepository.loadingRepositories') }}
+          </div>
+          <div
+            v-else-if="repositoriesError"
+            class="task-manager-integration-settings-page__error"
+          >
+            {{ repositoriesError }}
+          </div>
+          <UiButton
+            v-if="isAdmin"
+            class="task-manager-integration-settings-page__disconnect-button"
+            :content="t('projects.settings.taskManager.githubRepository.disconnectButton')"
+            rounded
+            @click="disconnectGitHub"
+          />
+        </div>
+
+        <!-- Connected Repository Info (shown when repository is selected) -->
+        <div
+          v-else
+          class="task-manager-integration-settings-page__connected-info"
+        >
+          <UiButton
+            class="task-manager-integration-settings-page__connected-repo-button"
+            :content="connectedRepoFullName"
+            :icon="connectedRepoIcon"
+            rounded
+            @click="openRepository"
+          />
         </div>
         <UiButton
-          v-if="isAdmin"
+          v-if="isAdmin && connectedRepoFullName"
+          class="task-manager-integration-settings-page__disconnect-button"
           :content="t('projects.settings.taskManager.githubRepository.disconnectButton')"
-          warning
+          rounded
           @click="disconnectGitHub"
         />
       </div>
@@ -46,7 +91,7 @@
 
     <!-- Auto Task Creation Section -->
     <section
-      v-if="isConnected"
+      v-if="isConnected && connectedRepoFullName"
       class="task-manager-integration-settings-page__section"
     >
       <div class="settings-window-page__subtitle">
@@ -90,7 +135,7 @@
 
     <!-- Agent Assignment Section -->
     <section
-      v-if="isConnected"
+      v-if="isConnected && connectedRepoFullName"
       class="task-manager-integration-settings-page__section"
     >
       <div class="settings-window-page__subtitle">
@@ -116,10 +161,11 @@ import { useI18n } from 'vue-i18n';
 import type { Project } from '../../../types/project';
 import UiSwitch from '../../forms/UiSwitch.vue';
 import UiButton from '../../utils/UiButton.vue';
+import CustomSelect from '../../forms/CustomSelect.vue';
 import { ActionType } from '../../utils/ConfirmationWindow/types';
 import notifier from 'codex-notifier';
 import { API_ENDPOINT } from '../../../api';
-import { DISCONNECT_TASK_MANAGER } from '@/store/modules/projects/actionTypes';
+import { DISCONNECT_TASK_MANAGER, UPDATE_GITHUB_REPOSITORY, FETCH_GITHUB_REPOSITORIES } from '@/store/modules/projects/actionTypes';
 
 /**
  * This data will be sent to update task manager settings
@@ -173,6 +219,71 @@ const formAssignAgent = ref<boolean>(props.project.taskManager?.assignAgent || f
 const showSubmitButton = ref<boolean>(false);
 
 /**
+ * Repository interface for GitHub repositories
+ */
+interface Repository {
+  /**
+   * Repository ID
+   */
+  id: string;
+
+  /**
+   * Repository name (without owner)
+   */
+  name: string;
+
+  /**
+   * Repository full name (owner/repo)
+   */
+  fullName: string;
+
+  /**
+   * Whether repository is private
+   */
+  private: boolean;
+
+  /**
+   * Repository HTML URL
+   */
+  htmlUrl: string;
+
+  /**
+   * Last update date
+   */
+  updatedAt: string;
+
+  /**
+   * Primary programming language
+   */
+  language: string | null;
+}
+
+/**
+ * Repository list for selection
+ */
+const repositories = ref<Repository[]>([]);
+
+/**
+ * Loading state for repositories
+ */
+const isLoadingRepositories = ref<boolean>(false);
+
+/**
+ * Error message for repository loading
+ */
+const repositoriesError = ref<string | null>(null);
+
+/**
+ * Selected repository
+ */
+interface SelectedRepository {
+  id: string;
+  name: string;
+}
+
+const selectedRepository = ref<SelectedRepository | null>(null);
+
+/**
  * Is GitHub repository connected
  */
 const isConnected = computed<boolean>(() => {
@@ -184,6 +295,98 @@ const isConnected = computed<boolean>(() => {
  */
 const connectedRepoFullName = computed<string>(() => {
   return props.project.taskManager?.config.repoFullName || '';
+});
+
+/**
+ * Connected repository ID
+ */
+const connectedRepoId = computed<string>(() => {
+  const repoId = props.project.taskManager?.config.repoId;
+
+  return repoId ? String(repoId) : '';
+});
+
+/**
+ * Find connected repository from loaded repositories list
+ */
+const connectedRepository = computed<Repository | null>(() => {
+  if (!connectedRepoId.value || repositories.value.length === 0) {
+    return null;
+  }
+
+  return repositories.value.find((repo: Repository) => repo.id === connectedRepoId.value) || null;
+});
+
+/**
+ * Icon for connected repository (language icon or GitHub fallback)
+ */
+const connectedRepoIcon = computed<string>(() => {
+  if (connectedRepository.value) {
+    return getLanguageIcon(connectedRepository.value.language);
+  }
+
+  return 'github';
+});
+
+/**
+ * URL for connected repository
+ */
+const connectedRepoUrl = computed<string>(() => {
+  if (connectedRepository.value) {
+    return connectedRepository.value.htmlUrl;
+  }
+
+  /**
+   * Fallback: construct URL from repoFullName if we don't have htmlUrl
+   */
+  if (connectedRepoFullName.value) {
+    return `https://github.com/${connectedRepoFullName.value}`;
+  }
+
+  return '';
+});
+
+/**
+ * Mapping of programming languages to icon names
+ * Falls back to 'github' if language is not found
+ */
+const LANGUAGE_ICON_MAP: Record<string, string> = {
+  Vue: 'vue',
+  JavaScript: 'nodejs',
+  TypeScript: 'nodejs',
+  Python: 'python',
+  PHP: 'php',
+  Django: 'django',
+  Flask: 'flask',
+  FastAPI: 'fastapi',
+  Nuxt: 'nuxt',
+};
+
+/**
+ * Get icon name for language
+ *
+ * @param language - programming language name
+ * @returns icon name or 'github' as fallback
+ */
+function getLanguageIcon(language: string | null): string {
+  if (!language) {
+    return 'github';
+  }
+
+  return LANGUAGE_ICON_MAP[language] || 'github';
+}
+
+/**
+ * Repository options for CustomSelect
+ */
+const repositoryOptions = computed(() => {
+  return repositories.value.map((repo: Repository) => {
+    return {
+      id: repo.id,
+      name: repo.fullName,
+      icon: getLanguageIcon(repo.language),
+    };
+  });
 });
 
 /**
@@ -211,6 +414,105 @@ watch(
 );
 
 /**
+ * Load repositories from API
+ */
+async function loadRepositories(): Promise<void> {
+  if (!isConnected.value) {
+    /**
+     * Don't load if not connected
+     */
+    return;
+  }
+
+  /**
+   * If repositories are already loaded, don't reload
+   */
+  if (repositories.value.length > 0) {
+    return;
+  }
+
+  isLoadingRepositories.value = true;
+  repositoriesError.value = null;
+
+  try {
+    const repos = await store.dispatch(FETCH_GITHUB_REPOSITORIES, {
+      projectId: props.project.id,
+    });
+
+    repositories.value = repos || [];
+  } catch (error) {
+    console.error('Error loading repositories:', error);
+
+    repositoriesError.value = error instanceof Error ? error.message : String(error);
+  } finally {
+    isLoadingRepositories.value = false;
+  }
+}
+
+/**
+ * Open connected repository in new tab
+ */
+function openRepository(): void {
+  if (connectedRepoUrl.value) {
+    window.open(connectedRepoUrl.value, '_blank');
+  }
+}
+
+/**
+ * Handle repository selection
+ *
+ * @param repository - selected repository object
+ * @param repository.id - repository ID
+ * @param repository.name - repository name
+ */
+async function onRepositorySelected(repository: SelectedRepository): Promise<void> {
+  if (!repository) {
+    return;
+  }
+
+  /**
+   * Find full repository data
+   */
+  const fullRepo = repositories.value.find((r: Repository) => {
+    return r.id === repository.id;
+  });
+
+  if (!fullRepo) {
+    notifier.show({
+      message: t('projects.settings.taskManager.githubRepository.repositoryNotFound'),
+      style: 'error',
+      time: 5000,
+    });
+
+    return;
+  }
+
+  try {
+    await store.dispatch(UPDATE_GITHUB_REPOSITORY, {
+      projectId: props.project.id,
+      repoId: fullRepo.id,
+      repoFullName: fullRepo.fullName,
+    });
+
+    selectedRepository.value = repository;
+
+    notifier.show({
+      message: t('projects.settings.taskManager.githubRepository.repositorySelected'),
+      style: 'success',
+      time: 5000,
+    });
+  } catch (error) {
+    console.error('Error updating repository selection:', error);
+
+    notifier.show({
+      message: error instanceof Error ? error.message : String(error),
+      style: 'error',
+      time: 5000,
+    });
+  }
+}
+
+/**
  * Check for success/error query parameters after GitHub callback
  */
 onMounted(() => {
@@ -231,10 +533,9 @@ onMounted(() => {
     window.history.replaceState({}, '', window.location.pathname);
 
     /**
-     * Reload page to get updated project data
-     * TODO: Replace with GraphQL query to fetch updated project when API is ready
+     * Load repositories after successful connection
      */
-    window.location.reload();
+    loadRepositories();
   } else if (error) {
     notifier.show({
       message: error,
@@ -246,6 +547,11 @@ onMounted(() => {
      * Remove query parameters from URL
      */
     window.history.replaceState({}, '', window.location.pathname);
+  } else if (isConnected.value) {
+    /**
+     * Load repositories if connected (needed for repository info even if already selected)
+     */
+    loadRepositories();
   }
 });
 
@@ -271,47 +577,31 @@ async function connectGitHub(): Promise<void> {
   try {
     /**
      * Make request to API endpoint with Authorization header
-     * The endpoint will return a redirect URL or handle the redirect itself
+     * The endpoint will return JSON with redirectUrl
      */
     const apiUrl = API_ENDPOINT || 'http://localhost:4000';
     const connectUrl = `${apiUrl}/integration/github/connect?projectId=${props.project.id}`;
 
-    /**
-     * Use fetch to make request with Authorization header
-     * The API should return a redirect response (302) or a URL to redirect to
-     */
     const response = await fetch(connectUrl, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      redirect: 'manual', // Don't follow redirect automatically
     });
 
-    /**
-     * If response is a redirect, follow it
-     */
-    if (response.status === 302 || response.status === 301) {
-      const redirectUrl = response.headers.get('Location');
-
-      if (redirectUrl) {
-        window.location.href = redirectUrl;
-
-        return;
-      }
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    /**
-     * If response is OK, try to get redirect URL from response
-     */
-    if (response.ok) {
-      const data = await response.json();
+    const data = await response.json();
 
-      if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
+    if (data.redirectUrl) {
+      /**
+       * Redirect to GitHub installation page
+       */
+      window.location.href = data.redirectUrl;
 
-        return;
-      }
+      return;
     }
 
     /**
@@ -487,6 +777,28 @@ async function onAssignAgentChange(): Promise<void> {
     &__connected-info {
       color: var(--color-text-main);
       font-size: 14px;
+    }
+
+    &__repo-picker {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 20px;
+      width: 270px;
+    }
+
+    &__loading {
+      color: var(--color-text-second);
+      font-size: 14px;
+    }
+
+    &__error {
+      color: var(--color-error);
+      font-size: 14px;
+    }
+
+    &__disconnect-button {
+      align-self: flex-start;
     }
 
     &__form {

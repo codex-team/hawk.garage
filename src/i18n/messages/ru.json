@@ -252,11 +252,17 @@
           "description": "Настройте автоматическое создание Issues, исправляйте ошибки автоматически с Copilot.",
           "connectButton": "Подключить GitHub",
           "connectedTo": "Подключено к",
+          "connected": "GitHub App подключен",
           "disconnectButton": "Отключить",
-          "connectSuccess": "GitHub репозиторий успешно подключен",
+          "connectSuccess": "GitHub успешно подключен. Выберите репозиторий",
           "disconnectSuccess": "GitHub репозиторий успешно отключен",
           "disconnectError": "Не удалось отключить GitHub репозиторий",
           "authError": "Ошибка аутентификации. Пожалуйста, попробуйте снова.",
+          "selectRepositoryLabel": "Выберите репозиторий",
+          "selectRepositoryPlaceholder": "Выберите репозиторий",
+          "loadingRepositories": "Загрузка репозиториев...",
+          "repositoryNotFound": "Репозиторий не найден",
+          "repositorySelected": "Репозиторий подключен",
           "disconnectConfirmation": {
             "title": "Отключить GitHub репозиторий?",
             "description": "После отключения Хоук перестанет автоматически создавать issues. Существующие issues останутся в вашем репозитории."

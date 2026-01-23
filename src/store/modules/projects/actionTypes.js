@@ -82,3 +82,13 @@ export const UPDATE_PROJECT_RATE_LIMITS = 'UPDATE_PROJECT_RATE_LIMITS';
  * Send request to disconnect task manager integration
  */
 export const DISCONNECT_TASK_MANAGER = 'DISCONNECT_TASK_MANAGER';
+
+/**
+ * Send request to update GitHub repository selection
+ */
+export const UPDATE_GITHUB_REPOSITORY = 'UPDATE_GITHUB_REPOSITORY';
+
+/**
+ * Send request to fetch GitHub repositories list
+ */
+export const FETCH_GITHUB_REPOSITORIES = 'FETCH_GITHUB_REPOSITORIES';

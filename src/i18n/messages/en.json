@@ -252,11 +252,17 @@
           "description": "Configure automatic Issue creation, fix errors automatically with Copilot.",
           "connectButton": "Connect GitHub Repository",
           "connectedTo": "Connected to",
+          "connected": "GitHub App connected",
           "disconnectButton": "Disconnect",
-          "connectSuccess": "GitHub repository connected successfully",
+          "connectSuccess": "GitHub connected successfully. Select a repository",
           "disconnectSuccess": "GitHub repository disconnected successfully",
           "disconnectError": "Failed to disconnect GitHub repository",
           "authError": "Authentication error. Please try again.",
+          "selectRepositoryLabel": "Select Repository",
+          "selectRepositoryPlaceholder": "Select a repository",
+          "loadingRepositories": "Loading repositories...",
+          "repositoryNotFound": "Repository not found",
+          "repositorySelected": "Repository connected",
           "disconnectConfirmation": {
             "title": "Disconnect GitHub repository?",
             "description": "After disconnecting, Hawk will stop creating issues automatically. Existing issues will remain in your repository."

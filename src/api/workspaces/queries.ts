@@ -43,6 +43,19 @@ export const QUERY_ALL_WORKSPACES_WITH_PROJECTS = `
           N
           T
         }
+        taskManager {
+          type
+          autoTaskEnabled
+          taskThresholdTotalCount
+          assignAgent
+          connectedAt
+          updatedAt
+          config {
+            installationId
+            repoId
+            repoFullName
+          }
+        }
         dailyEventsPortion(limit: 1) {
           nextCursor {
             groupingTimestampBoundary
