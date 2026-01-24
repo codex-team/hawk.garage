@@ -71,6 +71,14 @@ export const EVENT_FRAGMENT = `
         ...eventBacktrace
       }
       addons
+      breadcrumbs {
+        timestamp
+        type
+        category
+        message
+        level
+        data
+      }
     }
     usersAffected
     release {
