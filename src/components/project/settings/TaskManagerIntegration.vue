@@ -103,8 +103,10 @@
           :label="t('projects.settings.taskManager.autoTaskCreation.enableLabel')"
           :is-first="true"
           :is-only="!formAutoTaskEnabled"
+          @click="handleEnableLabelClick"
         >
           <UiSwitch
+            ref="enableSwitchRef"
             v-model="formAutoTaskEnabled"
             @update:model-value="onAutoTaskEnabledChange"
           />
@@ -112,9 +114,11 @@
         <Control
           v-if="formAutoTaskEnabled"
           :label="t('projects.settings.taskManager.autoTaskCreation.thresholdLabel')"
+          label-for="threshold-input"
           :is-last="true"
         >
           <input
+            id="threshold-input"
             v-model.number="formThreshold"
             type="number"
             min="1"
@@ -150,8 +154,10 @@
       <Control
         :label="t('projects.settings.taskManager.agent.controlLabel')"
         :is-only="true"
+        @click="handleAssignAgentLabelClick"
       >
         <UiSwitch
+          ref="assignAgentSwitchRef"
           v-model="formAssignAgent"
           @update:model-value="onAssignAgentChange"
         />
@@ -230,6 +236,12 @@ const formAutoTaskEnabled = ref<boolean>(props.project.taskManager?.autoTaskEnab
  * Form data for assign agent
  */
 const formAssignAgent = ref<boolean>(props.project.taskManager?.assignAgent || false);
+
+/**
+ * Refs for switch components to handle label clicks
+ */
+const enableSwitchRef = ref<InstanceType<typeof UiSwitch> | null>(null);
+const assignAgentSwitchRef = ref<InstanceType<typeof UiSwitch> | null>(null);
 
 /**
  * Original values from project for comparison
@@ -823,6 +835,38 @@ function handleThresholdInput(): void {
    */
   if (formThreshold.value > 10000000) {
     formThreshold.value = 10000000;
+  }
+}
+
+/**
+ * Handle click on enable label to toggle switch
+ */
+function handleEnableLabelClick(): void {
+  if (enableSwitchRef.value) {
+    /**
+     * Toggle switch by calling its click method
+     */
+    const switchElement = enableSwitchRef.value.$el as HTMLElement;
+
+    if (switchElement) {
+      switchElement.click();
+    }
+  }
+}
+
+/**
+ * Handle click on assign agent label to toggle switch
+ */
+function handleAssignAgentLabelClick(): void {
+  if (assignAgentSwitchRef.value) {
+    /**
+     * Toggle switch by calling its click method
+     */
+    const switchElement = assignAgentSwitchRef.value.$el as HTMLElement;
+
+    if (switchElement) {
+      switchElement.click();
+    }
   }
 }
 

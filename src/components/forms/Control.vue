@@ -6,6 +6,7 @@
       'form-control--last': isLast,
       'form-control--only': isOnly,
     }"
+    @click="handleControlClick"
   >
     <label
       v-if="label"
@@ -14,7 +15,10 @@
     >
       {{ label }}
     </label>
-    <div class="form-control__control">
+    <div
+      class="form-control__control"
+      @click.stop
+    >
       <slot />
     </div>
   </div>
@@ -48,7 +52,34 @@ interface Props {
   isOnly?: boolean;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+/**
+ * Emit click event when control is clicked (but not the slot content)
+ */
+const emit = defineEmits<{
+  /**
+   * Emitted when control container is clicked (excluding slot content)
+   */
+  (e: 'click'): void;
+}>();
+
+/**
+ * Handle control click - emit event if clicked outside slot
+ */
+function handleControlClick(): void {
+  /**
+   * If labelFor is provided, browser will handle focus automatically via label-for association
+   */
+  if (props.labelFor) {
+    return;
+  }
+
+  /**
+   * Emit click event for parent to handle
+   */
+  emit('click');
+}
 </script>
 
 <style>
