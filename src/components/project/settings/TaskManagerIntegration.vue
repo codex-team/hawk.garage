@@ -90,67 +90,73 @@
     </section>
 
     <!-- Auto Task Creation Section -->
-    <section
+    <Section
       v-if="isConnected && connectedRepoFullName"
-      class="task-manager-integration-settings-page__section"
+      :title="t('projects.settings.taskManager.autoTaskCreation.title')"
+      :description="t('projects.settings.taskManager.autoTaskCreation.thresholdDescription')"
     >
-      <div class="settings-window-page__subtitle">
-        {{ t('projects.settings.taskManager.autoTaskCreation.title') }}
-      </div>
-      <div class="task-manager-integration-settings-page__description">
-        {{ t('projects.settings.taskManager.autoTaskCreation.description') }}
-      </div>
       <form
         class="task-manager-integration-settings-page__form"
         @submit.prevent
       >
-        <div class="task-manager-integration-settings-page__field">
-          <label class="label">
-            {{ t('projects.settings.taskManager.autoTaskCreation.thresholdLabel') }}
-          </label>
+        <Control
+          :label="t('projects.settings.taskManager.autoTaskCreation.enableLabel')"
+          :is-first="true"
+          :is-only="!formAutoTaskEnabled"
+        >
+          <UiSwitch
+            v-model="formAutoTaskEnabled"
+            @update:model-value="onAutoTaskEnabledChange"
+          />
+        </Control>
+        <Control
+          v-if="formAutoTaskEnabled"
+          :label="t('projects.settings.taskManager.autoTaskCreation.thresholdLabel')"
+          :is-last="true"
+        >
           <input
             v-model.number="formThreshold"
             type="number"
             min="1"
-            class="input"
-            :placeholder="t('projects.settings.taskManager.autoTaskCreation.thresholdPlaceholder')"
-            @input="showSubmitButton = true"
+            max="10000000"
+            step="1"
+            class="task-manager-integration-settings-page__control-input"
+            placeholder="50"
+            @keydown="handleNumberInputKeydown"
+            @input="handleThresholdInput"
+            @blur="handleThresholdInput"
           >
-          <div class="task-manager-integration-settings-page__field-description">
-            {{ t('projects.settings.taskManager.autoTaskCreation.thresholdDescription') }}
-          </div>
-        </div>
-        <div
-          v-if="showSubmitButton"
-          class="task-manager-integration-settings-page__submit-area"
-        >
-          <UiButton
-            :content="t('projects.settings.taskManager.autoTaskCreation.submit')"
-            submit
-            @click="saveAutoTaskSettings"
-          />
-        </div>
+        </Control>
       </form>
-    </section>
+    </Section>
+    <div
+      v-if="showSubmitButton"
+      class="task-manager-integration-settings-page__submit-area"
+    >
+      <UiButton
+        :content="t('common.save')"
+        @click="saveAutoTaskSettings"
+        submit
+      />
+    </div>
 
     <!-- Agent Assignment Section -->
-    <section
-      v-if="isConnected && connectedRepoFullName"
-      class="task-manager-integration-settings-page__section"
+    <Section
+      v-if="isConnected && connectedRepoFullName && formAutoTaskEnabled"
+      :title="t('projects.settings.taskManager.agent.title')"
+      :description="t('projects.settings.taskManager.agent.description')"
+      class="task-manager-integration-settings-page__agent-section"
     >
-      <div class="settings-window-page__subtitle">
-        {{ t('projects.settings.taskManager.agent.title') }}
-      </div>
-      <div class="task-manager-integration-settings-page__description">
-        {{ t('projects.settings.taskManager.agent.description') }}
-      </div>
-      <div class="task-manager-integration-settings-page__switch-wrapper">
+      <Control
+        :label="t('projects.settings.taskManager.agent.controlLabel')"
+        :is-only="true"
+      >
         <UiSwitch
           v-model="formAssignAgent"
           @update:model-value="onAssignAgentChange"
         />
-      </div>
-    </section>
+      </Control>
+    </Section>
   </div>
 </template>
 
@@ -162,10 +168,12 @@ import type { Project } from '../../../types/project';
 import UiSwitch from '../../forms/UiSwitch.vue';
 import UiButton from '../../utils/UiButton.vue';
 import CustomSelect from '../../forms/CustomSelect.vue';
+import Section from '../../forms/Section.vue';
+import Control from '../../forms/Control.vue';
 import { ActionType } from '../../utils/ConfirmationWindow/types';
 import notifier from 'codex-notifier';
 import { API_ENDPOINT } from '../../../api';
-import { DISCONNECT_TASK_MANAGER, UPDATE_GITHUB_REPOSITORY, FETCH_GITHUB_REPOSITORIES } from '@/store/modules/projects/actionTypes';
+import { DISCONNECT_TASK_MANAGER, UPDATE_GITHUB_REPOSITORY, FETCH_GITHUB_REPOSITORIES, UPDATE_TASK_MANAGER_SETTINGS } from '@/store/modules/projects/actionTypes';
 
 /**
  * This data will be sent to update task manager settings
@@ -180,6 +188,11 @@ interface UpdateTaskManagerSettingsPayload {
    * Threshold for auto task creation
    */
   taskThresholdTotalCount?: number;
+
+  /**
+   * Enable auto task creation
+   */
+  autoTaskEnabled?: boolean;
 
   /**
    * Assign agent to tasks
@@ -209,14 +222,32 @@ const instance = getCurrentInstance();
 const formThreshold = ref<number>(props.project.taskManager?.taskThresholdTotalCount || 10);
 
 /**
+ * Form data for auto task enabled
+ */
+const formAutoTaskEnabled = ref<boolean>(props.project.taskManager?.autoTaskEnabled || false);
+
+/**
  * Form data for assign agent
  */
 const formAssignAgent = ref<boolean>(props.project.taskManager?.assignAgent || false);
 
 /**
- * Button will be shown only when some fields are changed
+ * Original values from project for comparison
  */
-const showSubmitButton = ref<boolean>(false);
+const originalThreshold = ref<number>(props.project.taskManager?.taskThresholdTotalCount || 10);
+const originalAutoTaskEnabled = ref<boolean>(props.project.taskManager?.autoTaskEnabled || false);
+
+/**
+ * Button will be shown only when threshold is changed
+ * Note: auto task enabled state changes are saved automatically via onAutoTaskEnabledChange
+ */
+const showSubmitButton = computed(() => {
+  /**
+   * Show button only if threshold changed and auto task creation is enabled
+   * Don't show button for auto task enabled state changes (they are saved automatically)
+   */
+  return formAutoTaskEnabled.value && formThreshold.value !== originalThreshold.value;
+});
 
 /**
  * Repository interface for GitHub repositories
@@ -406,9 +437,14 @@ watch(
   () => {
     if (props.project.taskManager) {
       formThreshold.value = props.project.taskManager.taskThresholdTotalCount || 10;
+      formAutoTaskEnabled.value = props.project.taskManager.autoTaskEnabled || false;
       formAssignAgent.value = props.project.taskManager.assignAgent || false;
     }
-    showSubmitButton.value = false;
+    /**
+     * Update original values after successful save
+     */
+    originalThreshold.value = formThreshold.value;
+    originalAutoTaskEnabled.value = formAutoTaskEnabled.value;
   },
   { deep: true }
 );
@@ -664,21 +700,34 @@ function disconnectGitHub(): void {
  */
 async function saveAutoTaskSettings(): Promise<void> {
   try {
+    /**
+     * Validate threshold value before saving
+     */
+    if (formThreshold.value < 1) {
+      formThreshold.value = 1;
+    }
+
+    if (formThreshold.value > 10000000) {
+      formThreshold.value = 10000000;
+    }
+
     const payload: UpdateTaskManagerSettingsPayload = {
       projectId: props.project.id,
+      autoTaskEnabled: formAutoTaskEnabled.value,
       taskThresholdTotalCount: formThreshold.value,
+      assignAgent: formAssignAgent.value,
     };
 
-    /**
-     * TODO: Call GraphQL mutation updateTaskManagerSettings
-     * This will be implemented in phase 2 (API)
-     */
-    console.log('Saving auto task settings:', payload);
+    await store.dispatch(UPDATE_TASK_MANAGER_SETTINGS, payload);
 
-    showSubmitButton.value = false;
+    /**
+     * Update original values after successful save
+     */
+    originalThreshold.value = formThreshold.value;
+    originalAutoTaskEnabled.value = formAutoTaskEnabled.value;
 
     notifier.show({
-      message: t('projects.settings.taskManager.autoTaskCreation.updatedMessage'),
+      message: t('common.settingsUpdated'),
       style: 'success',
       time: 5000,
     });
@@ -700,17 +749,15 @@ async function onAssignAgentChange(): Promise<void> {
   try {
     const payload: UpdateTaskManagerSettingsPayload = {
       projectId: props.project.id,
+      autoTaskEnabled: formAutoTaskEnabled.value,
+      taskThresholdTotalCount: formThreshold.value,
       assignAgent: formAssignAgent.value,
     };
 
-    /**
-     * TODO: Call GraphQL mutation updateTaskManagerSettings
-     * This will be implemented in phase 2 (API)
-     */
-    console.log('Saving assign agent setting:', payload);
+    await store.dispatch(UPDATE_TASK_MANAGER_SETTINGS, payload);
 
     notifier.show({
-      message: t('projects.settings.taskManager.agent.updatedMessage'),
+      message: t('common.settingsUpdated'),
       style: 'success',
       time: 5000,
     });
@@ -722,6 +769,79 @@ async function onAssignAgentChange(): Promise<void> {
       style: 'error',
       time: 5000,
     });
+  }
+}
+
+/**
+ * Handle number input keydown to allow only numbers
+ *
+ * @param {KeyboardEvent} e - Keyboard event
+ */
+function handleNumberInputKeydown(e: KeyboardEvent): void {
+  /**
+   * Allow: backspace, delete, tab, escape, enter
+   * Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
+   * Allow: home, end, left, right arrow keys
+   */
+  if (
+    [46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1
+    || (e.keyCode === 65 && e.ctrlKey === true)
+    || (e.keyCode === 67 && e.ctrlKey === true)
+    || (e.keyCode === 86 && e.ctrlKey === true)
+    || (e.keyCode === 88 && e.ctrlKey === true)
+    || (e.keyCode === 90 && e.ctrlKey === true)
+    || (e.keyCode >= 35 && e.keyCode <= 39)
+  ) {
+    return;
+  }
+
+  /**
+   * Ensure that it is a number and stop the keypress
+   */
+  if (
+    (e.shiftKey || (e.keyCode < 48 || e.keyCode > 57))
+    && (e.keyCode < 96 || e.keyCode > 105)
+  ) {
+    e.preventDefault();
+  }
+}
+
+/**
+ * Handle number input change to validate minimum and maximum value
+ */
+function handleThresholdInput(): void {
+  /**
+   * Ensure value is at least 1
+   * Handle case when value is 0, null, undefined, or empty string
+   */
+  if (!formThreshold.value || formThreshold.value < 1 || isNaN(formThreshold.value)) {
+    formThreshold.value = 1;
+  }
+
+  /**
+   * Ensure value is not more than 10 million
+   */
+  if (formThreshold.value > 10000000) {
+    formThreshold.value = 10000000;
+  }
+}
+
+/**
+ * Handle auto task enabled switch change
+ */
+async function onAutoTaskEnabledChange(): Promise<void> {
+  try {
+    await saveAutoTaskSettings();
+    /**
+     * Update original value after successful save
+     */
+    originalAutoTaskEnabled.value = formAutoTaskEnabled.value;
+  } catch (error) {
+    /**
+     * If save failed, revert the switch state
+     */
+    formAutoTaskEnabled.value = originalAutoTaskEnabled.value;
+    throw error;
   }
 }
 </script>
@@ -802,26 +922,52 @@ async function onAssignAgentChange(): Promise<void> {
     }
 
     &__form {
-      margin-top: 20px;
+      margin-top: 0;
     }
 
-    &__field {
-      margin-bottom: 20px;
-    }
+    &__control-input {
+      width: 100%;
+      padding: 0;
+      background-color: var(--color-bg-main);
+      border: 0;
+      border-radius: 6px;
+      color: var(--color-text-main);
+      font-size: 15px;
+      text-align: right;
+      appearance: none;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: textfield;
 
-    &__field-description {
-      margin-top: 8px;
-      color: var(--color-text-second);
-      font-size: 13px;
-      line-height: 18px;
+      /**
+       * Hide spinner arrows in Chrome/Safari
+       */
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+      }
+
+      &::placeholder {
+        color: var(--color-text-second);
+      }
     }
 
     &__submit-area {
-      margin-top: 20px;
+      margin-bottom: 40px;
     }
 
     &__switch-wrapper {
       margin-top: 20px;
+    }
+
+    &__agent-section {
+      margin-top: 40px;
     }
   }
 

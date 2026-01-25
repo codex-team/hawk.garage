@@ -305,3 +305,28 @@ export const MUTATION_DISCONNECT_TASK_MANAGER = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Mutation for updating task manager settings
+ */
+export const MUTATION_UPDATE_TASK_MANAGER_SETTINGS = `
+  mutation updateTaskManagerSettings($input: UpdateTaskManagerSettingsInput!) {
+    updateTaskManagerSettings(input: $input) {
+      id
+      taskManager {
+        type
+        autoTaskEnabled
+        taskThresholdTotalCount
+        assignAgent
+        connectedAt
+        updatedAt
+        config {
+          installationId
+          repoId
+          repoFullName
+        }
+      }
+    }
+  }
+`;

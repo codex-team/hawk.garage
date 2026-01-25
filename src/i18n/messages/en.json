@@ -153,8 +153,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Awesome project",
         "submit": "Save",
-        "created": "Created at Aug 25, 2019",
-        "updatedMessage": "The project was updated"
+        "created": "Created at Aug 25, 2019"
       },
       "integrations": {
         "title": "Integrations",
@@ -239,7 +238,6 @@
         "periodPlaceholder": "Period (seconds)",
         "submit": "Save",
         "reset": "Reset rate limits",
-        "updatedMessage": "Rate limits updated successfully",
         "clearedMessage": "Rate limits cleared successfully",
         "paidOnlyMessage": "Rate limits allow you to protect against error spikes that can cause your workspace to prematurely exhaust its event limit. Set the maximum number of events that Hawk should accept per unit of time. Events exceeding the limit will not be processed and captured.",
         "paidOnlyUpgrade": "This feature is available only for paid plans.",
@@ -271,16 +269,14 @@
         "autoTaskCreation": {
           "title": "Auto Task Creation",
           "description": "Configure automatic creation of GitHub issues for errors that meet the threshold.",
-          "thresholdLabel": "Create Issue when total repeats ≥ N",
-          "thresholdPlaceholder": "Enter threshold",
-          "thresholdDescription": "Uses total number of error repetitions for all time (totalCount).",
-          "submit": "Save",
-          "updatedMessage": "Auto task creation settings updated successfully"
+          "enableLabel": "Create GitHub Issue when threshold is reached",
+          "thresholdLabel": "Occurrence threshold",
+          "thresholdDescription": "Uses total number of error occurrences over all time"
         },
         "agent": {
-          "title": "Agent",
-          "description": "If the agent is unavailable, the task will be created without an assignee.",
-          "updatedMessage": "Agent assignment settings updated successfully"
+          "title": "Automatic error fixing",
+          "controlLabel": "Assign Copilot to task",
+          "description": "You must have access to GitHub Copilot"
         }
       }
     },
@@ -638,6 +634,8 @@
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",
+    "settingsUpdated": "Settings updated",
+    "save": "Save",
     "loading": "Loading...",
     "minute": "minute",
     "hour": "hour",

@@ -92,3 +92,8 @@ export const UPDATE_GITHUB_REPOSITORY = 'UPDATE_GITHUB_REPOSITORY';
  * Send request to fetch GitHub repositories list
  */
 export const FETCH_GITHUB_REPOSITORIES = 'FETCH_GITHUB_REPOSITORIES';
+
+/**
+ * Send request to update Task Manager settings
+ */
+export const UPDATE_TASK_MANAGER_SETTINGS = 'UPDATE_TASK_MANAGER_SETTINGS';

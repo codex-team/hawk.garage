@@ -16,7 +16,8 @@ import {
   MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
   QUERY_PROJECT_RELEASES,
   QUERY_PROJECT_RELEASE_DETAILS,
-  MUTATION_DISCONNECT_TASK_MANAGER
+  MUTATION_DISCONNECT_TASK_MANAGER,
+  MUTATION_UPDATE_TASK_MANAGER_SETTINGS
 } from './queries';
 import * as api from '../index.ts';
 
@@ -67,6 +68,31 @@ export async function updateProjectRateLimits(id, rateLimitSettings) {
   const updatedProjectRateLimits = response.data.updateProjectRateLimits;
 
   return updatedProjectRateLimits;
+}
+
+/**
+ * Update Task Manager settings
+ *
+ * @param {UpdateTaskManagerSettingsInput} input - task manager settings
+ * @returns {Promise<ProjectDBScheme>}
+ */
+export async function updateTaskManagerSettings(input) {
+  const response = await api.call(
+    MUTATION_UPDATE_TASK_MANAGER_SETTINGS,
+    { input },
+    undefined,
+    { allowErrors: true }
+  );
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
+  }
+
+  if (!response.data || !response.data.updateTaskManagerSettings) {
+    throw new Error('Failed to update Task Manager settings: response data is null');
+  }
+
+  return response.data.updateTaskManagerSettings;
 }
 
 /**

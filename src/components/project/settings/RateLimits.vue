@@ -126,7 +126,7 @@ export default defineComponent({
         });
 
         notifier.show({
-          message: this.$t('projects.settings.rateLimits.updatedMessage') as string,
+          message: this.$t('common.settingsUpdated') as string,
           style: 'success',
           time: 5000,
         });

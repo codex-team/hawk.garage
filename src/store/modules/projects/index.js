@@ -17,7 +17,8 @@ import {
   GENERATE_NEW_INTEGRATION_TOKEN,
   DISCONNECT_TASK_MANAGER,
   UPDATE_GITHUB_REPOSITORY,
-  FETCH_GITHUB_REPOSITORIES
+  FETCH_GITHUB_REPOSITORIES,
+  UPDATE_TASK_MANAGER_SETTINGS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -261,6 +262,32 @@ const actions = {
 
     commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
       projectId,
+      key: 'taskManager',
+      value: updatedProject.taskManager,
+    });
+  },
+
+  /**
+   * Update Task Manager settings for project
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {object} payload - action payload
+   * @param {string} payload.projectId - project id
+   * @param {boolean} payload.autoTaskEnabled - enable auto task creation
+   * @param {number} payload.taskThresholdTotalCount - threshold for auto task creation
+   * @param {boolean} payload.assignAgent - assign agent to tasks
+   * @returns {Promise<void>}
+   */
+  async [UPDATE_TASK_MANAGER_SETTINGS]({ commit }, payload) {
+    const updatedProject = await projectsApi.updateTaskManagerSettings({
+      projectId: payload.projectId,
+      autoTaskEnabled: payload.autoTaskEnabled,
+      taskThresholdTotalCount: payload.taskThresholdTotalCount,
+      assignAgent: payload.assignAgent,
+    });
+
+    commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+      projectId: payload.projectId,
       key: 'taskManager',
       value: updatedProject.taskManager,
     });
