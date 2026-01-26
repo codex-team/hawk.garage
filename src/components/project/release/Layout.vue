@@ -234,7 +234,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 @import "./../../../styles/custom-properties.css";
 
 .release-layout {
