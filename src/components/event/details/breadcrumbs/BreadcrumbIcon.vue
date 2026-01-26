@@ -1,7 +1,7 @@
 <template>
   <div
     class="breadcrumb-icon"
-    :class="iconClass"
+    :class="[iconClass, statusClass]"
   >
     <svg
       v-if="type === 'error'"
@@ -109,6 +109,10 @@ interface Props {
    * Breadcrumb level (currently not used)
    */
   level?: BreadcrumbLevel;
+  /**
+   * HTTP status code for request breadcrumbs (determines color)
+   */
+  statusCode?: number;
 }
 
 const props = defineProps<Props>();
@@ -116,11 +120,25 @@ const props = defineProps<Props>();
 const iconClass = computed(() => {
   return `breadcrumb-icon--type-${props.type || 'default'}`;
 });
+
+/**
+ * Computed class for request status-based coloring
+ */
+const statusClass = computed(() => {
+  if (props.type === 'request' && props.statusCode != null) {
+    if (props.statusCode === 200) {
+      return 'breadcrumb-icon--status-success';
+    }
+    if (props.statusCode >= 500) {
+      return 'breadcrumb-icon--status-error';
+    }
+  }
+  return '';
+});
 </script>
 
 <style scoped>
 .breadcrumb-icon {
-  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,8 +153,8 @@ const iconClass = computed(() => {
   }
 
   &--type-navigation {
-    background-color: rgba(0, 224, 100, 0.1);
-    color: var(--color-indicator-positive);
+    background-color: rgba(255, 102, 207, 0.1);
+    color: #ff66cf;
   }
 
   &--type-ui {
@@ -147,6 +165,16 @@ const iconClass = computed(() => {
   &--type-request {
     background-color: rgba(230, 167, 0, 0.1);
     color: var(--color-indicator-warning);
+  }
+
+  &--status-success {
+    background-color: rgba(0, 224, 100, 0.1);
+    color: var(--color-indicator-positive);
+  }
+
+  &--status-error {
+    background-color: rgba(217, 72, 72, 0.1);
+    color: var(--color-indicator-critical);
   }
 
   &--type-logic {
