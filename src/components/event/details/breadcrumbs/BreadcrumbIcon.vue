@@ -125,7 +125,7 @@ const iconClass = computed(() => {
  * Computed class for request status-based coloring
  */
 const statusClass = computed(() => {
-  if (props.type === 'request' && props.statusCode != null) {
+  if (props.type === 'request' && props.statusCode !== null && props.statusCode !== undefined) {
     if (props.statusCode === 200) {
       return 'breadcrumb-icon--status-success';
     }
@@ -133,6 +133,7 @@ const statusClass = computed(() => {
       return 'breadcrumb-icon--status-error';
     }
   }
+
   return '';
 });
 </script>
