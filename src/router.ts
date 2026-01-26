@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
 import { defineComponent } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
 
 import { Analytics, AnalyticsEventType } from './analytics';
@@ -7,6 +7,7 @@ import { Analytics, AnalyticsEventType } from './analytics';
 import AppShell from './components/AppShell.vue';
 import invitesHandler from './invitesHandler';
 import unsubscribeHandler from './unsubscribeHandler';
+import { loadAsyncComponent } from './utils';
 
 /**
  * Empty component for routes that only use beforeEnter guards
@@ -35,28 +36,28 @@ const router = createRouter({
         {
           path: 'account',
           name: 'account',
-          component: () => import(/* webpackChunkName: 'settings' */ './components/account/settings/Layout.vue'),
+          component: loadAsyncComponent(() => import(/* webpackChunkName: 'settings' */ './components/account/settings/Layout.vue')),
           redirect: 'account/general',
           children: [
             {
               path: 'general',
               name: 'account-general',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/General.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'settings' */'./components/account/settings/General.vue')),
             },
             {
               path: 'appearance',
               name: 'account-appearance',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Appearance.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'settings' */'./components/account/settings/Appearance.vue')),
             },
             {
               path: 'notifications',
               name: 'account-notifications',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Notifications.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'settings' */'./components/account/settings/Notifications.vue')),
             },
             {
               path: 'billing',
               name: 'account-billing',
-              component: () => import(/* webpackChunkName: 'settings' */'./components/account/settings/Billing.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'settings' */'./components/account/settings/Billing.vue')),
             },
           ],
         },
@@ -76,29 +77,29 @@ const router = createRouter({
         {
           path: 'workspace/:workspaceId/settings',
           name: 'workspace-settings',
-          component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue'),
+          component: loadAsyncComponent(() => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/Layout.vue')),
           redirect: to => `/workspace/${to.params.workspaceId.toString()}/settings/general`,
           children: [
             {
               path: 'general',
               name: 'workspace-settings-general',
-              component: () => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/General.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'workspace-settings' */ './components/workspace/settings/General.vue')),
               props: true,
             },
             {
               path: 'team',
               name: 'workspace-settings-team',
-              component: () => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/settings/Team.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'workspace-team' */ './components/workspace/settings/Team.vue')),
             },
             {
               path: 'volume',
               name: 'workspace-settings-used-volume',
-              component: () => import(/* webpackChunkName: 'workspace-used-volume' */ './components/workspace/settings/UsedVolume.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'workspace-used-volume' */ './components/workspace/settings/UsedVolume.vue')),
             },
             {
               path: 'billing',
               name: 'workspace-settings-billing',
-              component: () => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/Billing.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'workspace-billing' */ './components/workspace/settings/Billing.vue')),
             },
             {
               path: 'sso',
@@ -114,12 +115,12 @@ const router = createRouter({
          */
         {
           path: 'project/:projectId',
-          component: () => import(/* webpackChunkName: 'project' */ './components/project/Project.vue'),
+          component: loadAsyncComponent(() => import(/* webpackChunkName: 'project' */ './components/project/Project.vue')),
           children: [
             {
               path: '',
               name: 'project-overview',
-              component: () => import(/* webpackChunkName: 'project-overview' */ './components/project/Overview.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-overview' */ './components/project/Overview.vue')),
               children: [
                 /**
                  * Project Event
@@ -128,7 +129,7 @@ const router = createRouter({
                 {
                   path: 'event/:eventId/:repetitionId?',
                   name: 'event',
-                  component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue'),
+                  component: loadAsyncComponent(() => import(/* webpackChunkName: 'event-overview' */ './components/event/Layout.vue')),
                   // eslint-disable-next-line jsdoc/require-param
                   /**
                    * Support old-style event urls:
@@ -207,22 +208,22 @@ const router = createRouter({
                     {
                       path: 'overview',
                       name: 'event-overview',
-                      component: () => import(/* webpackChunkName: 'event-overview' */ './components/event/Overview.vue'),
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'event-overview' */ './components/event/Overview.vue')),
                     },
                     {
                       path: 'repetitions',
                       name: 'event-repetitions',
-                      component: () => import(/* webpackChunkName: 'event-repetitions' */ './components/event/Repetitions.vue'),
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'event-repetitions' */ './components/event/Repetitions.vue')),
                     },
                     {
                       path: 'daily',
                       name: 'event-daily',
-                      component: () => import(/* webpackChunkName: 'event-daily' */ './components/event/Daily.vue'),
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'event-daily' */ './components/event/Daily.vue')),
                     },
                     {
                       path: 'affected',
                       name: 'event-affected',
-                      component: () => import(/* webpackChunkName: 'event-affected' */ './components/event/UsersAffected.vue'),
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'event-affected' */ './components/event/UsersAffected.vue')),
                     },
                   ],
                 },
@@ -231,28 +232,28 @@ const router = createRouter({
             {
               path: 'releases',
               name: 'project-releases',
-              component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-releases' */ './components/project/Releases.vue')),
               children: [
                 {
                   path: ':release',
                   name: 'project-release',
-                  component: () => import(/* webpackChunkName: 'project-releases' */ './components/project/release/Layout.vue'),
+                  component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-releases' */ './components/project/release/Layout.vue')),
                   redirect: { name: 'project-release-events' },
                   children: [
                     {
                       path: 'events',
                       name: 'project-release-events',
-                      component: () => import(/* webpackChunkName: 'project-release' */ './components/project/release/Events.vue'),
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-release' */ './components/project/release/Events.vue')),
                     },
                     {
                       path: 'files',
                       name: 'project-release-files',
-                      component: () => import(/* webpackChunkName: 'project-release' */ './components/project/release/Files.vue'),
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-release' */ './components/project/release/Files.vue')),
                     },
                     {
                       path: 'commits',
                       name: 'project-release-commits',
-                      component: () => import(/* webpackChunkName: 'project-release' */ './components/project/release/Commits.vue'),
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-release' */ './components/project/release/Commits.vue')),
                     },
                   ],
                 },
@@ -261,12 +262,12 @@ const router = createRouter({
             {
               path: 'add-catcher',
               name: 'add-catcher',
-              component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/AddCatcher.vue')),
             },
             {
               path: 'setup-catcher/:page',
               name: 'setup-catcher',
-              component: () => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadGuidePages.js'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-add-catcher' */ './components/catalog/catchers/dynamicLoadGuidePages.js')),
             },
           ],
         },
@@ -277,35 +278,35 @@ const router = createRouter({
          */
         {
           path: 'project/:projectId/settings',
-          component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Layout.vue'),
+          component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Layout.vue')),
           children: [
             {
               path: 'general',
               name: 'project-settings-general',
-              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/General.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/General.vue')),
             },
             {
               path: 'integrations',
               name: 'project-settings-integrations',
-              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Integrations.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Integrations.vue')),
             },
             {
               path: 'notifications',
               name: 'project-settings-notifications',
-              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Notifications.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Notifications.vue')),
             },
             {
               path: 'patterns',
               name: 'project-settings-patterns',
-              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/EventGroupingPattern.vue'),
+              component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/EventGroupingPattern.vue')),
             },
             {
               path: 'rate-limits',
               name: 'project-settings-rate-limits',
-              component: () =>
+              component: loadAsyncComponent(() =>
                 import(
                   /* webpackChunkName: 'project-settings' */ './components/project/settings/RateLimits.vue'
-                ),
+                )),
             },
           ],
         },
@@ -314,12 +315,12 @@ const router = createRouter({
     {
       path: '/sign-up',
       name: 'sign-up',
-      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/SignUp.vue'),
+      component: loadAsyncComponent(() => import(/* webpackChunkName: 'auth-pages' */ './components/auth/SignUp.vue')),
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue'),
+      component: loadAsyncComponent(() => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Login.vue')),
       props: route => ({
         success: route.query.success as string | undefined,
         emailPrefilled: route.query.emailPrefilled as string | undefined,
@@ -346,7 +347,7 @@ const router = createRouter({
     {
       path: '/recover',
       name: 'recover',
-      component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/RecoverPassword.vue'),
+      component: loadAsyncComponent(() => import(/* webpackChunkName: 'auth-pages' */ './components/auth/RecoverPassword.vue')),
     },
     {
       path: '/unsubscribe/:projectId/:ruleId',
