@@ -71,7 +71,7 @@ const toggleShowAll = () => {
 };
 </script>
 
-<style>
+<style scoped>
 .breadcrumbs {
   position: relative;
   border-radius: 10px;
