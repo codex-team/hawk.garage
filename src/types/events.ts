@@ -1,7 +1,7 @@
 import type { User } from '@/types/user';
 import type { ChartLine, EventChartItem } from '@/types/chart';
 import type { ReleaseCommit } from './release';
-import type { EventAddons, AffectedUser } from '@hawk.so/types';
+import type { EventAddons, AffectedUser, Breadcrumb } from '@hawk.so/types';
 
 /**
  * Event marks enum
@@ -260,6 +260,11 @@ export interface HawkEventPayload {
    * Event type: TypeError, ReferenceError etc.
    */
   type?: string;
+
+  /**
+   * Breadcrumbs - chronological trail of events before the error
+   */
+  breadcrumbs?: Breadcrumb[];
 }
 
 export interface HawkEventBacktraceFrame {
