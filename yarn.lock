@@ -718,10 +718,10 @@
     "@eslint/core" "^0.17.0"
     levn "^0.4.1"
 
-"@hawk.so/javascript@3.2.13-rc.2":
-  version "3.2.13-rc.2"
-  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.2.13-rc.2.tgz#f8ac58a84c5fa226e91f8a4fe55a6c28a136844b"
-  integrity sha512-LIWkg2wF7xtgv7tJr/AjHjdJcwaFi+0YiayXzMHgYplU5R6zyEgsMBM2DM67xwSU1tSIl4CRfYQRBSG7UBTgdg==
+"@hawk.so/javascript@3.2.13":
+  version "3.2.13"
+  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.2.13.tgz#84b36a1d476679148a0fb747770e55ac5db7469c"
+  integrity sha512-ZlKU80wBYVyXLGWbQiYci6L+f9o9LGQWsVYR8T2O/S2mdRLBrMd+CPN6Jq2K9y7lYXW7kRsomUJKxTZjYSmIJQ==
   dependencies:
     error-stack-parser "^2.1.4"
 
