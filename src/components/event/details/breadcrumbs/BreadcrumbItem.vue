@@ -8,40 +8,47 @@
       :class="{ 'breadcrumb-item__header-row--clickable': hasData }"
       @click="toggleExpanded"
     >
-      <div class="breadcrumb-item__method">
+      <div class="breadcrumb-item__type-column">
         <BreadcrumbIcon
           :type="breadcrumb.type"
           :level="breadcrumb.level"
+          :status-code="getStatusCode"
           class="breadcrumb-item__icon"
         />
         <span
           class="breadcrumb-item__type"
-          :class="`breadcrumb-item__type--${breadcrumb.type || 'default'}`"
+          :class="[
+            `breadcrumb-item__type--${breadcrumb.type || 'default'}`,
+            getStatusCode && breadcrumb.type === 'request' && getStatusCode === 200 ? 'breadcrumb-item__type--status-success' : '',
+            getStatusCode && breadcrumb.type === 'request' && getStatusCode >= 500 ? 'breadcrumb-item__type--status-error' : ''
+          ]"
         >
           {{ t(`event.breadcrumbs.types.${formatType(breadcrumb.type)}`) }}
         </span>
-        <span
+      </div>
+      <div class="breadcrumb-item__content-column">
+        <div
           v-if="breadcrumb.message"
-          class="breadcrumb-item__message-inline"
+          class="breadcrumb-item__message"
           :title="breadcrumb.message"
         >
           {{ breadcrumb.message }}
-        </span>
-      </div>
-      <div class="breadcrumb-item__meta">
-        <span
-          v-if="breadcrumb.category"
-          class="breadcrumb-item__meta-category"
-        >
-          {{ breadcrumb.category }}
-        </span>
-        <span
-          v-if="breadcrumb.category"
-          class="breadcrumb-item__meta-separator"
-        />
-        <span class="breadcrumb-item__meta-time">
-          {{ formatTime(breadcrumb.timestamp) }}
-        </span>
+        </div>
+        <div class="breadcrumb-item__meta">
+          <span
+            v-if="breadcrumb.category"
+            class="breadcrumb-item__meta-category"
+          >
+            {{ breadcrumb.category }}
+          </span>
+          <span
+            v-if="breadcrumb.category"
+            class="breadcrumb-item__meta-separator"
+          />
+          <span class="breadcrumb-item__meta-time">
+            {{ formatTime(breadcrumb.timestamp) }}
+          </span>
+        </div>
       </div>
       <Icon
         v-if="hasData"
@@ -192,6 +199,21 @@ const formatType = (type?: string): string => {
 };
 
 /**
+ * Gets HTTP status code from breadcrumb data if it's a request type
+ *
+ * @returns {number | undefined} Status code or undefined
+ */
+const getStatusCode = computed(() => {
+  if (props.breadcrumb.type === 'request' && props.breadcrumb.data) {
+    const statusCode = props.breadcrumb.data.statusCode;
+
+    return typeof statusCode === 'number' ? statusCode : undefined;
+  }
+
+  return undefined;
+});
+
+/**
  * Formats timestamp to date and time string with milliseconds
  * Uses prettyDateFromDateTimeString and adds seconds and milliseconds
  *
@@ -228,7 +250,7 @@ const formatTime = (timestamp: number): string => {
 };
 </script>
 
-<style>
+<style scoped>
 .event-details__content-block.breadcrumb-item {
   max-width: 100% !important;
   overflow: hidden !important;
@@ -250,17 +272,19 @@ const formatTime = (timestamp: number): string => {
     right: 5px;
     width: 12px;
     height: 12px;
-    margin: -6px 4px 0 11px;
+    transform: translateY(-50%);
 
     &--opened {
-      transform: rotate(180deg);
+      transform: translateY(-50%) rotate(180deg);
     }
   }
 
   &__header-row {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: center;
     font-size: 13px;
     line-height: 1.4em;
     letter-spacing: 0.15px;
@@ -268,40 +292,38 @@ const formatTime = (timestamp: number): string => {
     min-width: 0;
     width: 100%;
     box-sizing: border-box;
+    padding-right: 30px;
 
     &--clickable {
       cursor: pointer;
     }
   }
 
-  &__method {
-    position: relative;
+  &__type-column {
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: flex-start;
     gap: 8px;
-    margin-top: 1px;
-    margin-left: 28px;
-    padding-right: 30px;
-    min-width: 0;
-    max-width: calc(100% - 28px);
-    box-sizing: border-box;
+    min-width: 100px;
+    max-width: 120px;
+    flex-shrink: 0;
   }
 
   &__icon {
-    position: absolute;
-    left: -28px;
-    top: 0;
+    flex-shrink: 0;
   }
 
   &__type {
     font-weight: 600;
+    white-space: nowrap;
 
     &--error {
       color: var(--color-indicator-critical);
     }
 
     &--navigation {
-      color: var(--color-indicator-positive);
+      color: #ff66cf;
     }
 
     &--ui {
@@ -310,6 +332,14 @@ const formatTime = (timestamp: number): string => {
 
     &--request {
       color: var(--color-indicator-warning);
+    }
+
+    &--status-success {
+      color: var(--color-indicator-positive);
+    }
+
+    &--status-error {
+      color: var(--color-indicator-critical);
     }
 
     &--logic {
@@ -321,13 +351,22 @@ const formatTime = (timestamp: number): string => {
     }
   }
 
-  &__message-inline {
+  &__content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__message {
     color: var(--color-text-main);
-    flex: 1;
     min-width: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    line-height: 1.4em;
   }
 
   &__meta {
@@ -335,10 +374,8 @@ const formatTime = (timestamp: number): string => {
     color: var(--color-text-second);
     font-size: 12px;
     line-height: 1.4em;
-    margin-left: 28px;
-    padding-right: 30px;
     min-width: 0;
-    max-width: calc(100% - 28px);
+    max-width: 100%;
     box-sizing: border-box;
 
     &-category {
@@ -358,13 +395,13 @@ const formatTime = (timestamp: number): string => {
   }
 
   &__data-wrapper {
-    width: calc(100% - 28px);
+    grid-column: 1 / -1;
+    width: 100%;
     min-width: 0;
-    max-width: calc(100% - 28px);
+    max-width: 100%;
     box-sizing: border-box;
     overflow: hidden;
     margin-top: 8px;
-    margin-left: 28px;
     background: var(--color-bg-code-fragment);
     border-radius: 3px;
     border: 1px solid rgba(0, 0, 0, 0.1);
