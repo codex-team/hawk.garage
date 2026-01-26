@@ -190,6 +190,10 @@ body .cdx-notify {
   background-color: var(--color-bg-second) !important;
   box-shadow: 0 6px 17px -4px #0000009c;
 
+  a {
+    color: var(--color-text-highlighted);
+  }
+
   &__btns-wrapper {
     margin-top: 8px;
   }

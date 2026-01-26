@@ -264,3 +264,60 @@ export const MUTATION_CANCEL_SUBSCRIPTION = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * Query for getting workspace public info by ID for SSO login page
+ * Available without authentication, returns only if SSO is enabled
+ */
+export const QUERY_SSO_WORKSPACE = `
+  query ssoWorkspace($id: ID!) {
+    ssoWorkspace(id: $id) {
+      id
+      name
+      image
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Query for getting SSO settings for workspace
+ * Admin only
+ */
+export const QUERY_SSO_SETTINGS = `
+  query getSsoSettings($workspaceId: ID!) {
+    workspaces(ids: [$workspaceId]) {
+      id
+      sso {
+        enabled
+        enforced
+        type
+        saml {
+          idpEntityId
+          ssoUrl
+          x509Cert
+          nameIdFormat
+          attributeMapping {
+            email
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for updating SSO settings for workspace
+ * Admin only
+ */
+export const MUTATION_UPDATE_SSO_SETTINGS = `
+  mutation updateWorkspaceSso(
+    $workspaceId: ID!
+    $config: WorkspaceSsoConfigInput!
+  ) {
+    updateWorkspaceSso(workspaceId: $workspaceId, config: $config)
+  }
+`;

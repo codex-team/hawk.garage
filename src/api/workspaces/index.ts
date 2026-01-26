@@ -10,10 +10,19 @@ import {
   QUERY_WORKSPACES,
   QUERY_BALANCE,
   MUTATION_CHANGE_WORKSPACE_PLAN_TO_DEFAULT,
-  MUTATION_CANCEL_SUBSCRIPTION, MUTATION_JOIN_BY_INVITE_LINK
+  MUTATION_CANCEL_SUBSCRIPTION,
+  MUTATION_JOIN_BY_INVITE_LINK,
+  QUERY_SSO_WORKSPACE,
+  QUERY_SSO_SETTINGS,
+  MUTATION_UPDATE_SSO_SETTINGS
 } from './queries';
 import * as api from '../index';
-import type { Workspace } from '@/types/workspaces';
+import type {
+  Workspace,
+  WorkspacePreview,
+  WorkspaceSsoConfig,
+  WorkspaceSsoConfigInput
+} from '@/types/workspaces';
 import type { APIResponse, APIResponseData } from '@/types/api';
 
 interface CreateWorkspaceInput {
@@ -104,7 +113,7 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * @param ids – id of fetching workspaces
  * @returns
  */
-export async function getWorkspaces(ids: string): Promise<Workspace[]> {
+export async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
 }
 
@@ -192,4 +201,40 @@ export async function cancelSubscription(workspaceId: string): Promise<Pick<Work
       workspaceId,
     },
   })).workspace.cancelSubscription.record;
+}
+
+/**
+ * Get workspace public info by ID for SSO login page
+ * Available without authentication, returns only if SSO is enabled
+ * @param id - identifier of workspace with sso enabled
+ * @returns Workspace public info (id, name, image) or null if not found or SSO not enabled
+ */
+export async function getSsoWorkspace(id: string): Promise<APIResponse<{ ssoWorkspace: WorkspacePreview }>> {
+  return api.call<{ ssoWorkspace: WorkspacePreview }>(QUERY_SSO_WORKSPACE, { id });
+}
+
+/**
+ * Get SSO settings for workspace (admin only)
+ * @param workspaceId - identifier of workspace
+ * @returns SSO configuration or null if not configured
+ */
+export async function getSsoSettings(workspaceId: string): Promise<APIResponse<{ workspaces: Array<{ id: string;
+  sso: WorkspaceSsoConfig | null; }>; }>> {
+  return api.call<{
+    workspaces: Array<{
+      id: string;
+      sso: WorkspaceSsoConfig | null;
+    }>;
+  }>(QUERY_SSO_SETTINGS, { workspaceId });
+}
+
+/**
+ * Update SSO settings for workspace (admin only)
+ * @param workspaceId - identifier of workspace
+ * @param config - SSO configuration
+ * @returns true if successful
+ */
+export async function updateSsoSettings(workspaceId: string, config: WorkspaceSsoConfigInput): Promise<APIResponse<{ updateWorkspaceSso: boolean }>> {
+  return api.call<{ updateWorkspaceSso: boolean }>(MUTATION_UPDATE_SSO_SETTINGS, { workspaceId,
+    config });
 }

@@ -193,14 +193,14 @@ export async function callOld(
  * @param [settings] - settings for call method
  * @returns - request data
  */
-export async function call(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function call<T = any>(
   request: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables?: Record<string, any>,
   files?: { [name: string]: File | undefined },
   { initial = false, force = false, allowErrors = false }: ApiCallSettings = {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<APIResponse<any>> {
+): Promise<APIResponse<T>> {
   const response = await callOld(request, variables, files, Object.assign({
     initial,
     force,
@@ -215,7 +215,7 @@ export async function call(
    * It helps not to throw original "access token expired" error.
    */
   if (response._apiFlags && response._apiFlags.authError) {
-    return response;
+    return response as APIResponse<T>;
   }
 
   /**
@@ -234,11 +234,21 @@ export async function call(
    */
   if (response.errors && response.errors.length && allowErrors === false) {
     response.errors.forEach((error) => {
-      throw new Error(error.message);
+      const err = new Error(error.message) as Error & { extensions?: Record<string, unknown> };
+
+      /**
+       * Preserve extensions from GraphQL error
+       * (e.g., for SSO enforcement, see /api/src/resolvers/user.ts@login)
+       */
+      if (error.extensions) {
+        err.extensions = error.extensions as Record<string, unknown>;
+      }
+
+      throw err;
     });
   }
 
-  return response;
+  return response as APIResponse<T>;
 }
 
 /**

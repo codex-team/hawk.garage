@@ -12,11 +12,20 @@
     "recoverPasswordSuccessMessage": "New password is sent to your email",
     "signupSuccessMessage": "The password is sent to your email",
     "inviteHelper": "You are invited to join a workspace. Please login or sign up to continue.",
+    "continueWithSso": "Continue with SSO",
+    "ssoLogin": {
+      "title": "Single Sign-On",
+      "workspaceId": "Workspace ID",
+      "workspaceIdPlaceholder": "Enter workspace ID",
+      "workspaceIdRequired": "Workspace ID is required",
+      "backToLogin": "Login via email"
+    },
     "errors": {
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",
       "Wrong email format": "Wrong email format",
-      "Network Error": "Server is not available. Check your internet connection."
+      "Network Error": "Server is not available. Check your internet connection.",
+      "SSO_REQUIRED": "Workspace \"{workspace}\" requires SSO login. <a href=\"{link}\">Sign in with SSO →</a>"
     }
   },
   "layout": {
@@ -369,6 +378,34 @@
           "User is already invited to this workspace": "User is already invited to this workspace"
         }
       },
+      "sso": {
+        "title": "SSO Settings",
+        "description": "SSO (Single Sign-On) allows your team to sign in to Hawk using your corporate identity system. Users will be able to authenticate using their work credentials without needing to create a separate password.",
+        "enable": "Enable SSO",
+        "enforce": "SSO only (email and password login will be disabled)",
+        "entityId": "IdP Entity ID",
+        "ssoUrl": "SSO URL",
+        "certificate": "X.509 Certificate (PEM format)",
+        "nameIdFormat": "NameID Format",
+        "attributeMapping": {
+          "email": "Email Attribute Name",
+          "emailPlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+          "name": "Name Attribute Name",
+          "namePlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        },
+        "spInfo": {
+          "title": "Service Provider (SP) Information",
+          "description": "Provide these details to your IdP (Identity Provider) system administrator to configure SAML integration.",
+          "entityId": "SP Entity ID",
+          "acsUrl": "ACS URL"
+        },
+        "save": "Save",
+        "saved": "SSO settings saved successfully",
+        "errors": {
+          "Workspace not found": "Workspace not found",
+          "SAML configuration is required when SSO is enabled": "SAML configuration is required when SSO is enabled"
+        }
+      },
       "billing": {
         "title": "Billing information",
         "cancelSubscriptionText": "Are you sure you want to cancel subscription? Current plan will be valid until the end of the paid period."
@@ -543,6 +580,17 @@
       "noname": "No name",
       "viewProfile": "View profile"
     },
+    "breadcrumbs": {
+      "title": "Breadcrumbs",
+      "types": {
+        "default": "Event",
+        "request": "Request",
+        "ui": "UI Click",
+        "navigation": "Navigation",
+        "logic": "Logic",
+        "error": "Exception"
+      }
+    },
     "limit": {
       "title": "Event Hidden",
       "description": "We received this event but have hidden it because your subscription has expired.",
@@ -557,6 +605,8 @@
     "threshold": "Seen more than",
     "thresholdPeriod": "in the last",
     "copiedNotification": "Copied!",
+    "showLess": "Show Less",
+    "viewAll": "View All",
     "free": "FREE",
     "select": "Select",
     "selected": "Selected",
