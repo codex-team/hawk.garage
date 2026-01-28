@@ -15,7 +15,9 @@ import {
   QUERY_CHART_DATA,
   MUTATION_GENERATE_NEW_INTEGRATION_TOKEN,
   QUERY_PROJECT_RELEASES,
-  QUERY_PROJECT_RELEASE_DETAILS
+  QUERY_PROJECT_RELEASE_DETAILS,
+  MUTATION_DISCONNECT_TASK_MANAGER,
+  MUTATION_UPDATE_TASK_MANAGER_SETTINGS
 } from './queries';
 import * as api from '../index.ts';
 
@@ -66,6 +68,31 @@ export async function updateProjectRateLimits(id, rateLimitSettings) {
   const updatedProjectRateLimits = response.data.updateProjectRateLimits;
 
   return updatedProjectRateLimits;
+}
+
+/**
+ * Update Task Manager settings
+ *
+ * @param {UpdateTaskManagerSettingsInput} input - task manager settings
+ * @returns {Promise<ProjectDBScheme>}
+ */
+export async function updateTaskManagerSettings(input) {
+  const response = await api.call(
+    MUTATION_UPDATE_TASK_MANAGER_SETTINGS,
+    { input },
+    undefined,
+    { allowErrors: true }
+  );
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
+  }
+
+  if (!response.data || !response.data.updateTaskManagerSettings) {
+    throw new Error('Failed to update Task Manager settings: response data is null');
+  }
+
+  return response.data.updateTaskManagerSettings;
 }
 
 /**
@@ -278,4 +305,54 @@ export async function unsubscribeFromNotifications(payload) {
   return (await api.call(MUTATION_UNSUBSCRIBE_FROM_NOTIFICATIONS, {
     input: payload,
   })).unsubscribeFromNotifications;
+}
+
+/**
+ * Disconnect task manager integration from project
+ *
+ * @param {string} projectId - project id
+ * @returns {Promise<Project>}
+ */
+export async function disconnectTaskManager(projectId) {
+  const response = await api.call(MUTATION_DISCONNECT_TASK_MANAGER, { projectId });
+
+  if (response.errors?.length) {
+    response.errors.forEach(e => console.error(e));
+  }
+
+  if (!response.data || !response.data.disconnectTaskManager) {
+    throw new Error(`Failed to disconnect Task Manager: disconnectTaskManager is missing from response (projectId: ${projectId})`);
+  }
+
+  return response.data.disconnectTaskManager;
+}
+
+/**
+ * Get list of GitHub repositories for project
+ *
+ * @param {string} projectId - project id
+ * @returns {Promise<{repositories: Array<{id: string, name: string, fullName: string, private: boolean, htmlUrl: string, updatedAt: string, language: string | null}>}>}
+ */
+export async function getGitHubRepositories(projectId) {
+  return api.callRest(`/integration/github/repositories?projectId=${projectId}`, {
+    method: 'GET',
+  });
+}
+
+/**
+ * Update GitHub repository selection for project
+ *
+ * @param {string} projectId - project id
+ * @param {string} repoId - repository ID
+ * @param {string} repoFullName - repository full name (owner/repo)
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
+export async function updateGitHubRepository(projectId, repoId, repoFullName) {
+  return api.callRest(`/integration/github/repository?projectId=${projectId}`, {
+    method: 'PUT',
+    body: {
+      repoId,
+      repoFullName,
+    },
+  });
 }

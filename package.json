@@ -40,6 +40,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
+    "@hawk.so/types": "^0.5.7",
     "@hawk.so/vite-plugin": "^1.0.6",
     "@types/node": "^24.6.2",
     "@types/postcss-nested-ancestors": "^3",

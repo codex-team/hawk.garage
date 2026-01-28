@@ -153,8 +153,7 @@
         "description": "Описание",
         "descriptionPlaceholder": "Лучший проект",
         "submit": "Сохранить",
-        "created": "Создан 25 Авг, 2019",
-        "updatedMessage": "Настройки проекта обновлены"
+        "created": "Создан 25 Авг, 2019"
       },
       "integrations": {
         "title": "Интеграции",
@@ -239,11 +238,46 @@
         "periodPlaceholder": "Период (секунды)",
         "submit": "Сохранить",
         "reset": "Сбросить рейт лимиты",
-        "updatedMessage": "Настройки рейт лимитов успешно обновлены",
         "clearedMessage": "Рейт лимиты успешно очищены",
         "paidOnlyMessage": "Рейт-лимиты позволяют защититься от всплесков ошибок, из-за которых воркспейс может преждевременно потратить свой лимит событий. Установите максимальное количество событий, которое Хоук должен принимать за единицу времени. События сверх лимита не будут обработаны и захвачены.",
         "paidOnlyUpgrade": "Эта функция доступна только для платных планов.",
         "upgradeButton": "Перейти на платный план"
+      },
+      "taskManager": {
+        "title": "Таск-менеджер",
+        "githubRepository": {
+          "title": "GitHub Репозиторий",
+          "description": "Настройте автоматическое создание Issues, исправляйте ошибки с Copilot.",
+          "connectButton": "Подключить GitHub",
+          "connectedTo": "Подключено к",
+          "connected": "GitHub App подключен",
+          "disconnectButton": "Отключить",
+          "connectSuccess": "GitHub успешно подключен. Выберите репозиторий",
+          "disconnectSuccess": "GitHub репозиторий успешно отключен",
+          "disconnectError": "Не удалось отключить GitHub репозиторий",
+          "authError": "Ошибка аутентификации. Пожалуйста, попробуйте снова.",
+          "selectRepositoryLabel": "Выберите репозиторий",
+          "selectRepositoryPlaceholder": "Выберите репозиторий",
+          "loadingRepositories": "Загрузка репозиториев...",
+          "repositoryNotFound": "Репозиторий не найден",
+          "repositorySelected": "Репозиторий подключен",
+          "disconnectConfirmation": {
+            "title": "Отключить GitHub репозиторий?",
+            "description": "После отключения Хоук перестанет автоматически создавать issues. Существующие issues останутся в вашем репозитории."
+          }
+        },
+        "autoTaskCreation": {
+          "title": "Автоматическое создание задач",
+          "description": "Настройте автоматическое создание GitHub issues для ошибок, которые достигают порога.",
+          "enableLabel": "Создавать GitHub Issue при достижении порога",
+          "thresholdLabel": "Порог количества повторений",
+          "thresholdDescription": "Используется общее количество повторений ошибки за все время"
+        },
+        "agent": {
+          "title": "Автоматическое исправление ошибок",
+          "controlLabel": "Назначать Copilot на задачу",
+          "description": "У вас должен быть доступ к GitHub Copilot"
+        }
       }
     },
     "notFound": "Проект не найден",
@@ -613,6 +647,8 @@
     "continue": "Продолжить",
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",
+    "settingsUpdated": "Настройки обновлены",
+    "save": "Сохранить",
     "loading": "Загрузка...",
     "minute": "минуту",
     "hour": "час",

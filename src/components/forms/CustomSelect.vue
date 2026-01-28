@@ -19,7 +19,19 @@
         :name="currentValue.name"
         size="28"
       />
-      {{ currentValue?.name }}
+      <Icon
+        v-else-if="currentValue && currentValue.icon"
+        class="custom-select__icon"
+        :symbol="currentValue.icon"
+      />
+      <span
+        v-if="currentValue && currentValue.name"
+        class="custom-select__text"
+      >{{ currentValue.name }}</span>
+      <span
+        v-else
+        class="custom-select__placeholder"
+      >{{ placeholder }}</span>
       <Icon
         class="custom-select__expand-icon"
         symbol="arrow-down"
@@ -44,7 +56,12 @@
             :name="option.name"
             size="28"
           />
-          {{ option.name }}
+          <Icon
+            v-else-if="option.icon"
+            class="custom-select__icon"
+            :symbol="option.icon"
+          />
+          <span class="custom-select__text">{{ option.name }}</span>
         </div>
       </div>
     </transition>
@@ -77,6 +94,13 @@ export default {
     needImage: {
       type: Boolean,
       default: true,
+    },
+    /**
+     * Placeholder text shown when no option is selected
+     */
+    placeholder: {
+      type: String,
+      default: '',
     },
   },
   emits: ['update:modelValue'],
@@ -113,6 +137,8 @@ export default {
     padding: 0;
     border: 0;
     user-select: none;
+    width: 100%;
+    min-width: 100%;
 
     &__label {
       display: block;
@@ -173,10 +199,14 @@ export default {
       display: flex;
       align-items: center;
       width: 100%;
+      min-width: 100%;
       height: 40px;
       padding: 0 0 0 12px;
       font-size: 14px;
       cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &--opened &__select {
@@ -199,6 +229,32 @@ export default {
 
     &__option-image {
       margin-right: 6px;
+      flex-shrink: 0;
+    }
+
+    &__icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      flex-shrink: 0;
+      border-radius: 50%;
+    }
+
+    &__text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &__placeholder {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--color-text-second);
     }
   }
 </style>

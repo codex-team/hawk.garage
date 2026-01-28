@@ -132,7 +132,7 @@ export default defineComponent({
         this.showSubmitButton = false;
 
         notifier.show({
-          message: this.$t('projects.settings.general.updatedMessage') as string,
+          message: this.$t('common.settingsUpdated') as string,
           style: 'success',
           time: 5000,
         });
