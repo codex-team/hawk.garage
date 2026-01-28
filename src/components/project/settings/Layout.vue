@@ -15,6 +15,7 @@
     <template #menu>
       <div>
         <router-link
+          v-if="isAdmin"
           class="settings-window__menu-item"
           :to="{ name:'project-settings-general' }"
         >
