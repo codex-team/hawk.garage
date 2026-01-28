@@ -320,6 +320,10 @@ export async function disconnectTaskManager(projectId) {
     response.errors.forEach(e => console.error(e));
   }
 
+  if (!response.data || !response.data.disconnectTaskManager) {
+    throw new Error(`Failed to disconnect Task Manager: disconnectTaskManager is missing from response (projectId: ${projectId})`);
+  }
+
   return response.data.disconnectTaskManager;
 }
 

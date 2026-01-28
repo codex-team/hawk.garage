@@ -502,7 +502,14 @@ async function loadRepositories(): Promise<void> {
  */
 function openRepository(): void {
   if (connectedRepoUrl.value) {
-    window.open(connectedRepoUrl.value, '_blank');
+    const newTab = window.open(connectedRepoUrl.value, '_blank', 'noopener,noreferrer');
+
+    if (newTab) {
+      /**
+       * Defense-in-depth: ensure the newly opened tab cannot reference this window.
+       */
+      newTab.opener = null;
+    }
   }
 }
 
@@ -627,7 +634,7 @@ async function connectGitHub(): Promise<void> {
      * Make request to API endpoint with Authorization header
      * The endpoint will return JSON with redirectUrl
      */
-    const apiUrl = API_ENDPOINT || 'http://localhost:4000';
+    const apiUrl = API_ENDPOINT || 'https://api.hawk.so';
     const connectUrl = `${apiUrl}/integration/github/connect?projectId=${props.project.id}`;
 
     const response = await fetch(connectUrl, {
@@ -744,13 +751,15 @@ async function saveAutoTaskSettings(): Promise<void> {
       time: 5000,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+    const err = error instanceof Error ? error : new Error(String(error));
 
     notifier.show({
-      message,
+      message: err.message,
       style: 'error',
       time: 5000,
     });
+
+    throw err;
   }
 }
 
