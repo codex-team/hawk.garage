@@ -139,8 +139,8 @@
     >
       <UiButton
         :content="t('common.save')"
-        @click="saveAutoTaskSettings"
         submit
+        @click="saveAutoTaskSettings"
       />
     </div>
 

@@ -286,7 +286,6 @@ interface RestRequestOptions {
 /**
  * Makes REST API request (non-GraphQL)
  * Uses axios with configured interceptors and auth token
- *
  * @param url - REST endpoint URL (relative to API_ENDPOINT or absolute)
  * @param options - request options (method, body, headers)
  * @returns Promise with response data
@@ -322,7 +321,8 @@ export async function callRest<T = any>(url: string, options: RestRequestOptions
        */
       const errorMessage = error.response?.data?.error || error.message || 'Request failed';
 
-      const apiError = new Error(errorMessage) as Error & { status?: number; response?: unknown };
+      const apiError = new Error(errorMessage) as Error & { status?: number;
+        response?: unknown; };
 
       apiError.status = error.response?.status;
       apiError.response = error.response?.data;

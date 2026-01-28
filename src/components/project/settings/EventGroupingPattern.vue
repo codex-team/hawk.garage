@@ -266,7 +266,6 @@ export default defineComponent({
   gap: 16px;
   max-width: var(--width-popup-form-container);
 
-
   &__title {
     margin-bottom: 5px;
     color: var(--color-text-main);
