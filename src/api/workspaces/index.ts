@@ -24,6 +24,7 @@ import type {
   WorkspaceSsoConfigInput
 } from '@/types/workspaces';
 import type { APIResponse, APIResponseData } from '@/types/api';
+import { withDemoMock, DEMO_WORKSPACE_ID } from '@/utils/withDemoMock';
 
 interface CreateWorkspaceInput {
   /**
@@ -60,7 +61,13 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * Returns all user's workspaces and project.
  * @returns
  */
-export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
+export const getAllWorkspacesWithProjects = withDemoMock(
+  () => import('./getAllWorkspacesWithProjects.mock'),
+  {
+    extract: () => ({ workspaceId: DEMO_WORKSPACE_ID }),
+    mapMock: (mock) => mock.default || mock,
+  }
+)(async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
   return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
     initial: true,
 
@@ -70,7 +77,7 @@ export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ work
      */
     allowErrors: true,
   });
-}
+});
 
 /**
  * Invites user to workspace by email
@@ -113,9 +120,15 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * @param ids – id of fetching workspaces
  * @returns
  */
-export async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
+export const getWorkspaces = withDemoMock(
+  () => import('./getWorkspaces.mock'),
+  {
+    extract: (args) => ({ workspaceId: args[0]?.[0] }),
+    mapMock: (mock) => ({ workspaces: (mock.default || mock).data.workspaces }),
+  }
+)(async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
-}
+});
 
 /**
  * Get workspace balance
