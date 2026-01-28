@@ -8,6 +8,12 @@
     }"
     @click="handleControlClick"
   >
+    <div
+      v-if="iconLeft"
+      class="form-control__icon form-control__icon--left"
+    >
+      <Icon :symbol="iconLeft" />
+    </div>
     <label
       v-if="label"
       class="form-control__label"
@@ -19,12 +25,20 @@
       class="form-control__control"
       @click.stop
     >
+      <div
+        v-if="iconRight"
+        class="form-control__icon form-control__icon--right"
+      >
+        <Icon :symbol="iconRight" />
+      </div>
       <slot />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import Icon from '../utils/Icon.vue';
+
 interface Props {
   /**
    * Label text for the control
@@ -50,6 +64,16 @@ interface Props {
    * Whether this is the only control in a group
    */
   isOnly?: boolean;
+
+  /**
+   * Optional icon name to render on the left
+   */
+  iconLeft?: string;
+
+  /**
+   * Optional icon name to render on the right
+   */
+  iconRight?: string;
 }
 
 const props = defineProps<Props>();
@@ -92,6 +116,25 @@ function handleControlClick(): void {
     border-radius: 0;
 
     --radius: 10px;
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    &__icon--left {
+      margin-right: 8px;
+    }
+
+    &__icon--right {
+      margin-left: 8px;
+    }
 
     &__label {
       flex: 1;

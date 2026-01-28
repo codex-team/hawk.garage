@@ -264,7 +264,8 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 75%;
+  max-width: var(--width-popup-form-container);
+
 
   &__title {
     margin-bottom: 5px;

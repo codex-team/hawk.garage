@@ -299,7 +299,7 @@ export default defineComponent({
      */
     openIssueUrl() {
       if (this.event && this.event.taskManagerItem && this.event.taskManagerItem.url) {
-        window.open(this.event.taskManagerItem.url, '_blank', 'noopener,noreferrer');
+        window.open(this.event.taskManagerItem.url, '_blank', 'noopener');
       }
     },
   },

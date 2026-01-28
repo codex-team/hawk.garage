@@ -22,7 +22,6 @@
           :content="t('projects.settings.taskManager.githubRepository.connectButton')"
           icon="github"
           submit
-          rounded
           @click="connectGitHub"
         />
       </div>
@@ -61,31 +60,32 @@
             v-if="isAdmin"
             class="task-manager-integration-settings-page__disconnect-button"
             :content="t('projects.settings.taskManager.githubRepository.disconnectButton')"
-            rounded
             @click="disconnectGitHub"
           />
         </div>
 
         <!-- Connected Repository Info (shown when repository is selected) -->
-        <div
+        <Section
           v-else
           class="task-manager-integration-settings-page__connected-info"
         >
-          <UiButton
-            class="task-manager-integration-settings-page__connected-repo-button"
-            :content="connectedRepoFullName"
-            :icon="connectedRepoIcon"
-            rounded
+          <Control
+            :label="connectedRepoFullName"
+            :icon-left="connectedRepoIcon"
+            icon-right="external"
+            :is-first="true"
+            :is-last="!(isAdmin && connectedRepoFullName)"
+            :is-only="!(isAdmin && connectedRepoFullName)"
             @click="openRepository"
           />
-        </div>
-        <UiButton
-          v-if="isAdmin && connectedRepoFullName"
-          class="task-manager-integration-settings-page__disconnect-button"
-          :content="t('projects.settings.taskManager.githubRepository.disconnectButton')"
-          rounded
-          @click="disconnectGitHub"
-        />
+          <Control
+            v-if="isAdmin && connectedRepoFullName"
+            :label="t('projects.settings.taskManager.githubRepository.disconnectButton')"
+            class="task-manager-integration-settings-page__connected-info-disconnect"
+            :is-last="true"
+            @click="disconnectGitHub"
+          />
+        </Section>
       </div>
     </section>
 
@@ -894,6 +894,8 @@ async function onAutoTaskEnabledChange(): Promise<void> {
 
 <style>
   .task-manager-integration-settings-page {
+    max-width: var(--width-popup-form-container);
+
     &__section {
       margin-bottom: 40px;
     }
@@ -911,13 +913,13 @@ async function onAutoTaskEnabledChange(): Promise<void> {
     }
 
     &__connect-button {
-      padding: 10px 16px;
-      background-color: #000;
+      padding: 8px 12px;
       color: #fff !important;
+      border-radius: 6px;
 
       .ui-button-icon {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
       }
 
       .ui-button-text  {
@@ -925,22 +927,35 @@ async function onAutoTaskEnabledChange(): Promise<void> {
         white-space: nowrap;
         margin-left: 6px;
       }
-
-      &:hover {
-        background-color: #111 !important;
-      }
     }
 
     &__connected-section {
-      display: flex;
-      align-items: center;
-      gap: 16px;
       margin-top: 20px;
     }
 
     &__connected-info {
       color: var(--color-text-main);
       font-size: 14px;
+
+      .form-control__icon--right {
+        opacity: 0.6;
+      }
+
+      .form-control__icon--right,
+      .form-control__icon--right .icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .form-control:hover {
+        .form-control__icon--right {
+          opacity: 1;
+        }
+      }
+
+      &-disconnect label {
+        color: var(--color-text-second);
+      }
     }
 
     &__repo-picker {

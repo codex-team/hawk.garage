@@ -247,7 +247,7 @@
         "title": "Таск-менеджер",
         "githubRepository": {
           "title": "GitHub Репозиторий",
-          "description": "Настройте автоматическое создание Issues, исправляйте ошибки автоматически с Copilot.",
+          "description": "Настройте автоматическое создание Issues, исправляйте ошибки с Copilot.",
           "connectButton": "Подключить GitHub",
           "connectedTo": "Подключено к",
           "connected": "GitHub App подключен",
