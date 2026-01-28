@@ -11,6 +11,8 @@ import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 
+import '@codexteam/ui/styles';
+
 const DEBOUNCE_TIMEOUT = 1000;
 
 /**

@@ -90,6 +90,15 @@ export const EVENT_FRAGMENT = `
         date
       }
     }
+    taskManagerItem {
+      type
+      number
+      url
+      title
+      createdBy
+      createdAt
+      assignee
+    }
   }
 
   ${USER_FRAGMENT}

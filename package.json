@@ -19,6 +19,7 @@
   "dependencies": {
     "@amplitude/analytics-browser": "^2.25.2",
     "@amplitude/analytics-types": "^2.10.0",
+    "@codexteam/ui": "0.2.0-rc.4",
     "@hawk.so/javascript": "3.2.13",
     "@hawk.so/types": "^0.5.2",
     "axios": "^1.12.2",
@@ -39,6 +40,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
+    "@hawk.so/types": "^0.5.7",
     "@hawk.so/vite-plugin": "^1.0.6",
     "@types/node": "^24.6.2",
     "@types/postcss-nested-ancestors": "^3",

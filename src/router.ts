@@ -291,6 +291,11 @@ const router = createRouter({
               component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Integrations.vue')),
             },
             {
+              path: 'task-manager',
+              name: 'project-settings-task-manager',
+              component: () => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/TaskManagerIntegration.vue'),
+            },
+            {
               path: 'notifications',
               name: 'project-settings-notifications',
               component: loadAsyncComponent(() => import(/* webpackChunkName: 'project-settings' */ './components/project/settings/Notifications.vue')),
