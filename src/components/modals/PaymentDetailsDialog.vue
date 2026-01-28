@@ -611,7 +611,7 @@ export default defineComponent({
 
       widget.pay(method,
         {
-          publicId: import.meta.env.VITE_CLOUDPAYMENTS_PUBLIC_ID,
+          publicId: data.plan.id,
           description: this.$t(titleKey, {
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
