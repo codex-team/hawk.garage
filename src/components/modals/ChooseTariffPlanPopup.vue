@@ -144,6 +144,20 @@ export default defineComponent({
      */
     async onContinue(): Promise<void> {
       if (this.selectedPlan.monthlyCharge === 0) {
+        /**
+         * Disable free plan reset:
+         * if workspace is already on free plan, do not allow switching to free again
+         */
+        if (this.workspace.plan.monthlyCharge === 0) {
+          notifier.show({
+            message: this.$t('workspaces.chooseTariffPlanDialog.freeResetNotAllowed') as string,
+            style: 'error',
+            time: 5000,
+          });
+
+          return;
+        }
+
         this.$confirm.open({
           actionType: ActionType.SUBMIT,
           description: this.$t('workspaces.chooseTariffPlanDialog.confirmSetToFreePlanDescription').toString(),
