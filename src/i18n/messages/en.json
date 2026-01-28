@@ -614,6 +614,17 @@
       "noname": "No name",
       "viewProfile": "View profile"
     },
+    "breadcrumbs": {
+      "title": "Breadcrumbs",
+      "types": {
+        "default": "Event",
+        "request": "Request",
+        "ui": "UI Click",
+        "navigation": "Navigation",
+        "logic": "Logic",
+        "error": "Exception"
+      }
+    },
     "limit": {
       "title": "Event Hidden",
       "description": "We received this event but have hidden it because your subscription has expired.",
@@ -628,6 +639,8 @@
     "threshold": "Seen more than",
     "thresholdPeriod": "in the last",
     "copiedNotification": "Copied!",
+    "showLess": "Show Less",
+    "viewAll": "View All",
     "free": "FREE",
     "select": "Select",
     "selected": "Selected",

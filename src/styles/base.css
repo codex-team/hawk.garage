@@ -277,3 +277,22 @@ body .cdx-notify {
     transform: scale(1);
   }
 }
+
+/**
+ * Codex UI variables
+ */
+:root {
+  --base--bg-primary: var(--color-bg-main);
+  --base--bg-secondary: var(--color-bg-darken);
+  --base--bg-secondary-hover: var(--color-bg-sidebar);
+  --base--border: var(--color-border);
+  --base--text: var(--color-text-main);
+  --base--text-secondary: var(--color-text-second);
+  --base--solid: var(--color-bg-main);
+  --base--text-solid-foreground: var(--color-text-main);
+
+  --accent--solid: var(--color-indicator-medium);
+  --accent--solid-hover: var(--color-indicator-medium-dark);
+  --accent--bg-secondary: color-mod(var(--color-indicator-medium) alpha(10%));
+  --accent--text-solid-foreground: var(--color-text-main);
+}
