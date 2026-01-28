@@ -65,9 +65,11 @@ export async function updateProjectRateLimits(id, rateLimitSettings) {
     response.errors.forEach(e => console.error(e));
   }
 
-  const updatedProjectRateLimits = response.data.updateProjectRateLimits;
+  if (!response.data || !response.data.updateProjectRateLimits) {
+    throw new Error('Failed to update project rate limits: response data is null');
+  }
 
-  return updatedProjectRateLimits;
+  return response.data.updateProjectRateLimits;
 }
 
 /**
