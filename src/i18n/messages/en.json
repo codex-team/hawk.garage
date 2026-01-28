@@ -322,6 +322,7 @@
       "description": "All plans includes all available features. If you have questions on plans, please contact us by {emailLink}",
       "onSuccess": "Workspace plan has been successfully changed",
       "onError": "Unable to change workspace plan due to an error, please try again later",
+      "freeResetNotAllowed": "Free plan can not be reset again. You have already used your free plan quota.",
       "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
       "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan.",
       "premiumPlan": "Premium",
