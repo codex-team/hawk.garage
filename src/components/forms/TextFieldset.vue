@@ -31,7 +31,7 @@
       :hidden="hidden"
       :disabled="disabled"
       @input="$emit('update:modelValue', $event.target.value)"
-    />
+    >
   </fieldset>
 </template>
 

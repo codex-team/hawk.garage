@@ -21,6 +21,9 @@
     "paths": {
       "@/*": [
         "../../src/*"
+      ],
+      "@codexteam/ui/vue": [
+        "../../node_modules/@codexteam/ui/dist/types/vue/index.d.ts"
       ]
     },
     "lib": [

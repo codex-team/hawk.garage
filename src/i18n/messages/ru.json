@@ -12,11 +12,20 @@
     "recoverPasswordSuccessMessage": "Новый пароль отправлен на вашу почту",
     "signupSuccessMessage": "Пароль отправлен на указанную почту",
     "inviteHelper": "Вы приглашены в воркспейс. Войдите или зарегистрируйтесь, чтобы продолжить.",
+    "continueWithSso": "Войти через SSO",
+    "ssoLogin": {
+      "title": "Вход через SSO",
+      "workspaceId": "ID воркспейса",
+      "workspaceIdPlaceholder": "Введите ID воркспейса",
+      "workspaceIdRequired": "Необходимо указать ID воркспейса",
+      "backToLogin": "Вход через email"
+    },
     "errors": {
       "Wrong email or password": "Неправильный email или пароль",
       "User with this email already registered": "Пользователь с этой почтой уже зарегистрирован",
       "Wrong email format": "Некорректный формат почты",
-      "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету."
+      "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету.",
+      "SSO_REQUIRED": "Воркспейс \"{workspace}\" требует вход только через SSO. <a href=\"{link}\">Войти через SSO →</a>"
     }
   },
   "layout": {
@@ -144,8 +153,7 @@
         "description": "Описание",
         "descriptionPlaceholder": "Лучший проект",
         "submit": "Сохранить",
-        "created": "Создан 25 Авг, 2019",
-        "updatedMessage": "Настройки проекта обновлены"
+        "created": "Создан 25 Авг, 2019"
       },
       "integrations": {
         "title": "Интеграции",
@@ -230,11 +238,46 @@
         "periodPlaceholder": "Период (секунды)",
         "submit": "Сохранить",
         "reset": "Сбросить рейт лимиты",
-        "updatedMessage": "Настройки рейт лимитов успешно обновлены",
         "clearedMessage": "Рейт лимиты успешно очищены",
         "paidOnlyMessage": "Рейт-лимиты позволяют защититься от всплесков ошибок, из-за которых воркспейс может преждевременно потратить свой лимит событий. Установите максимальное количество событий, которое Хоук должен принимать за единицу времени. События сверх лимита не будут обработаны и захвачены.",
         "paidOnlyUpgrade": "Эта функция доступна только для платных планов.",
         "upgradeButton": "Перейти на платный план"
+      },
+      "taskManager": {
+        "title": "Таск-менеджер",
+        "githubRepository": {
+          "title": "GitHub Репозиторий",
+          "description": "Настройте автоматическое создание Issues, исправляйте ошибки с Copilot.",
+          "connectButton": "Подключить GitHub",
+          "connectedTo": "Подключено к",
+          "connected": "GitHub App подключен",
+          "disconnectButton": "Отключить",
+          "connectSuccess": "GitHub успешно подключен. Выберите репозиторий",
+          "disconnectSuccess": "GitHub репозиторий успешно отключен",
+          "disconnectError": "Не удалось отключить GitHub репозиторий",
+          "authError": "Ошибка аутентификации. Пожалуйста, попробуйте снова.",
+          "selectRepositoryLabel": "Выберите репозиторий",
+          "selectRepositoryPlaceholder": "Выберите репозиторий",
+          "loadingRepositories": "Загрузка репозиториев...",
+          "repositoryNotFound": "Репозиторий не найден",
+          "repositorySelected": "Репозиторий подключен",
+          "disconnectConfirmation": {
+            "title": "Отключить GitHub репозиторий?",
+            "description": "После отключения Хоук перестанет автоматически создавать issues. Существующие issues останутся в вашем репозитории."
+          }
+        },
+        "autoTaskCreation": {
+          "title": "Автоматическое создание задач",
+          "description": "Настройте автоматическое создание GitHub issues для ошибок, которые достигают порога.",
+          "enableLabel": "Создавать GitHub Issue при достижении порога",
+          "thresholdLabel": "Порог количества повторений",
+          "thresholdDescription": "Используется общее количество повторений ошибки за все время"
+        },
+        "agent": {
+          "title": "Автоматическое исправление ошибок",
+          "controlLabel": "Назначать Copilot на задачу",
+          "description": "У вас должен быть доступ к GitHub Copilot"
+        }
       }
     },
     "notFound": "Проект не найден",
@@ -367,6 +410,34 @@
         "removeMember": "Удалить",
         "errors": {
           "User is already invited to this workspace": "Пользователь уже приглашен"
+        }
+      },
+      "sso": {
+        "title": "Настройки SSO",
+        "description": "SSO (Single Sign-On) позволяет вашей команде входить в Hawk через корпоративную систему идентификации. Пользователи смогут авторизоваться используя свои рабочие учетные данные без необходимости создавать отдельный пароль.",
+        "enable": "Включить SSO",
+        "enforce": "Вход только по SSO (отключить вход через email)",
+        "entityId": "IdP Entity ID",
+        "ssoUrl": "SSO URL",
+        "certificate": "X.509 Сертификат (PEM формат)",
+        "nameIdFormat": "Формат NameID",
+        "attributeMapping": {
+          "email": "Имя атрибута Email",
+          "emailPlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+          "name": "Имя атрибута Name",
+          "namePlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        },
+        "spInfo": {
+          "title": "Информация о Service Provider (SP)",
+          "description": "Предоставьте эти данные администратору вашей системы IdP (Identity Provider) для настройки интеграции SAML.",
+          "entityId": "SP Entity ID",
+          "acsUrl": "ACS URL"
+        },
+        "save": "Сохранить",
+        "saved": "Настройки SSO успешно сохранены",
+        "errors": {
+          "Workspace not found": "Workspace не найден",
+          "SAML configuration is required when SSO is enabled": "Конфигурация SAML обязательна при включении SSO"
         }
       },
       "volume": {
@@ -543,6 +614,17 @@
       "noname": "Безымянный",
       "viewProfile": "Посмотреть профиль"
     },
+    "breadcrumbs": {
+      "title": "Хлебные крошки",
+      "types": {
+        "default": "Событие",
+        "request": "Запрос",
+        "ui": "Клик",
+        "navigation": "Навигация",
+        "logic": "Логика",
+        "error": "Исключение"
+      }
+    },
     "limit": {
       "title": "Событие скрыто",
       "description": "Мы получили это событие, но скрыли его, потому что ваша подписка закончилась.",
@@ -557,12 +639,16 @@
     "threshold": "Встречалось больше",
     "thresholdPeriod": "раз за",
     "copiedNotification": "Скопировано!",
+    "showLess": "Скрыть",
+    "viewAll": "Показать все",
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
     "selected": "Выбрано",
     "continue": "Продолжить",
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",
+    "settingsUpdated": "Настройки обновлены",
+    "save": "Сохранить",
     "loading": "Загрузка...",
     "minute": "минуту",
     "hour": "час",

@@ -71,6 +71,14 @@ export const EVENT_FRAGMENT = `
         ...eventBacktrace
       }
       addons
+      breadcrumbs {
+        timestamp
+        type
+        category
+        message
+        level
+        data
+      }
     }
     usersAffected
     release {
@@ -81,6 +89,15 @@ export const EVENT_FRAGMENT = `
         title
         date
       }
+    }
+    taskManagerItem {
+      type
+      number
+      url
+      title
+      createdBy
+      createdAt
+      assignee
     }
   }
 

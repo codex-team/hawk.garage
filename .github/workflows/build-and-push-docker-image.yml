@@ -35,7 +35,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Make stage envfile
         if: github.ref_name == 'stage'
@@ -45,6 +45,7 @@ jobs:
           envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
           envkey_VITE_API_ENDPOINT: "https://api-staging.hawk.so"
           envkey_VITE_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
+          envkey_VITE_SSO_SP_ENTITY_ID: ${{ secrets.SSO_SP_ENTITY_ID_STAGE }}
           # envkey_VITE_HAWK_TOKEN: ${{ secrets.HAWK_TOKEN_STAGE }}
           # envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_STAGE }}
           # envkey_VITE_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_STAGE }}
@@ -58,6 +59,7 @@ jobs:
           envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
           envkey_VITE_API_ENDPOINT: "https://api.hawk.so"
           envkey_VITE_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
+          envkey_VITE_SSO_SP_ENTITY_ID: ${{ secrets.SSO_SP_ENTITY_ID }}
           # envkey_VITE_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
 
       - name: Make prod-ru envfile
@@ -68,6 +70,7 @@ jobs:
           envkey_VITE_AMPLITUDE_TOKEN: ${{ secrets.AMPLITUDE_TOKEN_PROD }}
           envkey_VITE_API_ENDPOINT: "https://api.hawk-tracker.ru"
           envkey_VITE_FREE_PLAN_ID: ${{ secrets.FREE_PLAN_ID }}
+          envkey_VITE_SSO_SP_ENTITY_ID: ${{ secrets.SSO_SP_ENTITY_ID }}
           # envkey_VITE_CLOUDPAYMENTS_PUBLIC_ID: ${{ secrets.CP_PUBLIC_ID_PROD }}
 
       - name: Set up Docker Buildx

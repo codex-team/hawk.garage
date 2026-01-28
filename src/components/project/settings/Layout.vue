@@ -28,6 +28,12 @@
         </router-link>
         <router-link
           class="settings-window__menu-item"
+          :to="{ name: 'project-settings-task-manager'}"
+        >
+          {{ $t('projects.settings.taskManager.title') }}
+        </router-link>
+        <router-link
+          class="settings-window__menu-item"
           :to="{ name: 'project-settings-notifications'}"
         >
           {{ $t('projects.settings.notifications.title') }}

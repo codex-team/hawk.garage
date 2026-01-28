@@ -14,7 +14,11 @@ import {
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN,
   FETCH_CHART_DATA,
-  GENERATE_NEW_INTEGRATION_TOKEN
+  GENERATE_NEW_INTEGRATION_TOKEN,
+  DISCONNECT_TASK_MANAGER,
+  UPDATE_GITHUB_REPOSITORY,
+  FETCH_GITHUB_REPOSITORIES,
+  UPDATE_TASK_MANAGER_SETTINGS
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
@@ -243,6 +247,101 @@ const actions = {
         value: token,
       });
     }
+  },
+
+  /**
+   * Disconnect task manager integration from project
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {object} payload - action payload
+   * @param {string} payload.projectId - project id
+   * @returns {Promise<void>}
+   */
+  async [DISCONNECT_TASK_MANAGER]({ commit }, { projectId }) {
+    const updatedProject = await projectsApi.disconnectTaskManager(projectId);
+
+    commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+      projectId,
+      key: 'taskManager',
+      value: updatedProject.taskManager,
+    });
+  },
+
+  /**
+   * Update Task Manager settings for project
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {object} payload - action payload
+   * @param {string} payload.projectId - project id
+   * @param {boolean} payload.autoTaskEnabled - enable auto task creation
+   * @param {number} payload.taskThresholdTotalCount - threshold for auto task creation
+   * @param {boolean} payload.assignAgent - assign agent to tasks
+   * @returns {Promise<void>}
+   */
+  async [UPDATE_TASK_MANAGER_SETTINGS]({ commit }, payload) {
+    const updatedProject = await projectsApi.updateTaskManagerSettings({
+      projectId: payload.projectId,
+      autoTaskEnabled: payload.autoTaskEnabled,
+      taskThresholdTotalCount: payload.taskThresholdTotalCount,
+      assignAgent: payload.assignAgent,
+    });
+
+    commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+      projectId: payload.projectId,
+      key: 'taskManager',
+      value: updatedProject.taskManager,
+    });
+  },
+
+  /**
+   * Update GitHub repository selection for project
+   *
+   * @param {Function} commit - Vuex commit for mutations
+   * @param {object} payload - action payload
+   * @param {string} payload.projectId - project id
+   * @param {string} payload.repoId - repository ID
+   * @param {string} payload.repoFullName - repository full name (owner/repo)
+   * @returns {Promise<void>}
+   */
+  async [UPDATE_GITHUB_REPOSITORY]({ commit, state }, { projectId, repoId, repoFullName }) {
+    await projectsApi.updateGitHubRepository(projectId, repoId, repoFullName);
+
+    /**
+     * Update taskManager in store with new repository selection
+     */
+    const project = state.list.find(p => p.id === projectId);
+
+    if (project && project.taskManager) {
+      const updatedTaskManager = {
+        ...project.taskManager,
+        config: {
+          ...project.taskManager.config,
+          repoId,
+          repoFullName,
+        },
+        updatedAt: new Date().toISOString(),
+      };
+
+      commit(mutationTypes.UPDATE_PROJECT_PROPERTY, {
+        projectId,
+        key: 'taskManager',
+        value: updatedTaskManager,
+      });
+    }
+  },
+
+  /**
+   * Fetch GitHub repositories list for project
+   *
+   * @param {object} context - Vuex action context
+   * @param {object} payload - action payload
+   * @param {string} payload.projectId - project id
+   * @returns {Promise<Array<{id: string, name: string, fullName: string, private: boolean, htmlUrl: string, updatedAt: string, language: string | null}>>}
+   */
+  async [FETCH_GITHUB_REPOSITORIES](context, { projectId }) {
+    const response = await projectsApi.getGitHubRepositories(projectId);
+
+    return response.repositories || [];
   },
 
   /**

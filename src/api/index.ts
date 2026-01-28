@@ -193,14 +193,14 @@ export async function callOld(
  * @param [settings] - settings for call method
  * @returns - request data
  */
-export async function call(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function call<T = any>(
   request: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables?: Record<string, any>,
   files?: { [name: string]: File | undefined },
   { initial = false, force = false, allowErrors = false }: ApiCallSettings = {}
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<APIResponse<any>> {
+): Promise<APIResponse<T>> {
   const response = await callOld(request, variables, files, Object.assign({
     initial,
     force,
@@ -215,7 +215,7 @@ export async function call(
    * It helps not to throw original "access token expired" error.
    */
   if (response._apiFlags && response._apiFlags.authError) {
-    return response;
+    return response as APIResponse<T>;
   }
 
   /**
@@ -234,11 +234,21 @@ export async function call(
    */
   if (response.errors && response.errors.length && allowErrors === false) {
     response.errors.forEach((error) => {
-      throw new Error(error.message);
+      const err = new Error(error.message) as Error & { extensions?: Record<string, unknown> };
+
+      /**
+       * Preserve extensions from GraphQL error
+       * (e.g., for SSO enforcement, see /api/src/resolvers/user.ts@login)
+       */
+      if (error.extensions) {
+        err.extensions = error.extensions as Record<string, unknown>;
+      }
+
+      throw err;
     });
   }
 
-  return response;
+  return response as APIResponse<T>;
 }
 
 /**
@@ -250,6 +260,96 @@ export function setAuthToken(accessToken: string | null): void {
     delete axios.defaults.headers.common.Authorization;
   } else {
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  }
+}
+
+/**
+ * REST API request options
+ */
+interface RestRequestOptions {
+  /**
+   * HTTP method (GET, POST, PUT, DELETE, etc.)
+   */
+  method?: string;
+
+  /**
+   * Request body (will be JSON stringified)
+   */
+  body?: Record<string, unknown>;
+
+  /**
+   * Additional headers
+   */
+  headers?: Record<string, string>;
+}
+
+/**
+ * Makes REST API request (non-GraphQL)
+ * Uses axios with configured interceptors and auth token
+ * @param url - REST endpoint URL (relative to API_ENDPOINT or absolute)
+ * @param options - request options (method, body, headers)
+ * @returns Promise with response data
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function callRest<T = any>(url: string, options: RestRequestOptions = {}): Promise<T> {
+  const { method = 'GET', body, headers = {} } = options;
+
+  /**
+   * Use absolute URL if provided, otherwise prepend API_ENDPOINT
+   */
+  const fullUrl = url.startsWith('http') ? url : `${API_ENDPOINT}${url}`;
+
+  try {
+    const response = await axios({
+      method,
+      url: fullUrl,
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      } as Record<string, string>,
+    });
+
+    return response.data;
+  } catch (error) {
+    /**
+     * Handle axios errors
+     */
+    if (axios.isAxiosError(error)) {
+      /**
+       * Try to extract error message from response
+       */
+      const errorMessage = error.response?.data?.error || error.message || 'Request failed';
+
+      const apiError = new Error(errorMessage) as Error & { status?: number;
+        response?: unknown; };
+
+      apiError.status = error.response?.status;
+      apiError.response = error.response?.data;
+
+      /**
+       * Track error
+       */
+      track(apiError, {
+        URL: fullUrl,
+        Method: method,
+        Body: body || {},
+        'Response Data': error.response?.data || {},
+      } as any);
+
+      throw apiError;
+    }
+
+    /**
+     * Re-throw non-axios errors
+     */
+    track(error as Error, {
+      URL: fullUrl,
+      Method: method,
+      Body: body || {},
+    } as any);
+
+    throw error;
   }
 }
 

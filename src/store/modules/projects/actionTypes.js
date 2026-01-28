@@ -77,3 +77,23 @@ export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
  * Send request to update project rate limits settings
  */
 export const UPDATE_PROJECT_RATE_LIMITS = 'UPDATE_PROJECT_RATE_LIMITS';
+
+/**
+ * Send request to disconnect task manager integration
+ */
+export const DISCONNECT_TASK_MANAGER = 'DISCONNECT_TASK_MANAGER';
+
+/**
+ * Send request to update GitHub repository selection
+ */
+export const UPDATE_GITHUB_REPOSITORY = 'UPDATE_GITHUB_REPOSITORY';
+
+/**
+ * Send request to fetch GitHub repositories list
+ */
+export const FETCH_GITHUB_REPOSITORIES = 'FETCH_GITHUB_REPOSITORIES';
+
+/**
+ * Send request to update Task Manager settings
+ */
+export const UPDATE_TASK_MANAGER_SETTINGS = 'UPDATE_TASK_MANAGER_SETTINGS';
