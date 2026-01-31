@@ -1,7 +1,7 @@
 <template>
   <div
     class="breadcrumb-icon"
-    :class="[iconClass, statusClass]"
+    :style="colorStyle"
   >
     <svg
       v-if="type === 'error'"
@@ -110,32 +110,20 @@ interface Props {
    */
   level?: BreadcrumbLevel;
   /**
-   * HTTP status code for request breadcrumbs (determines color)
+   * CSS variable name for color (e.g., '--color-indicator-positive')
    */
-  statusCode?: number;
+  colorVariable: string;
 }
 
 const props = defineProps<Props>();
 
-const iconClass = computed(() => {
-  return `breadcrumb-icon--type-${props.type || 'default'}`;
-});
-
 /**
- * Computed class for request status-based coloring
+ * Style object with color CSS variable
  */
-const statusClass = computed(() => {
-  if (props.type === 'request' && props.statusCode !== null && props.statusCode !== undefined) {
-    if (props.statusCode === 200) {
-      return 'breadcrumb-icon--status-success';
-    }
-    if (props.statusCode >= 500) {
-      return 'breadcrumb-icon--status-error';
-    }
-  }
-
-  return '';
-});
+const colorStyle = computed(() => ({
+  '--breadcrumb-color': `var(${props.colorVariable})`,
+  '--breadcrumb-bg': `rgb(from var(${props.colorVariable}) r g b / 0.1)`,
+}));
 </script>
 
 <style scoped>
@@ -147,46 +135,8 @@ const statusClass = computed(() => {
   height: 22px;
   border-radius: 50%;
   flex-shrink: 0;
-
-  &--type-error {
-    background-color: rgba(217, 72, 72, 0.1);
-    color: var(--color-indicator-critical);
-  }
-
-  &--type-navigation {
-    background-color: rgba(255, 102, 207, 0.1);
-    color: #ff66cf;
-  }
-
-  &--type-ui {
-    background-color: rgba(168, 85, 247, 0.1);
-    color: #a855f7;
-  }
-
-  &--type-request {
-    background-color: rgba(230, 167, 0, 0.1);
-    color: var(--color-indicator-warning);
-  }
-
-  &--status-success {
-    background-color: rgba(0, 224, 100, 0.1);
-    color: var(--color-indicator-positive);
-  }
-
-  &--status-error {
-    background-color: rgba(217, 72, 72, 0.1);
-    color: var(--color-indicator-critical);
-  }
-
-  &--type-logic {
-    background-color: rgba(113, 157, 255, 0.1);
-    color: var(--color-text-highlighted);
-  }
-
-  &--type-default {
-    background-color: rgba(148, 163, 184, 0.1);
-    color: #94a3b8;
-  }
+  background-color: var(--breadcrumb-bg);
+  color: var(--breadcrumb-color);
 
   &__svg {
     width: 16px;
