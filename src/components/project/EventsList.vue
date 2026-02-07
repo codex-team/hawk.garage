@@ -349,7 +349,6 @@ export default {
      */
     onShowEventOverview(eventId) {
       const event = this.getEvent(eventId);
-
       const originalEventId = event.originalEventId;
 
       if (this.isAssigneesShowed) {
