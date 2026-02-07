@@ -20,7 +20,7 @@
     "@amplitude/analytics-browser": "^2.25.2",
     "@amplitude/analytics-types": "^2.10.0",
     "@codexteam/ui": "0.2.0-rc.4",
-    "@hawk.so/javascript": "3.2.13",
+    "@hawk.so/javascript": "3.2.15",
     "@hawk.so/types": "^0.5.8",
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
