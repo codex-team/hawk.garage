@@ -187,8 +187,10 @@ const onBreadcrumbCopied = (copiedText: string) => {
  * @param {string | undefined} type - Breadcrumb type
  * @returns {string} Formatted type or 'default' if type is not provided
  */
+const KNOWN_TYPES = new Set(['default', 'request', 'ui', 'navigation', 'logic', 'error']);
+
 const formatType = (type?: string): string => {
-  if (!type) {
+  if (!type || !KNOWN_TYPES.has(type)) {
     return 'default';
   }
 
