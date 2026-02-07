@@ -179,16 +179,8 @@ const module: Module<EventsModuleState, RootState> = {
        */
       return (projectId: string, eventId: string): HawkEvent | null => {
         const key = getEventsListKey(projectId, eventId);
-        const event = state.events[key] || null;
 
-        if (!event) {
-          const availableKeys = Object.keys(state.events).filter(k => k.startsWith(projectId + ':'));
-          console.warn(`[⚠️ getProjectEventById] NOT FOUND: key="${key}". Available keys for ${projectId}:`, availableKeys);
-        } else {
-          console.log(`[✅ getProjectEventById] FOUND: ${key}`);
-        }
-
-        return event;
+        return state.events[key] || null;
       };
     },
 
