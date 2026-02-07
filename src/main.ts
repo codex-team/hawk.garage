@@ -10,7 +10,6 @@ import { i18n } from './i18n';
 import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
-import { enableDemoMode } from './utils/withDemoMock';
 
 import '@codexteam/ui/styles';
 
@@ -28,17 +27,6 @@ import { debounce } from './utils';
 import setupDirectives from './directives';
 
 const { init: initHawk, track } = useErrorTracker();
-
-/**
- * Enable demo mode if running without a server
- * You can disable this in production or enable via console: enableDemoMode()
- */
-console.log('[App Init] VITE_API_URL:', import.meta.env.VITE_API_URL);
-if (!import.meta.env.VITE_API_URL || import.meta.env.VITE_API_URL === 'http://localhost:4000') {
-  enableDemoMode();
-} else {
-  console.log('[App Init] Using real API server at:', import.meta.env.VITE_API_URL);
-}
 
 const app = createApp(App);
 
@@ -131,13 +119,3 @@ api.setupApiModuleHandlers({
     });
   }, DEBOUNCE_TIMEOUT),
 });
-
-/**
- * Export demo mode functions to window for browser console usage
- * Usage: enableDemoMode() or disableDemoMode() in browser console
- */
-(window as any).enableDemoMode = enableDemoMode;
-(window as any).disableDemoMode = () => {
-  const { disableDemoMode } = require('./utils/withDemoMock');
-  disableDemoMode();
-};
