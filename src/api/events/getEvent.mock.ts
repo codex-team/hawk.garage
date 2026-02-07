@@ -1,5 +1,4 @@
 import type { HawkEvent } from '@/types/events';
-import { DEMO_USER } from '@/api/user/demoUser.mock';
 
 /**
  * Mock data for getEvent - detailed event information
@@ -77,7 +76,7 @@ const mockGetEvent: HawkEvent = {
   },
   catcherType: 'client/javascript',
   repetitions: [],
-  visitedBy: [DEMO_USER],
+  visitedBy: [],
   marks: {
     resolved: false,
     starred: true,

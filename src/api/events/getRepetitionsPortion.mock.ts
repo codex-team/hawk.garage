@@ -1,5 +1,4 @@
 import type { HawkEvent } from '@/types/events';
-import { DEMO_USER } from '@/api/user/demoUser.mock';
 
 /**
  * Helper to create detailed mock repetition events
@@ -18,7 +17,7 @@ const createRepetitionEvent = (
   id,
   groupHash,
   totalCount: count,
-  visitedBy: [DEMO_USER],
+  visitedBy: [],
   marks: {
     resolved: false,
     starred: false,

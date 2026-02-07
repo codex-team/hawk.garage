@@ -12,7 +12,6 @@ import {
 } from './queries';
 import * as api from '../index.ts';
 import { validateUtmParams } from '../../components/utils/utm/utm.ts';
-import { withDemoMock, DEMO_PROJECT_ID } from '../../utils/withDemoMock';
 
 /**
  * @typedef {object} TokensPair
@@ -27,18 +26,12 @@ import { withDemoMock, DEMO_PROJECT_ID } from '../../utils/withDemoMock';
  * @param {string} password - Password
  * @returns {Promise<{data: {login: TokensPair}, errors: object[]}>} - Auth token
  */
-export const login = withDemoMock(
-  () => import('./login.mock'),
-  {
-    extract: () => ({ projectId: DEMO_PROJECT_ID }),
-    mapMock: (mock) => mock.default || mock,
-  }
-)(async function login(email, password) {
+export async function login(email, password) {
   return api.call(MUTATION_LOGIN, {
     email,
     password,
   });
-});
+}
 
 /**
  * Sign up by email and return status (true or false)
@@ -47,13 +40,7 @@ export const login = withDemoMock(
  * @param {object} utm - UTM parameters object
  * @returns {Promise<{data: {signUp: boolean}, errors: object[]}>} Response data
  */
-export const signUp = withDemoMock(
-  () => import('./signUp.mock'),
-  {
-    extract: () => ({ projectId: DEMO_PROJECT_ID }),
-    mapMock: (mock) => mock.default || mock,
-  }
-)(async function signUp(email, utm) {
+export async function signUp(email, utm) {
   const validatedUtm = validateUtmParams(utm);
 
   const variables = {
@@ -62,7 +49,7 @@ export const signUp = withDemoMock(
   };
 
   return api.call(MUTATION_SIGN_UP, variables);
-});
+}
 
 /**
  * Recover password by email
@@ -96,15 +83,9 @@ export async function refreshTokens(refreshToken) {
  *
  * @returns {Promise<APIResponse<{ me: User }>>}
  */
-export const fetchCurrentUser = withDemoMock(
-  () => import('./fetchCurrentUser.mock'),
-  {
-    extract: () => ({ projectId: DEMO_PROJECT_ID }),
-    mapMock: (mock) => mock.default || mock,
-  }
-)(async function fetchCurrentUser() {
+export async function fetchCurrentUser() {
   return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
-});
+}
 
 /**
  * Update user profile
@@ -173,12 +154,6 @@ export async function updateNotificationsReceiveType(payload) {
  *
  * @returns {Promise<Array<BankCard>>}
  */
-export const fetchBankCards = withDemoMock(
-  () => import('./fetchBankCards.mock'),
-  {
-    extract: () => ({ projectId: DEMO_PROJECT_ID }),
-    mapMock: (mock) => (mock.default || mock).me.bankCards,
-  }
-)(async function fetchBankCards() {
+export async function fetchBankCards() {
   return (await api.callOld(QUERY_BANK_CARDS)).me.bankCards || [];
-});
+}

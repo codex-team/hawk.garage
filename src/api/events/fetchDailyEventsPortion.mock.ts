@@ -1,5 +1,4 @@
 import type { DailyEventsPortion, HawkEvent } from '@/types/events';
-import { DEMO_USER } from '@/api/user/demoUser.mock';
 
 /**
  * Create a complete mock event with all fields
@@ -16,7 +15,7 @@ const createDemoEvent = (
   id,
   groupHash,
   totalCount,
-  visitedBy: [DEMO_USER],
+  visitedBy: [],
   marks: {
     resolved: false,
     starred: false,

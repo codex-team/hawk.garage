@@ -61,14 +61,8 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * Returns all user's workspaces and project.
  * @returns
  */
-export const getAllWorkspacesWithProjects = withDemoMock(
-  () => import('./getAllWorkspacesWithProjects.mock'),
-  {
-    extract: () => ({ workspaceId: DEMO_WORKSPACE_ID }),
-    mapMock: (mock) => mock.default || mock,
-  }
-)(async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
-  return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
+export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
+  const response = await api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
     initial: true,
 
     /**
@@ -77,7 +71,20 @@ export const getAllWorkspacesWithProjects = withDemoMock(
      */
     allowErrors: true,
   });
-});
+
+  // Remove Demo workspace from the response if it is present, since we will add it with enriched data later
+  response.data.workspaces = response.data.workspaces.filter((ws, index) => {
+      return ws.id !== DEMO_WORKSPACE_ID;
+  });
+
+  // add demo at the start of the list if there is no such workspace in the response
+  response.data.workspaces = [
+    (await import('./getAllWorkspacesWithProjects.mock').then((m) => m.default)).data.workspaces[0],
+    ...response.data.workspaces,
+  ];
+
+  return response;
+}
 
 /**
  * Invites user to workspace by email
@@ -120,15 +127,9 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * @param ids – id of fetching workspaces
  * @returns
  */
-export const getWorkspaces = withDemoMock(
-  () => import('./getWorkspaces.mock'),
-  {
-    extract: (args) => ({ workspaceId: args[0]?.[0] }),
-    mapMock: (mock) => ({ workspaces: (mock.default || mock).data.workspaces }),
-  }
-)(async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
+export async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
-});
+}
 
 /**
  * Get workspace balance
