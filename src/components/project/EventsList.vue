@@ -19,7 +19,7 @@
         <EventItem
           v-for="(dailyEventInfo, index) in eventsByDate"
           :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
-          :last-occurrence-timestamp="getEvent(dailyEventInfo.eventId)?.timestamp"
+          :last-occurrence-timestamp="getEvent(dailyEventInfo.eventId).timestamp"
           :count="dailyEventInfo.count"
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
@@ -251,13 +251,7 @@ export default {
      * @returns {GroupedEvent}
      */
     getEvent(eventId) {
-      const event = this.getProjectEventById(this.projectId, eventId);
-
-      if (!event) {
-        console.error(`[❌ getEvent] NOT FOUND: eventId=${eventId} in project=${this.projectId}`);
-      }
-
-      return event;
+      return this.getProjectEventById(this.projectId, eventId);
     },
     /**
      * Format grouped date for displaying in headers.
@@ -292,14 +286,6 @@ export default {
         release: this.release,
       });
 
-      console.log('[🔍 loadMoreEvents] Received:', {
-        count: dailyEventsWithEventsLinked.length,
-      });
-
-      dailyEventsWithEventsLinked.forEach((de, i) => {
-        console.log(`  ✅ [${i}] eventId=${de.eventId}`);
-      });
-
       this.dailyEventsNextCursor = nextCursor;
       this.noMore = this.dailyEventsNextCursor === null;
 
@@ -312,8 +298,6 @@ export default {
       } else {
         this.dailyEvents.push(...dailyEventsWithEventsLinked);
       }
-
-      console.log('[✅ loadMoreEvents] After push: dailyEvents.length=', this.dailyEvents.length);
 
       this.isLoading = false;
     },
@@ -365,11 +349,6 @@ export default {
      */
     onShowEventOverview(eventId) {
       const event = this.getEvent(eventId);
-
-      if (!event) {
-        console.error('[EventsList] onShowEventOverview: event not found for eventId:', eventId);
-        return;
-      }
 
       const originalEventId = event.originalEventId;
 
