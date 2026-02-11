@@ -62,10 +62,10 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * @returns
  */
 export const getAllWorkspacesWithProjects = withMockDemo(
-  () => import('./mocks/getAllWorkspacesWithProjects.mock').then((m) => m.default)
-)(async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
-  return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
-    initial: true,
+  'getAllWorkspacesWithProjects.mock',
+  async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
+    return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
+      initial: true,
 
     /**
      * This request calls on the app start, so we don't want to break app if something goes wrong
@@ -73,7 +73,9 @@ export const getAllWorkspacesWithProjects = withMockDemo(
      */
     allowErrors: true,
   });
-});
+  },
+  { debug: true }
+);
 
 /**
  * Invites user to workspace by email

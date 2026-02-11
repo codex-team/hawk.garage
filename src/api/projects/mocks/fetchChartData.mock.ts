@@ -1,15 +1,17 @@
-import mockChartData from "../../events/mocks/fetchChartData.mock";
+import { DEMO_CHART_DATA } from '@/api/mock-db';
 
 /**
- * Mock data for project overview chart
+ * Mock: fetchChartData (projects)
+ *
+ * Returns chart data for project overview from mock-db
  */
-const mockFetchChartData = {
-  data: {
-    project: {
-      chartData: mockChartData
+export default function mockFetchChartData() {
+  return {
+    data: {
+      project: {
+        chartData: DEMO_CHART_DATA,
+      },
     },
-  },
-  errors: [],
-};
-
-export default mockFetchChartData;
+    errors: [],
+  };
+}

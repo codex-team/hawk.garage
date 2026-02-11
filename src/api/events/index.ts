@@ -32,9 +32,9 @@ import { withMockDemo } from '@/utils/withMockDemo';
  * @returns
  */
 export const getEvent = withMockDemo(
-  () => import('./mocks/getEvent.mock').then(m => m.default)
-)(async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
-  const project = await (await api.callOld(QUERY_EVENT, {
+  'getEvent.mock',
+  async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
+    const project = await (await api.callOld(QUERY_EVENT, {
     projectId,
     eventId,
     originalEventId,
@@ -57,10 +57,10 @@ export const getEvent = withMockDemo(
  * @param release - release identifier to filter events
  */
 export const fetchDailyEventsPortion = withMockDemo(
-  () => import('./mocks/fetchDailyEventsPortion.mock').then(m => m.default)
-)(async function fetchDailyEventsPortion(
-  projectId: string,
-  nextCursor: DailyEventsCursor | null = null,
+  'fetchDailyEventsPortion.mock',
+  async function fetchDailyEventsPortion(
+    projectId: string,
+    nextCursor: DailyEventsCursor | null = null,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
   search = '',
@@ -89,7 +89,9 @@ export const fetchDailyEventsPortion = withMockDemo(
 
   return project?.dailyEventsPortion ?? { nextCursor: null,
     dailyEvents: [] };
-});
+  },
+  { debug: true }
+);
 
 /**
  * Fetches event's repetitions portion from project
@@ -100,10 +102,10 @@ export const fetchDailyEventsPortion = withMockDemo(
  * @returns
  */
 export const getRepetitionsPortion = withMockDemo(
-  () => import('./mocks/getRepetitionsPortion.mock').then(m => m.default)
-)(async function getRepetitionsPortion(
-  projectId: string, originalEventId: string, limit: number, cursor?: string
-): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[];
+  'getRepetitionsPortion.mock',
+  async function getRepetitionsPortion(
+    projectId: string, originalEventId: string, limit: number, cursor?: string
+  ): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[];
   nextCursor?: string; }; }; }; }>> {
   const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
     limit,
@@ -132,9 +134,9 @@ export const getRepetitionsPortion = withMockDemo(
  * @returns
  */
 export const visitEvent = withMockDemo(
-  () => import('./mocks/visitEvent.mock').then(m => m.default)
-)(async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
-  return (await api.callOld(MUTATION_VISIT_EVENT, {
+  'visitEvent.mock',
+  async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
+    return (await api.callOld(MUTATION_VISIT_EVENT, {
     projectId,
     originalEventId,
   })).visitEvent;
@@ -147,9 +149,9 @@ export const visitEvent = withMockDemo(
  * @param mark — mark to set
  */
 export const toggleEventMark = withMockDemo(
-  () => import('./mocks/toggleEventMark.mock').then(m => m.default)
-)(async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
-  return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
+  'toggleEventMark.mock',
+  async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
+    return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
     projectId,
     eventId,
     mark,
@@ -195,10 +197,10 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  * @param timezoneOffset - user's local timezone
  */
 export const fetchChartData = withMockDemo(
-  () => import('./mocks/fetchChartData.mock').then(m => m.default)
-)(async function fetchChartData(
-  projectId: string,
-  originalEventId: string,
+  'fetchChartData.mock',
+  async function fetchChartData(
+    projectId: string,
+    originalEventId: string,
   days: number,
   timezoneOffset: number
 ): Promise<ChartLine[]> {

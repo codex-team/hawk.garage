@@ -136,10 +136,11 @@ export async function removeProject(projectId) {
  * @returns {Promise<boolean>} - success status
  */
 export const updateLastProjectVisit = withMockDemo(
-  () => import('./mocks/updateLastProjectVisit.mock').then(m => m.default)
-)(async function updateLastProjectVisit(projectId) {
-  return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
-});
+  'updateLastProjectVisit.mock',
+  async function updateLastProjectVisit(projectId) {
+    return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
+  }
+);
 
 /**
  * Send request for creation new project notifications rule
@@ -258,9 +259,9 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @returns {Promise<Object>} - chart data response
  */
 export const fetchChartData = withMockDemo(
-  () => import('./mocks/fetchChartData.mock').then(m => m.default)
-)(async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
-  const response = await api.call(QUERY_CHART_DATA, {
+  'fetchChartData.mock',
+  async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
+    const response = await api.call(QUERY_CHART_DATA, {
     projectId,
     startDate,
     endDate,
@@ -283,9 +284,9 @@ export const fetchChartData = withMockDemo(
  * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number, commitsCount: number, filesCount: number}>>} - list of releases with unique events count, commits count and files count
  */
 export const fetchProjectReleases = withMockDemo(
-  () => import('./mocks/fetchProjectReleases.mock').then(m => m.default)
-)(async function fetchProjectReleases(projectId) {
-  const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
+  'fetchProjectReleases.mock',
+  async function fetchProjectReleases(projectId) {
+    const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
   if (response.errors?.length) {
     response.errors.forEach(console.error);
@@ -302,10 +303,10 @@ export const fetchProjectReleases = withMockDemo(
  * @returns {Promise<ReleaseDetails>}
  */
 export const fetchProjectReleaseDetails = withMockDemo(
-  () => import('./mocks/fetchProjectReleaseDetails.mock').then(m => m.default)
-)(async function fetchProjectReleaseDetails(projectId, release) {
-  const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
-    release });
+  'fetchProjectReleaseDetails.mock',
+  async function fetchProjectReleaseDetails(projectId, release) {
+    const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
+      release });
 
   if (response.errors?.length) {
     /**

@@ -7,6 +7,7 @@
 import type { HawkEvent } from '@/types/events';
 import { DEMO_USER } from './users';
 import { DEMO_PROJECT_ID } from './workspaces';
+import { User } from '@/types/user';
 
 /**
  * Helper to create realistic error event
@@ -23,6 +24,7 @@ function createDemoEvent(config: {
   file?: string;
   line?: number;
   isStarred?: boolean;
+  visitedBy?: User[];
 }): HawkEvent {
   const {
     id,
@@ -36,6 +38,7 @@ function createDemoEvent(config: {
     file = 'src/store/user.ts',
     line = 42,
     isStarred = false,
+    visitedBy = [],
   } = config;
 
   return {
@@ -43,7 +46,7 @@ function createDemoEvent(config: {
     groupHash,
     totalCount,
     usersAffected,
-    visitedBy: [DEMO_USER],
+    visitedBy,
     marks: {
       resolved: false,
       starred: isStarred,
@@ -145,6 +148,7 @@ export const DEMO_EVENTS: HawkEvent[] = [
     usersAffected: 4,
     file: 'src/utils/parser.ts',
     line: 55,
+    visitedBy: [DEMO_USER],
   }),
 ];
 

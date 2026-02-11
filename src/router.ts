@@ -364,7 +364,7 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
 
@@ -373,8 +373,8 @@ router.beforeEach((to, from, next) => {
 
   if (isDemoPath) {
     // Enable demo mode and set fake tokens
-    store.dispatch('demo/enableDemo');
-    store.dispatch(SET_TOKENS, {
+    await store.dispatch('demo/enableDemo');
+    await store.dispatch(SET_TOKENS, {
       accessToken: 'demo-access-token',
       refreshToken: 'demo-refresh-token',
     });
@@ -391,13 +391,15 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  if (store.getters.isAuthenticated) {
+  if (store.getters.isAuthenticated || store.state.demo?.isActive) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
+      return;
     }
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
+      return;
     }
   }
 

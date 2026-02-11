@@ -1,47 +1,17 @@
+import { DEMO_RELEASE_DETAILS } from '@/api/mock-db';
+
 /**
- * Mock data for fetchProjectReleaseDetails
- * Returns detailed information about a specific release
+ * Mock: fetchProjectReleaseDetails
+ *
+ * Returns detailed release information from mock-db
  */
-
-const releaseDetailsMock = {
-  release: 'v2.5.0',
-  timestamp: Date.now() - 86400000,
-  commits: [
-    {
-      hash: 'abc123def',
-      message: 'Fix critical bug in payment processing',
-      author: 'Demo Developer',
-      timestamp: Date.now() - 86400000,
+export default function mockFetchProjectReleaseDetails() {
+  return {
+    data: {
+      project: {
+        releaseDetails: DEMO_RELEASE_DETAILS,
+      },
     },
-    {
-      hash: 'def456ghi',
-      message: 'Update dependencies',
-      author: 'Demo Developer',
-      timestamp: Date.now() - 86400000 - 3600000,
-    },
-  ],
-  files: [
-    {
-      path: 'src/payment/processor.ts',
-      additions: 15,
-      deletions: 8,
-    },
-    {
-      path: 'package.json',
-      additions: 3,
-      deletions: 3,
-    },
-  ],
-  newEventsCount: 3,
-};
-
-const mockFetchProjectReleaseDetails = {
-  data: {
-    project: {
-      releaseDetails: releaseDetailsMock,
-    },
-  },
-  errors: [],
-};
-
-export default mockFetchProjectReleaseDetails;
+    errors: [],
+  };
+}
