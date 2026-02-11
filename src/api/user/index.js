@@ -85,7 +85,7 @@ export async function refreshTokens(refreshToken) {
  * @returns {Promise<APIResponse<{ me: User }>>}
  */
 export const fetchCurrentUser = withMockDemo(
-  'fetchCurrentUser.mock',
+  '@/api/user/mocks/fetchCurrentUser.mock',
   async function fetchCurrentUser() {
     return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
   },

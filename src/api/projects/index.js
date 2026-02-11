@@ -136,7 +136,7 @@ export async function removeProject(projectId) {
  * @returns {Promise<boolean>} - success status
  */
 export const updateLastProjectVisit = withMockDemo(
-  'updateLastProjectVisit.mock',
+  '@/api/projects/mocks/updateLastProjectVisit.mock',
   async function updateLastProjectVisit(projectId) {
     return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
   }
@@ -259,7 +259,7 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @returns {Promise<object>} - chart data response
  */
 export const fetchChartData = withMockDemo(
-  'fetchChartData.mock',
+  '@/api/projects/mocks/fetchChartData.mock',
   async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
     const response = await api.call(QUERY_CHART_DATA, {
       projectId,
@@ -275,7 +275,9 @@ export const fetchChartData = withMockDemo(
     });
 
     return response;
-  });
+  },
+  { debug: true }
+);
 
 /**
  * Fetch project releases
@@ -284,7 +286,7 @@ export const fetchChartData = withMockDemo(
  * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number, commitsCount: number, filesCount: number}>>} - list of releases with unique events count, commits count and files count
  */
 export const fetchProjectReleases = withMockDemo(
-  'fetchProjectReleases.mock',
+  '@/api/projects/mocks/fetchProjectReleases.mock',
   async function fetchProjectReleases(projectId) {
     const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
@@ -303,7 +305,7 @@ export const fetchProjectReleases = withMockDemo(
  * @returns {Promise<ReleaseDetails>}
  */
 export const fetchProjectReleaseDetails = withMockDemo(
-  'fetchProjectReleaseDetails.mock',
+  '@/api/projects/mocks/fetchProjectReleaseDetails.mock',
   async function fetchProjectReleaseDetails(projectId, release) {
     const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
       release });

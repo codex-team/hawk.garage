@@ -62,7 +62,7 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * @returns
  */
 export const getAllWorkspacesWithProjects = withMockDemo(
-  'getAllWorkspacesWithProjects.mock',
+  '@/api/workspaces/mocks/getAllWorkspacesWithProjects.mock',
   async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
     return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
       initial: true,

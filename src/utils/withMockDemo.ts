@@ -69,16 +69,36 @@ function isDemoModeActive(): boolean {
  * @param mockName
  */
 function resolveMockPath(mockName: string): string | null {
-  // If already a full path starting with /src/, check if it exists
+  // If already a full path starting with /src/, check variants with extensions
   if (mockName.startsWith('/src/')) {
-    return mockModuleLoaders[mockName] ? mockName : null;
+    if (mockModuleLoaders[mockName]) {
+      return mockName;
+    }
+    if (mockModuleLoaders[`${mockName}.ts`]) {
+      return `${mockName}.ts`;
+    }
+    if (mockModuleLoaders[`${mockName}.js`]) {
+      return `${mockName}.js`;
+    }
+
+    return null;
   }
 
-  // If starts with @/, convert to /src/ and check
+  // If starts with @/, convert to /src/ and check variants
   if (mockName.startsWith('@/')) {
     const normalized = mockName.replace(/^@\//, '/src/');
 
-    return mockModuleLoaders[normalized] ? normalized : null;
+    if (mockModuleLoaders[normalized]) {
+      return normalized;
+    }
+    if (mockModuleLoaders[`${normalized}.ts`]) {
+      return `${normalized}.ts`;
+    }
+    if (mockModuleLoaders[`${normalized}.js`]) {
+      return `${normalized}.js`;
+    }
+
+    return null;
   }
 
   // Build list of candidates with different extensions
