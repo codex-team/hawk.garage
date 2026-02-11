@@ -20,7 +20,7 @@ import {
   MUTATION_UPDATE_TASK_MANAGER_SETTINGS
 } from './queries';
 import * as api from '../index.ts';
-import { withDemoMock, DEMO_PROJECT_ID } from '@/utils/withDemoMock';
+import { withMockDemo } from '@/utils/withMockDemo.ts';
 
 /**
  * Create project and returns its id
@@ -135,11 +135,8 @@ export async function removeProject(projectId) {
  * @param {string} projectId - id of the project
  * @returns {Promise<boolean>} - success status
  */
-export const updateLastProjectVisit = withDemoMock(
-  () => Promise.resolve(true),
-  {
-    extract: (args) => ({ projectId: args[0] }),
-  }
+export const updateLastProjectVisit = withMockDemo(
+  () => import('./mocks/updateLastProjectVisit.mock').then(m => m.default)
 )(async function updateLastProjectVisit(projectId) {
   return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
 });
@@ -260,11 +257,8 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @param {number} timezoneOffset - timezone offset in minutes
  * @returns {Promise<Object>} - chart data response
  */
-export const fetchChartData = withDemoMock(
-  () => import('./fetchChartData.mock').then(m => m.default),
-  {
-    extract: (args) => ({ projectId: args[0] }),
-  }
+export const fetchChartData = withMockDemo(
+  () => import('./mocks/fetchChartData.mock').then(m => m.default)
 )(async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
   const response = await api.call(QUERY_CHART_DATA, {
     projectId,
@@ -288,12 +282,8 @@ export const fetchChartData = withDemoMock(
  * @param {string} projectId - id of the project to fetch releases
  * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number, commitsCount: number, filesCount: number}>>} - list of releases with unique events count, commits count and files count
  */
-export const fetchProjectReleases = withDemoMock(
-  () => import('./fetchProjectReleases.mock'),
-  {
-    extract: (args) => ({ projectId: args[0] }),
-    mapMock: (mock) => (mock.default || mock).data.project.releases,
-  }
+export const fetchProjectReleases = withMockDemo(
+  () => import('./mocks/fetchProjectReleases.mock').then(m => m.default)
 )(async function fetchProjectReleases(projectId) {
   const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
@@ -311,12 +301,8 @@ export const fetchProjectReleases = withDemoMock(
  * @param {string} release
  * @returns {Promise<ReleaseDetails>}
  */
-export const fetchProjectReleaseDetails = withDemoMock(
-  () => import('./fetchProjectReleaseDetails.mock'),
-  {
-    extract: (args) => ({ projectId: args[0] }),
-    mapMock: (mock) => (mock.default || mock).data.project.releaseDetails,
-  }
+export const fetchProjectReleaseDetails = withMockDemo(
+  () => import('./mocks/fetchProjectReleaseDetails.mock').then(m => m.default)
 )(async function fetchProjectReleaseDetails(projectId, release) {
   const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
     release });

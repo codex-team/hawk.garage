@@ -12,6 +12,7 @@ import {
 } from './queries';
 import * as api from '../index.ts';
 import { validateUtmParams } from '../../components/utils/utm/utm.ts';
+import { withMockDemo } from '../../utils/withMockDemo.ts';
 
 /**
  * @typedef {object} TokensPair
@@ -83,9 +84,11 @@ export async function refreshTokens(refreshToken) {
  *
  * @returns {Promise<APIResponse<{ me: User }>>}
  */
-export async function fetchCurrentUser() {
+export const fetchCurrentUser = withMockDemo(
+  () => import('./mocks/fetchCurrentUser.mock').then(m => m.default)
+)(async function fetchCurrentUser() {
   return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
-}
+});
 
 /**
  * Update user profile
