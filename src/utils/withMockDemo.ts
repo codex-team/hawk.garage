@@ -13,7 +13,7 @@
  * ```
  */
 
-import store from '@/store';
+import { isDemoActive } from '@/composables/useDemo';
 
 type MaybePromise<T> = T | Promise<T>;
 type MockFactory<Fn extends (...args: any[]) => any> = (
@@ -37,97 +37,61 @@ export interface MockOptions {
   debug?: boolean;
 }
 
-/**
- * Pre-load all mock modules using Vite's import.meta.glob
- */
-const mockModuleLoaders = import.meta.glob('/src/api/**/mocks/*.mock.{ts,js}');
+function normalizeMockPath(mockPath: string): string {
+  if (mockPath.startsWith('@/')) {
+    return `/src/${mockPath.slice(2)}`;
+  }
+
+  return mockPath;
+}
 
 /**
- * Check if demo mode is active in store
+ * Dynamically import mock module
+ * @param mockPath - Full path to mock file
  */
-function isDemoModeActive(): boolean {
+async function loadMockModule(mockPath: string): Promise<any> {
   try {
-    // Check if current path is /demo or /demo/*
-    if (typeof window !== 'undefined' && window.location) {
-      const isDemoPath = window.location.pathname === '/demo' || window.location.pathname.startsWith('/demo/');
+    const normalizedPath = normalizeMockPath(mockPath);
 
-      if (isDemoPath) {
-        return true;
+    // Try different extensions
+    const candidates = [
+      normalizedPath,
+      `${normalizedPath}.ts`,
+      `${normalizedPath}.js`,
+    ];
+
+    for (const path of candidates) {
+      try {
+        return await import(/* @vite-ignore */ path);
+      } catch {
+        // Try next candidate
       }
     }
 
-    return store?.state?.demo?.isActive ?? false;
+    throw new Error(`Failed to load mock module: ${mockPath}`);
   } catch (error) {
-    console.warn('[withMockDemo] Could not access store, demo mode disabled:', error);
-
-    return false;
+    throw new Error(`Mock module not found: ${mockPath}`);
   }
 }
 
 /**
- * Resolve mock path from short name to full glob path
- * @param mockName
+ * Resolve mock path from short name to full module path
+ * @param mockName - Mock file name or path
  */
-function resolveMockPath(mockName: string): string | null {
-  // If already a full path starting with /src/, check variants with extensions
-  if (mockName.startsWith('/src/')) {
-    if (mockModuleLoaders[mockName]) {
-      return mockName;
-    }
-    if (mockModuleLoaders[`${mockName}.ts`]) {
-      return `${mockName}.ts`;
-    }
-    if (mockModuleLoaders[`${mockName}.js`]) {
-      return `${mockName}.js`;
-    }
-
-    return null;
-  }
-
-  // If starts with @/, convert to /src/ and check variants
+function resolveMockPath(mockName: string): string {
+  // If already starts with @/, return as is (will be resolved by Vite)
   if (mockName.startsWith('@/')) {
-    const normalized = mockName.replace(/^@\//, '/src/');
-
-    if (mockModuleLoaders[normalized]) {
-      return normalized;
-    }
-    if (mockModuleLoaders[`${normalized}.ts`]) {
-      return `${normalized}.ts`;
-    }
-    if (mockModuleLoaders[`${normalized}.js`]) {
-      return `${normalized}.js`;
-    }
-
-    return null;
+    return mockName;
   }
 
-  // Build list of candidates with different extensions
-  const candidates = new Set<string>();
-
-  // Add the name as-is
-  candidates.add(mockName);
-
-  // If doesn't end with .mock, add variants with .mock suffix
-  if (!mockName.endsWith('.mock')) {
-    candidates.add(`${mockName}.mock`);
-    candidates.add(`${mockName}.mock.ts`);
-    candidates.add(`${mockName}.mock.js`);
-  } else {
-    // If already ends with .mock, just add file extensions
-    candidates.add(`${mockName}.ts`);
-    candidates.add(`${mockName}.js`);
+  // If already a full path starting with /src/, return as is
+  if (mockName.startsWith('/src/')) {
+    return mockName;
   }
 
-  // Search in all loaded mock modules
-  for (const key of Object.keys(mockModuleLoaders)) {
-    for (const candidate of candidates) {
-      if (key.endsWith(`/mocks/${candidate}`)) {
-        return key;
-      }
-    }
-  }
-
-  return null;
+  // If it's just a filename, we can't resolve it without preloading
+  // This should not happen with the new explicit path approach
+  throw new Error(`Mock path must be explicit (use @/ or /src/ prefix): ${mockName}`);
 }
 
 /**
@@ -146,7 +110,7 @@ export function withMockDemo<Fn extends (...args: any[]) => any>(
   return async function (this: any, ...args: Parameters<Fn>): Promise<Awaited<ReturnType<Fn>>> {
     // Check if mocks are enabled
     const shouldUseMock
-      = typeof enabled === 'function' ? enabled() : enabled ?? isDemoModeActive();
+      = typeof enabled === 'function' ? enabled() : enabled ?? isDemoActive();
 
     // If not using mocks, call original function
     if (!shouldUseMock) {
@@ -165,20 +129,16 @@ export function withMockDemo<Fn extends (...args: any[]) => any>(
     try {
       let mockData: any;
 
-      // If mockSource is a string, resolve and load it
+      // If mockSource is a string, resolve and load it dynamically
       if (typeof mockSource === 'string') {
         const mockPath = resolveMockPath(mockSource);
-
-        if (!mockPath) {
-          throw new Error(`Mock file not found: ${mockSource}`);
-        }
 
         if (debug) {
           console.log(`[Demo Mock] 📂 Loading mock from: ${mockPath}`);
         }
 
-        const mockModule = await mockModuleLoaders[mockPath]();
-        const mockExport = (mockModule as any).default;
+        const mockModule = await loadMockModule(mockPath);
+        const mockExport = mockModule.default;
 
         // Mock can be either a function (call it) or a value (use it directly)
         if (typeof mockExport === 'function') {

@@ -2,6 +2,7 @@ import { defineComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
 import { SET_TOKENS } from './store/modules/user/actionTypes';
+import { enableDemo, isDemoActive } from './composables/useDemo';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
@@ -373,7 +374,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (isDemoPath) {
     // Enable demo mode and set fake tokens
-    await store.dispatch('demo/enableDemo');
+    await enableDemo();
     await store.dispatch(SET_TOKENS, {
       accessToken: 'demo-access-token',
       refreshToken: 'demo-refresh-token',
@@ -386,7 +387,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // Keep /demo prefix for navigation while demo mode is active
-  if (store.state.demo?.isActive && !to.path.startsWith('/demo') && !authRoutes.test(to.fullPath)) {
+  if (isDemoActive() && !to.path.startsWith('/demo') && !authRoutes.test(to.fullPath)) {
     const demoPath = to.path === '/' ? '/demo' : `/demo${to.path}`;
 
     next({ path: demoPath,
