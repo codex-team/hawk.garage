@@ -4,7 +4,7 @@
  * Contains demo user data
  */
 
-import type { User } from '@/types/user';
+import type { User } from '@hawk.so/types';
 
 /**
  * Demo user account

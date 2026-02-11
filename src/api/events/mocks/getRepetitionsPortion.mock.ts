@@ -1,13 +1,14 @@
 import { DEMO_EVENTS } from '@/api/mock-db';
-import type { HawkEvent } from '@/types/events';
-import { MILLISECONDS_IN_HOUR } from '@/utils/time';
+import type { HawkEvent } from '@hawk.so/types';
+import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_SECOND } from '@/utils/time';
 
 const REPETITION_ID_OFFSET = 4;
 const TWO = 2;
 const THREE = 3;
-const ONE_HOUR = MILLISECONDS_IN_HOUR;
-const TWO_HOURS = MILLISECONDS_IN_HOUR * TWO;
-const THREE_HOURS = MILLISECONDS_IN_HOUR * THREE;
+const ONE_HOUR = Math.floor(MILLISECONDS_IN_HOUR / MILLISECONDS_IN_SECOND);
+const TWO_HOURS = ONE_HOUR * TWO;
+const THREE_HOURS = ONE_HOUR * THREE;
+const NOW_SECONDS = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
 
 /**
  * Mock: getRepetitionsPortion
@@ -48,7 +49,7 @@ export default function mockGetRepetitionsPortion(): {
   const repetitions: HawkEvent[] = variations.map((variant, index) => ({
     ...baseEvent,
     id: `507f1f77bcf86cd79943901${REPETITION_ID_OFFSET + index}`,
-    timestamp: Date.now() + variant.timeOffset,
+    timestamp: NOW_SECONDS + variant.timeOffset,
     payload: {
       ...baseEvent.payload,
       context: {

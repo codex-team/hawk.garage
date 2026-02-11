@@ -1,5 +1,5 @@
 import { DEMO_CHART_DATA } from '@/api/mock-db';
-import type { ChartLine } from '@/types/chart';
+import type { ChartLine } from '@hawk.so/types';
 
 /**
  * Mock: fetchChartData (projects)

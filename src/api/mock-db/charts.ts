@@ -4,7 +4,7 @@
  * Contains demo chart data for events and projects
  */
 
-import type { ChartLine } from '@/types/chart';
+import type { ChartLine } from '@hawk.so/types';
 import {
   MILLISECONDS_IN_SECOND,
   SECONDS_IN_DAY,

@@ -4,11 +4,10 @@
  * Contains demo error events with realistic data
  */
 
-import type { HawkEvent } from '@/types/events';
-import { DEMO_USER } from './users';
+import type { HawkEvent, User } from '@hawk.so/types';
+import { MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
 import { DEMO_PROJECT_ID } from './workspaces';
-import type { User } from '@/types/user';
-import { MILLISECONDS_IN_DAY } from '@/utils/time';
+import { DEMO_USER } from './users';
 
 /**
  * Helper to create realistic error event
@@ -36,7 +35,7 @@ function createDemoEvent(config: {
     groupHash,
     totalCount,
     usersAffected,
-    timestamp = Date.now(),
+    timestamp = Math.floor(Date.now() / MILLISECONDS_IN_SECOND),
     file = 'src/store/user.ts',
     line = 42,
     isStarred = false,
@@ -103,7 +102,7 @@ function createDemoEvent(config: {
     repetitions: [],
     assignee: undefined as any,
     timestamp,
-    originalTimestamp: timestamp - MILLISECONDS_IN_DAY,
+    originalTimestamp: timestamp - SECONDS_IN_DAY,
     originalEventId,
   };
 }

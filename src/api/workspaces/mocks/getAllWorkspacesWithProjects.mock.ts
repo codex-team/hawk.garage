@@ -5,17 +5,16 @@
  */
 
 import { DEMO_WORKSPACE, DEMO_PROJECT } from '@/api/mock-db';
-import type { DailyEventsPortion } from '@/types/events';
+import type { DailyEventsPortion, Workspace } from '@hawk.so/types';
 import { DEMO_EVENTS } from '@/api/mock-db';
-import { MILLISECONDS_IN_DAY } from '@/utils/time';
-import type { Workspace } from '@/types/workspaces';
+import { MILLISECONDS_IN_DAY, MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
 
 /**
  * Create fresh daily events portion
  */
 function createDailyEventsPortion(): DailyEventsPortion {
-  const now = Date.now();
-  const dayTimestamp = Math.floor(now / MILLISECONDS_IN_DAY) * MILLISECONDS_IN_DAY;
+  const now_seconds = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
+  const dayTimestamp = Math.floor(now_seconds / SECONDS_IN_DAY) * SECONDS_IN_DAY;
 
   return {
     nextCursor: null,

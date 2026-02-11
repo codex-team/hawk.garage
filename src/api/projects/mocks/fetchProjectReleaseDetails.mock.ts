@@ -1,21 +1,11 @@
 import { DEMO_RELEASE_DETAILS } from '@/api/mock-db';
-import type { ReleaseDetails } from '@/types/project-integrations';
+import type { ReleaseDetails } from '@hawk.so/types';
 
 /**
  * Mock: fetchProjectReleaseDetails
  *
  * Returns detailed release information from mock-db
  */
-export default function mockFetchProjectReleaseDetails(): {
-  data: { project: { releaseDetails: ReleaseDetails } };
-  errors: unknown[];
-} {
-  return {
-    data: {
-      project: {
-        releaseDetails: DEMO_RELEASE_DETAILS,
-      },
-    },
-    errors: [],
-  };
+export default function mockFetchProjectReleaseDetails(): ReleaseDetails {
+  return DEMO_RELEASE_DETAILS;
 }

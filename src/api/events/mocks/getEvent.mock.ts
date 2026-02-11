@@ -1,5 +1,5 @@
 import { DEMO_EVENTS } from '@/api/mock-db';
-import type { HawkEvent } from '@/types/events';
+import type { HawkEvent } from '@hawk.so/types';
 
 /**
  * Mock: getEvent

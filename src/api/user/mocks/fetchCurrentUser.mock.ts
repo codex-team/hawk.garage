@@ -5,7 +5,7 @@
  */
 
 import { DEMO_USER } from '@/api/mock-db';
-import type { CurrentUser } from '@/types/user';
+import type { CurrentUser } from '@hawk.so/types';
 
 export default function mockFetchCurrentUser(): {
   data: { me: CurrentUser };

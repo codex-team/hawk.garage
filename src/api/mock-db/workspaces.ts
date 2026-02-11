@@ -4,8 +4,7 @@
  * Contains demo workspace and project data with proper references
  */
 
-import type { Workspace } from '@/types/workspaces';
-import type { Project } from '@/types/project';
+import type { Workspace, Project } from '@hawk.so/types';
 import { ReceiveTypes } from '@/types/project-notifications';
 import { DEMO_USER, DEMO_TEAM_MEMBERS } from './users';
 
