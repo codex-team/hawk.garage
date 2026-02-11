@@ -1,4 +1,5 @@
 import { DEMO_EVENTS } from '@/api/mock-db';
+import type { HawkEvent } from '@/types/events';
 
 /**
  * Mock: getEvent
@@ -6,9 +7,11 @@ import { DEMO_EVENTS } from '@/api/mock-db';
  * Returns a single event from DEMO_EVENTS by eventId
  * Falls back to first event if not found
  */
-export default function mockGetEvent() {
+export default function mockGetEvent(): HawkEvent | null {
   // In demo mode, we just return the first demo event
   // In a real scenario, we could match by eventId from args
-  return DEMO_EVENTS[0] || null;
+  const event = DEMO_EVENTS[0];
+
+  return event ?? null;
 }
 

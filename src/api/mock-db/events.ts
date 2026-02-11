@@ -8,6 +8,7 @@ import type { HawkEvent } from '@/types/events';
 import { DEMO_USER } from './users';
 import { DEMO_PROJECT_ID } from './workspaces';
 import { User } from '@/types/user';
+import { MILLISECONDS_IN_DAY } from '@/utils/time';
 
 /**
  * Helper to create realistic error event
@@ -97,7 +98,7 @@ function createDemoEvent(config: {
     repetitions: [],
     assignee: undefined as any,
     timestamp,
-    originalTimestamp: timestamp - 86400000, // 1 day ago
+    originalTimestamp: timestamp - MILLISECONDS_IN_DAY,
     originalEventId,
   };
 }

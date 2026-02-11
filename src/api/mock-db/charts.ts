@@ -5,9 +5,19 @@
  */
 
 import type { ChartLine } from '@/types/chart';
+import {
+  MILLISECONDS_IN_SECOND,
+  SECONDS_IN_DAY,
+  SIX_DAYS_AGO,
+  FIVE_DAYS_AGO,
+  FOUR_DAYS_AGO,
+  THREE_DAYS_AGO,
+  TWO_DAYS_AGO,
+  ONE_DAY_AGO,
+} from '@/utils/time';
 
-const DAY = 86400;
-const NOW = Math.floor(Date.now() / 1000);
+const DAY = SECONDS_IN_DAY;
+const NOW = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
 
 /**
  * Demo chart data - used for both event and project charts
@@ -17,27 +27,27 @@ export const DEMO_CHART_DATA: ChartLine[] = [
     label: 'accepted',
     data: [
       {
-        timestamp: NOW - 6 * DAY,
+        timestamp: NOW - SIX_DAYS_AGO * DAY,
         count: 175,
       },
       {
-        timestamp: NOW - 5 * DAY,
+        timestamp: NOW - FIVE_DAYS_AGO * DAY,
         count: 242,
       },
       {
-        timestamp: NOW - 4 * DAY,
+        timestamp: NOW - FOUR_DAYS_AGO * DAY,
         count: 198,
       },
       {
-        timestamp: NOW - 3 * DAY,
+        timestamp: NOW - THREE_DAYS_AGO * DAY,
         count: 215,
       },
       {
-        timestamp: NOW - 2 * DAY,
+        timestamp: NOW - TWO_DAYS_AGO * DAY,
         count: 321,
       },
       {
-        timestamp: NOW - 1 * DAY,
+        timestamp: NOW - ONE_DAY_AGO * DAY,
         count: 298,
       },
       {
@@ -50,27 +60,27 @@ export const DEMO_CHART_DATA: ChartLine[] = [
     label: 'rate-limited',
     data: [
       {
-        timestamp: NOW - 6 * DAY,
+        timestamp: NOW - SIX_DAYS_AGO * DAY,
         count: 105,
       },
       {
-        timestamp: NOW - 5 * DAY,
+        timestamp: NOW - FIVE_DAYS_AGO * DAY,
         count: 122,
       },
       {
-        timestamp: NOW - 4 * DAY,
+        timestamp: NOW - FOUR_DAYS_AGO * DAY,
         count: 18,
       },
       {
-        timestamp: NOW - 3 * DAY,
+        timestamp: NOW - THREE_DAYS_AGO * DAY,
         count: 2500,
       },
       {
-        timestamp: NOW - 2 * DAY,
+        timestamp: NOW - TWO_DAYS_AGO * DAY,
         count: 31,
       },
       {
-        timestamp: NOW - 1 * DAY,
+        timestamp: NOW - ONE_DAY_AGO * DAY,
         count: 128,
       },
       {
