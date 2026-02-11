@@ -5,19 +5,26 @@
  */
 
 /**
+ * Base time constants
+ */
+const SIXTY = 60;
+const TWENTY_FOUR = 24;
+const ONE_THOUSAND = 1000;
+
+/**
  * Time in milliseconds
  */
-export const MILLISECONDS_IN_SECOND = 1000;
-export const MILLISECONDS_IN_MINUTE = 60 * MILLISECONDS_IN_SECOND;
-export const MILLISECONDS_IN_HOUR = 60 * MILLISECONDS_IN_MINUTE;
-export const MILLISECONDS_IN_DAY = 24 * MILLISECONDS_IN_HOUR;
+export const MILLISECONDS_IN_SECOND = ONE_THOUSAND;
+export const MILLISECONDS_IN_MINUTE = SIXTY * MILLISECONDS_IN_SECOND;
+export const MILLISECONDS_IN_HOUR = SIXTY * MILLISECONDS_IN_MINUTE;
+export const MILLISECONDS_IN_DAY = TWENTY_FOUR * MILLISECONDS_IN_HOUR;
 
 /**
  * Time in seconds
  */
-export const SECONDS_IN_MINUTE = 60;
-export const SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE;
-export const SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR;
+export const SECONDS_IN_MINUTE = SIXTY;
+export const SECONDS_IN_HOUR = SIXTY * SECONDS_IN_MINUTE;
+export const SECONDS_IN_DAY = TWENTY_FOUR * SECONDS_IN_HOUR;
 
 /**
  * Common day offsets

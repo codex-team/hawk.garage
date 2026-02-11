@@ -13,7 +13,7 @@ import {
   FOUR_DAYS_AGO,
   THREE_DAYS_AGO,
   TWO_DAYS_AGO,
-  ONE_DAY_AGO,
+  ONE_DAY_AGO
 } from '@/utils/time';
 
 const DAY = SECONDS_IN_DAY;

@@ -1,5 +1,5 @@
 /**
- * @withMockDemo - Intercepts API calls in demo mode and returns mock data
+ * Intercepts API calls in demo mode and returns mock data
  *
  * Usage:
  * ```ts
@@ -50,6 +50,7 @@ function isDemoModeActive(): boolean {
     // Check if current path is /demo or /demo/*
     if (typeof window !== 'undefined' && window.location) {
       const isDemoPath = window.location.pathname === '/demo' || window.location.pathname.startsWith('/demo/');
+
       if (isDemoPath) {
         return true;
       }
@@ -58,12 +59,14 @@ function isDemoModeActive(): boolean {
     return store?.state?.demo?.isActive ?? false;
   } catch (error) {
     console.warn('[withMockDemo] Could not access store, demo mode disabled:', error);
+
     return false;
   }
 }
 
 /**
  * Resolve mock path from short name to full glob path
+ * @param mockName
  */
 function resolveMockPath(mockName: string): string | null {
   // If already a full path starting with /src/, check if it exists
@@ -74,6 +77,7 @@ function resolveMockPath(mockName: string): string | null {
   // If starts with @/, convert to /src/ and check
   if (mockName.startsWith('@/')) {
     const normalized = mockName.replace(/^@\//, '/src/');
+
     return mockModuleLoaders[normalized] ? normalized : null;
   }
 
@@ -108,7 +112,6 @@ function resolveMockPath(mockName: string): string | null {
 
 /**
  * Wraps API function to return mock data when demo mode is active
- *
  * @param mockSource - Mock file name (string) or factory function
  * @param originalFunction - The real API implementation
  * @param options - Configuration options
@@ -122,19 +125,21 @@ export function withMockDemo<Fn extends (...args: any[]) => any>(
 
   return async function (this: any, ...args: Parameters<Fn>): Promise<Awaited<ReturnType<Fn>>> {
     // Check if mocks are enabled
-    const shouldUseMock =
-      typeof enabled === 'function' ? enabled() : enabled ?? isDemoModeActive();
+    const shouldUseMock
+      = typeof enabled === 'function' ? enabled() : enabled ?? isDemoModeActive();
 
     // If not using mocks, call original function
     if (!shouldUseMock) {
       if (debug) {
         console.log(`[Demo Mock] ⏭️  Skipping mock for ${originalFunction.name} (demo mode inactive)`);
       }
+
       return originalFunction.apply(this, args);
     }
 
     if (debug) {
-      console.log(`[Demo Mock] 🎭 Using mock for ${originalFunction.name}`, { args, mockSource });
+      console.log(`[Demo Mock] 🎭 Using mock for ${originalFunction.name}`, { args,
+        mockSource });
     }
 
     try {
@@ -143,6 +148,7 @@ export function withMockDemo<Fn extends (...args: any[]) => any>(
       // If mockSource is a string, resolve and load it
       if (typeof mockSource === 'string') {
         const mockPath = resolveMockPath(mockSource);
+
         if (!mockPath) {
           throw new Error(`Mock file not found: ${mockSource}`);
         }
@@ -175,6 +181,7 @@ export function withMockDemo<Fn extends (...args: any[]) => any>(
         `[Demo Mock] ❌ Error loading mock for ${originalFunction.name}, falling back to real API:`,
         error
       );
+
       // Fallback to real API on error
       return originalFunction.apply(this, args);
     }

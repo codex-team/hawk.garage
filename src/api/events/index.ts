@@ -35,17 +35,17 @@ export const getEvent = withMockDemo(
   'getEvent.mock',
   async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
     const project = await (await api.callOld(QUERY_EVENT, {
-    projectId,
-    eventId,
-    originalEventId,
-  })).project;
+      projectId,
+      eventId,
+      originalEventId,
+    })).project;
 
-  if (!project) {
-    return null;
-  }
+    if (!project) {
+      return null;
+    }
 
-  return project.event;
-});
+    return project.event;
+  });
 
 /**
  * Returns portion (list) of daily events with pointer to the first daily event of the next portion
@@ -65,30 +65,30 @@ export const fetchDailyEventsPortion = withMockDemo(
   filters: EventsFilters = {},
   search = '',
   release?: string
-): Promise<DailyEventsPortion> {
-  const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
-    projectId,
-    cursor: nextCursor,
-    sort,
-    filters,
-    search,
-    release,
-  }, undefined, {
+  ): Promise<DailyEventsPortion> {
+    const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
+      projectId,
+      cursor: nextCursor,
+      sort,
+      filters,
+      search,
+      release,
+    }, undefined, {
     /**
      * This request calls on the app start, so we don't want to break app if something goes wrong
      * With this flag, errors from the API won't be thrown, but returned in the response for further handling
      */
-    allowErrors: true,
-  });
+      allowErrors: true,
+    });
 
-  const project = response.data.project;
+    const project = response.data.project;
 
-  if (response.errors?.length) {
-    response.errors.forEach(e => console.error(e));
-  }
+    if (response.errors?.length) {
+      response.errors.forEach(e => console.error(e));
+    }
 
-  return project?.dailyEventsPortion ?? { nextCursor: null,
-    dailyEvents: [] };
+    return project?.dailyEventsPortion ?? { nextCursor: null,
+      dailyEvents: [] };
   },
   { debug: true }
 );
@@ -106,26 +106,26 @@ export const getRepetitionsPortion = withMockDemo(
   async function getRepetitionsPortion(
     projectId: string, originalEventId: string, limit: number, cursor?: string
   ): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[];
-  nextCursor?: string; }; }; }; }>> {
-  const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
-    limit,
-    projectId,
-    originalEventId,
-    cursor,
-  }, undefined, {
+    nextCursor?: string; }; }; }; }>> {
+    const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
+      limit,
+      projectId,
+      originalEventId,
+      cursor,
+    }, undefined, {
     /**
      * This request calls on the app start, so we don't want to break app if something goes wrong
      * With this flag, errors from the API won't be thrown, but returned in the response for further handling
      */
-    allowErrors: true,
+      allowErrors: true,
+    });
+
+    if (response.errors?.length) {
+      response.errors.forEach(e => console.error(e));
+    }
+
+    return response;
   });
-
-  if (response.errors?.length) {
-    response.errors.forEach(e => console.error(e));
-  }
-
-  return response;
-});
 
 /**
  * Mark event as visited for current user
@@ -137,10 +137,10 @@ export const visitEvent = withMockDemo(
   'visitEvent.mock',
   async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
     return (await api.callOld(MUTATION_VISIT_EVENT, {
-    projectId,
-    originalEventId,
-  })).visitEvent;
-});
+      projectId,
+      originalEventId,
+    })).visitEvent;
+  });
 
 /**
  * Set or unset mark to event
@@ -152,11 +152,11 @@ export const toggleEventMark = withMockDemo(
   'toggleEventMark.mock',
   async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
     return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
-    projectId,
-    eventId,
-    mark,
-  })).toggleEventMark;
-});
+      projectId,
+      eventId,
+      mark,
+    })).toggleEventMark;
+  });
 
 /**
  * Update assignee
@@ -201,13 +201,13 @@ export const fetchChartData = withMockDemo(
   async function fetchChartData(
     projectId: string,
     originalEventId: string,
-  days: number,
-  timezoneOffset: number
-): Promise<ChartLine[]> {
-  return (await api.callOld(QUERY_CHART_DATA, {
-    projectId,
-    originalEventId,
-    days,
-    timezoneOffset,
-  })).project.event.chartData;
-});
+    days: number,
+    timezoneOffset: number
+  ): Promise<ChartLine[]> {
+    return (await api.callOld(QUERY_CHART_DATA, {
+      projectId,
+      originalEventId,
+      days,
+      timezoneOffset,
+    })).project.event.chartData;
+  });

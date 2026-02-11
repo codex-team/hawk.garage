@@ -381,24 +381,32 @@ router.beforeEach(async (to, from, next) => {
 
     // Continue to the requested route with demo mode enabled
     next();
+
     return;
   }
 
   // Keep /demo prefix for navigation while demo mode is active
   if (store.state.demo?.isActive && !to.path.startsWith('/demo') && !authRoutes.test(to.fullPath)) {
     const demoPath = to.path === '/' ? '/demo' : `/demo${to.path}`;
-    next({ path: demoPath, query: to.query, hash: to.hash, replace: true });
+
+    next({ path: demoPath,
+      query: to.query,
+      hash: to.hash,
+      replace: true });
+
     return;
   }
 
   if (store.getters.isAuthenticated || store.state.demo?.isActive) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
+
       return;
     }
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
+
       return;
     }
   }

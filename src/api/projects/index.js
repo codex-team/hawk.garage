@@ -256,26 +256,26 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @param {string} endDate - end date in ISO format
  * @param {string} groupBy - grouping period (day, week, month)
  * @param {number} timezoneOffset - timezone offset in minutes
- * @returns {Promise<Object>} - chart data response
+ * @returns {Promise<object>} - chart data response
  */
 export const fetchChartData = withMockDemo(
   'fetchChartData.mock',
   async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
     const response = await api.call(QUERY_CHART_DATA, {
-    projectId,
-    startDate,
-    endDate,
-    groupBy,
-    timezoneOffset,
-  }, undefined, {
+      projectId,
+      startDate,
+      endDate,
+      groupBy,
+      timezoneOffset,
+    }, undefined, {
     /**
      * Allow errors to be returned in response for handling in store/component
      */
-    allowErrors: true,
-  });
+      allowErrors: true,
+    });
 
-  return response;
-});
+    return response;
+  });
 
 /**
  * Fetch project releases
@@ -288,12 +288,12 @@ export const fetchProjectReleases = withMockDemo(
   async function fetchProjectReleases(projectId) {
     const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
-  if (response.errors?.length) {
-    response.errors.forEach(console.error);
-  }
+    if (response.errors?.length) {
+      response.errors.forEach(console.error);
+    }
 
-  return response.data.project.releases;
-});
+    return response.data.project.releases;
+  });
 
 /**
  * Fetch specific release details
@@ -308,19 +308,19 @@ export const fetchProjectReleaseDetails = withMockDemo(
     const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
       release });
 
-  if (response.errors?.length) {
+    if (response.errors?.length) {
     /**
      * Throw error if release not found or other API errors
      */
-    const error = new Error(response.errors[0].message);
+      const error = new Error(response.errors[0].message);
 
-    error.name = response.errors[0].extensions?.code || 'API_ERROR';
+      error.name = response.errors[0].extensions?.code || 'API_ERROR';
 
-    throw error;
-  }
+      throw error;
+    }
 
-  return response.data.project.releaseDetails;
-});
+    return response.data.project.releaseDetails;
+  });
 
 /**
  * Send request for unsubscribing from notifications

@@ -12,7 +12,7 @@ export default function mockFetchDailyEventsPortion(): DailyEventsPortion {
 
   return {
     nextCursor: null,
-    dailyEvents: DEMO_EVENTS.map((event) => ({
+    dailyEvents: DEMO_EVENTS.map(event => ({
       id: `daily-${event.id}`,
       groupingTimestamp: dayTimestamp,
       count: event.totalCount,

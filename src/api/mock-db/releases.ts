@@ -13,7 +13,7 @@ import {
   TWO_DAYS_AGO,
   ONE_WEEK_AGO,
   TWO_WEEKS_AGO,
-  THREE_WEEKS_AGO,
+  THREE_WEEKS_AGO
 } from '@/utils/time';
 
 const DAY = MILLISECONDS_IN_DAY;

@@ -7,11 +7,12 @@
 import type { HawkEvent } from '@/types/events';
 import { DEMO_USER } from './users';
 import { DEMO_PROJECT_ID } from './workspaces';
-import { User } from '@/types/user';
+import type { User } from '@/types/user';
 import { MILLISECONDS_IN_DAY } from '@/utils/time';
 
 /**
  * Helper to create realistic error event
+ * @param config
  */
 function createDemoEvent(config: {
   id: string;
@@ -64,10 +65,14 @@ function createDemoEvent(config: {
           function: 'getUserProfile',
           arguments: ['userId'],
           sourceCode: [
-            { line: line - 2, content: 'export const getUserProfile = (userId) => {' },
-            { line: line - 1, content: '  const user = store.getters.user;' },
-            { line, content: '  return user.profile.settings;' },
-            { line: line + 1, content: '};' },
+            { line: line - 2,
+              content: 'export const getUserProfile = (userId) => {' },
+            { line: line - 1,
+              content: '  const user = store.getters.user;' },
+            { line,
+              content: '  return user.profile.settings;' },
+            { line: line + 1,
+              content: '};' },
           ],
         },
       ],
@@ -155,6 +160,7 @@ export const DEMO_EVENTS: HawkEvent[] = [
 
 /**
  * Get event by ID
+ * @param id
  */
 export function getDemoEventById(id: string): HawkEvent | undefined {
   return DEMO_EVENTS.find(event => event.id === id);

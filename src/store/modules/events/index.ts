@@ -608,11 +608,13 @@ const module: Module<EventsModuleState, RootState> = {
 
       const additions = Object.fromEntries(eventsList.map((event, idx) => {
         const key = getEventsListKey(projectId, event.id);
+
         if (!event.id) {
           console.error(`  ❌ [${idx}] Event missing id!`, event);
         } else {
           console.log(`  ✅ [${idx}] ${key} => event.id=${event.id}`);
         }
+
         return [key, event];
       }));
 

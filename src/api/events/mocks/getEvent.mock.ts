@@ -14,4 +14,3 @@ export default function mockGetEvent(): HawkEvent | null {
 
   return event ?? null;
 }
-
