@@ -44,9 +44,10 @@ export const i18n = createI18n({
     ru: ruMessages,
     en: enMessages,
   },
-  legacy: true,
+  legacy: false,
+  globalInjection: true,
 });
 
 export function setLanguage(lang) {
-  i18n.global.locale = lang;
+  i18n.global.locale.value = lang;
 }

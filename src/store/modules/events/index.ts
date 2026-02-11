@@ -271,6 +271,20 @@ const module: Module<EventsModuleState, RootState> = {
 
       const dailyEvents = dailyEventsPortion.dailyEvents;
 
+      // DEBUG: Check if dailyEvents exist and have event field
+      console.log('[🔍 FETCH_PROJECT_OVERVIEW] Received from API:', {
+        projectId,
+        dailyEventsCount: dailyEvents.length,
+      });
+
+      dailyEvents.forEach((de, i) => {
+        if (de.event?.id) {
+          console.log(`  ✅ [${i}] event.id = ${de.event.id}`);
+        } else {
+          console.error(`  ❌ [${i}] MISSING event.id in dailyEvent`, de);
+        }
+      });
+
       /**
        * Reset loadedEventsCount only when starting a new search
        * This ensures proper pagination during search
@@ -590,14 +604,26 @@ const module: Module<EventsModuleState, RootState> = {
       projectId: string;
       eventsList: HawkEvent[];
     }): void {
-      const additions = Object.fromEntries(eventsList.map((event) => {
-        return [getEventsListKey(projectId, event.id), event];
+      console.log(`[🔍 AddToEventsList] Adding ${eventsList.length} events for project ${projectId}`);
+
+      const additions = Object.fromEntries(eventsList.map((event, idx) => {
+        const key = getEventsListKey(projectId, event.id);
+
+        if (!event.id) {
+          console.error(`  ❌ [${idx}] Event missing id!`, event);
+        } else {
+          console.log(`  ✅ [${idx}] ${key} => event.id=${event.id}`);
+        }
+
+        return [key, event];
       }));
 
       state.events = {
         ...state.events,
         ...additions,
       };
+
+      console.log(`[✅ AddToEventsList] state.events now has ${Object.keys(state.events).length} keys`);
     },
 
     /**

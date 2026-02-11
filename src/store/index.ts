@@ -9,6 +9,7 @@ import type { EventsModuleState } from './modules/events/index';
 import events from './modules/events/index';
 import type { PlansModuleState } from './modules/plans/index';
 import plans from './modules/plans/index';
+import demo, { type DemoState } from './modules/demo';
 
 import createPersistedState from 'vuex-persistedstate';
 import type { User } from '../types/user';
@@ -43,6 +44,7 @@ export interface RootState {
   events: EventsModuleState;
   user: UserModuleState;
   plans: PlansModuleState;
+  demo: DemoState;
 }
 
 /**
@@ -65,6 +67,8 @@ export default createStore({
     events,
 
     plans,
+
+    demo,
   },
   plugins: [
     createPersistedState({

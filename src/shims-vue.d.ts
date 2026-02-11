@@ -7,3 +7,10 @@ declare module '*.vue' {
 
   export default value;
 }
+
+/**
+ * Extend ImportMeta for Vite's import.meta.glob feature
+ */
+interface ImportMeta {
+  glob: (pattern: string) => Record<string, () => Promise<unknown>>;
+}

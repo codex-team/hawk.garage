@@ -13,6 +13,8 @@
     "signupSuccessMessage": "Пароль отправлен на указанную почту",
     "inviteHelper": "Вы приглашены в воркспейс. Войдите или зарегистрируйтесь, чтобы продолжить.",
     "continueWithSso": "Войти через SSO",
+    "showDemo": "Показать демо",
+    "showDemo": "Показать демо",
     "ssoLogin": {
       "title": "Вход через SSO",
       "workspaceId": "ID воркспейса",
@@ -27,8 +29,9 @@
       "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету.",
       "SSO_REQUIRED": "Воркспейс \"{workspace}\" требует вход только через SSO. <a href=\"{link}\">Войти через SSO →</a>"
     }
-  },
-  "layout": {
+  },  "demo": {
+    "bannerText": "Демо режим — Все данные являются демонстрационными"
+  },  "layout": {
     "aside": {
       "emptyProjectsList": "У вас еще нет проектов.",
       "createFirstProjectLabel": "Добавьте первую интеграцию.",
