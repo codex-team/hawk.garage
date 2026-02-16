@@ -159,6 +159,10 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
         endpoint
         isEnabled
       }
+      webhook {
+        endpoint
+        isEnabled
+      }
     }
     threshold
     thresholdPeriod
