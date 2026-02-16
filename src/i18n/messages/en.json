@@ -186,6 +186,8 @@
         "slackDescription": "Alerts through the Webhook App",
         "loop": "Loop",
         "loopDescription": "Alerts through the Loop Webhook",
+        "webhook": "Webhook",
+        "webhookDescription": "Send POST request with event data to your URL",
         "telegram": "Telegram",
         "telegramDescription": "Alerts through the {telegramLink}",
         "receiveNewLabel": "Only new events",
