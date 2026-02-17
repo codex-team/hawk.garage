@@ -49,10 +49,23 @@
             </template>
           </template>
         </div>
+        <template v-if="channelName === 'webhook'">
+          <div class="settings-field__endpoint">
+            <input
+              v-model="webhookEndpoint"
+              type="url"
+              class="settings-field__endpoint-input"
+              placeholder="https://example.com/hawk-webhook"
+              :disabled="!getChannelState(channelName)"
+              @blur="saveWebhookEndpoint"
+              @keydown.enter="saveWebhookEndpoint"
+            >
+          </div>
+        </template>
         <div class="settings-field__input">
           <UiCheckbox
             :model-value="getChannelState(channelName)"
-            :disabled="isChannelUnavailable(channelName) || !user.email"
+            :disabled="isChannelUnavailable(channelName) || (channelName === 'email' && !user.email)"
             @update:model-value="channelChanged(channelName, $event)"
           />
         </div>
@@ -122,7 +135,12 @@ export default defineComponent({
       /**
        * Set of available channel names
        */
-      channelsAvailable: ['email', 'webPush', 'desktopPush'] as Array<keyof UserNotificationsChannels>,
+      channelsAvailable: ['email', 'webhook', 'webPush', 'desktopPush'] as Array<keyof UserNotificationsChannels>,
+
+      /**
+       * Webhook endpoint URL input model
+       */
+      webhookEndpoint: '',
 
       /**
        * Set of available receive types
@@ -139,6 +157,13 @@ export default defineComponent({
      * Load 'notifications' field on user
      */
     await this.$store.dispatch(FETCH_NOTIFICATIONS_SETTINGS);
+
+    /**
+     * Pre-fill webhook endpoint from saved settings
+     */
+    if (this.user.notifications?.channels?.webhook?.endpoint) {
+      this.webhookEndpoint = this.user.notifications.channels.webhook.endpoint;
+    }
   },
   methods: {
     /**
@@ -199,12 +224,41 @@ export default defineComponent({
       switch (channelName) {
         case 'email':
           return this.user.email;
+        case 'webhook':
+          return this.webhookEndpoint;
         case 'webPush':
         case 'desktopPush':
           return '';
       }
 
       return '';
+    },
+
+    /**
+     * Save webhook endpoint URL when input loses focus or Enter is pressed
+     */
+    async saveWebhookEndpoint(): Promise<void> {
+      if (!this.getChannelState('webhook')) {
+        return;
+      }
+
+      try {
+        await this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
+          webhook: {
+            endpoint: this.webhookEndpoint,
+            isEnabled: true,
+          } as NotificationsChannelSettings,
+        } as UserNotificationsChannels);
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error));
+
+        this.$sendToHawk(err);
+
+        notifier.show({
+          message: err.message,
+          style: 'error',
+        });
+      }
     },
 
     /**
@@ -234,7 +288,7 @@ export default defineComponent({
      * @param channelName - channel name to check
      */
     isChannelUnavailable(channelName: string): boolean {
-      return channelName !== 'email';
+      return channelName !== 'email' && channelName !== 'webhook';
     },
   },
 });
@@ -294,6 +348,36 @@ export default defineComponent({
     &__email {
       font-weight: 500;
       font-style: italic;
+    }
+
+    &__endpoint {
+      flex-shrink: 0;
+      margin-right: 15px;
+    }
+
+    &__endpoint-input {
+      width: 280px;
+      padding: 6px 10px;
+      color: var(--color-text-main);
+      font-size: 13px;
+      background: var(--color-bg-main);
+      border: 1px solid var(--color-delimiter-line);
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 150ms ease;
+
+      &:focus {
+        border-color: var(--color-indicator-medium);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &::placeholder {
+        color: var(--color-text-second);
+      }
     }
 
     &__warning {

@@ -339,6 +339,7 @@
       "soon": "Скоро",
       "channels": {
         "email": "Email",
+        "webhook": "Webhook",
         "webPush": "Браузерные пуши",
         "desktopPush": "Пуши в приложении"
       },
@@ -346,6 +347,7 @@
         "email": "Уведомления на",
         "emailEmptyPlaceholder": "вашу почту",
         "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
+        "webhook": "POST-запрос с данными события на ваш URL",
         "webPush": "Уведомления даже при закрытой вкладке",
         "desktopPush": "Системные уведомления через Hawk Desktop"
       },

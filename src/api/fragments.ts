@@ -187,6 +187,10 @@ export const USER_NOTIFICATIONS_FRAGMENT = `
         isEnabled
         endpoint
       }
+      webhook {
+        isEnabled
+        endpoint
+      }
       webPush {
         isEnabled
         endpoint

@@ -339,6 +339,7 @@
       "soon": "Soon",
       "channels": {
         "email": "Email",
+        "webhook": "Webhook",
         "webPush": "Web Push",
         "desktopPush": "Desktop Push"
       },
@@ -346,6 +347,7 @@
         "email": "Notifications on",
         "emailEmptyPlaceholder": "your email",
         "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
+        "webhook": "POST request with event data to your URL",
         "webPush": "Alerts even with closed tab",
         "desktopPush": "Native notifies through the Hawk Desktop"
       },
