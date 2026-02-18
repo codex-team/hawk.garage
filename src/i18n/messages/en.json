@@ -678,33 +678,33 @@
       "monthsAgo": "a month ago | {numberOfMonths} months ago",
       "yearsAgo": "a year ago | {numberOfYears} years ago"
     },
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "notifications": {
+      "channels": {
+        "email": "Email",
+        "slack": "Slack",
+        "loop": "Loop",
+        "telegram": "Telegram",
+        "webhook": "Webhook",
+        "webPush": "Web Push",
+        "desktopPush": "Desktop Push"
+      },
+      "channelDescriptions": {
+        "email": "Notifications on",
+        "emailDescription": "Max frequency is 1 alert in 10 min",
+        "emailEmptyPlaceholder": "your email",
+        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
+        "slack": "Alerts through the Webhook App",
+        "loop": "Alerts through the Loop Webhook",
+        "telegram": "Alerts through the {telegramLink}",
+        "webhook": "Receive event data via HTTP POST to your endpoint",
+        "webPush": "Alerts even with closed tab",
+        "desktopPush": "Native notifies through the Hawk Desktop"
+      }
+    }
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it.",
     "You need to refresh your tokens": "Your session has expired. Please log in again."
-  },
-  "shared": {
-    "channels": {
-      "email": "Email",
-      "slack": "Slack",
-      "loop": "Loop",
-      "telegram": "Telegram",
-      "webhook": "Webhook",
-      "webPush": "Web Push",
-      "desktopPush": "Desktop Push"
-    },
-    "channelDescriptions": {
-      "email": "Notifications on",
-      "emailDescription": "Max frequency is 1 alert in 10 min",
-      "emailEmptyPlaceholder": "your email",
-      "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
-      "slack": "Alerts through the Webhook App",
-      "loop": "Alerts through the Loop Webhook",
-      "telegram": "Alerts through the {telegramLink}",
-      "webhook": "Receive event data via HTTP POST to your endpoint",
-      "webPush": "Alerts even with closed tab",
-      "desktopPush": "Native notifies through the Hawk Desktop"
-    }
   }
 }

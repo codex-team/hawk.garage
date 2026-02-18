@@ -13,7 +13,7 @@
         class="settings-field"
       >
         <div class="settings-field__name">
-          {{ $t('shared.channels.' + channelName) }}
+          {{ $t('common.notifications.channels.' + channelName) }}
 
           <span
             v-if="isChannelUnavailable(channelName)"
@@ -23,7 +23,7 @@
           </span>
         </div>
         <div class="settings-field__description">
-          {{ $t('shared.channelDescriptions.' + channelName) }}
+          {{ $t('common.notifications.channelDescriptions.' + channelName) }}
 
           <template v-if="channelName === 'email'">
             <span
@@ -33,7 +33,7 @@
               {{ user.email }}
             </span>
             <template v-else>
-              {{ $t('shared.channelDescriptions.emailEmptyPlaceholder') }}
+              {{ $t('common.notifications.channelDescriptions.emailEmptyPlaceholder') }}
 
               <div class="settings-field__warning">
                 <Icon
@@ -41,7 +41,7 @@
                 />
                 <!-- eslint-disable vue/no-v-html -->
                 <span
-                  v-html="$t('shared.channelDescriptions.emailEmptyWarning', {
+                  v-html="$t('common.notifications.channelDescriptions.emailEmptyWarning', {
                     accountUrl: '/account/general'
                   })"
                 />
@@ -59,6 +59,7 @@
                 v-model="webhookEndpoint"
                 placeholder="https://example.com/hawk-webhook"
                 :disabled="!getChannelState(channelName)"
+                :is-invalid="webhookEndpoint.length > 0 && !isWebhookEndpointValid"
               />
             </div>
           </template>
@@ -155,6 +156,11 @@ export default defineComponent({
       ],
     };
   },
+  computed: {
+    isWebhookEndpointValid(): boolean {
+      return /^https?:\/\/.+/.test(this.webhookEndpoint);
+    },
+  },
   async created(): Promise<void> {
     /**
      * Load 'notifications' field on user
@@ -176,6 +182,15 @@ export default defineComponent({
      * @param value - new value
      */
     async channelChanged(channelName: string, value: boolean): Promise<void> {
+      if (channelName === 'webhook' && value && !this.isWebhookEndpointValid) {
+        notifier.show({
+          message: 'Webhook URL must start with http:// or https://',
+          style: 'error',
+        });
+
+        return;
+      }
+
       try {
         await this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
           [channelName]: {
@@ -242,6 +257,15 @@ export default defineComponent({
      */
     async saveWebhookEndpoint(): Promise<void> {
       if (!this.getChannelState('webhook')) {
+        return;
+      }
+
+      if (!this.isWebhookEndpointValid) {
+        notifier.show({
+          message: 'Webhook URL must start with http:// or https://',
+          style: 'error',
+        });
+
         return;
       }
 
