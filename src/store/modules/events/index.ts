@@ -600,7 +600,6 @@ const module: Module<EventsModuleState, RootState> = {
         ...state.events,
         ...additions,
       };
-
     },
 
     /**

@@ -49,5 +49,5 @@ export const i18n = createI18n({
 });
 
 export function setLanguage(lang) {
-  i18n.global.locale.value = lang;
+  i18n.global.locale = lang;
 }
