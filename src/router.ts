@@ -1,6 +1,7 @@
 import { defineComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
+import { isEnabled } from './composables/useDemo';
 
 import AppShell from './components/AppShell.vue';
 import invitesHandler from './invitesHandler';
@@ -363,14 +364,25 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
+  const isDemoQuery = to.query.demo === '1';
 
-  if (store.getters.isAuthenticated) {
+  if (isDemoQuery) {
+    next();
+
+    return;
+  }
+
+  if (store.getters.isAuthenticated || store.state.demo?.isActive || isEnabled.value) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
+
+      return;
     }
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
+
+      return;
     }
   }
 

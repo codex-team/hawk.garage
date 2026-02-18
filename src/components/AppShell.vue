@@ -1,42 +1,56 @@
 <template>
   <div class="app-shell">
-    <aside class="aside">
-      <Sidebar
-        :is-loading="initialDataLoading"
+    <div
+      v-if="isDemoMode"
+      class="app-shell__demo-banner"
+    >
+      <span class="app-shell__demo-banner-text">{{ $t('demo.bannerText') }}</span>
+      <UiButton
+        class="app-shell__demo-banner-button"
+        :content="$t('demo.disableButton')"
+        hollow
+        @click="disableDemoMode"
       />
-      <div class="aside__right-column">
-        <WorkspaceInfo
-          v-if="currentWorkspace"
-          class="aside__workspace-info"
-          :workspace="currentWorkspace"
+    </div>
+    <div class="app-shell__body">
+      <aside class="aside">
+        <Sidebar
+          :is-loading="initialDataLoading"
         />
-        <SearchField
-          v-model="searchQuery"
-          class="aside__search-field"
-          :placeholder="$t('forms.searchField')"
-        />
-        <div
-          v-if="projects.length"
-          class="aside__projects-list"
-        >
-          <ProjectsMenuItem
-            v-for="project in projects"
-            :key="project.id"
-            :search-query="searchQuery"
-            :project-id="project.id"
-            @click="onProjectMenuItemClick(project)"
+        <div class="aside__right-column">
+          <WorkspaceInfo
+            v-if="currentWorkspace"
+            class="aside__workspace-info"
+            :workspace="currentWorkspace"
           />
+          <SearchField
+            v-model="searchQuery"
+            class="aside__search-field"
+            :placeholder="$t('forms.searchField')"
+          />
+          <div
+            v-if="projects.length"
+            class="aside__projects-list"
+          >
+            <ProjectsMenuItem
+              v-for="project in projects"
+              :key="project.id"
+              :search-query="searchQuery"
+              :project-id="project.id"
+              @click="onProjectMenuItemClick(project)"
+            />
+          </div>
+          <EmptyProjectsList
+            v-else-if="currentWorkspace"
+            :workspace="currentWorkspace"
+          />
+          <ProjectsMenuSkeleton v-else-if="initialDataLoading" />
         </div>
-        <EmptyProjectsList
-          v-else-if="currentWorkspace"
-          :workspace="currentWorkspace"
-        />
-        <ProjectsMenuSkeleton v-else-if="initialDataLoading" />
+      </aside>
+      <div class="app-shell__content">
+        <ProjectPlaceholder v-if="!$route.params.projectId" />
+        <router-view :key="$route.params.projectId" />
       </div>
-    </aside>
-    <div class="app-shell__content">
-      <ProjectPlaceholder v-if="!$route.params.projectId" />
-      <router-view :key="$route.params.projectId" />
     </div>
     <component
       :is="modalComponent"
@@ -49,6 +63,7 @@
 
 <script>
 import { defineComponent, markRaw } from 'vue';
+import { isEnabled, useDemo } from '@/composables/useDemo';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
@@ -63,6 +78,7 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDial
 import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
 import ProjectsMenuSkeleton from './aside/ProjectsMenuSkeleton';
+import UiButton from './utils/UiButton.vue';
 
 export default defineComponent({
   name: 'AppShell',
@@ -74,6 +90,7 @@ export default defineComponent({
     ProjectPlaceholder,
     EmptyProjectsList,
     ProjectsMenuSkeleton,
+    UiButton,
   },
   props: {
     /**
@@ -83,6 +100,11 @@ export default defineComponent({
       type: String,
       default: '',
     },
+  },
+  setup() {
+    useDemo();
+
+    return {};
   },
   data() {
     return {
@@ -101,6 +123,9 @@ export default defineComponent({
     };
   },
   computed: {
+    isDemoMode() {
+      return isEnabled.value;
+    },
     /**
      * Current opened modal window
      */
@@ -274,6 +299,11 @@ export default defineComponent({
     }
   },
   methods: {
+    disableDemoMode() {
+      const { disableDemo } = useDemo();
+
+      disableDemo();
+    },
     onModalClose() {
       this.$store.dispatch(RESET_MODAL_DIALOG);
     },
@@ -323,7 +353,32 @@ export default defineComponent({
 
   .app-shell {
     display: flex;
+    flex-direction: column;
     min-height: 100%;
+
+    &__demo-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      padding: 5px 20px;
+      color: #fff;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+      background: linear-gradient(90deg, #d916ee 0%, #090054 40%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    &__demo-banner-text {
+      font-weight: 500;
+    }
+
+    &__body {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
 
     &__content {
       display: flex;

@@ -13,6 +13,7 @@
     "signupSuccessMessage": "The password is sent to your email",
     "inviteHelper": "You are invited to join a workspace. Please login or sign up to continue.",
     "continueWithSso": "Continue with SSO",
+    "showDemo": "Show Demo",
     "ssoLogin": {
       "title": "Single Sign-On",
       "workspaceId": "Workspace ID",
@@ -27,6 +28,10 @@
       "Network Error": "Server is not available. Check your internet connection.",
       "SSO_REQUIRED": "Workspace \"{workspace}\" requires SSO login. <a href=\"{link}\">Sign in with SSO →</a>"
     }
+  },
+  "demo": {
+    "bannerText": "Demo Mode — All data is mocked for demonstration purposes",
+    "disableButton": "Disable Demo"
   },
   "layout": {
     "aside": {

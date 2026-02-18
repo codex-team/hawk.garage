@@ -24,6 +24,7 @@ import type {
   WorkspaceSsoConfigInput
 } from '@/types/workspaces';
 import type { APIResponse, APIResponseData } from '@/types/api';
+import { withMockDemo } from '@/utils/withMockDemo';
 
 interface CreateWorkspaceInput {
   /**
@@ -60,17 +61,20 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * Returns all user's workspaces and project.
  * @returns
  */
-export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
-  return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
-    initial: true,
+export const getAllWorkspacesWithProjects = withMockDemo(
+  async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
+    return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
+      initial: true,
 
-    /**
-     * This request calls on the app start, so we don't want to break app if something goes wrong
-     * With this flag, errors from the API won't be thrown, but returned in the response for further handling
-     */
-    allowErrors: true,
-  });
-}
+      /**
+       * This request calls on the app start, so we don't want to break app if something goes wrong
+       * With this flag, errors from the API won't be thrown, but returned in the response for further handling
+       */
+      allowErrors: true,
+    });
+  },
+  '/src/api/workspaces/mocks/getAllWorkspacesWithProjects.mock.ts'
+);
 
 /**
  * Invites user to workspace by email

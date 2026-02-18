@@ -13,6 +13,7 @@
 import * as api from './api/';
 import { setLanguage } from './i18n';
 import { defineComponent } from 'vue';
+import { isEnabled, useDemo } from './composables/useDemo';
 import FeedbackButton from './components/utils/FeedbackButton.vue';
 import notifier from 'codex-notifier';
 
@@ -20,6 +21,11 @@ export default defineComponent({
   name: 'App',
   components: {
     FeedbackButton,
+  },
+  setup() {
+    useDemo();
+
+    return {};
   },
   computed: {
     /**
@@ -40,7 +46,7 @@ export default defineComponent({
     this.$store.watch(
       state => state.user.accessToken,
       (accessToken) => {
-        if (!accessToken) {
+        if (!accessToken && !isEnabled.value) {
           this.$router.push('/login');
         }
         api.setAuthToken(accessToken);

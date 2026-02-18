@@ -21,6 +21,14 @@
             {{ $t('authPages.continueWithSso') }}
           </router-link>
         </div>
+        <div class="auth-page__demo-section">
+          <router-link
+            :to="{ path: '/', query: { demo: '1' } }"
+            class="auth-page__demo-button"
+          >
+            {{ $t('authPages.showDemo') }}
+          </router-link>
+        </div>
       </template>
     </FormComponent>
   </div>
@@ -28,7 +36,7 @@
 
 <script>
 import FormComponent from './Form';
-import { LOGIN, SET_TOKENS } from '../../store/modules/user/actionTypes';
+import { LOGIN } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
 import { getCookie, removeCookie } from '../../utils';
@@ -206,6 +214,30 @@ export default {
 
     &:hover {
       color: var(--color-text-main);
+    }
+  }
+
+  &__demo-section {
+    margin-top: 15px;
+    text-align: center;
+  }
+
+  &__demo-button {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--color-bg-main);
+    color: var(--color-text-second);
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--color-bg-main);
+      color: var(--color-text-main);
+      border-color: var(--color-border-main);
     }
   }
 }
