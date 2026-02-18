@@ -23,7 +23,7 @@
         </div>
         <div class="auth-page__demo-section">
           <router-link
-            to="/demo"
+            :to="{ path: '/', query: { demo: '1' } }"
             class="auth-page__demo-button"
           >
             {{ $t('authPages.showDemo') }}

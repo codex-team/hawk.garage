@@ -136,10 +136,10 @@ export async function removeProject(projectId) {
  * @returns {Promise<boolean>} - success status
  */
 export const updateLastProjectVisit = withMockDemo(
-  '@/api/projects/mocks/updateLastProjectVisit.mock',
   async function updateLastProjectVisit(projectId) {
     return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
-  }
+  },
+  '/src/api/projects/mocks/updateLastProjectVisit.mock.ts'
 );
 
 /**
@@ -259,7 +259,6 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @returns {Promise<object>} - chart data response
  */
 export const fetchChartData = withMockDemo(
-  '@/api/projects/mocks/fetchChartData.mock',
   async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
     const response = await api.call(QUERY_CHART_DATA, {
       projectId,
@@ -273,10 +272,9 @@ export const fetchChartData = withMockDemo(
      */
       allowErrors: true,
     });
-
     return response;
   },
-  { debug: true }
+  '/src/api/projects/mocks/fetchChartData.mock.ts'
 );
 
 /**
@@ -286,16 +284,16 @@ export const fetchChartData = withMockDemo(
  * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number, commitsCount: number, filesCount: number}>>} - list of releases with unique events count, commits count and files count
  */
 export const fetchProjectReleases = withMockDemo(
-  '@/api/projects/mocks/fetchProjectReleases.mock',
   async function fetchProjectReleases(projectId) {
     const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
     if (response.errors?.length) {
       response.errors.forEach(console.error);
     }
-
     return response.data.project.releases;
-  });
+  },
+  '/src/api/projects/mocks/fetchProjectReleases.mock.ts'
+);
 
 /**
  * Fetch specific release details
@@ -305,7 +303,6 @@ export const fetchProjectReleases = withMockDemo(
  * @returns {Promise<ReleaseDetails>}
  */
 export const fetchProjectReleaseDetails = withMockDemo(
-  '@/api/projects/mocks/fetchProjectReleaseDetails.mock',
   async function fetchProjectReleaseDetails(projectId, release) {
     const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
       release });
@@ -320,9 +317,10 @@ export const fetchProjectReleaseDetails = withMockDemo(
 
       throw error;
     }
-
     return response.data.project.releaseDetails;
-  });
+  },
+  '/src/api/projects/mocks/fetchProjectReleaseDetails.mock.ts'
+);
 
 /**
  * Send request for unsubscribing from notifications

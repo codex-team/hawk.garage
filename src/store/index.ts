@@ -75,6 +75,7 @@ export default createStore({
       paths: [
         'app',
         'user',
+        'demo',
       ],
     }),
   ],

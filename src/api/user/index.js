@@ -85,11 +85,10 @@ export async function refreshTokens(refreshToken) {
  * @returns {Promise<APIResponse<{ me: User }>>}
  */
 export const fetchCurrentUser = withMockDemo(
-  '@/api/user/mocks/fetchCurrentUser.mock',
   async function fetchCurrentUser() {
     return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
   },
-  { debug: true }
+  '/src/api/user/mocks/fetchCurrentUser.mock.ts'
 );
 
 /**

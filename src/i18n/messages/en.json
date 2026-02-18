@@ -30,7 +30,8 @@
     }
   },
   "demo": {
-    "bannerText": "Demo Mode — All data is mocked for demonstration purposes"
+    "bannerText": "Demo Mode — All data is mocked for demonstration purposes",
+    "disableButton": "Disable Demo"
   },
   "layout": {
     "aside": {

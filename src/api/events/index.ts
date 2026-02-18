@@ -32,7 +32,6 @@ import { withMockDemo } from '@/utils/withMockDemo';
  * @returns
  */
 export const getEvent = withMockDemo(
-  'getEvent.mock',
   async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
     const project = await (await api.callOld(QUERY_EVENT, {
       projectId,
@@ -43,9 +42,10 @@ export const getEvent = withMockDemo(
     if (!project) {
       return null;
     }
-
     return project.event;
-  });
+  },
+  '/src/api/events/mocks/getEvent.mock.ts'
+);
 
 /**
  * Returns portion (list) of daily events with pointer to the first daily event of the next portion
@@ -57,7 +57,6 @@ export const getEvent = withMockDemo(
  * @param release - release identifier to filter events
  */
 export const fetchDailyEventsPortion = withMockDemo(
-  '@/api/events/mocks/fetchDailyEventsPortion.mock',
   async function fetchDailyEventsPortion(
     projectId: string,
     nextCursor: DailyEventsCursor | null = null,
@@ -86,11 +85,10 @@ export const fetchDailyEventsPortion = withMockDemo(
     if (response.errors?.length) {
       response.errors.forEach(e => console.error(e));
     }
-
     return project?.dailyEventsPortion ?? { nextCursor: null,
       dailyEvents: [] };
   },
-  { debug: true }
+  '/src/api/events/mocks/fetchDailyEventsPortion.mock.ts'
 );
 
 /**
@@ -102,7 +100,6 @@ export const fetchDailyEventsPortion = withMockDemo(
  * @returns
  */
 export const getRepetitionsPortion = withMockDemo(
-  '@/api/events/mocks/getRepetitionsPortion.mock',
   async function getRepetitionsPortion(
     projectId: string, originalEventId: string, limit: number, cursor?: string
   ): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[];
@@ -123,9 +120,10 @@ export const getRepetitionsPortion = withMockDemo(
     if (response.errors?.length) {
       response.errors.forEach(e => console.error(e));
     }
-
     return response;
-  });
+  },
+  '/src/api/events/mocks/getRepetitionsPortion.mock.ts'
+);
 
 /**
  * Mark event as visited for current user
@@ -134,13 +132,14 @@ export const getRepetitionsPortion = withMockDemo(
  * @returns
  */
 export const visitEvent = withMockDemo(
-  'visitEvent.mock',
   async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
     return (await api.callOld(MUTATION_VISIT_EVENT, {
       projectId,
       originalEventId,
     })).visitEvent;
-  });
+  },
+  '/src/api/events/mocks/visitEvent.mock.ts'
+);
 
 /**
  * Set or unset mark to event
@@ -149,14 +148,15 @@ export const visitEvent = withMockDemo(
  * @param mark — mark to set
  */
 export const toggleEventMark = withMockDemo(
-  '@/api/events/mocks/toggleEventMark.mock',
   async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
     return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
       projectId,
       eventId,
       mark,
     })).toggleEventMark;
-  });
+  },
+  '/src/api/events/mocks/toggleEventMark.mock.ts'
+);
 
 /**
  * Update assignee
@@ -197,7 +197,6 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  * @param timezoneOffset - user's local timezone
  */
 export const fetchChartData = withMockDemo(
-  '@/api/events/mocks/fetchChartData.mock',
   async function fetchChartData(
     projectId: string,
     originalEventId: string,
@@ -210,4 +209,6 @@ export const fetchChartData = withMockDemo(
       days,
       timezoneOffset,
     })).project.event.chartData;
-  });
+  },
+  '/src/api/events/mocks/fetchChartData.mock.ts'
+);

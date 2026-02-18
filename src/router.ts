@@ -1,8 +1,7 @@
 import { defineComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
-import { SET_TOKENS } from './store/modules/user/actionTypes';
-import { enableDemo, isDemoActive } from './composables/useDemo';
+import { isEnabled } from './composables/useDemo';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
@@ -27,7 +26,6 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      alias: '/demo',
       name: 'home',
       component: AppShell,
       props: true,
@@ -365,40 +363,18 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
+  const isDemoQuery = to.query.demo === '1';
 
-  // Check for demo mode: exact /demo path, /demo/* paths, or ?demo=true parameter
-  const isDemoPath = to.path === '/demo' || to.path.startsWith('/demo/') || to.query.demo === 'true';
-
-  if (isDemoPath) {
-    // Enable demo mode and set fake tokens
-    await enableDemo();
-    await store.dispatch(SET_TOKENS, {
-      accessToken: 'demo-access-token',
-      refreshToken: 'demo-refresh-token',
-    });
-
-    // Continue to the requested route with demo mode enabled
+  if (isDemoQuery) {
     next();
 
     return;
   }
 
-  // Keep /demo prefix for navigation while demo mode is active
-  if (isDemoActive() && !to.path.startsWith('/demo') && !authRoutes.test(to.fullPath)) {
-    const demoPath = to.path === '/' ? '/demo' : `/demo${to.path}`;
-
-    next({ path: demoPath,
-      query: to.query,
-      hash: to.hash,
-      replace: true });
-
-    return;
-  }
-
-  if (store.getters.isAuthenticated || store.state.demo?.isActive) {
+  if (store.getters.isAuthenticated || store.state.demo?.isActive || isEnabled.value) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
 
