@@ -28,10 +28,10 @@ function setDemoState(enabled: boolean): void {
   isEnabled.value = enabled;
 
   if (enabled) {
-    store.dispatch('demo/enableDemo');
+    void store.dispatch('demo/enableDemo');
 
     if (!store.state.user.accessToken) {
-      store.dispatch(SET_TOKENS, {
+      void store.dispatch(SET_TOKENS, {
         accessToken: DEMO_ACCESS_TOKEN,
         refreshToken: DEMO_REFRESH_TOKEN,
       });
@@ -40,10 +40,10 @@ function setDemoState(enabled: boolean): void {
     return;
   }
 
-  store.dispatch('demo/disableDemo');
+  void store.dispatch('demo/disableDemo');
 
   if (store.state.user.accessToken === DEMO_ACCESS_TOKEN) {
-    store.dispatch(SET_TOKENS, {
+    void store.dispatch(SET_TOKENS, {
       accessToken: '',
       refreshToken: '',
     });
@@ -87,7 +87,7 @@ function initDemoWatcher(): void {
 
       delete nextQuery[DEMO_QUERY_KEY];
 
-      router.replace({ path: route.path,
+      void router.replace({ path: route.path,
         query: nextQuery,
         hash: route.hash });
     },
