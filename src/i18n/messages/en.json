@@ -180,14 +180,6 @@
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",
         "sectionCustomFilters": "Custom Filters",
-        "email": "Email",
-        "emailDescription": "Max frequency is 1 alert in 10 min",
-        "slack": "Slack",
-        "slackDescription": "Alerts through the Webhook App",
-        "loop": "Loop",
-        "loopDescription": "Alerts through the Loop Webhook",
-        "telegram": "Telegram",
-        "telegramDescription": "Alerts through the {telegramLink}",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Frequency based",
@@ -335,18 +327,6 @@
       "channelsHeading": "Channels",
       "actionTypesHeading": "Action types",
       "soon": "Soon",
-      "channels": {
-        "email": "Email",
-        "webPush": "Web Push",
-        "desktopPush": "Desktop Push"
-      },
-      "channelDescriptions": {
-        "email": "Notifications on",
-        "emailEmptyPlaceholder": "your email",
-        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
-        "webPush": "Alerts even with closed tab",
-        "desktopPush": "Native notifies through the Hawk Desktop"
-      },
       "actions": {
         "IssueAssigning": "Issue assigning",
         "WeeklyDigest": "Weekly digest",
@@ -698,7 +678,30 @@
       "monthsAgo": "a month ago | {numberOfMonths} months ago",
       "yearsAgo": "a year ago | {numberOfYears} years ago"
     },
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "notifications": {
+      "channels": {
+        "email": "Email",
+        "slack": "Slack",
+        "loop": "Loop",
+        "telegram": "Telegram",
+        "webhook": "Webhook",
+        "webPush": "Web Push",
+        "desktopPush": "Desktop Push"
+      },
+      "channelDescriptions": {
+        "email": "Notifications on",
+        "emailDescription": "Max frequency is 1 alert in 10 min",
+        "emailEmptyPlaceholder": "your email",
+        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
+        "slack": "Alerts through the Webhook App",
+        "loop": "Alerts through the Loop Webhook",
+        "telegram": "Alerts through the {telegramLink}",
+        "webhook": "Receive event data via HTTP POST to your endpoint",
+        "webPush": "Alerts even with closed tab",
+        "desktopPush": "Native notifies through the Hawk Desktop"
+      }
+    }
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it.",

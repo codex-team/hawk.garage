@@ -11,7 +11,7 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.telegram.endpoint"
-            :label="$t('projects.settings.notifications.telegram')"
+            :label="$t('common.notifications.channels.telegram')"
             :description="telegramDescription"
             :hidden="!form.channels.telegram.isEnabled"
             :is-invalid="!isChannelEndpointValid('telegram') && endpointShouldBeValidated.telegram"
@@ -24,8 +24,8 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.email.endpoint"
-            :label="$t('projects.settings.notifications.email')"
-            :description="$t('projects.settings.notifications.emailDescription')"
+            :label="$t('common.notifications.channels.email')"
+            :description="$t('common.notifications.channelDescriptions.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
             :is-invalid="!isChannelEndpointValid('email') && endpointShouldBeValidated.email"
             placeholder="alerts@yourteam.org"
@@ -37,8 +37,8 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.slack.endpoint"
-            :label="$t('projects.settings.notifications.slack')"
-            :description="$t('projects.settings.notifications.slackDescription')"
+            :label="$t('common.notifications.channels.slack')"
+            :description="$t('common.notifications.channelDescriptions.slack')"
             :hidden="!form.channels.slack.isEnabled"
             :is-invalid="!isChannelEndpointValid('slack') && endpointShouldBeValidated.slack"
             placeholder="Webhook App endpoint"
@@ -50,14 +50,27 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.loop.endpoint"
-            :label="$t('projects.settings.notifications.loop')"
-            :description="$t('projects.settings.notifications.loopDescription')"
+            :label="$t('common.notifications.channels.loop')"
+            :description="$t('common.notifications.channelDescriptions.loop')"
             :hidden="!form.channels.loop.isEnabled"
             :is-invalid="!isChannelEndpointValid('loop') && endpointShouldBeValidated.loop"
             placeholder="Webhook App endpoint"
           />
           <UiCheckbox
             v-model="form.channels.loop.isEnabled"
+          />
+        </section>
+        <section>
+          <FormTextFieldset
+            v-model="form.channels.webhook.endpoint"
+            :label="$t('common.notifications.channels.webhook')"
+            :description="$t('common.notifications.channelDescriptions.webhook')"
+            :hidden="!form.channels.webhook.isEnabled"
+            :is-invalid="!isChannelEndpointValid('webhook') && endpointShouldBeValidated.webhook"
+            placeholder="https://example.com/hawk-webhook"
+          />
+          <UiCheckbox
+            v-model="form.channels.webhook.isEnabled"
           />
         </section>
       </div>
@@ -212,6 +225,11 @@ export default defineComponent({
        * Flag that represents, if validation state of the email endpoint should be displayed in textfield state
        */
       email: boolean;
+
+      /**
+       * Flag that represents, if validation state of the webhook endpoint should be displayed in textfield state
+       */
+      webhook: boolean;
     };
   } {
     const selectedThreshold = '100';
@@ -241,6 +259,10 @@ export default defineComponent({
             isEnabled: false,
           },
           loop: {
+            endpoint: '',
+            isEnabled: false,
+          },
+          webhook: {
             endpoint: '',
             isEnabled: false,
           },
@@ -304,6 +326,7 @@ export default defineComponent({
         slack: false,
         loop: false,
         email: false,
+        webhook: false,
       },
     };
   },
@@ -311,7 +334,7 @@ export default defineComponent({
     telegramDescription(): string {
       const telegramLink = `<a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>`;
 
-      return this.$t('projects.settings.notifications.telegramDescription', {
+      return this.$t('common.notifications.channelDescriptions.telegram', {
         telegramLink,
       }) as string;
     },
@@ -442,6 +465,13 @@ export default defineComponent({
           isEnabled: false,
         };
       }
+
+      if (!this.form.channels.webhook) {
+        this.form.channels.webhook = {
+          endpoint: '',
+          isEnabled: false,
+        };
+      }
     }
   },
   methods: {
@@ -519,6 +549,7 @@ export default defineComponent({
       this.endpointShouldBeValidated.slack = this.form.channels.slack!.isEnabled;
       this.endpointShouldBeValidated.loop = this.form.channels.loop!.isEnabled;
       this.endpointShouldBeValidated.email = this.form.channels.email!.isEnabled;
+      this.endpointShouldBeValidated.webhook = this.form.channels.webhook!.isEnabled;
 
       const allChannelsValid = true;
 
@@ -561,6 +592,13 @@ export default defineComponent({
 
         case (channelName === 'telegram' && this.form.channels.telegram!.isEnabled):
           if (!/^https:\/\/notify\.bot\.codex\.so\/u\/[A-Za-z0-9]+$/.test(this.form.channels.telegram!.endpoint)) {
+            return false;
+          }
+
+          return true;
+
+        case (channelName === 'webhook' && this.form.channels.webhook?.isEnabled):
+          if (!/^https?:\/\/.+/.test(this.form.channels.webhook?.endpoint || '')) {
             return false;
           }
 
