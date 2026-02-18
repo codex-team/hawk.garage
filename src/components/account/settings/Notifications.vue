@@ -58,7 +58,6 @@
               <FormTextFieldset
                 v-model="webhookEndpoint"
                 placeholder="https://example.com/hawk-webhook"
-                :disabled="!getChannelState(channelName)"
                 :is-invalid="webhookEndpoint.length > 0 && !isWebhookEndpointValid"
               />
             </div>
