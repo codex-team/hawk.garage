@@ -656,10 +656,10 @@
   dependencies:
     error-stack-parser "^2.1.4"
 
-"@hawk.so/types@^0.5.8":
-  version "0.5.8"
-  resolved "https://registry.yarnpkg.com/@hawk.so/types/-/types-0.5.8.tgz#4278b489f77b5b0335a04ae8184f87c2112116d0"
-  integrity sha512-3LebU/fFWFCVBHcj8yAyZqjjam9vYo7diRi8BlMBXJ5yC1fE7M44+Zb+lzudHQnysj+ZcHZyBuA/dEpGhB7vxg==
+"@hawk.so/types@^0.5.9":
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/@hawk.so/types/-/types-0.5.9.tgz#817e8b26283d0367371125f055f2e37a274797bc"
+  integrity sha512-86aE0Bdzvy8C+Dqd1iZpnDho44zLGX/t92SGuAv2Q52gjSJ7SHQdpGDWtM91FXncfT5uzAizl9jYMuE6Qrtm0Q==
   dependencies:
     bson "^7.0.0"
 
