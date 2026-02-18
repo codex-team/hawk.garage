@@ -13,7 +13,7 @@
         class="settings-field"
       >
         <div class="settings-field__name">
-          {{ $t('settings.notifications.channels.' + channelName) }}
+          {{ $t('shared.channels.' + channelName) }}
 
           <span
             v-if="isChannelUnavailable(channelName)"
@@ -23,7 +23,7 @@
           </span>
         </div>
         <div class="settings-field__description">
-          {{ $t('settings.notifications.channelDescriptions.' + channelName) }}
+          {{ $t('shared.channelDescriptions.' + channelName) }}
 
           <template v-if="channelName === 'email'">
             <span
@@ -33,7 +33,7 @@
               {{ user.email }}
             </span>
             <template v-else>
-              {{ $t('settings.notifications.channelDescriptions.emailEmptyPlaceholder') }}
+              {{ $t('shared.channelDescriptions.emailEmptyPlaceholder') }}
 
               <div class="settings-field__warning">
                 <Icon
@@ -41,7 +41,7 @@
                 />
                 <!-- eslint-disable vue/no-v-html -->
                 <span
-                  v-html="$t('settings.notifications.channelDescriptions.emailEmptyWarning', {
+                  v-html="$t('shared.channelDescriptions.emailEmptyWarning', {
                     accountUrl: '/account/general'
                   })"
                 />
@@ -50,16 +50,16 @@
           </template>
 
           <template v-if="channelName === 'webhook'">
-            <div class="settings-field__endpoint">
-              <input
+            <div
+              class="settings-field__endpoint"
+              @focusout="saveWebhookEndpoint"
+              @keydown.enter="saveWebhookEndpoint"
+            >
+              <FormTextFieldset
                 v-model="webhookEndpoint"
-                type="url"
-                class="settings-field__endpoint-input"
                 placeholder="https://example.com/hawk-webhook"
                 :disabled="!getChannelState(channelName)"
-                @blur="saveWebhookEndpoint"
-                @keydown.enter="saveWebhookEndpoint"
-              >
+              />
             </div>
           </template>
         </div>
@@ -103,6 +103,7 @@
 import { defineComponent } from 'vue';
 import { User } from '../../../types/user';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
+import FormTextFieldset from './../../forms/TextFieldset.vue';
 import {
   UserNotificationType,
   UserNotificationsChannels,
@@ -120,6 +121,7 @@ import Icon from './../../utils/Icon.vue';
 export default defineComponent({
   components: {
     UiCheckbox,
+    FormTextFieldset,
     Icon,
   },
   props: {
@@ -353,30 +355,14 @@ export default defineComponent({
 
     &__endpoint {
       margin-top: 8px;
-    }
 
-    &__endpoint-input {
-      width: 280px;
-      padding: 6px 10px;
-      color: var(--color-text-main);
-      font-size: 13px;
-      background: var(--color-bg-main);
-      border: 1px solid var(--color-delimiter-line);
-      border-radius: 5px;
-      outline: none;
-      transition: border-color 150ms ease;
+      .input {
+        width: 280px;
 
-      &:focus {
-        border-color: var(--color-indicator-medium);
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      &::placeholder {
-        color: var(--color-text-second);
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
       }
     }
 

@@ -11,7 +11,7 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.telegram.endpoint"
-            :label="$t('projects.settings.notifications.telegram')"
+            :label="$t('shared.channels.telegram')"
             :description="telegramDescription"
             :hidden="!form.channels.telegram.isEnabled"
             :is-invalid="!isChannelEndpointValid('telegram') && endpointShouldBeValidated.telegram"
@@ -24,8 +24,8 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.email.endpoint"
-            :label="$t('projects.settings.notifications.email')"
-            :description="$t('projects.settings.notifications.emailDescription')"
+            :label="$t('shared.channels.email')"
+            :description="$t('shared.channelDescriptions.emailDescription')"
             :hidden="!form.channels.email.isEnabled"
             :is-invalid="!isChannelEndpointValid('email') && endpointShouldBeValidated.email"
             placeholder="alerts@yourteam.org"
@@ -37,8 +37,8 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.slack.endpoint"
-            :label="$t('projects.settings.notifications.slack')"
-            :description="$t('projects.settings.notifications.slackDescription')"
+            :label="$t('shared.channels.slack')"
+            :description="$t('shared.channelDescriptions.slack')"
             :hidden="!form.channels.slack.isEnabled"
             :is-invalid="!isChannelEndpointValid('slack') && endpointShouldBeValidated.slack"
             placeholder="Webhook App endpoint"
@@ -50,8 +50,8 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.loop.endpoint"
-            :label="$t('projects.settings.notifications.loop')"
-            :description="$t('projects.settings.notifications.loopDescription')"
+            :label="$t('shared.channels.loop')"
+            :description="$t('shared.channelDescriptions.loop')"
             :hidden="!form.channels.loop.isEnabled"
             :is-invalid="!isChannelEndpointValid('loop') && endpointShouldBeValidated.loop"
             placeholder="Webhook App endpoint"
@@ -63,8 +63,8 @@
         <section>
           <FormTextFieldset
             v-model="form.channels.webhook.endpoint"
-            :label="$t('projects.settings.notifications.webhook')"
-            :description="$t('projects.settings.notifications.webhookDescription')"
+            :label="$t('shared.channels.webhook')"
+            :description="$t('shared.channelDescriptions.webhook')"
             :hidden="!form.channels.webhook.isEnabled"
             :is-invalid="!isChannelEndpointValid('webhook') && endpointShouldBeValidated.webhook"
             placeholder="https://example.com/hawk-webhook"
@@ -334,7 +334,7 @@ export default defineComponent({
     telegramDescription(): string {
       const telegramLink = `<a href='https://t.me/hawkso_bot' target='_blank' class='n-rule__bot-link'>@hawkso_bot</a>`;
 
-      return this.$t('projects.settings.notifications.telegramDescription', {
+      return this.$t('shared.channelDescriptions.telegram', {
         telegramLink,
       }) as string;
     },
