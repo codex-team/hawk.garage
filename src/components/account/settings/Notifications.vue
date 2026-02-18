@@ -48,20 +48,21 @@
               </div>
             </template>
           </template>
+
+          <template v-if="channelName === 'webhook'">
+            <div class="settings-field__endpoint">
+              <input
+                v-model="webhookEndpoint"
+                type="url"
+                class="settings-field__endpoint-input"
+                placeholder="https://example.com/hawk-webhook"
+                :disabled="!getChannelState(channelName)"
+                @blur="saveWebhookEndpoint"
+                @keydown.enter="saveWebhookEndpoint"
+              >
+            </div>
+          </template>
         </div>
-        <template v-if="channelName === 'webhook'">
-          <div class="settings-field__endpoint">
-            <input
-              v-model="webhookEndpoint"
-              type="url"
-              class="settings-field__endpoint-input"
-              placeholder="https://example.com/hawk-webhook"
-              :disabled="!getChannelState(channelName)"
-              @blur="saveWebhookEndpoint"
-              @keydown.enter="saveWebhookEndpoint"
-            >
-          </div>
-        </template>
         <div class="settings-field__input">
           <UiCheckbox
             :model-value="getChannelState(channelName)"
@@ -351,8 +352,7 @@ export default defineComponent({
     }
 
     &__endpoint {
-      flex-shrink: 0;
-      margin-right: 15px;
+      margin-top: 8px;
     }
 
     &__endpoint-input {
