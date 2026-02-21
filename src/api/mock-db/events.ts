@@ -9,6 +9,8 @@ import { MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
 import { DEMO_PROJECT_ID } from './workspaces';
 import { DEMO_USER } from './users';
 
+const NOW_SECONDS = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
+
 /**
  * Helper to create realistic error event
  * @param config
@@ -124,6 +126,7 @@ export const DEMO_EVENTS: HawkEvent[] = [
     totalCount: 42,
     usersAffected: 8,
     isStarred: true,
+    timestamp: NOW_SECONDS - 7 * 60,
   }),
   createDemoEvent({
     id: '507f191e810c19729de860ea',
@@ -136,6 +139,7 @@ export const DEMO_EVENTS: HawkEvent[] = [
     file: 'src/api/config.ts',
     line: 15,
     isResolved: true,
+    timestamp: NOW_SECONDS - 49 * 60,
   }),
   createDemoEvent({
     id: '507f1f77bcf86cd799439012',
@@ -147,6 +151,7 @@ export const DEMO_EVENTS: HawkEvent[] = [
     usersAffected: 3,
     file: 'src/api/user/index.ts',
     line: 28,
+    timestamp: NOW_SECONDS - 3 * 60 * 60,
   }),
   createDemoEvent({
     id: '507f1f77bcf86cd799439014',
@@ -160,6 +165,135 @@ export const DEMO_EVENTS: HawkEvent[] = [
     line: 55,
     isIgnored: true,
     visitedBy: [DEMO_USER],
+    timestamp: NOW_SECONDS - 9 * 60 * 60,
+  }),
+  ...[
+    {
+      title: 'TypeError: Cannot destructure property \"profile\" of null',
+      type: 'TypeError',
+      file: 'src/components/account/ProfileCard.vue',
+      line: 73,
+      totalCount: 26,
+      usersAffected: 7,
+      isStarred: true,
+    },
+    {
+      title: 'Network Error: request timeout while loading dashboard',
+      type: 'NetworkError',
+      file: 'src/api/projects/index.js',
+      line: 114,
+      totalCount: 31,
+      usersAffected: 11,
+    },
+    {
+      title: 'RateLimitError: Too many requests to /events endpoint',
+      type: 'RateLimitError',
+      file: 'src/api/events/index.ts',
+      line: 87,
+      totalCount: 9,
+      usersAffected: 5,
+      isIgnored: true,
+    },
+    {
+      title: 'ReferenceError: config is not defined in init script',
+      type: 'ReferenceError',
+      file: 'src/main.ts',
+      line: 22,
+      totalCount: 14,
+      usersAffected: 4,
+    },
+    {
+      title: 'RangeError: Maximum call stack size exceeded in serializer',
+      type: 'RangeError',
+      file: 'src/utils/serializer.ts',
+      line: 129,
+      totalCount: 19,
+      usersAffected: 6,
+    },
+    {
+      title: 'TypeError: Failed to execute \"appendChild\" on \"Node\"',
+      type: 'TypeError',
+      file: 'src/components/modals/BaseModal.vue',
+      line: 101,
+      totalCount: 23,
+      usersAffected: 9,
+      isResolved: true,
+    },
+    {
+      title: 'RateLimitError: Ingestion quota exceeded for project token',
+      type: 'RateLimitError',
+      file: 'src/api/index.ts',
+      line: 438,
+      totalCount: 12,
+      usersAffected: 3,
+    },
+    {
+      title: 'SyntaxError: Unexpected end of JSON input',
+      type: 'SyntaxError',
+      file: 'src/store/modules/events/index.ts',
+      line: 241,
+      totalCount: 8,
+      usersAffected: 4,
+      isResolved: true,
+    },
+  ].flatMap((template, index) => {
+    const minuteOffsets = [
+      75,
+      115,
+      170,
+      260,
+      360,
+      510,
+      720,
+      960,
+      1410,
+      1890,
+      2520,
+      3360,
+      4290,
+      5370,
+      6960,
+      8400,
+      10080,
+      12180,
+      14640,
+      17220,
+      20160,
+      23040,
+      25920,
+      28800,
+      31680,
+      34560,
+      37440,
+      40320,
+      41760,
+    ];
+
+    return minuteOffsets
+      .filter((_, offsetIndex) => offsetIndex % 8 === index)
+      .map((offsetMinutes, offsetIndex) => {
+        const sequence = index * 10 + offsetIndex;
+        const idSuffix = String(1000 + sequence).padStart(4, '0');
+        const originalSuffix = String(2000 + sequence).padStart(4, '0');
+        const totalCount = template.totalCount + (offsetIndex % 3) * 4;
+        const usersAffected = Math.max(1, Math.min(totalCount, template.usersAffected + (offsetIndex % 2)));
+
+        return createDemoEvent({
+          id: `507f1f77bcf86cd79944${idSuffix}`,
+          originalEventId: `507f1f77bcf86cd79945${originalSuffix}`,
+          title: template.title,
+          type: template.type,
+          groupHash: `hash-507f1f77bcf86cd79944${idSuffix}`,
+          totalCount,
+          usersAffected,
+          file: template.file,
+          line: template.line,
+          isStarred: Boolean(template.isStarred),
+          isResolved: Boolean(template.isResolved),
+          isIgnored: Boolean(template.isIgnored),
+          timestamp: NOW_SECONDS - offsetMinutes * 60,
+        });
+      });
   }),
 ];
 
