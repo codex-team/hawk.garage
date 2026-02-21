@@ -43,10 +43,10 @@ export function withMockDemo<Fn extends (...args: any[]) => any>(
   originalFunction: Fn,
   mockSource: MockSource<Fn>
 ): Fn {
-  const { isEnabled } = useDemo();
-
   return async function (this: any, ...args: Parameters<Fn>): Promise<Awaited<ReturnType<Fn>>> {
-    if (!isEnabled.value) {
+    const { isDemoActive } = useDemo();
+
+    if (!isDemoActive()) {
       return originalFunction.apply(this, args);
     }
 

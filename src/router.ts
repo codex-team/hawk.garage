@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
-import { useDemo } from './composables/useDemo';
+import { SET_TOKENS } from './store/modules/user/actionTypes';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
@@ -363,20 +363,27 @@ const router = createRouter({
   ],
 });
 
-const { isEnabled } = useDemo();
-
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
   const isDemoQuery = to.query.demo === '1';
 
   if (isDemoQuery) {
+    void store.dispatch('demo/enableDemo');
+
+    if (!store.state.user.accessToken) {
+      void store.dispatch(SET_TOKENS, {
+        accessToken: 'demo-access-token',
+        refreshToken: 'demo-refresh-token',
+      });
+    }
+
     next();
 
     return;
   }
 
-  if (store.getters.isAuthenticated || store.state.demo?.isActive || isEnabled.value) {
+  if (store.getters.isAuthenticated || store.state.demo?.isActive) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
 

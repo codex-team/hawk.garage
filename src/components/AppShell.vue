@@ -124,7 +124,7 @@ export default defineComponent({
   },
   computed: {
     isDemoMode() {
-      return this.isDemoEnabled.value;
+      return this.isDemoEnabled;
     },
     /**
      * Current opened modal window

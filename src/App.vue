@@ -45,7 +45,7 @@ export default defineComponent({
     this.$store.watch(
       state => state.user.accessToken,
       (accessToken) => {
-        if (!accessToken && !this.isDemoEnabled.value) {
+        if (!accessToken && !this.isDemoEnabled) {
           this.$router.push('/login');
         }
         api.setAuthToken(accessToken);

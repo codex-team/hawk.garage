@@ -70,6 +70,7 @@ import SettingsWindow from '../../settings/Window.vue';
 import Icon from '@/components/utils/Icon.vue';
 import { RESET_STORE } from '@/store/methodsTypes';
 import { User } from '@/types/user';
+import { useDemo } from '@/composables/useDemo';
 
 export default defineComponent({
   name: 'AccountSettingsLayout',
@@ -89,7 +90,15 @@ export default defineComponent({
     /**
      * Logouts user
      */
-    logout() {
+    async logout() {
+      const { disableDemo, isDemoActive } = useDemo();
+
+      if (isDemoActive()) {
+        await disableDemo();
+
+        return;
+      }
+
       this.$store.dispatch(RESET_STORE);
     },
   },
