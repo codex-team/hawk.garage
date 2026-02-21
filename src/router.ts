@@ -1,7 +1,7 @@
 import { defineComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
-import { isEnabled } from './composables/useDemo';
+import { useDemo } from './composables/useDemo';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
@@ -362,6 +362,8 @@ const router = createRouter({
     },
   ],
 });
+
+const { isEnabled } = useDemo();
 
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;

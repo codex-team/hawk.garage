@@ -744,10 +744,10 @@
   dependencies:
     error-stack-parser "^2.1.4"
 
-"@hawk.so/types@^0.5.2":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@hawk.so/types/-/types-0.5.3.tgz#10c9632ab93c57243b2682e7c89ea3ac7e637f0b"
-  integrity sha512-nLgyDNaJxFqJY1QXk07RJZrkHfBIbTdSqp0n8gpDAvQ1CNuh2yTrpZfVrR7D+MmeRjGa2dLnuWDKOX/gJmr0eg==
+"@hawk.so/types@^0.5.9":
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/@hawk.so/types/-/types-0.5.9.tgz#817e8b26283d0367371125f055f2e37a274797bc"
+  integrity sha512-86aE0Bdzvy8C+Dqd1iZpnDho44zLGX/t92SGuAv2Q52gjSJ7SHQdpGDWtM91FXncfT5uzAizl9jYMuE6Qrtm0Q==
   dependencies:
     bson "^7.0.0"
 

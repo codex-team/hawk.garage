@@ -63,7 +63,7 @@
 
 <script>
 import { defineComponent, markRaw } from 'vue';
-import { isEnabled, useDemo } from '@/composables/useDemo';
+import { useDemo } from '@/composables/useDemo';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
@@ -102,9 +102,9 @@ export default defineComponent({
     },
   },
   setup() {
-    useDemo();
+    const { isEnabled: isDemoEnabled } = useDemo();
 
-    return {};
+    return { isDemoEnabled };
   },
   data() {
     return {
@@ -124,7 +124,7 @@ export default defineComponent({
   },
   computed: {
     isDemoMode() {
-      return isEnabled.value;
+      return this.isDemoEnabled.value;
     },
     /**
      * Current opened modal window

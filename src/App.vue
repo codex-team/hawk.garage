@@ -13,7 +13,7 @@
 import * as api from './api/';
 import { setLanguage } from './i18n';
 import { defineComponent } from 'vue';
-import { isEnabled, useDemo } from './composables/useDemo';
+import { useDemo } from './composables/useDemo';
 import FeedbackButton from './components/utils/FeedbackButton.vue';
 
 export default defineComponent({
@@ -22,9 +22,9 @@ export default defineComponent({
     FeedbackButton,
   },
   setup() {
-    useDemo();
+    const { isEnabled: isDemoEnabled } = useDemo();
 
-    return {};
+    return { isDemoEnabled };
   },
   computed: {
     /**
@@ -45,7 +45,7 @@ export default defineComponent({
     this.$store.watch(
       state => state.user.accessToken,
       (accessToken) => {
-        if (!accessToken && !isEnabled.value) {
+        if (!accessToken && !this.isDemoEnabled.value) {
           this.$router.push('/login');
         }
         api.setAuthToken(accessToken);
