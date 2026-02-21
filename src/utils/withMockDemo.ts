@@ -60,7 +60,7 @@ export function withMockDemo<Fn extends (...args: any[]) => any>(
 
         // Mock can be either a function (call it) or a value (use it directly)
         if (typeof mockExport === 'function') {
-          mockData = await mockExport();
+          mockData = await mockExport(...args);
         } else {
           mockData = mockExport;
         }
