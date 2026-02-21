@@ -30,8 +30,10 @@
     }
   },
   "demo": {
-    "bannerText": "Demo Mode — All data is mocked for demonstration purposes",
-    "disableButton": "Disable Demo"
+    "bannerText": "Hawk in demo mode",
+    "registerButton": "Sign up",
+    "contactButton": "Contact us",
+    "disableButton": "End Demo Mode"
   },
   "layout": {
     "aside": {

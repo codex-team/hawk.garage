@@ -1,17 +1,9 @@
 <template>
-  <div class="app-shell">
-    <div
-      v-if="isDemoMode"
-      class="app-shell__demo-banner"
-    >
-      <span class="app-shell__demo-banner-text">{{ $t('demo.bannerText') }}</span>
-      <UiButton
-        class="app-shell__demo-banner-button"
-        :content="$t('demo.disableButton')"
-        hollow
-        @click="disableDemoMode"
-      />
-    </div>
+  <div
+    class="app-shell"
+    :class="{ 'app-shell--demo-mode': isDemoMode }"
+  >
+    <AppDemoBanner v-if="isDemoMode" />
     <div class="app-shell__body">
       <aside class="aside">
         <Sidebar
@@ -63,7 +55,7 @@
 
 <script>
 import { defineComponent, markRaw } from 'vue';
-import { useDemo } from '@/composables/useDemo';
+import { useDemo } from '../composables/useDemo';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
@@ -78,11 +70,12 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDial
 import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
 import ProjectsMenuSkeleton from './aside/ProjectsMenuSkeleton';
-import UiButton from './utils/UiButton.vue';
+import AppDemoBanner from './AppDemoBanner.vue';
 
 export default defineComponent({
   name: 'AppShell',
   components: {
+    AppDemoBanner,
     Sidebar,
     ProjectsMenuItem,
     SearchField,
@@ -90,7 +83,6 @@ export default defineComponent({
     ProjectPlaceholder,
     EmptyProjectsList,
     ProjectsMenuSkeleton,
-    UiButton,
   },
   props: {
     /**
@@ -299,11 +291,6 @@ export default defineComponent({
     }
   },
   methods: {
-    disableDemoMode() {
-      const { disableDemo } = useDemo();
-
-      disableDemo();
-    },
     onModalClose() {
       this.$store.dispatch(RESET_MODAL_DIALOG);
     },
@@ -356,28 +343,30 @@ export default defineComponent({
     flex-direction: column;
     min-height: 100%;
 
-    &__demo-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      width: 100%;
-      padding: 5px 20px;
-      color: #fff;
-      font-size: 14px;
-      letter-spacing: 0.2px;
-      background: linear-gradient(90deg, #d916ee 0%, #090054 40%);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-    }
-
-    &__demo-banner-text {
-      font-weight: 500;
+    &--demo-mode {
+      background: linear-gradient(90deg, #6800D0 19.23%, #5D34F0 100%), #12141B;
     }
 
     &__body {
       display: flex;
       flex: 1;
       min-height: 0;
+    }
+
+    &--demo-mode &__body {
+      border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(164, 146, 255, 0.392);
+      }
     }
 
     &__content {

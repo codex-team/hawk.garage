@@ -32,6 +32,7 @@ export default defineComponent({
     color: var(--color-text-second);
     font-weight: bold;
     font-size: 14px;
+    white-space: nowrap;
 
     &__icon {
       display: block;

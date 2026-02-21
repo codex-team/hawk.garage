@@ -29,8 +29,10 @@
       "SSO_REQUIRED": "Воркспейс \"{workspace}\" требует вход только через SSO. <a href=\"{link}\">Войти через SSO →</a>"
     }
   },  "demo": {
-    "bannerText": "Демо режим — Все данные являются демонстрационными",
-    "disableButton": "Выключить демо"
+    "bannerText": "Хоук в режиме демо",
+    "registerButton": "Регистрация",
+    "contactButton": "Написать нам",
+    "disableButton": "Завершить демо-режим"
   },  "layout": {
     "aside": {
       "emptyProjectsList": "У вас еще нет проектов.",
