@@ -25,6 +25,8 @@ function createDemoEvent(config: {
   file?: string;
   line?: number;
   isStarred?: boolean;
+  isResolved?: boolean;
+  isIgnored?: boolean;
   visitedBy?: User[];
 }): HawkEvent {
   const {
@@ -39,6 +41,8 @@ function createDemoEvent(config: {
     file = 'src/store/user.ts',
     line = 42,
     isStarred = false,
+    isResolved = false,
+    isIgnored = false,
     visitedBy = [],
   } = config;
 
@@ -49,9 +53,9 @@ function createDemoEvent(config: {
     usersAffected,
     visitedBy,
     marks: {
-      resolved: false,
+      resolved: isResolved,
       starred: isStarred,
-      ignored: false,
+      ignored: isIgnored,
     },
     payload: {
       title,
@@ -131,6 +135,7 @@ export const DEMO_EVENTS: HawkEvent[] = [
     usersAffected: 5,
     file: 'src/api/config.ts',
     line: 15,
+    isResolved: true,
   }),
   createDemoEvent({
     id: '507f1f77bcf86cd799439012',
@@ -153,6 +158,7 @@ export const DEMO_EVENTS: HawkEvent[] = [
     usersAffected: 4,
     file: 'src/utils/parser.ts',
     line: 55,
+    isIgnored: true,
     visitedBy: [DEMO_USER],
   }),
 ];
