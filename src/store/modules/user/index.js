@@ -189,10 +189,6 @@ const actions = {
     const notifications = userWithNotifications?.notifications;
 
     if (!notifications) {
-      if (state.accessToken === 'demo-access-token') {
-        throw new Error('Функция не доступа в демо-режиме');
-      }
-
       throw new Error('Failed to load notification settings');
     }
 
