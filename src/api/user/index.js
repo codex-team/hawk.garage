@@ -12,7 +12,7 @@ import {
 } from './queries';
 import * as api from '../index.ts';
 import { validateUtmParams } from '../../components/utils/utm/utm.ts';
-import { withMockDemo } from '../../utils/withMockDemo.ts';
+import { withDemoMock } from '../../utils/withDemoMock.ts';
 
 /**
  * @typedef {object} TokensPair
@@ -84,7 +84,7 @@ export async function refreshTokens(refreshToken) {
  *
  * @returns {Promise<APIResponse<{ me: User }>>}
  */
-export const fetchCurrentUser = withMockDemo(
+export const fetchCurrentUser = withDemoMock(
   async function fetchCurrentUser() {
     return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
   },
@@ -131,7 +131,7 @@ async function fetchNotificationsSettingsRequest() {
   return response.data.me;
 }
 
-export const fetchNotificationsSettings = withMockDemo(
+export const fetchNotificationsSettings = withDemoMock(
   fetchNotificationsSettingsRequest,
   '/src/api/user/mocks/fetchNotificationsSettings.mock.ts'
 );
@@ -150,7 +150,7 @@ async function updateNotificationsChannelRequest(payload) {
   return response.data.changeUserNotificationsChannel;
 }
 
-export const updateNotificationsChannel = withMockDemo(
+export const updateNotificationsChannel = withDemoMock(
   updateNotificationsChannelRequest,
   '/src/api/user/mocks/updateNotificationsChannel.mock.ts'
 );
@@ -169,7 +169,7 @@ async function updateNotificationsReceiveTypeRequest(payload) {
   return response.data.changeUserNotificationsReceiveType;
 }
 
-export const updateNotificationsReceiveType = withMockDemo(
+export const updateNotificationsReceiveType = withDemoMock(
   updateNotificationsReceiveTypeRequest,
   '/src/api/user/mocks/updateNotificationsReceiveType.mock.ts'
 );

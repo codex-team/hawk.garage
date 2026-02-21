@@ -22,7 +22,7 @@ import {
 import type { User } from '@/types/user';
 import type { EventChartItem, ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
-import { withMockDemo } from '@/utils/withMockDemo';
+import { withDemoMock } from '@/utils/withDemoMock';
 
 /**
  * Get specific event
@@ -31,7 +31,7 @@ import { withMockDemo } from '@/utils/withMockDemo';
  * @param originalEventId - id of the original event
  * @returns
  */
-export const getEvent = withMockDemo(
+export const getEvent = withDemoMock(
   async function getEvent(projectId: string, eventId: string, originalEventId: string): Promise<HawkEvent | null> {
     const project = await (await api.callOld(QUERY_EVENT, {
       projectId,
@@ -56,7 +56,7 @@ export const getEvent = withMockDemo(
  * @param search - search string for daily events
  * @param release - release identifier to filter events
  */
-export const fetchDailyEventsPortion = withMockDemo(
+export const fetchDailyEventsPortion = withDemoMock(
   async function fetchDailyEventsPortion(
     projectId: string,
     nextCursor: DailyEventsCursor | null = null,
@@ -99,7 +99,7 @@ export const fetchDailyEventsPortion = withMockDemo(
  * @param cursor - the cursor to fetch the next page of repetitions
  * @returns
  */
-export const getRepetitionsPortion = withMockDemo(
+export const getRepetitionsPortion = withDemoMock(
   async function getRepetitionsPortion(
     projectId: string, originalEventId: string, limit: number, cursor?: string
   ): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[];
@@ -131,7 +131,7 @@ export const getRepetitionsPortion = withMockDemo(
  * @param originalEventId — original event id of the visited one
  * @returns
  */
-export const visitEvent = withMockDemo(
+export const visitEvent = withDemoMock(
   async function visitEvent(projectId: string, originalEventId: string): Promise<boolean> {
     return (await api.callOld(MUTATION_VISIT_EVENT, {
       projectId,
@@ -147,7 +147,7 @@ export const visitEvent = withMockDemo(
  * @param eventId — event Id
  * @param mark — mark to set
  */
-export const toggleEventMark = withMockDemo(
+export const toggleEventMark = withDemoMock(
   async function toggleEventMark(projectId: string, eventId: string, mark: EventMark): Promise<boolean> {
     return (await api.callOld(MUTATION_TOGGLE_EVENT_MARK, {
       projectId,
@@ -196,7 +196,7 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
  * @param days - how many days we need to fetch for displaying in chart
  * @param timezoneOffset - user's local timezone
  */
-export const fetchChartData = withMockDemo(
+export const fetchChartData = withDemoMock(
   async function fetchChartData(
     projectId: string,
     originalEventId: string,

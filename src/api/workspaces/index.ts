@@ -24,7 +24,7 @@ import type {
   WorkspaceSsoConfigInput
 } from '@/types/workspaces';
 import type { APIResponse, APIResponseData } from '@/types/api';
-import { withMockDemo } from '@/utils/withMockDemo';
+import { withDemoMock } from '@/utils/withDemoMock';
 
 interface CreateWorkspaceInput {
   /**
@@ -61,7 +61,7 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * Returns all user's workspaces and project.
  * @returns
  */
-export const getAllWorkspacesWithProjects = withMockDemo(
+export const getAllWorkspacesWithProjects = withDemoMock(
   async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
     return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
       initial: true,
@@ -121,7 +121,7 @@ async function getWorkspacesRequest(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
 }
 
-export const getWorkspaces = withMockDemo(
+export const getWorkspaces = withDemoMock(
   getWorkspacesRequest,
   '/src/api/workspaces/mocks/getWorkspaces.mock.ts'
 );
@@ -134,7 +134,7 @@ async function getBalanceRequest(ids: string[]): Promise<Workspace> {
   return (await api.callOld(QUERY_BALANCE, { ids })).workspaces;
 }
 
-export const getBalance = withMockDemo(
+export const getBalance = withDemoMock(
   getBalanceRequest,
   '/src/api/workspaces/mocks/getBalance.mock.ts'
 );
@@ -169,7 +169,7 @@ async function grantAdminPermissionsRequest(workspaceId: string, userId: string,
   })).grantAdmin;
 }
 
-export const grantAdminPermissions = withMockDemo(
+export const grantAdminPermissions = withDemoMock(
   grantAdminPermissionsRequest,
   '/src/api/workspaces/mocks/grantAdminPermissions.mock.ts'
 );
@@ -193,7 +193,7 @@ async function removeUserFromWorkspaceRequest(
   })).removeMemberFromWorkspace;
 }
 
-export const removeUserFromWorkspace = withMockDemo(
+export const removeUserFromWorkspace = withDemoMock(
   removeUserFromWorkspaceRequest,
   '/src/api/workspaces/mocks/removeUserFromWorkspace.mock.ts'
 );

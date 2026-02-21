@@ -3,7 +3,7 @@
  *
  * Usage:
  * ```ts
- * export const fetchUser = withMockDemo(
+ * export const fetchUser = withDemoMock(
  *   async function fetchUser(userId: string) {
  *     // Real API implementation
  *     return api.call(QUERY_USER, { userId });
@@ -39,7 +39,7 @@ async function loadMockModule(mockPath: string): Promise<any> {
  * @param originalFunction - The real API implementation
  * @param mockSource - Mock file path (string) or factory function
  */
-export function withMockDemo<Fn extends (...args: any[]) => any>(
+export function withDemoMock<Fn extends (...args: any[]) => any>(
   originalFunction: Fn,
   mockSource: MockSource<Fn>
 ): Fn {

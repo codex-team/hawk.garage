@@ -1,6 +1,6 @@
 import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
-import { withMockDemo } from '@/utils/withMockDemo';
+import { withDemoMock } from '@/utils/withDemoMock';
 import type { BusinessOperation } from '../../types/business-operation';
 import { BeforePaymentPayload } from '@/types/before-payment-payload';
 
@@ -12,7 +12,7 @@ async function getBusinessOperationsRequest(ids: string[]): Promise<BusinessOper
   return (await api.callOld(QUERY_BUSINESS_OPERATIONS, { ids })).businessOperations;
 }
 
-export const getBusinessOperations = withMockDemo(
+export const getBusinessOperations = withDemoMock(
   getBusinessOperationsRequest,
   '/src/api/billing/mocks/getBusinessOperations.mock.ts'
 );
