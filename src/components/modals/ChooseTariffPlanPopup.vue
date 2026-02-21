@@ -15,12 +15,7 @@
           v-html="chooseTariffPlanDescription"
         />
 
-        <div
-          :class="{
-            'choose-plan__plans': true,
-            'choose-plan__plans--horizontal': plans.length > 3,
-          }"
-        >
+        <div class="choose-plan__plans">
           <TariffPlan
             v-for="plan in plans"
             :key="plan.id"
@@ -30,7 +25,6 @@
             :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
             :is-current-plan="plan.id === workspace.plan.id"
-            :horizontal="plans.length > 3"
             @click="proceedWithPlan(plan.id)"
           />
 
@@ -263,7 +257,8 @@ export default defineComponent({
 
     &__plans {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 15px;
     }
 
     &__plans--horizontal {

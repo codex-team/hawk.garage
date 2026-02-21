@@ -477,6 +477,17 @@ export default defineComponent({
     }
 
     try {
+      // Check if demo mode is active
+      if (this.$store.state.demo?.isActive) {
+        notifier.show({
+          message: this.$t('demo.functionUnavailable') as string,
+          style: 'error',
+          time: 5000,
+        });
+        this.$emit('close');
+        return;
+      }
+
       // Fetch payment data when component is mounted via store
       this.paymentData = await this.$store.dispatch(COMPOSE_PAYMENT, {
         workspaceId: this.workspaceId,
@@ -505,6 +516,16 @@ export default defineComponent({
      * Open service payment
      */
     async onGoToServicePayment(): Promise<void> {
+      // Check if demo mode is active
+      if (this.$store.state.demo?.isActive) {
+        notifier.show({
+          message: this.$t('demo.functionUnavailable') as string,
+          style: 'error',
+          time: 5000,
+        });
+        return;
+      }
+
       if (this.isAcceptedAllAgreements && this.paymentData) {
         await this.processPayment();
       } else {

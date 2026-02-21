@@ -117,17 +117,27 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * @param ids – id of fetching workspaces
  * @returns
  */
-export async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
+async function getWorkspacesRequest(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
 }
+
+export const getWorkspaces = withMockDemo(
+  getWorkspacesRequest,
+  '/src/api/workspaces/mocks/getWorkspaces.mock.ts'
+);
 
 /**
  * Get workspace balance
  * @param ids – id of fetching workspaces balance
  */
-export async function getBalance(ids: string[]): Promise<Workspace> {
+async function getBalanceRequest(ids: string[]): Promise<Workspace> {
   return (await api.callOld(QUERY_BALANCE, { ids })).workspaces;
 }
+
+export const getBalance = withMockDemo(
+  getBalanceRequest,
+  '/src/api/workspaces/mocks/getBalance.mock.ts'
+);
 
 /**
  * Update workspace data
@@ -151,13 +161,18 @@ export async function updateWorkspace(id: string, name: string, description: str
  * @param state - if true, grant permissions, if false, withdraw them
  * @returns
  */
-export async function grantAdminPermissions(workspaceId: string, userId: string, state = true): Promise<boolean> {
+async function grantAdminPermissionsRequest(workspaceId: string, userId: string, state = true): Promise<boolean> {
   return (await api.callOld(MUTATION_GRANT_ADMIN_PERMISSIONS, {
     workspaceId,
     userId,
     state,
   })).grantAdmin;
 }
+
+export const grantAdminPermissions = withMockDemo(
+  grantAdminPermissionsRequest,
+  '/src/api/workspaces/mocks/grantAdminPermissions.mock.ts'
+);
 
 /**
  * Remove user from workspace
@@ -166,7 +181,7 @@ export async function grantAdminPermissions(workspaceId: string, userId: string,
  * @param userEmail - email of user to remove
  * @returns
  */
-export async function removeUserFromWorkspace(
+async function removeUserFromWorkspaceRequest(
   workspaceId: string,
   userId: string,
   userEmail: string
@@ -177,6 +192,11 @@ export async function removeUserFromWorkspace(
     userEmail,
   })).removeMemberFromWorkspace;
 }
+
+export const removeUserFromWorkspace = withMockDemo(
+  removeUserFromWorkspaceRequest,
+  '/src/api/workspaces/mocks/removeUserFromWorkspace.mock.ts'
+);
 
 /**
  * Changes workspace tariff plan

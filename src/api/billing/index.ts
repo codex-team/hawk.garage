@@ -1,5 +1,6 @@
 import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
+import { withMockDemo } from '@/utils/withMockDemo';
 import type { BusinessOperation } from '../../types/business-operation';
 import { BeforePaymentPayload } from '@/types/before-payment-payload';
 
@@ -7,9 +8,14 @@ import { BeforePaymentPayload } from '@/types/before-payment-payload';
  * Request business operations list for passed workspaces
  * @param ids - ids of workspaces
  */
-export async function getBusinessOperations(ids: string[]): Promise<BusinessOperation[]> {
+async function getBusinessOperationsRequest(ids: string[]): Promise<BusinessOperation[]> {
   return (await api.callOld(QUERY_BUSINESS_OPERATIONS, { ids })).businessOperations;
 }
+
+export const getBusinessOperations = withMockDemo(
+  getBusinessOperationsRequest,
+  '/src/api/billing/mocks/getBusinessOperations.mock.ts'
+);
 
 /**
  * Data for processing payment with saved card
