@@ -185,7 +185,16 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [FETCH_NOTIFICATIONS_SETTINGS]({ commit, state }) {
-    const { notifications } = await userApi.fetchNotificationsSettings();
+    const userWithNotifications = await userApi.fetchNotificationsSettings();
+    const notifications = userWithNotifications?.notifications;
+
+    if (!notifications) {
+      if (state.accessToken === 'demo-access-token') {
+        throw new Error('Функция не доступа в демо-режиме');
+      }
+
+      throw new Error('Failed to load notification settings');
+    }
 
     commit(mutationTypes.SET_CURRENT_USER, Object.assign({}, state.data, {
       notifications,

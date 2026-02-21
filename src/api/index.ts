@@ -8,6 +8,14 @@ import { useErrorTracker } from '@/hawk';
  * Hawk API endpoint URL
  */
 export const API_ENDPOINT: string = import.meta.env.VITE_API_ENDPOINT || '';
+const DEMO_ACCESS_TOKEN = 'demo-access-token';
+const DEMO_MODE_UNAVAILABLE_MESSAGE = 'Функция не доступа в демо-режиме';
+
+function isDemoModeEnabled(): boolean {
+  const authHeader = axios.defaults.headers.common.Authorization;
+
+  return typeof authHeader === 'string' && authHeader.includes(DEMO_ACCESS_TOKEN);
+}
 
 /**
  * A promise that will be resolved after the initialization request
@@ -234,7 +242,11 @@ export async function call<T = any>(
    */
   if (response.errors && response.errors.length && allowErrors === false) {
     response.errors.forEach((error) => {
-      const err = new Error(error.message) as Error & { extensions?: Record<string, unknown> };
+      const isUnauthenticated = error.extensions && error.extensions.code === 'UNAUTHENTICATED';
+      const message = isDemoModeEnabled() && isUnauthenticated
+        ? DEMO_MODE_UNAVAILABLE_MESSAGE
+        : error.message;
+      const err = new Error(message) as Error & { extensions?: Record<string, unknown> };
 
       /**
        * Preserve extensions from GraphQL error

@@ -44,6 +44,7 @@ export const i18n = createI18n({
     ru: ruMessages,
     en: enMessages,
   },
+  legacy: true,
 });
 
 export function setLanguage(lang) {

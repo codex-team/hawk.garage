@@ -138,7 +138,18 @@ export default defineComponent({
     /**
      * Load 'notifications' field on user
      */
-    await this.$store.dispatch(FETCH_NOTIFICATIONS_SETTINGS);
+    try {
+      await this.$store.dispatch(FETCH_NOTIFICATIONS_SETTINGS);
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+
+      this.$sendToHawk(err);
+
+      notifier.show({
+        message: err.message,
+        style: 'error',
+      });
+    }
   },
   methods: {
     /**
