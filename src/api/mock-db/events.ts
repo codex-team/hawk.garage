@@ -6,7 +6,7 @@
 
 import type { HawkEvent, User } from '@hawk.so/types';
 import { MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
-import { DEMO_PROJECT_ID } from './workspaces';
+import { DEMO_PROJECT_ID, DEMO_SECOND_PROJECT_ID } from './workspaces';
 import { DEMO_USER } from './users';
 
 const NOW_SECONDS = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
@@ -30,6 +30,7 @@ function createDemoEvent(config: {
   isResolved?: boolean;
   isIgnored?: boolean;
   visitedBy?: User[];
+  projectId?: string;
 }): HawkEvent {
   const {
     id,
@@ -46,6 +47,7 @@ function createDemoEvent(config: {
     isResolved = false,
     isIgnored = false,
     visitedBy = [],
+    projectId = DEMO_PROJECT_ID,
   } = config;
 
   return {
@@ -100,7 +102,7 @@ function createDemoEvent(config: {
         screen: '1920x1080',
         timezone: 'UTC+2',
         language: 'en-US',
-        url: `http://localhost:8080/project/${DEMO_PROJECT_ID}`,
+        url: `http://localhost:8080/project/${projectId}`,
       },
       addons: {} as any,
     },
@@ -295,7 +297,141 @@ export const DEMO_EVENTS: HawkEvent[] = [
         });
       });
   }),
+  ...[
+    {
+      title: 'TypeError: undefined is not an object (evaluating \"navigation.state.routes\")',
+      type: 'TypeError',
+      file: 'src/mobile/navigation/router.ts',
+      line: 143,
+      totalCount: 34,
+      usersAffected: 16,
+      isStarred: true,
+    },
+    {
+      title: 'Network Error: timeout reached while syncing offline queue',
+      type: 'NetworkError',
+      file: 'src/mobile/offline/syncQueue.ts',
+      line: 211,
+      totalCount: 56,
+      usersAffected: 27,
+    },
+    {
+      title: 'RateLimitError: mobile ingest throughput exceeded',
+      type: 'RateLimitError',
+      file: 'src/mobile/telemetry/send.ts',
+      line: 79,
+      totalCount: 22,
+      usersAffected: 8,
+      isIgnored: true,
+    },
+    {
+      title: 'ReferenceError: pushToken is not defined in notifications bootstrap',
+      type: 'ReferenceError',
+      file: 'src/mobile/push/bootstrap.ts',
+      line: 41,
+      totalCount: 18,
+      usersAffected: 10,
+      isResolved: true,
+    },
+    {
+      title: 'SyntaxError: JSON Parse error: Unexpected EOF',
+      type: 'SyntaxError',
+      file: 'src/mobile/storage/restoreState.ts',
+      line: 63,
+      totalCount: 27,
+      usersAffected: 12,
+    },
+    {
+      title: 'RangeError: Invalid time value while formatting release date',
+      type: 'RangeError',
+      file: 'src/mobile/utils/date.ts',
+      line: 58,
+      totalCount: 16,
+      usersAffected: 7,
+    },
+  ].flatMap((template, index) => {
+    const minuteOffsets = [
+      12,
+      19,
+      26,
+      34,
+      43,
+      57,
+      69,
+      85,
+      101,
+      130,
+      164,
+      211,
+      269,
+      345,
+      447,
+      576,
+      743,
+      957,
+      1242,
+      1610,
+      2098,
+      2730,
+      3520,
+      4560,
+      5840,
+      7440,
+      9360,
+      11760,
+      14640,
+      18000,
+      21600,
+      25200,
+      28800,
+      32400,
+      36000,
+      39600,
+      41700,
+    ];
+
+    return minuteOffsets
+      .filter((_, offsetIndex) => offsetIndex % 6 === index)
+      .map((offsetMinutes, offsetIndex) => {
+        const sequence = index * 20 + offsetIndex;
+        const idSuffix = String(3000 + sequence).padStart(4, '0');
+        const originalSuffix = String(4000 + sequence).padStart(4, '0');
+        const totalCount = template.totalCount + (offsetIndex % 4) * 5;
+        const usersAffected = Math.max(1, Math.min(totalCount, template.usersAffected + (offsetIndex % 3)));
+
+        return createDemoEvent({
+          id: `607f1f77bcf86cd79944${idSuffix}`,
+          originalEventId: `607f1f77bcf86cd79945${originalSuffix}`,
+          title: template.title,
+          type: template.type,
+          groupHash: `hash-607f1f77bcf86cd79944${idSuffix}`,
+          totalCount,
+          usersAffected,
+          file: template.file,
+          line: template.line,
+          isStarred: Boolean(template.isStarred),
+          isResolved: Boolean(template.isResolved),
+          isIgnored: Boolean(template.isIgnored),
+          timestamp: NOW_SECONDS - offsetMinutes * 60,
+          projectId: DEMO_SECOND_PROJECT_ID,
+        });
+      });
+  }),
 ];
+
+/**
+ * Returns events for specific project in demo mode
+ * @param projectId
+ */
+export function getDemoEventsByProjectId(projectId?: string): HawkEvent[] {
+  if (!projectId) {
+    return DEMO_EVENTS;
+  }
+
+  const projectPath = `/project/${projectId}`;
+
+  return DEMO_EVENTS.filter(event => event.payload.context.url.includes(projectPath));
+}
 
 /**
  * Get event by ID

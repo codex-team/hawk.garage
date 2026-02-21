@@ -1,6 +1,6 @@
-import { DEMO_EVENTS } from '@/api/mock-db';
+import { getDemoEventsByProjectId } from '@/api/mock-db';
 import type { DailyEventsPortion } from '@hawk.so/types';
-import { MILLISECONDS_IN_DAY, MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
+import { MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
 import { EventsSortOrder, type EventsFilters } from '@/types/events';
 
 /**
@@ -9,7 +9,7 @@ import { EventsSortOrder, type EventsFilters } from '@/types/events';
  * Returns daily events portion using centralized demo events
  */
 export default function mockFetchDailyEventsPortion(
-  _projectId?: string,
+  projectId?: string,
   _nextCursor: unknown = null,
   sort = EventsSortOrder.ByDate,
   filters: EventsFilters = {},
@@ -20,7 +20,7 @@ export default function mockFetchDailyEventsPortion(
 
   const normalizedSearch = String(search || '').trim().toLowerCase();
 
-  const filteredEvents = DEMO_EVENTS
+  const filteredEvents = getDemoEventsByProjectId(projectId)
     .filter((event) => {
       if (typeof filters.starred === 'boolean' && event.marks.starred !== filters.starred) {
         return false;

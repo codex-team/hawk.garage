@@ -1,4 +1,4 @@
-import { DEMO_EVENTS } from '@/api/mock-db';
+import { getDemoEventsByProjectId } from '@/api/mock-db';
 import type { HawkEvent } from '@hawk.so/types';
 import { MILLISECONDS_IN_HOUR, MILLISECONDS_IN_SECOND } from '@/utils/time';
 
@@ -15,7 +15,10 @@ const NOW_SECONDS = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
  *
  * Returns repetitions of the first demo event with different browsers/timestamps
  */
-export default function mockGetRepetitionsPortion(): {
+export default function mockGetRepetitionsPortion(
+  projectId?: string,
+  originalEventId?: string
+): {
   data: {
     project: {
       event: {
@@ -28,7 +31,24 @@ export default function mockGetRepetitionsPortion(): {
   };
   errors: unknown[];
 } {
-  const baseEvent = DEMO_EVENTS[0];
+  const projectEvents = getDemoEventsByProjectId(projectId);
+  const baseEvent = projectEvents.find(event => event.originalEventId === originalEventId) || projectEvents[0];
+
+  if (!baseEvent) {
+    return {
+      data: {
+        project: {
+          event: {
+            repetitionsPortion: {
+              repetitions: [],
+              nextCursor: null,
+            },
+          },
+        },
+      },
+      errors: [],
+    };
+  }
 
   // Create variations of the same event with different context
   const variations = [

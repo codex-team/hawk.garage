@@ -1,4 +1,4 @@
-import { DEMO_EVENTS } from '@/api/mock-db';
+import { getDemoEventsByProjectId } from '@/api/mock-db';
 import type { ChartLine } from '@hawk.so/types';
 
 const SECONDS_IN_MINUTE = 60;
@@ -16,7 +16,7 @@ function alignToDay(timestamp: number, timezoneOffset = 0): number {
  * Returns chart data from mock-db
  */
 export default function mockFetchChartData(
-  _projectId: string,
+  projectId: string,
   originalEventId: string,
   days = 14,
   timezoneOffset = 0
@@ -31,9 +31,10 @@ export default function mockFetchChartData(
     buckets.set(dayTimestamp, 0);
   }
 
-  const anchorEvent = DEMO_EVENTS.find(event => event.originalEventId === originalEventId);
+  const projectEvents = getDemoEventsByProjectId(projectId);
+  const anchorEvent = projectEvents.find(event => event.originalEventId === originalEventId);
 
-  const relatedEvents = DEMO_EVENTS.filter((event) => {
+  const relatedEvents = projectEvents.filter((event) => {
     if (event.timestamp < fromTimestamp || event.timestamp > nowSeconds) {
       return false;
     }

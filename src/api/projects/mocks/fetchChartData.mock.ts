@@ -1,4 +1,4 @@
-import { DEMO_EVENTS } from '@/api/mock-db';
+import { getDemoEventsByProjectId } from '@/api/mock-db';
 import type { ChartLine } from '@hawk.so/types';
 
 const SECONDS_IN_MINUTE = 60;
@@ -45,7 +45,7 @@ function isRateLimitedEvent(event: { payload?: { type?: string; title?: string }
  * Returns chart data for project overview from mock-db
  */
 export default function mockFetchChartData(
-  _projectId: string,
+  projectId: string,
   startDate: string,
   endDate: string,
   groupBy: number,
@@ -90,7 +90,7 @@ export default function mockFetchChartData(
     rateLimitedByBucket.set(bucket, 0);
   }
 
-  const eventsInRange = DEMO_EVENTS.filter(event =>
+  const eventsInRange = getDemoEventsByProjectId(projectId).filter(event =>
     event.timestamp >= startTimestamp && event.timestamp <= endTimestamp
   );
 
