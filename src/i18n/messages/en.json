@@ -33,7 +33,8 @@
     "bannerText": "Hawk in demo mode",
     "registerButton": "Sign up",
     "contactButton": "Contact us",
-    "disableButton": "End Demo Mode"
+    "disableButton": "End Demo Mode",
+    "functionUnavailable": "Feature is unavailable in demo mode"
   },
   "layout": {
     "aside": {

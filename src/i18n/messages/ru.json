@@ -32,7 +32,8 @@
     "bannerText": "Хоук в режиме демо",
     "registerButton": "Регистрация",
     "contactButton": "Написать нам",
-    "disableButton": "Завершить демо-режим"
+    "disableButton": "Завершить демо-режим",
+    "functionUnavailable": "Функция не доступна в демо-режиме"
   },  "layout": {
     "aside": {
       "emptyProjectsList": "У вас еще нет проектов.",

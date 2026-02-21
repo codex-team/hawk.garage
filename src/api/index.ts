@@ -3,13 +3,13 @@ import axios from 'axios';
 import { prepareFormData } from '@/api/utils';
 import type { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
+import { i18n } from '@/i18n';
 
 /**
  * Hawk API endpoint URL
  */
 export const API_ENDPOINT: string = import.meta.env.VITE_API_ENDPOINT || '';
 const DEMO_ACCESS_TOKEN = 'demo-access-token';
-const DEMO_MODE_UNAVAILABLE_MESSAGE = 'Функция не доступа в демо-режиме';
 
 function isDemoModeEnabled(): boolean {
   const authHeader = axios.defaults.headers.common.Authorization;
@@ -244,7 +244,7 @@ export async function call<T = any>(
     response.errors.forEach((error) => {
       const isUnauthenticated = error.extensions && error.extensions.code === 'UNAUTHENTICATED';
       const message = isDemoModeEnabled() && isUnauthenticated
-        ? DEMO_MODE_UNAVAILABLE_MESSAGE
+        ? i18n.global.t('demo.functionUnavailable').toString()
         : error.message;
       const err = new Error(message) as Error & { extensions?: Record<string, unknown> };
 
