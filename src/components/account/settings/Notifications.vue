@@ -13,7 +13,7 @@
         class="settings-field"
       >
         <div class="settings-field__name">
-          {{ $t('settings.notifications.channels.' + channelName) }}
+          {{ $t('common.notifications.channels.' + channelName) }}
 
           <span
             v-if="isChannelUnavailable(channelName)"
@@ -23,7 +23,7 @@
           </span>
         </div>
         <div class="settings-field__description">
-          {{ $t('settings.notifications.channelDescriptions.' + channelName) }}
+          {{ $t('common.notifications.channelDescriptions.' + channelName) }}
 
           <template v-if="channelName === 'email'">
             <span
@@ -33,7 +33,7 @@
               {{ user.email }}
             </span>
             <template v-else>
-              {{ $t('settings.notifications.channelDescriptions.emailEmptyPlaceholder') }}
+              {{ $t('common.notifications.channelDescriptions.emailEmptyPlaceholder') }}
 
               <div class="settings-field__warning">
                 <Icon
@@ -41,18 +41,32 @@
                 />
                 <!-- eslint-disable vue/no-v-html -->
                 <span
-                  v-html="$t('settings.notifications.channelDescriptions.emailEmptyWarning', {
+                  v-html="$t('common.notifications.channelDescriptions.emailEmptyWarning', {
                     accountUrl: '/account/general'
                   })"
                 />
               </div>
             </template>
           </template>
+
+          <template v-if="channelName === 'webhook'">
+            <div
+              class="settings-field__endpoint"
+              @focusout="saveWebhookEndpoint"
+              @keydown.enter="saveWebhookEndpoint"
+            >
+              <FormTextFieldset
+                v-model="webhookEndpoint"
+                placeholder="https://example.com/hawk-webhook"
+                :is-invalid="webhookEndpoint.length > 0 && !isWebhookEndpointValid"
+              />
+            </div>
+          </template>
         </div>
         <div class="settings-field__input">
           <UiCheckbox
             :model-value="getChannelState(channelName)"
-            :disabled="isChannelUnavailable(channelName) || !user.email"
+            :disabled="isChannelUnavailable(channelName) || (channelName === 'email' && !user.email)"
             @update:model-value="channelChanged(channelName, $event)"
           />
         </div>
@@ -89,6 +103,7 @@
 import { defineComponent } from 'vue';
 import { User } from '../../../types/user';
 import UiCheckbox from './../../forms/UiCheckbox.vue';
+import FormTextFieldset from './../../forms/TextFieldset.vue';
 import {
   UserNotificationType,
   UserNotificationsChannels,
@@ -106,6 +121,7 @@ import Icon from './../../utils/Icon.vue';
 export default defineComponent({
   components: {
     UiCheckbox,
+    FormTextFieldset,
     Icon,
   },
   props: {
@@ -122,7 +138,12 @@ export default defineComponent({
       /**
        * Set of available channel names
        */
-      channelsAvailable: ['email', 'webPush', 'desktopPush'] as Array<keyof UserNotificationsChannels>,
+      channelsAvailable: ['email', 'webhook', 'webPush', 'desktopPush'] as Array<keyof UserNotificationsChannels>,
+
+      /**
+       * Webhook endpoint URL input model
+       */
+      webhookEndpoint: '',
 
       /**
        * Set of available receive types
@@ -134,11 +155,23 @@ export default defineComponent({
       ],
     };
   },
+  computed: {
+    isWebhookEndpointValid(): boolean {
+      return /^https?:\/\/.+/.test(this.webhookEndpoint);
+    },
+  },
   async created(): Promise<void> {
     /**
      * Load 'notifications' field on user
      */
     await this.$store.dispatch(FETCH_NOTIFICATIONS_SETTINGS);
+
+    /**
+     * Pre-fill webhook endpoint from saved settings
+     */
+    if (this.user.notifications?.channels?.webhook?.endpoint) {
+      this.webhookEndpoint = this.user.notifications.channels.webhook.endpoint;
+    }
   },
   methods: {
     /**
@@ -148,6 +181,15 @@ export default defineComponent({
      * @param value - new value
      */
     async channelChanged(channelName: string, value: boolean): Promise<void> {
+      if (channelName === 'webhook' && value && !this.isWebhookEndpointValid) {
+        notifier.show({
+          message: 'Webhook URL must start with http:// or https://',
+          style: 'error',
+        });
+
+        return;
+      }
+
       try {
         await this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
           [channelName]: {
@@ -199,12 +241,50 @@ export default defineComponent({
       switch (channelName) {
         case 'email':
           return this.user.email;
+        case 'webhook':
+          return this.webhookEndpoint;
         case 'webPush':
         case 'desktopPush':
           return '';
       }
 
       return '';
+    },
+
+    /**
+     * Save webhook endpoint URL when input loses focus or Enter is pressed
+     */
+    async saveWebhookEndpoint(): Promise<void> {
+      if (!this.getChannelState('webhook')) {
+        return;
+      }
+
+      if (!this.isWebhookEndpointValid) {
+        notifier.show({
+          message: 'Webhook URL must start with http:// or https://',
+          style: 'error',
+        });
+
+        return;
+      }
+
+      try {
+        await this.$store.dispatch(CHANGE_NOTIFICATIONS_CHANNEL, {
+          webhook: {
+            endpoint: this.webhookEndpoint,
+            isEnabled: true,
+          } as NotificationsChannelSettings,
+        } as UserNotificationsChannels);
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error));
+
+        this.$sendToHawk(err);
+
+        notifier.show({
+          message: err.message,
+          style: 'error',
+        });
+      }
     },
 
     /**
@@ -234,7 +314,7 @@ export default defineComponent({
      * @param channelName - channel name to check
      */
     isChannelUnavailable(channelName: string): boolean {
-      return channelName !== 'email';
+      return channelName !== 'email' && channelName !== 'webhook';
     },
   },
 });
@@ -294,6 +374,19 @@ export default defineComponent({
     &__email {
       font-weight: 500;
       font-style: italic;
+    }
+
+    &__endpoint {
+      margin-top: 8px;
+
+      .input {
+        width: 280px;
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
     }
 
     &__warning {

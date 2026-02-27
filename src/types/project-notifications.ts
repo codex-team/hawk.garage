@@ -53,7 +53,7 @@ export interface ProjectNotificationsRule {
 /**
  * Available channels of the project notifications
  */
-export type ProjectNotificationsChannels = Pick<NotificationsChannels, 'email' | 'telegram' | 'slack' | 'loop'>;
+export type ProjectNotificationsChannels = Pick<NotificationsChannels, 'email' | 'telegram' | 'slack' | 'loop' | 'webhook'>;
 
 /**
  * Available options of 'What to receive'

@@ -2,8 +2,6 @@ import { defineComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
 
-import { Analytics, AnalyticsEventType } from './analytics';
-
 import AppShell from './components/AppShell.vue';
 import invitesHandler from './invitesHandler';
 import unsubscribeHandler from './unsubscribeHandler';
@@ -374,32 +372,6 @@ router.beforeEach((to, from, next) => {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
     }
-  }
-
-  /**
-   * Track visit
-   */
-  try {
-    /**
-     * Try to get user id
-     */
-    if (store.state.user && store.state.user.data && store.state.user.data.id) {
-      Analytics?.setUserId(store.state.user.data.id);
-    }
-
-    /**
-     * Event additional data
-     */
-    const eventProperties = {
-      url: to.fullPath,
-    };
-
-    /**
-     * Track event
-     */
-    void Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
-  } catch (e) {
-    console.error(e);
   }
 
   next();

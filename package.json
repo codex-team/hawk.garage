@@ -1,6 +1,6 @@
 {
   "name": "hawk.so",
-  "version": "1.1.1",
+  "version": "1.1.4",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -17,11 +17,9 @@
     "e2e:ci": "start-server-and-test serve 8080 cy:run"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^2.25.2",
-    "@amplitude/analytics-types": "^2.10.0",
     "@codexteam/ui": "0.2.0-rc.4",
-    "@hawk.so/javascript": "3.2.13",
-    "@hawk.so/types": "^0.5.2",
+    "@hawk.so/javascript": "3.2.15",
+    "@hawk.so/types": "^0.5.9",
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
     "cssnano": "^7.1.1",
@@ -40,7 +38,6 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
-    "@hawk.so/types": "^0.5.7",
     "@hawk.so/vite-plugin": "^1.0.6",
     "@types/node": "^24.6.2",
     "@types/postcss-nested-ancestors": "^3",
