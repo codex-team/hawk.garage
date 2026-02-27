@@ -1,6 +1,6 @@
 {
   "name": "hawk.so",
-  "version": "1.0.3",
+  "version": "1.1.4",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -17,9 +17,9 @@
     "e2e:ci": "start-server-and-test serve 8080 cy:run"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^2.25.2",
-    "@amplitude/analytics-types": "^2.10.0",
-    "@hawk.so/javascript": "^3.2.8",
+    "@codexteam/ui": "0.2.0-rc.4",
+    "@hawk.so/javascript": "3.2.15",
+    "@hawk.so/types": "^0.5.9",
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
     "cssnano": "^7.1.1",

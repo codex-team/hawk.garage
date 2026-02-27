@@ -148,7 +148,8 @@ const smoothPath = computed((): string => {
     const pointX = index * props.stepX;
     const pointY = props.chartHeight - (value - props.minValue) * kY.value;
 
-    pathPoints.push({ x: pointX, y: pointY });
+    pathPoints.push({ x: pointX,
+      y: pointY });
   });
 
   /* Start with move to first point */

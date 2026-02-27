@@ -25,6 +25,11 @@
   --color-indicator-positive: #00e064;
   --color-indicator-warning: #e6a700;
 
+  /** Breadcrumb colors */
+  --color-breadcrumb-navigation: #ff66cf;
+  --color-breadcrumb-ui: #a855f7;
+  --color-breadcrumb-default: #94a3b8;
+
   --border-radius: 10px;
 
   --color-border-input: #1f2230;

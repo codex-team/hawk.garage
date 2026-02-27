@@ -111,6 +111,8 @@ export default defineComponent({
 
 <style>
   .projects-integrations-settings-page {
+    max-width: var(--width-popup-form-container);
+
     &__token {
       margin-top: 15px;
     }

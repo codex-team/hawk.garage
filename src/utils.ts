@@ -1,7 +1,7 @@
+import type { DecodedIntegrationToken } from '@hawk.so/types';
 import mergeWith from 'lodash.mergewith';
 import shortNumber from 'short-number';
 import type { HawkEvent, HawkEventDailyInfo } from './types/events';
-import type { DecodedIntegrationToken } from '@hawk.so/types';
 
 /**
  * @param currency
@@ -588,3 +588,7 @@ export function removeCookie(name: string): void {
 
 // Export filter utilities
 export * from './utils/filters';
+
+// Export async component utilities
+export * from './utils/loadAsyncComponent';
+
