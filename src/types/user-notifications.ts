@@ -30,7 +30,7 @@ export type UserNotificationsReceiveTypesConfig = {
 /**
  * Available channels of the account notifications
  */
-export type UserNotificationsChannels = Pick<NotificationsChannels, 'email' | 'webPush' | 'desktopPush'>;
+export type UserNotificationsChannels = Pick<NotificationsChannels, 'email' | 'webhook' | 'webPush' | 'desktopPush'>;
 
 /**
  * Available options of 'What to receive'
