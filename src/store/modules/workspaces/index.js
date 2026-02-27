@@ -15,7 +15,9 @@ import {
   CHANGE_WORKSPACE_PLAN_FOR_FREE_PLAN,
   CANCEL_SUBSCRIPTION,
   PAY_WITH_CARD,
-  COMPOSE_PAYMENT
+  COMPOSE_PAYMENT,
+  FETCH_WORKSPACE_SSO_SETTINGS,
+  UPDATE_WORKSPACE_SSO
 } from './actionTypes';
 import { REMOVE_PROJECTS_BY_WORKSPACE_ID } from '../projects/actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
@@ -487,6 +489,42 @@ const actions = {
       id: data.id,
       subscriptionId: data.subscriptionId,
     });
+  },
+
+  /**
+   * Fetch SSO settings for workspace (admin only)
+   *
+   * @param {object} _context - Vuex action context
+   * @param {string} workspaceId - id of workspace to get SSO settings
+   * @returns {Promise<object|null>} - SSO configuration or null if not configured
+   */
+  async [FETCH_WORKSPACE_SSO_SETTINGS](_context, workspaceId) {
+    const response = await workspaceApi.getSsoSettings(workspaceId);
+
+    if (response.data && response.data.workspaces && response.data.workspaces.length > 0) {
+      const workspace = response.data.workspaces[0];
+
+      if (workspace && workspace.sso) {
+        return workspace.sso;
+      }
+    }
+
+    return null;
+  },
+
+  /**
+   * Update SSO settings for workspace (admin only)
+   *
+   * @param {object} _context - Vuex action context
+   * @param {object} payload - action payload
+   * @param {string} payload.workspaceId - id of workspace to update SSO settings
+   * @param {object} payload.config - SSO configuration to save
+   * @returns {Promise<boolean>} - true if successful
+   */
+  async [UPDATE_WORKSPACE_SSO](_context, { workspaceId, config }) {
+    const response = await workspaceApi.updateSsoSettings(workspaceId, config);
+
+    return response.data && response.data.updateWorkspaceSso === true;
   },
 
   /**

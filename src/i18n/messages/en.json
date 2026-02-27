@@ -12,11 +12,20 @@
     "recoverPasswordSuccessMessage": "New password is sent to your email",
     "signupSuccessMessage": "The password is sent to your email",
     "inviteHelper": "You are invited to join a workspace. Please login or sign up to continue.",
+    "continueWithSso": "Continue with SSO",
+    "ssoLogin": {
+      "title": "Single Sign-On",
+      "workspaceId": "Workspace ID",
+      "workspaceIdPlaceholder": "Enter workspace ID",
+      "workspaceIdRequired": "Workspace ID is required",
+      "backToLogin": "Login via email"
+    },
     "errors": {
       "Wrong email or password": "Wrong email or password",
       "User with this email already registered": "User with this email already registered",
       "Wrong email format": "Wrong email format",
-      "Network Error": "Server is not available. Check your internet connection."
+      "Network Error": "Server is not available. Check your internet connection.",
+      "SSO_REQUIRED": "Workspace \"{workspace}\" requires SSO login. <a href=\"{link}\">Sign in with SSO →</a>"
     }
   },
   "layout": {
@@ -144,8 +153,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Awesome project",
         "submit": "Save",
-        "created": "Created at Aug 25, 2019",
-        "updatedMessage": "The project was updated"
+        "created": "Created at Aug 25, 2019"
       },
       "integrations": {
         "title": "Integrations",
@@ -172,14 +180,6 @@
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",
         "sectionCustomFilters": "Custom Filters",
-        "email": "Email",
-        "emailDescription": "Max frequency is 1 alert in 10 min",
-        "slack": "Slack",
-        "slackDescription": "Alerts through the Webhook App",
-        "loop": "Loop",
-        "loopDescription": "Alerts through the Loop Webhook",
-        "telegram": "Telegram",
-        "telegramDescription": "Alerts through the {telegramLink}",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Frequency based",
@@ -230,11 +230,46 @@
         "periodPlaceholder": "Period (seconds)",
         "submit": "Save",
         "reset": "Reset rate limits",
-        "updatedMessage": "Rate limits updated successfully",
         "clearedMessage": "Rate limits cleared successfully",
         "paidOnlyMessage": "Rate limits allow you to protect against error spikes that can cause your workspace to prematurely exhaust its event limit. Set the maximum number of events that Hawk should accept per unit of time. Events exceeding the limit will not be processed and captured.",
         "paidOnlyUpgrade": "This feature is available only for paid plans.",
         "upgradeButton": "Upgrade plan"
+      },
+      "taskManager": {
+        "title": "Task Manager",
+        "githubRepository": {
+          "title": "GitHub Repository",
+          "description": "Configure automatic Issue creation, fix errors automatically with Copilot.",
+          "connectButton": "Connect GitHub Repository",
+          "connectedTo": "Connected to",
+          "connected": "GitHub App connected",
+          "disconnectButton": "Disconnect",
+          "connectSuccess": "GitHub connected successfully. Select a repository",
+          "disconnectSuccess": "GitHub repository disconnected successfully",
+          "disconnectError": "Failed to disconnect GitHub repository",
+          "authError": "Authentication error. Please try again.",
+          "selectRepositoryLabel": "Select Repository",
+          "selectRepositoryPlaceholder": "Select a repository",
+          "loadingRepositories": "Loading repositories...",
+          "repositoryNotFound": "Repository not found",
+          "repositorySelected": "Repository connected",
+          "disconnectConfirmation": {
+            "title": "Disconnect GitHub repository?",
+            "description": "After disconnecting, Hawk will stop creating issues automatically. Existing issues will remain in your repository."
+          }
+        },
+        "autoTaskCreation": {
+          "title": "Auto Task Creation",
+          "description": "Configure automatic creation of GitHub issues for errors that meet the threshold.",
+          "enableLabel": "Create GitHub Issue when threshold is reached",
+          "thresholdLabel": "Occurrence threshold",
+          "thresholdDescription": "Uses total number of error occurrences over all time"
+        },
+        "agent": {
+          "title": "Automatic error fixing",
+          "controlLabel": "Assign Copilot to task",
+          "description": "You must have access to GitHub Copilot"
+        }
       }
     },
     "notFound": "Project not found",
@@ -292,18 +327,6 @@
       "channelsHeading": "Channels",
       "actionTypesHeading": "Action types",
       "soon": "Soon",
-      "channels": {
-        "email": "Email",
-        "webPush": "Web Push",
-        "desktopPush": "Desktop Push"
-      },
-      "channelDescriptions": {
-        "email": "Notifications on",
-        "emailEmptyPlaceholder": "your email",
-        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
-        "webPush": "Alerts even with closed tab",
-        "desktopPush": "Native notifies through the Hawk Desktop"
-      },
       "actions": {
         "IssueAssigning": "Issue assigning",
         "WeeklyDigest": "Weekly digest",
@@ -368,6 +391,34 @@
         "removeMember": "Remove",
         "errors": {
           "User is already invited to this workspace": "User is already invited to this workspace"
+        }
+      },
+      "sso": {
+        "title": "SSO Settings",
+        "description": "SSO (Single Sign-On) allows your team to sign in to Hawk using your corporate identity system. Users will be able to authenticate using their work credentials without needing to create a separate password.",
+        "enable": "Enable SSO",
+        "enforce": "SSO only (email and password login will be disabled)",
+        "entityId": "IdP Entity ID",
+        "ssoUrl": "SSO URL",
+        "certificate": "X.509 Certificate (PEM format)",
+        "nameIdFormat": "NameID Format",
+        "attributeMapping": {
+          "email": "Email Attribute Name",
+          "emailPlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+          "name": "Name Attribute Name",
+          "namePlaceholder": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        },
+        "spInfo": {
+          "title": "Service Provider (SP) Information",
+          "description": "Provide these details to your IdP (Identity Provider) system administrator to configure SAML integration.",
+          "entityId": "SP Entity ID",
+          "acsUrl": "ACS URL"
+        },
+        "save": "Save",
+        "saved": "SSO settings saved successfully",
+        "errors": {
+          "Workspace not found": "Workspace not found",
+          "SAML configuration is required when SSO is enabled": "SAML configuration is required when SSO is enabled"
         }
       },
       "billing": {
@@ -544,6 +595,17 @@
       "noname": "No name",
       "viewProfile": "View profile"
     },
+    "breadcrumbs": {
+      "title": "Breadcrumbs",
+      "types": {
+        "default": "Event",
+        "request": "Request",
+        "ui": "UI Click",
+        "navigation": "Navigation",
+        "logic": "Logic",
+        "error": "Exception"
+      }
+    },
     "limit": {
       "title": "Event Hidden",
       "description": "We received this event but have hidden it because your subscription has expired.",
@@ -558,12 +620,16 @@
     "threshold": "Seen more than",
     "thresholdPeriod": "in the last",
     "copiedNotification": "Copied!",
+    "showLess": "Show Less",
+    "viewAll": "View All",
     "free": "FREE",
     "select": "Select",
     "selected": "Selected",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",
+    "settingsUpdated": "Settings updated",
+    "save": "Save",
     "loading": "Loading...",
     "minute": "minute",
     "hour": "hour",
@@ -613,7 +679,30 @@
       "monthsAgo": "a month ago | {numberOfMonths} months ago",
       "yearsAgo": "a year ago | {numberOfYears} years ago"
     },
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "notifications": {
+      "channels": {
+        "email": "Email",
+        "slack": "Slack",
+        "loop": "Loop",
+        "telegram": "Telegram",
+        "webhook": "Webhook",
+        "webPush": "Web Push",
+        "desktopPush": "Desktop Push"
+      },
+      "channelDescriptions": {
+        "email": "Notifications on",
+        "emailDescription": "Max frequency is 1 alert in 10 min",
+        "emailEmptyPlaceholder": "your email",
+        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
+        "slack": "Alerts through the Webhook App",
+        "loop": "Alerts through the Loop Webhook",
+        "telegram": "Alerts through the {telegramLink}",
+        "webhook": "Receive event data via HTTP POST to your endpoint",
+        "webPush": "Alerts even with closed tab",
+        "desktopPush": "Native notifies through the Hawk Desktop"
+      }
+    }
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it.",

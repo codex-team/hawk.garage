@@ -3,7 +3,10 @@
     <div class="settings-window-page__title">
       {{ $t('projects.settings.rateLimits.title') }}
     </div>
-    <div v-if="isRateLimitsAvailable" class="project-settings__description">
+    <div
+      v-if="isRateLimitsAvailable"
+      class="project-settings__description"
+    >
       {{ $t('projects.settings.rateLimits.description') }}
     </div>
     <RateLimitsForm
@@ -123,7 +126,7 @@ export default defineComponent({
         });
 
         notifier.show({
-          message: this.$t('projects.settings.rateLimits.updatedMessage') as string,
+          message: this.$t('common.settingsUpdated') as string,
           style: 'success',
           time: 5000,
         });

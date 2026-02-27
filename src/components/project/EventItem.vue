@@ -25,6 +25,14 @@
     >
       {{ event.payload.title }}
     </div>
+    <UiButton
+      v-if="event.taskManagerItem"
+      class="event-item__issue-button"
+      :content="`#${event.taskManagerItem.number}`"
+      icon="github"
+      extrasmall
+      @click.stop="openIssueUrl"
+    />
     <Icon
       v-if="!event.assignee"
       symbol="assignee"
@@ -49,6 +57,7 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
+import UiButton from '../utils/UiButton.vue';
 import { prettyTime } from '@/utils/filters';
 import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscriptionExpiry';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
@@ -60,6 +69,7 @@ export default {
     EventBadge,
     Icon,
     EntityImage,
+    UiButton,
   },
   props: {
     /**
@@ -199,6 +209,15 @@ export default {
         this.$emit('showEventOverview');
       }
     },
+
+    /**
+     * Open GitHub issue URL in new tab
+     */
+    openIssueUrl() {
+      if (this.event && this.event.taskManagerItem && this.event.taskManagerItem.url) {
+        window.open(this.event.taskManagerItem.url, '_blank', 'noopener');
+      }
+    },
   },
 };
 </script>
@@ -237,6 +256,11 @@ export default {
         user-select: none;
         pointer-events: none;
       }
+    }
+
+    &__issue-button {
+      margin-left: 8px;
+      flex-shrink: 0;
     }
 
     &__assignee {
