@@ -6,7 +6,8 @@ import {
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  QUERY_AFFECTED_USERS_CHART_DATA
 } from './queries';
 import * as api from '@/api';
 import type {
@@ -20,7 +21,7 @@ import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem, ChartLine } from '@/types/chart';
+import type { ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
 
 /**
@@ -82,8 +83,10 @@ export async function fetchDailyEventsPortion(
     response.errors.forEach(e => console.error(e));
   }
 
-  return project?.dailyEventsPortion ?? { cursor: null,
-    dailyEventsPortion: [] };
+  return project?.dailyEventsPortion ?? {
+    cursor: null,
+    dailyEventsPortion: [],
+  };
 }
 
 /**
@@ -96,8 +99,16 @@ export async function fetchDailyEventsPortion(
  */
 export async function getRepetitionsPortion(
   projectId: string, originalEventId: string, limit: number, cursor?: string
-): Promise<APIResponse<{ project: { event: { repetitionsPortion: { repetitions: HawkEvent[];
-  nextCursor?: string; }; }; }; }>> {
+): Promise<APIResponse<{
+  project: {
+    event: {
+      repetitionsPortion: {
+        repetitions: HawkEvent[];
+        nextCursor?: string;
+      };
+    };
+  };
+}>> {
   const response = await api.call(QUERY_EVENT_REPETITIONS_PORTION, {
     limit,
     projectId,
@@ -151,8 +162,10 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
  * @param eventId - original event id
  * @param assignee - user id to assign
  */
-export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{ success: boolean;
-  record: User; }> {
+export async function updateAssignee(projectId: string, eventId: string, assignee: string): Promise<{
+  success: boolean;
+  record: User;
+}> {
   return (await api.callOld(MUTATION_UPDATE_EVENT_ASSIGNEE, {
     input: {
       projectId,
@@ -195,4 +208,25 @@ export async function fetchChartData(
     days,
     timezoneOffset,
   })).project.event.chartData;
+}
+
+/**
+ * Fetch data for affected users daily chart
+ * @param projectId - id of the project owning the event
+ * @param originalEventId - id of the original event
+ * @param days - how many days we need to fetch for displaying in chart
+ * @param timezoneOffset - user's local timezone
+ */
+export async function fetchAffectedUsersChartData(
+  projectId: string,
+  originalEventId: string,
+  days: number,
+  timezoneOffset: number
+): Promise<ChartLine[]> {
+  return (await api.callOld(QUERY_AFFECTED_USERS_CHART_DATA, {
+    projectId,
+    originalEventId,
+    days,
+    timezoneOffset,
+  })).project.event.affectedUsersChartData;
 }

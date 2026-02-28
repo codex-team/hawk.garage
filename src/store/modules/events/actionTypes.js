@@ -59,6 +59,11 @@ export const SET_EVENTS_FILTERS = 'SET_EVENTS_FILTERS';
 export const GET_CHART_DATA = 'GET_CHART_DATA';
 
 /**
+ * Get affected users chart data for target event
+ */
+export const GET_AFFECTED_USERS_CHART_DATA = 'GET_AFFECTED_USERS_CHART_DATA';
+
+/**
  * Get list project with dailyEvents portion
  */
 export const FETCH_PROJECT_OVERVIEW = 'FETCH_PROJECT_OVERVIEW';
