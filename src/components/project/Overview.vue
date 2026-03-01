@@ -23,7 +23,12 @@
         <EventsList ref="eventsList" />
       </div>
     </div>
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <component
+        :is="Component"
+        @event-deleted="eventDeleted"
+      />
+    </router-view>
   </div>
 </template>
 
@@ -144,6 +149,10 @@ export default {
       if (this.$refs.eventsList && this.$refs.eventsList.reloadDailyEvents) {
         this.$refs.eventsList.reloadDailyEvents();
       }
+    },
+
+    async eventDeleted() {
+      this.reloadDailyEvents();
     },
   },
 };

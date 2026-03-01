@@ -295,4 +295,7 @@ body .cdx-notify {
   --accent--solid-hover: var(--color-indicator-medium-dark);
   --accent--bg-secondary: color-mod(var(--color-indicator-medium) alpha(10%));
   --accent--text-solid-foreground: var(--color-text-main);
+
+  /* Override codexteam/ui popover z-index to appear above app modals */
+  --z-popover: 10000;
 }

@@ -1,12 +1,22 @@
 <template>
   <div class="event-header">
     <div class="event-layout__container">
-      <span
-        v-if="!loading"
-        class="event-header__date"
-      >
-        {{ formattedFullDate }}
-      </span>
+      <div class="event-header__top-right">
+        <span
+          v-if="!loading"
+          class="event-header__date"
+        >
+          {{ formattedFullDate }}
+        </span>
+
+        <div class="event-header__button event-header__button--more">
+          <Icon
+            class="event-header__button--more-icon"
+            symbol="dots"
+            @click="onMoreClick($event)"
+          />
+        </div>
+      </div>
 
       <div
         v-if="workspace"
@@ -124,12 +134,17 @@ import AssigneeBar from '../utils/AssigneeBar.vue';
 import EntityImage from '../utils/EntityImage.vue';
 
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
-import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
+import { REMOVE_EVENT, TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
 import { Project } from '@/types/project';
 import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
+import { usePopover } from '@codexteam/ui/vue';
+import EventActionsMenu from './EventActionsMenu.vue';
+import { ActionType } from '../utils/ConfirmationWindow/types';
+import notifier from 'codex-notifier';
+import Icon from '../utils/Icon.vue';
 
 export default defineComponent({
   name: 'EventHeader',
@@ -141,6 +156,7 @@ export default defineComponent({
     AssigneeBar,
     EntityImage,
     ProjectBadge,
+    Icon,
   },
   mixins: [projectBadges],
   props: {
@@ -152,6 +168,15 @@ export default defineComponent({
       default: null,
       validator: prop => typeof prop === 'object' || prop === null,
     },
+  },
+  emits: ['event-deleted'],
+  setup() {
+    const { showPopover, hide } = usePopover();
+
+    return {
+      showPopover,
+      hidePopover: hide,
+    };
   },
   data() {
     return {
@@ -302,6 +327,70 @@ export default defineComponent({
         window.open(this.event.taskManagerItem.url, '_blank', 'noopener');
       }
     },
+
+    /**
+     * Open the "more options" context menu near the 3-dot button
+     *
+     * @param event - native click mouse event
+     */
+    onMoreClick(event: MouseEvent) {
+      this.showPopover({
+        targetEl: event.currentTarget as HTMLElement,
+        with: {
+          component: EventActionsMenu,
+          props: {
+            items: [
+              {
+                title: this.$t('event.remove') as string,
+                icon: 'Trash',
+                danger: true,
+                onClick: () => {
+                  this.hidePopover();
+                  this.confirmRemoveEvent();
+                },
+              },
+            ],
+          },
+        },
+        align: {
+          vertically: 'below',
+          horizontally: 'right',
+        },
+      });
+    },
+
+    /**
+     * Show confirmation dialog and, on confirm, delete the event then navigate back
+     */
+    confirmRemoveEvent() {
+      const { projectId, eventId } = this.$route.params;
+
+      this.$confirm.open({
+        description: this.$t('event.removeConfirmation').toString(),
+        actionType: ActionType.DELETION,
+        continueButtonText: this.$t('event.removeButton').toString(),
+        onConfirm: async () => {
+          try {
+            await this.$store.dispatch(REMOVE_EVENT, {
+              projectId,
+              eventId,
+            });
+            notifier.show({
+              message: this.$t('event.removeSuccess').toString(),
+              style: 'success',
+              time: 5000,
+            });
+            this.$emit('event-deleted');
+          } catch {
+            notifier.show({
+              message: this.$t('event.removeError').toString(),
+              style: 'error',
+              time: 5000,
+            });
+          }
+        },
+      });
+    },
   },
 });
 </script>
@@ -352,8 +441,14 @@ export default defineComponent({
       text-overflow: ellipsis;
     }
 
-    &__date {
+    &__top-right {
+      display: flex;
       float: right;
+      align-items: center;
+      gap: 12px;
+    }
+
+    &__date {
       font-size: 12px;
       line-height: 23px;
     }
@@ -394,6 +489,21 @@ export default defineComponent({
 
       &:hover {
         color: var(--color-text-main)
+      }
+
+      &--more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      &--more-icon {
+        width: 16px;
+        height: 16px;
       }
     }
 
