@@ -6,7 +6,8 @@ import {
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  MUTATION_REMOVE_EVENT
 } from './queries';
 import * as api from '@/api';
 import type {
@@ -195,4 +196,16 @@ export async function fetchChartData(
     days,
     timezoneOffset,
   })).project.event.chartData;
+}
+
+/**
+ * Remove event and all related data (repetitions, daily events)
+ * @param projectId - project event is related to
+ * @param eventId — original event id to remove
+ */
+export async function removeEvent(projectId: string, eventId: string): Promise<boolean> {
+  return (await api.callOld(MUTATION_REMOVE_EVENT, {
+    projectId,
+    eventId,
+  })).removeEvent;
 }

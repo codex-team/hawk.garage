@@ -295,4 +295,16 @@ body .cdx-notify {
   --accent--solid-hover: var(--color-indicator-medium-dark);
   --accent--bg-secondary: color-mod(var(--color-indicator-medium) alpha(10%));
   --accent--text-solid-foreground: var(--color-text-main);
+
+  /* Override codexteam/ui popover z-index to appear above app modals */
+  --z-popover: 10000;
 }
+
+/**
+ * Style for context-menu items that should appear as "danger" (red)
+ * Targets codexteam/ui ContextMenu which uses non-hashed global class names.
+ * Applied only to items inside the codex-popover to avoid collateral effects.
+ */
+/* .codex-popover .codex-context-menu-item__default {
+  color: var(--color-indicator-critical);
+} */

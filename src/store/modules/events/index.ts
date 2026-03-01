@@ -9,7 +9,8 @@ import {
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  GET_CHART_DATA,
+  REMOVE_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import type { Module } from 'vuex';
@@ -414,6 +415,20 @@ const module: Module<EventsModuleState, RootState> = {
       if (!result) {
         commitAction();
       }
+    },
+
+    /**
+     * Remove event and all related data (repetitions, daily events)
+     * @param _context - vuex action context (not used)
+     * @param payload - vuex action payload
+     * @param payload.projectId - project event is related to
+     * @param payload.eventId - original event id to remove
+     */
+    async [REMOVE_EVENT](_context, { projectId, eventId }: {
+      projectId: string;
+      eventId: string;
+    }): Promise<boolean> {
+      return eventsApi.removeEvent(projectId, eventId);
     },
 
     /**

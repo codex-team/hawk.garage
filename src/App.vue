@@ -6,6 +6,7 @@
   >
     <router-view />
     <FeedbackButton />
+    <Popover />
   </div>
 </template>
 
@@ -15,11 +16,13 @@ import { setLanguage } from './i18n';
 import { defineComponent } from 'vue';
 import FeedbackButton from './components/utils/FeedbackButton.vue';
 import notifier from 'codex-notifier';
+import { Popover } from '@codexteam/ui/vue';
 
 export default defineComponent({
   name: 'App',
   components: {
     FeedbackButton,
+    Popover,
   },
   computed: {
     /**

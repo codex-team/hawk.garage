@@ -23,7 +23,12 @@
         <EventsList ref="eventsList" />
       </div>
     </div>
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <component
+        :is="Component"
+        @event-deleted="reloadDailyEvents"
+      />
+    </router-view>
   </div>
 </template>
 
