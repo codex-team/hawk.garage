@@ -298,4 +298,8 @@ body .cdx-notify {
 
   /* Override codexteam/ui popover z-index to appear above app modals */
   --z-popover: 10000;
+  
+  .codex-popover {
+    padding: 10px;
+  }
 }

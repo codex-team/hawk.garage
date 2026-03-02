@@ -429,7 +429,7 @@ const module: Module<EventsModuleState, RootState> = {
       projectId: string;
       eventId: string;
     }): Promise<boolean> {
-      return eventsApi.removeEvent(projectId, eventId);
+      return await eventsApi.removeEvent(projectId, eventId);
     },
 
     /**

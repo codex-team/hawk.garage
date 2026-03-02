@@ -8,14 +8,11 @@
         >
           {{ formattedFullDate }}
         </span>
-
-        <div class="event-header__button event-header__button--more">
-          <Icon
-            class="event-header__button--more-icon"
-            symbol="dots"
-            @click="onMoreClick($event)"
-          />
-        </div>
+        <Icon
+          class="event-header__button--more"
+          symbol="dots"
+          @click="onMoreClick($event)"
+        />
       </div>
 
       <div
@@ -492,18 +489,15 @@ export default defineComponent({
       }
 
       &--more {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-        border-radius: 4px;
-      }
-
-      &--more-icon {
         width: 16px;
         height: 16px;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: opacity 0.2s ease-in-out;
+
+        &:hover {
+          opacity: 1;
+        }
       }
     }
 
