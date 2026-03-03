@@ -45,6 +45,11 @@ export function useErrorTracker(): {
         token: import.meta.env.VITE_HAWK_TOKEN,
         release: buildRevision,
         vue,
+        issues: {
+          longTasks: true,
+          longAnimationFrames: true,
+          webVitals: true,
+        },
       };
 
       if (user) {
