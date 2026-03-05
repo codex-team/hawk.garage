@@ -1,6 +1,6 @@
 {
   "name": "hawk.so",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -35,7 +35,8 @@
     "vue-json-pretty": "^2.6.0",
     "vue-router": "^4.5.1",
     "vuex": "^4.1.0",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "web-vitals": "^5.1.0"
   },
   "devDependencies": {
     "@hawk.so/vite-plugin": "^1.0.6",
