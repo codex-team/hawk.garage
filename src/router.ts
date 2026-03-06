@@ -368,6 +368,11 @@ router.beforeEach((to, from, next) => {
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
   const isDemoQuery = to.query.demo === '1';
 
+  /**
+   * Handle demo mode activation from query parameter
+   * Note: This is needed for initial navigation before useDemo composable is initialized
+   * The useDemo composable handles subsequent demo state management
+   */
   if (isDemoQuery) {
     void store.dispatch('demo/enableDemo');
 
