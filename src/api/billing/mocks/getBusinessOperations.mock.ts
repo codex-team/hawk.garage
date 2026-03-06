@@ -1,5 +1,5 @@
 import type { BusinessOperation } from '@/types/business-operation';
-import { DEMO_BUSINESS_OPERATIONS } from '@/api/mock-db/business-operations';
+import { DEMO_WORKSPACE_ID, DEMO_BUSINESS_OPERATIONS } from '@/api/mock-db';
 
 /**
  * Mock: getBusinessOperations
@@ -8,7 +8,7 @@ import { DEMO_BUSINESS_OPERATIONS } from '@/api/mock-db/business-operations';
  */
 export default function mockGetBusinessOperations(ids: string[]): BusinessOperation[] {
   // Return demo operations if requesting for demo workspace
-  if (ids.includes('6213b6a01e6281087467cc7a')) {
+  if (ids.includes(DEMO_WORKSPACE_ID)) {
     return DEMO_BUSINESS_OPERATIONS;
   }
   return [];
