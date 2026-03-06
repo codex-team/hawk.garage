@@ -6,7 +6,7 @@
 
 import { DEMO_WORKSPACE, DEMO_PROJECTS, getDemoEventsByProjectId } from '@/api/mock-db';
 import type { DailyEventsPortion, Workspace } from '@hawk.so/types';
-import { MILLISECONDS_IN_DAY, MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
+import { MILLISECONDS_IN_SECOND, SECONDS_IN_DAY } from '@/utils/time';
 
 /**
  * Create fresh daily events portion
