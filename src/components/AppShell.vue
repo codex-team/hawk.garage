@@ -94,9 +94,9 @@ export default defineComponent({
     },
   },
   setup() {
-    const { isEnabled: isDemoEnabled } = useDemo();
+    const { isDemoActive } = useDemo();
 
-    return { isDemoEnabled };
+    return { isDemoActive };
   },
   data() {
     return {
@@ -116,7 +116,7 @@ export default defineComponent({
   },
   computed: {
     isDemoMode() {
-      return this.isDemoEnabled;
+      return this.isDemoActive;
     },
     /**
      * Current opened modal window

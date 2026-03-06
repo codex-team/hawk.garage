@@ -93,7 +93,7 @@ export default defineComponent({
     async logout() {
       const { disableDemo, isDemoActive } = useDemo();
 
-      if (isDemoActive()) {
+      if (isDemoActive.value) {
         await disableDemo();
 
         return;

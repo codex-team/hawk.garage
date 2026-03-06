@@ -22,9 +22,9 @@ export default defineComponent({
     FeedbackButton,
   },
   setup() {
-    const { isEnabled: isDemoEnabled } = useDemo();
+    const { isDemoActive } = useDemo();
 
-    return { isDemoEnabled };
+    return { isDemoActive };
   },
   computed: {
     /**
@@ -45,7 +45,7 @@ export default defineComponent({
     this.$store.watch(
       state => state.user.accessToken,
       (accessToken) => {
-        if (!accessToken && !this.isDemoEnabled) {
+        if (!accessToken && !this.isDemoActive) {
           this.$router.push('/login');
         }
         api.setAuthToken(accessToken);

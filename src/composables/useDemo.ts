@@ -4,18 +4,16 @@
  * Provides reactive demo mode state and management functions
  */
 
-import { getCurrentInstance, ref, watch } from 'vue';
+import { computed, getCurrentInstance, ref, watch } from 'vue';
 import { createSharedComposable } from '@vueuse/core';
 import { useRoute, useRouter } from 'vue-router';
 import store from '@/store';
 import { SET_TOKENS } from '@/store/modules/user/actionTypes';
-import type { Ref } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
 
 type DemoControls = {
-  /** Reactive flag for current demo mode state */
-  isEnabled: Ref<boolean>;
-  /** Returns `true` when demo mode is currently active */
-  isDemoActive: () => boolean;
+  /** Computed ref that returns `true` when demo mode is currently active */
+  isDemoActive: ComputedRef<boolean>;
   /** Enables demo mode */
   enableDemo: () => Promise<void>;
   /** Disables demo mode */
@@ -119,10 +117,9 @@ export const useDemo = createSharedComposable((): DemoControls => {
   }
 
   /**
-   * Check if demo mode is active
-   * @returns true if demo mode is active
+   * Computed ref for demo mode state with fallback to store
    */
-  const isDemoActive = (): boolean => {
+  const isDemoActive = computed<boolean>(() => {
     try {
       return isEnabled.value || (store?.state?.demo?.isActive ?? false);
     } catch (error) {
@@ -130,7 +127,7 @@ export const useDemo = createSharedComposable((): DemoControls => {
 
       return false;
     }
-  };
+  });
 
   /**
    * Enable demo mode
@@ -172,7 +169,6 @@ export const useDemo = createSharedComposable((): DemoControls => {
   };
 
   return {
-    isEnabled,
     isDemoActive,
     enableDemo,
     disableDemo,

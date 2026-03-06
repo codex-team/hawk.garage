@@ -46,7 +46,7 @@ export function withDemoMock<Fn extends (...args: any[]) => any>(
   return async function (this: any, ...args: Parameters<Fn>): Promise<Awaited<ReturnType<Fn>>> {
     const { isDemoActive } = useDemo();
 
-    if (!isDemoActive()) {
+    if (!isDemoActive.value) {
       return originalFunction.apply(this, args);
     }
 
