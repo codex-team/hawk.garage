@@ -130,7 +130,7 @@ export const getWorkspaces = withDemoMock(
  * Get workspace balance
  * @param ids – id of fetching workspaces balance
  */
-async function getBalanceRequest(ids: string[]): Promise<Workspace> {
+async function getBalanceRequest(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_BALANCE, { ids })).workspaces;
 }
 
