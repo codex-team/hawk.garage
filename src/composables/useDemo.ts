@@ -23,13 +23,19 @@ type DemoControls = {
 };
 
 /**
+ * Demo access token used for temporary auth in demo mode
+ */
+export const DEMO_ACCESS_TOKEN = 'demo-access-token';
+
+/**
+ * Demo refresh token used for temporary auth in demo mode
+ */
+export const DEMO_REFRESH_TOKEN = 'demo-refresh-token';
+
+/**
  * Composable for demo mode management
  */
 export const useDemo = createSharedComposable((): DemoControls => {
-  /** Demo access token used for temporary auth in demo mode */
-  const DEMO_ACCESS_TOKEN = 'demo-access-token';
-  /** Demo refresh token used for temporary auth in demo mode */
-  const DEMO_REFRESH_TOKEN = 'demo-refresh-token';
   /** URL query parameter key that enables demo mode */
   const DEMO_QUERY_KEY = 'demo';
   /** Reactive flag that indicates whether demo mode is enabled */

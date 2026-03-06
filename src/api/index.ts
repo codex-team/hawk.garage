@@ -4,12 +4,12 @@ import { prepareFormData } from '@/api/utils';
 import type { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
 import { i18n } from '@/i18n';
+import { DEMO_ACCESS_TOKEN } from '@/composables/useDemo';
 
 /**
  * Hawk API endpoint URL
  */
 export const API_ENDPOINT: string = import.meta.env.VITE_API_ENDPOINT || '';
-const DEMO_ACCESS_TOKEN = 'demo-access-token';
 
 /**
  * Checks if the application is running in demo mode.

@@ -2,6 +2,7 @@ import { defineComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import store from './store';
 import { SET_TOKENS } from './store/modules/user/actionTypes';
+import { DEMO_ACCESS_TOKEN, DEMO_REFRESH_TOKEN } from './composables/useDemo';
 
 import { Analytics, AnalyticsEventType } from './analytics';
 
@@ -378,8 +379,8 @@ router.beforeEach((to, from, next) => {
 
     if (!store.state.user.accessToken) {
       void store.dispatch(SET_TOKENS, {
-        accessToken: 'demo-access-token',
-        refreshToken: 'demo-refresh-token',
+        accessToken: DEMO_ACCESS_TOKEN,
+        refreshToken: DEMO_REFRESH_TOKEN,
       });
     }
 
