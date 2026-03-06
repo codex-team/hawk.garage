@@ -11,6 +11,25 @@ import { i18n } from '@/i18n';
 export const API_ENDPOINT: string = import.meta.env.VITE_API_ENDPOINT || '';
 const DEMO_ACCESS_TOKEN = 'demo-access-token';
 
+/**
+ * Checks if the application is running in demo mode.
+ *
+ * This function determines demo mode by inspecting the Authorization header
+ * stored in axios defaults. In demo mode, a special access token ('demo-access-token')
+ * is used instead of a real user token.
+ *
+ * Why this approach:
+ * - Demo mode token is set globally in axios.defaults.headers.common.Authorization
+ * - This allows all API requests to use the demo token without passing it explicitly
+ * - The Authorization header format is typically "Bearer <token>", so we use includes()
+ *   to check if the demo token is present anywhere in the header string
+ * - Type guard (typeof === 'string') ensures safe string operations, as the header
+ *   could be undefined, string, or other types
+ * - This centralized approach makes it easy to check demo mode status anywhere in the app
+ *   without additional state management
+ *
+ * @returns true if demo access token is present in the Authorization header, false otherwise
+ */
 function isDemoModeEnabled(): boolean {
   const authHeader = axios.defaults.headers.common.Authorization;
 
