@@ -28,13 +28,15 @@
       "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету.",
       "SSO_REQUIRED": "Воркспейс \"{workspace}\" требует вход только через SSO. <a href=\"{link}\">Войти через SSO →</a>"
     }
-  },  "demo": {
+  },
+  "demo": {
     "bannerText": "Хоук в режиме демо",
     "registerButton": "Регистрация",
     "contactButton": "Написать нам",
     "disableButton": "Завершить демо-режим",
-    "functionUnavailable": "Функция не доступна в демо-режиме"
-  },  "layout": {
+    "functionUnavailable": "Функция недоступна в демо-режиме"
+  },
+  "layout": {
     "aside": {
       "emptyProjectsList": "У вас еще нет проектов.",
       "createFirstProjectLabel": "Добавьте первую интеграцию.",
