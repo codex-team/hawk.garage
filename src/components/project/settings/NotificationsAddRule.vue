@@ -1,6 +1,6 @@
 <template>
   <form
-    class="grid-form"
+    class="grid-form notifications-add-rule-form"
     @submit.prevent="save"
   >
     <section class="grid-form__section">
@@ -101,6 +101,7 @@
                 />
                 <CustomSelect
                   v-model="selectedThresholdPeriod"
+                  class="grid-form__seen-more-period"
                   :label="$t('common.thresholdPeriod')"
                   :options="seenMoreThresholdPeriod"
                   :need-image="false"
@@ -679,4 +680,9 @@ export default defineComponent({
       }
     }
   }
+
+  .grid-form__seen-more-period {
+    flex: 0 0 120px;
+  }
+
 </style>
