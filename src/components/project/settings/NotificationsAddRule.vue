@@ -1,6 +1,6 @@
 <template>
   <form
-    class="grid-form notifications-add-rule-form"
+    class="grid-form"
     @submit.prevent="save"
   >
     <section class="grid-form__section">
