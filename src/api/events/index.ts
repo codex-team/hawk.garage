@@ -203,9 +203,11 @@ export async function fetchChartData(
  * @param projectId - project event is related to
  * @param eventId — original event id to remove
  */
-export async function removeEvent(projectId: string, eventId: string): Promise<boolean> {
-  return (await api.callOld(MUTATION_REMOVE_EVENT, {
+export async function removeEvent(projectId: string, eventId: string): Promise<APIResponse<{ removeEvent: boolean }>> {
+  return await api.call<{ removeEvent: boolean }>(MUTATION_REMOVE_EVENT, {
     projectId,
     eventId,
-  })).removeEvent;
+  }, undefined, {
+    allowErrors: true,
+  });
 }

@@ -28,6 +28,12 @@ import {
 } from '@/types/events';
 import type { User } from '@/types/user';
 import type { EventChartItem } from '@/types/chart';
+import { useErrorTracker } from '@/hawk';
+
+/**
+ * Error tracking composable
+ */
+const { track } = useErrorTracker();
 
 /**
  * Mutations enum for this module
@@ -425,11 +431,31 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - project event is related to
      * @param payload.eventId - original event id to remove
      */
-    async [REMOVE_EVENT]({ commit }, { projectId, eventId }: {
+    async [REMOVE_EVENT](context, { projectId, eventId }: {
       projectId: string;
       eventId: string;
     }): Promise<boolean> {
-      return await eventsApi.removeEvent(projectId, eventId);
+      const response = await eventsApi.removeEvent(projectId, eventId);
+
+      if (response.errors?.length) {
+        response.errors.forEach((apiError) => {
+          const apiErrorDetails = {
+            message: apiError.message,
+            path: apiError.path ? apiError.path.join('.') : '',
+            code: String(apiError.extensions?.code ?? ''),
+          };
+
+          track(new Error(apiError.message), {
+            projectId,
+            eventId,
+            errorDetails: apiErrorDetails,
+          });
+        });
+
+        return false;
+      }
+
+      return Boolean(response.data?.removeEvent);
     },
 
     /**

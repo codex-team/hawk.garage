@@ -9,6 +9,7 @@
           {{ formattedFullDate }}
         </span>
         <Icon
+          v-if="isAdmin"
           class="event-header__button--more"
           symbol="dots"
           @click="onMoreClick($event)"
@@ -137,7 +138,7 @@ import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
-import { usePopover } from '@codexteam/ui/vue';
+import { ContextMenuItem, usePopover } from '@codexteam/ui/vue';
 import EventActionsMenu from './EventActionsMenu.vue';
 import { ActionType } from '../utils/ConfirmationWindow/types';
 import notifier from 'codex-notifier';
@@ -276,6 +277,13 @@ export default defineComponent({
     },
 
     /**
+     * Is current user admin in workspace with this project
+     */
+    isAdmin(): boolean {
+      return this.workspace ? this.$store.getters.isCurrentUserAdmin(this.workspace.id) : false;
+    },
+
+    /**
      * Computed property that returns formatted full date for event timestamp
      */
     formattedFullDate(): string {
@@ -326,27 +334,38 @@ export default defineComponent({
     },
 
     /**
+     * Build "more options" context menu items
+     */
+    eventActionsMenuItems(): ContextMenuItem[] {
+      return [
+        {
+          type: 'default',
+          title: this.$t('event.remove') as string,
+          icon: 'Trash',
+          onActivate: () => {
+            this.hidePopover();
+            this.confirmRemoveEvent();
+          },
+        },
+      ];
+    },
+
+    /**
      * Open the "more options" context menu near the 3-dot button
      *
      * @param event - native click mouse event
      */
     onMoreClick(event: MouseEvent) {
+      if (!this.isAdmin) {
+        return;
+      }
+
       this.showPopover({
         targetEl: event.currentTarget as HTMLElement,
         with: {
           component: EventActionsMenu,
           props: {
-            items: [
-              {
-                title: this.$t('event.remove') as string,
-                icon: 'Trash',
-                danger: true,
-                onClick: () => {
-                  this.hidePopover();
-                  this.confirmRemoveEvent();
-                },
-              },
-            ],
+            items: this.eventActionsMenuItems(),
           },
         },
         align: {
@@ -367,24 +386,27 @@ export default defineComponent({
         actionType: ActionType.DELETION,
         continueButtonText: this.$t('event.removeButton').toString(),
         onConfirm: async () => {
-          try {
-            await this.$store.dispatch(REMOVE_EVENT, {
-              projectId,
-              eventId,
-            });
+          const isRemoved = await this.$store.dispatch(REMOVE_EVENT, {
+            projectId,
+            eventId,
+          });
+
+          if (isRemoved) {
             notifier.show({
               message: this.$t('event.removeSuccess').toString(),
               style: 'success',
               time: 5000,
             });
             this.$emit('event-deleted');
-          } catch {
-            notifier.show({
-              message: this.$t('event.removeError').toString(),
-              style: 'error',
-              time: 5000,
-            });
+
+            return;
           }
+
+          notifier.show({
+            message: this.$t('event.removeError').toString(),
+            style: 'error',
+            time: 5000,
+          });
         },
       });
     },
