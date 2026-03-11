@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@codexteam/ui": "0.2.0-rc.4",
-    "@hawk.so/javascript": "3.3.0-rc.3",
+    "@hawk.so/javascript": "3.3.0-rc.4",
     "@hawk.so/types": "^0.5.9",
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
@@ -35,8 +35,7 @@
     "vue-json-pretty": "^2.6.0",
     "vue-router": "^4.5.1",
     "vuex": "^4.1.0",
-    "vuex-persistedstate": "^4.1.0",
-    "web-vitals": "^5.1.0"
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@hawk.so/vite-plugin": "^1.0.6",
