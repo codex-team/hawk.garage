@@ -355,9 +355,13 @@ const actions = {
    * @returns {Promise<void>}
    */
   async [UPDATE_PROJECT_LAST_VISIT]({ commit }, { projectId }) {
-    await projectsApi.updateLastProjectVisit(projectId);
-
     commit(mutationTypes.RESET_PROJECT_UNREAD_COUNT, { projectId });
+
+    try {
+      await projectsApi.updateLastProjectVisit(projectId);
+    } catch (e) {
+      console.error('Failed to update last project visit', e);
+    }
   },
 
   /**

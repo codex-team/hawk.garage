@@ -37,14 +37,15 @@ export default {
       return this.$store.getters.getProjectById(this.projectId);
     },
   },
-  /**
-   * Vue mounted hook
-   * Used to update user's last project visit time
-   */
-  mounted() {
-    if (this.project) {
-      this.$store.dispatch('UPDATE_PROJECT_LAST_VISIT', { projectId: this.projectId });
-    }
+  watch: {
+    project: {
+      handler(newProject, oldProject) {
+        if (newProject && !oldProject) {
+          this.$store.dispatch('UPDATE_PROJECT_LAST_VISIT', { projectId: this.projectId });
+        }
+      },
+      immediate: true,
+    },
   },
 };
 </script>
