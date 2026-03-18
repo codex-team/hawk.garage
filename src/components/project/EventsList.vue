@@ -1,12 +1,20 @@
 <template>
   <div class="events-list">
-    <SearchField
-      v-model="searchQuery"
-      class="search-container"
-      skin="fancy"
-      :placeholder="searchFieldPlaceholder"
-      :is-c-m-d-k-enabled="true"
-    />
+    <div class="events-list__controls">
+      <SearchField
+        v-model="searchQuery"
+        class="search-container"
+        skin="fancy"
+        :placeholder="searchFieldPlaceholder"
+        :is-c-m-d-k-enabled="true"
+      />
+      <UiSelect
+        v-model="selectedAssigneeId"
+        class="events-list__assignee-filter"
+        :options="assigneeOptions"
+        :placeholder="$t('event.viewedBy.assignee')"
+      />
+    </div>
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -76,6 +84,7 @@ import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
+import UiSelect from '../utils/UiSelect.vue';
 
 /**
  * Events list component grouped by days.
@@ -99,6 +108,7 @@ export default {
     AssigneesList,
     SearchField,
     EmptyState,
+    UiSelect,
   },
   props: {
     fallback: {
@@ -122,6 +132,10 @@ export default {
        * Raw (not grouped by groupingTimestamp) dailyEvents list
        */
       dailyEvents: [],
+      /**
+       * Selected assignee id for filtering events
+       */
+      selectedAssigneeId: '',
       /**
        * Indicates whether items are loading or not.
        */
@@ -212,6 +226,33 @@ export default {
     release() {
       return this.$route.params.release || this.$route.query?.release;
     },
+    /**
+     * Workspace for current project (contains team members)
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    },
+    /**
+     * Assignee filter options (all + workspace users)
+     */
+    assigneeOptions() {
+      const users = (this.workspace?.team || [])
+        .map(member => member.user)
+        .filter(Boolean);
+
+      const options = users.map(user => ({
+        label: user.name || user.email,
+        value: String(user.id),
+      }));
+
+      return [
+        {
+          label: this.$t('projects.filters.assigneeAll'),
+          value: '',
+        },
+        ...options,
+      ];
+    },
     ...mapGetters(['getProjectEventById', 'getProjectSearch']),
     /**
      * Whether there are items to display
@@ -284,6 +325,7 @@ export default {
         nextCursor: this.dailyEventsNextCursor,
         search,
         release: this.release,
+        assignee: this.selectedAssigneeId || undefined,
       });
 
       this.dailyEventsNextCursor = nextCursor;
@@ -395,6 +437,9 @@ export default {
     searchQuery(newVal) {
       void this.debouncedSearch(newVal);
     },
+    selectedAssigneeId() {
+      this.reloadDailyEvents();
+    },
   },
 };
 </script>
@@ -403,6 +448,12 @@ export default {
 .events-list {
   display: flex;
   flex-direction: column;
+
+  &__controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
 
   &__group {
     margin-top: 25px;
@@ -447,8 +498,29 @@ export default {
     position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
   }
+
+  &__assignee-filter {
+    width: 152px;
+    margin-top: 16px;
+
+    .ui-select__button {
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+    }
+
+    .ui-context-list {
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+
+      &__item:hover {
+        background-color: var(--color-bg-third);
+      }
+    }
+  }
 }
 .search-container {
+  flex: 1 1 auto;
+  min-width: 0;
   margin-top: 16px;
 }
 </style>

@@ -130,7 +130,8 @@
         "byDate": "По времени",
         "byCount": "По количеству",
         "byAffectedUsers": "По пользователям"
-      }
+      },
+      "assigneeAll": "Все исполнители"
     },
     "placeholder": "Выберите проект",
     "loadMoreEvents": "Загрузить больше событий",

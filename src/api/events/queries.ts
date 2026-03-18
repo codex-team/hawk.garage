@@ -24,9 +24,10 @@ export const QUERY_PROJECT_DAILY_EVENTS = `
     $filters: EventsFiltersInput
     $search: String
     $release: String
+    $assignee: ID
   ) {
     project(projectId: $projectId) {
-      dailyEventsPortion(sort: $sort, filters: $filters, search: $search, release: $release, nextCursor: $cursor) {
+      dailyEventsPortion(sort: $sort, filters: $filters, search: $search, release: $release, assignee: $assignee, nextCursor: $cursor) {
         nextCursor {
           groupingTimestampBoundary
           sortValueBoundary
