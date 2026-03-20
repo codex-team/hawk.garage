@@ -9,7 +9,8 @@ import {
   TOGGLE_EVENT_MARK,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  GET_CHART_DATA,
+  GET_AFFECTED_USERS_CHART_DATA
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import type { Module } from 'vuex';
@@ -26,7 +27,7 @@ import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem } from '@/types/chart';
+import type { ChartLine } from '@/types/chart';
 
 /**
  * Mutations enum for this module
@@ -69,6 +70,11 @@ enum MutationTypes {
    * Get chart data for en event for a few days
    */
   SaveChartData = 'SAVE_CHART_DATA',
+
+  /**
+   * Get affected users chart data for an event for a few days
+   */
+  SaveAffectedUsersChartData = 'SAVE_AFFECTED_USERS_CHART_DATA',
 
   /**
    * Set project search
@@ -253,12 +259,16 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.search - event searching regex string
      * @param payload.nextCursor - pointer to the first daily event of the portion to fetch
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release }: { projectId: string;
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release }: {
+      projectId: string;
       search: string;
       nextCursor: DailyEventsCursor | null;
-      release?: string; }):
-      Promise<{ dailyEventsWithEventsLinked: DailyEventWithEventLinked[];
-        nextCursor: string | null; }> {
+      release?: string;
+    }):
+      Promise<{
+        dailyEventsWithEventsLinked: DailyEventWithEventLinked[];
+        nextCursor: string | null;
+      }> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
@@ -294,8 +304,10 @@ const module: Module<EventsModuleState, RootState> = {
         };
       });
 
-      return { dailyEventsWithEventsLinked,
-        nextCursor: dailyEventsPortion.nextCursor };
+      return {
+        dailyEventsWithEventsLinked,
+        nextCursor: dailyEventsPortion.nextCursor,
+      };
     },
 
     /**
@@ -311,12 +323,16 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [FETCH_EVENT_REPETITIONS](
       { commit },
-      { projectId, originalEventId, limit, cursor }: { projectId: string;
+      { projectId, originalEventId, limit, cursor }: {
+        projectId: string;
         originalEventId: string;
         limit: number;
-        cursor?: string; }
-    ): Promise<{ repetitions: HawkEvent[];
-      nextCursor?: string; }> {
+        cursor?: string;
+      }
+    ): Promise<{
+      repetitions: HawkEvent[];
+      nextCursor?: string;
+    }> {
       const response = await eventsApi.getRepetitionsPortion(projectId, originalEventId, limit, cursor);
 
       let repetitions: HawkEvent[] = [];
@@ -336,8 +352,10 @@ const module: Module<EventsModuleState, RootState> = {
         eventsList: repetitions,
       });
 
-      return { repetitions,
-        nextCursor };
+      return {
+        repetitions,
+        nextCursor,
+      };
     },
 
     /**
@@ -433,9 +451,11 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.eventId - event id
      * @param payload.assignee - user to assign to this event
      */
-    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: { projectId: string;
+    async [UPDATE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId, assignee }: {
+      projectId: string;
       eventId: string;
-      assignee: User; }): Promise<void> {
+      assignee: User;
+    }): Promise<void> {
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
       const result = await eventsApi.updateAssignee(projectId, event.originalEventId, assignee.id);
@@ -457,8 +477,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - project id
      * @param payload.eventId - event id
      */
-    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string;
-      eventId: string; }): Promise<void> {
+    async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: {
+      projectId: string;
+      eventId: string;
+    }): Promise<void> {
       const result = await eventsApi.removeAssignee(projectId, eventId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
 
@@ -536,6 +558,41 @@ const module: Module<EventsModuleState, RootState> = {
       );
 
       commit(MutationTypes.SaveChartData, {
+        projectId,
+        eventId,
+        data: chartData,
+      });
+    },
+
+    /**
+     * Get affected users chart data for an event for a specified period
+     * @param context - vuex action context
+     * @param context.commit - VueX commit method
+     * @param payload - object of payload data
+     * @param payload.projectId - project's id
+     * @param payload.eventId - event's id
+     * @param payload.originalEventId - original event's id
+     * @param payload.days - number of days to fetch chart data for
+     */
+    async [GET_AFFECTED_USERS_CHART_DATA](
+      { commit },
+      { projectId, eventId, originalEventId, days }:
+        {
+          projectId: string;
+          eventId: string;
+          originalEventId: string;
+          days: number;
+        }
+    ): Promise<void> {
+      const timezoneOffset = (new Date()).getTimezoneOffset();
+      const chartData = await eventsApi.fetchAffectedUsersChartData(
+        projectId,
+        originalEventId,
+        days,
+        timezoneOffset
+      );
+
+      commit(MutationTypes.SaveAffectedUsersChartData, {
         projectId,
         eventId,
         data: chartData,
@@ -678,8 +735,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param project.order - order to set
      * @param project.projectId - project to set order for
      */
-    [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder;
-      projectId: string; }): void {
+    [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: {
+      order: EventsSortOrder;
+      projectId: string;
+    }): void {
       if (!state.filters[projectId]) {
         state.filters[projectId] = {};
       }
@@ -694,8 +753,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param project.filters - filters object to set
      * @param project.projectId - project to set filters for
      */
-    [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters;
-      projectId: string; }): void {
+    [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: {
+      filters: EventsFilters;
+      projectId: string;
+    }): void {
       if (!state.filters[projectId]) {
         state.filters[projectId] = {};
       }
@@ -711,13 +772,33 @@ const module: Module<EventsModuleState, RootState> = {
      * @param project.eventId - event ID
      * @param project.data - array of dots
      */
-    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string;
+    [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: {
+      projectId: string;
       eventId: string;
-      data: EventChartItem[]; }): void {
+      data: ChartLine[];
+    }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.events[key];
 
       state.events[key].chartData = data;
+    },
+
+    /**
+     * Save event's affected users chart data
+     * @param state - module state
+     * @param project - object for project data
+     * @param project.projectId - project ID
+     * @param project.eventId - event ID
+     * @param project.data - array of dots
+     */
+    [MutationTypes.SaveAffectedUsersChartData](state: EventsModuleState, { projectId, eventId, data }: {
+      projectId: string;
+      eventId: string;
+      data: ChartLine[];
+    }): void {
+      const key = getEventsListKey(projectId, eventId);
+
+      state.events[key].affectedUsersChartData = data;
     },
 
     /**
@@ -735,8 +816,10 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - project id
      * @param payload.search - search string
      */
-    [MutationTypes.SetProjectSearch](state: EventsModuleState, { projectId, search }: { projectId: string;
-      search: string; }): void {
+    [MutationTypes.SetProjectSearch](state: EventsModuleState, { projectId, search }: {
+      projectId: string;
+      search: string;
+    }): void {
       state.search[projectId] = search;
     },
   },
