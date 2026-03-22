@@ -503,6 +503,7 @@ export default {
     .ui-select__button {
       background-color: var(--color-bg-main);
       border: 1px solid var(--color-border);
+      gap: 2px;
     }
 
     .ui-context-list {
