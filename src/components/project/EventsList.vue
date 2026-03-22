@@ -1,20 +1,21 @@
 <template>
   <div class="events-list">
-    <div class="events-list__controls">
-      <SearchField
-        v-model="searchQuery"
-        class="search-container"
-        skin="fancy"
-        :placeholder="searchFieldPlaceholder"
-        :is-c-m-d-k-enabled="true"
-      />
-      <UiSelect
-        v-model="selectedAssigneeId"
-        class="events-list__assignee-filter"
-        :options="assigneeOptions"
-        :placeholder="$t('event.viewedBy.assignee')"
-      />
-    </div>
+    <SearchField
+      v-model="searchQuery"
+      class="events-list__search search-container"
+      skin="fancy"
+      :placeholder="searchFieldPlaceholder"
+      :is-c-m-d-k-enabled="true"
+    >
+      <template #suffix>
+        <UiSelect
+          v-model="selectedAssigneeId"
+          class="events-list__assignee-filter"
+          :options="assigneeOptions"
+          :placeholder="$t('event.viewedBy.assignee')"
+        />
+      </template>
+    </SearchField>
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -449,12 +450,6 @@ export default {
   display: flex;
   flex-direction: column;
 
-  &__controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-
   &__group {
     margin-top: 25px;
   }
@@ -500,8 +495,7 @@ export default {
   }
 
   &__assignee-filter {
-    width: 152px;
-    margin-top: 16px;
+    flex-shrink: 0;
 
     .ui-select__button {
       background-color: var(--color-bg-main);
@@ -519,8 +513,7 @@ export default {
   }
 }
 .search-container {
-  flex: 1 1 auto;
-  min-width: 0;
+  width: 100%;
   margin-top: 16px;
 }
 </style>
