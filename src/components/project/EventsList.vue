@@ -11,6 +11,8 @@
         <UiSelect
           v-model="selectedAssigneeId"
           class="events-list__assignee-filter"
+          :class="{ 'events-list__assignee-filter--all': !selectedAssigneeId }"
+          :icon-left="selectedAssigneeId ? undefined : 'user-small'"
           :options="assigneeOptions"
           :placeholder="$t('event.viewedBy.assignee')"
         />
@@ -248,8 +250,9 @@ export default {
 
       return [
         {
-          label: this.$t('projects.filters.assigneeAll'),
           value: '',
+          icon: 'user-small',
+          label: this.$t('projects.filters.assigneeAll'),
         },
         ...options,
       ];
@@ -503,13 +506,37 @@ export default {
     }
 
     .ui-context-list {
+      /* Override scoped UiSelect: align popover to trigger right edge, width from content (grows left) */
+      right: 0 !important;
+      left: auto !important;
+      width: max-content !important;
+      min-width: 100%;
+      max-width: min(420px, calc(100vw - 24px));
+      box-sizing: border-box;
       background-color: var(--color-bg-main);
       border: 1px solid var(--color-border);
 
-      &__item:hover {
+      .ui-context-list__item {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      .ui-context-list__item:hover {
         background-color: var(--color-bg-third);
       }
     }
+  }
+
+  /* “All assignees” trigger: iconLeft + chevron only; label hidden via CSS (UiSelect unchanged) */
+  &__assignee-filter--all .ui-select__button {
+    font-size: 0;
+    line-height: 0;
+  }
+
+  &__assignee-filter--all .ui-select__button .icon {
+    width: 12px;
+    height: 12px;
   }
 }
 .search-container {
