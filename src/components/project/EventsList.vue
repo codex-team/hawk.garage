@@ -2,11 +2,22 @@
   <div class="events-list">
     <SearchField
       v-model="searchQuery"
-      class="search-container"
+      class="events-list__search search-container"
       skin="fancy"
       :placeholder="searchFieldPlaceholder"
       :is-c-m-d-k-enabled="true"
-    />
+    >
+      <template #suffix>
+        <UiSelect
+          v-model="selectedAssigneeId"
+          class="events-list__assignee-filter"
+          :class="{ 'events-list__assignee-filter--all': !selectedAssigneeId }"
+          :icon-left="selectedAssigneeId ? undefined : 'user-small'"
+          :options="assigneeOptions"
+          :placeholder="$t('event.viewedBy.assignee')"
+        />
+      </template>
+    </SearchField>
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -76,6 +87,7 @@ import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
+import UiSelect from '../utils/UiSelect.vue';
 
 /**
  * Events list component grouped by days.
@@ -99,6 +111,7 @@ export default {
     AssigneesList,
     SearchField,
     EmptyState,
+    UiSelect,
   },
   props: {
     fallback: {
@@ -122,6 +135,10 @@ export default {
        * Raw (not grouped by groupingTimestamp) dailyEvents list
        */
       dailyEvents: [],
+      /**
+       * Selected assignee id for filtering events
+       */
+      selectedAssigneeId: '',
       /**
        * Indicates whether items are loading or not.
        */
@@ -212,6 +229,34 @@ export default {
     release() {
       return this.$route.params.release || this.$route.query?.release;
     },
+    /**
+     * Workspace for current project (contains team members)
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    },
+    /**
+     * Assignee filter options (all + workspace users)
+     */
+    assigneeOptions() {
+      const users = (this.workspace?.team || [])
+        .map(member => member.user)
+        .filter(Boolean);
+
+      const options = users.map(user => ({
+        label: user.name || user.email,
+        value: String(user.id),
+      }));
+
+      return [
+        {
+          value: '',
+          icon: 'user-small',
+          label: this.$t('projects.filters.assigneeAll'),
+        },
+        ...options,
+      ];
+    },
     ...mapGetters(['getProjectEventById', 'getProjectSearch']),
     /**
      * Whether there are items to display
@@ -284,6 +329,7 @@ export default {
         nextCursor: this.dailyEventsNextCursor,
         search,
         release: this.release,
+        assignee: this.selectedAssigneeId || undefined,
       });
 
       this.dailyEventsNextCursor = nextCursor;
@@ -395,6 +441,9 @@ export default {
     searchQuery(newVal) {
       void this.debouncedSearch(newVal);
     },
+    selectedAssigneeId() {
+      this.reloadDailyEvents();
+    },
   },
 };
 </script>
@@ -447,8 +496,52 @@ export default {
     position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
   }
+
+  &__assignee-filter {
+    flex-shrink: 0;
+
+    .ui-select__button {
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+      gap: 2px;
+    }
+
+    .ui-context-list {
+      /* Override scoped UiSelect: align popover to trigger right edge, width from content (grows left) */
+      right: 0 !important;
+      left: auto !important;
+      width: max-content !important;
+      min-width: 100%;
+      max-width: min(420px, calc(100vw - 24px));
+      box-sizing: border-box;
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+
+      .ui-context-list__item {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      .ui-context-list__item:hover {
+        background-color: var(--color-bg-third);
+      }
+    }
+  }
+
+  /* “All assignees” trigger: iconLeft + chevron only; label hidden via CSS (UiSelect unchanged) */
+  &__assignee-filter--all .ui-select__button {
+    font-size: 0;
+    line-height: 0;
+  }
+
+  &__assignee-filter--all .ui-select__button .icon {
+    width: 12px;
+    height: 12px;
+  }
 }
 .search-container {
+  width: 100%;
   margin-top: 16px;
 }
 </style>
