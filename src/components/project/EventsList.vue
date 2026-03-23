@@ -501,9 +501,17 @@ export default {
     flex-shrink: 0;
 
     .ui-select__button {
-      background-color: var(--color-bg-main);
-      border: 1px solid var(--color-border);
       gap: 2px;
+      color: var(--color-text-second) !important;
+      font-weight: 500;
+      background-color: transparent !important;
+      border: none;
+      box-shadow: none;
+
+      &:hover {
+        color: var(--color-text-main) !important;
+        background-color: transparent !important;
+      }
     }
 
     .ui-context-list {
