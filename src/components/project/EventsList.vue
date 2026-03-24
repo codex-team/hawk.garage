@@ -551,5 +551,9 @@ export default {
 .search-container {
   width: 100%;
   margin-top: 16px;
+
+  &.form-search-field {
+      padding-inline-end: 7px;
+  }
 }
 </style>
