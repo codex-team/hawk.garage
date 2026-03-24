@@ -180,6 +180,10 @@ export default {
        * Anchor element for assignees popup positioning
        */
       assigneesAnchorEl: null,
+      /**
+       * When true, run reloadDailyEvents once the current load finishes (assignee changed mid-request)
+       */
+      pendingAssigneeReload: false,
     };
   },
   created() {
@@ -442,7 +446,19 @@ export default {
       void this.debouncedSearch(newVal);
     },
     selectedAssigneeId() {
+      if (this.isLoading) {
+        this.pendingAssigneeReload = true;
+
+        return;
+      }
+      this.pendingAssigneeReload = false;
       this.reloadDailyEvents();
+    },
+    isLoading(newVal) {
+      if (!newVal && this.pendingAssigneeReload) {
+        this.pendingAssigneeReload = false;
+        this.reloadDailyEvents();
+      }
     },
   },
 };

@@ -252,6 +252,8 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - id of the project to get overview for
      * @param payload.search - event searching regex string
      * @param payload.nextCursor - pointer to the first daily event of the portion to fetch
+     * @param payload.release - optional release label to filter by payload.release
+     * @param payload.assignee - optional user id to filter events by assignee
      */
     async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release, assignee }: { projectId: string;
       search: string;
