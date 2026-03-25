@@ -527,7 +527,6 @@ export default {
 
   &__assignee-filter {
     flex-shrink: 0;
-    /* Popover above event rows (assignee avatars stack high) */
     position: relative;
     z-index: 100;
 
