@@ -34,4 +34,9 @@ export interface BeforePaymentPayload {
    * Next payment date in ISO string format
    */
   nextPaymentDate: string;
+
+  /**
+   * CloudPayments public id (merchant identifier for widget)
+   */
+  cloudPaymentsPublicId: string;
 }

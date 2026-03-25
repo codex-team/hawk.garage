@@ -649,12 +649,13 @@
     "@eslint/core" "^0.17.0"
     levn "^0.4.1"
 
-"@hawk.so/javascript@3.2.15":
-  version "3.2.15"
-  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.2.15.tgz#898426f90f8206ab0f32b7aa5decb0b3b7dc5c8b"
-  integrity sha512-TqTP2gE3Ru8c01APsH64MrRy+umC2RjOopAggvxpwgpHT+JJsY4+Y8h/HfhjVyguCzShqP3CMG++RG0i9HrCKA==
+"@hawk.so/javascript@3.3.0-rc.5":
+  version "3.3.0-rc.5"
+  resolved "https://registry.yarnpkg.com/@hawk.so/javascript/-/javascript-3.3.0-rc.5.tgz#d1a8c6f3c4c07049ee581765c1694de96ed59f49"
+  integrity sha512-o/yOXyXJ8IVEa0uODyV7ocznExberqWXHqxidS00YvR+CMwUjZaAiNmBe2yaq9xufwysWPM9l6zRWpqwEr3l2g==
   dependencies:
     error-stack-parser "^2.1.4"
+    web-vitals "^5.1.0"
 
 "@hawk.so/types@^0.5.9":
   version "0.5.9"
@@ -5421,6 +5422,11 @@ vuex@^4.1.0:
   integrity sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.11"
+
+web-vitals@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/web-vitals/-/web-vitals-5.1.0.tgz#2f117e92c8c4eeb107cb163cbb482ac20d685ebd"
+  integrity sha512-ArI3kx5jI0atlTtmV0fWU3fjpLmq/nD3Zr1iFFlJLaqa5wLBkUSzINwBPySCX/8jRyjlmy1Volw1kz1g9XE4Jg==
 
 whatwg-encoding@^2.0.0:
   version "2.0.0"

@@ -130,7 +130,8 @@
         "byDate": "By time",
         "byCount": "By count",
         "byAffectedUsers": "By affected users"
-      }
+      },
+      "assigneeAll": "All assignees"
     },
     "placeholder": "No project selected",
     "loadMoreEvents": "Load more events",

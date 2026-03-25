@@ -81,6 +81,7 @@ export const QUERY_COMPOSE_PAYMENT = `
       currency
       checksum
       nextPaymentDate
+      cloudPaymentsPublicId
     }
   }
 `;
