@@ -131,7 +131,9 @@
         "byCount": "By count",
         "byAffectedUsers": "By affected users"
       },
-      "assigneeAll": "All assignees"
+      "assigneeNoFilter": "No filter",
+      "assigneeUnassigned": "Unassigned",
+      "assigneeAny": "Any assignee"
     },
     "placeholder": "No project selected",
     "loadMoreEvents": "Load more events",

@@ -128,6 +128,7 @@ export default defineComponent({
      */
     selectOptionsToContextListItems(): UiContextListItem[] {
       return this.options.map(option => ({
+        rowKey: option.value,
         icon: option.icon,
         label: option.label,
         isActive: option.value === this.internalValue,
