@@ -131,7 +131,9 @@
         "byCount": "По количеству",
         "byAffectedUsers": "По пользователям"
       },
-      "assigneeAll": "Все исполнители"
+      "assigneeNoFilter": "Без фильтра",
+      "assigneeUnassigned": "Без исполнителя",
+      "assigneeAny": "Любой исполнитель"
     },
     "placeholder": "Выберите проект",
     "loadMoreEvents": "Загрузить больше событий",

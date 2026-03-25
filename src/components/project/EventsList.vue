@@ -89,6 +89,10 @@ import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
 
+/** Must match api/src/models/eventsFactory.js assignee filter sentinels */
+const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
+const ASSIGNEE_FILTER_ANY_ASSIGNEE = '__filter_any_assignee__';
+
 /**
  * Events list component grouped by days.
  *
@@ -256,7 +260,15 @@ export default {
         {
           value: '',
           icon: 'user-small',
-          label: this.$t('projects.filters.assigneeAll'),
+          label: this.$t('projects.filters.assigneeNoFilter'),
+        },
+        {
+          value: ASSIGNEE_FILTER_UNASSIGNED,
+          label: this.$t('projects.filters.assigneeUnassigned'),
+        },
+        {
+          value: ASSIGNEE_FILTER_ANY_ASSIGNEE,
+          label: this.$t('projects.filters.assigneeAny'),
         },
         ...options,
       ];
@@ -515,6 +527,8 @@ export default {
 
   &__assignee-filter {
     flex-shrink: 0;
+    position: relative;
+    z-index: 100;
 
     .ui-select__button {
       gap: 2px;
@@ -532,6 +546,7 @@ export default {
 
     .ui-context-list {
       /* Override scoped UiSelect: align popover to trigger right edge, width from content (grows left) */
+      z-index: 101;
       right: 0 !important;
       left: auto !important;
       width: max-content !important;
@@ -569,7 +584,9 @@ export default {
   margin-top: 16px;
 
   &.form-search-field {
-      padding-inline-end: 7px;
+    position: relative;
+    z-index: 100;
+    padding-inline-end: 7px;
   }
 }
 </style>
