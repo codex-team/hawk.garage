@@ -480,6 +480,7 @@ export default {
 .events-list {
   display: flex;
   flex-direction: column;
+  min-height: 400px;
 
   &__group {
     margin-top: 25px;
