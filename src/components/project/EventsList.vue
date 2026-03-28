@@ -338,30 +338,33 @@ export default {
       }
 
       this.isLoading = true;
-      const search = this.getProjectSearch(this.projectId) || '';
 
-      const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
-        projectId: this.projectId,
-        nextCursor: this.dailyEventsNextCursor,
-        search,
-        release: this.release,
-        assignee: this.selectedAssigneeId || undefined,
-      });
+      try {
+        const search = this.getProjectSearch(this.projectId) || '';
 
-      this.dailyEventsNextCursor = nextCursor;
-      this.noMore = this.dailyEventsNextCursor === null;
+        const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+          projectId: this.projectId,
+          nextCursor: this.dailyEventsNextCursor,
+          search,
+          release: this.release,
+          assignee: this.selectedAssigneeId || undefined,
+        });
 
-      if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
-        this.$emit('no-events');
+        this.dailyEventsNextCursor = nextCursor;
+        this.noMore = this.dailyEventsNextCursor === null;
+
+        if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
+          this.$emit('no-events');
+        }
+
+        if (overwrite) {
+          this.dailyEvents = [...dailyEventsWithEventsLinked];
+        } else {
+          this.dailyEvents.push(...dailyEventsWithEventsLinked);
+        }
+      } finally {
+        this.isLoading = false;
       }
-
-      if (overwrite) {
-        this.dailyEvents = [...dailyEventsWithEventsLinked];
-      } else {
-        this.dailyEvents.push(...dailyEventsWithEventsLinked);
-      }
-
-      this.isLoading = false;
     },
     /**
      * Reset pagination and reload list
