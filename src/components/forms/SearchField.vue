@@ -7,14 +7,17 @@
       class="form-search-field__search-icon"
       symbol="search"
     />
-    <input
-      ref="input"
-      class="form-search-field__input"
-      type="text"
-      :placeholder="placeholderText"
-      :value="modelValue"
-      @input="onChange"
-    >
+    <div class="form-search-field__input-wrap">
+      <input
+        ref="input"
+        class="form-search-field__input"
+        type="text"
+        :placeholder="placeholderText"
+        :value="modelValue"
+        @input="onChange"
+      >
+    </div>
+    <slot name="suffix" />
     <div
       v-show="inputValue"
       class="form-search-field__clear-icon-wrapper"
@@ -145,13 +148,20 @@ export default {
 
     }
 
+    &__input-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
     &__search-icon {
+      flex-shrink: 0;
       width: 14px;
       height: 14px;
       color: var(--color-text-second);
     }
 
     &__clear-icon-wrapper {
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;

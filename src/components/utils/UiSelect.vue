@@ -1,5 +1,8 @@
 <template>
-  <div class="ui-select">
+  <div
+    v-click-outside="close"
+    class="ui-select"
+  >
     <div
       class="ui-select__button"
       @click="isOpen = !isOpen"
@@ -55,10 +58,6 @@ export interface UiSelectOption {
    */
   isDisabled?: boolean;
 }
-/**
- * @todo support closing by click outside @see https://vueuse.org/core/onClickOutside/
- */
-
 export default defineComponent({
   components: {
     Icon,
@@ -129,6 +128,7 @@ export default defineComponent({
      */
     selectOptionsToContextListItems(): UiContextListItem[] {
       return this.options.map(option => ({
+        rowKey: option.value,
         icon: option.icon,
         label: option.label,
         isActive: option.value === this.internalValue,
