@@ -4,6 +4,7 @@
       {{ $t('projects.settings.general.title') }}
     </div>
     <form
+      v-if="userCanEdit"
       class="project-settings__form"
       @submit.prevent="save"
     >
@@ -56,6 +57,8 @@ import { UPDATE_PROJECT } from '@/store/modules/projects/actionTypes';
 
 import notifier from 'codex-notifier';
 
+import { ConfirmedMember, Member, Workspace } from '@/types/workspaces';
+
 /**
  * This data will be send to update a project
  */
@@ -94,6 +97,17 @@ export default defineComponent({
     project: {
       type: Object as () => Project,
       required: true,
+    },
+  },
+  computed: {
+    workspace(): Workspace {
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
+    currentMembership(): Member | undefined {
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
+    },
+    userCanEdit(): boolean {
+      return this.currentMembership ? (this.currentMembership as ConfirmedMember).isAdmin : false;
     },
   },
   data() {
