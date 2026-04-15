@@ -12,6 +12,7 @@
     />
 
     <div
+      v-if="userCanEdit"
       class="projects-integrations-settings-page__revoke-container"
       @click="revokeIntegrationToken()"
       v-html="$t('projects.settings.integrations.revokeText')"
@@ -47,6 +48,7 @@ import { ActionType } from '../../utils/ConfirmationWindow/types';
 import { GENERATE_NEW_INTEGRATION_TOKEN } from '@/store/modules/projects/actionTypes';
 import notifier from 'codex-notifier';
 import { getSentryDSN } from '../../../utils';
+import { ConfirmedMember, Member, Workspace } from '@/types/workspaces';
 
 export default defineComponent({
   name: 'ProjectIntegrationsSettings',
@@ -66,12 +68,25 @@ export default defineComponent({
     sentryDSN(): string {
       return getSentryDSN(this.project.token);
     },
+    workspace(): Workspace {
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
+    currentMembership(): Member | undefined {
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
+    },
+    userCanEdit(): boolean {
+      return this.currentMembership ? (this.currentMembership as ConfirmedMember).isAdmin : false;
+    },
   },
   methods: {
     /**
      * Revokes integration token with confirmation
      */
     revokeIntegrationToken(): void {
+      if (!this.userCanEdit) {
+        return;
+      }
+
       this.$confirm.open({
         title: this.$t('projects.settings.integrations.revokeConfirmation.title') as string,
         description: this.$t('projects.settings.integrations.revokeConfirmation.description') as string,

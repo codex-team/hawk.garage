@@ -4,7 +4,7 @@
       {{ $t('projects.settings.general.title') }}
     </div>
     <form
-      class="project-settings__form"
+      :class="['project-settings__form', { 'project-settings__form--disabled': !userCanEdit }]"
       @submit.prevent="save"
     >
       <div class="project-settings__fieldset">
@@ -33,7 +33,7 @@
 
       <div class="project-settings__submit-area">
         <button
-          v-if="showSubmitButton"
+          v-if="userCanEdit && showSubmitButton"
           class="button button--submit project-settings__submit-button"
         >
           {{ $t('projects.settings.general.submit') }}
@@ -55,6 +55,8 @@ import { Project } from '../../../types/project';
 import { UPDATE_PROJECT } from '@/store/modules/projects/actionTypes';
 
 import notifier from 'codex-notifier';
+
+import { ConfirmedMember, Member, Workspace } from '@/types/workspaces';
 
 /**
  * This data will be send to update a project
@@ -96,6 +98,17 @@ export default defineComponent({
       required: true,
     },
   },
+  computed: {
+    workspace(): Workspace {
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
+    currentMembership(): Member | undefined {
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
+    },
+    userCanEdit(): boolean {
+      return this.currentMembership ? (this.currentMembership as ConfirmedMember).isAdmin : false;
+    },
+  },
   data() {
     return {
       /**
@@ -116,6 +129,10 @@ export default defineComponent({
      * Form submit event handler
      */
     async save(): Promise<void> {
+      if (!this.userCanEdit) {
+        return;
+      }
+
       try {
         const payload = {
           id: this.project.id,
@@ -164,6 +181,11 @@ export default defineComponent({
 
     &__submit-area {
       flex-basis: 100%;
+    }
+
+    &__form--disabled {
+      pointer-events: none;
+      opacity: 0.6;
     }
 
     &__label {
