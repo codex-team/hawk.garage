@@ -2,11 +2,22 @@
   <div class="events-list">
     <SearchField
       v-model="searchQuery"
-      class="search-container"
+      class="events-list__search search-container"
       skin="fancy"
       :placeholder="searchFieldPlaceholder"
       :is-c-m-d-k-enabled="true"
-    />
+    >
+      <template #suffix>
+        <UiSelect
+          v-model="selectedAssigneeId"
+          class="events-list__assignee-filter"
+          :class="{ 'events-list__assignee-filter--all': !selectedAssigneeId }"
+          :icon-left="selectedAssigneeId ? undefined : 'user-small'"
+          :options="assigneeOptions"
+          :placeholder="$t('event.viewedBy.assignee')"
+        />
+      </template>
+    </SearchField>
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -76,6 +87,11 @@ import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
+import UiSelect from '../utils/UiSelect.vue';
+
+/** Must match api/src/models/eventsFactory.js assignee filter sentinels */
+const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
+const ASSIGNEE_FILTER_ANY_ASSIGNEE = '__filter_any_assignee__';
 
 /**
  * Events list component grouped by days.
@@ -99,6 +115,7 @@ export default {
     AssigneesList,
     SearchField,
     EmptyState,
+    UiSelect,
   },
   props: {
     fallback: {
@@ -122,6 +139,10 @@ export default {
        * Raw (not grouped by groupingTimestamp) dailyEvents list
        */
       dailyEvents: [],
+      /**
+       * Selected assignee id for filtering events
+       */
+      selectedAssigneeId: '',
       /**
        * Indicates whether items are loading or not.
        */
@@ -163,6 +184,10 @@ export default {
        * Anchor element for assignees popup positioning
        */
       assigneesAnchorEl: null,
+      /**
+       * When true, run reloadDailyEvents once the current load finishes (assignee changed mid-request)
+       */
+      pendingAssigneeReload: false,
     };
   },
   created() {
@@ -211,6 +236,42 @@ export default {
      */
     release() {
       return this.$route.params.release || this.$route.query?.release;
+    },
+    /**
+     * Workspace for current project (contains team members)
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    },
+    /**
+     * Assignee filter options (all + workspace users)
+     */
+    assigneeOptions() {
+      const users = (this.workspace?.team || [])
+        .map(member => member.user)
+        .filter(Boolean);
+
+      const options = users.map(user => ({
+        label: user.name || user.email,
+        value: String(user.id),
+      }));
+
+      return [
+        {
+          value: '',
+          icon: 'user-small',
+          label: this.$t('projects.filters.assigneeNoFilter'),
+        },
+        {
+          value: ASSIGNEE_FILTER_UNASSIGNED,
+          label: this.$t('projects.filters.assigneeUnassigned'),
+        },
+        {
+          value: ASSIGNEE_FILTER_ANY_ASSIGNEE,
+          label: this.$t('projects.filters.assigneeAny'),
+        },
+        ...options,
+      ];
     },
     ...mapGetters(['getProjectEventById', 'getProjectSearch']),
     /**
@@ -277,29 +338,33 @@ export default {
       }
 
       this.isLoading = true;
-      const search = this.getProjectSearch(this.projectId) || '';
 
-      const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
-        projectId: this.projectId,
-        nextCursor: this.dailyEventsNextCursor,
-        search,
-        release: this.release,
-      });
+      try {
+        const search = this.getProjectSearch(this.projectId) || '';
 
-      this.dailyEventsNextCursor = nextCursor;
-      this.noMore = this.dailyEventsNextCursor === null;
+        const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+          projectId: this.projectId,
+          nextCursor: this.dailyEventsNextCursor,
+          search,
+          release: this.release,
+          assignee: this.selectedAssigneeId || undefined,
+        });
 
-      if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
-        this.$emit('no-events');
+        this.dailyEventsNextCursor = nextCursor;
+        this.noMore = this.dailyEventsNextCursor === null;
+
+        if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
+          this.$emit('no-events');
+        }
+
+        if (overwrite) {
+          this.dailyEvents = [...dailyEventsWithEventsLinked];
+        } else {
+          this.dailyEvents.push(...dailyEventsWithEventsLinked);
+        }
+      } finally {
+        this.isLoading = false;
       }
-
-      if (overwrite) {
-        this.dailyEvents = [...dailyEventsWithEventsLinked];
-      } else {
-        this.dailyEvents.push(...dailyEventsWithEventsLinked);
-      }
-
-      this.isLoading = false;
     },
     /**
      * Reset pagination and reload list
@@ -395,6 +460,21 @@ export default {
     searchQuery(newVal) {
       void this.debouncedSearch(newVal);
     },
+    selectedAssigneeId() {
+      if (this.isLoading) {
+        this.pendingAssigneeReload = true;
+
+        return;
+      }
+      this.pendingAssigneeReload = false;
+      this.reloadDailyEvents();
+    },
+    isLoading(newVal) {
+      if (!newVal && this.pendingAssigneeReload) {
+        this.pendingAssigneeReload = false;
+        this.reloadDailyEvents();
+      }
+    },
   },
 };
 </script>
@@ -403,6 +483,7 @@ export default {
 .events-list {
   display: flex;
   flex-direction: column;
+  min-height: 400px;
 
   &__group {
     margin-top: 25px;
@@ -447,8 +528,69 @@ export default {
     position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
   }
+
+  &__assignee-filter {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 100;
+
+    .ui-select__button {
+      gap: 2px;
+      color: var(--color-text-second) !important;
+      font-weight: 500;
+      background-color: transparent !important;
+      border: none;
+      box-shadow: none;
+
+      &:hover {
+        color: var(--color-text-main) !important;
+        background-color: transparent !important;
+      }
+    }
+
+    .ui-context-list {
+      /* Override scoped UiSelect: align popover to trigger right edge, width from content (grows left) */
+      z-index: 101;
+      right: 0 !important;
+      left: auto !important;
+      width: max-content !important;
+      min-width: 100%;
+      max-width: min(420px, calc(100vw - 24px));
+      box-sizing: border-box;
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+
+      .ui-context-list__item {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      .ui-context-list__item:hover {
+        background-color: var(--color-bg-third);
+      }
+    }
+  }
+
+  /* “All assignees” trigger: iconLeft + chevron only; label hidden via CSS (UiSelect unchanged) */
+  &__assignee-filter--all .ui-select__button {
+    font-size: 0;
+    line-height: 0;
+  }
+
+  &__assignee-filter--all .ui-select__button .icon {
+    width: 12px;
+    height: 12px;
+  }
 }
 .search-container {
+  width: 100%;
   margin-top: 16px;
+
+  &.form-search-field {
+    position: relative;
+    z-index: 100;
+    padding-inline-end: 7px;
+  }
 }
 </style>
