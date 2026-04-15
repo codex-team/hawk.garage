@@ -4,8 +4,7 @@
       {{ $t('projects.settings.general.title') }}
     </div>
     <form
-      v-if="userCanEdit"
-      class="project-settings__form"
+      :class="['project-settings__form', { 'project-settings__form--disabled': !userCanEdit }]"
       @submit.prevent="save"
     >
       <div class="project-settings__fieldset">
@@ -34,7 +33,7 @@
 
       <div class="project-settings__submit-area">
         <button
-          v-if="showSubmitButton"
+          v-if="userCanEdit && showSubmitButton"
           class="button button--submit project-settings__submit-button"
         >
           {{ $t('projects.settings.general.submit') }}
@@ -130,6 +129,10 @@ export default defineComponent({
      * Form submit event handler
      */
     async save(): Promise<void> {
+      if (!this.userCanEdit) {
+        return;
+      }
+
       try {
         const payload = {
           id: this.project.id,
@@ -178,6 +181,11 @@ export default defineComponent({
 
     &__submit-area {
       flex-basis: 100%;
+    }
+
+    &__form--disabled {
+      pointer-events: none;
+      opacity: 0.6;
     }
 
     &__label {

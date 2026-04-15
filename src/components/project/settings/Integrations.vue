@@ -83,6 +83,10 @@ export default defineComponent({
      * Revokes integration token with confirmation
      */
     revokeIntegrationToken(): void {
+      if (!this.userCanEdit) {
+        return;
+      }
+
       this.$confirm.open({
         title: this.$t('projects.settings.integrations.revokeConfirmation.title') as string,
         description: this.$t('projects.settings.integrations.revokeConfirmation.description') as string,
