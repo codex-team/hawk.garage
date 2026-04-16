@@ -26,6 +26,12 @@ export default {
   height: 16px;
   background-color: var(--color-bg-third);
   border-radius: 9px;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 .event-item-skeleton {
