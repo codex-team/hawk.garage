@@ -372,6 +372,7 @@ export default {
     reloadDailyEvents() {
       this.dailyEventsNextCursor = null;
       this.noMore = false;
+      this.dailyEvents = [];
       this.loadMoreEvents(true);
     },
     /**
