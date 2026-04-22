@@ -49,6 +49,11 @@ export const UPDATE_EVENT_ASSIGNEE = 'UPDATE_EVENT_ASSIGNEE';
 export const REMOVE_EVENT_ASSIGNEE = 'REMOVE_EVENT_ASSIGNEE';
 
 /**
+ * Bulk set/clear assignee on many events
+ */
+export const BULK_UPDATE_EVENT_ASSIGNEE = 'BULK_UPDATE_EVENT_ASSIGNEE';
+
+/**
  * Set events order to use
  */
 export const SET_EVENTS_ORDER = 'SET_EVENTS_ORDER';

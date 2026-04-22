@@ -129,7 +129,7 @@ import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
-import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, UPDATE_EVENT_ASSIGNEE, REMOVE_EVENT_ASSIGNEE, VISIT_EVENT } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, BULK_UPDATE_EVENT_ASSIGNEE, VISIT_EVENT } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
@@ -695,27 +695,6 @@ export default {
       return [...new Set(originalIds)];
     },
     /**
-     * Selected repetition ids deduplicated by original event id
-     *
-     * @returns {string[]}
-     */
-    getSelectedRepresentativeRepetitionIds() {
-      const repetitionIdsByOriginal = new Map();
-
-      for (const repetitionId of this.selectedRepetitionIds) {
-        const event = this.getEvent(repetitionId);
-        const originalId = event && event.originalEventId ? String(event.originalEventId) : null;
-
-        if (!originalId || repetitionIdsByOriginal.has(originalId)) {
-          continue;
-        }
-
-        repetitionIdsByOriginal.set(originalId, repetitionId);
-      }
-
-      return Array.from(repetitionIdsByOriginal.values());
-    },
-    /**
      * Keep only selected rows that are currently rendered
      *
      * @returns {void}
@@ -1093,13 +1072,12 @@ export default {
       this.bulkActionInFlight = true;
 
       try {
-        const ids = this.getSelectedRepresentativeRepetitionIds();
-
-        await Promise.all(ids.map(repetitionId => this.$store.dispatch(UPDATE_EVENT_ASSIGNEE, {
+        const originalIds = this.getSelectedOriginalIds();
+        await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
-          eventId: repetitionId,
+          eventIds: originalIds,
           assignee: user,
-        })));
+        });
       } finally {
         this.bulkActionInFlight = false;
       }
@@ -1123,12 +1101,12 @@ export default {
       this.bulkActionInFlight = true;
 
       try {
-        const ids = this.getSelectedRepresentativeRepetitionIds();
-
-        await Promise.all(ids.map(repetitionId => this.$store.dispatch(REMOVE_EVENT_ASSIGNEE, {
+        const originalIds = this.getSelectedOriginalIds();
+        await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
-          eventId: repetitionId,
-        })));
+          eventIds: originalIds,
+          assignee: null,
+        });
       } finally {
         this.bulkActionInFlight = false;
       }

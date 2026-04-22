@@ -171,3 +171,19 @@ export const MUTATION_REMOVE_EVENT_ASSIGNEE = `
     }
   }
 `;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to bulk set/clear assignee for original events
+ */
+export const MUTATION_BULK_UPDATE_EVENT_ASSIGNEE = `
+  mutation bulkUpdateAssignee($input: BulkUpdateAssigneeInput!) {
+    events {
+      bulkUpdateAssignee(input: $input) {
+        updatedCount
+        updatedEventIds
+        failedEventIds
+      }
+    }
+  }
+`;

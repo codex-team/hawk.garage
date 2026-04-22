@@ -8,6 +8,7 @@ import {
   SET_EVENTS_ORDER,
   TOGGLE_EVENT_MARK,
   BULK_TOGGLE_EVENT_MARKS,
+  BULK_UPDATE_EVENT_ASSIGNEE,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
   GET_CHART_DATA
@@ -519,6 +520,48 @@ const module: Module<EventsModuleState, RootState> = {
           assignee: null,
         });
       }
+    },
+    /**
+     * Bulk set/clear assignee for original event ids
+     * @param context - vuex action context
+     * @param context.commit - VueX commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - project id
+     * @param payload.eventIds - original event ids
+     * @param payload.assignee - user to assign, null to clear
+     */
+    async [BULK_UPDATE_EVENT_ASSIGNEE](
+      { commit },
+      { projectId, eventIds, assignee }: { projectId: string; eventIds: string[]; assignee: User | null; }
+    ): Promise<
+      {
+        updatedCount: number;
+        updatedEventIds: string[];
+        failedEventIds: string[];
+      } | null
+    > {
+      const uniqueEventIds = [...new Set(eventIds.map(String))];
+      const result = await eventsApi.bulkUpdateAssignee(
+        projectId,
+        uniqueEventIds,
+        assignee ? assignee.id : null
+      );
+
+      if (!result) {
+        return null;
+      }
+
+      const updatedIds = [...new Set((result.updatedEventIds || []).map(String))];
+
+      updatedIds.forEach((originalEventId) => {
+        commit(MutationTypes.SetEventAssignee, {
+          projectId,
+          originalEventId,
+          assignee,
+        });
+      });
+
+      return result;
     },
 
     /**

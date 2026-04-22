@@ -4,6 +4,7 @@ import {
   MUTATION_VISIT_EVENT,
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
+  MUTATION_BULK_UPDATE_EVENT_ASSIGNEE,
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
@@ -219,6 +220,51 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
       eventId,
     },
   })).events.removeAssignee;
+}
+
+/**
+ * Bulk set/clear assignee for original event ids
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ * @param assigneeId - user id to assign, null to clear
+ */
+export async function bulkUpdateAssignee(
+  projectId: string,
+  eventIds: string[],
+  assigneeId: string | null
+): Promise<
+  {
+    updatedCount: number;
+    updatedEventIds: string[];
+    failedEventIds: string[];
+  } | null
+> {
+  const response = await api.call<{
+    events: {
+      bulkUpdateAssignee: {
+        updatedCount: number;
+        updatedEventIds: string[];
+        failedEventIds: string[];
+      };
+    };
+  }>(
+    MUTATION_BULK_UPDATE_EVENT_ASSIGNEE,
+    {
+      input: {
+        projectId,
+        eventIds,
+        assignee: assigneeId,
+      },
+    },
+    undefined,
+    { allowErrors: true }
+  );
+
+  if (response.errors?.length) {
+    return null;
+  }
+
+  return response.data.events.bulkUpdateAssignee ?? null;
 }
 
 /**
