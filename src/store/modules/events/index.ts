@@ -9,6 +9,7 @@ import {
   TOGGLE_EVENT_MARK,
   BULK_TOGGLE_EVENT_MARKS,
   BULK_UPDATE_EVENT_ASSIGNEE,
+  BULK_VISIT_EVENTS,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
   GET_CHART_DATA
@@ -389,6 +390,46 @@ const module: Module<EventsModuleState, RootState> = {
           user,
         });
       }
+    },
+    /**
+     * Mark many original events as visited
+     * @param context - vuex action context
+     * @param context.commit - VueX commit function
+     * @param context.rootState - root VueX state
+     * @param payload - vuex action payload
+     * @param payload.projectId - project id
+     * @param payload.eventIds - original event ids
+     * @returns API result or null on GraphQL error
+     */
+    async [BULK_VISIT_EVENTS](
+      { commit, rootState },
+      { projectId, eventIds }: { projectId: string; eventIds: string[]; }
+    ): Promise<
+      {
+        updatedCount: number;
+        updatedEventIds: string[];
+        failedEventIds: string[];
+      } | null
+    > {
+      const uniqueEventIds = [...new Set(eventIds.map(String))];
+      const result = await eventsApi.bulkVisitEvents(projectId, uniqueEventIds);
+
+      if (!result) {
+        return null;
+      }
+
+      const user = (rootState).user.data;
+      const updatedIds = [...new Set((result.updatedEventIds || []).map(String))];
+
+      updatedIds.forEach((originalEventId) => {
+        commit(MutationTypes.MarkAsVisited, {
+          projectId,
+          originalEventId,
+          user,
+        });
+      });
+
+      return result;
     },
 
     /**

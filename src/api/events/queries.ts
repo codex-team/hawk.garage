@@ -116,6 +116,20 @@ export const MUTATION_VISIT_EVENT = `
 
 // language=GraphQL
 /**
+ * GraphQL Mutation to bulk mark events as visited
+ */
+export const MUTATION_BULK_VISIT_EVENTS = `
+  mutation bulkVisitEvents($projectId: ID!, $eventIds: [ID!]!) {
+    bulkVisitEvents(projectId: $projectId, eventIds: $eventIds) {
+      updatedCount
+      updatedEventIds
+      failedEventIds
+    }
+  }
+`;
+
+// language=GraphQL
+/**
  * GraphQL Mutation to set mark to event for current user
  */
 export const MUTATION_TOGGLE_EVENT_MARK = `

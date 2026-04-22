@@ -129,7 +129,7 @@ import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
-import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, BULK_UPDATE_EVENT_ASSIGNEE, VISIT_EVENT } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, BULK_UPDATE_EVENT_ASSIGNEE, BULK_VISIT_EVENTS } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
@@ -1073,6 +1073,7 @@ export default {
 
       try {
         const originalIds = this.getSelectedOriginalIds();
+
         await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
           eventIds: originalIds,
@@ -1102,6 +1103,7 @@ export default {
 
       try {
         const originalIds = this.getSelectedOriginalIds();
+
         await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
           eventIds: originalIds,
@@ -1133,10 +1135,10 @@ export default {
       try {
         const originalIds = this.getSelectedOriginalIds();
 
-        await Promise.all(originalIds.map(originalEventId => this.$store.dispatch(VISIT_EVENT, {
+        await this.$store.dispatch(BULK_VISIT_EVENTS, {
           projectId: this.projectId,
-          originalEventId,
-        })));
+          eventIds: originalIds,
+        });
       } finally {
         this.bulkActionInFlight = false;
       }

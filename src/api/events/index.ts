@@ -1,6 +1,7 @@
 import {
   MUTATION_TOGGLE_EVENT_MARK,
   MUTATION_BULK_TOGGLE_EVENT_MARKS,
+  MUTATION_BULK_VISIT_EVENTS,
   MUTATION_VISIT_EVENT,
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
@@ -134,6 +135,44 @@ export async function visitEvent(projectId: string, originalEventId: string): Pr
     projectId,
     originalEventId,
   })).visitEvent;
+}
+
+/**
+ * Mark many original events as visited for current user
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ */
+export async function bulkVisitEvents(
+  projectId: string,
+  eventIds: string[]
+): Promise<
+  {
+    updatedCount: number;
+    updatedEventIds: string[];
+    failedEventIds: string[];
+  } | null
+> {
+  const response = await api.call<{
+    bulkVisitEvents: {
+      updatedCount: number;
+      updatedEventIds: string[];
+      failedEventIds: string[];
+    };
+  }>(
+    MUTATION_BULK_VISIT_EVENTS,
+    {
+      projectId,
+      eventIds,
+    },
+    undefined,
+    { allowErrors: true }
+  );
+
+  if (response.errors?.length) {
+    return null;
+  }
+
+  return response.data.bulkVisitEvents ?? null;
 }
 
 /**

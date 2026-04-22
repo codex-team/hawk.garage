@@ -29,6 +29,11 @@ export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';
 export const VISIT_EVENT = 'VISIT_EVENT';
 
 /**
+ * Bulk mark events as visited
+ */
+export const BULK_VISIT_EVENTS = 'BULK_VISIT_EVENTS';
+
+/**
  * Action to set or unset mark to event
  */
 export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';
