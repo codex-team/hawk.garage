@@ -13,6 +13,7 @@ import {
 } from './queries';
 import * as api from '@/api';
 import type {
+  BulkEventsMutationResult,
   DailyEventsCursor,
   DailyEventsPortion,
   EventMark,
@@ -23,8 +24,22 @@ import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem, ChartLine } from '@/types/chart';
+import type { ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
+
+async function runBulkMutation<TResponse>(
+  query: string,
+  variables: Record<string, unknown>,
+  pickResult: (response: TResponse) => BulkEventsMutationResult | null | undefined
+): Promise<BulkEventsMutationResult | null> {
+  const response = await api.call<TResponse>(query, variables, undefined, { allowErrors: true });
+
+  if (response.errors?.length) {
+    return null;
+  }
+
+  return pickResult(response.data) ?? null;
+}
 
 /**
  * Get specific event
@@ -145,14 +160,8 @@ export async function visitEvent(projectId: string, originalEventId: string): Pr
 export async function bulkVisitEvents(
   projectId: string,
   eventIds: string[]
-): Promise<
-  {
-    updatedCount: number;
-    updatedEventIds: string[];
-    failedEventIds: string[];
-  } | null
-> {
-  const response = await api.call<{
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
     bulkVisitEvents: {
       updatedCount: number;
       updatedEventIds: string[];
@@ -164,15 +173,8 @@ export async function bulkVisitEvents(
       projectId,
       eventIds,
     },
-    undefined,
-    { allowErrors: true }
+    data => data.bulkVisitEvents
   );
-
-  if (response.errors?.length) {
-    return null;
-  }
-
-  return response.data.bulkVisitEvents ?? null;
 }
 
 /**
@@ -199,14 +201,8 @@ export async function bulkToggleEventMarks(
   projectId: string,
   eventIds: string[],
   mark: 'resolved' | 'ignored' | 'starred'
-): Promise<
-  {
-    updatedCount: number;
-    updatedEventIds: string[];
-    failedEventIds: string[];
-  } | null
-> {
-  const response = await api.call<{
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
     bulkToggleEventMarks: {
       updatedCount: number;
       updatedEventIds: string[];
@@ -219,15 +215,8 @@ export async function bulkToggleEventMarks(
       eventIds,
       mark,
     },
-    undefined,
-    { allowErrors: true }
+    data => data.bulkToggleEventMarks
   );
-
-  if (response.errors?.length) {
-    return null;
-  }
-
-  return response.data.bulkToggleEventMarks ?? null;
 }
 
 /**
@@ -271,14 +260,8 @@ export async function bulkUpdateAssignee(
   projectId: string,
   eventIds: string[],
   assigneeId: string | null
-): Promise<
-  {
-    updatedCount: number;
-    updatedEventIds: string[];
-    failedEventIds: string[];
-  } | null
-> {
-  const response = await api.call<{
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
     events: {
       bulkUpdateAssignee: {
         updatedCount: number;
@@ -295,15 +278,8 @@ export async function bulkUpdateAssignee(
         assignee: assigneeId,
       },
     },
-    undefined,
-    { allowErrors: true }
+    data => data.events.bulkUpdateAssignee
   );
-
-  if (response.errors?.length) {
-    return null;
-  }
-
-  return response.data.events.bulkUpdateAssignee ?? null;
 }
 
 /**
