@@ -22,74 +22,21 @@
       v-if="workspace && !workspace.isBlocked"
       class="events-list__bulk-slot"
     >
-      <div
-        v-show="selectionModeActive"
-        class="events-list__bulk-bar"
-      >
-        <div class="events-list__bulk-meta">
-          <button
-            type="button"
-            class="ui-button ui-button--small ui-button--secondary events-list__bulk-cancel-combo"
-            @click="exitBulkSelect"
-          >
-            <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }}</span>
-            <span class="ui-button-text events-list__bulk-cancel-esc">{{ $t('common.escKey') }}</span>
-          </button>
-          <span class="events-list__bulk-count">{{ $t('common.selected') }}: {{ selectedCount }}</span>
-        </div>
-        <div class="events-list__bulk-actions">
-          <UiButton
-            :content="''"
-            :title="bulkResolveLabel"
-            :aria-label="bulkResolveLabel"
-            :icon="bulkResolveIcon"
-            class="events-list__bulk-action-button"
-            small
-            :disabled="selectedCount === 0 || bulkActionLoading"
-            @click="runBulkMark('resolved')"
-          />
-          <UiButton
-            :content="''"
-            :title="bulkIgnoreLabel"
-            :aria-label="bulkIgnoreLabel"
-            :icon="bulkIgnoreIcon"
-            class="events-list__bulk-action-button"
-            small
-            :disabled="selectedCount === 0 || bulkActionLoading"
-            @click="runBulkMark('ignored')"
-          />
-          <UiButton
-            :content="''"
-            :title="bulkStarLabel"
-            :aria-label="bulkStarLabel"
-            :icon="bulkStarIcon"
-            class="events-list__bulk-action-button"
-            small
-            :disabled="selectedCount === 0 || bulkActionLoading"
-            @click="runBulkMark('starred')"
-          />
-          <UiButton
-            :content="''"
-            :title="$t('event.viewedBy.assignee')"
-            :aria-label="$t('event.viewedBy.assignee')"
-            icon="assignee"
-            class="events-list__bulk-action-button"
-            small
-            :disabled="selectedCount === 0 || bulkActionLoading"
-            @click="onBulkAssignButtonClick"
-          />
-          <UiButton
-            :content="''"
-            :title="$t('event.bulk.moreActions')"
-            :aria-label="$t('event.bulk.moreActions')"
-            icon="dots-vertical"
-            class="events-list__bulk-action-button events-list__bulk-more-trigger"
-            small
-            :disabled="selectedCount === 0 || bulkActionLoading"
-            @click="onBulkMoreMenuButtonClick"
-          />
-        </div>
-      </div>
+      <BulkActionsBar
+        :selection-mode-active="selectionModeActive"
+        :selected-count="selectedCount"
+        :active-bulk-action="activeBulkAction"
+        :bulk-resolve-label="bulkResolveLabel"
+        :bulk-resolve-icon="bulkResolveIcon"
+        :bulk-ignore-label="bulkIgnoreLabel"
+        :bulk-ignore-icon="bulkIgnoreIcon"
+        :bulk-star-label="bulkStarLabel"
+        :bulk-star-icon="bulkStarIcon"
+        @exit-bulk-select="exitBulkSelect"
+        @bulk-mark="runBulkMark"
+        @bulk-assign-click="onBulkAssignButtonClick"
+        @bulk-more-menu-click="onBulkMoreMenuButtonClick"
+      />
     </div>
     <template v-if="hasItems">
       <div
@@ -178,6 +125,7 @@
 <script>
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
+import BulkActionsBar from './BulkActionsBar.vue';
 import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
@@ -186,7 +134,6 @@ import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, UPDATE_EVENT_ASSIGNEE,
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
-import UiButton from '../utils/UiButton.vue';
 import UiContextList from '../utils/UiContextList.vue';
 import notifier from 'codex-notifier';
 
@@ -213,11 +160,11 @@ export default {
   components: {
     EventItem,
     EventItemSkeleton,
+    BulkActionsBar,
     AssigneesList,
     SearchField,
     EmptyState,
     UiSelect,
-    UiButton,
     UiContextList,
   },
   props: {
@@ -299,7 +246,7 @@ export default {
        * Last toggled row id used as Shift-selection anchor
        */
       lastSelectedRepetitionId: null,
-      bulkActionLoading: false,
+      activeBulkAction: '',
       /**
        * Bulk bar assignee picker
        */
@@ -687,13 +634,17 @@ export default {
      * @returns {Promise<void>}
      */
     async runBulkMark(mark) {
+      if (this.activeBulkAction) {
+        return;
+      }
+
       const uniqueOriginal = this.getSelectedOriginalIds();
 
       if (uniqueOriginal.length === 0) {
         return;
       }
 
-      this.bulkActionLoading = true;
+      this.activeBulkAction = mark;
 
       try {
         const result = await this.$store.dispatch(BULK_TOGGLE_EVENT_MARKS, {
@@ -723,7 +674,7 @@ export default {
           });
         }
       } finally {
-        this.bulkActionLoading = false;
+        this.activeBulkAction = '';
       }
     },
     /**
@@ -964,6 +915,10 @@ export default {
      * @returns {void}
      */
     onBulkAssignButtonClick(evt) {
+      if (this.activeBulkAction) {
+        return;
+      }
+
       /* Otherwise, the same click will reach the document and v-click-outside will close the just-mounted list */
 
       if (evt && typeof evt.stopPropagation === 'function') {
@@ -1002,6 +957,10 @@ export default {
      * @returns {void}
      */
     onBulkMoreMenuButtonClick(evt) {
+      if (this.activeBulkAction) {
+        return;
+      }
+
       if (evt && typeof evt.stopPropagation === 'function') {
         evt.stopPropagation();
       }
@@ -1122,13 +1081,17 @@ export default {
      * @returns {Promise<void>}
      */
     async onBulkPickAssignee(user) {
+      if (this.activeBulkAction) {
+        return;
+      }
+
       this.hideBulkAssigneesList();
 
       if (!user || this.selectedCount === 0) {
         return;
       }
 
-      this.bulkActionLoading = true;
+      this.activeBulkAction = 'assign';
 
       try {
         const ids = this.getSelectedRepresentativeRepetitionIds();
@@ -1139,7 +1102,7 @@ export default {
           assignee: user,
         })));
       } finally {
-        this.bulkActionLoading = false;
+        this.activeBulkAction = '';
       }
     },
     /**
@@ -1148,13 +1111,17 @@ export default {
      * @returns {Promise<void>}
      */
     async onBulkClearAssigneesFromSelection() {
+      if (this.activeBulkAction) {
+        return;
+      }
+
       this.hideBulkAssigneesList();
 
       if (this.selectedCount === 0) {
         return;
       }
 
-      this.bulkActionLoading = true;
+      this.activeBulkAction = 'unassign';
 
       try {
         const ids = this.getSelectedRepresentativeRepetitionIds();
@@ -1164,7 +1131,7 @@ export default {
           eventId: repetitionId,
         })));
       } finally {
-        this.bulkActionLoading = false;
+        this.activeBulkAction = '';
       }
     },
     /**
@@ -1173,6 +1140,10 @@ export default {
      * @returns {Promise<void>}
      */
     async onBulkMarkViewed() {
+      if (this.activeBulkAction) {
+        return;
+      }
+
       this.hideBulkAssigneesList();
       this.hideBulkMoreMenu();
 
@@ -1180,7 +1151,7 @@ export default {
         return;
       }
 
-      this.bulkActionLoading = true;
+      this.activeBulkAction = 'mark-viewed';
 
       try {
         const originalIds = this.getSelectedOriginalIds();
@@ -1190,7 +1161,7 @@ export default {
           originalEventId,
         })));
       } finally {
-        this.bulkActionLoading = false;
+        this.activeBulkAction = '';
       }
     },
   },
