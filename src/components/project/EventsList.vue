@@ -510,7 +510,7 @@ export default {
      * @returns {string}
      */
     bulkResolveIcon() {
-      return this.areAllSelectedResolved ? 'close' : 'checkmark';
+      return this.areAllSelectedResolved ? 'close-circle' : 'checkmark';
     },
     /**
      * Dynamic bulk label for starred action
@@ -722,8 +722,6 @@ export default {
             time: 10000,
           });
         }
-
-        this.exitBulkSelect();
       } finally {
         this.bulkActionLoading = false;
       }
@@ -1140,8 +1138,6 @@ export default {
           eventId: repetitionId,
           assignee: user,
         })));
-
-        this.exitBulkSelect();
       } finally {
         this.bulkActionLoading = false;
       }
@@ -1167,8 +1163,6 @@ export default {
           projectId: this.projectId,
           eventId: repetitionId,
         })));
-
-        this.exitBulkSelect();
       } finally {
         this.bulkActionLoading = false;
       }
@@ -1195,8 +1189,6 @@ export default {
           projectId: this.projectId,
           originalEventId,
         })));
-
-        this.exitBulkSelect();
       } finally {
         this.bulkActionLoading = false;
       }
@@ -1236,7 +1228,7 @@ export default {
     flex-shrink: 0;
     box-sizing: border-box;
     min-height: 40px;
-    margin-block: 12px 0;
+    margin-block: 18px 0;
   }
 
   &__bulk-bar {
