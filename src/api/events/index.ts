@@ -150,15 +150,15 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
 }
 
 /**
- * Bulk toggle resolved or ignored marks (original event ids)
+ * Bulk toggle marks (original event ids)
  * @param projectId - project id
  * @param eventIds - original event ids
- * @param mark - resolved or ignored
+ * @param mark - resolved, ignored or starred
  */
 export async function bulkToggleEventMarks(
   projectId: string,
   eventIds: string[],
-  mark: 'resolved' | 'ignored'
+  mark: 'resolved' | 'ignored' | 'starred'
 ): Promise<
   {
     updatedCount: number;

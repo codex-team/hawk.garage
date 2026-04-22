@@ -49,8 +49,7 @@
         class="event-item__checkbox"
         @pointerdown.stop
         @pointerup.stop
-        @click.stop
-        @update:model-value="$emit('toggle-row-select')"
+        @click.stop="$emit('toggle-row-select', $event)"
       />
     </div>
     <Icon
@@ -256,11 +255,12 @@ export default {
     /**
      * Open event or limit modal
      *
+     * @param {MouseEvent} [evt] - row click event (used for Shift multi-select)
      * @returns {void}
      */
-    handleRowClick() {
+    handleRowClick(evt) {
       if (this.selectionModeActive && !this.isWorkspaceBlocked) {
-        this.$emit('toggle-row-select');
+        this.$emit('toggle-row-select', evt);
 
         return;
       }

@@ -422,20 +422,20 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Bulk toggle resolved or ignored marks for original event ids
+     * Bulk toggle marks for original event ids
      * @param _context - Vuex action context (unused)
      * @param payload - mutation arguments
      * @param payload.projectId - project id
      * @param payload.eventIds - original event ids
-     * @param payload.mark - resolved or ignored
+     * @param payload.mark - resolved, ignored or starred
      * @returns API result or null on GraphQL error
      */
     async [BULK_TOGGLE_EVENT_MARKS](
-      _context: unknown,
+      { commit, state },
       payload: {
         projectId: string;
         eventIds: string[];
-        mark: 'resolved' | 'ignored';
+        mark: 'resolved' | 'ignored' | 'starred';
       }
     ): Promise<
       {
@@ -444,8 +444,50 @@ const module: Module<EventsModuleState, RootState> = {
       } | null
     > {
       const { projectId, eventIds, mark } = payload;
+      const uniqueEventIds = [...new Set(eventIds.map(String))];
+      const markByOriginalId = new Map<string, boolean>();
 
-      return eventsApi.bulkToggleEventMarks(projectId, eventIds, mark);
+      Object.entries(state.events).forEach(([key, event]) => {
+        if (!key.startsWith(`${projectId}:`)) {
+          return;
+        }
+
+        if (!uniqueEventIds.includes(event.originalEventId)) {
+          return;
+        }
+
+        if (!markByOriginalId.has(event.originalEventId)) {
+          markByOriginalId.set(event.originalEventId, !!event.marks?.[mark]);
+        }
+      });
+
+      const allSelectedMarked = uniqueEventIds.length > 0
+        && uniqueEventIds.every(id => markByOriginalId.get(id) === true);
+      const originalIdsToToggle = allSelectedMarked
+        ? uniqueEventIds
+        : uniqueEventIds.filter(id => markByOriginalId.get(id) !== true);
+
+      const result = await eventsApi.bulkToggleEventMarks(projectId, eventIds, mark);
+
+      if (!result) {
+        return null;
+      }
+
+      const failedIds = new Set((result.failedEventIds || []).map(String));
+
+      originalIdsToToggle.forEach((originalEventId) => {
+        if (failedIds.has(String(originalEventId))) {
+          return;
+        }
+
+        commit(MutationTypes.ToggleMark, {
+          projectId,
+          eventId: originalEventId,
+          mark,
+        });
+      });
+
+      return result;
     },
 
     /**

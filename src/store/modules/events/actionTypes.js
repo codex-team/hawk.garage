@@ -34,7 +34,7 @@ export const VISIT_EVENT = 'VISIT_EVENT';
 export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';
 
 /**
- * Bulk toggle resolved or ignored on many events
+ * Bulk toggle resolved/ignored/starred on many events
  */
 export const BULK_TOGGLE_EVENT_MARKS = 'BULK_TOGGLE_EVENT_MARKS';
 

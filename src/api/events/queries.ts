@@ -126,7 +126,7 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
 
 // language=GraphQL
 /**
- * Bulk toggle resolved or ignored on many original events
+ * Bulk toggle resolved/ignored/starred on many original events
  */
 export const MUTATION_BULK_TOGGLE_EVENT_MARKS = `
   mutation bulkToggleEventMarks($projectId: ID!, $eventIds: [ID!]!, $mark: EventMark!) {

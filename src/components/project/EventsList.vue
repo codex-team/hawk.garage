@@ -39,25 +39,54 @@
         </div>
         <div class="events-list__bulk-actions">
           <UiButton
-            :content="$t('event.resolve')"
-            icon="checkmark"
+            :content="''"
+            :title="bulkResolveLabel"
+            :aria-label="bulkResolveLabel"
+            :icon="bulkResolveIcon"
+            class="events-list__bulk-action-button"
             small
             :disabled="selectedCount === 0 || bulkActionLoading"
             @click="runBulkMark('resolved')"
           />
           <UiButton
-            :content="$t('event.ignore')"
-            icon="hided"
+            :content="''"
+            :title="bulkIgnoreLabel"
+            :aria-label="bulkIgnoreLabel"
+            :icon="bulkIgnoreIcon"
+            class="events-list__bulk-action-button"
             small
             :disabled="selectedCount === 0 || bulkActionLoading"
             @click="runBulkMark('ignored')"
           />
           <UiButton
-            :content="$t('event.bulk.assignee')"
+            :content="''"
+            :title="bulkStarLabel"
+            :aria-label="bulkStarLabel"
+            :icon="bulkStarIcon"
+            class="events-list__bulk-action-button"
+            small
+            :disabled="selectedCount === 0 || bulkActionLoading"
+            @click="runBulkMark('starred')"
+          />
+          <UiButton
+            :content="''"
+            :title="$t('event.viewedBy.assignee')"
+            :aria-label="$t('event.viewedBy.assignee')"
             icon="assignee"
+            class="events-list__bulk-action-button"
             small
             :disabled="selectedCount === 0 || bulkActionLoading"
             @click="onBulkAssignButtonClick"
+          />
+          <UiButton
+            :content="''"
+            :title="$t('event.bulk.moreActions')"
+            :aria-label="$t('event.bulk.moreActions')"
+            icon="dots-vertical"
+            class="events-list__bulk-action-button events-list__bulk-more-trigger"
+            small
+            :disabled="selectedCount === 0 || bulkActionLoading"
+            @click="onBulkMoreMenuButtonClick"
           />
         </div>
       </div>
@@ -84,7 +113,7 @@
           :bulk-adjacent-top="!!bulkAdjacentByEventId[dailyEventInfo.eventId]?.top"
           :bulk-adjacent-bottom="!!bulkAdjacentByEventId[dailyEventInfo.eventId]?.bottom"
           @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
-          @toggle-row-select="toggleRowSelected(dailyEventInfo.eventId)"
+          @toggle-row-select="toggleRowSelected(dailyEventInfo.eventId, $event)"
           @show-event-overview="onShowEventOverview(dailyEventInfo.eventId)"
         />
       </div>
@@ -135,6 +164,14 @@
       @pick-user="onBulkPickAssignee"
       @bulk-clear-assignees="onBulkClearAssigneesFromSelection"
     />
+    <div
+      v-if="isBulkMoreMenuShowed"
+      v-click-outside="hideBulkMoreMenu"
+      :style="bulkMoreMenuPosition"
+      class="events-list__bulk-more-menu"
+    >
+      <UiContextList :items="bulkMoreMenuItems" />
+    </div>
   </div>
 </template>
 
@@ -145,11 +182,12 @@ import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
-import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, UPDATE_EVENT_ASSIGNEE, REMOVE_EVENT_ASSIGNEE } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, UPDATE_EVENT_ASSIGNEE, REMOVE_EVENT_ASSIGNEE, VISIT_EVENT } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
 import UiButton from '../utils/UiButton.vue';
+import UiContextList from '../utils/UiContextList.vue';
 import notifier from 'codex-notifier';
 
 /** Must match api/src/models/eventsFactory.js assignee filter sentinels */
@@ -180,6 +218,7 @@ export default {
     EmptyState,
     UiSelect,
     UiButton,
+    UiContextList,
   },
   props: {
     fallback: {
@@ -256,6 +295,10 @@ export default {
        * Selected list row ids (repetition / display event id from dailyEvents)
        */
       selectedRepetitionIds: [],
+      /**
+       * Last toggled row id used as Shift-selection anchor
+       */
+      lastSelectedRepetitionId: null,
       bulkActionLoading: false,
       /**
        * Bulk bar assignee picker
@@ -270,6 +313,16 @@ export default {
        * Bound handler to detach in hideBulkAssigneesList
        */
       bulkAssignOnViewportChange: null,
+      /**
+       * Bulk "more actions" menu
+       */
+      isBulkMoreMenuShowed: false,
+      bulkMoreMenuPosition: {
+        top: 0,
+        left: 0,
+      },
+      bulkMoreMenuAnchorEl: null,
+      bulkMoreMenuOnViewportChange: null,
     };
   },
   created() {
@@ -297,6 +350,7 @@ export default {
     window.removeEventListener('keydown', this.onDocumentEscape);
     this.hideAssigneesList();
     this.hideBulkAssigneesList();
+    this.hideBulkMoreMenu();
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   // eslint-disable-next-line vue/order-in-components
@@ -397,6 +451,111 @@ export default {
       return this.selectedRepetitionIds.length > 0;
     },
     /**
+     * Selected events resolved from current row ids
+     *
+     * @returns {object[]}
+     */
+    selectedEvents() {
+      return this.selectedRepetitionIds
+        .map(repetitionId => this.getEvent(repetitionId))
+        .filter(Boolean);
+    },
+    /**
+     * True when all selected events are ignored
+     *
+     * @returns {boolean}
+     */
+    areAllSelectedIgnored() {
+      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.ignored);
+    },
+    /**
+     * True when all selected events are resolved
+     *
+     * @returns {boolean}
+     */
+    areAllSelectedResolved() {
+      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.resolved);
+    },
+    /**
+     * True when all selected events are starred
+     *
+     * @returns {boolean}
+     */
+    areAllSelectedStarred() {
+      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.starred);
+    },
+    /**
+     * Dynamic bulk label for ignore action
+     *
+     * @returns {string}
+     */
+    bulkIgnoreLabel() {
+      return this.areAllSelectedIgnored
+        ? this.$t('event.bulk.unignore')
+        : this.$t('event.ignore');
+    },
+    /**
+     * Dynamic bulk label for resolve action
+     *
+     * @returns {string}
+     */
+    bulkResolveLabel() {
+      return this.areAllSelectedResolved
+        ? this.$t('event.bulk.unresolve')
+        : this.$t('event.resolve');
+    },
+    /**
+     * Dynamic bulk icon for resolve action
+     *
+     * @returns {string}
+     */
+    bulkResolveIcon() {
+      return this.areAllSelectedResolved ? 'close' : 'checkmark';
+    },
+    /**
+     * Dynamic bulk label for starred action
+     *
+     * @returns {string}
+     */
+    bulkStarLabel() {
+      return this.areAllSelectedStarred
+        ? this.$t('event.bulk.unstar')
+        : this.$t('event.star');
+    },
+    /**
+     * Dynamic bulk icon for ignore action
+     *
+     * @returns {string}
+     */
+    bulkIgnoreIcon() {
+      return this.areAllSelectedIgnored ? 'eye' : 'hided';
+    },
+    /**
+     * Dynamic bulk icon for starred action
+     *
+     * @returns {string}
+     */
+    bulkStarIcon() {
+      return this.areAllSelectedStarred ? 'star-outline' : 'star';
+    },
+    /**
+     * "More actions" menu items for bulk toolbar
+     *
+     * @returns {Array}
+     */
+    bulkMoreMenuItems() {
+      return [
+        {
+          label: this.$t('event.bulk.markViewed'),
+          icon: 'eye',
+          isActive: false,
+          onActivate: () => {
+            void this.onBulkMarkViewed();
+          },
+        },
+      ];
+    },
+    /**
      * Event row ids in list order (same as template v-for over groupedByDate)
      *
      * @returns {string[]}
@@ -444,7 +603,9 @@ export default {
      */
     exitBulkSelect() {
       this.hideBulkAssigneesList();
+      this.hideBulkMoreMenu();
       this.selectedRepetitionIds = [];
+      this.lastSelectedRepetitionId = null;
     },
     /**
      * Exit bulk selection on Escape
@@ -469,12 +630,41 @@ export default {
       return this.selectedRepetitionIds.includes(repetitionId);
     },
     /**
-     * Toggle row selection in bulk mode
+     * Toggle row selection in bulk mode, supports Shift range selection
      *
      * @param {string} repetitionId - daily event row id
+     * @param {MouseEvent} [evt] - click event (for Shift key state)
      * @returns {void}
      */
-    toggleRowSelected(repetitionId) {
+    toggleRowSelected(repetitionId, evt) {
+      const flat = this.flattenedDailyEventIds;
+      const isShiftRange = !!(
+        evt
+        && evt.shiftKey
+        && this.lastSelectedRepetitionId
+        && this.lastSelectedRepetitionId !== repetitionId
+      );
+
+      if (isShiftRange) {
+        const fromIndex = flat.indexOf(this.lastSelectedRepetitionId);
+        const toIndex = flat.indexOf(repetitionId);
+
+        if (fromIndex >= 0 && toIndex >= 0) {
+          const start = Math.min(fromIndex, toIndex);
+          const end = Math.max(fromIndex, toIndex);
+          const selectedSet = new Set(this.selectedRepetitionIds);
+
+          for (let i = start; i <= end; i++) {
+            selectedSet.add(flat[i]);
+          }
+
+          this.selectedRepetitionIds = flat.filter(id => selectedSet.has(id));
+          this.lastSelectedRepetitionId = repetitionId;
+
+          return;
+        }
+      }
+
       const ids = this.selectedRepetitionIds;
       const i = ids.indexOf(repetitionId);
 
@@ -483,25 +673,21 @@ export default {
       } else {
         ids.push(repetitionId);
       }
+
+      this.lastSelectedRepetitionId = repetitionId;
+
+      if (ids.length === 0) {
+        this.lastSelectedRepetitionId = null;
+      }
     },
     /**
-     * Run bulk toggle for resolved or ignored (original event ids)
+     * Run bulk toggle for marks
      *
-     * @param {'resolved'|'ignored'} mark - mark to toggle
+     * @param {'resolved'|'ignored'|'starred'} mark - mark to toggle
      * @returns {Promise<void>}
      */
     async runBulkMark(mark) {
-      const originalIds = [];
-
-      for (const rid of this.selectedRepetitionIds) {
-        const ev = this.getEvent(rid);
-
-        if (ev && ev.originalEventId) {
-          originalIds.push(ev.originalEventId);
-        }
-      }
-
-      const uniqueOriginal = [...new Set(originalIds)];
+      const uniqueOriginal = this.getSelectedOriginalIds();
 
       if (uniqueOriginal.length === 0) {
         return;
@@ -538,10 +724,27 @@ export default {
         }
 
         this.exitBulkSelect();
-        this.reloadDailyEvents();
       } finally {
         this.bulkActionLoading = false;
       }
+    },
+    /**
+     * Selected original event ids from current selection
+     *
+     * @returns {string[]}
+     */
+    getSelectedOriginalIds() {
+      const originalIds = [];
+
+      for (const repetitionId of this.selectedRepetitionIds) {
+        const event = this.getEvent(repetitionId);
+
+        if (event && event.originalEventId) {
+          originalIds.push(String(event.originalEventId));
+        }
+      }
+
+      return [...new Set(originalIds)];
     },
     /**
      * Return midnight timestamp extracted from grouping key
@@ -631,6 +834,7 @@ export default {
      */
     onAssigneeIconClick(eventId, nativeEvent) {
       this.hideBulkAssigneesList();
+      this.hideBulkMoreMenu();
 
       const targetEl = nativeEvent && nativeEvent.target ? nativeEvent.target : null;
       const anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
@@ -664,6 +868,7 @@ export default {
      */
     onShowEventOverview(eventId) {
       this.hideBulkAssigneesList();
+      this.hideBulkMoreMenu();
 
       const event = this.getEvent(eventId);
       const originalEventId = event.originalEventId;
@@ -722,6 +927,7 @@ export default {
       if (this.isAssigneesShowed) {
         this.hideAssigneesList();
       }
+      this.hideBulkMoreMenu();
 
       const el = evt && evt.currentTarget ? evt.currentTarget : null;
 
@@ -744,6 +950,42 @@ export default {
       window.addEventListener('scroll', this.bulkAssignOnViewportChange, true);
     },
     /**
+     * Toggle bulk "more actions" menu
+     *
+     * @param {MouseEvent} evt - click event
+     * @returns {void}
+     */
+    onBulkMoreMenuButtonClick(evt) {
+      if (evt && typeof evt.stopPropagation === 'function') {
+        evt.stopPropagation();
+      }
+
+      this.hideBulkAssigneesList();
+      if (this.isAssigneesShowed) {
+        this.hideAssigneesList();
+      }
+
+      const el = evt && evt.currentTarget ? evt.currentTarget : null;
+
+      if (!el) {
+        return;
+      }
+
+      if (this.isBulkMoreMenuShowed && this.bulkMoreMenuAnchorEl === el) {
+        this.hideBulkMoreMenu();
+
+        return;
+      }
+
+      this.hideBulkMoreMenu();
+      this.bulkMoreMenuAnchorEl = el;
+      this.isBulkMoreMenuShowed = true;
+      this.setBulkMoreMenuPosition();
+      this.bulkMoreMenuOnViewportChange = this.setBulkMoreMenuPosition.bind(this);
+      window.addEventListener('resize', this.bulkMoreMenuOnViewportChange);
+      window.addEventListener('scroll', this.bulkMoreMenuOnViewportChange, true);
+    },
+    /**
      * Fixed position for bulk assign popover (below trigger)
      *
      * @returns {void}
@@ -754,10 +996,39 @@ export default {
       }
 
       const rect = this.bulkAssignAnchorEl.getBoundingClientRect();
+      const LIST_WIDTH = 210;
+      const ARROW_X_FROM_LEFT = 174; // AssigneesList top triangle: right: 36px => 210 - 36
+      const OFFSET_X = 8;
+      const viewportWidth = window.innerWidth;
+      const leftPadding = 8;
+      const anchorX = rect.left + rect.width / 2;
+      const desiredLeft = anchorX - ARROW_X_FROM_LEFT + OFFSET_X;
+      const clampedLeft = Math.min(
+        Math.max(desiredLeft, leftPadding),
+        Math.max(leftPadding, viewportWidth - LIST_WIDTH - leftPadding)
+      );
 
       this.bulkAssigneesListPosition = {
-        top: `${rect.bottom + 6}px`,
-        left: `${rect.left}px`,
+        top: `${rect.bottom + 8}px`,
+        left: `${clampedLeft}px`,
+      };
+    },
+    /**
+     * Position bulk "more actions" menu near trigger
+     *
+     * @returns {void}
+     */
+    setBulkMoreMenuPosition() {
+      if (!this.bulkMoreMenuAnchorEl) {
+        return;
+      }
+
+      const rect = this.bulkMoreMenuAnchorEl.getBoundingClientRect();
+      const OFFSET_X = 0;
+
+      this.bulkMoreMenuPosition = {
+        top: `${rect.bottom + 8}px`,
+        left: `${rect.right + OFFSET_X}px`,
       };
     },
     /**
@@ -773,6 +1044,21 @@ export default {
         window.removeEventListener('resize', this.bulkAssignOnViewportChange);
         window.removeEventListener('scroll', this.bulkAssignOnViewportChange, true);
         this.bulkAssignOnViewportChange = null;
+      }
+    },
+    /**
+     * Close bulk "more actions" menu and detach listeners
+     *
+     * @returns {void}
+     */
+    hideBulkMoreMenu() {
+      this.isBulkMoreMenuShowed = false;
+      this.bulkMoreMenuAnchorEl = null;
+
+      if (typeof this.bulkMoreMenuOnViewportChange === 'function') {
+        window.removeEventListener('resize', this.bulkMoreMenuOnViewportChange);
+        window.removeEventListener('scroll', this.bulkMoreMenuOnViewportChange, true);
+        this.bulkMoreMenuOnViewportChange = null;
       }
     },
     /**
@@ -800,7 +1086,6 @@ export default {
         })));
 
         this.exitBulkSelect();
-        this.reloadDailyEvents();
       } finally {
         this.bulkActionLoading = false;
       }
@@ -828,7 +1113,34 @@ export default {
         })));
 
         this.exitBulkSelect();
-        this.reloadDailyEvents();
+      } finally {
+        this.bulkActionLoading = false;
+      }
+    },
+    /**
+     * Bulk: mark selected events as viewed (badge should become visited)
+     *
+     * @returns {Promise<void>}
+     */
+    async onBulkMarkViewed() {
+      this.hideBulkAssigneesList();
+      this.hideBulkMoreMenu();
+
+      if (this.selectedCount === 0) {
+        return;
+      }
+
+      this.bulkActionLoading = true;
+
+      try {
+        const originalIds = this.getSelectedOriginalIds();
+
+        await Promise.all(originalIds.map(originalEventId => this.$store.dispatch(VISIT_EVENT, {
+          projectId: this.projectId,
+          originalEventId,
+        })));
+
+        this.exitBulkSelect();
       } finally {
         this.bulkActionLoading = false;
       }
@@ -884,6 +1196,7 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     gap: 12px 16px;
+    margin-left: 11px;
   }
 
   &__bulk-cancel-combo {
@@ -891,6 +1204,7 @@ export default {
     align-items: center;
     gap: 6px;
     font: inherit;
+    white-space: nowrap;
     cursor: pointer;
   }
 
@@ -908,10 +1222,28 @@ export default {
     gap: 10px;
   }
 
+  &__bulk-action-button,
+  &__bulk-action-button .ui-button-text,
+  &__bulk-action-button .ui-button-icon {
+    white-space: nowrap;
+  }
+
+  &__bulk-action-button .ui-button-icon-assignee {
+    width: 16px;
+    height: 16px;
+  }
+
+  &__bulk-more-trigger.ui-button {
+    padding-inline: 8px;
+    background-color: transparent;
+    border: 0;
+  }
+
   &__bulk-count {
     color: var(--color-text-main);
     font-size: 13px;
     font-weight: 500;
+    white-space: nowrap;
   }
 
   &__group {
@@ -965,6 +1297,18 @@ export default {
 
   &__assignees-list--bulk {
     transform: none;
+  }
+
+  &__bulk-more-menu {
+    position: fixed;
+    z-index: 210;
+    transform: translateX(-100%);
+
+    .ui-context-list {
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
+    }
   }
 
   &__assignee-filter {
@@ -1028,7 +1372,7 @@ export default {
   &.form-search-field {
     position: relative;
     z-index: 100;
-    padding-inline-end: 7px;
+    padding-inline: 11px;
   }
 }
 </style>

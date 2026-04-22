@@ -575,7 +575,11 @@
       "assignee": "Assignee"
     },
     "bulk": {
-      "assignee": "Assign assignee",
+      "markViewed": "Mark as viewed",
+      "moreActions": "More actions",
+      "unignore": "Unignore",
+      "unresolve": "Unresolved",
+      "unstar": "Remove from starred",
       "markError": "Could not update events",
       "markPartial": "{updated} updated, {failed} failed"
     },
