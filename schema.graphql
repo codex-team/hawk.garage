@@ -597,6 +597,18 @@ type Mutation {
     mark: EventMark!
   ): Boolean!
 
+  """Bulk toggle resolved or ignored on many original events"""
+  bulkToggleEventMarks(
+    """Project id"""
+    projectId: ID!
+
+    """Original event ids"""
+    eventIds: [ID!]!
+
+    """If every event already has the mark, clear all; else set mark on those that lack it"""
+    mark: EventMark!
+  ): BulkToggleEventMarksResult!
+
   """Namespace that contains only mutations related to the events"""
   events: EventsMutations!
 
@@ -1341,6 +1353,15 @@ input RemoveAssigneeInput {
 type RemoveAssigneeResponse {
   """Response status"""
   success: Boolean!
+}
+
+"""Result of bulk toggling event marks"""
+type BulkToggleEventMarksResult {
+  """Number of events updated"""
+  updatedCount: Int!
+
+  """Ids that were not updated"""
+  failedEventIds: [ID!]!
 }
 
 """Input type for deleting of the event grouping pattern"""

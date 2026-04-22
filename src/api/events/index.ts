@@ -1,5 +1,6 @@
 import {
   MUTATION_TOGGLE_EVENT_MARK,
+  MUTATION_BULK_TOGGLE_EVENT_MARKS,
   MUTATION_VISIT_EVENT,
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
@@ -146,6 +147,45 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     eventId,
     mark,
   })).toggleEventMark;
+}
+
+/**
+ * Bulk toggle resolved or ignored marks (original event ids)
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ * @param mark - resolved or ignored
+ */
+export async function bulkToggleEventMarks(
+  projectId: string,
+  eventIds: string[],
+  mark: 'resolved' | 'ignored'
+): Promise<
+  {
+    updatedCount: number;
+    failedEventIds: string[];
+  } | null
+> {
+  const response = await api.call<{
+    bulkToggleEventMarks: {
+      updatedCount: number;
+      failedEventIds: string[];
+    };
+  }>(
+    MUTATION_BULK_TOGGLE_EVENT_MARKS,
+    {
+      projectId,
+      eventIds,
+      mark,
+    },
+    undefined,
+    { allowErrors: true }
+  );
+
+  if (response.errors?.length) {
+    return null;
+  }
+
+  return response.data.bulkToggleEventMarks ?? null;
 }
 
 /**

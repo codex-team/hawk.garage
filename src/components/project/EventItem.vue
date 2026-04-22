@@ -4,9 +4,13 @@
     :class="{
       'event-item--visited': isVisited,
       [`event-item--${mark}-label`]: true,
+      'event-item--selection-mode': selectionModeActive,
+      'event-item--row-selected': rowSelected,
+      'event-item--bulk-adjacent-top': rowSelected && bulkAdjacentTop,
+      'event-item--bulk-adjacent-bottom': rowSelected && bulkAdjacentBottom,
     }"
     data-ripple
-    @click="handleClick"
+    @click="handleRowClick"
   >
     <EventMark :mark="mark" />
     <div class="event-item__time">
@@ -33,11 +37,26 @@
       extrasmall
       @click.stop="openIssueUrl"
     />
+    <div
+      v-if="!isWorkspaceBlocked"
+      class="event-item__bulk-checkbox"
+      @click.stop
+      @pointerdown.stop
+    >
+      <UiCheckbox
+        :model-value="rowSelected"
+        class="event-item__checkbox"
+        @pointerdown.stop
+        @pointerup.stop
+        @click.stop
+        @update:model-value="$emit('toggle-row-select')"
+      />
+    </div>
     <Icon
       v-if="!event.assignee"
       symbol="assignee"
       class="event-item__assignee event-item__assignee--icon"
-      @click.stop="$emit('onAssigneeIconClick', $event)"
+      @click.stop="$emit('on-assignee-icon-click', $event)"
     />
     <EntityImage
       v-else
@@ -47,7 +66,7 @@
       :name="event.assignee.name || event.assignee.email"
       :title="event.assignee.name || event.assignee.email"
       size="20"
-      @click.stop="$emit('onAssigneeIconClick', $event)"
+      @click.stop="$emit('on-assignee-icon-click', $event)"
     />
   </div>
 </template>
@@ -58,6 +77,7 @@ import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
 import UiButton from '../utils/UiButton.vue';
+import UiCheckbox from '../forms/UiCheckbox.vue';
 import { prettyTime } from '@/utils/filters';
 import { isEventAfterSubscriptionExpiry } from '@/components/utils/events/subscriptionExpiry';
 import { SET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
@@ -70,8 +90,37 @@ export default {
     Icon,
     EntityImage,
     UiButton,
+    UiCheckbox,
   },
   props: {
+    /**
+     * True when at least one row is selected (all rows show checkboxes)
+     */
+    selectionModeActive: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Whether this row is selected
+     */
+    rowSelected: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Selected block: previous list row is also selected (hide top radius between rows)
+     */
+    bulkAdjacentTop: {
+      type: Boolean,
+      default: false,
+    },
+    /**
+     * Selected block: next list row is also selected (hide bottom radius between rows)
+     */
+    bulkAdjacentBottom: {
+      type: Boolean,
+      default: false,
+    },
     /**
      * @type {GroupedEvent} - event to display
      */
@@ -104,6 +153,7 @@ export default {
       default: null,
     },
   },
+  emits: ['show-event-overview', 'toggle-row-select', 'on-assignee-icon-click'],
   computed: {
     /**
      * Return true if user visited current event
@@ -195,9 +245,17 @@ export default {
   },
   methods: {
     /**
-     * Handle click on event item
+     * Open event or limit modal
+     *
+     * @returns {void}
      */
-    handleClick() {
+    handleRowClick() {
+      if (this.selectionModeActive && !this.isWorkspaceBlocked) {
+        this.$emit('toggle-row-select');
+
+        return;
+      }
+
       if (this.isEventBlurred) {
         this.$store.dispatch(SET_MODAL_DIALOG, {
           component: 'EventLimitModal',
@@ -205,9 +263,11 @@ export default {
             workspaceId: this.workspace.id,
           },
         });
-      } else {
-        this.$emit('showEventOverview');
+
+        return;
       }
+
+      this.$emit('show-event-overview');
     },
 
     /**
@@ -263,6 +323,35 @@ export default {
       flex-shrink: 0;
     }
 
+    &__bulk-checkbox {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 0;
+      min-width: 0;
+      margin-left: 8px;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease, min-width 0.12s ease, width 0.12s ease;
+    }
+
+    /* Smaller than default UiCheckbox (28px) */
+    &__checkbox.ui-checkbox {
+      flex-shrink: 0;
+      width: 20px;
+      min-width: 20px;
+      height: 20px;
+      min-height: 20px;
+
+      .icon {
+        width: 14px;
+        height: 14px;
+        padding: 2px;
+      }
+    }
+
     &__assignee {
       margin-left: 10px;
 
@@ -278,14 +367,60 @@ export default {
       background-color: var(--color-bg-main);
     }
 
-    &--visited {
-      ^&__info {
-        color: var(--color-text-second);
-      }
+    /* Same fill as UiCheckbox:hover — row bg is also --color-bg-main, so this reads clearly */
+    &:hover .event-item__bulk-checkbox .ui-checkbox:not(.ui-checkbox--disabled) {
+      background-color: var(--color-bg-sidebar);
+    }
+
+    &--row-selected .event-item__bulk-checkbox .ui-checkbox:not(.ui-checkbox--disabled) {
+      background-color: var(--color-bg-sidebar);
+    }
+
+    &:hover .event-item__bulk-checkbox,
+    &--selection-mode .event-item__bulk-checkbox,
+    &--row-selected .event-item__bulk-checkbox {
+      width: 22px;
+      min-width: 22px;
+      opacity: 1;
+      pointer-events: auto;
+      overflow: visible;
     }
 
     &--ignored-label {
       opacity: 0.2;
     }
+  }
+
+  /* Devices without hover: always show checkbox hit target */
+  @media (hover: none) {
+    .event-item .event-item__bulk-checkbox {
+      width: 22px;
+      min-width: 22px;
+      opacity: 1;
+      pointer-events: auto;
+      overflow: visible;
+    }
+  }
+
+  .event-item--visited .event-item__info {
+    color: var(--color-text-second);
+  }
+
+  .event-item.event-item--row-selected:not(:hover) {
+    background-color: var(--color-bg-darken);
+  }
+
+  .event-item.event-item--row-selected.event-item--ignored-label {
+    opacity: 1;
+  }
+
+  .event-item.event-item--row-selected.event-item--bulk-adjacent-top {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .event-item.event-item--row-selected.event-item--bulk-adjacent-bottom {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 </style>

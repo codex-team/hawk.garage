@@ -126,6 +126,19 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
 
 // language=GraphQL
 /**
+ * Bulk toggle resolved or ignored on many original events
+ */
+export const MUTATION_BULK_TOGGLE_EVENT_MARKS = `
+  mutation bulkToggleEventMarks($projectId: ID!, $eventIds: [ID!]!, $mark: EventMark!) {
+    bulkToggleEventMarks(projectId: $projectId, eventIds: $eventIds, mark: $mark) {
+      updatedCount
+      failedEventIds
+    }
+  }
+`;
+
+// language=GraphQL
+/**
  * GraphQL Mutation to update an assignee to the event
  */
 export const MUTATION_UPDATE_EVENT_ASSIGNEE = `

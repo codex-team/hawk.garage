@@ -18,6 +18,50 @@
         />
       </template>
     </SearchField>
+    <div
+      v-if="workspace && !workspace.isBlocked"
+      class="events-list__bulk-slot"
+    >
+      <div
+        v-show="selectionModeActive"
+        class="events-list__bulk-bar"
+      >
+        <div class="events-list__bulk-meta">
+          <button
+            type="button"
+            class="ui-button ui-button--small ui-button--secondary events-list__bulk-cancel-combo"
+            @click="exitBulkSelect"
+          >
+            <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }}</span>
+            <span class="ui-button-text events-list__bulk-cancel-esc">{{ $t('common.escKey') }}</span>
+          </button>
+          <span class="events-list__bulk-count">{{ $t('common.selected') }}: {{ selectedCount }}</span>
+        </div>
+        <div class="events-list__bulk-actions">
+          <UiButton
+            :content="$t('event.resolve')"
+            icon="checkmark"
+            small
+            :disabled="selectedCount === 0 || bulkActionLoading"
+            @click="runBulkMark('resolved')"
+          />
+          <UiButton
+            :content="$t('event.ignore')"
+            icon="hided"
+            small
+            :disabled="selectedCount === 0 || bulkActionLoading"
+            @click="runBulkMark('ignored')"
+          />
+          <UiButton
+            :content="$t('event.bulk.assignee')"
+            icon="assignee"
+            small
+            :disabled="selectedCount === 0 || bulkActionLoading"
+            @click="onBulkAssignButtonClick"
+          />
+        </div>
+      </div>
+    </div>
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -35,7 +79,12 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
+          :selection-mode-active="selectionModeActive"
+          :row-selected="isRowSelected(dailyEventInfo.eventId)"
+          :bulk-adjacent-top="!!bulkAdjacentByEventId[dailyEventInfo.eventId]?.top"
+          :bulk-adjacent-bottom="!!bulkAdjacentByEventId[dailyEventInfo.eventId]?.bottom"
           @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
+          @toggle-row-select="toggleRowSelected(dailyEventInfo.eventId)"
           @show-event-overview="onShowEventOverview(dailyEventInfo.eventId)"
         />
       </div>
@@ -74,6 +123,18 @@
       class="events-list__assignees-list"
       @hide="hideAssigneesList"
     />
+    <AssigneesList
+      v-if="isBulkAssigneesShowed"
+      v-click-outside="hideBulkAssigneesList"
+      :style="bulkAssigneesListPosition"
+      :project-id="projectId"
+      :bulk-pick-only="true"
+      triangle="top"
+      class="events-list__assignees-list events-list__assignees-list--bulk"
+      @hide="hideBulkAssigneesList"
+      @pick-user="onBulkPickAssignee"
+      @bulk-clear-assignees="onBulkClearAssigneesFromSelection"
+    />
   </div>
 </template>
 
@@ -84,10 +145,12 @@ import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
-import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, UPDATE_EVENT_ASSIGNEE, REMOVE_EVENT_ASSIGNEE } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
+import UiButton from '../utils/UiButton.vue';
+import notifier from 'codex-notifier';
 
 /** Must match api/src/models/eventsFactory.js assignee filter sentinels */
 const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
@@ -116,6 +179,7 @@ export default {
     SearchField,
     EmptyState,
     UiSelect,
+    UiButton,
   },
   props: {
     fallback: {
@@ -188,6 +252,24 @@ export default {
        * When true, run reloadDailyEvents once the current load finishes (assignee changed mid-request)
        */
       pendingAssigneeReload: false,
+      /**
+       * Selected list row ids (repetition / display event id from dailyEvents)
+       */
+      selectedRepetitionIds: [],
+      bulkActionLoading: false,
+      /**
+       * Bulk bar assignee picker
+       */
+      isBulkAssigneesShowed: false,
+      bulkAssigneesListPosition: {
+        top: 0,
+        left: 0,
+      },
+      bulkAssignAnchorEl: null,
+      /**
+       * Bound handler to detach in hideBulkAssigneesList
+       */
+      bulkAssignOnViewportChange: null,
     };
   },
   created() {
@@ -208,7 +290,11 @@ export default {
       this.reloadDailyEvents();
     }, 500);
   },
+  mounted() {
+    window.addEventListener('keydown', this.onDocumentEscape);
+  },
   beforeUnmount() {
+    window.removeEventListener('keydown', this.onDocumentEscape);
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   // eslint-disable-next-line vue/order-in-components
@@ -294,8 +380,167 @@ export default {
 
       return groupByGroupingTimestamp(this.dailyEvents);
     },
+    /**
+     * Number of selected rows in bulk mode
+     */
+    selectedCount() {
+      return this.selectedRepetitionIds.length;
+    },
+    /**
+     * True when at least one row is selected (bulk bar + all rows show checkboxes)
+     *
+     * @returns {boolean}
+     */
+    selectionModeActive() {
+      return this.selectedRepetitionIds.length > 0;
+    },
+    /**
+     * Event row ids in list order (same as template v-for over groupedByDate)
+     *
+     * @returns {string[]}
+     */
+    flattenedDailyEventIds() {
+      const flat = [];
+      const grouped = this.groupedByDate;
+
+      for (const date of Object.keys(grouped)) {
+        for (const dailyEventInfo of grouped[date]) {
+          flat.push(dailyEventInfo.eventId);
+        }
+      }
+
+      return flat;
+    },
+    /**
+     * Selected runs: flatten top/bottom inner radii between consecutive selected rows
+     *
+     * @returns {Record<string, { top: boolean; bottom: boolean }>}
+     */
+    bulkAdjacentByEventId() {
+      const flat = this.flattenedDailyEventIds;
+      const result = {};
+
+      for (let i = 0; i < flat.length; i++) {
+        const id = flat[i];
+
+        if (!this.isRowSelected(id)) {
+          continue;
+        }
+
+        result[id] = {
+          top: i > 0 && this.isRowSelected(flat[i - 1]),
+          bottom: i < flat.length - 1 && this.isRowSelected(flat[i + 1]),
+        };
+      }
+
+      return result;
+    },
   },
   methods: {
+    /**
+     * Clear bulk selection (hides bar when empty)
+     */
+    exitBulkSelect() {
+      this.hideBulkAssigneesList();
+      this.selectedRepetitionIds = [];
+    },
+    /**
+     * Exit bulk selection on Escape
+     *
+     * @param {KeyboardEvent} e - key event
+     * @returns {void}
+     */
+    onDocumentEscape(e) {
+      if (e.key !== 'Escape' || this.selectedCount === 0) {
+        return;
+      }
+      e.preventDefault();
+      this.exitBulkSelect();
+    },
+    /**
+     * Whether repetition row id is selected
+     *
+     * @param {string} repetitionId - daily event row id
+     * @returns {boolean}
+     */
+    isRowSelected(repetitionId) {
+      return this.selectedRepetitionIds.includes(repetitionId);
+    },
+    /**
+     * Toggle row selection in bulk mode
+     *
+     * @param {string} repetitionId - daily event row id
+     * @returns {void}
+     */
+    toggleRowSelected(repetitionId) {
+      const ids = this.selectedRepetitionIds;
+      const i = ids.indexOf(repetitionId);
+
+      if (i >= 0) {
+        ids.splice(i, 1);
+      } else {
+        ids.push(repetitionId);
+      }
+    },
+    /**
+     * Run bulk toggle for resolved or ignored (original event ids)
+     *
+     * @param {'resolved'|'ignored'} mark - mark to toggle
+     * @returns {Promise<void>}
+     */
+    async runBulkMark(mark) {
+      const originalIds = [];
+
+      for (const rid of this.selectedRepetitionIds) {
+        const ev = this.getEvent(rid);
+
+        if (ev && ev.originalEventId) {
+          originalIds.push(ev.originalEventId);
+        }
+      }
+
+      const uniqueOriginal = [...new Set(originalIds)];
+
+      if (uniqueOriginal.length === 0) {
+        return;
+      }
+
+      this.bulkActionLoading = true;
+
+      try {
+        const result = await this.$store.dispatch(BULK_TOGGLE_EVENT_MARKS, {
+          projectId: this.projectId,
+          eventIds: uniqueOriginal,
+          mark,
+        });
+
+        if (!result) {
+          notifier.show({
+            message: this.$t('event.bulk.markError'),
+            style: 'error',
+            time: 8000,
+          });
+
+          return;
+        }
+
+        if (result.failedEventIds.length > 0) {
+          notifier.show({
+            message: this.$t('event.bulk.markPartial', {
+              updated: result.updatedCount,
+              failed: result.failedEventIds.length,
+            }),
+            style: 'error',
+            time: 10000,
+          });
+        }
+
+        this.exitBulkSelect();
+        this.reloadDailyEvents();
+      } finally {
+        this.bulkActionLoading = false;
+      }
+    },
     /**
      * Return midnight timestamp extracted from grouping key
      *
@@ -383,6 +628,8 @@ export default {
      * @returns {void}
      */
     onAssigneeIconClick(eventId, nativeEvent) {
+      this.hideBulkAssigneesList();
+
       const targetEl = nativeEvent && nativeEvent.target ? nativeEvent.target : null;
       const anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
 
@@ -414,6 +661,8 @@ export default {
      * @returns {void}
      */
     onShowEventOverview(eventId) {
+      this.hideBulkAssigneesList();
+
       const event = this.getEvent(eventId);
       const originalEventId = event.originalEventId;
 
@@ -455,6 +704,135 @@ export default {
       window.removeEventListener('resize', this.onResize);
       window.removeEventListener('scroll', this.onResize, true);
     },
+    /**
+     * Open workspace member picker under bulk assign button
+     *
+     * @param {MouseEvent} evt - click event
+     * @returns {void}
+     */
+    onBulkAssignButtonClick(evt) {
+      /* Otherwise, the same click will reach the document and v-click-outside will close the just-mounted list */
+
+      if (evt && typeof evt.stopPropagation === 'function') {
+        evt.stopPropagation();
+      }
+
+      if (this.isAssigneesShowed) {
+        this.hideAssigneesList();
+      }
+
+      const el = evt && evt.currentTarget ? evt.currentTarget : null;
+
+      if (!el) {
+        return;
+      }
+
+      if (this.isBulkAssigneesShowed && this.bulkAssignAnchorEl === el) {
+        this.hideBulkAssigneesList();
+
+        return;
+      }
+
+      this.hideBulkAssigneesList();
+      this.bulkAssignAnchorEl = el;
+      this.isBulkAssigneesShowed = true;
+      this.setBulkAssigneesPosition();
+      this.bulkAssignOnViewportChange = this.setBulkAssigneesPosition.bind(this);
+      window.addEventListener('resize', this.bulkAssignOnViewportChange);
+      window.addEventListener('scroll', this.bulkAssignOnViewportChange, true);
+    },
+    /**
+     * Fixed position for bulk assign popover (below trigger)
+     *
+     * @returns {void}
+     */
+    setBulkAssigneesPosition() {
+      if (!this.bulkAssignAnchorEl) {
+        return;
+      }
+
+      const rect = this.bulkAssignAnchorEl.getBoundingClientRect();
+
+      this.bulkAssigneesListPosition = {
+        top: `${rect.bottom + 6}px`,
+        left: `${rect.left}px`,
+      };
+    },
+    /**
+     * Close bulk assignee picker and detach listeners
+     *
+     * @returns {void}
+     */
+    hideBulkAssigneesList() {
+      this.isBulkAssigneesShowed = false;
+      this.bulkAssignAnchorEl = null;
+
+      if (typeof this.bulkAssignOnViewportChange === 'function') {
+        window.removeEventListener('resize', this.bulkAssignOnViewportChange);
+        window.removeEventListener('scroll', this.bulkAssignOnViewportChange, true);
+        this.bulkAssignOnViewportChange = null;
+      }
+    },
+    /**
+     * Assign picked user to all selected rows (repetition ids)
+     *
+     * @param {object} user - workspace team member (same shape as in AssigneesList)
+     * @returns {Promise<void>}
+     */
+    async onBulkPickAssignee(user) {
+      this.hideBulkAssigneesList();
+
+      if (!user || this.selectedCount === 0) {
+        return;
+      }
+
+      this.bulkActionLoading = true;
+
+      try {
+        const ids = [...this.selectedRepetitionIds];
+
+        for (const repetitionId of ids) {
+          await this.$store.dispatch(UPDATE_EVENT_ASSIGNEE, {
+            projectId: this.projectId,
+            eventId: repetitionId,
+            assignee: user,
+          });
+        }
+
+        this.exitBulkSelect();
+        this.reloadDailyEvents();
+      } finally {
+        this.bulkActionLoading = false;
+      }
+    },
+    /**
+     * Bulk: remove assignee from all selected events
+     *
+     * @returns {Promise<void>}
+     */
+    async onBulkClearAssigneesFromSelection() {
+      this.hideBulkAssigneesList();
+
+      if (this.selectedCount === 0) {
+        return;
+      }
+
+      this.bulkActionLoading = true;
+
+      try {
+        for (const repetitionId of [...this.selectedRepetitionIds]) {
+          await this.$store.dispatch(REMOVE_EVENT_ASSIGNEE, {
+            projectId: this.projectId,
+            eventId: repetitionId,
+          });
+        }
+
+        this.exitBulkSelect();
+        this.reloadDailyEvents();
+      } finally {
+        this.bulkActionLoading = false;
+      }
+    },
   },
   // eslint-disable-next-line vue/order-in-components
   watch: {
@@ -486,7 +864,61 @@ export default {
   flex-direction: column;
   min-height: 400px;
 
+  &__bulk-slot {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    min-height: 40px;
+    margin-block: 12px 0;
+  }
+
+  &__bulk-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__bulk-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+  }
+
+  &__bulk-cancel-combo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  &__bulk-cancel-esc {
+    color: var(--color-text-second);
+    font-size: 12px;
+    font-weight: 500;
+    user-select: none;
+  }
+
+  &__bulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__bulk-count {
+    color: var(--color-text-main);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
   &__group {
+    margin-top: 8px;
+  }
+
+  &__group + &__group {
     margin-top: 25px;
   }
 
@@ -528,6 +960,11 @@ export default {
   &__assignees-list {
     position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
+    z-index: 200;
+  }
+
+  &__assignees-list--bulk {
+    transform: none;
   }
 
   &__assignee-filter {

@@ -21,6 +21,21 @@
       class="event-assignees-list__assignees assignees"
     >
       <div
+        v-if="bulkPickOnly"
+        class="assignees__row assignees__row--bulk-unassign"
+        @click="onBulkUnassignAllClick"
+      >
+        <Icon
+          class="assignees__image assignees__row-bulk-icon"
+          symbol="assignee-minus"
+        />
+        <div class="assignees__name-wrapper name-wrapper">
+          <span class="name-wrapper__name name-wrapper__name--scrollable">
+            {{ $t('projects.filters.assigneeUnassigned') }}
+          </span>
+        </div>
+      </div>
+      <div
         v-for="user in filteredUsers"
         :key="user.id"
         class="assignees__row"
@@ -39,7 +54,7 @@
           </span>
         </div>
         <Icon
-          v-if="user.id == currentAssigneeId"
+          v-if="!bulkPickOnly && user.id == currentAssigneeId"
           class="assignees__checkmark"
           symbol="checkmark"
         />
@@ -55,6 +70,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'AssigneesList',
+  emits: ['hide', 'pick-user', 'bulk-clear-assignees'],
   components: {
     EntityImage,
     Icon,
@@ -83,6 +99,14 @@ export default {
       type: String,
       default: 'right',
     },
+
+    /**
+     * Bulk mode: emit pick-user instead of updating store (no current-assignee checkmarks)
+     */
+    bulkPickOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -104,7 +128,15 @@ export default {
      * @returns {string} - assignee id or empty string
      */
     currentAssigneeId() {
+      if (this.bulkPickOnly) {
+        return '';
+      }
+
       const currentEvent = this.getProjectEventById(this.projectId, this.eventId);
+
+      if (!currentEvent) {
+        return '';
+      }
 
       const assignee = currentEvent.assignee;
 
@@ -148,12 +180,28 @@ export default {
   },
   methods: {
     /**
+     * Bulk: clear assignee on all selected list rows
+     *
+     * @returns {void}
+     */
+    onBulkUnassignAllClick() {
+      this.$emit('bulk-clear-assignees');
+      this.$emit('hide');
+    },
+    /**
      * Update assignee to other or remove him
      *
      * @returns {void}
      * @param user
      */
     async updateAssignee(user) {
+      if (this.bulkPickOnly) {
+        this.$emit('pick-user', user);
+        this.$emit('hide');
+
+        return;
+      }
+
       if (this.currentAssigneeId === user.id) {
         await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
@@ -245,6 +293,12 @@ export default {
 
     &__image {
       margin-right: 7px;
+    }
+
+    &__row-bulk-icon {
+      width: 16px;
+      height: 16px;
+      color: inherit;
     }
 
     &__checkmark {

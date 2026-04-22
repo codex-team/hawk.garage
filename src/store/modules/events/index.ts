@@ -7,6 +7,7 @@ import {
   SET_EVENTS_FILTERS,
   SET_EVENTS_ORDER,
   TOGGLE_EVENT_MARK,
+  BULK_TOGGLE_EVENT_MARKS,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
   GET_CHART_DATA
@@ -421,6 +422,33 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
+     * Bulk toggle resolved or ignored marks for original event ids
+     * @param _context - Vuex action context (unused)
+     * @param payload - mutation arguments
+     * @param payload.projectId - project id
+     * @param payload.eventIds - original event ids
+     * @param payload.mark - resolved or ignored
+     * @returns API result or null on GraphQL error
+     */
+    async [BULK_TOGGLE_EVENT_MARKS](
+      _context: unknown,
+      payload: {
+        projectId: string;
+        eventIds: string[];
+        mark: 'resolved' | 'ignored';
+      }
+    ): Promise<
+      {
+        updatedCount: number;
+        failedEventIds: string[];
+      } | null
+    > {
+      const { projectId, eventIds, mark } = payload;
+
+      return eventsApi.bulkToggleEventMarks(projectId, eventIds, mark);
+    },
+
+    /**
      * Resets module state
      * @param commit - standard Vuex commit function
      */
@@ -463,8 +491,9 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string;
       eventId: string; }): Promise<void> {
-      const result = await eventsApi.removeAssignee(projectId, eventId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+
+      const result = await eventsApi.removeAssignee(projectId, event.originalEventId);
 
       if (result.success) {
         commit(MutationTypes.SetEventAssignee, {

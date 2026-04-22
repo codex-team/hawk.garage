@@ -574,6 +574,11 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
+    "bulk": {
+      "assignee": "Assign assignee",
+      "markError": "Could not update events",
+      "markPartial": "{updated} updated, {failed} failed"
+    },
     "suspectedCommits": {
       "header": "Suspected commits",
       "hide": "hide",
@@ -628,6 +633,7 @@
     "free": "FREE",
     "select": "Select",
     "selected": "Selected",
+    "escKey": "(Esc)",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",

@@ -574,6 +574,11 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
+    "bulk": {
+      "assignee": "Назначить исполнителя",
+      "markError": "Не удалось обновить события",
+      "markPartial": "Обновлено: {updated}, ошибок: {failed}"
+    },
     "suspectedCommits": {
       "header": "Подозреваемые коммиты",
       "hide": "скрыть",
@@ -628,6 +633,7 @@
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
     "selected": "Выбрано",
+    "escKey": "(Esc)",
     "continue": "Продолжить",
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",
