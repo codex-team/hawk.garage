@@ -132,6 +132,7 @@ export const MUTATION_BULK_TOGGLE_EVENT_MARKS = `
   mutation bulkToggleEventMarks($projectId: ID!, $eventIds: [ID!]!, $mark: EventMark!) {
     bulkToggleEventMarks(projectId: $projectId, eventIds: $eventIds, mark: $mark) {
       updatedCount
+      updatedEventIds
       failedEventIds
     }
   }

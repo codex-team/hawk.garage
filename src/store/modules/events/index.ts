@@ -431,7 +431,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @returns API result or null on GraphQL error
      */
     async [BULK_TOGGLE_EVENT_MARKS](
-      { commit, state },
+      { commit },
       payload: {
         projectId: string;
         eventIds: string[];
@@ -440,46 +440,21 @@ const module: Module<EventsModuleState, RootState> = {
     ): Promise<
       {
         updatedCount: number;
+        updatedEventIds: string[];
         failedEventIds: string[];
       } | null
     > {
       const { projectId, eventIds, mark } = payload;
       const uniqueEventIds = [...new Set(eventIds.map(String))];
-      const markByOriginalId = new Map<string, boolean>();
-
-      Object.entries(state.events).forEach(([key, event]) => {
-        if (!key.startsWith(`${projectId}:`)) {
-          return;
-        }
-
-        if (!uniqueEventIds.includes(event.originalEventId)) {
-          return;
-        }
-
-        if (!markByOriginalId.has(event.originalEventId)) {
-          markByOriginalId.set(event.originalEventId, !!event.marks?.[mark]);
-        }
-      });
-
-      const allSelectedMarked = uniqueEventIds.length > 0
-        && uniqueEventIds.every(id => markByOriginalId.get(id) === true);
-      const originalIdsToToggle = allSelectedMarked
-        ? uniqueEventIds
-        : uniqueEventIds.filter(id => markByOriginalId.get(id) !== true);
-
-      const result = await eventsApi.bulkToggleEventMarks(projectId, eventIds, mark);
+      const result = await eventsApi.bulkToggleEventMarks(projectId, uniqueEventIds, mark);
 
       if (!result) {
         return null;
       }
 
-      const failedIds = new Set((result.failedEventIds || []).map(String));
+      const updatedIds = [...new Set((result.updatedEventIds || []).map(String))];
 
-      originalIdsToToggle.forEach((originalEventId) => {
-        if (failedIds.has(String(originalEventId))) {
-          return;
-        }
-
+      updatedIds.forEach((originalEventId) => {
         commit(MutationTypes.ToggleMark, {
           projectId,
           eventId: originalEventId,

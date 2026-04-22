@@ -101,8 +101,8 @@
           {{ formatGroupDate(date) }}
         </div>
         <EventItem
-          v-for="(dailyEventInfo, index) in eventsByDate"
-          :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
+          v-for="dailyEventInfo in eventsByDate"
+          :key="dailyEventInfo.eventId"
           :last-occurrence-timestamp="getEvent(dailyEventInfo.eventId).timestamp"
           :count="dailyEventInfo.count"
           :affected-users-count="dailyEventInfo.affectedUsers"
@@ -747,6 +747,51 @@ export default {
       return [...new Set(originalIds)];
     },
     /**
+     * Selected repetition ids deduplicated by original event id
+     *
+     * @returns {string[]}
+     */
+    getSelectedRepresentativeRepetitionIds() {
+      const repetitionIdsByOriginal = new Map();
+
+      for (const repetitionId of this.selectedRepetitionIds) {
+        const event = this.getEvent(repetitionId);
+        const originalId = event && event.originalEventId ? String(event.originalEventId) : null;
+
+        if (!originalId || repetitionIdsByOriginal.has(originalId)) {
+          continue;
+        }
+
+        repetitionIdsByOriginal.set(originalId, repetitionId);
+      }
+
+      return Array.from(repetitionIdsByOriginal.values());
+    },
+    /**
+     * Keep only selected rows that are currently rendered
+     *
+     * @returns {void}
+     */
+    syncSelectionWithVisibleRows() {
+      if (this.selectedRepetitionIds.length === 0) {
+        return;
+      }
+
+      const visibleSet = new Set(this.flattenedDailyEventIds);
+      const nextSelected = this.selectedRepetitionIds.filter(id => visibleSet.has(id));
+
+      if (nextSelected.length === this.selectedRepetitionIds.length) {
+        return;
+      }
+
+      this.selectedRepetitionIds = nextSelected;
+      this.lastSelectedRepetitionId = nextSelected.length > 0 ? nextSelected[nextSelected.length - 1] : null;
+
+      if (nextSelected.length === 0) {
+        this.exitBulkSelect();
+      }
+    },
+    /**
      * Return midnight timestamp extracted from grouping key
      *
      * @param {string} date - key like 'groupingTimestamp:1576011600'
@@ -812,6 +857,8 @@ export default {
         } else {
           this.dailyEvents.push(...dailyEventsWithEventsLinked);
         }
+
+        this.syncSelectionWithVisibleRows();
       } finally {
         this.isLoading = false;
       }
@@ -820,6 +867,7 @@ export default {
      * Reset pagination and reload list
      */
     reloadDailyEvents() {
+      this.exitBulkSelect();
       this.dailyEventsNextCursor = null;
       this.noMore = false;
       this.dailyEvents = [];
@@ -1025,10 +1073,18 @@ export default {
 
       const rect = this.bulkMoreMenuAnchorEl.getBoundingClientRect();
       const OFFSET_X = 0;
+      const MENU_WIDTH = 260;
+      const viewportWidth = window.innerWidth;
+      const leftPadding = 8;
+      const desiredRight = rect.right + OFFSET_X;
+      const clampedRight = Math.min(
+        Math.max(desiredRight, MENU_WIDTH + leftPadding),
+        Math.max(MENU_WIDTH + leftPadding, viewportWidth - leftPadding)
+      );
 
       this.bulkMoreMenuPosition = {
         top: `${rect.bottom + 8}px`,
-        left: `${rect.right + OFFSET_X}px`,
+        left: `${clampedRight}px`,
       };
     },
     /**
@@ -1077,7 +1133,7 @@ export default {
       this.bulkActionLoading = true;
 
       try {
-        const ids = [...this.selectedRepetitionIds];
+        const ids = this.getSelectedRepresentativeRepetitionIds();
 
         await Promise.all(ids.map(repetitionId => this.$store.dispatch(UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
@@ -1105,7 +1161,7 @@ export default {
       this.bulkActionLoading = true;
 
       try {
-        const ids = [...this.selectedRepetitionIds];
+        const ids = this.getSelectedRepresentativeRepetitionIds();
 
         await Promise.all(ids.map(repetitionId => this.$store.dispatch(REMOVE_EVENT_ASSIGNEE, {
           projectId: this.projectId,

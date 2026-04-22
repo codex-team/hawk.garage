@@ -162,12 +162,14 @@ export async function bulkToggleEventMarks(
 ): Promise<
   {
     updatedCount: number;
+    updatedEventIds: string[];
     failedEventIds: string[];
   } | null
 > {
   const response = await api.call<{
     bulkToggleEventMarks: {
       updatedCount: number;
+      updatedEventIds: string[];
       failedEventIds: string[];
     };
   }>(
