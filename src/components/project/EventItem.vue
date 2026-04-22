@@ -4,6 +4,7 @@
     :class="{
       'event-item--visited': isVisited,
       [`event-item--${mark}-label`]: true,
+      'event-item--ignored-label': isIgnored,
       'event-item--selection-mode': selectionModeActive,
       'event-item--row-selected': rowSelected,
       'event-item--bulk-adjacent-top': rowSelected && bulkAdjacentTop,
@@ -185,6 +186,14 @@ export default {
       }
 
       return mark;
+    },
+    /**
+     * Whether event has ignored mark (used only for row muting style)
+     *
+     * @returns {boolean}
+     */
+    isIgnored() {
+      return !!(this.event.marks && this.event.marks.ignored);
     },
 
     /**

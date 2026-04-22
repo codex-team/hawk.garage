@@ -295,6 +295,8 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.onDocumentEscape);
+    this.hideAssigneesList();
+    this.hideBulkAssigneesList();
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   // eslint-disable-next-line vue/order-in-components
@@ -791,13 +793,11 @@ export default {
       try {
         const ids = [...this.selectedRepetitionIds];
 
-        for (const repetitionId of ids) {
-          await this.$store.dispatch(UPDATE_EVENT_ASSIGNEE, {
-            projectId: this.projectId,
-            eventId: repetitionId,
-            assignee: user,
-          });
-        }
+        await Promise.all(ids.map(repetitionId => this.$store.dispatch(UPDATE_EVENT_ASSIGNEE, {
+          projectId: this.projectId,
+          eventId: repetitionId,
+          assignee: user,
+        })));
 
         this.exitBulkSelect();
         this.reloadDailyEvents();
@@ -820,12 +820,12 @@ export default {
       this.bulkActionLoading = true;
 
       try {
-        for (const repetitionId of [...this.selectedRepetitionIds]) {
-          await this.$store.dispatch(REMOVE_EVENT_ASSIGNEE, {
-            projectId: this.projectId,
-            eventId: repetitionId,
-          });
-        }
+        const ids = [...this.selectedRepetitionIds];
+
+        await Promise.all(ids.map(repetitionId => this.$store.dispatch(REMOVE_EVENT_ASSIGNEE, {
+          projectId: this.projectId,
+          eventId: repetitionId,
+        })));
 
         this.exitBulkSelect();
         this.reloadDailyEvents();
