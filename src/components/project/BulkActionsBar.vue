@@ -22,18 +22,8 @@
         :icon="bulkResolveIcon"
         class="events-list__bulk-action-button"
         small
-        :disabled="isActionDisabled('resolved')"
-        @click="$emit('bulk-mark', 'resolved')"
-      />
-      <UiButton
-        :content="''"
-        :title="bulkIgnoreLabel"
-        :aria-label="bulkIgnoreLabel"
-        :icon="bulkIgnoreIcon"
-        class="events-list__bulk-action-button"
-        small
-        :disabled="isActionDisabled('ignored')"
-        @click="$emit('bulk-mark', 'ignored')"
+        :disabled="isMarkDisabled('resolved')"
+        @click="onMarkClick('resolved')"
       />
       <UiButton
         :content="''"
@@ -42,8 +32,18 @@
         :icon="bulkStarIcon"
         class="events-list__bulk-action-button"
         small
-        :disabled="isActionDisabled('starred')"
-        @click="$emit('bulk-mark', 'starred')"
+        :disabled="isMarkDisabled('starred')"
+        @click="onMarkClick('starred')"
+      />
+      <UiButton
+        :content="''"
+        :title="bulkIgnoreLabel"
+        :aria-label="bulkIgnoreLabel"
+        :icon="bulkIgnoreIcon"
+        class="events-list__bulk-action-button"
+        small
+        :disabled="isMarkDisabled('ignored')"
+        @click="onMarkClick('ignored')"
       />
       <UiButton
         :content="''"
@@ -52,7 +52,7 @@
         icon="assignee"
         class="events-list__bulk-action-button"
         small
-        :disabled="isActionDisabled('assign')"
+        :disabled="selectedCount === 0"
         @click="$emit('bulk-assign-click', $event)"
       />
       <UiButton
@@ -62,7 +62,7 @@
         icon="dots-vertical"
         class="events-list__bulk-action-button events-list__bulk-more-trigger"
         small
-        :disabled="isActionDisabled('more')"
+        :disabled="selectedCount === 0"
         @click="$emit('bulk-more-menu-click', $event)"
       />
     </div>
@@ -86,9 +86,9 @@ export default {
       type: Number,
       default: 0,
     },
-    activeBulkAction: {
-      type: String,
-      default: '',
+    onBulkMark: {
+      type: Function,
+      required: true,
     },
     bulkResolveLabel: {
       type: String,
@@ -117,19 +117,34 @@ export default {
   },
   emits: [
     'exit-bulk-select',
-    'bulk-mark',
     'bulk-assign-click',
     'bulk-more-menu-click',
   ],
-  computed: {
-    isActionDisabled() {
-      return (action) => {
-        if (this.selectedCount === 0) {
-          return true;
-        }
+  data() {
+    return {
+      activeMarkAction: '',
+    };
+  },
+  methods: {
+    isMarkDisabled(action) {
+      if (this.selectedCount === 0) {
+        return true;
+      }
 
-        return this.activeBulkAction === action;
-      };
+      return this.activeMarkAction === action;
+    },
+    async onMarkClick(action) {
+      if (this.activeMarkAction) {
+        return;
+      }
+
+      this.activeMarkAction = action;
+
+      try {
+        await this.onBulkMark(action);
+      } finally {
+        this.activeMarkAction = '';
+      }
     },
   },
 };

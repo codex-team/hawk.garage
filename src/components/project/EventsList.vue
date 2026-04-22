@@ -25,7 +25,7 @@
       <BulkActionsBar
         :selection-mode-active="selectionModeActive"
         :selected-count="selectedCount"
-        :active-bulk-action="activeBulkAction"
+        :on-bulk-mark="runBulkMark"
         :bulk-resolve-label="bulkResolveLabel"
         :bulk-resolve-icon="bulkResolveIcon"
         :bulk-ignore-label="bulkIgnoreLabel"
@@ -33,7 +33,6 @@
         :bulk-star-label="bulkStarLabel"
         :bulk-star-icon="bulkStarIcon"
         @exit-bulk-select="exitBulkSelect"
-        @bulk-mark="runBulkMark"
         @bulk-assign-click="onBulkAssignButtonClick"
         @bulk-more-menu-click="onBulkMoreMenuButtonClick"
       />
@@ -246,7 +245,6 @@ export default {
        * Last toggled row id used as Shift-selection anchor
        */
       lastSelectedRepetitionId: null,
-      activeBulkAction: '',
       /**
        * Bulk bar assignee picker
        */
@@ -274,6 +272,7 @@ export default {
   },
   created() {
     this.loadMoreEvents(true);
+    this.bulkActionInFlight = false;
 
     const SEARCH_MAX_LENGTH = 50;
 
@@ -634,7 +633,7 @@ export default {
      * @returns {Promise<void>}
      */
     async runBulkMark(mark) {
-      if (this.activeBulkAction) {
+      if (this.bulkActionInFlight) {
         return;
       }
 
@@ -644,7 +643,7 @@ export default {
         return;
       }
 
-      this.activeBulkAction = mark;
+      this.bulkActionInFlight = true;
 
       try {
         const result = await this.$store.dispatch(BULK_TOGGLE_EVENT_MARKS, {
@@ -674,7 +673,7 @@ export default {
           });
         }
       } finally {
-        this.activeBulkAction = '';
+        this.bulkActionInFlight = false;
       }
     },
     /**
@@ -915,7 +914,7 @@ export default {
      * @returns {void}
      */
     onBulkAssignButtonClick(evt) {
-      if (this.activeBulkAction) {
+      if (this.bulkActionInFlight) {
         return;
       }
 
@@ -957,7 +956,7 @@ export default {
      * @returns {void}
      */
     onBulkMoreMenuButtonClick(evt) {
-      if (this.activeBulkAction) {
+      if (this.bulkActionInFlight) {
         return;
       }
 
@@ -1081,7 +1080,7 @@ export default {
      * @returns {Promise<void>}
      */
     async onBulkPickAssignee(user) {
-      if (this.activeBulkAction) {
+      if (this.bulkActionInFlight) {
         return;
       }
 
@@ -1091,7 +1090,7 @@ export default {
         return;
       }
 
-      this.activeBulkAction = 'assign';
+      this.bulkActionInFlight = true;
 
       try {
         const ids = this.getSelectedRepresentativeRepetitionIds();
@@ -1102,7 +1101,7 @@ export default {
           assignee: user,
         })));
       } finally {
-        this.activeBulkAction = '';
+        this.bulkActionInFlight = false;
       }
     },
     /**
@@ -1111,7 +1110,7 @@ export default {
      * @returns {Promise<void>}
      */
     async onBulkClearAssigneesFromSelection() {
-      if (this.activeBulkAction) {
+      if (this.bulkActionInFlight) {
         return;
       }
 
@@ -1121,7 +1120,7 @@ export default {
         return;
       }
 
-      this.activeBulkAction = 'unassign';
+      this.bulkActionInFlight = true;
 
       try {
         const ids = this.getSelectedRepresentativeRepetitionIds();
@@ -1131,7 +1130,7 @@ export default {
           eventId: repetitionId,
         })));
       } finally {
-        this.activeBulkAction = '';
+        this.bulkActionInFlight = false;
       }
     },
     /**
@@ -1140,7 +1139,7 @@ export default {
      * @returns {Promise<void>}
      */
     async onBulkMarkViewed() {
-      if (this.activeBulkAction) {
+      if (this.bulkActionInFlight) {
         return;
       }
 
@@ -1151,7 +1150,7 @@ export default {
         return;
       }
 
-      this.activeBulkAction = 'mark-viewed';
+      this.bulkActionInFlight = true;
 
       try {
         const originalIds = this.getSelectedOriginalIds();
@@ -1161,7 +1160,7 @@ export default {
           originalEventId,
         })));
       } finally {
-        this.activeBulkAction = '';
+        this.bulkActionInFlight = false;
       }
     },
   },
