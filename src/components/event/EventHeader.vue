@@ -132,16 +132,14 @@ import AssigneeBar from '../utils/AssigneeBar.vue';
 import EntityImage from '../utils/EntityImage.vue';
 
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
-import { REMOVE_EVENT, TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
+import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
 import { Project } from '@/types/project';
 import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
-import { ContextMenuItem, usePopover } from '@codexteam/ui/vue';
+import { usePopover } from '@codexteam/ui/vue';
 import EventActionsMenu from './EventActionsMenu.vue';
-import { ActionType } from '../utils/ConfirmationWindow/types';
-import notifier from 'codex-notifier';
 import Icon from '../utils/Icon.vue';
 
 export default defineComponent({
@@ -167,7 +165,6 @@ export default defineComponent({
       validator: prop => typeof prop === 'object' || prop === null,
     },
   },
-  emits: ['event-deleted'],
   setup() {
     const { showPopover, hide } = usePopover();
 
@@ -334,23 +331,6 @@ export default defineComponent({
     },
 
     /**
-     * Build "more options" context menu items
-     */
-    eventActionsMenuItems(): ContextMenuItem[] {
-      return [
-        {
-          type: 'default',
-          title: this.$t('event.remove') as string,
-          icon: 'Trash',
-          onActivate: () => {
-            this.hidePopover();
-            this.confirmRemoveEvent();
-          },
-        },
-      ];
-    },
-
-    /**
      * Open the "more options" context menu near the 3-dot button
      *
      * @param event - native click mouse event
@@ -365,48 +345,14 @@ export default defineComponent({
         with: {
           component: EventActionsMenu,
           props: {
-            items: this.eventActionsMenuItems(),
+            projectId: this.projectId,
+            eventId: this.$route.params.eventId,
+            onClose: () => this.hidePopover(),
           },
         },
         align: {
           vertically: 'below',
           horizontally: 'right',
-        },
-      });
-    },
-
-    /**
-     * Show confirmation dialog and, on confirm, delete the event then navigate back
-     */
-    confirmRemoveEvent() {
-      const { projectId, eventId } = this.$route.params;
-
-      this.$confirm.open({
-        description: this.$t('event.removeConfirmation').toString(),
-        actionType: ActionType.DELETION,
-        continueButtonText: this.$t('event.removeButton').toString(),
-        onConfirm: async () => {
-          const isRemoved = await this.$store.dispatch(REMOVE_EVENT, {
-            projectId,
-            eventId,
-          });
-
-          if (isRemoved) {
-            notifier.show({
-              message: this.$t('event.removeSuccess').toString(),
-              style: 'success',
-              time: 5000,
-            });
-            this.$emit('event-deleted');
-
-            return;
-          }
-
-          notifier.show({
-            message: this.$t('event.removeError').toString(),
-            style: 'error',
-            time: 5000,
-          });
         },
       });
     },

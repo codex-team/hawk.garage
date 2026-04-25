@@ -24,10 +24,7 @@
       </div>
     </div>
     <router-view v-slot="{ Component }">
-      <component
-        :is="Component"
-        @event-deleted="eventDeleted"
-      />
+      <component :is="Component" />
     </router-view>
   </div>
 </template>
@@ -87,6 +84,19 @@ export default {
      */
     isWorkspaceBlocked() {
       return this.workspace?.isBlocked;
+    },
+  },
+  watch: {
+    /**
+     * Refresh list when route gets a new reload token
+     *
+     * @param newValue
+     * @param oldValue
+     */
+    '$route.query.reload'(newValue, oldValue) {
+      if (newValue && newValue !== oldValue) {
+        this.reloadDailyEvents();
+      }
     },
   },
 
@@ -149,10 +159,6 @@ export default {
       if (this.$refs.eventsList && this.$refs.eventsList.reloadDailyEvents) {
         this.$refs.eventsList.reloadDailyEvents();
       }
-    },
-
-    async eventDeleted() {
-      this.reloadDailyEvents();
     },
   },
 };

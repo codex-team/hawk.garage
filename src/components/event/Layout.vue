@@ -7,7 +7,6 @@
     <EventHeader
       v-if="event || loading"
       :event="event"
-      @event-deleted="onEventDeleted"
     />
     <div class="event-layout__info">
       <div class="event-layout__container">
@@ -46,7 +45,6 @@ export default defineComponent({
     PopupDialog,
     EventHeader,
   },
-  emits: ['event-deleted'],
   data() {
     return {
       /**
@@ -126,18 +124,6 @@ export default defineComponent({
           originalEventId: this.event.originalEventId,
         });
       }
-    },
-
-    /**
-     * Called when EventHeader signals that the event was deleted.
-     * and navigates back to the project overview to close the modal.
-     */
-    onEventDeleted() {
-      this.$emit('event-deleted');
-      this.$router.push({
-        name: 'project-overview',
-        params: { projectId: this.projectId },
-      });
     },
   },
 });

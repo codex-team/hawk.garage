@@ -615,10 +615,9 @@
       "upgradeButton": "Pay and view event"
     },
     "remove": "Remove event",
-    "removeConfirmation": "Are you sure you want to remove this event? All repetitions and related data will also be removed.",
+    "removeConfirmation": "Are you sure you want to remove this event? All related data will also be removed.",
     "removeButton": "Remove",
-    "removeSuccess": "Event successfully removed",
-    "removeError": "Failed to remove the event"
+    "removeSuccess": "Event successfully removed"
   },
   "common": {
     "workspace": "Workspace",
