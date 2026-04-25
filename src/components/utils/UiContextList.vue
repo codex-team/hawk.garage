@@ -2,7 +2,7 @@
   <div class="ui-context-list">
     <div
       v-for="item in items"
-      :key="item.label"
+      :key="item.rowKey != null ? String(item.rowKey) : item.label"
       class="ui-context-list__item"
       :class="{
         'ui-context-list__item--active': item.isActive,
@@ -51,6 +51,11 @@ export interface UiContextListItem {
    * Whether the item is disabled
    */
   isDisabled?: boolean;
+
+  /**
+   * Stable key for v-for (e.g. option value when labels may repeat)
+   */
+  rowKey?: string;
 }
 
 export default defineComponent({
@@ -90,9 +95,14 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: var(--items-gap);
+  max-height: min(280px, 45vh);
   padding: 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: var(--color-bg-second);
   border-radius: var(--radius);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 
   &__item {
     display: flex;
