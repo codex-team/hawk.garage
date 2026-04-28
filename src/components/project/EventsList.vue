@@ -95,6 +95,7 @@
       :style="assigneesListPosition"
       :event-id="assigneesEventId"
       :project-id="projectId"
+      :can-unassign="canUnassignCurrentEvent"
       class="events-list__assignees-list"
       @hide="hideAssigneesList"
     />
@@ -103,12 +104,12 @@
       v-click-outside="hideBulkAssigneesList"
       :style="bulkAssigneesListPosition"
       :project-id="projectId"
-      :bulk-pick-only="true"
+      :can-unassign="hasAssigneeInSelection"
       triangle="top"
       class="events-list__assignees-list events-list__assignees-list--bulk"
       @hide="hideBulkAssigneesList"
       @pick-user="onBulkPickAssignee"
-      @bulk-clear-assignees="onBulkClearAssigneesFromSelection"
+      @unassign="onBulkClearAssigneesFromSelection"
     />
     <div
       v-if="isBulkMoreMenuShowed"
@@ -405,6 +406,28 @@ export default {
       return this.selectedRepetitionIds
         .map(repetitionId => this.getEvent(repetitionId))
         .filter(Boolean);
+    },
+    /**
+     * Current opened event has assignee, so "unassign" row is visible
+     *
+     * @returns {boolean}
+     */
+    canUnassignCurrentEvent() {
+      if (!this.assigneesEventId) {
+        return false;
+      }
+
+      const event = this.getEvent(this.assigneesEventId);
+
+      return !!event?.assignee;
+    },
+    /**
+     * At least one selected event has assignee
+     *
+     * @returns {boolean}
+     */
+    hasAssigneeInSelection() {
+      return this.selectedEvents.some(event => !!event.assignee);
     },
     /**
      * True when all selected events are ignored

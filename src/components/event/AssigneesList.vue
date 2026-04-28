@@ -21,9 +21,9 @@
       class="event-assignees-list__assignees assignees"
     >
       <div
-        v-if="bulkPickOnly"
-        class="assignees__row assignees__row--bulk-unassign"
-        @click="onBulkUnassignAllClick"
+        v-if="canUnassign"
+        class="assignees__row assignees__row--unassign"
+        @click="onUnassignClick"
       >
         <Icon
           class="assignees__image assignees__row-bulk-icon"
@@ -54,7 +54,7 @@
           </span>
         </div>
         <Icon
-          v-if="!bulkPickOnly && user.id == currentAssigneeId"
+          v-if="eventId && user.id == currentAssigneeId"
           class="assignees__checkmark"
           symbol="checkmark"
         />
@@ -70,7 +70,7 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'AssigneesList',
-  emits: ['hide', 'pick-user', 'bulk-clear-assignees'],
+  emits: ['hide', 'pick-user', 'unassign'],
   components: {
     EntityImage,
     Icon,
@@ -101,9 +101,9 @@ export default {
     },
 
     /**
-     * Bulk mode: emit pick-user instead of updating store (no current-assignee checkmarks)
+     * Show top row action to remove assignee(s) in parent context
      */
-    bulkPickOnly: {
+    canUnassign: {
       type: Boolean,
       default: false,
     },
@@ -128,7 +128,7 @@ export default {
      * @returns {string} - assignee id or empty string
      */
     currentAssigneeId() {
-      if (this.bulkPickOnly) {
+      if (!this.eventId) {
         return '';
       }
 
@@ -180,12 +180,20 @@ export default {
   },
   methods: {
     /**
-     * Bulk: clear assignee on all selected list rows
+     * Remove assignee for current context
      *
      * @returns {void}
      */
-    onBulkUnassignAllClick() {
-      this.$emit('bulk-clear-assignees');
+    async onUnassignClick() {
+      if (this.eventId) {
+        await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
+          projectId: this.projectId,
+          eventId: this.eventId,
+        });
+      } else {
+        this.$emit('unassign');
+      }
+
       this.$emit('hide');
     },
     /**
@@ -195,7 +203,7 @@ export default {
      * @param user
      */
     async updateAssignee(user) {
-      if (this.bulkPickOnly) {
+      if (!this.eventId) {
         this.$emit('pick-user', user);
         this.$emit('hide');
 
