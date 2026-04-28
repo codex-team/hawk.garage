@@ -507,7 +507,7 @@ export default {
         if (result.failedEventIds.length > 0) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
-              updated: result.updatedCount,
+              updated: result.updatedEventIds.length,
               failed: result.failedEventIds.length,
             }),
             style: 'error',
@@ -741,12 +741,32 @@ export default {
 
       try {
         const originalIds = this.getSelectedOriginalIds();
-
-        await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
+        const result = await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
           eventIds: originalIds,
           assignee: user,
         });
+
+        if (!result) {
+          notifier.show({
+            message: this.$t('event.bulk.markError'),
+            style: 'error',
+            time: 8000,
+          });
+
+          return;
+        }
+
+        if (result.failedEventIds.length > 0) {
+          notifier.show({
+            message: this.$t('event.bulk.markPartial', {
+              updated: result.updatedEventIds.length,
+              failed: result.failedEventIds.length,
+            }),
+            style: 'error',
+            time: 10000,
+          });
+        }
       } finally {
         this.bulkActionInFlight = false;
       }
@@ -769,12 +789,32 @@ export default {
 
       try {
         const originalIds = this.getSelectedOriginalIds();
-
-        await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
+        const result = await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
           eventIds: originalIds,
           assignee: null,
         });
+
+        if (!result) {
+          notifier.show({
+            message: this.$t('event.bulk.markError'),
+            style: 'error',
+            time: 8000,
+          });
+
+          return;
+        }
+
+        if (result.failedEventIds.length > 0) {
+          notifier.show({
+            message: this.$t('event.bulk.markPartial', {
+              updated: result.updatedEventIds.length,
+              failed: result.failedEventIds.length,
+            }),
+            style: 'error',
+            time: 10000,
+          });
+        }
       } finally {
         this.bulkActionInFlight = false;
       }
@@ -797,11 +837,31 @@ export default {
 
       try {
         const originalIds = this.getSelectedOriginalIds();
-
-        await this.$store.dispatch(BULK_VISIT_EVENTS, {
+        const result = await this.$store.dispatch(BULK_VISIT_EVENTS, {
           projectId: this.projectId,
           eventIds: originalIds,
         });
+
+        if (!result) {
+          notifier.show({
+            message: this.$t('event.bulk.markError'),
+            style: 'error',
+            time: 8000,
+          });
+
+          return;
+        }
+
+        if (result.failedEventIds.length > 0) {
+          notifier.show({
+            message: this.$t('event.bulk.markPartial', {
+              updated: result.updatedEventIds.length,
+              failed: result.failedEventIds.length,
+            }),
+            style: 'error',
+            time: 10000,
+          });
+        }
       } finally {
         this.bulkActionInFlight = false;
       }

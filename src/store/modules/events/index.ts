@@ -406,7 +406,6 @@ const module: Module<EventsModuleState, RootState> = {
       { projectId, eventIds }: { projectId: string; eventIds: string[]; }
     ): Promise<
       {
-        updatedCount: number;
         updatedEventIds: string[];
         failedEventIds: string[];
       } | null
@@ -481,7 +480,6 @@ const module: Module<EventsModuleState, RootState> = {
       }
     ): Promise<
       {
-        updatedCount: number;
         updatedEventIds: string[];
         failedEventIds: string[];
       } | null
@@ -576,7 +574,6 @@ const module: Module<EventsModuleState, RootState> = {
       { projectId, eventIds, assignee }: { projectId: string; eventIds: string[]; assignee: User | null; }
     ): Promise<
       {
-        updatedCount: number;
         updatedEventIds: string[];
         failedEventIds: string[];
       } | null

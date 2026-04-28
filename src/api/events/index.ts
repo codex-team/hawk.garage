@@ -163,7 +163,6 @@ export async function bulkVisitEvents(
 ): Promise<BulkEventsMutationResult | null> {
   return runBulkMutation<{
     bulkVisitEvents: {
-      updatedCount: number;
       updatedEventIds: string[];
       failedEventIds: string[];
     };
@@ -204,7 +203,6 @@ export async function bulkToggleEventMarks(
 ): Promise<BulkEventsMutationResult | null> {
   return runBulkMutation<{
     bulkToggleEventMarks: {
-      updatedCount: number;
       updatedEventIds: string[];
       failedEventIds: string[];
     };
@@ -264,7 +262,6 @@ export async function bulkUpdateAssignee(
   return runBulkMutation<{
     events: {
       bulkUpdateAssignee: {
-        updatedCount: number;
         updatedEventIds: string[];
         failedEventIds: string[];
       };
