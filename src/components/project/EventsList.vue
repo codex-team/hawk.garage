@@ -23,18 +23,15 @@
       class="events-list__bulk-slot"
     >
       <BulkActionsBar
+        :project-id="projectId"
         :selection-mode-active="selectionModeActive"
         :selected-count="selectedCount"
+        :selected-events="selectedEvents"
         :on-bulk-mark="runBulkMark"
-        :bulk-resolve-label="bulkResolveLabel"
-        :bulk-resolve-icon="bulkResolveIcon"
-        :bulk-ignore-label="bulkIgnoreLabel"
-        :bulk-ignore-icon="bulkIgnoreIcon"
-        :bulk-star-label="bulkStarLabel"
-        :bulk-star-icon="bulkStarIcon"
+        :on-bulk-assign="onBulkPickAssignee"
+        :on-bulk-unassign="onBulkClearAssigneesFromSelection"
+        :on-bulk-mark-viewed="onBulkMarkViewed"
         @exit-bulk-select="exitBulkSelect"
-        @bulk-assign-click="onBulkAssignButtonClick"
-        @bulk-more-menu-click="onBulkMoreMenuButtonClick"
       />
     </div>
     <template v-if="hasItems">
@@ -99,26 +96,6 @@
       class="events-list__assignees-list"
       @hide="hideAssigneesList"
     />
-    <AssigneesList
-      v-if="isBulkAssigneesShowed"
-      v-click-outside="hideBulkAssigneesList"
-      :style="bulkAssigneesListPosition"
-      :project-id="projectId"
-      :can-unassign="hasAssigneeInSelection"
-      triangle="top"
-      class="events-list__assignees-list events-list__assignees-list--bulk"
-      @hide="hideBulkAssigneesList"
-      @pick-user="onBulkPickAssignee"
-      @unassign="onBulkClearAssigneesFromSelection"
-    />
-    <div
-      v-if="isBulkMoreMenuShowed"
-      v-click-outside="hideBulkMoreMenu"
-      :style="bulkMoreMenuPosition"
-      class="events-list__bulk-more-menu"
-    >
-      <UiContextList :items="bulkMoreMenuItems" />
-    </div>
   </div>
 </template>
 
@@ -134,7 +111,6 @@ import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, BULK_UPDATE_EVENT_ASSI
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
-import UiContextList from '../utils/UiContextList.vue';
 import notifier from 'codex-notifier';
 
 /** Must match api/src/models/eventsFactory.js assignee filter sentinels */
@@ -165,7 +141,6 @@ export default {
     SearchField,
     EmptyState,
     UiSelect,
-    UiContextList,
   },
   props: {
     fallback: {
@@ -246,29 +221,6 @@ export default {
        * Last toggled row id used as Shift-selection anchor
        */
       lastSelectedRepetitionId: null,
-      /**
-       * Bulk bar assignee picker
-       */
-      isBulkAssigneesShowed: false,
-      bulkAssigneesListPosition: {
-        top: 0,
-        left: 0,
-      },
-      bulkAssignAnchorEl: null,
-      /**
-       * Bound handler to detach in hideBulkAssigneesList
-       */
-      bulkAssignOnViewportChange: null,
-      /**
-       * Bulk "more actions" menu
-       */
-      isBulkMoreMenuShowed: false,
-      bulkMoreMenuPosition: {
-        top: 0,
-        left: 0,
-      },
-      bulkMoreMenuAnchorEl: null,
-      bulkMoreMenuOnViewportChange: null,
     };
   },
   created() {
@@ -296,8 +248,6 @@ export default {
   beforeUnmount() {
     window.removeEventListener('keydown', this.onDocumentEscape);
     this.hideAssigneesList();
-    this.hideBulkAssigneesList();
-    this.hideBulkMoreMenu();
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   // eslint-disable-next-line vue/order-in-components
@@ -422,109 +372,6 @@ export default {
       return !!event?.assignee;
     },
     /**
-     * At least one selected event has assignee
-     *
-     * @returns {boolean}
-     */
-    hasAssigneeInSelection() {
-      return this.selectedEvents.some(event => !!event.assignee);
-    },
-    /**
-     * True when all selected events are ignored
-     *
-     * @returns {boolean}
-     */
-    areAllSelectedIgnored() {
-      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.ignored);
-    },
-    /**
-     * True when all selected events are resolved
-     *
-     * @returns {boolean}
-     */
-    areAllSelectedResolved() {
-      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.resolved);
-    },
-    /**
-     * True when all selected events are starred
-     *
-     * @returns {boolean}
-     */
-    areAllSelectedStarred() {
-      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.starred);
-    },
-    /**
-     * Dynamic bulk label for ignore action
-     *
-     * @returns {string}
-     */
-    bulkIgnoreLabel() {
-      return this.areAllSelectedIgnored
-        ? this.$t('event.bulk.unignore')
-        : this.$t('event.ignore');
-    },
-    /**
-     * Dynamic bulk label for resolve action
-     *
-     * @returns {string}
-     */
-    bulkResolveLabel() {
-      return this.areAllSelectedResolved
-        ? this.$t('event.bulk.unresolve')
-        : this.$t('event.resolve');
-    },
-    /**
-     * Dynamic bulk icon for resolve action
-     *
-     * @returns {string}
-     */
-    bulkResolveIcon() {
-      return this.areAllSelectedResolved ? 'close-circle' : 'checkmark';
-    },
-    /**
-     * Dynamic bulk label for starred action
-     *
-     * @returns {string}
-     */
-    bulkStarLabel() {
-      return this.areAllSelectedStarred
-        ? this.$t('event.bulk.unstar')
-        : this.$t('event.star');
-    },
-    /**
-     * Dynamic bulk icon for ignore action
-     *
-     * @returns {string}
-     */
-    bulkIgnoreIcon() {
-      return this.areAllSelectedIgnored ? 'eye' : 'hided';
-    },
-    /**
-     * Dynamic bulk icon for starred action
-     *
-     * @returns {string}
-     */
-    bulkStarIcon() {
-      return this.areAllSelectedStarred ? 'star-outline' : 'star';
-    },
-    /**
-     * "More actions" menu items for bulk toolbar
-     *
-     * @returns {Array}
-     */
-    bulkMoreMenuItems() {
-      return [
-        {
-          label: this.$t('event.bulk.markViewed'),
-          icon: 'eye',
-          isActive: false,
-          onActivate: () => {
-            void this.onBulkMarkViewed();
-          },
-        },
-      ];
-    },
-    /**
      * Event row ids in list order (same as template v-for over groupedByDate)
      *
      * @returns {string[]}
@@ -571,8 +418,6 @@ export default {
      * Clear bulk selection (hides bar when empty)
      */
     exitBulkSelect() {
-      this.hideBulkAssigneesList();
-      this.hideBulkMoreMenu();
       this.selectedRepetitionIds = [];
       this.lastSelectedRepetitionId = null;
     },
@@ -831,9 +676,6 @@ export default {
      * @returns {void}
      */
     onAssigneeIconClick(eventId, nativeEvent) {
-      this.hideBulkAssigneesList();
-      this.hideBulkMoreMenu();
-
       const targetEl = nativeEvent && nativeEvent.target ? nativeEvent.target : null;
       const anchorEl = targetEl && targetEl.closest ? targetEl.closest('.event-item__assignee') : null;
 
@@ -865,9 +707,6 @@ export default {
      * @returns {void}
      */
     onShowEventOverview(eventId) {
-      this.hideBulkAssigneesList();
-      this.hideBulkMoreMenu();
-
       const event = this.getEvent(eventId);
       const originalEventId = event.originalEventId;
 
@@ -910,172 +749,6 @@ export default {
       window.removeEventListener('scroll', this.onResize, true);
     },
     /**
-     * Open workspace member picker under bulk assign button
-     *
-     * @param {MouseEvent} evt - click event
-     * @returns {void}
-     */
-    onBulkAssignButtonClick(evt) {
-      if (this.bulkActionInFlight) {
-        return;
-      }
-
-      /* Otherwise, the same click will reach the document and v-click-outside will close the just-mounted list */
-
-      if (evt && typeof evt.stopPropagation === 'function') {
-        evt.stopPropagation();
-      }
-
-      if (this.isAssigneesShowed) {
-        this.hideAssigneesList();
-      }
-      this.hideBulkMoreMenu();
-
-      const el = evt && evt.currentTarget ? evt.currentTarget : null;
-
-      if (!el) {
-        return;
-      }
-
-      if (this.isBulkAssigneesShowed && this.bulkAssignAnchorEl === el) {
-        this.hideBulkAssigneesList();
-
-        return;
-      }
-
-      this.hideBulkAssigneesList();
-      this.bulkAssignAnchorEl = el;
-      this.isBulkAssigneesShowed = true;
-      this.setBulkAssigneesPosition();
-      this.bulkAssignOnViewportChange = this.setBulkAssigneesPosition.bind(this);
-      window.addEventListener('resize', this.bulkAssignOnViewportChange);
-      window.addEventListener('scroll', this.bulkAssignOnViewportChange, true);
-    },
-    /**
-     * Toggle bulk "more actions" menu
-     *
-     * @param {MouseEvent} evt - click event
-     * @returns {void}
-     */
-    onBulkMoreMenuButtonClick(evt) {
-      if (this.bulkActionInFlight) {
-        return;
-      }
-
-      if (evt && typeof evt.stopPropagation === 'function') {
-        evt.stopPropagation();
-      }
-
-      this.hideBulkAssigneesList();
-      if (this.isAssigneesShowed) {
-        this.hideAssigneesList();
-      }
-
-      const el = evt && evt.currentTarget ? evt.currentTarget : null;
-
-      if (!el) {
-        return;
-      }
-
-      if (this.isBulkMoreMenuShowed && this.bulkMoreMenuAnchorEl === el) {
-        this.hideBulkMoreMenu();
-
-        return;
-      }
-
-      this.hideBulkMoreMenu();
-      this.bulkMoreMenuAnchorEl = el;
-      this.isBulkMoreMenuShowed = true;
-      this.setBulkMoreMenuPosition();
-      this.bulkMoreMenuOnViewportChange = this.setBulkMoreMenuPosition.bind(this);
-      window.addEventListener('resize', this.bulkMoreMenuOnViewportChange);
-      window.addEventListener('scroll', this.bulkMoreMenuOnViewportChange, true);
-    },
-    /**
-     * Fixed position for bulk assign popover (below trigger)
-     *
-     * @returns {void}
-     */
-    setBulkAssigneesPosition() {
-      if (!this.bulkAssignAnchorEl) {
-        return;
-      }
-
-      const rect = this.bulkAssignAnchorEl.getBoundingClientRect();
-      const LIST_WIDTH = 210;
-      const ARROW_X_FROM_LEFT = 174; // AssigneesList top triangle: right: 36px => 210 - 36
-      const OFFSET_X = 8;
-      const viewportWidth = window.innerWidth;
-      const leftPadding = 8;
-      const anchorX = rect.left + rect.width / 2;
-      const desiredLeft = anchorX - ARROW_X_FROM_LEFT + OFFSET_X;
-      const clampedLeft = Math.min(
-        Math.max(desiredLeft, leftPadding),
-        Math.max(leftPadding, viewportWidth - LIST_WIDTH - leftPadding)
-      );
-
-      this.bulkAssigneesListPosition = {
-        top: `${rect.bottom + 8}px`,
-        left: `${clampedLeft}px`,
-      };
-    },
-    /**
-     * Position bulk "more actions" menu near trigger
-     *
-     * @returns {void}
-     */
-    setBulkMoreMenuPosition() {
-      if (!this.bulkMoreMenuAnchorEl) {
-        return;
-      }
-
-      const rect = this.bulkMoreMenuAnchorEl.getBoundingClientRect();
-      const OFFSET_X = 0;
-      const MENU_WIDTH = 260;
-      const viewportWidth = window.innerWidth;
-      const leftPadding = 8;
-      const desiredRight = rect.right + OFFSET_X;
-      const clampedRight = Math.min(
-        Math.max(desiredRight, MENU_WIDTH + leftPadding),
-        Math.max(MENU_WIDTH + leftPadding, viewportWidth - leftPadding)
-      );
-
-      this.bulkMoreMenuPosition = {
-        top: `${rect.bottom + 8}px`,
-        left: `${clampedRight}px`,
-      };
-    },
-    /**
-     * Close bulk assignee picker and detach listeners
-     *
-     * @returns {void}
-     */
-    hideBulkAssigneesList() {
-      this.isBulkAssigneesShowed = false;
-      this.bulkAssignAnchorEl = null;
-
-      if (typeof this.bulkAssignOnViewportChange === 'function') {
-        window.removeEventListener('resize', this.bulkAssignOnViewportChange);
-        window.removeEventListener('scroll', this.bulkAssignOnViewportChange, true);
-        this.bulkAssignOnViewportChange = null;
-      }
-    },
-    /**
-     * Close bulk "more actions" menu and detach listeners
-     *
-     * @returns {void}
-     */
-    hideBulkMoreMenu() {
-      this.isBulkMoreMenuShowed = false;
-      this.bulkMoreMenuAnchorEl = null;
-
-      if (typeof this.bulkMoreMenuOnViewportChange === 'function') {
-        window.removeEventListener('resize', this.bulkMoreMenuOnViewportChange);
-        window.removeEventListener('scroll', this.bulkMoreMenuOnViewportChange, true);
-        this.bulkMoreMenuOnViewportChange = null;
-      }
-    },
-    /**
      * Assign picked user to all selected rows (repetition ids)
      *
      * @param {object} user - workspace team member (same shape as in AssigneesList)
@@ -1085,8 +758,6 @@ export default {
       if (this.bulkActionInFlight) {
         return;
       }
-
-      this.hideBulkAssigneesList();
 
       if (!user || this.selectedCount === 0) {
         return;
@@ -1116,8 +787,6 @@ export default {
         return;
       }
 
-      this.hideBulkAssigneesList();
-
       if (this.selectedCount === 0) {
         return;
       }
@@ -1145,9 +814,6 @@ export default {
       if (this.bulkActionInFlight) {
         return;
       }
-
-      this.hideBulkAssigneesList();
-      this.hideBulkMoreMenu();
 
       if (this.selectedCount === 0) {
         return;
