@@ -504,11 +504,11 @@ export default {
           return;
         }
 
-        if (result.failedEventIds.length > 0) {
+        if (result.modifiedCount < uniqueOriginal.length) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
-              updated: result.updatedEventIds.length,
-              failed: result.failedEventIds.length,
+              updated: result.modifiedCount,
+              failed: uniqueOriginal.length - result.modifiedCount,
             }),
             style: 'error',
             time: 10000,
@@ -757,11 +757,11 @@ export default {
           return;
         }
 
-        if (result.failedEventIds.length > 0) {
+        if (result.modifiedCount < originalIds.length) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
-              updated: result.updatedEventIds.length,
-              failed: result.failedEventIds.length,
+              updated: result.modifiedCount,
+              failed: originalIds.length - result.modifiedCount,
             }),
             style: 'error',
             time: 10000,
@@ -805,11 +805,11 @@ export default {
           return;
         }
 
-        if (result.failedEventIds.length > 0) {
+        if (result.modifiedCount < originalIds.length) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
-              updated: result.updatedEventIds.length,
-              failed: result.failedEventIds.length,
+              updated: result.modifiedCount,
+              failed: originalIds.length - result.modifiedCount,
             }),
             style: 'error',
             time: 10000,
@@ -852,11 +852,11 @@ export default {
           return;
         }
 
-        if (result.failedEventIds.length > 0) {
+        if (result.modifiedCount < originalIds.length) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
-              updated: result.updatedEventIds.length,
-              failed: result.failedEventIds.length,
+              updated: result.modifiedCount,
+              failed: originalIds.length - result.modifiedCount,
             }),
             style: 'error',
             time: 10000,

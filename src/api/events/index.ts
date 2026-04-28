@@ -163,8 +163,8 @@ export async function bulkVisitEvents(
 ): Promise<BulkEventsMutationResult | null> {
   return runBulkMutation<{
     bulkVisitEvents: {
-      updatedEventIds: string[];
-      failedEventIds: string[];
+      success: boolean;
+      modifiedCount: number;
     };
   }>(
     MUTATION_BULK_VISIT_EVENTS,
@@ -203,8 +203,8 @@ export async function bulkToggleEventMarks(
 ): Promise<BulkEventsMutationResult | null> {
   return runBulkMutation<{
     bulkToggleEventMarks: {
-      updatedEventIds: string[];
-      failedEventIds: string[];
+      success: boolean;
+      modifiedCount: number;
     };
   }>(
     MUTATION_BULK_TOGGLE_EVENT_MARKS,
@@ -262,8 +262,8 @@ export async function bulkUpdateAssignee(
   return runBulkMutation<{
     events: {
       bulkUpdateAssignee: {
-        updatedEventIds: string[];
-        failedEventIds: string[];
+        success: boolean;
+        modifiedCount: number;
       };
     };
   }>(

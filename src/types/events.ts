@@ -186,8 +186,8 @@ export interface DailyEventsPortion {
  * Generic response shape for bulk event mutations
  */
 export interface BulkEventsMutationResult {
-  updatedEventIds: string[];
-  failedEventIds: string[];
+  success: boolean;
+  modifiedCount: number;
 }
 
 /**

@@ -1369,26 +1369,20 @@ type RemoveAssigneeResponse {
 
 """Result of bulk toggling event marks"""
 type BulkToggleEventMarksResult {
-  """Number of events updated"""
-  updatedCount: Int!
+  """True when database accepted mutation"""
+  success: Boolean!
 
-  """Ids that were updated"""
-  updatedEventIds: [ID!]!
-
-  """Ids that were not updated"""
-  failedEventIds: [ID!]!
+  """Number of original events actually modified"""
+  modifiedCount: Int!
 }
 
 """Result of bulk marking events as viewed"""
 type BulkVisitEventsResult {
-  """Number of events updated"""
-  updatedCount: Int!
+  """True when database accepted mutation"""
+  success: Boolean!
 
-  """Ids that were updated"""
-  updatedEventIds: [ID!]!
-
-  """Ids that were not updated"""
-  failedEventIds: [ID!]!
+  """Number of original events actually modified"""
+  modifiedCount: Int!
 }
 
 """Input type for deleting of the event grouping pattern"""
@@ -1462,14 +1456,11 @@ input BulkUpdateAssigneeInput {
 }
 
 type BulkUpdateAssigneeResponse {
-  """Number of events updated in the database"""
-  updatedCount: Int!
+  """True when database accepted mutation"""
+  success: Boolean!
 
-  """Original event ids actually updated in this operation"""
-  updatedEventIds: [ID!]!
-
-  """Event ids that were not updated (invalid id or not found)"""
-  failedEventIds: [ID!]!
+  """Number of original events actually modified"""
+  modifiedCount: Int!
 }
 
 input UpdateAssigneeInput {

@@ -121,8 +121,8 @@ export const MUTATION_VISIT_EVENT = `
 export const MUTATION_BULK_VISIT_EVENTS = `
   mutation bulkVisitEvents($projectId: ID!, $eventIds: [ID!]!) {
     bulkVisitEvents(projectId: $projectId, eventIds: $eventIds) {
-      updatedEventIds
-      failedEventIds
+      success
+      modifiedCount
     }
   }
 `;
@@ -144,8 +144,8 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
 export const MUTATION_BULK_TOGGLE_EVENT_MARKS = `
   mutation bulkToggleEventMarks($projectId: ID!, $eventIds: [ID!]!, $mark: EventMark!) {
     bulkToggleEventMarks(projectId: $projectId, eventIds: $eventIds, mark: $mark) {
-      updatedEventIds
-      failedEventIds
+      success
+      modifiedCount
     }
   }
 `;
@@ -192,8 +192,8 @@ export const MUTATION_BULK_UPDATE_EVENT_ASSIGNEE = `
   mutation bulkUpdateAssignee($input: BulkUpdateAssigneeInput!) {
     events {
       bulkUpdateAssignee(input: $input) {
-        updatedEventIds
-        failedEventIds
+        success
+        modifiedCount
       }
     }
   }

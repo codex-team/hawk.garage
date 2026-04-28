@@ -403,24 +403,26 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [BULK_VISIT_EVENTS](
       { commit, rootState },
-      { projectId, eventIds }: { projectId: string; eventIds: string[]; }
+      { projectId, eventIds }: {
+        projectId: string;
+        eventIds: string[];
+      }
     ): Promise<
       {
-        updatedEventIds: string[];
-        failedEventIds: string[];
+        success: boolean;
+        modifiedCount: number;
       } | null
     > {
       const uniqueEventIds = [...new Set(eventIds.map(String))];
       const result = await eventsApi.bulkVisitEvents(projectId, uniqueEventIds);
 
-      if (!result) {
+      if (!result || !result.success) {
         return null;
       }
 
       const user = (rootState).user.data;
-      const updatedIds = [...new Set((result.updatedEventIds || []).map(String))];
 
-      updatedIds.forEach((originalEventId) => {
+      uniqueEventIds.forEach((originalEventId) => {
         commit(MutationTypes.MarkAsVisited, {
           projectId,
           originalEventId,
@@ -480,21 +482,19 @@ const module: Module<EventsModuleState, RootState> = {
       }
     ): Promise<
       {
-        updatedEventIds: string[];
-        failedEventIds: string[];
+        success: boolean;
+        modifiedCount: number;
       } | null
     > {
       const { projectId, eventIds, mark } = payload;
       const uniqueEventIds = [...new Set(eventIds.map(String))];
       const result = await eventsApi.bulkToggleEventMarks(projectId, uniqueEventIds, mark);
 
-      if (!result) {
+      if (!result || !result.success) {
         return null;
       }
 
-      const updatedIds = [...new Set((result.updatedEventIds || []).map(String))];
-
-      updatedIds.forEach((originalEventId) => {
+      uniqueEventIds.forEach((originalEventId) => {
         commit(MutationTypes.ToggleMark, {
           projectId,
           eventId: originalEventId,
@@ -570,28 +570,50 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.assignee - user to assign, null to clear
      */
     async [BULK_UPDATE_EVENT_ASSIGNEE](
-      { commit },
-      { projectId, eventIds, assignee }: { projectId: string; eventIds: string[]; assignee: User | null; }
+      { commit, state },
+      { projectId, eventIds, assignee }: {
+        projectId: string;
+        eventIds: string[];
+        assignee: User | null;
+      }
     ): Promise<
       {
-        updatedEventIds: string[];
-        failedEventIds: string[];
+        success: boolean;
+        modifiedCount: number;
       } | null
     > {
       const uniqueEventIds = [...new Set(eventIds.map(String))];
+      const targetAssigneeId = assignee ? String(assignee.id) : '';
+      const eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
+        const event = state.events[getEventsListKey(projectId, originalEventId)];
+
+        if (!event) {
+          return true;
+        }
+
+        const currentAssigneeId = event.assignee ? String(event.assignee.id || '') : '';
+
+        return currentAssigneeId !== targetAssigneeId;
+      });
+
+      if (eventIdsToUpdate.length === 0) {
+        return {
+          success: true,
+          modifiedCount: 0,
+        };
+      }
+
       const result = await eventsApi.bulkUpdateAssignee(
         projectId,
-        uniqueEventIds,
+        eventIdsToUpdate,
         assignee ? assignee.id : null
       );
 
-      if (!result) {
+      if (!result || !result.success) {
         return null;
       }
 
-      const updatedIds = [...new Set((result.updatedEventIds || []).map(String))];
-
-      updatedIds.forEach((originalEventId) => {
+      eventIdsToUpdate.forEach((originalEventId) => {
         commit(MutationTypes.SetEventAssignee, {
           projectId,
           originalEventId,
