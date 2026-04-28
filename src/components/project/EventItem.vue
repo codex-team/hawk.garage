@@ -5,10 +5,8 @@
       'event-item--visited': isVisited,
       [`event-item--${mark}-label`]: true,
       'event-item--ignored-label': isIgnored,
-      'event-item--selection-mode': selectionModeActive,
-      'event-item--row-selected': rowSelected,
-      'event-item--bulk-adjacent-top': rowSelected && bulkAdjacentTop,
-      'event-item--bulk-adjacent-bottom': rowSelected && bulkAdjacentBottom,
+      'event-item--selection-mode': isSelectionModeActive,
+      'event-item--row-selected': isRowSelected,
     }"
     data-ripple
     @click="handleRowClick"
@@ -39,13 +37,12 @@
       @click.stop="openIssueUrl"
     />
     <div
-      v-if="!isWorkspaceBlocked"
       class="event-item__bulk-checkbox"
       @click.stop
       @pointerdown.stop
     >
       <UiCheckbox
-        :model-value="rowSelected"
+        :model-value="isRowSelected"
         class="event-item__checkbox"
         @pointerdown.stop
         @pointerup.stop
@@ -96,28 +93,14 @@ export default {
     /**
      * True when at least one row is selected (all rows show checkboxes)
      */
-    selectionModeActive: {
+    isSelectionModeActive: {
       type: Boolean,
       default: false,
     },
     /**
-     * Whether this row is selected
+     * Whether this row is selected in Event List via bulk selection
      */
-    rowSelected: {
-      type: Boolean,
-      default: false,
-    },
-    /**
-     * Selected block: previous list row is also selected (hide top radius between rows)
-     */
-    bulkAdjacentTop: {
-      type: Boolean,
-      default: false,
-    },
-    /**
-     * Selected block: next list row is also selected (hide bottom radius between rows)
-     */
-    bulkAdjacentBottom: {
+    isRowSelected: {
       type: Boolean,
       default: false,
     },
@@ -259,7 +242,7 @@ export default {
      * @returns {void}
      */
     handleRowClick(evt) {
-      if (this.selectionModeActive && !this.isWorkspaceBlocked) {
+      if (this.isSelectionModeActive && !this.isWorkspaceBlocked) {
         this.$emit('toggle-row-select', evt);
 
         return;
@@ -423,12 +406,12 @@ export default {
     opacity: 1;
   }
 
-  .event-item.event-item--row-selected.event-item--bulk-adjacent-top {
+  .event-item.event-item--row-selected + .event-item.event-item--row-selected {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
 
-  .event-item.event-item--row-selected.event-item--bulk-adjacent-bottom {
+  .event-item.event-item--row-selected:has(+ .event-item.event-item--row-selected) {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }

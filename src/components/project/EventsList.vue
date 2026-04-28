@@ -51,10 +51,8 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
-          :selection-mode-active="selectionModeActive"
-          :row-selected="isRowSelected(dailyEventInfo.eventId)"
-          :bulk-adjacent-top="!!bulkAdjacentByEventId[dailyEventInfo.eventId]?.top"
-          :bulk-adjacent-bottom="!!bulkAdjacentByEventId[dailyEventInfo.eventId]?.bottom"
+          :is-selection-mode-active="selectionModeActive"
+          :is-row-selected="isRowSelected(dailyEventInfo.eventId)"
           @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
           @toggle-row-select="toggleRowSelected(dailyEventInfo.eventId, $event)"
           @show-event-overview="onShowEventOverview(dailyEventInfo.eventId)"
@@ -387,30 +385,6 @@ export default {
       }
 
       return flat;
-    },
-    /**
-     * Selected runs: flatten top/bottom inner radii between consecutive selected rows
-     *
-     * @returns {Record<string, { top: boolean; bottom: boolean }>}
-     */
-    bulkAdjacentByEventId() {
-      const flat = this.flattenedDailyEventIds;
-      const result = {};
-
-      for (let i = 0; i < flat.length; i++) {
-        const id = flat[i];
-
-        if (!this.isRowSelected(id)) {
-          continue;
-        }
-
-        result[id] = {
-          top: i > 0 && this.isRowSelected(flat[i - 1]),
-          bottom: i < flat.length - 1 && this.isRowSelected(flat[i + 1]),
-        };
-      }
-
-      return result;
     },
   },
   methods: {
