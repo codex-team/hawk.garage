@@ -9,8 +9,7 @@
         class="ui-button ui-button--small ui-button--secondary events-list__bulk-cancel-combo"
         @click="$emit('exit-bulk-select')"
       >
-        <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }}</span>
-        <span class="ui-button-text events-list__bulk-cancel-esc">{{ $t('common.escKey') }}</span>
+        <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }} {{ $t('common.escKey') }}</span>
       </button>
       <span class="events-list__bulk-count">{{ $t('common.selected') }}: {{ selectedCount }}</span>
     </div>

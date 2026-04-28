@@ -1223,17 +1223,13 @@ export default {
   &__bulk-cancel-combo {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
     font: inherit;
     white-space: nowrap;
     cursor: pointer;
   }
 
-  &__bulk-cancel-esc {
-    color: var(--color-text-second);
-    font-size: 12px;
-    font-weight: 500;
-    user-select: none;
+  &__bulk-cancel-combo .ui-button-text {
+    line-height: 14px;
   }
 
   &__bulk-actions {
@@ -1264,6 +1260,7 @@ export default {
     color: var(--color-text-main);
     font-size: 13px;
     font-weight: 500;
+    line-height: 14px;
     white-space: nowrap;
   }
 
