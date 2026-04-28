@@ -105,6 +105,10 @@ export default {
       type: String,
       default: '',
     },
+    currentUserId: {
+      type: String,
+      default: '',
+    },
     selectionModeActive: {
       type: Boolean,
       default: false,
@@ -207,6 +211,95 @@ export default {
     },
   },
   methods: {
+    /**
+     * Selected original events deduplicated by original id.
+     *
+     * @returns {{ originalEventId: string; event: object }[]}
+     */
+    getSelectedOriginalEvents() {
+      const byOriginalId = new Map();
+
+      for (const event of this.selectedEvents) {
+        if (!event || !event.originalEventId) {
+          continue;
+        }
+
+        const originalEventId = String(event.originalEventId);
+
+        if (!byOriginalId.has(originalEventId)) {
+          byOriginalId.set(originalEventId, event);
+        }
+      }
+
+      return Array.from(byOriginalId.entries()).map(([originalEventId, event]) => ({
+        originalEventId,
+        event,
+      }));
+    },
+    /**
+     * Resolve target ids for bulk mark click.
+     * If all selected have mark -> unmark all selected.
+     * Else -> mark only those without mark.
+     *
+     * @param {'resolved'|'ignored'|'starred'} action
+     * @returns {string[]}
+     */
+    getTargetOriginalIdsForMark(action) {
+      const selected = this.getSelectedOriginalEvents();
+
+      if (selected.length === 0) {
+        return [];
+      }
+
+      const allHaveMark = selected.every(({ event }) => Boolean(event.marks && event.marks[action]));
+
+      if (allHaveMark) {
+        return selected.map(({ originalEventId }) => originalEventId);
+      }
+
+      return selected
+        .filter(({ event }) => !(event.marks && event.marks[action]))
+        .map(({ originalEventId }) => originalEventId);
+    },
+    /**
+     * Resolve target ids for assignee bulk action.
+     *
+     * @param {string|null} assigneeId
+     * @returns {string[]}
+     */
+    getTargetOriginalIdsForAssignee(assigneeId) {
+      const selected = this.getSelectedOriginalEvents();
+      const targetAssigneeId = assigneeId ? String(assigneeId) : '';
+
+      return selected
+        .filter(({ event }) => {
+          const currentAssigneeId = event.assignee ? String(event.assignee.id || '') : '';
+
+          return currentAssigneeId !== targetAssigneeId;
+        })
+        .map(({ originalEventId }) => originalEventId);
+    },
+    /**
+     * Resolve target ids for "mark viewed" bulk action.
+     *
+     * @returns {string[]}
+     */
+    getTargetOriginalIdsForViewed() {
+      const selected = this.getSelectedOriginalEvents();
+      const currentUserId = String(this.currentUserId || '');
+
+      if (!currentUserId) {
+        return selected.map(({ originalEventId }) => originalEventId);
+      }
+
+      return selected
+        .filter(({ event }) => {
+          const visitedBy = Array.isArray(event.visitedBy) ? event.visitedBy : [];
+
+          return !visitedBy.some(visitor => String(visitor && visitor.id) === currentUserId);
+        })
+        .map(({ originalEventId }) => originalEventId);
+    },
     isMarkDisabled(action) {
       if (this.selectedCount === 0) {
         return true;
@@ -224,7 +317,13 @@ export default {
       this.activeMarkAction = action;
 
       try {
-        await this.onBulkMark(action);
+        const targetOriginalIds = this.getTargetOriginalIdsForMark(action);
+
+        if (targetOriginalIds.length === 0) {
+          return;
+        }
+
+        await this.onBulkMark(action, targetOriginalIds);
       } finally {
         this.activeMarkAction = '';
       }
@@ -353,7 +452,13 @@ export default {
         return;
       }
 
-      await this.onBulkAssign(user);
+      const targetOriginalIds = this.getTargetOriginalIdsForAssignee(user.id);
+
+      if (targetOriginalIds.length === 0) {
+        return;
+      }
+
+      await this.onBulkAssign(user, targetOriginalIds);
     },
     async onBulkClearAssignees() {
       this.hideBulkAssigneesList();
@@ -362,7 +467,13 @@ export default {
         return;
       }
 
-      await this.onBulkUnassign();
+      const targetOriginalIds = this.getTargetOriginalIdsForAssignee(null);
+
+      if (targetOriginalIds.length === 0) {
+        return;
+      }
+
+      await this.onBulkUnassign(targetOriginalIds);
     },
     async onBulkMarkViewedClick() {
       this.hideBulkAssigneesList();
@@ -372,7 +483,13 @@ export default {
         return;
       }
 
-      await this.onBulkMarkViewed();
+      const targetOriginalIds = this.getTargetOriginalIdsForViewed();
+
+      if (targetOriginalIds.length === 0) {
+        return;
+      }
+
+      await this.onBulkMarkViewed(targetOriginalIds);
     },
   },
   // eslint-disable-next-line vue/order-in-components

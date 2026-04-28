@@ -20,6 +20,7 @@ import * as eventsApi from '../../../api/events';
 import { filterBeautifiedAddons } from '@/utils';
 import type { RootState } from '../../index';
 import type {
+  BulkEventsMutationResult,
   DailyEventWithEventLinked,
   EventsFilters,
   HawkEvent,
@@ -402,19 +403,35 @@ const module: Module<EventsModuleState, RootState> = {
      * @returns API result or null on GraphQL error
      */
     async [BULK_VISIT_EVENTS](
-      { commit, rootState },
+      { commit, rootState, state },
       { projectId, eventIds }: {
         projectId: string;
         eventIds: string[];
       }
     ): Promise<
-      {
-        success: boolean;
-        modifiedCount: number;
-      } | null
+      (BulkEventsMutationResult & { targetEventIds: string[] }) | null
     > {
       const uniqueEventIds = [...new Set(eventIds.map(String))];
-      const result = await eventsApi.bulkVisitEvents(projectId, uniqueEventIds);
+      const currentUserId = String((rootState).user.data.id);
+      const eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
+        const event = state.events[getEventsListKey(projectId, originalEventId)];
+
+        if (!event) {
+          return true;
+        }
+
+        return !(event.visitedBy || []).some(visitor => String(visitor.id) === currentUserId);
+      });
+
+      if (eventIdsToUpdate.length === 0) {
+        return {
+          success: true,
+          modifiedCount: 0,
+          targetEventIds: [],
+        };
+      }
+
+      const result = await eventsApi.bulkVisitEvents(projectId, eventIdsToUpdate);
 
       if (!result || !result.success) {
         return null;
@@ -422,7 +439,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       const user = (rootState).user.data;
 
-      uniqueEventIds.forEach((originalEventId) => {
+      eventIdsToUpdate.forEach((originalEventId) => {
         commit(MutationTypes.MarkAsVisited, {
           projectId,
           originalEventId,
@@ -430,7 +447,10 @@ const module: Module<EventsModuleState, RootState> = {
         });
       });
 
-      return result;
+      return {
+        ...result,
+        targetEventIds: eventIdsToUpdate,
+      };
     },
 
     /**
@@ -474,27 +494,49 @@ const module: Module<EventsModuleState, RootState> = {
      * @returns API result or null on GraphQL error
      */
     async [BULK_TOGGLE_EVENT_MARKS](
-      { commit },
+      { commit, state },
       payload: {
         projectId: string;
         eventIds: string[];
         mark: 'resolved' | 'ignored' | 'starred';
       }
     ): Promise<
-      {
-        success: boolean;
-        modifiedCount: number;
-      } | null
+      (BulkEventsMutationResult & { targetEventIds: string[] }) | null
     > {
       const { projectId, eventIds, mark } = payload;
       const uniqueEventIds = [...new Set(eventIds.map(String))];
-      const result = await eventsApi.bulkToggleEventMarks(projectId, uniqueEventIds, mark);
+      const allKnownEvents = uniqueEventIds
+        .map(originalEventId => state.events[getEventsListKey(projectId, originalEventId)])
+        .filter(Boolean);
+      const hasUnknownEvents = allKnownEvents.length !== uniqueEventIds.length;
+      const allHaveMark = !hasUnknownEvents
+        && allKnownEvents.length > 0
+        && allKnownEvents.every(event => event.marks[mark]);
+      let eventIdsToUpdate = uniqueEventIds;
+
+      if (!hasUnknownEvents && !allHaveMark) {
+        eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
+          const event = state.events[getEventsListKey(projectId, originalEventId)];
+
+          return !event || !event.marks[mark];
+        });
+      }
+
+      if (eventIdsToUpdate.length === 0) {
+        return {
+          success: true,
+          modifiedCount: 0,
+          targetEventIds: [],
+        };
+      }
+
+      const result = await eventsApi.bulkToggleEventMarks(projectId, eventIdsToUpdate, mark);
 
       if (!result || !result.success) {
         return null;
       }
 
-      uniqueEventIds.forEach((originalEventId) => {
+      eventIdsToUpdate.forEach((originalEventId) => {
         commit(MutationTypes.ToggleMark, {
           projectId,
           eventId: originalEventId,
@@ -502,7 +544,10 @@ const module: Module<EventsModuleState, RootState> = {
         });
       });
 
-      return result;
+      return {
+        ...result,
+        targetEventIds: eventIdsToUpdate,
+      };
     },
 
     /**
@@ -577,10 +622,7 @@ const module: Module<EventsModuleState, RootState> = {
         assignee: User | null;
       }
     ): Promise<
-      {
-        success: boolean;
-        modifiedCount: number;
-      } | null
+      (BulkEventsMutationResult & { targetEventIds: string[] }) | null
     > {
       const uniqueEventIds = [...new Set(eventIds.map(String))];
       const targetAssigneeId = assignee ? String(assignee.id) : '';
@@ -600,6 +642,7 @@ const module: Module<EventsModuleState, RootState> = {
         return {
           success: true,
           modifiedCount: 0,
+          targetEventIds: [],
         };
       }
 
@@ -621,7 +664,10 @@ const module: Module<EventsModuleState, RootState> = {
         });
       });
 
-      return result;
+      return {
+        ...result,
+        targetEventIds: eventIdsToUpdate,
+      };
     },
 
     /**

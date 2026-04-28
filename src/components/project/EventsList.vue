@@ -24,6 +24,7 @@
     >
       <BulkActionsBar
         :project-id="projectId"
+        :current-user-id="currentUserId"
         :selection-mode-active="selectionModeActive"
         :selected-count="selectedCount"
         :selected-events="selectedEvents"
@@ -356,6 +357,14 @@ export default {
         .filter(Boolean);
     },
     /**
+     * Current user id from store
+     *
+     * @returns {string}
+     */
+    currentUserId() {
+      return String(this.$store?.state?.user?.data?.id || '');
+    },
+    /**
      * Current opened event has assignee, so "unassign" row is visible
      *
      * @returns {boolean}
@@ -472,16 +481,15 @@ export default {
      * Run bulk toggle for marks
      *
      * @param {'resolved'|'ignored'|'starred'} mark - mark to toggle
+     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
      * @returns {Promise<void>}
      */
-    async runBulkMark(mark) {
+    async runBulkMark(mark, targetOriginalIds = this.getSelectedOriginalIds()) {
       if (this.bulkActionInFlight) {
         return;
       }
 
-      const uniqueOriginal = this.getSelectedOriginalIds();
-
-      if (uniqueOriginal.length === 0) {
+      if (targetOriginalIds.length === 0) {
         return;
       }
 
@@ -490,7 +498,7 @@ export default {
       try {
         const result = await this.$store.dispatch(BULK_TOGGLE_EVENT_MARKS, {
           projectId: this.projectId,
-          eventIds: uniqueOriginal,
+          eventIds: targetOriginalIds,
           mark,
         });
 
@@ -504,11 +512,17 @@ export default {
           return;
         }
 
-        if (result.modifiedCount < uniqueOriginal.length) {
+        const targetEventIds = Array.isArray(result.targetEventIds)
+          ? result.targetEventIds
+          : targetOriginalIds;
+        const attemptedCount = targetEventIds.length;
+        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
+
+        if (result.modifiedCount < attemptedCount) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
               updated: result.modifiedCount,
-              failed: uniqueOriginal.length - result.modifiedCount,
+              failed: failedCount,
             }),
             style: 'error',
             time: 10000,
@@ -726,9 +740,10 @@ export default {
      * Assign picked user to all selected rows (repetition ids)
      *
      * @param {object} user - workspace team member (same shape as in AssigneesList)
+     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
      * @returns {Promise<void>}
      */
-    async onBulkPickAssignee(user) {
+    async onBulkPickAssignee(user, targetOriginalIds = this.getSelectedOriginalIds()) {
       if (this.bulkActionInFlight) {
         return;
       }
@@ -740,10 +755,13 @@ export default {
       this.bulkActionInFlight = true;
 
       try {
-        const originalIds = this.getSelectedOriginalIds();
+        if (targetOriginalIds.length === 0) {
+          return;
+        }
+
         const result = await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
-          eventIds: originalIds,
+          eventIds: targetOriginalIds,
           assignee: user,
         });
 
@@ -757,11 +775,17 @@ export default {
           return;
         }
 
-        if (result.modifiedCount < originalIds.length) {
+        const targetEventIds = Array.isArray(result.targetEventIds)
+          ? result.targetEventIds
+          : targetOriginalIds;
+        const attemptedCount = targetEventIds.length;
+        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
+
+        if (result.modifiedCount < attemptedCount) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
               updated: result.modifiedCount,
-              failed: originalIds.length - result.modifiedCount,
+              failed: failedCount,
             }),
             style: 'error',
             time: 10000,
@@ -774,9 +798,10 @@ export default {
     /**
      * Bulk: remove assignee from all selected events
      *
+     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
      * @returns {Promise<void>}
      */
-    async onBulkClearAssigneesFromSelection() {
+    async onBulkClearAssigneesFromSelection(targetOriginalIds = this.getSelectedOriginalIds()) {
       if (this.bulkActionInFlight) {
         return;
       }
@@ -788,10 +813,13 @@ export default {
       this.bulkActionInFlight = true;
 
       try {
-        const originalIds = this.getSelectedOriginalIds();
+        if (targetOriginalIds.length === 0) {
+          return;
+        }
+
         const result = await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
           projectId: this.projectId,
-          eventIds: originalIds,
+          eventIds: targetOriginalIds,
           assignee: null,
         });
 
@@ -805,11 +833,17 @@ export default {
           return;
         }
 
-        if (result.modifiedCount < originalIds.length) {
+        const targetEventIds = Array.isArray(result.targetEventIds)
+          ? result.targetEventIds
+          : targetOriginalIds;
+        const attemptedCount = targetEventIds.length;
+        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
+
+        if (result.modifiedCount < attemptedCount) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
               updated: result.modifiedCount,
-              failed: originalIds.length - result.modifiedCount,
+              failed: failedCount,
             }),
             style: 'error',
             time: 10000,
@@ -822,9 +856,10 @@ export default {
     /**
      * Bulk: mark selected events as viewed (badge should become visited)
      *
+     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
      * @returns {Promise<void>}
      */
-    async onBulkMarkViewed() {
+    async onBulkMarkViewed(targetOriginalIds = this.getSelectedOriginalIds()) {
       if (this.bulkActionInFlight) {
         return;
       }
@@ -836,10 +871,13 @@ export default {
       this.bulkActionInFlight = true;
 
       try {
-        const originalIds = this.getSelectedOriginalIds();
+        if (targetOriginalIds.length === 0) {
+          return;
+        }
+
         const result = await this.$store.dispatch(BULK_VISIT_EVENTS, {
           projectId: this.projectId,
-          eventIds: originalIds,
+          eventIds: targetOriginalIds,
         });
 
         if (!result) {
@@ -852,11 +890,17 @@ export default {
           return;
         }
 
-        if (result.modifiedCount < originalIds.length) {
+        const targetEventIds = Array.isArray(result.targetEventIds)
+          ? result.targetEventIds
+          : targetOriginalIds;
+        const attemptedCount = targetEventIds.length;
+        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
+
+        if (result.modifiedCount < attemptedCount) {
           notifier.show({
             message: this.$t('event.bulk.markPartial', {
               updated: result.modifiedCount,
-              failed: originalIds.length - result.modifiedCount,
+              failed: failedCount,
             }),
             style: 'error',
             time: 10000,
