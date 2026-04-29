@@ -1,28 +1,17 @@
-type BulkSelectionState = {
-  selectedRepetitionIds: string[];
-  lastSelectedRepetitionId: string | null;
-};
+import type {
+  BulkSelectionState,
+  SyncSelectionWithVisibleRowsParams,
+  ToggleRowSelectedParams,
+  UseBulkSelection
+} from '../../../../types/bulk';
 
-type ToggleRowSelectedParams = {
-  selectedRepetitionIds: string[];
-  lastSelectedRepetitionId: string | null;
-  repetitionId: string;
-  flatRepetitionIds: string[];
-  isShiftKey: boolean;
-};
-
-type SyncSelectionWithVisibleRowsParams = {
-  selectedRepetitionIds: string[];
-  visibleRepetitionIds: string[];
-};
-
-export function useBulkSelection(): {
-  exitBulkSelect: () => BulkSelectionState;
-  onDocumentEscape: (e: KeyboardEvent, selectedCount: number) => boolean;
-  isRowSelected: (selectedRepetitionIds: string[], repetitionId: string) => boolean;
-  toggleRowSelected: (params: ToggleRowSelectedParams) => BulkSelectionState;
-  syncSelectionWithVisibleRows: (params: SyncSelectionWithVisibleRowsParams) => BulkSelectionState | null;
-} {
+/**
+ * Factory with pure helpers for events bulk row selection.
+ */
+export function useBulkSelection(): UseBulkSelection {
+  /**
+   * Reset selection state.
+   */
   function exitBulkSelect(): BulkSelectionState {
     return {
       selectedRepetitionIds: [],
@@ -30,6 +19,11 @@ export function useBulkSelection(): {
     };
   }
 
+  /**
+   * Handle Escape key press for bulk selection.
+   * @param e Keyboard event from document listener
+   * @param selectedCount Number of selected rows
+   */
   function onDocumentEscape(e: KeyboardEvent, selectedCount: number): boolean {
     if (e.key !== 'Escape' || selectedCount === 0) {
       return false;
@@ -40,17 +34,27 @@ export function useBulkSelection(): {
     return true;
   }
 
+  /**
+   * Check if row is selected.
+   * @param selectedRepetitionIds Current selected row ids
+   * @param repetitionId Row id to check
+   */
   function isRowSelected(selectedRepetitionIds: string[], repetitionId: string): boolean {
     return selectedRepetitionIds.includes(repetitionId);
   }
 
-  function toggleRowSelected({
-    selectedRepetitionIds,
-    lastSelectedRepetitionId,
-    repetitionId,
-    flatRepetitionIds,
-    isShiftKey,
-  }: ToggleRowSelectedParams): BulkSelectionState {
+  /**
+   * Toggle row selection with optional Shift-range mode.
+   * @param params Current selection and click context
+   */
+  function toggleRowSelected(params: ToggleRowSelectedParams): BulkSelectionState {
+    const {
+      selectedRepetitionIds,
+      lastSelectedRepetitionId,
+      repetitionId,
+      flatRepetitionIds,
+      isShiftKey,
+    } = params;
     const hasShiftAnchor = typeof lastSelectedRepetitionId === 'string' && lastSelectedRepetitionId.length > 0;
     const isShiftRange = Boolean(
       isShiftKey
@@ -93,10 +97,13 @@ export function useBulkSelection(): {
     };
   }
 
-  function syncSelectionWithVisibleRows({
-    selectedRepetitionIds,
-    visibleRepetitionIds,
-  }: SyncSelectionWithVisibleRowsParams): BulkSelectionState | null {
+  /**
+   * Keep selection only for rows that are still visible.
+   * @param params Current and visible row ids
+   */
+  function syncSelectionWithVisibleRows(params: SyncSelectionWithVisibleRowsParams): BulkSelectionState | null {
+    const { selectedRepetitionIds, visibleRepetitionIds } = params;
+
     if (selectedRepetitionIds.length === 0) {
       return null;
     }

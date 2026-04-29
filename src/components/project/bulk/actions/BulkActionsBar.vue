@@ -91,31 +91,28 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import type {
+  BulkAssigneeUser,
+  BulkPosition,
+  BulkSelectedEvent,
+  BulkViewportHandler,
+  MarkAction
+} from '../../../../types/bulk';
 import UiButton from '../../../utils/UiButton.vue';
 import UiContextList from '../../../utils/UiContextList.vue';
 import AssigneesList from '../../../event/AssigneesList.vue';
 
-type MarkAction = 'resolved' | 'ignored' | 'starred';
-type SelectedEvent = {
-  originalEventId?: string;
-  assignee?: { id?: string | null } | null;
-  marks?: Partial<Record<MarkAction, boolean>>;
-  visitedBy?: Array<{ id?: string | null }>;
-};
-type Position = {
-  top: string | number;
-  left: string | number;
-};
-type ViewportHandler = (() => void) | null;
-
+/**
+ * Props contract for bulk actions toolbar.
+ */
 const props = withDefaults(defineProps<{
   projectId?: string;
   currentUserId?: string;
   selectionModeActive?: boolean;
   selectedCount?: number;
-  selectedEvents?: SelectedEvent[];
+  selectedEvents?: BulkSelectedEvent[];
   onBulkMark: (action: MarkAction, targetOriginalIds: string[]) => Promise<void> | void;
-  onBulkAssign: (user: { id?: string | null } | null, targetOriginalIds: string[]) => Promise<void> | void;
+  onBulkAssign: (user: BulkAssigneeUser, targetOriginalIds: string[]) => Promise<void> | void;
   onBulkUnassign: (targetOriginalIds: string[]) => Promise<void> | void;
   onBulkMarkViewed: (targetOriginalIds: string[]) => Promise<void> | void;
 }>(), {
@@ -123,28 +120,46 @@ const props = withDefaults(defineProps<{
   currentUserId: '',
   selectionModeActive: false,
   selectedCount: 0,
-  selectedEvents: () => [] as SelectedEvent[],
+  selectedEvents: () => [] as BulkSelectedEvent[],
 });
 
 const { t } = useI18n();
 const emit = defineEmits<{ (e: 'exit-bulk-select'): void }>();
 
+/**
+ * Mark action currently in progress.
+ */
 const activeMarkAction = ref('');
+/**
+ * Assignees popover visibility state.
+ */
 const isBulkAssigneesShowed = ref(false);
-const bulkAssigneesListPosition = ref<Position>({
+/**
+ * Inline style for assignees popover position.
+ */
+const bulkAssigneesListPosition = ref<BulkPosition>({
   top: 0,
   left: 0,
 });
 const bulkAssignAnchorEl = ref<HTMLElement | null>(null);
-const bulkAssignOnViewportChange = ref<ViewportHandler>(null);
+const bulkAssignOnViewportChange = ref<BulkViewportHandler>(null);
+/**
+ * More-actions menu visibility state.
+ */
 const isBulkMoreMenuShowed = ref(false);
-const bulkMoreMenuPosition = ref<Position>({
+/**
+ * Inline style for more-actions menu position.
+ */
+const bulkMoreMenuPosition = ref<BulkPosition>({
   top: 0,
   left: 0,
 });
 const bulkMoreMenuAnchorEl = ref<HTMLElement | null>(null);
-const bulkMoreMenuOnViewportChange = ref<ViewportHandler>(null);
+const bulkMoreMenuOnViewportChange = ref<BulkViewportHandler>(null);
 
+/**
+ * True when every selected event is already ignored.
+ */
 const areAllSelectedIgnored = computed(() => {
   return props.selectedEvents.length > 0 && props.selectedEvents.every(event => event.marks?.ignored);
 });
@@ -186,8 +201,11 @@ const bulkMoreMenuItems = computed(() => [
   },
 ]);
 
+/**
+ * Build deduplicated selected events keyed by original event id.
+ */
 function getSelectedOriginalEvents() {
-  const byOriginalId = new Map<string, SelectedEvent>();
+  const byOriginalId = new Map<string, BulkSelectedEvent>();
 
   for (const event of props.selectedEvents) {
     if (!event?.originalEventId) {
@@ -207,6 +225,11 @@ function getSelectedOriginalEvents() {
   }));
 }
 
+/**
+ * Resolve target ids for mark action according to current marks state.
+ *
+ * @param action Action requested by user
+ */
 function getTargetOriginalIdsForMark(action: MarkAction): string[] {
   const selected = getSelectedOriginalEvents();
 
@@ -225,6 +248,11 @@ function getTargetOriginalIdsForMark(action: MarkAction): string[] {
     .map(({ originalEventId }) => originalEventId);
 }
 
+/**
+ * Resolve target ids for assignee update action.
+ *
+ * @param assigneeId Assignee id to apply, null means clear assignee
+ */
 function getTargetOriginalIdsForAssignee(assigneeId: string | null): string[] {
   const selected = getSelectedOriginalEvents();
   const targetAssigneeId = assigneeId ? String(assigneeId) : '';
@@ -238,6 +266,9 @@ function getTargetOriginalIdsForAssignee(assigneeId: string | null): string[] {
     .map(({ originalEventId }) => originalEventId);
 }
 
+/**
+ * Resolve target ids for "mark viewed" action.
+ */
 function getTargetOriginalIdsForViewed(): string[] {
   const selected = getSelectedOriginalEvents();
   const currentUserId = String(props.currentUserId || '');
@@ -255,6 +286,12 @@ function getTargetOriginalIdsForViewed(): string[] {
     .map(({ originalEventId }) => originalEventId);
 }
 
+/**
+ * Disable mark button when there is no selection
+ * or when same mark action is already running.
+ *
+ * @param action Action currently checked for disabled state
+ */
 function isMarkDisabled(action: MarkAction): boolean {
   if (props.selectedCount === 0) {
     return true;
@@ -263,6 +300,11 @@ function isMarkDisabled(action: MarkAction): boolean {
   return activeMarkAction.value === action;
 }
 
+/**
+ * Handle mark action click with in-flight guard.
+ *
+ * @param action Action clicked in bulk toolbar
+ */
 async function onMarkClick(action: MarkAction): Promise<void> {
   if (activeMarkAction.value) {
     return;
@@ -285,6 +327,11 @@ async function onMarkClick(action: MarkAction): Promise<void> {
   }
 }
 
+/**
+ * Toggle assignees popover near assign button.
+ *
+ * @param evt Click event from assign button
+ */
 function onBulkAssignButtonClick(evt: MouseEvent): void {
   evt?.stopPropagation?.();
   hideBulkMoreMenu();
@@ -310,6 +357,11 @@ function onBulkAssignButtonClick(evt: MouseEvent): void {
   window.addEventListener('scroll', bulkAssignOnViewportChange.value, true);
 }
 
+/**
+ * Toggle "more actions" context menu.
+ *
+ * @param evt Click event from more-actions button
+ */
 function onBulkMoreMenuButtonClick(evt: MouseEvent): void {
   evt?.stopPropagation?.();
   hideBulkAssigneesList();
@@ -335,6 +387,9 @@ function onBulkMoreMenuButtonClick(evt: MouseEvent): void {
   window.addEventListener('scroll', bulkMoreMenuOnViewportChange.value, true);
 }
 
+/**
+ * Recalculate assignees popover position.
+ */
 function setBulkAssigneesPosition(): void {
   if (!bulkAssignAnchorEl.value) {
     return;
@@ -359,6 +414,9 @@ function setBulkAssigneesPosition(): void {
   };
 }
 
+/**
+ * Recalculate "more actions" menu position.
+ */
 function setBulkMoreMenuPosition(): void {
   if (!bulkMoreMenuAnchorEl.value) {
     return;
@@ -381,6 +439,9 @@ function setBulkMoreMenuPosition(): void {
   };
 }
 
+/**
+ * Hide assignees popover and detach listeners.
+ */
 function hideBulkAssigneesList(): void {
   isBulkAssigneesShowed.value = false;
   bulkAssignAnchorEl.value = null;
@@ -392,6 +453,9 @@ function hideBulkAssigneesList(): void {
   }
 }
 
+/**
+ * Hide "more actions" menu and detach listeners.
+ */
 function hideBulkMoreMenu(): void {
   isBulkMoreMenuShowed.value = false;
   bulkMoreMenuAnchorEl.value = null;
@@ -403,7 +467,12 @@ function hideBulkMoreMenu(): void {
   }
 }
 
-async function onBulkPickAssignee(user: { id?: string | null } | null): Promise<void> {
+/**
+ * Forward assignee selection to parent bulk handler.
+ *
+ * @param user User picked in assignees list
+ */
+async function onBulkPickAssignee(user: BulkAssigneeUser): Promise<void> {
   hideBulkAssigneesList();
 
   if (!user || props.selectedCount === 0) {
@@ -419,6 +488,9 @@ async function onBulkPickAssignee(user: { id?: string | null } | null): Promise<
   await props.onBulkAssign(user, targetOriginalIds);
 }
 
+/**
+ * Forward unassign action to parent bulk handler.
+ */
 async function onBulkClearAssignees(): Promise<void> {
   hideBulkAssigneesList();
 
@@ -435,6 +507,9 @@ async function onBulkClearAssignees(): Promise<void> {
   await props.onBulkUnassign(targetOriginalIds);
 }
 
+/**
+ * Forward "mark viewed" action to parent bulk handler.
+ */
 async function onBulkMarkViewedClick(): Promise<void> {
   hideBulkAssigneesList();
   hideBulkMoreMenu();
