@@ -4,40 +4,16 @@ import {
   BULK_UPDATE_EVENT_ASSIGNEE,
   BULK_VISIT_EVENTS,
 } from '../../../store/modules/events/actionTypes';
-import type { BulkAssigneeUser, BulkSelectedEvent, MarkAction } from '@/types/bulk';
+import type {
+  BulkActionContext,
+  BulkActionResult,
+  BulkAssigneeUser,
+  MarkAction,
+  RefreshEventsContext,
+} from '@/types/bulk';
 
 const BULK_ERROR_TIMEOUT_MS = 8000;
 const BULK_PARTIAL_TIMEOUT_MS = 10000;
-
-type BulkActionResult = {
-  modifiedCount: number;
-  targetEventIds?: string[];
-} | null;
-
-type BulkNotifyPayload = {
-  message: string;
-  style: string;
-  time: number;
-};
-
-type BulkDispatch = <TResult = unknown>(
-  actionType: string,
-  payload: Record<string, unknown>
-) => Promise<TResult>;
-
-type BulkActionContext = {
-  dispatch: BulkDispatch;
-  projectId: string;
-  t: (key: string, params?: Record<string, unknown>) => string;
-  notify: (payload: BulkNotifyPayload) => void;
-  refreshByOriginalIds: (targetOriginalIds: string[]) => Promise<void>;
-};
-
-type RefreshEventsContext = {
-  dispatch: BulkDispatch;
-  projectId: string;
-  selectedEvents: BulkSelectedEvent[];
-};
 
 /**
  * Resolve target ids from result payload or fallback to requested ids.

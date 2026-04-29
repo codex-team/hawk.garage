@@ -119,3 +119,48 @@ export interface BulkEventsMutationResult {
   success: boolean;
   modifiedCount: number;
 }
+
+/**
+ * Result returned by a bulk store action.
+ */
+export type BulkActionResult = {
+  modifiedCount: number;
+  targetEventIds?: string[];
+} | null;
+
+/**
+ * Payload for showing a notification from bulk operations.
+ */
+export type BulkNotifyPayload = {
+  message: string;
+  style: string;
+  time: number;
+};
+
+/**
+ * Generic Vuex dispatch wrapper used in bulk operation context.
+ */
+export type BulkDispatch = <TResult = unknown>(
+  actionType: string,
+  payload: Record<string, unknown>
+) => Promise<TResult>;
+
+/**
+ * Shared context passed into bulk action helpers.
+ */
+export type BulkActionContext = {
+  dispatch: BulkDispatch;
+  projectId: string;
+  t: (key: string, params?: Record<string, unknown>) => string;
+  notify: (payload: BulkNotifyPayload) => void;
+  refreshByOriginalIds: (targetOriginalIds: string[]) => Promise<void>;
+};
+
+/**
+ * Context for refreshing stale events after a failed or partial bulk operation.
+ */
+export type RefreshEventsContext = {
+  dispatch: BulkDispatch;
+  projectId: string;
+  selectedEvents: BulkSelectedEvent[];
+};
