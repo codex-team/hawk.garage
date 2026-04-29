@@ -20,12 +20,12 @@ import * as eventsApi from '../../../api/events';
 import { filterBeautifiedAddons } from '@/utils';
 import type { RootState } from '../../index';
 import type {
-  BulkEventsMutationResult,
   DailyEventWithEventLinked,
   EventsFilters,
   HawkEvent,
   DailyEventsCursor
 } from '@/types/events';
+import type { BulkEventsMutationResult } from '@/types/bulk';
 import {
   EventsSortOrder
 } from '@/types/events';

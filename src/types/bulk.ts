@@ -110,3 +110,11 @@ export type UseBulkSelection = {
    */
   syncSelectionWithVisibleRows: (params: SyncSelectionWithVisibleRowsParams) => BulkSelectionState | null;
 };
+
+/**
+ * Generic response shape for bulk event mutations.
+ */
+export interface BulkEventsMutationResult {
+  success: boolean;
+  modifiedCount: number;
+}

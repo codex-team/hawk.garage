@@ -13,13 +13,13 @@ import {
 } from './queries';
 import * as api from '@/api';
 import type {
-  BulkEventsMutationResult,
   DailyEventsCursor,
   DailyEventsPortion,
   EventMark,
   EventsFilters,
   HawkEvent
 } from '@/types/events';
+import type { BulkEventsMutationResult } from '@/types/bulk';
 import {
   EventsSortOrder
 } from '@/types/events';

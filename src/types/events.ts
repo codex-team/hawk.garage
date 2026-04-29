@@ -183,14 +183,6 @@ export interface DailyEventsPortion {
 }
 
 /**
- * Generic response shape for bulk event mutations
- */
-export interface BulkEventsMutationResult {
-  success: boolean;
-  modifiedCount: number;
-}
-
-/**
  * Information about Event for specific day
  */
 export interface HawkEventDailyInfo {
