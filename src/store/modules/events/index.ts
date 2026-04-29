@@ -438,14 +438,17 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       const user = (rootState).user.data;
+      const isFullSuccess = result.modifiedCount === eventIdsToUpdate.length;
 
-      eventIdsToUpdate.forEach((originalEventId) => {
-        commit(MutationTypes.MarkAsVisited, {
-          projectId,
-          originalEventId,
-          user,
+      if (isFullSuccess) {
+        eventIdsToUpdate.forEach((originalEventId) => {
+          commit(MutationTypes.MarkAsVisited, {
+            projectId,
+            originalEventId,
+            user,
+          });
         });
-      });
+      }
 
       return {
         ...result,
@@ -535,14 +538,17 @@ const module: Module<EventsModuleState, RootState> = {
       if (!result || !result.success) {
         return null;
       }
+      const isFullSuccess = result.modifiedCount === eventIdsToUpdate.length;
 
-      eventIdsToUpdate.forEach((originalEventId) => {
-        commit(MutationTypes.ToggleMark, {
-          projectId,
-          eventId: originalEventId,
-          mark,
+      if (isFullSuccess) {
+        eventIdsToUpdate.forEach((originalEventId) => {
+          commit(MutationTypes.ToggleMark, {
+            projectId,
+            eventId: originalEventId,
+            mark,
+          });
         });
-      });
+      }
 
       return {
         ...result,
@@ -655,14 +661,17 @@ const module: Module<EventsModuleState, RootState> = {
       if (!result || !result.success) {
         return null;
       }
+      const isFullSuccess = result.modifiedCount === eventIdsToUpdate.length;
 
-      eventIdsToUpdate.forEach((originalEventId) => {
-        commit(MutationTypes.SetEventAssignee, {
-          projectId,
-          originalEventId,
-          assignee,
+      if (isFullSuccess) {
+        eventIdsToUpdate.forEach((originalEventId) => {
+          commit(MutationTypes.SetEventAssignee, {
+            projectId,
+            originalEventId,
+            assignee,
+          });
         });
-      });
+      }
 
       return {
         ...result,
