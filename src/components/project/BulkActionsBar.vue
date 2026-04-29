@@ -143,20 +143,47 @@ export default {
   ],
   data() {
     return {
+      /**
+       * Currently running bulk mark action to prevent double submit
+       */
       activeMarkAction: '',
+      /**
+       * Visibility flag for bulk assignees popover
+       */
       isBulkAssigneesShowed: false,
+      /**
+       * Bulk assignees popover position
+       */
       bulkAssigneesListPosition: {
         top: 0,
         left: 0,
       },
+      /**
+       * Anchor element for bulk assignees popover
+       */
       bulkAssignAnchorEl: null,
+      /**
+       * Window resize/scroll handler for assignees popover
+       */
       bulkAssignOnViewportChange: null,
+      /**
+       * Visibility flag for "more actions" context menu
+       */
       isBulkMoreMenuShowed: false,
+      /**
+       * Bulk "more actions" menu position
+       */
       bulkMoreMenuPosition: {
         top: 0,
         left: 0,
       },
+      /**
+       * Anchor element for bulk "more actions" menu
+       */
       bulkMoreMenuAnchorEl: null,
+      /**
+       * Window resize/scroll handler for "more actions" menu
+       */
       bulkMoreMenuOnViewportChange: null,
     };
   },
@@ -214,7 +241,7 @@ export default {
     /**
      * Selected original events deduplicated by original id.
      *
-     * @returns {{ originalEventId: string; event: object }[]}
+     * @returns {{ originalEventId: string; event: object }[]} Deduplicated selected events by original id
      */
     getSelectedOriginalEvents() {
       const byOriginalId = new Map();
@@ -241,8 +268,8 @@ export default {
      * If all selected have mark -> unmark all selected.
      * Else -> mark only those without mark.
      *
-     * @param {'resolved'|'ignored'|'starred'} action
-     * @returns {string[]}
+     * @param {'resolved'|'ignored'|'starred'} action - mark action from toolbar button
+     * @returns {string[]} Original event ids that should be sent to API
      */
     getTargetOriginalIdsForMark(action) {
       const selected = this.getSelectedOriginalEvents();
@@ -264,8 +291,8 @@ export default {
     /**
      * Resolve target ids for assignee bulk action.
      *
-     * @param {string|null} assigneeId
-     * @returns {string[]}
+     * @param {string|null} assigneeId - assignee id to set, null to clear
+     * @returns {string[]} Original event ids that should be sent to API
      */
     getTargetOriginalIdsForAssignee(assigneeId) {
       const selected = this.getSelectedOriginalEvents();
@@ -282,7 +309,7 @@ export default {
     /**
      * Resolve target ids for "mark viewed" bulk action.
      *
-     * @returns {string[]}
+     * @returns {string[]} Original event ids not visited by current user
      */
     getTargetOriginalIdsForViewed() {
       const selected = this.getSelectedOriginalEvents();
@@ -300,6 +327,12 @@ export default {
         })
         .map(({ originalEventId }) => originalEventId);
     },
+    /**
+     * Whether mark button should be disabled.
+     *
+     * @param {'resolved'|'ignored'|'starred'} action - mark action name
+     * @returns {boolean} True when action is unavailable
+     */
     isMarkDisabled(action) {
       if (this.selectedCount === 0) {
         return true;

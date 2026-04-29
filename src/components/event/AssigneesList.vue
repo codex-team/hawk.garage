@@ -54,7 +54,7 @@
           </span>
         </div>
         <Icon
-          v-if="eventId && user.id == currentAssigneeId"
+          v-if="user.id == currentAssigneeId"
           class="assignees__checkmark"
           symbol="checkmark"
         />
