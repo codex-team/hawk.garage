@@ -28,10 +28,6 @@
         :selection-mode-active="selectionModeActive"
         :selected-count="selectedCount"
         :selected-events="selectedEvents"
-        :on-bulk-mark="runBulkMark"
-        :on-bulk-assign="onBulkPickAssignee"
-        :on-bulk-unassign="onBulkClearAssigneesFromSelection"
-        :on-bulk-mark-viewed="onBulkMarkViewed"
         @exit-bulk-select="exitBulkSelect"
       />
     </div>
@@ -101,17 +97,16 @@
 <script>
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
-import BulkActionsBar from './bulk/actions/BulkActionsBar.vue';
+import BulkActionsBar from './bulk/BulkActionsBar.vue';
 import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
-import { FETCH_PROJECT_OVERVIEW, BULK_TOGGLE_EVENT_MARKS, BULK_UPDATE_EVENT_ASSIGNEE, BULK_VISIT_EVENTS } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
-import notifier from 'codex-notifier';
-import { useBulkSelection } from './bulk/selection/useBulkSelection';
+import { useBulkSelection } from './bulk/useBulkSelection';
 
 /** Must match api/src/models/eventsFactory.js assignee filter sentinels */
 const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
@@ -226,7 +221,6 @@ export default {
   },
   created() {
     this.loadMoreEvents(true);
-    this.bulkActionInFlight = false;
 
     const SEARCH_MAX_LENGTH = 50;
 
@@ -454,79 +448,6 @@ export default {
       this.applySelectionState(nextState);
     },
     /**
-     * Run bulk toggle for marks
-     *
-     * @param {'resolved'|'ignored'|'starred'} mark - mark to toggle
-     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
-     * @returns {Promise<void>}
-     */
-    async runBulkMark(mark, targetOriginalIds = this.getSelectedOriginalIds()) {
-      if (this.bulkActionInFlight) {
-        return;
-      }
-
-      if (targetOriginalIds.length === 0) {
-        return;
-      }
-
-      this.bulkActionInFlight = true;
-
-      try {
-        const result = await this.$store.dispatch(BULK_TOGGLE_EVENT_MARKS, {
-          projectId: this.projectId,
-          eventIds: targetOriginalIds,
-          mark,
-        });
-
-        if (!result) {
-          notifier.show({
-            message: this.$t('event.bulk.markError'),
-            style: 'error',
-            time: 8000,
-          });
-
-          return;
-        }
-
-        const targetEventIds = Array.isArray(result.targetEventIds)
-          ? result.targetEventIds
-          : targetOriginalIds;
-        const attemptedCount = targetEventIds.length;
-        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
-
-        if (result.modifiedCount < attemptedCount) {
-          notifier.show({
-            message: this.$t('event.bulk.markPartial', {
-              updated: result.modifiedCount,
-              failed: failedCount,
-            }),
-            style: 'error',
-            time: 10000,
-          });
-        }
-      } finally {
-        this.bulkActionInFlight = false;
-      }
-    },
-    /**
-     * Selected original event ids from current selection
-     *
-     * @returns {string[]}
-     */
-    getSelectedOriginalIds() {
-      const originalIds = [];
-
-      for (const repetitionId of this.selectedRepetitionIds) {
-        const event = this.getEvent(repetitionId);
-
-        if (event && event.originalEventId) {
-          originalIds.push(String(event.originalEventId));
-        }
-      }
-
-      return [...new Set(originalIds)];
-    },
-    /**
      * Keep only selected rows that are currently rendered
      *
      * @returns {void}
@@ -708,180 +629,6 @@ export default {
       this.isAssigneesShowed = false;
       window.removeEventListener('resize', this.onResize);
       window.removeEventListener('scroll', this.onResize, true);
-    },
-    /**
-     * Assign picked user to all selected rows (repetition ids)
-     *
-     * @param {object} user - workspace team member (same shape as in AssigneesList)
-     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
-     * @returns {Promise<void>}
-     */
-    async onBulkPickAssignee(user, targetOriginalIds = this.getSelectedOriginalIds()) {
-      if (this.bulkActionInFlight) {
-        return;
-      }
-
-      if (!user || this.selectedCount === 0) {
-        return;
-      }
-
-      this.bulkActionInFlight = true;
-
-      try {
-        if (targetOriginalIds.length === 0) {
-          return;
-        }
-
-        const result = await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
-          projectId: this.projectId,
-          eventIds: targetOriginalIds,
-          assignee: user,
-        });
-
-        if (!result) {
-          notifier.show({
-            message: this.$t('event.bulk.markError'),
-            style: 'error',
-            time: 8000,
-          });
-
-          return;
-        }
-
-        const targetEventIds = Array.isArray(result.targetEventIds)
-          ? result.targetEventIds
-          : targetOriginalIds;
-        const attemptedCount = targetEventIds.length;
-        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
-
-        if (result.modifiedCount < attemptedCount) {
-          notifier.show({
-            message: this.$t('event.bulk.markPartial', {
-              updated: result.modifiedCount,
-              failed: failedCount,
-            }),
-            style: 'error',
-            time: 10000,
-          });
-        }
-      } finally {
-        this.bulkActionInFlight = false;
-      }
-    },
-    /**
-     * Bulk: remove assignee from all selected events
-     *
-     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
-     * @returns {Promise<void>}
-     */
-    async onBulkClearAssigneesFromSelection(targetOriginalIds = this.getSelectedOriginalIds()) {
-      if (this.bulkActionInFlight) {
-        return;
-      }
-
-      if (this.selectedCount === 0) {
-        return;
-      }
-
-      this.bulkActionInFlight = true;
-
-      try {
-        if (targetOriginalIds.length === 0) {
-          return;
-        }
-
-        const result = await this.$store.dispatch(BULK_UPDATE_EVENT_ASSIGNEE, {
-          projectId: this.projectId,
-          eventIds: targetOriginalIds,
-          assignee: null,
-        });
-
-        if (!result) {
-          notifier.show({
-            message: this.$t('event.bulk.markError'),
-            style: 'error',
-            time: 8000,
-          });
-
-          return;
-        }
-
-        const targetEventIds = Array.isArray(result.targetEventIds)
-          ? result.targetEventIds
-          : targetOriginalIds;
-        const attemptedCount = targetEventIds.length;
-        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
-
-        if (result.modifiedCount < attemptedCount) {
-          notifier.show({
-            message: this.$t('event.bulk.markPartial', {
-              updated: result.modifiedCount,
-              failed: failedCount,
-            }),
-            style: 'error',
-            time: 10000,
-          });
-        }
-      } finally {
-        this.bulkActionInFlight = false;
-      }
-    },
-    /**
-     * Bulk: mark selected events as viewed (badge should become visited)
-     *
-     * @param {string[]} targetOriginalIds - optional prefiltered original event ids
-     * @returns {Promise<void>}
-     */
-    async onBulkMarkViewed(targetOriginalIds = this.getSelectedOriginalIds()) {
-      if (this.bulkActionInFlight) {
-        return;
-      }
-
-      if (this.selectedCount === 0) {
-        return;
-      }
-
-      this.bulkActionInFlight = true;
-
-      try {
-        if (targetOriginalIds.length === 0) {
-          return;
-        }
-
-        const result = await this.$store.dispatch(BULK_VISIT_EVENTS, {
-          projectId: this.projectId,
-          eventIds: targetOriginalIds,
-        });
-
-        if (!result) {
-          notifier.show({
-            message: this.$t('event.bulk.markError'),
-            style: 'error',
-            time: 8000,
-          });
-
-          return;
-        }
-
-        const targetEventIds = Array.isArray(result.targetEventIds)
-          ? result.targetEventIds
-          : targetOriginalIds;
-        const attemptedCount = targetEventIds.length;
-        const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
-
-        if (result.modifiedCount < attemptedCount) {
-          notifier.show({
-            message: this.$t('event.bulk.markPartial', {
-              updated: result.modifiedCount,
-              failed: failedCount,
-            }),
-            style: 'error',
-            time: 10000,
-          });
-        }
-      } finally {
-        this.bulkActionInFlight = false;
-      }
     },
   },
   // eslint-disable-next-line vue/order-in-components

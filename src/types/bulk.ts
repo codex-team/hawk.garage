@@ -7,6 +7,7 @@ export type MarkAction = 'resolved' | 'ignored' | 'starred';
  * Event shape required by bulk toolbar logic.
  */
 export type BulkSelectedEvent = {
+  id?: string | null;
   originalEventId?: string;
   assignee?: { id?: string | null } | null;
   marks?: Partial<Record<MarkAction, boolean>>;

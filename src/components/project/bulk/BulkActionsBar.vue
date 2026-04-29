@@ -91,16 +91,24 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useStore } from 'vuex';
+import notifier from 'codex-notifier';
 import type {
   BulkAssigneeUser,
   BulkPosition,
   BulkSelectedEvent,
   BulkViewportHandler,
   MarkAction
-} from '../../../../types/bulk';
-import UiButton from '../../../utils/UiButton.vue';
-import UiContextList from '../../../utils/UiContextList.vue';
-import AssigneesList from '../../../event/AssigneesList.vue';
+} from '@/types/bulk';
+import UiButton from '../../utils/UiButton.vue';
+import UiContextList from '../../utils/UiContextList.vue';
+import AssigneesList from '../../event/AssigneesList.vue';
+import {
+  refreshEventsByOriginalIds,
+  runBulkAssigneeAction,
+  runBulkMarkAction,
+  runBulkViewedAction
+} from './bulkEventOperations';
 
 /**
  * Props contract for bulk actions toolbar.
@@ -111,10 +119,6 @@ const props = withDefaults(defineProps<{
   selectionModeActive?: boolean;
   selectedCount?: number;
   selectedEvents?: BulkSelectedEvent[];
-  onBulkMark: (action: MarkAction, targetOriginalIds: string[]) => Promise<void> | void;
-  onBulkAssign: (user: BulkAssigneeUser, targetOriginalIds: string[]) => Promise<void> | void;
-  onBulkUnassign: (targetOriginalIds: string[]) => Promise<void> | void;
-  onBulkMarkViewed: (targetOriginalIds: string[]) => Promise<void> | void;
 }>(), {
   projectId: '',
   currentUserId: '',
@@ -124,6 +128,7 @@ const props = withDefaults(defineProps<{
 });
 
 const { t } = useI18n();
+const store = useStore();
 const emit = defineEmits<{ (e: 'exit-bulk-select'): void }>();
 
 /**
@@ -301,6 +306,27 @@ function isMarkDisabled(action: MarkAction): boolean {
 }
 
 /**
+ * Build shared context for bulk operation helpers.
+ */
+function getBulkActionsContext() {
+  const dispatch = store.dispatch.bind(store);
+
+  return {
+    dispatch,
+    projectId: String(props.projectId || ''),
+    t,
+    notify: payload => notifier.show(payload),
+    refreshByOriginalIds: (originalIds: string[]) => {
+      return refreshEventsByOriginalIds({
+        dispatch,
+        projectId: String(props.projectId || ''),
+        selectedEvents: props.selectedEvents,
+      }, originalIds);
+    },
+  };
+}
+
+/**
  * Handle mark action click with in-flight guard.
  *
  * @param action Action clicked in bulk toolbar
@@ -321,7 +347,7 @@ async function onMarkClick(action: MarkAction): Promise<void> {
       return;
     }
 
-    await props.onBulkMark(action, targetOriginalIds);
+    await runBulkMarkAction(getBulkActionsContext(), action, targetOriginalIds);
   } finally {
     activeMarkAction.value = '';
   }
@@ -485,7 +511,7 @@ async function onBulkPickAssignee(user: BulkAssigneeUser): Promise<void> {
     return;
   }
 
-  await props.onBulkAssign(user, targetOriginalIds);
+  await runBulkAssigneeAction(getBulkActionsContext(), user, targetOriginalIds);
 }
 
 /**
@@ -504,7 +530,7 @@ async function onBulkClearAssignees(): Promise<void> {
     return;
   }
 
-  await props.onBulkUnassign(targetOriginalIds);
+  await runBulkAssigneeAction(getBulkActionsContext(), null, targetOriginalIds);
 }
 
 /**
@@ -524,7 +550,7 @@ async function onBulkMarkViewedClick(): Promise<void> {
     return;
   }
 
-  await props.onBulkMarkViewed(targetOriginalIds);
+  await runBulkViewedAction(getBulkActionsContext(), targetOriginalIds);
 }
 
 watch(() => props.selectionModeActive, (newVal) => {

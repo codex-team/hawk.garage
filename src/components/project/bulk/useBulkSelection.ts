@@ -3,7 +3,7 @@ import type {
   SyncSelectionWithVisibleRowsParams,
   ToggleRowSelectedParams,
   UseBulkSelection
-} from '../../../../types/bulk';
+} from '@/types/bulk';
 
 /**
  * Factory with pure helpers for events bulk row selection.
