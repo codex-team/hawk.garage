@@ -38,6 +38,10 @@ async function runBulkMutation<TResponse>(
     return null;
   }
 
+  if (!response.data) {
+    return null;
+  }
+
   return pickResult(response.data) ?? null;
 }
 
