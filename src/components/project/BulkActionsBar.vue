@@ -340,6 +340,12 @@ export default {
 
       return this.activeMarkAction === action;
     },
+    /**
+     * Handle bulk mark button click and prevent concurrent mark actions.
+     *
+     * @param {'resolved'|'ignored'|'starred'} action - mark action from toolbar
+     * @returns {Promise<void>} Promise resolved when mark action is finished
+     */
     async onMarkClick(action) {
       if (this.activeMarkAction) {
         return;
@@ -361,6 +367,12 @@ export default {
         this.activeMarkAction = '';
       }
     },
+    /**
+     * Open/close assignees popover anchored to bulk assign button.
+     *
+     * @param {MouseEvent} evt - click event from assign button
+     * @returns {void}
+     */
     onBulkAssignButtonClick(evt) {
       if (evt && typeof evt.stopPropagation === 'function') {
         evt.stopPropagation();
@@ -388,6 +400,12 @@ export default {
       window.addEventListener('resize', this.bulkAssignOnViewportChange);
       window.addEventListener('scroll', this.bulkAssignOnViewportChange, true);
     },
+    /**
+     * Open/close bulk "more actions" context menu.
+     *
+     * @param {MouseEvent} evt - click event from more-actions button
+     * @returns {void}
+     */
     onBulkMoreMenuButtonClick(evt) {
       if (evt && typeof evt.stopPropagation === 'function') {
         evt.stopPropagation();
@@ -414,6 +432,11 @@ export default {
       window.addEventListener('resize', this.bulkMoreMenuOnViewportChange);
       window.addEventListener('scroll', this.bulkMoreMenuOnViewportChange, true);
     },
+    /**
+     * Calculate and update assignees popover position.
+     *
+     * @returns {void}
+     */
     setBulkAssigneesPosition() {
       if (!this.bulkAssignAnchorEl) {
         return;
@@ -437,6 +460,11 @@ export default {
         left: `${clampedLeft}px`,
       };
     },
+    /**
+     * Calculate and update bulk "more actions" menu position.
+     *
+     * @returns {void}
+     */
     setBulkMoreMenuPosition() {
       if (!this.bulkMoreMenuAnchorEl) {
         return;
@@ -458,6 +486,11 @@ export default {
         left: `${clampedRight}px`,
       };
     },
+    /**
+     * Hide assignees popover and remove viewport listeners.
+     *
+     * @returns {void}
+     */
     hideBulkAssigneesList() {
       this.isBulkAssigneesShowed = false;
       this.bulkAssignAnchorEl = null;
@@ -468,6 +501,11 @@ export default {
         this.bulkAssignOnViewportChange = null;
       }
     },
+    /**
+     * Hide "more actions" menu and remove viewport listeners.
+     *
+     * @returns {void}
+     */
     hideBulkMoreMenu() {
       this.isBulkMoreMenuShowed = false;
       this.bulkMoreMenuAnchorEl = null;
@@ -478,6 +516,12 @@ export default {
         this.bulkMoreMenuOnViewportChange = null;
       }
     },
+    /**
+     * Forward picked assignee action to parent with prefiltered ids.
+     *
+     * @param {object} user - selected assignee user object
+     * @returns {Promise<void>} Promise resolved when parent action is finished
+     */
     async onBulkPickAssignee(user) {
       this.hideBulkAssigneesList();
 
@@ -493,6 +537,11 @@ export default {
 
       await this.onBulkAssign(user, targetOriginalIds);
     },
+    /**
+     * Forward bulk unassign action to parent with prefiltered ids.
+     *
+     * @returns {Promise<void>} Promise resolved when parent action is finished
+     */
     async onBulkClearAssignees() {
       this.hideBulkAssigneesList();
 
@@ -508,6 +557,11 @@ export default {
 
       await this.onBulkUnassign(targetOriginalIds);
     },
+    /**
+     * Forward bulk mark-viewed action to parent with prefiltered ids.
+     *
+     * @returns {Promise<void>} Promise resolved when parent action is finished
+     */
     async onBulkMarkViewedClick() {
       this.hideBulkAssigneesList();
       this.hideBulkMoreMenu();

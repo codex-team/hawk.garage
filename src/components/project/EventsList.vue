@@ -19,7 +19,7 @@
       </template>
     </SearchField>
     <div
-      v-if="workspace && !workspace.isBlocked"
+      v-if="!workspace.isBlocked"
       class="events-list__bulk-slot"
     >
       <BulkActionsBar
@@ -46,7 +46,7 @@
         </div>
         <EventItem
           v-for="dailyEventInfo in eventsByDate"
-          :key="dailyEventInfo.eventId"
+          :key="dailyEventInfo.id"
           :last-occurrence-timestamp="getEvent(dailyEventInfo.eventId).timestamp"
           :count="dailyEventInfo.count"
           :affected-users-count="dailyEventInfo.affectedUsers"
