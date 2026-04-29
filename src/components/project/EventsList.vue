@@ -400,13 +400,20 @@ export default {
   },
   methods: {
     /**
+     * Apply next bulk-selection state to local fields.
+     *
+     * @param {object} nextState
+     * @returns {void}
+     */
+    applySelectionState(nextState) {
+      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
+      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
+    },
+    /**
      * Clear bulk selection (hides bar when empty)
      */
     exitBulkSelect() {
-      const nextState = bulkSelection.exitBulkSelect();
-
-      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
-      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
+      this.applySelectionState(bulkSelection.exitBulkSelect());
     },
     /**
      * Exit bulk selection on Escape
@@ -444,8 +451,7 @@ export default {
         isShiftKey: Boolean(evt && evt.shiftKey),
       });
 
-      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
-      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
+      this.applySelectionState(nextState);
     },
     /**
      * Run bulk toggle for marks
@@ -535,8 +541,7 @@ export default {
         return;
       }
 
-      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
-      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
+      this.applySelectionState(nextState);
 
       if (nextState.selectedRepetitionIds.length === 0) {
         this.exitBulkSelect();
