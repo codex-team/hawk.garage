@@ -8,11 +8,12 @@
         >
           {{ formattedFullDate }}
         </span>
-        <Icon
+        <CdxButton
           v-if="isAdmin"
           class="event-header__button--more"
-          symbol="dots"
-          @click="onMoreClick($event)"
+          secondary
+          icon="EtcHorisontal"
+          @click="onMoreClick"
         />
       </div>
 
@@ -138,13 +139,14 @@ import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
-import { usePopover } from '@codexteam/ui/vue';
+import { Button as CdxButton, usePopover } from '@codexteam/ui/vue';
 import EventActionsMenu from './EventActionsMenu.vue';
 import Icon from '../utils/Icon.vue';
 
 export default defineComponent({
   name: 'EventHeader',
   components: {
+    CdxButton,
     TabBar,
     ViewedBy,
     UiButton,
@@ -152,7 +154,6 @@ export default defineComponent({
     AssigneeBar,
     EntityImage,
     ProjectBadge,
-    Icon,
   },
   mixins: [projectBadges],
   props: {
@@ -456,17 +457,6 @@ export default defineComponent({
         color: var(--color-text-main)
       }
 
-      &--more {
-        width: 16px;
-        height: 16px;
-        opacity: 0.5;
-        cursor: pointer;
-        transition: opacity 0.2s ease-in-out;
-
-        &:hover {
-          opacity: 1;
-        }
-      }
     }
 
     &__nav-bar, &__viewed-by {

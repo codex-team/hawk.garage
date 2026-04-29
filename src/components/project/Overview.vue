@@ -23,9 +23,7 @@
         <EventsList ref="eventsList" />
       </div>
     </div>
-    <router-view v-slot="{ Component }">
-      <component :is="Component" />
-    </router-view>
+    <router-view />
   </div>
 </template>
 
