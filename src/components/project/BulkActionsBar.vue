@@ -7,7 +7,7 @@
       <button
         type="button"
         class="ui-button ui-button--small ui-button--secondary events-list__bulk-cancel-combo"
-        @click="$emit('exit-bulk-select')"
+        @click="emit('exit-bulk-select')"
       >
         <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }} {{ $t('common.escKey') }}</span>
       </button>
@@ -88,510 +88,379 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import UiButton from '../utils/UiButton.vue';
 import UiContextList from '../utils/UiContextList.vue';
 import AssigneesList from '../event/AssigneesList.vue';
 
-export default {
-  name: 'BulkActionsBar',
-  components: {
-    UiButton,
-    UiContextList,
-    AssigneesList,
-  },
-  props: {
-    projectId: {
-      type: String,
-      default: '',
-    },
-    currentUserId: {
-      type: String,
-      default: '',
-    },
-    selectionModeActive: {
-      type: Boolean,
-      default: false,
-    },
-    selectedCount: {
-      type: Number,
-      default: 0,
-    },
-    selectedEvents: {
-      type: Array,
-      default: () => [],
-    },
-    onBulkMark: {
-      type: Function,
-      required: true,
-    },
-    onBulkAssign: {
-      type: Function,
-      required: true,
-    },
-    onBulkUnassign: {
-      type: Function,
-      required: true,
-    },
-    onBulkMarkViewed: {
-      type: Function,
-      required: true,
-    },
-  },
-  emits: [
-    'exit-bulk-select',
-  ],
-  data() {
-    return {
-      /**
-       * Currently running bulk mark action to prevent double submit
-       */
-      activeMarkAction: '',
-      /**
-       * Visibility flag for bulk assignees popover
-       */
-      isBulkAssigneesShowed: false,
-      /**
-       * Bulk assignees popover position
-       */
-      bulkAssigneesListPosition: {
-        top: 0,
-        left: 0,
-      },
-      /**
-       * Anchor element for bulk assignees popover
-       */
-      bulkAssignAnchorEl: null,
-      /**
-       * Window resize/scroll handler for assignees popover
-       */
-      bulkAssignOnViewportChange: null,
-      /**
-       * Visibility flag for "more actions" context menu
-       */
-      isBulkMoreMenuShowed: false,
-      /**
-       * Bulk "more actions" menu position
-       */
-      bulkMoreMenuPosition: {
-        top: 0,
-        left: 0,
-      },
-      /**
-       * Anchor element for bulk "more actions" menu
-       */
-      bulkMoreMenuAnchorEl: null,
-      /**
-       * Window resize/scroll handler for "more actions" menu
-       */
-      bulkMoreMenuOnViewportChange: null,
-    };
-  },
-  computed: {
-    areAllSelectedIgnored() {
-      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.ignored);
-    },
-    areAllSelectedResolved() {
-      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.resolved);
-    },
-    areAllSelectedStarred() {
-      return this.selectedEvents.length > 0 && this.selectedEvents.every(event => event.marks?.starred);
-    },
-    bulkIgnoreLabel() {
-      return this.areAllSelectedIgnored
-        ? this.$t('event.bulk.unignore')
-        : this.$t('event.ignore');
-    },
-    bulkResolveLabel() {
-      return this.areAllSelectedResolved
-        ? this.$t('event.bulk.unresolve')
-        : this.$t('event.resolve');
-    },
-    bulkResolveIcon() {
-      return this.areAllSelectedResolved ? 'close-circle' : 'checkmark';
-    },
-    bulkStarLabel() {
-      return this.areAllSelectedStarred
-        ? this.$t('event.bulk.unstar')
-        : this.$t('event.star');
-    },
-    bulkIgnoreIcon() {
-      return this.areAllSelectedIgnored ? 'eye' : 'hided';
-    },
-    bulkStarIcon() {
-      return this.areAllSelectedStarred ? 'star-outline' : 'star';
-    },
-    hasAssigneeInSelection() {
-      return this.selectedEvents.some(event => !!event.assignee);
-    },
-    bulkMoreMenuItems() {
-      return [
-        {
-          label: this.$t('event.bulk.markViewed'),
-          icon: 'eye',
-          isActive: false,
-          onActivate: () => {
-            void this.onBulkMarkViewedClick();
-          },
-        },
-      ];
-    },
-  },
-  methods: {
-    /**
-     * Selected original events deduplicated by original id.
-     *
-     * @returns {{ originalEventId: string; event: object }[]} Deduplicated selected events by original id
-     */
-    getSelectedOriginalEvents() {
-      const byOriginalId = new Map();
-
-      for (const event of this.selectedEvents) {
-        if (!event || !event.originalEventId) {
-          continue;
-        }
-
-        const originalEventId = String(event.originalEventId);
-
-        if (!byOriginalId.has(originalEventId)) {
-          byOriginalId.set(originalEventId, event);
-        }
-      }
-
-      return Array.from(byOriginalId.entries()).map(([originalEventId, event]) => ({
-        originalEventId,
-        event,
-      }));
-    },
-    /**
-     * Resolve target ids for bulk mark click.
-     * If all selected have mark -> unmark all selected.
-     * Else -> mark only those without mark.
-     *
-     * @param {'resolved'|'ignored'|'starred'} action - mark action from toolbar button
-     * @returns {string[]} Original event ids that should be sent to API
-     */
-    getTargetOriginalIdsForMark(action) {
-      const selected = this.getSelectedOriginalEvents();
-
-      if (selected.length === 0) {
-        return [];
-      }
-
-      const allHaveMark = selected.every(({ event }) => Boolean(event.marks && event.marks[action]));
-
-      if (allHaveMark) {
-        return selected.map(({ originalEventId }) => originalEventId);
-      }
-
-      return selected
-        .filter(({ event }) => !(event.marks && event.marks[action]))
-        .map(({ originalEventId }) => originalEventId);
-    },
-    /**
-     * Resolve target ids for assignee bulk action.
-     *
-     * @param {string|null} assigneeId - assignee id to set, null to clear
-     * @returns {string[]} Original event ids that should be sent to API
-     */
-    getTargetOriginalIdsForAssignee(assigneeId) {
-      const selected = this.getSelectedOriginalEvents();
-      const targetAssigneeId = assigneeId ? String(assigneeId) : '';
-
-      return selected
-        .filter(({ event }) => {
-          const currentAssigneeId = event.assignee ? String(event.assignee.id || '') : '';
-
-          return currentAssigneeId !== targetAssigneeId;
-        })
-        .map(({ originalEventId }) => originalEventId);
-    },
-    /**
-     * Resolve target ids for "mark viewed" bulk action.
-     *
-     * @returns {string[]} Original event ids not visited by current user
-     */
-    getTargetOriginalIdsForViewed() {
-      const selected = this.getSelectedOriginalEvents();
-      const currentUserId = String(this.currentUserId || '');
-
-      if (!currentUserId) {
-        return selected.map(({ originalEventId }) => originalEventId);
-      }
-
-      return selected
-        .filter(({ event }) => {
-          const visitedBy = Array.isArray(event.visitedBy) ? event.visitedBy : [];
-
-          return !visitedBy.some(visitor => String(visitor && visitor.id) === currentUserId);
-        })
-        .map(({ originalEventId }) => originalEventId);
-    },
-    /**
-     * Whether mark button should be disabled.
-     *
-     * @param {'resolved'|'ignored'|'starred'} action - mark action name
-     * @returns {boolean} True when action is unavailable
-     */
-    isMarkDisabled(action) {
-      if (this.selectedCount === 0) {
-        return true;
-      }
-
-      return this.activeMarkAction === action;
-    },
-    /**
-     * Handle bulk mark button click and prevent concurrent mark actions.
-     *
-     * @param {'resolved'|'ignored'|'starred'} action - mark action from toolbar
-     * @returns {Promise<void>} Promise resolved when mark action is finished
-     */
-    async onMarkClick(action) {
-      if (this.activeMarkAction) {
-        return;
-      }
-
-      this.hideBulkAssigneesList();
-      this.hideBulkMoreMenu();
-      this.activeMarkAction = action;
-
-      try {
-        const targetOriginalIds = this.getTargetOriginalIdsForMark(action);
-
-        if (targetOriginalIds.length === 0) {
-          return;
-        }
-
-        await this.onBulkMark(action, targetOriginalIds);
-      } finally {
-        this.activeMarkAction = '';
-      }
-    },
-    /**
-     * Open/close assignees popover anchored to bulk assign button.
-     *
-     * @param {MouseEvent} evt - click event from assign button
-     * @returns {void}
-     */
-    onBulkAssignButtonClick(evt) {
-      if (evt && typeof evt.stopPropagation === 'function') {
-        evt.stopPropagation();
-      }
-
-      this.hideBulkMoreMenu();
-
-      const el = evt && evt.currentTarget ? evt.currentTarget : null;
-
-      if (!el) {
-        return;
-      }
-
-      if (this.isBulkAssigneesShowed && this.bulkAssignAnchorEl === el) {
-        this.hideBulkAssigneesList();
-
-        return;
-      }
-
-      this.hideBulkAssigneesList();
-      this.bulkAssignAnchorEl = el;
-      this.isBulkAssigneesShowed = true;
-      this.setBulkAssigneesPosition();
-      this.bulkAssignOnViewportChange = this.setBulkAssigneesPosition.bind(this);
-      window.addEventListener('resize', this.bulkAssignOnViewportChange);
-      window.addEventListener('scroll', this.bulkAssignOnViewportChange, true);
-    },
-    /**
-     * Open/close bulk "more actions" context menu.
-     *
-     * @param {MouseEvent} evt - click event from more-actions button
-     * @returns {void}
-     */
-    onBulkMoreMenuButtonClick(evt) {
-      if (evt && typeof evt.stopPropagation === 'function') {
-        evt.stopPropagation();
-      }
-
-      this.hideBulkAssigneesList();
-      const el = evt && evt.currentTarget ? evt.currentTarget : null;
-
-      if (!el) {
-        return;
-      }
-
-      if (this.isBulkMoreMenuShowed && this.bulkMoreMenuAnchorEl === el) {
-        this.hideBulkMoreMenu();
-
-        return;
-      }
-
-      this.hideBulkMoreMenu();
-      this.bulkMoreMenuAnchorEl = el;
-      this.isBulkMoreMenuShowed = true;
-      this.setBulkMoreMenuPosition();
-      this.bulkMoreMenuOnViewportChange = this.setBulkMoreMenuPosition.bind(this);
-      window.addEventListener('resize', this.bulkMoreMenuOnViewportChange);
-      window.addEventListener('scroll', this.bulkMoreMenuOnViewportChange, true);
-    },
-    /**
-     * Calculate and update assignees popover position.
-     *
-     * @returns {void}
-     */
-    setBulkAssigneesPosition() {
-      if (!this.bulkAssignAnchorEl) {
-        return;
-      }
-
-      const rect = this.bulkAssignAnchorEl.getBoundingClientRect();
-      const LIST_WIDTH = 210;
-      const ARROW_X_FROM_LEFT = 174; // AssigneesList top triangle: right: 36px => 210 - 36
-      const OFFSET_X = 8;
-      const viewportWidth = window.innerWidth;
-      const leftPadding = 8;
-      const anchorX = rect.left + rect.width / 2;
-      const desiredLeft = anchorX - ARROW_X_FROM_LEFT + OFFSET_X;
-      const clampedLeft = Math.min(
-        Math.max(desiredLeft, leftPadding),
-        Math.max(leftPadding, viewportWidth - LIST_WIDTH - leftPadding)
-      );
-
-      this.bulkAssigneesListPosition = {
-        top: `${rect.bottom + 8}px`,
-        left: `${clampedLeft}px`,
-      };
-    },
-    /**
-     * Calculate and update bulk "more actions" menu position.
-     *
-     * @returns {void}
-     */
-    setBulkMoreMenuPosition() {
-      if (!this.bulkMoreMenuAnchorEl) {
-        return;
-      }
-
-      const rect = this.bulkMoreMenuAnchorEl.getBoundingClientRect();
-      const OFFSET_X = 0;
-      const MENU_WIDTH = 260;
-      const viewportWidth = window.innerWidth;
-      const leftPadding = 8;
-      const desiredRight = rect.right + OFFSET_X;
-      const clampedRight = Math.min(
-        Math.max(desiredRight, MENU_WIDTH + leftPadding),
-        Math.max(MENU_WIDTH + leftPadding, viewportWidth - leftPadding)
-      );
-
-      this.bulkMoreMenuPosition = {
-        top: `${rect.bottom + 8}px`,
-        left: `${clampedRight}px`,
-      };
-    },
-    /**
-     * Hide assignees popover and remove viewport listeners.
-     *
-     * @returns {void}
-     */
-    hideBulkAssigneesList() {
-      this.isBulkAssigneesShowed = false;
-      this.bulkAssignAnchorEl = null;
-
-      if (typeof this.bulkAssignOnViewportChange === 'function') {
-        window.removeEventListener('resize', this.bulkAssignOnViewportChange);
-        window.removeEventListener('scroll', this.bulkAssignOnViewportChange, true);
-        this.bulkAssignOnViewportChange = null;
-      }
-    },
-    /**
-     * Hide "more actions" menu and remove viewport listeners.
-     *
-     * @returns {void}
-     */
-    hideBulkMoreMenu() {
-      this.isBulkMoreMenuShowed = false;
-      this.bulkMoreMenuAnchorEl = null;
-
-      if (typeof this.bulkMoreMenuOnViewportChange === 'function') {
-        window.removeEventListener('resize', this.bulkMoreMenuOnViewportChange);
-        window.removeEventListener('scroll', this.bulkMoreMenuOnViewportChange, true);
-        this.bulkMoreMenuOnViewportChange = null;
-      }
-    },
-    /**
-     * Forward picked assignee action to parent with prefiltered ids.
-     *
-     * @param {object} user - selected assignee user object
-     * @returns {Promise<void>} Promise resolved when parent action is finished
-     */
-    async onBulkPickAssignee(user) {
-      this.hideBulkAssigneesList();
-
-      if (!user || this.selectedCount === 0) {
-        return;
-      }
-
-      const targetOriginalIds = this.getTargetOriginalIdsForAssignee(user.id);
-
-      if (targetOriginalIds.length === 0) {
-        return;
-      }
-
-      await this.onBulkAssign(user, targetOriginalIds);
-    },
-    /**
-     * Forward bulk unassign action to parent with prefiltered ids.
-     *
-     * @returns {Promise<void>} Promise resolved when parent action is finished
-     */
-    async onBulkClearAssignees() {
-      this.hideBulkAssigneesList();
-
-      if (this.selectedCount === 0) {
-        return;
-      }
-
-      const targetOriginalIds = this.getTargetOriginalIdsForAssignee(null);
-
-      if (targetOriginalIds.length === 0) {
-        return;
-      }
-
-      await this.onBulkUnassign(targetOriginalIds);
-    },
-    /**
-     * Forward bulk mark-viewed action to parent with prefiltered ids.
-     *
-     * @returns {Promise<void>} Promise resolved when parent action is finished
-     */
-    async onBulkMarkViewedClick() {
-      this.hideBulkAssigneesList();
-      this.hideBulkMoreMenu();
-
-      if (this.selectedCount === 0) {
-        return;
-      }
-
-      const targetOriginalIds = this.getTargetOriginalIdsForViewed();
-
-      if (targetOriginalIds.length === 0) {
-        return;
-      }
-
-      await this.onBulkMarkViewed(targetOriginalIds);
-    },
-  },
-  // eslint-disable-next-line vue/order-in-components
-  watch: {
-    selectionModeActive(newVal) {
-      if (!newVal) {
-        this.hideBulkAssigneesList();
-        this.hideBulkMoreMenu();
-      }
-    },
-  },
-  // eslint-disable-next-line vue/order-in-components
-  beforeUnmount() {
-    this.hideBulkAssigneesList();
-    this.hideBulkMoreMenu();
-  },
+type MarkAction = 'resolved' | 'ignored' | 'starred';
+type SelectedEvent = {
+  originalEventId?: string;
+  assignee?: { id?: string | null } | null;
+  marks?: Partial<Record<MarkAction, boolean>>;
+  visitedBy?: Array<{ id?: string | null }>;
 };
+type Position = {
+  top: string | number;
+  left: string | number;
+};
+type ViewportHandler = (() => void) | null;
+
+const props = withDefaults(defineProps<{
+  projectId?: string;
+  currentUserId?: string;
+  selectionModeActive?: boolean;
+  selectedCount?: number;
+  selectedEvents?: SelectedEvent[];
+  onBulkMark: (action: MarkAction, targetOriginalIds: string[]) => Promise<void> | void;
+  onBulkAssign: (user: { id?: string | null } | null, targetOriginalIds: string[]) => Promise<void> | void;
+  onBulkUnassign: (targetOriginalIds: string[]) => Promise<void> | void;
+  onBulkMarkViewed: (targetOriginalIds: string[]) => Promise<void> | void;
+}>(), {
+  projectId: '',
+  currentUserId: '',
+  selectionModeActive: false,
+  selectedCount: 0,
+  selectedEvents: () => [] as SelectedEvent[],
+});
+
+const { t } = useI18n();
+const emit = defineEmits<{ (e: 'exit-bulk-select'): void }>();
+
+const activeMarkAction = ref('');
+const isBulkAssigneesShowed = ref(false);
+const bulkAssigneesListPosition = ref<Position>({
+  top: 0,
+  left: 0,
+});
+const bulkAssignAnchorEl = ref<HTMLElement | null>(null);
+const bulkAssignOnViewportChange = ref<ViewportHandler>(null);
+const isBulkMoreMenuShowed = ref(false);
+const bulkMoreMenuPosition = ref<Position>({
+  top: 0,
+  left: 0,
+});
+const bulkMoreMenuAnchorEl = ref<HTMLElement | null>(null);
+const bulkMoreMenuOnViewportChange = ref<ViewportHandler>(null);
+
+const areAllSelectedIgnored = computed(() => {
+  return props.selectedEvents.length > 0 && props.selectedEvents.every(event => event.marks?.ignored);
+});
+const areAllSelectedResolved = computed(() => {
+  return props.selectedEvents.length > 0 && props.selectedEvents.every(event => event.marks?.resolved);
+});
+const areAllSelectedStarred = computed(() => {
+  return props.selectedEvents.length > 0 && props.selectedEvents.every(event => event.marks?.starred);
+});
+const bulkIgnoreLabel = computed(() => {
+  return areAllSelectedIgnored.value ? t('event.bulk.unignore') : t('event.ignore');
+});
+const bulkResolveLabel = computed(() => {
+  return areAllSelectedResolved.value ? t('event.bulk.unresolve') : t('event.resolve');
+});
+const bulkResolveIcon = computed(() => {
+  return areAllSelectedResolved.value ? 'close-circle' : 'checkmark';
+});
+const bulkStarLabel = computed(() => {
+  return areAllSelectedStarred.value ? t('event.bulk.unstar') : t('event.star');
+});
+const bulkIgnoreIcon = computed(() => {
+  return areAllSelectedIgnored.value ? 'eye' : 'hided';
+});
+const bulkStarIcon = computed(() => {
+  return areAllSelectedStarred.value ? 'star-outline' : 'star';
+});
+const hasAssigneeInSelection = computed(() => {
+  return props.selectedEvents.some(event => !!event.assignee);
+});
+const bulkMoreMenuItems = computed(() => [
+  {
+    label: t('event.bulk.markViewed'),
+    icon: 'eye',
+    isActive: false,
+    onActivate: () => {
+      void onBulkMarkViewedClick();
+    },
+  },
+]);
+
+function getSelectedOriginalEvents() {
+  const byOriginalId = new Map<string, SelectedEvent>();
+
+  for (const event of props.selectedEvents) {
+    if (!event?.originalEventId) {
+      continue;
+    }
+
+    const originalEventId = String(event.originalEventId);
+
+    if (!byOriginalId.has(originalEventId)) {
+      byOriginalId.set(originalEventId, event);
+    }
+  }
+
+  return Array.from(byOriginalId.entries()).map(([originalEventId, event]) => ({
+    originalEventId,
+    event,
+  }));
+}
+
+function getTargetOriginalIdsForMark(action: MarkAction): string[] {
+  const selected = getSelectedOriginalEvents();
+
+  if (selected.length === 0) {
+    return [];
+  }
+
+  const allHaveMark = selected.every(({ event }) => Boolean(event.marks && event.marks[action]));
+
+  if (allHaveMark) {
+    return selected.map(({ originalEventId }) => originalEventId);
+  }
+
+  return selected
+    .filter(({ event }) => !(event.marks && event.marks[action]))
+    .map(({ originalEventId }) => originalEventId);
+}
+
+function getTargetOriginalIdsForAssignee(assigneeId: string | null): string[] {
+  const selected = getSelectedOriginalEvents();
+  const targetAssigneeId = assigneeId ? String(assigneeId) : '';
+
+  return selected
+    .filter(({ event }) => {
+      const currentAssigneeId = event.assignee ? String(event.assignee.id || '') : '';
+
+      return currentAssigneeId !== targetAssigneeId;
+    })
+    .map(({ originalEventId }) => originalEventId);
+}
+
+function getTargetOriginalIdsForViewed(): string[] {
+  const selected = getSelectedOriginalEvents();
+  const currentUserId = String(props.currentUserId || '');
+
+  if (!currentUserId) {
+    return selected.map(({ originalEventId }) => originalEventId);
+  }
+
+  return selected
+    .filter(({ event }) => {
+      const visitedBy = Array.isArray(event.visitedBy) ? event.visitedBy : [];
+
+      return !visitedBy.some(visitor => String(visitor && visitor.id) === currentUserId);
+    })
+    .map(({ originalEventId }) => originalEventId);
+}
+
+function isMarkDisabled(action: MarkAction): boolean {
+  if (props.selectedCount === 0) {
+    return true;
+  }
+
+  return activeMarkAction.value === action;
+}
+
+async function onMarkClick(action: MarkAction): Promise<void> {
+  if (activeMarkAction.value) {
+    return;
+  }
+
+  hideBulkAssigneesList();
+  hideBulkMoreMenu();
+  activeMarkAction.value = action;
+
+  try {
+    const targetOriginalIds = getTargetOriginalIdsForMark(action);
+
+    if (targetOriginalIds.length === 0) {
+      return;
+    }
+
+    await props.onBulkMark(action, targetOriginalIds);
+  } finally {
+    activeMarkAction.value = '';
+  }
+}
+
+function onBulkAssignButtonClick(evt: MouseEvent): void {
+  evt?.stopPropagation?.();
+  hideBulkMoreMenu();
+
+  const el = evt.currentTarget as HTMLElement | null;
+
+  if (!el) {
+    return;
+  }
+
+  if (isBulkAssigneesShowed.value && bulkAssignAnchorEl.value === el) {
+    hideBulkAssigneesList();
+
+    return;
+  }
+
+  hideBulkAssigneesList();
+  bulkAssignAnchorEl.value = el;
+  isBulkAssigneesShowed.value = true;
+  setBulkAssigneesPosition();
+  bulkAssignOnViewportChange.value = setBulkAssigneesPosition.bind(null);
+  window.addEventListener('resize', bulkAssignOnViewportChange.value);
+  window.addEventListener('scroll', bulkAssignOnViewportChange.value, true);
+}
+
+function onBulkMoreMenuButtonClick(evt: MouseEvent): void {
+  evt?.stopPropagation?.();
+  hideBulkAssigneesList();
+
+  const el = evt.currentTarget as HTMLElement | null;
+
+  if (!el) {
+    return;
+  }
+
+  if (isBulkMoreMenuShowed.value && bulkMoreMenuAnchorEl.value === el) {
+    hideBulkMoreMenu();
+
+    return;
+  }
+
+  hideBulkMoreMenu();
+  bulkMoreMenuAnchorEl.value = el;
+  isBulkMoreMenuShowed.value = true;
+  setBulkMoreMenuPosition();
+  bulkMoreMenuOnViewportChange.value = setBulkMoreMenuPosition.bind(null);
+  window.addEventListener('resize', bulkMoreMenuOnViewportChange.value);
+  window.addEventListener('scroll', bulkMoreMenuOnViewportChange.value, true);
+}
+
+function setBulkAssigneesPosition(): void {
+  if (!bulkAssignAnchorEl.value) {
+    return;
+  }
+
+  const rect = bulkAssignAnchorEl.value.getBoundingClientRect();
+  const LIST_WIDTH = 210;
+  const ARROW_X_FROM_LEFT = 174;
+  const OFFSET_X = 8;
+  const viewportWidth = window.innerWidth;
+  const leftPadding = 8;
+  const anchorX = rect.left + rect.width / 2;
+  const desiredLeft = anchorX - ARROW_X_FROM_LEFT + OFFSET_X;
+  const clampedLeft = Math.min(
+    Math.max(desiredLeft, leftPadding),
+    Math.max(leftPadding, viewportWidth - LIST_WIDTH - leftPadding)
+  );
+
+  bulkAssigneesListPosition.value = {
+    top: `${rect.bottom + 8}px`,
+    left: `${clampedLeft}px`,
+  };
+}
+
+function setBulkMoreMenuPosition(): void {
+  if (!bulkMoreMenuAnchorEl.value) {
+    return;
+  }
+
+  const rect = bulkMoreMenuAnchorEl.value.getBoundingClientRect();
+  const OFFSET_X = 0;
+  const MENU_WIDTH = 260;
+  const viewportWidth = window.innerWidth;
+  const leftPadding = 8;
+  const desiredRight = rect.right + OFFSET_X;
+  const clampedRight = Math.min(
+    Math.max(desiredRight, MENU_WIDTH + leftPadding),
+    Math.max(MENU_WIDTH + leftPadding, viewportWidth - leftPadding)
+  );
+
+  bulkMoreMenuPosition.value = {
+    top: `${rect.bottom + 8}px`,
+    left: `${clampedRight}px`,
+  };
+}
+
+function hideBulkAssigneesList(): void {
+  isBulkAssigneesShowed.value = false;
+  bulkAssignAnchorEl.value = null;
+
+  if (typeof bulkAssignOnViewportChange.value === 'function') {
+    window.removeEventListener('resize', bulkAssignOnViewportChange.value);
+    window.removeEventListener('scroll', bulkAssignOnViewportChange.value, true);
+    bulkAssignOnViewportChange.value = null;
+  }
+}
+
+function hideBulkMoreMenu(): void {
+  isBulkMoreMenuShowed.value = false;
+  bulkMoreMenuAnchorEl.value = null;
+
+  if (typeof bulkMoreMenuOnViewportChange.value === 'function') {
+    window.removeEventListener('resize', bulkMoreMenuOnViewportChange.value);
+    window.removeEventListener('scroll', bulkMoreMenuOnViewportChange.value, true);
+    bulkMoreMenuOnViewportChange.value = null;
+  }
+}
+
+async function onBulkPickAssignee(user: { id?: string | null } | null): Promise<void> {
+  hideBulkAssigneesList();
+
+  if (!user || props.selectedCount === 0) {
+    return;
+  }
+
+  const targetOriginalIds = getTargetOriginalIdsForAssignee(String(user.id || ''));
+
+  if (targetOriginalIds.length === 0) {
+    return;
+  }
+
+  await props.onBulkAssign(user, targetOriginalIds);
+}
+
+async function onBulkClearAssignees(): Promise<void> {
+  hideBulkAssigneesList();
+
+  if (props.selectedCount === 0) {
+    return;
+  }
+
+  const targetOriginalIds = getTargetOriginalIdsForAssignee(null);
+
+  if (targetOriginalIds.length === 0) {
+    return;
+  }
+
+  await props.onBulkUnassign(targetOriginalIds);
+}
+
+async function onBulkMarkViewedClick(): Promise<void> {
+  hideBulkAssigneesList();
+  hideBulkMoreMenu();
+
+  if (props.selectedCount === 0) {
+    return;
+  }
+
+  const targetOriginalIds = getTargetOriginalIdsForViewed();
+
+  if (targetOriginalIds.length === 0) {
+    return;
+  }
+
+  await props.onBulkMarkViewed(targetOriginalIds);
+}
+
+watch(() => props.selectionModeActive, (newVal) => {
+  if (!newVal) {
+    hideBulkAssigneesList();
+    hideBulkMoreMenu();
+  }
+});
+
+onBeforeUnmount(() => {
+  hideBulkAssigneesList();
+  hideBulkMoreMenu();
+});
 </script>
