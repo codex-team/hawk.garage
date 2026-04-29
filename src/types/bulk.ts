@@ -1,7 +1,33 @@
+import type { Ref, ComputedRef } from 'vue';
+
 /**
  * Common mark actions used by bulk operations.
  */
 export type MarkAction = 'resolved' | 'ignored' | 'starred';
+
+/**
+ * Public contract for the bulk selection composable.
+ */
+export interface UseBulkSelectionReturn {
+  /** Currently selected row ids (repetition ids). */
+  selectedRepetitionIds: Ref<string[]>;
+  /** True when at least one row is selected. */
+  selectionModeActive: ComputedRef<boolean>;
+  /** Number of selected rows. */
+  selectedCount: ComputedRef<number>;
+  /** Clear all selection. */
+  exitBulkSelect: () => void;
+  /** Whether a given row id is in the selection. */
+  isRowSelected: (repetitionId: string) => boolean;
+  /**
+   * Toggle one row, with optional Shift-range expansion.
+   * @param repetitionId - row id clicked
+   * @param evt - optional mouse event (for Shift key detection)
+   */
+  toggleRowSelected: (repetitionId: string, evt?: MouseEvent) => void;
+  /** Remove selected rows that are no longer in the visible list. */
+  syncSelectionWithVisibleRows: () => void;
+}
 
 /**
  * Event shape required by bulk toolbar logic.
@@ -31,86 +57,6 @@ export type BulkViewportHandler = (() => void) | null;
  * Minimal assignee shape used by bulk assign handlers.
  */
 export type BulkAssigneeUser = { id?: string | null } | null;
-
-/**
- * Mutable bulk selection state used by the events list.
- */
-export type BulkSelectionState = {
-  /**
-   * Selected row ids (repetition ids from grouped daily events).
-   */
-  selectedRepetitionIds: string[];
-  /**
-   * Last clicked row id used as Shift-range anchor.
-   */
-  lastSelectedRepetitionId: string | null;
-};
-
-/**
- * Input data for toggling a single row (with optional Shift-range support).
- */
-export type ToggleRowSelectedParams = {
-  /**
-   * Current selected row ids.
-   */
-  selectedRepetitionIds: string[];
-  /**
-   * Last selected row id used as range anchor.
-   */
-  lastSelectedRepetitionId: string | null;
-  /**
-   * Row id user clicked.
-   */
-  repetitionId: string;
-  /**
-   * Visible row ids in list order.
-   */
-  flatRepetitionIds: string[];
-  /**
-   * True when selection should apply Shift-range behavior.
-   */
-  isShiftKey: boolean;
-};
-
-/**
- * Input data for syncing selection with currently visible rows.
- */
-export type SyncSelectionWithVisibleRowsParams = {
-  /**
-   * Current selected row ids.
-   */
-  selectedRepetitionIds: string[];
-  /**
-   * Row ids currently rendered on screen.
-   */
-  visibleRepetitionIds: string[];
-};
-
-/**
- * Public contract for bulk selection helpers.
- */
-export type UseBulkSelection = {
-  /**
-   * Clear selection and reset range anchor.
-   */
-  exitBulkSelect: () => BulkSelectionState;
-  /**
-   * Handle Escape key for bulk selection mode.
-   */
-  onDocumentEscape: (e: KeyboardEvent, selectedCount: number) => boolean;
-  /**
-   * Check if given row id is selected.
-   */
-  isRowSelected: (selectedRepetitionIds: string[], repetitionId: string) => boolean;
-  /**
-   * Toggle one row selection (with Shift-range support).
-   */
-  toggleRowSelected: (params: ToggleRowSelectedParams) => BulkSelectionState;
-  /**
-   * Remove selected rows that are no longer visible.
-   */
-  syncSelectionWithVisibleRows: (params: SyncSelectionWithVisibleRowsParams) => BulkSelectionState | null;
-};
 
 /**
  * Generic response shape for bulk event mutations.

@@ -19,7 +19,6 @@
       </template>
     </SearchField>
     <div
-      v-if="!workspace.isBlocked"
       class="events-list__bulk-slot"
     >
       <BulkActionsBar
@@ -41,8 +40,8 @@
           {{ formatGroupDate(date) }}
         </div>
         <EventItem
-          v-for="dailyEventInfo in eventsByDate"
-          :key="dailyEventInfo.id"
+          v-for="(dailyEventInfo, index) in eventsByDate"
+          :key="`${dailyEventInfo.groupHash}-${date}-${index}`"
           :last-occurrence-timestamp="getEvent(dailyEventInfo.eventId).timestamp"
           :count="dailyEventInfo.count"
           :affected-users-count="dailyEventInfo.affectedUsers"
@@ -95,6 +94,7 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
 import BulkActionsBar from './bulk/BulkActionsBar.vue';
@@ -111,7 +111,6 @@ import { useBulkSelection } from './bulk/useBulkSelection';
 /** Must match api/src/models/eventsFactory.js assignee filter sentinels */
 const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
 const ASSIGNEE_FILTER_ANY_ASSIGNEE = '__filter_any_assignee__';
-const bulkSelection = useBulkSelection();
 
 /**
  * Events list component grouped by days.
@@ -144,6 +143,52 @@ export default {
       default: 'simple',
     },
   },
+  setup() {
+    const dailyEvents = ref([]);
+
+    const groupedByDate = computed(() => {
+      if (!dailyEvents.value.length) {
+        return {};
+      }
+
+      return groupByGroupingTimestamp(dailyEvents.value);
+    });
+
+    const flattenedDailyEventIds = computed(() => {
+      const flat = [];
+
+      for (const date of Object.keys(groupedByDate.value)) {
+        for (const dailyEventInfo of groupedByDate.value[date]) {
+          flat.push(dailyEventInfo.eventId);
+        }
+      }
+
+      return flat;
+    });
+
+    const {
+      selectedRepetitionIds,
+      selectionModeActive,
+      selectedCount,
+      exitBulkSelect,
+      isRowSelected,
+      toggleRowSelected,
+      syncSelectionWithVisibleRows,
+    } = useBulkSelection(flattenedDailyEventIds);
+
+    return {
+      dailyEvents,
+      groupedByDate,
+      flattenedDailyEventIds,
+      selectedRepetitionIds,
+      selectionModeActive,
+      selectedCount,
+      exitBulkSelect,
+      isRowSelected,
+      toggleRowSelected,
+      syncSelectionWithVisibleRows,
+    };
+  },
   data() {
     return {
       /**
@@ -156,10 +201,6 @@ export default {
       searchQuery: (this.$store && this.$store.getters && this.$route)
         ? (this.$store.getters.getProjectSearch(this.$route.params.projectId) || '')
         : '',
-      /**
-       * Raw (not grouped by groupingTimestamp) dailyEvents list
-       */
-      dailyEvents: [],
       /**
        * Selected assignee id for filtering events
        */
@@ -209,14 +250,6 @@ export default {
        * When true, run reloadDailyEvents once the current load finishes (assignee changed mid-request)
        */
       pendingAssigneeReload: false,
-      /**
-       * Selected list row ids (repetition / display event id from dailyEvents)
-       */
-      selectedRepetitionIds: [],
-      /**
-       * Last toggled row id used as Shift-selection anchor
-       */
-      lastSelectedRepetitionId: null,
     };
   },
   created() {
@@ -237,11 +270,7 @@ export default {
       this.reloadDailyEvents();
     }, 500);
   },
-  mounted() {
-    window.addEventListener('keydown', this.onDocumentEscape);
-  },
   beforeUnmount() {
-    window.removeEventListener('keydown', this.onDocumentEscape);
     this.hideAssigneesList();
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
@@ -317,32 +346,6 @@ export default {
       return Array.isArray(this.dailyEvents) && this.dailyEvents.length > 0;
     },
     /**
-     * Group events by the `groupingTimestamp` key
-     *
-     * @returns {Record<string, any[]>}
-     */
-    groupedByDate() {
-      if (!this.hasItems) {
-        return {};
-      }
-
-      return groupByGroupingTimestamp(this.dailyEvents);
-    },
-    /**
-     * Number of selected rows in bulk mode
-     */
-    selectedCount() {
-      return this.selectedRepetitionIds.length;
-    },
-    /**
-     * True when at least one row is selected (bulk bar + all rows show checkboxes)
-     *
-     * @returns {boolean}
-     */
-    selectionModeActive() {
-      return this.selectedRepetitionIds.length > 0;
-    },
-    /**
      * Selected events resolved from current row ids
      *
      * @returns {object[]}
@@ -374,100 +377,8 @@ export default {
 
       return !!event?.assignee;
     },
-    /**
-     * Event row ids in list order (same as template v-for over groupedByDate)
-     *
-     * @returns {string[]}
-     */
-    flattenedDailyEventIds() {
-      const flat = [];
-      const grouped = this.groupedByDate;
-
-      for (const date of Object.keys(grouped)) {
-        for (const dailyEventInfo of grouped[date]) {
-          flat.push(dailyEventInfo.eventId);
-        }
-      }
-
-      return flat;
-    },
   },
   methods: {
-    /**
-     * Apply next bulk-selection state to local fields.
-     *
-     * @param {object} nextState
-     * @returns {void}
-     */
-    applySelectionState(nextState) {
-      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
-      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
-    },
-    /**
-     * Clear bulk selection (hides bar when empty)
-     */
-    exitBulkSelect() {
-      this.applySelectionState(bulkSelection.exitBulkSelect());
-    },
-    /**
-     * Exit bulk selection on Escape
-     *
-     * @param {KeyboardEvent} e - key event
-     * @returns {void}
-     */
-    onDocumentEscape(e) {
-      if (bulkSelection.onDocumentEscape(e, this.selectedCount)) {
-        this.exitBulkSelect();
-      }
-    },
-    /**
-     * Whether repetition row id is selected
-     *
-     * @param {string} repetitionId - daily event row id
-     * @returns {boolean}
-     */
-    isRowSelected(repetitionId) {
-      return bulkSelection.isRowSelected(this.selectedRepetitionIds, repetitionId);
-    },
-    /**
-     * Toggle row selection in bulk mode, supports Shift range selection
-     *
-     * @param {string} repetitionId - daily event row id
-     * @param {MouseEvent} [evt] - click event (for Shift key state)
-     * @returns {void}
-     */
-    toggleRowSelected(repetitionId, evt) {
-      const nextState = bulkSelection.toggleRowSelected({
-        selectedRepetitionIds: this.selectedRepetitionIds,
-        lastSelectedRepetitionId: this.lastSelectedRepetitionId,
-        repetitionId,
-        flatRepetitionIds: this.flattenedDailyEventIds,
-        isShiftKey: Boolean(evt && evt.shiftKey),
-      });
-
-      this.applySelectionState(nextState);
-    },
-    /**
-     * Keep only selected rows that are currently rendered
-     *
-     * @returns {void}
-     */
-    syncSelectionWithVisibleRows() {
-      const nextState = bulkSelection.syncSelectionWithVisibleRows({
-        selectedRepetitionIds: this.selectedRepetitionIds,
-        visibleRepetitionIds: this.flattenedDailyEventIds,
-      });
-
-      if (!nextState) {
-        return;
-      }
-
-      this.applySelectionState(nextState);
-
-      if (nextState.selectedRepetitionIds.length === 0) {
-        this.exitBulkSelect();
-      }
-    },
     /**
      * Return midnight timestamp extracted from grouping key
      *
