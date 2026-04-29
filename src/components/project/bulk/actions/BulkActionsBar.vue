@@ -91,9 +91,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import UiButton from '../utils/UiButton.vue';
-import UiContextList from '../utils/UiContextList.vue';
-import AssigneesList from '../event/AssigneesList.vue';
+import UiButton from '../../../utils/UiButton.vue';
+import UiContextList from '../../../utils/UiContextList.vue';
+import AssigneesList from '../../../event/AssigneesList.vue';
 
 type MarkAction = 'resolved' | 'ignored' | 'starred';
 type SelectedEvent = {

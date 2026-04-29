@@ -101,7 +101,7 @@
 <script>
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
-import BulkActionsBar from './BulkActionsBar.vue';
+import BulkActionsBar from './bulk/actions/BulkActionsBar.vue';
 import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
@@ -111,10 +111,12 @@ import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
 import notifier from 'codex-notifier';
+import { useBulkSelection } from './bulk/selection/useBulkSelection';
 
 /** Must match api/src/models/eventsFactory.js assignee filter sentinels */
 const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
 const ASSIGNEE_FILTER_ANY_ASSIGNEE = '__filter_any_assignee__';
+const bulkSelection = useBulkSelection();
 
 /**
  * Events list component grouped by days.
@@ -401,8 +403,10 @@ export default {
      * Clear bulk selection (hides bar when empty)
      */
     exitBulkSelect() {
-      this.selectedRepetitionIds = [];
-      this.lastSelectedRepetitionId = null;
+      const nextState = bulkSelection.exitBulkSelect();
+
+      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
+      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
     },
     /**
      * Exit bulk selection on Escape
@@ -411,11 +415,9 @@ export default {
      * @returns {void}
      */
     onDocumentEscape(e) {
-      if (e.key !== 'Escape' || this.selectedCount === 0) {
-        return;
+      if (bulkSelection.onDocumentEscape(e, this.selectedCount)) {
+        this.exitBulkSelect();
       }
-      e.preventDefault();
-      this.exitBulkSelect();
     },
     /**
      * Whether repetition row id is selected
@@ -424,7 +426,7 @@ export default {
      * @returns {boolean}
      */
     isRowSelected(repetitionId) {
-      return this.selectedRepetitionIds.includes(repetitionId);
+      return bulkSelection.isRowSelected(this.selectedRepetitionIds, repetitionId);
     },
     /**
      * Toggle row selection in bulk mode, supports Shift range selection
@@ -434,48 +436,16 @@ export default {
      * @returns {void}
      */
     toggleRowSelected(repetitionId, evt) {
-      const flat = this.flattenedDailyEventIds;
-      const isShiftRange = !!(
-        evt
-        && evt.shiftKey
-        && this.lastSelectedRepetitionId
-        && this.lastSelectedRepetitionId !== repetitionId
-      );
+      const nextState = bulkSelection.toggleRowSelected({
+        selectedRepetitionIds: this.selectedRepetitionIds,
+        lastSelectedRepetitionId: this.lastSelectedRepetitionId,
+        repetitionId,
+        flatRepetitionIds: this.flattenedDailyEventIds,
+        isShiftKey: Boolean(evt && evt.shiftKey),
+      });
 
-      if (isShiftRange) {
-        const fromIndex = flat.indexOf(this.lastSelectedRepetitionId);
-        const toIndex = flat.indexOf(repetitionId);
-
-        if (fromIndex >= 0 && toIndex >= 0) {
-          const start = Math.min(fromIndex, toIndex);
-          const end = Math.max(fromIndex, toIndex);
-          const selectedSet = new Set(this.selectedRepetitionIds);
-
-          for (let i = start; i <= end; i++) {
-            selectedSet.add(flat[i]);
-          }
-
-          this.selectedRepetitionIds = flat.filter(id => selectedSet.has(id));
-          this.lastSelectedRepetitionId = repetitionId;
-
-          return;
-        }
-      }
-
-      const ids = this.selectedRepetitionIds;
-      const i = ids.indexOf(repetitionId);
-
-      if (i >= 0) {
-        ids.splice(i, 1);
-      } else {
-        ids.push(repetitionId);
-      }
-
-      this.lastSelectedRepetitionId = repetitionId;
-
-      if (ids.length === 0) {
-        this.lastSelectedRepetitionId = null;
-      }
+      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
+      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
     },
     /**
      * Run bulk toggle for marks
@@ -556,21 +526,19 @@ export default {
      * @returns {void}
      */
     syncSelectionWithVisibleRows() {
-      if (this.selectedRepetitionIds.length === 0) {
+      const nextState = bulkSelection.syncSelectionWithVisibleRows({
+        selectedRepetitionIds: this.selectedRepetitionIds,
+        visibleRepetitionIds: this.flattenedDailyEventIds,
+      });
+
+      if (!nextState) {
         return;
       }
 
-      const visibleSet = new Set(this.flattenedDailyEventIds);
-      const nextSelected = this.selectedRepetitionIds.filter(id => visibleSet.has(id));
+      this.selectedRepetitionIds = nextState.selectedRepetitionIds;
+      this.lastSelectedRepetitionId = nextState.lastSelectedRepetitionId;
 
-      if (nextSelected.length === this.selectedRepetitionIds.length) {
-        return;
-      }
-
-      this.selectedRepetitionIds = nextSelected;
-      this.lastSelectedRepetitionId = nextSelected.length > 0 ? nextSelected[nextSelected.length - 1] : null;
-
-      if (nextSelected.length === 0) {
+      if (nextState.selectedRepetitionIds.length === 0) {
         this.exitBulkSelect();
       }
     },
