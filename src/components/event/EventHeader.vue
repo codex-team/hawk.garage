@@ -1,12 +1,21 @@
 <template>
   <div class="event-header">
     <div class="event-layout__container">
-      <span
-        v-if="!loading"
-        class="event-header__date"
-      >
-        {{ formattedFullDate }}
-      </span>
+      <div class="event-header__top-right">
+        <span
+          v-if="!loading"
+          class="event-header__date"
+        >
+          {{ formattedFullDate }}
+        </span>
+        <CdxButton
+          v-if="isAdmin"
+          class="event-header__button--more"
+          secondary
+          icon="EtcHorisontal"
+          @click="onMoreClick"
+        />
+      </div>
 
       <div
         v-if="workspace"
@@ -130,10 +139,14 @@ import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
 import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
+import { Button as CdxButton, usePopover } from '@codexteam/ui/vue';
+import EventActionsMenu from './EventActionsMenu.vue';
+import Icon from '../utils/Icon.vue';
 
 export default defineComponent({
   name: 'EventHeader',
   components: {
+    CdxButton,
     TabBar,
     ViewedBy,
     UiButton,
@@ -152,6 +165,14 @@ export default defineComponent({
       default: null,
       validator: prop => typeof prop === 'object' || prop === null,
     },
+  },
+  setup() {
+    const { showPopover, hide } = usePopover();
+
+    return {
+      showPopover,
+      hidePopover: hide,
+    };
   },
   data() {
     return {
@@ -254,6 +275,13 @@ export default defineComponent({
     },
 
     /**
+     * Is current user admin in workspace with this project
+     */
+    isAdmin(): boolean {
+      return this.workspace ? this.$store.getters.isCurrentUserAdmin(this.workspace.id) : false;
+    },
+
+    /**
      * Computed property that returns formatted full date for event timestamp
      */
     formattedFullDate(): string {
@@ -301,6 +329,33 @@ export default defineComponent({
       if (this.event && this.event.taskManagerItem && this.event.taskManagerItem.url) {
         window.open(this.event.taskManagerItem.url, '_blank', 'noopener');
       }
+    },
+
+    /**
+     * Open the "more options" context menu near the 3-dot button
+     *
+     * @param event - native click mouse event
+     */
+    onMoreClick(event: MouseEvent) {
+      if (!this.isAdmin) {
+        return;
+      }
+
+      this.showPopover({
+        targetEl: event.currentTarget as HTMLElement,
+        with: {
+          component: EventActionsMenu,
+          props: {
+            projectId: this.projectId,
+            eventId: this.$route.params.eventId,
+            onClose: () => this.hidePopover(),
+          },
+        },
+        align: {
+          vertically: 'below',
+          horizontally: 'right',
+        },
+      });
     },
   },
 });
@@ -352,8 +407,14 @@ export default defineComponent({
       text-overflow: ellipsis;
     }
 
-    &__date {
+    &__top-right {
+      display: flex;
       float: right;
+      align-items: center;
+      gap: 12px;
+    }
+
+    &__date {
       font-size: 12px;
       line-height: 23px;
     }
@@ -395,6 +456,7 @@ export default defineComponent({
       &:hover {
         color: var(--color-text-main)
       }
+
     }
 
     &__nav-bar, &__viewed-by {
