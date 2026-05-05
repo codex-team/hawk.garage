@@ -566,6 +566,9 @@ const module: Module<EventsModuleState, RootState> = {
         ...result,
         targetEventIds: eventIdsToUpdate,
       };
+    },
+
+    /**
      * Remove event and all related data (repetitions, daily events)
      * @param context - vuex action context (not used)
      * @param context.commit - standard Vuex commit function
