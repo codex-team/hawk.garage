@@ -1,6 +1,6 @@
 import {
   MUTATION_TOGGLE_EVENT_MARK,
-  MUTATION_BULK_TOGGLE_EVENT_MARKS,
+  MUTATION_BULK_SET_EVENT_MARKS,
   MUTATION_BULK_VISIT_EVENTS,
   MUTATION_VISIT_EVENT,
   MUTATION_UPDATE_EVENT_ASSIGNEE,
@@ -202,29 +202,32 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
 }
 
 /**
- * Bulk toggle marks (original event ids)
+ * Bulk set/clear marks (original event ids)
  * @param projectId - project id
  * @param eventIds - original event ids
  * @param mark - resolved, ignored or starred
+ * @param enabled - true to set mark, false to clear mark
  */
-export async function bulkToggleEventMarks(
+export async function bulkSetEventMarks(
   projectId: string,
   eventIds: string[],
-  mark: 'resolved' | 'ignored' | 'starred'
+  mark: 'resolved' | 'ignored' | 'starred',
+  enabled: boolean
 ): Promise<BulkEventsMutationResult | null> {
   return runBulkMutation<{
-    bulkToggleEventMarks: {
+    bulkSetEventMarks: {
       success: boolean;
       modifiedCount: number;
     };
   }>(
-    MUTATION_BULK_TOGGLE_EVENT_MARKS,
+    MUTATION_BULK_SET_EVENT_MARKS,
     {
       projectId,
       eventIds,
       mark,
+      enabled,
     },
-    data => data.bulkToggleEventMarks
+    data => data.bulkSetEventMarks
   );
 }
 

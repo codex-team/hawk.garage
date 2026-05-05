@@ -609,17 +609,20 @@ type Mutation {
     mark: EventMark!
   ): Boolean!
 
-  """Bulk toggle resolved or ignored on many original events"""
-  bulkToggleEventMarks(
+  """Bulk set or clear one mark on many original events"""
+  bulkSetEventMarks(
     """Project id"""
     projectId: ID!
 
     """Original event ids"""
     eventIds: [ID!]!
 
-    """If every event already has the mark, clear all; else set mark on those that lack it"""
+    """Mark to update"""
     mark: EventMark!
-  ): BulkToggleEventMarksResult!
+
+    """True - set mark, false - clear mark"""
+    enabled: Boolean!
+  ): BulkSetEventMarksResult!
 
   """Namespace that contains only mutations related to the events"""
   events: EventsMutations!
@@ -1368,7 +1371,7 @@ type RemoveAssigneeResponse {
 }
 
 """Result of bulk toggling event marks"""
-type BulkToggleEventMarksResult {
+type BulkSetEventMarksResult {
   """True when database accepted mutation"""
   success: Boolean!
 

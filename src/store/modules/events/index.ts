@@ -7,7 +7,7 @@ import {
   SET_EVENTS_FILTERS,
   SET_EVENTS_ORDER,
   TOGGLE_EVENT_MARK,
-  BULK_TOGGLE_EVENT_MARKS,
+  BULK_SET_EVENT_MARKS,
   BULK_UPDATE_EVENT_ASSIGNEE,
   BULK_VISIT_EVENTS,
   UPDATE_EVENT_ASSIGNEE,
@@ -31,6 +31,8 @@ import {
 } from '@/types/events';
 import type { User } from '@/types/user';
 import type { EventChartItem } from '@/types/chart';
+
+const MILLISECONDS_IN_SECOND = 1000;
 
 /**
  * Mutations enum for this module
@@ -68,6 +70,11 @@ enum MutationTypes {
    * Toggle mark for event
    */
   ToggleMark = 'TOGGLE_MARK',
+
+  /**
+   * Explicitly set/unset mark for event
+   */
+  SetMark = 'SET_MARK',
 
   /**
    * Get chart data for en event for a few days
@@ -431,7 +438,7 @@ const module: Module<EventsModuleState, RootState> = {
         };
       }
 
-      const result = await eventsApi.bulkVisitEvents(projectId, eventIdsToUpdate);
+      const result = await eventsApi.bulkVisitEvents(projectId, uniqueEventIds);
 
       if (!result || !result.success) {
         return null;
@@ -488,42 +495,39 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
-     * Bulk toggle marks for original event ids
+     * Bulk set/clear marks for original event ids
      * @param _context - Vuex action context (unused)
      * @param payload - mutation arguments
      * @param payload.projectId - project id
      * @param payload.eventIds - original event ids
      * @param payload.mark - resolved, ignored or starred
+     * @param payload.enabled - true to set mark, false to clear
      * @returns API result or null on GraphQL error
      */
-    async [BULK_TOGGLE_EVENT_MARKS](
+    async [BULK_SET_EVENT_MARKS](
       { commit, state },
       payload: {
         projectId: string;
         eventIds: string[];
         mark: 'resolved' | 'ignored' | 'starred';
+        enabled: boolean;
       }
     ): Promise<
       (BulkEventsMutationResult & { targetEventIds: string[] }) | null
     > {
-      const { projectId, eventIds, mark } = payload;
+      const { projectId, eventIds, mark, enabled } = payload;
       const uniqueEventIds = [...new Set(eventIds.map(String))];
-      const allKnownEvents = uniqueEventIds
-        .map(originalEventId => state.events[getEventsListKey(projectId, originalEventId)])
-        .filter(Boolean);
-      const hasUnknownEvents = allKnownEvents.length !== uniqueEventIds.length;
-      const allHaveMark = !hasUnknownEvents
-        && allKnownEvents.length > 0
-        && allKnownEvents.every(event => event.marks[mark]);
-      let eventIdsToUpdate = uniqueEventIds;
+      const eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
+        const event = state.events[getEventsListKey(projectId, originalEventId)];
 
-      if (!hasUnknownEvents && !allHaveMark) {
-        eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
-          const event = state.events[getEventsListKey(projectId, originalEventId)];
+        if (!event) {
+          return true;
+        }
 
-          return !event || !event.marks[mark];
-        });
-      }
+        const hasMark = Boolean(event.marks[mark]);
+
+        return enabled ? !hasMark : hasMark;
+      });
 
       if (eventIdsToUpdate.length === 0) {
         return {
@@ -533,7 +537,7 @@ const module: Module<EventsModuleState, RootState> = {
         };
       }
 
-      const result = await eventsApi.bulkToggleEventMarks(projectId, eventIdsToUpdate, mark);
+      const result = await eventsApi.bulkSetEventMarks(projectId, uniqueEventIds, mark, enabled);
 
       if (!result || !result.success) {
         return null;
@@ -542,10 +546,11 @@ const module: Module<EventsModuleState, RootState> = {
 
       if (isFullSuccess) {
         eventIdsToUpdate.forEach((originalEventId) => {
-          commit(MutationTypes.ToggleMark, {
+          commit(MutationTypes.SetMark, {
             projectId,
             eventId: originalEventId,
             mark,
+            enabled,
           });
         });
       }
@@ -654,7 +659,7 @@ const module: Module<EventsModuleState, RootState> = {
 
       const result = await eventsApi.bulkUpdateAssignee(
         projectId,
-        eventIdsToUpdate,
+        uniqueEventIds,
         assignee ? assignee.id : null
       );
 
@@ -876,6 +881,35 @@ const module: Module<EventsModuleState, RootState> = {
 
         // Toggle the mark
         event.marks[mark] = !event.marks[mark];
+      });
+    },
+
+    /**
+     * Set or unset mark for all events with matching originalEventId.
+     * @param state - events module state
+     * @param payload - mutation payload
+     * @param payload.projectId - project id
+     * @param payload.eventId - original event id
+     * @param payload.mark - mark to update
+     * @param payload.enabled - true to set mark, false to remove
+     */
+    [MutationTypes.SetMark](state, { projectId, eventId, mark, enabled }): void {
+      Object.entries(state.events).forEach(([key, event]) => {
+        if (!key.startsWith(`${projectId}:`)) {
+          return;
+        }
+
+        if (event.originalEventId !== eventId) {
+          return;
+        }
+
+        if (enabled) {
+          event.marks[mark] = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
+
+          return;
+        }
+
+        event.marks[mark] = undefined;
       });
     },
 

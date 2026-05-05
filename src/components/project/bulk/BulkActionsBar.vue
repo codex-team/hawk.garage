@@ -207,88 +207,20 @@ const bulkMoreMenuItems = computed(() => [
 ]);
 
 /**
- * Build deduplicated selected events keyed by original event id.
+ * Build deduplicated selected original event ids.
  */
-function getSelectedOriginalEvents() {
-  const byOriginalId = new Map<string, BulkSelectedEvent>();
+function getSelectedOriginalIds(): string[] {
+  const byOriginalId = new Set<string>();
 
   for (const event of props.selectedEvents) {
     if (!event?.originalEventId) {
       continue;
     }
 
-    const originalEventId = String(event.originalEventId);
-
-    if (!byOriginalId.has(originalEventId)) {
-      byOriginalId.set(originalEventId, event);
-    }
+    byOriginalId.add(String(event.originalEventId));
   }
 
-  return Array.from(byOriginalId.entries()).map(([originalEventId, event]) => ({
-    originalEventId,
-    event,
-  }));
-}
-
-/**
- * Resolve target ids for mark action according to current marks state.
- *
- * @param action Action requested by user
- */
-function getTargetOriginalIdsForMark(action: MarkAction): string[] {
-  const selected = getSelectedOriginalEvents();
-
-  if (selected.length === 0) {
-    return [];
-  }
-
-  const allHaveMark = selected.every(({ event }) => Boolean(event.marks && event.marks[action]));
-
-  if (allHaveMark) {
-    return selected.map(({ originalEventId }) => originalEventId);
-  }
-
-  return selected
-    .filter(({ event }) => !(event.marks && event.marks[action]))
-    .map(({ originalEventId }) => originalEventId);
-}
-
-/**
- * Resolve target ids for assignee update action.
- *
- * @param assigneeId Assignee id to apply, null means clear assignee
- */
-function getTargetOriginalIdsForAssignee(assigneeId: string | null): string[] {
-  const selected = getSelectedOriginalEvents();
-  const targetAssigneeId = assigneeId ? String(assigneeId) : '';
-
-  return selected
-    .filter(({ event }) => {
-      const currentAssigneeId = event.assignee ? String(event.assignee.id || '') : '';
-
-      return currentAssigneeId !== targetAssigneeId;
-    })
-    .map(({ originalEventId }) => originalEventId);
-}
-
-/**
- * Resolve target ids for "mark viewed" action.
- */
-function getTargetOriginalIdsForViewed(): string[] {
-  const selected = getSelectedOriginalEvents();
-  const currentUserId = String(props.currentUserId || '');
-
-  if (!currentUserId) {
-    return selected.map(({ originalEventId }) => originalEventId);
-  }
-
-  return selected
-    .filter(({ event }) => {
-      const visitedBy = Array.isArray(event.visitedBy) ? event.visitedBy : [];
-
-      return !visitedBy.some(visitor => String(visitor && visitor.id) === currentUserId);
-    })
-    .map(({ originalEventId }) => originalEventId);
+  return Array.from(byOriginalId.values());
 }
 
 /**
@@ -303,6 +235,23 @@ function isMarkDisabled(action: MarkAction): boolean {
   }
 
   return activeMarkAction.value === action;
+}
+
+/**
+ * Resolve explicit next state for selected mark.
+ *
+ * @param action Mark action
+ */
+function resolveMarkEnabled(action: MarkAction): boolean {
+  if (action === 'ignored') {
+    return !areAllSelectedIgnored.value;
+  }
+
+  if (action === 'resolved') {
+    return !areAllSelectedResolved.value;
+  }
+
+  return !areAllSelectedStarred.value;
 }
 
 /**
@@ -341,13 +290,14 @@ async function onMarkClick(action: MarkAction): Promise<void> {
   activeMarkAction.value = action;
 
   try {
-    const targetOriginalIds = getTargetOriginalIdsForMark(action);
+    const targetOriginalIds = getSelectedOriginalIds();
+    const enabled = resolveMarkEnabled(action);
 
     if (targetOriginalIds.length === 0) {
       return;
     }
 
-    await runBulkMarkAction(getBulkActionsContext(), action, targetOriginalIds);
+    await runBulkMarkAction(getBulkActionsContext(), action, targetOriginalIds, enabled);
   } finally {
     activeMarkAction.value = '';
   }
@@ -505,7 +455,7 @@ async function onBulkPickAssignee(user: BulkAssigneeUser): Promise<void> {
     return;
   }
 
-  const targetOriginalIds = getTargetOriginalIdsForAssignee(String(user.id || ''));
+  const targetOriginalIds = getSelectedOriginalIds();
 
   if (targetOriginalIds.length === 0) {
     return;
@@ -524,7 +474,7 @@ async function onBulkClearAssignees(): Promise<void> {
     return;
   }
 
-  const targetOriginalIds = getTargetOriginalIdsForAssignee(null);
+  const targetOriginalIds = getSelectedOriginalIds();
 
   if (targetOriginalIds.length === 0) {
     return;
@@ -544,7 +494,7 @@ async function onBulkMarkViewedClick(): Promise<void> {
     return;
   }
 
-  const targetOriginalIds = getTargetOriginalIdsForViewed();
+  const targetOriginalIds = getSelectedOriginalIds();
 
   if (targetOriginalIds.length === 0) {
     return;

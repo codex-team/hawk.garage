@@ -139,11 +139,11 @@ export const MUTATION_TOGGLE_EVENT_MARK = `
 
 // language=GraphQL
 /**
- * Bulk toggle resolved/ignored/starred on many original events
+ * Bulk set/clear resolved/ignored/starred on many original events
  */
-export const MUTATION_BULK_TOGGLE_EVENT_MARKS = `
-  mutation bulkToggleEventMarks($projectId: ID!, $eventIds: [ID!]!, $mark: EventMark!) {
-    bulkToggleEventMarks(projectId: $projectId, eventIds: $eventIds, mark: $mark) {
+export const MUTATION_BULK_SET_EVENT_MARKS = `
+  mutation bulkSetEventMarks($projectId: ID!, $eventIds: [ID!]!, $mark: EventMark!, $enabled: Boolean!) {
+    bulkSetEventMarks(projectId: $projectId, eventIds: $eventIds, mark: $mark, enabled: $enabled) {
       success
       modifiedCount
     }

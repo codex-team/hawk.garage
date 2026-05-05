@@ -39,9 +39,9 @@ export const BULK_VISIT_EVENTS = 'BULK_VISIT_EVENTS';
 export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';
 
 /**
- * Bulk toggle resolved/ignored/starred on many events
+ * Bulk set/clear resolved/ignored/starred on many events
  */
-export const BULK_TOGGLE_EVENT_MARKS = 'BULK_TOGGLE_EVENT_MARKS';
+export const BULK_SET_EVENT_MARKS = 'BULK_SET_EVENT_MARKS';
 
 /**
  * Update event assigneee

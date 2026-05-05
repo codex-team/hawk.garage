@@ -1,6 +1,6 @@
 import {
   FETCH_EVENT,
-  BULK_TOGGLE_EVENT_MARKS,
+  BULK_SET_EVENT_MARKS,
   BULK_UPDATE_EVENT_ASSIGNEE,
   BULK_VISIT_EVENTS
 } from '../../../store/modules/events/actionTypes';
@@ -128,7 +128,7 @@ export async function refreshEventsByOriginalIds(
 }
 
 /**
- * Execute bulk mark toggle action.
+ * Execute bulk set-mark action.
  * @param ctx Shared bulk action context
  * @param mark Requested mark action
  * @param targetOriginalIds Target original event ids
@@ -136,9 +136,10 @@ export async function refreshEventsByOriginalIds(
 export async function runBulkMarkAction(
   ctx: BulkActionContext,
   mark: MarkAction,
-  targetOriginalIds: string[]
+  targetOriginalIds: string[],
+  enabled: boolean
 ): Promise<BulkActionResult> {
-  return executeBulkActionWithRecovery(ctx, BULK_TOGGLE_EVENT_MARKS, { mark }, targetOriginalIds);
+  return executeBulkActionWithRecovery(ctx, BULK_SET_EVENT_MARKS, { mark, enabled }, targetOriginalIds);
 }
 
 /**
