@@ -18,18 +18,13 @@
         />
       </template>
     </SearchField>
-    <div
-      class="events-list__bulk-slot"
-    >
-      <BulkActionsBar
-        :project-id="projectId"
-        :current-user-id="currentUserId"
-        :selection-mode-active="selectionModeActive"
-        :selected-count="selectedCount"
-        :selected-events="selectedEvents"
-        @exit-bulk-select="exitBulkSelect"
-      />
-    </div>
+    <BulkActionsBar
+      :project-id="projectId"
+      :selection-mode-active="selectionModeActive"
+      :selected-count="selectedCount"
+      :selected-event-ids="selectedRowIds"
+      @exit-bulk-select="exitBulkSelect"
+    />
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -167,20 +162,19 @@ export default {
     });
 
     const {
-      selectedRepetitionIds,
+      selectedIds: selectedRowIds,
       selectionModeActive,
       selectedCount,
       exitBulkSelect,
-      isRowSelected,
-      toggleRowSelected,
-      syncSelectionWithVisibleRows,
+      isSelected: isRowSelected,
+      toggleSelected: toggleRowSelected,
+      syncSelectionWithVisibleIds: syncSelectionWithVisibleRows,
     } = useBulkSelection(flattenedDailyEventIds);
 
     return {
       dailyEvents,
       groupedByDate,
-      flattenedDailyEventIds,
-      selectedRepetitionIds,
+      selectedRowIds,
       selectionModeActive,
       selectedCount,
       exitBulkSelect,
@@ -345,29 +339,7 @@ export default {
     hasItems() {
       return Array.isArray(this.dailyEvents) && this.dailyEvents.length > 0;
     },
-    /**
-     * Selected events resolved from current row ids
-     *
-     * @returns {object[]}
-     */
-    selectedEvents() {
-      return this.selectedRepetitionIds
-        .map(repetitionId => this.getEvent(repetitionId))
-        .filter(Boolean);
-    },
-    /**
-     * Current user id from store
-     *
-     * @returns {string}
-     */
-    currentUserId() {
-      return String(this.$store?.state?.user?.data?.id || '');
-    },
-    /**
-     * Current opened event has assignee, so "unassign" row is visible
-     *
-     * @returns {boolean}
-     */
+    /** Whether assignee popover target event currently has an assignee. */
     canUnassignCurrentEvent() {
       if (!this.assigneesEventId) {
         return false;
@@ -572,73 +544,6 @@ export default {
   flex-direction: column;
   min-height: 400px;
 
-  &__bulk-slot {
-    flex-shrink: 0;
-    box-sizing: border-box;
-    min-height: 40px;
-    margin-block: 18px 0;
-  }
-
-  &__bulk-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 16px;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  &__bulk-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 16px;
-    margin-left: 11px;
-  }
-
-  &__bulk-cancel-combo {
-    display: inline-flex;
-    align-items: center;
-    font: inherit;
-    white-space: nowrap;
-    cursor: pointer;
-  }
-
-  &__bulk-cancel-combo .ui-button-text {
-    line-height: 14px;
-  }
-
-  &__bulk-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
-
-  &__bulk-action-button,
-  &__bulk-action-button .ui-button-text,
-  &__bulk-action-button .ui-button-icon {
-    white-space: nowrap;
-  }
-
-  &__bulk-action-button .ui-button-icon-assignee {
-    width: 16px;
-    height: 16px;
-  }
-
-  &__bulk-more-trigger.ui-button {
-    padding-inline: 8px;
-    background-color: transparent;
-    border: 0;
-  }
-
-  &__bulk-count {
-    color: var(--color-text-main);
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 14px;
-    white-space: nowrap;
-  }
-
   &__group {
     margin-top: 8px;
   }
@@ -686,22 +591,6 @@ export default {
     position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
     z-index: 200;
-  }
-
-  &__assignees-list--bulk {
-    transform: none;
-  }
-
-  &__bulk-more-menu {
-    position: fixed;
-    z-index: 210;
-    transform: translateX(-100%);
-
-    .ui-context-list {
-      background-color: var(--color-bg-main);
-      border: 1px solid var(--color-border);
-      box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
-    }
   }
 
   &__assignee-filter {

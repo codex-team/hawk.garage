@@ -585,8 +585,7 @@
       "unignore": "Unignore",
       "unresolve": "Unresolved",
       "unstar": "Remove from starred",
-      "markError": "Could not update events",
-      "markPartial": "{updated} updated, {failed} failed"
+      "markError": "Could not update events"
     },
     "suspectedCommits": {
       "header": "Suspected commits",
@@ -651,6 +650,7 @@
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",
     "settingsUpdated": "Settings updated",
+    "updated": "Data updated",
     "save": "Save",
     "loading": "Loading...",
     "minute": "minute",

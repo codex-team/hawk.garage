@@ -12,33 +12,17 @@ import type {
   RefreshEventsContext
 } from '@/types/bulk';
 
-const BULK_ERROR_TIMEOUT_MS = 8000;
-const BULK_PARTIAL_TIMEOUT_MS = 10000;
-
 /**
- * Resolve target ids from result payload or fallback to requested ids.
- * @param result Bulk action result returned by store action
- * @param targetOriginalIds Requested original event ids
- */
-function getTargetEventIds(result: BulkActionResult, targetOriginalIds: string[]): string[] {
-  if (Array.isArray(result?.targetEventIds)) {
-    return result.targetEventIds;
-  }
-
-  return targetOriginalIds;
-}
-
-/**
- * Execute one bulk action, show error/partial notifications, and refresh stale rows.
+ * Execute one bulk action and refresh stale rows on error result.
  * @param ctx Shared action context
  * @param actionType Vuex action type
  * @param payload Additional payload to pass into action dispatch
  * @param targetOriginalIds Original event ids targeted by action
  */
-async function executeBulkActionWithRecovery(
+export async function executeBulkAction(
   ctx: BulkActionContext,
-  actionType: string,
-  payload: Record<string, unknown>,
+  actionType: BulkActionType,
+  payload: BulkActionPayload,
   targetOriginalIds: string[]
 ): Promise<BulkActionResult> {
   const result = await ctx.dispatch<BulkActionResult>(actionType, {
@@ -51,28 +35,16 @@ async function executeBulkActionWithRecovery(
     ctx.notify({
       message: ctx.t('event.bulk.markError'),
       style: 'error',
-      time: BULK_ERROR_TIMEOUT_MS,
     });
     await ctx.refreshByOriginalIds(targetOriginalIds);
 
     return null;
   }
 
-  const targetEventIds = getTargetEventIds(result, targetOriginalIds);
-  const attemptedCount = targetEventIds.length;
-  const failedCount = Math.max(0, attemptedCount - result.modifiedCount);
-
-  if (result.modifiedCount < attemptedCount) {
-    ctx.notify({
-      message: ctx.t('event.bulk.markPartial', {
-        updated: result.modifiedCount,
-        failed: failedCount,
-      }),
-      style: 'error',
-      time: BULK_PARTIAL_TIMEOUT_MS,
-    });
-    await ctx.refreshByOriginalIds(targetEventIds);
-  }
+  ctx.notify({
+    message: ctx.t('common.updated'),
+    style: 'success',
+  });
 
   return result;
 }
@@ -86,7 +58,7 @@ export async function refreshEventsByOriginalIds(
   ctx: RefreshEventsContext,
   originalIds: string[] = []
 ): Promise<void> {
-  const originalIdsSet = new Set((originalIds || []).map(String));
+  const originalIdsSet = new Set(originalIds.map(String));
 
   if (originalIdsSet.size === 0) {
     return;
@@ -96,7 +68,7 @@ export async function refreshEventsByOriginalIds(
     originalEventId: string; }>();
 
   ctx.selectedEvents.forEach((event) => {
-    if (!event?.originalEventId) {
+    if (event?.originalEventId == null || event.originalEventId === '') {
       return;
     }
 
@@ -107,7 +79,7 @@ export async function refreshEventsByOriginalIds(
     }
 
     targetsByOriginalId.set(originalEventId, {
-      eventId: String(event.id || originalEventId),
+      eventId: String(event.id ?? originalEventId),
       originalEventId,
     });
   });
@@ -127,43 +99,22 @@ export async function refreshEventsByOriginalIds(
   }));
 }
 
-/**
- * Execute bulk set-mark action.
- * @param ctx Shared bulk action context
- * @param mark Requested mark action
- * @param targetOriginalIds Target original event ids
- */
-export async function runBulkMarkAction(
-  ctx: BulkActionContext,
-  mark: MarkAction,
-  targetOriginalIds: string[],
-  enabled: boolean
-): Promise<BulkActionResult> {
-  return executeBulkActionWithRecovery(ctx, BULK_SET_EVENT_MARKS, { mark, enabled }, targetOriginalIds);
-}
+export const BULK_ACTION_TYPES = {
+  setMarks: BULK_SET_EVENT_MARKS,
+  updateAssignee: BULK_UPDATE_EVENT_ASSIGNEE,
+  visit: BULK_VISIT_EVENTS,
+} as const;
 
 /**
- * Execute bulk assignee update action.
- * @param ctx Shared bulk action context
- * @param assignee User to assign (or null to clear)
- * @param targetOriginalIds Target original event ids
+ * Supported bulk Vuex action names.
  */
-export async function runBulkAssigneeAction(
-  ctx: BulkActionContext,
-  assignee: BulkAssigneeUser,
-  targetOriginalIds: string[]
-): Promise<BulkActionResult> {
-  return executeBulkActionWithRecovery(ctx, BULK_UPDATE_EVENT_ASSIGNEE, { assignee }, targetOriginalIds);
-}
+export type BulkActionType = typeof BULK_ACTION_TYPES[keyof typeof BULK_ACTION_TYPES];
 
 /**
- * Execute bulk "mark viewed" action.
- * @param ctx Shared bulk action context
- * @param targetOriginalIds Target original event ids
+ * Additional payload fields for bulk actions.
  */
-export async function runBulkViewedAction(
-  ctx: BulkActionContext,
-  targetOriginalIds: string[]
-): Promise<BulkActionResult> {
-  return executeBulkActionWithRecovery(ctx, BULK_VISIT_EVENTS, {}, targetOriginalIds);
-}
+export type BulkActionPayload = {
+  mark?: MarkAction;
+  enabled?: boolean;
+  assignee?: BulkAssigneeUser | null;
+};

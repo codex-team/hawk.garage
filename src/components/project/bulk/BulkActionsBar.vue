@@ -1,89 +1,91 @@
 <template>
-  <div
-    v-show="selectionModeActive"
-    class="events-list__bulk-bar"
-  >
-    <div class="events-list__bulk-meta">
-      <button
-        type="button"
-        class="ui-button ui-button--small ui-button--secondary events-list__bulk-cancel-combo"
-        @click="emit('exit-bulk-select')"
-      >
-        <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }} {{ $t('common.escKey') }}</span>
-      </button>
-      <span class="events-list__bulk-count">{{ $t('common.selected') }}: {{ selectedCount }}</span>
-    </div>
-    <div class="events-list__bulk-actions">
-      <UiButton
-        :content="''"
-        :title="bulkResolveLabel"
-        :aria-label="bulkResolveLabel"
-        :icon="bulkResolveIcon"
-        class="events-list__bulk-action-button"
-        small
-        :disabled="isMarkDisabled('resolved')"
-        @click="onMarkClick('resolved')"
-      />
-      <UiButton
-        :content="''"
-        :title="bulkStarLabel"
-        :aria-label="bulkStarLabel"
-        :icon="bulkStarIcon"
-        class="events-list__bulk-action-button"
-        small
-        :disabled="isMarkDisabled('starred')"
-        @click="onMarkClick('starred')"
-      />
-      <UiButton
-        :content="''"
-        :title="bulkIgnoreLabel"
-        :aria-label="bulkIgnoreLabel"
-        :icon="bulkIgnoreIcon"
-        class="events-list__bulk-action-button"
-        small
-        :disabled="isMarkDisabled('ignored')"
-        @click="onMarkClick('ignored')"
-      />
-      <UiButton
-        :content="''"
-        :title="$t('event.viewedBy.assignee')"
-        :aria-label="$t('event.viewedBy.assignee')"
-        icon="assignee"
-        class="events-list__bulk-action-button"
-        small
-        :disabled="selectedCount === 0"
-        @click="onBulkAssignButtonClick"
-      />
-      <UiButton
-        :content="''"
-        :title="$t('event.bulk.moreActions')"
-        :aria-label="$t('event.bulk.moreActions')"
-        icon="dots-vertical"
-        class="events-list__bulk-action-button events-list__bulk-more-trigger"
-        small
-        :disabled="selectedCount === 0"
-        @click="onBulkMoreMenuButtonClick"
-      />
-    </div>
-    <AssigneesList
-      v-if="isBulkAssigneesShowed"
-      v-click-outside="hideBulkAssigneesList"
-      :style="bulkAssigneesListPosition"
-      :project-id="projectId"
-      :can-unassign="hasAssigneeInSelection"
-      triangle="top"
-      class="events-list__assignees-list events-list__assignees-list--bulk"
-      @hide="hideBulkAssigneesList"
-      @pick-user="onBulkPickAssignee"
-      @unassign="onBulkClearAssignees"
-    />
+  <div class="events-list__bulk-slot">
     <div
-      v-if="isBulkMoreMenuShowed"
-      v-click-outside="hideBulkMoreMenu"
-      :style="bulkMoreMenuPosition"
-      class="events-list__bulk-more-menu"
+      v-show="selectionModeActive"
+      class="events-list__bulk-bar"
     >
-      <UiContextList :items="bulkMoreMenuItems" />
+      <div class="events-list__bulk-meta">
+        <button
+          type="button"
+          class="ui-button ui-button--small ui-button--secondary events-list__bulk-cancel-combo"
+          @click="emit('exit-bulk-select')"
+        >
+          <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }} {{ $t('common.escKey') }}</span>
+        </button>
+        <span class="events-list__bulk-count">{{ $t('common.selected') }}: {{ selectedCount }}</span>
+      </div>
+      <div class="events-list__bulk-actions">
+        <UiButton
+          :content="''"
+          :title="bulkResolveLabel"
+          :aria-label="bulkResolveLabel"
+          :icon="bulkResolveIcon"
+          class="events-list__bulk-action-button"
+          small
+          :disabled="isMarkDisabled('resolved')"
+          @click="onMarkClick('resolved')"
+        />
+        <UiButton
+          :content="''"
+          :title="bulkStarLabel"
+          :aria-label="bulkStarLabel"
+          :icon="bulkStarIcon"
+          class="events-list__bulk-action-button"
+          small
+          :disabled="isMarkDisabled('starred')"
+          @click="onMarkClick('starred')"
+        />
+        <UiButton
+          :content="''"
+          :title="bulkIgnoreLabel"
+          :aria-label="bulkIgnoreLabel"
+          :icon="bulkIgnoreIcon"
+          class="events-list__bulk-action-button"
+          small
+          :disabled="isMarkDisabled('ignored')"
+          @click="onMarkClick('ignored')"
+        />
+        <UiButton
+          :content="''"
+          :title="$t('event.viewedBy.assignee')"
+          :aria-label="$t('event.viewedBy.assignee')"
+          icon="assignee"
+          class="events-list__bulk-action-button"
+          small
+          :disabled="selectedCount === 0"
+          @click="onBulkAssignButtonClick"
+        />
+        <UiButton
+          :content="''"
+          :title="$t('event.bulk.moreActions')"
+          :aria-label="$t('event.bulk.moreActions')"
+          icon="dots-vertical"
+          class="events-list__bulk-action-button events-list__bulk-more-trigger"
+          small
+          :disabled="selectedCount === 0"
+          @click="onBulkMoreMenuButtonClick"
+        />
+      </div>
+      <AssigneesList
+        v-if="isBulkAssigneesShowed"
+        v-click-outside="hideBulkAssigneesList"
+        :style="bulkAssigneesListPosition"
+        :project-id="projectId"
+        :can-unassign="hasAssigneeInSelection"
+        triangle="top"
+        class="events-list__assignees-list events-list__assignees-list--bulk"
+        @hide="hideBulkAssigneesList"
+        @pick-user="onBulkPickAssignee"
+        @unassign="onBulkClearAssignees"
+      />
+      <div
+        v-if="isBulkMoreMenuShowed"
+        v-click-outside="hideBulkMoreMenu"
+        :style="bulkMoreMenuPosition"
+        class="events-list__bulk-more-menu"
+      >
+        <UiContextList :items="bulkMoreMenuItems" />
+      </div>
     </div>
   </div>
 </template>
@@ -104,10 +106,9 @@ import UiButton from '../../utils/UiButton.vue';
 import UiContextList from '../../utils/UiContextList.vue';
 import AssigneesList from '../../event/AssigneesList.vue';
 import {
-  refreshEventsByOriginalIds,
-  runBulkAssigneeAction,
-  runBulkMarkAction,
-  runBulkViewedAction
+  BULK_ACTION_TYPES,
+  executeBulkAction,
+  refreshEventsByOriginalIds
 } from './bulkEventOperations';
 
 /**
@@ -115,16 +116,14 @@ import {
  */
 const props = withDefaults(defineProps<{
   projectId?: string;
-  currentUserId?: string;
   selectionModeActive?: boolean;
   selectedCount?: number;
-  selectedEvents?: BulkSelectedEvent[];
+  selectedEventIds?: string[];
 }>(), {
   projectId: '',
-  currentUserId: '',
   selectionModeActive: false,
   selectedCount: 0,
-  selectedEvents: () => [] as BulkSelectedEvent[],
+  selectedEventIds: () => [] as string[],
 });
 
 const { t } = useI18n();
@@ -162,17 +161,27 @@ const bulkMoreMenuPosition = ref<BulkPosition>({
 const bulkMoreMenuAnchorEl = ref<HTMLElement | null>(null);
 const bulkMoreMenuOnViewportChange = ref<BulkViewportHandler>(null);
 
+const selectedEvents = computed<BulkSelectedEvent[]>(() => {
+  if (!props.projectId) {
+    return [];
+  }
+
+  return props.selectedEventIds
+    .map(eventId => store.getters.getProjectEventById(String(props.projectId), String(eventId)))
+    .filter(Boolean);
+});
+
 /**
  * True when every selected event is already ignored.
  */
 const areAllSelectedIgnored = computed(() => {
-  return props.selectedEvents.length > 0 && props.selectedEvents.every(event => event.marks?.ignored);
+  return selectedEvents.value.length > 0 && selectedEvents.value.every(event => event.marks?.ignored);
 });
 const areAllSelectedResolved = computed(() => {
-  return props.selectedEvents.length > 0 && props.selectedEvents.every(event => event.marks?.resolved);
+  return selectedEvents.value.length > 0 && selectedEvents.value.every(event => event.marks?.resolved);
 });
 const areAllSelectedStarred = computed(() => {
-  return props.selectedEvents.length > 0 && props.selectedEvents.every(event => event.marks?.starred);
+  return selectedEvents.value.length > 0 && selectedEvents.value.every(event => event.marks?.starred);
 });
 const bulkIgnoreLabel = computed(() => {
   return areAllSelectedIgnored.value ? t('event.bulk.unignore') : t('event.ignore');
@@ -193,7 +202,7 @@ const bulkStarIcon = computed(() => {
   return areAllSelectedStarred.value ? 'star-outline' : 'star';
 });
 const hasAssigneeInSelection = computed(() => {
-  return props.selectedEvents.some(event => !!event.assignee);
+  return selectedEvents.value.some(event => !!event.assignee);
 });
 const bulkMoreMenuItems = computed(() => [
   {
@@ -212,7 +221,7 @@ const bulkMoreMenuItems = computed(() => [
 function getSelectedOriginalIds(): string[] {
   const byOriginalId = new Set<string>();
 
-  for (const event of props.selectedEvents) {
+  for (const event of selectedEvents.value) {
     if (!event?.originalEventId) {
       continue;
     }
@@ -238,7 +247,7 @@ function isMarkDisabled(action: MarkAction): boolean {
 }
 
 /**
- * Resolve explicit next state for selected mark.
+ * Compute next explicit state for selected mark.
  *
  * @param action Mark action
  */
@@ -269,7 +278,7 @@ function getBulkActionsContext() {
       return refreshEventsByOriginalIds({
         dispatch,
         projectId: String(props.projectId || ''),
-        selectedEvents: props.selectedEvents,
+        selectedEvents: selectedEvents.value,
       }, originalIds);
     },
   };
@@ -297,7 +306,10 @@ async function onMarkClick(action: MarkAction): Promise<void> {
       return;
     }
 
-    await runBulkMarkAction(getBulkActionsContext(), action, targetOriginalIds, enabled);
+    await executeBulkAction(getBulkActionsContext(), BULK_ACTION_TYPES.setMarks, {
+      mark: action,
+      enabled,
+    }, targetOriginalIds);
   } finally {
     activeMarkAction.value = '';
   }
@@ -461,7 +473,9 @@ async function onBulkPickAssignee(user: BulkAssigneeUser): Promise<void> {
     return;
   }
 
-  await runBulkAssigneeAction(getBulkActionsContext(), user, targetOriginalIds);
+  await executeBulkAction(getBulkActionsContext(), BULK_ACTION_TYPES.updateAssignee, {
+    assignee: user,
+  }, targetOriginalIds);
 }
 
 /**
@@ -480,7 +494,9 @@ async function onBulkClearAssignees(): Promise<void> {
     return;
   }
 
-  await runBulkAssigneeAction(getBulkActionsContext(), null, targetOriginalIds);
+  await executeBulkAction(getBulkActionsContext(), BULK_ACTION_TYPES.updateAssignee, {
+    assignee: null,
+  }, targetOriginalIds);
 }
 
 /**
@@ -500,7 +516,7 @@ async function onBulkMarkViewedClick(): Promise<void> {
     return;
   }
 
-  await runBulkViewedAction(getBulkActionsContext(), targetOriginalIds);
+  await executeBulkAction(getBulkActionsContext(), BULK_ACTION_TYPES.visit, {}, targetOriginalIds);
 }
 
 watch(() => props.selectionModeActive, (newVal) => {
@@ -515,3 +531,90 @@ onBeforeUnmount(() => {
   hideBulkMoreMenu();
 });
 </script>
+
+<style>
+.events-list {
+  &__bulk-slot {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    min-height: 40px;
+    margin-block: 18px 0;
+  }
+
+  &__bulk-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__bulk-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    margin-left: 11px;
+  }
+
+  &__bulk-cancel-combo {
+    display: inline-flex;
+    align-items: center;
+    font: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  &__bulk-cancel-combo .ui-button-text {
+    line-height: 14px;
+  }
+
+  &__bulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__bulk-action-button,
+  &__bulk-action-button .ui-button-text,
+  &__bulk-action-button .ui-button-icon {
+    white-space: nowrap;
+  }
+
+  &__bulk-action-button .ui-button-icon-assignee {
+    width: 16px;
+    height: 16px;
+  }
+
+  &__bulk-more-trigger.ui-button {
+    padding-inline: 8px;
+    background-color: transparent;
+    border: 0;
+  }
+
+  &__bulk-count {
+    color: var(--color-text-main);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 14px;
+    white-space: nowrap;
+  }
+
+  &__assignees-list--bulk {
+    transform: none;
+  }
+
+  &__bulk-more-menu {
+    position: fixed;
+    z-index: 210;
+    transform: translateX(-100%);
+
+    .ui-context-list {
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+</style>

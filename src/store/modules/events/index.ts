@@ -31,7 +31,7 @@ import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem } from '@/types/chart';
+import type { ChartLine } from '@/types/chart';
 import { useErrorTracker } from '@/hawk';
 
 /**
@@ -417,7 +417,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @returns API result or null on GraphQL error
      */
     async [BULK_VISIT_EVENTS](
-      { commit, rootState, state },
+      { commit, rootState },
       { projectId, eventIds }: {
         projectId: string;
         eventIds: string[];
@@ -426,18 +426,8 @@ const module: Module<EventsModuleState, RootState> = {
       (BulkEventsMutationResult & { targetEventIds: string[] }) | null
     > {
       const uniqueEventIds = [...new Set(eventIds.map(String))];
-      const currentUserId = String((rootState).user.data.id);
-      const eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
-        const event = state.events[getEventsListKey(projectId, originalEventId)];
 
-        if (!event) {
-          return true;
-        }
-
-        return !(event.visitedBy || []).some(visitor => String(visitor.id) === currentUserId);
-      });
-
-      if (eventIdsToUpdate.length === 0) {
+      if (uniqueEventIds.length === 0) {
         return {
           success: true,
           modifiedCount: 0,
@@ -452,21 +442,18 @@ const module: Module<EventsModuleState, RootState> = {
       }
 
       const user = (rootState).user.data;
-      const isFullSuccess = result.modifiedCount === eventIdsToUpdate.length;
 
-      if (isFullSuccess) {
-        eventIdsToUpdate.forEach((originalEventId) => {
-          commit(MutationTypes.MarkAsVisited, {
-            projectId,
-            originalEventId,
-            user,
-          });
+      uniqueEventIds.forEach((originalEventId) => {
+        commit(MutationTypes.MarkAsVisited, {
+          projectId,
+          originalEventId,
+          user,
         });
-      }
+      });
 
       return {
         ...result,
-        targetEventIds: eventIdsToUpdate,
+        targetEventIds: uniqueEventIds,
       };
     },
 
@@ -512,7 +499,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @returns API result or null on GraphQL error
      */
     async [BULK_SET_EVENT_MARKS](
-      { commit, state },
+      { commit },
       payload: {
         projectId: string;
         eventIds: string[];
@@ -524,19 +511,8 @@ const module: Module<EventsModuleState, RootState> = {
     > {
       const { projectId, eventIds, mark, enabled } = payload;
       const uniqueEventIds = [...new Set(eventIds.map(String))];
-      const eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
-        const event = state.events[getEventsListKey(projectId, originalEventId)];
 
-        if (!event) {
-          return true;
-        }
-
-        const hasMark = Boolean(event.marks[mark]);
-
-        return enabled ? !hasMark : hasMark;
-      });
-
-      if (eventIdsToUpdate.length === 0) {
+      if (uniqueEventIds.length === 0) {
         return {
           success: true,
           modifiedCount: 0,
@@ -549,22 +525,19 @@ const module: Module<EventsModuleState, RootState> = {
       if (!result || !result.success) {
         return null;
       }
-      const isFullSuccess = result.modifiedCount === eventIdsToUpdate.length;
 
-      if (isFullSuccess) {
-        eventIdsToUpdate.forEach((originalEventId) => {
-          commit(MutationTypes.SetMark, {
-            projectId,
-            eventId: originalEventId,
-            mark,
-            enabled,
-          });
+      uniqueEventIds.forEach((originalEventId) => {
+        commit(MutationTypes.SetMark, {
+          projectId,
+          eventId: originalEventId,
+          mark,
+          enabled,
         });
-      }
+      });
 
       return {
         ...result,
-        targetEventIds: eventIdsToUpdate,
+        targetEventIds: uniqueEventIds,
       };
     },
 
@@ -668,7 +641,7 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.assignee - user to assign, null to clear
      */
     async [BULK_UPDATE_EVENT_ASSIGNEE](
-      { commit, state },
+      { commit },
       { projectId, eventIds, assignee }: {
         projectId: string;
         eventIds: string[];
@@ -678,20 +651,8 @@ const module: Module<EventsModuleState, RootState> = {
       (BulkEventsMutationResult & { targetEventIds: string[] }) | null
     > {
       const uniqueEventIds = [...new Set(eventIds.map(String))];
-      const targetAssigneeId = assignee ? String(assignee.id) : '';
-      const eventIdsToUpdate = uniqueEventIds.filter((originalEventId) => {
-        const event = state.events[getEventsListKey(projectId, originalEventId)];
 
-        if (!event) {
-          return true;
-        }
-
-        const currentAssigneeId = event.assignee ? String(event.assignee.id || '') : '';
-
-        return currentAssigneeId !== targetAssigneeId;
-      });
-
-      if (eventIdsToUpdate.length === 0) {
+      if (uniqueEventIds.length === 0) {
         return {
           success: true,
           modifiedCount: 0,
@@ -708,21 +669,18 @@ const module: Module<EventsModuleState, RootState> = {
       if (!result || !result.success) {
         return null;
       }
-      const isFullSuccess = result.modifiedCount === eventIdsToUpdate.length;
 
-      if (isFullSuccess) {
-        eventIdsToUpdate.forEach((originalEventId) => {
-          commit(MutationTypes.SetEventAssignee, {
-            projectId,
-            originalEventId,
-            assignee,
-          });
+      uniqueEventIds.forEach((originalEventId) => {
+        commit(MutationTypes.SetEventAssignee, {
+          projectId,
+          originalEventId,
+          assignee,
         });
-      }
+      });
 
       return {
         ...result,
-        targetEventIds: eventIdsToUpdate,
+        targetEventIds: uniqueEventIds,
       };
     },
 
@@ -965,7 +923,10 @@ const module: Module<EventsModuleState, RootState> = {
     [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder;
       projectId: string; }): void {
       if (!state.filters[projectId]) {
-        state.filters[projectId] = {};
+        state.filters[projectId] = {
+          filters: {},
+          order: EventsSortOrder.ByDate,
+        };
       }
 
       state.filters[projectId].order = order;
@@ -981,7 +942,10 @@ const module: Module<EventsModuleState, RootState> = {
     [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters;
       projectId: string; }): void {
       if (!state.filters[projectId]) {
-        state.filters[projectId] = {};
+        state.filters[projectId] = {
+          filters: {},
+          order: EventsSortOrder.ByDate,
+        };
       }
 
       state.filters[projectId].filters = filters;
@@ -997,7 +961,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string;
       eventId: string;
-      data: EventChartItem[]; }): void {
+      data: ChartLine[]; }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.events[key];
 

@@ -2,47 +2,46 @@ import { ref, computed, onMounted, onBeforeUnmount, type Ref } from 'vue';
 import type { UseBulkSelectionReturn } from '@/types/bulk';
 
 /**
- * Vue composable for bulk row selection in the events list.
- * Owns reactive selection state, Escape key handler, and all selection logic.
+ * Vue composable for list selection.
+ * Owns reactive selection state, Escape key handler, and Shift-range logic.
  * Must be called inside component `setup()`.
- * @param flatRepetitionIds - reactive list of all visible row ids in display order
+ * @param visibleIds - reactive list of currently visible ids in display order
  */
-export function useBulkSelection(flatRepetitionIds: Ref<string[]>): UseBulkSelectionReturn {
-  const selectedRepetitionIds = ref<string[]>([]);
-  const lastSelectedRepetitionId = ref<string | null>(null);
+export function useBulkSelection(visibleIds: Ref<string[]>): UseBulkSelectionReturn {
+  const selectedIds = ref<string[]>([]);
+  const lastSelectedId = ref<string | null>(null);
 
-  const selectionModeActive = computed(() => selectedRepetitionIds.value.length > 0);
-  const selectedCount = computed(() => selectedRepetitionIds.value.length);
+  const selectionModeActive = computed(() => selectedIds.value.length > 0);
+  const selectedCount = computed(() => selectedIds.value.length);
 
   /** Reset selection state and Shift-range anchor. */
   function exitBulkSelect(): void {
-    selectedRepetitionIds.value = [];
-    lastSelectedRepetitionId.value = null;
+    selectedIds.value = [];
+    lastSelectedId.value = null;
   }
 
   /**
-   * Whether the given row id is currently selected.
-   * @param repetitionId - row id to check
+   * Whether id is currently selected.
+   * @param id - id to check
    */
-  function isRowSelected(repetitionId: string): boolean {
-    return selectedRepetitionIds.value.includes(repetitionId);
+  function isSelected(id: string): boolean {
+    return selectedIds.value.includes(id);
   }
 
   /**
-   * Toggle one row, with optional Shift-range expansion.
-   * @param repetitionId - row id that was clicked
+   * Toggle one id, with optional Shift-range expansion.
+   * @param id - id that was clicked
    * @param evt - optional mouse event for Shift key detection
    */
-  function toggleRowSelected(repetitionId: string, evt?: MouseEvent): void {
+  function toggleSelected(id: string, evt?: MouseEvent): void {
     const isShiftKey = Boolean(evt?.shiftKey);
-    const currentSelected = selectedRepetitionIds.value;
-    const lastId = lastSelectedRepetitionId.value;
+    const currentSelected = selectedIds.value;
+    const lastId = lastSelectedId.value;
     const hasShiftAnchor = typeof lastId === 'string' && lastId.length > 0;
 
-    if (isShiftKey && hasShiftAnchor && lastId !== repetitionId) {
-      const flat = flatRepetitionIds.value;
-      const fromIndex = flat.indexOf(lastId);
-      const toIndex = flat.indexOf(repetitionId);
+    if (isShiftKey && hasShiftAnchor && lastId !== id) {
+      const fromIndex = visibleIds.value.indexOf(lastId);
+      const toIndex = visibleIds.value.indexOf(id);
 
       if (fromIndex >= 0 && toIndex >= 0) {
         const start = Math.min(fromIndex, toIndex);
@@ -50,44 +49,47 @@ export function useBulkSelection(flatRepetitionIds: Ref<string[]>): UseBulkSelec
         const selectedSet = new Set(currentSelected);
 
         for (let i = start; i <= end; i++) {
-          selectedSet.add(flat[i]);
+          selectedSet.add(visibleIds.value[i]);
         }
 
-        selectedRepetitionIds.value = flat.filter(id => selectedSet.has(id));
-        lastSelectedRepetitionId.value = repetitionId;
+        selectedIds.value = visibleIds.value.filter(itemId => selectedSet.has(itemId));
+        lastSelectedId.value = id;
 
         return;
       }
     }
 
     const nextSelected = [...currentSelected];
-    const selectedIndex = nextSelected.indexOf(repetitionId);
+    const selectedIndex = nextSelected.indexOf(id);
 
     if (selectedIndex >= 0) {
       nextSelected.splice(selectedIndex, 1);
     } else {
-      nextSelected.push(repetitionId);
+      nextSelected.push(id);
     }
 
-    selectedRepetitionIds.value = nextSelected;
-    lastSelectedRepetitionId.value = nextSelected.length === 0 ? null : repetitionId;
+    selectedIds.value = nextSelected;
+    lastSelectedId.value = nextSelected.length === 0 ? null : id;
   }
 
-  /** Remove selected rows that are no longer in the visible list. */
-  function syncSelectionWithVisibleRows(): void {
-    if (selectedRepetitionIds.value.length === 0) {
+  /**
+   * Keep selection consistent when list content changes due to
+   * pagination/filter/search updates and previously selected ids disappear.
+   */
+  function syncSelectionWithVisibleIds(): void {
+    if (selectedIds.value.length === 0) {
       return;
     }
 
-    const visibleSet = new Set(flatRepetitionIds.value);
-    const nextSelected = selectedRepetitionIds.value.filter(id => visibleSet.has(id));
+    const visibleSet = new Set(visibleIds.value);
+    const nextSelected = selectedIds.value.filter(id => visibleSet.has(id));
 
-    if (nextSelected.length === selectedRepetitionIds.value.length) {
+    if (nextSelected.length === selectedIds.value.length) {
       return;
     }
 
-    selectedRepetitionIds.value = nextSelected;
-    lastSelectedRepetitionId.value = nextSelected.length > 0 ? nextSelected[nextSelected.length - 1] : null;
+    selectedIds.value = nextSelected;
+    lastSelectedId.value = nextSelected.length > 0 ? nextSelected[nextSelected.length - 1] : null;
   }
 
   /**
@@ -95,7 +97,7 @@ export function useBulkSelection(flatRepetitionIds: Ref<string[]>): UseBulkSelec
    * @param e - keyboard event from document listener
    */
   function onDocumentEscape(e: KeyboardEvent): void {
-    if (e.key === 'Escape' && selectedRepetitionIds.value.length > 0) {
+    if (e.key === 'Escape' && selectedIds.value.length > 0) {
       e.preventDefault();
       exitBulkSelect();
     }
@@ -105,12 +107,12 @@ export function useBulkSelection(flatRepetitionIds: Ref<string[]>): UseBulkSelec
   onBeforeUnmount(() => window.removeEventListener('keydown', onDocumentEscape));
 
   return {
-    selectedRepetitionIds,
+    selectedIds,
     selectionModeActive,
     selectedCount,
     exitBulkSelect,
-    isRowSelected,
-    toggleRowSelected,
-    syncSelectionWithVisibleRows,
+    isSelected,
+    toggleSelected,
+    syncSelectionWithVisibleIds,
   };
 }

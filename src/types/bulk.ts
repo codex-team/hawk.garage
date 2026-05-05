@@ -9,24 +9,24 @@ export type MarkAction = 'resolved' | 'ignored' | 'starred';
  * Public contract for the bulk selection composable.
  */
 export interface UseBulkSelectionReturn {
-  /** Currently selected row ids (repetition ids). */
-  selectedRepetitionIds: Ref<string[]>;
+  /** Currently selected ids in list order. */
+  selectedIds: Ref<string[]>;
   /** True when at least one row is selected. */
   selectionModeActive: ComputedRef<boolean>;
   /** Number of selected rows. */
   selectedCount: ComputedRef<number>;
   /** Clear all selection. */
   exitBulkSelect: () => void;
-  /** Whether a given row id is in the selection. */
-  isRowSelected: (repetitionId: string) => boolean;
+  /** Whether a given id is currently selected. */
+  isSelected: (id: string) => boolean;
   /**
-   * Toggle one row, with optional Shift-range expansion.
-   * @param repetitionId - row id clicked
+   * Toggle one id, with optional Shift-range expansion.
+   * @param id - id clicked
    * @param evt - optional mouse event (for Shift key detection)
    */
-  toggleRowSelected: (repetitionId: string, evt?: MouseEvent) => void;
-  /** Remove selected rows that are no longer in the visible list. */
-  syncSelectionWithVisibleRows: () => void;
+  toggleSelected: (id: string, evt?: MouseEvent) => void;
+  /** Drop selected ids that are not present in visible list anymore. */
+  syncSelectionWithVisibleIds: () => void;
 }
 
 /**
@@ -80,7 +80,7 @@ export type BulkActionResult = {
 export type BulkNotifyPayload = {
   message: string;
   style: string;
-  time: number;
+  time?: number;
 };
 
 /**

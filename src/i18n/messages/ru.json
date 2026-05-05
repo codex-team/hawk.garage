@@ -585,8 +585,7 @@
       "unignore": "Не игнорировать",
       "unresolve": "Не выполнено",
       "unstar": "Убрать из избранного",
-      "markError": "Не удалось обновить события",
-      "markPartial": "Обновлено: {updated}, ошибок: {failed}"
+      "markError": "Не удалось обновить события"
     },
     "suspectedCommits": {
       "header": "Подозреваемые коммиты",
@@ -651,6 +650,7 @@
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",
     "settingsUpdated": "Настройки обновлены",
+    "updated": "Данные обновлены",
     "save": "Сохранить",
     "loading": "Загрузка...",
     "minute": "минуту",
