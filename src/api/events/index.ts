@@ -27,6 +27,13 @@ import type { User } from '@/types/user';
 import type { ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
 
+/**
+ * Execute bulk GraphQL mutation with soft-error handling.
+ * Returns null when API responds with GraphQL errors or without data.
+ * @param query GraphQL mutation document
+ * @param variables Mutation variables
+ * @param pickResult Selector extracting mutation result payload from response data
+ */
 async function runBulkMutation<TResponse>(
   query: string,
   variables: Record<string, unknown>,

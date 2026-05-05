@@ -574,6 +574,11 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
+    "assignee": {
+      "noFilter": "No filter",
+      "unassigned": "Unassigned",
+      "any": "Any assignee"
+    },
     "bulk": {
       "markViewed": "Mark as viewed",
       "moreActions": "More actions",

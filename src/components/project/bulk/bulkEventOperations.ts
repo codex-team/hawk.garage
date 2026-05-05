@@ -2,14 +2,14 @@ import {
   FETCH_EVENT,
   BULK_TOGGLE_EVENT_MARKS,
   BULK_UPDATE_EVENT_ASSIGNEE,
-  BULK_VISIT_EVENTS,
+  BULK_VISIT_EVENTS
 } from '../../../store/modules/events/actionTypes';
 import type {
   BulkActionContext,
   BulkActionResult,
   BulkAssigneeUser,
   MarkAction,
-  RefreshEventsContext,
+  RefreshEventsContext
 } from '@/types/bulk';
 
 const BULK_ERROR_TIMEOUT_MS = 8000;
@@ -17,7 +17,6 @@ const BULK_PARTIAL_TIMEOUT_MS = 10000;
 
 /**
  * Resolve target ids from result payload or fallback to requested ids.
- *
  * @param result Bulk action result returned by store action
  * @param targetOriginalIds Requested original event ids
  */
@@ -31,7 +30,6 @@ function getTargetEventIds(result: BulkActionResult, targetOriginalIds: string[]
 
 /**
  * Execute one bulk action, show error/partial notifications, and refresh stale rows.
- *
  * @param ctx Shared action context
  * @param actionType Vuex action type
  * @param payload Additional payload to pass into action dispatch
@@ -81,7 +79,6 @@ async function executeBulkActionWithRecovery(
 
 /**
  * Refetch selected events by original ids to restore consistent UI state.
- *
  * @param ctx Refresh context for dispatching and resolving selected rows
  * @param originalIds Original event ids that should be refreshed
  */
@@ -95,7 +92,8 @@ export async function refreshEventsByOriginalIds(
     return;
   }
 
-  const targetsByOriginalId = new Map<string, { eventId: string; originalEventId: string }>();
+  const targetsByOriginalId = new Map<string, { eventId: string;
+    originalEventId: string; }>();
 
   ctx.selectedEvents.forEach((event) => {
     if (!event?.originalEventId) {
@@ -131,7 +129,6 @@ export async function refreshEventsByOriginalIds(
 
 /**
  * Execute bulk mark toggle action.
- *
  * @param ctx Shared bulk action context
  * @param mark Requested mark action
  * @param targetOriginalIds Target original event ids
@@ -146,7 +143,6 @@ export async function runBulkMarkAction(
 
 /**
  * Execute bulk assignee update action.
- *
  * @param ctx Shared bulk action context
  * @param assignee User to assign (or null to clear)
  * @param targetOriginalIds Target original event ids
@@ -161,7 +157,6 @@ export async function runBulkAssigneeAction(
 
 /**
  * Execute bulk "mark viewed" action.
- *
  * @param ctx Shared bulk action context
  * @param targetOriginalIds Target original event ids
  */

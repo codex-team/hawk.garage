@@ -574,6 +574,11 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
+    "assignee": {
+      "noFilter": "Без фильтра",
+      "unassigned": "Без исполнителя",
+      "any": "Любой исполнитель"
+    },
     "bulk": {
       "markViewed": "Пометить как просмотренные",
       "moreActions": "Другие действия",

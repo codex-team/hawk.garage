@@ -31,7 +31,7 @@
         />
         <div class="assignees__name-wrapper name-wrapper">
           <span class="name-wrapper__name name-wrapper__name--scrollable">
-            {{ $t('projects.filters.assigneeUnassigned') }}
+            {{ $t('event.assignee.unassigned') }}
           </span>
         </div>
       </div>
@@ -70,7 +70,6 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'AssigneesList',
-  emits: ['hide', 'pick-user', 'unassign'],
   components: {
     EntityImage,
     Icon,
@@ -108,6 +107,7 @@ export default {
       default: false,
     },
   },
+  emits: ['hide', 'pick-user', 'unassign'],
   data() {
     return {
       /**

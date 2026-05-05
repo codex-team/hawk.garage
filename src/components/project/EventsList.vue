@@ -323,15 +323,15 @@ export default {
         {
           value: '',
           icon: 'user-small',
-          label: this.$t('projects.filters.assigneeNoFilter'),
+          label: this.$t('event.assignee.noFilter'),
         },
         {
           value: ASSIGNEE_FILTER_UNASSIGNED,
-          label: this.$t('projects.filters.assigneeUnassigned'),
+          label: this.$t('event.assignee.unassigned'),
         },
         {
           value: ASSIGNEE_FILTER_ANY_ASSIGNEE,
-          label: this.$t('projects.filters.assigneeAny'),
+          label: this.$t('event.assignee.any'),
         },
         ...options,
       ];
