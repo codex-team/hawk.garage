@@ -130,10 +130,7 @@
         "byDate": "По времени",
         "byCount": "По количеству",
         "byAffectedUsers": "По пользователям"
-      },
-      "assigneeNoFilter": "Без фильтра",
-      "assigneeUnassigned": "Без исполнителя",
-      "assigneeAny": "Любой исполнитель"
+      }
     },
     "placeholder": "Выберите проект",
     "loadMoreEvents": "Загрузить больше событий",
@@ -650,7 +647,6 @@
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",
     "settingsUpdated": "Настройки обновлены",
-    "updated": "Данные обновлены",
     "save": "Сохранить",
     "loading": "Загрузка...",
     "minute": "минуту",

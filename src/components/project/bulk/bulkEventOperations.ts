@@ -41,11 +41,6 @@ export async function executeBulkAction(
     return null;
   }
 
-  ctx.notify({
-    message: ctx.t('common.updated'),
-    style: 'success',
-  });
-
   return result;
 }
 

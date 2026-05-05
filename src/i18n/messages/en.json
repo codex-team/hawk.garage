@@ -130,10 +130,7 @@
         "byDate": "By time",
         "byCount": "By count",
         "byAffectedUsers": "By affected users"
-      },
-      "assigneeNoFilter": "No filter",
-      "assigneeUnassigned": "Unassigned",
-      "assigneeAny": "Any assignee"
+      }
     },
     "placeholder": "No project selected",
     "loadMoreEvents": "Load more events",
@@ -650,7 +647,6 @@
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",
     "settingsUpdated": "Settings updated",
-    "updated": "Data updated",
     "save": "Save",
     "loading": "Loading...",
     "minute": "minute",
