@@ -182,6 +182,7 @@ export default {
     background-color: var(--color-text-main);
     border-radius: var(--border-radius);
     box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
+    z-index: 100;
 
     &:after {
       position: absolute;
