@@ -84,6 +84,19 @@ export default {
       return this.workspace?.isBlocked;
     },
   },
+  watch: {
+    /**
+     * Refresh list when route gets a new reload token
+     *
+     * @param newValue
+     * @param oldValue
+     */
+    '$route.query.reload'(newValue, oldValue) {
+      if (newValue && newValue !== oldValue) {
+        this.reloadDailyEvents();
+      }
+    },
+  },
 
   /**
    * Vue created hook

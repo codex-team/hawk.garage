@@ -12,7 +12,8 @@ import {
   BULK_VISIT_EVENTS,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  GET_CHART_DATA,
+  REMOVE_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import type { Module } from 'vuex';
@@ -31,6 +32,12 @@ import {
 } from '@/types/events';
 import type { User } from '@/types/user';
 import type { EventChartItem } from '@/types/chart';
+import { useErrorTracker } from '@/hawk';
+
+/**
+ * Error tracking composable
+ */
+const { track } = useErrorTracker();
 
 const MILLISECONDS_IN_SECOND = 1000;
 
@@ -559,6 +566,38 @@ const module: Module<EventsModuleState, RootState> = {
         ...result,
         targetEventIds: eventIdsToUpdate,
       };
+     * Remove event and all related data (repetitions, daily events)
+     * @param context - vuex action context (not used)
+     * @param context.commit - standard Vuex commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - project event is related to
+     * @param payload.eventId - original event id to remove
+     */
+    async [REMOVE_EVENT](context, { projectId, eventId }: {
+      projectId: string;
+      eventId: string;
+    }): Promise<boolean> {
+      const response = await eventsApi.removeEvent(projectId, eventId);
+
+      if (response.errors?.length) {
+        response.errors.forEach((apiError) => {
+          const apiErrorDetails = {
+            message: apiError.message,
+            path: apiError.path ? apiError.path.join('.') : '',
+            code: String(apiError.extensions?.code ?? ''),
+          };
+
+          track(new Error(apiError.message), {
+            projectId,
+            eventId,
+            errorDetails: apiErrorDetails,
+          });
+        });
+
+        return false;
+      }
+
+      return Boolean(response.data?.removeEvent);
     },
 
     /**

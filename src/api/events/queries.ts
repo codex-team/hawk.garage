@@ -198,3 +198,13 @@ export const MUTATION_BULK_UPDATE_EVENT_ASSIGNEE = `
     }
   }
 `;
+    
+// language=GraphQL
+/**
+ * GraphQL Mutation to remove an event and all related data
+ */
+export const MUTATION_REMOVE_EVENT = `
+  mutation removeEvent($projectId: ID!, $eventId: ID!) {
+    removeEvent(projectId: $projectId, eventId: $eventId)
+  }
+`;
