@@ -39,8 +39,6 @@ import { useErrorTracker } from '@/hawk';
  */
 const { track } = useErrorTracker();
 
-const MILLISECONDS_IN_SECOND = 1000;
-
 /**
  * Mutations enum for this module
  */
@@ -903,13 +901,7 @@ const module: Module<EventsModuleState, RootState> = {
           return;
         }
 
-        if (enabled) {
-          event.marks[mark] = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
-
-          return;
-        }
-
-        event.marks[mark] = undefined;
+        event.marks[mark] = enabled;
       });
     },
 
