@@ -130,10 +130,7 @@
         "byDate": "By time",
         "byCount": "By count",
         "byAffectedUsers": "By affected users"
-      },
-      "assigneeNoFilter": "No filter",
-      "assigneeUnassigned": "Unassigned",
-      "assigneeAny": "Any assignee"
+      }
     },
     "placeholder": "No project selected",
     "loadMoreEvents": "Load more events",
@@ -574,6 +571,19 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
+    "assignee": {
+      "noFilter": "No filter",
+      "unassigned": "Unassigned",
+      "any": "Any assignee"
+    },
+    "bulk": {
+      "markViewed": "Mark as viewed",
+      "moreActions": "More actions",
+      "unignore": "Unignore",
+      "unresolve": "Unresolved",
+      "unstar": "Remove from starred",
+      "markError": "Could not update events"
+    },
     "suspectedCommits": {
       "header": "Suspected commits",
       "hide": "hide",
@@ -632,6 +642,7 @@
     "free": "FREE",
     "select": "Select",
     "selected": "Selected",
+    "escKey": "(Esc)",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",

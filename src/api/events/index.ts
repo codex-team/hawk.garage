@@ -1,8 +1,11 @@
 import {
   MUTATION_TOGGLE_EVENT_MARK,
+  MUTATION_BULK_SET_EVENT_MARKS,
+  MUTATION_BULK_VISIT_EVENTS,
   MUTATION_VISIT_EVENT,
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
+  MUTATION_BULK_UPDATE_EVENT_ASSIGNEE,
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
@@ -17,12 +20,38 @@ import type {
   EventsFilters,
   HawkEvent
 } from '@/types/events';
+import type { BulkEventsMutationResult } from '@/types/bulk';
 import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem, ChartLine } from '@/types/chart';
+import type { ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
+
+/**
+ * Execute bulk GraphQL mutation with soft-error handling.
+ * Returns null when API responds with GraphQL errors or without data.
+ * @param query GraphQL mutation document
+ * @param variables Mutation variables
+ * @param pickResult Selector extracting mutation result payload from response data
+ */
+async function runBulkMutation<TResponse>(
+  query: string,
+  variables: Record<string, unknown>,
+  pickResult: (response: TResponse) => BulkEventsMutationResult | null | undefined
+): Promise<BulkEventsMutationResult | null> {
+  const response = await api.call<TResponse>(query, variables, undefined, { allowErrors: true });
+
+  if (response.errors?.length) {
+    return null;
+  }
+
+  if (!response.data) {
+    return null;
+  }
+
+  return pickResult(response.data) ?? null;
+}
 
 /**
  * Get specific event
@@ -136,6 +165,30 @@ export async function visitEvent(projectId: string, originalEventId: string): Pr
 }
 
 /**
+ * Mark many original events as visited for current user
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ */
+export async function bulkVisitEvents(
+  projectId: string,
+  eventIds: string[]
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
+    bulkVisitEvents: {
+      success: boolean;
+      modifiedCount: number;
+    };
+  }>(
+    MUTATION_BULK_VISIT_EVENTS,
+    {
+      projectId,
+      eventIds,
+    },
+    data => data.bulkVisitEvents
+  );
+}
+
+/**
  * Set or unset mark to event
  * @param projectId - project event is related to
  * @param eventId — event Id
@@ -147,6 +200,36 @@ export async function toggleEventMark(projectId: string, eventId: string, mark: 
     eventId,
     mark,
   })).toggleEventMark;
+}
+
+/**
+ * Bulk set/clear marks (original event ids)
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ * @param mark - resolved, ignored or starred
+ * @param enabled - true to set mark, false to clear mark
+ */
+export async function bulkSetEventMarks(
+  projectId: string,
+  eventIds: string[],
+  mark: 'resolved' | 'ignored' | 'starred',
+  enabled: boolean
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
+    bulkSetEventMarks: {
+      success: boolean;
+      modifiedCount: number;
+    };
+  }>(
+    MUTATION_BULK_SET_EVENT_MARKS,
+    {
+      projectId,
+      eventIds,
+      mark,
+      enabled,
+    },
+    data => data.bulkSetEventMarks
+  );
 }
 
 /**
@@ -178,6 +261,37 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
       eventId,
     },
   })).events.removeAssignee;
+}
+
+/**
+ * Bulk set/clear assignee for original event ids
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ * @param assigneeId - user id to assign, null to clear
+ */
+export async function bulkUpdateAssignee(
+  projectId: string,
+  eventIds: string[],
+  assigneeId: string | null
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
+    events: {
+      bulkUpdateAssignee: {
+        success: boolean;
+        modifiedCount: number;
+      };
+    };
+  }>(
+    MUTATION_BULK_UPDATE_EVENT_ASSIGNEE,
+    {
+      input: {
+        projectId,
+        eventIds,
+        assignee: assigneeId,
+      },
+    },
+    data => data.events.bulkUpdateAssignee
+  );
 }
 
 /**
