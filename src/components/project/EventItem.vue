@@ -411,8 +411,10 @@ export default {
     border-top-right-radius: 0;
   }
 
-  .event-item.event-item--row-selected:has(+ .event-item.event-item--row-selected) {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+  @supports selector(.event-item:has(+ .event-item)) {
+    .event-item.event-item--row-selected:has(+ .event-item.event-item--row-selected) {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 </style>
