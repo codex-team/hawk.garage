@@ -127,3 +127,21 @@ export type BulkActionPayload = {
   enabled?: boolean;
   assignee?: BulkAssigneeUser | null;
 };
+
+/**
+ * Public contract for the bulk event operations composable.
+ */
+export interface UseBulkEventOperationsReturn {
+  /** Execute one bulk store action and refresh stale rows on failure. */
+  executeBulkAction: (
+    ctx: BulkActionContext,
+    actionType: BulkActionType,
+    payload: BulkActionPayload,
+    targetOriginalIds: string[]
+  ) => Promise<BulkActionResult>;
+  /** Refetch selected events by original ids. */
+  refreshEventsByOriginalIds: (
+    ctx: RefreshEventsContext,
+    originalIds?: string[]
+  ) => Promise<void>;
+}

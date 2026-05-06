@@ -1,8 +1,8 @@
 <template>
-  <div class="bulk-actions-bar__slot">
+  <div class="bulk-actions-bar">
     <div
       v-show="selectionModeActive"
-      class="bulk-actions-bar"
+      class="bulk-actions-bar__content"
     >
       <div class="bulk-actions-bar__meta">
         <button
@@ -113,10 +113,7 @@ import {
 import UiButton from '../../utils/UiButton.vue';
 import UiContextList from '../../utils/UiContextList.vue';
 import AssigneesList from '../../event/AssigneesList.vue';
-import {
-  executeBulkAction,
-  refreshEventsByOriginalIds
-} from './useBulkEventOperations';
+import { useBulkEventOperations } from './useBulkEventOperations';
 
 /**
  * Props contract for bulk actions toolbar.
@@ -136,6 +133,10 @@ const props = withDefaults(defineProps<{
 const { t } = useI18n();
 const store = useStore();
 const emit = defineEmits<{ (e: 'exit-bulk-select'): void }>();
+const {
+  executeBulkAction,
+  refreshEventsByOriginalIds,
+} = useBulkEventOperations();
 
 /**
  * Guards against concurrent bulk submissions.
@@ -558,14 +559,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
-.bulk-actions-bar__slot {
+.bulk-actions-bar {
   flex-shrink: 0;
   box-sizing: border-box;
   min-height: 40px;
   margin-block: 18px 0;
 }
 
-.bulk-actions-bar {
+.bulk-actions-bar__content {
   display: flex;
   flex-wrap: wrap;
   gap: 10px 16px;
