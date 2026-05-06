@@ -585,12 +585,16 @@ onBeforeUnmount(() => {
 .bulk-actions-bar__cancel-combo {
   display: inline-flex;
   align-items: center;
-  font: inherit;
+  justify-content: center;
   white-space: nowrap;
   cursor: pointer;
 }
 
-.bulk-actions-bar__cancel-combo .ui-button-text {
+/* Match UiButton &-text (14px / 500) so label and counter share one line rhythm */
+.bulk-actions-bar__cancel-combo .ui-button-text,
+.bulk-actions-bar__count {
+  font-size: 14px;
+  font-weight: 500;
   line-height: 14px;
 }
 
@@ -619,10 +623,9 @@ onBeforeUnmount(() => {
 }
 
 .bulk-actions-bar__count {
+  display: inline-flex;
+  align-items: center;
   color: var(--color-text-main);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 14px;
   white-space: nowrap;
 }
 
