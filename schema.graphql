@@ -514,6 +514,9 @@ type EventsMutations {
 
   """Remove an assignee from the selected event"""
   removeAssignee(input: RemoveAssigneeInput!): RemoveAssigneeResponse!
+
+  """Bulk set/clear assignee on many original events"""
+  bulkUpdateAssignee(input: BulkUpdateAssigneeInput!): BulkUpdateAssigneeResponse!
 }
 
 """Possible events order"""
@@ -585,6 +588,15 @@ type Mutation {
     eventId: ID!
   ): Boolean!
 
+  """Mark many original events as visited for current user"""
+  bulkVisitEvents(
+    """ID of project event is related to"""
+    projectId: ID!
+
+    """Original event ids"""
+    eventIds: [ID!]!
+  ): BulkVisitEventsResult!
+
   """Mutation sets or unsets passed mark to event"""
   toggleEventMark(
     """ID of project event is related to"""
@@ -596,6 +608,21 @@ type Mutation {
     """Mark to set"""
     mark: EventMark!
   ): Boolean!
+
+  """Bulk set or clear one mark on many original events"""
+  bulkSetEventMarks(
+    """Project id"""
+    projectId: ID!
+
+    """Original event ids"""
+    eventIds: [ID!]!
+
+    """Mark to update"""
+    mark: EventMark!
+
+    """True - set mark, false - clear mark"""
+    enabled: Boolean!
+  ): BulkSetEventMarksResult!
 
   """Namespace that contains only mutations related to the events"""
   events: EventsMutations!
@@ -1343,6 +1370,24 @@ type RemoveAssigneeResponse {
   success: Boolean!
 }
 
+"""Result of bulk toggling event marks"""
+type BulkSetEventMarksResult {
+  """True when database accepted mutation"""
+  success: Boolean!
+
+  """Number of original events actually modified"""
+  modifiedCount: Int!
+}
+
+"""Result of bulk marking events as viewed"""
+type BulkVisitEventsResult {
+  """True when database accepted mutation"""
+  success: Boolean!
+
+  """Number of original events actually modified"""
+  modifiedCount: Int!
+}
+
 """Input type for deleting of the event grouping pattern"""
 input RemoveProjectEventGroupingPatternInput {
   """Id of the pattern to be removed"""
@@ -1400,6 +1445,25 @@ type Tokens {
 
   """User's refresh token for getting new token pair"""
   refreshToken: String!
+}
+
+input BulkUpdateAssigneeInput {
+  """ID of project event is related to"""
+  projectId: ID!
+
+  """Original event ids to update"""
+  eventIds: [ID!]!
+
+  """Assignee id to set. Pass null to clear assignee."""
+  assignee: ID
+}
+
+type BulkUpdateAssigneeResponse {
+  """True when database accepted mutation"""
+  success: Boolean!
+
+  """Number of original events actually modified"""
+  modifiedCount: Int!
 }
 
 input UpdateAssigneeInput {

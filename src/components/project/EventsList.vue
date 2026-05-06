@@ -18,6 +18,13 @@
         />
       </template>
     </SearchField>
+    <BulkActionsBar
+      :project-id="projectId"
+      :selection-mode-active="selectionModeActive"
+      :selected-count="selectedCount"
+      :selected-event-ids="selectedRowIds"
+      @exit-bulk-select="exitBulkSelect"
+    />
     <template v-if="hasItems">
       <div
         v-for="(eventsByDate, date) in groupedByDate"
@@ -35,7 +42,10 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
+          :is-selection-mode-active="selectionModeActive"
+          :is-row-selected="isRowSelected(dailyEventInfo.eventId)"
           @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
+          @toggle-row-select="toggleRowSelected(dailyEventInfo.eventId, $event)"
           @show-event-overview="onShowEventOverview(dailyEventInfo.eventId)"
         />
       </div>
@@ -71,6 +81,7 @@
       :style="assigneesListPosition"
       :event-id="assigneesEventId"
       :project-id="projectId"
+      :can-unassign="canUnassignAssigneesPopoverEvent"
       class="events-list__assignees-list"
       @hide="hideAssigneesList"
     />
@@ -78,8 +89,10 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
+import BulkActionsBar from './bulk/BulkActionsBar.vue';
 import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
@@ -88,6 +101,7 @@ import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
+import { useBulkSelection } from './bulk/useBulkSelection';
 
 /** Must match api/src/models/eventsFactory.js assignee filter sentinels */
 const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
@@ -112,6 +126,7 @@ export default {
   components: {
     EventItem,
     EventItemSkeleton,
+    BulkActionsBar,
     AssigneesList,
     SearchField,
     EmptyState,
@@ -122,6 +137,54 @@ export default {
       type: String,
       default: 'simple',
     },
+  },
+  setup() {
+    const dailyEvents = ref([]);
+
+    const groupedByDate = computed(() => {
+      if (!dailyEvents.value.length) {
+        return {};
+      }
+
+      return groupByGroupingTimestamp(dailyEvents.value);
+    });
+
+    const flattenedDailyEventIds = computed(() => {
+      const flat = [];
+
+      for (const date of Object.keys(groupedByDate.value)) {
+        for (const dailyEventInfo of groupedByDate.value[date]) {
+          flat.push(dailyEventInfo.eventId);
+        }
+      }
+
+      return flat;
+    });
+
+    const {
+      selectedIds: selectedRowIds,
+      selectionModeActive,
+      selectedCount,
+      exitBulkSelect,
+      isSelected: isRowSelected,
+      toggleSelected: toggleRowSelected,
+      syncSelectionWithVisibleIds: syncSelectionWithVisibleRows,
+    } = useBulkSelection(flattenedDailyEventIds);
+
+    /**
+     * Expose composable state/methods to template and Options API methods via `this.*`.
+     */
+    return {
+      dailyEvents,
+      groupedByDate,
+      selectedRowIds,
+      selectionModeActive,
+      selectedCount,
+      exitBulkSelect,
+      isRowSelected,
+      toggleRowSelected,
+      syncSelectionWithVisibleRows,
+    };
   },
   data() {
     return {
@@ -135,10 +198,6 @@ export default {
       searchQuery: (this.$store && this.$store.getters && this.$route)
         ? (this.$store.getters.getProjectSearch(this.$route.params.projectId) || '')
         : '',
-      /**
-       * Raw (not grouped by groupingTimestamp) dailyEvents list
-       */
-      dailyEvents: [],
       /**
        * Selected assignee id for filtering events
        */
@@ -209,6 +268,7 @@ export default {
     }, 500);
   },
   beforeUnmount() {
+    this.hideAssigneesList();
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   // eslint-disable-next-line vue/order-in-components
@@ -260,15 +320,15 @@ export default {
         {
           value: '',
           icon: 'user-small',
-          label: this.$t('projects.filters.assigneeNoFilter'),
+          label: this.$t('event.assignee.noFilter'),
         },
         {
           value: ASSIGNEE_FILTER_UNASSIGNED,
-          label: this.$t('projects.filters.assigneeUnassigned'),
+          label: this.$t('event.assignee.unassigned'),
         },
         {
           value: ASSIGNEE_FILTER_ANY_ASSIGNEE,
-          label: this.$t('projects.filters.assigneeAny'),
+          label: this.$t('event.assignee.any'),
         },
         ...options,
       ];
@@ -282,17 +342,15 @@ export default {
     hasItems() {
       return Array.isArray(this.dailyEvents) && this.dailyEvents.length > 0;
     },
-    /**
-     * Group events by the `groupingTimestamp` key
-     *
-     * @returns {Record<string, any[]>}
-     */
-    groupedByDate() {
-      if (!this.hasItems) {
-        return {};
+    /** Whether assignee popover target event currently has an assignee. */
+    canUnassignAssigneesPopoverEvent() {
+      if (!this.assigneesEventId) {
+        return false;
       }
 
-      return groupByGroupingTimestamp(this.dailyEvents);
+      const event = this.getEvent(this.assigneesEventId);
+
+      return !!event?.assignee;
     },
   },
   methods: {
@@ -362,6 +420,8 @@ export default {
         } else {
           this.dailyEvents.push(...dailyEventsWithEventsLinked);
         }
+
+        this.syncSelectionWithVisibleRows();
       } finally {
         this.isLoading = false;
       }
@@ -370,6 +430,7 @@ export default {
      * Reset pagination and reload list
      */
     reloadDailyEvents() {
+      this.exitBulkSelect();
       this.dailyEventsNextCursor = null;
       this.noMore = false;
       this.dailyEvents = [];
@@ -487,6 +548,10 @@ export default {
   min-height: 400px;
 
   &__group {
+    margin-top: 8px;
+  }
+
+  &__group + &__group {
     margin-top: 25px;
   }
 
@@ -528,6 +593,7 @@ export default {
   &__assignees-list {
     position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
+    z-index: 200;
   }
 
   &__assignee-filter {
@@ -591,7 +657,7 @@ export default {
   &.form-search-field {
     position: relative;
     z-index: 100;
-    padding-inline-end: 7px;
+    padding-inline: 11px;
   }
 }
 </style>

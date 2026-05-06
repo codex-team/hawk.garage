@@ -116,11 +116,37 @@ export const MUTATION_VISIT_EVENT = `
 
 // language=GraphQL
 /**
+ * GraphQL Mutation to bulk mark events as visited
+ */
+export const MUTATION_BULK_VISIT_EVENTS = `
+  mutation bulkVisitEvents($projectId: ID!, $eventIds: [ID!]!) {
+    bulkVisitEvents(projectId: $projectId, eventIds: $eventIds) {
+      success
+      modifiedCount
+    }
+  }
+`;
+
+// language=GraphQL
+/**
  * GraphQL Mutation to set mark to event for current user
  */
 export const MUTATION_TOGGLE_EVENT_MARK = `
   mutation toggleEventMark($projectId: ID!, $eventId: ID!, $mark: EventMark!) {
     toggleEventMark(project: $projectId, eventId: $eventId, mark: $mark)
+  }
+`;
+
+// language=GraphQL
+/**
+ * Bulk set/clear resolved/ignored/starred on many original events
+ */
+export const MUTATION_BULK_SET_EVENT_MARKS = `
+  mutation bulkSetEventMarks($projectId: ID!, $eventIds: [ID!]!, $mark: EventMark!, $enabled: Boolean!) {
+    bulkSetEventMarks(projectId: $projectId, eventIds: $eventIds, mark: $mark, enabled: $enabled) {
+      success
+      modifiedCount
+    }
   }
 `;
 
@@ -153,6 +179,21 @@ export const MUTATION_REMOVE_EVENT_ASSIGNEE = `
     events {
       removeAssignee(input: $input) {
         success
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * GraphQL Mutation to bulk set/clear assignee for original events
+ */
+export const MUTATION_BULK_UPDATE_EVENT_ASSIGNEE = `
+  mutation bulkUpdateAssignee($input: BulkUpdateAssigneeInput!) {
+    events {
+      bulkUpdateAssignee(input: $input) {
+        success
+        modifiedCount
       }
     }
   }

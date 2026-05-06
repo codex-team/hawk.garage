@@ -21,6 +21,21 @@
       class="event-assignees-list__assignees assignees"
     >
       <div
+        v-if="canUnassign"
+        class="assignees__row assignees__row--unassign"
+        @click="onUnassignClick"
+      >
+        <Icon
+          class="assignees__image assignees__row-bulk-icon"
+          symbol="assignee-minus"
+        />
+        <div class="assignees__name-wrapper name-wrapper">
+          <span class="name-wrapper__name name-wrapper__name--scrollable">
+            {{ $t('event.assignee.unassigned') }}
+          </span>
+        </div>
+      </div>
+      <div
         v-for="user in filteredUsers"
         :key="user.id"
         class="assignees__row"
@@ -83,7 +98,16 @@ export default {
       type: String,
       default: 'right',
     },
+
+    /**
+     * Show top row action to remove assignee(s) in parent context
+     */
+    canUnassign: {
+      type: Boolean,
+      default: false,
+    },
   },
+  emits: ['hide', 'pick-user', 'unassign'],
   data() {
     return {
       /**
@@ -104,7 +128,15 @@ export default {
      * @returns {string} - assignee id or empty string
      */
     currentAssigneeId() {
+      if (!this.eventId) {
+        return '';
+      }
+
       const currentEvent = this.getProjectEventById(this.projectId, this.eventId);
+
+      if (!currentEvent) {
+        return '';
+      }
 
       const assignee = currentEvent.assignee;
 
@@ -148,12 +180,36 @@ export default {
   },
   methods: {
     /**
+     * Remove assignee for current context
+     *
+     * @returns {void}
+     */
+    async onUnassignClick() {
+      if (this.eventId) {
+        await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
+          projectId: this.projectId,
+          eventId: this.eventId,
+        });
+      } else {
+        this.$emit('unassign');
+      }
+
+      this.$emit('hide');
+    },
+    /**
      * Update assignee to other or remove him
      *
      * @returns {void}
      * @param user
      */
     async updateAssignee(user) {
+      if (!this.eventId) {
+        this.$emit('pick-user', user);
+        this.$emit('hide');
+
+        return;
+      }
+
       if (this.currentAssigneeId === user.id) {
         await this.$store.dispatch('REMOVE_EVENT_ASSIGNEE', {
           projectId: this.projectId,
@@ -246,6 +302,12 @@ export default {
 
     &__image {
       margin-right: 7px;
+    }
+
+    &__row-bulk-icon {
+      width: 16px;
+      height: 16px;
+      color: inherit;
     }
 
     &__checkmark {

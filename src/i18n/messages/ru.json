@@ -130,10 +130,7 @@
         "byDate": "По времени",
         "byCount": "По количеству",
         "byAffectedUsers": "По пользователям"
-      },
-      "assigneeNoFilter": "Без фильтра",
-      "assigneeUnassigned": "Без исполнителя",
-      "assigneeAny": "Любой исполнитель"
+      }
     },
     "placeholder": "Выберите проект",
     "loadMoreEvents": "Загрузить больше событий",
@@ -574,6 +571,19 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
+    "assignee": {
+      "noFilter": "Без фильтра",
+      "unassigned": "Без исполнителя",
+      "any": "Любой исполнитель"
+    },
+    "bulk": {
+      "markViewed": "Пометить как просмотренные",
+      "moreActions": "Другие действия",
+      "unignore": "Не игнорировать",
+      "unresolve": "Не выполнено",
+      "unstar": "Убрать из избранного",
+      "markError": "Не удалось обновить события"
+    },
     "suspectedCommits": {
       "header": "Подозреваемые коммиты",
       "hide": "скрыть",
@@ -632,6 +642,7 @@
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
     "selected": "Выбрано",
+    "escKey": "(Esc)",
     "continue": "Продолжить",
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",
