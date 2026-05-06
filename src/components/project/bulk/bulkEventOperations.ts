@@ -1,14 +1,11 @@
 import {
-  FETCH_EVENT,
-  BULK_SET_EVENT_MARKS,
-  BULK_UPDATE_EVENT_ASSIGNEE,
-  BULK_VISIT_EVENTS
+  FETCH_EVENT
 } from '../../../store/modules/events/actionTypes';
 import type {
   BulkActionContext,
+  BulkActionPayload,
+  BulkActionType,
   BulkActionResult,
-  BulkAssigneeUser,
-  MarkAction,
   RefreshEventsContext
 } from '@/types/bulk';
 
@@ -93,23 +90,3 @@ export async function refreshEventsByOriginalIds(
     });
   }));
 }
-
-export const BULK_ACTION_TYPES = {
-  setMarks: BULK_SET_EVENT_MARKS,
-  updateAssignee: BULK_UPDATE_EVENT_ASSIGNEE,
-  visit: BULK_VISIT_EVENTS,
-} as const;
-
-/**
- * Supported bulk Vuex action names.
- */
-export type BulkActionType = typeof BULK_ACTION_TYPES[keyof typeof BULK_ACTION_TYPES];
-
-/**
- * Additional payload fields for bulk actions.
- */
-export type BulkActionPayload = {
-  mark?: MarkAction;
-  enabled?: boolean;
-  assignee?: BulkAssigneeUser | null;
-};

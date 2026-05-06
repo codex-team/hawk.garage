@@ -96,6 +96,7 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import notifier from 'codex-notifier';
 import type {
+  BulkActionType,
   BulkActionContext,
   BulkAssigneeUser,
   BulkPosition,
@@ -103,11 +104,15 @@ import type {
   BulkViewportHandler,
   MarkAction
 } from '@/types/bulk';
+import {
+  BULK_SET_EVENT_MARKS,
+  BULK_UPDATE_EVENT_ASSIGNEE,
+  BULK_VISIT_EVENTS
+} from '../../../store/modules/events/actionTypes';
 import UiButton from '../../utils/UiButton.vue';
 import UiContextList from '../../utils/UiContextList.vue';
 import AssigneesList from '../../event/AssigneesList.vue';
 import {
-  BULK_ACTION_TYPES,
   executeBulkAction,
   refreshEventsByOriginalIds
 } from './bulkEventOperations';
@@ -215,6 +220,12 @@ const bulkMoreMenuItems = computed(() => [
     },
   },
 ]);
+
+const BULK_ACTION_TYPES = {
+  setMarks: BULK_SET_EVENT_MARKS as BulkActionType,
+  updateAssignee: BULK_UPDATE_EVENT_ASSIGNEE as BulkActionType,
+  visit: BULK_VISIT_EVENTS as BulkActionType,
+} as const;
 
 /**
  * Build deduplicated selected original event ids.

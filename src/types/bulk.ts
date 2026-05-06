@@ -110,3 +110,20 @@ export type RefreshEventsContext = {
   projectId: string;
   selectedEvents: BulkSelectedEvent[];
 };
+
+/**
+ * Supported bulk Vuex action names.
+ */
+export type BulkActionType =
+  | 'BULK_SET_EVENT_MARKS'
+  | 'BULK_UPDATE_EVENT_ASSIGNEE'
+  | 'BULK_VISIT_EVENTS';
+
+/**
+ * Additional payload fields for bulk actions.
+ */
+export type BulkActionPayload = {
+  mark?: MarkAction;
+  enabled?: boolean;
+  assignee?: BulkAssigneeUser | null;
+};

@@ -81,7 +81,7 @@
       :style="assigneesListPosition"
       :event-id="assigneesEventId"
       :project-id="projectId"
-      :can-unassign="canUnassignCurrentEvent"
+      :can-unassign="canUnassignAssigneesPopoverEvent"
       class="events-list__assignees-list"
       @hide="hideAssigneesList"
     />
@@ -343,7 +343,7 @@ export default {
       return Array.isArray(this.dailyEvents) && this.dailyEvents.length > 0;
     },
     /** Whether assignee popover target event currently has an assignee. */
-    canUnassignCurrentEvent() {
+    canUnassignAssigneesPopoverEvent() {
       if (!this.assigneesEventId) {
         return false;
       }
