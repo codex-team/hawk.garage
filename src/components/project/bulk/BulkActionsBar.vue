@@ -46,6 +46,7 @@
           @click="onMarkClick('ignored')"
         />
         <UiButton
+          ref="bulkAssignButtonRef"
           :content="''"
           :title="$t('event.viewedBy.assignee')"
           :aria-label="$t('event.viewedBy.assignee')"
@@ -73,7 +74,7 @@
         :project-id="projectId"
         :can-unassign="hasAssigneeInSelection"
         triangle="top"
-        class="events-list__assignees-list bulk-actions-bar__assignees-list--bulk"
+        class="bulk-actions-bar__assignees-list--bulk"
         @hide="hideBulkAssigneesList"
         @pick-user="onBulkPickAssignee"
         @unassign="onBulkClearAssignees"
@@ -91,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, ref, watch, type ComponentPublicInstance } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import notifier from 'codex-notifier';
@@ -152,6 +153,7 @@ const bulkAssigneesListPosition = ref<BulkPosition>({
   left: 0,
 });
 const bulkAssignAnchorEl = ref<HTMLElement | null>(null);
+const bulkAssignButtonRef = ref<ComponentPublicInstance | null>(null);
 const bulkAssignOnViewportChange = ref<BulkViewportHandler>(null);
 /**
  * More-actions menu visibility state.
@@ -342,7 +344,7 @@ function onBulkAssignButtonClick(evt: MouseEvent): void {
   evt?.stopPropagation?.();
   hideBulkMoreMenu();
 
-  const el = evt.currentTarget as HTMLElement | null;
+  const el = bulkAssignButtonRef.value?.$el as HTMLElement | null;
 
   if (!el) {
     return;
@@ -403,12 +405,13 @@ function setBulkAssigneesPosition(): void {
 
   const rect = bulkAssignAnchorEl.value.getBoundingClientRect();
   const LIST_WIDTH = 210;
-  const ARROW_X_FROM_LEFT = 174;
-  const OFFSET_X = 8;
+  const ARROW_RIGHT_OFFSET = 36;
+  const ARROW_HALF_WIDTH = 6;
+  const ARROW_X_FROM_LEFT = LIST_WIDTH - ARROW_RIGHT_OFFSET - ARROW_HALF_WIDTH;
   const viewportWidth = window.innerWidth;
   const leftPadding = 8;
   const anchorX = rect.left + rect.width / 2;
-  const desiredLeft = anchorX - ARROW_X_FROM_LEFT + OFFSET_X;
+  const desiredLeft = anchorX - ARROW_X_FROM_LEFT;
   const clampedLeft = Math.min(
     Math.max(desiredLeft, leftPadding),
     Math.max(leftPadding, viewportWidth - LIST_WIDTH - leftPadding)
@@ -623,6 +626,8 @@ onBeforeUnmount(() => {
 }
 
 .bulk-actions-bar__assignees-list--bulk {
+  position: fixed;
+  z-index: 210;
   transform: none;
 }
 
