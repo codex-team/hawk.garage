@@ -22,7 +22,7 @@
           :icon="bulkResolveIcon"
           class="events-list__bulk-action-button"
           small
-          :disabled="isMarkDisabled('resolved')"
+          :disabled="isMarkDisabled()"
           @click="onMarkClick('resolved')"
         />
         <UiButton
@@ -32,7 +32,7 @@
           :icon="bulkStarIcon"
           class="events-list__bulk-action-button"
           small
-          :disabled="isMarkDisabled('starred')"
+          :disabled="isMarkDisabled()"
           @click="onMarkClick('starred')"
         />
         <UiButton
@@ -42,7 +42,7 @@
           :icon="bulkIgnoreIcon"
           class="events-list__bulk-action-button"
           small
-          :disabled="isMarkDisabled('ignored')"
+          :disabled="isMarkDisabled()"
           @click="onMarkClick('ignored')"
         />
         <UiButton
@@ -96,6 +96,7 @@ import { useI18n } from 'vue-i18n';
 import { useStore } from 'vuex';
 import notifier from 'codex-notifier';
 import type {
+  BulkActionContext,
   BulkAssigneeUser,
   BulkPosition,
   BulkSelectedEvent,
@@ -131,9 +132,9 @@ const store = useStore();
 const emit = defineEmits<{ (e: 'exit-bulk-select'): void }>();
 
 /**
- * Mark action currently in progress.
+ * Guards against concurrent bulk submissions.
  */
-const activeMarkAction = ref('');
+const isActionSubmitting = ref(false);
 /**
  * Assignees popover visibility state.
  */
@@ -234,22 +235,20 @@ function getSelectedOriginalIds(): string[] {
 
 /**
  * Disable mark button when there is no selection
- * or when same mark action is already running.
- *
- * @param action Action currently checked for disabled state
+ * or when a bulk action is already running.
  */
-function isMarkDisabled(action: MarkAction): boolean {
+function isMarkDisabled(): boolean {
   if (props.selectedCount === 0) {
     return true;
   }
 
-  return activeMarkAction.value === action;
+  return isActionSubmitting.value;
 }
 
 /**
  * Compute next explicit state for selected mark.
  *
- * @param action Mark action
+ * @param action Mark action selected by user.
  */
 function resolveMarkEnabled(action: MarkAction): boolean {
   if (action === 'ignored') {
@@ -264,11 +263,19 @@ function resolveMarkEnabled(action: MarkAction): boolean {
 }
 
 /**
+ * Store dispatch wrapper for bulk action helpers.
+ *
+ * @param actionType Vuex action name.
+ * @param payload Vuex action payload.
+ */
+const dispatch = (actionType: string, payload: Record<string, unknown>) => {
+  return store.dispatch(actionType, payload);
+};
+
+/**
  * Build shared context for bulk operation helpers.
  */
-function getBulkActionsContext() {
-  const dispatch = store.dispatch.bind(store);
-
+function getBulkActionsContext(): BulkActionContext {
   return {
     dispatch,
     projectId: String(props.projectId || ''),
@@ -290,13 +297,13 @@ function getBulkActionsContext() {
  * @param action Action clicked in bulk toolbar
  */
 async function onMarkClick(action: MarkAction): Promise<void> {
-  if (activeMarkAction.value) {
+  if (isActionSubmitting.value) {
     return;
   }
 
   hideBulkAssigneesList();
   hideBulkMoreMenu();
-  activeMarkAction.value = action;
+  isActionSubmitting.value = true;
 
   try {
     const targetOriginalIds = getSelectedOriginalIds();
@@ -311,7 +318,7 @@ async function onMarkClick(action: MarkAction): Promise<void> {
       enabled,
     }, targetOriginalIds);
   } finally {
-    activeMarkAction.value = '';
+    isActionSubmitting.value = false;
   }
 }
 
