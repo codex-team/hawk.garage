@@ -171,6 +171,9 @@ export default {
       syncSelectionWithVisibleIds: syncSelectionWithVisibleRows,
     } = useBulkSelection(flattenedDailyEventIds);
 
+    /**
+     * Expose composable state/methods to template and Options API methods via `this.*`.
+     */
     return {
       dailyEvents,
       groupedByDate,

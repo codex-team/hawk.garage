@@ -519,6 +519,10 @@ async function onBulkMarkViewedClick(): Promise<void> {
   await executeBulkAction(getBulkActionsContext(), BULK_ACTION_TYPES.visit, {}, targetOriginalIds);
 }
 
+/**
+ * Close bulk popovers when selection mode is switched off
+ * (e.g. Escape key or external clear-selection action).
+ */
 watch(() => props.selectionModeActive, (newVal) => {
   if (!newVal) {
     hideBulkAssigneesList();
