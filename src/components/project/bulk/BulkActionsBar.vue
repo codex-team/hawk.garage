@@ -590,10 +590,9 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
-/* Match UiButton &-text (14px / 500) so label and counter share one line rhythm */
 .bulk-actions-bar__cancel-combo .ui-button-text,
 .bulk-actions-bar__count {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 14px;
 }
