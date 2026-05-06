@@ -1,26 +1,26 @@
 <template>
-  <div class="events-list__bulk-slot">
+  <div class="bulk-actions-bar__slot">
     <div
       v-show="selectionModeActive"
-      class="events-list__bulk-bar"
+      class="bulk-actions-bar"
     >
-      <div class="events-list__bulk-meta">
+      <div class="bulk-actions-bar__meta">
         <button
           type="button"
-          class="ui-button ui-button--small ui-button--secondary events-list__bulk-cancel-combo"
+          class="ui-button ui-button--small ui-button--secondary bulk-actions-bar__cancel-combo"
           @click="emit('exit-bulk-select')"
         >
           <span class="ui-button-text">{{ $t('components.confirmationWindow.cancel') }} {{ $t('common.escKey') }}</span>
         </button>
-        <span class="events-list__bulk-count">{{ $t('common.selected') }}: {{ selectedCount }}</span>
+        <span class="bulk-actions-bar__count">{{ $t('common.selected') }}: {{ selectedCount }}</span>
       </div>
-      <div class="events-list__bulk-actions">
+      <div class="bulk-actions-bar__actions">
         <UiButton
           :content="''"
           :title="bulkResolveLabel"
           :aria-label="bulkResolveLabel"
           :icon="bulkResolveIcon"
-          class="events-list__bulk-action-button"
+          class="bulk-actions-bar__action-button"
           small
           :disabled="isMarkDisabled()"
           @click="onMarkClick('resolved')"
@@ -30,7 +30,7 @@
           :title="bulkStarLabel"
           :aria-label="bulkStarLabel"
           :icon="bulkStarIcon"
-          class="events-list__bulk-action-button"
+          class="bulk-actions-bar__action-button"
           small
           :disabled="isMarkDisabled()"
           @click="onMarkClick('starred')"
@@ -40,7 +40,7 @@
           :title="bulkIgnoreLabel"
           :aria-label="bulkIgnoreLabel"
           :icon="bulkIgnoreIcon"
-          class="events-list__bulk-action-button"
+          class="bulk-actions-bar__action-button"
           small
           :disabled="isMarkDisabled()"
           @click="onMarkClick('ignored')"
@@ -50,7 +50,7 @@
           :title="$t('event.viewedBy.assignee')"
           :aria-label="$t('event.viewedBy.assignee')"
           icon="assignee"
-          class="events-list__bulk-action-button"
+          class="bulk-actions-bar__action-button"
           small
           :disabled="selectedCount === 0"
           @click="onBulkAssignButtonClick"
@@ -60,7 +60,7 @@
           :title="$t('event.bulk.moreActions')"
           :aria-label="$t('event.bulk.moreActions')"
           icon="dots-vertical"
-          class="events-list__bulk-action-button events-list__bulk-more-trigger"
+          class="bulk-actions-bar__action-button bulk-actions-bar__more-trigger"
           small
           :disabled="selectedCount === 0"
           @click="onBulkMoreMenuButtonClick"
@@ -73,7 +73,7 @@
         :project-id="projectId"
         :can-unassign="hasAssigneeInSelection"
         triangle="top"
-        class="events-list__assignees-list events-list__assignees-list--bulk"
+        class="events-list__assignees-list bulk-actions-bar__assignees-list--bulk"
         @hide="hideBulkAssigneesList"
         @pick-user="onBulkPickAssignee"
         @unassign="onBulkClearAssignees"
@@ -82,7 +82,7 @@
         v-if="isBulkMoreMenuShowed"
         v-click-outside="hideBulkMoreMenu"
         :style="bulkMoreMenuPosition"
-        class="events-list__bulk-more-menu"
+        class="bulk-actions-bar__more-menu"
       >
         <UiContextList :items="bulkMoreMenuItems" />
       </div>
@@ -115,7 +115,7 @@ import AssigneesList from '../../event/AssigneesList.vue';
 import {
   executeBulkAction,
   refreshEventsByOriginalIds
-} from './bulkEventOperations';
+} from './useBulkEventOperations';
 
 /**
  * Props contract for bulk actions toolbar.
@@ -555,88 +555,86 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
-.events-list {
-  &__bulk-slot {
-    flex-shrink: 0;
-    box-sizing: border-box;
-    min-height: 40px;
-    margin-block: 18px 0;
-  }
+.bulk-actions-bar__slot {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  min-height: 40px;
+  margin-block: 18px 0;
+}
 
-  &__bulk-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 16px;
-    align-items: center;
-    justify-content: space-between;
-  }
+.bulk-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
 
-  &__bulk-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 16px;
-    margin-left: 11px;
-  }
+.bulk-actions-bar__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-left: 11px;
+}
 
-  &__bulk-cancel-combo {
-    display: inline-flex;
-    align-items: center;
-    font: inherit;
-    white-space: nowrap;
-    cursor: pointer;
-  }
+.bulk-actions-bar__cancel-combo {
+  display: inline-flex;
+  align-items: center;
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
 
-  &__bulk-cancel-combo .ui-button-text {
-    line-height: 14px;
-  }
+.bulk-actions-bar__cancel-combo .ui-button-text {
+  line-height: 14px;
+}
 
-  &__bulk-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
+.bulk-actions-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
 
-  &__bulk-action-button,
-  &__bulk-action-button .ui-button-text,
-  &__bulk-action-button .ui-button-icon {
-    white-space: nowrap;
-  }
+.bulk-actions-bar__action-button,
+.bulk-actions-bar__action-button .ui-button-text,
+.bulk-actions-bar__action-button .ui-button-icon {
+  white-space: nowrap;
+}
 
-  &__bulk-action-button .ui-button-icon-assignee {
-    width: 16px;
-    height: 16px;
-  }
+.bulk-actions-bar__action-button .ui-button-icon-assignee {
+  width: 16px;
+  height: 16px;
+}
 
-  &__bulk-more-trigger.ui-button {
-    padding-inline: 8px;
-    background-color: transparent;
-    border: 0;
-  }
+.bulk-actions-bar__more-trigger.ui-button {
+  padding-inline: 8px;
+  background-color: transparent;
+  border: 0;
+}
 
-  &__bulk-count {
-    color: var(--color-text-main);
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 14px;
-    white-space: nowrap;
-  }
+.bulk-actions-bar__count {
+  color: var(--color-text-main);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 14px;
+  white-space: nowrap;
+}
 
-  &__assignees-list--bulk {
-    transform: none;
-  }
+.bulk-actions-bar__assignees-list--bulk {
+  transform: none;
+}
 
-  &__bulk-more-menu {
-    position: fixed;
-    z-index: 210;
-    transform: translateX(-100%);
+.bulk-actions-bar__more-menu {
+  position: fixed;
+  z-index: 210;
+  transform: translateX(-100%);
 
-    .ui-context-list {
-      background-color: var(--color-bg-main);
-      border: 1px solid var(--color-border);
-      box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
-    }
+  .ui-context-list {
+    background-color: var(--color-bg-main);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 11px 13px -4px rgba(0, 0, 0, 0.5);
   }
 }
 </style>
