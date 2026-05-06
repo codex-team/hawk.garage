@@ -14,6 +14,9 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { i18n } from '../../i18n';
 import { ActionType } from '../utils/ConfirmationWindow/types';
+import { stringifyEventPayload } from '@/components/utils/events/stringifiedEventPayload';
+
+import type { HawkEventPayload } from '@/types/events';
 
 interface Props {
   /**
@@ -24,6 +27,10 @@ interface Props {
    * Original event id to remove
    */
   eventId: string;
+  /**
+   * Event payload to copy
+   */
+  eventPayload: HawkEventPayload
   /**
    * Callback to close popover
    */
@@ -79,10 +86,42 @@ function confirmRemoveEvent(): void {
 }
 
 /**
+ * Copies a formatted event payload to the clipboard
+ * 
+ * Includes information about title, backtrace, context, addons
+ * structured for easy pasting into logs, tickets, or chat
+ */
+async function copyRawEventData(): Promise<void> {
+  const {
+    eventPayload
+  } = props;
+
+  const stringifiedEvent = stringifyEventPayload(eventPayload);
+
+  await navigator.clipboard.writeText(stringifiedEvent);
+
+  notifier.show({
+    message: i18n.global.t('common.copiedNotification'),
+    style: 'success',
+    time: 2000,
+  });
+}
+
+
+/**
  * Actions available in event context menu
  */
 const menuItems = computed<ContextMenuItem[]>(() => {
   return [
+    {
+      type: "default",
+      title: i18n.global.t('event.copy') as string,
+      icon: 'Copy',
+      onActivate: () => {
+        props.onClose?.();
+        copyRawEventData();
+      }
+    },
     {
       type: 'default',
       title: i18n.global.t('event.remove') as string,
@@ -91,7 +130,7 @@ const menuItems = computed<ContextMenuItem[]>(() => {
         props.onClose?.();
         confirmRemoveEvent();
       },
-    },
+    }
   ];
 });
 </script>

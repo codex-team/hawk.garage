@@ -348,6 +348,7 @@ export default defineComponent({
           props: {
             projectId: this.projectId,
             eventId: this.$route.params.eventId,
+            eventPayload: this.$props.event.payload,
             onClose: () => this.hidePopover(),
           },
         },

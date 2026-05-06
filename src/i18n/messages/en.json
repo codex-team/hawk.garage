@@ -615,6 +615,7 @@
       "upgradeButton": "Pay and view event"
     },
     "remove": "Remove event",
+    "copy": "Copy event",
     "removeConfirmation": "Are you sure you want to remove this event? All related data will also be removed.",
     "removeButton": "Remove",
     "removeSuccess": "Event successfully removed"
