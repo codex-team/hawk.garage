@@ -25,17 +25,20 @@ function buildBacktraceString(backtrace: HawkEventBacktraceFrame[]): string | nu
     return null;
   }
 
-  return backtrace.map(frame => {
-    const frameString: string[] = [];
-    frameString.push(frame.function);
-    frameString.push(`${frame.file} line ${frame.line}:${frame.column}`);
-    
-    const stringifyedSourceCode = frame.sourceCode?.map(line => (`${line.line} ${line.content}`));
-    if (stringifyedSourceCode) {
-      frameString.push(stringifyedSourceCode.join('\n'));
-    }
+  return backtrace.map(({ function: func, file, line, column, sourceCode }) => {
+    const parts: string[] = [
+      func,
+      `${file} line ${line}:${column}`
+    ];
 
-    return frameString.join('\n');
+    if (sourceCode?.length) {
+      parts.push(
+        sourceCode
+          .map(({ line, content }) => `${line} ${content}`)
+          .join('\n')
+      );
+    }
+    return parts.join('\n');
   }).join('\n\n');
 }
 
@@ -56,6 +59,10 @@ function buildObjectString(obj: object): string | null {
   const lineArray: string[] = [];
   
   const traverse = (obj: object, level: number = 0) => {
+    if (!isObject(obj)) {
+      return null;
+    }
+  
     Object.entries(obj).forEach(([key, value]) => {
       const prefix = " ".repeat(level);
       if (typeof value === "object") {
