@@ -30,7 +30,7 @@ interface Props {
   /**
    * Event payload to copy
    */
-  eventPayload: HawkEventPayload
+  eventPayload: HawkEventPayload;
   /**
    * Callback to close popover
    */
@@ -87,13 +87,13 @@ function confirmRemoveEvent(): void {
 
 /**
  * Copies a formatted event payload to the clipboard
- * 
+ *
  * Includes information about title, backtrace, context, addons
  * structured for easy pasting into logs, tickets, or chat
  */
 async function copyRawEventData(): Promise<void> {
   const {
-    eventPayload
+    eventPayload,
   } = props;
 
   const stringifiedEvent = stringifyEventPayload(eventPayload);
@@ -107,20 +107,19 @@ async function copyRawEventData(): Promise<void> {
   });
 }
 
-
 /**
  * Actions available in event context menu
  */
 const menuItems = computed<ContextMenuItem[]>(() => {
   return [
     {
-      type: "default",
+      type: 'default',
       title: i18n.global.t('event.copy') as string,
       icon: 'Copy',
       onActivate: () => {
         props.onClose?.();
         copyRawEventData();
-      }
+      },
     },
     {
       type: 'default',
@@ -130,7 +129,7 @@ const menuItems = computed<ContextMenuItem[]>(() => {
         props.onClose?.();
         confirmRemoveEvent();
       },
-    }
+    },
   ];
 });
 </script>
