@@ -96,12 +96,25 @@ function buildObjectString(obj: object): string | null {
   const traverse = (obj: object, level: number = 0) => {  
     Object.entries(obj).forEach(([key, value]) => {
       const prefix = " ".repeat(level);
+
       if (isObject(value)) {
         lineArray.push(`${prefix}${key}: {`);
         traverse(value, level + 2);
         lineArray.push(`${prefix}}`);
+      } else if (Array.isArray(value)) {
+        lineArray.push(`${prefix}${key}: [`);
+        value.map((el, index) => {
+          const prefix = " ".repeat(level + 2);
+          lineArray.push(`${prefix}{`);
+          traverse(el, level + 4);
+          lineArray.push(`${prefix}}`);
+          if (index !== value.length - 1) {
+            lineArray[lineArray.length - 1] += ","
+          }
+        })
+        lineArray.push(`${prefix}]`);
       } else {
-        lineArray.push(`${prefix}${key}: ${value}`);
+        lineArray.push(`${prefix}${key}: ${String(value)}`);
       }
     });
   };
