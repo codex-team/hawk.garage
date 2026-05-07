@@ -17,7 +17,9 @@ export function stringifyEventPayload(payload: HawkEventPayload) {
     buildSection("Addons", buildAddonsString(payload.addons))
   ];
 
-  return sections.join('\n\n');
+  return sections
+    .filter(Boolean)
+    .join('\n\n');
 };
 
 /**
@@ -62,7 +64,7 @@ function buildBacktraceString(backtrace: HawkEventBacktraceFrame[]): string | nu
 }
 
 /**
- * Converts event addons into a fromatted string
+ * Converts event addons into a formatted string
  * 
  * Excludes ignored addon fields from the output
  * 
@@ -79,7 +81,7 @@ function buildAddonsString(addons: EventAddons) {
 }
 
 /**
- * Traverses passed object and builds a formatted string representation
+ * Traverses the passed object and builds a formatted string representation
  * 
  * @param obj - Object
  * @returns Formatted object string, or `null` if the value is not an object
@@ -91,14 +93,10 @@ function buildObjectString(obj: object): string | null {
 
   const lineArray: string[] = [];
   
-  const traverse = (obj: object, level: number = 0) => {
-    if (!isObject(obj)) {
-      return null;
-    }
-  
+  const traverse = (obj: object, level: number = 0) => {  
     Object.entries(obj).forEach(([key, value]) => {
       const prefix = " ".repeat(level);
-      if (typeof value === "object") {
+      if (isObject(value)) {
         lineArray.push(`${prefix}${key}: {`);
         traverse(value, level + 2);
         lineArray.push(`${prefix}}`);
