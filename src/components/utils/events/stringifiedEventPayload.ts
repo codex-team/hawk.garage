@@ -102,7 +102,7 @@ function buildSection(title: string, content: string | null | undefined): string
     return null;
   }
 
-  return `### ${title} ###\n${content}`;
+  return `## ${title}\n${content}`;
 }
 
 /**
@@ -117,7 +117,7 @@ export function stringifyEventPayload(payload: HawkEventPayload): string {
     buildSection('Title', payload.title),
     buildSection('Backtrace', buildBacktraceString(payload.backtrace)),
     buildSection('Context', buildObjectString(payload.context)),
-    buildSection('Addons', buildAddonsString(payload.addons)),
+    buildSection('Additional data', buildAddonsString(payload.addons)),
   ];
 
   return sections
