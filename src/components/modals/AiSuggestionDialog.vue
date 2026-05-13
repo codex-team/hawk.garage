@@ -30,8 +30,9 @@
               v-else
               :key="'text-' + idx"
               class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
-              v-html="renderMarkdown(seg.text)"
-            />
+            >
+              <div class="text-ui-base" v-html="renderMarkdown(seg.text)" />
+            </div>
           </template>
         </div>
       </div>
@@ -105,72 +106,85 @@ export default defineComponent({
 
 <style>
 .ai-suggestion-dialog {
-  max-width: 720px;
-  padding: 20px;
+  width: 720px;
 
   &__header {
-    margin-bottom: 10px;
+    padding: 20px;
     font-weight: 600;
     font-size: 18px;
+    color: var(--color-text-second);
+    background-color: #121419;
   }
 
   &__content {
-    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
   }
 
   &__suggestion {
     line-height: 1.6;
-    white-space: pre-wrap;
-  }
-
-  &__text {
-    white-space: pre-wrap;
   }
 
   &__markdown {
     white-space: normal;
 
-    h1, h2, h3, h4, h5, h6 {
-      margin: 12px 0 6px;
-      font-weight: 600;
-      line-height: 1.3;
+    p {
+      font-size: inherit;
+      margin: 0 0 6px;
     }
 
-    p {
-      margin: 8px 0;
+    li {
+      list-style: inherit;
+      padding-left: 0;
+      margin: 0 0 6px;
+    }
+
+    li p {
+      display: inline;
     }
 
     ul, ol {
-      margin: 8px 0 8px 20px;
+      padding-left: 1.2em;
+      list-style-position: outside;
+      margin: 0 0 6px;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: 8px 0 4px;
     }
 
     blockquote {
-      margin: 8px 0;
-      padding-left: 12px;
-      color: var(--color-text-secondary);
+      margin: 0 0 6px;
+      padding-left: 8px;
+      color: var(--color-text-second);
       border-left: 3px solid var(--color-border);
     }
 
     code {
+      border-radius: 4px;
       padding: 1px 4px;
-      font-size: 90%;
-      font-family: var(--font-monospace);
       background: var(--color-bg-code-fragment);
-      border-radius: 3px;
-    }
-
-    a {
-      color: var(--color-link);
-      text-decoration: underline;
+      white-space: nowrap;
     }
   }
 
   &__code {
-    margin: 10px 0;
+    margin: 0 0 8px;
   }
 
   &__error {
     color: var(--color-indicator-critical);
   }
+}
+</style>
+
+<style lang="scss">
+.ai-suggestion-dialog__text.ai-suggestion-dialog__markdown {
+  @import '@codexteam/ui/styles';
 }
 </style>
