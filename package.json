@@ -17,7 +17,7 @@
     "e2e:ci": "start-server-and-test serve 8080 cy:run"
   },
   "dependencies": {
-    "@codexteam/ui": "0.2.0-rc.4",
+    "@codexteam/ui": "0.2.3",
     "@hawk.so/javascript": "3.3.0",
     "@hawk.so/types": "^0.5.9",
     "axios": "^1.12.2",
