@@ -5,8 +5,7 @@
   font-stretch: 75% 125%;
   font-display: swap;
   src:
-    local("Roboto"),
-    local("Roboto Regular"),
+    local("Roboto") tech(variations),
     url("../assets/fonts/roboto/Roboto-VariableFont_wdth,wght.ttf") format("truetype-variations");
 }
 
@@ -17,8 +16,7 @@
   font-stretch: 75% 125%;
   font-display: swap;
   src:
-    local("Roboto Italic"),
-    local("Roboto-Italic"),
+    local("Roboto Italic") tech(variations),
+    local("Roboto-Italic") tech(variations),
     url("../assets/fonts/roboto/Roboto-Italic-VariableFont_wdth,wght.ttf") format("truetype-variations");
 }
-
