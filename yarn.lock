@@ -32,10 +32,10 @@
   resolved "https://registry.yarnpkg.com/@codexteam/icons/-/icons-0.3.3.tgz#89d53af1d2bfc106e4e44be5fd824a059e94c098"
   integrity sha512-cp7mkZPgmBuSxigTm3Vb+DtVHYeX7qXfQd7o05vcLD8Ag5WvRlol2QSn5P10k0CDAJwmkH9nQGQLBycErS9lsQ==
 
-"@codexteam/ui@0.2.0-rc.4":
-  version "0.2.0-rc.4"
-  resolved "https://registry.yarnpkg.com/@codexteam/ui/-/ui-0.2.0-rc.4.tgz#c2ba520ea896bd14039c135c0252d3f792aec7f1"
-  integrity sha512-gjbviNfKayeH78tbt3q+YNNAclqzyJbnusYVup5tod1GOdfrcZ6nM/9X1tHoUZVNuXKxFWtOUce89KagxeyjvQ==
+"@codexteam/ui@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@codexteam/ui/-/ui-0.2.3.tgz#d98e73fc44972f25d3c391508e0ac580e5671784"
+  integrity sha512-4HGmCcRDio9gEt6Qg4t6FdljwxYwqloVkUBueuNkXPe5UsZGKyv0h1xnDTs0p2juK9uuPFxFshL4kSN50E7b5A==
   dependencies:
     "@codexteam/icons" "^0.3.3"
     "@editorjs/editorjs" "2.30.2"
