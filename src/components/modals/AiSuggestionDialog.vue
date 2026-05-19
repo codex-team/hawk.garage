@@ -5,7 +5,7 @@
         {{ $t('event.ai.title') }}
       </div>
       <div class="ai-suggestion-dialog__content">
-        <Spinner v-if="loading" />
+        <AiSuggestionSkeleton v-if="loading" />
         <div
           v-else-if="error"
           class="ai-suggestion-dialog__error"
@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import PopupDialog from '../utils/PopupDialog.vue';
-import Spinner from '../utils/Spinner.vue';
+import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import CodeFragment from '../utils/CodeFragment.vue';
 import * as eventsApi from '@/api/events';
 import { getMarkdownRenderer, splitTextAndCodeSegments } from '@/utils/markdown';
@@ -51,7 +51,7 @@ export default defineComponent({
   name: 'AiSuggestionDialog',
   components: {
     PopupDialog,
-    Spinner,
+    AiSuggestionSkeleton,
     CodeFragment,
   },
   props: {
