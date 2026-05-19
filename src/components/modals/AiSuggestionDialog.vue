@@ -105,68 +105,127 @@ export default defineComponent({
 
 <style>
 .ai-suggestion-dialog {
-  max-width: 720px;
-  padding: 20px;
+  width: 720px;
 
   &__header {
-    margin-bottom: 10px;
+    padding: 20px;
     font-weight: 600;
     font-size: 18px;
+    color: var(--color-text-second);
+    background-color: #121419;
   }
 
   &__content {
-    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding: 20px;
   }
 
   &__suggestion {
-    line-height: 1.6;
-    white-space: pre-wrap;
-  }
-
-  &__text {
-    white-space: pre-wrap;
-  }
-
-  &__markdown {
-    white-space: normal;
-
-    h1, h2, h3, h4, h5, h6 {
-      margin: 12px 0 6px;
-      font-weight: 600;
-      line-height: 1.3;
-    }
-
-    p {
-      margin: 8px 0;
-    }
-
-    ul, ol {
-      margin: 8px 0 8px 20px;
-    }
-
-    blockquote {
-      margin: 8px 0;
-      padding-left: 12px;
-      color: var(--color-text-secondary);
-      border-left: 3px solid var(--color-border);
-    }
-
-    code {
-      padding: 1px 4px;
-      font-size: 90%;
-      font-family: var(--font-monospace);
-      background: var(--color-bg-code-fragment);
-      border-radius: 3px;
-    }
-
-    a {
-      color: var(--color-link);
-      text-decoration: underline;
-    }
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    /* .text-p */
+    font-size: 1rem;
+    line-height: 145%;
+    font-weight: 400;
   }
 
   &__code {
-    margin: 10px 0;
+    margin: 0 0 var(--spacing-s) 0;
+  }
+
+  &__markdown {
+    word-break: break-word;
+
+    h1, h2, h3, h4, h5, h6 {
+      margin: var(--spacing-xl) 0 var(--spacing-ml) 0;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    a {
+      text-decoration: underline;
+    }
+
+    .text-p {
+      margin: 0 0 var(--spacing-s) 0;
+    }
+
+    ul, ol {
+      margin: 0 0 var(--spacing-s) 0;
+      padding-left: calc(var(--spacing-l) + var(--spacing-xs));
+    }
+
+    li {
+      list-style-position: outside;
+      margin-bottom: var(--spacing-s);
+      padding-left: var(--spacing-xs);
+    }
+
+    ul > li {
+      list-style-type: disc;
+    }
+
+    ol > li {
+      list-style-type: decimal;
+    }
+
+    li > ul,
+    li > ol {
+      margin-top: var(--spacing-s);
+    }
+
+    li .text-p {
+      margin: 0 0 var(--spacing-s) 0;
+    }
+
+    li .text-p:last-child {
+      margin-bottom: 0;
+    }
+
+    blockquote {
+      margin: 0 0 var(--spacing-s) 0;
+    }
+
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    code {
+      background: var(--color-bg-third);
+      border-radius: 4px;
+      padding: 0 var(--spacing-xs);
+    }
+
+    table {
+      width: 100%;
+      margin: 0 0 var(--spacing-s) 0;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: var(--spacing-ms) var(--spacing-ms);
+      vertical-align: middle;
+      border: 1px solid var(--color-delimiter-line);
+    }
+
+    th {
+      text-align: left;
+      font-weight: 600;
+      background-color: var(--color-bg-main);
+    }
   }
 
   &__error {
