@@ -492,7 +492,8 @@
     "ai": {
       "ask": "Ask AI",
       "empty": "Could not get an answer from AI",
-      "error": "An error occurred while getting an AI answer"
+      "error": "An error occurred while getting an AI answer",
+      "title": "Hawk Assistant"
     },
     "repetitions": {
       "total": "Total",

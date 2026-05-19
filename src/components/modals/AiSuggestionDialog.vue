@@ -2,7 +2,7 @@
   <PopupDialog @close="$emit('close')">
     <div class="ai-suggestion-dialog">
       <div class="ai-suggestion-dialog__header">
-        {{ $t('event.ai.ask') }}
+        {{ $t('event.ai.title') }}
       </div>
       <div class="ai-suggestion-dialog__content">
         <Spinner v-if="loading" />
