@@ -48,7 +48,7 @@ export function splitTextAndCodeSegments(source: string | undefined | null): Con
       }
     }
 
-    const lines: CodeLine[] = code.trimEnd().replace(/\n$/, '').split('\n')
+    const lines: CodeLine[] = code.replace(/\n$/, '').split('\n')
       .map((line, i) => ({
         line: i + 1,
         content: line,
@@ -82,41 +82,12 @@ export function splitTextAndCodeSegments(source: string | undefined | null): Con
  * @returns a function that renders a limited subset of Markdown to HTML
  */
 export async function getMarkdownRenderer(): Promise<(text: string) => string> {
-  const { marked, Renderer } = await import("marked");
-  const renderer = new Renderer();
+  const marked = await import('marked');
 
-  renderer.heading = ({ tokens, depth }) => {
-    const body = renderer.parser.parseInline(tokens);
-
-    return `<h${depth} class="text-h${depth}">${body}</h${depth}>\n`;
-  };
-
-  renderer.paragraph = ({ tokens }) => {
-    const body = renderer.parser.parseInline(tokens);
-
-    return `<p>${body}</p>\n`;
-  };
-
-  renderer.strong = ({ tokens }) => {
-    const body = renderer.parser.parseInline(tokens);
-
-    return `<strong class="text-ui-base-bold">${body}</strong>`;
-  };
-
-  renderer.code = ({ text, lang }) =>
-    `<pre><code class="text-monospaced">${text}</code></pre>\n`;
-
-  renderer.codespan = ({ text }) =>
-    `<code class="text-monospaced">${text}</code>`;
-
-  renderer.blockquote = ({ tokens }) => {
-    const body = renderer.parser.parse(tokens);
-
-    return `<blockquote class="text-blockquote">${body}</blockquote>\n`;
-  };
-
-  const sanitize = (html: string) =>
-    html.replace(/<(\/?[A-Z][a-zA-Z]*)/g, '&lt;$1');
-
-  return (text: string) => sanitize(marked.parse(text, { renderer }) as string);
+  /**
+   * Return a function that renders a limited subset of Markdown to HTML.
+   * @param text - raw markdown text
+   * @returns HTML string safe to inject with v-html
+   */
+  return (text: string) => marked.parse(text) as string;
 }

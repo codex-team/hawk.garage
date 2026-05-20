@@ -21,10 +21,7 @@
         :class="{'current': isCurrentLine(row.line)}"
       />
     </div>
-    <div
-      class="code-preview__button-wrapper"
-      :style="lines.length < 10 ? { top: 'auto', bottom: '10px' } : {}"
-    >
+    <div class="code-preview__button-wrapper">
       <button
         v-if="copyable"
         class="button button--copy code-preview__copy-button"
@@ -36,24 +33,22 @@
     <!-- eslint-disable vue/no-v-html -->
     <pre
       class="code-preview__content"
-      :class="{[syntax]: true, 'code-preview__content__copyable': copyable }"
+      :class="{[syntax]: true }"
       v-html="escapedCodeWithPointer"
     />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import hljs from 'highlight.js';
 import * as _ from './../../utils';
 import notifier from 'codex-notifier';
-import type { CodeLine } from './../../utils'
-import type { PropType } from 'vue';
 
 /**
  * This component is using to render some code fragment, for example in stack trace description
  * It requires the 'lines' property as array of {line: number, content: string}
  *
- * @typedef {object} CodeLine
+ * @typedef {object} CodeRow
  * @property {number} line - line number
  * @property {string} content - line content
  */
@@ -63,10 +58,10 @@ export default {
     /**
      * Array of code fragment lines
      *
-     * @type {CodeLine[]}
+     * @type {CodeRow[]}
      */
     lines: {
-      type: Array as PropType<CodeLine[]>,
+      type: Array,
       default() {
         return [];
       },
@@ -79,7 +74,7 @@ export default {
      */
     linesHighlighted: {
       type: Array,
-      default: () => [],
+      default: null,
     },
 
     /**
@@ -307,36 +302,21 @@ export default {
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
 
-    --code-line-height: 21px;
-    --copy-btn-width: calc(13px * 2 + 11 * 7px);
-    --copy-btn-top: 10px;
-    --copy-btn-right: 10px;
-
-    --content-padding-right: calc(var(--copy-btn-width) + var(--copy-btn-right));
-    --content-min-height: calc(var(--copy-btn-top) + 22px + var(--code-line-height));
-
     &__content {
       z-index: 2;
       flex-grow: 2;
       font-size: 12px;
-      line-height: var(--code-line-height);
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
+      line-height: 21px;
 
       &::-webkit-scrollbar {
         display: none;
-      }
-
-      &__copyable {
-        min-height: var(--content-min-height);
-        padding-right: var(--content-padding-right);
       }
     }
 
     &__button-wrapper {
       position: absolute;
-      top: var(--copy-btn-top);
-      right: var(--copy-btn-right);
+      top: 10px;
+      right: 10px;
       z-index: 3;
     }
 
@@ -347,16 +327,17 @@ export default {
 
       span {
         display: flex;
+        flex-grow: 1;
         align-items: center;
         padding: 0 10px;
         color: var(--color-text-main);
         font-size: 10px;
-        line-height: var(--code-line-height);
+        line-height: 21px;
         vertical-align: bottom;
         opacity: 0.4;
 
         &::before {
-          content: attr(data-line);
+          content: attr(data-line)
         }
       }
     }
@@ -372,7 +353,7 @@ export default {
       flex-direction: column;
 
       div {
-        height: var(--code-line-height);
+        flex-grow: 1;
       }
 
       .current {
