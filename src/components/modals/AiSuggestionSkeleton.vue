@@ -7,7 +7,7 @@
         width="45%"
       />
       <SkeletonBar
-        v-for="i in 3"
+        v-for="i in 4"
         :key="`line-${i}`"
         class="ai-suggestion-skeleton__line"
         size="medium"
@@ -16,42 +16,6 @@
         class="ai-suggestion-skeleton__line ai-suggestion-skeleton__line--short"
         size="medium"
         width="60%"
-      />
-    </div>
-    <div class="ai-suggestion-skeleton__block">
-      <SkeletonBar
-        class="ai-suggestion-skeleton__heading"
-        size="large"
-        width="35%"
-      />
-      <SkeletonBar
-        v-for="i in 2"
-        :key="`line2-${i}`"
-        class="ai-suggestion-skeleton__line"
-        size="medium"
-      />
-      <SkeletonBar
-        class="ai-suggestion-skeleton__line ai-suggestion-skeleton__line--short"
-        size="medium"
-        width="50%"
-      />
-    </div>
-    <div class="ai-suggestion-skeleton__block">
-      <SkeletonBar
-        class="ai-suggestion-skeleton__heading"
-        size="large"
-        width="55%"
-      />
-      <SkeletonBar
-        v-for="i in 4"
-        :key="`line3-${i}`"
-        class="ai-suggestion-skeleton__line"
-        size="medium"
-      />
-      <SkeletonBar
-        class="ai-suggestion-skeleton__line ai-suggestion-skeleton__line--short"
-        size="medium"
-        width="40%"
       />
     </div>
   </div>

@@ -2,6 +2,10 @@
   <PopupDialog @close="$emit('close')">
     <div class="ai-suggestion-dialog">
       <div class="ai-suggestion-dialog__header">
+        <Icon
+          class="ai-suggestion-dialog__header-icon"
+          symbol="ai"
+        />
         {{ $t('event.ai.title') }}
       </div>
       <div class="ai-suggestion-dialog__content">
@@ -43,6 +47,7 @@
 import PopupDialog from '../utils/PopupDialog.vue';
 import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import CodeFragment from '../utils/CodeFragment.vue';
+import Icon from '../utils/Icon.vue';
 import * as eventsApi from '@/api/events';
 import { getMarkdownRenderer, splitTextAndCodeSegments } from '@/utils/markdown';
 import { defineComponent } from 'vue';
@@ -53,6 +58,7 @@ export default defineComponent({
     PopupDialog,
     AiSuggestionSkeleton,
     CodeFragment,
+    Icon,
   },
   props: {
     projectId: {
@@ -109,11 +115,20 @@ export default defineComponent({
   min-height: 400px;
 
   &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 20px;
     font-weight: 600;
     font-size: 18px;
     color: var(--color-text-second);
     background-color: #121419;
+  }
+
+  &__header-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--color-indicator-ai);
   }
 
   &__content {
@@ -160,6 +175,7 @@ export default defineComponent({
 
     .text-p {
       margin: 0 0 var(--spacing-s) 0;
+      font-size: inherit;
     }
 
     ul, ol {
@@ -212,6 +228,8 @@ export default defineComponent({
       background: var(--color-bg-third);
       border-radius: 4px;
       padding: 0 var(--spacing-xs);
+      font-size: 0.85em;
+      color: var(--color-text-main);
     }
 
     table {

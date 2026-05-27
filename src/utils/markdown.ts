@@ -88,15 +88,9 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
 
   const renderer = new Renderer();
 
-  const headingClassMap: Record<number, string> = {
-    1: 'text-h1',
-    2: 'text-h2',
-    3: 'text-h3',
-  };
-
   renderer.heading = ({ tokens, depth }) => {
     const text = marked.Parser.parseInline(tokens);
-    const cls = headingClassMap[depth] || 'text-h3';
+    const cls = depth === 1 ? 'text-h2' : 'text-h3';
 
     return `<h${depth} class="${cls}">${text}</h${depth}>`;
   };
