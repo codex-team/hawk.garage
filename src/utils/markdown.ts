@@ -76,6 +76,8 @@ export function splitTextAndCodeSegments(source: string | undefined | null): Con
   return segments;
 }
 
+import { escape } from '../utils';
+
 /**
  * Return a function that renders a limited subset of Markdown to HTML.
  * @todo use Abstract syntax tree (AST) instead of only string manipulation
@@ -116,5 +118,5 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
    * @param text - raw markdown text
    * @returns HTML string safe to inject with v-html
    */
-  return (text: string) => marked.parse(text, { renderer }) as string;
+  return (text: string) => marked.parse(escape(text), { renderer }) as string;
 }

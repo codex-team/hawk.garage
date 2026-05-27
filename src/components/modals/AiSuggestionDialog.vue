@@ -106,6 +106,7 @@ export default defineComponent({
 <style>
 .ai-suggestion-dialog {
   width: 720px;
+  min-height: 400px;
 
   &__header {
     padding: 20px;
@@ -132,6 +133,14 @@ export default defineComponent({
     font-size: 1rem;
     line-height: 145%;
     font-weight: 400;
+
+    > .ai-suggestion-dialog__markdown:first-child {
+      h1, h2, h3, h4, h5, h6 {
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+    }
   }
 
   &__code {
@@ -142,11 +151,7 @@ export default defineComponent({
     word-break: break-word;
 
     h1, h2, h3, h4, h5, h6 {
-      margin: var(--spacing-xl) 0 var(--spacing-ml) 0;
-
-      &:first-child {
-        margin-top: 0;
-      }
+      margin: var(--spacing-l) 0 var(--spacing-m) 0;
     }
 
     a {
