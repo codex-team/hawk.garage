@@ -252,11 +252,14 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - id of the project to get overview for
      * @param payload.search - event searching regex string
      * @param payload.nextCursor - pointer to the first daily event of the portion to fetch
+     * @param payload.release - optional release label to filter by payload.release
+     * @param payload.assignee - optional user id to filter events by assignee
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release }: { projectId: string;
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release, assignee }: { projectId: string;
       search: string;
       nextCursor: DailyEventsCursor | null;
-      release?: string; }):
+      release?: string;
+      assignee?: string; }):
       Promise<{ dailyEventsWithEventsLinked: DailyEventWithEventLinked[];
         nextCursor: string | null; }> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
@@ -266,7 +269,8 @@ const module: Module<EventsModuleState, RootState> = {
         eventsSortOrder,
         this.getters.getProjectFilters(projectId),
         search,
-        release
+        release,
+        assignee
       );
 
       const dailyEvents = dailyEventsPortion.dailyEvents;

@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Chart from '../events/Chart.vue';
+import { Chart } from '@codexteam/ui/vue';
 import UiSelect, { UiSelectOption } from '../utils/UiSelect.vue';
 import { FETCH_CHART_DATA } from '@/store/modules/projects/actionTypes.js';
 import { ChartLine, ChartLineColor } from '@/types/chart';

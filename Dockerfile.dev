@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:24-alpine
 
 RUN apk add --no-cache git
 
@@ -10,4 +10,4 @@ RUN yarn
 
 COPY . .
 
-CMD ["yarn", "serve"]
+CMD ["yarn", "dev"]

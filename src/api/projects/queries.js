@@ -18,6 +18,19 @@ export const MUTATION_CREATE_PROJECT = `
       notifications {
         ...ProjectNotificationsRule
       }
+      taskManager {
+        type
+        autoTaskEnabled
+        taskThresholdTotalCount
+        assignAgent
+        connectedAt
+        updatedAt
+        config {
+          installationId
+          repoId
+          repoFullName
+        }
+      }
     }
   }
 
@@ -263,6 +276,56 @@ export const QUERY_PROJECT_RELEASE_DETAILS = `
           length
         }
         commits { hash author title date }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for disconnecting task manager integration
+ */
+export const MUTATION_DISCONNECT_TASK_MANAGER = `
+  mutation disconnectTaskManager($projectId: ID!) {
+    disconnectTaskManager(projectId: $projectId) {
+      id
+      taskManager {
+        type
+        autoTaskEnabled
+        taskThresholdTotalCount
+        assignAgent
+        connectedAt
+        updatedAt
+        config {
+          installationId
+          repoId
+          repoFullName
+        }
+      }
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation for updating task manager settings
+ */
+export const MUTATION_UPDATE_TASK_MANAGER_SETTINGS = `
+  mutation updateTaskManagerSettings($input: UpdateTaskManagerSettingsInput!) {
+    updateTaskManagerSettings(input: $input) {
+      id
+      taskManager {
+        type
+        autoTaskEnabled
+        taskThresholdTotalCount
+        assignAgent
+        connectedAt
+        updatedAt
+        config {
+          installationId
+          repoId
+          repoFullName
+        }
       }
     }
   }

@@ -47,6 +47,13 @@
         >
           {{ $t('workspaces.settings.billing.title') }}
         </router-link>
+        <router-link
+          v-if="isAdmin"
+          class="settings-window__menu-item workspace-settings__menu-item"
+          :to="{ name: 'workspace-settings-sso', params: {workspaceId: workspace.id} }"
+        >
+          {{ $t('workspaces.settings.sso.title') }}
+        </router-link>
 
         <!-- <router-link
           v-if="isAdmin"

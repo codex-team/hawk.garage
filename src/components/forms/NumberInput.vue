@@ -1,5 +1,8 @@
 <template>
-  <fieldset class="form-fieldset form-fieldset__width" :class="{ 'form-fieldset--invalid': isInvalid }">
+  <fieldset
+    class="form-fieldset form-fieldset__width"
+    :class="{ 'form-fieldset--invalid': isInvalid }"
+  >
     <label
       class="label form-fieldset__label"
       :for="name"
@@ -8,6 +11,7 @@
     </label>
     <input
       :id="name"
+      ref="input"
       class="input form-fieldset__input"
       type="number"
       :name="name"
@@ -20,7 +24,6 @@
       @input="handleInput"
       @beforeinput="handleBeforeInput"
       @paste="handlePaste"
-      ref="input"
     >
     <div
       class="form-fieldset__error-message"

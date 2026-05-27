@@ -91,11 +91,12 @@
           @click="isAiSuggestionOpen = true"
         />
         <UiButton
-          v-if="false"
+          v-if="!loading && event.taskManagerItem"
           class="event-header__button"
-          :content="$t('event.issue')"
+          :content="`Issue #${event.taskManagerItem.number}`"
           icon="github"
           small
+          @click="openIssueUrl"
         />
       </div>
       <AiSuggestionDialog
@@ -309,6 +310,15 @@ export default defineComponent({
         eventId,
         mark,
       });
+    },
+
+    /**
+     * Open GitHub issue URL in new tab
+     */
+    openIssueUrl() {
+      if (this.event && this.event.taskManagerItem && this.event.taskManagerItem.url) {
+        window.open(this.event.taskManagerItem.url, '_blank', 'noopener');
+      }
     },
   },
 });

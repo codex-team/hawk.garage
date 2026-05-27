@@ -10,7 +10,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 // Current build revision id
-const buildRevision = Date.now()
+const buildRevision = Date.now().toString();
 
 // Get available icons
 const iconsAvailable = fs
@@ -44,7 +44,8 @@ const hawkToken = process.env.VITE_HAWK_TOKEN;
 
 if (hawkToken) {
   plugins.push(hawkVitePlugin({
-    token: hawkToken
+    token: hawkToken,
+    release: buildRevision,
   }));
 }
 

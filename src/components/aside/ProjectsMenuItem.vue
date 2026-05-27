@@ -37,7 +37,7 @@
       </div>
     </div>
     <Badge
-      v-if="project.unreadCount > 0"
+      v-if="project.unreadCount > 0 && project.id !== currentProjectId"
       :content="project.unreadCount"
       class="project-menu-item__events-number"
     />

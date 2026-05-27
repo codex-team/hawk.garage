@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Chart from '../events/Chart.vue';
+import { Chart } from '@codexteam/ui/vue';
 import { GET_CHART_DATA } from '../../store/modules/events/actionTypes';
 import { HawkEvent } from '../../types/events';
 import { prettyFullDate } from '../../utils/filters';

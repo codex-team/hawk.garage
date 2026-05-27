@@ -6,6 +6,7 @@
       'ui-button--submit': submit,
       'ui-button--warning': warning,
       'ui-button--small': small,
+      'ui-button--extrasmall': extrasmall,
       'ui-button--loading': isLoading,
       'ui-button--shaking': shaking,
       'ui-button--rounded': rounded,
@@ -93,6 +94,14 @@ export default defineComponent({
      * Pass true to make button small size
      */
     small: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
+     * Pass true to make button extra small size
+     */
+    extrasmall: {
       type: Boolean,
       default: false,
     },
@@ -190,6 +199,20 @@ $loaderSize: 56px;
 
   &--small {
     padding: 6px 7px;
+  }
+
+  &--extrasmall {
+    padding: 3px 5px;
+  }
+
+  &--extrasmall &-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 3px;
+  }
+
+  &--extrasmall &-text {
+    font-size: 13px;
   }
 
   &--shaking {

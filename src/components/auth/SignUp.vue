@@ -20,7 +20,6 @@ import notifier from 'codex-notifier';
 import { validateUtmParams } from '../utils/utm/utm';
 import { getCookie } from '../../utils';
 
-
 export default {
   components: {
     FormComponent,

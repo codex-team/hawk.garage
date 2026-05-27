@@ -132,9 +132,11 @@ export async function fetchNotificationsSettings() {
  * @returns {Promise<{notifications: UserNotifications}>}
  */
 export async function updateNotificationsChannel(payload) {
-  return (await api.callOld(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
+  const response = await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
     input: payload,
-  })).changeUserNotificationsChannel;
+  });
+
+  return response.data.changeUserNotificationsChannel;
 }
 
 /**

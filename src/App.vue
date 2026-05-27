@@ -14,6 +14,7 @@ import * as api from './api/';
 import { setLanguage } from './i18n';
 import { defineComponent } from 'vue';
 import FeedbackButton from './components/utils/FeedbackButton.vue';
+import notifier from 'codex-notifier';
 
 export default defineComponent({
   name: 'App',
@@ -56,6 +57,7 @@ export default defineComponent({
         setLanguage(newLang);
       }
     );
+    this.handleApiErrorFromQuery();
   },
 
   /**
@@ -69,6 +71,36 @@ export default defineComponent({
   },
 
   methods: {
+    /**
+     * Show API error passed from backend via query parameter
+     * and clean it from URL after displaying
+     */
+    handleApiErrorFromQuery(): void {
+      const apiError = this.$route.query.apiError as string | undefined;
+
+      if (!apiError) {
+        return;
+      }
+
+      notifier.show({
+        message: apiError,
+        style: 'error',
+        time: 5000,
+      });
+
+      /**
+       * Remove apiError from URL after showing notification
+       */
+      const query = { ...this.$route.query };
+
+      delete query.apiError;
+
+      this.$router.replace({
+        ...this.$route,
+        query,
+      });
+    },
+
     /**
      * Add "ripple" effects: wave navigation on clicked elements
      * To active effect, add "data-ripple" attribute to any clickable element
