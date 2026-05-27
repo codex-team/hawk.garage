@@ -118,7 +118,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 20px;
+    padding: 20px 30px;
     font-weight: 600;
     font-size: 18px;
     color: var(--color-text-second);
@@ -136,7 +136,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     min-width: 0;
-    padding: 20px;
+    padding: 10px 30px 20px 30px;
   }
 
   &__suggestion {
@@ -159,14 +159,15 @@ export default defineComponent({
   }
 
   &__code {
-    margin: 0 0 var(--spacing-s) 0;
+    margin: 0 0 var(--spacing-m) 0;
   }
 
   &__markdown {
     word-break: break-word;
+    font-size: inherit;
 
     h1, h2, h3, h4, h5, h6 {
-      margin: var(--spacing-l) 0 var(--spacing-m) 0;
+      margin: var(--spacing-l) 0 var(--spacing-ml) 0;
     }
 
     a {
@@ -174,12 +175,12 @@ export default defineComponent({
     }
 
     .text-p {
-      margin: 0 0 var(--spacing-s) 0;
+      margin: 0 0 var(--spacing-m) 0;
       font-size: inherit;
     }
 
     ul, ol {
-      margin: 0 0 var(--spacing-s) 0;
+      margin: var(--spacing-m) 0;
       padding-left: calc(var(--spacing-l) + var(--spacing-xs));
     }
 
@@ -187,6 +188,10 @@ export default defineComponent({
       list-style-position: outside;
       margin-bottom: var(--spacing-s);
       padding-left: var(--spacing-xs);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
 
     ul > li {
@@ -200,6 +205,7 @@ export default defineComponent({
     li > ul,
     li > ol {
       margin-top: var(--spacing-s);
+      margin-bottom: 0;
     }
 
     li .text-p {
@@ -211,7 +217,7 @@ export default defineComponent({
     }
 
     blockquote {
-      margin: 0 0 var(--spacing-s) 0;
+      margin: 0 0 var(--spacing-m) 0;
     }
 
     pre {
@@ -234,7 +240,7 @@ export default defineComponent({
 
     table {
       width: 100%;
-      margin: 0 0 var(--spacing-s) 0;
+      margin: 0 0 var(--spacing-m) 0;
       border-collapse: collapse;
     }
 
