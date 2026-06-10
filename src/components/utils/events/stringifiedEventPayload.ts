@@ -102,7 +102,7 @@ function buildSection(title: string, content: string | null | undefined): string
     return null;
   }
 
-  return `## ${title}\n${content}`;
+  return `## ${title}\n\n${content}`;
 }
 
 /**
