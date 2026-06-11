@@ -228,7 +228,7 @@ import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
-import { PayWithCardInput } from '../../api/billing';
+import type { PayWithCardInput, PromoCodeUtmInput } from '@/types/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
@@ -292,6 +292,22 @@ export default defineComponent({
     isRecurrent: {
       type: Boolean,
       default: false,
+    },
+
+    /**
+     * Applied promo code value.
+     */
+    promoCode: {
+      type: String,
+      default: '',
+    },
+
+    /**
+     * UTM parameters captured when promo was applied.
+     */
+    promoUtm: {
+      type: Object as () => PromoCodeUtmInput | undefined,
+      default: undefined,
     },
   },
   data() {
@@ -399,8 +415,15 @@ export default defineComponent({
      */
     price(): string {
       return this.$t('common.moneyPerMonth', {
-        currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+        currency: `${this.paymentAmount}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
       }).toString();
+    },
+
+    /**
+     * Actual payment amount returned by API.
+     */
+    paymentAmount(): number {
+      return this.paymentData?.plan.monthlyCharge ?? this.plan.monthlyCharge;
     },
 
     /**
@@ -482,6 +505,8 @@ export default defineComponent({
         workspaceId: this.workspaceId,
         tariffPlanId: this.tariffPlanId,
         shouldSaveCard: this.shouldSaveCard,
+        promoCode: this.promoCode || undefined,
+        promoUtm: this.promoUtm,
       });
     } catch (e) {
       const error = e as Error;

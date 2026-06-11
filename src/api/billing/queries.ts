@@ -82,6 +82,33 @@ export const QUERY_COMPOSE_PAYMENT = `
       checksum
       nextPaymentDate
       cloudPaymentsPublicId
+      promoCode
+      originalAmount
+      finalAmount
+      discountAmount
+    }
+  }
+`;
+
+// language=GraphQL
+/**
+ * Mutation to preview or apply promo code
+ */
+export const MUTATION_PREVIEW_PROMO_CODE = `
+  mutation PreviewPromoCode($input: PreviewPromoCodeInput!) {
+    previewPromoCode(input: $input) {
+      value
+      benefitType
+      applied
+      percent
+      amount
+      plans {
+        planId
+        isApplicable
+        originalAmount
+        finalAmount
+        discountAmount
+      }
     }
   }
 `;

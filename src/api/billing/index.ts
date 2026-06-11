@@ -1,34 +1,16 @@
-import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
+import { MUTATION_PAY_WITH_CARD, MUTATION_PREVIEW_PROMO_CODE, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
 import type { BusinessOperation } from '../../types/business-operation';
-import { BeforePaymentPayload } from '@/types/before-payment-payload';
+import type { ComposePaymentInput, PayWithCardInput, PromoCodePreview, PromoCodeUtmInput } from '@/types/billing';
 
 /**
  * Request business operations list for passed workspaces
  * @param ids - ids of workspaces
  */
 export async function getBusinessOperations(ids: string[]): Promise<BusinessOperation[]> {
-  return (await api.callOld(QUERY_BUSINESS_OPERATIONS, { ids })).businessOperations;
-}
+  const response = await api.call<{ businessOperations: BusinessOperation[] }>(QUERY_BUSINESS_OPERATIONS, { ids });
 
-/**
- * Data for processing payment with saved card
- */
-export interface PayWithCardInput {
-  /**
-   * Checksum for payment validation
-   */
-  checksum: string;
-
-  /**
-   * Saved card id for payment
-   */
-  cardId: string;
-
-  /**
-   * Is payment recurrent or not. If payment is recurrent, then the money will be debited every month
-   */
-  isRecurrent?: boolean;
+  return response.data?.businessOperations || [];
 }
 
 /**
@@ -36,7 +18,9 @@ export interface PayWithCardInput {
  * @param input - data for payment processing
  */
 export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
-  return (await api.callOld(MUTATION_PAY_WITH_CARD, { input })).payWithCard.record;
+  const response = await api.call<{ payWithCard: { record: unknown } }>(MUTATION_PAY_WITH_CARD, { input });
+
+  return response.data?.payWithCard.record;
 }
 
 /**
@@ -46,13 +30,27 @@ export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
  * @param shouldSaveCard - whether to save the card
  */
 export async function composePayment(
-  workspaceId: string,
-  tariffPlanId: string,
-  shouldSaveCard = false
+  input: ComposePaymentInput
 ): Promise<unknown> {
   return await api.call(QUERY_COMPOSE_PAYMENT, {
-    input: { workspaceId,
-      tariffPlanId,
-      shouldSaveCard },
+    input,
   });
+}
+
+/**
+ * Preview discount promo code or apply grant_plan promo code.
+ * @param input - promo code input
+ */
+export async function previewPromoCode(input: {
+  workspaceId: string;
+  value: string;
+  utm?: PromoCodeUtmInput;
+}): Promise<PromoCodePreview> {
+  const response = await api.call<{ previewPromoCode: PromoCodePreview }>(MUTATION_PREVIEW_PROMO_CODE, { input });
+
+  if (!response.data) {
+    throw new Error('Empty promo code response');
+  }
+
+  return response.data.previewPromoCode;
 }

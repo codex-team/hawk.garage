@@ -14,7 +14,23 @@
     </div>
     <div class="tariff-plan__footer">
       <div class="tariff-plan__price">
-        {{ price === 0 ? $t('common.free') : `${spacedNumber(price)}${$t('common.moneyPerMonth', { currency: currencySign })}` }}
+        <template v-if="hasDiscount">
+          <span class="tariff-plan__price-old">
+            {{ formatPrice(originalPrice) }}
+          </span>
+          <span class="tariff-plan__price-new">
+            {{ formatPrice(price) }}
+          </span>
+          <span
+            v-if="discountLabel"
+            class="tariff-plan__discount-label"
+          >
+            {{ discountLabel }}
+          </span>
+        </template>
+        <template v-else>
+          {{ formatPrice(price) }}
+        </template>
       </div>
 
       <UiButton
@@ -61,6 +77,20 @@ export default {
       required: true,
     },
     /**
+     * Plan price before discount
+     */
+    originalPrice: {
+      type: Number,
+      default: null,
+    },
+    /**
+     * Discount label to show near price
+     */
+    discountLabel: {
+      type: String,
+      default: '',
+    },
+    /**
      * Currency for price
      */
     currency: {
@@ -90,9 +120,15 @@ export default {
     currencySign() {
       return getCurrencySign(this.currency);
     },
+    hasDiscount() {
+      return this.originalPrice !== null && this.originalPrice !== this.price;
+    },
   },
   methods: {
     spacedNumber,
+    formatPrice(price) {
+      return price === 0 ? this.$t('common.free') : `${spacedNumber(price)}${this.$t('common.moneyPerMonth', { currency: this.currencySign })}`;
+    },
   },
 };
 </script>
@@ -173,6 +209,27 @@ export default {
       color: var(--color-text-second);
       font-weight: 600;
       font-size: 13px;
+    }
+
+    &__price-old {
+      margin-right: 6px;
+      color: var(--color-text-second);
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    &__price-new {
+      color: var(--color-indicator-medium);
+    }
+
+    &__discount-label {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 5px;
+      color: var(--color-indicator-medium);
+      font-size: 11px;
+      background: color-mod(var(--color-indicator-medium) alpha(12%));
+      border-radius: 4px;
     }
 
     &__button {

@@ -533,6 +533,19 @@
       "description": "Оплата тарифа \"{tariffPlanName}\" для воркспейса {workspaceName} на месяц.",
       "descriptionCardLinking": "Списание 1 рубля для проверки карты. Сумма будет автоматически возвращена."
     },
+    "promoCode": {
+      "title": "Промокод",
+      "havePromoCode": "У меня есть промокод",
+      "applied": "Применён промокод {code}",
+      "inputLabel": "Промокод",
+      "inputPlaceholder": "Введите промокод",
+      "apply": "Применить",
+      "fixedPriceLabel": "Промокод",
+      "notifications": {
+        "applied": "Промокод применён",
+        "grantPlanSuccess": "Тариф успешно применён"
+      }
+    },
     "cardLinking": {
       "description": "Вы собираетесь оформить подписку, которая начнёт действовать с",
       "howItWorks": "Как это работает?",
@@ -724,6 +737,9 @@
   },
   "errors": {
     "Something went wrong": "Произошла ошибка. Хоук уже сообщил нам о ней.",
-    "Invalid refresh token": "Ваша сессия завершена. Чтобы продолжить, авторизуйтесь снова."
+    "Invalid refresh token": "Ваша сессия завершена. Чтобы продолжить, авторизуйтесь снова.",
+    "PROMO_CODE_INVALID": "Промокод не действителен",
+    "PROMO_CODE_LIMIT_EXCEEDED": "Лимит применений промокода исчерпан",
+    "PROMO_CODE_APPLY_FAILED": "Не удалось применить промокод. Попробуйте позже"
   }
 }

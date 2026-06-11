@@ -39,4 +39,24 @@ export interface BeforePaymentPayload {
    * CloudPayments public id (merchant identifier for widget)
    */
   cloudPaymentsPublicId: string;
+
+  /**
+   * Applied promo code value
+   */
+  promoCode?: string;
+
+  /**
+   * Plan price before promo
+   */
+  originalAmount?: number;
+
+  /**
+   * Plan price after promo
+   */
+  finalAmount?: number;
+
+  /**
+   * Actual discount amount
+   */
+  discountAmount?: number;
 }

@@ -533,6 +533,19 @@
       "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month",
       "descriptionCardLinking": "A temporary charge of 1 USD will be made to verify your card. The amount will be refunded automatically."
     },
+    "promoCode": {
+      "title": "Promo code",
+      "havePromoCode": "I have a promo code",
+      "applied": "Applied promo code {code}",
+      "inputLabel": "Promo code",
+      "inputPlaceholder": "Enter promo code",
+      "apply": "Apply",
+      "fixedPriceLabel": "Promo code",
+      "notifications": {
+        "applied": "Promo code applied",
+        "grantPlanSuccess": "Plan applied successfully"
+      }
+    },
     "cardLinking": {
       "description": "You are about to subscribe, which will start on",
       "howItWorks": "How it works?",
@@ -724,6 +737,9 @@
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it.",
-    "You need to refresh your tokens": "Your session has expired. Please log in again."
+    "You need to refresh your tokens": "Your session has expired. Please log in again.",
+    "PROMO_CODE_INVALID": "Promo code is invalid",
+    "PROMO_CODE_LIMIT_EXCEEDED": "Promo code usage limit has been reached",
+    "PROMO_CODE_APPLY_FAILED": "Could not apply promo code. Please try again later"
   }
 }
