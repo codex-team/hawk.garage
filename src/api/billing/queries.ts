@@ -82,10 +82,13 @@ export const QUERY_COMPOSE_PAYMENT = `
       checksum
       nextPaymentDate
       cloudPaymentsPublicId
-      promoCode
-      originalAmount
-      finalAmount
-      discountAmount
+      promo {
+        id
+        benefitType
+        originalAmount
+        finalAmount
+        discountAmount
+      }
     }
   }
 `;

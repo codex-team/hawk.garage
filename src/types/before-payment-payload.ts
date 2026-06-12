@@ -3,6 +3,36 @@
  */
 import type { Plan } from './plan.d.ts';
 
+/**
+ * Promo data attached to payment
+ */
+export interface PaymentPromo {
+  /**
+   * Applied promo code id
+   */
+  id: string;
+
+  /**
+   * Promo benefit type
+   */
+  benefitType: 'percent_discount' | 'amount_discount' | 'fixed_price';
+
+  /**
+   * Plan price before promo
+   */
+  originalAmount: number;
+
+  /**
+   * Plan price after promo
+   */
+  finalAmount: number;
+
+  /**
+   * Actual discount amount
+   */
+  discountAmount: number;
+}
+
 export interface BeforePaymentPayload {
   /**
    * Tariff plan
@@ -41,22 +71,7 @@ export interface BeforePaymentPayload {
   cloudPaymentsPublicId: string;
 
   /**
-   * Applied promo code value
+   * Applied promo code data
    */
-  promoCode?: string;
-
-  /**
-   * Plan price before promo
-   */
-  originalAmount?: number;
-
-  /**
-   * Plan price after promo
-   */
-  finalAmount?: number;
-
-  /**
-   * Actual discount amount
-   */
-  discountAmount?: number;
+  promo?: PaymentPromo;
 }

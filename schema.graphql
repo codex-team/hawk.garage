@@ -299,14 +299,23 @@ type ComposePaymentResponse {
   """CloudPayments public id (merchant identifier for payment widget)"""
   cloudPaymentsPublicId: String!
 
-  """Applied promo code value"""
-  promoCode: String
+  """Applied promo code data"""
+  promo: ComposePaymentPromo
+}
+
+"""Promo data returned with composePayment"""
+type ComposePaymentPromo {
+  """Applied promo code id"""
+  id: ID!
+
+  """Promo benefit type"""
+  benefitType: PromoCodeBenefitType!
 
   """Plan price before promo"""
-  originalAmount: Int
+  originalAmount: Int!
 
   """Plan price after promo"""
-  finalAmount: Int
+  finalAmount: Int!
 
   """Actual discount amount in money"""
   discountAmount: Int
