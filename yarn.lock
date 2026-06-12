@@ -657,10 +657,10 @@
     error-stack-parser "^2.1.4"
     web-vitals "^5.1.0"
 
-"@hawk.so/types@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@hawk.so/types/-/types-0.6.2.tgz#69bf4efc93e67c609faf70303cc7df8b085fefd0"
-  integrity sha512-OmYBOqkzYDWgw5hoZ8PCNu7vc3WzswYsv1SQz8SYLjq39lMLQxNHdmqxXl7jCbR7eWF1WosTjy72leE/hfEowQ==
+"@hawk.so/types@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@hawk.so/types/-/types-0.6.3.tgz#9416282e480528e07b86e61834a23c2f76cc5112"
+  integrity sha512-nFlIrcZFDhbseDy1Y9WVxWcymEr70yQCdBC337d1ZP0VgZpYj4rKTLy1ar8N9wTpZbw7utTyUI5jyW0RmNLQrA==
   dependencies:
     bson "^7.0.0"
 
