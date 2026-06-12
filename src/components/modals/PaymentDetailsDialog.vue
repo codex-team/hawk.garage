@@ -228,7 +228,8 @@ import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
-import type { PayWithCardInput, PromoCodeUtmInput } from '@/types/billing';
+import type { PayWithCardInput } from '@/types/billing';
+import type { Utm as UtmInput } from '@hawk.so/types';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
@@ -306,7 +307,7 @@ export default defineComponent({
      * UTM parameters captured when promo was applied.
      */
     promoUtm: {
-      type: Object as () => PromoCodeUtmInput | undefined,
+      type: Object as () => UtmInput | undefined,
       default: undefined,
     },
   },

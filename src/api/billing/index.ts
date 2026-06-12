@@ -1,7 +1,8 @@
 import { MUTATION_PAY_WITH_CARD, MUTATION_PREVIEW_PROMO_CODE, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
 import type { BusinessOperation } from '../../types/business-operation';
-import type { ComposePaymentInput, PayWithCardInput, PromoCodePreview, PromoCodeUtmInput } from '@/types/billing';
+import type { ComposePaymentInput, PayWithCardInput, PromoCodePreview } from '@/types/billing';
+import type { Utm as UtmInput } from '@hawk.so/types';
 
 /**
  * Request business operations list for passed workspaces
@@ -44,7 +45,7 @@ export async function composePayment(
 export async function previewPromoCode(input: {
   workspaceId: string;
   value: string;
-  utm?: PromoCodeUtmInput;
+  utm?: UtmInput;
 }): Promise<PromoCodePreview> {
   const response = await api.call<{ previewPromoCode: PromoCodePreview }>(MUTATION_PREVIEW_PROMO_CODE, { input });
 

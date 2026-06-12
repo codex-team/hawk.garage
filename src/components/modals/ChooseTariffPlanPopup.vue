@@ -94,10 +94,12 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalD
 import { FETCH_WORKSPACE, PREVIEW_PROMO_CODE } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
-import type { PromoCodePreview, PromoCodePlanPrice, PromoCodeUtmInput } from '@/types/billing';
+import type { PromoCodePreview, PromoCodePlanPrice } from '@/types/billing';
+import type { Utm as UtmInput } from '@hawk.so/types';
+import { validateUtmParams } from '../utils/utm/utm';
 
 type AppliedPromoCode = PromoCodePreview & {
-  utm?: PromoCodeUtmInput;
+  utm?: UtmInput;
 };
 
 export default defineComponent({
@@ -323,7 +325,7 @@ export default defineComponent({
      *
      * @param planId - plan id
      */
-    getPaymentPromoPayload(planId: string): { promoCode?: string; promoUtm?: PromoCodeUtmInput } {
+    getPaymentPromoPayload(planId: string): { promoCode?: string; promoUtm?: UtmInput } {
       const promoPlan = this.getPromoPlanPrice(planId);
 
       if (!this.appliedPromo || !promoPlan?.isApplicable) {
@@ -339,16 +341,16 @@ export default defineComponent({
     /**
      * Reads UTM parameters from current URL.
      */
-    getPromoUtm(): PromoCodeUtmInput {
+    getPromoUtm(): UtmInput | undefined {
       const params = new URLSearchParams(globalThis.location.search);
 
-      return {
+      return validateUtmParams({
         source: params.get('utm_source') || undefined,
         medium: params.get('utm_medium') || undefined,
         campaign: params.get('utm_campaign') || undefined,
         content: params.get('utm_content') || undefined,
         term: params.get('utm_term') || undefined,
-      };
+      });
     },
 
     /**

@@ -202,7 +202,7 @@ input ComposePaymentInput {
   promoCode: String
 
   """UTM parameters captured when promo code was applied"""
-  promoUtm: PromoCodeUtmInput
+  promoUtm: UtmInput
 }
 
 """Input for promo code preview/apply"""
@@ -214,16 +214,7 @@ input PreviewPromoCodeInput {
   value: String!
 
   """UTM parameters captured when promo code was applied"""
-  utm: PromoCodeUtmInput
-}
-
-"""UTM data stored with promo usage"""
-input PromoCodeUtmInput {
-  source: String
-  medium: String
-  campaign: String
-  content: String
-  term: String
+  utm: UtmInput
 }
 
 """Promo code benefit type"""

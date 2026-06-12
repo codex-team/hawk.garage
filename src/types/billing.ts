@@ -1,13 +1,4 @@
-/**
- * UTM data captured when applying promo code.
- */
-export interface PromoCodeUtmInput {
-  source?: string;
-  medium?: string;
-  campaign?: string;
-  content?: string;
-  term?: string;
-}
+import type { Utm as UtmInput } from '@hawk.so/types';
 
 /**
  * Compose payment input.
@@ -17,7 +8,7 @@ export interface ComposePaymentInput {
   tariffPlanId: string;
   shouldSaveCard?: boolean;
   promoCode?: string;
-  promoUtm?: PromoCodeUtmInput;
+  promoUtm?: UtmInput;
 }
 
 /**
