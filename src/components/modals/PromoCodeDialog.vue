@@ -22,7 +22,7 @@
       <div class="promo-code-dialog__actions">
         <UiButton
           secondary
-          :content="$t('common.cancel')"
+          :content="$t('components.confirmationWindow.cancel')"
           :disabled="isLoading"
           @click.prevent="$emit('close')"
         />

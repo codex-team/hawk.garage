@@ -15,17 +15,19 @@
     <div class="tariff-plan__footer">
       <div class="tariff-plan__price">
         <template v-if="hasDiscount">
-          <span class="tariff-plan__price-old">
-            {{ formatPrice(originalPrice) }}
-          </span>
-          <span class="tariff-plan__price-new">
-            {{ formatPrice(price) }}
-          </span>
-          <span
-            v-if="discountLabel"
-            class="tariff-plan__discount-label"
-          >
-            {{ discountLabel }}
+          <span class="tariff-plan__price-discounted">
+            <span class="tariff-plan__price-old">
+              {{ formatPrice(originalPrice) }}
+            </span>
+            <span class="tariff-plan__price-new">
+              {{ formatPrice(price) }}
+            </span>
+            <span
+              v-if="discountLabel"
+              class="tariff-plan__discount-label"
+            >
+              {{ discountLabel }}
+            </span>
           </span>
         </template>
         <template v-else>
@@ -218,16 +220,24 @@ export default {
       opacity: 0.7;
     }
 
+    &__price-discounted {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      white-space: nowrap;
+    }
+
     &__price-new {
+      margin-right: 6px;
       color: var(--color-indicator-medium);
     }
 
     &__discount-label {
       display: inline-block;
-      margin-left: 6px;
       padding: 2px 5px;
       color: var(--color-indicator-medium);
       font-size: 11px;
+      white-space: nowrap;
       background: color-mod(var(--color-indicator-medium) alpha(12%));
       border-radius: 4px;
     }

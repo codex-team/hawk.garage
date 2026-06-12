@@ -16,12 +16,13 @@
         />
 
         <div class="choose-plan__promo">
-          <UiButton
-            small
-            secondary
-            :content="promoButtonText"
+          <button
+            class="choose-plan__promo-link"
+            type="button"
             @click.prevent="isPromoDialogOpen = true"
-          />
+          >
+            {{ promoButtonText }}
+          </button>
         </div>
 
         <div
@@ -325,7 +326,10 @@ export default defineComponent({
      *
      * @param planId - plan id
      */
-    getPaymentPromoPayload(planId: string): { promoCode?: string; promoUtm?: UtmInput } {
+    getPaymentPromoPayload(planId: string): {
+      promoCode?: string;
+      promoUtm?: UtmInput;
+    } {
       const promoPlan = this.getPromoPlanPrice(planId);
 
       if (!this.appliedPromo || !promoPlan?.isApplicable) {
@@ -494,6 +498,21 @@ export default defineComponent({
 
     &__promo {
       margin-bottom: 18px;
+    }
+
+    &__promo-link {
+      padding: 0;
+      color: var(--color-indicator-medium);
+      font: inherit;
+      font-size: 14px;
+      line-height: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &__plans {
