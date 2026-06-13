@@ -668,8 +668,8 @@ type Mutation {
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
 
-  """Previews promo code discounts or applies grant_plan promo immediately"""
-  previewPromoCode(input: PreviewPromoCodeInput!): PreviewPromoCodeResponse!
+  """Validates promo code for workspace admin and returns calculated prices, or immediately applies grant_plan promo"""
+  previewPromoCode(input: PreviewPromoCodeInput!): PreviewPromoCodeResponse! @requireAdmin
 
   """Mutation marks event as visited for current user"""
   visitEvent(
