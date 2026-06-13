@@ -1,6 +1,7 @@
 /**
  * Data declaration before card charge
  */
+import type { PromoCodeBenefitType } from '@hawk.so/types';
 import type { Plan } from './plan.d.ts';
 
 /**
@@ -15,7 +16,7 @@ export interface PaymentPromo {
   /**
    * Promo benefit type
    */
-  benefitType: 'percent_discount' | 'amount_discount' | 'fixed_price';
+  benefitType: Exclude<PromoCodeBenefitType, 'grant_plan'>;
 
   /**
    * Plan price before promo

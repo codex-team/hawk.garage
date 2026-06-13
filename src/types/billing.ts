@@ -1,4 +1,4 @@
-import type { Utm as UtmInput } from '@hawk.so/types';
+import type { PromoCodeBenefitType, Utm as UtmInput } from '@hawk.so/types';
 
 /**
  * Compose payment input.
@@ -32,6 +32,15 @@ export interface PayWithCardInput {
 }
 
 /**
+ * Promo code preview/apply input.
+ */
+export interface PromoCodePreviewInput {
+  workspaceId: string;
+  value: string;
+  utm?: UtmInput;
+}
+
+/**
  * Calculated promo price for a plan.
  */
 export interface PromoCodePlanPrice {
@@ -47,7 +56,7 @@ export interface PromoCodePlanPrice {
  */
 export interface PromoCodePreview {
   value: string;
-  benefitType: 'grant_plan' | 'percent_discount' | 'amount_discount' | 'fixed_price';
+  benefitType: PromoCodeBenefitType;
   applied: boolean;
   percent?: number;
   amount?: number;
