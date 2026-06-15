@@ -82,16 +82,16 @@ export function calculatePromoCodePlanPrice(
 ): PromoCodePlanPrice {
   const originalAmount = plan.monthlyCharge;
   const planId = getPlanId(plan);
-  const isApplicable = isDiscountablePlan(plan) && isPlanApplicable(benefit, plan);
+  const result: PromoCodePlanPrice = {
+    planId,
+    isApplicable: false,
+    originalAmount,
+    finalAmount: originalAmount,
+    discountAmount: 0,
+  };
 
-  if (!isApplicable) {
-    return {
-      planId,
-      isApplicable: false,
-      originalAmount,
-      finalAmount: originalAmount,
-      discountAmount: 0,
-    };
+  if (!isDiscountablePlan(plan) || !isPlanApplicable(benefit, plan)) {
+    return result;
   }
 
   switch (benefit.type) {
@@ -100,51 +100,25 @@ export function calculatePromoCodePlanPrice(
       const discountAmount = Math.floor(originalAmount * benefit.percent / 100);
       const finalAmount = Math.max(originalAmount - discountAmount, minFinalPrice);
 
-      if (finalAmount >= originalAmount) {
-        return {
-          planId,
-          isApplicable: false,
-          originalAmount,
-          finalAmount: originalAmount,
-          discountAmount: 0,
-        };
+      if (finalAmount < originalAmount) {
+        result.isApplicable = true;
+        result.finalAmount = finalAmount;
+        result.discountAmount = originalAmount - finalAmount;
       }
 
-      return {
-        planId,
-        isApplicable: true,
-        originalAmount,
-        finalAmount,
-        discountAmount: originalAmount - finalAmount,
-      };
+      return result;
     }
 
     case 'fixed_price':
-      if (benefit.amount >= originalAmount) {
-        return {
-          planId,
-          isApplicable: false,
-          originalAmount,
-          finalAmount: originalAmount,
-          discountAmount: 0,
-        };
+      if (benefit.amount < originalAmount) {
+        result.isApplicable = true;
+        result.finalAmount = benefit.amount;
+        result.discountAmount = originalAmount - benefit.amount;
       }
 
-      return {
-        planId,
-        isApplicable: true,
-        originalAmount,
-        finalAmount: benefit.amount,
-        discountAmount: originalAmount - benefit.amount,
-      };
+      return result;
 
     default:
-      return {
-        planId,
-        isApplicable: false,
-        originalAmount,
-        finalAmount: originalAmount,
-        discountAmount: 0,
-      };
+      return result;
   }
 }
