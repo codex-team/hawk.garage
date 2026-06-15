@@ -507,6 +507,7 @@
       "didNotAcceptRecurrentPaymentAgreement": "You need to accept the recurrent payments agreement to proceed with payment",
       "didNotAcceptChargingEveryMonth": "You need allow charges from your bank card every month to proceed with payment",
       "allowCardSaving": "Save card for future payments",
+      "promoRecurrentNote": "Promo applies to the first payment only. Then {amount} per month.",
       "goToPaymentService": "Go to payment service",
       "payWithSelectedCard": "Pay with selected card",
       "newCard": "New card",

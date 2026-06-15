@@ -41,6 +41,11 @@ export interface BeforePaymentPayload {
   plan: Plan;
 
   /**
+   * Amount to charge for this payment
+   */
+  chargeAmount: number;
+
+  /**
    * Unique invoice identifier, format: `WorkspaceNameConsonants year-month-identifier Tariff`
    */
   invoiceId: string;

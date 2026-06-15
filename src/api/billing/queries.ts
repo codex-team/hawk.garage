@@ -77,6 +77,7 @@ export const QUERY_COMPOSE_PAYMENT = `
         name
         monthlyCharge
       }
+      chargeAmount
       isCardLinkOperation
       currency
       checksum

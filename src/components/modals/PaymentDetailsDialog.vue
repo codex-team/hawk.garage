@@ -81,8 +81,21 @@
                 {{ $t('common.price') }}
               </div>
               <div class="payment-details__details-item-value">
-                {{ price }}
+                <template v-if="hasPromoDiscount">
+                  <span class="payment-details__price-old">{{ originalPriceLabel }}</span>
+                  <span class="payment-details__price-new">{{ price }}</span>
+                </template>
+                <template v-else>
+                  {{ price }}
+                </template>
               </div>
+            </div>
+
+            <div
+              v-if="hasPromoDiscount && isRecurrent"
+              class="payment-details__promo-note"
+            >
+              {{ promoRecurrentNote }}
             </div>
 
             <!--The next payment date -->
@@ -424,7 +437,48 @@ export default defineComponent({
      * Actual payment amount returned by API.
      */
     paymentAmount(): number {
-      return this.paymentData?.plan.monthlyCharge ?? this.plan.monthlyCharge;
+      return this.paymentData?.chargeAmount
+        ?? this.paymentData?.promo?.finalAmount
+        ?? this.paymentData?.plan.monthlyCharge
+        ?? this.plan.monthlyCharge;
+    },
+
+    /**
+     * Whether promo discount applies to this payment.
+     */
+    hasPromoDiscount(): boolean {
+      if (!this.paymentData?.promo) {
+        return false;
+      }
+
+      const fullPrice = this.paymentData.plan.monthlyCharge ?? this.plan.monthlyCharge;
+
+      return this.paymentAmount < fullPrice;
+    },
+
+    /**
+     * Full plan price label before promo.
+     */
+    originalPriceLabel(): string {
+      const amount = this.paymentData?.promo?.originalAmount
+        ?? this.paymentData?.plan.monthlyCharge
+        ?? this.plan.monthlyCharge;
+
+      return this.$t('common.moneyPerMonth', {
+        currency: `${amount}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+      }).toString();
+    },
+
+    /**
+     * Note that promo applies only to the first payment.
+     */
+    promoRecurrentNote(): string {
+      const fullAmount = this.paymentData?.plan.monthlyCharge ?? this.plan.monthlyCharge;
+      const currency = getCurrencySign(this.plan.monthlyChargeCurrency);
+
+      return this.$t('billing.paymentDetails.promoRecurrentNote', {
+        amount: `${fullAmount}${currency}`,
+      }).toString();
     },
 
     /**
@@ -631,7 +685,9 @@ export default defineComponent({
         }
       }
 
-      const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
+      const amount = data.isCardLinkOperation
+        ? AMOUNT_FOR_CARD_VALIDATION
+        : (data.chargeAmount ?? data.promo?.finalAmount ?? data.plan.monthlyCharge);
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
       const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
@@ -737,6 +793,24 @@ export default defineComponent({
         font-weight: bold;
       }
     }
+  }
+
+  &__price-old {
+    margin-right: 8px;
+    color: var(--color-text-second);
+    font-weight: normal;
+    text-decoration: line-through;
+  }
+
+  &__price-new {
+    color: var(--color-text-main);
+  }
+
+  &__promo-note {
+    margin: -8px 0 20px;
+    color: var(--color-text-second);
+    font-size: 13px;
+    line-height: 1.4;
   }
 
   &__card {
