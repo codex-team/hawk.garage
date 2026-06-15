@@ -4,6 +4,7 @@ import type {
 } from '@hawk.so/types';
 
 const DEFAULT_MIN_FINAL_PRICE = 1;
+const PERCENT_DIVISOR = 100;
 
 /**
  * Promo benefit shape used for price calculation.
@@ -35,7 +36,6 @@ export interface PromoCodePlanPrice {
 
 /**
  * Returns plan id string for promo pricing.
- *
  * @param plan - plan with id or _id
  */
 function getPlanId(plan: PromoCodePricingPlan): string {
@@ -69,10 +69,7 @@ function isDiscountablePlan(plan: PromoCodePricingPlan): boolean {
 }
 
 /**
- * Calculates discounted price for one plan.
- *
- * Keep in sync with api/src/utils/promoCodePricing.ts
- *
+ * Calculates discounted price for one plan. Keep in sync with api/src/utils/promoCodePricing.ts
  * @param benefit - promo benefit
  * @param plan - selected plan
  */
@@ -97,7 +94,7 @@ export function calculatePromoCodePlanPrice(
   switch (benefit.type) {
     case 'percent_discount': {
       const minFinalPrice = benefit.minFinalPrice ?? DEFAULT_MIN_FINAL_PRICE;
-      const discountAmount = Math.floor(originalAmount * benefit.percent / 100);
+      const discountAmount = Math.floor(originalAmount * benefit.percent / PERCENT_DIVISOR);
       const finalAmount = Math.max(originalAmount - discountAmount, minFinalPrice);
 
       if (finalAmount < originalAmount) {

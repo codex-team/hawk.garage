@@ -3,7 +3,6 @@ import type { PromoCodePricingBenefit } from '@/utils/promoCodePricing';
 
 /**
  * Builds pricing benefit from verified promo code response.
- *
  * @param promo - verified promo code response
  */
 export function buildPromoPricingBenefit(promo: PromoCodeVerify): PromoCodePricingBenefit {

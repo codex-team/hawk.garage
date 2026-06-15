@@ -317,7 +317,7 @@ export default defineComponent({
       promoCode?: string;
       promoUtm?: UtmInput;
     } {
-      const plan = this.plans.find((item) => item.id === planId);
+      const plan = this.plans.find(item => item.id === planId);
 
       if (!plan) {
         return {};
