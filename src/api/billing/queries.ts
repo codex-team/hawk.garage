@@ -51,6 +51,8 @@ export const QUERY_BUSINESS_OPERATIONS = `
 // language=GraphQL
 /**
  * Mutation for processing payment with savedcard
+ *
+ * Sends: checksum, cardId, isRecurrent
  */
 export const MUTATION_PAY_WITH_CARD = `
   mutation PayWithCard($input: PayWithCardInput!) {
@@ -66,7 +68,16 @@ export const MUTATION_PAY_WITH_CARD = `
 
 // language=GraphQL
 /**
- * Query to prepare payment data (GraphQL version of composePayment)
+ * Prepare payment data before opening CloudPayments widget.
+ *
+ * Sends (ComposePaymentInput):
+ *   workspaceId, tariffPlanId, shouldSaveCard?, promoCode?, promoUtm?
+ *
+ * Receives (calculated on server):
+ *   chargeAmount — actual amount to charge (with promo if applicable)
+ *   plan.monthlyCharge — full tariff price (for recurrent)
+ *   promo — server-validated discount breakdown for UI
+ *   checksum, invoiceId, etc.
  */
 export const QUERY_COMPOSE_PAYMENT = `
   query ComposePayment($input: ComposePaymentInput!) {
@@ -84,11 +95,8 @@ export const QUERY_COMPOSE_PAYMENT = `
       nextPaymentDate
       cloudPaymentsPublicId
       promo {
-        id
-        benefitType
         originalAmount
         finalAmount
-        discountAmount
       }
     }
   }
@@ -96,7 +104,13 @@ export const QUERY_COMPOSE_PAYMENT = `
 
 // language=GraphQL
 /**
- * Mutation to verify promo code
+ * Verify promo code before payment (UI discount preview).
+ *
+ * Sends (VerifyPromoCodeInput):
+ *   workspaceId, value
+ *
+ * Receives (benefit data for client-side price calculation):
+ *   value, benefitType, percent?, amount?, minFinalPrice?, applicablePlanIds?
  */
 export const MUTATION_VERIFY_PROMO_CODE = `
   mutation VerifyPromoCode($input: VerifyPromoCodeInput!) {
