@@ -205,16 +205,13 @@ input ComposePaymentInput {
   promoUtm: UtmInput
 }
 
-"""Input for promo code preview/apply"""
-input PreviewPromoCodeInput {
+"""Input for promo code apply"""
+input ApplyPromoCodeInput {
   """Workspace id for which promo code is applied"""
   workspaceId: ID!
 
   """Promo code value entered by user"""
   value: String!
-
-  """UTM parameters captured when promo code was applied"""
-  utm: UtmInput
 }
 
 """Promo code benefit type"""
@@ -225,43 +222,25 @@ enum PromoCodeBenefitType {
   fixed_price
 }
 
-"""Calculated promo code price for a tariff plan"""
-type PromoCodePlanPrice {
-  """Plan id"""
-  planId: ID!
-
-  """Whether promo code can be applied to this plan"""
-  isApplicable: Boolean!
-
-  """Plan price before promo"""
-  originalAmount: Int!
-
-  """Plan price after promo"""
-  finalAmount: Int!
-
-  """Actual discount amount in money"""
-  discountAmount: Int!
-}
-
-"""Promo code preview response"""
-type PreviewPromoCodeResponse {
+"""Validated promo code data for client-side price calculation"""
+type ApplyPromoCodeResponse {
   """Normalized promo code value"""
   value: String!
 
   """Benefit type"""
   benefitType: PromoCodeBenefitType!
 
-  """True if grant_plan promo was applied immediately"""
-  applied: Boolean!
-
   """Discount percent for percent promos"""
   percent: Int
 
-  """Discount or fixed price amount"""
+  """Fixed price amount"""
   amount: Int
 
-  """Calculated prices for visible plans"""
-  plans: [PromoCodePlanPrice!]!
+  """Minimum final price after percent discount"""
+  minFinalPrice: Int
+
+  """Plan ids this promo can be applied to"""
+  applicablePlanIds: [ID!]
 }
 
 """Minimal plan info used in composePayment response"""
@@ -671,8 +650,8 @@ type Mutation {
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
 
-  """Validates promo code for workspace admin and returns calculated prices, or immediately applies grant_plan promo"""
-  previewPromoCode(input: PreviewPromoCodeInput!): PreviewPromoCodeResponse! @requireAdmin
+  """Validates promo code for workspace admin and returns benefit data"""
+  applyPromoCode(input: ApplyPromoCodeInput!): ApplyPromoCodeResponse! @requireAdmin
 
   """Mutation marks event as visited for current user"""
   visitEvent(

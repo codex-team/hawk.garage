@@ -96,23 +96,17 @@ export const QUERY_COMPOSE_PAYMENT = `
 
 // language=GraphQL
 /**
- * Mutation to preview or apply promo code
+ * Mutation to apply promo code
  */
-export const MUTATION_PREVIEW_PROMO_CODE = `
-  mutation PreviewPromoCode($input: PreviewPromoCodeInput!) {
-    previewPromoCode(input: $input) {
+export const MUTATION_APPLY_PROMO_CODE = `
+  mutation ApplyPromoCode($input: ApplyPromoCodeInput!) {
+    applyPromoCode(input: $input) {
       value
       benefitType
-      applied
       percent
       amount
-      plans {
-        planId
-        isApplicable
-        originalAmount
-        finalAmount
-        discountAmount
-      }
+      minFinalPrice
+      applicablePlanIds
     }
   }
 `;

@@ -16,7 +16,7 @@ export interface PaymentPromo {
   /**
    * Promo benefit type
    */
-  benefitType: Exclude<PromoCodeBenefitType, 'grant_plan'>;
+  benefitType: Exclude<PromoCodeBenefitType, 'grant_plan' | 'amount_discount'>;
 
   /**
    * Plan price before promo

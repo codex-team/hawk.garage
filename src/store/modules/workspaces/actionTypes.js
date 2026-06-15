@@ -84,9 +84,9 @@ export const PAY_WITH_CARD = 'PAY_WITH_CARD';
 export const COMPOSE_PAYMENT = 'COMPOSE_PAYMENT';
 
 /**
- * Preview discount promo code or apply grant plan promo code
+ * Apply promo code and return validated benefit data
  */
-export const PREVIEW_PROMO_CODE = 'PREVIEW_PROMO_CODE';
+export const APPLY_PROMO_CODE = 'APPLY_PROMO_CODE';
 
 /**
  * Fetch SSO settings for workspace (admin only)

@@ -32,33 +32,21 @@ export interface PayWithCardInput {
 }
 
 /**
- * Promo code preview/apply input.
+ * Promo code apply input.
  */
-export interface PromoCodePreviewInput {
+export interface PromoCodeApplyInput {
   workspaceId: string;
   value: string;
-  utm?: UtmInput;
 }
 
 /**
- * Calculated promo price for a plan.
+ * Validated promo code data for client-side price calculation.
  */
-export interface PromoCodePlanPrice {
-  planId: string;
-  isApplicable: boolean;
-  originalAmount: number;
-  finalAmount: number;
-  discountAmount: number;
-}
-
-/**
- * Promo code preview/apply response.
- */
-export interface PromoCodePreview {
+export interface PromoCodeApply {
   value: string;
   benefitType: PromoCodeBenefitType;
-  applied: boolean;
   percent?: number;
   amount?: number;
-  plans: PromoCodePlanPrice[];
+  minFinalPrice?: number;
+  applicablePlanIds?: string[];
 }

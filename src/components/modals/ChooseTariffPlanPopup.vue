@@ -92,16 +92,16 @@ import UiButton from '../utils/UiButton.vue';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
-import { FETCH_WORKSPACE, PREVIEW_PROMO_CODE } from '@/store/modules/workspaces/actionTypes';
+import { APPLY_PROMO_CODE } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
-import type { PromoCodePreview, PromoCodePlanPrice } from '@/types/billing';
+import type { PromoCodeApply } from '@/types/billing';
 import type { Utm as UtmInput } from '@hawk.so/types';
+import { buildPromoPricingBenefit } from '@/utils/promoCode';
+import { calculatePromoCodePlanPrice } from '@/utils/promoCodePricing';
 import { validateUtmParams } from '../utils/utm/utm';
 
-type AppliedPromoCode = PromoCodePreview & {
-  utm?: UtmInput;
-};
+type AppliedPromoCode = PromoCodeApply;
 
 export default defineComponent({
   name: 'ChooseTariffPlanPopup',
@@ -150,7 +150,7 @@ export default defineComponent({
       isPromoInvalid: false,
 
       /**
-       * Applied promo code preview.
+       * Applied promo code returned by applyPromoCode mutation.
        */
       appliedPromo: null as AppliedPromoCode | null,
     };
@@ -211,32 +211,13 @@ export default defineComponent({
       this.isPromoApplying = true;
       this.isPromoInvalid = false;
 
-      const utm = this.getPromoUtm();
-
       try {
-        const promo = await this.$store.dispatch(PREVIEW_PROMO_CODE, {
+        const promo = await this.$store.dispatch(APPLY_PROMO_CODE, {
           workspaceId: this.workspaceId,
           value,
-          utm,
-        }) as PromoCodePreview;
+        }) as PromoCodeApply;
 
-        if (promo.applied) {
-          notifier.show({
-            message: this.$t('billing.promoCode.notifications.grantPlanSuccess') as string,
-            style: 'success',
-            time: 5000,
-          });
-
-          await this.$store.dispatch(FETCH_WORKSPACE, this.workspaceId);
-          await this.$store.dispatch(RESET_MODAL_DIALOG);
-
-          return;
-        }
-
-        this.appliedPromo = {
-          ...promo,
-          utm,
-        };
+        this.appliedPromo = promo;
         this.closePromoDialog();
 
         notifier.show({
@@ -270,10 +251,20 @@ export default defineComponent({
     /**
      * Gets promo price for plan.
      *
-     * @param planId - plan id
+     * @param plan - tariff plan
      */
-    getPromoPlanPrice(planId: string): PromoCodePlanPrice | undefined {
-      return this.appliedPromo?.plans.find(plan => plan.planId === planId);
+    getPromoPlanPrice(plan: Plan) {
+      if (!this.appliedPromo) {
+        return undefined;
+      }
+
+      return calculatePromoCodePlanPrice(
+        buildPromoPricingBenefit(this.appliedPromo),
+        {
+          id: plan.id,
+          monthlyCharge: plan.monthlyCharge,
+        }
+      );
     },
 
     /**
@@ -282,7 +273,7 @@ export default defineComponent({
      * @param plan - tariff plan
      */
     getPlanPrice(plan: Plan): number {
-      const promoPlan = this.getPromoPlanPrice(plan.id);
+      const promoPlan = this.getPromoPlanPrice(plan);
 
       return promoPlan?.isApplicable ? promoPlan.finalAmount : plan.monthlyCharge;
     },
@@ -293,7 +284,7 @@ export default defineComponent({
      * @param plan - tariff plan
      */
     getPlanOriginalPrice(plan: Plan): number | undefined {
-      const promoPlan = this.getPromoPlanPrice(plan.id);
+      const promoPlan = this.getPromoPlanPrice(plan);
 
       return promoPlan?.isApplicable ? promoPlan.originalAmount : undefined;
     },
@@ -304,7 +295,7 @@ export default defineComponent({
      * @param plan - tariff plan
      */
     getPlanDiscountLabel(plan: Plan): string {
-      const promoPlan = this.getPromoPlanPrice(plan.id);
+      const promoPlan = this.getPromoPlanPrice(plan);
 
       if (!this.appliedPromo || !promoPlan?.isApplicable) {
         return '';
@@ -312,10 +303,6 @@ export default defineComponent({
 
       if (this.appliedPromo.benefitType === 'percent_discount') {
         return `-${this.appliedPromo.percent}%`;
-      }
-
-      if (this.appliedPromo.benefitType === 'amount_discount') {
-        return `-${this.appliedPromo.amount}${plan.monthlyChargeCurrency}`;
       }
 
       return this.$t('billing.promoCode.fixedPriceLabel').toString();
@@ -330,7 +317,13 @@ export default defineComponent({
       promoCode?: string;
       promoUtm?: UtmInput;
     } {
-      const promoPlan = this.getPromoPlanPrice(planId);
+      const plan = this.plans.find((item) => item.id === planId);
+
+      if (!plan) {
+        return {};
+      }
+
+      const promoPlan = this.getPromoPlanPrice(plan);
 
       if (!this.appliedPromo || !promoPlan?.isApplicable) {
         return {};
@@ -338,7 +331,7 @@ export default defineComponent({
 
       return {
         promoCode: this.appliedPromo.value,
-        promoUtm: this.appliedPromo.utm,
+        promoUtm: this.getPromoUtm(),
       };
     },
 

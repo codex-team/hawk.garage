@@ -543,8 +543,7 @@
       "apply": "Применить",
       "fixedPriceLabel": "Промокод",
       "notifications": {
-        "applied": "Промокод применён",
-        "grantPlanSuccess": "Тариф успешно применён"
+        "applied": "Промокод применён"
       }
     },
     "cardLinking": {

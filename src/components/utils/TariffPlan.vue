@@ -16,17 +16,20 @@
       <div class="tariff-plan__price">
         <template v-if="hasDiscount">
           <span class="tariff-plan__price-discounted">
-            <span class="tariff-plan__price-old">
-              {{ formatPrice(originalPrice) }}
-            </span>
-            <span class="tariff-plan__price-new">
-              {{ formatPrice(price) }}
-            </span>
             <span
               v-if="discountLabel"
               class="tariff-plan__discount-label"
             >
               {{ discountLabel }}
+            </span>
+            <span class="tariff-plan__price-old">
+              {{ formatPriceAmount(originalPrice) }}
+            </span>
+            <span class="tariff-plan__price-new">
+              {{ formatPriceAmount(price) }}
+            </span>
+            <span class="tariff-plan__price-period">
+              {{ pricePeriodSuffix }}
             </span>
           </span>
         </template>
@@ -125,11 +128,21 @@ export default {
     hasDiscount() {
       return this.originalPrice !== null && this.originalPrice !== this.price;
     },
+    pricePeriodSuffix() {
+      return this.$t('common.moneyPerMonth', { currency: '' }).trim();
+    },
   },
   methods: {
     spacedNumber,
+    formatPriceAmount(price) {
+      return price === 0 ? this.$t('common.free') : `${spacedNumber(price)}${this.currencySign}`;
+    },
     formatPrice(price) {
-      return price === 0 ? this.$t('common.free') : `${spacedNumber(price)}${this.$t('common.moneyPerMonth', { currency: this.currencySign })}`;
+      if (price === 0) {
+        return this.$t('common.free');
+      }
+
+      return `${this.formatPriceAmount(price)} ${this.pricePeriodSuffix}`;
     },
   },
 };
@@ -214,7 +227,7 @@ export default {
     }
 
     &__price-old {
-      margin-right: 6px;
+      margin-right: 4px;
       color: var(--color-text-second);
       text-decoration: line-through;
       opacity: 0.7;
@@ -228,12 +241,17 @@ export default {
     }
 
     &__price-new {
-      margin-right: 6px;
+      margin-right: 4px;
       color: var(--color-indicator-medium);
+    }
+
+    &__price-period {
+      color: var(--color-text-second);
     }
 
     &__discount-label {
       display: inline-block;
+      margin-right: 6px;
       padding: 2px 5px;
       color: var(--color-indicator-medium);
       font-size: 11px;

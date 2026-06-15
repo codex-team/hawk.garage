@@ -16,7 +16,7 @@ import {
   CANCEL_SUBSCRIPTION,
   PAY_WITH_CARD,
   COMPOSE_PAYMENT,
-  PREVIEW_PROMO_CODE,
+  APPLY_PROMO_CODE,
   FETCH_WORKSPACE_SSO_SETTINGS,
   UPDATE_WORKSPACE_SSO
 } from './actionTypes';
@@ -441,14 +441,14 @@ const actions = {
   },
 
   /**
-   * Preview discount promo code or apply grant_plan promo code.
+   * Apply promo code and return validated benefit data.
    *
    * @param {object} context - Vuex action context
    * @param {object} payload - promo code payload
-   * @returns {Promise<import('@/types/billing').PromoCodePreview>}
+   * @returns {Promise<import('@/types/billing').PromoCodeApply>}
    */
-  async [PREVIEW_PROMO_CODE](context, payload) {
-    return billingApi.previewPromoCode(payload);
+  async [APPLY_PROMO_CODE](context, payload) {
+    return billingApi.applyPromoCode(payload);
   },
 
   /**

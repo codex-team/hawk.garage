@@ -543,8 +543,7 @@
       "apply": "Apply",
       "fixedPriceLabel": "Promo code",
       "notifications": {
-        "applied": "Promo code applied",
-        "grantPlanSuccess": "Plan applied successfully"
+        "applied": "Promo code applied"
       }
     },
     "cardLinking": {
