@@ -1,7 +1,7 @@
-import { MUTATION_PAY_WITH_CARD, MUTATION_APPLY_PROMO_CODE, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
+import { MUTATION_PAY_WITH_CARD, MUTATION_VERIFY_PROMO_CODE, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
 import type { BusinessOperation } from '../../types/business-operation';
-import type { ComposePaymentInput, PayWithCardInput, PromoCodeApply, PromoCodeApplyInput } from '@/types/billing';
+import type { ComposePaymentInput, PayWithCardInput, PromoCodeVerify, PromoCodeVerifyInput } from '@/types/billing';
 
 /**
  * Request business operations list for passed workspaces
@@ -36,15 +36,15 @@ export async function composePayment(
 }
 
 /**
- * Apply promo code and return validated benefit data.
+ * Verify promo code and return validated benefit data.
  * @param input - promo code input
  */
-export async function applyPromoCode(input: PromoCodeApplyInput): Promise<PromoCodeApply> {
-  const response = await api.call<{ applyPromoCode: PromoCodeApply }>(MUTATION_APPLY_PROMO_CODE, { input });
+export async function verifyPromoCode(input: PromoCodeVerifyInput): Promise<PromoCodeVerify> {
+  const response = await api.call<{ verifyPromoCode: PromoCodeVerify }>(MUTATION_VERIFY_PROMO_CODE, { input });
 
   if (!response.data) {
     throw new Error('Empty promo code response');
   }
 
-  return response.data.applyPromoCode;
+  return response.data.verifyPromoCode;
 }

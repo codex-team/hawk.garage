@@ -32,17 +32,17 @@ export interface PayWithCardInput {
 }
 
 /**
- * Promo code apply input.
+ * Promo code verification input.
  */
-export interface PromoCodeApplyInput {
+export interface PromoCodeVerifyInput {
   workspaceId: string;
   value: string;
 }
 
 /**
- * Validated promo code data for client-side price calculation.
+ * Verified promo code data for client-side price calculation.
  */
-export interface PromoCodeApply {
+export interface PromoCodeVerify {
   value: string;
   benefitType: PromoCodeBenefitType;
   percent?: number;

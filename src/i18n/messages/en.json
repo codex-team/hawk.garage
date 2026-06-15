@@ -740,6 +740,6 @@
     "You need to refresh your tokens": "Your session has expired. Please log in again.",
     "PROMO_CODE_INVALID": "Promo code is invalid",
     "PROMO_CODE_LIMIT_EXCEEDED": "Promo code usage limit has been reached",
-    "PROMO_CODE_APPLY_FAILED": "Could not apply promo code. Please try again later"
+    "PROMO_CODE_VERIFY_FAILED": "Could not apply promo code. Please try again later"
   }
 }

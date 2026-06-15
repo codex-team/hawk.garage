@@ -96,11 +96,11 @@ export const QUERY_COMPOSE_PAYMENT = `
 
 // language=GraphQL
 /**
- * Mutation to apply promo code
+ * Mutation to verify promo code
  */
-export const MUTATION_APPLY_PROMO_CODE = `
-  mutation ApplyPromoCode($input: ApplyPromoCodeInput!) {
-    applyPromoCode(input: $input) {
+export const MUTATION_VERIFY_PROMO_CODE = `
+  mutation VerifyPromoCode($input: VerifyPromoCodeInput!) {
+    verifyPromoCode(input: $input) {
       value
       benefitType
       percent

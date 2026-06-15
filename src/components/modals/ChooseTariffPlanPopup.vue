@@ -77,7 +77,7 @@
       v-if="isPromoDialogOpen"
       :is-loading="isPromoApplying"
       :is-invalid="isPromoInvalid"
-      @apply="applyPromoCode"
+      @apply="verifyPromoCode"
       @close="closePromoDialog"
     />
   </PopupDialog>
@@ -92,16 +92,16 @@ import UiButton from '../utils/UiButton.vue';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
-import { APPLY_PROMO_CODE } from '@/store/modules/workspaces/actionTypes';
+import { VERIFY_PROMO_CODE } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
-import type { PromoCodeApply } from '@/types/billing';
+import type { PromoCodeVerify } from '@/types/billing';
 import type { Utm as UtmInput } from '@hawk.so/types';
 import { buildPromoPricingBenefit } from '@/utils/promoCode';
 import { calculatePromoCodePlanPrice } from '@/utils/promoCodePricing';
 import { validateUtmParams } from '../utils/utm/utm';
 
-type AppliedPromoCode = PromoCodeApply;
+type VerifiedPromoCode = PromoCodeVerify;
 
 export default defineComponent({
   name: 'ChooseTariffPlanPopup',
@@ -150,9 +150,9 @@ export default defineComponent({
       isPromoInvalid: false,
 
       /**
-       * Applied promo code returned by applyPromoCode mutation.
+       * Verified promo code ready for payment.
        */
-      appliedPromo: null as AppliedPromoCode | null,
+      verifiedPromo: null as VerifiedPromoCode | null,
     };
   },
   computed: {
@@ -180,12 +180,12 @@ export default defineComponent({
      * Promo button text.
      */
     promoButtonText(): string {
-      if (!this.appliedPromo) {
+      if (!this.verifiedPromo) {
         return this.$t('billing.promoCode.havePromoCode').toString();
       }
 
       return this.$t('billing.promoCode.applied', {
-        code: this.appliedPromo.value,
+        code: this.verifiedPromo.value,
       }).toString();
     },
   },
@@ -207,17 +207,17 @@ export default defineComponent({
      *
      * @param value - promo code value
      */
-    async applyPromoCode(value: string): Promise<void> {
+    async verifyPromoCode(value: string): Promise<void> {
       this.isPromoApplying = true;
       this.isPromoInvalid = false;
 
       try {
-        const promo = await this.$store.dispatch(APPLY_PROMO_CODE, {
+        const promo = await this.$store.dispatch(VERIFY_PROMO_CODE, {
           workspaceId: this.workspaceId,
           value,
-        }) as PromoCodeApply;
+        }) as PromoCodeVerify;
 
-        this.appliedPromo = promo;
+        this.verifiedPromo = promo;
         this.closePromoDialog();
 
         notifier.show({
@@ -254,12 +254,12 @@ export default defineComponent({
      * @param plan - tariff plan
      */
     getPromoPlanPrice(plan: Plan) {
-      if (!this.appliedPromo) {
+      if (!this.verifiedPromo) {
         return undefined;
       }
 
       return calculatePromoCodePlanPrice(
-        buildPromoPricingBenefit(this.appliedPromo),
+        buildPromoPricingBenefit(this.verifiedPromo),
         {
           id: plan.id,
           monthlyCharge: plan.monthlyCharge,
@@ -297,12 +297,12 @@ export default defineComponent({
     getPlanDiscountLabel(plan: Plan): string {
       const promoPlan = this.getPromoPlanPrice(plan);
 
-      if (!this.appliedPromo || !promoPlan?.isApplicable) {
+      if (!this.verifiedPromo || !promoPlan?.isApplicable) {
         return '';
       }
 
-      if (this.appliedPromo.benefitType === 'percent_discount') {
-        return `-${this.appliedPromo.percent}%`;
+      if (this.verifiedPromo.benefitType === 'percent_discount') {
+        return `-${this.verifiedPromo.percent}%`;
       }
 
       return this.$t('billing.promoCode.fixedPriceLabel').toString();
@@ -325,12 +325,12 @@ export default defineComponent({
 
       const promoPlan = this.getPromoPlanPrice(plan);
 
-      if (!this.appliedPromo || !promoPlan?.isApplicable) {
+      if (!this.verifiedPromo || !promoPlan?.isApplicable) {
         return {};
       }
 
       return {
-        promoCode: this.appliedPromo.value,
+        promoCode: this.verifiedPromo.value,
         promoUtm: this.getPromoUtm(),
       };
     },

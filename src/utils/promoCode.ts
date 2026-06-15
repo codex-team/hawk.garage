@@ -1,12 +1,12 @@
-import type { PromoCodeApply } from '@/types/billing';
+import type { PromoCodeVerify } from '@/types/billing';
 import type { PromoCodePricingBenefit } from '@/utils/promoCodePricing';
 
 /**
- * Builds pricing benefit from validated promo code response.
+ * Builds pricing benefit from verified promo code response.
  *
- * @param promo - promo code apply response
+ * @param promo - verified promo code response
  */
-export function buildPromoPricingBenefit(promo: PromoCodeApply): PromoCodePricingBenefit {
+export function buildPromoPricingBenefit(promo: PromoCodeVerify): PromoCodePricingBenefit {
   if (promo.benefitType === 'percent_discount') {
     return {
       type: 'percent_discount',

@@ -205,8 +205,8 @@ input ComposePaymentInput {
   promoUtm: UtmInput
 }
 
-"""Input for promo code apply"""
-input ApplyPromoCodeInput {
+"""Input for promo code verification"""
+input VerifyPromoCodeInput {
   """Workspace id for which promo code is applied"""
   workspaceId: ID!
 
@@ -222,8 +222,8 @@ enum PromoCodeBenefitType {
   fixed_price
 }
 
-"""Validated promo code data for client-side price calculation"""
-type ApplyPromoCodeResponse {
+"""Verified promo code data for client-side price calculation"""
+type VerifyPromoCodeResponse {
   """Normalized promo code value"""
   value: String!
 
@@ -650,8 +650,8 @@ type Mutation {
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
 
-  """Validates promo code for workspace admin and returns benefit data"""
-  applyPromoCode(input: ApplyPromoCodeInput!): ApplyPromoCodeResponse! @requireAdmin
+  """Verifies promo code for workspace admin and returns benefit data"""
+  verifyPromoCode(input: VerifyPromoCodeInput!): VerifyPromoCodeResponse! @requireAdmin
 
   """Mutation marks event as visited for current user"""
   visitEvent(
