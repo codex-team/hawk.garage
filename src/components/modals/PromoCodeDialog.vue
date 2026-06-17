@@ -1,6 +1,7 @@
 <template>
-  <PopupDialog @close="$emit('close')">
+  <PopupDialog @close="emit('close')">
     <form
+      ref="formRef"
       class="promo-code-dialog"
       @click.stop
       @submit.prevent.stop="onSubmit"
@@ -36,7 +37,7 @@
           secondary
           :content="$t('components.confirmationWindow.cancel')"
           :disabled="isLoading"
-          @click.prevent="$emit('close')"
+          @click.prevent="emit('close')"
         />
         <UiButton
           type="submit"
@@ -50,69 +51,67 @@
   </PopupDialog>
 </template>
 
-<script lang="ts">
-import { defineComponent, nextTick } from 'vue';
+<script setup lang="ts">
+import { nextTick, onMounted, ref } from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TextFieldset from '../forms/TextFieldset.vue';
 import UiButton from '../utils/UiButton.vue';
 
-export default defineComponent({
-  name: 'PromoCodeDialog',
-  components: {
-    PopupDialog,
-    TextFieldset,
-    UiButton,
-  },
-  props: {
-    /**
-     * Loading state.
-     */
-    isLoading: {
-      type: Boolean,
-      default: false,
-    },
+interface Props {
+  /**
+   * Loading state.
+   */
+  isLoading?: boolean;
 
-    /**
-     * Invalid input state.
-     */
-    isInvalid: {
-      type: Boolean,
-      default: false,
-    },
+  /**
+   * Invalid input state.
+   */
+  isInvalid?: boolean;
 
-    /**
-     * Error text shown under the input.
-     */
-    errorMessage: {
-      type: String,
-      default: '',
-    },
-  },
-  emits: ['apply', 'close'],
-  data() {
-    return {
-      value: '',
-    };
-  },
-  mounted() {
-    nextTick(() => {
-      const input = (this.$el as HTMLElement).querySelector('input[name="promoCode"]') as HTMLInputElement | null;
+  /**
+   * Error text shown under the input.
+   */
+  errorMessage?: string;
+}
 
-      input?.focus();
-    });
-  },
-  methods: {
-    /**
-     * Emits entered promo code value.
-     */
-    onSubmit(): void {
-      this.$emit('apply', this.value);
-    },
-  },
+const {
+  isLoading = false,
+  isInvalid = false,
+  errorMessage = '',
+} = defineProps<Props>();
+
+const emit = defineEmits<{
+  /**
+   * Applies entered promo code value.
+   */
+  (event: 'apply', value: string): void;
+
+  /**
+   * Closes the dialog.
+   */
+  (event: 'close'): void;
+}>();
+
+const value = ref('');
+const formRef = ref<HTMLFormElement | null>(null);
+
+onMounted(() => {
+  nextTick(() => {
+    const input = formRef.value?.querySelector('input[name="promoCode"]') as HTMLInputElement | null;
+
+    input?.focus();
+  });
 });
+
+/**
+ * Emits entered promo code value.
+ */
+function onSubmit(): void {
+  emit('apply', value.value);
+}
 </script>
 
-<style>
+<style scoped>
 .promo-code-dialog {
   width: 360px;
   padding: 28px;
