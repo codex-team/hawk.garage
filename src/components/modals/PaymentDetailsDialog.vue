@@ -658,7 +658,11 @@ export default defineComponent({
     },
 
     /**
-     * Method prepares widget and charges money from entered card
+     * Method prepares CloudPayments widget and charges money from entered card.
+     *
+     * Promo discounts affect only the first widget charge: amount is taken from
+     * chargeAmount/finalAmount, while recurrent.amount is always the full plan
+     * monthly price for later automatic subscription renewals.
      *
      * @param {BeforePaymentPayload} data — server response that sent after beforePay request
      */
@@ -685,9 +689,14 @@ export default defineComponent({
         }
       }
 
+      /**
+       * Payment amount sent to CloudPayments:
+       * - Card link operation charges 1 RUB only to validate the card, then refunds it.
+       * - Tariff payment uses server-calculated chargeAmount; it already includes promo discount when applied.
+       */
       const amount = data.isCardLinkOperation
         ? AMOUNT_FOR_CARD_VALIDATION
-        : (data.chargeAmount ?? data.promo?.finalAmount ?? data.plan.monthlyCharge);
+        : data.chargeAmount;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
       const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
