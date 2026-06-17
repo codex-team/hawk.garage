@@ -255,12 +255,6 @@ import { i18n } from '../../i18n';
 const NEW_CARD_ID = 'NEW_CARD';
 
 /**
- * The amount we will debit to confirm the subscription.
- * After confirmation, we will refund the user money.
- */
-const AMOUNT_FOR_CARD_VALIDATION = 1;
-
-/**
  * Transforms card data to CustomSelect option
  *
  * @param card - card data to transform
@@ -660,9 +654,9 @@ export default defineComponent({
     /**
      * Method prepares CloudPayments widget and charges money from entered card.
      *
-     * Promo discounts affect only the first widget charge: amount is taken from
-     * chargeAmount/finalAmount, while recurrent.amount is always the full plan
-     * monthly price for later automatic subscription renewals.
+     * Amount is taken from server-calculated chargeAmount. Promo discounts affect
+     * only the first widget charge, while recurrent.amount is always the full
+     * plan monthly price for later automatic subscription renewals.
      *
      * @param {BeforePaymentPayload} data — server response that sent after beforePay request
      */
@@ -689,14 +683,7 @@ export default defineComponent({
         }
       }
 
-      /**
-       * Payment amount sent to CloudPayments:
-       * - Card link operation charges 1 RUB only to validate the card, then refunds it.
-       * - Tariff payment uses server-calculated chargeAmount; it already includes promo discount when applied.
-       */
-      const amount = data.isCardLinkOperation
-        ? AMOUNT_FOR_CARD_VALIDATION
-        : data.chargeAmount;
+      const amount = data.chargeAmount;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
       const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 

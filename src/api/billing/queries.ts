@@ -74,7 +74,7 @@ export const MUTATION_PAY_WITH_CARD = `
  *   workspaceId, tariffPlanId, shouldSaveCard?, promoCode?, promoUtm?
  *
  * Receives (calculated on server):
- *   chargeAmount — actual amount to charge (with promo if applicable)
+ *   chargeAmount — actual amount to charge (card validation, promo price, or full plan price)
  *   plan.monthlyCharge — full tariff price (for recurrent)
  *   promo — server-validated discount breakdown for UI
  *   checksum, invoiceId, etc.
