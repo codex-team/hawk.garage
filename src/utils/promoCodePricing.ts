@@ -1,24 +1,39 @@
-import type {
-  FixedPricePromoCodeBenefit,
-  PercentDiscountPromoCodeBenefit
-} from '@hawk.so/types';
+import type { PromoCodeBenefitType } from '@hawk.so/types';
 
 const DEFAULT_MIN_FINAL_PRICE = 1;
 const PERCENT_DIVISOR = 100;
 
-/**
- * Promo benefit shape used for price calculation.
- */
-export type PromoCodePricingBenefit =
-  | PercentDiscountPromoCodeBenefit
-  | FixedPricePromoCodeBenefit;
+type SupportedPromoCodeBenefitTypes = {
+  PercentDiscount: Extract<PromoCodeBenefitType, 'percent_discount'>;
+  FixedPrice: Extract<PromoCodeBenefitType, 'fixed_price'>;
+};
+
+export const SUPPORTED_PROMO_CODE_BENEFIT_TYPES: SupportedPromoCodeBenefitTypes = {
+  PercentDiscount: 'percent_discount',
+  FixedPrice: 'fixed_price',
+};
+
+interface PromoCodeVerifyBase {
+  value: string;
+  applicablePlanIds?: string[];
+}
+
+export type PromoCodeVerify =
+  | (PromoCodeVerifyBase & {
+    benefitType: typeof SUPPORTED_PROMO_CODE_BENEFIT_TYPES.PercentDiscount;
+    percent: number;
+    minFinalPrice?: number;
+  })
+  | (PromoCodeVerifyBase & {
+    benefitType: typeof SUPPORTED_PROMO_CODE_BENEFIT_TYPES.FixedPrice;
+    amount: number;
+  });
 
 /**
  * Minimal plan fields required for promo price calculation.
  */
 export interface PromoCodePricingPlan {
-  id?: string;
-  _id?: { toString(): string };
+  id: string;
   monthlyCharge: number;
   isHidden?: boolean;
 }
@@ -34,34 +49,16 @@ export interface PromoCodePlanPrice {
   discountAmount: number;
 }
 
-/**
- * Returns plan id string for promo pricing.
- * @param plan - plan with id or _id
- */
-function getPlanId(plan: PromoCodePricingPlan): string {
-  if (plan.id) {
-    return plan.id;
-  }
-
-  if (plan._id) {
-    return plan._id.toString();
-  }
-
-  throw new Error('Plan id is required for promo pricing');
-}
-
 function isPlanAvailableForPurchase(plan: PromoCodePricingPlan): boolean {
   return plan.isHidden !== true;
 }
 
-function isPlanApplicable(benefit: PromoCodePricingBenefit, plan: PromoCodePricingPlan): boolean {
-  if (!benefit.applicablePlanIds || benefit.applicablePlanIds.length === 0) {
+function isPlanApplicable(promo: PromoCodeVerify, plan: PromoCodePricingPlan): boolean {
+  if (!promo.applicablePlanIds || promo.applicablePlanIds.length === 0) {
     return true;
   }
 
-  const planId = getPlanId(plan);
-
-  return benefit.applicablePlanIds.some((applicablePlanId): boolean => applicablePlanId.toString() === planId);
+  return promo.applicablePlanIds.includes(plan.id);
 }
 
 function isDiscountablePlan(plan: PromoCodePricingPlan): boolean {
@@ -70,31 +67,30 @@ function isDiscountablePlan(plan: PromoCodePricingPlan): boolean {
 
 /**
  * Calculates discounted price for one plan. Keep in sync with api/src/utils/promoCodePricing.ts
- * @param benefit - promo benefit
+ * @param promo - verified promo code
  * @param plan - selected plan
  */
 export function calculatePromoCodePlanPrice(
-  benefit: PromoCodePricingBenefit,
+  promo: PromoCodeVerify,
   plan: PromoCodePricingPlan
 ): PromoCodePlanPrice {
   const originalAmount = plan.monthlyCharge;
-  const planId = getPlanId(plan);
   const result: PromoCodePlanPrice = {
-    planId,
+    planId: plan.id,
     isApplicable: false,
     originalAmount,
     finalAmount: originalAmount,
     discountAmount: 0,
   };
 
-  if (!isDiscountablePlan(plan) || !isPlanApplicable(benefit, plan)) {
+  if (!isDiscountablePlan(plan) || !isPlanApplicable(promo, plan)) {
     return result;
   }
 
-  switch (benefit.type) {
-    case 'percent_discount': {
-      const minFinalPrice = benefit.minFinalPrice ?? DEFAULT_MIN_FINAL_PRICE;
-      const discountAmount = Math.floor(originalAmount * benefit.percent / PERCENT_DIVISOR);
+  switch (promo.benefitType) {
+    case SUPPORTED_PROMO_CODE_BENEFIT_TYPES.PercentDiscount: {
+      const minFinalPrice = promo.minFinalPrice ?? DEFAULT_MIN_FINAL_PRICE;
+      const discountAmount = Math.floor(originalAmount * promo.percent / PERCENT_DIVISOR);
       const finalAmount = Math.max(originalAmount - discountAmount, minFinalPrice);
 
       if (finalAmount < originalAmount) {
@@ -106,16 +102,13 @@ export function calculatePromoCodePlanPrice(
       return result;
     }
 
-    case 'fixed_price':
-      if (benefit.amount < originalAmount) {
+    case SUPPORTED_PROMO_CODE_BENEFIT_TYPES.FixedPrice:
+      if (promo.amount < originalAmount) {
         result.isApplicable = true;
-        result.finalAmount = benefit.amount;
-        result.discountAmount = originalAmount - benefit.amount;
+        result.finalAmount = promo.amount;
+        result.discountAmount = originalAmount - promo.amount;
       }
 
-      return result;
-
-    default:
       return result;
   }
 }

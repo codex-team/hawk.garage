@@ -96,10 +96,12 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalD
 import { VERIFY_PROMO_CODE } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
-import type { PromoCodeVerify } from '@/types/billing';
 import type { Utm as UtmInput } from '@hawk.so/types';
-import { buildPromoPricingBenefit } from '@/utils/promoCode';
-import { calculatePromoCodePlanPrice } from '@/utils/promoCodePricing';
+import {
+  calculatePromoCodePlanPrice,
+  SUPPORTED_PROMO_CODE_BENEFIT_TYPES,
+  type PromoCodeVerify
+} from '@/utils/promoCodePricing';
 import { validateUtmParams } from '../utils/utm/utm';
 
 type VerifiedPromoCode = PromoCodeVerify;
@@ -264,6 +266,7 @@ export default defineComponent({
      * Gets promo price for plan.
      *
      * @param plan - tariff plan
+     * @param promo - verified promo code
      */
     getPromoPlanPrice(plan: Plan, promo: VerifiedPromoCode | null = this.verifiedPromo) {
       if (!promo || this.isActiveCurrentPlan(plan)) {
@@ -271,7 +274,7 @@ export default defineComponent({
       }
 
       return calculatePromoCodePlanPrice(
-        buildPromoPricingBenefit(promo),
+        promo,
         {
           id: plan.id,
           monthlyCharge: plan.monthlyCharge,
@@ -313,7 +316,7 @@ export default defineComponent({
         return '';
       }
 
-      if (this.verifiedPromo.benefitType === 'percent_discount') {
+      if (this.verifiedPromo.benefitType === SUPPORTED_PROMO_CODE_BENEFIT_TYPES.PercentDiscount) {
         return `-${this.verifiedPromo.percent}%`;
       }
 
