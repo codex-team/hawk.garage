@@ -41,9 +41,9 @@
             :discount-label="getPlanDiscountLabel(plan)"
             :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
-            :is-current-plan="plan.id === workspace.plan.id"
+            :is-current-plan="isActiveCurrentPlan(plan)"
             :horizontal="plans.length > 3"
-            @click="proceedWithPlan(plan.id)"
+            @click="proceedWithPlan(plan)"
           />
 
           <div class="choose-plan__premium-card">
@@ -77,6 +77,7 @@
       v-if="isPromoDialogOpen"
       :is-loading="isPromoApplying"
       :is-invalid="isPromoInvalid"
+      :error-message="promoErrorMessage"
       @apply="verifyPromoCode"
       @close="closePromoDialog"
     />
@@ -150,6 +151,11 @@ export default defineComponent({
       isPromoInvalid: false,
 
       /**
+       * Promo code error text.
+       */
+      promoErrorMessage: '',
+
+      /**
        * Verified promo code ready for payment.
        */
       verifiedPromo: null as VerifiedPromoCode | null,
@@ -190,10 +196,8 @@ export default defineComponent({
     },
   },
   methods: {
-    proceedWithPlan(id: string): void {
-      const plan = this.plans.find(p => p.id === id);
-
-      if (!plan) {
+    proceedWithPlan(plan: Plan): void {
+      if (this.isActiveCurrentPlan(plan)) {
         return;
       }
 
@@ -210,12 +214,17 @@ export default defineComponent({
     async verifyPromoCode(value: string): Promise<void> {
       this.isPromoApplying = true;
       this.isPromoInvalid = false;
+      this.promoErrorMessage = '';
 
       try {
         const promo = await this.$store.dispatch(VERIFY_PROMO_CODE, {
           workspaceId: this.workspaceId,
           value,
         }) as PromoCodeVerify;
+
+        if (!this.hasApplicablePromoPlan(promo)) {
+          throw new Error('PROMO_CODE_INVALID');
+        }
 
         this.verifiedPromo = promo;
         this.closePromoDialog();
@@ -228,10 +237,12 @@ export default defineComponent({
       } catch (e) {
         const error = e as Error;
         const key = 'errors.' + error.message;
+        const message = this.$te(key) ? this.$t(key) as string : this.$t('errors.PROMO_CODE_INVALID') as string;
 
         this.isPromoInvalid = true;
+        this.promoErrorMessage = message;
         notifier.show({
-          message: this.$te(key) ? this.$t(key) as string : this.$t('errors.PROMO_CODE_INVALID') as string,
+          message,
           style: 'error',
           time: 5000,
         });
@@ -246,6 +257,7 @@ export default defineComponent({
     closePromoDialog(): void {
       this.isPromoDialogOpen = false;
       this.isPromoInvalid = false;
+      this.promoErrorMessage = '';
     },
 
     /**
@@ -253,13 +265,13 @@ export default defineComponent({
      *
      * @param plan - tariff plan
      */
-    getPromoPlanPrice(plan: Plan) {
-      if (!this.verifiedPromo) {
+    getPromoPlanPrice(plan: Plan, promo: VerifiedPromoCode | null = this.verifiedPromo) {
+      if (!promo || this.isActiveCurrentPlan(plan)) {
         return undefined;
       }
 
       return calculatePromoCodePlanPrice(
-        buildPromoPricingBenefit(this.verifiedPromo),
+        buildPromoPricingBenefit(promo),
         {
           id: plan.id,
           monthlyCharge: plan.monthlyCharge,
@@ -306,6 +318,26 @@ export default defineComponent({
       }
 
       return this.$t('billing.promoCode.fixedPriceLabel').toString();
+    },
+
+    /**
+     * Checks that promo changes at least one visible purchasable plan.
+     *
+     * @param promo - verified promo code
+     */
+    hasApplicablePromoPlan(promo: VerifiedPromoCode): boolean {
+      return this.plans.some((plan): boolean => this.getPromoPlanPrice(plan, promo)?.isApplicable === true);
+    },
+
+    /**
+     * Checks whether plan is already active and should not start a new payment flow.
+     *
+     * Blocked workspaces can still pay for their current plan to restore access.
+     *
+     * @param plan - tariff plan
+     */
+    isActiveCurrentPlan(plan: Plan): boolean {
+      return plan.id === this.workspace.plan.id && !this.workspace.isBlocked;
     },
 
     /**

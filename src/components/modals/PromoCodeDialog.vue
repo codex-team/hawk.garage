@@ -2,7 +2,8 @@
   <PopupDialog @close="$emit('close')">
     <form
       class="promo-code-dialog"
-      @submit.prevent="onSubmit"
+      @click.stop
+      @submit.prevent.stop="onSubmit"
     >
       <h3 class="promo-code-dialog__title">
         {{ $t('billing.promoCode.title') }}
@@ -19,14 +20,26 @@
         auto-complete="off"
       />
 
+      <div
+        class="promo-code-dialog__error"
+        :class="{
+          'promo-code-dialog__error--hidden': !errorMessage,
+        }"
+        aria-live="polite"
+      >
+        {{ errorMessage }}
+      </div>
+
       <div class="promo-code-dialog__actions">
         <UiButton
+          type="button"
           secondary
           :content="$t('components.confirmationWindow.cancel')"
           :disabled="isLoading"
           @click.prevent="$emit('close')"
         />
         <UiButton
+          type="submit"
           submit
           :content="$t('billing.promoCode.apply')"
           :disabled="!value.trim() || isLoading"
@@ -38,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, nextTick } from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
 import TextFieldset from '../forms/TextFieldset.vue';
 import UiButton from '../utils/UiButton.vue';
@@ -66,12 +79,27 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Error text shown under the input.
+     */
+    errorMessage: {
+      type: String,
+      default: '',
+    },
   },
   emits: ['apply', 'close'],
   data() {
     return {
       value: '',
     };
+  },
+  mounted() {
+    nextTick(() => {
+      const input = (this.$el as HTMLElement).querySelector('input[name="promoCode"]') as HTMLInputElement | null;
+
+      input?.focus();
+    });
   },
   methods: {
     /**
@@ -99,6 +127,19 @@ export default defineComponent({
 
   &__input {
     margin-bottom: 20px;
+  }
+
+  &__error {
+    margin-top: -10px;
+    margin-bottom: 20px;
+    min-height: 18px;
+    color: var(--color-indicator-critical);
+    font-size: 13px;
+    line-height: 1.4;
+
+    &--hidden {
+      visibility: hidden;
+    }
   }
 
   &__actions {
