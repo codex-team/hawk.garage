@@ -2,7 +2,7 @@ import { MUTATION_PAY_WITH_CARD, MUTATION_VERIFY_PROMO_CODE, QUERY_BUSINESS_OPER
 import * as api from '../';
 import type { BusinessOperation } from '../../types/business-operation';
 import type { Utm as UtmInput } from '@hawk.so/types';
-import type { PromoCodeVerify } from '@/utils/promoCodePricing';
+import type { PromoCodeVerify, PromoCodeVerifyInput } from '@/types/promoCode';
 
 interface ComposePaymentInput {
   workspaceId: string;
@@ -21,11 +21,6 @@ export interface PayWithCardInput {
   checksum: string;
   cardId: string;
   isRecurrent?: boolean;
-}
-
-interface PromoCodeVerifyInput {
-  workspaceId: string;
-  value: string;
 }
 
 /**

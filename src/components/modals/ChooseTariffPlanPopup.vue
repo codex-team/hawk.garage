@@ -98,10 +98,9 @@ import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
 import type { Utm as UtmInput } from '@hawk.so/types';
 import {
-  calculatePromoCodePlanPrice,
-  SUPPORTED_PROMO_CODE_BENEFIT_TYPES,
-  type PromoCodeVerify
+  calculatePromoCodePlanPrice
 } from '@/utils/promoCodePricing';
+import { SUPPORTED_PROMO_CODE_BENEFIT_TYPES, type PromoCodeVerify } from '@/types/promoCode';
 import { validateUtmParams } from '../utils/utm/utm';
 
 type VerifiedPromoCode = PromoCodeVerify;

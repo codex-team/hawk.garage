@@ -1,53 +1,12 @@
-import type { PromoCodeBenefitType } from '@hawk.so/types';
+import {
+  SUPPORTED_PROMO_CODE_BENEFIT_TYPES,
+  type PromoCodePlanPrice,
+  type PromoCodePricingPlan,
+  type PromoCodeVerify
+} from '@/types/promoCode';
 
 const DEFAULT_MIN_FINAL_PRICE = 1;
 const PERCENT_DIVISOR = 100;
-
-type SupportedPromoCodeBenefitTypes = {
-  PercentDiscount: Extract<PromoCodeBenefitType, 'percent_discount'>;
-  FixedPrice: Extract<PromoCodeBenefitType, 'fixed_price'>;
-};
-
-export const SUPPORTED_PROMO_CODE_BENEFIT_TYPES: SupportedPromoCodeBenefitTypes = {
-  PercentDiscount: 'percent_discount',
-  FixedPrice: 'fixed_price',
-};
-
-interface PromoCodeVerifyBase {
-  value: string;
-  applicablePlanIds?: string[];
-}
-
-export type PromoCodeVerify =
-  | (PromoCodeVerifyBase & {
-    benefitType: typeof SUPPORTED_PROMO_CODE_BENEFIT_TYPES.PercentDiscount;
-    percent: number;
-    minFinalPrice?: number;
-  })
-  | (PromoCodeVerifyBase & {
-    benefitType: typeof SUPPORTED_PROMO_CODE_BENEFIT_TYPES.FixedPrice;
-    amount: number;
-  });
-
-/**
- * Minimal plan fields required for promo price calculation.
- */
-export interface PromoCodePricingPlan {
-  id: string;
-  monthlyCharge: number;
-  isHidden?: boolean;
-}
-
-/**
- * Calculated promo price for one plan.
- */
-export interface PromoCodePlanPrice {
-  planId: string;
-  isApplicable: boolean;
-  originalAmount: number;
-  finalAmount: number;
-  discountAmount: number;
-}
 
 function isPlanAvailableForPurchase(plan: PromoCodePricingPlan): boolean {
   return plan.isHidden !== true;

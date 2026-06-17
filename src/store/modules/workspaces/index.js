@@ -445,7 +445,7 @@ const actions = {
    *
    * @param {object} context - Vuex action context
    * @param {object} payload - promo code payload
-   * @returns {Promise<import('@/utils/promoCodePricing').PromoCodeVerify>}
+   * @returns {Promise<import('@/types/promoCode').PromoCodeVerify>}
    */
   async [VERIFY_PROMO_CODE](context, payload) {
     return billingApi.verifyPromoCode(payload);
