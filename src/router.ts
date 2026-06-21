@@ -158,7 +158,7 @@ const router = createRouter({
                     const eventId = pathMatch[2];
                     const segment3 = pathMatch[3];
                     const segment4 = pathMatch[4];
-                    const knownTabs = new Set(['overview', 'repetitions', 'daily', 'affected']);
+                    const knownTabs = new Set(['overview', 'repetitions', 'occurrence-paths', 'daily', 'affected']);
 
                     /**
                      * Determine if segment3 is a tab name or a repetitionId
@@ -212,6 +212,11 @@ const router = createRouter({
                       path: 'repetitions',
                       name: 'event-repetitions',
                       component: loadAsyncComponent(() => import(/* webpackChunkName: 'event-repetitions' */ './components/event/Repetitions.vue')),
+                    },
+                    {
+                      path: 'occurrence-paths',
+                      name: 'event-occurrence-paths',
+                      component: loadAsyncComponent(() => import(/* webpackChunkName: 'event-occurrence-paths' */ './components/event/OccurrencePaths.vue')),
                     },
                     {
                       path: 'daily',

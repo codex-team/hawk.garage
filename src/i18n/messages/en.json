@@ -551,6 +551,25 @@
     "daily": {
       "lastTwoWeeks": "Last 2 weeks"
     },
+    "occurrencePaths": {
+      "title": "Most frequent paths",
+      "description": "Normalized sequences of actions and requests that occurred before this error.",
+      "sort": {
+        "title": "Sort by",
+        "repetitions": "Repetitions",
+        "users": "Users",
+        "share": "Share",
+        "lastSeen": "Last seen"
+      },
+      "metrics": {
+        "repetitions": "Repetitions",
+        "users": "Users",
+        "share": "Share",
+        "firstSeen": "First seen",
+        "lastSeen": "Last seen",
+        "release": "Release"
+      }
+    },
     "usersAffected": {
       "total": "Total",
       "users": "{n} user | {n} users"
@@ -558,6 +577,7 @@
     "navigation": {
       "overview": "Overview",
       "repetitions": "Repetitions",
+      "occurrencePaths": "Occurrence paths",
       "daily": "Days repeating",
       "usersAffected": "Users affected"
     },

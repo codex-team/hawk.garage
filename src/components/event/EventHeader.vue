@@ -231,6 +231,10 @@ export default defineComponent({
           badge: !this.loading ? this.event.totalCount : 0,
         },
         {
+          title: this.$t('event.navigation.occurrencePaths') as string,
+          routeName: 'event-occurrence-paths',
+        },
+        {
           title: this.$t('event.navigation.daily') as string,
           routeName: 'event-daily',
         },
