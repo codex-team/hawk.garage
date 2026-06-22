@@ -7,6 +7,11 @@
           v-for="column in columns"
           :key="column"
         >
+          <Icon
+            v-if="column === 'yandexMetrica'"
+            symbol="yandex-metrica"
+            class="repetitions-table__addon-icon"
+          />
           {{ getAddonName(column) }}
         </th>
       </tr>
@@ -108,6 +113,7 @@
 import { defineComponent, PropType } from 'vue';
 import { prettyTime } from '@/utils/filters';
 import EntityImage from '../utils/EntityImage.vue';
+import Icon from '../utils/Icon.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import CustomRendererYandexMetrica from '@/components/event/details/customRenderers/YandexMetrica.vue';
@@ -118,6 +124,7 @@ import { isObject, trim } from '../../utils';
 export default defineComponent({
   components: {
     EntityImage,
+    Icon,
     CustomRendererBeautifiedUserAgent,
     CustomRendererWindow,
     CustomRendererYandexMetrica,
@@ -340,6 +347,13 @@ export default defineComponent({
 
     &__user {
       width: 22px;
+    }
+
+    &__addon-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+      vertical-align: -3px;
     }
 
     th {

@@ -1,19 +1,29 @@
 <template>
   <div class="yandex-metrica">
-    <div class="yandex-metrica__identifiers">
-      <span class="yandex-metrica__identifier">
-        <span class="yandex-metrica__label">
-          {{ $t('components.yandexMetrica.counterId') }}
-        </span>
-        <code>{{ value.counterId }}</code>
-      </span>
-      <span class="yandex-metrica__identifier">
-        <span class="yandex-metrica__label">
-          {{ $t('components.yandexMetrica.clientId') }}
-        </span>
-        <code>{{ value.clientId }}</code>
-      </span>
-    </div>
+    <span class="yandex-metrica__identifier yandex-metrica__identifier--counter">
+      {{ $t('components.yandexMetrica.counterId') }}:
+      <button
+        type="button"
+        class="yandex-metrica__copy-value"
+        :title="$t('components.codeBlock.copy')"
+        @click.stop="copyValue(String(value.counterId))"
+      >
+        {{ value.counterId }}
+      </button>
+    </span>
+    /
+    <span class="yandex-metrica__identifier yandex-metrica__identifier--client">
+      {{ $t('components.yandexMetrica.clientId') }}:
+      <button
+        type="button"
+        class="yandex-metrica__copy-value"
+        :title="$t('components.codeBlock.copy')"
+        @click.stop="copyValue(value.clientId)"
+      >
+        {{ value.clientId }}
+      </button>
+    </span>
+    /
     <a
       :href="webvisorUrl"
       target="_blank"
@@ -32,6 +42,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import notifier from 'codex-notifier';
 import Icon from '@/components/utils/Icon.vue';
 
 /**
@@ -58,6 +70,29 @@ const props = defineProps<{
    */
   value: YandexMetricaAddon;
 }>();
+
+const { t } = useI18n();
+
+/**
+ * Copies a Yandex Metrica identifier to the clipboard.
+ *
+ * @param value - Identifier to copy.
+ */
+const copyValue = async (value: string): Promise<void> => {
+  try {
+    await navigator.clipboard.writeText(value);
+
+    notifier.show({
+      message: t('common.copiedNotification'),
+      style: 'success',
+      time: 2000,
+    });
+  } catch {
+    /**
+     * Clipboard access can be denied by the browser.
+     */
+  }
+};
 
 /**
  * Builds a Yandex Metrica Webvisor URL filtered by ClientID.
@@ -89,31 +124,45 @@ const webvisorUrl = computed(() => {
 .yandex-metrica {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 16px;
   align-items: center;
-
-  &__identifiers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 16px;
-  }
+  color: inherit;
+  font: inherit;
 
   &__identifier {
-    display: inline-flex;
-    gap: 6px;
-    align-items: center;
+    color: inherit;
+    font: inherit;
     white-space: nowrap;
+
+    &--counter {
+      margin-right: 10px;
+    }
+
+    &--client {
+      margin-right: 10px;
+      margin-left: 10px;
+    }
   }
 
-  &__label {
-    color: var(--color-text-second);
+  &__copy-value {
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &__link {
     display: inline-flex;
     gap: 4px;
     align-items: center;
-    color: var(--color-text-second);
+    margin-left: 10px;
+    color: inherit;
+    font: inherit;
     text-decoration: none;
     white-space: nowrap;
 

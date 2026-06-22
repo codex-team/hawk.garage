@@ -13,6 +13,11 @@
         class="event-details__content-block"
       >
         <div class="event-details__key">
+          <Icon
+            v-if="key === 'yandexMetrica'"
+            symbol="yandex-metrica"
+            class="event-details__addon-icon"
+          />
           {{ getAddonName(key) }}
         </div>
         <div class="event-details__value">
@@ -121,6 +126,13 @@ export default defineComponent({
 
 <style>
   .event-details {
+    &__addon-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+      vertical-align: -3px;
+    }
+
     &__single-line-code {
       line-height: 1em;
       background: var(--color-bg-code-fragment);
