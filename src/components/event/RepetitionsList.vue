@@ -110,6 +110,7 @@ import { prettyTime } from '@/utils/filters';
 import EntityImage from '../utils/EntityImage.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
+import CustomRendererYandexMetrica from '@/components/event/details/customRenderers/YandexMetrica.vue';
 import AddonRenderers from '../../mixins/addonRenderers';
 import { HawkEvent } from '../../types/events';
 import { isObject, trim } from '../../utils';
@@ -119,6 +120,7 @@ export default defineComponent({
     EntityImage,
     CustomRendererBeautifiedUserAgent,
     CustomRendererWindow,
+    CustomRendererYandexMetrica,
   },
   mixins: [
     AddonRenderers,

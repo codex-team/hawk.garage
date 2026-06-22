@@ -57,6 +57,7 @@ import CodeBlock from '../../utils/CodeBlock.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import CustomRendererConsoleOutput from '@/components/event/details/customRenderers/ConsoleOutput.vue';
+import CustomRendererYandexMetrica from '@/components/event/details/customRenderers/YandexMetrica.vue';
 import { EventAddons } from '@hawk.so/types';
 import AddonRenderers from '../../../mixins/addonRenderers';
 
@@ -73,6 +74,7 @@ export default defineComponent({
     CustomRendererBeautifiedUserAgent,
     CustomRendererWindow,
     CustomRendererConsoleOutput,
+    CustomRendererYandexMetrica,
   },
   mixins: [
     AddonRenderers,

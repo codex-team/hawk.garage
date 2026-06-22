@@ -64,6 +64,11 @@
       "show_previous": "Show previous",
       "hide_previous": "Hide previous"
     },
+    "yandexMetrica": {
+      "counterId": "Counter ID",
+      "clientId": "Client ID",
+      "openWebvisor": "Open in Webvisor"
+    },
     "catalog": {
       "step1": "Add a project",
       "step2": "Integrate a catcher",
@@ -596,7 +601,8 @@
       "url": "URL",
       "window": "Browser Window",
       "beautifiedUserAgent": "User Agent",
-      "consoleOutput": "Console Output"
+      "consoleOutput": "Console Output",
+      "yandexMetrica": "Yandex Metrica"
     },
     "user": {
       "affectedUser": "Affected user",
