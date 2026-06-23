@@ -350,10 +350,10 @@ export default defineComponent({
     }
 
     &__addon-icon {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       margin-right: 4px;
-      vertical-align: -3px;
+      vertical-align: -2px;
     }
 
     th {
