@@ -70,7 +70,7 @@ export const DEMO_PROJECT: Project = {
   token: `hawk_${DEMO_PROJECT_ID}_demo_token`,
   name: 'Production App',
   uidAdded: DEMO_USER,
-  unreadCount: 5,
+  unreadCount: 1280,
   description: 'Production environment error tracker',
   image: 'https://ui-avatars.com/api/?name=Prod+App&background=4ECDC4&color=fff',
   notifications: [
@@ -120,7 +120,7 @@ export const DEMO_SECOND_PROJECT: Project = {
   token: `hawk_${DEMO_SECOND_PROJECT_ID}_demo_token`,
   name: 'Mobile App Beta',
   uidAdded: DEMO_TEAM_MEMBERS[0],
-  unreadCount: 11,
+  unreadCount: 3420,
   description: 'Beta environment with aggressive rollout and feature flags',
   image: 'https://ui-avatars.com/api/?name=Mobile+Beta&background=FF6B6B&color=fff',
   notifications: [
