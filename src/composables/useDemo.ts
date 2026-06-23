@@ -129,7 +129,7 @@ export const useDemo = createSharedComposable((): DemoControls => {
     try {
       return isEnabled.value || (store?.state?.demo?.isActive ?? false);
     } catch (error) {
-      throw new Error(`[useDemo] Could not access store, demo mode disabled: ${error}`);
+      throw new Error(`[useDemo] Could not access store, demo mode disabled: ${String(error)}`);
     }
   });
 
@@ -140,7 +140,7 @@ export const useDemo = createSharedComposable((): DemoControls => {
     try {
       setDemoState(true);
     } catch (error) {
-      throw new Error(`[useDemo] Failed to enable demo mode: ${error}`);
+      throw new Error(`[useDemo] Failed to enable demo mode: ${String(error)}`);
     }
 
     return Promise.resolve();
@@ -153,7 +153,7 @@ export const useDemo = createSharedComposable((): DemoControls => {
     try {
       setDemoState(false);
     } catch (error) {
-      throw new Error(`[useDemo] Failed to disable demo mode: ${error}`);
+      throw new Error(`[useDemo] Failed to disable demo mode: ${String(error)}`);
     }
 
     return Promise.resolve();
@@ -166,7 +166,7 @@ export const useDemo = createSharedComposable((): DemoControls => {
     try {
       setDemoState(!isEnabled.value);
     } catch (error) {
-      throw new Error(`[useDemo] Failed to toggle demo mode: ${error}`);
+      throw new Error(`[useDemo] Failed to toggle demo mode: ${String(error)}`);
     }
 
     return Promise.resolve();

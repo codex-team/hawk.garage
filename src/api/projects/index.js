@@ -274,6 +274,7 @@ export const fetchChartData = withDemoMock(
      */
       allowErrors: true,
     });
+
     return response;
   },
   '/src/api/projects/mocks/fetchChartData.mock.ts'
@@ -292,6 +293,7 @@ export const fetchProjectReleases = withDemoMock(
     if (response.errors?.length) {
       response.errors.forEach(console.error);
     }
+
     return response.data.project.releases;
   },
   '/src/api/projects/mocks/fetchProjectReleases.mock.ts'
@@ -319,6 +321,7 @@ export const fetchProjectReleaseDetails = withDemoMock(
 
       throw error;
     }
+
     return response.data.project.releaseDetails;
   },
   '/src/api/projects/mocks/fetchProjectReleaseDetails.mock.ts'

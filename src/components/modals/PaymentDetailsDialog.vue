@@ -485,6 +485,7 @@ export default defineComponent({
           time: 5000,
         });
         this.$emit('close');
+
         return;
       }
 
@@ -523,6 +524,7 @@ export default defineComponent({
           style: 'error',
           time: 5000,
         });
+
         return;
       }
 

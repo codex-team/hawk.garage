@@ -27,7 +27,6 @@ export const API_ENDPOINT: string = import.meta.env.VITE_API_ENDPOINT || '';
  *   could be undefined, string, or other types
  * - This centralized approach makes it easy to check demo mode status anywhere in the app
  *   without additional state management
- *
  * @returns true if demo access token is present in the Authorization header, false otherwise
  */
 function isDemoModeEnabled(): boolean {

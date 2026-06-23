@@ -72,6 +72,7 @@ export const getEvent = withDemoMock(
     if (!project) {
       return null;
     }
+
     return project.event;
   },
   '/src/api/events/mocks/getEvent.mock.ts'
@@ -118,6 +119,7 @@ export const fetchDailyEventsPortion = withDemoMock(
     if (response.errors?.length) {
       response.errors.forEach(e => console.error(e));
     }
+
     return project?.dailyEventsPortion ?? { nextCursor: null,
       dailyEvents: [] };
   },
@@ -153,6 +155,7 @@ export const getRepetitionsPortion = withDemoMock(
     if (response.errors?.length) {
       response.errors.forEach(e => console.error(e));
     }
+
     return response;
   },
   '/src/api/events/mocks/getRepetitionsPortion.mock.ts'
