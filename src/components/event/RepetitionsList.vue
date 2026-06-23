@@ -8,8 +8,8 @@
           :key="column"
         >
           <Icon
-            v-if="column === 'yandexMetrica'"
-            symbol="yandex-metrica"
+            v-if="column === 'yandexMetrika'"
+            symbol="yandex-metrika"
             class="repetitions-table__addon-icon"
           />
           {{ getAddonName(column) }}
@@ -116,7 +116,7 @@ import EntityImage from '../utils/EntityImage.vue';
 import Icon from '../utils/Icon.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
-import CustomRendererYandexMetrica from '@/components/event/details/customRenderers/YandexMetrica.vue';
+import CustomRendererYandexMetrika from '@/components/event/details/customRenderers/YandexMetrika.vue';
 import AddonRenderers from '../../mixins/addonRenderers';
 import { HawkEvent } from '../../types/events';
 import { isObject, trim } from '../../utils';
@@ -127,7 +127,7 @@ export default defineComponent({
     Icon,
     CustomRendererBeautifiedUserAgent,
     CustomRendererWindow,
-    CustomRendererYandexMetrica,
+    CustomRendererYandexMetrika,
   },
   mixins: [
     AddonRenderers,

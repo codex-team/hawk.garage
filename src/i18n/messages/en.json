@@ -64,7 +64,7 @@
       "show_previous": "Show previous",
       "hide_previous": "Hide previous"
     },
-    "yandexMetrica": {
+    "yandexMetrika": {
       "counterId": "Counter ID",
       "clientId": "Client ID",
       "openWebvisor": "Open in Webvisor"
@@ -602,7 +602,7 @@
       "window": "Browser Window",
       "beautifiedUserAgent": "User Agent",
       "consoleOutput": "Console Output",
-      "yandexMetrica": "Yandex Metrica"
+      "yandexMetrika": "Yandex Metrika"
     },
     "user": {
       "affectedUser": "Affected user",

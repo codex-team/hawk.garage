@@ -64,7 +64,7 @@
       "show_previous": "Показать предыдущие",
       "hide_previous": "Скрыть предыдущие"
     },
-    "yandexMetrica": {
+    "yandexMetrika": {
       "counterId": "ID счётчика",
       "clientId": "ClientID",
       "openWebvisor": "Открыть в Вебвизоре"
@@ -602,7 +602,7 @@
       "window": "Окно браузера",
       "beautifiedUserAgent": "Клиент",
       "consoleOutput": "Лог Консоли",
-      "yandexMetrica": "Яндекс Метрика"
+      "yandexMetrika": "Яндекс Метрика"
     },
     "user": {
       "affectedUser": "Затронутый пользователь",
