@@ -1,42 +1,48 @@
 <template>
   <div class="yandex-metrica">
-    <span class="yandex-metrica__identifier yandex-metrica__identifier--counter">
-      {{ $t('components.yandexMetrica.counterId') }}:
-      <button
-        type="button"
-        class="yandex-metrica__copy-value"
-        :title="$t('components.codeBlock.copy')"
-        @click.stop="copyValue(String(value.counterId))"
-      >
-        {{ value.counterId }}
-      </button>
-    </span>
-    /
-    <span class="yandex-metrica__identifier yandex-metrica__identifier--client">
-      {{ $t('components.yandexMetrica.clientId') }}:
-      <button
-        type="button"
-        class="yandex-metrica__copy-value"
-        :title="$t('components.codeBlock.copy')"
-        @click.stop="copyValue(value.clientId)"
-      >
-        {{ value.clientId }}
-      </button>
-    </span>
-    /
-    <a
-      :href="webvisorUrl"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="yandex-metrica__link"
-      @click.stop
+    <div
+      v-for="counter in counters"
+      :key="counter.key"
+      class="yandex-metrica__counter"
     >
-      {{ $t('components.yandexMetrica.openWebvisor') }}
-      <Icon
-        symbol="link-external"
-        class="yandex-metrica__link-icon"
-      />
-    </a>
+      <span class="yandex-metrica__identifier yandex-metrica__identifier--counter">
+        {{ $t('components.yandexMetrica.counterId') }}:
+        <button
+          type="button"
+          class="yandex-metrica__copy-value"
+          :title="$t('components.codeBlock.copy')"
+          @click.stop="copyValue(String(counter.identifiers.counterId))"
+        >
+          {{ counter.identifiers.counterId }}
+        </button>
+      </span>
+      /
+      <span class="yandex-metrica__identifier yandex-metrica__identifier--client">
+        {{ $t('components.yandexMetrica.clientId') }}:
+        <button
+          type="button"
+          class="yandex-metrica__copy-value"
+          :title="$t('components.codeBlock.copy')"
+          @click.stop="copyValue(counter.identifiers.clientId)"
+        >
+          {{ counter.identifiers.clientId }}
+        </button>
+      </span>
+      /
+      <a
+        :href="buildWebvisorUrl(counter.identifiers)"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="yandex-metrica__link"
+        @click.stop
+      >
+        {{ $t('components.yandexMetrica.openWebvisor') }}
+        <Icon
+          symbol="link-external"
+          class="yandex-metrica__link-icon"
+        />
+      </a>
+    </div>
   </div>
 </template>
 
@@ -49,7 +55,7 @@ import Icon from '@/components/utils/Icon.vue';
 /**
  * Yandex Metrica identifiers attached by the browser catcher.
  */
-interface YandexMetricaAddon {
+interface YandexMetricaIdentifiers {
   /**
    * Yandex Metrica counter ID.
    */
@@ -60,6 +66,8 @@ interface YandexMetricaAddon {
    */
   clientId: string;
 }
+
+type YandexMetricaAddon = YandexMetricaIdentifiers | Record<string, YandexMetricaIdentifiers>;
 
 /**
  * Yandex Metrica identifiers collected by the browser catcher.
@@ -72,6 +80,45 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+
+/**
+ * Checks whether a value contains one counter's Yandex Metrica identifiers.
+ *
+ * @param value - Value to check.
+ */
+const isYandexMetricaIdentifiers = (value: unknown): value is YandexMetricaIdentifiers => {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const identifiers = value as Partial<YandexMetricaIdentifiers>;
+
+  return Number.isSafeInteger(identifiers.counterId)
+    && typeof identifiers.clientId === 'string'
+    && identifiers.clientId.length > 0;
+};
+
+/**
+ * Normalizes current multi-counter values and legacy single-counter events.
+ */
+const counters = computed(() => {
+  if (isYandexMetricaIdentifiers(props.value)) {
+    return [{
+      key: '1',
+      identifiers: props.value,
+    }];
+  }
+
+  return Object.entries(props.value)
+    .filter((entry): entry is [string, YandexMetricaIdentifiers] => {
+      return isYandexMetricaIdentifiers(entry[1]);
+    })
+    .sort(([leftKey], [rightKey]) => Number(leftKey) - Number(rightKey))
+    .map(([key, identifiers]) => ({
+      key,
+      identifiers,
+    }));
+});
 
 /**
  * Copies a Yandex Metrica identifier to the clipboard.
@@ -100,12 +147,14 @@ const copyValue = async (value: string): Promise<void> => {
  * The quotes around ClientID are pre-encoded as `%27`. URLSearchParams
  * encodes the percent signs once more, producing the `%2527` expected by
  * the Metrica report filter.
+ *
+ * @param identifiers - Counter and ClientID used to build the link.
  */
-const webvisorUrl = computed(() => {
+const buildWebvisorUrl = (identifiers: YandexMetricaIdentifiers): string => {
   const query = new URLSearchParams({
     period: 'year',
-    filter: `(EXISTS ym:u:userID WITH (ym:u:clientID==%27${props.value.clientId}%27))`,
-    id: String(props.value.counterId),
+    filter: `(EXISTS ym:u:userID WITH (ym:u:clientID==%27${identifiers.clientId}%27))`,
+    id: String(identifiers.counterId),
     group: 'week',
     isMinSamplingEnabled: 'false',
     currency: 'RUB',
@@ -117,16 +166,26 @@ const webvisorUrl = computed(() => {
   });
 
   return `https://metrika.yandex.ru/stat/visor?${query.toString()}`;
-});
+};
 </script>
 
 <style scoped>
 .yandex-metrica {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
   color: inherit;
   font: inherit;
+  padding-top: 4px;
+
+  &__counter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    color: inherit;
+    font: inherit;
+  }
 
   &__identifier {
     color: inherit;
