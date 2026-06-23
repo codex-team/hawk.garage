@@ -4,8 +4,6 @@ import store from './store';
 import { SET_TOKENS } from './store/modules/user/actionTypes';
 import { DEMO_ACCESS_TOKEN, DEMO_REFRESH_TOKEN } from './composables/useDemo';
 
-import { Analytics, AnalyticsEventType } from './analytics';
-
 import AppShell from './components/AppShell.vue';
 import invitesHandler from './invitesHandler';
 import unsubscribeHandler from './unsubscribeHandler';
@@ -401,32 +399,6 @@ router.beforeEach((to, from, next) => {
 
       return;
     }
-  }
-
-  /**
-   * Track visit
-   */
-  try {
-    /**
-     * Try to get user id
-     */
-    if (store.state.user && store.state.user.data && store.state.user.data.id) {
-      Analytics?.setUserId(store.state.user.data.id);
-    }
-
-    /**
-     * Event additional data
-     */
-    const eventProperties = {
-      url: to.fullPath,
-    };
-
-    /**
-     * Track event
-     */
-    void Analytics?.track(AnalyticsEventType.PageVisited, eventProperties);
-  } catch (e) {
-    console.error(e);
   }
 
   next();

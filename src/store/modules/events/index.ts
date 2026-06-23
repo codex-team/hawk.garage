@@ -7,9 +7,13 @@ import {
   SET_EVENTS_FILTERS,
   SET_EVENTS_ORDER,
   TOGGLE_EVENT_MARK,
+  BULK_SET_EVENT_MARKS,
+  BULK_UPDATE_EVENT_ASSIGNEE,
+  BULK_VISIT_EVENTS,
   UPDATE_EVENT_ASSIGNEE,
   VISIT_EVENT,
-  GET_CHART_DATA
+  GET_CHART_DATA,
+  REMOVE_EVENT
 } from './actionTypes';
 import { RESET_STORE } from '../../methodsTypes';
 import type { Module } from 'vuex';
@@ -22,11 +26,18 @@ import type {
   HawkEvent,
   DailyEventsCursor
 } from '@/types/events';
+import type { BulkEventsMutationResult } from '@/types/bulk';
 import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem } from '@/types/chart';
+import type { ChartLine } from '@/types/chart';
+import { useErrorTracker } from '@/hawk';
+
+/**
+ * Error tracking composable
+ */
+const { track } = useErrorTracker();
 
 /**
  * Mutations enum for this module
@@ -64,6 +75,11 @@ enum MutationTypes {
    * Toggle mark for event
    */
   ToggleMark = 'TOGGLE_MARK',
+
+  /**
+   * Explicitly set/unset mark for event
+   */
+  SetMark = 'SET_MARK',
 
   /**
    * Get chart data for en event for a few days
@@ -252,11 +268,14 @@ const module: Module<EventsModuleState, RootState> = {
      * @param payload.projectId - id of the project to get overview for
      * @param payload.search - event searching regex string
      * @param payload.nextCursor - pointer to the first daily event of the portion to fetch
+     * @param payload.release - optional release label to filter by payload.release
+     * @param payload.assignee - optional user id to filter events by assignee
      */
-    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release }: { projectId: string;
+    async [FETCH_PROJECT_OVERVIEW]({ commit }, { projectId, search, nextCursor, release, assignee }: { projectId: string;
       search: string;
       nextCursor: DailyEventsCursor | null;
-      release?: string; }):
+      release?: string;
+      assignee?: string; }):
       Promise<{ dailyEventsWithEventsLinked: DailyEventWithEventLinked[];
         nextCursor: string | null; }> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
@@ -266,7 +285,8 @@ const module: Module<EventsModuleState, RootState> = {
         eventsSortOrder,
         this.getters.getProjectFilters(projectId),
         search,
-        release
+        release,
+        assignee
       );
 
       const dailyEvents = dailyEventsPortion.dailyEvents;
@@ -384,6 +404,56 @@ const module: Module<EventsModuleState, RootState> = {
         });
       }
     },
+    /**
+     * Mark many original events as visited
+     * @param context - vuex action context
+     * @param context.commit - VueX commit function
+     * @param context.rootState - root VueX state
+     * @param payload - vuex action payload
+     * @param payload.projectId - project id
+     * @param payload.eventIds - original event ids
+     * @returns API result or null on GraphQL error
+     */
+    async [BULK_VISIT_EVENTS](
+      { commit, rootState },
+      { projectId, eventIds }: {
+        projectId: string;
+        eventIds: string[];
+      }
+    ): Promise<
+      (BulkEventsMutationResult & { targetEventIds: string[] }) | null
+    > {
+      const uniqueEventIds = [...new Set(eventIds.map(String))];
+
+      if (uniqueEventIds.length === 0) {
+        return {
+          success: true,
+          modifiedCount: 0,
+          targetEventIds: [],
+        };
+      }
+
+      const result = await eventsApi.bulkVisitEvents(projectId, uniqueEventIds);
+
+      if (!result || !result.success) {
+        return null;
+      }
+
+      const user = (rootState).user.data;
+
+      uniqueEventIds.forEach((originalEventId) => {
+        commit(MutationTypes.MarkAsVisited, {
+          projectId,
+          originalEventId,
+          user,
+        });
+      });
+
+      return {
+        ...result,
+        targetEventIds: uniqueEventIds,
+      };
+    },
 
     /**
      * Send request to set mark to event
@@ -414,6 +484,94 @@ const module: Module<EventsModuleState, RootState> = {
       if (!result) {
         commitAction();
       }
+    },
+
+    /**
+     * Bulk set/clear marks for original event ids
+     * @param _context - Vuex action context (unused)
+     * @param payload - mutation arguments
+     * @param payload.projectId - project id
+     * @param payload.eventIds - original event ids
+     * @param payload.mark - resolved, ignored or starred
+     * @param payload.enabled - true to set mark, false to clear
+     * @returns API result or null on GraphQL error
+     */
+    async [BULK_SET_EVENT_MARKS](
+      { commit },
+      payload: {
+        projectId: string;
+        eventIds: string[];
+        mark: 'resolved' | 'ignored' | 'starred';
+        enabled: boolean;
+      }
+    ): Promise<
+      (BulkEventsMutationResult & { targetEventIds: string[] }) | null
+    > {
+      const { projectId, eventIds, mark, enabled } = payload;
+      const uniqueEventIds = [...new Set(eventIds.map(String))];
+
+      if (uniqueEventIds.length === 0) {
+        return {
+          success: true,
+          modifiedCount: 0,
+          targetEventIds: [],
+        };
+      }
+
+      const result = await eventsApi.bulkSetEventMarks(projectId, uniqueEventIds, mark, enabled);
+
+      if (!result || !result.success) {
+        return null;
+      }
+
+      uniqueEventIds.forEach((originalEventId) => {
+        commit(MutationTypes.SetMark, {
+          projectId,
+          eventId: originalEventId,
+          mark,
+          enabled,
+        });
+      });
+
+      return {
+        ...result,
+        targetEventIds: uniqueEventIds,
+      };
+    },
+
+    /**
+     * Remove event and all related data (repetitions, daily events)
+     * @param context - vuex action context (not used)
+     * @param context.commit - standard Vuex commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - project event is related to
+     * @param payload.eventId - original event id to remove
+     */
+    async [REMOVE_EVENT](context, { projectId, eventId }: {
+      projectId: string;
+      eventId: string;
+    }): Promise<boolean> {
+      const response = await eventsApi.removeEvent(projectId, eventId);
+
+      if (response.errors?.length) {
+        response.errors.forEach((apiError) => {
+          const apiErrorDetails = {
+            message: apiError.message,
+            path: apiError.path ? apiError.path.join('.') : '',
+            code: String(apiError.extensions?.code ?? ''),
+          };
+
+          track(new Error(apiError.message), {
+            projectId,
+            eventId,
+            errorDetails: apiErrorDetails,
+          });
+        });
+
+        return false;
+      }
+
+      return Boolean(response.data?.removeEvent);
     },
 
     /**
@@ -459,8 +617,9 @@ const module: Module<EventsModuleState, RootState> = {
      */
     async [REMOVE_EVENT_ASSIGNEE]({ commit }, { projectId, eventId }: { projectId: string;
       eventId: string; }): Promise<void> {
-      const result = await eventsApi.removeAssignee(projectId, eventId);
       const event: HawkEvent = this.getters.getProjectEventById(projectId, eventId);
+
+      const result = await eventsApi.removeAssignee(projectId, event.originalEventId);
 
       if (result.success) {
         commit(MutationTypes.SetEventAssignee, {
@@ -469,6 +628,58 @@ const module: Module<EventsModuleState, RootState> = {
           assignee: null,
         });
       }
+    },
+    /**
+     * Bulk set/clear assignee for original event ids
+     * @param context - vuex action context
+     * @param context.commit - VueX commit function
+     * @param payload - vuex action payload
+     * @param payload.projectId - project id
+     * @param payload.eventIds - original event ids
+     * @param payload.assignee - user to assign, null to clear
+     */
+    async [BULK_UPDATE_EVENT_ASSIGNEE](
+      { commit },
+      { projectId, eventIds, assignee }: {
+        projectId: string;
+        eventIds: string[];
+        assignee: User | null;
+      }
+    ): Promise<
+      (BulkEventsMutationResult & { targetEventIds: string[] }) | null
+    > {
+      const uniqueEventIds = [...new Set(eventIds.map(String))];
+
+      if (uniqueEventIds.length === 0) {
+        return {
+          success: true,
+          modifiedCount: 0,
+          targetEventIds: [],
+        };
+      }
+
+      const result = await eventsApi.bulkUpdateAssignee(
+        projectId,
+        uniqueEventIds,
+        assignee ? assignee.id : null
+      );
+
+      if (!result || !result.success) {
+        return null;
+      }
+
+      uniqueEventIds.forEach((originalEventId) => {
+        commit(MutationTypes.SetEventAssignee, {
+          projectId,
+          originalEventId,
+          assignee,
+        });
+      });
+
+      return {
+        ...result,
+        targetEventIds: uniqueEventIds,
+      };
     },
 
     /**
@@ -674,6 +885,29 @@ const module: Module<EventsModuleState, RootState> = {
     },
 
     /**
+     * Set or unset mark for all events with matching originalEventId.
+     * @param state - events module state
+     * @param payload - mutation payload
+     * @param payload.projectId - project id
+     * @param payload.eventId - original event id
+     * @param payload.mark - mark to update
+     * @param payload.enabled - true to set mark, false to remove
+     */
+    [MutationTypes.SetMark](state, { projectId, eventId, mark, enabled }): void {
+      Object.entries(state.events).forEach(([key, event]) => {
+        if (!key.startsWith(`${projectId}:`)) {
+          return;
+        }
+
+        if (event.originalEventId !== eventId) {
+          return;
+        }
+
+        event.marks[mark] = enabled;
+      });
+    },
+
+    /**
      * Set sorting order for project
      * @param state - module state
      * @param project - object for project data
@@ -683,7 +917,10 @@ const module: Module<EventsModuleState, RootState> = {
     [SET_EVENTS_ORDER](state: EventsModuleState, { order, projectId }: { order: EventsSortOrder;
       projectId: string; }): void {
       if (!state.filters[projectId]) {
-        state.filters[projectId] = {};
+        state.filters[projectId] = {
+          filters: {},
+          order: EventsSortOrder.ByDate,
+        };
       }
 
       state.filters[projectId].order = order;
@@ -699,7 +936,10 @@ const module: Module<EventsModuleState, RootState> = {
     [SET_EVENTS_FILTERS](state: EventsModuleState, { filters, projectId }: { filters: EventsFilters;
       projectId: string; }): void {
       if (!state.filters[projectId]) {
-        state.filters[projectId] = {};
+        state.filters[projectId] = {
+          filters: {},
+          order: EventsSortOrder.ByDate,
+        };
       }
 
       state.filters[projectId].filters = filters;
@@ -715,7 +955,7 @@ const module: Module<EventsModuleState, RootState> = {
      */
     [MutationTypes.SaveChartData](state: EventsModuleState, { projectId, eventId, data }: { projectId: string;
       eventId: string;
-      data: EventChartItem[]; }): void {
+      data: ChartLine[]; }): void {
       const key = getEventsListKey(projectId, eventId);
       // const event = state.events[key];
 

@@ -23,7 +23,12 @@ export interface NotificationsChannels {
   telegram?: NotificationsChannelSettings;
 
   /**
-   * Alerts through the Slack
+   * Alerts through a custom Webhook URL
+   */
+  webhook?: NotificationsChannelSettings;
+
+  /**
+   * Alerts through the Web Push
    */
   webPush?: NotificationsChannelSettings;
 

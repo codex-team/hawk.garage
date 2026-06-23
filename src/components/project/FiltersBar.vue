@@ -244,6 +244,7 @@ export default defineComponent({
     &__filter-icon {
       width: 12px;
       height: 10px;
+      margin-left: 11px;
       margin-right: 6px;
       color: var(--color-text-second);
     }

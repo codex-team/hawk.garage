@@ -2,10 +2,28 @@
   <div class="events-list">
     <SearchField
       v-model="searchQuery"
-      class="search-container"
+      class="events-list__search search-container"
       skin="fancy"
       :placeholder="searchFieldPlaceholder"
       :is-c-m-d-k-enabled="true"
+    >
+      <template #suffix>
+        <UiSelect
+          v-model="selectedAssigneeId"
+          class="events-list__assignee-filter"
+          :class="{ 'events-list__assignee-filter--all': !selectedAssigneeId }"
+          :icon-left="selectedAssigneeId ? undefined : 'user-small'"
+          :options="assigneeOptions"
+          :placeholder="$t('event.viewedBy.assignee')"
+        />
+      </template>
+    </SearchField>
+    <BulkActionsBar
+      :project-id="projectId"
+      :selection-mode-active="selectionModeActive"
+      :selected-count="selectedCount"
+      :selected-event-ids="selectedRowIds"
+      @exit-bulk-select="exitBulkSelect"
     />
     <template v-if="hasItems">
       <div
@@ -24,7 +42,10 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
+          :is-selection-mode-active="selectionModeActive"
+          :is-row-selected="isRowSelected(dailyEventInfo.eventId)"
           @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
+          @toggle-row-select="toggleRowSelected(dailyEventInfo.eventId, $event)"
           @show-event-overview="onShowEventOverview(dailyEventInfo.eventId)"
         />
       </div>
@@ -60,6 +81,7 @@
       :style="assigneesListPosition"
       :event-id="assigneesEventId"
       :project-id="projectId"
+      :can-unassign="canUnassignAssigneesPopoverEvent"
       class="events-list__assignees-list"
       @hide="hideAssigneesList"
     />
@@ -67,8 +89,10 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
 import EventItem from './EventItem';
 import EventItemSkeleton from './EventItemSkeleton';
+import BulkActionsBar from './bulk/BulkActionsBar.vue';
 import { groupByGroupingTimestamp, debounce, getPlatform } from '@/utils';
 import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
@@ -76,6 +100,12 @@ import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
+import UiSelect from '../utils/UiSelect.vue';
+import { useBulkSelection } from './bulk/useBulkSelection';
+
+/** Must match api/src/models/eventsFactory.js assignee filter sentinels */
+const ASSIGNEE_FILTER_UNASSIGNED = '__filter_unassigned__';
+const ASSIGNEE_FILTER_ANY_ASSIGNEE = '__filter_any_assignee__';
 
 /**
  * Events list component grouped by days.
@@ -96,15 +126,65 @@ export default {
   components: {
     EventItem,
     EventItemSkeleton,
+    BulkActionsBar,
     AssigneesList,
     SearchField,
     EmptyState,
+    UiSelect,
   },
   props: {
     fallback: {
       type: String,
       default: 'simple',
     },
+  },
+  setup() {
+    const dailyEvents = ref([]);
+
+    const groupedByDate = computed(() => {
+      if (!dailyEvents.value.length) {
+        return {};
+      }
+
+      return groupByGroupingTimestamp(dailyEvents.value);
+    });
+
+    const flattenedDailyEventIds = computed(() => {
+      const flat = [];
+
+      for (const date of Object.keys(groupedByDate.value)) {
+        for (const dailyEventInfo of groupedByDate.value[date]) {
+          flat.push(dailyEventInfo.eventId);
+        }
+      }
+
+      return flat;
+    });
+
+    const {
+      selectedIds: selectedRowIds,
+      selectionModeActive,
+      selectedCount,
+      exitBulkSelect,
+      isSelected: isRowSelected,
+      toggleSelected: toggleRowSelected,
+      syncSelectionWithVisibleIds: syncSelectionWithVisibleRows,
+    } = useBulkSelection(flattenedDailyEventIds);
+
+    /**
+     * Expose composable state/methods to template and Options API methods via `this.*`.
+     */
+    return {
+      dailyEvents,
+      groupedByDate,
+      selectedRowIds,
+      selectionModeActive,
+      selectedCount,
+      exitBulkSelect,
+      isRowSelected,
+      toggleRowSelected,
+      syncSelectionWithVisibleRows,
+    };
   },
   data() {
     return {
@@ -119,9 +199,9 @@ export default {
         ? (this.$store.getters.getProjectSearch(this.$route.params.projectId) || '')
         : '',
       /**
-       * Raw (not grouped by groupingTimestamp) dailyEvents list
+       * Selected assignee id for filtering events
        */
-      dailyEvents: [],
+      selectedAssigneeId: '',
       /**
        * Indicates whether items are loading or not.
        */
@@ -163,6 +243,10 @@ export default {
        * Anchor element for assignees popup positioning
        */
       assigneesAnchorEl: null,
+      /**
+       * When true, run reloadDailyEvents once the current load finishes (assignee changed mid-request)
+       */
+      pendingAssigneeReload: false,
     };
   },
   created() {
@@ -184,6 +268,7 @@ export default {
     }, 500);
   },
   beforeUnmount() {
+    this.hideAssigneesList();
     this.debouncedSearch && this.debouncedSearch.cancel && this.debouncedSearch.cancel();
   },
   // eslint-disable-next-line vue/order-in-components
@@ -212,6 +297,42 @@ export default {
     release() {
       return this.$route.params.release || this.$route.query?.release;
     },
+    /**
+     * Workspace for current project (contains team members)
+     */
+    workspace() {
+      return this.$store.getters.getWorkspaceByProjectId(this.projectId);
+    },
+    /**
+     * Assignee filter options (all + workspace users)
+     */
+    assigneeOptions() {
+      const users = (this.workspace?.team || [])
+        .map(member => member.user)
+        .filter(Boolean);
+
+      const options = users.map(user => ({
+        label: user.name || user.email,
+        value: String(user.id),
+      }));
+
+      return [
+        {
+          value: '',
+          icon: 'user-small',
+          label: this.$t('event.assignee.noFilter'),
+        },
+        {
+          value: ASSIGNEE_FILTER_UNASSIGNED,
+          label: this.$t('event.assignee.unassigned'),
+        },
+        {
+          value: ASSIGNEE_FILTER_ANY_ASSIGNEE,
+          label: this.$t('event.assignee.any'),
+        },
+        ...options,
+      ];
+    },
     ...mapGetters(['getProjectEventById', 'getProjectSearch']),
     /**
      * Whether there are items to display
@@ -221,17 +342,15 @@ export default {
     hasItems() {
       return Array.isArray(this.dailyEvents) && this.dailyEvents.length > 0;
     },
-    /**
-     * Group events by the `groupingTimestamp` key
-     *
-     * @returns {Record<string, any[]>}
-     */
-    groupedByDate() {
-      if (!this.hasItems) {
-        return {};
+    /** Whether assignee popover target event currently has an assignee. */
+    canUnassignAssigneesPopoverEvent() {
+      if (!this.assigneesEventId) {
+        return false;
       }
 
-      return groupByGroupingTimestamp(this.dailyEvents);
+      const event = this.getEvent(this.assigneesEventId);
+
+      return !!event?.assignee;
     },
   },
   methods: {
@@ -277,36 +396,44 @@ export default {
       }
 
       this.isLoading = true;
-      const search = this.getProjectSearch(this.projectId) || '';
 
-      const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
-        projectId: this.projectId,
-        nextCursor: this.dailyEventsNextCursor,
-        search,
-        release: this.release,
-      });
+      try {
+        const search = this.getProjectSearch(this.projectId) || '';
 
-      this.dailyEventsNextCursor = nextCursor;
-      this.noMore = this.dailyEventsNextCursor === null;
+        const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+          projectId: this.projectId,
+          nextCursor: this.dailyEventsNextCursor,
+          search,
+          release: this.release,
+          assignee: this.selectedAssigneeId || undefined,
+        });
 
-      if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
-        this.$emit('no-events');
+        this.dailyEventsNextCursor = nextCursor;
+        this.noMore = this.dailyEventsNextCursor === null;
+
+        if (this.noMore && dailyEventsWithEventsLinked.length === 0) {
+          this.$emit('no-events');
+        }
+
+        if (overwrite) {
+          this.dailyEvents = [...dailyEventsWithEventsLinked];
+        } else {
+          this.dailyEvents.push(...dailyEventsWithEventsLinked);
+        }
+
+        this.syncSelectionWithVisibleRows();
+      } finally {
+        this.isLoading = false;
       }
-
-      if (overwrite) {
-        this.dailyEvents = [...dailyEventsWithEventsLinked];
-      } else {
-        this.dailyEvents.push(...dailyEventsWithEventsLinked);
-      }
-
-      this.isLoading = false;
     },
     /**
      * Reset pagination and reload list
      */
     reloadDailyEvents() {
+      this.exitBulkSelect();
       this.dailyEventsNextCursor = null;
       this.noMore = false;
+      this.dailyEvents = [];
       this.loadMoreEvents(true);
     },
     /**
@@ -395,6 +522,21 @@ export default {
     searchQuery(newVal) {
       void this.debouncedSearch(newVal);
     },
+    selectedAssigneeId() {
+      if (this.isLoading) {
+        this.pendingAssigneeReload = true;
+
+        return;
+      }
+      this.pendingAssigneeReload = false;
+      this.reloadDailyEvents();
+    },
+    isLoading(newVal) {
+      if (!newVal && this.pendingAssigneeReload) {
+        this.pendingAssigneeReload = false;
+        this.reloadDailyEvents();
+      }
+    },
   },
 };
 </script>
@@ -403,8 +545,13 @@ export default {
 .events-list {
   display: flex;
   flex-direction: column;
+  min-height: 400px;
 
   &__group {
+    margin-top: 8px;
+  }
+
+  &__group + &__group {
     margin-top: 25px;
   }
 
@@ -446,9 +593,71 @@ export default {
   &__assignees-list {
     position: fixed;
     transform: translateX(-100%) translate(-15px, -5px);
+    z-index: 200;
+  }
+
+  &__assignee-filter {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 100;
+
+    .ui-select__button {
+      gap: 2px;
+      color: var(--color-text-second) !important;
+      font-weight: 500;
+      background-color: transparent !important;
+      border: none;
+      box-shadow: none;
+
+      &:hover {
+        color: var(--color-text-main) !important;
+        background-color: transparent !important;
+      }
+    }
+
+    .ui-context-list {
+      /* Override scoped UiSelect: align popover to trigger right edge, width from content (grows left) */
+      z-index: 101;
+      right: 0 !important;
+      left: auto !important;
+      width: max-content !important;
+      min-width: 100%;
+      max-width: min(420px, calc(100vw - 24px));
+      box-sizing: border-box;
+      background-color: var(--color-bg-main);
+      border: 1px solid var(--color-border);
+
+      .ui-context-list__item {
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      .ui-context-list__item:hover {
+        background-color: var(--color-bg-third);
+      }
+    }
+  }
+
+  /* “All assignees” trigger: iconLeft + chevron only; label hidden via CSS (UiSelect unchanged) */
+  &__assignee-filter--all .ui-select__button {
+    font-size: 0;
+    line-height: 0;
+  }
+
+  &__assignee-filter--all .ui-select__button .icon {
+    width: 12px;
+    height: 12px;
   }
 }
 .search-container {
+  width: 100%;
   margin-top: 16px;
+
+  &.form-search-field {
+    position: relative;
+    z-index: 100;
+    padding-inline: 11px;
+  }
 }
 </style>

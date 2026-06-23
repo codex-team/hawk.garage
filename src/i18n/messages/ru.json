@@ -188,14 +188,6 @@
         "sectionWhereToReceive": "Где получать",
         "sectionWhatToReceive": "Что получать",
         "sectionCustomFilters": "Фильтры",
-        "email": "На почту",
-        "emailDescription": "Не более одного письма в 10 минут",
-        "slack": "Slack",
-        "slackDescription": "Уведомления через Webhook App",
-        "loop": "Loop",
-        "loopDescription": "Уведомления через Loop Webhook",
-        "telegram": "Telegram",
-        "telegramDescription": "Уведомления через {telegramLink}",
         "receiveNewLabel": "Только новые события",
         "receiveNewDescription": "При первом получении",
         "receiveSeenMoreLabel": "По частоте появления",
@@ -343,18 +335,6 @@
       "channelsHeading": "Каналы",
       "actionTypesHeading": "Типы событий",
       "soon": "Скоро",
-      "channels": {
-        "email": "Email",
-        "webPush": "Браузерные пуши",
-        "desktopPush": "Пуши в приложении"
-      },
-      "channelDescriptions": {
-        "email": "Уведомления на",
-        "emailEmptyPlaceholder": "вашу почту",
-        "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
-        "webPush": "Уведомления даже при закрытой вкладке",
-        "desktopPush": "Системные уведомления через Hawk Desktop"
-      },
       "actions": {
         "IssueAssigning": "Назначение на задачу",
         "WeeklyDigest": "Еженедельная сводка",
@@ -373,6 +353,7 @@
       "description": "Все тарифные планы включают в себя все возможности сервиса. Если у вас возникли вопросы по тарифной сетке, напишите нам&nbsp;на&nbsp;{emailLink}",
       "onSuccess": "Тарифный план был успешно изменён",
       "onError": "Произошла ошибка, пожалуйста попробуйте ещё раз немного позже",
+      "freeResetNotAllowed": "Бесплатный план нельзя обнулить повторно — вы уже использовали свой бесплатный лимит.",
       "confirmSetToFreePlanDescription": "Старый план будет отменён. Неиспользованные ошибки и время не будут возвращены.",
       "confirmSetToPaidPlanDescription": "Старый план отменяется. Возврат денег за неиспользованные ошибки и время не предусмотрен. Новый тариф нужно оплатить отдельно.",
       "premiumPlan": "Премиум",
@@ -598,6 +579,19 @@
     "viewedBy": {
       "assignee": "Исполнитель"
     },
+    "assignee": {
+      "noFilter": "Без фильтра",
+      "unassigned": "Без исполнителя",
+      "any": "Любой исполнитель"
+    },
+    "bulk": {
+      "markViewed": "Пометить как просмотренные",
+      "moreActions": "Другие действия",
+      "unignore": "Не игнорировать",
+      "unresolve": "Не выполнено",
+      "unstar": "Убрать из избранного",
+      "markError": "Не удалось обновить события"
+    },
     "suspectedCommits": {
       "header": "Подозреваемые коммиты",
       "hide": "скрыть",
@@ -637,7 +631,11 @@
       "title": "Событие скрыто",
       "description": "Мы получили это событие, но скрыли его, потому что ваша подписка закончилась.",
       "upgradeButton": "Оплатить и посмотреть событие"
-    }
+    },
+    "remove": "Удалить событие",
+    "removeConfirmation": "Вы уверены, что хотите удалить это событие? Все связанные данные также будут удалены.",
+    "removeButton": "Удалить",
+    "removeSuccess": "Событие успешно удалено"
   },
   "common": {
     "workspace": "Воркспейc",
@@ -652,6 +650,7 @@
     "free": "БЕСПЛАТНО",
     "select": "Выбрать",
     "selected": "Выбрано",
+    "escKey": "(Esc)",
     "continue": "Продолжить",
     "eventsPerMonth": "событий / мес",
     "moneyPerMonth": "{currency} / мес",
@@ -706,7 +705,30 @@
       "monthsAgo": "в этом месяце | месяц назад | {numberOfMonths} месяца назад | {numberOfMonths} месяцев назад",
       "yearsAgo": "в этом году | год назад | {numberOfYears} года назад | {numberOfYears} лет назад"
     },
-    "readMore": "Подробнее"
+    "readMore": "Подробнее",
+    "notifications": {
+      "channels": {
+        "email": "Email",
+        "slack": "Slack",
+        "loop": "Loop",
+        "telegram": "Telegram",
+        "webhook": "Webhook",
+        "webPush": "Браузерные пуши",
+        "desktopPush": "Пуши в приложении"
+      },
+      "channelDescriptions": {
+        "email": "Уведомления на",
+        "emailDescription": "Не более одного письма в 10 минут",
+        "emailEmptyPlaceholder": "вашу почту",
+        "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
+        "slack": "Уведомления через Webhook App",
+        "loop": "Уведомления через Loop Webhook",
+        "telegram": "Уведомления через {telegramLink}",
+        "webhook": "Получайте данные событий через HTTP POST на ваш endpoint",
+        "webPush": "Уведомления даже при закрытой вкладке",
+        "desktopPush": "Системные уведомления через Hawk Desktop"
+      }
+    }
   },
   "errors": {
     "Something went wrong": "Произошла ошибка. Хоук уже сообщил нам о ней.",

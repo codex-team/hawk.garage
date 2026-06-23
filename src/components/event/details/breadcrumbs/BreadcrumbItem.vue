@@ -12,16 +12,12 @@
         <BreadcrumbIcon
           :type="breadcrumb.type"
           :level="breadcrumb.level"
-          :status-code="getStatusCode"
+          :color-variable="colorVariable"
           class="breadcrumb-item__icon"
         />
         <span
           class="breadcrumb-item__type"
-          :class="[
-            `breadcrumb-item__type--${breadcrumb.type || 'default'}`,
-            getStatusCode && breadcrumb.type === 'request' && getStatusCode === 200 ? 'breadcrumb-item__type--status-success' : '',
-            getStatusCode && breadcrumb.type === 'request' && getStatusCode >= 500 ? 'breadcrumb-item__type--status-error' : ''
-          ]"
+          :style="colorStyle"
         >
           {{ t(`event.breadcrumbs.types.${formatType(breadcrumb.type)}`) }}
         </span>
@@ -94,6 +90,7 @@ import Json from '../../../utils/Json.vue';
 import Icon from '../../../utils/Icon.vue';
 import notifier from 'codex-notifier';
 import { prettyDateFromDateTimeString } from '@/utils/filters';
+import { getBreadcrumbColor } from '@/components/utils/breadcrumbs/breadcrumbColor';
 
 const { t } = useI18n();
 
@@ -190,8 +187,10 @@ const onBreadcrumbCopied = (copiedText: string) => {
  * @param {string | undefined} type - Breadcrumb type
  * @returns {string} Formatted type or 'default' if type is not provided
  */
+const KNOWN_TYPES = new Set(['default', 'request', 'ui', 'navigation', 'logic', 'error']);
+
 const formatType = (type?: string): string => {
-  if (!type) {
+  if (!type || !KNOWN_TYPES.has(type)) {
     return 'default';
   }
 
@@ -199,19 +198,20 @@ const formatType = (type?: string): string => {
 };
 
 /**
- * Gets HTTP status code from breadcrumb data if it's a request type
+ * Gets CSS variable name for breadcrumb color based on type and status
  *
- * @returns {number | undefined} Status code or undefined
+ * @returns {string} CSS variable name (e.g., '--color-indicator-positive')
  */
-const getStatusCode = computed(() => {
-  if (props.breadcrumb.type === 'request' && props.breadcrumb.data) {
-    const statusCode = props.breadcrumb.data.statusCode;
-
-    return typeof statusCode === 'number' ? statusCode : undefined;
-  }
-
-  return undefined;
+const colorVariable = computed(() => {
+  return getBreadcrumbColor(props.breadcrumb);
 });
+
+/**
+ * Style object with color CSS variable
+ */
+const colorStyle = computed(() => ({
+  '--breadcrumb-color': `var(${colorVariable.value})`,
+}));
 
 /**
  * Formats timestamp to date and time string with milliseconds
@@ -317,38 +317,7 @@ const formatTime = (timestamp: number): string => {
   &__type {
     font-weight: 600;
     white-space: nowrap;
-
-    &--error {
-      color: var(--color-indicator-critical);
-    }
-
-    &--navigation {
-      color: #ff66cf;
-    }
-
-    &--ui {
-      color: #a855f7;
-    }
-
-    &--request {
-      color: var(--color-indicator-warning);
-    }
-
-    &--status-success {
-      color: var(--color-indicator-positive);
-    }
-
-    &--status-error {
-      color: var(--color-indicator-critical);
-    }
-
-    &--logic {
-      color: var(--color-text-highlighted);
-    }
-
-    &--default {
-      color: #94a3b8;
-    }
+    color: var(--breadcrumb-color);
   }
 
   &__content-column {

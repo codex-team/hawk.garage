@@ -159,6 +159,10 @@ export const PROJECT_NOTIFICATIONS_RULE_FRAGMENT = `
         endpoint
         isEnabled
       }
+      webhook {
+        endpoint
+        isEnabled
+      }
     }
     threshold
     thresholdPeriod
@@ -180,6 +184,10 @@ export const USER_NOTIFICATIONS_FRAGMENT = `
   fragment UserNotifications on UserNotificationsSettings {
     channels {
       email {
+        isEnabled
+        endpoint
+      }
+      webhook {
         isEnabled
         endpoint
       }

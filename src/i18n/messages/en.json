@@ -188,14 +188,6 @@
         "sectionWhereToReceive": "Where to receive",
         "sectionWhatToReceive": "What to receive",
         "sectionCustomFilters": "Custom Filters",
-        "email": "Email",
-        "emailDescription": "Max frequency is 1 alert in 10 min",
-        "slack": "Slack",
-        "slackDescription": "Alerts through the Webhook App",
-        "loop": "Loop",
-        "loopDescription": "Alerts through the Loop Webhook",
-        "telegram": "Telegram",
-        "telegramDescription": "Alerts through the {telegramLink}",
         "receiveNewLabel": "Only new events",
         "receiveNewDescription": "First occurrence of event",
         "receiveSeenMoreLabel": "Frequency based",
@@ -343,18 +335,6 @@
       "channelsHeading": "Channels",
       "actionTypesHeading": "Action types",
       "soon": "Soon",
-      "channels": {
-        "email": "Email",
-        "webPush": "Web Push",
-        "desktopPush": "Desktop Push"
-      },
-      "channelDescriptions": {
-        "email": "Notifications on",
-        "emailEmptyPlaceholder": "your email",
-        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
-        "webPush": "Alerts even with closed tab",
-        "desktopPush": "Native notifies through the Hawk Desktop"
-      },
       "actions": {
         "IssueAssigning": "Issue assigning",
         "WeeklyDigest": "Weekly digest",
@@ -373,6 +353,7 @@
       "description": "All plans includes all available features. If you have questions on plans, please contact us by {emailLink}",
       "onSuccess": "Workspace plan has been successfully changed",
       "onError": "Unable to change workspace plan due to an error, please try again later",
+      "freeResetNotAllowed": "Free plan can not be reset again. You have already used your free plan quota.",
       "confirmSetToFreePlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded.",
       "confirmSetToPaidPlanDescription": "The old plan will be canceled. Unused errors and time will not be refunded. You will need to pay for a new tariff plan.",
       "premiumPlan": "Premium",
@@ -598,6 +579,19 @@
     "viewedBy": {
       "assignee": "Assignee"
     },
+    "assignee": {
+      "noFilter": "No filter",
+      "unassigned": "Unassigned",
+      "any": "Any assignee"
+    },
+    "bulk": {
+      "markViewed": "Mark as viewed",
+      "moreActions": "More actions",
+      "unignore": "Unignore",
+      "unresolve": "Unresolved",
+      "unstar": "Remove from starred",
+      "markError": "Could not update events"
+    },
     "suspectedCommits": {
       "header": "Suspected commits",
       "hide": "hide",
@@ -637,7 +631,11 @@
       "title": "Event Hidden",
       "description": "We received this event but have hidden it because your subscription has expired.",
       "upgradeButton": "Pay and view event"
-    }
+    },
+    "remove": "Remove event",
+    "removeConfirmation": "Are you sure you want to remove this event? All related data will also be removed.",
+    "removeButton": "Remove",
+    "removeSuccess": "Event successfully removed"
   },
   "common": {
     "workspace": "Workspace",
@@ -652,6 +650,7 @@
     "free": "FREE",
     "select": "Select",
     "selected": "Selected",
+    "escKey": "(Esc)",
     "continue": "Continue",
     "eventsPerMonth": "events / mo",
     "moneyPerMonth": "{currency} / mo",
@@ -706,7 +705,30 @@
       "monthsAgo": "a month ago | {numberOfMonths} months ago",
       "yearsAgo": "a year ago | {numberOfYears} years ago"
     },
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "notifications": {
+      "channels": {
+        "email": "Email",
+        "slack": "Slack",
+        "loop": "Loop",
+        "telegram": "Telegram",
+        "webhook": "Webhook",
+        "webPush": "Web Push",
+        "desktopPush": "Desktop Push"
+      },
+      "channelDescriptions": {
+        "email": "Notifications on",
+        "emailDescription": "Max frequency is 1 alert in 10 min",
+        "emailEmptyPlaceholder": "your email",
+        "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
+        "slack": "Alerts through the Webhook App",
+        "loop": "Alerts through the Loop Webhook",
+        "telegram": "Alerts through the {telegramLink}",
+        "webhook": "Receive event data via HTTP POST to your endpoint",
+        "webPush": "Alerts even with closed tab",
+        "desktopPush": "Native notifies through the Hawk Desktop"
+      }
+    }
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it.",

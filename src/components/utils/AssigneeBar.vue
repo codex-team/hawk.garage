@@ -33,6 +33,7 @@
       v-click-outside="hideAssigneesList"
       :project-id="projectId"
       :event-id="event.id"
+      :can-unassign="!!(event && event.assignee)"
       triangle="top"
       class="assignee-bar__assignees-list"
       @hide="hideAssigneesList"
@@ -142,7 +143,6 @@ export default defineComponent({
     position: absolute;
     top: 50px;
     right: -30px;
-    z-index: 1;
   }
 }
 </style>

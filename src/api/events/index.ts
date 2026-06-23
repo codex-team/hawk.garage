@@ -1,12 +1,16 @@
 import {
   MUTATION_TOGGLE_EVENT_MARK,
+  MUTATION_BULK_SET_EVENT_MARKS,
+  MUTATION_BULK_VISIT_EVENTS,
   MUTATION_VISIT_EVENT,
   MUTATION_UPDATE_EVENT_ASSIGNEE,
   MUTATION_REMOVE_EVENT_ASSIGNEE,
+  MUTATION_BULK_UPDATE_EVENT_ASSIGNEE,
   QUERY_EVENT,
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
-  QUERY_CHART_DATA
+  QUERY_CHART_DATA,
+  MUTATION_REMOVE_EVENT
 } from './queries';
 import * as api from '@/api';
 import type {
@@ -16,13 +20,39 @@ import type {
   EventsFilters,
   HawkEvent
 } from '@/types/events';
+import type { BulkEventsMutationResult } from '@/types/bulk';
 import {
   EventsSortOrder
 } from '@/types/events';
 import type { User } from '@/types/user';
-import type { EventChartItem, ChartLine } from '@/types/chart';
+import type { ChartLine } from '@/types/chart';
 import type { APIResponse } from '../../types/api';
 import { withDemoMock } from '@/utils/withDemoMock';
+
+/**
+ * Execute bulk GraphQL mutation with soft-error handling.
+ * Returns null when API responds with GraphQL errors or without data.
+ * @param query GraphQL mutation document
+ * @param variables Mutation variables
+ * @param pickResult Selector extracting mutation result payload from response data
+ */
+async function runBulkMutation<TResponse>(
+  query: string,
+  variables: Record<string, unknown>,
+  pickResult: (response: TResponse) => BulkEventsMutationResult | null | undefined
+): Promise<BulkEventsMutationResult | null> {
+  const response = await api.call<TResponse>(query, variables, undefined, { allowErrors: true });
+
+  if (response.errors?.length) {
+    return null;
+  }
+
+  if (!response.data) {
+    return null;
+  }
+
+  return pickResult(response.data) ?? null;
+}
 
 /**
  * Get specific event
@@ -55,15 +85,17 @@ export const getEvent = withDemoMock(
  * @param filters - filters for daily events
  * @param search - search string for daily events
  * @param release - release identifier to filter events
+ * @param assignee - user id to filter events by assignee
  */
 export const fetchDailyEventsPortion = withDemoMock(
   async function fetchDailyEventsPortion(
     projectId: string,
     nextCursor: DailyEventsCursor | null = null,
-  sort = EventsSortOrder.ByDate,
-  filters: EventsFilters = {},
-  search = '',
-  release?: string
+    sort = EventsSortOrder.ByDate,
+    filters: EventsFilters = {},
+    search = '',
+    release?: string,
+    assignee?: string
   ): Promise<DailyEventsPortion> {
     const response = await api.call(QUERY_PROJECT_DAILY_EVENTS, {
       projectId,
@@ -72,6 +104,7 @@ export const fetchDailyEventsPortion = withDemoMock(
       filters,
       search,
       release,
+      assignee,
     }, undefined, {
     /**
      * This request calls on the app start, so we don't want to break app if something goes wrong
@@ -142,6 +175,30 @@ export const visitEvent = withDemoMock(
 );
 
 /**
+ * Mark many original events as visited for current user
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ */
+export async function bulkVisitEvents(
+  projectId: string,
+  eventIds: string[]
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
+    bulkVisitEvents: {
+      success: boolean;
+      modifiedCount: number;
+    };
+  }>(
+    MUTATION_BULK_VISIT_EVENTS,
+    {
+      projectId,
+      eventIds,
+    },
+    data => data.bulkVisitEvents
+  );
+}
+
+/**
  * Set or unset mark to event
  * @param projectId - project event is related to
  * @param eventId — event Id
@@ -157,6 +214,36 @@ export const toggleEventMark = withDemoMock(
   },
   '/src/api/events/mocks/toggleEventMark.mock.ts'
 );
+
+/**
+ * Bulk set/clear marks (original event ids)
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ * @param mark - resolved, ignored or starred
+ * @param enabled - true to set mark, false to clear mark
+ */
+export async function bulkSetEventMarks(
+  projectId: string,
+  eventIds: string[],
+  mark: 'resolved' | 'ignored' | 'starred',
+  enabled: boolean
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
+    bulkSetEventMarks: {
+      success: boolean;
+      modifiedCount: number;
+    };
+  }>(
+    MUTATION_BULK_SET_EVENT_MARKS,
+    {
+      projectId,
+      eventIds,
+      mark,
+      enabled,
+    },
+    data => data.bulkSetEventMarks
+  );
+}
 
 /**
  * Update assignee
@@ -190,6 +277,37 @@ export async function removeAssignee(projectId: string, eventId: string): Promis
 }
 
 /**
+ * Bulk set/clear assignee for original event ids
+ * @param projectId - project id
+ * @param eventIds - original event ids
+ * @param assigneeId - user id to assign, null to clear
+ */
+export async function bulkUpdateAssignee(
+  projectId: string,
+  eventIds: string[],
+  assigneeId: string | null
+): Promise<BulkEventsMutationResult | null> {
+  return runBulkMutation<{
+    events: {
+      bulkUpdateAssignee: {
+        success: boolean;
+        modifiedCount: number;
+      };
+    };
+  }>(
+    MUTATION_BULK_UPDATE_EVENT_ASSIGNEE,
+    {
+      input: {
+        projectId,
+        eventIds,
+        assignee: assigneeId,
+      },
+    },
+    data => data.events.bulkUpdateAssignee
+  );
+}
+
+/**
  * Fetch data for event daily chart
  * @param projectId - id of the project owning the event
  * @param originalEventId - id of the original event
@@ -212,3 +330,17 @@ export const fetchChartData = withDemoMock(
   },
   '/src/api/events/mocks/fetchChartData.mock.ts'
 );
+
+/**
+ * Remove event and all related data (repetitions, daily events)
+ * @param projectId - project event is related to
+ * @param eventId — original event id to remove
+ */
+export async function removeEvent(projectId: string, eventId: string): Promise<APIResponse<{ removeEvent: boolean }>> {
+  return await api.call<{ removeEvent: boolean }>(MUTATION_REMOVE_EVENT, {
+    projectId,
+    eventId,
+  }, undefined, {
+    allowErrors: true,
+  });
+}

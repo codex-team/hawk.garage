@@ -29,9 +29,19 @@ export const GET_LATEST_EVENT = 'GET_LATEST_EVENT';
 export const VISIT_EVENT = 'VISIT_EVENT';
 
 /**
+ * Bulk mark events as visited
+ */
+export const BULK_VISIT_EVENTS = 'BULK_VISIT_EVENTS';
+
+/**
  * Action to set or unset mark to event
  */
 export const TOGGLE_EVENT_MARK = 'TOGGLE_EVENT_MARK';
+
+/**
+ * Bulk set/clear resolved/ignored/starred on many events
+ */
+export const BULK_SET_EVENT_MARKS = 'BULK_SET_EVENT_MARKS';
 
 /**
  * Update event assigneee
@@ -42,6 +52,11 @@ export const UPDATE_EVENT_ASSIGNEE = 'UPDATE_EVENT_ASSIGNEE';
  * Remove event assignee
  */
 export const REMOVE_EVENT_ASSIGNEE = 'REMOVE_EVENT_ASSIGNEE';
+
+/**
+ * Bulk set/clear assignee on many events
+ */
+export const BULK_UPDATE_EVENT_ASSIGNEE = 'BULK_UPDATE_EVENT_ASSIGNEE';
 
 /**
  * Set events order to use
@@ -62,3 +77,8 @@ export const GET_CHART_DATA = 'GET_CHART_DATA';
  * Get list project with dailyEvents portion
  */
 export const FETCH_PROJECT_OVERVIEW = 'FETCH_PROJECT_OVERVIEW';
+
+/**
+ * Remove a single event and all related data
+ */
+export const REMOVE_EVENT = 'REMOVE_EVENT';
