@@ -715,7 +715,7 @@
         "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
         "slack": "Alerts through the Webhook App",
         "loop": "Alerts through the Loop Webhook",
-        "telegram": "Alerts through the {telegramLink}",
+        "telegram": "Add {telegramLink} to the chat and call /notify",
         "webhook": "Receive event data via HTTP POST to your endpoint",
         "webPush": "Alerts even with closed tab",
         "desktopPush": "Native notifies through the Hawk Desktop"
