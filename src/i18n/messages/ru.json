@@ -715,7 +715,7 @@
         "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
         "slack": "Уведомления через Webhook App",
         "loop": "Уведомления через Loop Webhook",
-        "telegram": "Уведомления через {telegramLink}",
+        "telegram": "Добавьте в чат {telegramLink} и вызовите /notify",
         "webhook": "Получайте данные событий через HTTP POST на ваш endpoint",
         "webPush": "Уведомления даже при закрытой вкладке",
         "desktopPush": "Системные уведомления через Hawk Desktop"
