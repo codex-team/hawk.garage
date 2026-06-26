@@ -46,7 +46,7 @@
 import hljs from 'highlight.js';
 import * as _ from './../../utils';
 import notifier from 'codex-notifier';
-import type { CodeLine } from './../../utils'
+import type { CodeLine } from '@/utils/markdown';
 import type { PropType } from 'vue';
 
 /**
