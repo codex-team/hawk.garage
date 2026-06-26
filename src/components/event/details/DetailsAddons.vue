@@ -13,6 +13,11 @@
         class="event-details__content-block"
       >
         <div class="event-details__key">
+          <Icon
+            v-if="key === 'yandexMetrika'"
+            symbol="yandex-metrika"
+            class="event-details__addon-icon"
+          />
           {{ getAddonName(key) }}
         </div>
         <div class="event-details__value">
@@ -57,6 +62,7 @@ import CodeBlock from '../../utils/CodeBlock.vue';
 import CustomRendererBeautifiedUserAgent from '@/components/event/details/customRenderers/BeautifiedUserAgent.vue';
 import CustomRendererWindow from '@/components/event/details/customRenderers/Window.vue';
 import CustomRendererConsoleOutput from '@/components/event/details/customRenderers/ConsoleOutput.vue';
+import CustomRendererYandexMetrika from '@/components/event/details/customRenderers/YandexMetrika.vue';
 import { EventAddons } from '@hawk.so/types';
 import AddonRenderers from '../../../mixins/addonRenderers';
 
@@ -73,6 +79,7 @@ export default defineComponent({
     CustomRendererBeautifiedUserAgent,
     CustomRendererWindow,
     CustomRendererConsoleOutput,
+    CustomRendererYandexMetrika,
   },
   mixins: [
     AddonRenderers,
@@ -119,6 +126,13 @@ export default defineComponent({
 
 <style>
   .event-details {
+    &__addon-icon {
+      width: 14px;
+      height: 14px;
+      margin-right: 4px;
+      vertical-align: -2px;
+    }
+
     &__single-line-code {
       line-height: 1em;
       background: var(--color-bg-code-fragment);
