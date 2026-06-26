@@ -6,7 +6,7 @@
           class="ai-suggestion-dialog__header-icon"
           symbol="ai"
         />
-        {{ $t('event.ai.title') }}
+        {{ $t('event.ai.titlePrefix') }}:&nbsp;{{ title }}
       </div>
       <div class="ai-suggestion-dialog__content">
         <AiSuggestionSkeleton v-if="loading" />
@@ -72,6 +72,10 @@ export default defineComponent({
     originalEventId: {
       type: String,
       required: true,
+    },
+    title: {
+      type: String,
+      default: '',
     },
   },
   data() {

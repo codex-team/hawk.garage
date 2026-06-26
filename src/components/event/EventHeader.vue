@@ -100,11 +100,12 @@
         />
       </div>
       <AiSuggestionDialog
-        v-if="isAiSuggestionOpen"
+        v-if="isAiSuggestionOpen && event"
         class="event-header__dialog"
         :project-id="projectId"
         :event-id="event.id"
         :original-event-id="event.originalEventId"
+        :title="event.payload.title"
         @close="isAiSuggestionOpen = false"
       />
       <div class="event-header__nav-bar">
