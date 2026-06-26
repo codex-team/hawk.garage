@@ -48,7 +48,8 @@ export function splitTextAndCodeSegments(source: string | undefined | null): Con
       }
     }
 
-    const lines: CodeLine[] = code.trimEnd().replace(/\n$/, '').split('\n')
+    const lines: CodeLine[] = code.trimEnd().replace(/\n$/, '')
+      .split('\n')
       .map((line, i) => ({
         line: i + 1,
         content: line,
@@ -90,7 +91,7 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
 
   renderer.heading = ({ tokens, depth }) => {
     const text = marked.Parser.parseInline(tokens);
-    const cls = depth === 1 ? 'text-h2' : 'text-h3';
+    const cls = depth === 1 ? 'text-h1' : depth === 2 ? 'text-h2' : 'text-ui-large';
 
     return `<h${depth} class="${cls}">${text}</h${depth}>`;
   };

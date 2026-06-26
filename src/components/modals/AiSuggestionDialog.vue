@@ -121,17 +121,17 @@ export default defineComponent({
   &__header {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 20px 30px;
+    gap: var(--spacing-s);
+    padding: var(--spacing-l) var(--spacing-xl);
+    color: var(--base--text-secondary);
     font-weight: 600;
-    font-size: 18px;
-    color: var(--color-text-second);
-    background-color: #121419;
+    font-size: 1rem;
+    background-color: var(--base--bg-secondary-hover);
   }
 
   &__header-icon {
-    width: 20px;
-    height: 20px;
+    width: 17px;
+    height: 17px;
     color: var(--color-indicator-ai);
   }
 
@@ -140,7 +140,7 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     min-width: 0;
-    padding: 10px 30px 20px 30px;
+    padding: var(--spacing-l) var(--spacing-xl);
   }
 
   &__suggestion {
@@ -148,54 +148,114 @@ export default defineComponent({
     max-width: 100%;
     min-width: 0;
     overflow-x: auto;
-    /* .text-p */
-    font-size: 1rem;
-    line-height: 145%;
+    color: var(--base--text);
     font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.45;
 
-    > .ai-suggestion-dialog__markdown:first-child {
-      h1, h2, h3, h4, h5, h6 {
-        &:first-child {
-          margin-top: 0;
-        }
-      }
+    > * {
+      margin-block: 0;
     }
-  }
 
-  &__code {
-    margin: 0 0 var(--spacing-m) 0;
+    > * + * {
+      margin-block-start: var(--spacing-ml);
+    }
   }
 
   &__markdown {
-    word-break: break-word;
-    font-size: inherit;
+    overflow-wrap: break-word;
+
+    > :first-child {
+      margin-block-start: 0;
+    }
+
+    > :last-child {
+      margin-block-end: 0;
+    }
 
     h1, h2, h3, h4, h5, h6 {
-      margin: var(--spacing-l) 0 var(--spacing-ml) 0;
+      margin: var(--spacing-l) 0 var(--spacing-ml);
+      color: var(--base--text);
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    h1, h2 {
+      padding-block-end: var(--spacing-s);
+      border-block-end: var(--delimiter-height) solid var(--base--border);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    h4, h5, h6 {
+      font-size: 1rem;
+    }
+
+    h6 {
+      color: var(--base--text-secondary);
+    }
+
+    p, blockquote, ul, ol, table, pre, hr {
+      margin-block: 0 var(--spacing-ml);
     }
 
     a {
+      color: var(--accent--solid);
       text-decoration: underline;
+      text-underline-offset: 0.2rem;
+
+      &:hover {
+        color: var(--accent--solid-hover);
+      }
     }
 
-    .text-p {
-      margin: 0 0 var(--spacing-m) 0;
-      font-size: inherit;
+    strong {
+      font-weight: 600;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    mark {
+      color: var(--base--text);
+      background-color: var(--accent--bg-secondary);
+    }
+
+    blockquote {
+      padding: 0 0 0 var(--spacing-l);
+      color: var(--base--text-secondary);
+      border-inline-start: 3px solid var(--accent--solid);
+
+      > :first-child {
+        margin-block-start: 0;
+      }
+
+      > :last-child {
+        margin-block-end: 0;
+      }
     }
 
     ul, ol {
-      margin: var(--spacing-m) 0;
-      padding-left: calc(var(--spacing-l) + var(--spacing-xs));
+      padding-inline-start: var(--spacing-xl);
     }
 
     li {
       list-style-position: outside;
-      margin-bottom: var(--spacing-s);
-      padding-left: var(--spacing-xs);
+    }
 
-      &:last-child {
-        margin-bottom: 0;
-      }
+    ul ul, ul ol, ol ul, ol ol {
+      margin-block: var(--spacing-xxs) 0;
     }
 
     ul > li {
@@ -206,58 +266,97 @@ export default defineComponent({
       list-style-type: decimal;
     }
 
-    li > ul,
-    li > ol {
-      margin-top: var(--spacing-s);
-      margin-bottom: 0;
+    ol ol > li, ul ol > li {
+      list-style-type: lower-roman;
     }
 
-    li .text-p {
-      margin: 0 0 var(--spacing-s) 0;
+    ul ul ol > li, ul ol ol > li, ol ul ol > li, ol ol ol > li {
+      list-style-type: lower-alpha;
     }
 
-    li .text-p:last-child {
-      margin-bottom: 0;
+    li + li {
+      margin-block-start: var(--spacing-xxs);
     }
 
-    blockquote {
-      margin: 0 0 var(--spacing-m) 0;
+    li > p {
+      margin-block: var(--spacing-s) 0;
+    }
+
+    li > p:first-child {
+      margin-block-start: 0;
+    }
+
+    table {
+      display: block;
+      width: max-content;
+      max-width: 100%;
+      overflow: auto;
+      word-break: normal;
+      border-spacing: 0;
+      border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
+    }
+
+    tr {
+      background-color: var(--base--bg-primary);
+      border-top: var(--delimiter-height) solid var(--base--border);
+
+      &:nth-child(2n) {
+        background-color: var(--base--bg-secondary);
+      }
+    }
+
+    th, td {
+      padding: var(--spacing-xs) var(--spacing-m);
+      text-align: start;
+      vertical-align: top;
+      border: var(--delimiter-height) solid var(--base--border);
+    }
+
+    th {
+      font-weight: 600;
+    }
+
+    hr {
+      height: var(--spacing-xxs);
+      background-color: var(--base--border);
+      border: 0;
+    }
+
+    code, pre {
+      font-family: var(--font-monospace);
+    }
+
+    code {
+      margin: 0;
+      padding: 0.15em 0.4em;
+      color: var(--base--text);
+      font-size: 85%;
+      white-space: break-spaces;
+      background-color: var(--base--bg-secondary);
+      border: var(--delimiter-height) solid var(--base--border);
+      border-radius: var(--radius-s);
     }
 
     pre {
       max-width: 100%;
-      overflow-x: auto;
-      scrollbar-width: none;
+      padding: var(--spacing-ml);
+      overflow: auto;
+      color: var(--base--text);
+      font-size: 0.866rem;
+      line-height: 1.45;
+      background-color: var(--base--bg-secondary);
+      border: var(--delimiter-height) solid var(--base--border);
+      border-radius: var(--radius-m);
 
-      &::-webkit-scrollbar {
-        display: none;
+      code {
+        padding: 0;
+        color: inherit;
+        font-size: inherit;
+        white-space: pre;
+        background: transparent;
+        border: 0;
       }
-    }
-
-    code {
-      background: var(--color-bg-third);
-      border-radius: 4px;
-      padding: 0 var(--spacing-xs);
-      font-size: 0.85em;
-      color: var(--color-text-main);
-    }
-
-    table {
-      width: 100%;
-      margin: 0 0 var(--spacing-m) 0;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: var(--spacing-ms) var(--spacing-ms);
-      vertical-align: middle;
-      border: 1px solid var(--color-delimiter-line);
-    }
-
-    th {
-      text-align: left;
-      font-weight: 600;
-      background-color: var(--color-bg-main);
     }
   }
 
