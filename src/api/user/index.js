@@ -12,6 +12,7 @@ import {
 } from './queries';
 import * as api from '../index.ts';
 import { validateUtmParams } from '../../components/utils/utm/utm.ts';
+import { withDemoMock } from '../../utils/withDemoMock.ts';
 
 /**
  * @typedef {object} TokensPair
@@ -83,9 +84,12 @@ export async function refreshTokens(refreshToken) {
  *
  * @returns {Promise<APIResponse<{ me: User }>>}
  */
-export async function fetchCurrentUser() {
-  return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
-}
+export const fetchCurrentUser = withDemoMock(
+  async function fetchCurrentUser() {
+    return await api.call(QUERY_CURRENT_USER, {}, undefined, { allowErrors: true });
+  },
+  '/src/api/user/mocks/fetchCurrentUser.mock.ts'
+);
 
 /**
  * Update user profile
@@ -121,9 +125,16 @@ export async function changePassword(oldPassword, newPassword) {
  *
  * @returns {Promise<Pick<User, 'notifications'>>}
  */
-export async function fetchNotificationsSettings() {
-  return (await api.callOld(QUERY_CURRENT_USER_WITH_NOTIFICATIONS)).me;
+async function fetchNotificationsSettingsRequest() {
+  const response = await api.call(QUERY_CURRENT_USER_WITH_NOTIFICATIONS);
+
+  return response.data.me;
 }
+
+export const fetchNotificationsSettings = withDemoMock(
+  fetchNotificationsSettingsRequest,
+  '/src/api/user/mocks/fetchNotificationsSettings.mock.ts'
+);
 
 /**
  * Change notifications channel settings
@@ -131,7 +142,7 @@ export async function fetchNotificationsSettings() {
  * @param {UserNotificationsChannels} payload - new channel settings
  * @returns {Promise<{notifications: UserNotifications}>}
  */
-export async function updateNotificationsChannel(payload) {
+async function updateNotificationsChannelRequest(payload) {
   const response = await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_CHANNEL, {
     input: payload,
   });
@@ -139,17 +150,29 @@ export async function updateNotificationsChannel(payload) {
   return response.data.changeUserNotificationsChannel;
 }
 
+export const updateNotificationsChannel = withDemoMock(
+  updateNotificationsChannelRequest,
+  '/src/api/user/mocks/updateNotificationsChannel.mock.ts'
+);
+
 /**
  * Change notifications receive type
  *
  * @param {UserNotificationsReceiveTypesConfig} payload - Receive Type with its is-enabled state
  * @returns {Promise<{notifications: UserNotifications}>}
  */
-export async function updateNotificationsReceiveType(payload) {
-  return (await api.callOld(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
+async function updateNotificationsReceiveTypeRequest(payload) {
+  const response = await api.call(MUTATION_CHANGE_USER_NOTIFICATIONS_RECEIVE_TYPE, {
     input: payload,
-  })).changeUserNotificationsReceiveType;
+  });
+
+  return response.data.changeUserNotificationsReceiveType;
 }
+
+export const updateNotificationsReceiveType = withDemoMock(
+  updateNotificationsReceiveTypeRequest,
+  '/src/api/user/mocks/updateNotificationsReceiveType.mock.ts'
+);
 
 /**
  * Fetches user's bank cards for one-click payments
@@ -157,5 +180,7 @@ export async function updateNotificationsReceiveType(payload) {
  * @returns {Promise<Array<BankCard>>}
  */
 export async function fetchBankCards() {
-  return (await api.callOld(QUERY_BANK_CARDS)).me.bankCards || [];
+  const response = await api.call(QUERY_BANK_CARDS);
+
+  return response.data.me?.bankCards || [];
 }

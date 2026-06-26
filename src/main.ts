@@ -12,7 +12,6 @@ import * as api from './api/index';
 import { REFRESH_TOKENS } from './store/modules/user/actionTypes';
 import { RESET_STORE } from './store/methodsTypes';
 
-
 const DEBOUNCE_TIMEOUT = 1000;
 
 /**

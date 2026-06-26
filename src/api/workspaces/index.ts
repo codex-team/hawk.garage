@@ -24,6 +24,7 @@ import type {
   WorkspaceSsoConfigInput
 } from '@/types/workspaces';
 import type { APIResponse, APIResponseData } from '@/types/api';
+import { withDemoMock } from '@/utils/withDemoMock';
 
 interface CreateWorkspaceInput {
   /**
@@ -60,17 +61,20 @@ export async function leaveWorkspace(workspaceId: string): Promise<boolean> {
  * Returns all user's workspaces and project.
  * @returns
  */
-export async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
-  return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
-    initial: true,
+export const getAllWorkspacesWithProjects = withDemoMock(
+  async function getAllWorkspacesWithProjects(): Promise<APIResponse<{ workspaces: Workspace[] }>> {
+    return api.call(QUERY_ALL_WORKSPACES_WITH_PROJECTS, undefined, undefined, {
+      initial: true,
 
-    /**
-     * This request calls on the app start, so we don't want to break app if something goes wrong
-     * With this flag, errors from the API won't be thrown, but returned in the response for further handling
-     */
-    allowErrors: true,
-  });
-}
+      /**
+       * This request calls on the app start, so we don't want to break app if something goes wrong
+       * With this flag, errors from the API won't be thrown, but returned in the response for further handling
+       */
+      allowErrors: true,
+    });
+  },
+  '/src/api/workspaces/mocks/getAllWorkspacesWithProjects.mock.ts'
+);
 
 /**
  * Invites user to workspace by email
@@ -113,9 +117,14 @@ export async function confirmInvite(workspaceId: string, inviteHash: string): Pr
  * @param ids – id of fetching workspaces
  * @returns
  */
-export async function getWorkspaces(ids: string[]): Promise<Workspace[]> {
+async function getWorkspacesRequest(ids: string[]): Promise<Workspace[]> {
   return (await api.callOld(QUERY_WORKSPACES, { ids })).workspaces;
 }
+
+export const getWorkspaces = withDemoMock(
+  getWorkspacesRequest,
+  '/src/api/workspaces/mocks/getWorkspaces.mock.ts'
+);
 
 /**
  * Get workspace balance
@@ -147,13 +156,18 @@ export async function updateWorkspace(id: string, name: string, description: str
  * @param state - if true, grant permissions, if false, withdraw them
  * @returns
  */
-export async function grantAdminPermissions(workspaceId: string, userId: string, state = true): Promise<boolean> {
+async function grantAdminPermissionsRequest(workspaceId: string, userId: string, state = true): Promise<boolean> {
   return (await api.callOld(MUTATION_GRANT_ADMIN_PERMISSIONS, {
     workspaceId,
     userId,
     state,
   })).grantAdmin;
 }
+
+export const grantAdminPermissions = withDemoMock(
+  grantAdminPermissionsRequest,
+  '/src/api/workspaces/mocks/grantAdminPermissions.mock.ts'
+);
 
 /**
  * Remove user from workspace
@@ -162,7 +176,7 @@ export async function grantAdminPermissions(workspaceId: string, userId: string,
  * @param userEmail - email of user to remove
  * @returns
  */
-export async function removeUserFromWorkspace(
+async function removeUserFromWorkspaceRequest(
   workspaceId: string,
   userId: string,
   userEmail: string
@@ -173,6 +187,11 @@ export async function removeUserFromWorkspace(
     userEmail,
   })).removeMemberFromWorkspace;
 }
+
+export const removeUserFromWorkspace = withDemoMock(
+  removeUserFromWorkspaceRequest,
+  '/src/api/workspaces/mocks/removeUserFromWorkspace.mock.ts'
+);
 
 /**
  * Changes workspace tariff plan

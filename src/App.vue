@@ -14,6 +14,7 @@
 import * as api from './api/';
 import { setLanguage } from './i18n';
 import { defineComponent } from 'vue';
+import { useDemo } from './composables/useDemo';
 import FeedbackButton from './components/utils/FeedbackButton.vue';
 import notifier from 'codex-notifier';
 import { Popover } from '@codexteam/ui/vue';
@@ -23,6 +24,11 @@ export default defineComponent({
   components: {
     FeedbackButton,
     Popover,
+  },
+  setup() {
+    const { isDemoActive } = useDemo();
+
+    return { isDemoActive };
   },
   computed: {
     /**
@@ -43,7 +49,7 @@ export default defineComponent({
     this.$store.watch(
       state => state.user.accessToken,
       (accessToken) => {
-        if (!accessToken) {
+        if (!accessToken && !this.isDemoActive) {
           this.$router.push('/login');
         }
         api.setAuthToken(accessToken);

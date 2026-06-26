@@ -13,6 +13,7 @@
     "signupSuccessMessage": "Пароль отправлен на указанную почту",
     "inviteHelper": "Вы приглашены в воркспейс. Войдите или зарегистрируйтесь, чтобы продолжить.",
     "continueWithSso": "Войти через SSO",
+    "showDemo": "Показать демо",
     "ssoLogin": {
       "title": "Вход через SSO",
       "workspaceId": "ID воркспейса",
@@ -27,6 +28,13 @@
       "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету.",
       "SSO_REQUIRED": "Воркспейс \"{workspace}\" требует вход только через SSO. <a href=\"{link}\">Войти через SSO →</a>"
     }
+  },
+  "demo": {
+    "bannerText": "Хоук в режиме демо",
+    "registerButton": "Регистрация",
+    "contactButton": "Написать нам",
+    "disableButton": "Завершить демо-режим",
+    "functionUnavailable": "Функция недоступна в демо-режиме"
   },
   "layout": {
     "aside": {

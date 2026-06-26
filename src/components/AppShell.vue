@@ -1,42 +1,48 @@
 <template>
-  <div class="app-shell">
-    <aside class="aside">
-      <Sidebar
-        :is-loading="initialDataLoading"
-      />
-      <div class="aside__right-column">
-        <WorkspaceInfo
-          v-if="currentWorkspace"
-          class="aside__workspace-info"
-          :workspace="currentWorkspace"
+  <div
+    class="app-shell"
+    :class="{ 'app-shell--demo-mode': isDemoMode }"
+  >
+    <AppDemoBanner v-if="isDemoMode" />
+    <div class="app-shell__body">
+      <aside class="aside">
+        <Sidebar
+          :is-loading="initialDataLoading"
         />
-        <SearchField
-          v-model="searchQuery"
-          class="aside__search-field"
-          :placeholder="$t('forms.searchField')"
-        />
-        <div
-          v-if="projects.length"
-          class="aside__projects-list"
-        >
-          <ProjectsMenuItem
-            v-for="project in projects"
-            :key="project.id"
-            :search-query="searchQuery"
-            :project-id="project.id"
-            @click="onProjectMenuItemClick(project)"
+        <div class="aside__right-column">
+          <WorkspaceInfo
+            v-if="currentWorkspace"
+            class="aside__workspace-info"
+            :workspace="currentWorkspace"
           />
+          <SearchField
+            v-model="searchQuery"
+            class="aside__search-field"
+            :placeholder="$t('forms.searchField')"
+          />
+          <div
+            v-if="projects.length"
+            class="aside__projects-list"
+          >
+            <ProjectsMenuItem
+              v-for="project in projects"
+              :key="project.id"
+              :search-query="searchQuery"
+              :project-id="project.id"
+              @click="onProjectMenuItemClick(project)"
+            />
+          </div>
+          <EmptyProjectsList
+            v-else-if="currentWorkspace"
+            :workspace="currentWorkspace"
+          />
+          <ProjectsMenuSkeleton v-else-if="initialDataLoading" />
         </div>
-        <EmptyProjectsList
-          v-else-if="currentWorkspace"
-          :workspace="currentWorkspace"
-        />
-        <ProjectsMenuSkeleton v-else-if="initialDataLoading" />
+      </aside>
+      <div class="app-shell__content">
+        <ProjectPlaceholder v-if="!$route.params.projectId" />
+        <router-view :key="$route.params.projectId" />
       </div>
-    </aside>
-    <div class="app-shell__content">
-      <ProjectPlaceholder v-if="!$route.params.projectId" />
-      <router-view :key="$route.params.projectId" />
     </div>
     <component
       :is="modalComponent"
@@ -49,6 +55,7 @@
 
 <script>
 import { defineComponent, markRaw } from 'vue';
+import { useDemo } from '../composables/useDemo';
 
 import { FETCH_INITIAL_DATA } from '../store/modules/app/actionTypes';
 import { SET_CURRENT_WORKSPACE } from '../store/modules/workspaces/actionTypes';
@@ -63,10 +70,12 @@ import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../store/modules/modalDial
 import { mapState, mapGetters } from 'vuex';
 import { misTranslit } from '../utils';
 import ProjectsMenuSkeleton from './aside/ProjectsMenuSkeleton';
+import AppDemoBanner from './AppDemoBanner.vue';
 
 export default defineComponent({
   name: 'AppShell',
   components: {
+    AppDemoBanner,
     Sidebar,
     ProjectsMenuItem,
     SearchField,
@@ -83,6 +92,11 @@ export default defineComponent({
       type: String,
       default: '',
     },
+  },
+  setup() {
+    const { isDemoActive } = useDemo();
+
+    return { isDemoActive };
   },
   data() {
     return {
@@ -101,6 +115,9 @@ export default defineComponent({
     };
   },
   computed: {
+    isDemoMode() {
+      return this.isDemoActive;
+    },
     /**
      * Current opened modal window
      */
@@ -323,7 +340,34 @@ export default defineComponent({
 
   .app-shell {
     display: flex;
+    flex-direction: column;
     min-height: 100%;
+
+    &--demo-mode {
+      background: linear-gradient(90deg, #6800D0 19.23%, #5D34F0 100%), #12141B;
+    }
+
+    &__body {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    &--demo-mode &__body {
+      border-radius: 20px 20px 0 0;
+      overflow: hidden;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: rgba(164, 146, 255, 0.392);
+      }
+    }
 
     &__content {
       display: flex;
