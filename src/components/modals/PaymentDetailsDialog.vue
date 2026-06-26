@@ -81,8 +81,21 @@
                 {{ $t('common.price') }}
               </div>
               <div class="payment-details__details-item-value">
-                {{ price }}
+                <template v-if="hasPromoDiscount">
+                  <span class="payment-details__price-old">{{ originalPriceLabel }}</span>
+                  <span class="payment-details__price-new">{{ price }}</span>
+                </template>
+                <template v-else>
+                  {{ price }}
+                </template>
               </div>
+            </div>
+
+            <div
+              v-if="hasPromoDiscount && isRecurrent"
+              class="payment-details__promo-note"
+            >
+              {{ promoRecurrentNote }}
             </div>
 
             <!--The next payment date -->
@@ -228,7 +241,8 @@ import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
-import { PayWithCardInput } from '../../api/billing';
+import type { PayWithCardInput } from '@/api/billing';
+import type { Utm as UtmInput } from '@hawk.so/types';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
@@ -239,12 +253,6 @@ import { i18n } from '../../i18n';
  * Id for the 'New card' option in select
  */
 const NEW_CARD_ID = 'NEW_CARD';
-
-/**
- * The amount we will debit to confirm the subscription.
- * After confirmation, we will refund the user money.
- */
-const AMOUNT_FOR_CARD_VALIDATION = 1;
 
 /**
  * Transforms card data to CustomSelect option
@@ -292,6 +300,22 @@ export default defineComponent({
     isRecurrent: {
       type: Boolean,
       default: false,
+    },
+
+    /**
+     * Applied promo code value.
+     */
+    promoCode: {
+      type: String,
+      default: '',
+    },
+
+    /**
+     * UTM parameters captured when promo was applied.
+     */
+    promoUtm: {
+      type: Object as () => UtmInput | undefined,
+      default: undefined,
     },
   },
   data() {
@@ -399,7 +423,55 @@ export default defineComponent({
      */
     price(): string {
       return this.$t('common.moneyPerMonth', {
-        currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+        currency: `${this.paymentAmount}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+      }).toString();
+    },
+
+    /**
+     * Actual payment amount returned by API.
+     */
+    paymentAmount(): number {
+      return this.paymentData?.chargeAmount
+        ?? this.paymentData?.promo?.finalAmount
+        ?? this.paymentData?.plan.monthlyCharge
+        ?? this.plan.monthlyCharge;
+    },
+
+    /**
+     * Whether promo discount applies to this payment.
+     */
+    hasPromoDiscount(): boolean {
+      if (!this.paymentData?.promo) {
+        return false;
+      }
+
+      const fullPrice = this.paymentData.plan.monthlyCharge ?? this.plan.monthlyCharge;
+
+      return this.paymentAmount < fullPrice;
+    },
+
+    /**
+     * Full plan price label before promo.
+     */
+    originalPriceLabel(): string {
+      const amount = this.paymentData?.promo?.originalAmount
+        ?? this.paymentData?.plan.monthlyCharge
+        ?? this.plan.monthlyCharge;
+
+      return this.$t('common.moneyPerMonth', {
+        currency: `${amount}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+      }).toString();
+    },
+
+    /**
+     * Note that promo applies only to the first payment.
+     */
+    promoRecurrentNote(): string {
+      const fullAmount = this.paymentData?.plan.monthlyCharge ?? this.plan.monthlyCharge;
+      const currency = getCurrencySign(this.plan.monthlyChargeCurrency);
+
+      return this.$t('billing.paymentDetails.promoRecurrentNote', {
+        amount: `${fullAmount}${currency}`,
       }).toString();
     },
 
@@ -482,6 +554,8 @@ export default defineComponent({
         workspaceId: this.workspaceId,
         tariffPlanId: this.tariffPlanId,
         shouldSaveCard: this.shouldSaveCard,
+        promoCode: this.promoCode || undefined,
+        promoUtm: this.promoUtm,
       });
     } catch (e) {
       const error = e as Error;
@@ -578,7 +652,11 @@ export default defineComponent({
     },
 
     /**
-     * Method prepares widget and charges money from entered card
+     * Method prepares CloudPayments widget and charges money from entered card.
+     *
+     * Amount is taken from server-calculated chargeAmount. Promo discounts affect
+     * only the first widget charge, while recurrent.amount is always the full
+     * plan monthly price for later automatic subscription renewals.
      *
      * @param {BeforePaymentPayload} data — server response that sent after beforePay request
      */
@@ -605,7 +683,7 @@ export default defineComponent({
         }
       }
 
-      const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
+      const amount = data.chargeAmount;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
       const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
@@ -711,6 +789,24 @@ export default defineComponent({
         font-weight: bold;
       }
     }
+  }
+
+  &__price-old {
+    margin-right: 8px;
+    color: var(--color-text-second);
+    font-weight: normal;
+    text-decoration: line-through;
+  }
+
+  &__price-new {
+    color: var(--color-text-main);
+  }
+
+  &__promo-note {
+    margin: -8px 0 20px;
+    color: var(--color-text-second);
+    font-size: 13px;
+    line-height: 1.4;
   }
 
   &__card {

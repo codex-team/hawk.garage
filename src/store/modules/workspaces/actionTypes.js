@@ -84,6 +84,11 @@ export const PAY_WITH_CARD = 'PAY_WITH_CARD';
 export const COMPOSE_PAYMENT = 'COMPOSE_PAYMENT';
 
 /**
+ * Verify promo code and return validated benefit data
+ */
+export const VERIFY_PROMO_CODE = 'VERIFY_PROMO_CODE';
+
+/**
  * Fetch SSO settings for workspace (admin only)
  */
 export const FETCH_WORKSPACE_SSO_SETTINGS = 'FETCH_WORKSPACE_SSO_SETTINGS';

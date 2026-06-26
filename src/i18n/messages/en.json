@@ -512,6 +512,7 @@
       "didNotAcceptRecurrentPaymentAgreement": "You need to accept the recurrent payments agreement to proceed with payment",
       "didNotAcceptChargingEveryMonth": "You need allow charges from your bank card every month to proceed with payment",
       "allowCardSaving": "Save card for future payments",
+      "promoRecurrentNote": "Promo applies to the first payment only. Then {amount} per month.",
       "goToPaymentService": "Go to payment service",
       "payWithSelectedCard": "Pay with selected card",
       "newCard": "New card",
@@ -537,6 +538,18 @@
     "cloudPaymentsWidget": {
       "description": "Payment for tariff \"{tariffPlanName}\" for {workspaceName} workspace for a month",
       "descriptionCardLinking": "A temporary charge of 1 USD will be made to verify your card. The amount will be refunded automatically."
+    },
+    "promoCode": {
+      "title": "Promo code",
+      "havePromoCode": "I have a promo code",
+      "applied": "Applied promo code {code}",
+      "inputLabel": "Promo code",
+      "inputPlaceholder": "Enter promo code",
+      "apply": "Apply",
+      "fixedPriceLabel": "Promo code",
+      "notifications": {
+        "applied": "Promo code applied"
+      }
     },
     "cardLinking": {
       "description": "You are about to subscribe, which will start on",
@@ -730,6 +743,9 @@
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it.",
-    "You need to refresh your tokens": "Your session has expired. Please log in again."
+    "You need to refresh your tokens": "Your session has expired. Please log in again.",
+    "PROMO_CODE_INVALID": "Promo code is invalid",
+    "PROMO_CODE_LIMIT_EXCEEDED": "Promo code usage limit has been reached",
+    "PROMO_CODE_VERIFY_FAILED": "Could not apply promo code. Please try again later"
   }
 }

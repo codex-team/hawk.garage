@@ -15,6 +15,16 @@
           v-html="chooseTariffPlanDescription"
         />
 
+        <div class="choose-plan__promo">
+          <button
+            class="choose-plan__promo-link"
+            type="button"
+            @click.prevent="isPromoDialogOpen = true"
+          >
+            {{ promoButtonText }}
+          </button>
+        </div>
+
         <div
           :class="{
             'choose-plan__plans': true,
@@ -26,12 +36,14 @@
             :key="plan.id"
             :name="plan.name"
             :limit="plan.eventsLimit"
-            :price="plan.monthlyCharge"
+            :price="getPlanPrice(plan)"
+            :original-price="getPlanOriginalPrice(plan)"
+            :discount-label="getPlanDiscountLabel(plan)"
             :currency="plan.monthlyChargeCurrency"
             :selected="plan.id === selectedPlan.id"
-            :is-current-plan="plan.id === workspace.plan.id"
+            :is-current-plan="isActiveCurrentPlan(plan)"
             :horizontal="plans.length > 3"
-            @click="proceedWithPlan(plan.id)"
+            @click="proceedWithPlan(plan)"
           />
 
           <div class="choose-plan__premium-card">
@@ -60,25 +72,45 @@
         </div>
       </div>
     </div>
+
+    <PromoCodeDialog
+      v-if="isPromoDialogOpen"
+      :is-loading="isPromoApplying"
+      :is-invalid="isPromoInvalid"
+      :error-message="promoErrorMessage"
+      @apply="verifyPromoCode"
+      @close="closePromoDialog"
+    />
   </PopupDialog>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import PopupDialog from '../utils/PopupDialog.vue';
+import PromoCodeDialog from './PromoCodeDialog.vue';
 import TariffPlan from '../utils/TariffPlan.vue';
 import UiButton from '../utils/UiButton.vue';
 import { Workspace } from '@/types/workspaces';
 import { Plan } from '@/types/plan';
 import { RESET_MODAL_DIALOG, SET_MODAL_DIALOG } from '../../store/modules/modalDialog/actionTypes';
+import { VERIFY_PROMO_CODE } from '@/store/modules/workspaces/actionTypes';
 import notifier from 'codex-notifier';
 import { ActionType } from '../utils/ConfirmationWindow/types';
+import type { Utm as UtmInput } from '@hawk.so/types';
+import {
+  calculatePromoCodePlanPrice
+} from '@/utils/promoCodePricing';
+import { SUPPORTED_PROMO_CODE_BENEFIT_TYPES, type PromoCodeVerify } from '@/types/promoCode';
+import { validateUtmParams } from '../utils/utm/utm';
+
+type VerifiedPromoCode = PromoCodeVerify;
 
 export default defineComponent({
   name: 'ChooseTariffPlanPopup',
   components: {
     TariffPlan,
     PopupDialog,
+    PromoCodeDialog,
     UiButton,
   },
   props: {
@@ -103,6 +135,31 @@ export default defineComponent({
        * Selected plan object
        */
       selectedPlan: workspace.plan,
+
+      /**
+       * Promo code popup visibility.
+       */
+      isPromoDialogOpen: false,
+
+      /**
+       * Promo code apply loading state.
+       */
+      isPromoApplying: false,
+
+      /**
+       * Promo code input invalid state.
+       */
+      isPromoInvalid: false,
+
+      /**
+       * Promo code error text.
+       */
+      promoErrorMessage: '',
+
+      /**
+       * Verified promo code ready for payment.
+       */
+      verifiedPromo: null as VerifiedPromoCode | null,
     };
   },
   computed: {
@@ -125,18 +182,206 @@ export default defineComponent({
     plans(): Plan[] {
       return this.$store.state.plans.list;
     },
+
+    /**
+     * Promo button text.
+     */
+    promoButtonText(): string {
+      if (!this.verifiedPromo) {
+        return this.$t('billing.promoCode.havePromoCode').toString();
+      }
+
+      return this.$t('billing.promoCode.applied', {
+        code: this.verifiedPromo.value,
+      }).toString();
+    },
   },
   methods: {
-    proceedWithPlan(id: string): void {
-      const plan = this.plans.find(p => p.id === id);
-
-      if (!plan) {
+    proceedWithPlan(plan: Plan): void {
+      if (this.isActiveCurrentPlan(plan)) {
         return;
       }
 
       this.selectedPlan = plan;
 
       this.onContinue();
+    },
+
+    /**
+     * Applies entered promo code.
+     *
+     * @param value - promo code value
+     */
+    async verifyPromoCode(value: string): Promise<void> {
+      this.isPromoApplying = true;
+      this.isPromoInvalid = false;
+      this.promoErrorMessage = '';
+
+      try {
+        const promo = await this.$store.dispatch(VERIFY_PROMO_CODE, {
+          workspaceId: this.workspaceId,
+          value,
+        }) as PromoCodeVerify;
+
+        if (!this.hasApplicablePromoPlan(promo)) {
+          throw new Error('PROMO_CODE_INVALID');
+        }
+
+        this.verifiedPromo = promo;
+        this.closePromoDialog();
+
+        notifier.show({
+          message: this.$t('billing.promoCode.notifications.applied') as string,
+          style: 'success',
+          time: 5000,
+        });
+      } catch (e) {
+        const error = e as Error;
+        const key = 'errors.' + error.message;
+        const message = this.$te(key) ? this.$t(key) as string : this.$t('errors.PROMO_CODE_INVALID') as string;
+
+        this.isPromoInvalid = true;
+        this.promoErrorMessage = message;
+        notifier.show({
+          message,
+          style: 'error',
+          time: 5000,
+        });
+      } finally {
+        this.isPromoApplying = false;
+      }
+    },
+
+    /**
+     * Closes promo code dialog.
+     */
+    closePromoDialog(): void {
+      this.isPromoDialogOpen = false;
+      this.isPromoInvalid = false;
+      this.promoErrorMessage = '';
+    },
+
+    /**
+     * Gets promo price for plan.
+     *
+     * @param plan - tariff plan
+     * @param promo - verified promo code
+     */
+    getPromoPlanPrice(plan: Plan, promo: VerifiedPromoCode | null = this.verifiedPromo) {
+      if (!promo || this.isActiveCurrentPlan(plan)) {
+        return undefined;
+      }
+
+      return calculatePromoCodePlanPrice(
+        promo,
+        {
+          id: plan.id,
+          monthlyCharge: plan.monthlyCharge,
+        }
+      );
+    },
+
+    /**
+     * Returns price to display in plan card.
+     *
+     * @param plan - tariff plan
+     */
+    getPlanPrice(plan: Plan): number {
+      const promoPlan = this.getPromoPlanPrice(plan);
+
+      return promoPlan?.isApplicable ? promoPlan.finalAmount : plan.monthlyCharge;
+    },
+
+    /**
+     * Returns old price for discounted plan card.
+     *
+     * @param plan - tariff plan
+     */
+    getPlanOriginalPrice(plan: Plan): number | undefined {
+      const promoPlan = this.getPromoPlanPrice(plan);
+
+      return promoPlan?.isApplicable ? promoPlan.originalAmount : undefined;
+    },
+
+    /**
+     * Returns discount label for plan card.
+     *
+     * @param plan - tariff plan
+     */
+    getPlanDiscountLabel(plan: Plan): string {
+      const promoPlan = this.getPromoPlanPrice(plan);
+
+      if (!this.verifiedPromo || !promoPlan?.isApplicable) {
+        return '';
+      }
+
+      if (this.verifiedPromo.benefitType === SUPPORTED_PROMO_CODE_BENEFIT_TYPES.PercentDiscount) {
+        return `-${this.verifiedPromo.percent}%`;
+      }
+
+      return this.$t('billing.promoCode.fixedPriceLabel').toString();
+    },
+
+    /**
+     * Checks that promo changes at least one visible purchasable plan.
+     *
+     * @param promo - verified promo code
+     */
+    hasApplicablePromoPlan(promo: VerifiedPromoCode): boolean {
+      return this.plans.some((plan): boolean => this.getPromoPlanPrice(plan, promo)?.isApplicable === true);
+    },
+
+    /**
+     * Checks whether plan is already active and should not start a new payment flow.
+     *
+     * Blocked workspaces can still pay for their current plan to restore access.
+     *
+     * @param plan - tariff plan
+     */
+    isActiveCurrentPlan(plan: Plan): boolean {
+      return plan.id === this.workspace.plan.id && !this.workspace.isBlocked;
+    },
+
+    /**
+     * Returns payment promo payload for selected plan.
+     *
+     * @param planId - plan id
+     */
+    getPaymentPromoPayload(planId: string): {
+      promoCode?: string;
+      promoUtm?: UtmInput;
+    } {
+      const plan = this.plans.find(item => item.id === planId);
+
+      if (!plan) {
+        return {};
+      }
+
+      const promoPlan = this.getPromoPlanPrice(plan);
+
+      if (!this.verifiedPromo || !promoPlan?.isApplicable) {
+        return {};
+      }
+
+      return {
+        promoCode: this.verifiedPromo.value,
+        promoUtm: this.getPromoUtm(),
+      };
+    },
+
+    /**
+     * Reads UTM parameters from current URL.
+     */
+    getPromoUtm(): UtmInput | undefined {
+      const params = new URLSearchParams(globalThis.location.search);
+
+      return validateUtmParams({
+        source: params.get('utm_source') || undefined,
+        medium: params.get('utm_medium') || undefined,
+        campaign: params.get('utm_campaign') || undefined,
+        content: params.get('utm_content') || undefined,
+        term: params.get('utm_term') || undefined,
+      });
     },
 
     /**
@@ -202,6 +447,7 @@ export default defineComponent({
             workspaceId: this.workspaceId,
             tariffPlanId: this.selectedPlan.id,
             isRecurrent: true,
+            ...this.getPaymentPromoPayload(this.selectedPlan.id),
           },
         });
 
@@ -219,6 +465,7 @@ export default defineComponent({
                 workspaceId: this.workspaceId,
                 tariffPlanId: this.selectedPlan.id,
                 isRecurrent: true,
+                ...this.getPaymentPromoPayload(this.selectedPlan.id),
               },
             });
           },
@@ -230,6 +477,7 @@ export default defineComponent({
             workspaceId: this.workspaceId,
             tariffPlanId: this.selectedPlan.id,
             isRecurrent: true,
+            ...this.getPaymentPromoPayload(this.selectedPlan.id),
           },
         });
       }
@@ -272,6 +520,25 @@ export default defineComponent({
 
       a:not([href*="mailto"]) {
         color: var(--color-indicator-medium);
+      }
+    }
+
+    &__promo {
+      margin-bottom: 18px;
+    }
+
+    &__promo-link {
+      padding: 0;
+      color: var(--color-indicator-medium);
+      font: inherit;
+      font-size: 14px;
+      line-height: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
       }
     }
 
