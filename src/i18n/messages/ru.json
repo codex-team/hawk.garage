@@ -64,6 +64,11 @@
       "show_previous": "Показать предыдущие",
       "hide_previous": "Скрыть предыдущие"
     },
+    "yandexMetrika": {
+      "counterId": "ID счётчика",
+      "clientId": "ClientID",
+      "openWebvisor": "Открыть в Вебвизоре"
+    },
     "catalog": {
       "step1": "Создать проект",
       "step2": "Интегрировать Кэтчер",
@@ -596,7 +601,8 @@
       "url": "Адрес",
       "window": "Окно браузера",
       "beautifiedUserAgent": "Клиент",
-      "consoleOutput": "Лог Консоли"
+      "consoleOutput": "Лог Консоли",
+      "yandexMetrika": "Яндекс Метрика"
     },
     "user": {
       "affectedUser": "Затронутый пользователь",
