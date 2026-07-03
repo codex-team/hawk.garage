@@ -5,10 +5,10 @@
  * Contains demo error events with realistic data
  */
 
-import type { Breadcrumb, HawkEvent, User } from '@hawk.so/types';
+import type { Breadcrumb, HawkEvent, TaskManagerItem, User } from '@hawk.so/types';
 import { MILLISECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE } from '@/utils/time';
-import { DEMO_PROJECT_ID, DEMO_SECOND_PROJECT_ID } from './workspaces';
-import { DEMO_AFFECTED_USER, DEMO_USER } from './users';
+import { DEMO_PROJECT_ID, DEMO_SECOND_PROJECT_ID, DEMO_WORKSPACE_ID } from './workspaces';
+import { DEMO_AFFECTED_USER, DEMO_TEAM_MEMBERS, DEMO_USER } from './users';
 import { createDemoEventRelease } from './releases';
 
 const NOW_SECONDS = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
@@ -206,7 +206,140 @@ function createDefaultConsoleOutput(context: DemoAddonsContext): Array<Record<st
   ];
 }
 
-function createDemoAddons(context: DemoAddonsContext): Record<string, unknown> {
+const DEMO_ASSIGNEE_POOL: User[] = [DEMO_USER, ...DEMO_TEAM_MEMBERS];
+const DEMO_ASSIGNEE_MODULO = 3;
+const DEMO_TASK_MANAGER_MODULO = 5;
+const DEMO_TASK_MANAGER_ISSUE_BASE = 120;
+const DEMO_TASK_MANAGER_ISSUE_SPREAD = 80;
+const DEMO_TASK_MANAGER_TITLE_MAX_LENGTH = 60;
+const DEMO_COOKIE_SESSION_VALUE_PREFIX = 's%3A';
+const DEMO_COOKIE_SESSION_VALUE_SUFFIX = '.demo-token';
+
+interface DemoCookie {
+  key: string;
+  value: string;
+}
+
+/**
+ * Stable hash for picking demo list metadata from event id
+ *
+ * @param eventId - event id
+ */
+function getDemoEventIdHash(eventId: string): number {
+  let hash = 0;
+
+  for (let index = 0; index < eventId.length; index++) {
+    hash = (hash + eventId.charCodeAt(index) * (index + 1)) % 997;
+  }
+
+  return hash;
+}
+
+/**
+ * Returns demo cookies for event overview
+ *
+ * @param projectId - demo project id
+ */
+function createDemoCookies(projectId?: string): DemoCookie[] {
+  const isSecondProject = projectId === DEMO_SECOND_PROJECT_ID;
+  const sessionScope = isSecondProject ? 'mobile-beta' : 'prod';
+
+  return [
+    {
+      key: 'session_id',
+      value: `${DEMO_COOKIE_SESSION_VALUE_PREFIX}${sessionScope}${DEMO_COOKIE_SESSION_VALUE_SUFFIX}`,
+    },
+    {
+      key: 'hawk_demo',
+      value: '1',
+    },
+    {
+      key: 'locale',
+      value: isSecondProject ? 'en-US' : 'ru-RU',
+    },
+    {
+      key: '_ga',
+      value: 'GA1.2.1847293847.1735689600',
+    },
+    {
+      key: '_ym_id',
+      value: '98475231',
+    },
+  ];
+}
+
+/**
+ * Returns Vue integration addon for event overview
+ *
+ * @param file - source file from backtrace
+ * @param projectId - demo project id
+ */
+function createDemoVueAddon(file: string, projectId?: string): Record<string, unknown> {
+  const isSecondProject = projectId === DEMO_SECOND_PROJECT_ID;
+  const component = file.split('/').pop() || 'App.vue';
+
+  return {
+    vue: {
+      lifecycle: 'render',
+      component,
+      props: isSecondProject
+        ? {
+            rollout: 35,
+            routeName: 'mobile-beta',
+          }
+        : {
+            workspaceId: DEMO_WORKSPACE_ID,
+            menuOpen: true,
+          },
+      data: {
+        isHydrated: false,
+      },
+    },
+  };
+}
+
+/**
+ * Picks assignee for list view (~1/3 of events)
+ *
+ * @param eventId - event id
+ */
+function pickDemoAssignee(eventId: string): User | undefined {
+  const hash = getDemoEventIdHash(eventId);
+
+  if (hash % DEMO_ASSIGNEE_MODULO !== 0) {
+    return undefined;
+  }
+
+  return DEMO_ASSIGNEE_POOL[hash % DEMO_ASSIGNEE_POOL.length];
+}
+
+/**
+ * Picks GitHub issue link for list/header (~1/5 of events)
+ *
+ * @param eventId - event id
+ * @param title - event title
+ */
+function pickDemoTaskManagerItem(eventId: string, title: string): TaskManagerItem | undefined {
+  const hash = getDemoEventIdHash(eventId);
+
+  if (hash % DEMO_TASK_MANAGER_MODULO !== 0) {
+    return undefined;
+  }
+
+  const issueNumber = DEMO_TASK_MANAGER_ISSUE_BASE + (hash % DEMO_TASK_MANAGER_ISSUE_SPREAD);
+
+  return {
+    type: 'github-issue',
+    number: issueNumber,
+    url: `https://github.com/codex-team/hawk.demo/issues/${issueNumber}`,
+    title: `Investigate: ${title.slice(0, DEMO_TASK_MANAGER_TITLE_MAX_LENGTH)}`,
+    createdBy: hash % 2 === 0 ? 'auto' : 'manual',
+    createdAt: new Date((NOW_SECONDS - hash % SECONDS_IN_DAY) * MILLISECONDS_IN_SECOND),
+    assignee: hash % 4 === 0 ? 'copilot' : null,
+  };
+}
+
+function createDemoAddons(context: DemoAddonsContext, withVueAddon = false, file = 'src/App.vue'): Record<string, unknown> {
   const isSecondProject = context.projectId === DEMO_SECOND_PROJECT_ID;
   const isUserStateError = isUserStateTypeError(context);
   const currentUrl = isSecondProject
@@ -244,6 +377,7 @@ function createDemoAddons(context: DemoAddonsContext): Record<string, unknown> {
           browser: 'Firefox',
           browserVersion: '149.0.0',
         },
+    ...(withVueAddon ? createDemoVueAddon(file, context.projectId) : {}),
   };
 }
 
@@ -1049,6 +1183,10 @@ function createDemoEvent(config: {
   isIgnored?: boolean;
   visitedBy?: User[];
   projectId?: string;
+  withCookies?: boolean;
+  withVueAddon?: boolean;
+  assignee?: User;
+  taskManagerItem?: TaskManagerItem;
 }): HawkEvent {
   const {
     id,
@@ -1066,6 +1204,10 @@ function createDemoEvent(config: {
     isIgnored = false,
     visitedBy = [],
     projectId = DEMO_PROJECT_ID,
+    withCookies = false,
+    withVueAddon = false,
+    assignee = pickDemoAssignee(id),
+    taskManagerItem = pickDemoTaskManagerItem(id, title),
   } = config;
   const scaledTotalCount = getScaledTotalCount(totalCount, type, projectId);
   const scaledUsersAffected = getScaledUsersAffected(usersAffected, scaledTotalCount, projectId);
@@ -1104,13 +1246,15 @@ function createDemoEvent(config: {
       release: demoRelease.releaseName,
       user: DEMO_AFFECTED_USER as any,
       context: createDemoContext(contextPayload),
-      addons: createDemoAddons(contextPayload) as any,
+      addons: createDemoAddons(contextPayload, withVueAddon, file) as any,
       breadcrumbs: createDemoBreadcrumbs(contextPayload),
+      ...(withCookies ? { cookies: createDemoCookies(projectId) } : {}),
     },
     release: demoRelease as any,
     catcherType: 'client/javascript',
     repetitions: [],
-    assignee: undefined as any,
+    assignee: assignee as any,
+    taskManagerItem,
     timestamp,
     originalTimestamp: timestamp - SECONDS_IN_DAY,
     originalEventId,
@@ -1134,6 +1278,18 @@ export const DEMO_EVENTS: HawkEvent[] = [
     totalCount: 42,
     usersAffected: 8,
     isStarred: true,
+    withCookies: true,
+    withVueAddon: true,
+    assignee: DEMO_TEAM_MEMBERS[1],
+    taskManagerItem: {
+      type: 'github-issue',
+      number: 142,
+      url: 'https://github.com/codex-team/hawk.demo/issues/142',
+      title: 'Investigate: TypeError in UserMenu hydration',
+      createdBy: 'auto',
+      createdAt: new Date((NOW_SECONDS - SECONDS_IN_DAY) * MILLISECONDS_IN_SECOND),
+      assignee: 'copilot',
+    },
     timestamp: NOW_SECONDS - 7 * SECONDS_IN_MINUTE,
   }),
   createDemoEvent({
