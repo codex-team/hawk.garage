@@ -9,6 +9,7 @@ import type { Breadcrumb, HawkEvent, User } from '@hawk.so/types';
 import { MILLISECONDS_IN_SECOND, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE } from '@/utils/time';
 import { DEMO_PROJECT_ID, DEMO_SECOND_PROJECT_ID } from './workspaces';
 import { DEMO_AFFECTED_USER, DEMO_USER } from './users';
+import { createDemoEventRelease } from './releases';
 
 const NOW_SECONDS = Math.floor(Date.now() / MILLISECONDS_IN_SECOND);
 const FIRST_PROJECT_EVENT_MULTIPLIER = 112;
@@ -1074,6 +1075,7 @@ function createDemoEvent(config: {
     title,
     timestamp,
   };
+  const demoRelease = createDemoEventRelease(projectId);
 
   const event: HawkEvent = {
     id,
@@ -1099,12 +1101,13 @@ function createDemoEvent(config: {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
         'Accept-Language': 'en-US,en;q=0.9',
       },
-      release: 'v1.2.3',
+      release: demoRelease.releaseName,
       user: DEMO_AFFECTED_USER as any,
       context: createDemoContext(contextPayload),
       addons: createDemoAddons(contextPayload) as any,
       breadcrumbs: createDemoBreadcrumbs(contextPayload),
     },
+    release: demoRelease as any,
     catcherType: 'client/javascript',
     repetitions: [],
     assignee: undefined as any,
