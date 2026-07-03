@@ -9,6 +9,21 @@ import { ReceiveTypes } from '@/types/project-notifications';
 import { DEMO_USER, DEMO_TEAM_MEMBERS } from './users';
 
 /**
+ * Demo workspace avatar
+ */
+export const DEMO_WORKSPACE_AVATAR_URL = 'https://static.hawk.so/fb59c4d7-db38-46d9-936e-c0d468ab1ea2.png';
+
+/**
+ * Production App project avatar
+ */
+export const DEMO_PROJECT_AVATAR_URL = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=160&h=160&q=80';
+
+/**
+ * Mobile App Beta project avatar
+ */
+export const DEMO_SECOND_PROJECT_AVATAR_URL = 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=160&h=160&q=80';
+
+/**
  * Demo workspace ID (used across the app)
  */
 export const DEMO_WORKSPACE_ID = '6213b6a01e6281087467cc7a';
@@ -30,7 +45,7 @@ export const DEMO_WORKSPACE: Workspace = {
   id: DEMO_WORKSPACE_ID,
   name: 'Demo Workspace',
   description: 'This is a demo workspace showcasing Hawk error tracking',
-  image: 'https://static.hawk.so/fb59c4d7-db38-46d9-936e-c0d468ab1ea2.png',
+  image: DEMO_WORKSPACE_AVATAR_URL,
   inviteHash: 'demo-invite-hash',
   team: [
     {
@@ -72,7 +87,7 @@ export const DEMO_PROJECT: Project = {
   uidAdded: DEMO_USER,
   unreadCount: 1280,
   description: 'Production environment error tracker',
-  image: 'https://ui-avatars.com/api/?name=Prod+App&background=4ECDC4&color=fff',
+  image: DEMO_PROJECT_AVATAR_URL,
   notifications: [
     {
       id: 'notif-001',
@@ -122,7 +137,7 @@ export const DEMO_SECOND_PROJECT: Project = {
   uidAdded: DEMO_TEAM_MEMBERS[0],
   unreadCount: 3420,
   description: 'Beta environment with aggressive rollout and feature flags',
-  image: 'https://ui-avatars.com/api/?name=Mobile+Beta&background=FF6B6B&color=fff',
+  image: DEMO_SECOND_PROJECT_AVATAR_URL,
   notifications: [
     {
       id: 'notif-201',

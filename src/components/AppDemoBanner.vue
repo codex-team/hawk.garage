@@ -22,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import { useDemo } from '../composables/useDemo';
 
 import UiButton from './utils/UiButton.vue';
@@ -31,16 +30,13 @@ defineOptions({
   name: 'AppDemoBanner',
 });
 
-const router = useRouter();
 const { disableDemo } = useDemo();
 
 const onDisableClick = (): void => {
   void disableDemo();
 };
 
-const onRegisterClick = async (): Promise<void> => {
-  await disableDemo();
-
+const onRegisterClick = (): void => {
   /* eslint-disable camelcase */
   const registrationUtm = {
     utm_source: 'demo',
@@ -50,9 +46,11 @@ const onRegisterClick = async (): Promise<void> => {
   };
   /* eslint-enable camelcase */
 
-  void router.push({
-    name: 'sign-up',
-    query: registrationUtm,
+  void disableDemo({
+    redirectTo: {
+      name: 'sign-up',
+      query: registrationUtm,
+    },
   });
 };
 </script>
