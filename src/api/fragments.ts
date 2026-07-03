@@ -37,6 +37,7 @@ export const EVENT_FRAGMENT = `
     id
     catcherType
     totalCount
+    count
     assignee {
       id
       name
