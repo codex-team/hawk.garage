@@ -8,7 +8,7 @@
       :class="{ 'breadcrumb-item__header-row--clickable': hasData }"
       @click="toggleExpanded"
     >
-      <div class="breadcrumb-item__type-column">
+      <div class="event-details__key breadcrumb-item__type-column">
         <BreadcrumbIcon
           :type="breadcrumb.type"
           :level="breadcrumb.level"
@@ -18,6 +18,7 @@
         <span
           class="breadcrumb-item__type"
           :style="colorStyle"
+          :title="t(`event.breadcrumbs.types.${formatType(breadcrumb.type)}`)"
         >
           {{ t(`event.breadcrumbs.types.${formatType(breadcrumb.type)}`) }}
         </span>
@@ -281,9 +282,7 @@ const formatTime = (timestamp: number): string => {
 
   &__header-row {
     position: relative;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 12px;
+    display: flex;
     align-items: center;
     font-size: 13px;
     line-height: 1.4em;
@@ -305,8 +304,6 @@ const formatTime = (timestamp: number): string => {
     align-items: center;
     justify-content: flex-start;
     gap: 8px;
-    min-width: 100px;
-    max-width: 120px;
     flex-shrink: 0;
   }
 
@@ -315,14 +312,20 @@ const formatTime = (timestamp: number): string => {
   }
 
   &__type {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-size: 13px;
     font-weight: 600;
     white-space: nowrap;
+    text-overflow: ellipsis;
     color: var(--breadcrumb-color);
   }
 
   &__content-column {
     display: flex;
     flex-direction: column;
+    flex-grow: 2;
     gap: 0;
     min-width: 0;
     max-width: 100%;
