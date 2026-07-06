@@ -92,19 +92,23 @@ function confirmRemoveEvent(): void {
  * structured for easy pasting into logs, tickets, or chat
  */
 async function copyRawEventData(): Promise<void> {
-  const {
-    eventPayload,
-  } = props;
+  try {
+    const stringifiedEvent = stringifyEventPayload(props.eventPayload);
 
-  const stringifiedEvent = stringifyEventPayload(eventPayload);
+    await navigator.clipboard.writeText(stringifiedEvent);
 
-  await navigator.clipboard.writeText(stringifiedEvent);
-
-  notifier.show({
-    message: i18n.global.t('common.copiedNotification'),
-    style: 'success',
-    time: 2000,
-  });
+    notifier.show({
+      message: i18n.global.t('common.copiedNotification').toString(),
+      style: 'success',
+      time: 2000,
+    });
+  } catch (_error) {
+    notifier.show({
+      message: i18n.global.t('errors.Something went wrong').toString(),
+      style: 'error',
+      time: 5000,
+    });
+  }
 }
 
 /**
@@ -118,8 +122,8 @@ const menuItems = computed<ContextMenuItem[]>(() => {
       icon: 'Copy',
       onActivate: () => {
         props.onClose?.();
-        copyRawEventData();
-      },
+        void copyRawEventData();
+      }
     },
     {
       type: 'default',

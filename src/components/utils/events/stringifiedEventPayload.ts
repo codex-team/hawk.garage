@@ -15,27 +15,29 @@ function buildObjectString(obj: object): string | null {
 
   const lineArray: string[] = [];
 
-  const traverse = (obj: object, level: number = 0): void => {
-    Object.entries(obj).forEach(([key, value]) => {
+  const traverse = (node: object, level: number = 0): void => {
+    Object.entries(node).forEach(([key, value]) => {
       const prefix = '  '.repeat(level);
 
-      if (isObject(value)) {
-        lineArray.push(`${prefix}${key}: {`);
-        traverse(value, level + 1);
-        lineArray.push(`${prefix}}`);
-      } else if (Array.isArray(value)) {
+      if (Array.isArray(value)) {
         lineArray.push(`${prefix}${key}: [`);
-        value.map((el, index) => {
-          const prefix = ' '.repeat(level + 1);
+        value.forEach((el, index) => {
+          const itemPrefix = '  '.repeat(level + 1);
+          const suffix = index !== value.length - 1 ? ',' : '';
 
-          lineArray.push(`${prefix}{`);
-          traverse(el, level + 2);
-          lineArray.push(`${prefix}}`);
-          if (index !== value.length - 1) {
-            lineArray[lineArray.length - 1] += ',';
+          if (isObject(el)) {
+            lineArray.push(`${itemPrefix}{`);
+            traverse(el as object, level + 2);
+            lineArray.push(`${itemPrefix}}${suffix}`);
+          } else {
+            lineArray.push(`${itemPrefix}${String(el)}${suffix}`);
           }
         });
         lineArray.push(`${prefix}]`);
+      } else if (isObject(value)) {
+        lineArray.push(`${prefix}${key}: {`);
+        traverse(value as object, level + 1);
+        lineArray.push(`${prefix}}`);
       } else {
         lineArray.push(`${prefix}${key}: ${String(value)}`);
       }
@@ -123,4 +125,4 @@ export function stringifyEventPayload(payload: HawkEventPayload): string {
   return sections
     .filter(Boolean)
     .join('\n\n');
-};
+}
