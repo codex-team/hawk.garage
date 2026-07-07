@@ -337,7 +337,7 @@ export default defineComponent({
      * @param event - native click mouse event
      */
     onMoreClick(event: MouseEvent) {
-      if (!this.isAdmin) {
+      if (!this.isAdmin || this.loading || !this.event) {
         return;
       }
 
@@ -348,6 +348,7 @@ export default defineComponent({
           props: {
             projectId: this.projectId,
             eventId: this.$route.params.eventId,
+            eventPayload: this.event.payload,
             onClose: () => this.hidePopover(),
           },
         },
