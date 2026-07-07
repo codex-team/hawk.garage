@@ -75,7 +75,7 @@ function buildAddonsString(addons: EventAddons): string | null {
  * @returns Formatted backtrace string, or `null` if the backtrace is empty
  */
 function buildBacktraceString(backtrace: HawkEventBacktraceFrame[]): string | null {
-  if (!backtrace.length) {
+  if (!backtrace || !backtrace.length) {
     return null;
   }
 
