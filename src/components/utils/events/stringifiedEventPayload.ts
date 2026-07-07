@@ -57,6 +57,10 @@ function buildObjectString(obj: object): string | null {
  * @returns Formatted addons string
  */
 function buildAddonsString(addons: EventAddons): string | null {
+  if (!addons) {
+    return null;
+  }
+
   const ignoredAddons = ['beautifiedUserAgent'];
   const filteredAddons = Object.fromEntries(
     Object.entries(addons).filter(([key]) => !ignoredAddons.includes(key))
