@@ -9,7 +9,6 @@
           {{ formattedFullDate }}
         </span>
         <CdxButton
-          v-if="isAdmin"
           class="event-header__button--more"
           secondary
           icon="EtcHorisontal"
@@ -337,7 +336,7 @@ export default defineComponent({
      * @param event - native click mouse event
      */
     onMoreClick(event: MouseEvent) {
-      if (!this.isAdmin || this.loading || !this.event) {
+      if (this.loading || !this.event) {
         return;
       }
 

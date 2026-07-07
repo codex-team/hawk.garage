@@ -32,6 +32,10 @@ interface Props {
    */
   eventPayload: HawkEventPayload;
   /**
+   * Is current user admin in workspace with this project
+   */
+  isAdmin: string;
+  /**
    * Callback to close popover
    */
   onClose?: () => void;
@@ -108,34 +112,37 @@ async function copyRawEventData(): Promise<void> {
       style: 'error',
       time: 5000,
     });
+    console.error(_error);
   }
 }
 
 /**
  * Actions available in event context menu
  */
-const menuItems = computed<ContextMenuItem[]>(() => {
-  return [
-    {
-      type: 'default',
-      title: i18n.global.t('event.copy') as string,
-      icon: 'Copy',
-      onActivate: () => {
-        props.onClose?.();
-        void copyRawEventData();
-      }
+const menuItems = computed<ContextMenuItem[]>(() => [
+  {
+    type: 'default',
+    title: i18n.global.t('event.copy') as string,
+    icon: 'Copy',
+    onActivate: () => {
+      props.onClose?.();
+      void copyRawEventData();
     },
-    {
-      type: 'default',
-      title: i18n.global.t('event.remove') as string,
-      icon: 'Trash',
-      onActivate: () => {
-        props.onClose?.();
-        confirmRemoveEvent();
-      },
-    },
-  ];
-});
+  },
+  ...(props.isAdmin
+    ? [
+        {
+          type: 'default' as const,
+          title: i18n.global.t('event.remove') as string,
+          icon: 'Trash',
+          onActivate: () => {
+            props.onClose?.();
+            confirmRemoveEvent();
+          },
+        },
+      ]
+    : []),
+]);
 </script>
 
 <style scoped>
