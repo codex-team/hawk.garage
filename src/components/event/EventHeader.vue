@@ -9,6 +9,7 @@
           {{ formattedFullDate }}
         </span>
         <CdxButton
+          v-if="!loading"
           class="event-header__button--more"
           secondary
           icon="EtcHorisontal"
@@ -348,6 +349,7 @@ export default defineComponent({
             projectId: this.projectId,
             eventId: this.$route.params.eventId,
             eventPayload: this.event.payload,
+            isAdmin: this.isAdmin,
             onClose: () => this.hidePopover(),
           },
         },

@@ -34,7 +34,7 @@ interface Props {
   /**
    * Is current user admin in workspace with this project
    */
-  isAdmin: string;
+  isAdmin: boolean;
   /**
    * Callback to close popover
    */
@@ -112,7 +112,7 @@ async function copyRawEventData(): Promise<void> {
       style: 'error',
       time: 5000,
     });
-    console.error(_error);
+    throw _error;
   }
 }
 
@@ -121,7 +121,8 @@ async function copyRawEventData(): Promise<void> {
  */
 const menuItems = computed<ContextMenuItem[]>(() => [
   {
-    type: 'default',
+    type: 'default' as const,
+    isVisible: true,
     title: i18n.global.t('event.copy') as string,
     icon: 'Copy',
     onActivate: () => {
@@ -129,20 +130,17 @@ const menuItems = computed<ContextMenuItem[]>(() => [
       void copyRawEventData();
     },
   },
-  ...(props.isAdmin
-    ? [
-        {
-          type: 'default' as const,
-          title: i18n.global.t('event.remove') as string,
-          icon: 'Trash',
-          onActivate: () => {
-            props.onClose?.();
-            confirmRemoveEvent();
-          },
-        },
-      ]
-    : []),
-]);
+  {
+    type: 'default' as const,
+    isVisible: props.isAdmin === true,
+    title: i18n.global.t('event.remove') as string,
+    icon: 'Trash',
+    onActivate: () => {
+      props.onClose?.();
+      confirmRemoveEvent();
+    },
+  },
+].filter(item => item.isVisible));
 </script>
 
 <style scoped>
