@@ -32,6 +32,10 @@ interface Props {
    */
   eventPayload: HawkEventPayload;
   /**
+   * Is current user admin in workspace with this project
+   */
+  isAdmin: boolean;
+  /**
    * Callback to close popover
    */
   onClose?: () => void;
@@ -108,34 +112,35 @@ async function copyRawEventData(): Promise<void> {
       style: 'error',
       time: 5000,
     });
+    throw _error;
   }
 }
 
 /**
  * Actions available in event context menu
  */
-const menuItems = computed<ContextMenuItem[]>(() => {
-  return [
-    {
-      type: 'default',
-      title: i18n.global.t('event.copy') as string,
-      icon: 'Copy',
-      onActivate: () => {
-        props.onClose?.();
-        void copyRawEventData();
-      }
+const menuItems = computed<ContextMenuItem[]>(() => [
+  {
+    type: 'default' as const,
+    isVisible: true,
+    title: i18n.global.t('event.copy') as string,
+    icon: 'Copy',
+    onActivate: () => {
+      props.onClose?.();
+      void copyRawEventData();
     },
-    {
-      type: 'default',
-      title: i18n.global.t('event.remove') as string,
-      icon: 'Trash',
-      onActivate: () => {
-        props.onClose?.();
-        confirmRemoveEvent();
-      },
+  },
+  {
+    type: 'default' as const,
+    isVisible: props.isAdmin === true,
+    title: i18n.global.t('event.remove') as string,
+    icon: 'Trash',
+    onActivate: () => {
+      props.onClose?.();
+      confirmRemoveEvent();
     },
-  ];
-});
+  },
+].filter(item => item.isVisible));
 </script>
 
 <style scoped>
