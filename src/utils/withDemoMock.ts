@@ -8,7 +8,7 @@
  *     // Real API implementation
  *     return api.call(QUERY_USER, { userId });
  *   },
- *   '@/api/user/mocks/fetchUser.mock'
+ *   '/src/api/user/mocks/fetchUser.mock.ts'
  * );
  * ```
  */
@@ -23,15 +23,23 @@ type MockFactory<Fn extends (...args: any[]) => any> = (
 type MockSource<Fn extends (...args: any[]) => any> = MockFactory<Fn> | string;
 
 /**
- * Dynamically import mock module
+ * Statically discoverable mock registry so Vite can code-split and include mocks in the bundle.
+ * Runtime `import(variable)` with `@vite-ignore` would break demo mode in production builds.
+ */
+const mockModules = import.meta.glob('/src/api/**/mocks/**/*.{ts,js}');
+
+/**
+ * Load mock module by path used in withDemoMock call sites (e.g. `/src/api/.../foo.mock.ts`)
  * @param mockPath - Full path to mock file
  */
 async function loadMockModule(mockPath: string): Promise<any> {
-  try {
-    return await import(/* @vite-ignore */ mockPath);
-  } catch (error) {
+  const loader = mockModules[mockPath];
+
+  if (!loader) {
     throw new Error(`Mock module not found: ${mockPath}`);
   }
+
+  return await loader();
 }
 
 /**
