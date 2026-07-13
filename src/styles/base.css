@@ -200,6 +200,10 @@ body .cdx-notify {
 
 }
 
+body .codex-icon svg {
+  fill: none;
+}
+
 @media (--media-mobile) {
   body .cdx-notify {
     box-sizing: border-box;
