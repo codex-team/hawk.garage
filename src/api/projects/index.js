@@ -20,6 +20,7 @@ import {
   MUTATION_UPDATE_TASK_MANAGER_SETTINGS
 } from './queries';
 import * as api from '../index.ts';
+import { withDemoMock } from '@/utils/withDemoMock.ts';
 
 /**
  * Create project and returns its id
@@ -130,9 +131,18 @@ export async function removeProject(projectId) {
  * @param {string} projectId - project ID
  * @returns {Promise<number>}
  */
-export async function updateLastProjectVisit(projectId) {
-  return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
-}
+/**
+ * Update last project visit timestamp
+ *
+ * @param {string} projectId - id of the project
+ * @returns {Promise<boolean>} - success status
+ */
+export const updateLastProjectVisit = withDemoMock(
+  async function updateLastProjectVisit(projectId) {
+    return (await api.callOld(MUTATION_UPDATE_LAST_VISIT, { projectId })).setLastProjectVisit;
+  },
+  '/src/api/projects/mocks/updateLastProjectVisit.mock.ts'
+);
 
 /**
  * Send request for creation new project notifications rule
@@ -240,22 +250,35 @@ export async function toggleEnabledStateOfProjectNotificationsRule(payload) {
  * @param {number} timezoneOffset - user's local timezone offset
  * @returns {Promise<APIResponse<{project: {chartData: ChartData[]}}>>}
  */
-export async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
-  const response = await api.call(QUERY_CHART_DATA, {
-    projectId,
-    startDate,
-    endDate,
-    groupBy,
-    timezoneOffset,
-  }, undefined, {
+/**
+ * Fetch chart data for project overview
+ *
+ * @param {string} projectId - id of the project
+ * @param {string} startDate - start date in ISO format
+ * @param {string} endDate - end date in ISO format
+ * @param {string} groupBy - grouping period (day, week, month)
+ * @param {number} timezoneOffset - timezone offset in minutes
+ * @returns {Promise<object>} - chart data response
+ */
+export const fetchChartData = withDemoMock(
+  async function fetchChartData(projectId, startDate, endDate, groupBy, timezoneOffset) {
+    const response = await api.call(QUERY_CHART_DATA, {
+      projectId,
+      startDate,
+      endDate,
+      groupBy,
+      timezoneOffset,
+    }, undefined, {
     /**
      * Allow errors to be returned in response for handling in store/component
      */
-    allowErrors: true,
-  });
+      allowErrors: true,
+    });
 
-  return response;
-}
+    return response;
+  },
+  '/src/api/projects/mocks/fetchChartData.mock.ts'
+);
 
 /**
  * Fetch project releases
@@ -263,15 +286,18 @@ export async function fetchChartData(projectId, startDate, endDate, groupBy, tim
  * @param {string} projectId - id of the project to fetch releases
  * @returns {Promise<Array<{release: string, timestamp: number, newEventsCount: number, commitsCount: number, filesCount: number}>>} - list of releases with unique events count, commits count and files count
  */
-export async function fetchProjectReleases(projectId) {
-  const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
+export const fetchProjectReleases = withDemoMock(
+  async function fetchProjectReleases(projectId) {
+    const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
-  if (response.errors?.length) {
-    response.errors.forEach(console.error);
-  }
+    if (response.errors?.length) {
+      response.errors.forEach(console.error);
+    }
 
-  return response.data.project.releases;
-}
+    return response.data.project.releases;
+  },
+  '/src/api/projects/mocks/fetchProjectReleases.mock.ts'
+);
 
 /**
  * Fetch specific release details
@@ -280,23 +306,26 @@ export async function fetchProjectReleases(projectId) {
  * @param {string} release
  * @returns {Promise<ReleaseDetails>}
  */
-export async function fetchProjectReleaseDetails(projectId, release) {
-  const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
-    release });
+export const fetchProjectReleaseDetails = withDemoMock(
+  async function fetchProjectReleaseDetails(projectId, release) {
+    const response = await api.call(QUERY_PROJECT_RELEASE_DETAILS, { projectId,
+      release });
 
-  if (response.errors?.length) {
+    if (response.errors?.length) {
     /**
      * Throw error if release not found or other API errors
      */
-    const error = new Error(response.errors[0].message);
+      const error = new Error(response.errors[0].message);
 
-    error.name = response.errors[0].extensions?.code || 'API_ERROR';
+      error.name = response.errors[0].extensions?.code || 'API_ERROR';
 
-    throw error;
-  }
+      throw error;
+    }
 
-  return response.data.project.releaseDetails;
-}
+    return response.data.project.releaseDetails;
+  },
+  '/src/api/projects/mocks/fetchProjectReleaseDetails.mock.ts'
+);
 
 /**
  * Send request for unsubscribing from notifications
