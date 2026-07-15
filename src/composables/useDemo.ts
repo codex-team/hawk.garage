@@ -41,6 +41,18 @@ export const DEMO_ACCESS_TOKEN = 'demo-access-token';
  */
 export const DEMO_REFRESH_TOKEN = 'demo-refresh-token';
 
+/**
+ * True while disableDemo is doing window.location.assign —
+ * App.vue must not soft-redirect to /login in that window
+ */
+let isHardRedirectPending = false;
+
+/**
+ * Whether demo exit is currently hard-navigating away
+ */
+export function isDemoHardRedirectPending(): boolean {
+  return isHardRedirectPending;
+}
 const NAMED_ROUTE_PATHS: Record<string, string> = {
   'sign-up': '/sign-up',
   login: '/login',
@@ -107,6 +119,15 @@ export const useDemo = createSharedComposable((): DemoControls => {
   };
 
   /**
+   * Real JWT session (not the demo placeholder token)
+   */
+  const hasRealSession = (): boolean => {
+    const token = store.state.user.accessToken;
+
+    return Boolean(token) && token !== DEMO_ACCESS_TOKEN;
+  };
+
+  /**
    * Applies demo mode state and synchronizes related Vuex modules
    * @param enabled - Next demo mode state
    */
@@ -150,6 +171,7 @@ export const useDemo = createSharedComposable((): DemoControls => {
    * @param redirectTo - Target route
    */
   const redirectWithHardNavigation = (redirectTo: RouteLocationRaw): void => {
+    isHardRedirectPending = true;
     window.location.assign(buildLocationHref(redirectTo));
   };
 
@@ -234,12 +256,22 @@ export const useDemo = createSharedComposable((): DemoControls => {
   const disableDemo = async (options: DisableDemoOptions = {}): Promise<void> => {
     try {
       let redirectTo = options.redirectTo;
+      const realSession = hasRealSession();
 
       if (redirectTo === undefined) {
-        redirectTo = store.getters.isAuthenticated ? false : { name: 'login' };
+        /**
+         * Finish demo: stay in account if there is a real session,
+         * otherwise go to login (demo-access-token is not a real session)
+         */
+        redirectTo = realSession ? false : { name: 'login' };
+      } else if (redirectTo !== false && realSession) {
+        /**
+         * e.g. Register while already logged in — skip sign-up, enter account
+         */
+        redirectTo = false;
       }
 
-      const shouldStayOnPage = redirectTo === false && store.getters.isAuthenticated;
+      const shouldStayOnPage = redirectTo === false && realSession;
 
       setDemoState(false);
 
