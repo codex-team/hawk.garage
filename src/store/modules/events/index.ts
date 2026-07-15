@@ -802,7 +802,9 @@ const module: Module<EventsModuleState, RootState> = {
       eventsList: HawkEvent[];
     }): void {
       const additions = Object.fromEntries(eventsList.map((event) => {
-        return [getEventsListKey(projectId, event.id), event];
+        const key = getEventsListKey(projectId, event.id);
+
+        return [key, event];
       }));
 
       state.events = {

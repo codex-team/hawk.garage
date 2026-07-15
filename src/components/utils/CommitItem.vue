@@ -65,6 +65,7 @@ export default {
 .commit-item {
   display: flex;
   flex-direction: row;
+  flex-basis: 100%;
 }
 
 .commit-item__left {

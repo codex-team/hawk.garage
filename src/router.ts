@@ -364,13 +364,28 @@ router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
 
+  /**
+   * Let `?demo=1` through before auth redirect — useDemo is not ready yet
+   * (App mounts only after this navigation), and would never see the query
+   * if we bounced to /login first.
+   */
+  if (to.query.demo === '1') {
+    next();
+
+    return;
+  }
+
   if (store.getters.isAuthenticated) {
     if (authRoutes.test(to.fullPath)) {
       next('/');
+
+      return;
     }
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
       next('/login');
+
+      return;
     }
   }
 

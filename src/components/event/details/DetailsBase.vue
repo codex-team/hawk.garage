@@ -124,6 +124,10 @@ export default {
       font-size: 11px;
       font-family: var(--font-monospace);
       word-wrap: break-word;
+
+      .code-block__content {
+        max-width: none !important;
+      }
     }
   }
 

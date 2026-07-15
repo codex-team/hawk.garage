@@ -3,7 +3,6 @@
     class="tariff-plan"
     :class="{
       'tariff-plan--selected': selected,
-      'tariff-plan--horizontal': horizontal,
     }"
   >
     <h4 class="tariff-plan__name">
@@ -74,13 +73,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    /**
-     * True if horizontal view enabled
-     */
-    horizontal: {
-      type: Boolean,
-      default: false,
-    },
     isCurrentPlan: {
       type: Boolean,
       default: false,
@@ -100,10 +92,10 @@ export default {
 <style>
   .tariff-plan {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     box-sizing: border-box;
-    width: 220px;
-    height: 140px;
+    width: 100%;
     padding: 20px 25px;
     background: var(--color-bg-main);
     border-radius: 7px;
@@ -114,44 +106,17 @@ export default {
       border: 3px solid var(--color-indicator-medium);
     }
 
-    &--horizontal {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      width: auto;
-      height: auto;
-
-      &:not(:last-of-type) {
-        margin-bottom: 10px;
-      }
-
-      .tariff-plan__name {
-        width: 150px;
-        margin-bottom: 0;
-      }
-      .tariff-plan__limit {
-        width: 300px;
-      }
-
-      .tariff-plan__footer {
-        margin-left: auto;
-      }
-
-      .tariff-plan__price {
-        margin-right: 20px
-      }
-    }
-
     &__name {
-      margin: 0 0 10px;
+      width: 150px;
+      margin: 0;
       color: var(--color-text-main);
       font-weight: 600;
-
       font-size: 15px;
       letter-spacing: 0;
     }
 
     &__limit {
+      width: 300px;
       color: var(--color-text-second);
       font-weight: 600;
       font-size: 15px;
@@ -165,14 +130,15 @@ export default {
     &__footer {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-top: auto;
+      margin-left: auto;
+      gap: 20px;
     }
 
     &__price {
       color: var(--color-text-second);
       font-weight: 600;
       font-size: 13px;
+      white-space: nowrap;
     }
 
     &__button {
