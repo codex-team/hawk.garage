@@ -1,6 +1,10 @@
 <template>
   <div
     ref="content"
+    v-copyable="{
+      selector: copyable ? '.code-preview__content' : null,
+      callback: onCopy,
+    }"
     class="code-preview"
   >
     <div class="code-preview__line-numbers">
@@ -17,24 +21,39 @@
         :class="{'current': isCurrentLine(row.line)}"
       />
     </div>
+    <div
+      class="code-preview__button-wrapper"
+      :style="lines.length < 10 ? { top: 'auto', bottom: '10px' } : {}"
+    >
+      <button
+        v-if="copyable"
+        class="button button--copy code-preview__copy-button"
+        type="button"
+      >
+        {{ $t('components.codeBlock.copy') }}
+      </button>
+    </div>
     <!-- eslint-disable vue/no-v-html -->
     <pre
       class="code-preview__content"
-      :class="{[syntax]: true }"
+      :class="{[syntax]: true, 'code-preview__content__copyable': copyable }"
       v-html="escapedCodeWithPointer"
     />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import hljs from 'highlight.js';
 import * as _ from './../../utils';
+import notifier from 'codex-notifier';
+import type { CodeLine } from '@/utils/markdown';
+import type { PropType } from 'vue';
 
 /**
  * This component is using to render some code fragment, for example in stack trace description
  * It requires the 'lines' property as array of {line: number, content: string}
  *
- * @typedef {object} CodeRow
+ * @typedef {object} CodeLine
  * @property {number} line - line number
  * @property {string} content - line content
  */
@@ -44,10 +63,10 @@ export default {
     /**
      * Array of code fragment lines
      *
-     * @type {CodeRow[]}
+     * @type {CodeLine[]}
      */
     lines: {
-      type: Array,
+      type: Array as PropType<CodeLine[]>,
       default() {
         return [];
       },
@@ -60,7 +79,7 @@ export default {
      */
     linesHighlighted: {
       type: Array,
-      default: null,
+      default: () => [],
     },
 
     /**
@@ -86,6 +105,13 @@ export default {
     filename: {
       type: String,
       default: '',
+    },
+    /**
+     * Enable copy-to-clipboard UI and behavior
+     */
+    copyable: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -257,6 +283,17 @@ export default {
 
       return code;
     },
+
+    /**
+     * Show notification after successful copy
+     */
+    onCopy() {
+      notifier.show({
+        message: this.$t('common.copiedNotification'),
+        style: 'success',
+        time: 2000,
+      });
+    },
   },
 };
 </script>
@@ -270,15 +307,37 @@ export default {
     background-color: var(--color-bg-code-fragment);
     border-radius: var(--border-radius);
 
+    --code-line-height: 21px;
+    --copy-btn-width: calc(13px * 2 + 11 * 7px);
+    --copy-btn-top: 10px;
+    --copy-btn-right: 10px;
+
+    --content-padding-right: calc(var(--copy-btn-width) + var(--copy-btn-right));
+    --content-min-height: calc(var(--copy-btn-top) + 22px + var(--code-line-height));
+
     &__content {
       z-index: 2;
       flex-grow: 2;
       font-size: 12px;
-      line-height: 21px;
+      line-height: var(--code-line-height);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
 
       &::-webkit-scrollbar {
         display: none;
       }
+
+      &__copyable {
+        min-height: var(--content-min-height);
+        padding-right: var(--content-padding-right);
+      }
+    }
+
+    &__button-wrapper {
+      position: absolute;
+      top: var(--copy-btn-top);
+      right: var(--copy-btn-right);
+      z-index: 3;
     }
 
     &__line-numbers {
@@ -288,17 +347,16 @@ export default {
 
       span {
         display: flex;
-        flex-grow: 1;
         align-items: center;
         padding: 0 10px;
         color: var(--color-text-main);
         font-size: 10px;
-        line-height: 21px;
+        line-height: var(--code-line-height);
         vertical-align: bottom;
         opacity: 0.4;
 
         &::before {
-          content: attr(data-line)
+          content: attr(data-line);
         }
       }
     }
@@ -314,7 +372,7 @@ export default {
       flex-direction: column;
 
       div {
-        flex-grow: 1;
+        height: var(--code-line-height);
       }
 
       .current {

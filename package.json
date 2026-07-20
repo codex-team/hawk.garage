@@ -28,6 +28,7 @@
     "http-server": "^14.1.1",
     "install": "^0.13.0",
     "lodash.mergewith": "^4.6.2",
+    "marked": "^17.0.0",
     "normalize.css": "^8.0.1",
     "short-number": "^1.0.7",
     "vue": "^3.5.22",

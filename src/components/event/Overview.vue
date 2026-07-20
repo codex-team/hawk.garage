@@ -139,6 +139,17 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    /**
+     * Current project id
+     */
+    projectId: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+    };
   },
   computed: {
     /**
@@ -243,6 +254,7 @@ export default defineComponent({
 
       return this.event.payload.addons[integrationName];
     },
+
   },
 });
 </script>

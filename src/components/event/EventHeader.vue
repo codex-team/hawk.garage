@@ -93,6 +93,13 @@
           @click="markEvent('ignored')"
         />
         <UiButton
+          class="event-header__button event-header__button--ai"
+          :content="$t('event.ai.ask')"
+          icon="ai"
+          small
+          @click="isAiSuggestionOpen = true"
+        />
+        <UiButton
           v-if="!loading && event.taskManagerItem"
           class="event-header__button"
           :content="`Issue #${event.taskManagerItem.number}`"
@@ -101,6 +108,15 @@
           @click="openIssueUrl"
         />
       </div>
+      <AiSuggestionDialog
+        v-if="isAiSuggestionOpen && event"
+        class="event-header__dialog"
+        :project-id="projectId"
+        :event-id="event.id"
+        :original-event-id="event.originalEventId"
+        :title="event.payload.title"
+        @close="isAiSuggestionOpen = false"
+      />
       <div class="event-header__nav-bar">
         <TabBar
           :items="navigationItems"
@@ -141,7 +157,7 @@ import ProjectBadge from '../project/ProjectBadge.vue';
 import { JavaScriptAddons } from '@hawk.so/types';
 import { Button as CdxButton, usePopover } from '@codexteam/ui/vue';
 import EventActionsMenu from './EventActionsMenu.vue';
-import Icon from '../utils/Icon.vue';
+import AiSuggestionDialog from '../modals/AiSuggestionDialog.vue';
 
 export default defineComponent({
   name: 'EventHeader',
@@ -154,6 +170,7 @@ export default defineComponent({
     AssigneeBar,
     EntityImage,
     ProjectBadge,
+    AiSuggestionDialog,
   },
   mixins: [projectBadges],
   props: {
@@ -182,6 +199,7 @@ export default defineComponent({
        * @type {boolean}
        */
       loading: !this.event,
+      isAiSuggestionOpen: false as boolean,
     };
   },
   computed: {
@@ -461,9 +479,25 @@ export default defineComponent({
 
     }
 
+    &__button--ai {
+      color: var(--color-indicator-ai);
+      background-color: transparent;
+      border-color: color-mod(var(--color-indicator-ai) alpha(20%));
+
+      &:not(&--disabled):hover {
+        color: color-mod(var(--color-indicator-ai) lightness(75%));
+        background-color: transparent;
+        border-color: color-mod(var(--color-indicator-ai) alpha(26%));
+      }
+    }
+
     &__nav-bar, &__viewed-by {
       display: flex;
       justify-content: space-between;
+    }
+
+    &__dialog {
+      color: var(--color-text-main);
     }
   }
 </style>

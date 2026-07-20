@@ -10,7 +10,8 @@ import {
   QUERY_EVENT_REPETITIONS_PORTION,
   QUERY_PROJECT_DAILY_EVENTS,
   QUERY_CHART_DATA,
-  MUTATION_REMOVE_EVENT
+  MUTATION_REMOVE_EVENT,
+  QUERY_EVENT_AI_SUGGESTION
 } from './queries';
 import * as api from '@/api';
 import type {
@@ -246,6 +247,22 @@ export async function bulkSetEventMarks(
     },
     data => data.bulkSetEventMarks
   );
+}
+
+/**
+ * Fetch AI suggestion for an event
+ * @param projectId - project event is related to
+ * @param eventId - event to fetch AI suggestion for
+ * @param originalEventId - id of the original event
+ */
+export async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {
+  const response = await api.call(QUERY_EVENT_AI_SUGGESTION, {
+    projectId,
+    eventId,
+    originalEventId,
+  });
+
+  return response.data.project?.event?.aiSuggestion ?? '';
 }
 
 /**
