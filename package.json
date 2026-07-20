@@ -23,6 +23,7 @@
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
     "cssnano": "^7.1.1",
+    "dompurify": "^3.4.12",
     "fast-glob": "^3.3.3",
     "highlight.js": "^11.11.1",
     "http-server": "^14.1.1",
