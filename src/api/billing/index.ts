@@ -1,5 +1,6 @@
 import { MUTATION_PAY_WITH_CARD, MUTATION_VERIFY_PROMO_CODE, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMENT } from './queries';
 import * as api from '../';
+import { withDemoMock } from '@/utils/withDemoMock';
 import type { BusinessOperation } from '../../types/business-operation';
 import type { Utm as UtmInput } from '@hawk.so/types';
 import type { PromoCodeVerify, PromoCodeVerifyInput } from '@/types/promoCode';
@@ -17,9 +18,23 @@ interface ComposePaymentInput {
   promoUtm?: UtmInput;
 }
 
+/**
+ * Data for processing payment with saved card
+ */
 export interface PayWithCardInput {
+  /**
+   * Checksum for payment validation
+   */
   checksum: string;
+
+  /**
+   * Saved card id for payment
+   */
   cardId: string;
+
+  /**
+   * Is payment recurrent or not. If payment is recurrent, then the money will be debited every month
+   */
   isRecurrent?: boolean;
 }
 
@@ -27,11 +42,14 @@ export interface PayWithCardInput {
  * Request business operations list for passed workspaces
  * @param ids - ids of workspaces
  */
-export async function getBusinessOperations(ids: string[]): Promise<BusinessOperation[]> {
-  const response = await api.call<{ businessOperations: BusinessOperation[] }>(QUERY_BUSINESS_OPERATIONS, { ids });
-
-  return response.data?.businessOperations || [];
+async function getBusinessOperationsRequest(ids: string[]): Promise<BusinessOperation[]> {
+  return (await api.callOld(QUERY_BUSINESS_OPERATIONS, { ids })).businessOperations;
 }
+
+export const getBusinessOperations = withDemoMock(
+  getBusinessOperationsRequest,
+  '/src/api/billing/mocks/getBusinessOperations.mock.ts'
+);
 
 /**
  * Process payment via saved card

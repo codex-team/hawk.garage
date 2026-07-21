@@ -13,6 +13,7 @@
     "signupSuccessMessage": "Пароль отправлен на указанную почту",
     "inviteHelper": "Вы приглашены в воркспейс. Войдите или зарегистрируйтесь, чтобы продолжить.",
     "continueWithSso": "Войти через SSO",
+    "showDemo": "Показать демо",
     "ssoLogin": {
       "title": "Вход через SSO",
       "workspaceId": "ID воркспейса",
@@ -27,6 +28,13 @@
       "Network Error": "Сервер недоступен. Проверьте ваше подключение к интернету.",
       "SSO_REQUIRED": "Воркспейс \"{workspace}\" требует вход только через SSO. <a href=\"{link}\">Войти через SSO →</a>"
     }
+  },
+  "demo": {
+    "bannerText": "Хоук в режиме демо",
+    "registerButton": "Регистрация",
+    "contactButton": "Написать нам",
+    "disableButton": "Завершить демо-режим",
+    "functionUnavailable": "Функция недоступна в демо-режиме"
   },
   "layout": {
     "aside": {
@@ -63,6 +71,11 @@
     "consoleOutput": {
       "show_previous": "Показать предыдущие",
       "hide_previous": "Скрыть предыдущие"
+    },
+    "yandexMetrika": {
+      "counterId": "ID счётчика",
+      "clientId": "ClientID",
+      "openWebvisor": "Открыть в Вебвизоре"
     },
     "catalog": {
       "step1": "Создать проект",
@@ -609,7 +622,8 @@
       "url": "Адрес",
       "window": "Окно браузера",
       "beautifiedUserAgent": "Клиент",
-      "consoleOutput": "Лог Консоли"
+      "consoleOutput": "Лог Консоли",
+      "yandexMetrika": "Яндекс Метрика"
     },
     "user": {
       "affectedUser": "Затронутый пользователь",
@@ -638,6 +652,7 @@
       "upgradeButton": "Оплатить и посмотреть событие"
     },
     "remove": "Удалить событие",
+    "copy": "Копировать событие",
     "removeConfirmation": "Вы уверены, что хотите удалить это событие? Все связанные данные также будут удалены.",
     "removeButton": "Удалить",
     "removeSuccess": "Событие успешно удалено"
@@ -728,7 +743,7 @@
         "emailEmptyWarning": "Чтобы активировать уведомления на почту, заполните&nbsp;Email в&nbsp;<a href='{accountUrl}'>Настройках Аккаунта</a>",
         "slack": "Уведомления через Webhook App",
         "loop": "Уведомления через Loop Webhook",
-        "telegram": "Уведомления через {telegramLink}",
+        "telegram": "Добавьте в чат {telegramLink} и вызовите /notify",
         "webhook": "Получайте данные событий через HTTP POST на ваш endpoint",
         "webPush": "Уведомления даже при закрытой вкладке",
         "desktopPush": "Системные уведомления через Hawk Desktop"

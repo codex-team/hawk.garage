@@ -14,6 +14,9 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { i18n } from '../../i18n';
 import { ActionType } from '../utils/ConfirmationWindow/types';
+import { stringifyEventPayload } from '@/components/utils/events/stringifiedEventPayload';
+
+import type { HawkEventPayload } from '@/types/events';
 
 interface Props {
   /**
@@ -24,6 +27,14 @@ interface Props {
    * Original event id to remove
    */
   eventId: string;
+  /**
+   * Event payload to copy
+   */
+  eventPayload: HawkEventPayload;
+  /**
+   * Is current user admin in workspace with this project
+   */
+  isAdmin: boolean;
   /**
    * Callback to close popover
    */
@@ -79,21 +90,57 @@ function confirmRemoveEvent(): void {
 }
 
 /**
+ * Copies a formatted event payload to the clipboard
+ *
+ * Includes information about title, backtrace, context, addons
+ * structured for easy pasting into logs, tickets, or chat
+ */
+async function copyRawEventData(): Promise<void> {
+  try {
+    const stringifiedEvent = stringifyEventPayload(props.eventPayload);
+
+    await navigator.clipboard.writeText(stringifiedEvent);
+
+    notifier.show({
+      message: i18n.global.t('common.copiedNotification').toString(),
+      style: 'success',
+      time: 2000,
+    });
+  } catch (_error) {
+    notifier.show({
+      message: i18n.global.t('errors.Something went wrong').toString(),
+      style: 'error',
+      time: 5000,
+    });
+    throw _error;
+  }
+}
+
+/**
  * Actions available in event context menu
  */
-const menuItems = computed<ContextMenuItem[]>(() => {
-  return [
-    {
-      type: 'default',
-      title: i18n.global.t('event.remove') as string,
-      icon: 'Trash',
-      onActivate: () => {
-        props.onClose?.();
-        confirmRemoveEvent();
-      },
+const menuItems = computed<ContextMenuItem[]>(() => [
+  {
+    type: 'default' as const,
+    isVisible: true,
+    title: i18n.global.t('event.copy') as string,
+    icon: 'Copy',
+    onActivate: () => {
+      props.onClose?.();
+      void copyRawEventData();
     },
-  ];
-});
+  },
+  {
+    type: 'default' as const,
+    isVisible: props.isAdmin === true,
+    title: i18n.global.t('event.remove') as string,
+    icon: 'Trash',
+    onActivate: () => {
+      props.onClose?.();
+      confirmRemoveEvent();
+    },
+  },
+].filter(item => item.isVisible));
 </script>
 
 <style scoped>

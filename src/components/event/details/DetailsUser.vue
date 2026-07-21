@@ -14,7 +14,7 @@
               :id="payloadUser.photo ? payloadUser.id : undefined"
               :name="payloadUser.photo ? payloadUser.name || payloadUser.id : undefined"
               :image="payloadUser.photo"
-              size="22"
+              size="20"
               :title="payloadUser.name || payloadUser.id || $t('event.user.noname')"
             />
             <span
@@ -92,6 +92,7 @@ export default defineComponent({
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
+    flex-basis: 100%;
   }
 
   &__user-link-button {
@@ -108,6 +109,7 @@ export default defineComponent({
     border-radius: 4px;
     cursor: pointer;
     user-select: none;
+    margin-left: auto;
 
     &:hover {
       color: var(--color-text-main);

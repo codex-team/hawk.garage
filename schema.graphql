@@ -1383,7 +1383,7 @@ type Query {
   ): [Workspace]
 
   """Gets available Hawk tariff plans"""
-  plans: [Plan!]!
+  plans: [Plan!]! @allowAnon
 }
 
 """Rate limits configuration"""

@@ -3,11 +3,37 @@ import axios from 'axios';
 import { prepareFormData } from '@/api/utils';
 import type { APIResponse } from '../types/api';
 import { useErrorTracker } from '@/hawk';
+import { i18n } from '@/i18n';
+import { DEMO_ACCESS_TOKEN } from '@/composables/useDemo';
 
 /**
  * Hawk API endpoint URL
  */
 export const API_ENDPOINT: string = import.meta.env.VITE_API_ENDPOINT || '';
+
+/**
+ * Checks if the application is running in demo mode.
+ *
+ * This function determines demo mode by inspecting the Authorization header
+ * stored in axios defaults. In demo mode, a special access token ('demo-access-token')
+ * is used instead of a real user token.
+ *
+ * Why this approach:
+ * - Demo mode token is set globally in axios.defaults.headers.common.Authorization
+ * - This allows all API requests to use the demo token without passing it explicitly
+ * - The Authorization header format is typically "Bearer <token>", so we use includes()
+ *   to check if the demo token is present anywhere in the header string
+ * - Type guard (typeof === 'string') ensures safe string operations, as the header
+ *   could be undefined, string, or other types
+ * - This centralized approach makes it easy to check demo mode status anywhere in the app
+ *   without additional state management
+ * @returns true if demo access token is present in the Authorization header, false otherwise
+ */
+function isDemoModeEnabled(): boolean {
+  const authHeader = axios.defaults.headers.common.Authorization;
+
+  return typeof authHeader === 'string' && authHeader.includes(DEMO_ACCESS_TOKEN);
+}
 
 /**
  * A promise that will be resolved after the initialization request
@@ -234,7 +260,11 @@ export async function call<T = any>(
    */
   if (response.errors && response.errors.length && allowErrors === false) {
     response.errors.forEach((error) => {
-      const err = new Error(error.message) as Error & { extensions?: Record<string, unknown> };
+      const isUnauthenticated = error.extensions && error.extensions.code === 'UNAUTHENTICATED';
+      const message = isDemoModeEnabled() && isUnauthenticated
+        ? i18n.global.t('demo.functionUnavailable').toString()
+        : error.message;
+      const err = new Error(message) as Error & { extensions?: Record<string, unknown> };
 
       /**
        * Preserve extensions from GraphQL error

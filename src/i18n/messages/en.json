@@ -13,6 +13,7 @@
     "signupSuccessMessage": "The password is sent to your email",
     "inviteHelper": "You are invited to join a workspace. Please login or sign up to continue.",
     "continueWithSso": "Continue with SSO",
+    "showDemo": "Show Demo",
     "ssoLogin": {
       "title": "Single Sign-On",
       "workspaceId": "Workspace ID",
@@ -27,6 +28,13 @@
       "Network Error": "Server is not available. Check your internet connection.",
       "SSO_REQUIRED": "Workspace \"{workspace}\" requires SSO login. <a href=\"{link}\">Sign in with SSO →</a>"
     }
+  },
+  "demo": {
+    "bannerText": "Hawk in demo mode",
+    "registerButton": "Sign up",
+    "contactButton": "Contact us",
+    "disableButton": "End Demo Mode",
+    "functionUnavailable": "Feature is unavailable in demo mode"
   },
   "layout": {
     "aside": {
@@ -63,6 +71,11 @@
     "consoleOutput": {
       "show_previous": "Show previous",
       "hide_previous": "Hide previous"
+    },
+    "yandexMetrika": {
+      "counterId": "Counter ID",
+      "clientId": "Client ID",
+      "openWebvisor": "Open in Webvisor"
     },
     "catalog": {
       "step1": "Add a project",
@@ -609,7 +622,8 @@
       "url": "URL",
       "window": "Browser Window",
       "beautifiedUserAgent": "User Agent",
-      "consoleOutput": "Console Output"
+      "consoleOutput": "Console Output",
+      "yandexMetrika": "Yandex Metrika"
     },
     "user": {
       "affectedUser": "Affected user",
@@ -638,6 +652,7 @@
       "upgradeButton": "Pay and view event"
     },
     "remove": "Remove event",
+    "copy": "Copy event",
     "removeConfirmation": "Are you sure you want to remove this event? All related data will also be removed.",
     "removeButton": "Remove",
     "removeSuccess": "Event successfully removed"
@@ -728,7 +743,7 @@
         "emailEmptyWarning": "To enable email notifications you need to fill an&nbsp;email in&nbsp;<a href='{accountUrl}'>Account Settings</a>",
         "slack": "Alerts through the Webhook App",
         "loop": "Alerts through the Loop Webhook",
-        "telegram": "Alerts through the {telegramLink}",
+        "telegram": "Add {telegramLink} to the chat and call /notify",
         "webhook": "Receive event data via HTTP POST to your endpoint",
         "webPush": "Alerts even with closed tab",
         "desktopPush": "Native notifies through the Hawk Desktop"

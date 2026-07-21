@@ -544,7 +544,8 @@ export default defineComponent({
 
     &__plans {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 15px;
     }
 
     &__plans--horizontal {
