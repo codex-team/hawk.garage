@@ -421,11 +421,13 @@ const actions = {
    * Prepare payment data before opening payment widget
    *
    * @param {Function} commit - standard Vuex commit method
+   * @param {object} context - Vuex action context
    * @param {object} payload - compose payment payload
    * @param {string} payload.workspaceId - workspace id
    * @param {string} payload.tariffPlanId - plan id
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
-   * @param context
+   * @param {string} [payload.promoCode] - applied promo code value
+   * @param {object} [payload.promoUtm] - UTM params captured when promo was applied
    * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
    */
   async [COMPOSE_PAYMENT](context, payload) {
