@@ -5,13 +5,32 @@ import {
   type PromoCodeVerify
 } from '@/types/promoCode';
 
+/**
+ * Default floor for percent-discount final price when promo has no minFinalPrice
+ */
 const DEFAULT_MIN_FINAL_PRICE = 1;
+
+/**
+ * Divisor used to convert percent value into a fraction
+ */
 const PERCENT_DIVISOR = 100;
 
+/**
+ * Whether plan can be purchased (hidden plans are not sellable)
+ *
+ * @param plan - pricing plan
+ */
 function isPlanAvailableForPurchase(plan: PromoCodePricingPlan): boolean {
   return plan.isHidden !== true;
 }
 
+/**
+ * Whether promo applies to the given plan.
+ * Empty/missing applicablePlanIds means all plans.
+ *
+ * @param promo - verified promo code
+ * @param plan - pricing plan
+ */
 function isPlanApplicable(promo: PromoCodeVerify, plan: PromoCodePricingPlan): boolean {
   if (!promo.applicablePlanIds || promo.applicablePlanIds.length === 0) {
     return true;
@@ -20,12 +39,20 @@ function isPlanApplicable(promo: PromoCodeVerify, plan: PromoCodePricingPlan): b
   return promo.applicablePlanIds.includes(plan.id);
 }
 
+/**
+ * Whether plan can receive a promo discount (paid + available for purchase)
+ *
+ * @param plan - pricing plan
+ */
 function isDiscountablePlan(plan: PromoCodePricingPlan): boolean {
   return plan.monthlyCharge > 0 && isPlanAvailableForPurchase(plan);
 }
 
 /**
  * Calculates discounted price for one plan. Keep in sync with api/src/utils/promoCodePricing.ts
+ *
+ * Unknown benefit types return the original price with isApplicable=false.
+ *
  * @param promo - verified promo code
  * @param plan - selected plan
  */
