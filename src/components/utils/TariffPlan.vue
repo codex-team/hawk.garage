@@ -220,7 +220,7 @@ export default {
       margin-right: 6px;
       padding: 2px 5px;
       color: var(--color-indicator-medium);
-      font-size: 11px;
+      font-size: 13px;
       white-space: nowrap;
       background: color-mod(var(--color-indicator-medium) alpha(12%));
       border-radius: 4px;
