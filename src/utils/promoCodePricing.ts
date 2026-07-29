@@ -69,5 +69,8 @@ export function calculatePromoCodePlanPrice(
       }
 
       return result;
+
+    default:
+      return result;
   }
 }
