@@ -84,6 +84,7 @@ export function splitStringIntoTextAndCodeSegments(source: string | undefined | 
 }
 
 import { escape } from '../utils';
+import DOMPurify from 'dompurify';
 
 /**
  * Return a function that renders a limited subset of Markdown to HTML.
@@ -119,5 +120,5 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
    * @param text - raw markdown text
    * @returns HTML string safe to inject with v-html
    */
-  return (text: string) => marked.parse(escape(text), { renderer }) as string;
+  return (text: string) => DOMPurify.sanitize(marked.parse(escape(text), { renderer }) as string);
 }
