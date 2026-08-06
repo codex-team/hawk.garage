@@ -197,6 +197,50 @@ input ComposePaymentInput {
 
   """Whether card should be saved for future recurrent payments"""
   shouldSaveCard: Boolean
+
+  """Promo code value entered by user"""
+  promoCode: String
+
+  """UTM parameters captured when promo code was applied"""
+  promoUtm: UtmInput
+}
+
+"""Input for promo code verification"""
+input VerifyPromoCodeInput {
+  """Workspace id for which promo code is applied"""
+  workspaceId: ID!
+
+  """Promo code value entered by user"""
+  value: String!
+}
+
+"""Promo code benefit type"""
+enum PromoCodeBenefitType {
+  grant_plan
+  percent_discount
+  amount_discount
+  fixed_price
+}
+
+"""Verified promo code data for client-side price calculation"""
+type VerifyPromoCodeResponse {
+  """Normalized promo code value"""
+  value: String!
+
+  """Benefit type"""
+  benefitType: PromoCodeBenefitType!
+
+  """Discount percent for percent promos"""
+  percent: Int
+
+  """Fixed price amount"""
+  amount: Int
+
+  """Minimum final price after percent discount"""
+  minFinalPrice: Int
+
+  """Plan ids this promo can be applied to"""
+  applicablePlanIds: [ID!]
 }
 
 """Minimal plan info used in composePayment response"""
@@ -207,7 +251,7 @@ type ComposePaymentPlanInfo {
   """Plan name"""
   name: String!
 
-  """Monthly charge for plan"""
+  """Monthly charge for plan (full tariff price)"""
   monthlyCharge: Int!
 }
 
@@ -218,6 +262,9 @@ type ComposePaymentResponse {
 
   """Selected plan info"""
   plan: ComposePaymentPlanInfo!
+
+  """Amount to charge for this payment (may differ from plan.monthlyCharge when promo is applied)"""
+  chargeAmount: Int!
 
   """True if only card linking validation payment is expected"""
   isCardLinkOperation: Boolean!
@@ -230,6 +277,30 @@ type ComposePaymentResponse {
 
   """Next payment date (recurrent start)"""
   nextPaymentDate: DateTime!
+
+  """CloudPayments public id (merchant identifier for payment widget)"""
+  cloudPaymentsPublicId: String!
+
+  """Applied promo code data"""
+  promo: ComposePaymentPromo
+}
+
+"""Promo data returned with composePayment"""
+type ComposePaymentPromo {
+  """Applied promo code id"""
+  id: ID!
+
+  """Promo benefit type"""
+  benefitType: PromoCodeBenefitType!
+
+  """Plan price before promo"""
+  originalAmount: Int!
+
+  """Plan price after promo"""
+  finalAmount: Int!
+
+  """Actual discount amount in money"""
+  discountAmount: Int
 }
 
 """Confirmed member data in workspace"""
@@ -578,6 +649,9 @@ type Mutation {
 
   """Returns JSON data with payment link and initiate card attach procedure"""
   attachCard(language: String): BillingSession!
+
+  """Verifies promo code for workspace admin and returns benefit data"""
+  verifyPromoCode(input: VerifyPromoCodeInput!): VerifyPromoCodeResponse! @requireAdmin
 
   """Mutation marks event as visited for current user"""
   visitEvent(

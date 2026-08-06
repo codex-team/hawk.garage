@@ -16,6 +16,7 @@ import {
   CANCEL_SUBSCRIPTION,
   PAY_WITH_CARD,
   COMPOSE_PAYMENT,
+  VERIFY_PROMO_CODE,
   FETCH_WORKSPACE_SSO_SETTINGS,
   UPDATE_WORKSPACE_SSO
 } from './actionTypes';
@@ -419,16 +420,23 @@ const actions = {
   /**
    * Prepare payment data before opening payment widget
    *
-   * @param {Function} commit - standard Vuex commit method
+   * @param {object} context - Vuex action context
    * @param {object} payload - compose payment payload
    * @param {string} payload.workspaceId - workspace id
    * @param {string} payload.tariffPlanId - plan id
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
-   * @param context
+   * @param {string} [payload.promoCode] - applied promo code value
+   * @param {object} [payload.promoUtm] - UTM params captured when promo was applied
    * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
    */
-  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
-    const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
+  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false, promoCode, promoUtm }) {
+    const result = await billingApi.composePayment({
+      workspaceId,
+      tariffPlanId,
+      shouldSaveCard,
+      promoCode,
+      promoUtm,
+    });
 
     const { data } = result;
 
@@ -437,6 +445,17 @@ const actions = {
     }
 
     return data.composePayment;
+  },
+
+  /**
+   * Verify promo code and return validated benefit data.
+   *
+   * @param {object} context - Vuex action context
+   * @param {object} payload - promo code payload
+   * @returns {Promise<import('@/types/promoCode').PromoCodeVerify>}
+   */
+  async [VERIFY_PROMO_CODE](context, payload) {
+    return billingApi.verifyPromoCode(payload);
   },
 
   /**
