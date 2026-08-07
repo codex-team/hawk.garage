@@ -6,6 +6,15 @@ import AppShell from './components/AppShell.vue';
 import invitesHandler from './invitesHandler';
 import unsubscribeHandler from './unsubscribeHandler';
 import { loadAsyncComponent } from './utils';
+import {
+  captureUtmFromCurrentUrl,
+  preserveUtmQuery
+} from './components/utils/utm/utm';
+
+/**
+ * Capture attribution before route-level redirects can discard the landing query
+ */
+captureUtmFromCurrentUrl();
 
 /**
  * Empty component for routes that only use beforeEnter guards
@@ -363,6 +372,24 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
+  const queryWithUtm = preserveUtmQuery(to.query);
+  const queryKeys = Object.keys(queryWithUtm);
+  const isQueryPreserved = queryKeys.length === Object.keys(to.query).length
+    && queryKeys.every(key => JSON.stringify(queryWithUtm[key]) === JSON.stringify(to.query[key]));
+
+  /**
+   * Canonicalize every internal route with the persisted attribution
+   */
+  if (!isQueryPreserved) {
+    next({
+      path: to.path,
+      query: queryWithUtm,
+      hash: to.hash,
+      replace: true,
+    });
+
+    return;
+  }
 
   /**
    * Let `?demo=1` through before auth redirect — useDemo is not ready yet
@@ -377,13 +404,19 @@ router.beforeEach((to, from, next) => {
 
   if (store.getters.isAuthenticated) {
     if (authRoutes.test(to.fullPath)) {
-      next('/');
+      next({
+        path: '/',
+        query: preserveUtmQuery({}),
+      });
 
       return;
     }
   } else {
     if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
-      next('/login');
+      next({
+        path: '/login',
+        query: preserveUtmQuery({}),
+      });
 
       return;
     }

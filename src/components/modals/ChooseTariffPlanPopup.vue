@@ -101,7 +101,7 @@ import {
   calculatePromoCodePlanPrice
 } from '@/utils/promoCodePricing';
 import { SUPPORTED_PROMO_CODE_BENEFIT_TYPES, type PromoCodeVerify } from '@/types/promoCode';
-import { validateUtmParams } from '../utils/utm/utm';
+import { resolveUtmParams } from '../utils/utm/utm';
 
 type VerifiedPromoCode = PromoCodeVerify;
 
@@ -370,18 +370,10 @@ export default defineComponent({
     },
 
     /**
-     * Reads UTM parameters from current URL.
+     * Reads persisted UTM attribution.
      */
     getPromoUtm(): UtmInput | undefined {
-      const params = new URLSearchParams(globalThis.location.search);
-
-      return validateUtmParams({
-        source: params.get('utm_source') || undefined,
-        medium: params.get('utm_medium') || undefined,
-        campaign: params.get('utm_campaign') || undefined,
-        content: params.get('utm_content') || undefined,
-        term: params.get('utm_term') || undefined,
-      });
+      return resolveUtmParams(this.$route.query) as UtmInput | undefined;
     },
 
     /**

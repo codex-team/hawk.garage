@@ -17,7 +17,10 @@ import FormComponent from './Form';
 import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
-import { validateUtmParams } from '../utils/utm/utm';
+import {
+  preserveUtmQuery,
+  resolveUtmParams
+} from '../utils/utm/utm';
 import { getCookie } from '../../utils';
 
 export default {
@@ -43,32 +46,16 @@ export default {
   },
   computed: {
     /**
-     * Extract and validate UTM parameters from route query
+     * Return persisted UTM parameters as hidden form fields
      */
     hiddenFields() {
-      const utmFields = [];
+      const utm = resolveUtmParams(this.$route.query);
 
-      // Extract and validate each utm_ param individually
-      Object.entries(this.$route.query).forEach(([key, value]) => {
-        if (key.startsWith('utm_') && value) {
-          const cleanKey = key.replace('utm_', '');
-
-          // Validate single param
-          const singleParam = { [cleanKey]: value };
-          const validatedParam = validateUtmParams(singleParam);
-
-          // If this param is valid, add to fields
-          if (validatedParam[cleanKey]) {
-            utmFields.push({
-              name: key, // keep original utm_ prefix
-              value: validatedParam[cleanKey],
-              type: 'hidden',
-            });
-          }
-        }
-      });
-
-      return utmFields;
+      return Object.entries(utm || {}).map(([key, value]) => ({
+        name: `utm_${key}`,
+        value,
+        type: 'hidden',
+      }));
     },
 
     /**
@@ -110,10 +97,10 @@ export default {
 
         this.$router.push({
           name: 'login',
-          query: {
+          query: preserveUtmQuery({
             success: 'signup',
             emailPrefilled: email,
-          },
+          }),
         });
       } catch (e) {
         console.error(e);

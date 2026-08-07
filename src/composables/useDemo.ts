@@ -10,6 +10,7 @@ import { useRoute, type RouteLocationRaw, type Router } from 'vue-router';
 import store from '@/store';
 import { SET_TOKENS, FETCH_CURRENT_USER } from '@/store/modules/user/actionTypes';
 import { FETCH_INITIAL_DATA } from '@/store/modules/app/actionTypes';
+import { preserveUtmQuery } from '@/components/utils/utm/utm';
 import type { ComputedRef } from 'vue';
 
 type DemoControls = {
@@ -71,11 +72,9 @@ function buildLocationHref(redirectTo: RouteLocationRaw): string {
   const path = redirectTo.path
     || (typeof redirectTo.name === 'string' ? NAMED_ROUTE_PATHS[redirectTo.name] : undefined)
     || '/';
-  const query = redirectTo.query;
-
-  if (!query || typeof query !== 'object') {
-    return `${window.location.origin}${path}`;
-  }
+  const query = preserveUtmQuery(
+    (redirectTo.query || {}) as Parameters<typeof preserveUtmQuery>[0]
+  );
 
   const searchParams = new URLSearchParams();
 
