@@ -48,8 +48,9 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import CodeFragment from '../utils/CodeFragment.vue';
 import Icon from '../utils/Icon.vue';
-import * as eventsApi from '@/api/events';
+import * as aiApi from '@/api/ai';
 import { getMarkdownRenderer, splitStringIntoTextAndCodeSegments } from '@/utils/markdown';
+import { isAbortError } from '@/utils/errors';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -84,6 +85,7 @@ export default defineComponent({
       suggestion: '',
       error: '',
       renderMarkdown: (text: string) => text,
+      streamAbortController: new AbortController(),
     };
   },
   computed: {
@@ -98,17 +100,31 @@ export default defineComponent({
   async created() {
     try {
       this.renderMarkdown = await getMarkdownRenderer();
-      this.suggestion = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
+
+      await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
+        signal: this.streamAbortController.signal,
+        onTextDelta: (delta) => {
+          this.suggestion += delta;
+          this.loading = false;
+        },
+      });
 
       if (!this.suggestion) {
         this.error = this.$t('event.ai.empty') as string;
       }
-    } catch (e) {
-      this.error = this.$t('event.ai.error') as string;
-      console.error(e);
+    } catch (error) {
+      if (!isAbortError(error)) {
+        this.error = this.$t('event.ai.error') as string;
+        console.error(error);
+      }
     } finally {
-      this.loading = false;
+      if (!this.streamAbortController.signal.aborted) {
+        this.loading = false;
+      }
     }
+  },
+  beforeUnmount() {
+    this.streamAbortController.abort();
   },
 });
 </script>
