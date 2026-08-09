@@ -20,10 +20,12 @@
           v-else
           class="ai-suggestion-dialog__suggestion"
         >
-          <template v-for="(seg, idx) in segments">
+          <template
+            v-for="seg in segments"
+            :key="seg.key"
+          >
             <CodeFragment
               v-if="seg.type === 'code'"
-              :key="'code-' + idx"
               class="ai-suggestion-dialog__code"
               :lines="seg.lines"
               :lang="seg.lang || 'plaintext'"
@@ -32,9 +34,8 @@
             />
             <div
               v-else
-              :key="'text-' + idx"
               class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
-              v-html="renderMarkdown(seg.text)"
+              v-html="seg.html"
             />
           </template>
         </div>
@@ -49,7 +50,7 @@ import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import CodeFragment from '../utils/CodeFragment.vue';
 import Icon from '../utils/Icon.vue';
 import * as aiApi from '@/api/ai';
-import { getMarkdownRenderer, splitStringIntoTextAndCodeSegments } from '@/utils/markdown';
+import { getMarkdownStreamRenderer, type MarkdownNode } from '@/utils/markdown';
 import { isAbortError } from '@/utils/errors';
 import { defineComponent } from 'vue';
 
@@ -84,30 +85,25 @@ export default defineComponent({
       loading: true,
       suggestion: '',
       error: '',
-      renderMarkdown: (text: string) => text,
+      segments: [] as MarkdownNode[],
       streamAbortController: new AbortController(),
     };
   },
-  computed: {
-    /**
-     * Split AI answer into text and code segments.
-     * Code segments are fenced with ```lang ... ```
-     */
-    segments() {
-      return splitStringIntoTextAndCodeSegments((this as unknown as { suggestion: string }).suggestion);
-    },
-  },
   async created() {
     try {
-      this.renderMarkdown = await getMarkdownRenderer();
+      const markdownStreamRenderer = await getMarkdownStreamRenderer();
 
       await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
         signal: this.streamAbortController.signal,
         onTextDelta: (delta) => {
           this.suggestion += delta;
+          // TODO: Batch updates per animation frame when deltas outpace rendering.
+          this.segments = markdownStreamRenderer.append(delta);
           this.loading = false;
         },
       });
+
+      this.segments = markdownStreamRenderer.finish();
 
       if (!this.suggestion) {
         this.error = this.$t('event.ai.empty') as string;
