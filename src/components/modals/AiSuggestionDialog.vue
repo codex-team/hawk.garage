@@ -20,24 +20,26 @@
           v-else
           class="ai-suggestion-dialog__suggestion"
         >
-          <template
-            v-for="seg in segments"
-            :key="seg.key"
-          >
-            <CodeFragment
-              v-if="seg.type === 'code'"
-              class="ai-suggestion-dialog__code"
-              :lines="seg.lines"
-              :lang="seg.lang || 'plaintext'"
-              :lines-highlighted="[]"
-              :copyable="true"
-            />
-            <div
-              v-else
-              class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
-              v-html="seg.html"
-            />
-          </template>
+          <TransitionGroup name="ai-suggestion-dialog__node">
+            <template
+              v-for="seg in segments"
+              :key="seg.key"
+            >
+              <CodeFragment
+                v-if="seg.type === 'code'"
+                class="ai-suggestion-dialog__code"
+                :lines="seg.lines"
+                :lang="seg.lang || 'plaintext'"
+                :lines-highlighted="[]"
+                :copyable="true"
+              />
+              <div
+                v-else
+                class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
+                v-html="seg.html"
+              />
+            </template>
+          </TransitionGroup>
         </div>
       </div>
     </div>
@@ -172,6 +174,15 @@ export default defineComponent({
     > * + * {
       margin-block-start: var(--spacing-ml);
     }
+  }
+
+  &__node-enter-active {
+    transition: opacity 350ms ease-out, filter 200ms linear;
+  }
+
+  &__node-enter-from {
+    opacity: 0;
+    filter: blur(5px);
   }
 
   &__markdown {
