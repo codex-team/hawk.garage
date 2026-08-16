@@ -1,5 +1,5 @@
 import {
-  consumeAiSuggestionTextStream,
+  consumeAiSuggestionStream,
   type AiSuggestionStreamOptions
 } from '..';
 
@@ -216,6 +216,8 @@ This is HTML abbreviation example.`;
 const MOCK_STREAM_DELAY = 120;
 const MOCK_STREAM_CHUNK_SIZE = 100;
 
+const MOCK_TEXT_BLOCK_ID = '0';
+
 /**
  * Create an abort error compatible with Fetch stream cancellation.
  */
@@ -256,16 +258,28 @@ function waitForMockChunk(signal: AbortSignal): Promise<void> {
  * @param signal - abort signal for the active stream
  */
 function createMockResponse(signal: AbortSignal): Response {
-  const bytes = new TextEncoder().encode(MOCK_RESPONSE_TEXT);
+  const encoder = new TextEncoder();
+
+  /**
+   * Wrap a stream part the way the API frames it.
+   * @param part - part to send
+   */
+  const frame = (part: Record<string, unknown>): Uint8Array =>
+    encoder.encode(`data: ${JSON.stringify(part)}\n\n`);
 
   const body = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
-        for (let start = 0; start < bytes.length; start += MOCK_STREAM_CHUNK_SIZE) {
+        for (let start = 0; start < MOCK_RESPONSE_TEXT.length; start += MOCK_STREAM_CHUNK_SIZE) {
           await waitForMockChunk(signal);
-          controller.enqueue(bytes.slice(start, start + MOCK_STREAM_CHUNK_SIZE));
+          controller.enqueue(frame({
+            type: 'text-delta',
+            id: MOCK_TEXT_BLOCK_ID,
+            delta: MOCK_RESPONSE_TEXT.slice(start, start + MOCK_STREAM_CHUNK_SIZE),
+          }));
         }
 
+        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
       } catch (error) {
         controller.error(error);
@@ -276,13 +290,13 @@ function createMockResponse(signal: AbortSignal): Response {
   return new Response(body, {
     status: 200,
     headers: {
-      'content-type': 'text/plain; charset=utf-8',
+      'content-type': 'text/event-stream',
     },
   });
 }
 
 /**
- * Stream a deterministic plain-text suggestion in demo mode.
+ * Stream a deterministic suggestion in demo mode.
  * @param options - cancellation signal and text-delta consumer
  */
 export default async function mockStreamEventAiSuggestion(
@@ -291,5 +305,5 @@ export default async function mockStreamEventAiSuggestion(
   _originalEventId: string,
   options: AiSuggestionStreamOptions
 ): Promise<void> {
-  await consumeAiSuggestionTextStream(createMockResponse(options.signal), options);
+  await consumeAiSuggestionStream(createMockResponse(options.signal), options);
 }

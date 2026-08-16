@@ -3,13 +3,28 @@ import { API_ENDPOINT } from '@/api';
 import { withDemoMock } from '@/utils/withDemoMock';
 
 /**
- * Options for consuming an AI suggestion text stream.
+ * Options for consuming an AI suggestion stream.
  */
 export interface AiSuggestionStreamOptions {
   /** Abort the active stream when the consumer is no longer interested in it. */
   signal: AbortSignal;
   /** Receive each decoded text fragment in order. */
   onTextDelta: (delta: string) => void;
+  /** The answer was refused; whatever arrived before is not an answer. */
+  onError: (message: string) => void;
+}
+
+/**
+ * Part of the answer as the API sends it. Fields beyond the type belong to
+ * particular parts, so each is checked before use.
+ */
+interface AiSuggestionStreamPart {
+  /** Which kind of part this is; the ones not handled carry stream structure. */
+  type: string;
+  /** Next piece of the answer, on a text-delta part. */
+  delta?: string;
+  /** Why the answer was refused, on an error part. */
+  errorText?: string;
 }
 
 /**
@@ -20,15 +35,53 @@ function createAbortError(): DOMException {
 }
 
 /**
- * Decode a plain-text response body and forward text fragments to the consumer.
- * @param response - plain-text HTTP response
- * @param options - cancellation signal and text-delta consumer
+ * Hand one server-sent event to the matching callback.
+ * @param frame - single event, without its trailing blank line
+ * @param options - cancellation signal and stream consumers
  */
-export async function consumeAiSuggestionTextStream(
+function consumeFrame(frame: string, options: AiSuggestionStreamOptions): void {
+  const line = frame.trim();
+
+  if (!line.startsWith('data:')) {
+    return;
+  }
+
+  const payload = line.slice('data:'.length).trim();
+
+  if (payload === '' || payload === '[DONE]') {
+    return;
+  }
+
+  let part: AiSuggestionStreamPart;
+
+  try {
+    part = JSON.parse(payload) as AiSuggestionStreamPart;
+  } catch {
+    return;
+  }
+
+  if (part.type === 'text-delta' && typeof part.delta === 'string') {
+    options.onTextDelta(part.delta);
+  }
+
+  if (part.type === 'error' && typeof part.errorText === 'string') {
+    options.onError(part.errorText);
+  }
+}
+
+/**
+ * Read a server-sent event body and dispatch each event to the consumer.
+ *
+ * Events are buffered rather than handled per read, since a read returns
+ * whatever bytes arrived and an event can straddle two of them.
+ * @param response - text/event-stream HTTP response
+ * @param options - cancellation signal and stream consumers
+ */
+export async function consumeAiSuggestionStream(
   response: Response,
   options: AiSuggestionStreamOptions
 ): Promise<void> {
-  const { signal, onTextDelta } = options;
+  const { signal } = options;
 
   if (!response.body) {
     throw new Error('AI suggestion stream response has no body.');
@@ -36,6 +89,7 @@ export async function consumeAiSuggestionTextStream(
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
+  let buffer = '';
 
   try {
     while (true) {
@@ -44,10 +98,15 @@ export async function consumeAiSuggestionTextStream(
       }
 
       const { done, value } = await reader.read();
-      const delta = decoder.decode(value, { stream: !done });
 
-      if (delta) {
-        onTextDelta(delta);
+      buffer += decoder.decode(value, { stream: !done });
+
+      let boundary = buffer.indexOf('\n\n');
+
+      while (boundary !== -1) {
+        consumeFrame(buffer.slice(0, boundary), options);
+        buffer = buffer.slice(boundary + 2);
+        boundary = buffer.indexOf('\n\n');
       }
 
       if (done) {
@@ -55,11 +114,7 @@ export async function consumeAiSuggestionTextStream(
       }
     }
 
-    const remainingText = decoder.decode();
-
-    if (remainingText) {
-      onTextDelta(remainingText);
-    }
+    consumeFrame(buffer, options);
   } finally {
     reader.releaseLock();
   }
@@ -127,7 +182,7 @@ export const streamEventAiSuggestion = withDemoMock(
       throw new Error(await readErrorMessage(response));
     }
 
-    await consumeAiSuggestionTextStream(response, options);
+    await consumeAiSuggestionStream(response, options);
   },
   '/src/api/ai/mocks/streamEventAiSuggestion.mock.ts'
 );
