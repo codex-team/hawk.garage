@@ -103,11 +103,23 @@ export default defineComponent({
           this.segments = markdownStreamRenderer.append(delta);
           this.loading = false;
         },
+        onError: (message) => {
+          /**
+           * What arrived so far belongs to an answer the API withdrew, so it goes
+           * rather than staying on screen beside the error.
+           */
+          this.suggestion = '';
+          this.segments = [];
+          this.error = message;
+          this.loading = false;
+        },
       });
 
-      this.segments = markdownStreamRenderer.finish();
+      if (!this.error) {
+        this.segments = markdownStreamRenderer.finish();
+      }
 
-      if (!this.suggestion) {
+      if (!this.suggestion && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
     } catch (error) {
