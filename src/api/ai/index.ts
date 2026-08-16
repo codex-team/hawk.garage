@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { API_ENDPOINT } from '@/api';
 import { withDemoMock } from '@/utils/withDemoMock';
 
 /**
@@ -64,22 +66,68 @@ export async function consumeAiSuggestionTextStream(
 }
 
 /**
- * Stream an AI suggestion for an event.
- *
- * Does nothing outside demo mode.
+ * Body the API sends instead of a stream when it refuses the request.
+ */
+interface AiSuggestionStreamErrorBody {
+  /** Reason the request was refused. */
+  error?: string;
+}
+
+/**
+ * Read the error message the API sends with a failed response.
+ * @param response - response with a non-2xx status
+ */
+async function readErrorMessage(response: Response): Promise<string> {
+  try {
+    const body = await response.json() as AiSuggestionStreamErrorBody;
+
+    return body.error ?? `AI suggestion stream failed with status ${response.status}.`;
+  } catch {
+    return `AI suggestion stream failed with status ${response.status}.`;
+  }
+}
+
+/**
+ * Request the suggestion stream and hand each fragment to the consumer as it arrives.
  * @param projectId - project event is related to
  * @param eventId - event to fetch AI suggestion for
- * @param originalEventId - id of the original event
+ * @param originalEventId - id of the event the repetition belongs to
  * @param options - cancellation signal and text-delta consumer
  */
 export const streamEventAiSuggestion = withDemoMock(
   async function streamEventAiSuggestion(
-    _projectId: string,
-    _eventId: string,
-    _originalEventId: string,
-    _options: AiSuggestionStreamOptions
+    projectId: string,
+    eventId: string,
+    originalEventId: string,
+    options: AiSuggestionStreamOptions
   ): Promise<void> {
-    return undefined;
+    const query = new URLSearchParams({
+      projectId,
+      eventId,
+      originalEventId,
+    });
+
+    /**
+     * Streaming needs the response body as it arrives, which axios does not expose,
+     * so the token the axios interceptors would have attached is passed by hand.
+     */
+    const authorization = axios.defaults.headers.common.Authorization;
+    const headers = new Headers();
+
+    if (typeof authorization === 'string') {
+      headers.set('Authorization', authorization);
+    }
+
+    const response = await fetch(`${API_ENDPOINT}/integration/ai/stream?${query.toString()}`, {
+      signal: options.signal,
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(await readErrorMessage(response));
+    }
+
+    await consumeAiSuggestionTextStream(response, options);
   },
   '/src/api/ai/mocks/streamEventAiSuggestion.mock.ts'
 );
