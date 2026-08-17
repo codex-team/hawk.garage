@@ -142,6 +142,20 @@ import { escape } from '../utils';
 import DOMPurify from 'dompurify';
 
 /**
+ * What may reach the DOM. img is left out although marked emits it: the answer is
+ * built from the event payload, and a remote image in it reports back when the
+ * dialog opens.
+ */
+const ALLOWED_TAGS = [
+  'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'ul', 'ol', 'li', 'blockquote', 'code', 'pre',
+  'table', 'thead', 'tbody', 'tr', 'th', 'td',
+  'a', 'strong', 'em', 'del', 'hr', 'br',
+];
+
+const ALLOWED_ATTR = ['href', 'class'];
+
+/**
  * Return a function that renders a limited subset of Markdown to HTML.
  * @todo use Abstract syntax tree (AST) instead of only string manipulation
  * @returns a function that renders a limited subset of Markdown to HTML
@@ -151,23 +165,26 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
 
   const renderer = new Renderer();
 
-  renderer.heading = ({ tokens, depth }) => {
-    const text = marked.Parser.parseInline(tokens);
+  // this.parser, not marked.Parser: the static one builds a parser with the
+  // default renderer and never sees the overrides below.
+  renderer.heading = function ({ tokens, depth }) {
+    const text = this.parser.parseInline(tokens);
     const cls = depth === 1 ? 'text-h1' : depth === 2 ? 'text-h2' : 'text-ui-large';
 
     return `<h${depth} class="${cls}">${text}</h${depth}>`;
   };
 
-  renderer.paragraph = ({ tokens }) => {
-    return `<p class="text-p">${marked.Parser.parseInline(tokens)}</p>`;
+  renderer.paragraph = function ({ tokens }) {
+    return `<p class="text-p">${this.parser.parseInline(tokens)}</p>`;
   };
 
-  renderer.blockquote = ({ tokens }) => {
-    return `<blockquote class="text-blockquote">\n${marked.Parser.parse(tokens)}\n</blockquote>\n`;
+  renderer.blockquote = function ({ tokens }) {
+    return `<blockquote class="text-blockquote">\n${this.parser.parse(tokens)}\n</blockquote>\n`;
   };
 
   renderer.codespan = ({ text }) => {
-    return `<code class="text-monospaced">${text}</code>`;
+    // marked hands a code span to a custom renderer unescaped.
+    return `<code class="text-monospaced">${escape(text)}</code>`;
   };
 
   /**
@@ -175,7 +192,10 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
    * @param text - raw markdown text
    * @returns HTML string safe to inject with v-html
    */
-  return (text: string) => DOMPurify.sanitize(marked.parse(escape(text), { renderer }) as string);
+  return (text: string) => DOMPurify.sanitize(marked.parse(text, { renderer }) as string, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+  });
 }
 
 /**

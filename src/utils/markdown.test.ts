@@ -84,17 +84,12 @@ const CHUNK_ACROSS_FENCE = 7;
 describe('getMarkdownRenderer', () => {
   describe('literal characters', () => {
     it.each([
-      ['an apostrophe', 'it doesn\'t run', 'it doesn\'t run'],
-      ['ampersands', 'compare a && b', 'compare a && b'],
-      ['an angle bracket', 'a < b', 'a < b'],
-    ])('shows %s in text as written', (_case, source, expected) => {
-      expect(render(source).textContent).toContain(expected);
-    });
-
-    it.fails.each([
-      ['an apostrophe', '`reading \'subscription\'`', 'reading \'subscription\''],
-      ['a quote', '`x === "active"`', 'x === "active"'],
-    ])('shows %s in inline code as written', (_case, source, expected) => {
+      ['an apostrophe in text', 'it doesn\'t run', 'it doesn\'t run'],
+      ['ampersands in text', 'compare a && b', 'compare a && b'],
+      ['an angle bracket in text', 'a < b', 'a < b'],
+      ['an apostrophe in inline code', '`reading \'subscription\'`', 'reading \'subscription\''],
+      ['a quote in inline code', '`x === "active"`', 'x === "active"'],
+    ])('shows %s as written', (_case, source, expected) => {
       expect(render(source).textContent).toContain(expected);
     });
   });
@@ -105,10 +100,6 @@ describe('getMarkdownRenderer', () => {
       ['a table', '| a |\n|---|\n| b |', 'table td'],
     ])('builds %s', (_case, source, selector) => {
       expect(render(source).querySelector(selector)).not.toBeNull();
-    });
-
-    it.fails('builds a blockquote', () => {
-      expect(render('> quoted').querySelector('blockquote')).not.toBeNull();
     });
   });
 
@@ -140,12 +131,11 @@ describe('getMarkdownRenderer', () => {
       ['a paragraph', 'plain', 'p', 'text-p'],
       ['a top-level heading', '# title', 'h1', 'text-h1'],
       ['a second-level heading', '## title', 'h2', 'text-h2'],
+      ['inline code', 'an `identifier` here', 'code', 'text-monospaced'],
+      ['a blockquote', '> quoted', 'blockquote', 'text-blockquote'],
+      ['a paragraph inside a blockquote', '> quoted', 'blockquote p', 'text-p'],
     ])('marks %s', (_case, source, selector, className) => {
       expect(render(source).querySelector(selector)?.className).toBe(className);
-    });
-
-    it.fails('marks inline code', () => {
-      expect(render('an `identifier` here').querySelector('code')?.className).toBe('text-monospaced');
     });
   });
 });
