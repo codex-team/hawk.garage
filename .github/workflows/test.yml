@@ -1,0 +1,23 @@
+name: Run unit tests
+
+on:
+  - push
+
+jobs:
+  test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Enable corepack for yarn version management
+        run: corepack enable
+
+      - run: yarn install --immutable
+
+      - run: yarn test
