@@ -76,7 +76,9 @@ function createCodeSegment(lang: string | undefined, code: string, source: strin
 function splitMarkdownSourceSegments(source: string | undefined | null): MarkdownSourceSegment[] {
   const text = source || '';
   const segments: MarkdownSourceSegment[] = [];
-  const fenceRe = /```([\w+-]+)?\r?\n([\s\S]*?)```/g;
+  // An indented fence belongs to the list or quote around it, so only one at the
+  // start of a line becomes a segment of its own.
+  const fenceRe = /^```([\w+-]+)?\r?\n([\s\S]*?)^```/gm;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -270,9 +272,21 @@ export async function getMarkdownStreamRenderer(): Promise<MarkdownStreamRendere
     const lastContentToken = tokens[lastContentTokenIndex];
     const isClosedCodeFence = lastContentToken.type === 'code'
       && /^```[\w+-]*\r?\n[\s\S]*?```$/.test(lastContentToken.raw);
-    const completedTokens = lastContentTokenIndex < tokens.length - 1 || isClosedCodeFence
-      ? tokens
-      : tokens.slice(0, lastContentTokenIndex);
+    const isSettled = lastContentTokenIndex < tokens.length - 1 || isClosedCodeFence;
+    let end = isSettled ? tokens.length : lastContentTokenIndex;
+    let lastBlockEnd = end;
+
+    while (lastBlockEnd > 0 && tokens[lastBlockEnd - 1].type === 'space') {
+      lastBlockEnd--;
+    }
+
+    // A list keeps absorbing what follows: a blank line does not end it, and a
+    // lone "2" reads as a paragraph until its dot arrives.
+    if (lastBlockEnd > 0 && tokens[lastBlockEnd - 1].type === 'list') {
+      end = lastBlockEnd - 1;
+    }
+
+    const completedTokens = tokens.slice(0, end);
 
     return completedTokens.reduce((length, token) => length + token.raw.length, 0);
   };

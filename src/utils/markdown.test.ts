@@ -141,19 +141,13 @@ describe('getMarkdownRenderer', () => {
 });
 
 describe('getMarkdownStreamRenderer', () => {
-  it('renders the same content however the source is chunked', async () => {
+  it.each([
+    ['a fenced block', ANSWER],
+    ['a fence inside a list', ANSWER_WITH_NESTED_FENCE],
+  ])('renders the same content however %s is chunked', async (_case, source) => {
     const [whole, byCharacter] = await Promise.all([
-      stream(ANSWER, ANSWER.length),
-      stream(ANSWER, 1),
-    ]);
-
-    expect(content(byCharacter)).toBe(content(whole));
-  });
-
-  it.fails('renders the same content when the fence sits inside a list', async () => {
-    const [whole, byCharacter] = await Promise.all([
-      stream(ANSWER_WITH_NESTED_FENCE, ANSWER_WITH_NESTED_FENCE.length),
-      stream(ANSWER_WITH_NESTED_FENCE, 1),
+      stream(source, source.length),
+      stream(source, 1),
     ]);
 
     expect(content(byCharacter)).toBe(content(whole));
@@ -195,10 +189,10 @@ describe('splitStringIntoTextAndCodeSegments', () => {
     expect(segment.type).toBe('text');
   });
 
-  it('finds a fence nested in a list item', () => {
+  it('leaves a fence nested in a list as text', () => {
     const source = '1. Fix it:\n\n   ```ts\n   const x = 1;\n   ```\n';
     const segments = splitStringIntoTextAndCodeSegments(source);
 
-    expect(segments.filter(segment => segment.type === 'code')).toHaveLength(1);
+    expect(segments.filter(segment => segment.type === 'code')).toHaveLength(0);
   });
 });
