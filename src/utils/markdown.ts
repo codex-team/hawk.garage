@@ -96,19 +96,21 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
 
   const renderer = new Renderer();
 
-  renderer.heading = ({ tokens, depth }) => {
-    const text = marked.Parser.parseInline(tokens);
+  // this.parser, not marked.Parser: the static one builds a parser with the
+  // default renderer and never sees the overrides below.
+  renderer.heading = function ({ tokens, depth }) {
+    const text = this.parser.parseInline(tokens);
     const cls = depth === 1 ? 'text-h1' : depth === 2 ? 'text-h2' : 'text-ui-large';
 
     return `<h${depth} class="${cls}">${text}</h${depth}>`;
   };
 
-  renderer.paragraph = ({ tokens }) => {
-    return `<p class="text-p">${marked.Parser.parseInline(tokens)}</p>`;
+  renderer.paragraph = function ({ tokens }) {
+    return `<p class="text-p">${this.parser.parseInline(tokens)}</p>`;
   };
 
-  renderer.blockquote = ({ tokens }) => {
-    return `<blockquote class="text-blockquote">\n${marked.Parser.parse(tokens)}\n</blockquote>\n`;
+  renderer.blockquote = function ({ tokens }) {
+    return `<blockquote class="text-blockquote">\n${this.parser.parse(tokens)}\n</blockquote>\n`;
   };
 
   renderer.codespan = ({ text }) => {
