@@ -1,5 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { getMarkdownRenderer, splitStringIntoTextAndCodeSegments } from './markdown';
+import {
+  getMarkdownRenderer,
+  getMarkdownStreamRenderer,
+  splitStringIntoTextAndCodeSegments,
+  type MarkdownNode
+} from './markdown';
 
 let renderMarkdown: (text: string) => string;
 
@@ -19,6 +24,50 @@ function render(source: string): HTMLElement {
 
   return host;
 }
+
+/**
+ * Feed a source through the streaming renderer in fixed-size chunks.
+ * @param source - markdown text
+ * @param chunkSize - characters per append call
+ * @returns nodes left after the stream is finished
+ */
+async function stream(source: string, chunkSize: number): Promise<MarkdownNode[]> {
+  const renderer = await getMarkdownStreamRenderer();
+
+  for (let at = 0; at < source.length; at += chunkSize) {
+    renderer.append(source.slice(at, at + chunkSize));
+  }
+
+  return renderer.finish();
+}
+
+/**
+ * Flatten nodes to the content they put on screen.
+ * @param nodes - rendered nodes
+ * @returns rendered content as one string
+ */
+function content(nodes: MarkdownNode[]): string {
+  return nodes
+    .map(node => (node.type === 'code'
+      ? `[${node.lang}]${node.lines.map(line => line.content).join('\n')}`
+      : node.html))
+    .join('');
+}
+
+const ANSWER = [
+  '## Cause',
+  '',
+  'The `subscription` field is not set.',
+  '',
+  '```ts',
+  'if (workspace.subscription?.status === "active") {',
+  '}',
+  '```',
+  '',
+  'Check the caller.',
+].join('\n');
+
+const CHUNK_ACROSS_FENCE = 7;
 
 describe('getMarkdownRenderer', () => {
   describe('literal characters', () => {
@@ -76,6 +125,31 @@ describe('getMarkdownRenderer', () => {
     ])('should mark %s', (_case, source, selector, className) => {
       expect(render(source).querySelector(selector)?.className).toBe(className);
     });
+  });
+});
+
+describe('getMarkdownStreamRenderer', () => {
+  it('should render the same content however the source is chunked', async () => {
+    const [whole, byCharacter] = await Promise.all([
+      stream(ANSWER, ANSWER.length),
+      stream(ANSWER, 1),
+    ]);
+
+    expect(content(byCharacter)).toBe(content(whole));
+  });
+
+  it('should close a code block split across chunks', async () => {
+    const code = (await stream(ANSWER, CHUNK_ACROSS_FENCE)).filter(node => node.type === 'code');
+
+    expect(code).toMatchObject([{ lang: 'ts' }]);
+  });
+
+  it('should keep the key of a block that is still growing', async () => {
+    const renderer = await getMarkdownStreamRenderer();
+    const [first] = renderer.append('The subscription');
+    const [grown] = renderer.append(' field is not set.');
+
+    expect(grown.key).toBe(first.key);
   });
 });
 
