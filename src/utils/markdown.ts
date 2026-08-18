@@ -87,6 +87,20 @@ import { escape } from '../utils';
 import DOMPurify from 'dompurify';
 
 /**
+ * What may reach the DOM. img is left out although marked emits it: the answer is
+ * built from the event payload, and a remote image in it reports back when the
+ * dialog opens.
+ */
+const ALLOWED_TAGS = [
+  'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'ul', 'ol', 'li', 'blockquote', 'code', 'pre',
+  'table', 'thead', 'tbody', 'tr', 'th', 'td',
+  'a', 'strong', 'em', 'del', 'hr', 'br',
+];
+
+const ALLOWED_ATTR = ['href', 'class'];
+
+/**
  * Return a function that renders a limited subset of Markdown to HTML.
  * @todo use Abstract syntax tree (AST) instead of only string manipulation
  * @returns a function that renders a limited subset of Markdown to HTML
@@ -114,7 +128,8 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
   };
 
   renderer.codespan = ({ text }) => {
-    return `<code class="text-monospaced">${text}</code>`;
+    // marked hands a code span to a custom renderer unescaped.
+    return `<code class="text-monospaced">${escape(text)}</code>`;
   };
 
   /**
@@ -122,5 +137,8 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
    * @param text - raw markdown text
    * @returns HTML string safe to inject with v-html
    */
-  return (text: string) => DOMPurify.sanitize(marked.parse(escape(text), { renderer }) as string);
+  return (text: string) => DOMPurify.sanitize(marked.parse(text, { renderer }) as string, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+  });
 }
