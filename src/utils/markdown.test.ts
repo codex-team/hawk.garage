@@ -67,6 +67,18 @@ const ANSWER = [
   'Check the caller.',
 ].join('\n');
 
+const ANSWER_WITH_NESTED_FENCE = [
+  '1. Add a guard:',
+  '',
+  '   ```ts',
+  '   if (!workspace.subscription) {',
+  '     return;',
+  '   }',
+  '   ```',
+  '',
+  '2. Ship it.',
+].join('\n');
+
 const CHUNK_ACROSS_FENCE = 7;
 
 describe('getMarkdownRenderer', () => {
@@ -138,6 +150,15 @@ describe('getMarkdownStreamRenderer', () => {
     expect(content(byCharacter)).toBe(content(whole));
   });
 
+  it('should render the same content when the fence sits inside a list', async () => {
+    const [whole, byCharacter] = await Promise.all([
+      stream(ANSWER_WITH_NESTED_FENCE, ANSWER_WITH_NESTED_FENCE.length),
+      stream(ANSWER_WITH_NESTED_FENCE, 1),
+    ]);
+
+    expect(content(byCharacter)).toBe(content(whole));
+  });
+
   it('should close a code block split across chunks', async () => {
     const code = (await stream(ANSWER, CHUNK_ACROSS_FENCE)).filter(node => node.type === 'code');
 
@@ -172,5 +193,12 @@ describe('splitStringIntoTextAndCodeSegments', () => {
     const [segment] = splitStringIntoTextAndCodeSegments('```ts\nconst x = 1;');
 
     expect(segment.type).toBe('text');
+  });
+
+  it('should leave a fence nested in a list as text', () => {
+    const source = '1. Fix it:\n\n   ```ts\n   const x = 1;\n   ```\n';
+    const segments = splitStringIntoTextAndCodeSegments(source);
+
+    expect(segments.filter(segment => segment.type === 'code')).toHaveLength(0);
   });
 });
