@@ -53,6 +53,7 @@ describe('getMarkdownRenderer', () => {
       ['an image smuggled out of inline code', '`</code><img src=x>`', 'img'],
       ['an image smuggled out of inline code inside a heading', '# `</code><img src=x>`', 'img'],
       ['an image smuggled out of inline code inside a blockquote', '> `</code><img src=x>`', 'img'],
+      ['an image written in markdown', '![pixel](https://attacker.example/pixel.png)', 'img'],
       ['a form', '<form action="https://attacker.example"></form>', 'form'],
       ['a stylesheet', '<style>body { display: none }</style>', 'style'],
     ])('should keep %s out of the DOM', (_case, source, selector) => {
