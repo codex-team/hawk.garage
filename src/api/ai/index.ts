@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_ENDPOINT } from '@/api';
+import * as api from '@/api';
 import { withDemoMock } from '@/utils/withDemoMock';
 
 /**
@@ -162,20 +161,8 @@ export const streamEventAiSuggestion = withDemoMock(
       originalEventId,
     });
 
-    /**
-     * Streaming needs the response body as it arrives, which axios does not expose,
-     * so the token the axios interceptors would have attached is passed by hand.
-     */
-    const authorization = axios.defaults.headers.common.Authorization;
-    const headers = new Headers();
-
-    if (typeof authorization === 'string') {
-      headers.set('Authorization', authorization);
-    }
-
-    const response = await fetch(`${API_ENDPOINT}/integration/ai/stream?${query.toString()}`, {
+    const response = await api.callRestStream(`/integration/ai/stream?${query.toString()}`, {
       signal: options.signal,
-      headers,
     });
 
     if (!response.ok) {
