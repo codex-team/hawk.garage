@@ -384,6 +384,44 @@ export async function callRest<T = any>(url: string, options: RestRequestOptions
 }
 
 /**
+ * REST API streaming request options
+ */
+interface RestStreamRequestOptions {
+  /**
+   * AbortSignal to cancel the request
+   */
+  signal?: AbortSignal;
+
+  /**
+   * Additional headers
+   */
+  headers?: Record<string, string>;
+}
+
+/**
+ * Makes REST API request that returns a raw Response for streaming.
+ * Uses fetch with the auth token configured for axios interceptors.
+ * @param url - REST endpoint URL (relative to API_ENDPOINT or absolute)
+ * @param options - request options (signal, headers)
+ * @returns Promise with raw Response object
+ */
+export async function callRestStream(url: string, options: RestStreamRequestOptions = {}): Promise<Response> {
+  const { signal, headers = {} } = options;
+  const fullUrl = url.startsWith('http') ? url : `${API_ENDPOINT}${url}`;
+  const authorization = axios.defaults.headers.common.Authorization;
+  const requestHeaders: Record<string, string> = { ...headers };
+
+  if (typeof authorization === 'string') {
+    requestHeaders.Authorization = authorization;
+  }
+
+  return fetch(fullUrl, {
+    signal,
+    headers: requestHeaders,
+  });
+}
+
+/**
  * Hawk API error codes
  */
 export const errorCodes = {
