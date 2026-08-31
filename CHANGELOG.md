@@ -3,7 +3,6 @@
 ## 0.x.x
 
 
-
 ### 0.4
 
 - 0.4.1 - ...
@@ -12,10 +11,10 @@
 
 - Fixed: workspace settings now correctly works both for direct visits and router-segue.
 - Fixed problem with opening Team after new workspace creation
-- Affected components go to typescript. 
+- Affected components go to typescript.
 - Improved router links inheritance
-- Improved project structure: 
--- `projects` folder renamed to `project`. 
+- Improved project structure:
+-- `projects` folder renamed to `project`.
 -- Project Settings moved to `/project/settings`
 -- `workspaces` renamed to `workspace`
 - Improve settings components naming and consistence:
@@ -30,7 +29,7 @@
 
 ### 0.2.x
 
-- 0.2.0 - `New` - Changelog started 
+- 0.2.0 - `New` - Changelog started
 - 0.2.1 - `New` - Add "ripple" amimation effect to clickable elements
-- 0.2.2 - `New` - `JS Events`: User-Agent and Window size details added 
- 
+- 0.2.2 - `New` - `JS Events`: User-Agent and Window size details added
+
