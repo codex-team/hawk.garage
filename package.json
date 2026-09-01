@@ -13,6 +13,7 @@
     "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
     "get-schema": "get-graphql-schema http://api-staging.hawk.so/graphql > schema.graphql",
+    "test": "node --experimental-strip-types --test src/components/utils/utm/utm.test.ts",
     "cy:run": "cypress run",
     "e2e:ci": "start-server-and-test serve 8080 cy:run"
   },

@@ -1,4 +1,9 @@
 /**
+ * Route query-like object (vue-router LocationQuery is compatible)
+ */
+type QueryLike = Record<string, unknown>;
+
+/**
  * Valid UTM parameter keys
  */
 const VALID_UTM_KEYS = ['source', 'medium', 'campaign', 'content', 'term'];
@@ -46,6 +51,103 @@ export function validateUtmParams(utm: any): Record<string, string> | undefined 
     }
 
     result[key] = value;
+  }
+
+  return result;
+}
+
+/**
+ * First non-empty string from a query value (string or array)
+ * @param value - query value
+ */
+function firstQueryString(value: unknown): string | undefined {
+  if (Array.isArray(value)) {
+    const found = value.find((item) => typeof item === 'string' && item.length > 0);
+
+    return typeof found === 'string' ? found : undefined;
+  }
+
+  if (typeof value === 'string' && value.length > 0) {
+    return value;
+  }
+
+  return undefined;
+}
+
+/**
+ * Valid `utm_*` params from a route query, still prefixed
+ * @param query - current or previous route query
+ */
+export function extractUtmQuery(query: QueryLike): Record<string, string> {
+  const unprefixed: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(query)) {
+    if (!key.startsWith('utm_')) {
+      continue;
+    }
+
+    const raw = firstQueryString(value);
+
+    if (raw === undefined) {
+      continue;
+    }
+
+    unprefixed[key.slice('utm_'.length)] = raw;
+  }
+
+  const validated = validateUtmParams(unprefixed);
+
+  if (!validated) {
+    return {};
+  }
+
+  const prefixed: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(validated)) {
+    prefixed[`utm_${key}`] = value;
+  }
+
+  return prefixed;
+}
+
+/**
+ * Copy UTM from the previous route when the next one has none.
+ * Returns null when the query should stay as-is.
+ * @param toQuery - destination route query
+ * @param fromQuery - source route query
+ */
+export function mergeUtmIntoQuery<T extends QueryLike>(toQuery: T, fromQuery: QueryLike): T | null {
+  if (Object.keys(extractUtmQuery(toQuery)).length > 0) {
+    return null;
+  }
+
+  const fromUtm = extractUtmQuery(fromQuery);
+
+  if (Object.keys(fromUtm).length === 0) {
+    return null;
+  }
+
+  return {
+    ...toQuery,
+    ...fromUtm,
+  };
+}
+
+/**
+ * UTM object for API calls (`source`, `medium`, …) from a route query
+ * @param query - route query
+ */
+export function getUtmFromQuery(query: QueryLike): Record<string, string> | undefined {
+  const prefixed = extractUtmQuery(query);
+
+  if (Object.keys(prefixed).length === 0) {
+    return undefined;
+  }
+
+  const result: Record<string, string> = {};
+
+  for (const [key, value] of Object.entries(prefixed)) {
+    result[key.slice('utm_'.length)] = value;
   }
 
   return result;

@@ -20,6 +20,70 @@ describe('Sign Up', () => {
       .should('eq', '/login');
   });
 
+  it('should keep UTM params when switching between signup and login', () => {
+    // Arrange
+    cy.visitHawk('sign-up?utm_source=google&utm_medium=cpc&utm_campaign=spring');
+
+    // Act
+    cy.contains('Login')
+      .click();
+
+    // Assert
+    cy.location('pathname')
+      .should('eq', '/login');
+    cy.location('search')
+      .should('include', 'utm_source=google')
+      .and('include', 'utm_medium=cpc')
+      .and('include', 'utm_campaign=spring');
+
+    // Act
+    cy.contains('Sign up')
+      .click();
+
+    // Assert
+    cy.location('pathname')
+      .should('eq', '/sign-up');
+    cy.location('search')
+      .should('include', 'utm_source=google');
+  });
+
+  it('should keep UTM params on login after visiting a protected page', () => {
+    // Arrange
+    const path = '?utm_source=google&utm_campaign=spring';
+
+    // Act
+    cy.visitHawk(path);
+
+    // Assert
+    cy.location('pathname')
+      .should('eq', '/login');
+    cy.location('search')
+      .should('include', 'utm_source=google')
+      .and('include', 'utm_campaign=spring');
+  });
+
+  it('should send UTM params in signup after navigating through login', () => {
+    // Arrange
+    cy.intercept('POST', '/graphql').as('graphql');
+    cy.visitHawk('sign-up?utm_source=google&utm_campaign=spring');
+    cy.contains('Login')
+      .click();
+    cy.contains('Sign up')
+      .click();
+
+    // Act
+    cy.register(user.email);
+
+    // Assert
+    cy.wait('@graphql')
+      .then((interception) => {
+        expect(interception.request.body.variables.utm).to.deep.include({
+          source: 'google',
+          campaign: 'spring',
+        });
+      });
+  });
+
   it('should open login page after signup', () => {
     cy.register(user.email);
 
