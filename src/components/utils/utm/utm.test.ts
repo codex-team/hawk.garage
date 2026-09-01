@@ -38,8 +38,14 @@ describe('UTM query persistence', () => {
   describe('mergeUtmIntoQuery', () => {
     it('should copy UTM onto the next route when it has none', () => {
       // Arrange
-      const toQuery = { success: 'signup', emailPrefilled: 'user@test.com' };
-      const fromQuery = { utm_source: 'google', utm_campaign: 'spring' };
+      const toQuery = {
+        success: 'signup',
+        emailPrefilled: 'user@test.com',
+      };
+      const fromQuery = {
+        utm_source: 'google',
+        utm_campaign: 'spring',
+      };
 
       // Act
       const result = mergeUtmIntoQuery(toQuery, fromQuery);
@@ -81,7 +87,11 @@ describe('UTM query persistence', () => {
   describe('getUtmFromQuery', () => {
     it('should return API-shaped UTM for signup', () => {
       // Arrange
-      const query = { utm_source: 'google', utm_medium: 'cpc', foo: 'bar' };
+      const query = {
+        utm_source: 'google',
+        utm_medium: 'cpc',
+        foo: 'bar',
+      };
 
       // Act
       const result = getUtmFromQuery(query);
