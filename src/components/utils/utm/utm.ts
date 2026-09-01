@@ -62,7 +62,7 @@ export function validateUtmParams(utm: any): Record<string, string> | undefined 
  */
 function firstQueryString(value: unknown): string | undefined {
   if (Array.isArray(value)) {
-    const found = value.find((item) => typeof item === 'string' && item.length > 0);
+    const found = value.find(item => typeof item === 'string' && item.length > 0);
 
     return typeof found === 'string' ? found : undefined;
   }
