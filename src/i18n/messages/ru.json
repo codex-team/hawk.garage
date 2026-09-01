@@ -520,7 +520,6 @@
       "didNotAcceptRecurrentPaymentAgreement": "Чтобы продолжить, примите соглашение",
       "didNotAcceptChargingEveryMonth": "Подтвердите согласие на ежемесячные списания",
       "allowCardSaving": "Сохранить карту для будущих платежей",
-      "promoRecurrentNote": "Промокод действует на первый платёж. Далее — {amount} в месяц.",
       "goToPaymentService": "Перейти к оплате",
       "payWithSelectedCard": "Оплатить с выбранной карты",
       "newCard": "Новая карта",
@@ -530,6 +529,14 @@
         "readMore": "Подробнее об оплате по счету",
         "emailSubject": "Запрос оплаты плана {planName} через выставление счета. Воркспейс {workspaceName} (id {workspaceId})"
       }
+    },
+    "promoCode": {
+      "label": "Промокод",
+      "placeholder": "Введите промокод",
+      "apply": "Применить",
+      "applied": "Применён",
+      "invalid": "Промокод недействителен",
+      "recurrentNote": "Промокод действует только на первый платёж. Следующие платежи — {price}."
     },
     "notifications": {
       "error": "Произошла ошибка во время попытки провести платеж. Пожалуйста, попробуйте снова"
@@ -546,18 +553,6 @@
     "cloudPaymentsWidget": {
       "description": "Оплата тарифа \"{tariffPlanName}\" для воркспейса {workspaceName} на месяц.",
       "descriptionCardLinking": "Списание 1 рубля для проверки карты. Сумма будет автоматически возвращена."
-    },
-    "promoCode": {
-      "title": "Промокод",
-      "havePromoCode": "У меня есть промокод",
-      "applied": "Применён промокод {code}",
-      "inputLabel": "Промокод",
-      "inputPlaceholder": "Введите промокод",
-      "apply": "Применить",
-      "fixedPriceLabel": "Промокод",
-      "notifications": {
-        "applied": "Промокод применён"
-      }
     },
     "cardLinking": {
       "description": "Вы собираетесь оформить подписку, которая начнёт действовать с",
@@ -655,7 +650,13 @@
     "copy": "Копировать событие",
     "removeConfirmation": "Вы уверены, что хотите удалить это событие? Все связанные данные также будут удалены.",
     "removeButton": "Удалить",
-    "removeSuccess": "Событие успешно удалено"
+    "removeSuccess": "Событие успешно удалено",
+    "ai": {
+      "ask": "Спросить AI",
+      "empty": "Не удалось получить ответ от AI",
+      "error": "Произошла ошибка при получении ответа от AI",
+      "titlePrefix": "Ошибка"
+    }
   },
   "common": {
     "workspace": "Воркспейc",
@@ -754,7 +755,6 @@
     "Something went wrong": "Произошла ошибка. Хоук уже сообщил нам о ней.",
     "Invalid refresh token": "Ваша сессия завершена. Чтобы продолжить, авторизуйтесь снова.",
     "PROMO_CODE_INVALID": "Промокод недействителен",
-    "PROMO_CODE_LIMIT_EXCEEDED": "Лимит применений промокода исчерпан",
-    "PROMO_CODE_VERIFY_FAILED": "Не удалось применить промокод. Попробуйте позже"
+    "PROMO_CODE_LIMIT_EXCEEDED": "Лимит использования промокода исчерпан"
   }
 }

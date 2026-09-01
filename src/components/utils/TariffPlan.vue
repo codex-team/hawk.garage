@@ -13,28 +13,7 @@
     </div>
     <div class="tariff-plan__footer">
       <div class="tariff-plan__price">
-        <template v-if="hasDiscount">
-          <span class="tariff-plan__price-discounted">
-            <span
-              v-if="discountLabel"
-              class="tariff-plan__discount-label"
-            >
-              {{ discountLabel }}
-            </span>
-            <span class="tariff-plan__price-old">
-              {{ formatPriceAmount(originalPrice) }}
-            </span>
-            <span class="tariff-plan__price-new">
-              {{ formatPriceAmount(price) }}
-            </span>
-            <span class="tariff-plan__price-period">
-              {{ pricePeriodSuffix }}
-            </span>
-          </span>
-        </template>
-        <template v-else>
-          {{ formatPrice(price) }}
-        </template>
+        {{ price === 0 ? $t('common.free') : `${spacedNumber(price)}${$t('common.moneyPerMonth', { currency: currencySign })}` }}
       </div>
 
       <UiButton
@@ -81,20 +60,6 @@ export default {
       required: true,
     },
     /**
-     * Plan price before discount
-     */
-    originalPrice: {
-      type: Number,
-      default: null,
-    },
-    /**
-     * Discount label to show near price
-     */
-    discountLabel: {
-      type: String,
-      default: '',
-    },
-    /**
      * Currency for price
      */
     currency: {
@@ -117,25 +82,9 @@ export default {
     currencySign() {
       return getCurrencySign(this.currency);
     },
-    hasDiscount() {
-      return this.originalPrice !== null && this.originalPrice !== this.price;
-    },
-    pricePeriodSuffix() {
-      return this.$t('common.moneyPerMonth', { currency: '' }).trim();
-    },
   },
   methods: {
     spacedNumber,
-    formatPriceAmount(price) {
-      return price === 0 ? this.$t('common.free') : `${spacedNumber(price)}${this.currencySign}`;
-    },
-    formatPrice(price) {
-      if (price === 0) {
-        return this.$t('common.free');
-      }
-
-      return `${this.formatPriceAmount(price)} ${this.pricePeriodSuffix}`;
-    },
   },
 };
 </script>
@@ -190,40 +139,6 @@ export default {
       font-weight: 600;
       font-size: 13px;
       white-space: nowrap;
-    }
-
-    &__price-old {
-      margin-right: 4px;
-      color: var(--color-text-second);
-      text-decoration: line-through;
-      opacity: 0.7;
-    }
-
-    &__price-discounted {
-      display: inline-flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      white-space: nowrap;
-    }
-
-    &__price-new {
-      margin-right: 4px;
-      color: var(--color-indicator-medium);
-    }
-
-    &__price-period {
-      color: var(--color-text-second);
-    }
-
-    &__discount-label {
-      display: inline-block;
-      margin-right: 6px;
-      padding: 2px 5px;
-      color: var(--color-indicator-medium);
-      font-size: 13px;
-      white-space: nowrap;
-      background: color-mod(var(--color-indicator-medium) alpha(12%));
-      border-radius: 4px;
     }
 
     &__button {

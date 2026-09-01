@@ -98,6 +98,17 @@ export default defineComponent({
       required: true,
     },
   },
+  computed: {
+    workspace(): Workspace {
+      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
+    },
+    currentMembership(): Member | undefined {
+      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
+    },
+    userCanEdit(): boolean {
+      return this.currentMembership ? (this.currentMembership as ConfirmedMember).isAdmin : false;
+    },
+  },
   data() {
     return {
       /**
@@ -112,17 +123,6 @@ export default defineComponent({
        */
       showSubmitButton: false,
     };
-  },
-  computed: {
-    workspace(): Workspace {
-      return this.$store.getters.getWorkspaceByProjectId(this.project.id);
-    },
-    currentMembership(): Member | undefined {
-      return this.$store.getters.getCurrentUserInWorkspace(this.workspace);
-    },
-    userCanEdit(): boolean {
-      return this.currentMembership ? (this.currentMembership as ConfirmedMember).isAdmin : false;
-    },
   },
   methods: {
     /**

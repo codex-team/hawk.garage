@@ -81,13 +81,13 @@
                 {{ $t('common.price') }}
               </div>
               <div class="payment-details__details-item-value">
-                <template v-if="hasPromoDiscount">
-                  <span class="payment-details__price-old">{{ originalPriceLabel }}</span>
-                  <span class="payment-details__price-new">{{ price }}</span>
-                </template>
-                <template v-else>
-                  {{ price }}
-                </template>
+                <span
+                  v-if="hasPromoDiscount"
+                  class="payment-details__price-old"
+                >
+                  {{ fullPrice }}
+                </span>
+                {{ price }}
               </div>
             </div>
 
@@ -95,7 +95,7 @@
               v-if="hasPromoDiscount && isRecurrent"
               class="payment-details__promo-note"
             >
-              {{ promoRecurrentNote }}
+              {{ $t('billing.promoCode.recurrentNote', { price: fullPrice }) }}
             </div>
 
             <!--The next payment date -->
@@ -112,6 +112,35 @@
             </div> -->
           </div>
         </template>
+
+        <div
+          v-if="paymentData && !paymentData.isCardLinkOperation"
+          class="payment-details__promo"
+        >
+          <TextFieldSet
+            v-model="promoCode"
+            name="promoCode"
+            :label="$t('billing.promoCode.label')"
+            :placeholder="$t('billing.promoCode.placeholder')"
+            :is-invalid="Boolean(promoError)"
+            :disabled="isPromoApplying || hasPromoDiscount"
+            auto-complete="off"
+          />
+          <UiButton
+            small
+            secondary
+            :content="$t(hasPromoDiscount ? 'billing.promoCode.applied' : 'billing.promoCode.apply')"
+            :disabled="!promoCode.trim() || isPromoApplying || hasPromoDiscount"
+            :is-loading="isPromoApplying"
+            @click.prevent="applyPromoCode"
+          />
+          <div
+            v-if="promoError"
+            class="payment-details__promo-error"
+          >
+            {{ promoError }}
+          </div>
+        </div>
 
         <!--Card-->
         <!-- <CustomSelect
@@ -183,6 +212,7 @@
             class="payment-details__bottom-button"
             :submit="isAcceptedAllAgreements"
             :secondary="!isAcceptedAllAgreements"
+            :disabled="isPromoApplying"
             @click.prevent="onGoToServicePayment"
           />
 
@@ -227,7 +257,7 @@ import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
 // import CustomSelect from '../forms/CustomSelect.vue';
-// import TextFieldSet from '../forms/TextFieldset.vue';
+import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
@@ -241,13 +271,13 @@ import { RESET_MODAL_DIALOG } from '@/store/modules/modalDialog/actionTypes';
 import { PAY_WITH_CARD, GET_BUSINESS_OPERATIONS, FETCH_WORKSPACE, COMPOSE_PAYMENT } from '@/store/modules/workspaces/actionTypes';
 import { BankCard } from '../../types/bankCard';
 import CustomSelectOption from '../../types/customSelectOption';
-import type { PayWithCardInput } from '@/api/billing';
-import type { Utm as UtmInput } from '@hawk.so/types';
+import { PayWithCardInput } from '../../api/billing';
 import { BusinessOperation } from '../../types/business-operation';
 import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 import { getCurrencySign, prettyFullDate } from '@/utils';
 import { i18n } from '../../i18n';
+import { validateUtmParams } from '../utils/utm/utm';
 
 /**
  * Id for the 'New card' option in select
@@ -275,7 +305,7 @@ export default defineComponent({
     PopupDialog,
     EntityImage,
     // CustomSelect,
-    // TextFieldSet,
+    TextFieldSet,
     UiCheckboxWithLabel,
   },
   props: {
@@ -301,22 +331,6 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-
-    /**
-     * Applied promo code value.
-     */
-    promoCode: {
-      type: String,
-      default: '',
-    },
-
-    /**
-     * UTM parameters captured when promo was applied.
-     */
-    promoUtm: {
-      type: Object as () => UtmInput | undefined,
-      default: undefined,
-    },
   },
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
@@ -333,6 +347,10 @@ export default defineComponent({
        * Payment data received from API
        */
       paymentData: null as BeforePaymentPayload | null,
+
+      promoCode: '',
+      promoError: '',
+      isPromoApplying: false,
 
       /**
        * New card id to use it in template
@@ -422,57 +440,25 @@ export default defineComponent({
      * example: 100$
      */
     price(): string {
-      return this.$t('common.moneyPerMonth', {
-        currency: `${this.paymentAmount}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
-      }).toString();
-    },
-
-    /**
-     * Actual payment amount returned by API.
-     */
-    paymentAmount(): number {
-      return this.paymentData?.chargeAmount
-        ?? this.paymentData?.promo?.finalAmount
-        ?? this.paymentData?.plan.monthlyCharge
-        ?? this.plan.monthlyCharge;
-    },
-
-    /**
-     * Whether promo discount applies to this payment.
-     */
-    hasPromoDiscount(): boolean {
-      if (!this.paymentData?.promo) {
-        return false;
-      }
-
-      const fullPrice = this.paymentData.plan.monthlyCharge ?? this.plan.monthlyCharge;
-
-      return this.paymentAmount < fullPrice;
-    },
-
-    /**
-     * Full plan price label before promo.
-     */
-    originalPriceLabel(): string {
-      const amount = this.paymentData?.promo?.originalAmount
-        ?? this.paymentData?.plan.monthlyCharge
-        ?? this.plan.monthlyCharge;
+      const amount = this.paymentData?.chargeAmount ?? this.plan.monthlyCharge;
 
       return this.$t('common.moneyPerMonth', {
         currency: `${amount}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
       }).toString();
     },
 
-    /**
-     * Note that promo applies only to the first payment.
-     */
-    promoRecurrentNote(): string {
-      const fullAmount = this.paymentData?.plan.monthlyCharge ?? this.plan.monthlyCharge;
-      const currency = getCurrencySign(this.plan.monthlyChargeCurrency);
-
-      return this.$t('billing.paymentDetails.promoRecurrentNote', {
-        amount: `${fullAmount}${currency}`,
+    fullPrice(): string {
+      return this.$t('common.moneyPerMonth', {
+        currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
       }).toString();
+    },
+
+    hasPromoDiscount(): boolean {
+      return Boolean(
+        this.paymentData
+        && !this.paymentData.isCardLinkOperation
+        && this.paymentData.chargeAmount < this.plan.monthlyCharge
+      );
     },
 
     /**
@@ -561,14 +547,7 @@ export default defineComponent({
         return;
       }
 
-      // Fetch payment data when component is mounted via store
-      this.paymentData = await this.$store.dispatch(COMPOSE_PAYMENT, {
-        workspaceId: this.workspaceId,
-        tariffPlanId: this.tariffPlanId,
-        shouldSaveCard: this.shouldSaveCard,
-        promoCode: this.promoCode || undefined,
-        promoUtm: this.promoUtm,
-      });
+      this.paymentData = await this.composePayment();
     } catch (e) {
       const error = e as Error;
       const key = 'errors.' + error.message;
@@ -587,10 +566,62 @@ export default defineComponent({
   },
   methods: {
     prettyFullDate,
+
+    composePayment(promoCode?: string): Promise<BeforePaymentPayload> {
+      return this.$store.dispatch(COMPOSE_PAYMENT, {
+        workspaceId: this.workspaceId,
+        tariffPlanId: this.tariffPlanId,
+        shouldSaveCard: this.shouldSaveCard,
+        promoCode,
+        promoUtm: promoCode ? this.getPromoUtm() : undefined,
+      });
+    },
+
+    getPromoUtm(): Record<string, string> | undefined {
+      const params = new URLSearchParams(globalThis.location.search);
+
+      return validateUtmParams({
+        source: params.get('utm_source'),
+        medium: params.get('utm_medium'),
+        campaign: params.get('utm_campaign'),
+        content: params.get('utm_content'),
+        term: params.get('utm_term'),
+      });
+    },
+
+    async applyPromoCode(): Promise<void> {
+      const promoCode = this.promoCode.trim();
+
+      if (!promoCode) {
+        return;
+      }
+
+      this.isPromoApplying = true;
+      this.promoError = '';
+
+      try {
+        this.paymentData = await this.composePayment(promoCode);
+        this.promoCode = promoCode.toUpperCase();
+      } catch (e) {
+        const error = e as Error;
+        const key = `errors.${error.message}`;
+
+        this.promoError = this.$te(key)
+          ? this.$t(key).toString()
+          : this.$t('billing.promoCode.invalid').toString();
+      } finally {
+        this.isPromoApplying = false;
+      }
+    },
+
     /**
      * Open service payment
      */
     async onGoToServicePayment(): Promise<void> {
+      if (this.isPromoApplying) {
+        return;
+      }
+
       // Check if demo mode is active
       if (this.$store.state.demo?.isActive) {
         notifier.show({
@@ -675,11 +706,7 @@ export default defineComponent({
     },
 
     /**
-     * Method prepares CloudPayments widget and charges money from entered card.
-     *
-     * Amount is taken from server-calculated chargeAmount. Promo discounts affect
-     * only the first widget charge, while recurrent.amount is always the full
-     * plan monthly price for later automatic subscription renewals.
+     * Method prepares widget and charges money from entered card
      *
      * @param {BeforePaymentPayload} data — server response that sent after beforePay request
      */
@@ -697,16 +724,15 @@ export default defineComponent({
           recurrent: {
             interval,
             period: 1,
+            amount: data.plan.monthlyCharge,
           },
         };
 
         if (data.nextPaymentDate) {
           paymentData.cloudPayments.recurrent.startDate = data.nextPaymentDate;
-          paymentData.cloudPayments.recurrent.amount = data.plan.monthlyCharge;
         }
       }
 
-      const amount = data.chargeAmount;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
       const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
@@ -717,7 +743,7 @@ export default defineComponent({
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
-          amount,
+          amount: data.chargeAmount,
           currency: data.currency,
           email: this.email,
 
@@ -815,21 +841,29 @@ export default defineComponent({
   }
 
   &__price-old {
-    margin-right: 8px;
+    margin-right: 6px;
     color: var(--color-text-second);
-    font-weight: normal;
     text-decoration: line-through;
   }
 
-  &__price-new {
-    color: var(--color-text-main);
+  &__promo-note {
+    color: var(--color-text-second);
+    font-weight: normal;
+    font-size: 13px;
   }
 
-  &__promo-note {
-    margin: -8px 0 20px;
-    color: var(--color-text-second);
+  &__promo {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 8px 12px;
+    margin-bottom: 28px;
+  }
+
+  &__promo-error {
+    grid-column: 1 / -1;
+    color: var(--color-indicator-critical);
     font-size: 13px;
-    line-height: 1.4;
   }
 
   &__card {
