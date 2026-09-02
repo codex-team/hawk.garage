@@ -530,6 +530,14 @@
         "emailSubject": "Request for payment by invoice. Workspace {workspaceName} (id {workspaceId}). Plan {planName}"
       }
     },
+    "promoCode": {
+      "label": "Promo code",
+      "placeholder": "Enter promo code",
+      "apply": "Apply",
+      "applied": "Applied",
+      "invalid": "Promo code is invalid",
+      "recurrentNote": "The promo applies to the first payment only. Next payments will be {price}."
+    },
     "notifications": {
       "error": "A payment processing error occurred. Please try again"
     },
@@ -745,6 +753,8 @@
   },
   "errors": {
     "Something went wrong": "Error occurred. Hawk just informed us about it.",
-    "You need to refresh your tokens": "Your session has expired. Please log in again."
+    "You need to refresh your tokens": "Your session has expired. Please log in again.",
+    "PROMO_CODE_INVALID": "Promo code is invalid",
+    "PROMO_CODE_LIMIT_EXCEEDED": "Promo code usage limit has been reached"
   }
 }
