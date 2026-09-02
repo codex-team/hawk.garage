@@ -3,7 +3,6 @@
     <FormComponent
       class="auth-page__form"
       :fields="fields"
-      :hidden-fields="hiddenFields"
       :submit-text="submitText"
       :message="message"
       :helper-text="isVisitedByInvite ? $t('authPages.inviteHelper') : null"
@@ -17,7 +16,7 @@ import FormComponent from './Form';
 import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
-import { getUtmFromQuery } from '../utils/utm/utm';
+import { getStoredUtm } from '../utils/utm/utm';
 import { getCookie } from '../../utils';
 
 export default {
@@ -43,27 +42,10 @@ export default {
   },
   computed: {
     /**
-     * Extract and validate UTM parameters from route query
-     */
-    hiddenFields() {
-      const utm = getUtmFromQuery(this.$route.query);
-
-      if (!utm) {
-        return [];
-      }
-
-      return Object.entries(utm).map(([key, value]) => ({
-        name: `utm_${key}`,
-        value,
-        type: 'hidden',
-      }));
-    },
-
-    /**
-     * Get UTM data as object for API calls
+     * UTM captured on landing (including utm_demo)
      */
     utmData() {
-      return getUtmFromQuery(this.$route.query);
+      return getStoredUtm();
     },
 
     /**

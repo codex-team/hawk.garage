@@ -20,6 +20,11 @@ const VALID_UTM_CHARACTERS = /^[a-zA-Z0-9\s\-_.]+$/;
 const MAX_UTM_VALUE_LENGTH = 50;
 
 /**
+ * Session storage key for captured UTM params
+ */
+export const UTM_STORAGE_KEY = 'hawk_utm';
+
+/**
  * Validates and filters UTM parameters
  * @param utm - UTM parameters to validate
  * @returns - filtered valid UTM parameters
@@ -75,10 +80,10 @@ function firstQueryString(value: unknown): string | undefined {
 }
 
 /**
- * Valid `utm_*` params from a route query, still prefixed
- * @param query - current or previous route query
+ * UTM object for API calls (`source`, `medium`, …) from a route query
+ * @param query - route query
  */
-export function extractUtmQuery(query: QueryLike): Record<string, string> {
+export function getUtmFromQuery(query: QueryLike): Record<string, string> | undefined {
   const unprefixed: Record<string, string> = {};
 
   for (const [key, value] of Object.entries(query)) {
@@ -97,58 +102,77 @@ export function extractUtmQuery(query: QueryLike): Record<string, string> {
 
   const validated = validateUtmParams(unprefixed);
 
-  if (!validated) {
-    return {};
-  }
-
-  const prefixed: Record<string, string> = {};
-
-  for (const [key, value] of Object.entries(validated)) {
-    prefixed[`utm_${key}`] = value;
-  }
-
-  return prefixed;
-}
-
-/**
- * Copy UTM from the previous route when the next one has none.
- * Returns null when the query should stay as-is.
- * @param toQuery - destination route query
- * @param fromQuery - source route query
- */
-export function mergeUtmIntoQuery<T extends QueryLike>(toQuery: T, fromQuery: QueryLike): T | null {
-  if (Object.keys(extractUtmQuery(toQuery)).length > 0) {
-    return null;
-  }
-
-  const fromUtm = extractUtmQuery(fromQuery);
-
-  if (Object.keys(fromUtm).length === 0) {
-    return null;
-  }
-
-  return {
-    ...toQuery,
-    ...fromUtm,
-  };
-}
-
-/**
- * UTM object for API calls (`source`, `medium`, …) from a route query
- * @param query - route query
- */
-export function getUtmFromQuery(query: QueryLike): Record<string, string> | undefined {
-  const prefixed = extractUtmQuery(query);
-
-  if (Object.keys(prefixed).length === 0) {
+  if (!validated || Object.keys(validated).length === 0) {
     return undefined;
   }
 
-  const result: Record<string, string> = {};
+  return validated;
+}
 
-  for (const [key, value] of Object.entries(prefixed)) {
-    result[key.slice('utm_'.length)] = value;
+/**
+ * @param utm - validated UTM
+ */
+function writeUtm(utm: Record<string, string>): void {
+  try {
+    sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(utm));
+  } catch {
+    // sessionStorage may be unavailable
+  }
+}
+
+/**
+ * Stored UTM for signup
+ */
+export function getStoredUtm(): Record<string, string> | undefined {
+  try {
+    const raw = sessionStorage.getItem(UTM_STORAGE_KEY);
+
+    if (!raw) {
+      return undefined;
+    }
+
+    const parsed = JSON.parse(raw) as unknown;
+    const validated = validateUtmParams(parsed);
+
+    if (!validated || Object.keys(validated).length === 0) {
+      return undefined;
+    }
+
+    return validated;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Persist valid UTM from the current URL. Campaign fields are first-touch.
+ * @param query - route query
+ */
+export function captureUtmFromQuery(query: QueryLike): void {
+  const incoming = getUtmFromQuery(query);
+
+  if (!incoming) {
+    return;
   }
 
-  return result;
+  const stored = getStoredUtm() ?? {};
+  const next: Record<string, string> = { ...stored };
+
+  for (const [key, value] of Object.entries(incoming)) {
+    if (stored[key] === undefined) {
+      next[key] = value;
+    }
+  }
+
+  writeUtm(next);
+}
+
+/**
+ * Registration from demo overwrites source
+ */
+export function saveDemoUtm(): void {
+  writeUtm({
+    ...getStoredUtm(),
+    source: 'demo',
+  });
 }

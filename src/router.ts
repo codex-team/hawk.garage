@@ -6,7 +6,7 @@ import AppShell from './components/AppShell.vue';
 import invitesHandler from './invitesHandler';
 import unsubscribeHandler from './unsubscribeHandler';
 import { loadAsyncComponent } from './utils';
-import { extractUtmQuery, mergeUtmIntoQuery } from './components/utils/utm/utm';
+import { captureUtmFromQuery } from './components/utils/utm/utm';
 
 /**
  * Empty component for routes that only use beforeEnter guards
@@ -364,27 +364,15 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
-  const mergedQuery = mergeUtmIntoQuery(to.query, from.query);
-  const query = mergedQuery ?? to.query;
-  const utmQuery = extractUtmQuery(query);
+
+  captureUtmFromQuery(to.query);
 
   /**
    * Let `?demo=1` through before auth redirect — useDemo is not ready yet
    * (App mounts only after this navigation), and would never see the query
    * if we bounced to /login first.
    */
-  if (query.demo === '1') {
-    if (mergedQuery) {
-      next({
-        path: to.path,
-        query,
-        hash: to.hash,
-        replace: true,
-      });
-
-      return;
-    }
-
+  if (to.query.demo === '1') {
     next();
 
     return;
@@ -392,31 +380,16 @@ router.beforeEach((to, from, next) => {
 
   if (store.getters.isAuthenticated) {
     if (authRoutes.test(to.fullPath)) {
-      next({
-        path: '/',
-        query: utmQuery,
-      });
+      next('/');
 
       return;
     }
-  } else if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
-    next({
-      path: '/login',
-      query: utmQuery,
-    });
+  } else {
+    if (!authRoutes.test(to.fullPath) && !routesAvailableWithoutAuth.test(to.fullPath)) {
+      next('/login');
 
-    return;
-  }
-
-  if (mergedQuery) {
-    next({
-      path: to.path,
-      query,
-      hash: to.hash,
-      replace: true,
-    });
-
-    return;
+      return;
+    }
   }
 
   next();

@@ -20,34 +20,25 @@ describe('Sign Up', () => {
       .should('eq', '/login');
   });
 
-  it('should keep UTM params when switching between signup and login', () => {
+  it('should store UTM from the landing URL in sessionStorage', () => {
     // Arrange
-    cy.visitHawk('sign-up?utm_source=google&utm_medium=cpc&utm_campaign=spring');
+    const path = 'sign-up?utm_source=google&utm_medium=cpc&utm_campaign=spring';
 
     // Act
-    cy.contains('Login')
-      .click();
+    cy.visitHawk(path);
 
     // Assert
-    cy.location('pathname')
-      .should('eq', '/login');
-    cy.location('search')
-      .should('include', 'utm_source=google')
-      .and('include', 'utm_medium=cpc')
-      .and('include', 'utm_campaign=spring');
-
-    // Act
-    cy.contains('Sign up')
-      .click();
-
-    // Assert
-    cy.location('pathname')
-      .should('eq', '/sign-up');
-    cy.location('search')
-      .should('include', 'utm_source=google');
+    cy.window()
+      .then((win) => {
+        expect(JSON.parse(win.sessionStorage.getItem('hawk_utm') ?? '{}')).to.deep.include({
+          source: 'google',
+          medium: 'cpc',
+          campaign: 'spring',
+        });
+      });
   });
 
-  it('should keep UTM params on login after visiting a protected page', () => {
+  it('should store UTM when redirected from a protected page to login', () => {
     // Arrange
     const path = '?utm_source=google&utm_campaign=spring';
 
@@ -57,12 +48,16 @@ describe('Sign Up', () => {
     // Assert
     cy.location('pathname')
       .should('eq', '/login');
-    cy.location('search')
-      .should('include', 'utm_source=google')
-      .and('include', 'utm_campaign=spring');
+    cy.window()
+      .then((win) => {
+        expect(JSON.parse(win.sessionStorage.getItem('hawk_utm') ?? '{}')).to.deep.include({
+          source: 'google',
+          campaign: 'spring',
+        });
+      });
   });
 
-  it('should send UTM params in signup after navigating through login', () => {
+  it('should send stored UTM in signup after navigating through login', () => {
     // Arrange
     cy.intercept('POST', '/graphql').as('graphql');
     cy.visitHawk('sign-up?utm_source=google&utm_campaign=spring');
