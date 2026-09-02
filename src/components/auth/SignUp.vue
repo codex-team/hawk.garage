@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     /**
-     * UTM captured on landing (including utm_demo)
+     * UTM captured on the first landing in this tab
      */
     utmData() {
       return getStoredUtm();

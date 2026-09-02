@@ -107,7 +107,7 @@ describe('UTM session storage', () => {
       });
     });
 
-    it('should keep the first campaign UTM if a later URL has different tags', () => {
+    it('should keep first-touch UTM and fill missing fields from later URLs', () => {
       // Arrange
       captureUtmFromQuery({
         utm_source: 'google',
