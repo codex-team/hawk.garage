@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import { useDemo } from '../composables/useDemo';
+import { saveDemoUtm } from './utils/utm/utm';
 
 import UiButton from './utils/UiButton.vue';
 
@@ -37,19 +38,11 @@ const onDisableClick = (): void => {
 };
 
 const onRegisterClick = (): void => {
-  /* eslint-disable camelcase */
-  const registrationUtm = {
-    utm_source: 'demo',
-    utm_medium: 'demo_banner',
-    utm_campaign: 'demo_mode',
-    utm_content: 'registration_button',
-  };
-  /* eslint-enable camelcase */
+  saveDemoUtm();
 
   void disableDemo({
     redirectTo: {
       name: 'sign-up',
-      query: registrationUtm,
     },
   });
 };

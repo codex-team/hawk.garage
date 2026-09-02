@@ -1,6 +1,6 @@
 {
   "name": "hawk.so",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,7 @@
     "storybook": "vue-cli-service storybook:serve -p 6006 -c config/storybook -s ./public",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
     "get-schema": "get-graphql-schema http://api-staging.hawk.so/graphql > schema.graphql",
+    "test": "node --experimental-strip-types --test \"src/**/*.test.ts\"",
     "cy:run": "cypress run",
     "e2e:ci": "start-server-and-test serve 8080 cy:run"
   },
@@ -23,6 +24,7 @@
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
     "cssnano": "^7.1.1",
+    "dompurify": "^3.4.12",
     "fast-glob": "^3.3.3",
     "highlight.js": "^11.11.1",
     "http-server": "^14.1.1",

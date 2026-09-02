@@ -85,8 +85,8 @@ export default {
      * @returns {string} image background color (if image URL is not provided)
      */
     bgColor() {
-      if (this.isImageShowing) {
-        return 'none';
+      if (this.image) {
+        return 'transparent';
       }
       if (this.id) {
         return getEntityColor(this.id);

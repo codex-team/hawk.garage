@@ -6,6 +6,7 @@ import AppShell from './components/AppShell.vue';
 import invitesHandler from './invitesHandler';
 import unsubscribeHandler from './unsubscribeHandler';
 import { loadAsyncComponent } from './utils';
+import { captureUtmFromQuery } from './components/utils/utm/utm';
 
 /**
  * Empty component for routes that only use beforeEnter guards
@@ -363,6 +364,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authRoutes = /^\/(login|sign-up|recover)/;
   const routesAvailableWithoutAuth = /^\/(join|unsubscribe)/;
+
+  captureUtmFromQuery(to.query);
 
   /**
    * Let `?demo=1` through before auth redirect — useDemo is not ready yet
