@@ -120,11 +120,12 @@ Cypress.Commands.add('register', (email: string) => {
 });
 
 /**
- * Clears localStorage
+ * Clears localStorage and sessionStorage
  */
 Cypress.Commands.add('clearStorage', () => {
   cy.window()
     .then(win => {
       win.localStorage.clear();
+      win.sessionStorage.clear();
     });
 });

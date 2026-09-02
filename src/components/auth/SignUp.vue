@@ -3,7 +3,6 @@
     <FormComponent
       class="auth-page__form"
       :fields="fields"
-      :hidden-fields="hiddenFields"
       :submit-text="submitText"
       :message="message"
       :helper-text="isVisitedByInvite ? $t('authPages.inviteHelper') : null"
@@ -17,7 +16,7 @@ import FormComponent from './Form';
 import { SIGN_UP } from '../../store/modules/user/actionTypes';
 import { offlineErrorMessage } from '../../mixins/offlineErrorMessage';
 import notifier from 'codex-notifier';
-import { validateUtmParams } from '../utils/utm/utm';
+import { getStoredUtm } from '../utils/utm/utm';
 import { getCookie } from '../../utils';
 
 export default {
@@ -43,48 +42,10 @@ export default {
   },
   computed: {
     /**
-     * Extract and validate UTM parameters from route query
-     */
-    hiddenFields() {
-      const utmFields = [];
-
-      // Extract and validate each utm_ param individually
-      Object.entries(this.$route.query).forEach(([key, value]) => {
-        if (key.startsWith('utm_') && value) {
-          const cleanKey = key.replace('utm_', '');
-
-          // Validate single param
-          const singleParam = { [cleanKey]: value };
-          const validatedParam = validateUtmParams(singleParam);
-
-          // If this param is valid, add to fields
-          if (validatedParam[cleanKey]) {
-            utmFields.push({
-              name: key, // keep original utm_ prefix
-              value: validatedParam[cleanKey],
-              type: 'hidden',
-            });
-          }
-        }
-      });
-
-      return utmFields;
-    },
-
-    /**
-     * Get UTM data as object for API calls
+     * UTM captured on the first landing in this tab
      */
     utmData() {
-      const utmData = {};
-
-      this.hiddenFields.forEach((field) => {
-        // Remove 'utm_' prefix from field names
-        const cleanKey = field.name.replace('utm_', '');
-
-        utmData[cleanKey] = field.value;
-      });
-
-      return Object.keys(utmData).length > 0 ? utmData : undefined;
+      return getStoredUtm();
     },
 
     /**
