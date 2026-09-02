@@ -71,6 +71,8 @@ describe('getMarkdownRenderer', () => {
       ['a top-level heading', '# title', 'h1', 'text-h1'],
       ['a second-level heading', '## title', 'h2', 'text-h2'],
       ['inline code', 'an `identifier` here', 'code', 'text-monospaced'],
+      ['a blockquote', '> quoted', 'blockquote', 'text-blockquote'],
+      ['a paragraph inside a blockquote', '> quoted', 'blockquote p', 'text-p'],
     ])('should mark %s', (_case, source, selector, className) => {
       expect(render(source).querySelector(selector)?.className).toBe(className);
     });
