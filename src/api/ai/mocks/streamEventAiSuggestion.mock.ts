@@ -1,3 +1,4 @@
+import type { AiStreamPart } from '@hawk.so/types';
 import {
   consumeAiSuggestionStream,
   type AiSuggestionStreamOptions
@@ -262,9 +263,10 @@ function createMockResponse(signal: AbortSignal): Response {
 
   /**
    * Wrap a stream part the way the API frames it.
-   * @param part - part to send
+   * @param part - part to send, carrying the block id the API puts on text
+   *               parts and the consumer ignores
    */
-  const frame = (part: Record<string, unknown>): Uint8Array =>
+  const frame = (part: AiStreamPart & { id?: string }): Uint8Array =>
     encoder.encode(`data: ${JSON.stringify(part)}\n\n`);
 
   const body = new ReadableStream<Uint8Array>({

@@ -1,3 +1,4 @@
+import type { AiStreamPart } from '@hawk.so/types';
 import * as api from '@/api';
 import { withDemoMock } from '@/utils/withDemoMock';
 
@@ -11,19 +12,6 @@ export interface AiSuggestionStreamOptions {
   onTextDelta: (delta: string) => void;
   /** The answer was refused; whatever arrived before is not an answer. */
   onError: (message: string) => void;
-}
-
-/**
- * Part of the answer as the API sends it. Fields beyond the type belong to
- * particular parts, so each is checked before use.
- */
-interface AiSuggestionStreamPart {
-  /** Which kind of part this is; the ones not handled carry stream structure. */
-  type: string;
-  /** Next piece of the answer, on a text-delta part. */
-  delta?: string;
-  /** Why the answer was refused, on an error part. */
-  errorText?: string;
 }
 
 /**
@@ -51,19 +39,19 @@ function consumeFrame(frame: string, options: AiSuggestionStreamOptions): void {
     return;
   }
 
-  let part: AiSuggestionStreamPart;
+  let part: AiStreamPart;
 
   try {
-    part = JSON.parse(payload) as AiSuggestionStreamPart;
+    part = JSON.parse(payload) as AiStreamPart;
   } catch {
     return;
   }
 
-  if (part.type === 'text-delta' && typeof part.delta === 'string') {
+  if (part.type === 'text-delta') {
     options.onTextDelta(part.delta);
   }
 
-  if (part.type === 'error' && typeof part.errorText === 'string') {
+  if (part.type === 'error') {
     options.onError(part.errorText);
   }
 }
