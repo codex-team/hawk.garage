@@ -251,7 +251,9 @@ export async function getMarkdownStreamRenderer(): Promise<MarkdownStreamRendere
     });
   };
 
-  // Find the source prefix that cannot be extended by later text.
+  // Find the source prefix that cannot be extended by later text. Ignores that a
+  // reference-style link (`[x][id]` defined by a later `[id]: url` line) can finalize
+  // before its definition arrives, since real answers don't use that syntax.
   const getCompletedSourceLength = (text: string): number => {
     const tokens = marked.lexer(text);
     let lastContentTokenIndex = -1;

@@ -1,229 +1,45 @@
+import type { AiStreamPart } from '@hawk.so/types';
 import {
   consumeAiSuggestionStream,
   type AiSuggestionStreamOptions
 } from '..';
+import { createAbortError } from '@/utils/sse';
+import { isAbortError } from '@/utils/errors';
 
-const MOCK_RESPONSE_TEXT = `
-# h1 Heading 8-)
-## h2 Heading
-### h3 Heading
-#### h4 Heading
-##### h5 Heading
-###### h6 Heading
+const MOCK_RESPONSE_TEXT = `# Cause
 
+The crash happens because \`workspace.subscription\` is \`undefined\` for workspaces created before the billing migration, and the code assumes it **always** exists.
 
-## Typographic replacements
+## Short summary
 
-Enable typographer option to see result.
+\`checkAccess\` reads \`workspace.subscription.status\` without checking whether \`subscription\` exists at all. It fails for *every* workspace that predates the migration, not just some of them.
 
-(c) (C) (r) (R) (tm) (TM) +-
-
-test.. test... test..... test?..... test!....
-
-!!!!!! ???? ,,  -- ---
-
-"Smartypants, double quotes" and 'single quotes'
-
-
-## Emphasis
-
-**This is bold text**
-
-__This is bold text__
-
-*This is italic text*
-
-_This is italic text_
-
-~~Strikethrough~~
-
-
-## Blockquotes
-
-
-> Blockquotes can also be nested...
->> ...by using additional greater-than signs right next to each other...
-> > > ...or with spaces between arrows.
-
-
-## Lists
-
-Unordered
-
-+ Create a list by starting a line with
-+ Sub-lists are made by indenting 2 spaces:
-  - Marker character change forces new list start:
-    * Ac tristique libero volutpat at
-    + Facilisis in pretium nisl aliquet
-    - Nulla volutpat aliquam velit
-+ Very easy!
-
-Ordered
-
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
-
-
-1. You can use sequential numbers...
-1. ...or keep all the numbers as \`1.\`
-
-Start numbering with offset:
-
-57. foo
-1. bar
-
-
-## Code
-
-Inline \`code\`
-
-Indented code
-
-    // Some comments
-    line 1 of code
-    line 2 of code
-    line 3 of code
-
-
-Syntax highlighting
-
-\`\`\`js
-const foo = function (bar) {
-  return bar++;
-};
-
-console.log(foo(5));
+\`\`\`ts
+function checkAccess(workspace: Workspace): boolean {
+  return workspace.subscription.status === 'active';
+}
 \`\`\`
 
-## Tables
+> Any workspace created before the migration hits this on the very first check. It isn't intermittent.
 
-| Option | Description |
-| ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
+The failure looks like this:
 
-Right aligned columns
+- \`TypeError: Cannot read properties of undefined (reading 'status')\`
+- Thrown on the first protected action after signing in
+- Never recovers on retry, since the workspace record never changes
 
-| Option | Description |
-| ------:| -----------:|
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
+## How to fix it
 
+1. Guard the read with an explicit \`subscription\` check, or use [optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) before reading \`status\`
+2. Backfill the missing field for the affected workspaces
+3. Remove the guard once the backfill has run
 
-## Links
-
-[link text](http://dev.nodeca.com)
-
-[link with title](http://nodeca.github.io/pica/demo/ "title text!")
-
-Autoconverted link https://github.com/nodeca/pica (enable linkify to see)
-
-
-## Images
-
-![Minion](https://octodex.github.com/images/minion.png)
-![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
-
-Like links, Images also have a footnote style syntax
-
-![Alt text][id]
-
-With a reference later in the document defining the URL location:
-
-[id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
-
-
-## Plugins
-
-The killer feature of \`markdown-it\` is very effective support of
-[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
-
-
-### [Emojies](https://github.com/markdown-it/markdown-it-emoji)
-
-> Classic markup: :wink: :cry: :laughing: :yum:
->
-> Shortcuts (emoticons): :-) :-( 8-) ;)
-
-see [how to change output](https://github.com/markdown-it/markdown-it-emoji#change-output) with twemoji.
-
-
-### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
-
-- 19^th^
-- H~2~O
-
-
-### [\<ins>](https://github.com/markdown-it/markdown-it-ins)
-
-++Inserted text++
-
-
-### [\<mark>](https://github.com/markdown-it/markdown-it-mark)
-
-==Marked text==
-
-
-### [Footnotes](https://github.com/markdown-it/markdown-it-footnote)
-
-Footnote 1 link[^first].
-
-Footnote 2 link[^second].
-
-Inline footnote^[Text of inline footnote] definition.
-
-Duplicated footnote reference[^second].
-
-[^first]: Footnote **can have markup**
-
-    and multiple paragraphs.
-
-[^second]: Footnote text.
-
-
-### [Definition lists](https://github.com/markdown-it/markdown-it-deflist)
-
-Term 1
-
-:   Definition 1
-with lazy continuation.
-
-Term 2 with *inline markup*
-
-:   Definition 2
-
-        { some code, part of Definition 2 }
-
-    Third paragraph of definition 2.
-
-_Compact style:_
-
-Term 1
-  ~ Definition 1
-
-Term 2
-  ~ Definition 2a
-  ~ Definition 2b
-
-
-### [Abbreviations](https://github.com/markdown-it/markdown-it-abbr)
-
-This is HTML abbreviation example.`;
+Either step alone stops the crash. Doing both keeps the code simple once the backfill lands.`;
 
 const MOCK_STREAM_DELAY = 120;
 const MOCK_STREAM_CHUNK_SIZE = 100;
 
 const MOCK_TEXT_BLOCK_ID = '0';
-
-/**
- * Create an abort error compatible with Fetch stream cancellation.
- */
-function createAbortError(): DOMException {
-  return new DOMException('The AI suggestion stream was aborted.', 'AbortError');
-}
 
 /**
  * Wait before emitting the next mock chunk, unless the stream is aborted.
@@ -254,20 +70,21 @@ function waitForMockChunk(signal: AbortSignal): Promise<void> {
 }
 
 /**
- * Build a plain UTF-8 response with a readable text stream.
+ * Build a text/event-stream body carrying the mock answer.
  * @param signal - abort signal for the active stream
  */
-function createMockResponse(signal: AbortSignal): Response {
+function createMockStream(signal: AbortSignal): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder();
 
   /**
    * Wrap a stream part the way the API frames it.
-   * @param part - part to send
+   * @param part - part to send, carrying the block id the API puts on text
+   *               parts and the consumer ignores
    */
-  const frame = (part: Record<string, unknown>): Uint8Array =>
+  const frame = (part: AiStreamPart & { id?: string }): Uint8Array =>
     encoder.encode(`data: ${JSON.stringify(part)}\n\n`);
 
-  const body = new ReadableStream<Uint8Array>({
+  return new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
         for (let start = 0; start < MOCK_RESPONSE_TEXT.length; start += MOCK_STREAM_CHUNK_SIZE) {
@@ -279,18 +96,10 @@ function createMockResponse(signal: AbortSignal): Response {
           }));
         }
 
-        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
       } catch (error) {
         controller.error(error);
       }
-    },
-  });
-
-  return new Response(body, {
-    status: 200,
-    headers: {
-      'content-type': 'text/event-stream',
     },
   });
 }
@@ -305,5 +114,11 @@ export default async function mockStreamEventAiSuggestion(
   _originalEventId: string,
   options: AiSuggestionStreamOptions
 ): Promise<void> {
-  await consumeAiSuggestionStream(createMockResponse(options.signal), options);
+  try {
+    await consumeAiSuggestionStream(createMockStream(options.signal), options);
+  } catch (error) {
+    if (!isAbortError(error)) {
+      throw error;
+    }
+  }
 }
