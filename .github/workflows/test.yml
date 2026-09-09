@@ -1,0 +1,22 @@
+name: Unit tests
+
+on: [pull_request]
+
+jobs:
+  test:
+    name: Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Enable corepack for yarn version management
+        run: corepack enable
+
+      - run: yarn install
+
+      - run: yarn test
