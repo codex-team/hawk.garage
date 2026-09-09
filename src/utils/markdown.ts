@@ -200,6 +200,94 @@ export async function getMarkdownRenderer(): Promise<(text: string) => string> {
 }
 
 /**
+ * Marks a span holding a single word, so the dialog can animate words as they land.
+ */
+export const STREAM_WORD_ATTRIBUTE = 'data-stream-word';
+
+/**
+ * Elements whose text is not read as prose and so is left in one piece.
+ */
+const UNSPLIT_ELEMENTS = new Set(['PRE', 'CODE']);
+
+/**
+ * Report whether a node sits inside an element whose text stays whole.
+ * @param node - text node to check
+ * @param root - node the search stops at
+ * @returns true when a word split would land inside code
+ */
+function isInsideUnsplitElement(node: Node, root: Node): boolean {
+  for (let element = node.parentElement; element && element !== root; element = element.parentElement) {
+    if (UNSPLIT_ELEMENTS.has(element.tagName)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Replace a text node with its words, each in a span of its own.
+ * @param node - text node to split
+ */
+function splitTextNodeIntoWords(node: Text): void {
+  const document = node.ownerDocument;
+  const fragment = document.createDocumentFragment();
+
+  // Whitespace is kept as its own piece: a word span holds a word and nothing
+  // else, so the gaps between words stay where the markup put them.
+  for (const part of (node.nodeValue ?? '').split(/(\s+)/)) {
+    if (!part) {
+      continue;
+    }
+
+    if (/^\s+$/.test(part)) {
+      fragment.appendChild(document.createTextNode(part));
+
+      continue;
+    }
+
+    const span = document.createElement('span');
+
+    span.setAttribute(STREAM_WORD_ATTRIBUTE, '');
+    span.textContent = part;
+    fragment.appendChild(span);
+  }
+
+  node.replaceWith(fragment);
+}
+
+/**
+ * Wrap every word of rendered Markdown in a span of its own.
+ *
+ * Runs on already sanitized markup, so the spans are ours rather than the
+ * answer's and the tag and attribute allowlists stay as narrow as they are.
+ * Splitting through the DOM rather than the HTML string keeps a word from ever
+ * being cut out of the middle of a tag.
+ * @param html - sanitized HTML
+ * @returns the same HTML with each word wrapped in a span
+ */
+export function wrapWordsInHtml(html: string): string {
+  const template = document.createElement('template');
+
+  template.innerHTML = html;
+
+  const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_TEXT);
+  const wordNodes: Text[] = [];
+
+  while (walker.nextNode()) {
+    const node = walker.currentNode as Text;
+
+    if (node.nodeValue?.trim() && !isInsideUnsplitElement(node, template.content)) {
+      wordNodes.push(node);
+    }
+  }
+
+  wordNodes.forEach(splitTextNodeIntoWords);
+
+  return template.innerHTML;
+}
+
+/**
  * Create a Markdown renderer that preserves completed blocks between updates.
  */
 export async function getMarkdownStreamRenderer(): Promise<MarkdownStreamRenderer> {
@@ -221,7 +309,7 @@ export async function getMarkdownStreamRenderer(): Promise<MarkdownStreamRendere
         key };
     }
 
-    const html = renderMarkdown(segment.text);
+    const html = wrapWordsInHtml(renderMarkdown(segment.text));
 
     return html
       ? { type: 'text',

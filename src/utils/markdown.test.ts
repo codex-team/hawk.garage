@@ -3,6 +3,7 @@ import {
   getMarkdownRenderer,
   getMarkdownStreamRenderer,
   splitStringIntoTextAndCodeSegments,
+  wrapWordsInHtml,
   type MarkdownNode
 } from './markdown';
 
@@ -209,5 +210,67 @@ describe('splitStringIntoTextAndCodeSegments', () => {
     const segments = splitStringIntoTextAndCodeSegments(source);
 
     expect(segments.filter(segment => segment.type === 'code')).toHaveLength(0);
+  });
+});
+
+describe('wrapWordsInHtml', () => {
+  /**
+   * Read the text a browser would show for a fragment of markup.
+   * @param html - markup to read
+   * @returns its text content
+   */
+  const textOf = (html: string): string => {
+    const host = document.createElement('div');
+
+    host.innerHTML = html;
+
+    return host.textContent ?? '';
+  };
+
+  it('should put each word in a span of its own', () => {
+    const words = ['one', 'two', 'three'];
+    const html = wrapWordsInHtml(`<p>${words.join(' ')}</p>`);
+    const host = document.createElement('div');
+
+    host.innerHTML = html;
+
+    expect(host.querySelectorAll('[data-stream-word]')).toHaveLength(words.length);
+  });
+
+  it('should leave the text exactly as it was', () => {
+    const html = renderMarkdown(ANSWER);
+
+    expect(textOf(wrapWordsInHtml(html))).toBe(textOf(html));
+  });
+
+  it('should keep the spacing between words', () => {
+    expect(textOf(wrapWordsInHtml('<p>one  two\nthree</p>'))).toBe('one  two\nthree');
+  });
+
+  it('should leave code alone, where the split would land inside a token', () => {
+    const html = wrapWordsInHtml('<p>call <code>new Map()</code> here</p>');
+    const host = document.createElement('div');
+
+    host.innerHTML = html;
+
+    expect(host.querySelectorAll('code [data-stream-word]')).toHaveLength(0);
+    expect(host.querySelector('code')?.textContent).toBe('new Map()');
+  });
+
+  it('should reach into the text of nested markup', () => {
+    const html = wrapWordsInHtml('<ul><li><strong>bold</strong> word</li></ul>');
+    const host = document.createElement('div');
+
+    host.innerHTML = html;
+
+    expect(host.querySelectorAll('strong [data-stream-word]')).toHaveLength(1);
+    expect(host.querySelectorAll('[data-stream-word]')).toHaveLength(2);
+  });
+
+  it('should wrap the words of a streamed answer as it renders', async () => {
+    const nodes = await stream(ANSWER, CHUNK_ACROSS_FENCE);
+    const html = nodes.map(node => (node.type === 'text' ? node.html : '')).join('');
+
+    expect(html).toContain('data-stream-word');
   });
 });
