@@ -2,6 +2,7 @@
   "name": "hawk.so",
   "version": "1.3.1",
   "private": true,
+  "packageManager": "yarn@4.18.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -67,6 +68,14 @@
     "vite": "^7.1.9",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-eslint-parser": "^10.2.0"
+  },
+  "dependenciesMeta": {
+    "esbuild": {
+      "built": false
+    },
+    "vue-demi": {
+      "built": false
+    }
   },
   "license": "BUSL-1.1",
   "lint-staged": {
