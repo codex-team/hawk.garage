@@ -35,8 +35,8 @@
               />
               <div
                 v-else
+                v-stream-html="seg.html"
                 class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
-                v-html="seg.html"
               />
             </template>
           </TransitionGroup>
@@ -53,6 +53,8 @@ import CodeFragment from '../utils/CodeFragment.vue';
 import Icon from '../utils/Icon.vue';
 import * as aiApi from '@/api/ai';
 import { getMarkdownStreamRenderer, type MarkdownNode } from '@/utils/markdown';
+import { morphHtml } from '@/utils/morphHtml';
+import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
 import { isAbortError } from '@/utils/errors';
 import { defineComponent } from 'vue';
 
@@ -63,6 +65,27 @@ export default defineComponent({
     AiSuggestionSkeleton,
     CodeFragment,
     Icon,
+  },
+  directives: {
+    /**
+     * Set an element's markup the way v-html does, but by updating the nodes
+     * that are already there.
+     *
+     * v-html assigns innerHTML, which builds every node again and so restarts
+     * the animation on every word of a block each time the block grows. Here
+     * only the words the last delta brought are new, and only those animate.
+     */
+    streamHtml: {
+      mounted(el: HTMLElement, binding: { value: string }): void {
+        morphHtml(el, binding.value);
+      },
+      updated(el: HTMLElement, binding: { value: string;
+        oldValue: string; }): void {
+        if (binding.value !== binding.oldValue) {
+          morphHtml(el, binding.value);
+        }
+      },
+    },
   },
   props: {
     projectId: {
@@ -89,31 +112,51 @@ export default defineComponent({
       error: '',
       segments: [] as MarkdownNode[],
       streamAbortController: new AbortController(),
+      streamPacer: null as StreamPacer | null,
     };
   },
   async created() {
     try {
       const markdownStreamRenderer = await getMarkdownStreamRenderer();
+      const streamPacer = createStreamPacer({
+        onText: (text) => {
+          this.segments = markdownStreamRenderer.append(text);
+          this.loading = false;
+        },
+      });
+
+      this.streamPacer = streamPacer;
+
+      // Unmounting during the dynamic import above leaves the pacer to be built
+      // after the teardown that was meant to stop it.
+      if (this.streamAbortController.signal.aborted) {
+        streamPacer.stop();
+
+        return;
+      }
 
       await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
         signal: this.streamAbortController.signal,
         onTextDelta: (delta) => {
           this.suggestion += delta;
-          // TODO: Batch updates per animation frame when deltas outpace rendering.
-          this.segments = markdownStreamRenderer.append(delta);
-          this.loading = false;
+          streamPacer.push(delta);
         },
         onError: (message) => {
           /**
            * What arrived so far belongs to an answer the API withdrew, so it goes
            * rather than staying on screen beside the error.
            */
+          streamPacer.stop();
           this.suggestion = '';
           this.segments = [];
           this.error = message;
           this.loading = false;
         },
       });
+
+      // The stream is done but the pacer is still holding words back, and they
+      // belong on screen before the last block is closed.
+      await streamPacer.drain();
 
       if (!this.error) {
         this.segments = markdownStreamRenderer.finish();
@@ -135,6 +178,7 @@ export default defineComponent({
   },
   beforeUnmount() {
     this.streamAbortController.abort();
+    this.streamPacer?.stop();
   },
 });
 </script>
@@ -195,6 +239,16 @@ export default defineComponent({
   &__node-enter-from {
     opacity: 0;
     filter: blur(5px);
+  }
+
+  /**
+   * Each word fades in on its own as it lands. The animation is only ever
+   * started by a word span being added to the document, which is why the
+   * markup is updated node by node rather than reassigned: reassigning it
+   * would make every word on screen animate again on the next delta.
+   */
+  [data-stream-word] {
+    animation: ai-suggestion-dialog-word-in 260ms ease-out backwards;
   }
 
   &__markdown {
@@ -397,6 +451,21 @@ export default defineComponent({
 
   &__error {
     color: var(--color-indicator-critical);
+  }
+}
+
+@keyframes ai-suggestion-dialog-word-in {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-suggestion-dialog [data-stream-word],
+  .ai-suggestion-dialog__node-enter-active {
+    animation: none;
+    transition: none;
   }
 }
 </style>
