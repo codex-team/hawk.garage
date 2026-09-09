@@ -214,8 +214,15 @@ Term 2
 
 This is HTML abbreviation example.`;
 
+/**
+ * Pace of the demo stream. A model writes at roughly 20 to 40 words a second,
+ * and the answer below is around five and a half characters to the word, so
+ * these two numbers put the demo in that range. Feeding it faster than a model
+ * writes leaves every word of a line inside one fade and turns the reveal into
+ * a line appearing at once.
+ */
 const MOCK_STREAM_DELAY = 120;
-const MOCK_STREAM_CHUNK_SIZE = 100;
+const MOCK_STREAM_CHUNK_SIZE = 12;
 
 const MOCK_TEXT_BLOCK_ID = '0';
 
