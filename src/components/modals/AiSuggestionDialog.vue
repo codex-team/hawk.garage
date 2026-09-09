@@ -1,6 +1,9 @@
 <template>
   <PopupDialog @close="$emit('close')">
-    <div class="ai-suggestion-dialog">
+    <div
+      ref="dialog"
+      class="ai-suggestion-dialog"
+    >
       <div class="ai-suggestion-dialog__header">
         <Icon
           class="ai-suggestion-dialog__header-icon"
@@ -57,6 +60,13 @@ import { morphHtml } from '@/utils/morphHtml';
 import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
 import { isAbortError } from '@/utils/errors';
 import { defineComponent } from 'vue';
+
+/**
+ * How far from the end of the answer the reader may be and still be taken along
+ * with it. Further back than this is someone reading what has already arrived,
+ * and the view leaves them where they are.
+ */
+const FOLLOW_THRESHOLD = 48;
 
 export default defineComponent({
   name: 'AiSuggestionDialog',
@@ -120,6 +130,7 @@ export default defineComponent({
       const markdownStreamRenderer = await getMarkdownStreamRenderer();
       const streamPacer = createStreamPacer({
         onText: (text) => {
+          this.keepAnswerEndInView();
           this.segments = markdownStreamRenderer.append(text);
           this.loading = false;
         },
@@ -159,6 +170,7 @@ export default defineComponent({
       await streamPacer.drain();
 
       if (!this.error) {
+        this.keepAnswerEndInView();
         this.segments = markdownStreamRenderer.finish();
       }
 
@@ -179,6 +191,50 @@ export default defineComponent({
   beforeUnmount() {
     this.streamAbortController.abort();
     this.streamPacer?.stop();
+  },
+  methods: {
+    /**
+     * Find the element the dialog scrolls inside of.
+     *
+     * @returns the scrolling element, or null before the dialog is in the document
+     */
+    getScroller(): HTMLElement | null {
+      const dialog = this.$refs.dialog as HTMLElement | undefined;
+
+      return dialog?.closest('.popup-dialog__mask') ?? null;
+    },
+
+    /**
+     * Take the reader along with the answer, if they are at the end of it.
+     *
+     * Called with the document still holding the previous words, because once
+     * the new ones are in it there is no way to tell being at the end from
+     * having been left behind by what was just added. The scroll itself waits
+     * for a frame: the answer reaches the document on Vue's flush, which is a
+     * microtask, so the next frame is the first moment the new words have a
+     * height to scroll to.
+     */
+    keepAnswerEndInView(): void {
+      const scroller = this.getScroller();
+
+      if (!scroller) {
+        return;
+      }
+
+      const distanceFromEnd = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight;
+
+      if (distanceFromEnd > FOLLOW_THRESHOLD) {
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        const target = this.getScroller();
+
+        if (target) {
+          target.scrollTop = target.scrollHeight;
+        }
+      });
+    },
   },
 });
 </script>
