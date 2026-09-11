@@ -27,6 +27,14 @@
           {{ formatTimeByRepetition(repetition) }}
         </td>
 
+        <!-- Count (optional, only when at least one repetition merges several occurrences) -->
+        <td
+          v-if="columns.includes('Count')"
+          class="repetitions-table__count"
+        >
+          {{ repetition.count || '—' }}
+        </td>
+
         <!-- User (optional) -->
         <td
           v-if="columns.includes('User')"
@@ -203,6 +211,7 @@ export default defineComponent({
       let releaseSpecifiedSomewhere = false;
       let userSpecifiedSomewhere = false;
       let titleSpecifiedSomewhere = false;
+      let countSpecifiedSomewhere = false;
 
       this.repetitions.forEach((repetition) => {
         if (repetition.payload.release) {
@@ -217,10 +226,14 @@ export default defineComponent({
           userSpecifiedSomewhere = true;
         }
 
-        if (titleSpecifiedSomewhere && userSpecifiedSomewhere && releaseSpecifiedSomewhere) {
-          return;
+        if (repetition.count) {
+          countSpecifiedSomewhere = true;
         }
       });
+
+      if (countSpecifiedSomewhere) {
+        cols.push('Count');
+      }
 
       if (userSpecifiedSomewhere) {
         cols.push('User');
