@@ -330,6 +330,17 @@ const router = createRouter({
       }),
     },
     {
+      path: '/concent',
+      name: 'concent',
+      component: loadAsyncComponent(() => import(/* webpackChunkName: 'auth-pages' */ './components/auth/Concent.vue')),
+      props: route => ({
+        redirect_uri: route.query.redirect_uri as string | undefined,
+        state: route.query.state as string | undefined,
+        client_id: route.query.client_id as string | undefined,
+        code_challenge: route.query.code_challenge as string | undefined,
+      }),
+    },
+    {
       path: '/login/sso/:workspaceId?',
       name: 'sso-login',
       component: () => import(/* webpackChunkName: 'auth-pages' */ './components/auth/SsoLogin.vue'),

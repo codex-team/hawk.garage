@@ -13,6 +13,7 @@
     "signupSuccessMessage": "The password is sent to your email",
     "inviteHelper": "You are invited to join a workspace. Please login or sign up to continue.",
     "continueWithSso": "Continue with SSO",
+    "concentText": "Concent",
     "ssoLogin": {
       "title": "Single Sign-On",
       "workspaceId": "Workspace ID",

@@ -13,6 +13,7 @@
     "signupSuccessMessage": "Пароль отправлен на указанную почту",
     "inviteHelper": "Вы приглашены в воркспейс. Войдите или зарегистрируйтесь, чтобы продолжить.",
     "continueWithSso": "Войти через SSO",
+    "concentText": "Разрешить",
     "ssoLogin": {
       "title": "Вход через SSO",
       "workspaceId": "ID воркспейса",
