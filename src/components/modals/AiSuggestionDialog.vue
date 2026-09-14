@@ -32,7 +32,8 @@ import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import Icon from '../utils/Icon.vue';
 import * as aiApi from '@/api/ai';
 import { isAbortError } from '@/utils/errors';
-import { defineAsyncComponent, defineComponent } from 'vue';
+import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
+import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
 import { type Token as BlockToken } from 'marked';
 
 export default defineComponent({
@@ -72,6 +73,7 @@ export default defineComponent({
       error: '',
       lex: null as ((source: string) => BlockToken[]) | null,
       streamAbortController: new AbortController(),
+      streamPacer: null as StreamPacer | null,
     };
   },
   computed: {
@@ -85,30 +87,41 @@ export default defineComponent({
   async created() {
     try {
       const marked = await import('marked');
+      const pacer = createStreamPacer({
+        onText: (text) => {
+          this.suggestion += text;
+          this.loading = false;
+        },
+      });
 
       this.lex = source => marked.lexer(source);
+      this.streamPacer = markRaw(pacer);
 
       await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
         signal: this.streamAbortController.signal,
-        onTextDelta: (delta) => {
-          // TODO: Batch updates per animation frame when deltas outpace rendering.
-          this.suggestion += delta;
-          this.loading = false;
-        },
+        onTextDelta: delta => pacer.push(delta),
         onError: (message) => {
           /**
            * Drop the part of the answer the API withdrew.
            */
+          pacer.stop();
           this.suggestion = '';
           this.error = message;
           this.loading = false;
         },
       });
 
+      await pacer.drain();
+
       if (!this.suggestion && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
     } catch (error) {
+      /**
+       * Drop the rest of the failed stream.
+       */
+      this.streamPacer?.stop();
+
       if (!isAbortError(error)) {
         this.error = this.$t('event.ai.error') as string;
         console.error(error);
@@ -121,6 +134,7 @@ export default defineComponent({
   },
   beforeUnmount() {
     this.streamAbortController.abort();
+    this.streamPacer?.stop();
   },
 });
 </script>
