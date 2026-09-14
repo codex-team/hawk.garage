@@ -424,11 +424,19 @@ const actions = {
    * @param {string} payload.workspaceId - workspace id
    * @param {string} payload.tariffPlanId - plan id
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
+   * @param {string} [payload.promoCode] - promo code for the first payment
+   * @param {object} [payload.promoUtm] - promo attribution data
    * @param context
    * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
    */
-  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
-    const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
+  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false, promoCode, promoUtm }) {
+    const result = await billingApi.composePayment({
+      workspaceId,
+      tariffPlanId,
+      shouldSaveCard,
+      promoCode,
+      promoUtm,
+    });
 
     const { data } = result;
 
