@@ -20,23 +20,26 @@
           v-else
           class="ai-suggestion-dialog__suggestion"
         >
-          <template v-for="(seg, idx) in segments">
-            <CodeFragment
-              v-if="seg.type === 'code'"
-              :key="'code-' + idx"
-              class="ai-suggestion-dialog__code"
-              :lines="seg.lines"
-              :lang="seg.lang || 'plaintext'"
-              :lines-highlighted="[]"
-              :copyable="true"
-            />
-            <div
-              v-else
-              :key="'text-' + idx"
-              class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
-              v-html="renderMarkdown(seg.text)"
-            />
-          </template>
+          <TransitionGroup name="ai-suggestion-dialog__node">
+            <template
+              v-for="seg in segments"
+              :key="seg.key"
+            >
+              <CodeFragment
+                v-if="seg.type === 'code'"
+                class="ai-suggestion-dialog__code"
+                :lines="seg.lines"
+                :lang="seg.lang || 'plaintext'"
+                :lines-highlighted="[]"
+                :copyable="true"
+              />
+              <div
+                v-else
+                class="ai-suggestion-dialog__text ai-suggestion-dialog__markdown"
+                v-html="seg.html"
+              />
+            </template>
+          </TransitionGroup>
         </div>
       </div>
     </div>
@@ -48,8 +51,9 @@ import PopupDialog from '../utils/PopupDialog.vue';
 import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import CodeFragment from '../utils/CodeFragment.vue';
 import Icon from '../utils/Icon.vue';
-import * as eventsApi from '@/api/events';
-import { getMarkdownRenderer, splitStringIntoTextAndCodeSegments } from '@/utils/markdown';
+import * as aiApi from '@/api/ai';
+import { getMarkdownStreamRenderer, type MarkdownNode } from '@/utils/markdown';
+import { isAbortError } from '@/utils/errors';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -83,32 +87,54 @@ export default defineComponent({
       loading: true,
       suggestion: '',
       error: '',
-      renderMarkdown: (text: string) => text,
+      segments: [] as MarkdownNode[],
+      streamAbortController: new AbortController(),
     };
-  },
-  computed: {
-    /**
-     * Split AI answer into text and code segments.
-     * Code segments are fenced with ```lang ... ```
-     */
-    segments() {
-      return splitStringIntoTextAndCodeSegments((this as unknown as { suggestion: string }).suggestion);
-    },
   },
   async created() {
     try {
-      this.renderMarkdown = await getMarkdownRenderer();
-      this.suggestion = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
+      const markdownStreamRenderer = await getMarkdownStreamRenderer();
 
-      if (!this.suggestion) {
+      await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
+        signal: this.streamAbortController.signal,
+        onTextDelta: (delta) => {
+          this.suggestion += delta;
+          // TODO: Batch updates per animation frame when deltas outpace rendering.
+          this.segments = markdownStreamRenderer.append(delta);
+          this.loading = false;
+        },
+        onError: (message) => {
+          /**
+           * What arrived so far belongs to an answer the API withdrew, so it goes
+           * rather than staying on screen beside the error.
+           */
+          this.suggestion = '';
+          this.segments = [];
+          this.error = message;
+          this.loading = false;
+        },
+      });
+
+      if (!this.error) {
+        this.segments = markdownStreamRenderer.finish();
+      }
+
+      if (!this.suggestion && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
-    } catch (e) {
-      this.error = this.$t('event.ai.error') as string;
-      console.error(e);
+    } catch (error) {
+      if (!isAbortError(error)) {
+        this.error = this.$t('event.ai.error') as string;
+        console.error(error);
+      }
     } finally {
-      this.loading = false;
+      if (!this.streamAbortController.signal.aborted) {
+        this.loading = false;
+      }
     }
+  },
+  beforeUnmount() {
+    this.streamAbortController.abort();
   },
 });
 </script>
@@ -160,6 +186,15 @@ export default defineComponent({
     > * + * {
       margin-block-start: var(--spacing-ml);
     }
+  }
+
+  &__node-enter-active {
+    transition: opacity 350ms ease-out, filter 200ms linear;
+  }
+
+  &__node-enter-from {
+    opacity: 0;
+    filter: blur(5px);
   }
 
   &__markdown {
