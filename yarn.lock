@@ -1057,12 +1057,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hawk.so/types@npm:^0.6.3":
-  version: 0.6.3
-  resolution: "@hawk.so/types@npm:0.6.3"
+"@hawk.so/types@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "@hawk.so/types@npm:0.7.0"
   dependencies:
     bson: "npm:^7.0.0"
-  checksum: 10c0/cd20a069a9e314678b457e5b7c3b4dedaca1f70072f720664f112fa0fd3831d68c9d851bebabcceebd959ad584b05337d408654a1457a196982db69fd1725e95
+  checksum: 10c0/5ac562e582066a173c7f9693a5fd1634b6f80f47d4f6a44d32876643f4186b7399e79f7d33181ee40b9ec37484b6b61a51d1fd27cec9d04e3f601f12e85343ac
   languageName: node
   linkType: hard
 
@@ -4318,7 +4318,7 @@ __metadata:
   dependencies:
     "@codexteam/ui": "npm:0.2.3"
     "@hawk.so/javascript": "npm:3.3.0"
-    "@hawk.so/types": "npm:^0.6.3"
+    "@hawk.so/types": "npm:^0.7.0"
     "@hawk.so/vite-plugin": "npm:^1.0.6"
     "@types/node": "npm:^24.6.2"
     "@types/postcss-nested-ancestors": "npm:^3"
@@ -4340,6 +4340,7 @@ __metadata:
     http-server: "npm:^14.1.1"
     install: "npm:^0.13.0"
     jsdom: "npm:^30.0.1"
+    ky: "npm:^2.1.0"
     lodash.mergewith: "npm:^4.6.2"
     marked: "npm:^17.0.0"
     normalize.css: "npm:^8.0.1"
@@ -5062,6 +5063,13 @@ __metadata:
   version: 6.0.3
   resolution: "kind-of@npm:6.0.3"
   checksum: 10c0/61cdff9623dabf3568b6445e93e31376bee1cdb93f8ba7033d86022c2a9b1791a1d9510e026e6465ebd701a6dd2f7b0808483ad8838341ac52f003f512e0b4c4
+  languageName: node
+  linkType: hard
+
+"ky@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "ky@npm:2.1.0"
+  checksum: 10c0/e2a6f0abe670cca97175890d649e0ffc01fbf1bf46c6cf49a5371db80c3bb8b86988a8bd8eb661d7893c3cebca85684458813979793e955cff5a3020372fd888
   languageName: node
   linkType: hard
 
