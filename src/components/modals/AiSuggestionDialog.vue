@@ -33,6 +33,7 @@ import Icon from '../utils/Icon.vue';
 import MarkdownView from '../utils/markdown/View.vue';
 import * as aiApi from '@/api/ai';
 import { isAbortError } from '@/utils/errors';
+import { createMarkdownLexer } from '@/utils/markdown';
 import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
 import { defineComponent, markRaw } from 'vue';
 import { type Token as BlockToken } from 'marked';
@@ -68,30 +69,25 @@ export default defineComponent({
       loading: true,
       suggestion: '',
       error: '',
-      lex: null as ((source: string) => BlockToken[]) | null,
+      /**
+       * Blocks of AI answer to render. Kept raw: tokens are only read, never changed.
+       */
+      blocks: [] as BlockToken[],
       streamAbortController: new AbortController(),
       streamPacer: null as StreamPacer | null,
     };
   },
-  computed: {
-    /**
-     * Split AI answer into blocks to render.
-     */
-    blocks(): BlockToken[] {
-      return this.lex ? this.lex(this.suggestion) : [];
-    },
-  },
   async created() {
     try {
-      const marked = await import('marked');
+      const markdown = await createMarkdownLexer();
       const pacer = createStreamPacer({
         onText: (text) => {
           this.suggestion += text;
+          this.blocks = markRaw(markdown.append(text));
           this.loading = false;
         },
       });
 
-      this.lex = source => marked.lexer(source);
       this.streamPacer = markRaw(pacer);
 
       await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
@@ -103,12 +99,17 @@ export default defineComponent({
            */
           pacer.stop();
           this.suggestion = '';
+          this.blocks = [];
           this.error = message;
           this.loading = false;
         },
       });
 
       await pacer.drain();
+
+      if (!this.error) {
+        this.blocks = markRaw(markdown.reparse());
+      }
 
       if (!this.suggestion && !this.error) {
         this.error = this.$t('event.ai.empty') as string;

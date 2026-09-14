@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createApp, h, nextTick, shallowRef, type ShallowRef } from 'vue';
 import { marked, type Token } from 'marked';
 import MarkdownView from './View.vue';
+import { createMarkdownLexer } from '@/utils/markdown';
 
 /**
  * Mounted view with blocks that can be replaced later.
@@ -10,6 +11,11 @@ interface MountedView {
   host: HTMLElement;
   blocks: ShallowRef<Token[]>;
 }
+
+/**
+ * Paragraphs between a reference and its definition, enough for the reference to settle first.
+ */
+const PARAGRAPHS_BEFORE_DEFINITION = 5;
 
 /**
  * Mount the view.
@@ -105,6 +111,23 @@ describe('MarkdownView', () => {
       const { host, blocks } = mount(marked.lexer('Read [docs] carefully.\n\n'));
 
       blocks.value = marked.lexer('Read [docs] carefully.\n\n[docs]: https://hawk.so/docs\n');
+      await nextTick();
+
+      expect(host.querySelector('a')?.getAttribute('href')).toBe('https://hawk.so/docs');
+    });
+
+    it('should link a settled reference once the answer is lexed again', async () => {
+      const paragraphs = 'Another paragraph of the answer.\n\n'.repeat(PARAGRAPHS_BEFORE_DEFINITION);
+      const source = `Read [docs] carefully.\n\n${paragraphs}[docs]: https://hawk.so/docs\n`;
+      const lexer = await createMarkdownLexer();
+      const { host, blocks } = mount();
+
+      for (const character of source) {
+        blocks.value = lexer.append(character);
+        await nextTick();
+      }
+
+      blocks.value = lexer.reparse();
       await nextTick();
 
       expect(host.querySelector('a')?.getAttribute('href')).toBe('https://hawk.so/docs');
