@@ -255,15 +255,18 @@ export async function bulkSetEventMarks(
  * @param eventId - event to fetch AI suggestion for
  * @param originalEventId - id of the original event
  */
-export async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {
-  const response = await api.call(QUERY_EVENT_AI_SUGGESTION, {
-    projectId,
-    eventId,
-    originalEventId,
-  });
+export const fetchEventAiSuggestion = withDemoMock(
+  async function fetchEventAiSuggestion(projectId: string, eventId: string, originalEventId: string): Promise<string> {
+    const response = await api.call(QUERY_EVENT_AI_SUGGESTION, {
+      projectId,
+      eventId,
+      originalEventId,
+    });
 
-  return response.data.project?.event?.aiSuggestion ?? '';
-}
+    return response.data.project?.event?.aiSuggestion ?? '';
+  },
+  '/src/api/events/mocks/fetchEventAiSuggestion.mock.ts'
+);
 
 /**
  * Update assignee
