@@ -64,47 +64,44 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('AiSuggestionDialog streaming', () => {
-  it('should batch deltas until the next animation frame', async () => {
+describe('AiSuggestionDialog pacing', () => {
+  it('should discard buffered words when the API withdraws the answer', async () => {
     const host = await mount();
 
-    options!.onTextDelta('First ');
-    options!.onTextDelta('second.');
-    expect(host.querySelector('.ai-suggestion-skeleton')).not.toBeNull();
-    expect(vi.getTimerCount()).toBe(1);
-
-    vi.advanceTimersToNextFrame();
-    await nextTick();
-    await nextTick();
-
-    await vi.advanceTimersByTimeAsync(0);
-    expect(host.querySelector('.markdown-view p')?.textContent).toBe('First second.');
-  });
-
-  it('should publish the final delta without waiting for another frame', async () => {
-    const host = await mount();
-
-    options!.onTextDelta('Answer.');
-    resolveStream();
-    await nextTick();
-    await nextTick();
-
-    await vi.advanceTimersByTimeAsync(0);
-    expect(host.querySelector('.markdown-view p')?.textContent).toBe('Answer.');
-    expect(host.querySelector('.ai-suggestion-dialog__error')).toBeNull();
-  });
-
-  it('should discard a queued frame if the answer is refused', async () => {
-    const host = await mount();
-
-    options!.onTextDelta('Withdrawn ');
+    options!.onTextDelta('withdrawn words ');
     options!.onError('Answer refused');
-    resolveStream();
     await vi.runAllTimersAsync();
     await nextTick();
 
     expect(host.querySelector('.ai-suggestion-dialog__error')?.textContent).toBe('Answer refused');
+    expect(host.textContent).not.toContain('withdrawn words');
     expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('should stop releasing buffered words after a transport failure', async () => {
+    const host = await mount();
+
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    options!.onTextDelta('buffered words ');
+    rejectStream(new Error('Connection lost'));
+    await nextTick();
+    await nextTick();
+
+    expect(vi.getTimerCount()).toBe(0);
+    await vi.runAllTimersAsync();
+    expect(host.querySelector('.ai-suggestion-dialog__error')?.textContent).toBe('event.ai.error');
+  });
+
+  it('should abort the stream and stop pending releases when the dialog closes', async () => {
+    await mount();
+    options!.onTextDelta('buffered words ');
+
+    app.unmount();
+
+    expect(options!.signal.aborted).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
+    rejectStream(new DOMException('Closed', 'AbortError'));
+    await nextTick();
   });
 });
 
