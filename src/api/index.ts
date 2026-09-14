@@ -6,6 +6,8 @@ import { useErrorTracker } from '@/hawk';
 import { i18n } from '@/i18n';
 import { DEMO_ACCESS_TOKEN } from '@/composables/useDemo';
 
+const HTTP_STATUS_UNAUTHORIZED = 401;
+
 /**
  * Hawk API endpoint URL
  */
@@ -43,7 +45,12 @@ let blockingRequest: Promise<AxiosResponse>;
 /**
  * If contains Promise, request for token refreshing was already send and need wait for it
  */
-let tokenRefreshingRequest: Promise<string> | null;
+let tokenRefreshingRequest: Promise<string | null> | null;
+
+/**
+ * Handlers registered via setupApiModuleHandlers()
+ */
+let apiModuleHandlers: ApiModuleHandlers | null = null;
 
 /**
  * Error tracking composable
@@ -403,6 +410,29 @@ export const errorCodes = {
 };
 
 /**
+ * REST API streaming request options
+ */
+interface RestStreamRequestOptions {
+  /**
+   * AbortSignal to cancel the request
+   */
+  signal?: AbortSignal;
+
+  /**
+   * Additional headers
+   */
+  headers?: Record<string, string>;
+}
+
+/**
+ * Body the API sends instead of a stream when it refuses the request.
+ */
+interface RestStreamErrorBody {
+  /** Reason the request was refused. */
+  error?: string;
+}
+
+/**
  * Handlers for API module for getting necessary data or calling function on error occurrence
  */
 interface ApiModuleHandlers {
@@ -410,7 +440,7 @@ interface ApiModuleHandlers {
    * Called when a tokens pair needs to be updated
    * @returns access tokens
    */
-  onTokenExpired(): Promise<string>;
+  onTokenExpired(): Promise<string | null>;
 
   /**
    * Called when auth failed
@@ -419,10 +449,109 @@ interface ApiModuleHandlers {
 }
 
 /**
+ * Refresh the access token, coalescing concurrent callers onto one request.
+ * @param handlers - registered auth handlers
+ */
+async function refreshAccessToken(handlers: ApiModuleHandlers): Promise<string> {
+  tokenRefreshingRequest ??= handlers.onTokenExpired();
+
+  try {
+    const token = await tokenRefreshingRequest;
+
+    if (!token) {
+      throw new Error('The access token could not be refreshed.');
+    }
+
+    setAuthToken(token);
+
+    return token;
+  } finally {
+    tokenRefreshingRequest = null;
+  }
+}
+
+/**
+ * Refresh the access token for a retry, reporting an auth error when it cannot be refreshed.
+ * @param handlers - auth handlers
+ * @returns new access token
+ */
+async function refreshAccessTokenForRetry(handlers: ApiModuleHandlers): Promise<string> {
+  try {
+    return await refreshAccessToken(handlers);
+  } catch (error) {
+    console.error(error);
+    handlers.onAuthError();
+
+    throw error;
+  }
+}
+
+/**
+ * Read the reason the API sent instead of a stream.
+ * @param response - refused response
+ * @returns reason to show to the user
+ */
+async function readStreamRefusal(response: Response): Promise<string> {
+  const body = await response.json().catch(() => undefined) as RestStreamErrorBody | undefined;
+
+  return body?.error ?? `Request failed with status ${response.status}.`;
+}
+
+/**
+ * Makes a REST API request that streams the response body.
+ *
+ * On a 401 the access token is refreshed and the request is sent once more.
+ * @param url - REST endpoint URL (relative to API_ENDPOINT or absolute)
+ * @param options - request options (signal, headers)
+ * @returns Promise with response body stream
+ */
+export async function callRestStream(url: string, options: RestStreamRequestOptions = {}): Promise<ReadableStream<Uint8Array>> {
+  const { signal, headers = {} } = options;
+  const fullUrl = url.startsWith('http') ? url : `${API_ENDPOINT}${url}`;
+  const authorization = axios.defaults.headers.common.Authorization;
+  const requestHeaders: Record<string, string> = { ...headers };
+
+  if (typeof authorization === 'string') {
+    requestHeaders.Authorization = authorization;
+  }
+
+  let response = await fetch(new Request(fullUrl, {
+    signal,
+    headers: requestHeaders,
+  }));
+
+  /**
+   * The access token has expired: refresh it and send the request once more. If the retry is
+   * refused as well, the refusal below reports it.
+   */
+  if (response.status === HTTP_STATUS_UNAUTHORIZED && apiModuleHandlers) {
+    await response.body?.cancel();
+    requestHeaders.Authorization = 'Bearer ' + await refreshAccessTokenForRetry(apiModuleHandlers);
+
+    response = await fetch(new Request(fullUrl, {
+      signal,
+      headers: requestHeaders,
+    }));
+  }
+
+  if (!response.ok) {
+    throw new Error(await readStreamRefusal(response));
+  }
+
+  if (!response.body) {
+    throw new Error('Response has no body to stream.');
+  }
+
+  return response.body;
+}
+
+/**
  * Setup handlers for API module, for example, functions for refreshing token
  * @param eventsHandlers - object with handlers
  */
 export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void {
+  apiModuleHandlers = eventsHandlers;
+
   /**
    * Interceptors that handles the error of expired tokens
    */
@@ -443,17 +572,7 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
       const originalRequest = response.config;
 
       try {
-        /**
-         * If there is a pending request for token refreshing then await it
-         * Else send new request
-         */
-        if (!tokenRefreshingRequest) {
-          tokenRefreshingRequest = eventsHandlers.onTokenExpired();
-        }
-
-        const newAccessToken = await tokenRefreshingRequest;
-
-        tokenRefreshingRequest = null;
+        const newAccessToken = await refreshAccessToken(eventsHandlers);
 
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = 'Bearer ' + newAccessToken;
@@ -465,8 +584,6 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
 
         return axios(originalRequest);
       } catch (error) {
-        tokenRefreshingRequest = null;
-
         console.error(error);
 
         eventsHandlers.onAuthError();
