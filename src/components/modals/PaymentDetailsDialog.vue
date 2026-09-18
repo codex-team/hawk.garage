@@ -81,8 +81,21 @@
                 {{ $t('common.price') }}
               </div>
               <div class="payment-details__details-item-value">
+                <span
+                  v-if="hasPromoDiscount"
+                  class="payment-details__price-old"
+                >
+                  {{ fullPrice }}
+                </span>
                 {{ price }}
               </div>
+            </div>
+
+            <div
+              v-if="hasPromoDiscount && isRecurrent"
+              class="payment-details__promo-note"
+            >
+              {{ $t('billing.promoCode.recurrentNote', { price: fullPrice }) }}
             </div>
 
             <!--The next payment date -->
@@ -99,6 +112,35 @@
             </div> -->
           </div>
         </template>
+
+        <div
+          v-if="paymentData && !paymentData.isCardLinkOperation"
+          class="payment-details__promo"
+        >
+          <TextFieldSet
+            v-model="promoCode"
+            name="promoCode"
+            :label="$t('billing.promoCode.label')"
+            :placeholder="$t('billing.promoCode.placeholder')"
+            :is-invalid="Boolean(promoError)"
+            :disabled="isPromoApplying || hasPromoDiscount"
+            auto-complete="off"
+          />
+          <UiButton
+            small
+            secondary
+            :content="$t(hasPromoDiscount ? 'billing.promoCode.applied' : 'billing.promoCode.apply')"
+            :disabled="!promoCode.trim() || isPromoApplying || hasPromoDiscount"
+            :is-loading="isPromoApplying"
+            @click.prevent="applyPromoCode"
+          />
+          <div
+            v-if="promoError"
+            class="payment-details__promo-error"
+          >
+            {{ promoError }}
+          </div>
+        </div>
 
         <!--Card-->
         <!-- <CustomSelect
@@ -170,6 +212,7 @@
             class="payment-details__bottom-button"
             :submit="isAcceptedAllAgreements"
             :secondary="!isAcceptedAllAgreements"
+            :disabled="isPromoApplying"
             @click.prevent="onGoToServicePayment"
           />
 
@@ -214,7 +257,7 @@ import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
 // import CustomSelect from '../forms/CustomSelect.vue';
-// import TextFieldSet from '../forms/TextFieldset.vue';
+import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
@@ -234,17 +277,12 @@ import { BusinessOperationStatus } from '../../types/business-operation-status';
 import UiCheckboxWithLabel from '../forms/UiCheckboxWithLabel/UiCheckboxWithLabel.vue';
 import { getCurrencySign, prettyFullDate } from '@/utils';
 import { i18n } from '../../i18n';
+import { validateUtmParams } from '../utils/utm/utm';
 
 /**
  * Id for the 'New card' option in select
  */
 const NEW_CARD_ID = 'NEW_CARD';
-
-/**
- * The amount we will debit to confirm the subscription.
- * After confirmation, we will refund the user money.
- */
-const AMOUNT_FOR_CARD_VALIDATION = 1;
 
 /**
  * Transforms card data to CustomSelect option
@@ -267,7 +305,7 @@ export default defineComponent({
     PopupDialog,
     EntityImage,
     // CustomSelect,
-    // TextFieldSet,
+    TextFieldSet,
     UiCheckboxWithLabel,
   },
   props: {
@@ -309,6 +347,10 @@ export default defineComponent({
        * Payment data received from API
        */
       paymentData: null as BeforePaymentPayload | null,
+
+      promoCode: '',
+      promoError: '',
+      isPromoApplying: false,
 
       /**
        * New card id to use it in template
@@ -398,9 +440,25 @@ export default defineComponent({
      * example: 100$
      */
     price(): string {
+      const amount = this.paymentData?.chargeAmount ?? this.plan.monthlyCharge;
+
+      return this.$t('common.moneyPerMonth', {
+        currency: `${amount}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+      }).toString();
+    },
+
+    fullPrice(): string {
       return this.$t('common.moneyPerMonth', {
         currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
       }).toString();
+    },
+
+    hasPromoDiscount(): boolean {
+      return Boolean(
+        this.paymentData
+        && !this.paymentData.isCardLinkOperation
+        && this.paymentData.chargeAmount < this.plan.monthlyCharge
+      );
     },
 
     /**
@@ -489,12 +547,7 @@ export default defineComponent({
         return;
       }
 
-      // Fetch payment data when component is mounted via store
-      this.paymentData = await this.$store.dispatch(COMPOSE_PAYMENT, {
-        workspaceId: this.workspaceId,
-        tariffPlanId: this.tariffPlanId,
-        shouldSaveCard: this.shouldSaveCard,
-      });
+      this.paymentData = await this.composePayment();
     } catch (e) {
       const error = e as Error;
       const key = 'errors.' + error.message;
@@ -513,10 +566,62 @@ export default defineComponent({
   },
   methods: {
     prettyFullDate,
+
+    composePayment(promoCode?: string): Promise<BeforePaymentPayload> {
+      return this.$store.dispatch(COMPOSE_PAYMENT, {
+        workspaceId: this.workspaceId,
+        tariffPlanId: this.tariffPlanId,
+        shouldSaveCard: this.shouldSaveCard,
+        promoCode,
+        promoUtm: promoCode ? this.getPromoUtm() : undefined,
+      });
+    },
+
+    getPromoUtm(): Record<string, string> | undefined {
+      const params = new URLSearchParams(globalThis.location.search);
+
+      return validateUtmParams({
+        source: params.get('utm_source'),
+        medium: params.get('utm_medium'),
+        campaign: params.get('utm_campaign'),
+        content: params.get('utm_content'),
+        term: params.get('utm_term'),
+      });
+    },
+
+    async applyPromoCode(): Promise<void> {
+      const promoCode = this.promoCode.trim();
+
+      if (!promoCode) {
+        return;
+      }
+
+      this.isPromoApplying = true;
+      this.promoError = '';
+
+      try {
+        this.paymentData = await this.composePayment(promoCode);
+        this.promoCode = promoCode.toUpperCase();
+      } catch (e) {
+        const error = e as Error;
+        const key = `errors.${error.message}`;
+
+        this.promoError = this.$te(key)
+          ? this.$t(key).toString()
+          : this.$t('billing.promoCode.invalid').toString();
+      } finally {
+        this.isPromoApplying = false;
+      }
+    },
+
     /**
      * Open service payment
      */
     async onGoToServicePayment(): Promise<void> {
+      if (this.isPromoApplying) {
+        return;
+      }
+
       // Check if demo mode is active
       if (this.$store.state.demo?.isActive) {
         notifier.show({
@@ -619,16 +724,15 @@ export default defineComponent({
           recurrent: {
             interval,
             period: 1,
+            amount: data.plan.monthlyCharge,
           },
         };
 
         if (data.nextPaymentDate) {
           paymentData.cloudPayments.recurrent.startDate = data.nextPaymentDate;
-          paymentData.cloudPayments.recurrent.amount = data.plan.monthlyCharge;
         }
       }
 
-      const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
       const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
@@ -639,7 +743,7 @@ export default defineComponent({
             tariffPlanName: this.plan.name,
             workspaceName: this.workspace.name,
           }) as string,
-          amount,
+          amount: data.chargeAmount,
           currency: data.currency,
           email: this.email,
 
@@ -734,6 +838,32 @@ export default defineComponent({
         font-weight: bold;
       }
     }
+  }
+
+  &__price-old {
+    margin-right: 6px;
+    color: var(--color-text-second);
+    text-decoration: line-through;
+  }
+
+  &__promo-note {
+    color: var(--color-text-second);
+    font-weight: normal;
+    font-size: 13px;
+  }
+
+  &__promo {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 8px 12px;
+    margin-bottom: 28px;
+  }
+
+  &__promo-error {
+    grid-column: 1 / -1;
+    color: var(--color-indicator-critical);
+    font-size: 13px;
   }
 
   &__card {
