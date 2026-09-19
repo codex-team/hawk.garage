@@ -3,7 +3,7 @@
     <MarkdownBlock
       v-for="(block, index) in blocks"
       :key="index"
-      v-memo="[block.raw, definitions]"
+      v-memo="[block]"
       :block="block"
     />
   </div>
@@ -20,22 +20,12 @@ export default defineComponent({
     MarkdownBlock,
   },
   props: {
+    /**
+     * Blocks to render. A block renders again only when it is replaced by another object.
+     */
     blocks: {
       type: Array as PropType<BlockToken[]>,
       default: () => [],
-    },
-  },
-  computed: {
-    /**
-     * Link definitions of the answer, each written on its own line as `[docs]: https://hawk.so/docs`.
-     * A definition holds the target for every `[docs]` reference elsewhere in the answer, so one
-     * that arrives later turns text already rendered above it into a link.
-     */
-    definitions(): string {
-      return this.blocks
-        .filter(block => block.type === 'def')
-        .map(block => block.raw)
-        .join('');
     },
   },
 });
