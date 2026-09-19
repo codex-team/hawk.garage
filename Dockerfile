@@ -19,7 +19,7 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-RUN npm install -g http-server spa-http-server
+RUN npm install -g spa-http-server
 
 COPY --from=build-stage /app/dist ./
 
