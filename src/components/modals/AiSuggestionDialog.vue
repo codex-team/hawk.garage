@@ -30,7 +30,8 @@
 import PopupDialog from '../utils/PopupDialog.vue';
 import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import Icon from '../utils/Icon.vue';
-import * as eventsApi from '@/api/events';
+import * as aiApi from '@/api/ai';
+import { isAbortError } from '@/utils/errors';
 import { defineAsyncComponent, defineComponent } from 'vue';
 import { type Token as BlockToken } from 'marked';
 
@@ -70,6 +71,7 @@ export default defineComponent({
       suggestion: '',
       error: '',
       lex: null as ((source: string) => BlockToken[]) | null,
+      streamAbortController: new AbortController(),
     };
   },
   computed: {
@@ -85,17 +87,40 @@ export default defineComponent({
       const marked = await import('marked');
 
       this.lex = source => marked.lexer(source);
-      this.suggestion = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
 
-      if (!this.suggestion) {
+      await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
+        signal: this.streamAbortController.signal,
+        onTextDelta: (delta) => {
+          // TODO: Batch updates per animation frame when deltas outpace rendering.
+          this.suggestion += delta;
+          this.loading = false;
+        },
+        onError: (message) => {
+          /**
+           * Drop the part of the answer the API withdrew.
+           */
+          this.suggestion = '';
+          this.error = message;
+          this.loading = false;
+        },
+      });
+
+      if (!this.suggestion && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
-    } catch (e) {
-      this.error = this.$t('event.ai.error') as string;
-      console.error(e);
+    } catch (error) {
+      if (!isAbortError(error)) {
+        this.error = this.$t('event.ai.error') as string;
+        console.error(error);
+      }
     } finally {
-      this.loading = false;
+      if (!this.streamAbortController.signal.aborted) {
+        this.loading = false;
+      }
     }
+  },
+  beforeUnmount() {
+    this.streamAbortController.abort();
   },
 });
 </script>
