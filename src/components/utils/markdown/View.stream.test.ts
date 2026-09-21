@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createApp, h, nextTick, shallowRef } from 'vue';
-import { type Token } from 'marked';
+import type { Token } from 'marked';
 import MarkdownView from './View.vue';
 import { createIncrementalLexer } from '@/utils/markdown';
 
