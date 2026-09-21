@@ -141,6 +141,15 @@ export default {
     },
 
     /**
+     * Language and code to highlight
+     *
+     * @returns {string}
+     */
+    highlightSource() {
+      return `${this.lang}\n${this.code}`;
+    },
+
+    /**
      * Prepare and return html-escaped code with the column pointer for highlighted line
      *
      * @returns {string}
@@ -164,49 +173,66 @@ export default {
       return _.escape(code);
     },
   },
+  watch: {
+    /**
+     * Highlight again when streamed code or its language changes, once per update
+     */
+    highlightSource: 'highlight',
+  },
   /**
    * Vue mounted hook. Used to render highlighting
    */
   mounted() {
-    /**
-     * Set highlight.js syntax name based on catcher language
-     *
-     * @see https://github.com/highlightjs/highlight.js/tree/master/src/languages
-     */
-    this.syntax = this.lang;
-
-    /**
-     * Sometimes the JavaScript error can be triggered from inline scripts in HTML markup
-     * We need to highlight such code fragments as 'html' syntax instead of 'javascript'
-     */
-    if (this.syntax === 'javascript' && this.isHtmlScope()) {
-      this.syntax = 'html';
-    }
-
-    /**
-     * Sometimes error can be triggered from a JS-bundle, but source code is written on TS.
-     * If we've extracted real filenames from the source-map, we can detect TS scope by a filename
-     */
-    if (this.isTypeScriptScope()) {
-      this.syntax = 'typescript';
-    }
-
-    if (this.syntax !== 'plaintext') {
-      /**
-       * Timeout used to prevent Vue override 'hljs' class
-       */
-      setTimeout(() => {
-        /**
-         * We supposed to highlight each line separately because the code can be trimmed.
-         * This looks more suitable than incorrect highlighting of a whole block;
-         */
-        this.$refs.content.querySelectorAll('pre').forEach((el) => {
-          hljs.highlightBlock(el);
-        });
-      });
-    }
+    this.highlight();
   },
   methods: {
+    /**
+     * Detect syntax and highlight rendered code
+     */
+    async highlight() {
+      /**
+       * Set highlight.js syntax name based on catcher language
+       *
+       * @see https://github.com/highlightjs/highlight.js/tree/master/src/languages
+       */
+      this.syntax = this.lang;
+
+      /**
+       * Sometimes the JavaScript error can be triggered from inline scripts in HTML markup
+       * We need to highlight such code fragments as 'html' syntax instead of 'javascript'
+       * Code that is not taken from a file keeps the language it was given
+       */
+      if (this.syntax === 'javascript' && this.filename && this.isHtmlScope()) {
+        this.syntax = 'html';
+      }
+
+      /**
+       * Sometimes error can be triggered from a JS-bundle, but source code is written on TS.
+       * If we've extracted real filenames from the source-map, we can detect TS scope by a filename
+       */
+      if (this.isTypeScriptScope()) {
+        this.syntax = 'typescript';
+      }
+
+      if (this.syntax === 'plaintext') {
+        return;
+      }
+
+      /**
+       * Wait for render, so Vue doesn't override 'hljs' class and code
+       */
+      await this.$nextTick();
+
+      /**
+       * We supposed to highlight each line separately because the code can be trimmed.
+       * This looks more suitable than incorrect highlighting of a whole block;
+       */
+      this.$refs.content?.querySelectorAll('pre').forEach((el) => {
+        delete el.dataset.highlighted;
+        hljs.highlightElement(el);
+      });
+    },
+
     /**
      * Check if passed line should be highlighted
      *

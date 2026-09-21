@@ -8,7 +8,10 @@
         />
         {{ $t('event.ai.titlePrefix') }}:&nbsp;{{ title }}
       </div>
-      <div class="ai-suggestion-dialog__content">
+      <div
+        ref="content"
+        class="ai-suggestion-dialog__content"
+      >
         <AiSuggestionSkeleton v-if="loading" />
         <div
           v-else-if="error"
@@ -30,9 +33,15 @@
 import PopupDialog from '../utils/PopupDialog.vue';
 import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import Icon from '../utils/Icon.vue';
-import * as eventsApi from '@/api/events';
+import * as aiApi from '@/api/ai';
+import { isAbortError } from '@/utils/errors';
 import { defineAsyncComponent, defineComponent } from 'vue';
 import { type Token as BlockToken } from 'marked';
+
+/**
+ * Distance from the end of the answer that still counts as reading it.
+ */
+const FOLLOW_DISTANCE = 32;
 
 export default defineComponent({
   name: 'AiSuggestionDialog',
@@ -70,6 +79,7 @@ export default defineComponent({
       suggestion: '',
       error: '',
       lex: null as ((source: string) => BlockToken[]) | null,
+      streamAbortController: new AbortController(),
     };
   },
   computed: {
@@ -80,30 +90,77 @@ export default defineComponent({
       return this.lex ? this.lex(this.suggestion) : [];
     },
   },
+  watch: {
+    blocks: {
+      /**
+       * Keep the end of the suggestion in sight while reader is there.
+       */
+      handler(): void {
+        const content = this.$refs.content as HTMLElement;
+        const readAt = content.scrollTop;
+
+        if (content.scrollHeight - readAt - content.clientHeight > FOLLOW_DISTANCE) {
+          return;
+        }
+
+        void this.$nextTick(() => {
+          if (content.scrollTop === readAt) {
+            content.scrollTop = content.scrollHeight;
+          }
+        });
+      },
+      flush: 'pre',
+    },
+  },
   async created() {
     try {
       const marked = await import('marked');
 
       this.lex = source => marked.lexer(source);
-      this.suggestion = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
 
-      if (!this.suggestion) {
+      await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
+        signal: this.streamAbortController.signal,
+        onTextDelta: (delta) => {
+          // TODO: Batch updates per animation frame when deltas outpace rendering.
+          this.suggestion += delta;
+          this.loading = false;
+        },
+        onError: (message) => {
+          /**
+           * Drop the part of the answer the API withdrew.
+           */
+          this.suggestion = '';
+          this.error = message;
+          this.loading = false;
+        },
+      });
+
+      if (!this.suggestion && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
-    } catch (e) {
-      this.error = this.$t('event.ai.error') as string;
-      console.error(e);
+    } catch (error) {
+      if (!isAbortError(error)) {
+        this.error = this.$t('event.ai.error') as string;
+        console.error(error);
+      }
     } finally {
-      this.loading = false;
+      if (!this.streamAbortController.signal.aborted) {
+        this.loading = false;
+      }
     }
+  },
+  beforeUnmount() {
+    this.streamAbortController.abort();
   },
 });
 </script>
 
 <style>
 .ai-suggestion-dialog {
+  display: flex;
+  flex-direction: column;
   width: 720px;
-  min-height: 400px;
+  height: min(600px, calc(100vh - var(--popup-dialog-gutter) * 2));
 
   &__header {
     display: flex;
@@ -125,16 +182,19 @@ export default defineComponent({
   &__content {
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
     align-items: center;
     min-width: 0;
+    min-height: 0;
     padding: var(--spacing-l) var(--spacing-xl);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 
   &__suggestion {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    overflow-x: auto;
   }
 
   &__error {
