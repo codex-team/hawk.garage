@@ -35,6 +35,7 @@ import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import Icon from '../utils/Icon.vue';
 import * as aiApi from '@/api/ai';
 import { isAbortError } from '@/utils/errors';
+import { createIncrementalLexer } from '@/utils/markdown';
 import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
 import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
 import { type Token as BlockToken } from 'marked';
@@ -77,20 +78,14 @@ export default defineComponent({
   data() {
     return {
       loading: true,
-      suggestion: '',
       error: '',
-      lex: null as ((source: string) => BlockToken[]) | null,
+      /**
+       * Blocks of AI answer to render. Kept raw: tokens are only read, never changed.
+       */
+      blocks: [] as BlockToken[],
       streamAbortController: new AbortController(),
       streamPacer: null as StreamPacer | null,
     };
-  },
-  computed: {
-    /**
-     * Split AI answer into blocks to render.
-     */
-    blocks(): BlockToken[] {
-      return this.lex ? this.lex(this.suggestion) : [];
-    },
   },
   watch: {
     blocks: {
@@ -116,15 +111,14 @@ export default defineComponent({
   },
   async created() {
     try {
-      const marked = await import('marked');
+      const lexer = await createIncrementalLexer();
       const pacer = createStreamPacer({
         onText: (text) => {
-          this.suggestion += text;
+          this.blocks = markRaw(lexer.append(text));
           this.loading = false;
         },
       });
 
-      this.lex = source => marked.lexer(source);
       this.streamPacer = markRaw(pacer);
 
       await aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
@@ -135,7 +129,7 @@ export default defineComponent({
            * Drop the part of the answer the API withdrew.
            */
           pacer.stop();
-          this.suggestion = '';
+          this.blocks = [];
           this.error = message;
           this.loading = false;
         },
@@ -143,7 +137,11 @@ export default defineComponent({
 
       await pacer.drain();
 
-      if (!this.suggestion && !this.error) {
+      if (!this.error) {
+        this.blocks = markRaw(lexer.reparse());
+      }
+
+      if (!this.blocks.length && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
     } catch (error) {
