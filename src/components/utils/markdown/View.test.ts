@@ -88,13 +88,19 @@ describe('MarkdownView', () => {
     });
 
     it.each([
-      ['drop an unsafe link target', '[click](javascript:alert(1))', null],
-      ['drop an unsafe link target written with references', '[click](javascript&colon;alert(1))', null],
-      ['keep a safe link target', '[click](https://hawk.so)', 'https://hawk.so'],
-    ])('should %s', (_case, source, href) => {
-      const link = render(source).querySelector('a');
+      ['an unsafe link target', '[click](javascript:alert(1))'],
+      ['an unsafe link target written with references', '[click](javascript&colon;alert(1))'],
+    ])('should render the text of %s without a link', (_case, source) => {
+      const view = render(source);
 
-      expect(link?.getAttribute('href')).toBe(href);
+      expect(view.querySelector('a')).toBeNull();
+      expect(view.textContent).toBe('click');
+    });
+
+    it('should keep a safe link target', () => {
+      const link = render('[click](https://hawk.so)').querySelector('a');
+
+      expect(link?.getAttribute('href')).toBe('https://hawk.so');
     });
   });
 });

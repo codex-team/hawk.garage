@@ -11,7 +11,7 @@
 <script lang="ts">
 import MarkdownBlock from './Block.vue';
 import { defineComponent, type PropType } from 'vue';
-import { type Token as BlockToken } from 'marked';
+import type { Token } from 'marked';
 
 export default defineComponent({
   name: 'MarkdownView',
@@ -20,7 +20,7 @@ export default defineComponent({
   },
   props: {
     blocks: {
-      type: Array as PropType<BlockToken[]>,
+      type: Array as PropType<Token[]>,
       default: () => [],
     },
   },

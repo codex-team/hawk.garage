@@ -32,7 +32,12 @@ import AiSuggestionSkeleton from './AiSuggestionSkeleton.vue';
 import Icon from '../utils/Icon.vue';
 import * as eventsApi from '@/api/events';
 import { defineAsyncComponent, defineComponent } from 'vue';
-import { type Token as BlockToken } from 'marked';
+import type { Token } from 'marked';
+
+/**
+ * Splits an answer into the blocks the view renders.
+ */
+type MarkdownLexer = (source: string) => Token[];
 
 export default defineComponent({
   name: 'AiSuggestionDialog',
@@ -69,22 +74,22 @@ export default defineComponent({
       loading: true,
       suggestion: '',
       error: '',
-      lex: null as ((source: string) => BlockToken[]) | null,
+      markdownLexer: null as MarkdownLexer | null,
     };
   },
   computed: {
     /**
      * Split AI answer into blocks to render.
      */
-    blocks(): BlockToken[] {
-      return this.lex ? this.lex(this.suggestion) : [];
+    blocks(): Token[] {
+      return this.markdownLexer ? this.markdownLexer(this.suggestion) : [];
     },
   },
   async created() {
     try {
       const marked = await import('marked');
 
-      this.lex = source => marked.lexer(source);
+      this.markdownLexer = source => marked.lexer(source);
       this.suggestion = await eventsApi.fetchEventAiSuggestion(this.projectId, this.eventId, this.originalEventId);
 
       if (!this.suggestion) {

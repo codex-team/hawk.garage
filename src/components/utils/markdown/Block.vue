@@ -1,7 +1,7 @@
 <script lang="ts">
 import DOMPurify from 'dompurify';
 import { decodeHTMLStrict } from 'entities';
-import { type Token, type Tokens } from 'marked';
+import type { Token, Tokens } from 'marked';
 import { defineComponent, h, type PropType, type VNodeChild } from 'vue';
 import CodeFragment from '../CodeFragment.vue';
 
@@ -21,7 +21,7 @@ function decodeEntities(text: string): string {
 }
 
 /**
- * Render link token. Also drop unsafe `href`.
+ * Render link token. An unsafe `href` leaves the text without the link around it.
  *
  * @param link - link token
  * @returns purified link node
@@ -30,8 +30,12 @@ function renderLink(link: Tokens.Link): VNodeChild {
   const href = decodeEntities(link.href);
   const title = link.title ? decodeEntities(link.title) : undefined;
 
+  if (!DOMPurify.isValidAttribute('a', 'href', href)) {
+    return h('span', { title }, renderInline(link.tokens));
+  }
+
   return h('a', {
-    href: DOMPurify.isValidAttribute('a', 'href', href) ? href : undefined,
+    href,
     title,
   }, renderInline(link.tokens));
 }
