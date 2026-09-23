@@ -15,14 +15,10 @@ COPY . .
 RUN yarn run build
 
 # production stage
-FROM node:24-alpine
+FROM nginx:alpine
 
-WORKDIR /app
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN npm install -g spa-http-server
-
-COPY --from=build-stage /app/dist ./
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 
 EXPOSE 8080
-
-CMD ["http-server", "--push-state", "-c-0"]
