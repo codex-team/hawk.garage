@@ -46,8 +46,15 @@
 import hljs from 'highlight.js';
 import * as _ from './../../utils';
 import notifier from 'codex-notifier';
-import type { CodeLine } from '@/utils/markdown';
 import type { PropType } from 'vue';
+
+/**
+ * Single code line representation
+ */
+export type CodeLine = {
+  line: number;
+  content: string;
+};
 
 /**
  * This component is using to render some code fragment, for example in stack trace description
