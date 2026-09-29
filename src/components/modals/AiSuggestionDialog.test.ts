@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createApp, h, nextTick, type App, type Component } from 'vue';
 import type { AiSuggestionStreamOptions } from '@/api/ai';
+import type * as Markdown from '@/utils/markdown';
 import Dialog from './AiSuggestionDialog.vue';
 
-const { stream, loadView } = vi.hoisted(() => ({ stream: vi.fn(),
-  loadView: vi.fn() }));
+const { stream, loadView, loadLexer } = vi.hoisted(() => ({ stream: vi.fn(),
+  loadView: vi.fn(),
+  loadLexer: vi.fn() }));
 
 vi.mock('@/api/ai', () => ({ streamEventAiSuggestion: stream }));
 vi.mock('@/utils/loadAsyncComponent', async (importOriginal) => {
@@ -17,6 +19,18 @@ vi.mock('@/utils/loadAsyncComponent', async (importOriginal) => {
 
       return loader();
     }),
+  };
+});
+vi.mock('@/utils/markdown', async (importOriginal) => {
+  const original = await importOriginal<typeof Markdown>();
+
+  return {
+    ...original,
+    createIncrementalLexer: async () => {
+      await loadLexer();
+
+      return original.createIncrementalLexer();
+    },
   };
 });
 let app: App;
@@ -48,6 +62,7 @@ async function mount(): Promise<HTMLElement> {
 beforeEach(() => {
   options = undefined;
   loadView.mockResolvedValue(undefined);
+  loadLexer.mockResolvedValue(undefined);
   stream.mockImplementation((_project, _event, _original, callbacks) => {
     options = callbacks;
 
@@ -139,5 +154,44 @@ describe('AiSuggestionDialog loading', () => {
 
     rejectStream(new Error('Offline'));
     await vi.waitFor(() => expect(host.querySelector('.ai-suggestion-dialog__error')?.textContent).toBe('event.ai.error'));
+  });
+});
+
+describe('AiSuggestionDialog lexer loading', () => {
+  it('should preserve deltas received before the lexer is ready', async () => {
+    let finishLoading!: () => void;
+
+    loadLexer.mockReturnValue(new Promise<void>((resolve) => {
+      finishLoading = resolve;
+    }));
+    const host = await mount();
+
+    options!.onTextDelta('Early answer.');
+    resolveStream();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(host.querySelector('.ai-suggestion-skeleton')).not.toBeNull();
+
+    finishLoading();
+    await vi.waitFor(() => expect(host.querySelector('.markdown-view p')?.textContent).toBe('Early answer.'));
+  });
+
+  it('should discard early deltas if the API refuses the answer before the lexer is ready', async () => {
+    let finishLoading!: () => void;
+
+    loadLexer.mockReturnValue(new Promise<void>((resolve) => {
+      finishLoading = resolve;
+    }));
+    const host = await mount();
+
+    options!.onTextDelta('Withdrawn answer.');
+    options!.onError('Answer refused');
+    resolveStream();
+    finishLoading();
+    await vi.runAllTimersAsync();
+    await nextTick();
+
+    expect(host.querySelector('.ai-suggestion-dialog__error')?.textContent).toBe('Answer refused');
+    expect(host.textContent).not.toContain('Withdrawn answer.');
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

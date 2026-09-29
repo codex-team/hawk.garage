@@ -36,16 +36,12 @@ import Icon from '../utils/Icon.vue';
 import * as aiApi from '@/api/ai';
 import { isAbortError } from '@/utils/errors';
 import { loadAsyncComponent } from '@/utils/loadAsyncComponent';
+import { createIncrementalLexer, type IncrementalLexer } from '@/utils/markdown';
 import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
-import { defineAsyncComponent, defineComponent } from 'vue';
+import { defineAsyncComponent, defineComponent, markRaw } from 'vue';
 import type { Token } from 'marked';
 
 const loadMarkdownView = loadAsyncComponent(() => import('../utils/markdown/View.vue'));
-
-/**
- * Splits an answer into the blocks the view renders.
- */
-type MarkdownLexer = (source: string) => Token[];
 
 /**
  * Distance from the end of the answer that still counts as reading it.
@@ -88,19 +84,13 @@ export default defineComponent({
   data() {
     return {
       loading: true,
-      suggestion: '',
       error: '',
-      markdownLexer: null as MarkdownLexer | null,
+      /**
+       * Blocks of AI answer to render. Kept raw: tokens are only read, never changed.
+       */
+      blocks: [] as Token[],
       streamAbortController: new AbortController(),
     };
-  },
-  computed: {
-    /**
-     * Split AI answer into blocks to render.
-     */
-    blocks(): Token[] {
-      return this.markdownLexer ? this.markdownLexer(this.suggestion) : [];
-    },
   },
   watch: {
     blocks: {
@@ -125,56 +115,76 @@ export default defineComponent({
     },
   },
   async created() {
+    let lexer: IncrementalLexer | undefined;
     let pacer: StreamPacer | undefined;
+    let pendingText = '';
+    let viewReady = false;
     const stopPacer = (): void => pacer?.stop();
 
     this.streamAbortController.signal.addEventListener('abort', stopPacer, { once: true });
 
     try {
-      const rendererReady = Promise.all([import('marked'), loadMarkdownView()]).then(([marked]) => {
-        if (this.streamAbortController.signal.aborted) {
+      const rendererReady = loadMarkdownView().then(() => {
+        viewReady = true;
+
+        if (!this.streamAbortController.signal.aborted && (this.blocks.length || this.error)) {
+          this.loading = false;
+        }
+      });
+      const lexerReady = createIncrementalLexer().then((activeLexer) => {
+        if (this.streamAbortController.signal.aborted || this.error) {
           return;
         }
 
-        this.markdownLexer = source => marked.lexer(source);
-
-        if (this.suggestion || this.error) {
-          this.loading = !this.markdownLexer;
-        }
+        lexer = activeLexer;
+        pacer = createStreamPacer({
+          onText: (text) => {
+            this.blocks = markRaw(activeLexer.append(text));
+            this.loading = !viewReady;
+          },
+        });
+        pacer.push(pendingText);
+        pendingText = '';
       });
 
-      const activePacer = createStreamPacer({
-        onText: (text) => {
-          this.suggestion += text;
-          this.loading = !this.markdownLexer;
-        },
-      });
-
-      pacer = activePacer;
-
-      await Promise.all([rendererReady, aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
+      await Promise.all([rendererReady, lexerReady, aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
         signal: this.streamAbortController.signal,
-        onTextDelta: delta => activePacer.push(delta),
+        onTextDelta: (delta) => {
+          if (pacer) {
+            pacer.push(delta);
+          } else {
+            pendingText += delta;
+          }
+        },
         onError: (message) => {
           /**
            * Drop the part of the answer the API withdrew.
            */
-          activePacer.stop();
-          this.suggestion = '';
+          pacer?.stop();
+          pendingText = '';
+          this.blocks = markRaw([]);
           this.error = message;
-          this.loading = !this.markdownLexer;
+          this.loading = !viewReady;
         },
       })]);
 
-      await activePacer.drain();
+      await pacer?.drain();
 
-      if (!this.suggestion && !this.error) {
+      if (lexer && !this.error) {
+        this.blocks = markRaw(lexer.reparse());
+      }
+
+      if (!this.blocks.length && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
     } catch (error) {
       pacer?.stop();
 
       if (!isAbortError(error)) {
+        if (lexer && !this.error) {
+          this.blocks = markRaw(lexer.reparse());
+        }
+
         this.error = this.$t('event.ai.error') as string;
         this.streamAbortController.abort();
         this.loading = false;

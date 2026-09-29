@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createApp, h, shallowRef, type App } from 'vue';
-import { marked, type Token } from 'marked';
+import type { Token } from 'marked';
+import { createIncrementalLexer } from '@/utils/markdown';
 import MarkdownView from './View.vue';
 import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
 
@@ -25,17 +26,16 @@ afterEach(() => {
  * @param text - answer arriving in one burst
  * @returns the element displaying released words
  */
-function renderBurst(text: string): HTMLElement {
+async function renderBurst(text: string): Promise<HTMLElement> {
   const host = document.createElement('div');
   const blocks = shallowRef<Token[]>([]);
-  let source = '';
+  const lexer = await createIncrementalLexer();
 
   app = createApp({ render: () => h(MarkdownView, { blocks: blocks.value }) });
   app.mount(host);
   pacer = createStreamPacer({
     onText: (delta) => {
-      source += delta;
-      blocks.value = marked.lexer(source);
+      blocks.value = lexer.append(delta);
     },
   });
   pacer.push(text);
@@ -45,7 +45,7 @@ function renderBurst(text: string): HTMLElement {
 
 describe('MarkdownView pacing', () => {
   it('should reveal a heading word by word even with a large backlog', async () => {
-    const host = renderBurst('## Short summary\n\n' + 'body '.repeat(BACKLOG_WORDS));
+    const host = await renderBurst('## Short summary\n\n' + 'body '.repeat(BACKLOG_WORDS));
 
     await vi.advanceTimersToNextTimerAsync();
     await vi.advanceTimersToNextTimerAsync();
@@ -58,7 +58,7 @@ describe('MarkdownView pacing', () => {
   });
 
   it('should reveal a quotation word by word even with a large backlog', async () => {
-    const host = renderBurst('> These words arrive gradually.\n\n' + 'body '.repeat(BACKLOG_WORDS));
+    const host = await renderBurst('> These words arrive gradually.\n\n' + 'body '.repeat(BACKLOG_WORDS));
 
     await vi.advanceTimersToNextTimerAsync();
     await vi.advanceTimersToNextTimerAsync();
