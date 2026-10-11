@@ -77,6 +77,14 @@ export interface HawkEvent {
   totalCount: number;
 
   /**
+   * Number of real occurrences this single repetition represents. Undefined
+   * for the original event and for ordinary repetitions (both mean "single
+   * occurrence") — distinct from totalCount, which is the group's grand
+   * total across all repetitions.
+   */
+  count?: number;
+
+  /**
    * Users who visited this event
    */
   visitedBy: User[];
