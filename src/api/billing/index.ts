@@ -2,7 +2,7 @@ import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMEN
 import * as api from '../';
 import { withDemoMock } from '@/utils/withDemoMock';
 import type { BusinessOperation } from '../../types/business-operation';
-import { BeforePaymentPayload } from '@/types/before-payment-payload';
+import type { BeforePaymentPayload } from '@/types/before-payment-payload';
 
 /**
  * Request business operations list for passed workspaces
@@ -50,15 +50,20 @@ export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
  * @param workspaceId - id of workspace
  * @param tariffPlanId - id of plan
  * @param shouldSaveCard - whether to save the card
+ * @param promoCode - optional promo code to apply
  */
 export async function composePayment(
   workspaceId: string,
   tariffPlanId: string,
-  shouldSaveCard = false
-): Promise<unknown> {
-  return await api.call(QUERY_COMPOSE_PAYMENT, {
-    input: { workspaceId,
+  shouldSaveCard = false,
+  promoCode?: string
+) {
+  return await api.call<{ composePayment: BeforePaymentPayload }>(QUERY_COMPOSE_PAYMENT, {
+    input: {
+      workspaceId,
       tariffPlanId,
-      shouldSaveCard },
-  });
+      shouldSaveCard,
+      promoCode,
+    },
+  }, undefined, { allowErrors: true });
 }

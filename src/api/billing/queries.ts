@@ -78,6 +78,7 @@ export const QUERY_COMPOSE_PAYMENT = `
         monthlyCharge
       }
       isCardLinkOperation
+      paymentAmount
       currency
       checksum
       nextPaymentDate

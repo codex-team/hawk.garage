@@ -1,18 +1,26 @@
 /**
  * Data declaration before card charge
  */
-import type { Plan } from './plan.d.ts';
 
 export interface BeforePaymentPayload {
   /**
    * Tariff plan
    */
-  plan: Plan;
+  plan: {
+    id: string;
+    name: string;
+    monthlyCharge: number;
+  };
 
   /**
    * Unique invoice identifier, format: `WorkspaceNameConsonants year-month-identifier Tariff`
    */
   invoiceId: string;
+
+  /**
+   * Amount to charge for this payment
+   */
+  paymentAmount: number;
 
   /**
    * Payment currency
