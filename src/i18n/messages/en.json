@@ -508,19 +508,19 @@
       }
     },
     "promoCode": {
+      "showInput": "I have a promo code",
       "label": "Promo code",
       "placeholder": "Enter a promo code",
       "apply": "Apply",
       "remove": "Remove",
-      "total": "Total to pay",
       "applied": "Promo code {code} applied.",
       "onceNote": "The discount applies to this payment only.",
       "recurringNote": "The discount applies to the first payment only. Future payments: {price}.",
-      "applyFirst": "Apply the promo code or clear the field before continuing.",
+
       "priceChanged": "The price has changed. Check the new amount and click pay again.",
       "errors": {
         "PROMO_CODE_INVALID": "This promo code is invalid.",
-        "PROMO_CODE_ALREADY_USED": "This promo code has already been used or reserved for another payment.",
+        "PROMO_CODE_ALREADY_USED": "This promo code has already been used by this user or workspace.",
 
         "PROMO_CODE_ADMIN_REQUIRED": "Only a workspace administrator can apply a promo code.",
         "PROMO_CODE_NOT_AVAILABLE_FOR_CARD_LINK": "Promo codes cannot be used for card linking.",

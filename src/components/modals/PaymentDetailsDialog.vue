@@ -77,32 +77,35 @@
             </div>
 
             <!--Price-->
-            <div class="payment-details__details-item">
-              <div class="payment-details__details-item-field">
-                {{ $t('common.price') }}
-              </div>
-              <div
-                class="payment-details__details-item-value"
-                :class="{ 'payment-details__original-price': appliedPromoCode }"
-              >
-                {{ price }}
-              </div>
-            </div>
-
             <div
               v-if="paymentData"
               class="payment-details__details-item"
             >
               <div class="payment-details__details-item-field">
-                {{ $t('billing.promoCode.total') }}
+                {{ $t('common.price') }}
               </div>
-              <div class="payment-details__details-item-value">
-                {{ paymentData.paymentAmount }}{{ getCurrencySign(paymentData.currency) }}
+              <div class="payment-details__details-item-value payment-details__price-values">
+                <span
+                  v-if="appliedPromoCode"
+                  class="payment-details__original-price"
+                >
+                  {{ price }}
+                </span>
+                <span>{{ paymentData.paymentAmount }}{{ getCurrencySign(paymentData.currency) }}</span>
               </div>
             </div>
 
+            <button
+              v-if="paymentData && !paymentData.isCardLinkOperation && !promoInputVisible && !appliedPromoCode"
+              type="button"
+              class="payment-details__promo-link"
+              @click="showPromoCodeInput"
+            >
+              {{ $t('billing.promoCode.showInput') }}
+            </button>
+
             <form
-              v-if="paymentData && !paymentData.isCardLinkOperation"
+              v-if="paymentData && !paymentData.isCardLinkOperation && promoInputVisible"
               class="payment-details__promo"
               @submit.prevent="updatePromoCode(promoCode)"
             >
@@ -126,7 +129,7 @@
                   secondary
                 />
                 <UiButton
-                  v-else
+                  v-if="appliedPromoCode"
                   type="button"
                   :content="$t('billing.promoCode.remove')"
                   :disabled="isUpdatingPayment"
@@ -134,6 +137,7 @@
                   secondary
                   @click="updatePromoCode('')"
                 />
+
               </div>
               <p
                 v-if="promoError"
@@ -149,12 +153,6 @@
               >
                 {{ $t('billing.promoCode.applied', { code: appliedPromoCode }) }}
                 {{ isRecurrent ? $t('billing.promoCode.recurringNote', { price }) : $t('billing.promoCode.onceNote') }}
-              </p>
-              <p
-                v-else-if="promoCode.trim()"
-                class="payment-details__promo-note"
-              >
-                {{ $t('billing.promoCode.applyFirst') }}
               </p>
             </form>
 
@@ -381,6 +379,7 @@ export default defineComponent({
        */
       paymentData: null as BeforePaymentPayload | null,
       promoCode: '',
+      promoInputVisible: false,
       appliedPromoCode: '',
       promoError: '',
       isUpdatingPayment: false,
@@ -616,6 +615,12 @@ export default defineComponent({
       return this.$te(key) ? this.$t(key).toString() : this.$t('billing.notifications.error').toString();
     },
 
+    showPromoCodeInput(): void {
+      this.promoInputVisible = true;
+      this.promoError = '';
+    },
+
+
     /**
      * Apply a code, or remove it with an empty value, after the API confirms the quote.
      *
@@ -635,6 +640,7 @@ export default defineComponent({
         this.paymentData = await this.fetchPaymentData(value || undefined);
         this.appliedPromoCode = value.toUpperCase();
         this.promoCode = this.appliedPromoCode;
+        this.promoInputVisible = Boolean(this.appliedPromoCode);
       } catch (error) {
         this.promoError = this.paymentErrorMessage(error);
       } finally {
@@ -706,10 +712,10 @@ export default defineComponent({
 
         this.paymentData = payment;
 
-        if (payment.paymentAmount !== previousPayment.paymentAmount ||
-          payment.currency !== previousPayment.currency ||
-          payment.isCardLinkOperation !== previousPayment.isCardLinkOperation ||
-          (this.isRecurrent && payment.plan.monthlyCharge !== previousPayment.plan.monthlyCharge)) {
+        if (payment.paymentAmount !== previousPayment.paymentAmount
+          || payment.currency !== previousPayment.currency
+          || payment.isCardLinkOperation !== previousPayment.isCardLinkOperation
+          || (this.isRecurrent && payment.plan.monthlyCharge !== previousPayment.plan.monthlyCharge)) {
           notifier.show({
             message: this.$t('billing.promoCode.priceChanged') as string,
             style: 'error',
@@ -901,9 +907,31 @@ export default defineComponent({
     }
   }
 
+  &__price-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
   &__original-price {
     color: var(--color-text-second);
     text-decoration: line-through;
+  }
+
+  &__promo-link {
+    padding: 0;
+    color: var(--color-indicator-medium);
+    font: inherit;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: underline;
+  }
+
+  &__promo-link:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   &__promo {
