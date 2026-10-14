@@ -507,6 +507,27 @@
         "error": "There was an error while paying"
       }
     },
+    "promoCode": {
+      "showInput": "I have a promo code",
+      "label": "Promo code",
+      "placeholder": "Enter a promo code",
+      "apply": "Apply",
+      "remove": "Remove",
+      "applied": "Promo code {code} applied.",
+      "onceNote": "The discount applies to this payment only.",
+      "recurringNote": "The discount applies to the first payment only. Future payments: {price}.",
+
+      "priceChanged": "The price has changed. Check the new amount and click pay again.",
+      "errors": {
+        "PROMO_CODE_INVALID": "This promo code is invalid.",
+        "PROMO_CODE_ALREADY_USED": "This promo code has already been used by this user or workspace.",
+
+        "PROMO_CODE_ADMIN_REQUIRED": "Only a workspace administrator can apply a promo code.",
+        "PROMO_CODE_NOT_AVAILABLE_FOR_CARD_LINK": "Promo codes cannot be used for card linking.",
+
+        "PROMO_CODE_INVALID_AMOUNT": "This promo code cannot be used for this plan."
+      }
+    },
     "pricingAndPayments": "pricing and payments",
     "paymentDetails": {
       "title": "Payment details",
@@ -548,6 +569,7 @@
     },
     "cardLinking": {
       "description": "You are about to subscribe, which will start on",
+      "price": "Subscription price: {price}.",
       "howItWorks": "How it works?",
       "step1": "We will charge and immediately refund 1 USD to link your card.",
       "step2": "The first regular payment will be charged on {date}, and the subscription will start from that day."

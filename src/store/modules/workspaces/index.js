@@ -424,19 +424,22 @@ const actions = {
    * @param {string} payload.workspaceId - workspace id
    * @param {string} payload.tariffPlanId - plan id
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
+   * @param {string} [payload.promoCode] - optional promo code to apply
    * @param context
    * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
    */
-  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
-    const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
+  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false, promoCode }) {
+    const response = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard, promoCode);
 
-    const { data } = result;
-
-    if (!data) {
-      return null;
+    if (response.errors?.length) {
+      throw new Error(response.errors[0]?.message || 'Failed to compose payment.');
     }
 
-    return data.composePayment;
+    if (!response.data?.composePayment) {
+      throw new Error('Failed to compose payment: response is missing payment data.');
+    }
+
+    return response.data.composePayment;
   },
 
   /**
