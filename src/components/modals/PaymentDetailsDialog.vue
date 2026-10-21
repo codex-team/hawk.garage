@@ -137,7 +137,6 @@
                   secondary
                   @click="updatePromoCode('')"
                 />
-
               </div>
               <p
                 v-if="promoError"
@@ -619,7 +618,6 @@ export default defineComponent({
       this.promoInputVisible = true;
       this.promoError = '';
     },
-
 
     /**
      * Apply a code, or remove it with an empty value, after the API confirms the quote.

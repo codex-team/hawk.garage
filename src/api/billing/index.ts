@@ -3,6 +3,7 @@ import * as api from '../';
 import { withDemoMock } from '@/utils/withDemoMock';
 import type { BusinessOperation } from '../../types/business-operation';
 import type { BeforePaymentPayload } from '@/types/before-payment-payload';
+import type { APIResponse } from '@/types/api';
 
 /**
  * Request business operations list for passed workspaces
@@ -57,7 +58,7 @@ export async function composePayment(
   tariffPlanId: string,
   shouldSaveCard = false,
   promoCode?: string
-) {
+): Promise<APIResponse<{ composePayment: BeforePaymentPayload }>> {
   return await api.call<{ composePayment: BeforePaymentPayload }>(QUERY_COMPOSE_PAYMENT, {
     input: {
       workspaceId,
