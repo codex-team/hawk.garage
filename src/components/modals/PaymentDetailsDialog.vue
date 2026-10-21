@@ -327,6 +327,9 @@ function cardToSelectOption(card: BankCard): CustomSelectOption {
   };
 }
 
+/**
+ * Payment confirmation dialog with server-validated promo codes
+ */
 export default defineComponent({
   name: 'PaymentDetailsDialog',
   components: {
@@ -362,6 +365,11 @@ export default defineComponent({
       default: false,
     },
   },
+  /**
+   * Initialize payment agreements and promo code controls
+   *
+   * @returns {object} initial dialog state
+   */
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
@@ -377,10 +385,30 @@ export default defineComponent({
        * Payment data received from API
        */
       paymentData: null as BeforePaymentPayload | null,
+
+      /**
+       * User-entered code awaiting server validation
+       */
       promoCode: '',
+
+      /**
+       * Whether to show the discount controls instead of the reveal button
+       */
       promoInputVisible: false,
+
+      /**
+       * Normalized code confirmed by the latest successful quote
+       */
       appliedPromoCode: '',
+
+      /**
+       * Translated message for the latest quote failure
+       */
       promoError: '',
+
+      /**
+       * Whether a quote request is in flight, blocking duplicate submissions
+       */
       isUpdatingPayment: false,
 
       /**
@@ -430,6 +458,11 @@ export default defineComponent({
     };
   },
   computed: {
+    /**
+     * Prevent checkout with a discount that the server has not confirmed
+     *
+     * @returns {boolean} whether a non-empty code still needs to be applied
+     */
     hasUnappliedPromoCode(): boolean {
       return Boolean(this.promoCode.trim()) && !this.appliedPromoCode;
     },
@@ -470,9 +503,9 @@ export default defineComponent({
     },
 
     /**
-     * Price with dollar mark
+     * Format the regular monthly price without the promo discount
      *
-     * example: 100$
+     * @returns {string} localized amount with currency and billing period
      */
     price(): string {
       return this.$t('common.moneyPerMonth', {
@@ -536,12 +569,19 @@ export default defineComponent({
   //     this.selectedCard = newCards[1] || newCards[0];
   //   },
   // },
+  /**
+   * Load the payment widget script and request the initial quote
+   *
+   * @returns {Promise<void>} resolves after the initial loading state is cleared
+   */
   async mounted() {
     /**
      * Check if script was loaded
      */
     if (window.cp && window.cp.CloudPayments) {
-      // CloudPayments script is already loaded
+      /**
+       * CloudPayments script is already loaded
+       */
     } else {
       /**
        * Script is not loaded
@@ -554,7 +594,9 @@ export default defineComponent({
     }
 
     try {
-      // Check if demo mode is active
+      /**
+       * Check if demo mode is active
+       */
       if (this.$store.state.demo?.isActive) {
         notifier.show({
           message: this.$t('demo.functionUnavailable') as string,
@@ -566,7 +608,9 @@ export default defineComponent({
         return;
       }
 
-      // Fetch payment data when component is mounted via store
+      /**
+       * Fetch payment data when component is mounted via store
+       */
       this.paymentData = await this.fetchPaymentData();
     } catch (e) {
       const error = e as Error;
@@ -592,7 +636,7 @@ export default defineComponent({
      * Request the server's quote; never calculate a discount in the browser.
      *
      * @param promoCode - optional code to apply
-     * @returns payment quote and signed checksum
+     * @returns {Promise<BeforePaymentPayload>} payment quote and signed checksum
      */
     async fetchPaymentData(promoCode?: string): Promise<BeforePaymentPayload> {
       return this.$store.dispatch(COMPOSE_PAYMENT, {
@@ -604,8 +648,10 @@ export default defineComponent({
     },
 
     /**
+     * Resolve a quote failure to a user-facing notification
+     *
      * @param error - API or transport error
-     * @returns translated promo error or the generic payment error
+     * @returns {string} translated promo error or the generic payment error
      */
     paymentErrorMessage(error: unknown): string {
       const message = error instanceof Error ? error.message : '';
@@ -614,6 +660,11 @@ export default defineComponent({
       return this.$te(key) ? this.$t(key).toString() : this.$t('billing.notifications.error').toString();
     },
 
+    /**
+     * Reveal the discount controls and clear the previous failure message
+     *
+     * @returns {void}
+     */
     showPromoCodeInput(): void {
       this.promoInputVisible = true;
       this.promoError = '';
@@ -623,6 +674,7 @@ export default defineComponent({
      * Apply a code, or remove it with an empty value, after the API confirms the quote.
      *
      * @param code - promo code or an empty string for regular pricing
+     * @returns {Promise<void>} resolves after the quote and input state are updated
      */
     async updatePromoCode(code: string): Promise<void> {
       if (this.isUpdatingPayment) {
@@ -646,14 +698,18 @@ export default defineComponent({
       }
     },
     /**
-     * Open service payment
+     * Check agreements and promo validation before starting checkout
+     *
+     * @returns {Promise<void>} resolves after processing or notifying about unmet requirements
      */
     async onGoToServicePayment(): Promise<void> {
       if (this.isUpdatingPayment || this.hasUnappliedPromoCode) {
         return;
       }
 
-      // Check if demo mode is active
+      /**
+       * Check if demo mode is active
+       */
       if (this.$store.state.demo?.isActive) {
         notifier.show({
           message: this.$t('demo.functionUnavailable') as string,
@@ -693,7 +749,9 @@ export default defineComponent({
     },
 
     /**
-     * Method for payment processing
+     * Refresh the quote and open checkout only if the displayed price is still current
+     *
+     * @returns {Promise<void>} resolves after opening the widget or reporting a quote failure
      */
     async processPayment(): Promise<void> {
       if (!this.paymentData || this.isUpdatingPayment) {
@@ -772,7 +830,8 @@ export default defineComponent({
     /**
      * Method prepares widget and charges money from entered card
      *
-     * @param {BeforePaymentPayload} data — server response that sent after beforePay request
+     * @param {BeforePaymentPayload} data - confirmed quote with the amount to charge and signed details
+     * @returns {void}
      */
     showPaymentWidget(data: BeforePaymentPayload): void {
       const widget = new window.cp.CloudPayments({ language: this.$i18n.locale });
@@ -812,7 +871,9 @@ export default defineComponent({
           currency: data.currency,
           email: this.email,
 
-          /** Label for admin panel */
+          /**
+           * Label for admin panel
+           */
           invoiceId: data.invoiceId,
           accountId: this.$store.state.user.data.id,
 

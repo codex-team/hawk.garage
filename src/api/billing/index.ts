@@ -47,19 +47,30 @@ export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
 }
 
 /**
- * Prepare payment data (compose payment)
- * @param workspaceId - id of workspace
- * @param tariffPlanId - id of plan
- * @param shouldSaveCard - whether to save the card
- * @param promoCode - optional promo code to apply
+ * Prepare a server-calculated payment quote with an optional discount
+ * @param workspaceId - workspace to charge
+ * @param tariffPlanId - tariff to purchase
+ * @param [shouldSaveCard] - whether to save the card
+ * @param [promoCode] - optional discount code to apply
+ * @returns API response containing the payment quote or validation errors
  */
 export async function composePayment(
   workspaceId: string,
   tariffPlanId: string,
   shouldSaveCard = false,
   promoCode?: string
-): Promise<APIResponse<{ composePayment: BeforePaymentPayload }>> {
-  return await api.call<{ composePayment: BeforePaymentPayload }>(QUERY_COMPOSE_PAYMENT, {
+): Promise<APIResponse<{
+  /**
+   * Server-calculated amount and signed payment details
+   */
+  composePayment: BeforePaymentPayload;
+}>> {
+  return await api.call<{
+    /**
+     * Server-calculated amount and signed payment details
+     */
+    composePayment: BeforePaymentPayload;
+  }>(QUERY_COMPOSE_PAYMENT, {
     input: {
       workspaceId,
       tariffPlanId,

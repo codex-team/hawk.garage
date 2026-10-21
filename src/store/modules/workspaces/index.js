@@ -419,14 +419,14 @@ const actions = {
   /**
    * Prepare payment data before opening payment widget
    *
-   * @param {Function} commit - standard Vuex commit method
-   * @param {object} payload - compose payment payload
-   * @param {string} payload.workspaceId - workspace id
-   * @param {string} payload.tariffPlanId - plan id
+   * @param {object} context - Vuex action context (unused)
+   * @param {object} payload - details for requesting a payment quote
+   * @param {string} payload.workspaceId - workspace to charge
+   * @param {string} payload.tariffPlanId - tariff to purchase
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
-   * @param {string} [payload.promoCode] - optional promo code to apply
-   * @param context
-   * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
+   * @param {string} [payload.promoCode] - optional discount code to apply
+   * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>} server-calculated amount and signed payment details
+   * @throws {Error} when the API rejects the quote or omits payment data
    */
   async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false, promoCode }) {
     const response = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard, promoCode);

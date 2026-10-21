@@ -1,14 +1,24 @@
 /**
- * Data declaration before card charge
+ * Server-calculated payment quote and signed details for the payment widget
  */
-
 export interface BeforePaymentPayload {
   /**
    * Tariff plan
    */
   plan: {
+    /**
+     * Identifier of the tariff being purchased
+     */
     id: string;
+
+    /**
+     * Display name of the tariff
+     */
     name: string;
+
+    /**
+     * Regular monthly price before any promo discount
+     */
     monthlyCharge: number;
   };
 
@@ -18,7 +28,7 @@ export interface BeforePaymentPayload {
   invoiceId: string;
 
   /**
-   * Amount to charge for this payment
+   * Amount to charge in the payment currency after any promo discount
    */
   paymentAmount: number;
 
