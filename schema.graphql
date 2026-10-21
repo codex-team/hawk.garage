@@ -197,6 +197,11 @@ input ComposePaymentInput {
 
   """Whether card should be saved for future recurrent payments"""
   shouldSaveCard: Boolean
+
+  """
+  Optional promo code to apply to the payment
+  """
+  promoCode: String
 }
 
 """Minimal plan info used in composePayment response"""
@@ -222,6 +227,11 @@ type ComposePaymentResponse {
   """True if only card linking validation payment is expected"""
   isCardLinkOperation: Boolean!
 
+  """
+  Amount to charge for this payment
+  """
+  paymentAmount: Int!
+
   """Currency code"""
   currency: String!
 
@@ -230,6 +240,11 @@ type ComposePaymentResponse {
 
   """Next payment date (recurrent start)"""
   nextPaymentDate: DateTime!
+
+  """
+  CloudPayments public id (merchant identifier for payment widget)
+  """
+  cloudPaymentsPublicId: String!
 }
 
 """Confirmed member data in workspace"""

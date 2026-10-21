@@ -26,6 +26,7 @@
           class="payment-details__description"
         >
           <p>{{ $t('billing.cardLinking.description') }}&nbsp;{{ prettyFullDate(nextPaymentDateInSeconds) }}</p>
+          <p>{{ $t('billing.cardLinking.price', { price }) }}</p>
           <p>💳 {{ $t('billing.cardLinking.howItWorks') }}</p>
           <ul>
             <li>– {{ $t('billing.cardLinking.step1') }}</li>
@@ -76,14 +77,83 @@
             </div>
 
             <!--Price-->
-            <div class="payment-details__details-item">
+            <div
+              v-if="paymentData"
+              class="payment-details__details-item"
+            >
               <div class="payment-details__details-item-field">
                 {{ $t('common.price') }}
               </div>
-              <div class="payment-details__details-item-value">
-                {{ price }}
+              <div class="payment-details__details-item-value payment-details__price-values">
+                <span
+                  v-if="appliedPromoCode"
+                  class="payment-details__original-price"
+                >
+                  {{ price }}
+                </span>
+                <span>{{ paymentData.paymentAmount }}{{ getCurrencySign(paymentData.currency) }}</span>
               </div>
             </div>
+
+            <button
+              v-if="paymentData && !paymentData.isCardLinkOperation && !promoInputVisible && !appliedPromoCode"
+              type="button"
+              class="payment-details__promo-link"
+              @click="showPromoCodeInput"
+            >
+              {{ $t('billing.promoCode.showInput') }}
+            </button>
+
+            <form
+              v-if="paymentData && !paymentData.isCardLinkOperation && promoInputVisible"
+              class="payment-details__promo"
+              @submit.prevent="updatePromoCode(promoCode)"
+            >
+              <div class="payment-details__promo-controls">
+                <TextFieldSet
+                  v-model="promoCode"
+                  name="payment-promo-code"
+                  :label="$t('billing.promoCode.label')"
+                  :placeholder="$t('billing.promoCode.placeholder')"
+                  :disabled="isUpdatingPayment || Boolean(appliedPromoCode)"
+                  :is-invalid="Boolean(promoError)"
+                  auto-complete="off"
+                  class="payment-details__promo-input"
+                />
+                <UiButton
+                  v-if="!appliedPromoCode"
+                  type="submit"
+                  :content="$t('billing.promoCode.apply')"
+                  :disabled="isUpdatingPayment || !promoCode.trim()"
+                  :is-loading="isUpdatingPayment"
+                  secondary
+                />
+                <UiButton
+                  v-if="appliedPromoCode"
+                  type="button"
+                  :content="$t('billing.promoCode.remove')"
+                  :disabled="isUpdatingPayment"
+                  :is-loading="isUpdatingPayment"
+                  secondary
+                  @click="updatePromoCode('')"
+                />
+              </div>
+              <p
+                v-if="promoError"
+                class="payment-details__promo-error"
+                role="alert"
+              >
+                {{ promoError }}
+              </p>
+              <p
+                v-else-if="appliedPromoCode"
+                class="payment-details__promo-note"
+                aria-live="polite"
+              >
+                {{ $t('billing.promoCode.applied', { code: appliedPromoCode }) }}
+                {{ isRecurrent ? $t('billing.promoCode.recurringNote', { price }) : $t('billing.promoCode.onceNote') }}
+              </p>
+            </form>
 
             <!--The next payment date -->
             <!-- <div
@@ -125,6 +195,7 @@
         <section
           v-if="isRecurrent"
           class="payment-details__adoption-autoProlongation"
+          :inert="isUpdatingPayment"
         >
           <UiCheckboxWithLabel
             v-model="isAcceptedRecurrentPaymentAgreement"
@@ -148,6 +219,7 @@
         <section
           v-else
           class="payment-details__adoption"
+          :inert="isUpdatingPayment"
         >
           <UiCheckboxWithLabel
             v-if="!selectedCard || selectedCard.id === NEW_CARD_ID"
@@ -170,6 +242,8 @@
             class="payment-details__bottom-button"
             :submit="isAcceptedAllAgreements"
             :secondary="!isAcceptedAllAgreements"
+            :disabled="isUpdatingPayment || hasUnappliedPromoCode"
+            :is-loading="isUpdatingPayment"
             @click.prevent="onGoToServicePayment"
           />
 
@@ -214,7 +288,7 @@ import { Plan } from '../../types/plan';
 import PopupDialog from '../utils/PopupDialog.vue';
 import EntityImage from '../utils/EntityImage.vue';
 // import CustomSelect from '../forms/CustomSelect.vue';
-// import TextFieldSet from '../forms/TextFieldset.vue';
+import TextFieldSet from '../forms/TextFieldset.vue';
 import { Workspace } from '../../types/workspaces';
 import { User } from '../../types/user';
 import UiButton from '../utils/UiButton.vue';
@@ -241,12 +315,6 @@ import { i18n } from '../../i18n';
 const NEW_CARD_ID = 'NEW_CARD';
 
 /**
- * The amount we will debit to confirm the subscription.
- * After confirmation, we will refund the user money.
- */
-const AMOUNT_FOR_CARD_VALIDATION = 1;
-
-/**
  * Transforms card data to CustomSelect option
  *
  * @param card - card data to transform
@@ -259,6 +327,9 @@ function cardToSelectOption(card: BankCard): CustomSelectOption {
   };
 }
 
+/**
+ * Payment confirmation dialog with server-validated promo codes
+ */
 export default defineComponent({
   name: 'PaymentDetailsDialog',
   components: {
@@ -267,7 +338,7 @@ export default defineComponent({
     PopupDialog,
     EntityImage,
     // CustomSelect,
-    // TextFieldSet,
+    TextFieldSet,
     UiCheckboxWithLabel,
   },
   props: {
@@ -294,6 +365,11 @@ export default defineComponent({
       default: false,
     },
   },
+  /**
+   * Initialize payment agreements and promo code controls
+   *
+   * @returns {object} initial dialog state
+   */
   data() {
     const workspace: Workspace = this.$store.getters.getWorkspaceById(this.workspaceId) as Workspace;
     const user: User = this.$store.state.user.data;
@@ -309,6 +385,31 @@ export default defineComponent({
        * Payment data received from API
        */
       paymentData: null as BeforePaymentPayload | null,
+
+      /**
+       * User-entered code awaiting server validation
+       */
+      promoCode: '',
+
+      /**
+       * Whether to show the discount controls instead of the reveal button
+       */
+      promoInputVisible: false,
+
+      /**
+       * Normalized code confirmed by the latest successful quote
+       */
+      appliedPromoCode: '',
+
+      /**
+       * Translated message for the latest quote failure
+       */
+      promoError: '',
+
+      /**
+       * Whether a quote request is in flight, blocking duplicate submissions
+       */
+      isUpdatingPayment: false,
 
       /**
        * New card id to use it in template
@@ -358,6 +459,15 @@ export default defineComponent({
   },
   computed: {
     /**
+     * Prevent checkout with a discount that the server has not confirmed
+     *
+     * @returns {boolean} whether a non-empty code still needs to be applied
+     */
+    hasUnappliedPromoCode(): boolean {
+      return Boolean(this.promoCode.trim()) && !this.appliedPromoCode;
+    },
+
+    /**
      * New plan
      */
     plan(): Plan {
@@ -393,13 +503,13 @@ export default defineComponent({
     },
 
     /**
-     * Price with dollar mark
+     * Format the regular monthly price without the promo discount
      *
-     * example: 100$
+     * @returns {string} localized amount with currency and billing period
      */
     price(): string {
       return this.$t('common.moneyPerMonth', {
-        currency: `${this.plan.monthlyCharge}${getCurrencySign(this.plan.monthlyChargeCurrency)}`,
+        currency: `${this.paymentData?.plan.monthlyCharge ?? this.plan.monthlyCharge}${getCurrencySign(this.paymentData?.currency ?? this.plan.monthlyChargeCurrency)}`,
       }).toString();
     },
 
@@ -459,12 +569,19 @@ export default defineComponent({
   //     this.selectedCard = newCards[1] || newCards[0];
   //   },
   // },
+  /**
+   * Load the payment widget script and request the initial quote
+   *
+   * @returns {Promise<void>} resolves after the initial loading state is cleared
+   */
   async mounted() {
     /**
      * Check if script was loaded
      */
     if (window.cp && window.cp.CloudPayments) {
-      // CloudPayments script is already loaded
+      /**
+       * CloudPayments script is already loaded
+       */
     } else {
       /**
        * Script is not loaded
@@ -477,7 +594,9 @@ export default defineComponent({
     }
 
     try {
-      // Check if demo mode is active
+      /**
+       * Check if demo mode is active
+       */
       if (this.$store.state.demo?.isActive) {
         notifier.show({
           message: this.$t('demo.functionUnavailable') as string,
@@ -489,12 +608,10 @@ export default defineComponent({
         return;
       }
 
-      // Fetch payment data when component is mounted via store
-      this.paymentData = await this.$store.dispatch(COMPOSE_PAYMENT, {
-        workspaceId: this.workspaceId,
-        tariffPlanId: this.tariffPlanId,
-        shouldSaveCard: this.shouldSaveCard,
-      });
+      /**
+       * Fetch payment data when component is mounted via store
+       */
+      this.paymentData = await this.fetchPaymentData();
     } catch (e) {
       const error = e as Error;
       const key = 'errors.' + error.message;
@@ -513,11 +630,86 @@ export default defineComponent({
   },
   methods: {
     prettyFullDate,
+    getCurrencySign,
+
     /**
-     * Open service payment
+     * Request the server's quote; never calculate a discount in the browser.
+     *
+     * @param promoCode - optional code to apply
+     * @returns {Promise<BeforePaymentPayload>} payment quote and signed checksum
+     */
+    async fetchPaymentData(promoCode?: string): Promise<BeforePaymentPayload> {
+      return this.$store.dispatch(COMPOSE_PAYMENT, {
+        workspaceId: this.workspaceId,
+        tariffPlanId: this.tariffPlanId,
+        shouldSaveCard: this.shouldSaveCard,
+        promoCode,
+      });
+    },
+
+    /**
+     * Resolve a quote failure to a user-facing notification
+     *
+     * @param error - API or transport error
+     * @returns {string} translated promo error or the generic payment error
+     */
+    paymentErrorMessage(error: unknown): string {
+      const message = error instanceof Error ? error.message : '';
+      const key = 'billing.promoCode.errors.' + message;
+
+      return this.$te(key) ? this.$t(key).toString() : this.$t('billing.notifications.error').toString();
+    },
+
+    /**
+     * Reveal the discount controls and clear the previous failure message
+     *
+     * @returns {void}
+     */
+    showPromoCodeInput(): void {
+      this.promoInputVisible = true;
+      this.promoError = '';
+    },
+
+    /**
+     * Apply a code, or remove it with an empty value, after the API confirms the quote.
+     *
+     * @param code - promo code or an empty string for regular pricing
+     * @returns {Promise<void>} resolves after the quote and input state are updated
+     */
+    async updatePromoCode(code: string): Promise<void> {
+      if (this.isUpdatingPayment) {
+        return;
+      }
+
+      const value = code.trim();
+
+      this.isUpdatingPayment = true;
+      this.promoError = '';
+
+      try {
+        this.paymentData = await this.fetchPaymentData(value || undefined);
+        this.appliedPromoCode = value.toUpperCase();
+        this.promoCode = this.appliedPromoCode;
+        this.promoInputVisible = Boolean(this.appliedPromoCode);
+      } catch (error) {
+        this.promoError = this.paymentErrorMessage(error);
+      } finally {
+        this.isUpdatingPayment = false;
+      }
+    },
+    /**
+     * Check agreements and promo validation before starting checkout
+     *
+     * @returns {Promise<void>} resolves after processing or notifying about unmet requirements
      */
     async onGoToServicePayment(): Promise<void> {
-      // Check if demo mode is active
+      if (this.isUpdatingPayment || this.hasUnappliedPromoCode) {
+        return;
+      }
+
+      /**
+       * Check if demo mode is active
+       */
       if (this.$store.state.demo?.isActive) {
         notifier.show({
           message: this.$t('demo.functionUnavailable') as string,
@@ -557,14 +749,49 @@ export default defineComponent({
     },
 
     /**
-     * Method for payment processing
+     * Refresh the quote and open checkout only if the displayed price is still current
+     *
+     * @returns {Promise<void>} resolves after opening the widget or reporting a quote failure
      */
     async processPayment(): Promise<void> {
-      if (!this.paymentData) {
+      if (!this.paymentData || this.isUpdatingPayment) {
         return;
       }
 
-      this.showPaymentWidget(this.paymentData);
+      const previousPayment = this.paymentData;
+
+      this.isUpdatingPayment = true;
+      this.promoError = '';
+
+      try {
+        const payment = await this.fetchPaymentData(this.appliedPromoCode || undefined);
+
+        this.paymentData = payment;
+
+        if (payment.paymentAmount !== previousPayment.paymentAmount
+          || payment.currency !== previousPayment.currency
+          || payment.isCardLinkOperation !== previousPayment.isCardLinkOperation
+          || (this.isRecurrent && payment.plan.monthlyCharge !== previousPayment.plan.monthlyCharge)) {
+          notifier.show({
+            message: this.$t('billing.promoCode.priceChanged') as string,
+            style: 'error',
+            time: 5000,
+          });
+
+          return;
+        }
+
+        this.showPaymentWidget(payment);
+      } catch (error) {
+        this.promoError = this.paymentErrorMessage(error);
+        notifier.show({
+          message: this.promoError,
+          style: 'error',
+          time: 5000,
+        });
+      } finally {
+        this.isUpdatingPayment = false;
+      }
     },
 
     /**
@@ -603,7 +830,8 @@ export default defineComponent({
     /**
      * Method prepares widget and charges money from entered card
      *
-     * @param {BeforePaymentPayload} data — server response that sent after beforePay request
+     * @param {BeforePaymentPayload} data - confirmed quote with the amount to charge and signed details
+     * @returns {void}
      */
     showPaymentWidget(data: BeforePaymentPayload): void {
       const widget = new window.cp.CloudPayments({ language: this.$i18n.locale });
@@ -628,7 +856,7 @@ export default defineComponent({
         }
       }
 
-      const amount = data.isCardLinkOperation ? AMOUNT_FOR_CARD_VALIDATION : data.plan.monthlyCharge;
+      const amount = data.paymentAmount;
       const method = data.isCardLinkOperation ? 'auth' : 'charge';
       const titleKey = data.isCardLinkOperation ? 'billing.cloudPaymentsWidget.descriptionCardLinking' : 'billing.cloudPaymentsWidget.description';
 
@@ -643,7 +871,9 @@ export default defineComponent({
           currency: data.currency,
           email: this.email,
 
-          /** Label for admin panel */
+          /**
+           * Label for admin panel
+           */
           invoiceId: data.invoiceId,
           accountId: this.$store.state.user.data.id,
 
@@ -733,6 +963,63 @@ export default defineComponent({
       &-value {
         font-weight: bold;
       }
+    }
+  }
+
+  &__price-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__original-price {
+    color: var(--color-text-second);
+    text-decoration: line-through;
+  }
+
+  &__promo-link {
+    padding: 0;
+    color: var(--color-indicator-medium);
+    font: inherit;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: underline;
+  }
+
+  &__promo-link:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &__promo {
+    margin-top: 20px;
+
+    &-controls {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    &-input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &-error,
+    &-note {
+      margin: 10px 0 0;
+      font-weight: normal;
+      line-height: 1.4;
+    }
+
+    &-error {
+      color: var(--color-indicator-critical);
+    }
+
+    &-note {
+      color: var(--color-text-second);
     }
   }
 
