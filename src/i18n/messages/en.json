@@ -587,6 +587,16 @@
     "loading": "Loading...",
     "context": "Context",
     "release": "Release",
+    "releaseStatus": {
+      "firstSeen": "First seen in {release}",
+      "resolved": "Resolved in {release}",
+      "regression": "Regression in {release}"
+    },
+    "releaseDetails": {
+      "firstSeen": "First seen in release",
+      "resolved": "Resolved in release",
+      "regression": "Regressed in release"
+    },
     "viewedBy": {
       "assignee": "Assignee"
     },

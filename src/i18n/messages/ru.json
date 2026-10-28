@@ -581,6 +581,16 @@
     "loading": "Загрузка...",
     "context": "Дополнительно",
     "release": "Релиз",
+    "releaseStatus": {
+      "firstSeen": "Впервые в {release}",
+      "resolved": "Исправлено в {release}",
+      "regression": "Регрессия в {release}"
+    },
+    "releaseDetails": {
+      "firstSeen": "Впервые в релизе",
+      "resolved": "Исправлено в релизе",
+      "regression": "Регрессия в релизе"
+    },
     "viewedBy": {
       "assignee": "Исполнитель"
     },

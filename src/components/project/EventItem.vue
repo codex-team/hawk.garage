@@ -28,6 +28,11 @@
     >
       {{ event.payload.title }}
     </div>
+    <EventReleaseStatus
+      v-if="!isEventBlurred"
+      class="event-item__release-status"
+      :event="event"
+    />
     <UiButton
       v-if="event.taskManagerItem"
       class="event-item__issue-button"
@@ -73,6 +78,7 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
+import EventReleaseStatus from '../event/EventReleaseStatus.vue';
 import UiButton from '../utils/UiButton.vue';
 import UiCheckbox from '../forms/UiCheckbox.vue';
 import { prettyTime } from '@/utils/filters';
@@ -84,6 +90,7 @@ export default {
   components: {
     EventMark,
     EventBadge,
+    EventReleaseStatus,
     Icon,
     EntityImage,
     UiButton,
@@ -308,6 +315,12 @@ export default {
         user-select: none;
         pointer-events: none;
       }
+    }
+
+    &__release-status {
+      flex-shrink: 0;
+      max-width: 220px;
+      margin-left: 8px;
     }
 
     &__issue-button {

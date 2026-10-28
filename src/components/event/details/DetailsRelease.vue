@@ -4,17 +4,21 @@
       {{ $t("event.release") }}
     </template>
     <template #content>
-      <div class="event-details__content-block">
+      <div
+        v-for="item in releases"
+        :key="item.label"
+        class="event-details__content-block"
+      >
         <div class="event-details__key">
-          {{ $t("event.release") }}
+          {{ $t(item.label) }}
         </div>
         <div class="event-details__value">
           <router-link
-            :to="releaseRoute"
+            :to="{ name: 'project-release', params: { projectId: $route.params.projectId, release: item.release } }"
             class="event-details__release-link"
-            :title="release"
+            :title="item.release"
           >
-            {{ release }}
+            {{ item.release }}
           </router-link>
         </div>
       </div>
@@ -37,24 +41,37 @@ export default defineComponent({
      */
     release: {
       type: String,
-      required: true,
+      default: null,
+    },
+    firstSeenInRelease: {
+      type: String,
+      default: null,
+    },
+    resolvedInRelease: {
+      type: String,
+      default: null,
+    },
+    regressionInRelease: {
+      type: String,
+      default: null,
     },
   },
   computed: {
     /**
-     * Route to the release page inside current project
+     * Keep the selected repetition's release when it differs from the first occurrence.
      */
-    releaseRoute(): Record<string, unknown> {
-      const projectId = (this as any).$route.params.projectId;
-      const release = (this as any).release;
-
-      return {
-        name: 'project-release',
-        params: {
-          projectId,
-          release,
-        },
-      };
+    releases(): { label: string;
+      release: string; }[] {
+      return [
+        { label: 'event.releaseDetails.firstSeen',
+          release: this.firstSeenInRelease },
+        { label: 'event.release',
+          release: this.release !== this.firstSeenInRelease ? this.release : null },
+        { label: 'event.releaseDetails.resolved',
+          release: this.resolvedInRelease },
+        { label: 'event.releaseDetails.regression',
+          release: this.regressionInRelease },
+      ].filter(item => Boolean(item.release));
     },
   },
 });
@@ -64,6 +81,7 @@ export default defineComponent({
 .event-details__release-link {
   color: var(--color-text-main);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .event-details__release-link:hover {

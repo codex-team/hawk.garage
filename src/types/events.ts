@@ -136,6 +136,21 @@ export interface HawkEvent {
   release?: HawkEventRelease;
 
   /**
+   * Release of the original event, not the selected repetition.
+   */
+  firstSeenInRelease?: string | null;
+
+  /**
+   * Release in which the event stopped occurring.
+   */
+  resolvedInRelease?: string | null;
+
+  /**
+   * Release in which the resolved event occurred again.
+   */
+  regressionInRelease?: string | null;
+
+  /**
    * Task Manager item linked to this event (e.g., GitHub Issue)
    */
   taskManagerItem?: TaskManagerItem;
