@@ -600,7 +600,7 @@
       "regression": "The event reappeared in release {release} after it was considered fixed."
     },
     "releaseDetails": {
-      "occurrence": "Occurred in",
+      "occurrence": "Current occurrence in",
       "firstSeen": "Introduced in",
       "resolved": "Potentially resolved in",
       "regression": "Regressed in"

@@ -62,7 +62,7 @@ export default defineComponent({
   },
   computed: {
     /**
-     * Keep the selected repetition's release when it differs from the first occurrence.
+     * Keep the current occurrence separate from lifecycle milestones, even when their releases match.
      */
     releases(): { label: string;
       release: string; }[] {
@@ -70,9 +70,7 @@ export default defineComponent({
         { label: 'event.releaseDetails.firstSeen',
           release: this.firstSeenInRelease },
         { label: 'event.releaseDetails.occurrence',
-          release: [this.firstSeenInRelease, this.resolvedInRelease, this.regressionInRelease].includes(this.release)
-            ? null
-            : this.release },
+          release: this.release },
         { label: 'event.releaseDetails.resolved',
           release: this.resolvedInRelease },
         { label: 'event.releaseDetails.regression',

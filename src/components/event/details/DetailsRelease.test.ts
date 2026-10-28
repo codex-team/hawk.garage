@@ -64,8 +64,8 @@ function rows(): (string | undefined)[][] {
 
 describe('DetailsRelease', () => {
   it.each([
-    ['en', 'Occurred in', 'Introduced in', 'Potentially resolved in', 'Regressed in'],
-    ['ru', 'Произошло в', 'Появилось в', 'Потенциально исправлено в', 'Регрессия в'],
+    ['en', 'Current occurrence in', 'Introduced in', 'Potentially resolved in', 'Regressed in'],
+    ['ru', 'Текущее событие в', 'Появилось в', 'Потенциально исправлено в', 'Регрессия в'],
   ])('preserves every %s lifecycle link and the selected repetition release', async (locale, releaseLabel, firstSeenLabel, resolvedLabel, regressionLabel) => {
     const releases = ['original/build#1', 'selected/build#2', 'fixed/build#3', 'again/build#4'];
     const router = await mount({
@@ -102,7 +102,7 @@ describe('DetailsRelease', () => {
     });
   });
 
-  it('does not duplicate the payload release when it is the first-seen release', async () => {
+  it('keeps the current occurrence even when its release matches the first appearance', async () => {
     await mount({
       release: 'original',
       firstSeenInRelease: 'original',
@@ -112,12 +112,13 @@ describe('DetailsRelease', () => {
 
     expect(rows()).toEqual([
       ['Introduced in', 'original'],
+      ['Current occurrence in', 'original'],
       ['Potentially resolved in', 'fixed'],
       ['Regressed in', 'again'],
     ]);
   });
 
-  it('shows a regressed repetition once under the regression label', async () => {
+  it('keeps the current occurrence even when its release matches the regression', async () => {
     await mount({
       release: 'again',
       firstSeenInRelease: 'original',
@@ -127,6 +128,7 @@ describe('DetailsRelease', () => {
 
     expect(rows()).toEqual([
       ['Появилось в', 'original'],
+      ['Текущее событие в', 'again'],
       ['Потенциально исправлено в', 'fixed'],
       ['Регрессия в', 'again'],
     ]);
@@ -138,7 +140,7 @@ describe('DetailsRelease', () => {
 
     expect(rows()).toEqual([
       ['Introduced in', 'original'],
-      ['Occurred in', 'repeated'],
+      ['Current occurrence in', 'repeated'],
     ]);
   });
 
@@ -163,7 +165,7 @@ describe('DetailsRelease', () => {
   it('shows a legacy payload release without lifecycle data', async () => {
     await mount({ release: 'legacy/build#1' });
 
-    expect(rows()).toEqual([['Occurred in', 'legacy/build#1']]);
+    expect(rows()).toEqual([['Current occurrence in', 'legacy/build#1']]);
     expect(host.querySelector('a')?.getAttribute('href')).toBe('/project/project-42/releases/legacy%2Fbuild%231');
   });
 
