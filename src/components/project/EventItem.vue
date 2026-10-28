@@ -9,6 +9,7 @@
       'event-item--row-selected': isRowSelected,
     }"
     data-ripple
+    @mousedown.capture.shift.prevent
     @click="handleRowClick"
   >
     <EventMark :mark="mark" />
@@ -26,14 +27,19 @@
       class="event-item__info"
       :class="{ 'event-item__info--blurred': isEventBlurred }"
     >
-      {{ event.payload.title }}
+      <span
+        class="event-item__title"
+        :title="event.payload.title"
+      >
+        {{ event.payload.title }}
+      </span>
+      <EventReleaseStatus
+        v-if="!isEventBlurred"
+        class="event-item__release-status"
+        :event="event"
+        :latest-release="latestRelease"
+      />
     </div>
-    <EventReleaseStatus
-      v-if="!isEventBlurred"
-      class="event-item__release-status"
-      :event="event"
-      :latest-release="latestRelease"
-    />
     <UiButton
       v-if="event.taskManagerItem"
       class="event-item__issue-button"
@@ -307,19 +313,27 @@ export default {
     }
 
     &__info {
+      display: flex;
+      align-items: center;
+      min-width: 0;
       margin-right: auto;
       margin-left: 10px;
       overflow: hidden;
       font-weight: bold;
       font-size: 16px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
 
       &--blurred {
         filter: blur(4px);
         user-select: none;
         pointer-events: none;
       }
+    }
+
+    &__title {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__release-status {
