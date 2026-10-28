@@ -1,5 +1,8 @@
 <template>
   <div class="project-releases">
+    <p class="project-releases__description">
+      {{ $t('projects.releases.countDescription') }}
+    </p>
     <div
       v-if="groupedReleases && Object.keys(groupedReleases).length"
       class="project-releases__content"
@@ -22,7 +25,7 @@
             <div class="release-row__time">
               {{ formatReleaseTime(release.timestamp) }}
             </div>
-            <span>
+            <span :title="$t('projects.releases.stats.newEvents')">
               <Badge
                 :content="release.newEventsCount"
                 :type="release.newEventsCount === 0 ? 'silent' : undefined"
@@ -226,6 +229,13 @@ export default {
 .project-releases {
   padding-inline: var(--layout-padding-inline);
 
+  &__description {
+    margin: 20px 11px;
+    color: var(--color-text-second);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
   &__group {
     margin-top: 25px;
   }
@@ -260,10 +270,11 @@ export default {
 
 .release-row__left {
   display: grid;
-  grid-template-columns: 30px 40px auto;
+  flex: 1;
+  grid-template-columns: 42px 40px minmax(0, 1fr);
   align-items: center;
   min-width: 0;
-  column-gap: 10px;
+  column-gap: 16px;
 }
 
 .release-row__time {
@@ -286,8 +297,10 @@ export default {
 
 .release-row__right {
   display: flex;
+  flex-shrink: 0;
   gap: 16px;
   align-items: center;
+  white-space: nowrap;
 }
 
 .release-row__metric {

@@ -70,11 +70,14 @@ export const getEvent = withDemoMock(
       originalEventId,
     })).project;
 
-    if (!project) {
+    if (!project?.event) {
       return null;
     }
 
-    return project.event;
+    return {
+      ...project.event,
+      latestRelease: project.latestRelease ?? null,
+    };
   },
   '/src/api/events/mocks/getEvent.mock.ts'
 );
@@ -121,8 +124,11 @@ export const fetchDailyEventsPortion = withDemoMock(
       response.errors.forEach(e => console.error(e));
     }
 
-    return project?.dailyEventsPortion ?? { nextCursor: null,
-      dailyEvents: [] };
+    return {
+      ...(project?.dailyEventsPortion ?? { nextCursor: null,
+        dailyEvents: [] }),
+      latestRelease: project?.latestRelease ?? null,
+    };
   },
   '/src/api/events/mocks/fetchDailyEventsPortion.mock.ts'
 );

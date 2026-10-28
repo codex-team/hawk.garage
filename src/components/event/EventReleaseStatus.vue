@@ -2,10 +2,10 @@
   <span
     v-if="status"
     class="event-release-status"
-    :class="`event-release-status--${status.type}`"
-    :title="$t(`event.releaseStatus.${status.type}`, { release: status.release })"
+    :class="`event-release-status--${status}`"
+    :title="tooltip"
   >
-    {{ $t(`event.releaseStatus.${status.type}`, { release: status.release }) }}
+    {{ $t(`event.releaseStatus.${status}`) }}
   </span>
 </template>
 
@@ -19,6 +19,10 @@ type EventReleaseState = Pick<HawkEvent, 'firstSeenInRelease' | 'resolvedInRelea
 export default defineComponent({
   name: 'EventReleaseStatus',
   props: {
+    latestRelease: {
+      type: String,
+      default: null,
+    },
     event: {
       type: Object as PropType<EventReleaseState>,
       required: true,
@@ -28,24 +32,37 @@ export default defineComponent({
     /**
      * A regression supersedes the previous resolution; release names are opaque.
      */
-    status(): { type: 'firstSeen' | 'resolved' | 'regression';
-      release: string; } | null {
+    status(): 'firstSeen' | 'resolved' | 'regression' | null {
       if (isMeaningfulRelease(this.event.regressionInRelease)) {
-        return { type: 'regression',
-          release: this.event.regressionInRelease };
+        return 'regression';
       }
 
       if (isMeaningfulRelease(this.event.resolvedInRelease)) {
-        return { type: 'resolved',
-          release: this.event.resolvedInRelease };
+        return 'resolved';
       }
 
-      if (isMeaningfulRelease(this.event.firstSeenInRelease)) {
-        return { type: 'firstSeen',
-          release: this.event.firstSeenInRelease };
+      if (isMeaningfulRelease(this.event.firstSeenInRelease)
+        && isMeaningfulRelease(this.latestRelease)
+        && this.event.firstSeenInRelease === this.latestRelease) {
+        return 'firstSeen';
       }
 
       return null;
+    },
+    /**
+     * Explain the status and its release without expanding the visible badge.
+     */
+    tooltip(): string {
+      switch (this.status) {
+        case 'firstSeen':
+          return this.$t('event.releaseStatusTooltip.firstSeen', { release: this.event.firstSeenInRelease });
+        case 'resolved':
+          return this.$t('event.releaseStatusTooltip.resolved', { release: this.event.resolvedInRelease });
+        case 'regression':
+          return this.$t('event.releaseStatusTooltip.regression', { release: this.event.regressionInRelease });
+        default:
+          return '';
+      }
     },
   },
 });
@@ -56,16 +73,19 @@ export default defineComponent({
   display: inline-block;
   min-width: 0;
   max-width: 100%;
-  padding: 3px 6px;
+  padding: 2px 9px;
   overflow: hidden;
+
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 16px;
   white-space: nowrap;
   text-overflow: ellipsis;
   vertical-align: middle;
-  background-color: var(--color-bg-main);
-  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  cursor: help;
 
   &--firstSeen {
     color: var(--color-text-highlighted);

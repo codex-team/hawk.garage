@@ -55,7 +55,14 @@
       </div>
 
       <div class="event-header__type">
-        {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
+        <span class="event-header__type-label">
+          {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
+        </span>
+        <EventReleaseStatus
+          v-if="!loading"
+          :event="event"
+          :latest-release="event.latestRelease"
+        />
       </div>
 
       <h1 class="event-header__title">
@@ -158,6 +165,7 @@ import { JavaScriptAddons } from '@hawk.so/types';
 import { Button as CdxButton, usePopover } from '@codexteam/ui/vue';
 import EventActionsMenu from './EventActionsMenu.vue';
 import AiSuggestionDialog from '../modals/AiSuggestionDialog.vue';
+import EventReleaseStatus from './EventReleaseStatus.vue';
 
 export default defineComponent({
   name: 'EventHeader',
@@ -171,6 +179,7 @@ export default defineComponent({
     EntityImage,
     ProjectBadge,
     AiSuggestionDialog,
+    EventReleaseStatus,
   },
   mixins: [projectBadges],
   props: {
@@ -412,8 +421,17 @@ export default defineComponent({
     }
 
     &__type {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
       font-weight: 500;
       font-size: 12.2px;
+    }
+
+    &__type-label {
+      min-width: 0;
+      overflow-wrap: anywhere;
       font-family: var(--font-monospace);
       letter-spacing: 0.21px;
     }

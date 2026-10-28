@@ -4,7 +4,7 @@
     class="event-release-details"
   >
     <template #header>
-      {{ $t("event.releaseDetails.header") }}
+      {{ $t("event.release") }}
     </template>
     <template #content>
       <div
@@ -69,10 +69,10 @@ export default defineComponent({
       return [
         { label: 'event.releaseDetails.firstSeen',
           release: this.firstSeenInRelease },
-        { label: isMeaningfulRelease(this.firstSeenInRelease)
-          ? 'event.releaseDetails.repetition'
-          : 'event.releaseDetails.occurrence',
-        release: this.release !== this.firstSeenInRelease ? this.release : null },
+        { label: 'event.releaseDetails.occurrence',
+          release: [this.firstSeenInRelease, this.resolvedInRelease, this.regressionInRelease].includes(this.release)
+            ? null
+            : this.release },
         { label: 'event.releaseDetails.resolved',
           release: this.resolvedInRelease },
         { label: 'event.releaseDetails.regression',
@@ -87,7 +87,7 @@ export default defineComponent({
 .event-release-details {
   .event-details__content-block {
     display: grid;
-    grid-template-columns: minmax(0, 185px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 230px) minmax(0, 1fr);
     gap: 16px;
   }
 

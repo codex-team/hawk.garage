@@ -42,6 +42,7 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
+          :latest-release="latestRelease"
           :is-selection-mode-active="selectionModeActive"
           :is-row-selected="isRowSelected(dailyEventInfo.eventId)"
           @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
@@ -192,6 +193,7 @@ export default {
        * Pagination cursor for next dailyEvents portion
        */
       dailyEventsNextCursor: null,
+      latestRelease: null,
       /**
        * Current search query (controlled input for SearchField)
        */
@@ -400,7 +402,7 @@ export default {
       try {
         const search = this.getProjectSearch(this.projectId) || '';
 
-        const { nextCursor, dailyEventsWithEventsLinked } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
+        const { nextCursor, dailyEventsWithEventsLinked, latestRelease } = await this.$store.dispatch(FETCH_PROJECT_OVERVIEW, {
           projectId: this.projectId,
           nextCursor: this.dailyEventsNextCursor,
           search,
@@ -408,6 +410,7 @@ export default {
           assignee: this.selectedAssigneeId || undefined,
         });
 
+        this.latestRelease = latestRelease;
         this.dailyEventsNextCursor = nextCursor;
         this.noMore = this.dailyEventsNextCursor === null;
 
@@ -434,6 +437,7 @@ export default {
       this.dailyEventsNextCursor = null;
       this.noMore = false;
       this.dailyEvents = [];
+      this.latestRelease = null;
       this.loadMoreEvents(true);
     },
     /**

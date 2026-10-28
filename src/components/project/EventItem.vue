@@ -32,6 +32,7 @@
       v-if="!isEventBlurred"
       class="event-item__release-status"
       :event="event"
+      :latest-release="latestRelease"
     />
     <UiButton
       v-if="event.taskManagerItem"
@@ -97,6 +98,10 @@ export default {
     UiCheckbox,
   },
   props: {
+    latestRelease: {
+      type: String,
+      default: null,
+    },
     /**
      * True when at least one row is selected (all rows show checkboxes)
      */

@@ -64,8 +64,8 @@ function rows(): (string | undefined)[][] {
 
 describe('DetailsRelease', () => {
   it.each([
-    ['en', 'This repetition\'s release', 'First seen in release', 'Resolved in release', 'Regressed in release'],
-    ['ru', 'Релиз этого повторения', 'Впервые в релизе', 'Исправлено в релизе', 'Регрессия в релизе'],
+    ['en', 'Occurred in', 'Introduced in', 'Potentially resolved in', 'Regressed in'],
+    ['ru', 'Произошло в', 'Появилось в', 'Потенциально исправлено в', 'Регрессия в'],
   ])('preserves every %s lifecycle link and the selected repetition release', async (locale, releaseLabel, firstSeenLabel, resolvedLabel, regressionLabel) => {
     const releases = ['original/build#1', 'selected/build#2', 'fixed/build#3', 'again/build#4'];
     const router = await mount({
@@ -76,7 +76,7 @@ describe('DetailsRelease', () => {
     }, locale);
 
     expect(host.querySelector('.event-details__header')?.textContent?.trim())
-      .toBe(locale === 'ru' ? 'Релизы события' : 'Event releases');
+      .toBe(locale === 'ru' ? 'Релиз' : 'Release');
     expect(rows()).toEqual([
       [firstSeenLabel, releases[0]],
       [releaseLabel, releases[1]],
@@ -111,9 +111,34 @@ describe('DetailsRelease', () => {
     });
 
     expect(rows()).toEqual([
-      ['First seen in release', 'original'],
-      ['Resolved in release', 'fixed'],
-      ['Regressed in release', 'again'],
+      ['Introduced in', 'original'],
+      ['Potentially resolved in', 'fixed'],
+      ['Regressed in', 'again'],
+    ]);
+  });
+
+  it('shows a regressed repetition once under the regression label', async () => {
+    await mount({
+      release: 'again',
+      firstSeenInRelease: 'original',
+      resolvedInRelease: 'fixed',
+      regressionInRelease: 'again',
+    }, 'ru');
+
+    expect(rows()).toEqual([
+      ['Появилось в', 'original'],
+      ['Потенциально исправлено в', 'fixed'],
+      ['Регрессия в', 'again'],
+    ]);
+  });
+
+  it('does not call an ordinary repetition a regression', async () => {
+    await mount({ release: 'repeated',
+      firstSeenInRelease: 'original' });
+
+    expect(rows()).toEqual([
+      ['Introduced in', 'original'],
+      ['Occurred in', 'repeated'],
     ]);
   });
 
@@ -132,13 +157,13 @@ describe('DetailsRelease', () => {
       firstSeenInRelease: 'null',
       resolvedInRelease: 'fixed',
       regressionInRelease: ' ' });
-    expect(rows()).toEqual([['Resolved in release', 'fixed']]);
+    expect(rows()).toEqual([['Potentially resolved in', 'fixed']]);
   });
 
   it('shows a legacy payload release without lifecycle data', async () => {
     await mount({ release: 'legacy/build#1' });
 
-    expect(rows()).toEqual([['Event release', 'legacy/build#1']]);
+    expect(rows()).toEqual([['Occurred in', 'legacy/build#1']]);
     expect(host.querySelector('a')?.getAttribute('href')).toBe('/project/project-42/releases/legacy%2Fbuild%231');
   });
 
@@ -150,9 +175,9 @@ describe('DetailsRelease', () => {
     });
 
     expect(rows()).toEqual([
-      ['First seen in release', 'original'],
-      ['Resolved in release', 'fixed'],
-      ['Regressed in release', 'again'],
+      ['Introduced in', 'original'],
+      ['Potentially resolved in', 'fixed'],
+      ['Regressed in', 'again'],
     ]);
   });
 });
