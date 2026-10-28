@@ -114,6 +114,7 @@ import DetailsBreadcrumbs from './details/breadcrumbs/DetailsBreadcrumbs.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
+import { isMeaningfulRelease } from '@/utils';
 
 export default defineComponent({
   name: 'EventOverview',
@@ -228,8 +229,8 @@ export default defineComponent({
      * Whether any occurrence or lifecycle release is available.
      */
     hasReleaseInformation(): boolean {
-      return Boolean(this.event.payload.release || this.event.firstSeenInRelease
-        || this.event.resolvedInRelease || this.event.regressionInRelease);
+      return [this.event.payload.release, this.event.firstSeenInRelease,
+        this.event.resolvedInRelease, this.event.regressionInRelease].some(isMeaningfulRelease);
     },
 
     /**

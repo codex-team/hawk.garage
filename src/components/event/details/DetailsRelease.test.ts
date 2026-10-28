@@ -64,8 +64,8 @@ function rows(): (string | undefined)[][] {
 
 describe('DetailsRelease', () => {
   it.each([
-    ['en', 'Release', 'First seen in release', 'Resolved in release', 'Regressed in release'],
-    ['ru', 'Релиз', 'Впервые в релизе', 'Исправлено в релизе', 'Регрессия в релизе'],
+    ['en', 'This repetition\'s release', 'First seen in release', 'Resolved in release', 'Regressed in release'],
+    ['ru', 'Релиз этого повторения', 'Впервые в релизе', 'Исправлено в релизе', 'Регрессия в релизе'],
   ])('preserves every %s lifecycle link and the selected repetition release', async (locale, releaseLabel, firstSeenLabel, resolvedLabel, regressionLabel) => {
     const releases = ['original/build#1', 'selected/build#2', 'fixed/build#3', 'again/build#4'];
     const router = await mount({
@@ -75,6 +75,8 @@ describe('DetailsRelease', () => {
       regressionInRelease: releases[3],
     }, locale);
 
+    expect(host.querySelector('.event-details__header')?.textContent?.trim())
+      .toBe(locale === 'ru' ? 'Релизы события' : 'Event releases');
     expect(rows()).toEqual([
       [firstSeenLabel, releases[0]],
       [releaseLabel, releases[1]],
@@ -115,10 +117,28 @@ describe('DetailsRelease', () => {
     ]);
   });
 
+  it.each([undefined, null, '', '   ', 'null', 'undefined', ' NULL ', 'NaN'])(
+    'hides the entire section for non-meaningful releases: %j', async (release) => {
+      await mount({ release,
+        firstSeenInRelease: release,
+        resolvedInRelease: release,
+        regressionInRelease: release });
+      expect(host.querySelector('.event-details')).toBeNull();
+    }
+  );
+
+  it('only shows meaningful rows when release metadata is mixed', async () => {
+    await mount({ release: 'undefined',
+      firstSeenInRelease: 'null',
+      resolvedInRelease: 'fixed',
+      regressionInRelease: ' ' });
+    expect(rows()).toEqual([['Resolved in release', 'fixed']]);
+  });
+
   it('shows a legacy payload release without lifecycle data', async () => {
     await mount({ release: 'legacy/build#1' });
 
-    expect(rows()).toEqual([['Release', 'legacy/build#1']]);
+    expect(rows()).toEqual([['Event release', 'legacy/build#1']]);
     expect(host.querySelector('a')?.getAttribute('href')).toBe('/project/project-42/releases/legacy%2Fbuild%231');
   });
 

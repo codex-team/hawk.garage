@@ -587,6 +587,9 @@
       "regression": "Регрессия в {release}"
     },
     "releaseDetails": {
+      "header": "Релизы события",
+      "occurrence": "Релиз события",
+      "repetition": "Релиз этого повторения",
       "firstSeen": "Впервые в релизе",
       "resolved": "Исправлено в релизе",
       "regression": "Регрессия в релизе"

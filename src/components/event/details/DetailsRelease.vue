@@ -1,7 +1,10 @@
 <template>
-  <DetailsBase>
+  <DetailsBase
+    v-if="releases.length"
+    class="event-release-details"
+  >
     <template #header>
-      {{ $t("event.release") }}
+      {{ $t("event.releaseDetails.header") }}
     </template>
     <template #content>
       <div
@@ -29,6 +32,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
+import { isMeaningfulRelease } from '@/utils';
 
 export default defineComponent({
   name: 'DetailsRelease',
@@ -65,19 +69,41 @@ export default defineComponent({
       return [
         { label: 'event.releaseDetails.firstSeen',
           release: this.firstSeenInRelease },
-        { label: 'event.release',
-          release: this.release !== this.firstSeenInRelease ? this.release : null },
+        { label: isMeaningfulRelease(this.firstSeenInRelease)
+          ? 'event.releaseDetails.repetition'
+          : 'event.releaseDetails.occurrence',
+        release: this.release !== this.firstSeenInRelease ? this.release : null },
         { label: 'event.releaseDetails.resolved',
           release: this.resolvedInRelease },
         { label: 'event.releaseDetails.regression',
           release: this.regressionInRelease },
-      ].filter(item => Boolean(item.release));
+      ].filter(item => isMeaningfulRelease(item.release));
     },
   },
 });
 </script>
 
 <style>
+.event-release-details {
+  .event-details__content-block {
+    display: grid;
+    grid-template-columns: minmax(0, 185px) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .event-details__key {
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .event-release-details .event-details__content-block {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+
 .event-details__release-link {
   color: var(--color-text-main);
   text-decoration: none;

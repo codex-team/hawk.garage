@@ -12,6 +12,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import type { HawkEvent } from '@/types/events';
+import { isMeaningfulRelease } from '@/utils';
 
 type EventReleaseState = Pick<HawkEvent, 'firstSeenInRelease' | 'resolvedInRelease' | 'regressionInRelease'>;
 
@@ -29,17 +30,17 @@ export default defineComponent({
      */
     status(): { type: 'firstSeen' | 'resolved' | 'regression';
       release: string; } | null {
-      if (this.event.regressionInRelease) {
+      if (isMeaningfulRelease(this.event.regressionInRelease)) {
         return { type: 'regression',
           release: this.event.regressionInRelease };
       }
 
-      if (this.event.resolvedInRelease) {
+      if (isMeaningfulRelease(this.event.resolvedInRelease)) {
         return { type: 'resolved',
           release: this.event.resolvedInRelease };
       }
 
-      if (this.event.firstSeenInRelease) {
+      if (isMeaningfulRelease(this.event.firstSeenInRelease)) {
         return { type: 'firstSeen',
           release: this.event.firstSeenInRelease };
       }

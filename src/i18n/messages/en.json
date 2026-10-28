@@ -593,6 +593,9 @@
       "regression": "Regression in {release}"
     },
     "releaseDetails": {
+      "header": "Event releases",
+      "occurrence": "Event release",
+      "repetition": "This repetition's release",
       "firstSeen": "First seen in release",
       "resolved": "Resolved in release",
       "regression": "Regressed in release"

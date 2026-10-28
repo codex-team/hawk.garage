@@ -46,6 +46,21 @@ describe('EventReleaseStatus', () => {
     expect(host.textContent).toBe('');
   });
 
+  it.each([undefined, null, '', '   ', 'null', 'undefined', ' NULL ', ' Undefined ', 'NaN'])(
+    'hides non-meaningful release values: %j', (release) => {
+      expect(mount({ firstSeenInRelease: release,
+        resolvedInRelease: release,
+        regressionInRelease: release }).querySelector('.event-release-status')).toBeNull();
+    }
+  );
+
+  it('falls back to valid metadata when higher-priority fields are placeholders', () => {
+    mount({ firstSeenInRelease: 'original',
+      resolvedInRelease: 'fixed',
+      regressionInRelease: 'null' });
+    expect(host.textContent?.trim()).toBe('Resolved in fixed');
+  });
+
   it.each([
     ['en', 'firstSeen', { firstSeenInRelease: 'build/start#1' }, 'First seen in build/start#1'],
     ['ru', 'firstSeen', { firstSeenInRelease: 'build/start#1' }, 'Впервые в build/start#1'],

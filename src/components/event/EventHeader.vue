@@ -58,11 +58,6 @@
         {{ !loading ? event.payload.type || 'Application error' : $t('event.loading') }}
       </div>
 
-      <EventReleaseStatus
-        v-if="!loading"
-        class="event-header__release-status"
-        :event="event"
-      />
       <h1 class="event-header__title">
         {{ trimmedTitle }}
       </h1>
@@ -163,7 +158,6 @@ import { JavaScriptAddons } from '@hawk.so/types';
 import { Button as CdxButton, usePopover } from '@codexteam/ui/vue';
 import EventActionsMenu from './EventActionsMenu.vue';
 import AiSuggestionDialog from '../modals/AiSuggestionDialog.vue';
-import EventReleaseStatus from './EventReleaseStatus.vue';
 
 export default defineComponent({
   name: 'EventHeader',
@@ -177,7 +171,6 @@ export default defineComponent({
     EntityImage,
     ProjectBadge,
     AiSuggestionDialog,
-    EventReleaseStatus,
   },
   mixins: [projectBadges],
   props: {
@@ -423,11 +416,6 @@ export default defineComponent({
       font-size: 12.2px;
       font-family: var(--font-monospace);
       letter-spacing: 0.21px;
-    }
-
-    &__release-status {
-      max-width: 100%;
-      margin-top: 10px;
     }
 
     &__title {
