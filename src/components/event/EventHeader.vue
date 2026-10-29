@@ -61,7 +61,7 @@
         <EventReleaseStatus
           v-if="!loading"
           :event="event"
-          :latest-release="event.latestRelease"
+          :latest-release="latestRelease"
         />
       </div>
 
@@ -157,6 +157,7 @@ import EntityImage from '../utils/EntityImage.vue';
 
 import { HawkEvent, HawkEventBacktraceFrame } from '@/types/events';
 import { TOGGLE_EVENT_MARK } from '@/store/modules/events/actionTypes';
+import { FETCH_PROJECT_RELEASES } from '@/store/modules/projects/actionTypes';
 import { Project } from '@/types/project';
 import { Workspace } from '@/types/workspaces';
 import { projectBadges } from '../../mixins/projectBadges';
@@ -211,7 +212,13 @@ export default defineComponent({
       isAiSuggestionOpen: false as boolean,
     };
   },
+  created() {
+    this.$store.dispatch(FETCH_PROJECT_RELEASES, this.projectId).catch(console.error);
+  },
   computed: {
+    latestRelease(): string | null {
+      return this.$store.getters.getLatestProjectRelease(this.projectId);
+    },
     /**
      * Event location got from the first backtrace frame
      * Or got from a url if the backtrace is empty

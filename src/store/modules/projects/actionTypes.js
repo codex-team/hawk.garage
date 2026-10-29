@@ -74,6 +74,11 @@ export const TOGGLE_NOTIFICATIONS_RULE_ENABLED_STATE = 'TOGGLE_NOTIFICATIONS_RUL
 export const FETCH_CHART_DATA = 'FETCH_CHART_DATA';
 
 /**
+ * Fetch and cache project releases
+ */
+export const FETCH_PROJECT_RELEASES = 'FETCH_PROJECT_RELEASES';
+
+/**
  * Send request to update project rate limits settings
  */
 export const UPDATE_PROJECT_RATE_LIMITS = 'UPDATE_PROJECT_RATE_LIMITS';

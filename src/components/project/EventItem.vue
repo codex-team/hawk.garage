@@ -104,10 +104,7 @@ export default {
     UiCheckbox,
   },
   props: {
-    latestRelease: {
-      type: String,
-      default: null,
-    },
+
     /**
      * True when at least one row is selected (all rows show checkboxes)
      */
@@ -156,6 +153,9 @@ export default {
   },
   emits: ['show-event-overview', 'toggle-row-select', 'on-assignee-icon-click'],
   computed: {
+    latestRelease() {
+      return this.$store.getters.getLatestProjectRelease(this.projectId);
+    },
     /**
      * Return true if user visited current event
      *

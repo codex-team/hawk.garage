@@ -141,11 +141,6 @@ export interface HawkEvent {
   firstSeenInRelease?: string | null;
 
   /**
-   * Latest project release fetched alongside event detail for its status badge.
-   */
-  latestRelease?: string | null;
-
-  /**
    * Release in which the event stopped occurring.
    */
   resolvedInRelease?: string | null;
@@ -191,10 +186,6 @@ export type DailyEventWithEventLinked = Omit<DailyEvent, 'event'> & {
  * Interface representing a portion of daily events
  */
 export interface DailyEventsPortion {
-  /**
-   * Latest project release fetched alongside this portion, independent of filters.
-   */
-  latestRelease?: string | null;
 
   /**
    * Pointer to the next portion of daily events, null if there are no more events

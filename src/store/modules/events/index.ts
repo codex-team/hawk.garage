@@ -277,8 +277,7 @@ const module: Module<EventsModuleState, RootState> = {
       release?: string;
       assignee?: string; }):
       Promise<{ dailyEventsWithEventsLinked: DailyEventWithEventLinked[];
-        nextCursor: string | null;
-        latestRelease: string | null; }> {
+        nextCursor: string | null; }> {
       const eventsSortOrder = this.getters.getProjectOrder(projectId);
       const dailyEventsPortion = await eventsApi.fetchDailyEventsPortion(
         projectId,
@@ -316,8 +315,7 @@ const module: Module<EventsModuleState, RootState> = {
       });
 
       return { dailyEventsWithEventsLinked,
-        nextCursor: dailyEventsPortion.nextCursor,
-        latestRelease: dailyEventsPortion.latestRelease ?? null };
+        nextCursor: dailyEventsPortion.nextCursor };
     },
 
     /**

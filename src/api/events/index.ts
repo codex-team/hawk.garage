@@ -74,10 +74,7 @@ export const getEvent = withDemoMock(
       return null;
     }
 
-    return {
-      ...project.event,
-      latestRelease: project.latestRelease ?? null,
-    };
+    return project.event;
   },
   '/src/api/events/mocks/getEvent.mock.ts'
 );
@@ -124,11 +121,8 @@ export const fetchDailyEventsPortion = withDemoMock(
       response.errors.forEach(e => console.error(e));
     }
 
-    return {
-      ...(project?.dailyEventsPortion ?? { nextCursor: null,
-        dailyEvents: [] }),
-      latestRelease: project?.latestRelease ?? null,
-    };
+    return project?.dailyEventsPortion ?? { nextCursor: null,
+      dailyEvents: [] };
   },
   '/src/api/events/mocks/fetchDailyEventsPortion.mock.ts'
 );

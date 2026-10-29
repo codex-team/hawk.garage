@@ -7,7 +7,6 @@ import { EVENT_FRAGMENT } from '../fragments';
 export const QUERY_EVENT = `
   query Event($projectId: ID!, $eventId: ID!, $originalEventId: ID!) {
     project(projectId: $projectId) {
-      latestRelease
       event(eventId: $eventId, originalEventId: $originalEventId) {
         ...Event
       }
@@ -28,7 +27,6 @@ export const QUERY_PROJECT_DAILY_EVENTS = `
     $assignee: ID
   ) {
     project(projectId: $projectId) {
-      latestRelease
       dailyEventsPortion(sort: $sort, filters: $filters, search: $search, release: $release, assignee: $assignee, nextCursor: $cursor) {
         nextCursor {
           groupingTimestampBoundary

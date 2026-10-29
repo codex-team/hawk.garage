@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { fetchProjectReleases } from '@/api/projects';
+import { FETCH_PROJECT_RELEASES } from '@/store/modules/projects/actionTypes';
 import { prettyDate, prettyTime } from '@/utils/filters';
 import Badge from '@/components/utils/Badge.vue';
 import EmptyState from '../utils/EmptyState.vue';
@@ -137,11 +137,13 @@ export default {
   },
   data() {
     return {
-      releases: [],
       isLoading: false,
     };
   },
   computed: {
+    releases() {
+      return this.$store.getters.getProjectReleases(this.projectId);
+    },
     projectId() {
       return this.$route.params.projectId;
     },
@@ -180,9 +182,7 @@ export default {
   async created() {
     this.isLoading = true;
     try {
-      const items = await fetchProjectReleases(this.projectId);
-
-      this.releases = (items || []).sort((a, b) => b.timestamp - a.timestamp);
+      await this.$store.dispatch(FETCH_PROJECT_RELEASES, this.projectId);
     } catch (error) {
       console.error(error);
     } finally {

@@ -14,6 +14,7 @@ import {
   UPDATE_EVENT_GROUPING_PATTERN,
   REMOVE_EVENT_GROUPING_PATTERN,
   FETCH_CHART_DATA,
+  FETCH_PROJECT_RELEASES,
   GENERATE_NEW_INTEGRATION_TOKEN,
   DISCONNECT_TASK_MANAGER,
   UPDATE_GITHUB_REPOSITORY,
@@ -23,6 +24,9 @@ import {
 import { RESET_STORE } from '../../methodsTypes';
 import * as projectsApi from '../../../api/projects';
 import { useErrorTracker } from '../../../hawk.ts';
+import { isMeaningfulRelease } from '@/utils';
+
+const pendingProjectReleases = new Map();
 
 /**
  * Error tracking composable
@@ -39,6 +43,7 @@ export const mutationTypes = {
   UPDATE_PROJECT_PROPERTY: 'UPDATE_PROJECT_PROPERTY', // Updates project property by key
   REMOVE_PROJECT: 'REMOVE_PROJECT', // Remove project by id
   SET_PROJECTS_LIST: 'SET_PROJECTS_LIST', // Set new projects list
+  SET_PROJECT_RELEASES: 'SET_PROJECT_RELEASES',
   SET_EVENTS_LIST_BY_DATE: 'SET_EVENTS_LIST_BY_DATE', // Set events list by date to project
   RESET_PROJECT_UNREAD_COUNT: 'SET_PROJECT_UNREAD_COUNT', // Set project unread count
   PUSH_NOTIFICATIONS_RULE: 'PUSH_NOTIFICATIONS_RULE', // append new created notify rule
@@ -81,6 +86,7 @@ export const mutationTypes = {
  *
  * @typedef {object} ProjectsModuleState
  * @property {Array<Project>} list - user's projects
+ * @property {Record<string, Array>} releasesByProject - cached registered project releases
  */
 
 /**
@@ -98,6 +104,7 @@ function initialState() {
      * @type {object<string, ProjectChartData[]>}
      */
     charts: {},
+    releasesByProject: {},
   };
 }
 
@@ -107,6 +114,15 @@ function initialState() {
  * @namespace Getters
  */
 const projectsGetters = {
+  getProjectReleases: state => projectId => state.releasesByProject[projectId] || [],
+
+  // "New" means first seen in the latest registered Hawk release, not necessarily the deployed version.
+  getLatestProjectRelease: (state, getters) => (projectId) => {
+    const latest = getters.getProjectReleases(projectId)[0]?.release;
+
+    return isMeaningfulRelease(latest) ? latest : null;
+  },
+
   /**
    * Returns project by id
    *
@@ -147,6 +163,47 @@ const projectsGetters = {
 };
 
 const actions = {
+  /**
+   * Fetch and cache registered releases for the current session.
+   *
+   * @param {object} context - Vuex action context
+   * @param {ProjectsModuleState} context.state - module state
+   * @param {Function} context.commit - Vuex commit function
+   * @param {string} projectId - project's identifier
+   * @returns {Promise<Array>} releases sorted newest first
+   */
+  async [FETCH_PROJECT_RELEASES]({ state, commit }, projectId) {
+    if (state.releasesByProject[projectId]) {
+      return state.releasesByProject[projectId];
+    }
+
+    if (pendingProjectReleases.has(projectId)) {
+      return pendingProjectReleases.get(projectId);
+    }
+
+    const request = projectsApi.fetchProjectReleases(projectId)
+      .then((releases) => {
+        // Release identifiers are opaque: order by registration timestamp, not by version/hash.
+        const sortedReleases = [...releases].sort((a, b) => b.timestamp - a.timestamp);
+
+        if (pendingProjectReleases.get(projectId) === request) {
+          commit(mutationTypes.SET_PROJECT_RELEASES, { projectId,
+            releases: sortedReleases });
+        }
+
+        return sortedReleases;
+      })
+      .finally(() => {
+        if (pendingProjectReleases.get(projectId) === request) {
+          pendingProjectReleases.delete(projectId);
+        }
+      });
+
+    pendingProjectReleases.set(projectId, request);
+
+    return request;
+  },
+
   /**
    * Send request to create new project
    *
@@ -541,6 +598,10 @@ const actions = {
 };
 
 const mutations = {
+  [mutationTypes.SET_PROJECT_RELEASES](state, { projectId, releases }) {
+    state.releasesByProject[projectId] = releases;
+  },
+
   /**
    * Mutation for replacing projects list
    *
@@ -657,6 +718,7 @@ const mutations = {
    * @param {ProjectsModuleState} state - Vuex state
    */
   [RESET_STORE](state) {
+    pendingProjectReleases.clear();
     Object.assign(state, initialState());
   },
 
