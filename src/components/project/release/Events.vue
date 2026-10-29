@@ -1,5 +1,8 @@
 <template>
   <div class="release-events">
+    <p class="release-events__description">
+      {{ $t('projects.releases.eventsDescription') }}
+    </p>
     <EventsList fallback="fancy-release" />
   </div>
 </template>
@@ -48,5 +51,12 @@ export default defineComponent({
 .release-events {
   max-width: var(--width-event-center-container);
   margin: 0 auto;
+
+  &__description {
+    margin: 20px var(--layout-padding-inline);
+    color: var(--color-text-second);
+    font-size: 13px;
+    line-height: 1.6;
+  }
 }
 </style>

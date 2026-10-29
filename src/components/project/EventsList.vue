@@ -42,6 +42,7 @@
           :affected-users-count="dailyEventInfo.affectedUsers"
           class="events-list__event"
           :event="getEvent(dailyEventInfo.eventId)"
+
           :is-selection-mode-active="selectionModeActive"
           :is-row-selected="isRowSelected(dailyEventInfo.eventId)"
           @on-assignee-icon-click="onAssigneeIconClick(dailyEventInfo.eventId, $event)"
@@ -98,6 +99,7 @@ import { prettyDate } from '@/utils/filters';
 import AssigneesList from '../event/AssigneesList';
 import { mapGetters } from 'vuex';
 import { FETCH_PROJECT_OVERVIEW } from '../../store/modules/events/actionTypes';
+import { FETCH_PROJECT_RELEASES } from '../../store/modules/projects/actionTypes';
 import SearchField from '../forms/SearchField';
 import EmptyState from '../utils/EmptyState.vue';
 import UiSelect from '../utils/UiSelect.vue';
@@ -250,6 +252,7 @@ export default {
     };
   },
   created() {
+    this.$store.dispatch(FETCH_PROJECT_RELEASES, this.projectId).catch(console.error);
     this.loadMoreEvents(true);
 
     const SEARCH_MAX_LENGTH = 50;

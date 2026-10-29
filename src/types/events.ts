@@ -136,6 +136,21 @@ export interface HawkEvent {
   release?: HawkEventRelease;
 
   /**
+   * Release of the original event, not the selected repetition.
+   */
+  firstSeenInRelease?: string | null;
+
+  /**
+   * Release in which the event stopped occurring.
+   */
+  resolvedInRelease?: string | null;
+
+  /**
+   * Release in which the resolved event occurred again.
+   */
+  regressionInRelease?: string | null;
+
+  /**
    * Task Manager item linked to this event (e.g., GitHub Issue)
    */
   taskManagerItem?: TaskManagerItem;
@@ -171,6 +186,7 @@ export type DailyEventWithEventLinked = Omit<DailyEvent, 'event'> & {
  * Interface representing a portion of daily events
  */
 export interface DailyEventsPortion {
+
   /**
    * Pointer to the next portion of daily events, null if there are no more events
    */

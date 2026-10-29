@@ -9,6 +9,7 @@
       'event-item--row-selected': isRowSelected,
     }"
     data-ripple
+    @mousedown.capture.shift.prevent
     @click="handleRowClick"
   >
     <EventMark :mark="mark" />
@@ -26,7 +27,18 @@
       class="event-item__info"
       :class="{ 'event-item__info--blurred': isEventBlurred }"
     >
-      {{ event.payload.title }}
+      <span
+        class="event-item__title"
+        :title="event.payload.title"
+      >
+        {{ event.payload.title }}
+      </span>
+      <EventReleaseStatus
+        v-if="!isEventBlurred"
+        class="event-item__release-status"
+        :event="event"
+        :latest-release="latestRelease"
+      />
     </div>
     <UiButton
       v-if="event.taskManagerItem"
@@ -73,6 +85,7 @@ import Icon from '../utils/Icon';
 import EventMark from './EventMark';
 import EntityImage from '../utils/EntityImage';
 import EventBadge from './EventBadge.vue';
+import EventReleaseStatus from '../event/EventReleaseStatus.vue';
 import UiButton from '../utils/UiButton.vue';
 import UiCheckbox from '../forms/UiCheckbox.vue';
 import { prettyTime } from '@/utils/filters';
@@ -84,12 +97,14 @@ export default {
   components: {
     EventMark,
     EventBadge,
+    EventReleaseStatus,
     Icon,
     EntityImage,
     UiButton,
     UiCheckbox,
   },
   props: {
+
     /**
      * True when at least one row is selected (all rows show checkboxes)
      */
@@ -138,6 +153,9 @@ export default {
   },
   emits: ['show-event-overview', 'toggle-row-select', 'on-assignee-icon-click'],
   computed: {
+    latestRelease() {
+      return this.$store.getters.getLatestProjectRelease(this.projectId);
+    },
     /**
      * Return true if user visited current event
      *
@@ -295,19 +313,33 @@ export default {
     }
 
     &__info {
+      display: flex;
+      align-items: center;
+      min-width: 0;
       margin-right: auto;
       margin-left: 10px;
       overflow: hidden;
       font-weight: bold;
       font-size: 16px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
 
       &--blurred {
         filter: blur(4px);
         user-select: none;
         pointer-events: none;
       }
+    }
+
+    &__title {
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    &__release-status {
+      flex-shrink: 0;
+      max-width: 220px;
+      margin-left: 8px;
     }
 
     &__issue-button {

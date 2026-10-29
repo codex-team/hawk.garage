@@ -291,6 +291,8 @@
       "releases": "Releases"
     },
     "releases": {
+      "countDescription": "The number next to a release counts errors first introduced in it. Repetitions and regressions of errors from earlier releases are not included.",
+      "eventsDescription": "This page shows errors first introduced in this release and all their repetitions. Errors from earlier releases are not included.",
       "noNewEvents": "No new events",
       "notFound": "Release not found",
       "loadError": "Error loading release details",
@@ -302,8 +304,8 @@
       "empty": {
         "releasesTitle": "No releases found",
         "releasesDesc": "Releases sent to Hawk will appear here",
-        "eventsTitle": "No errors found in this release",
-        "eventsDesc": "Events captured within this release will appear here",
+        "eventsTitle": "No new errors found in this release",
+        "eventsDesc": "Errors from earlier releases, including their regressions, are not shown here.",
         "commitsTitle": "No commits",
         "commitsDesc": "There are no commits attached to this release",
         "filesTitle": "No files found",
@@ -587,6 +589,22 @@
     "loading": "Loading...",
     "context": "Context",
     "release": "Release",
+    "releaseStatus": {
+      "firstSeen": "New",
+      "resolved": "Resolved",
+      "regression": "Regression"
+    },
+    "releaseStatusTooltip": {
+      "firstSeen": "The event first appeared in release {release}, the project's latest release.",
+      "resolved": "No occurrences observed starting with release {release}. This is an automatic estimate: the event may be fixed.",
+      "regression": "The event reappeared in release {release} after it was considered fixed."
+    },
+    "releaseDetails": {
+      "occurrence": "Current occurrence in",
+      "firstSeen": "Introduced in",
+      "resolved": "Potentially resolved in",
+      "regression": "Regressed in"
+    },
     "viewedBy": {
       "assignee": "Assignee"
     },

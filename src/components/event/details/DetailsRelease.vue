@@ -1,20 +1,27 @@
 <template>
-  <DetailsBase>
+  <DetailsBase
+    v-if="releases.length"
+    class="event-release-details"
+  >
     <template #header>
       {{ $t("event.release") }}
     </template>
     <template #content>
-      <div class="event-details__content-block">
+      <div
+        v-for="item in releases"
+        :key="item.label"
+        class="event-details__content-block"
+      >
         <div class="event-details__key">
-          {{ $t("event.release") }}
+          {{ $t(item.label) }}
         </div>
         <div class="event-details__value">
           <router-link
-            :to="releaseRoute"
+            :to="{ name: 'project-release', params: { projectId: $route.params.projectId, release: item.release } }"
             class="event-details__release-link"
-            :title="release"
+            :title="item.release"
           >
-            {{ release }}
+            {{ item.release }}
           </router-link>
         </div>
       </div>
@@ -25,6 +32,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import DetailsBase from './DetailsBase.vue';
+import { isMeaningfulRelease } from '@/utils';
 
 export default defineComponent({
   name: 'DetailsRelease',
@@ -37,33 +45,67 @@ export default defineComponent({
      */
     release: {
       type: String,
-      required: true,
+      default: null,
+    },
+    firstSeenInRelease: {
+      type: String,
+      default: null,
+    },
+    resolvedInRelease: {
+      type: String,
+      default: null,
+    },
+    regressionInRelease: {
+      type: String,
+      default: null,
     },
   },
   computed: {
     /**
-     * Route to the release page inside current project
+     * Keep the current occurrence separate from lifecycle milestones, even when their releases match.
      */
-    releaseRoute(): Record<string, unknown> {
-      const projectId = (this as any).$route.params.projectId;
-      const release = (this as any).release;
-
-      return {
-        name: 'project-release',
-        params: {
-          projectId,
-          release,
-        },
-      };
+    releases(): { label: string;
+      release: string; }[] {
+      return [
+        { label: 'event.releaseDetails.firstSeen',
+          release: this.firstSeenInRelease },
+        { label: 'event.releaseDetails.occurrence',
+          release: this.release },
+        { label: 'event.releaseDetails.resolved',
+          release: this.resolvedInRelease },
+        { label: 'event.releaseDetails.regression',
+          release: this.regressionInRelease },
+      ].filter(item => isMeaningfulRelease(item.release));
     },
   },
 });
 </script>
 
 <style>
+.event-release-details {
+  .event-details__content-block {
+    display: grid;
+    grid-template-columns: minmax(0, 230px) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .event-details__key {
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .event-release-details .event-details__content-block {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}
+
 .event-details__release-link {
   color: var(--color-text-main);
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 
 .event-details__release-link:hover {

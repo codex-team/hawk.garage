@@ -291,7 +291,7 @@ export const fetchProjectReleases = withDemoMock(
     const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
 
     if (response.errors?.length) {
-      response.errors.forEach(console.error);
+      throw new Error(response.errors.map(error => error.message).join('; '));
     }
 
     return response.data.project.releases;
