@@ -36,6 +36,7 @@ import Icon from '../utils/Icon.vue';
 import * as aiApi from '@/api/ai';
 import { isAbortError } from '@/utils/errors';
 import { loadAsyncComponent } from '@/utils/loadAsyncComponent';
+import { createStreamPacer, type StreamPacer } from '@/utils/streamPacer';
 import { defineAsyncComponent, defineComponent } from 'vue';
 import type { Token } from 'marked';
 
@@ -88,8 +89,6 @@ export default defineComponent({
     return {
       loading: true,
       suggestion: '',
-      pendingText: '',
-      streamAnimationFrame: null as number | null,
       error: '',
       markdownLexer: null as MarkdownLexer | null,
       streamAbortController: new AbortController(),
@@ -126,6 +125,11 @@ export default defineComponent({
     },
   },
   async created() {
+    let pacer: StreamPacer | undefined;
+    const stopPacer = (): void => pacer?.stop();
+
+    this.streamAbortController.signal.addEventListener('abort', stopPacer, { once: true });
+
     try {
       const rendererReady = Promise.all([import('marked'), loadMarkdownView()]).then(([marked]) => {
         if (this.streamAbortController.signal.aborted) {
@@ -139,30 +143,37 @@ export default defineComponent({
         }
       });
 
+      const activePacer = createStreamPacer({
+        onText: (text) => {
+          this.suggestion += text;
+          this.loading = !this.markdownLexer;
+        },
+      });
+
+      pacer = activePacer;
+
       await Promise.all([rendererReady, aiApi.streamEventAiSuggestion(this.projectId, this.eventId, this.originalEventId, {
         signal: this.streamAbortController.signal,
-        onTextDelta: (delta) => {
-          this.pendingText += delta;
-          this.streamAnimationFrame ??= requestAnimationFrame(() => this.flushText());
-        },
+        onTextDelta: delta => activePacer.push(delta),
         onError: (message) => {
           /**
            * Drop the part of the answer the API withdrew.
            */
-          this.pendingText = '';
-          this.flushText();
+          activePacer.stop();
           this.suggestion = '';
           this.error = message;
           this.loading = !this.markdownLexer;
         },
       })]);
 
-      this.flushText();
+      await activePacer.drain();
 
       if (!this.suggestion && !this.error) {
         this.error = this.$t('event.ai.empty') as string;
       }
     } catch (error) {
+      pacer?.stop();
+
       if (!isAbortError(error)) {
         this.error = this.$t('event.ai.error') as string;
         this.streamAbortController.abort();
@@ -170,7 +181,7 @@ export default defineComponent({
         console.error(error);
       }
     } finally {
-      this.flushText();
+      this.streamAbortController.signal.removeEventListener('abort', stopPacer);
 
       if (!this.streamAbortController.signal.aborted) {
         this.loading = false;
@@ -179,25 +190,6 @@ export default defineComponent({
   },
   beforeUnmount() {
     this.streamAbortController.abort();
-    this.pendingText = '';
-    this.flushText();
-  },
-  methods: {
-    /**
-     * Publish buffered deltas together and cancel the pending frame.
-     */
-    flushText(): void {
-      if (this.streamAnimationFrame !== null) {
-        cancelAnimationFrame(this.streamAnimationFrame);
-        this.streamAnimationFrame = null;
-      }
-
-      if (this.pendingText) {
-        this.suggestion += this.pendingText;
-        this.pendingText = '';
-        this.loading = !this.markdownLexer;
-      }
-    },
   },
 });
 </script>
