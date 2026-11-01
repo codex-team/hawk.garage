@@ -56,6 +56,7 @@ export const EVENT_FRAGMENT = `
     originalTimestamp
     originalEventId
     firstSeenInRelease
+    isNew
     resolvedInRelease
     regressionInRelease
     payload {

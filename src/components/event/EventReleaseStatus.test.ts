@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { createApp, h, nextTick, reactive, ref, unref, type App, type Ref } from 'vue';
+import { createApp, h, nextTick, reactive, type App } from 'vue';
 import { createI18n } from 'vue-i18n';
 import en from '../../i18n/messages/en.json';
 import ru from '../../i18n/messages/ru.json';
 import type { HawkEvent } from '../../types/events';
 import EventReleaseStatus from './EventReleaseStatus.vue';
 
-type ReleaseState = Pick<HawkEvent, 'firstSeenInRelease' | 'resolvedInRelease' | 'regressionInRelease'>;
+type ReleaseState = Pick<HawkEvent, 'firstSeenInRelease' | 'resolvedInRelease' | 'regressionInRelease' | 'isNew'>;
 
 let app: App | undefined;
 let host: HTMLDivElement;
@@ -20,14 +20,12 @@ afterEach(() => {
  * Mount the badge with the real translations and reactive event state.
  * @param event - lifecycle fields from the event
  * @param locale - UI language
- * @param latestRelease - latest project release, independent of the selected list
  * @returns badge container
  */
-function mount(event: ReleaseState, locale = 'en', latestRelease: string | null | Ref<string | null> = null): HTMLDivElement {
+function mount(event: ReleaseState, locale = 'en'): HTMLDivElement {
   host = document.createElement('div');
   document.body.append(host);
-  app = createApp({ render: () => h(EventReleaseStatus, { event,
-    latestRelease: unref(latestRelease) }) });
+  app = createApp({ render: () => h(EventReleaseStatus, { event }) });
   app.use(createI18n({ legacy: false,
     locale,
     messages: { en,
@@ -52,7 +50,8 @@ describe('EventReleaseStatus', () => {
     'hides non-meaningful release values: %j', (release) => {
       expect(mount({ firstSeenInRelease: release,
         resolvedInRelease: release,
-        regressionInRelease: release }).querySelector('.event-release-status')).toBeNull();
+        regressionInRelease: release,
+        isNew: true }).querySelector('.event-release-status')).toBeNull();
     }
   );
 
@@ -82,8 +81,9 @@ describe('EventReleaseStatus', () => {
       resolvedInRelease: 'z-fixed',
       regressionInRelease: 'a/again#2' }, 'Регрессия',
     'Событие вернулось в релизе a/again#2 после предполагаемого исправления.'],
-  ] as const)('renders %s %s with lifecycle precedence, not release sorting', (locale, status, event, label, tooltip) => {
-    const badge = mount(event, locale, event.firstSeenInRelease).querySelector('.event-release-status');
+  ] as const)('renders %s %s with the server flag and lifecycle priority', (locale, status, event, label, tooltip) => {
+    const badge = mount({ ...event,
+      isNew: true }, locale).querySelector('.event-release-status');
 
     expect(badge?.textContent?.trim()).toBe(label);
     expect(badge?.getAttribute('title')).toBe(tooltip);
@@ -94,20 +94,22 @@ describe('EventReleaseStatus', () => {
     }
   });
 
-  it.each([null, '', ' ', 'null', 'undefined', 'NaN', 'newer-release'])(
-    'hides first-seen events when the latest release is unavailable or different: %j', (latestRelease) => {
-      mount({ firstSeenInRelease: 'original' }, 'en', latestRelease);
+  it.each([undefined, false])(
+    'hides the new badge when isNew is unavailable or false: %j', (isNew) => {
+      mount({ firstSeenInRelease: 'original',
+        isNew });
       expect(host.querySelector('.event-release-status')).toBeNull();
     }
   );
 
-  it('removes the first-seen badge when the project gets a newer release', async () => {
-    const latestRelease = ref<string | null>('current');
+  it('removes the new badge when the server flag changes', async () => {
+    const event = reactive<ReleaseState>({ firstSeenInRelease: 'current',
+      isNew: true });
 
-    mount({ firstSeenInRelease: 'current' }, 'en', latestRelease);
+    mount(event);
     expect(host.textContent?.trim()).toBe('New');
 
-    latestRelease.value = 'next';
+    event.isNew = false;
     await nextTick();
     expect(host.querySelector('.event-release-status')).toBeNull();
   });

@@ -395,6 +395,9 @@ type Event {
   """Release of the original event, regardless of the selected repetition"""
   firstSeenInRelease: String
 
+  """Whether the event first appeared in the latest registered project release"""
+  isNew: Boolean!
+
   """Release in which the event was resolved"""
   resolvedInRelease: String
 

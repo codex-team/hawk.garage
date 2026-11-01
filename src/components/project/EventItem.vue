@@ -37,7 +37,7 @@
         v-if="!isEventBlurred"
         class="event-item__release-status"
         :event="event"
-        :latest-release="latestRelease"
+
       />
     </div>
     <UiButton
@@ -153,9 +153,7 @@ export default {
   },
   emits: ['show-event-overview', 'toggle-row-select', 'on-assignee-icon-click'],
   computed: {
-    latestRelease() {
-      return this.$store.getters.getLatestProjectRelease(this.projectId);
-    },
+
     /**
      * Return true if user visited current event
      *

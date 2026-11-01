@@ -141,6 +141,11 @@ export interface HawkEvent {
   firstSeenInRelease?: string | null;
 
   /**
+   * Server-calculated flag for events first seen in the latest registered release.
+   */
+  isNew?: boolean;
+
+  /**
    * Release in which the event stopped occurring.
    */
   resolvedInRelease?: string | null;

@@ -14,15 +14,12 @@ import { defineComponent, type PropType } from 'vue';
 import type { HawkEvent } from '@/types/events';
 import { isMeaningfulRelease } from '@/utils';
 
-type EventReleaseState = Pick<HawkEvent, 'firstSeenInRelease' | 'resolvedInRelease' | 'regressionInRelease'>;
+type EventReleaseState = Pick<HawkEvent, 'firstSeenInRelease' | 'resolvedInRelease' | 'regressionInRelease' | 'isNew'>;
 
 export default defineComponent({
   name: 'EventReleaseStatus',
   props: {
-    latestRelease: {
-      type: String,
-      default: null,
-    },
+
     event: {
       type: Object as PropType<EventReleaseState>,
       required: true,
@@ -41,9 +38,7 @@ export default defineComponent({
         return 'resolved';
       }
 
-      if (isMeaningfulRelease(this.event.firstSeenInRelease)
-        && isMeaningfulRelease(this.latestRelease)
-        && this.event.firstSeenInRelease === this.latestRelease) {
+      if (this.event.isNew === true && isMeaningfulRelease(this.event.firstSeenInRelease)) {
         return 'firstSeen';
       }
 
