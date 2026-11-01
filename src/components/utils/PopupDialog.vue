@@ -63,6 +63,8 @@ export default {
     }
 
     &__mask {
+      --popup-dialog-gutter: 50px;
+
       position: fixed;
       top: 0;
       right: 0;
@@ -73,7 +75,7 @@ export default {
       justify-content: center;
       width: 100%;
       height: 100%;
-      padding: 50px;
+      padding: var(--popup-dialog-gutter);
       overflow-y: auto;
       background-color: rgba(0, 0, 0, .6);
       @mixin hide-scrollbar;
