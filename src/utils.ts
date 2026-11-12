@@ -4,6 +4,16 @@ import shortNumber from 'short-number';
 import type { HawkEvent, HawkEventDailyInfo } from './types/events';
 
 /**
+ * Reject missing releases and serialized placeholders without changing valid identifiers.
+ * @param release - release value from event metadata
+ * @returns whether the value contains a meaningful release identifier
+ */
+export function isMeaningfulRelease(release: unknown): release is string {
+  return typeof release === 'string' && release.trim() !== ''
+    && !/^(null|undefined|nan)$/i.test(release.trim());
+}
+
+/**
  * @param currency
  */
 export function getCurrencySign(currency: string): string {

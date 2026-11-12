@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   captureUtmFromQuery,
   getStoredUtm,
@@ -35,7 +34,7 @@ function createMemoryStorage(): Storage {
 
 describe('UTM session storage', () => {
   beforeEach(() => {
-    globalThis.sessionStorage = createMemoryStorage();
+    vi.stubGlobal('sessionStorage', createMemoryStorage());
   });
 
   describe('getUtmFromQuery', () => {
@@ -51,7 +50,7 @@ describe('UTM session storage', () => {
       const result = getUtmFromQuery(query);
 
       // Assert
-      assert.deepEqual(result, {
+      expect(result).toEqual({
         source: 'google',
         medium: 'cpc',
       });
@@ -68,7 +67,7 @@ describe('UTM session storage', () => {
       const result = getUtmFromQuery(query);
 
       // Assert
-      assert.equal(result, undefined);
+      expect(result).toBeUndefined();
     });
   });
 
@@ -84,7 +83,7 @@ describe('UTM session storage', () => {
       captureUtmFromQuery(query);
 
       // Assert
-      assert.deepEqual(JSON.parse(sessionStorage.getItem(UTM_STORAGE_KEY) ?? ''), {
+      expect(JSON.parse(sessionStorage.getItem(UTM_STORAGE_KEY) ?? '')).toEqual({
         source: 'google',
         campaign: 'spring',
       });
@@ -102,7 +101,7 @@ describe('UTM session storage', () => {
       });
 
       // Assert
-      assert.deepEqual(getStoredUtm(), {
+      expect(getStoredUtm()).toEqual({
         source: 'google',
       });
     });
@@ -121,7 +120,7 @@ describe('UTM session storage', () => {
       });
 
       // Assert
-      assert.deepEqual(getStoredUtm(), {
+      expect(getStoredUtm()).toEqual({
         source: 'google',
         medium: 'cpc',
         campaign: 'later',
@@ -141,7 +140,7 @@ describe('UTM session storage', () => {
       saveDemoUtm();
 
       // Assert
-      assert.deepEqual(getStoredUtm(), {
+      expect(getStoredUtm()).toEqual({
         source: 'demo',
         medium: 'cpc',
       });
@@ -160,7 +159,7 @@ describe('UTM session storage', () => {
       const result = getStoredUtm();
 
       // Assert
-      assert.deepEqual(result, {
+      expect(result).toEqual({
         source: 'google',
         medium: 'cpc',
       });
@@ -172,7 +171,7 @@ describe('UTM session storage', () => {
       const result = getStoredUtm();
 
       // Assert
-      assert.equal(result, undefined);
+      expect(result).toBeUndefined();
     });
 
     it('should return undefined for invalid stored JSON', () => {
@@ -183,7 +182,7 @@ describe('UTM session storage', () => {
       const result = getStoredUtm();
 
       // Assert
-      assert.equal(result, undefined);
+      expect(result).toBeUndefined();
     });
   });
 });

@@ -2,6 +2,7 @@
   <div class="repetitions-table">
     <table>
       <!-- Table headings -->
+      <thead>
       <tr>
         <th
           v-for="column in columns"
@@ -15,8 +16,10 @@
           {{ getAddonName(column) }}
         </th>
       </tr>
+      </thead>
 
       <!-- Table content -->
+      <tbody>
       <tr
         v-for="repetition in repetitions"
         :key="repetition.id"
@@ -105,6 +108,7 @@
           </template>
         </td>
       </tr>
+      </tbody>
     </table>
   </div>
 </template>
@@ -360,7 +364,7 @@ export default defineComponent({
       white-space: nowrap;
     }
 
-    tr:not(:first-child){
+    tbody tr {
       cursor: pointer;
 
       &:hover {
