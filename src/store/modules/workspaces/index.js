@@ -419,24 +419,27 @@ const actions = {
   /**
    * Prepare payment data before opening payment widget
    *
-   * @param {Function} commit - standard Vuex commit method
-   * @param {object} payload - compose payment payload
-   * @param {string} payload.workspaceId - workspace id
-   * @param {string} payload.tariffPlanId - plan id
+   * @param {object} context - Vuex action context (unused)
+   * @param {object} payload - details for requesting a payment quote
+   * @param {string} payload.workspaceId - workspace to charge
+   * @param {string} payload.tariffPlanId - tariff to purchase
    * @param {boolean} [payload.shouldSaveCard] - whether to save a card
-   * @param context
-   * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>}
+   * @param {string} [payload.promoCode] - optional discount code to apply
+   * @returns {Promise<import('@/types/before-payment-payload').BeforePaymentPayload>} server-calculated amount and signed payment details
+   * @throws {Error} when the API rejects the quote or omits payment data
    */
-  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false }) {
-    const result = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard);
+  async [COMPOSE_PAYMENT](context, { workspaceId, tariffPlanId, shouldSaveCard = false, promoCode }) {
+    const response = await billingApi.composePayment(workspaceId, tariffPlanId, shouldSaveCard, promoCode);
 
-    const { data } = result;
-
-    if (!data) {
-      return null;
+    if (response.errors?.length) {
+      throw new Error(response.errors[0]?.message || 'Failed to compose payment.');
     }
 
-    return data.composePayment;
+    if (!response.data?.composePayment) {
+      throw new Error('Failed to compose payment: response is missing payment data.');
+    }
+
+    return response.data.composePayment;
   },
 
   /**

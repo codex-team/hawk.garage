@@ -1,18 +1,36 @@
 /**
- * Data declaration before card charge
+ * Server-calculated payment quote and signed details for the payment widget
  */
-import type { Plan } from './plan.d.ts';
-
 export interface BeforePaymentPayload {
   /**
    * Tariff plan
    */
-  plan: Plan;
+  plan: {
+    /**
+     * Identifier of the tariff being purchased
+     */
+    id: string;
+
+    /**
+     * Display name of the tariff
+     */
+    name: string;
+
+    /**
+     * Regular monthly price before any promo discount
+     */
+    monthlyCharge: number;
+  };
 
   /**
    * Unique invoice identifier, format: `WorkspaceNameConsonants year-month-identifier Tariff`
    */
   invoiceId: string;
+
+  /**
+   * Amount to charge in the payment currency after any promo discount
+   */
+  paymentAmount: number;
 
   /**
    * Payment currency

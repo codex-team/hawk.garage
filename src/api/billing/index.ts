@@ -2,7 +2,8 @@ import { MUTATION_PAY_WITH_CARD, QUERY_BUSINESS_OPERATIONS, QUERY_COMPOSE_PAYMEN
 import * as api from '../';
 import { withDemoMock } from '@/utils/withDemoMock';
 import type { BusinessOperation } from '../../types/business-operation';
-import { BeforePaymentPayload } from '@/types/before-payment-payload';
+import type { BeforePaymentPayload } from '@/types/before-payment-payload';
+import type { APIResponse } from '@/types/api';
 
 /**
  * Request business operations list for passed workspaces
@@ -46,19 +47,35 @@ export async function payWithCard(input: PayWithCardInput): Promise<unknown> {
 }
 
 /**
- * Prepare payment data (compose payment)
- * @param workspaceId - id of workspace
- * @param tariffPlanId - id of plan
- * @param shouldSaveCard - whether to save the card
+ * Prepare a server-calculated payment quote with an optional discount
+ * @param workspaceId - workspace to charge
+ * @param tariffPlanId - tariff to purchase
+ * @param [shouldSaveCard] - whether to save the card
+ * @param [promoCode] - optional discount code to apply
+ * @returns API response containing the payment quote or validation errors
  */
 export async function composePayment(
   workspaceId: string,
   tariffPlanId: string,
-  shouldSaveCard = false
-): Promise<unknown> {
-  return await api.call(QUERY_COMPOSE_PAYMENT, {
-    input: { workspaceId,
+  shouldSaveCard = false,
+  promoCode?: string
+): Promise<APIResponse<{
+  /**
+   * Server-calculated amount and signed payment details
+   */
+  composePayment: BeforePaymentPayload;
+}>> {
+  return await api.call<{
+    /**
+     * Server-calculated amount and signed payment details
+     */
+    composePayment: BeforePaymentPayload;
+  }>(QUERY_COMPOSE_PAYMENT, {
+    input: {
+      workspaceId,
       tariffPlanId,
-      shouldSaveCard },
-  });
+      shouldSaveCard,
+      promoCode,
+    },
+  }, undefined, { allowErrors: true });
 }
