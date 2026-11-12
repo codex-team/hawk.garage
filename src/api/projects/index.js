@@ -288,13 +288,14 @@ export const fetchChartData = withDemoMock(
  */
 export const fetchProjectReleases = withDemoMock(
   async function fetchProjectReleases(projectId) {
-    const response = await api.call(QUERY_PROJECT_RELEASES, { projectId });
+    const response = await api.call(QUERY_PROJECT_RELEASES, { projectId }, undefined, {
+      allowErrors: true,
+    });
 
-    if (response.errors?.length) {
-      response.errors.forEach(console.error);
-    }
-
-    return response.data.project.releases;
+    /*
+     * GraphQL may return usable release data alongside field-level errors.
+     */
+    return response.data?.project?.releases ?? [];
   },
   '/src/api/projects/mocks/fetchProjectReleases.mock.ts'
 );
