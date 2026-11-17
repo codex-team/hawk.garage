@@ -190,8 +190,8 @@ export default defineComponent({
      */
     formatMessage(log: ConsoleLogEvent): string {
       // Add log type prefix except for regular console.log
-      const prefix
-        = log.method === 'log' ? '' : `${log.type || log.method.toUpperCase()} `;
+      const level = log.type || log.method?.toUpperCase();
+      const prefix = log.method === 'log' || !level ? '' : `${level} `;
 
       if (!log.message.includes('%c')) {
         return this.sanitizeHTML(prefix + log.message);
