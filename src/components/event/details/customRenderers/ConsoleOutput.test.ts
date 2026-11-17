@@ -27,4 +27,25 @@ describe('ConsoleOutput', () => {
     expect(host.querySelector('.log-message')?.textContent)
       .toBe('A console error without method metadata');
   });
+
+  it.each([
+    ['warn', 'WARN A warning message'],
+    ['log', 'A regular log message'],
+  ])('preserves formatting for console.%s messages', (method, expectedMessage) => {
+    host = document.createElement('div');
+    document.body.append(host);
+    app = createApp({
+      render: () => h(ConsoleOutput, {
+        value: [{
+          method,
+          timestamp: '2026-11-17T09:58:23.289Z',
+          message: method === 'warn' ? 'A warning message' : 'A regular log message',
+        }],
+      }),
+    });
+
+    app.mount(host);
+
+    expect(host.querySelector('.log-message')?.textContent).toBe(expectedMessage);
+  });
 });
