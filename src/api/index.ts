@@ -53,6 +53,11 @@ let tokenRefreshingRequest: Promise<string | null> | null;
 let apiModuleHandlers: ApiModuleHandlers | null = null;
 
 /**
+ * Id of the response interceptor registered by setupApiModuleHandlers()
+ */
+let authInterceptorId: number | null = null;
+
+/**
  * Error tracking composable
  */
 const { track } = useErrorTracker();
@@ -572,9 +577,16 @@ export function setupApiModuleHandlers(eventsHandlers: ApiModuleHandlers): void 
   apiModuleHandlers = eventsHandlers;
 
   /**
+   * A repeated setup replaces the interceptor instead of stacking another one
+   */
+  if (authInterceptorId !== null) {
+    axios.interceptors.response.eject(authInterceptorId);
+  }
+
+  /**
    * Interceptors that handles the error of expired tokens
    */
-  axios.interceptors.response.use(
+  authInterceptorId = axios.interceptors.response.use(
     /**
      * Interceptor handler
      * @param response - axios response object
