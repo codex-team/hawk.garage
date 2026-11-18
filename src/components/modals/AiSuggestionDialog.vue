@@ -13,17 +13,19 @@
         class="ai-suggestion-dialog__content"
       >
         <AiSuggestionSkeleton v-if="loading" />
-        <div
-          v-else-if="error"
-          class="ai-suggestion-dialog__error"
-        >
-          {{ error }}
-        </div>
-        <MarkdownView
-          v-else
-          class="ai-suggestion-dialog__suggestion"
-          :blocks="blocks"
-        />
+        <template v-else>
+          <MarkdownView
+            v-if="suggestion"
+            class="ai-suggestion-dialog__suggestion"
+            :blocks="blocks"
+          />
+          <div
+            v-if="error"
+            class="ai-suggestion-dialog__error"
+          >
+            {{ error }}
+          </div>
+        </template>
       </div>
     </div>
   </PopupDialog>
@@ -242,6 +244,10 @@ export default defineComponent({
     width: 100%;
     max-width: 100%;
     min-width: 0;
+  }
+
+  &__suggestion + &__error {
+    margin-block-start: var(--spacing-ml);
   }
 
   &__error {
