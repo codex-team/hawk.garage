@@ -28,6 +28,40 @@ describe('ConsoleOutput', () => {
       .toBe('A console error without method metadata');
   });
 
+  it('renders an empty message when the event has no message', () => {
+    host = document.createElement('div');
+    document.body.append(host);
+    app = createApp({
+      render: () => h(ConsoleOutput, {
+        value: [{
+          method: 'error',
+          timestamp: '2026-11-17T09:58:23.289Z',
+        }],
+      }),
+    });
+
+    expect(() => app?.mount(host)).not.toThrow();
+    expect(host.querySelector('.log-message')?.textContent).toBe('ERROR ');
+  });
+
+  it('renders styled messages with malformed style values safely', () => {
+    host = document.createElement('div');
+    document.body.append(host);
+    app = createApp({
+      render: () => h(ConsoleOutput, {
+        value: [{
+          method: 'log',
+          timestamp: '2026-11-17T09:58:23.289Z',
+          message: 'Styled%c message',
+          styles: ['font-weight'],
+        }],
+      }),
+    });
+
+    expect(() => app?.mount(host)).not.toThrow();
+    expect(host.querySelector('.log-message')?.textContent).toBe('Styled message ');
+  });
+
   it.each([
     ['warn', 'WARN A warning message'],
     ['log', 'A regular log message'],
