@@ -1,7 +1,27 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { callRestStream, setAuthToken, setupApiModuleHandlers } from './index';
 
+const { track } = vi.hoisted(() => ({ track: vi.fn() }));
+
+vi.mock('@/hawk', async (importOriginal) => {
+  const original = await importOriginal<{
+    useErrorTracker: () => {
+      init: () => void;
+      track: typeof track;
+    };
+  }>();
+
+  return {
+    ...original,
+    useErrorTracker: () => ({
+      ...original.useErrorTracker(),
+      track,
+    }),
+  };
+});
+
 const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_SERVER_ERROR = 500;
 
 /**
  * Absolute, so the request does not depend on VITE_API_ENDPOINT.
@@ -58,6 +78,7 @@ function mockFetchSequence(responses: Response[]): { authHeaders: (string | null
 }
 
 beforeEach(() => {
+  track.mockClear();
   setupApiModuleHandlers({
     onTokenExpired: () => Promise.resolve('refreshed-token'),
     onAuthError: vi.fn(),
@@ -101,6 +122,17 @@ describe('callRestStream', () => {
     ]);
 
     await expect(callRestStream(STREAM_URL)).rejects.toThrow('Refresh token is invalid');
+  });
+
+  it('should report the refusal to the error tracker', async () => {
+    setAuthToken('valid-token');
+    mockFetchSequence([jsonResponse(HTTP_STATUS_SERVER_ERROR, { error: 'AI is unavailable' })]);
+
+    await expect(callRestStream(STREAM_URL)).rejects.toThrow('AI is unavailable');
+    expect(track).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'AI is unavailable' }),
+      expect.objectContaining({ URL: STREAM_URL })
+    );
   });
 
   it('should report an auth error when the token refresh fails', async () => {

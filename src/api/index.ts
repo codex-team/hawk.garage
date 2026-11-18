@@ -487,14 +487,20 @@ async function refreshAccessTokenForRetry(handlers: ApiModuleHandlers): Promise<
 }
 
 /**
- * Read the reason the API sent instead of a stream.
+ * Read what the API sent instead of a stream.
  * @param response - refused response
- * @returns reason to show to the user
+ * @returns parsed body and reason to show to the user
  */
-async function readStreamRefusal(response: Response): Promise<string> {
+async function readStreamRefusal(response: Response): Promise<{
+  body: RestStreamErrorBody | undefined;
+  reason: string;
+}> {
   const body = await response.json().catch(() => undefined) as RestStreamErrorBody | undefined;
 
-  return body?.error ?? `Request failed with status ${response.status}.`;
+  return {
+    body,
+    reason: body?.error ?? `Request failed with status ${response.status}.`,
+  };
 }
 
 /**
@@ -535,7 +541,17 @@ export async function callRestStream(url: string, options: RestStreamRequestOpti
   }
 
   if (!response.ok) {
-    throw new Error(await readStreamRefusal(response));
+    const { body, reason } = await readStreamRefusal(response);
+
+    /**
+     * Send error to Hawk
+     */
+    track(new Error(reason), {
+      URL: fullUrl,
+      'Response Data': body ?? {},
+    });
+
+    throw new Error(reason);
   }
 
   if (!response.body) {
