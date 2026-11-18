@@ -515,7 +515,10 @@ export async function callRestStream(url: string, options: RestStreamRequestOpti
   const { signal, headers = {} } = options;
   const fullUrl = url.startsWith('http') ? url : `${API_ENDPOINT}${url}`;
   const authorization = axios.defaults.headers.common.Authorization;
-  const requestHeaders: Record<string, string> = { ...headers };
+  const requestHeaders: Record<string, string> = {
+    Accept: 'text/event-stream',
+    ...headers,
+  };
 
   if (typeof authorization === 'string') {
     requestHeaders.Authorization = authorization;
