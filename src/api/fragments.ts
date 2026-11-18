@@ -55,6 +55,10 @@ export const EVENT_FRAGMENT = `
     timestamp
     originalTimestamp
     originalEventId
+    firstSeenInRelease
+    isNew
+    resolvedInRelease
+    regressionInRelease
     payload {
       title
       type

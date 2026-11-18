@@ -85,13 +85,11 @@
                 {{ $t('common.price') }}
               </div>
               <div class="payment-details__details-item-value payment-details__price-values">
-                <span
-                  v-if="appliedPromoCode"
-                  class="payment-details__original-price"
-                >
-                  {{ price }}
-                </span>
-                <span>{{ paymentData.paymentAmount }}{{ getCurrencySign(paymentData.currency) }}</span>
+                <template v-if="appliedPromoCode">
+                  <span class="payment-details__original-price">{{ price }}</span>
+                  <span>{{ paymentData.paymentAmount }}{{ getCurrencySign(paymentData.currency) }}</span>
+                </template>
+                <span v-else>{{ price }}</span>
               </div>
             </div>
 
@@ -99,6 +97,7 @@
               v-if="paymentData && !paymentData.isCardLinkOperation && !promoInputVisible && !appliedPromoCode"
               type="button"
               class="payment-details__promo-link"
+              :disabled="isUpdatingPayment"
               @click="showPromoCodeInput"
             >
               {{ $t('billing.promoCode.showInput') }}
@@ -125,7 +124,7 @@
                   type="submit"
                   :content="$t('billing.promoCode.apply')"
                   :disabled="isUpdatingPayment || !promoCode.trim()"
-                  :is-loading="isUpdatingPayment"
+                  :is-loading="paymentUpdate === 'promo'"
                   secondary
                 />
                 <UiButton
@@ -133,7 +132,7 @@
                   type="button"
                   :content="$t('billing.promoCode.remove')"
                   :disabled="isUpdatingPayment"
-                  :is-loading="isUpdatingPayment"
+                  :is-loading="paymentUpdate === 'promo'"
                   secondary
                   @click="updatePromoCode('')"
                 />
@@ -152,6 +151,13 @@
               >
                 {{ $t('billing.promoCode.applied', { code: appliedPromoCode }) }}
                 {{ isRecurrent ? $t('billing.promoCode.recurringNote', { price }) : $t('billing.promoCode.onceNote') }}
+              </p>
+              <p
+                v-show="hasUnappliedPromoCode && !isUpdatingPayment"
+                class="payment-details__promo-note"
+                role="status"
+              >
+                {{ $t('billing.promoCode.applyOrClear') }}
               </p>
             </form>
 
@@ -243,7 +249,7 @@
             :submit="isAcceptedAllAgreements"
             :secondary="!isAcceptedAllAgreements"
             :disabled="isUpdatingPayment || hasUnappliedPromoCode"
-            :is-loading="isUpdatingPayment"
+            :is-loading="paymentUpdate === 'checkout'"
             @click.prevent="onGoToServicePayment"
           />
 
@@ -407,9 +413,9 @@ export default defineComponent({
       promoError: '',
 
       /**
-       * Whether a quote request is in flight, blocking duplicate submissions
+       * Which action is currently refreshing the payment quote.
        */
-      isUpdatingPayment: false,
+      paymentUpdate: null as 'promo' | 'checkout' | null,
 
       /**
        * New card id to use it in template
@@ -458,6 +464,13 @@ export default defineComponent({
     };
   },
   computed: {
+    /**
+     * Block both actions while either one is refreshing the quote.
+     */
+    isUpdatingPayment(): boolean {
+      return this.paymentUpdate !== null;
+    },
+
     /**
      * Prevent checkout with a discount that the server has not confirmed
      *
@@ -683,7 +696,7 @@ export default defineComponent({
 
       const value = code.trim();
 
-      this.isUpdatingPayment = true;
+      this.paymentUpdate = 'promo';
       this.promoError = '';
 
       try {
@@ -694,7 +707,7 @@ export default defineComponent({
       } catch (error) {
         this.promoError = this.paymentErrorMessage(error);
       } finally {
-        this.isUpdatingPayment = false;
+        this.paymentUpdate = null;
       }
     },
     /**
@@ -760,7 +773,7 @@ export default defineComponent({
 
       const previousPayment = this.paymentData;
 
-      this.isUpdatingPayment = true;
+      this.paymentUpdate = 'checkout';
       this.promoError = '';
 
       try {
@@ -790,7 +803,7 @@ export default defineComponent({
           time: 5000,
         });
       } finally {
-        this.isUpdatingPayment = false;
+        this.paymentUpdate = null;
       }
     },
 

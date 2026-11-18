@@ -70,7 +70,7 @@ export const getEvent = withDemoMock(
       originalEventId,
     })).project;
 
-    if (!project) {
+    if (!project?.event) {
       return null;
     }
 

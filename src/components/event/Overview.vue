@@ -79,9 +79,12 @@
         :addons="addonsFiltered"
       />
       <DetailsRelease
-        v-if="event.payload.release"
+        v-if="hasReleaseInformation"
         class="event-overview__section"
         :release="event.payload.release"
+        :first-seen-in-release="event.firstSeenInRelease"
+        :resolved-in-release="event.resolvedInRelease"
+        :regression-in-release="event.regressionInRelease"
       />
       <div
         v-if="isNoAdditionalInformation"
@@ -111,6 +114,7 @@ import DetailsBreadcrumbs from './details/breadcrumbs/DetailsBreadcrumbs.vue';
 import { HawkEvent } from '@/types/events';
 import { EventAddons } from '@hawk.so/types';
 import { ValueOf } from '../../types/utils';
+import { isMeaningfulRelease } from '@/utils';
 
 export default defineComponent({
   name: 'EventOverview',
@@ -222,6 +226,14 @@ export default defineComponent({
     },
 
     /**
+     * Whether any occurrence or lifecycle release is available.
+     */
+    hasReleaseInformation(): boolean {
+      return [this.event.payload.release, this.event.firstSeenInRelease,
+        this.event.resolvedInRelease, this.event.regressionInRelease].some(isMeaningfulRelease);
+    },
+
+    /**
      * Returns true if the event has no backtrace, context and addons
      *
      * @returns {boolean}
@@ -232,7 +244,7 @@ export default defineComponent({
       const noContext = !this.hasContext;
       const noBreadcrumbs = !this.hasBreadcrumbs;
 
-      return noBacktrace && noAddons && noContext && noBreadcrumbs;
+      return noBacktrace && noAddons && noContext && noBreadcrumbs && !this.hasReleaseInformation;
     },
   },
   methods: {

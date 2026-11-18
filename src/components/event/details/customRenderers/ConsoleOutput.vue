@@ -57,10 +57,10 @@
 import { defineComponent, PropType } from 'vue';
 
 interface ConsoleLogEvent {
-  method: string;
+  method?: string;
   timestamp: string;
   type?: string;
-  message: string;
+  message?: string;
   stack?: string;
   fileLine?: string;
   styles?: string[];
@@ -122,7 +122,7 @@ export default defineComponent({
      * @param {string} method - The console method/log level ('error', 'warn', 'info', or 'debug')
      * @returns {string} The corresponding CSS class name for styling the log entry
      */
-    logClass(method: string): string {
+    logClass(method?: string): string {
       const logClasses: Record<string, string> = {
         error: 'log-error',
         warn: 'log-warn',
@@ -130,7 +130,7 @@ export default defineComponent({
         debug: 'log-debug',
       };
 
-      return logClasses[method?.toLowerCase()] || 'log-default';
+      return (method && logClasses[method.toLowerCase()]) || 'log-default';
     },
     /**
      * Formats a timestamp into a human-readable time string with milliseconds
@@ -190,14 +190,15 @@ export default defineComponent({
      */
     formatMessage(log: ConsoleLogEvent): string {
       // Add log type prefix except for regular console.log
-      const prefix
-        = log.method === 'log' ? '' : `${log.type || log.method.toUpperCase()} `;
+      const level = log.type || log.method?.toUpperCase();
+      const prefix = log.method === 'log' || !level ? '' : `${level} `;
+      const message = typeof log.message === 'string' ? log.message : '';
 
-      if (!log.message.includes('%c')) {
-        return this.sanitizeHTML(prefix + log.message);
+      if (!message.includes('%c')) {
+        return this.sanitizeHTML(prefix + message);
       }
 
-      const parts = log.message.split('%c');
+      const parts = message.split('%c');
       const styles = log.styles || [];
       let result = this.sanitizeHTML(prefix);
 
@@ -221,6 +222,10 @@ export default defineComponent({
      * @returns {string} Sanitized CSS style string containing only allowed properties and values
      */
     sanitizeStyle(style: string): string {
+      if (typeof style !== 'string') {
+        return '';
+      }
+
       // List of allowed CSS properties
       const allowedProperties = [
         'color',
@@ -262,9 +267,9 @@ export default defineComponent({
           if (allowedProperties.includes(normalizedKey)) {
             // Check values for properties with a limited set of allowed values
             if (allowedValues[normalizedKey]) {
-              const normalizedValue = value.toLowerCase();
+              const normalizedValue = value?.toLowerCase();
 
-              if (allowedValues[normalizedKey].includes(normalizedValue)) {
+              if (normalizedValue && allowedValues[normalizedKey].includes(normalizedValue)) {
                 return `${key}: ${value}`;
               }
             } else {
