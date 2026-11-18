@@ -106,6 +106,22 @@ describe('AiSuggestionDialog streaming', () => {
     expect(host.querySelector('.ai-suggestion-dialog__error')?.textContent).toBe('Answer refused');
     expect(vi.getTimerCount()).toBe(0);
   });
+
+  it('should keep the streamed text when the connection drops', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const host = await mount();
+
+    options!.onTextDelta('Partial ');
+    options!.onTextDelta('answer.');
+    vi.advanceTimersToNextFrame();
+    await nextTick();
+    await nextTick();
+
+    rejectStream(new Error('Offline'));
+    await vi.waitFor(() => expect(host.querySelector('.ai-suggestion-dialog__error')?.textContent).toBe('event.ai.error'));
+
+    expect(host.querySelector('.markdown-view p')?.textContent).toBe('Partial answer.');
+  });
 });
 
 describe('AiSuggestionDialog loading', () => {
