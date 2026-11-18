@@ -62,19 +62,27 @@ function streamResponse(text: string): Response {
  * Read every fetch's Authorization header as it happens, and answer each call
  * with the next response from the given list.
  * @param responses - one Response per expected fetch call, in order
- * @returns Authorization headers of the calls
+ * @returns headers of the calls
  */
-function mockFetchSequence(responses: Response[]): { authHeaders: (string | null)[] } {
+function mockFetchSequence(responses: Response[]): {
+  authHeaders: (string | null)[];
+  acceptHeaders: (string | null)[];
+} {
   const authHeaders: (string | null)[] = [];
+  const acceptHeaders: (string | null)[] = [];
   let call = 0;
 
   vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL) => {
     authHeaders.push((input as Request).headers.get('Authorization'));
+    acceptHeaders.push((input as Request).headers.get('Accept'));
 
     return responses[call++];
   }));
 
-  return { authHeaders };
+  return {
+    authHeaders,
+    acceptHeaders,
+  };
 }
 
 beforeEach(() => {
@@ -93,11 +101,12 @@ afterEach(() => {
 describe('callRestStream', () => {
   it('should return the response body on success', async () => {
     setAuthToken('valid-token');
-    mockFetchSequence([streamResponse('hello')]);
+    const { acceptHeaders } = mockFetchSequence([streamResponse('hello')]);
 
     const stream = await callRestStream(STREAM_URL);
 
     await expect(new Response(stream).text()).resolves.toBe('hello');
+    expect(acceptHeaders).toEqual(['text/event-stream']);
   });
 
   it('should refresh the token and retry once on a 401', async () => {
