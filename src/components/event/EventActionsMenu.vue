@@ -92,7 +92,7 @@ function confirmRemoveEvent(): void {
 /**
  * Copies a formatted event payload to the clipboard
  *
- * Includes information about title, backtrace, context, addons
+ * Includes information about title, backtrace, breadcrumbs, context, addons
  * structured for easy pasting into logs, tickets, or chat
  */
 async function copyRawEventData(): Promise<void> {
