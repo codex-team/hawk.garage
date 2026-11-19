@@ -1,7 +1,7 @@
 import { isObject } from '@/utils';
 
 import type { HawkEventBacktraceFrame, HawkEventPayload } from '@/types/events';
-import type { EventAddons } from '@hawk.so/types';
+import type { Breadcrumb, EventAddons } from '@hawk.so/types';
 
 /**
  * Traverses the passed object and builds a formatted string representation
@@ -98,6 +98,44 @@ function buildBacktraceString(backtrace: HawkEventBacktraceFrame[]): string | nu
 }
 
 /**
+ * Converts event breadcrumbs into a formatted string
+ * @param breadcrumbs - Event payload breadcrumbs
+ * @returns Formatted breadcrumbs string, or `null` if breadcrumbs are empty
+ */
+function buildBreadcrumbsString(breadcrumbs?: Breadcrumb[]): string | null {
+  if (!breadcrumbs || !breadcrumbs.length) {
+    return null;
+  }
+
+  return breadcrumbs.map((breadcrumb) => {
+    const meta = [
+      Number.isFinite(breadcrumb.timestamp) ? new Date(breadcrumb.timestamp).toISOString() : null,
+      breadcrumb.type,
+      breadcrumb.category,
+      breadcrumb.level,
+    ].filter(Boolean);
+
+    const header = meta.length ? `[${meta.join(' | ')}]` : null;
+    const headline = [header, breadcrumb.message].filter(Boolean).join(' ');
+    const lines: string[] = [];
+
+    if (headline) {
+      lines.push(headline);
+    }
+
+    const dataString = breadcrumb.data ? buildObjectString(breadcrumb.data) : null;
+
+    if (dataString) {
+      lines.push(dataString);
+    }
+
+    return lines.join('\n');
+  })
+    .filter(Boolean)
+    .join('\n\n');
+}
+
+/**
  * Composes section string
  * @param title - Section name
  * @param content - Section content
@@ -114,7 +152,7 @@ function buildSection(title: string, content: string | null | undefined): string
 /**
  * Converts an event payload into a formatted multiline string
  *
- * Includes information about title, backtrace, context, addons
+ * Includes information about title, backtrace, breadcrumbs, context, addons
  * @param payload - Event payload to stringify
  * @returns Formatted string representation of the event payload
  */
@@ -122,6 +160,7 @@ export function stringifyEventPayload(payload: HawkEventPayload): string {
   const sections = [
     buildSection('Title', payload.title),
     buildSection('Backtrace', buildBacktraceString(payload.backtrace)),
+    buildSection('Breadcrumbs', buildBreadcrumbsString(payload.breadcrumbs)),
     buildSection('Context', buildObjectString(payload.context)),
     buildSection('Additional data', buildAddonsString(payload.addons)),
   ];
