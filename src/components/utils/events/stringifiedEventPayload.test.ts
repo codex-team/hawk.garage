@@ -24,11 +24,12 @@ function createPayload(overrides: Partial<HawkEventPayload> = {}): HawkEventPayl
 
 describe('stringifyEventPayload', () => {
   it('includes formatted breadcrumbs when present', () => {
-    const timestamp = Date.UTC(2026, 10, 19, 12, 0, 0);
+    const firstTimestamp = Date.parse('2026-11-19T12:00:00.000Z');
+    const secondTimestamp = Date.parse('2026-11-19T12:00:00.500Z');
     const result = stringifyEventPayload(createPayload({
       breadcrumbs: [
         {
-          timestamp,
+          timestamp: firstTimestamp,
           type: 'request',
           category: 'fetch',
           message: 'GET /api/me 200',
@@ -38,7 +39,7 @@ describe('stringifyEventPayload', () => {
           },
         },
         {
-          timestamp: timestamp + 500,
+          timestamp: secondTimestamp,
           type: 'ui',
           category: 'ui.click',
           message: 'Click on Submit',
