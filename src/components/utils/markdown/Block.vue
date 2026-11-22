@@ -116,6 +116,7 @@ function renderCodeBlock(code: Tokens.Code): VNodeChild {
     lines,
     lang: code.lang?.split(/\s+/)[0] || 'plaintext',
     copyable: true,
+    detectHtml: false,
   });
 }
 
