@@ -1,6 +1,6 @@
 {
   "name": "hawk.so",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "private": true,
   "packageManager": "yarn@4.18.0",
   "scripts": {
