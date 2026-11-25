@@ -1,6 +1,6 @@
 {
   "name": "hawk.so",
-  "version": "1.4.2",
+  "version": "1.6.1",
   "private": true,
   "packageManager": "yarn@4.18.0",
   "scripts": {
@@ -21,11 +21,12 @@
   "dependencies": {
     "@codexteam/ui": "0.2.3",
     "@hawk.so/javascript": "3.3.0",
-    "@hawk.so/types": "^0.6.3",
+    "@hawk.so/types": "^0.7.0",
     "axios": "^1.12.2",
     "codex-notifier": "^1.1.2",
     "cssnano": "^7.1.1",
     "dompurify": "^3.4.12",
+    "entities": "^8.1.0",
     "fast-glob": "^3.3.3",
     "highlight.js": "^11.11.1",
     "http-server": "^14.1.1",

@@ -1,143 +1,127 @@
-/**
- * Text segment for mixed markdown/plain text with fenced code
- */
-export type TextSegment = {
-  type: 'text';
-  text: string;
-};
+import type { Token } from 'marked';
 
 /**
- * Single code line representation
+ * Content blocks that must follow a block before it is lexed no more.
  */
-export type CodeLine = {
-  line: number;
-  content: string;
-};
+const SETTLE_BLOCKS = 3;
 
 /**
- * Code segment for mixed markdown/plain text with fenced code
+ * Characters that must follow a block before it is lexed no more.
  */
-export type CodeSegment = {
-  type: 'code';
-  lang: string;
-  lines: CodeLine[];
-};
+const SETTLE_CHARS = 64;
 
 /**
- * Union type of possible segments
+ * Lexer of a streamed markdown answer.
+ *
+ * Blocks with enough following text retain their identity between appends. A distant link
+ * definition can still change a settled reference, so reparse the complete answer at the end,
+ * including after a transport failure. Reparse preserves tokens whose content did not change.
+ *
+ * Settling happens only between top-level blocks. An open fence, list or table is re-lexed
+ * from its start on every append; the look-behind limits do not bound that block's size.
  */
-export type ContentSegment = TextSegment | CodeSegment;
-
-/**
- * Split markdown into text and code segments.
- * Code segments are fenced with ```lang ... ```
- * @param source - markdown text with fenced code blocks
- * @returns array of segments to render
- */
-export function splitStringIntoTextAndCodeSegments(source: string | undefined | null): ContentSegment[] {
-  const text = source || '';
-  const segments: ContentSegment[] = [];
-  const fenceRe = /```([\w+-]+)?\r?\n([\s\S]*?)```/g;
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-
-  while ((match = fenceRe.exec(text)) !== null) {
-    const [full, lang, code] = match;
-    const start = match.index;
-
-    if (start > lastIndex) {
-      const before = text.slice(lastIndex, start);
-
-      if (before) {
-        segments.push({ type: 'text',
-          text: before });
-      }
-    }
-
-    const lines: CodeLine[] = code.trimEnd().replace(/\n$/, '')
-      .split('\n')
-      .map((line, i) => ({
-        line: i + 1,
-        content: line,
-      }));
-
-    segments.push({
-      type: 'code',
-      lang: lang || 'plaintext',
-      lines,
-    });
-
-    lastIndex = start + full.length;
-  }
-
-  if (lastIndex < text.length) {
-    segments.push({ type: 'text',
-      text: text.slice(lastIndex) });
-  }
-
-  if (segments.length === 0) {
-    segments.push({ type: 'text',
-      text });
-  }
-
-  return segments;
-}
-
-import { escape } from '../utils';
-import DOMPurify from 'dompurify';
-
-/**
- * What may reach the DOM. img is left out although marked emits it: the answer is
- * built from the event payload, and a remote image in it reports back when the
- * dialog opens.
- */
-const ALLOWED_TAGS = [
-  'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'ul', 'ol', 'li', 'blockquote', 'code', 'pre',
-  'table', 'thead', 'tbody', 'tr', 'th', 'td',
-  'a', 'strong', 'em', 'del', 'hr', 'br',
-];
-
-const ALLOWED_ATTR = ['href', 'class'];
-
-/**
- * Return a function that renders a limited subset of Markdown to HTML.
- * @todo use Abstract syntax tree (AST) instead of only string manipulation
- * @returns a function that renders a limited subset of Markdown to HTML
- */
-export async function getMarkdownRenderer(): Promise<(text: string) => string> {
-  const { marked, Renderer } = await import('marked');
-
-  const renderer = new Renderer();
-
-  renderer.heading = function ({ tokens, depth }) {
-    const text = this.parser.parseInline(tokens);
-    const cls = depth === 1 ? 'text-h1' : depth === 2 ? 'text-h2' : 'text-ui-large';
-
-    return `<h${depth} class="${cls}">${text}</h${depth}>`;
-  };
-
-  renderer.paragraph = function ({ tokens }) {
-    return `<p class="text-p">${this.parser.parseInline(tokens)}</p>`;
-  };
-
-  renderer.blockquote = function ({ tokens }) {
-    return `<blockquote class="text-blockquote">\n${this.parser.parse(tokens)}\n</blockquote>\n`;
-  };
-
-  renderer.codespan = ({ text }) => {
-    return `<code class="text-monospaced">${escape(text)}</code>`;
-  };
-
-  renderer.html = ({ text }) => escape(text);
+export interface IncrementalLexer {
+  /**
+   * Append a fragment and return every block to render.
+   */
+  append(delta: string): Token[];
 
   /**
-   * Return a function that renders a limited subset of Markdown to HTML.
-   * @param text - raw markdown text
-   * @returns HTML string safe to inject with v-html
+   * Finish by lexing the whole answer, correcting blocks settled before a distant definition.
    */
-  return (text: string) => DOMPurify.sanitize(marked.parse(text, { renderer }) as string, {
-    ALLOWED_TAGS,
-    ALLOWED_ATTR,
-  });
+  reparse(): Token[];
+}
+
+/**
+ * Count leading tokens with enough following content to settle.
+ * @param tokens - tokens of the unsettled tail
+ * @returns how many of them may be settled
+ */
+function countSettled(tokens: Token[]): number {
+  let cut = tokens.length;
+  let content = 0;
+  let length = 0;
+
+  while (cut > 0 && (content < SETTLE_BLOCKS || length < SETTLE_CHARS)) {
+    const token = tokens[--cut];
+
+    length += token.raw.length;
+
+    if (token.type !== 'space') {
+      content++;
+    }
+  }
+
+  return cut;
+}
+
+/**
+ * Create a lexer that lexes only the unsettled tail of a streamed answer.
+ * @returns lexer keeping settled blocks between fragments
+ */
+export async function createIncrementalLexer(): Promise<IncrementalLexer> {
+  const { marked } = await import('marked');
+  const settled: Token[] = [];
+  const definitions: Record<string, { href: string;
+    title: string | null; }> = Object.create(null);
+  let source = '';
+  let settledOffset = 0;
+  let previousEndedWithCR = false;
+  let blocks: Token[] = [];
+
+  return {
+    append(delta: string): Token[] {
+      if (!delta) {
+        return blocks;
+      }
+
+      // Match marked's newline normalization even when CRLF straddles two appends.
+      const continuation = previousEndedWithCR && delta.startsWith('\n') ? delta.slice(1) : delta;
+
+      previousEndedWithCR = delta.endsWith('\r');
+      source += continuation.replace(/\r\n?/g, '\n');
+
+      const lexer = new marked.Lexer();
+
+      Object.assign(lexer.tokens.links, definitions);
+
+      const tokens = lexer.lex(source.slice(settledOffset));
+      const candidateCount = countSettled(tokens);
+      let cut = 0;
+
+      while (cut < candidateCount) {
+        const token = tokens[cut];
+
+        // Some raws contain synthetic newlines, and duplicate definitions can be omitted.
+        // Only advance across a prefix that matches the actual normalized source.
+        if (!source.startsWith(token.raw, settledOffset)) {
+          break;
+        }
+
+        settledOffset += token.raw.length;
+        settled.push(token);
+        void marked.walkTokens([token], (child) => {
+          if (child.type === 'def' && definitions[child.tag] === undefined) {
+            definitions[child.tag] = { href: child.href,
+              title: child.title };
+          }
+        });
+        cut++;
+      }
+
+      // A fresh array publishes the change to Vue; settled token objects remain shared.
+      blocks = settled.concat(tokens.slice(cut));
+
+      return blocks;
+    },
+    reparse(): Token[] {
+      blocks = marked.lexer(source).map((token, index) => {
+        const previous = blocks[index];
+
+        return previous && JSON.stringify(previous) === JSON.stringify(token) ? previous : token;
+      });
+
+      return blocks;
+    },
+  };
 }
