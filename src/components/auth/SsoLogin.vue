@@ -51,7 +51,8 @@ import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import FormComponent from './Form.vue';
 import EntityImage from '../utils/EntityImage.vue';
-import { SET_TOKENS } from '../../store/modules/user/actionTypes';
+import { SET_TOKENS, FETCH_CURRENT_USER } from '../../store/modules/user/actionTypes';
+import { FETCH_INITIAL_DATA } from '../../store/modules/app/actionTypes';
 import { getCookie, removeCookie } from '../../utils';
 import { API_ENDPOINT } from '../../api';
 import { getSsoWorkspace } from '../../api/workspaces';
@@ -177,10 +178,23 @@ onMounted(async () => {
     && route.query.refresh_token
   ) {
     try {
+      /**
+       * 1. Save tokens first
+       */
       await store.dispatch(SET_TOKENS, {
         accessToken: route.query.access_token,
         refreshToken: route.query.refresh_token,
       });
+
+      /**
+       * 2. Load initial data (workspaces, projects) and user data
+       * This ensures that when components render after redirect,
+       * they have access to user data (e.g., for isAdmin checks)
+       */
+      await Promise.all([
+        store.dispatch(FETCH_INITIAL_DATA),
+        store.dispatch(FETCH_CURRENT_USER),
+      ]);
 
       /**
        * Determine redirect URL:
